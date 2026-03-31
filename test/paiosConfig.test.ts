@@ -27,7 +27,9 @@ import {
   getProviderBaseUrl,
   getEnabledProviders,
   clearConfigCache,
-  PAIOSConfigSchema
+  PAIOSConfigSchema,
+  getOrchestrationConcurrencyConfig,
+  getOrchestrationConcurrencyLimit,
 } from '../src/config/paiosConfig.js';
 
 describe('paiosConfig', () => {
@@ -446,6 +448,34 @@ describe('paiosConfig', () => {
       loadPaiosConfig();
 
       expect(fs.readFileSync).toHaveBeenCalledTimes(2);
+    });
+  });
+
+  describe('orchestration concurrency', () => {
+    beforeEach(() => {
+      const mockConfig = {
+        orchestrator: {
+          default_model: 'github',
+          system_prompt_path: 'test.md',
+          max_tasks_per_request: 5,
+          concurrency: {
+            profile: 'balanced',
+            max_concurrent_tasks: 3,
+          },
+        },
+        providers: {},
+      };
+
+      vi.mocked(fs.existsSync).mockReturnValue(true);
+      vi.mocked(fs.readFileSync).mockReturnValue(yaml.dump(mockConfig));
+    });
+
+    it('should expose the balanced default concurrency profile', () => {
+      expect(getOrchestrationConcurrencyConfig()).toEqual({
+        profile: 'balanced',
+        max_concurrent_tasks: 3,
+      });
+      expect(getOrchestrationConcurrencyLimit()).toBe(3);
     });
   });
 });

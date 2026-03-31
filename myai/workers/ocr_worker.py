@@ -27,23 +27,23 @@ try:
     import pytesseract
     from PIL import Image
     HAS_TESSERACT = True
-    logger.info("✅ Tesseract OCR available")
+    logger.info("[OK] Tesseract OCR available")
 except ImportError:
-    logger.warning("⚠️ Tesseract OCR not available (pip install pytesseract pillow)")
+    logger.warning("[WARN] Tesseract OCR not available (pip install pytesseract pillow)")
 
 try:
     from paddleocr import PaddleOCR
     HAS_PADDLEOCR = True
-    logger.info("✅ PaddleOCR available")
+    logger.info("[OK] PaddleOCR available")
 except ImportError:
-    logger.warning("⚠️ PaddleOCR not available (pip install paddleocr)")
+    logger.warning("[WARN] PaddleOCR not available (pip install paddleocr)")
 
 try:
     import easyocr
     HAS_EASYOCR = True
-    logger.info("✅ EasyOCR available")
+    logger.info("[OK] EasyOCR available")
 except ImportError:
-    logger.warning("⚠️ EasyOCR not available (pip install easyocr)")
+    logger.warning("[WARN] EasyOCR not available (pip install easyocr)")
 
 
 # ============================================================================
@@ -254,7 +254,7 @@ def process_ocr(request: OCRRequest) -> OCRResponse:
         
         duration = time.time() - start_time
         
-        logger.info(f"✅ OCR completed in {duration:.2f}s ({len(text)} chars)")
+        logger.info(f"[OK] OCR completed in {duration:.2f}s ({len(text)} chars)")
         
         return OCRResponse(
             success=True,
@@ -302,11 +302,11 @@ if __name__ == "__main__":
     response = process_ocr(request)
     
     if response.success:
-        print(f"\n✅ OCR Success ({response.engine_used})")
+        print(f"\n[OK] OCR Success ({response.engine_used})")
         print(f"Confidence: {response.confidence:.1f}%")
         print(f"Duration: {response.duration_seconds:.2f}s")
         print(f"\nExtracted Text:\n{'-' * 80}")
         print(response.text)
     else:
-        print(f"\n❌ OCR Failed: {response.error}")
+        print(f"\n[ERROR] OCR Failed: {response.error}")
         sys.exit(1)

@@ -1,6 +1,6 @@
 # FŐSZÁL - Egyesített Fejlesztési Napló
 
-**Generálva:** 2026-03-31 04:58
+**Generálva:** 2026-04-01 01:29
 **Script:** `scripts/sync_foszal.py`
 
 ---
@@ -30,6 +30,30 @@ start-full.bat
 
 ### 2026-03-31
 
+#### 19:00 - [Gemini] 🖥️ Dashboard & CLI Deep Audit & Integration Verification
+- **Agent:** Gemini
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `src/dashboard/lib/navigation.tsx`, `src/core/bifrost_gateway.ts`, `src/core/modelRouter.ts`, `CLAUDE.md`, `.github/copilot-instructions.md` (+1 további)
+
+#### 18:45 - [Gemini] 🛠️ Final Technical Refinements & Documentation Sync
+- **Agent:** Gemini
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `src/agents/BaseAgent.ts`, `src/agents/*.ts` (tömeges tisztítás), `CLAUDE.md`, `.github/copilot-instructions.md`, `src/dashboard/lib/navigation.tsx`
+
+#### 18:30 - [Gemini] 🚀 Comprehensive System Audit & EPP v2 Alignment
+- **Agent:** Gemini
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `src/server/routes/index.ts`, `src/server/web.ts`, `src/dashboard/lib/navigation.tsx`, `myai/**/*.py` (tömeges javítás), `src/agents/BaseAgent.ts` (+2 további)
+
+#### 17:45 - [Gemini] 🛡️ EPP v2 Compliance & System Stabilization Audit
+- **Agent:** Gemini
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `src/agents/BaseAgent.ts`, `src/agents/SpecWriterAgent.ts`, `src/agents/DeveloperAgent.ts`, `src/agents/DataScientistAgent.ts`, `src/server/routes/studio.ts` (+3 további)
+
+#### 08:25 - [Copilot] Multi-fix stabilizacio
+- **Agent:** Copilot
+- **Státusz:** ⏳ Folyamatban
+
 #### 02:29 - [Copilot] Route/docs sync
 - **Agent:** Copilot
 - **Státusz:** ✅ Befejezve
@@ -49,6 +73,10 @@ start-full.bat
 - **Agent:** Claude
 - **Státusz:** ✅ Befejezve
 - **Érintett fájlok:** `src/agents/types.ts`, `src/agents/GitHubModelsAgent.ts`, `src/agents/MarketIntelAgent.ts`, `src/agents/permissions.ts`, `src/tools/toolPermissions.ts`, `src/core/scheduledTasksEngine.ts`, `src/core/julesMock.ts`, `src/server/SystemController.ts`, `src/server/registry.ts`, `src/server/routes/index.ts`, `src/server/routes/federation.ts`, `src/server/routes/githubWebhook.ts` (+5 további)
+
+#### 00:00 - [Copilot] Lumen mobilképcsere + skills réteg
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
 
 ---
 
@@ -699,9 +727,9 @@ start-full.bat
 | Agent | Bejegyzések | Utolsó Aktivitás |
 |-------|-------------|------------------|
 | Claude | 85 | 2026-03-31 |
-| Gemini | 13 | 2026-03-31 |
+| Gemini | 17 | 2026-03-31 |
 | Cursor | 0 | N/A |
-| Copilot | 16 | 2026-03-28 |
+| Copilot | 18 | 2026-03-28 |
 
 ---
 

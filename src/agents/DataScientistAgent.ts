@@ -1,5 +1,5 @@
 import { IAgent, AgentResponse, ISwarmContext } from "./types.js";
-import { logInfo, logError } from "../utils/logger.js";
+import { logInfo, logError, setAgentStatus } from "../utils/logger.js";
 import { exec } from "child_process";
 import path from "path";
 import fs from "fs/promises";
@@ -57,6 +57,7 @@ export default class DataScientistAgent implements IAgent {
   ): Promise<AgentResponse> {
     const taskLower = task.toLowerCase();
     logInfo(this.name, `Task received: ${task.slice(0, 100)}`);
+    setAgentStatus(this.name, "working", task.slice(0, 80));
 
     // Collect input data from swarm context or task itself
     let inputContent = task;
@@ -104,6 +105,8 @@ export default class DataScientistAgent implements IAgent {
       const msg = e instanceof Error ? e.message : String(e);
       logError(this.name, `Execution failed: ${msg}`);
       return { status: "error", error: msg };
+    } finally {
+      setAgentStatus(this.name, "idle");
     }
   }
 

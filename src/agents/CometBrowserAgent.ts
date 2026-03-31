@@ -73,8 +73,6 @@ export class CometBrowserAgent extends BaseAgent {
         message: `Hiba történt a Comet motorral való kommunikáció során: ${errorMsg}`,
         data: { error: errorMsg }
       };
-    } finally {
-      setAgentStatus(this.name, 'idle');
     }
   }
 }

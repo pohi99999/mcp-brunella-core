@@ -12,7 +12,7 @@
  * @version 3.0.0
  */
 
-import { logInfo, logError } from "./logger.js";
+import { logInfo, logError, logWarn } from "./logger.js";
 
 // ============================================================================
 // CONFIGURATION
@@ -25,8 +25,9 @@ const CF_GATEWAY_ID = process.env.CF_GATEWAY_ID || "brunella-gateway";
 const CF_API_TOKEN = process.env.CF_AI_API_TOKEN || process.env.CF_API_TOKEN || process.env.CF_TOKEN;
 const OLLAMA_BASE_URL = process.env.OLLAMA_BASE_URL || "http://127.0.0.1:11434";
 const OLLAMA_MODEL = process.env.OLLAMA_MODEL || "llama3.1:8b";
-const OLLAMA_EMBEDDING_TIMEOUT_MS = parseInt(process.env.OLLAMA_EMBEDDING_TIMEOUT_MS || process.env.EMBEDDING_TIMEOUT_MS || "5000", 10);
+const OLLAMA_EMBEDDING_TIMEOUT_MS = parseInt(process.env.OLLAMA_EMBEDDING_TIMEOUT_MS || process.env.EMBEDDING_TIMEOUT_MS || "15000", 10);
 const CF_MODEL = process.env.CF_MODEL || "@cf/meta/llama-3.1-8b-instruct";
+const CF_EMBEDDING_MODEL = process.env.CF_EMBEDDING_MODEL || "@cf/baai/bge-large-en-v1.5";
 
 // ============================================================================
 // TYPES
@@ -37,6 +38,8 @@ export interface AIGatewayConfig {
   cfAccountId: string;
   cfGatewayId: string;
   cfApiToken?: string;
+  cfGlobalApiKey?: string;
+  cfEmail?: string;
   cfModel: string;
   ollamaBaseUrl: string;
   ollamaModel: string;
@@ -68,8 +71,9 @@ export class AIGatewayClient {
       enabled: config?.enabled ?? AI_GATEWAY_ENABLED,
       cfAccountId: config?.cfAccountId || CF_ACCOUNT_ID,
       cfGatewayId: config?.cfGatewayId || CF_GATEWAY_ID,
-      cfApiToken:
-        config?.cfApiToken !== undefined ? config.cfApiToken : CF_API_TOKEN,
+      cfApiToken: config?.cfApiToken || process.env.CF_API_TOKEN || process.env.CLOUDFLARE_API_TOKEN,
+      cfGlobalApiKey: config?.cfGlobalApiKey || process.env.CF_GLOBAL_API_KEY || process.env.CLOUDFLARE_GLOBAL_API_KEY,
+      cfEmail: config?.cfEmail || process.env.CF_EMAIL || process.env.CLOUDFLARE_EMAIL,
       cfModel: config?.cfModel || CF_MODEL,
       ollamaBaseUrl: config?.ollamaBaseUrl || OLLAMA_BASE_URL,
       ollamaModel: config?.ollamaModel || OLLAMA_MODEL,
@@ -148,16 +152,73 @@ export class AIGatewayClient {
   }
 
   /**
-   * Generate embeddings (always Ollama - CF doesn't expose embeddings directly)
+   * Generate embeddings (routing: CF Workers AI or Ollama)
    */
   async embeddings(
+    text: string,
+    options?: { model?: string; expectedDimension?: number; forceLocal?: boolean },
+  ): Promise<number[]> {
+    const startTime = Date.now();
+    this.stats.totalRequests++;
+
+    const expectedDimension = options?.expectedDimension ?? 768;
+    const useCF = this.config.enabled && !options?.forceLocal;
+
+    try {
+      if (useCF) {
+        let model = options?.model || CF_EMBEDDING_MODEL;
+        
+        // Intelligent mapping: if using CF but got an Ollama model name, use CF default
+        if (!model.startsWith('@cf/') && (model.includes('nomic') || model.includes('mxbai') || model.includes('llama'))) {
+          logInfo("AIGateway", `Mapping Ollama model '${model}' to CF model '${CF_EMBEDDING_MODEL}'`);
+          model = CF_EMBEDDING_MODEL;
+        }
+        
+        // AI Gateway requires API Token (Bearer). Direct API supports Global Key.
+        const useDirectApi = Boolean(this.config.cfGlobalApiKey && this.config.cfEmail);
+        const url = useDirectApi
+          ? `https://api.cloudflare.com/client/v4/accounts/${this.config.cfAccountId}/ai/run/${model}`
+          : `https://gateway.ai.cloudflare.com/v1/${this.config.cfAccountId}/${this.config.cfGatewayId}/workers-ai/${model}`;
+
+        const response = await fetch(url, {
+          method: "POST",
+          headers: this.getCFHeaders(),
+          signal: AbortSignal.timeout(OLLAMA_EMBEDDING_TIMEOUT_MS),
+          body: JSON.stringify({
+            text: [text.slice(0, 8000)],
+          }),
+        });
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          logWarn("AIGateway", `CF embeddings failed (${response.status}), falling back to Ollama: ${errorText}`);
+          return await this.embeddingsOllama(text, options);
+        }
+
+        const data = (await response.json()) as { result?: { data?: number[][] } };
+        const vector = data.result?.data?.[0];
+        
+        if (!vector) throw new Error("Empty embedding in CF response");
+        
+        this.stats.cfRequests++;
+        this.updateLatency(Date.now() - startTime);
+        return vector;
+      } else {
+        return await this.embeddingsOllama(text, options);
+      }
+    } catch (error) {
+      this.stats.errors++;
+      logError("AIGateway", `Embeddings failed: ${error}`);
+      return new Array(expectedDimension).fill(0); // Zero vector fallback
+    }
+  }
+
+  private async embeddingsOllama(
     text: string,
     options?: { model?: string; expectedDimension?: number },
   ): Promise<number[]> {
     const startTime = Date.now();
-    this.stats.totalRequests++;
     this.stats.ollamaRequests++;
-
     const expectedDimension = options?.expectedDimension ?? 768;
 
     try {
@@ -181,9 +242,7 @@ export class AIGatewayClient {
 
       return data.embedding || new Array(expectedDimension).fill(0);
     } catch (error) {
-      this.stats.errors++;
-      logError("AIGateway", `Embeddings failed: ${error}`);
-      return new Array(expectedDimension).fill(0); // Zero vector fallback
+      throw error;
     }
   }
 
@@ -208,6 +267,21 @@ export class AIGatewayClient {
   // CF WORKERS AI
   // ========================================================================
 
+  private getCFHeaders(): Record<string, string> {
+    const headers: Record<string, string> = {
+      "Content-Type": "application/json",
+    };
+
+    if (this.config.cfGlobalApiKey && this.config.cfEmail) {
+      headers["X-Auth-Key"] = this.config.cfGlobalApiKey;
+      headers["X-Auth-Email"] = this.config.cfEmail;
+    } else if (this.config.cfApiToken) {
+      headers["Authorization"] = `Bearer ${this.config.cfApiToken}`;
+    }
+
+    return headers;
+  }
+
   /**
    * Call CF Workers AI with a specific model (public — used by BifrostGateway and ModelRouter).
    * Falls back to config.cfModel if model is empty.
@@ -220,14 +294,16 @@ export class AIGatewayClient {
     this.stats.cfRequests++;
 
     const resolvedModel = model || this.config.cfModel;
-    const url = `https://gateway.ai.cloudflare.com/v1/${this.config.cfAccountId}/${this.config.cfGatewayId}/workers-ai/${resolvedModel}`;
+    
+    // AI Gateway requires API Token (Bearer). Direct API supports Global Key.
+    const useDirectApi = Boolean(this.config.cfGlobalApiKey && this.config.cfEmail);
+    const url = useDirectApi
+      ? `https://api.cloudflare.com/client/v4/accounts/${this.config.cfAccountId}/ai/run/${model}`
+      : `https://gateway.ai.cloudflare.com/v1/${this.config.cfAccountId}/${this.config.cfGatewayId}/workers-ai/${model}`;
 
     const response = await fetch(url, {
       method: "POST",
-      headers: {
-        Authorization: `Bearer ${this.config.cfApiToken}`,
-        "Content-Type": "application/json",
-      },
+      headers: this.getCFHeaders(),
       body: JSON.stringify({
         messages,
         temperature: options?.temperature ?? 0.7,

@@ -13,7 +13,7 @@ from .models import CometResult, ActorResult, CometTask, BrowserStep
 logger = logging.getLogger(__name__)
 
 class CometOrchestrator:
-    """Fő koordinátor — Planner → Actor → Critic loop memóriával"""
+    """Fo koordinator - Planner -> Actor -> Critic loop memoriaval"""
 
     def __init__(self, headless: bool = True):
         self.planner = TaskPlanner()
@@ -21,11 +21,11 @@ class CometOrchestrator:
         self.critic = CriticAgent()
         self.memory = ActionMemory()
         self.max_retries = int(os.getenv("COMET_MAX_RETRIES", "3"))
-        self._step_callback = None  # opcionális callback lépésenként
+        self._step_callback = None  # opcionalis callback lepesenkent
 
     def on_step(self, callback):
-        """Regisztrál egy callback-et, ami minden lépésnél meghívódik.
-        callback(step_info: dict) — {"attempt", "step_index", "action", "success", "error"}
+        """Regisztral egy callback-et, ami minden lepesnel meghivodik.
+        callback(step_info: dict) - {"attempt", "step_index", "action", "success", "error"}
         """
         self._step_callback = callback
 
@@ -40,20 +40,20 @@ class CometOrchestrator:
 
     async def execute_with_page(self, task: str, page, context=None,
                                  extra_hints: Optional[List[str]] = None) -> CometResult:
-        """Feladat végrehajtása KÜLSŐ Playwright page-en (nem indít saját böngészőt).
+        """Feladat vegrehajtasa KULSO Playwright page-en (nem indit sajat bongeszot).
 
         Args:
-            task: Szöveges feladat
-            page: Meglévő Playwright Page objektum
-            context: Opcionális BrowserContext (session mentéshez)
-            extra_hints: Plusz memória tippek (pl. n8n anchors, general_knowledge)
+            task: Szoveges feladat
+            page: Meglevo Playwright Page objektum
+            context: Opcionalis BrowserContext (session menteshez)
+            extra_hints: Plusz memoria tippek (pl. n8n anchors, general_knowledge)
         """
         logger.info(f"[CometOrchestrator] execute_with_page: {task}")
         memory_hints = list(extra_hints or [])
         all_results: List[ActorResult] = []
 
         for attempt in range(self.max_retries):
-            logger.info(f"[CometOrchestrator] Próbálkozás {attempt + 1}/{self.max_retries}")
+            logger.info(f"[CometOrchestrator] Probaltozas {attempt + 1}/{self.max_retries}")
             await self._notify_step({
                 "type": "attempt_start", "attempt": attempt + 1,
                 "max_retries": self.max_retries, "task": task
@@ -97,7 +97,7 @@ class CometOrchestrator:
                         if not critic_result.success:
                             logger.warning(f"[CometOrchestrator] Critic hiba: {critic_result.error}")
                             memory_hints.append(
-                                f"Hiba a(z) {step.action} lépésnél: {critic_result.error}. "
+                                f"Hiba a(z) {step.action} lepesnel: {critic_result.error}. "
                                 f"Javaslat: {critic_result.suggestion}"
                             )
                             failed = True
@@ -131,8 +131,8 @@ class CometOrchestrator:
         )
 
     async def execute(self, task: str, context: Optional[Dict[str, Any]] = None) -> CometResult:
-        """Feladat végrehajtása fázisokra bontva, önjavító mechanizmussal és memóriával"""
-        logger.info(f"[CometOrchestrator] Feladat indítása: {task}")
+        """Feladat vegrehajtasa fazisokra bontva, onjavito mechanizmussal es memoriaval"""
+        logger.info(f"[CometOrchestrator] Feladat inditasa: {task}")
         
         session_path = "data/comet_session.json"
         memory_hints = []
@@ -141,7 +141,7 @@ class CometOrchestrator:
         async with async_playwright() as p:
             browser = await p.chromium.launch(headless=self.actor.headless)
             
-            # Munkamenet betöltése ha létezik
+            # Munkamenet betoltese ha letezik
             storage_state = session_path if os.path.exists(session_path) else None
             
             browser_context = await browser.new_context(
@@ -150,30 +150,30 @@ class CometOrchestrator:
                 storage_state=storage_state
             )
             
-            # Első oldal létrehozása
+            # Elso oldal letrehozasa
             page = await browser_context.new_page()
             pages = [page]
             
             for attempt in range(self.max_retries):
-                logger.info(f"[CometOrchestrator] Próbálkozás {attempt + 1}/{self.max_retries}")
+                logger.info(f"[CometOrchestrator] Probaltozas {attempt + 1}/{self.max_retries}")
                 
                 try:
-                    # 1. Domain kinyerés és memória tippek
+                    # 1. Domain kinyeres es memoria tippek
                     current_url = page.url
                     domain = urlparse(current_url).netloc
                     hints = await self.memory.get_hints(domain, task) if domain else []
                     
-                    # 2. Tervezés
+                    # 2. Tervezes
                     steps = await self.planner.plan(task, current_url=current_url, memory_hints=memory_hints + hints)
                     
-                    # 3. Végrehajtás és Ellenőrzés lépésenként
+                    # 3. Vegrehajtas es Ellenorzes lepesenkent
                     failed = False
                     current_attempt_results = []
                     
                     for step in steps:
                         result = await self.actor.execute_step(step, page)
                         
-                        # 4. Ellenőrzés (Critic) ha hiba volt vagy kritikus a lépés
+                        # 4. Ellenorzes (Critic) ha hiba volt vagy kritikus a lepes
                         if not result.success or step.critical:
                             screenshot_bytes = await page.screenshot()
                             critic_result = await self.critic.evaluate(
@@ -181,19 +181,19 @@ class CometOrchestrator:
                             )
                             
                             if not critic_result.success:
-                                logger.warning(f"[CometOrchestrator] Critic hiba detektált: {critic_result.error}")
-                                memory_hints.append(f"Hiba a(z) {step.action} lépésnél: {critic_result.error}. Javaslat: {critic_result.suggestion}")
+                                logger.warning(f"[CometOrchestrator] Critic hiba detektalt: {critic_result.error}")
+                                memory_hints.append(f"Hiba a(z) {step.action} lepesnel: {critic_result.error}. Javaslat: {critic_result.suggestion}")
                                 failed = True
-                                break # Megállítjuk a jelenlegi próbálkozást
+                                break # Megallitjuk a jelenlegi probaltozast
                         
-                        # Sikeres akció mentése a memóriába (ha volt selector)
+                        # Sikeres akcio mentese a memoriaba (ha volt selector)
                         if result.success and step.selector and domain:
                             await self.memory.record_success(domain, step.description or step.action, step.selector)
                         
                         current_attempt_results.append(result)
                     
                     if not failed:
-                        # Mentjük a munkamenetet sikeres végrehajtás után
+                        # Mentjuk a munkamenetet sikeres vegrehajtas utan
                         await browser_context.storage_state(path=session_path)
                         await browser.close()
                         return CometResult(
@@ -203,7 +203,7 @@ class CometOrchestrator:
                         )
 
                 except Exception as e:
-                    logger.error(f"[CometOrchestrator] Váratlan hiba az {attempt + 1}. próbálkozásnál: {e}")
+                    logger.error(f"[CometOrchestrator] Varatlan hiba az {attempt + 1}. probaltozasnal: {e}")
                     memory_hints.append(f"Rendszerhiba: {str(e)}")
             
             await browser.close()

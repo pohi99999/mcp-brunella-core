@@ -151,7 +151,6 @@ export class ProjectConductorAgent extends BaseAgent {
 
   async executeTask(context: AgentContext): Promise<AgentResult> {
     const task = context.task?.toLowerCase() || "";
-    setAgentStatus(this.name, "working", task);
 
     try {
       // Command routing

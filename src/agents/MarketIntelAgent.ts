@@ -105,8 +105,6 @@ export class MarketIntelAgent extends BaseAgent {
     const task = (context.task || '').trim();
     if (!task) return { success: false, message: 'Üres feladat leírás' };
 
-    setAgentStatus(this.name, 'working', `Piaci hírszerzés: ${task.substring(0, 50)}...`);
-
     // MASTER TRACK 3: Task 3 - Monitor product prices
     if (task.toLowerCase().includes('monitor product prices') || (context.context as any)?.taskType === 'monitor_market') {
       return await this.handleMarketMonitoring(context);
@@ -157,8 +155,6 @@ export class MarketIntelAgent extends BaseAgent {
         success: false,
         message: errorMsg,
       };
-    } finally {
-      setAgentStatus(this.name, 'idle');
     }
   }
 

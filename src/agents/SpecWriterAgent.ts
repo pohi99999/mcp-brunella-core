@@ -85,8 +85,6 @@ export class SpecWriterAgent extends BaseAgent {
 
   async executeTask(context: AgentContext): Promise<AgentResult> {
     const task = (context.task || "").toLowerCase();
-    const taskDesc = context.task?.slice(0, 80) || "track generation";
-    setAgentStatus(this.name, "working", taskDesc);
 
     try {
       const meta = (context.metadata || {}) as Record<string, unknown>;
@@ -115,8 +113,6 @@ export class SpecWriterAgent extends BaseAgent {
         message: `SpecWriter error: ${error.message}`,
         metadata: { error: error.message, stack: error.stack },
       };
-    } finally {
-      setAgentStatus(this.name, "idle");
     }
   }
 

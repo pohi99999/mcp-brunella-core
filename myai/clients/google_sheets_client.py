@@ -335,7 +335,7 @@ class GoogleSheetsClient:
             checkpoint.clear("write_invoices_start")
             
             logger.info(
-                f"✅ Successfully wrote {len(filtered_invoices)} invoices "
+                f"[OK] Successfully wrote {len(filtered_invoices)} invoices "
                 f"(skipped {len(duplicates)} duplicates)"
             )
             
@@ -405,7 +405,7 @@ class GoogleSheetsClient:
         """Clear all data from sheet (with Phoenix Protocol retry)."""
         try:
             self.worksheet.clear()
-            logger.info(f"✅ Sheet '{self.config.sheet_name}' cleared")
+            logger.info(f"[OK] Sheet '{self.config.sheet_name}' cleared")
             return {
                 "success": True,
                 "message": f"Sheet '{self.config.sheet_name}' cleared",

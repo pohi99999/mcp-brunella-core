@@ -318,3 +318,21 @@ Ezeket a módosításokat a conductor/tracks.md és a conductor/archive/ helyre 
 - A Jules panel többé nem mountkor kér le workflow-runs adatot; session/run frissítés kézzel indítható, így a dashboard indításakor nem generál felesleges 401 zajt.
 - A Track Progress widget TODO részletei kézi betöltésre kerültek, a Track TODO widget pedig nem auto-selectál tracket induláskor, így a mount-kori 404 zaj csökkenthető.
 - Verifikáció: `npm run build` ✅. Live browser validációt újra megpróbáltam, de a böngésző-MCP instabil volt / timeoutra futott, ezért a végső konzolcímzett smoke pass külön stabil sessiont igényel.
+
+### 2026-03-31 08:25 - Multi-fix stabilizacio
+**Feladat:** Teszt hibak javitasa, Gemini SDK migracio, OOM fix-ek, dashboard redesign
+**Statusz:** KESZ - 1892 pass, 0 fail
+**Commit:** fix(permissions,sdk,vitest,syncservice,bat): multi-fix stabilization
+
+### 2026-03-31 - Lumen mobilképcsere + skills réteg
+**Feladat:** (1) Lumen landing weboldal: "1500→1000 palack" szövegcsere + galériában mobilképcsere. (2) Brunella src/skills/ réteg létrehozása 6 skill-lel.
+**Érintett fájlok (Lumen):** temp/lumen_remote/lib/translations.ts, app/layout.tsx, app/page.tsx
+**Érintett fájlok (BAS):** src/skills/skill.interface.ts, src/skills/*Skill.ts (6 fájl), src/skills/skill-registry.ts, src/skills/index.ts, src/agents/AgentManager.ts, src/cli-hu.ts
+**Státusz:** ✅ Befejezve
+**Megjegyzés:**
+- Lumen 1500→1000 palack: lib/translations.ts + app/layout.tsx módosítva, git push main ✅, Vercel live ✅
+- Mobilképcsere: galéria sor1-bal→szerzetes-uj.jpg, sor1-jobb→6.jpg, sor2-bal→szerzetes-uj.jpg, sor2-jobb→szolofurt-uj.jpg (md:hidden mobile), asztali képek érintetlenek
+- Commit: 0591f89, push main ✅, Vercel deploy ✅
+- Chrome DevTools MCP 375×812 mobilvizsgálat: md:hidden képek visible=true ✅, hidden md:block képek display:none ✅
+- Brunella skills: 6 skill, AgentManager.executeSkill(), CLI brunella skill lista/futrat ✅
+- npm run build ✅, npm run test:fast ✅ (1892 passed), git push main ✅

@@ -38,6 +38,36 @@ import { createCognitiveBridgeRoutes } from "./cognitiveBridge.js";
 import { createWorkflowRoutes } from "./workflow.js";
 import { createRemoteRoutes } from "./remote.js";
 import { createAutonomousInfraRouter } from "./autonomousInfra.js";
+import { createTelemetryRouter } from "../telemetryRoutes.js";
+import { createGuardrailsRouter } from "../guardrailsRoutes.js";
+import { createAuditRouter } from "../auditRoutes.js";
+import { createSpecRouter } from "../specRoutes.js";
+import { createPhoenixRouter } from "../phoenixRoutes.js";
+import { createRouterRouter } from "../routerRoutes.js";
+import { createMemoryRouter } from "../memoryRoutes.js";
+import { createTracksRouter } from "../tracksRoutes.js";
+import ceanRouter from "./cean.js";
+import { createWranglerRouter } from "./wrangler.js";
+import mcpRouter from "./mcp.js";
+import { createFleetRouter } from "./fleet.js";
+import { createWorkersRouter } from "./workers.js";
+import { createMetricsRouter } from "./metrics.js";
+import { createScalingRouter } from "./scaling.js";
+import testSchedulerRoutes from "./testScheduler.js";
+import { createScheduledTasksRoutes } from "./scheduledTasks.js";
+import { createDashboardRoutes } from "./dashboard.js";
+import { createStudioRoutes } from "./studio.js";
+import grantsRouter from "./grants.js";
+import createWebhookRoutes from "./webhooks.js";
+import contactRouter from "./contact.js";
+import { harvestRouter } from "./harvest.js";
+import { createZeroPromptRouter } from "./zeroPrompt.js";
+import { createEphemeralRouter } from "./ephemeral.js";
+import { createUniversalOrchestratorRouter } from "./universalOrchestrator.js";
+import paiosOrchestratorRouter from "./paiosOrchestrator.js";
+import githubWebhookRouter from "./githubWebhook.js";
+import { getGlobalDb } from "../../utils/globalDb.js";
+
 // --- Activated dormant routes (2026-03-25) ---
 import { createObservabilityRouter } from "./observability.js";
 import { swarmRouter } from "./swarm.js";
@@ -92,6 +122,7 @@ export {
  */
 export function createV1Router(): Router {
   const router = Router();
+  const db = getGlobalDb();
 
   router.use("/health", createHealthRoutes());
   router.use("/agents", createAgentRoutes());
@@ -115,7 +146,7 @@ export function createV1Router(): Router {
   router.use("/robotkez-pro", createRobotkezProRoutes());
   router.use("/jules", createJulesRoutes());
   router.use("/cloudflare", createCloudflareRoutes());
-  router.use("/tracks", createTracksRoutes());
+  router.use("/tracks", createTracksRouter());
   router.use("/tts", createTTSRoutes());
   router.use("/brunella", createRecommendationRoutes());
   router.use("/bookkeeping", createBookkeepingRoutes());
@@ -134,6 +165,47 @@ export function createV1Router(): Router {
   router.use("/workflow", createWorkflowRoutes());
   router.use("/remote", createRemoteRoutes());
   router.use("/autonomous-infra", createAutonomousInfraRouter());
+
+  // Additional routes from web.ts
+  router.use("/telemetry", createTelemetryRouter());
+  router.use("/guardrails", createGuardrailsRouter());
+  router.use("/audit", createAuditRouter());
+  router.use("/specs", createSpecRouter());
+  router.use("/phoenix", createPhoenixRouter());
+  router.use("/router", createRouterRouter());
+  router.use("/memory", createMemoryRouter());
+  router.use("/mcp", mcpRouter);
+  router.use(ceanRouter);
+  router.use(createWranglerRouter());
+  router.use("/fleet", createFleetRouter(db));
+  router.use("/workers", createWorkersRouter(db));
+  router.use("/metrics", createMetricsRouter(db));
+  router.use("/scaling", createScalingRouter(db));
+  router.use("/tests", testSchedulerRoutes);
+  router.use("/scheduled-tasks", createScheduledTasksRoutes(db));
+  router.use("/dashboard", createDashboardRoutes());
+  router.use("/studio", createStudioRoutes());
+  router.use("/grants", grantsRouter);
+  router.use("/webhooks", createWebhookRoutes(db));
+  router.use("/contact", contactRouter);
+  router.use("/harvest", harvestRouter);
+  router.use("/zero-prompt", createZeroPromptRouter());
+  router.use("/ephemeral", createEphemeralRouter());
+  router.use("/orchestrator", createUniversalOrchestratorRouter());
+  router.use("/paios", paiosOrchestratorRouter);
+  router.use("/github", githubWebhookRouter);
+
+  // Browser snapshot endpoint
+  router.get("/browser/snapshot", (req, res) => {
+    const { persistentBrowser } = import('../../utils/persistentBrowser.js') as any;
+    const screenshot = persistentBrowser?.getLastScreenshot?.();
+    if (screenshot) {
+      res.setHeader("Content-Type", "image/png");
+      res.send(screenshot);
+    } else {
+      res.status(404).send("No active browser session or screenshot available.");
+    }
+  });
 
   // --- Activated dormant routes (2026-03-25) ---
   router.use("/observability", createObservabilityRouter());

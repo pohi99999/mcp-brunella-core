@@ -110,7 +110,7 @@ async def crawl_url(request: CrawlRequest) -> CrawlResult:
             return crawl_result
 
     except Exception as e:
-        logger.warning(f"Crawl4AI hiba, fallback patchright-ra: {e}")
+        logger.warning(f"[WARN] Crawl4AI hiba, fallback patchright-ra: {e}")
         return await _fallback_crawl(request)
 
 
@@ -138,7 +138,7 @@ async def _extract_structured(
         if result.extracted_content:
             return json.loads(result.extracted_content) if isinstance(result.extracted_content, str) else result.extracted_content
     except Exception as e:
-        logger.warning(f"Strukturált extrakció sikertelen: {e}")
+        logger.warning(f"[WARN] Strukturalt extrakcio sikertelen: {e}")
 
     return None
 
@@ -183,7 +183,7 @@ async def _fallback_crawl(request: CrawlRequest) -> CrawlResult:
             status="success",
         )
     except Exception as e:
-        logger.error(f"Fallback crawl hiba: {e}")
+        logger.error(f"[ERROR] Fallback crawl hiba: {e}")
         return CrawlResult(
             url=request.url,
             status="failed",

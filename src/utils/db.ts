@@ -1,5 +1,5 @@
 import { config } from '../config/index.js';
-import { logWarn } from './logger.js';
+import { logWarn, logInfo, logError } from './logger.js';
 
 let db: any = null;
 let path: any = null;
@@ -327,16 +327,15 @@ export async function updateBusinessJobStatus(id: string, status: string, result
                     })
                 }).then(res => {
                     if (res.ok) {
-                        console.log(`[GoldenBridge] Sample saved to Dataset from ${job.type}`);
+                        logInfo('GoldenBridge', `Sample saved to Dataset from ${job.type}`);
                     }
                 }).catch(e => {
-                    console.error(`[GoldenBridge] Failed to connect to Python API:`, e.message);
+                    logError('GoldenBridge', `Failed to connect to Python API: ${e.message}`);
                 });
-            }
-        } catch (err: any) {
-            console.error(`[GoldenBridge] Error processing sample:`, err.message);
-        }
-    }
+                }
+                } catch (err: any) {
+                logError('GoldenBridge', `Error processing sample: ${err.message}`);
+                }    }
 }
 
 export async function saveMessage(chatId: string, role: string, content: string, isLog: boolean = false) {

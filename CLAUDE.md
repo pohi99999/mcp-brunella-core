@@ -104,19 +104,14 @@ npm run agent:health           # Agent registry + capability health check
 | Alrendszer | Helye | Technológia |
 |---|---|---|
 | Node.js backend | `src/` | TypeScript ESM, Express 4, Socket.IO |
-| REST routes | `src/server/routes/` | 52 fájl, de csak ~20 aktív `index.ts`-ben |
+| REST routes | `src/server/routes/` | 52 fájl, központosítva `index.ts`-ben |
 | Dashboard | `src/dashboard/` | React 19, Vite, Tailwind v4, Radix UI |
-| Python alrendszer | `myai/` | FastAPI `:8000`, FastMCP ≥2.14.3, LanceDB, ChromaDB |
+| Python alrendszer | `myai/` | FastAPI `:8000`, FastMCP, LanceDB |
 | Agent rendszer | `src/agents/` | 95+ agent, SQLite task queue |
 | MCP tools | `src/tools/` | 53 tool, 33 fájl |
-| Golden Dataset Bridge | `src/core/goldenDatasetBridge.ts` | Fine-tuning adatgyűjtés |
-| Safe Zones | `config/safe_zones.json` | Sandboxolt műveleti határok |
-| E2B Sandbox | `src/security/e2b_sandbox_manager.ts` | Kód-végrehajtás izolálás |
-| Jules Integration | `src/core/julesIntegration.ts` | Jules PR automation |
 
-> ⚠️ **Route regisztrációs rés:** `src/server/routes/` 52 fájlt tartalmaz, de csak ~20 van importálva `src/server/routes/index.ts`-ben. Magas értékű regisztrálatlan fájlok: `autonomousInfra.ts`, `universalOrchestrator.ts`, `pythonWorkers.ts`, `paiosOrchestrator.ts`, `swarm.ts`, `goldenDataset.ts`, `remote.ts`, `crawl4ai.ts`. **Új route előtt ellenőrizd, hogy nem létezik-e már!**
-
-> ⚠️ **Dashboard panel rés:** Sok komponens van `src/dashboard/components/dashboard/`-ban, ami **nincs** regisztrálva `src/dashboard/lib/navigation.tsx`-ben (NavigationRegistry). Minden új panelt ott is regisztrálj.
+> ✅ **Route regisztráció:** Az összes (52+) route fájl központilag regisztrálva van a `src/server/routes/index.ts`-ben.
+> ✅ **Dashboard panelek:** Az összes elérhető komponens regisztrálva van a `src/dashboard/lib/navigation.tsx`-ben (NavigationRegistry).
 
 ### Agent Hierarchia
 
@@ -203,7 +198,7 @@ brunella harvest status   # Utolsó harvest összegzés
 - **`console.log` TILOS** — ESLint `no-console: warn` érvényesíti. Használd:
   - Agent kódban: `logInfo('AgentName', 'msg')`, `logError('AgentName', 'msg')`, `setAgentStatus()`
   - Szerver/utility kódban: `new Logger('feature.log')` → `logger.info('msg')`
-- **Agent `finally` KÖTELEZŐ:** `setAgentStatus(this.name, 'idle')` mindig legyen `finally`-ban
+- **Agent `finally` KÖTELEZŐ:** `setAgentStatus(this.name, 'idle')` mindig legyen `finally`-ban. Megjegyzés: A `BaseAgent` ezt automatikusan kezeli az `execute()` metódusában, de a standalone (IAgent-et közvetlenül megvalósító) ágenseknél manuálisan kell alkalmazni!
 - **Vitest (NE Jest!):** `vi.fn()`, `vi.mock()`, `vi.spyOn()` — soha nem `jest.*`
 - **Teszt konfig:** `fileParallelism: false`, 15s default timeout, `test/setup.ts`
 
@@ -253,6 +248,7 @@ export class MyComplexAgent extends BaseAgent {
   capabilities = ['skill1'];
 
   async executeTask(context: AgentContext): Promise<AgentResult> {
+    // A BaseAgent.execute() automatikusan kezeli a státusz-visszaállítást finally blokkban!
     // context.pastExperiences — RAG memória auto-betöltve
     return { success: true, message: 'OK', data: result };
   }

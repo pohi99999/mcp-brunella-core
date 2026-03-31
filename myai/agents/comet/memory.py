@@ -7,16 +7,16 @@ from typing import List, Optional
 logger = logging.getLogger(__name__)
 
 class ActionMemory:
-    """SQLite alapú memória a sikeres böngésző akciókhoz"""
+    """SQLite alapu memoria a sikeres bongeszo akciokhoz"""
 
     def __init__(self, db_path: str = "data/comet_memory.db"):
         self.db_path = db_path
-        # Biztosítjuk a data mappa létezését
+        # Biztositjuk a data mappa letezest
         os.makedirs(os.path.dirname(self.db_path), exist_ok=True)
         self._init_db()
 
     def _init_db(self):
-        """Adatbázis és táblák inicializálása"""
+        """Adatbazis es tablak inicializalasa"""
         with sqlite3.connect(self.db_path) as conn:
             conn.execute("""
                 CREATE TABLE IF NOT EXISTS site_actions (
@@ -32,7 +32,7 @@ class ActionMemory:
             conn.commit()
 
     async def get_hints(self, domain: str, action_desc: str) -> List[str]:
-        """Visszaadja a korábban működő selectorokat tippként"""
+        """Visszaadja a korabban mukodo selectorokat tippkent"""
         try:
             with sqlite3.connect(self.db_path) as conn:
                 cursor = conn.execute(
@@ -41,14 +41,14 @@ class ActionMemory:
                     "ORDER BY success_count DESC LIMIT 3",
                     (domain, f"%{action_desc}%")
                 )
-                hints = [f"Selector '{row[0]}' (már {row[1]}x működött)" for row in cursor.fetchall()]
+                hints = [f"Selector '{row[0]}' (mar {row[1]}x mukodott)" for row in cursor.fetchall()]
                 return hints
         except Exception as e:
-            logger.error(f"[ActionMemory] Hiba a tippek lekérésekor: {e}")
+            logger.error(f"[ActionMemory] Hiba a tippek lekeresekor: {e}")
             return []
 
     async def record_success(self, domain: str, action_desc: str, selector: str):
-        """Sikeres akció mentése vagy frissítése"""
+        """Sikeres akcio mentese vagy frissitese"""
         if not selector: return
         
         try:
@@ -63,10 +63,10 @@ class ActionMemory:
                 """, (domain, action_desc, selector, now))
                 conn.commit()
         except Exception as e:
-            logger.error(f"[ActionMemory] Hiba a mentéskor: {e}")
+            logger.error(f"[ActionMemory] Hiba a menteskor: {e}")
 
     async def clear_old(self, days: int = 30):
-        """Régi, nem használt bejegyzések törlése"""
+        """Regi, nem hasznalt bejegyzesek torlese"""
         with sqlite3.connect(self.db_path) as conn:
             conn.execute("DELETE FROM site_actions WHERE last_used < date('now', ?)", (f'-{days} days',))
             conn.commit()

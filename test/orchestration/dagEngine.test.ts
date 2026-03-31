@@ -46,6 +46,39 @@ describe("dagEngine", () => {
     expect(log.at(-1)).toBe("d");
   });
 
+  it("honors workflow maxConcurrency over the global orchestration limit", async () => {
+    const started: string[] = [];
+    let active = 0;
+    let peak = 0;
+
+    const workflow: DAGWorkflow = {
+      id: "bounded",
+      name: "Bounded",
+      maxConcurrency: 2,
+      nodes: [
+        { id: "a", label: "A", type: "agent" },
+        { id: "b", label: "B", type: "agent" },
+        { id: "c", label: "C", type: "agent" },
+        { id: "d", label: "D", type: "agent" },
+      ],
+    };
+
+    const result = await executeDAG(workflow, { values: {} }, {
+      async executeAgent(node: DAGNode): Promise<unknown> {
+        started.push(node.id);
+        active += 1;
+        peak = Math.max(peak, active);
+        await new Promise((resolve) => setTimeout(resolve, 15));
+        active -= 1;
+        return { ok: true, nodeId: node.id };
+      },
+    });
+
+    expect(result.status).toBe("success");
+    expect(started).toHaveLength(4);
+    expect(peak).toBeLessThanOrEqual(2);
+  });
+
   it("throws on cycle detection", () => {
     expect(() => topologicalSort([
       { id: "a", label: "A", type: "agent", dependsOn: ["b"] },

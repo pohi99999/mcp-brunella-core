@@ -144,8 +144,6 @@ export class PropertyVisionaryAgent extends BaseAgent {
           socketService.emit('business_job:updated', { jobId, status: 'failed' });
       }
       return { success: false, message: error.message };
-    } finally {
-      setAgentStatus(this.name, 'idle');
     }
   }
 }

@@ -96,8 +96,6 @@ export class LogisticsDispatcherAgent extends BaseAgent {
    * @param context - Additional context
    */
   async execute(task: string, context?: unknown): Promise<AgentResponse> {
-    setAgentStatus(this.name, 'working', `Logistics: ${task.substring(0, 50)}...`);
-
     try {
       logInfo(this.name, 'Starting logistics tracking pipeline...');
 
@@ -161,8 +159,6 @@ export class LogisticsDispatcherAgent extends BaseAgent {
         status: 'error',
         error: errorMsg,
       };
-    } finally {
-      setAgentStatus(this.name, 'idle');
     }
   }
 

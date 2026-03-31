@@ -58,22 +58,18 @@ export class EvaluatorAgent extends BaseAgent {
   async executeTask(context: AgentContext): Promise<AgentResult> {
     const task = context.task || "";
     this.logger.info(`Processing task: ${task}`);
-    setAgentStatus(this.name, "working", task.slice(0, 50));
 
     // Fast-paths for specific programmatic integrations (Hallucination check is separate)
     if (task.includes("Verify if data/training/golden_dataset.jsonl has increased in size")) {
       const res = await this.verifyDatasetGrowth("data/training/golden_dataset.jsonl");
-      setAgentStatus(this.name, "idle");
       return res;
     }
 
     try {
       // ReAct Loop for Evaluator
       const result = await this.runEvaluatorReActLoop(task, context);
-      setAgentStatus(this.name, "idle");
       return result;
     } catch (e: unknown) {
-      setAgentStatus(this.name, "idle");
       const error = e instanceof Error ? e.message : String(e);
       logError(this.name, `Task failed: ${error}`);
       return { success: false, message: "Hiba az Evaluator futása során", data: { error } };

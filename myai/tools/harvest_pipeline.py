@@ -261,9 +261,9 @@ class HarvestPipeline:
         Returns:
             Summary dictionary
         """
-        self.logger.info("╔" + "=" * 78 + "╗")
-        self.logger.info("║" + " " * 20 + "HARVEST PIPELINE STARTING" + " " * 33 + "║")
-        self.logger.info("╚" + "=" * 78 + "╝")
+        self.logger.info("+" + "=" * 78 + "+")
+        self.logger.info("|" + " " * 20 + "HARVEST PIPELINE STARTING" + " " * 33 + "|")
+        self.logger.info("+" + "=" * 78 + "+")
 
         start_time = datetime.utcnow()
         self.summary["start_time"] = start_time.isoformat()
@@ -314,9 +314,9 @@ class HarvestPipeline:
     def _print_final_summary(self):
         """Print final pipeline summary."""
         self.logger.info("")
-        self.logger.info("╔" + "=" * 78 + "╗")
-        self.logger.info("║" + " " * 20 + "HARVEST PIPELINE COMPLETED" + " " * 32 + "║")
-        self.logger.info("╚" + "=" * 78 + "╝")
+        self.logger.info("+" + "=" * 78 + "+")
+        self.logger.info("|" + " " * 20 + "HARVEST PIPELINE COMPLETED" + " " * 32 + "|")
+        self.logger.info("+" + "=" * 78 + "+")
         self.logger.info("")
         self.logger.info(f"  Duration: {self.summary['duration_seconds']:.2f} seconds")
         self.logger.info(f"  Harvest Status: {self.summary['harvest_status']}")
@@ -327,7 +327,7 @@ class HarvestPipeline:
         self.logger.info(f"  LanceDB Inserted: {self.summary['lancedb_inserted']}")
         self.logger.info(f"  Golden Dataset Appended: {self.summary['golden_dataset_appended']}")
         self.logger.info("")
-        self.logger.info("╚" + "=" * 78 + "╝")
+        self.logger.info("+" + "=" * 78 + "+")
 
 
 # ════════════════════════════════════════════════════════════════════════════

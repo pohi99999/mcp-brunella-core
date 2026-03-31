@@ -24,9 +24,9 @@ HAS_PLAYWRIGHT = False
 try:
     from playwright.async_api import async_playwright, Page, Browser
     HAS_PLAYWRIGHT = True
-    logger.info("✅ Playwright available")
+    logger.info("[OK] Playwright available")
 except ImportError:
-    logger.warning("⚠️ Playwright not available (pip install playwright && playwright install)")
+    logger.warning("[WARN] Playwright not available (pip install playwright && playwright install)")
 
 
 # ============================================================================
@@ -248,7 +248,7 @@ async def scrape_page(request: ScraperRequest) -> ScraperResponse:
             duration = time.time() - start_time
             pages_scraped = len(data)
             
-            logger.info(f"✅ Scraping completed: {pages_scraped} pages in {duration:.2f}s")
+            logger.info(f"[OK] Scraping completed: {pages_scraped} pages in {duration:.2f}s")
             
             return ScraperResponse(
                 success=True,
@@ -408,7 +408,7 @@ if __name__ == "__main__":
     
     # Output results
     if response.success:
-        print(f"\n✅ Scraping Success")
+        print(f"\n[OK] Scraping Success")
         print(f"Pages scraped: {response.pages_scraped}")
         print(f"Duration: {response.duration_seconds:.2f}s")
         print(f"\nExtracted Data:")
@@ -417,5 +417,5 @@ if __name__ == "__main__":
         if response.screenshot_path:
             print(f"\nScreenshot: {response.screenshot_path}")
     else:
-        print(f"\n❌ Scraping Failed: {response.error}")
+        print(f"\n[ERROR] Scraping Failed: {response.error}")
         sys.exit(1)

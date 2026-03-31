@@ -150,8 +150,6 @@ export class EdgeProxyAgent extends BaseAgent {
         message: `EdgeProxy hiba: ${error}`,
         data: null
       };
-    } finally {
-      setAgentStatus(this.name, 'idle');
     }
   }
 
