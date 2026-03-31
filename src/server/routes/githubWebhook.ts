@@ -11,7 +11,7 @@
 
 import { Router, type Request, type Response } from 'express';
 import crypto from 'crypto';
-import { logInfo, logError, logWarn, setAgentStatus } from '../../utils/logger.js';
+import { logInfo, logError, setAgentStatus } from '../../utils/logger.js';
 import type {
   GitHubWorkflowRunPayload,
   GitHubPullRequestPayload,
@@ -20,6 +20,7 @@ import type {
 import { GitHubAPIClient } from '../../core/githubAPIClient.js';
 import { DeploymentAnalyzer } from '../../tools/deploymentAnalyzer.js';
 import { processWorkflowFailure } from '../../core/julesIntegration.js';
+import { savePullRequest } from '../../utils/db.js';
 
 const router = Router();
 
@@ -28,11 +29,11 @@ const GITHUB_WEBHOOK_SECRET = process.env.GITHUB_WEBHOOK_SECRET || '';
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN || '';
 
 if (!GITHUB_WEBHOOK_SECRET) {
-  logWarn('GitHubWebhook', 'GITHUB_WEBHOOK_SECRET environment variable not set; webhook endpoint will remain unavailable until configured');
+  logError('GitHubWebhook', 'GITHUB_WEBHOOK_SECRET environment variable not set');
 }
 
 if (!GITHUB_TOKEN) {
-  logWarn('GitHubWebhook', 'GITHUB_TOKEN environment variable not set; workflow log analysis features will be limited');
+  logError('GitHubWebhook', 'GITHUB_TOKEN environment variable not set');
 }
 
 /**
@@ -206,15 +207,26 @@ async function handlePullRequest(payload: unknown, res: Response): Promise<void>
 
   try {
     const {
-      id: prNumber,
+      id: githubId,
       title: prTitle,
       head: { ref: branch }
     } = pullRequest;
 
+    const prNumber = prPayload.number || (pullRequest as any).number;
+
     logInfo('GitHubWebhook', `PR event (${action}): #${prNumber} "${prTitle}" on ${branch}`);
 
     // Track PR for potential auto-merge
-    // TODO: Store in database for tracking
+    await savePullRequest({
+        pr_number: prNumber,
+        github_id: githubId,
+        title: prTitle,
+        owner: prPayload.repository.owner.login,
+        repo: prPayload.repository.name,
+        branch: branch,
+        state: pullRequest.state,
+        action: action
+    });
 
     res.status(200).json({
       status: 'acknowledged',
@@ -300,7 +312,7 @@ router.post(
     try {
       // 1. Verify webhook signature
       if (!GITHUB_WEBHOOK_SECRET) {
-        logWarn('GitHubWebhook', 'Webhook request received but GITHUB_WEBHOOK_SECRET is not configured');
+        logError('GitHubWebhook', 'GITHUB_WEBHOOK_SECRET not configured');
         return res.status(500).json({
           error: 'Webhook not configured',
           details: 'GITHUB_WEBHOOK_SECRET missing'
