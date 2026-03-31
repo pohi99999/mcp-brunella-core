@@ -178,7 +178,7 @@ export class MarketIntelAgent extends BaseAgent {
     try {
       // 1. Scraping via Python Worker
       logInfo(this.name, `Scraping product data from ${url}...`);
-      const scrapedData = await runPythonWorker('market_scraper.py', { url, selectors });
+      const scrapedData = await runPythonWorker('market_scraper.py', { url, selectors }) as Record<string, unknown>;
 
       if (!scrapedData || Object.keys(scrapedData).length === 0) {
         return { success: false, message: "Nem sikerült adatokat kinyerni az oldalról.", data: null };
@@ -186,14 +186,14 @@ export class MarketIntelAgent extends BaseAgent {
 
       // 2. Valuation via Python Worker
       logInfo(this.name, `Evaluating product potential...`);
-      // Simulating some market baseline for the valuation
+      const priceStr = typeof scrapedData.price === 'string' ? scrapedData.price : '';
       const valuationInput = {
         ...scrapedData,
-        market_average: scrapedData.price ? parseFloat(scrapedData.price) * 1.2 : 1000, // Mock baseline
+        market_average: priceStr ? parseFloat(priceStr) * 1.2 : 1000,
         demand_score: 0.7,
         rarity: "medium"
       };
-      const valuationResult = await runPythonWorker('product_valuation.py', valuationInput);
+      const valuationResult = await runPythonWorker('product_valuation.py', valuationInput) as Record<string, unknown>;
 
       const marketData = {
         ...scrapedData,
@@ -251,9 +251,9 @@ export class MarketIntelAgent extends BaseAgent {
           demand_score: 0.85
         };
         
-        const valuation = await runPythonWorker('product_valuation.py', valuationInput);
-        
-        if (valuation.recommendation === 'BUY' || valuation.potential_score > 0.7) {
+        const valuation = await runPythonWorker('product_valuation.py', valuationInput) as Record<string, unknown>;
+
+        if (valuation.recommendation === 'BUY' || (valuation.potential_score as number) > 0.7) {
           opportunities.push({ ...machine, ...valuation });
         }
       }

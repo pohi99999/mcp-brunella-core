@@ -81,6 +81,7 @@ import { createScheduledTasksRoutes } from "./routes/scheduledTasks.js";
 import createWebhookRoutes from "./routes/webhooks.js";
 import githubWebhookRouter from "./routes/githubWebhook.js";
 import { heartbeatMonitor } from "../utils/heartbeatMonitor.js";
+import { fastApiService } from "../services/fastApiService.js";
 import { createEnterpriseRouter } from "./routes/enterprise.js";
 import paiosOrchestratorRouter from "./routes/paiosOrchestrator.js";
 import { createPythonWorkersRouter } from "./routes/pythonWorkers.js";
@@ -437,6 +438,11 @@ export async function startWebServer() {
   const { trackStateManager } = await import("../services/trackStateManager.js");
   await trackStateManager.fullSync();
   trackStateManager.startWatcher();
+  heartbeatMonitor.onFailure("fastapi", async (health) => {
+    logError("Phoenix", `FastAPI service failed: ${health.error}`);
+    logInfo("Phoenix", "Triggering FastAPI silent restart...");
+    await fastApiService.restart();
+  });
   heartbeatMonitor.start();
 
   httpServer.listen(config.port, () => {
