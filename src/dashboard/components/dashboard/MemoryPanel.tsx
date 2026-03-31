@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Database, Download, RefreshCw, Trash2, Upload } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import {
     exportStructuredMemory,
     getStructuredMemoryStats,
@@ -92,16 +93,27 @@ export function MemoryPanel() {
                     Agent Memória & Tanulás
                 </h2>
                 <div className="flex items-center gap-2">
-                    <button onClick={ () => void load() } className="rounded-md p-2 hover:bg-accent" title="Frissítés">
-                        <RefreshCw className="h-4 w-4" />
-                    </button>
-                    <button onClick={ () => void handlePurge() } disabled={ busyAction !== null } className="rounded-md border px-3 py-2 text-sm hover:bg-accent disabled:opacity-50">
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                            <button
+                                onClick={ () => void load() }
+                                className="rounded-md p-2 hover:bg-accent focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                                aria-label="Adatok frissítése"
+                            >
+                                <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
+                            </button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                            <p>Frissítés</p>
+                        </TooltipContent>
+                    </Tooltip>
+                    <button onClick={ () => void handlePurge() } disabled={ busyAction !== null } className="rounded-md border px-3 py-2 text-sm hover:bg-accent disabled:opacity-50 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring">
                         <Trash2 className="mr-2 inline h-4 w-4" /> Purge
                     </button>
-                    <button onClick={ () => void handleExport() } disabled={ busyAction !== null } className="rounded-md border px-3 py-2 text-sm hover:bg-accent disabled:opacity-50">
+                    <button onClick={ () => void handleExport() } disabled={ busyAction !== null } className="rounded-md border px-3 py-2 text-sm hover:bg-accent disabled:opacity-50 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring">
                         <Download className="mr-2 inline h-4 w-4" /> Export
                     </button>
-                    <button onClick={ () => void handleSync() } disabled={ busyAction !== null } className="rounded-md border px-3 py-2 text-sm hover:bg-accent disabled:opacity-50">
+                    <button onClick={ () => void handleSync() } disabled={ busyAction !== null } className="rounded-md border px-3 py-2 text-sm hover:bg-accent disabled:opacity-50 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring">
                         <Upload className="mr-2 inline h-4 w-4" /> Sync D1
                     </button>
                 </div>
