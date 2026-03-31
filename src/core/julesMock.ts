@@ -5,13 +5,33 @@
  * Used for E2E testing, local development, and verification
  *
  * Environment Variables:
- * - JULES_MOCK_MODE=true       // Enable mock mode
- * - JULES_API_URL              // Real API URL (overrides mock)
+ * - JULES_MOCK_MODE=true       // Enable mock mode (default)
+ * - JULES_API_URL              // Real API URL (overrides mock if present)
+ * - JULES_API_KEY              // API Key for real API
  * - JULES_RESPONSE_DELAY=1000  // Simulate network latency
  */
 
-import { logInfo, logWarn } from '../utils/logger.js';
-import type { DeploymentAnalysis } from '../tools/deploymentAnalyzer.js';
+// Removing dependencies to fix Cloudflare Worker build failures
+// import { logInfo, logWarn } from '../utils/logger.js';
+// import type { DeploymentAnalysis } from '../tools/deploymentAnalyzer.js';
+
+function logInfo(tag: string, message: string) {
+  // console.log(`[INFO] [${tag}] ${message}`);
+}
+
+function logWarn(tag: string, message: string) {
+  // console.warn(`[WARN] [${tag}] ${message}`);
+}
+
+// Minimal interface to avoid import dependency
+interface DeploymentAnalysis {
+  category: string;
+  errors?: string[];
+  summary: string;
+  suggestions?: string[];
+  confidence: number;
+  [key: string]: any;
+}
 
 export interface JulesFixResponse {
   status: 'success' | 'error' | 'partial';
@@ -223,6 +243,19 @@ function selectMockResponse(analysis: DeploymentAnalysis): JulesFixResponse {
 }
 
 /**
+ * Helper to safely access environment variables in diverse environments (Worker, Node.js)
+ */
+function getEnv(key: string): string | undefined {
+  if (typeof process !== 'undefined' && process.env) {
+    return process.env[key];
+  }
+  // Fallback for Cloudflare Workers where env might be on globalThis or not available directly
+  // Note: Usually Workers pass env to the handler, but for shared code we might check globalThis if configured.
+  // If env is not available, return undefined.
+  return undefined;
+}
+
+/**
  * Jules AI Client with Mock Support
  */
 export class JulesAICoreClient {
@@ -231,29 +264,45 @@ export class JulesAICoreClient {
   private responseDelay: number;
 
   constructor() {
-    this.useMock = process.env.JULES_MOCK_MODE !== 'false';
-    this.apiUrl = process.env.JULES_API_URL || '';
-    this.responseDelay = parseInt(process.env.JULES_RESPONSE_DELAY || '1000', 10);
+    const mockMode = getEnv('JULES_MOCK_MODE');
+    this.useMock = mockMode !== 'false';
+    this.apiUrl = getEnv('JULES_API_URL') || '';
+    this.responseDelay = parseInt(getEnv('JULES_RESPONSE_DELAY') || '1000', 10);
   }
 
   /**
    * Call Jules AI with error context
    */
   async generateFix(analysis: DeploymentAnalysis): Promise<JulesFixResponse> {
-    if (!this.useMock || !this.apiUrl) {
+    // 1. If API URL is provided, try calling remote API
+    if (this.apiUrl) {
+      try {
+        logInfo('JulesAI', `📡 Calling Jules AI API: ${this.apiUrl}`);
+        return await this.callRemoteJulesAPI(analysis);
+      } catch (error) {
+        logWarn(
+          'JulesAI',
+          `Network error calling Jules AI: ${error instanceof Error ? error.message : String(error)}`
+        );
+
+        // Fallback to mock if allowed (mock mode enabled by default)
+        // If mock mode is explicitly disabled (false), we should propagate the error
+        if (this.useMock) {
+          logInfo('JulesAI', 'Falling back to mock response due to API failure.');
+          return this.getMockResponse(analysis);
+        }
+
+        throw error;
+      }
+    }
+
+    // 2. If no API URL, fallback to mock if enabled
+    if (this.useMock) {
       return this.getMockResponse(analysis);
     }
 
-    try {
-      logInfo('JulesAI', `📡 Calling Jules AI API: ${this.apiUrl}`);
-      return await this.callRemoteJulesAPI(analysis);
-    } catch (error) {
-      logWarn(
-        'JulesAI',
-        `Network error calling Jules AI, falling back to mock: ${error instanceof Error ? error.message : String(error)}`
-      );
-      return this.getMockResponse(analysis);
-    }
+    // 3. If mock disabled and no URL, fail
+    throw new Error("Jules AI API URL not configured (JULES_API_URL) and mock mode is disabled (JULES_MOCK_MODE=false).");
   }
 
   /**
@@ -279,37 +328,66 @@ export class JulesAICoreClient {
   }
 
   /**
-   * Call real Jules AI API (Phase 3.3.2)
+   * Call real Jules AI API
    */
   private async callRemoteJulesAPI(analysis: DeploymentAnalysis): Promise<JulesFixResponse> {
-    const response = await fetch(`${this.apiUrl}/v1/generate-fix`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${process.env.JULES_API_KEY}`
-      },
-      body: JSON.stringify({
-        errorCategory: analysis.category,
-        errorContext: {
-          errors: analysis.errors,
-          summary: analysis.summary,
-          suggestions: analysis.suggestions,
-          confidence: analysis.confidence
-        }
-      })
-    });
-
-    if (!response.ok) {
-      throw new Error(`Jules API error: ${response.status} ${response.statusText}`);
+    const apiKey = getEnv('JULES_API_KEY');
+    if (!apiKey) {
+      throw new Error("Missing JULES_API_KEY environment variable");
     }
 
-    return (await response.json()) as JulesFixResponse;
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 30000); // 30s timeout
+
+    try {
+      // Ensure fetch is available
+      const fetchFn = globalThis.fetch;
+      if (!fetchFn) {
+        throw new Error("Global fetch is not available in this environment");
+      }
+
+      const response = await fetchFn(`${this.apiUrl}/v1/generate-fix`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${apiKey}`
+        },
+        body: JSON.stringify({
+          errorCategory: analysis.category,
+          errorContext: {
+            errors: analysis.errors,
+            summary: analysis.summary,
+            suggestions: analysis.suggestions,
+            confidence: analysis.confidence
+          }
+        }),
+        signal: controller.signal
+      });
+
+      if (!response.ok) {
+        throw new Error(`Jules API error: ${response.status} ${response.statusText}`);
+      }
+
+      const data = await response.json();
+
+      // Assume data is JulesFixResponse but validate it
+      if (!this.validateResponse(data as any)) {
+         throw new Error("Invalid response format received from Jules API");
+      }
+
+      return data as JulesFixResponse;
+    } finally {
+      clearTimeout(timeoutId);
+    }
   }
 
   /**
    * Validate fix response structure
    */
-  validateResponse(response: JulesFixResponse): boolean {
+  validateResponse(response: any): response is JulesFixResponse {
+    if (!response || typeof response !== 'object') {
+        return false;
+    }
     if (response.status !== 'success' && response.status !== 'error' && response.status !== 'partial') {
       return false;
     }
@@ -353,5 +431,3 @@ export function getAllMockResponses() {
 export function getMockResponse(key: string): JulesFixResponse | undefined {
   return mockResponses[key as keyof typeof mockResponses];
 }
-
-
