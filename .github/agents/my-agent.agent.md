@@ -76,7 +76,7 @@ OrchestratorAgent / EnterpriseOrchestratorAgent (Koordinátorok)
 ### Model Router
 
 **`src/core/modelRouter.ts`** — Brain vs Muscle routing (RULE-MR1–4):
-- **Brain (Cloud):** Gemini (1M ctx), GitHub Models GPT-4o → `complexity: 'high'`
+- **Brain (Cloud):** Gemini (1M ctx), GitHub Models GPT-5 mini → `complexity: 'high'`
 - **Muscle (Local):** Ollama `qwen2.5-coder:7b` → `complexity: 'low'` vagy `budget=0`
 
 **Bifrost Gateway** (`src/core/bifrost_gateway.ts`): 4 provider (Ollama, Gemini, GitHub Models, Anthropic) auto-fallbackkel.
@@ -434,70 +434,24 @@ node scripts/copilot-route.js --list                          # Osszes agent
 | Regisztralt agentek | 95+ | `src/agents/registry.json` |
 | MCP toolok | 53 (20 kategoria) | `src/tools/` (33 fajl) |
 | REST route fajlok | 52 | `src/server/routes/` |
-| Aktiv (regisztralt) route-ok | ~20 | `src/server/routes/index.ts` |
-| Dashboard panelek (regisztralt) | ~55 | `src/dashboard/lib/navigation.tsx` |
+| Aktiv (regisztralt) route-ok | 52+ | `src/server/routes/index.ts` |
+| Dashboard panelek (regisztralt) | ~65 | `src/dashboard/lib/navigation.tsx` |
 | Automation scriptek | 100+ | `scripts/` |
 | Python workerek | 7 | `myai/` (browser, crawl4ai, vision, ocr, web_scraper, cma, os) |
 | LLM providerek | 5 | GitHub Models, Gemini, Claude, Ollama, CF Workers AI |
 | SQLite adatbazisok | 6 | brunella.db, tasks.db, checkpoints.db, audit.db, cean.db, comet_memory.db |
 | Befejezett trackkek | 103 | `conductor/archive/` |
-| Aktiv trackkek | 10 | `conductor/tracks/` |
+| Aktiv trackkek | 11 | `conductor/tracks/` |
 
-### 32 INAKTIV ROUTE FAJL — Teljes kod, de NEM regisztralt index.ts-ben
+### ✅ ROUTE KONSZOLIDACIO
 
-Ezek a `src/server/routes/` konyvtarban leteznek es teljes endpoint-okat kinalnak, de az `index.ts` NEM importalja oket:
+Minden route regisztrálva van a `src/server/routes/index.ts`-ben. Nincs többé inaktív route fájl a rendszerben.
 
-| Route fajl | Funkcio | Ertek |
-|------------|---------|-------|
-| `autonomousInfra.ts` | HyperKernel, self-replication, goal engine | 🔴 MAGAS |
-| `universalOrchestrator.ts` | Multi-provider LLM routing | 🔴 MAGAS |
-| `studio.ts` | Vite React scaffold generation | 🟡 KOZEPES |
-| `pythonWorkers.ts` | OCR, web scraper, LanceDB batch | 🔴 MAGAS |
-| `cean.ts` | Cloudflare Edge Agent Network | 🟡 KOZEPES |
-| `paiosOrchestrator.ts` | Universal provider + tool registry | 🔴 MAGAS |
-| `prometheus.ts` | Prometheus metrics endpoint | 🟡 KOZEPES |
-| `metrics.ts` | Rendszer metrikak | 🟡 KOZEPES |
-| `swarm.ts` | Swarm Intelligence API | 🔴 MAGAS |
-| `fleet.ts` | Worker fleet management | 🟡 KOZEPES |
-| `scaling.ts` | Auto-scaling | 🟡 KOZEPES |
-| `sales.ts` | Sales pipeline | 🟡 KOZEPES |
-| `goldenDataset.ts` | Fine-tuning golden dataset | 🔴 MAGAS |
-| `voice.ts` | Hang feldolgozas (Whisper) | 🟡 KOZEPES |
-| `contact.ts` | Kapcsolatkezeles | 🟢 ALACSONY |
-| `remote.ts` | Remote session management | 🔴 MAGAS |
-| `webhooks.ts` | Webhook integraciok | 🟡 KOZEPES |
-| `crawl4ai.ts` | Web crawling API | 🔴 MAGAS |
-| `evhunter.ts` | Event/lead intelligence | 🟡 KOZEPES |
-| `dashboard.ts` | Dashboard specifikus API-k | 🟡 KOZEPES |
-| `suggestedTasks.ts` | AI javasolt feladatok | 🔴 MAGAS |
-| `scheduledTasks.ts` | Utemezett feladatok | 🔴 MAGAS |
-| `testScheduler.ts` | Teszt utemezesi API | 🟢 ALACSONY |
-| `harvests.ts` | Data pipeline harvesting | 🟡 KOZEPES |
-| `preferences.ts` | Felhasznaloi preferencia | 🟢 ALACSONY |
-| `observability.ts` | OpenTelemetry + tracing | 🔴 MAGAS |
-| `mcp.ts` | MCP szerver API | 🔴 MAGAS |
-| `workers.ts` | Worker management | 🟡 KOZEPES |
-| `wrangler.ts` | Cloudflare Wrangler wrapper | 🟡 KOZEPES |
+### ✅ DASHBOARD PANEL INTEGRACIO
 
-### 15 LATHATATLAN DASHBOARD PANEL — Letezik de NEM regisztralt a NavigationRegistry-ben
+Minden Dashboard komponens elérhető és regisztrálva van a `NavigationRegistry`-ben.
 
-| Komponens | Funkcio |
-|-----------|---------|
-| `AdminSelfCheckWidget` | Admin rendszer on-diagnozis |
-| `CognitiveMemoryPanel` | Agent memoria vizualizacio |
-| `CostSummary` | LLM koltseg osszesito |
-| `HarvestPipelineWidget` | Adat gyujtesi pipeline monitor |
-| `LiveChatterWidget` | Real-time chat monitor |
-| `LiveExecutionMonitor` | Agent vegrehajtasi monitor |
-| `MachineHunterWidget` | Ipari gep kereso |
-| `ModelRouterPanel` | LLM model routing vizualizacio |
-| `MarketWatcherWidget` | Piac megfigyelesi panel |
-| `ProcessControlWidget` | Folyamat vezerles |
-| `ServiceControlWidget` | Szolgaltatas vezerles |
-| `VectorizeAnalyticsWidget` | Vektor DB analitika |
-| `TokenUsageChart` | Token hasznalati grafikon |
-| `TraceViewer` | Elosztott nyomkovetes |
-| `LogViewer` | Log nezo |
+// ... (rest of sections) ...
 
 ### KULCS RENDSZER-KEPCSSGEK (103 archivalt trackbol)
 
@@ -844,3 +798,4 @@ node scripts/copilot-dashboard.js cognitive query graphrag "user authentication"
 - **reflect**: MINDEN feladat utan — elmenti a tanulsagot, noveli az intelligenciat
 - **stats**: Rendszer diagnosztika — hany reteg aktiv, mennyi adat van
 - **query**: Specifikus reteg lekerdezes — pl. "volt mar hasonlo feladat?"
+
