@@ -8,6 +8,7 @@ import { Progress } from '@/components/ui/progress'
 import { toast } from 'sonner'
 import { getAgentStatuses, executeAgent, API_BASE } from '@/lib/apiService'
 import { formatAgentResponse } from '@/lib/agentResponseFormatter'
+import { cn } from '@/lib/utils'
 
 interface AgentStatus {
     name: string;
@@ -99,12 +100,13 @@ export function AgentManagementPanel() {
 
     return (
         <div className="space-y-6 animate-in fade-in duration-500">
-            <div className="flex items-center justify-between">
+            <div className="flex items-end justify-between gap-4">
                 <div>
-                    <h2 className="text-3xl font-space font-bold text-foreground">Agent Management</h2>
-                    <p className="text-zinc-500 mt-1">AI ügynökök felügyelete és közvetlen vezérlése.</p>
+                    <p className="text-[10px] uppercase tracking-[0.22em] text-zinc-500">Agent Control</p>
+                    <h2 className="text-2xl font-semibold text-zinc-100">Agent Management</h2>
+                    <p className="mt-1 text-sm text-zinc-500">AI ügynökök felügyelete és közvetlen vezérlése.</p>
                 </div>
-                <Button onClick={fetchAgents} variant="outline" size="sm" className="gap-2">
+                <Button onClick={fetchAgents} variant="outline" size="sm" className="gap-2 rounded-full border-white/10 bg-white/[0.02] text-zinc-100 hover:bg-white/[0.05]">
                     <Clock className="w-4 h-4" /> Frissítés
                 </Button>
             </div>
@@ -112,16 +114,16 @@ export function AgentManagementPanel() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Registry & Status List */}
                 <div className="lg:col-span-1 space-y-4">
-                    <Card className="glass-card">
-                        <CardHeader>
-                            <CardTitle className="flex items-center gap-2 text-sm uppercase tracking-wider text-zinc-500">
-                                <Brain className="w-4 h-4 text-primary" />
+                    <Card className="glass-card border-white/10 overflow-hidden">
+                        <CardHeader className="pb-3 border-b border-white/[0.05] bg-white/[0.015]">
+                            <CardTitle className="flex items-center gap-2 text-[11px] font-mono font-semibold uppercase tracking-[0.28em] text-zinc-400">
+                                <Brain className="w-4 h-4 text-cyan-300" />
                                 Regisztrált Ügynökök
                             </CardTitle>
                         </CardHeader>
                         <CardContent className="p-0">
                             <ScrollArea className="h-[500px]">
-                                <div className="divide-y divide-border/50">
+                                <div className="divide-y divide-white/[0.05]">
                                     {loading ? (
                                         <div className="p-4 text-center text-zinc-500">Betöltés...</div>
                                     ) : agents.map((agent) => (
@@ -131,11 +133,17 @@ export function AgentManagementPanel() {
                                                 setSelectedAgent(agent.name)
                                                 subscribeToLogs(agent.name)
                                             }}
-                                            className={`p-4 cursor-pointer transition-colors hover:bg-muted/50 ${selectedAgent === agent.name ? 'bg-muted border-l-4 border-primary' : ''}`}
+                                            className={cn(
+                                                'p-4 cursor-pointer transition-colors hover:bg-white/[0.03]',
+                                                selectedAgent === agent.name ? 'bg-white/[0.04] border-l-4 border-cyan-400' : ''
+                                            )}
                                         >
                                             <div className="flex items-center justify-between mb-1">
-                                                <span className="font-bold text-sm">{agent.name}</span>
-                                                <Badge variant={agent.status === 'working' ? 'default' : 'secondary'} className="text-[10px]">
+                                                <span className="font-semibold text-sm text-zinc-100">{agent.name}</span>
+                                                <Badge
+                                                    variant={agent.status === 'working' ? 'default' : 'secondary'}
+                                                    className="text-[10px] uppercase tracking-[0.18em] bg-white/[0.06] text-zinc-100 border border-white/[0.08]"
+                                                >
                                                     {agent.status}
                                                 </Badge>
                                             </div>
@@ -152,15 +160,15 @@ export function AgentManagementPanel() {
                 <div className="lg:col-span-2 space-y-6">
                     {selectedAgent ? (
                         <>
-                            <Card className="glass-card overflow-hidden">
-                                <CardHeader className="bg-muted/30 border-b border-border/50">
+                            <Card className="glass-card border-white/10 overflow-hidden">
+                                <CardHeader className="bg-white/[0.015] border-b border-white/[0.05]">
                                     <div className="flex items-center justify-between">
                                         <div>
-                                            <CardTitle className="text-xl font-bold">{selectedAgent}</CardTitle>
-                                            <CardDescription>Közvetlen feladat végrehajtás</CardDescription>
+                                            <CardTitle className="text-lg font-semibold text-zinc-100">{selectedAgent}</CardTitle>
+                                            <CardDescription className="text-zinc-500">Közvetlen feladat végrehajtás</CardDescription>
                                         </div>
-                                        <Badge variant="outline" className="gap-1">
-                                            <Activity className="w-3 h-3 text-cyan-400" /> Aktív
+                                        <Badge variant="outline" className="gap-1 border-cyan-400/20 bg-cyan-400/10 text-cyan-100">
+                                            <Activity className="w-3 h-3 text-cyan-300" /> Aktív
                                         </Badge>
                                     </div>
                                 </CardHeader>
@@ -169,13 +177,13 @@ export function AgentManagementPanel() {
                                         <input
                                             type="text"
                                             placeholder="Írd be a feladatot (pl. 'Írj egy hello world scriptet')"
-                                            className="flex-1 bg-background border border-border/50 rounded-md px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary"
+                                            className="flex-1 rounded-xl border border-white/[0.08] bg-white/[0.03] px-4 py-2 text-sm text-zinc-100 placeholder:text-zinc-500 focus:outline-none focus:ring-1 focus:ring-cyan-400/50"
                                             value={taskInput}
                                             onChange={(e) => setTaskInput(e.target.value)}
                                             onKeyDown={(e) => e.key === 'Enter' && handleExecute()}
                                             disabled={executing}
                                         />
-                                        <Button onClick={handleExecute} disabled={executing || !taskInput.trim()} className="gap-2">
+                                        <Button onClick={handleExecute} disabled={executing || !taskInput.trim()} className="gap-2 rounded-xl bg-cyan-500 text-slate-950 hover:bg-cyan-400">
                                             <Play className="w-4 h-4 fill-current" />
                                             {executing ? 'Futtatás...' : 'Küldés'}
                                         </Button>
@@ -184,10 +192,10 @@ export function AgentManagementPanel() {
                                 </CardContent>
                             </Card>
 
-                            <Card className="glass-card flex-1 flex flex-col min-h-[400px]">
-                                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 border-b border-border/50">
-                                    <CardTitle className="text-sm font-medium flex items-center gap-2 text-zinc-500 uppercase tracking-wider">
-                                        <Terminal className="w-4 h-4" />
+                            <Card className="glass-card border-white/10 flex flex-col min-h-[400px] overflow-hidden">
+                                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 border-b border-white/[0.05] bg-white/[0.015]">
+                                    <CardTitle className="text-[11px] font-mono font-semibold flex items-center gap-2 text-zinc-400 uppercase tracking-[0.28em]">
+                                        <Terminal className="w-4 h-4 text-violet-300" />
                                         Agent Logs: {selectedAgent}
                                     </CardTitle>
                                     <Button variant="ghost" size="icon" onClick={clearLogs} className="h-8 w-8 text-zinc-500 hover:text-destructive" aria-label="Clear logs" title="Clear logs">
@@ -195,7 +203,7 @@ export function AgentManagementPanel() {
                                     </Button>
                                 </CardHeader>
                                 <CardContent className="p-0 flex-1 relative">
-                                    <ScrollArea className="h-[350px] w-full bg-white/[0.03] p-4 font-mono text-[12px]">
+                                    <ScrollArea className="h-[350px] w-full bg-white/[0.02] p-4 font-mono text-[12px]">
                                         <div className="space-y-1">
                                             {logs.map((log, i) => (
                                                 <div key={i} className={`whitespace-pre-wrap ${log.includes('HIBA') || log.includes('error') ? 'text-red-400' :

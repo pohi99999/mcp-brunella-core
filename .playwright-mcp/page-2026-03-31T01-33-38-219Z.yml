@@ -1,0 +1,12 @@
+- generic [ref=e3]:
+  - generic [ref=e4]: "[plugin:vite:react-swc] x 'import', and 'export' cannot be used outside of module code ,-[F:/mcp-brunella-core/src/dashboard/components/dashboard/RemoteConsolePanel.tsx:177:1] 174 | </CardContent> 175 | </Card> 176 | ); 177 | import { useEffect, useMemo, useState } from \"react\"; : ^^^^^^ 178 | import { Card, CardContent, CardHeader, CardTitle } from \"../ui/card\"; 179 | import { Input } from \"../ui/input\"; 179 | import { Button } from \"../ui/button\"; `---- Caused by: Syntax Error"
+  - generic [ref=e5]: F:/mcp-brunella-core/src/dashboard/components/dashboard/RemoteConsolePanel.tsx
+  - generic [ref=e6]:
+    - text: Click outside, press Esc key, or fix the code to dismiss.
+    - text: You can also disable this overlay by setting
+    - code [ref=e7]: server.hmr.overlay
+    - text: to
+    - code [ref=e8]: "false"
+    - text: in
+    - code [ref=e9]: vite.config.ts
+    - text: .

@@ -47,78 +47,81 @@ export function GuardrailsPanel() {
 
   useEffect(() => { fetchStats(); }, [fetchStats]);
 
-  if (loading) return <div className="p-4 text-zinc-500">Guardrails statisztikák betöltése...</div>;
+  if (loading) return <Card className="glass-card border-white/10"><CardContent className="p-4 text-zinc-500">Guardrails statisztikák betöltése...</CardContent></Card>;
 
   const total = (stats?.validationsPassed ?? 0) + (stats?.validationsFailed ?? 0);
   const passRate = total > 0 ? ((stats?.validationsPassed ?? 0) / total * 100).toFixed(1) : '—';
 
   return (
     <div className="space-y-4 p-4">
-      <div className="flex items-center justify-between">
-        <h2 className="text-xl font-bold flex items-center gap-2">
-          <Shield className="h-5 w-5 text-green-500" />
+      <div className="flex items-end justify-between gap-4">
+        <div>
+          <p className="text-[10px] uppercase tracking-[0.22em] text-zinc-500">Safety / Eval</p>
+          <h2 className="text-2xl font-semibold flex items-center gap-2 text-zinc-100">
+            <Shield className="h-5 w-5 text-emerald-300" />
           Guardrails & Evaluáció
-        </h2>
-        <button onClick={fetchStats} className="p-2 hover:bg-accent rounded-md">
+          </h2>
+        </div>
+        <button onClick={fetchStats} className="p-2 hover:bg-white/[0.05] rounded-md border border-white/[0.05]">
           <RefreshCw className="h-4 w-4" />
         </button>
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-zinc-500 flex items-center gap-1">
-              <CheckCircle className="h-4 w-4 text-green-500" /> Validáció OK
+        <Card className="glass-card border-white/10 overflow-hidden">
+          <CardHeader className="pb-2 border-b border-white/[0.05] bg-white/[0.015]">
+            <CardTitle className="text-[10px] font-mono font-semibold uppercase tracking-[0.24em] text-zinc-400 flex items-center gap-1">
+              <CheckCircle className="h-4 w-4 text-emerald-300" /> Validáció OK
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats?.validationsPassed ?? 0}</div>
+          <CardContent className="p-4">
+            <div className="text-2xl font-semibold font-mono text-zinc-100">{stats?.validationsPassed ?? 0}</div>
             <p className="text-xs text-zinc-500">Átment: {passRate}%</p>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-zinc-500 flex items-center gap-1">
-              <AlertTriangle className="h-4 w-4 text-yellow-500" /> Validáció Hiba
+        <Card className="glass-card border-white/10 overflow-hidden">
+          <CardHeader className="pb-2 border-b border-white/[0.05] bg-white/[0.015]">
+            <CardTitle className="text-[10px] font-mono font-semibold uppercase tracking-[0.24em] text-zinc-400 flex items-center gap-1">
+              <AlertTriangle className="h-4 w-4 text-amber-300" /> Validáció Hiba
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats?.validationsFailed ?? 0}</div>
+          <CardContent className="p-4">
+            <div className="text-2xl font-semibold font-mono text-zinc-100">{stats?.validationsFailed ?? 0}</div>
             <p className="text-xs text-zinc-500">Schema eltérés</p>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-zinc-500 flex items-center gap-1">
-              <BarChart3 className="h-4 w-4 text-blue-500" /> Átl. Confidence
+        <Card className="glass-card border-white/10 overflow-hidden">
+          <CardHeader className="pb-2 border-b border-white/[0.05] bg-white/[0.015]">
+            <CardTitle className="text-[10px] font-mono font-semibold uppercase tracking-[0.24em] text-zinc-400 flex items-center gap-1">
+              <BarChart3 className="h-4 w-4 text-violet-300" /> Átl. Confidence
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{(stats?.avgConfidence ?? 0).toFixed(2)}</div>
+          <CardContent className="p-4">
+            <div className="text-2xl font-semibold font-mono text-zinc-100">{(stats?.avgConfidence ?? 0).toFixed(2)}</div>
             <p className="text-xs text-zinc-500">Küszöb: {stats?.confidenceThreshold ?? 0.6}</p>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-zinc-500 flex items-center gap-1">
-              <Lock className="h-4 w-4 text-red-500" /> PII Redakció
+        <Card className="glass-card border-white/10 overflow-hidden">
+          <CardHeader className="pb-2 border-b border-white/[0.05] bg-white/[0.015]">
+            <CardTitle className="text-[10px] font-mono font-semibold uppercase tracking-[0.24em] text-zinc-400 flex items-center gap-1">
+              <Lock className="h-4 w-4 text-red-300" /> PII Redakció
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats?.redactionsTriggered ?? 0}</div>
+          <CardContent className="p-4">
+            <div className="text-2xl font-semibold font-mono text-zinc-100">{stats?.redactionsTriggered ?? 0}</div>
             <p className="text-xs text-zinc-500">Automatikus törlés</p>
           </CardContent>
         </Card>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-sm">Konfiguráció</CardTitle>
+      <Card className="glass-card border-white/10 overflow-hidden">
+        <CardHeader className="pb-3 border-b border-white/[0.05] bg-white/[0.015]">
+          <CardTitle className="text-[11px] font-mono font-semibold uppercase tracking-[0.28em] text-zinc-400">Konfiguráció</CardTitle>
         </CardHeader>
-        <CardContent className="text-sm space-y-1">
+        <CardContent className="text-sm space-y-1 p-4">
           <div className="flex justify-between">
             <span className="text-zinc-500">Strict Mode:</span>
             <span className={stats?.strictMode ? 'text-red-500 font-bold' : 'text-green-500'}>

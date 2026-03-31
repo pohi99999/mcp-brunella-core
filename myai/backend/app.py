@@ -35,6 +35,11 @@ def list_models() -> ModelsResponse:
     return ModelsResponse(data=gateway.list_models())
 
 
+@app.get("/v1/models", response_model=ModelsResponse, include_in_schema=False)
+def list_models_v1() -> ModelsResponse:
+    return ModelsResponse(data=gateway.list_models())
+
+
 @app.post("/chat/completions", response_model=ChatCompletionsResponse)
 def chat_completions(req: ChatCompletionsRequest) -> ChatCompletionsResponse:
     if req.stream:
@@ -61,6 +66,11 @@ def chat_completions(req: ChatCompletionsRequest) -> ChatCompletionsResponse:
         ],
         usage=completion.usage,
     )
+
+
+@app.post("/v1/chat/completions", response_model=ChatCompletionsResponse, include_in_schema=False)
+def chat_completions_v1(req: ChatCompletionsRequest) -> ChatCompletionsResponse:
+    return chat_completions(req)
 
 
 def start() -> None:

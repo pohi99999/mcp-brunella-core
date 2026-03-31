@@ -54,9 +54,15 @@ async function main() {
     // Start Autonomous Worker Loop
     initializedAgentManager.startWorkerLoop();
 
-    const transport = new StdioServerTransport();
-    await server.connect(transport);
-    console.error("MCP Brunella Core Server running on stdio");
+    // Only connect MCP stdio transport when running interactively (Claude Desktop / terminal)
+    // In background/headless mode (stdin is not a TTY), skip stdio to avoid blocking the event loop
+    if (process.stdin.isTTY) {
+      const transport = new StdioServerTransport();
+      await server.connect(transport);
+      console.error("MCP Brunella Core Server running on stdio");
+    } else {
+      console.error("MCP Brunella Core Server running in web-only mode (no stdin TTY)");
+    }
 
     // Graceful shutdown handling
     const shutdown = async (signal: string) => {

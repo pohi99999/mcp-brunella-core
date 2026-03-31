@@ -1,5 +1,5 @@
 import { Ollama } from 'ollama';
-import { GoogleGenerativeAI, type FunctionDeclarationsTool } from '@google/generative-ai';
+import { GoogleGenAI } from '@google/genai';
 import { Anthropic } from '@anthropic-ai/sdk';
 import { logInfo, logError, logWarn } from '../utils/logger.js';
 import { aiGateway, type ChatMessage as AIChatMessage } from '../utils/aiGateway.js';
@@ -113,7 +113,7 @@ export class BifrostGateway {
 
   // Provider clients
   private ollamaClient?: Ollama;
-  private geminiClient?: GoogleGenerativeAI;
+  private geminiClient?: GoogleGenAI;
   private anthropicClient?: Anthropic;
   // GitHub Models uses Ollama client with custom baseUrl
 
@@ -144,7 +144,7 @@ export class BifrostGateway {
 
     // 2. Gemini (Google, fast & reliable)
     const geminiKey = process.env.GEMINI_API_KEY;
-    const geminiModel = process.env.GEMINI_MODEL || 'gemini-1.5-pro';
+    const geminiModel = process.env.GEMINI_MODEL || 'gemini-2.5-pro';
     this.providers.set('gemini', {
       type: 'gemini',
       enabled: !!(geminiKey && geminiKey !== ''),
@@ -161,7 +161,7 @@ export class BifrostGateway {
       enabled: !!(githubToken && githubToken !== ''),
       apiKey: githubToken,
       baseUrl: 'https://models.github.ai/inference',
-      defaultModel: process.env.GITHUB_MODELS_DEFAULT_MODEL || process.env.GITHUB_MODEL || 'gpt-4.1',
+      defaultModel: process.env.GITHUB_MODELS_DEFAULT_MODEL || process.env.GITHUB_MODEL || 'openai/gpt-5-mini',
       priority: 3,
       maxRetries: 3
     });
@@ -221,7 +221,7 @@ export class BifrostGateway {
 
     const geminiConfig = this.providers.get('gemini');
     if (geminiConfig?.enabled && geminiConfig.apiKey) {
-      this.geminiClient = new GoogleGenerativeAI(geminiConfig.apiKey);
+      this.geminiClient = new GoogleGenAI({ apiKey: geminiConfig.apiKey });
     }
 
     const anthropicConfig = this.providers.get('anthropic');
@@ -578,10 +578,8 @@ export class BifrostGateway {
       throw new Error('Gemini client not initialized');
     }
 
-    const geminiModel = this.geminiClient.getGenerativeModel({ model });
-
-    const contents: any[] = [];
-    const parts: any[] = [{ text: options.prompt }];
+    const contents: unknown[] = [];
+    const parts: unknown[] = [{ text: options.prompt }];
 
     // Support vision/files from context
     if (options.context?.files && Array.isArray(options.context.files)) {
@@ -599,30 +597,29 @@ export class BifrostGateway {
 
     contents.push({ role: 'user', parts });
 
-    const geminiTools: FunctionDeclarationsTool[] | undefined = options.tools && options.tools.length > 0
+    const geminiTools = options.tools && options.tools.length > 0
       ? [{ functionDeclarations: options.tools.map((t: UniversalToolDefinition | OpenAIToolDefinition) => {
-          // Support both UniversalToolDefinition {name, description, parameters}
-          // and OpenAI-style {type:'function', function:{name, description, parameters}}
           const isOpenAI = 'function' in t;
           return {
             name: isOpenAI ? (t as OpenAIToolDefinition).function.name : (t as UniversalToolDefinition).name,
             description: isOpenAI ? (t as OpenAIToolDefinition).function.description : (t as UniversalToolDefinition).description,
-            parameters: (isOpenAI ? (t as OpenAIToolDefinition).function.parameters : (t as UniversalToolDefinition).parameters) as unknown as import('@google/generative-ai').FunctionDeclarationSchema
+            parameters: (isOpenAI ? (t as OpenAIToolDefinition).function.parameters : (t as UniversalToolDefinition).parameters) as unknown
           };
         }) }]
       : undefined;
 
-    const result = await geminiModel.generateContent({
-      contents,
-      generationConfig: {
+    const result = await this.geminiClient.models.generateContent({
+      model,
+      contents: contents as Parameters<typeof this.geminiClient.models.generateContent>[0]['contents'],
+      config: {
         temperature: options.temperature ?? 0.7,
-        maxOutputTokens: options.maxTokens ?? 2048
-      },
-      systemInstruction: options.systemPrompt,
-      ...(geminiTools && { tools: geminiTools })
+        maxOutputTokens: options.maxTokens ?? 2048,
+        systemInstruction: options.systemPrompt,
+        ...(geminiTools && { tools: geminiTools as unknown as Parameters<typeof this.geminiClient.models.generateContent>[0]['config'] extends { tools?: infer T } ? T : never })
+      }
     });
 
-    const candidate = result.response.candidates?.[0];
+    const candidate = result.candidates?.[0];
     const functionCallPart = candidate?.content?.parts?.find(
       (p: unknown) => (p as { functionCall?: unknown }).functionCall
     ) as { functionCall?: { name: string; args?: Record<string, unknown> } } | undefined;
@@ -638,7 +635,7 @@ export class BifrostGateway {
       : undefined;
 
     let content = '';
-    try { content = result.response.text(); } catch { /* tool call only response, no text part */ }
+    try { content = result.text ?? ''; } catch { /* tool call only response */ }
 
     return {
       success: true,
@@ -648,9 +645,9 @@ export class BifrostGateway {
       model,
       duration_ms: Date.now() - startTime,
       tokens: {
-        prompt: result.response.usageMetadata?.promptTokenCount || 0,
-        completion: result.response.usageMetadata?.candidatesTokenCount || 0,
-        total: result.response.usageMetadata?.totalTokenCount || 0
+        prompt: result.usageMetadata?.promptTokenCount || 0,
+        completion: result.usageMetadata?.candidatesTokenCount || 0,
+        total: result.usageMetadata?.totalTokenCount || 0
       }
     };
   }

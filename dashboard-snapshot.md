@@ -1,0 +1,851 @@
+- generic [ref=e20]:
+  - region "Notifications alt+T"
+  - generic [ref=e21]:
+    - button "Keresés... ⌘ K" [ref=e23]:
+      - img [ref=e24]
+      - generic [ref=e27]: Keresés...
+      - generic:
+        - generic: ⌘
+        - text: K
+    - generic [ref=e28]:
+      - heading "Command Palette" [level=2] [ref=e29]
+      - paragraph [ref=e30]: Search for a command to run...
+    - banner [ref=e31]:
+      - generic [ref=e32]:
+        - generic [ref=e33]:
+          - img [ref=e35]
+          - generic [ref=e37]:
+            - generic [ref=e38]: Brunella
+            - generic [ref=e39]: CORTEX v2.3
+        - navigation [ref=e41]:
+          - button "LAYOUT DEFAULT_DASHBOARD" [ref=e42]:
+            - generic [ref=e43]: LAYOUT
+            - generic [ref=e44]: DEFAULT_DASHBOARD
+            - img
+          - link "Gmail" [ref=e46] [cursor=pointer]:
+            - /url: https://mail.google.com/mail/u/0/
+            - img
+          - link "GitHub" [ref=e47] [cursor=pointer]:
+            - /url: https://github.com/pohi99999
+            - img
+          - link "Calendar" [ref=e48] [cursor=pointer]:
+            - /url: https://calendar.google.com/calendar/u/0/r
+            - img
+          - link "Drive" [ref=e49] [cursor=pointer]:
+            - /url: https://drive.google.com/drive/my-drive
+            - img
+          - link "Gemini" [ref=e50] [cursor=pointer]:
+            - /url: https://gemini.google.com/u/0/gem/c9db4e33647c
+            - img
+      - generic [ref=e51]:
+        - generic [ref=e54]: HEALTHY
+        - button "Toggle theme" [ref=e55]:
+          - img
+          - img
+          - generic [ref=e56]: Toggle theme
+    - generic [ref=e57]:
+      - complementary [ref=e59]:
+        - generic [ref=e60]:
+          - generic [ref=e61]:
+            - generic [ref=e62]: Navigáció
+            - img [ref=e63]
+          - generic [ref=e68]:
+            - generic [ref=e69]:
+              - heading "Core Systems" [level=3] [ref=e70]:
+                - button "Core Systems" [expanded] [ref=e71]:
+                  - generic [ref=e72]:
+                    - img [ref=e73]
+                    - generic [ref=e77]: Core Systems
+                  - img
+              - region "Core Systems" [ref=e78]:
+                - generic [ref=e79]:
+                  - button "Mission Control" [ref=e80]:
+                    - img [ref=e82]
+                    - generic [ref=e87]: Mission Control
+                  - button "Neural Map" [ref=e89]:
+                    - img [ref=e91]
+                    - generic [ref=e96]: Neural Map
+                  - button "Architecture" [ref=e97]:
+                    - img [ref=e99]
+                    - generic [ref=e103]: Architecture
+                  - button "Brunella Studio" [ref=e104]:
+                    - img [ref=e106]
+                    - generic [ref=e112]: Brunella Studio
+                  - button "VSCode Stream" [ref=e113]:
+                    - img [ref=e115]
+                    - generic [ref=e119]: VSCode Stream
+            - generic [ref=e120]:
+              - heading "AI & Agents" [level=3] [ref=e121]:
+                - button "AI & Agents" [expanded] [ref=e122]:
+                  - generic [ref=e123]:
+                    - img [ref=e124]
+                    - generic [ref=e134]: AI & Agents
+                  - img
+              - region "AI & Agents" [ref=e135]:
+                - generic [ref=e136]:
+                  - button "Neural Chat" [ref=e137]:
+                    - img [ref=e139]
+                    - generic [ref=e141]: Neural Chat
+                  - button "PAIOS Orchestrator" [ref=e142]:
+                    - img [ref=e144]
+                    - generic [ref=e154]: PAIOS Orchestrator
+                  - button "Copilot Commander" [ref=e155]:
+                    - img [ref=e157]
+                    - generic [ref=e159]: Copilot Commander
+                  - button "Personal Assistant" [ref=e160]:
+                    - img [ref=e162]
+                    - generic [ref=e164]: Personal Assistant
+                  - button "Phoenix Events" [ref=e165]:
+                    - img [ref=e167]
+                    - generic [ref=e169]: Phoenix Events
+                  - button "Approval Notifications" [ref=e170]:
+                    - img [ref=e172]
+                    - generic [ref=e175]: Approval Notifications
+                  - button "Ephemeral Agents" [ref=e176]:
+                    - img [ref=e178]
+                    - generic [ref=e180]: Ephemeral Agents
+                  - button "Learning Loop" [ref=e181]:
+                    - img [ref=e183]
+                    - generic [ref=e193]: Learning Loop
+                  - button "Federated MCP" [ref=e194]:
+                    - img [ref=e196]
+                    - generic [ref=e199]: Federated MCP
+                  - button "Agent Roster" [ref=e200]:
+                    - img [ref=e202]
+                    - generic [ref=e204]: Agent Roster
+                  - button "Agent Diagnostics" [ref=e205]:
+                    - img [ref=e207]
+                    - generic [ref=e210]: Agent Diagnostics
+                  - button "Decompose" [ref=e211]:
+                    - img [ref=e213]
+                    - generic [ref=e217]: Decompose
+                  - button "Incubator" [ref=e218]:
+                    - img [ref=e220]
+                    - generic [ref=e222]: Incubator
+                  - button "Neural Knowledge" [ref=e223]:
+                    - img [ref=e225]
+                    - generic [ref=e235]: Neural Knowledge
+                  - button "Agent Memory" [ref=e236]:
+                    - img [ref=e238]
+                    - generic [ref=e242]: Agent Memory
+                  - button "Felhasználói Memória" [ref=e243]:
+                    - img [ref=e245]
+                    - generic [ref=e249]: Felhasználói Memória
+                  - button "Developer" [ref=e250]:
+                    - img [ref=e252]
+                    - generic [ref=e256]: Developer
+                  - button "Edge" [ref=e257]:
+                    - img [ref=e259]
+                    - generic [ref=e261]: Edge
+                  - button "Robotkéz" [ref=e262]:
+                    - img [ref=e264]
+                    - generic [ref=e266]: Robotkéz
+                  - button "Browser Copilot" [ref=e267]:
+                    - img [ref=e269]
+                    - generic [ref=e271]: Browser Copilot
+                  - button "Jules AI" [ref=e272]:
+                    - img [ref=e274]
+                    - generic [ref=e276]: Jules AI
+            - heading "Enterprise" [level=3] [ref=e278]:
+              - button "Enterprise" [ref=e279]:
+                - generic [ref=e280]:
+                  - img [ref=e281]
+                  - generic [ref=e284]: Enterprise
+                - img
+            - heading "Értékesítési Központ" [level=3] [ref=e286]:
+              - button "Értékesítési Központ" [ref=e287]:
+                - generic [ref=e288]:
+                  - img [ref=e289]
+                  - generic [ref=e291]: Értékesítési Központ
+                - img
+            - heading "Orchestration" [level=3] [ref=e293]:
+              - button "Orchestration" [ref=e294]:
+                - generic [ref=e295]:
+                  - img [ref=e296]
+                  - generic [ref=e301]: Orchestration
+                - img
+            - heading "Project Mgmt" [level=3] [ref=e303]:
+              - button "Project Mgmt" [ref=e304]:
+                - generic [ref=e305]:
+                  - img [ref=e306]
+                  - generic [ref=e309]: Project Mgmt
+                - img
+            - heading "System" [level=3] [ref=e311]:
+              - button "System" [ref=e312]:
+                - generic [ref=e313]:
+                  - img [ref=e314]
+                  - generic [ref=e317]: System
+                - img
+          - generic [ref=e318]:
+            - generic [ref=e319]:
+              - img [ref=e321]
+              - generic [ref=e323]:
+                - generic [ref=e324]: Master Admin
+                - generic [ref=e325]: AUTHORIZED
+            - button "Disconnect" [ref=e326]:
+              - generic [ref=e327]: DISCONNECT
+              - img [ref=e328]
+      - generic [ref=e331]:
+        - main [ref=e332]:
+          - generic [ref=e334]:
+            - generic [ref=e335]:
+              - generic [ref=e336]:
+                - heading "Mission Control" [level=2] [ref=e337]
+                - generic [ref=e338]: 7 WIDGETS
+              - button "Reset" [ref=e339]:
+                - img
+                - text: Reset
+            - generic [ref=e340]:
+              - generic [ref=e342]:
+                - generic [ref=e343]:
+                  - generic [ref=e344]:
+                    - img [ref=e345]
+                    - text: System Health
+                  - generic [ref=e347]: 6/6
+                - generic [ref=e348]:
+                  - generic [ref=e349]:
+                    - generic [ref=e350]:
+                      - generic [ref=e351]:
+                        - img [ref=e352]
+                        - generic [ref=e354]:
+                          - paragraph [ref=e355]: Ollama
+                          - paragraph [ref=e356]: Működik
+                      - switch [checked] [ref=e358]
+                    - generic [ref=e359]:
+                      - generic [ref=e360]:
+                        - img [ref=e361]
+                        - generic [ref=e363]:
+                          - paragraph [ref=e364]: AnythingLLM
+                          - paragraph [ref=e365]: Működik
+                      - switch [checked] [ref=e367]
+                    - generic [ref=e368]:
+                      - generic [ref=e369]:
+                        - img [ref=e370]
+                        - generic [ref=e372]:
+                          - paragraph [ref=e373]: Agents
+                          - paragraph [ref=e374]: Aktív ágensek rendelkezésre állnak
+                      - generic [ref=e376]: AUTO
+                    - generic [ref=e377]:
+                      - generic [ref=e378]:
+                        - img [ref=e379]
+                        - generic [ref=e381]:
+                          - paragraph [ref=e382]: MCP Servers
+                          - paragraph [ref=e383]: MCP kapcsolat működik
+                      - generic [ref=e385]: AUTO
+                    - generic [ref=e386]:
+                      - generic [ref=e387]:
+                        - img [ref=e388]
+                        - generic [ref=e390]:
+                          - paragraph [ref=e391]: Python Service
+                          - paragraph [ref=e392]: Python alrendszer OK
+                      - switch [checked] [ref=e394]
+                    - generic [ref=e395]:
+                      - generic [ref=e396]:
+                        - img [ref=e397]
+                        - generic [ref=e399]:
+                          - paragraph [ref=e400]: Cloudflare
+                          - paragraph [ref=e401]: Gateway & R2 OK
+                      - generic [ref=e403]: AUTO
+                  - paragraph [ref=e405]: 2026. 03. 30. 8:00:59
+              - generic [ref=e407]:
+                - generic [ref=e409]:
+                  - img [ref=e410]
+                  - text: Agent Status Monitor
+                - generic [ref=e424]:
+                  - generic [ref=e426]:
+                    - generic [ref=e429]: InnovationBridge
+                    - generic [ref=e430]: IDLE
+                  - generic [ref=e432]:
+                    - generic [ref=e435]: DigitalHeadhunter
+                    - generic [ref=e436]: IDLE
+                  - generic [ref=e438]:
+                    - generic [ref=e441]: GrantHunter
+                    - generic [ref=e442]: IDLE
+                  - generic [ref=e444]:
+                    - generic [ref=e447]: LawDetective
+                    - generic [ref=e448]: IDLE
+                  - generic [ref=e450]:
+                    - generic [ref=e453]: PropertyVisionary
+                    - generic [ref=e454]: IDLE
+                  - generic [ref=e456]:
+                    - generic [ref=e459]: ApifyScraping
+                    - generic [ref=e460]: UNLOADED
+                  - generic [ref=e462]:
+                    - generic [ref=e465]: Architect
+                    - generic [ref=e466]: UNLOADED
+                  - generic [ref=e468]:
+                    - generic [ref=e471]: ConflictMediator
+                    - generic [ref=e472]: UNLOADED
+                  - generic [ref=e474]:
+                    - generic [ref=e477]: DependencyGraph
+                    - generic [ref=e478]: UNLOADED
+                  - generic [ref=e480]:
+                    - generic [ref=e483]: DevOps
+                    - generic [ref=e484]: UNLOADED
+                  - generic [ref=e486]:
+                    - generic [ref=e489]: documenter
+                    - generic [ref=e490]: UNLOADED
+                  - generic [ref=e492]:
+                    - generic [ref=e495]: github_models
+                    - generic [ref=e496]: UNLOADED
+                  - generic [ref=e498]:
+                    - generic [ref=e501]: lint_fixer
+                    - generic [ref=e502]: UNLOADED
+                  - generic [ref=e504]:
+                    - generic [ref=e507]: logistics_dispatcher
+                    - generic [ref=e508]: UNLOADED
+                  - generic [ref=e510]:
+                    - generic [ref=e513]: PricingAgent
+                    - generic [ref=e514]: UNLOADED
+                  - generic [ref=e516]:
+                    - generic [ref=e519]: ProactiveClaimsAgent
+                    - generic [ref=e520]: UNLOADED
+                  - generic [ref=e522]:
+                    - generic [ref=e525]: sales
+                    - generic [ref=e526]: UNLOADED
+                  - generic [ref=e528]:
+                    - generic [ref=e531]: UXDesigner
+                    - generic [ref=e532]: UNLOADED
+                  - generic [ref=e534]:
+                    - generic [ref=e537]: BankAgent
+                    - generic [ref=e538]: UNLOADED
+                  - generic [ref=e540]:
+                    - generic [ref=e543]: MatchingAgent
+                    - generic [ref=e544]: UNLOADED
+                  - generic [ref=e546]:
+                    - generic [ref=e549]: ChromeDevTools
+                    - generic [ref=e550]: UNLOADED
+                  - generic [ref=e552]:
+                    - generic [ref=e555]: DataScientist
+                    - generic [ref=e556]: UNLOADED
+                  - generic [ref=e558]:
+                    - generic [ref=e561]: Developer
+                    - generic [ref=e562]: UNLOADED
+                  - generic [ref=e564]:
+                    - generic [ref=e567]: orchestrator
+                    - generic [ref=e568]: UNLOADED
+                  - generic [ref=e570]:
+                    - generic [ref=e573]: Python
+                    - generic [ref=e574]: UNLOADED
+                  - generic [ref=e576]:
+                    - generic [ref=e579]: InvoiceAutomation
+                    - generic [ref=e580]: UNLOADED
+                  - generic [ref=e582]:
+                    - generic [ref=e585]: CampaignGenerator
+                    - generic [ref=e586]: UNLOADED
+                  - generic [ref=e588]:
+                    - generic [ref=e591]: EdgeProxy
+                    - generic [ref=e592]: UNLOADED
+                  - generic [ref=e594]:
+                    - generic [ref=e597]: email_triage
+                    - generic [ref=e598]: IDLE
+                  - generic [ref=e600]:
+                    - generic [ref=e603]: enterprise_orchestrator
+                    - generic [ref=e604]: UNLOADED
+                  - generic [ref=e606]:
+                    - generic [ref=e609]: evaluator
+                    - generic [ref=e610]: UNLOADED
+                  - generic [ref=e612]:
+                    - generic [ref=e615]: ops
+                    - generic [ref=e616]: UNLOADED
+                  - generic [ref=e618]:
+                    - generic [ref=e621]: qa
+                    - generic [ref=e622]: UNLOADED
+                  - generic [ref=e624]:
+                    - generic [ref=e627]: finance_guardian
+                    - generic [ref=e628]: UNLOADED
+                  - generic [ref=e630]:
+                    - generic [ref=e633]: FinancialGuard
+                    - generic [ref=e634]: UNLOADED
+                  - generic [ref=e636]:
+                    - generic [ref=e639]: grant_watcher
+                    - generic [ref=e640]: UNLOADED
+                  - generic [ref=e642]:
+                    - generic [ref=e645]: knowledge_base_builder
+                    - generic [ref=e646]: UNLOADED
+                  - generic [ref=e648]:
+                    - generic [ref=e651]: lead_mining
+                    - generic [ref=e652]: UNLOADED
+                  - generic [ref=e654]:
+                    - generic [ref=e657]: LocalCSR
+                    - generic [ref=e658]: UNLOADED
+                  - generic [ref=e660]:
+                    - generic [ref=e663]: LogisticsDispatcher
+                    - generic [ref=e664]: UNLOADED
+                  - generic [ref=e666]:
+                    - generic [ref=e669]: market_intel
+                    - generic [ref=e670]: UNLOADED
+                  - generic [ref=e672]:
+                    - generic [ref=e675]: NurturerAgent
+                    - generic [ref=e676]: UNLOADED
+                  - generic [ref=e678]:
+                    - generic [ref=e681]: procurement
+                    - generic [ref=e682]: UNLOADED
+                  - generic [ref=e684]:
+                    - generic [ref=e687]: PropertyAnalyst
+                    - generic [ref=e688]: UNLOADED
+                  - generic [ref=e690]:
+                    - generic [ref=e693]: researcher
+                    - generic [ref=e694]: UNLOADED
+                  - generic [ref=e696]:
+                    - generic [ref=e699]: robotkezv2
+                    - generic [ref=e700]: UNLOADED
+                  - generic [ref=e702]:
+                    - generic [ref=e705]: sales_hunter
+                    - generic [ref=e706]: UNLOADED
+                  - generic [ref=e708]:
+                    - generic [ref=e711]: task_decomposer
+                    - generic [ref=e712]: UNLOADED
+                  - generic [ref=e714]:
+                    - generic [ref=e717]: voice
+                    - generic [ref=e718]: UNLOADED
+                  - generic [ref=e720]:
+                    - generic [ref=e723]: SheetsSyncAgent
+                    - generic [ref=e724]: UNLOADED
+                  - generic [ref=e726]:
+                    - generic [ref=e729]: agent_architect
+                    - generic [ref=e730]: UNLOADED
+                  - generic [ref=e732]:
+                    - generic [ref=e735]: copywriter
+                    - generic [ref=e736]: UNLOADED
+                  - generic [ref=e738]:
+                    - generic [ref=e741]: marketing_director
+                    - generic [ref=e742]: UNLOADED
+                  - generic [ref=e744]:
+                    - generic [ref=e747]: project_organizer
+                    - generic [ref=e748]: UNLOADED
+                  - generic [ref=e750]:
+                    - generic [ref=e753]: MarketingDirector
+                    - generic [ref=e754]: UNLOADED
+                  - generic [ref=e756]:
+                    - generic [ref=e759]: innovation_bridge
+                    - generic [ref=e760]: UNLOADED
+                  - generic [ref=e762]:
+                    - generic [ref=e765]: law_detective
+                    - generic [ref=e766]: UNLOADED
+                  - generic [ref=e768]:
+                    - generic [ref=e771]: ProjectConductor
+                    - generic [ref=e772]: UNLOADED
+                  - generic [ref=e774]:
+                    - generic [ref=e777]: AIResearchWeekly
+                    - generic [ref=e778]: UNLOADED
+                  - generic [ref=e780]:
+                    - generic [ref=e783]: SpecWriter
+                    - generic [ref=e784]: UNLOADED
+                  - generic [ref=e786]:
+                    - generic [ref=e789]: RobotkezV2
+                    - generic [ref=e790]: UNLOADED
+                - generic [ref=e792]:
+                  - generic [ref=e793]: "Active: 0"
+                  - generic [ref=e794]: "Total: 61"
+              - generic [ref=e796]:
+                - generic [ref=e797]:
+                  - generic [ref=e798]:
+                    - img [ref=e799]
+                    - text: Ügynökök Közötti Csevegés
+                  - generic [ref=e803]: Live Feed
+                - generic [ref=e808]:
+                  - generic [ref=e1177]:
+                    - generic [ref=e1178]:
+                      - generic [ref=e1179]:
+                        - img [ref=e1180]
+                        - generic [ref=e1183]: email_triage
+                      - img [ref=e1184]
+                      - generic [ref=e1186]:
+                        - img [ref=e1187]
+                        - generic [ref=e1189]: System
+                      - generic [ref=e1190]: 8:00:00
+                    - paragraph [ref=e1192]: "Feladat sikeresen elvégezve: process inbox..."
+                  - generic [ref=e1193]:
+                    - generic [ref=e1194]:
+                      - generic [ref=e1195]:
+                        - img [ref=e1196]
+                        - generic [ref=e1198]: System
+                      - img [ref=e1199]
+                      - generic [ref=e1201]:
+                        - img [ref=e1202]
+                        - generic [ref=e1205]: email_triage
+                      - generic [ref=e1206]: 8:00:00
+                    - paragraph [ref=e1208]: "Ügynök indítása: email_triage"
+              - generic [ref=e814]:
+                - generic [ref=e815]:
+                  - generic [ref=e816]:
+                    - img [ref=e817]
+                    - text: Jules Integration
+                  - button [ref=e820]:
+                    - img
+                - generic [ref=e821]:
+                  - generic [ref=e822]:
+                    - textbox "Describe the task for Jules (e.g. 'Refactor the authentication logic in python')..." [ref=e823]
+                    - generic [ref=e824]:
+                      - button "Send to Jules" [disabled]:
+                        - img
+                        - text: Send to Jules
+                  - table [ref=e827]:
+                    - rowgroup [ref=e828]:
+                      - row "Session Status Task Action" [ref=e829]:
+                        - columnheader "Session" [ref=e830]
+                        - columnheader "Status" [ref=e831]
+                        - columnheader "Task" [ref=e832]
+                        - columnheader "Action" [ref=e833]
+                    - rowgroup [ref=e834]:
+                      - row "[2026-03-30... 08:00:59] [INFO] Jules session-ök lekérdezése..." [ref=e1226]:
+                        - cell "[2026-03-30..." [ref=e836]
+                        - cell "08:00:59]" [ref=e1227]:
+                          - generic [ref=e838]: 08:00:59]
+                        - cell "[INFO] Jules session-ök lekérdezése..." [ref=e839]
+                        - cell [ref=e840]:
+                          - button "Sync / Pull" [ref=e841]:
+                            - img
+                  - button "Async Tests (GitHub Actions) ▶" [ref=e842] [cursor=pointer]:
+                    - generic [ref=e843]: Async Tests (GitHub Actions)
+                    - generic [ref=e844]:
+                      - button "Frissítés" [ref=e845]:
+                        - img
+                      - generic [ref=e846]: ▶
+              - generic [ref=e848]:
+                - generic [ref=e849]:
+                  - generic [ref=e850]:
+                    - generic [ref=e852]: Total Tasks
+                    - generic [ref=e853]:
+                      - generic [ref=e854]: "0"
+                      - paragraph [ref=e855]: "SUCCESS RATE: 0%"
+                  - generic [ref=e856]:
+                    - generic [ref=e858]: Pending / Running
+                    - generic [ref=e859]:
+                      - generic [ref=e860]:
+                        - text: "0"
+                        - generic [ref=e861]: / 0
+                      - paragraph [ref=e862]: QUEUE DEPTH
+                  - generic [ref=e863]:
+                    - generic [ref=e865]: Success / Error
+                    - generic [ref=e866]:
+                      - generic [ref=e867]: 0 / 0
+                      - paragraph [ref=e868]: COMPLETION STATUS
+                  - generic [ref=e869]:
+                    - generic [ref=e871]: Avg Duration
+                    - generic [ref=e872]:
+                      - generic [ref=e873]: 0ms
+                      - paragraph [ref=e874]: PER TASK
+                - generic [ref=e875]:
+                  - generic [ref=e876]:
+                    - generic [ref=e877]:
+                      - generic [ref=e878]:
+                        - img [ref=e879]
+                        - text: Task Queue Explorer
+                      - generic [ref=e882]: Real-time view of agent task execution queue
+                    - button "Execute Next Pending" [disabled]:
+                      - img
+                      - text: Execute Next Pending
+                  - generic [ref=e883]:
+                    - table [ref=e886]:
+                      - rowgroup [ref=e887]:
+                        - row "ID Agent Description Status Created At Actions" [ref=e888]:
+                          - columnheader "ID" [ref=e889]
+                          - columnheader "Agent" [ref=e890]
+                          - columnheader "Description" [ref=e891]
+                          - columnheader "Status" [ref=e892]
+                          - columnheader "Created At" [ref=e893]
+                          - columnheader "Actions" [ref=e894]
+                      - rowgroup [ref=e895]:
+                        - row "#5497 email_triage process inbox Done 06:00:00 View task details" [ref=e1211]:
+                          - cell "#5497" [ref=e1212]
+                          - cell "email_triage" [ref=e1213]:
+                            - generic [ref=e1214]: email_triage
+                          - cell "process inbox" [ref=e1215]
+                          - cell "Done" [ref=e1216]:
+                            - generic [ref=e1217]:
+                              - img
+                              - text: Done
+                          - cell "06:00:00" [ref=e1218]
+                          - cell "View task details" [ref=e1219]:
+                            - button "View task details" [ref=e1221]:
+                              - img
+                        - row "#5496 Orchestrator TEST_TASK_INTEGRITY_CHECK Done 05:56:38 View task details" [ref=e896]:
+                          - cell "#5496" [ref=e897]
+                          - cell "Orchestrator" [ref=e898]:
+                            - generic [ref=e899]: Orchestrator
+                          - cell "TEST_TASK_INTEGRITY_CHECK" [ref=e900]
+                          - cell "Done" [ref=e901]:
+                            - generic [ref=e902]:
+                              - img
+                              - text: Done
+                          - cell "05:56:38" [ref=e903]
+                          - cell "View task details" [ref=e904]:
+                            - button "View task details" [ref=e906]:
+                              - img
+                        - row "#5494 FailingAgent crash test 2 Done 05:54:45 View task details" [ref=e907]:
+                          - cell "#5494" [ref=e908]
+                          - cell "FailingAgent" [ref=e909]:
+                            - generic [ref=e910]: FailingAgent
+                          - cell "crash test 2" [ref=e911]
+                          - cell "Done" [ref=e912]:
+                            - generic [ref=e913]:
+                              - img
+                              - text: Done
+                          - cell "05:54:45" [ref=e914]
+                          - cell "View task details" [ref=e915]:
+                            - button "View task details" [ref=e917]:
+                              - img
+                        - row "#5495 FailingAgent block test Done 05:54:45 View task details" [ref=e918]:
+                          - cell "#5495" [ref=e919]
+                          - cell "FailingAgent" [ref=e920]:
+                            - generic [ref=e921]: FailingAgent
+                          - cell "block test" [ref=e922]
+                          - cell "Done" [ref=e923]:
+                            - generic [ref=e924]:
+                              - img
+                              - text: Done
+                          - cell "05:54:45" [ref=e925]
+                          - cell "View task details" [ref=e926]:
+                            - button "View task details" [ref=e928]:
+                              - img
+                        - row "#5493 FailingAgent crash test Done 05:54:44 View task details" [ref=e929]:
+                          - cell "#5493" [ref=e930]
+                          - cell "FailingAgent" [ref=e931]:
+                            - generic [ref=e932]: FailingAgent
+                          - cell "crash test" [ref=e933]
+                          - cell "Done" [ref=e934]:
+                            - generic [ref=e935]:
+                              - img
+                              - text: Done
+                          - cell "05:54:44" [ref=e936]
+                          - cell "View task details" [ref=e937]:
+                            - button "View task details" [ref=e939]:
+                              - img
+                        - row "#5492 email_triage process inbox Done 05:45:00 View task details" [ref=e940]:
+                          - cell "#5492" [ref=e941]
+                          - cell "email_triage" [ref=e942]:
+                            - generic [ref=e943]: email_triage
+                          - cell "process inbox" [ref=e944]
+                          - cell "Done" [ref=e945]:
+                            - generic [ref=e946]:
+                              - img
+                              - text: Done
+                          - cell "05:45:00" [ref=e947]
+                          - cell "View task details" [ref=e948]:
+                            - button "View task details" [ref=e950]:
+                              - img
+                        - row "#5491 Orchestrator Teszt üzenet - E2E dashboard teszt Done 05:37:09 View task details" [ref=e951]:
+                          - cell "#5491" [ref=e952]
+                          - cell "Orchestrator" [ref=e953]:
+                            - generic [ref=e954]: Orchestrator
+                          - cell "Teszt üzenet - E2E dashboard teszt" [ref=e955]
+                          - cell "Done" [ref=e956]:
+                            - generic [ref=e957]:
+                              - img
+                              - text: Done
+                          - cell "05:37:09" [ref=e958]
+                          - cell "View task details" [ref=e959]:
+                            - button "View task details" [ref=e961]:
+                              - img
+                        - row "#5490 email_triage process inbox Done 05:30:00 View task details" [ref=e962]:
+                          - cell "#5490" [ref=e963]
+                          - cell "email_triage" [ref=e964]:
+                            - generic [ref=e965]: email_triage
+                          - cell "process inbox" [ref=e966]
+                          - cell "Done" [ref=e967]:
+                            - generic [ref=e968]:
+                              - img
+                              - text: Done
+                          - cell "05:30:00" [ref=e969]
+                          - cell "View task details" [ref=e970]:
+                            - button "View task details" [ref=e972]:
+                              - img
+                        - row "#5489 email_triage process inbox Done 05:15:00 View task details" [ref=e973]:
+                          - cell "#5489" [ref=e974]
+                          - cell "email_triage" [ref=e975]:
+                            - generic [ref=e976]: email_triage
+                          - cell "process inbox" [ref=e977]
+                          - cell "Done" [ref=e978]:
+                            - generic [ref=e979]:
+                              - img
+                              - text: Done
+                          - cell "05:15:00" [ref=e980]
+                          - cell "View task details" [ref=e981]:
+                            - button "View task details" [ref=e983]:
+                              - img
+                        - row "#5488 Orchestrator TEST_TASK_INTEGRITY_CHECK Done 05:11:28 View task details" [ref=e984]:
+                          - cell "#5488" [ref=e985]
+                          - cell "Orchestrator" [ref=e986]:
+                            - generic [ref=e987]: Orchestrator
+                          - cell "TEST_TASK_INTEGRITY_CHECK" [ref=e988]
+                          - cell "Done" [ref=e989]:
+                            - generic [ref=e990]:
+                              - img
+                              - text: Done
+                          - cell "05:11:28" [ref=e991]
+                          - cell "View task details" [ref=e992]:
+                            - button "View task details" [ref=e994]:
+                              - img
+                    - generic [ref=e1006]:
+                      - paragraph [ref=e1007]: Page 1 of 550
+                      - generic [ref=e1008]:
+                        - button "Prev" [disabled]:
+                          - img
+                          - text: Prev
+                        - button "Next" [ref=e1009]:
+                          - text: Next
+                          - img
+              - generic [ref=e1011]:
+                - generic [ref=e1012]:
+                  - generic [ref=e1013]:
+                    - img [ref=e1015]
+                    - generic [ref=e1019]:
+                      - paragraph [ref=e1020]: Harvest Pipeline
+                      - paragraph [ref=e1021]: DATA_FLYWHEEL
+                  - button "Frissítés" [ref=e1022]:
+                    - img [ref=e1023]
+                - generic [ref=e1028]:
+                  - img [ref=e1029]
+                  - generic [ref=e1031]: Hiba
+                  - generic [ref=e1032]: 03. 30. 07:24
+                - generic [ref=e1033]:
+                  - generic [ref=e1034]:
+                    - paragraph [ref=e1035]: LanceDB
+                    - generic [ref=e1036]:
+                      - paragraph [ref=e1037]: "1461"
+                      - paragraph [ref=e1038]: rekord indexelve
+                  - generic [ref=e1039]:
+                    - paragraph [ref=e1040]: Golden DS
+                    - generic [ref=e1041]:
+                      - paragraph [ref=e1042]: "1461"
+                      - paragraph [ref=e1043]: sample
+                - paragraph [ref=e1045]: 2026-03-30 07:24:52,268 [ERROR] [HarvestPipeline] Harvest phase failed, aborting pipeline
+                - button "Harvest Futtatás" [ref=e1046]:
+                  - img
+                  - text: Harvest Futtatás
+              - generic [ref=e1048]:
+                - generic [ref=e1049]:
+                  - generic [ref=e1050]:
+                    - img [ref=e1051]
+                    - text: Ütemezett MI Feladatok
+                  - generic [ref=e1055]:
+                    - button [ref=e1056]:
+                      - img
+                    - button "Új feladat" [ref=e1057]:
+                      - img
+                      - text: Új feladat
+                - table [ref=e1060]:
+                  - rowgroup [ref=e1061]:
+                    - row "Megnevezés Ütemezés Utolsó futás Műveletek" [ref=e1062]:
+                      - columnheader "Megnevezés" [ref=e1063]
+                      - columnheader "Ütemezés" [ref=e1064]
+                      - columnheader "Utolsó futás" [ref=e1065]
+                      - columnheader "Műveletek" [ref=e1066]
+                  - rowgroup [ref=e1067]:
+                    - row "Learning Loop — Nightly Cycle Nightly curated snapshot, trainer and eval cycle for reflex models 30 2 * * * Soha" [ref=e1068]:
+                      - cell "Learning Loop — Nightly Cycle Nightly curated snapshot, trainer and eval cycle for reflex models" [ref=e1069]:
+                        - generic [ref=e1070]: Learning Loop — Nightly Cycle
+                        - generic [ref=e1071]: Nightly curated snapshot, trainer and eval cycle for reflex models
+                      - cell "30 2 * * *" [ref=e1072]:
+                        - generic [ref=e1073]: 30 2 * * *
+                      - cell "Soha" [ref=e1074]:
+                        - generic [ref=e1076]: Soha
+                      - cell [ref=e1077]:
+                        - generic [ref=e1078]:
+                          - button "Futtatás most" [ref=e1079]:
+                            - img
+                          - button "Törlés" [ref=e1080]:
+                            - img
+                    - row "Weekly AI Ecosystem Research Heti AI ökoszisztéma kutatás és jelentéskészítés 0 5 * * 1 2026. 03. 30. 5:01:05" [ref=e1081]:
+                      - cell "Weekly AI Ecosystem Research Heti AI ökoszisztéma kutatás és jelentéskészítés" [ref=e1082]:
+                        - generic [ref=e1083]: Weekly AI Ecosystem Research
+                        - generic [ref=e1084]: Heti AI ökoszisztéma kutatás és jelentéskészítés
+                      - cell "0 5 * * 1" [ref=e1085]:
+                        - generic [ref=e1086]: 0 5 * * 1
+                      - cell "2026. 03. 30. 5:01:05" [ref=e1087]:
+                        - generic [ref=e1089]: 2026. 03. 30. 5:01:05
+                      - cell [ref=e1090]:
+                        - generic [ref=e1091]:
+                          - button "Futtatás most" [ref=e1092]:
+                            - img
+                          - button "Törlés" [ref=e1093]:
+                            - img
+                    - row "Daily Render Deployment Check Check Render deployment status and logs 0 6 * * * 2026. 03. 28. 6:00:00" [ref=e1094]:
+                      - cell "Daily Render Deployment Check Check Render deployment status and logs" [ref=e1095]:
+                        - generic [ref=e1096]: Daily Render Deployment Check
+                        - generic [ref=e1097]: Check Render deployment status and logs
+                      - cell "0 6 * * *" [ref=e1098]:
+                        - generic [ref=e1099]: 0 6 * * *
+                      - cell "2026. 03. 28. 6:00:00" [ref=e1100]:
+                        - generic [ref=e1102]: 2026. 03. 28. 6:00:00
+                      - cell [ref=e1103]:
+                        - generic [ref=e1104]:
+                          - button "Futtatás most" [ref=e1105]:
+                            - img
+                          - button "Törlés" [ref=e1106]:
+                            - img
+                    - row "Git Sync Schedule Auto-sync git commits every 4 hours 0 */4 * * * 2026. 03. 30. 8:00:00" [ref=e1222]:
+                      - cell "Git Sync Schedule Auto-sync git commits every 4 hours" [ref=e1108]:
+                        - generic [ref=e1109]: Git Sync Schedule
+                        - generic [ref=e1110]: Auto-sync git commits every 4 hours
+                      - cell "0 */4 * * *" [ref=e1111]:
+                        - generic [ref=e1112]: 0 */4 * * *
+                      - cell "2026. 03. 30. 8:00:00" [ref=e1223]:
+                        - generic [ref=e1115]: 2026. 03. 30. 8:00:00
+                      - cell [ref=e1116]:
+                        - generic [ref=e1117]:
+                          - button "Futtatás most" [ref=e1118]:
+                            - img
+                          - button "Törlés" [ref=e1119]:
+                            - img
+                    - row "Weekly Dependency Security Check Check for vulnerabilities in dependencies weekly 0 10 * * MON Soha" [ref=e1120]:
+                      - cell "Weekly Dependency Security Check Check for vulnerabilities in dependencies weekly" [ref=e1121]:
+                        - generic [ref=e1122]: Weekly Dependency Security Check
+                        - generic [ref=e1123]: Check for vulnerabilities in dependencies weekly
+                      - cell "0 10 * * MON" [ref=e1124]:
+                        - generic [ref=e1125]: 0 10 * * MON
+                      - cell "Soha" [ref=e1126]:
+                        - generic [ref=e1128]: Soha
+                      - cell [ref=e1129]:
+                        - generic [ref=e1130]:
+                          - button "Futtatás most" [ref=e1131]:
+                            - img
+                          - button "Törlés" [ref=e1132]:
+                            - img
+                    - row "Daily Test Suite Validation Run full test suite and report results 0 22 * * * 2026. 03. 29. 22:00:00" [ref=e1133]:
+                      - cell "Daily Test Suite Validation Run full test suite and report results" [ref=e1134]:
+                        - generic [ref=e1135]: Daily Test Suite Validation
+                        - generic [ref=e1136]: Run full test suite and report results
+                      - cell "0 22 * * *" [ref=e1137]:
+                        - generic [ref=e1138]: 0 22 * * *
+                      - cell "2026. 03. 29. 22:00:00" [ref=e1139]:
+                        - generic [ref=e1141]: 2026. 03. 29. 22:00:00
+                      - cell [ref=e1142]:
+                        - generic [ref=e1143]:
+                          - button "Futtatás most" [ref=e1144]:
+                            - img
+                          - button "Törlés" [ref=e1145]:
+                            - img
+                    - row "Daily Codebase Scan Scan codebase for TODOs, FIXME, and BUG comments daily 0 9 * * * 2026. 03. 29. 9:00:22" [ref=e1146]:
+                      - cell "Daily Codebase Scan Scan codebase for TODOs, FIXME, and BUG comments daily" [ref=e1147]:
+                        - generic [ref=e1148]: Daily Codebase Scan
+                        - generic [ref=e1149]: Scan codebase for TODOs, FIXME, and BUG comments daily
+                      - cell "0 9 * * *" [ref=e1150]:
+                        - generic [ref=e1151]: 0 9 * * *
+                      - cell "2026. 03. 29. 9:00:22" [ref=e1152]:
+                        - generic [ref=e1154]: 2026. 03. 29. 9:00:22
+                      - cell [ref=e1155]:
+                        - generic [ref=e1156]:
+                          - button "Futtatás most" [ref=e1157]:
+                            - img
+                          - button "Törlés" [ref=e1158]:
+                            - img
+                    - row "RobotK�z - Haszn�lt Aut� Keresked�s Figyel� Navig�lj a haszn�ltaut�.hu weboldalra, keress r� \"Budapest\" k�rny�k�n tal�lhat� haszn�lt aut�kra 2-5 milli� Ft �rkateg�ri�ban, �s k�sz�ts �sszefoglal�t az els� 10 tal�latr�l. 0 8 * * * 2026. 03. 30. 8:00:00" [ref=e1224]:
+                      - cell "RobotK�z - Haszn�lt Aut� Keresked�s Figyel� Navig�lj a haszn�ltaut�.hu weboldalra, keress r� \"Budapest\" k�rny�k�n tal�lhat� haszn�lt aut�kra 2-5 milli� Ft �rkateg�ri�ban, �s k�sz�ts �sszefoglal�t az els� 10 tal�latr�l." [ref=e1160]:
+                        - generic [ref=e1161]: RobotK�z - Haszn�lt Aut� Keresked�s Figyel�
+                        - generic [ref=e1162]: Navig�lj a haszn�ltaut�.hu weboldalra, keress r� "Budapest" k�rny�k�n tal�lhat� haszn�lt aut�kra 2-5 milli� Ft �rkateg�ri�ban, �s k�sz�ts �sszefoglal�t az els� 10 tal�latr�l.
+                      - cell "0 8 * * *" [ref=e1163]:
+                        - generic [ref=e1164]: 0 8 * * *
+                      - cell "2026. 03. 30. 8:00:00" [ref=e1225]:
+                        - generic [ref=e1167]: 2026. 03. 30. 8:00:00
+                      - cell [ref=e1168]:
+                        - generic [ref=e1169]:
+                          - button "Futtatás most" [ref=e1170]:
+                            - img
+                          - button "Törlés" [ref=e1171]:
+                            - img
+        - contentinfo [ref=e1172]:
+          - button "Expand terminal" [ref=e1173]:
+            - generic [ref=e1175]: SHOW LOG

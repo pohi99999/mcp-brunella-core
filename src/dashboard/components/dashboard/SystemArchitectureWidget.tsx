@@ -80,8 +80,8 @@ export function SystemArchitectureWidget() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-bold text-zinc-100">System Architecture</h2>
-          <p className="text-xs text-zinc-500 mt-0.5">
+          <h2 className="text-[11px] font-mono font-semibold uppercase tracking-[0.28em] text-zinc-400">System Architecture</h2>
+          <p className="text-xs text-zinc-500 mt-1">
             Glass Box — 4 réteg valós idejű státusza
           </p>
         </div>
@@ -111,9 +111,9 @@ export function SystemArchitectureWidget() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {/* 1. Ingestion Layer */}
-        <Card className="bg-white/[0.03] border-white/[0.04] rounded-lg">
-          <CardHeader className="pb-2 pt-3 px-4">
-            <CardTitle className="flex items-center justify-between text-sm font-semibold text-zinc-200">
+        <Card className="glass-card border-white/10 rounded-2xl overflow-hidden">
+          <CardHeader className="pb-2 pt-3 px-4 border-b border-white/[0.05] bg-white/[0.015]">
+            <CardTitle className="flex items-center justify-between text-[11px] font-mono font-semibold uppercase tracking-[0.24em] text-zinc-400">
               <span className="flex items-center gap-1.5">
                 <Database size={14} className="text-blue-400" />
                 Ingestion
@@ -125,7 +125,7 @@ export function SystemArchitectureWidget() {
               )}
             </CardTitle>
           </CardHeader>
-          <CardContent className="px-4 pb-3">
+          <CardContent className="px-4 pb-3 pt-3">
             {loading ? (
               <Skeleton className="h-8 w-full" />
             ) : data ? (
@@ -137,9 +137,9 @@ export function SystemArchitectureWidget() {
         </Card>
 
         {/* 2. Knowledge Layer */}
-        <Card className="bg-white/[0.03] border-white/[0.04] rounded-lg">
-          <CardHeader className="pb-2 pt-3 px-4">
-            <CardTitle className="flex items-center justify-between text-sm font-semibold text-zinc-200">
+        <Card className="glass-card border-white/10 rounded-2xl overflow-hidden">
+          <CardHeader className="pb-2 pt-3 px-4 border-b border-white/[0.05] bg-white/[0.015]">
+            <CardTitle className="flex items-center justify-between text-[11px] font-mono font-semibold uppercase tracking-[0.24em] text-zinc-400">
               <span className="flex items-center gap-1.5">
                 <Brain size={14} className="text-purple-400" />
                 Knowledge
@@ -151,7 +151,7 @@ export function SystemArchitectureWidget() {
               )}
             </CardTitle>
           </CardHeader>
-          <CardContent className="px-4 pb-3">
+          <CardContent className="px-4 pb-3 pt-3">
             {loading ? (
               <Skeleton className="h-16 w-full" />
             ) : data ? (
@@ -165,9 +165,9 @@ export function SystemArchitectureWidget() {
         </Card>
 
         {/* 3. Orchestration Layer */}
-        <Card className="bg-white/[0.03] border-white/[0.04] rounded-lg">
-          <CardHeader className="pb-2 pt-3 px-4">
-            <CardTitle className="flex items-center justify-between text-sm font-semibold text-zinc-200">
+        <Card className="glass-card border-white/10 rounded-2xl overflow-hidden">
+          <CardHeader className="pb-2 pt-3 px-4 border-b border-white/[0.05] bg-white/[0.015]">
+            <CardTitle className="flex items-center justify-between text-[11px] font-mono font-semibold uppercase tracking-[0.24em] text-zinc-400">
               <span className="flex items-center gap-1.5">
                 <Network size={14} className="text-emerald-400" />
                 Orchestration
@@ -179,7 +179,7 @@ export function SystemArchitectureWidget() {
               )}
             </CardTitle>
           </CardHeader>
-          <CardContent className="px-4 pb-3">
+          <CardContent className="px-4 pb-3 pt-3">
             {loading ? (
               <Skeleton className="h-16 w-full" />
             ) : data ? (
@@ -197,9 +197,9 @@ export function SystemArchitectureWidget() {
         </Card>
 
         {/* 4. Security Layer */}
-        <Card className="bg-white/[0.03] border-white/[0.04] rounded-lg">
-          <CardHeader className="pb-2 pt-3 px-4">
-            <CardTitle className="flex items-center justify-between text-sm font-semibold text-zinc-200">
+        <Card className="glass-card border-white/10 rounded-2xl overflow-hidden">
+          <CardHeader className="pb-2 pt-3 px-4 border-b border-white/[0.05] bg-white/[0.015]">
+            <CardTitle className="flex items-center justify-between text-[11px] font-mono font-semibold uppercase tracking-[0.24em] text-zinc-400">
               <span className="flex items-center gap-1.5">
                 <Shield size={14} className="text-amber-400" />
                 Security
@@ -211,7 +211,7 @@ export function SystemArchitectureWidget() {
               )}
             </CardTitle>
           </CardHeader>
-          <CardContent className="px-4 pb-3">
+          <CardContent className="px-4 pb-3 pt-3">
             {loading ? (
               <Skeleton className="h-16 w-full" />
             ) : data ? (

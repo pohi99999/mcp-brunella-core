@@ -2,7 +2,7 @@
 // PURPOSE: Multi-provider kliens implementálása LangSmith tracing-gel.
 // UPDATED: G3.1 — Model Router integráció
 
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { GoogleGenAI } from "@google/genai";
 import { traceable } from "langsmith/traceable";
 import { logInfo, logError } from "../utils/logger.js";
 import {
@@ -15,10 +15,10 @@ import { recordLlmUsageAndCost } from "../utils/metrics.js";
 
 // Configuration
 const OLLAMA_MODEL = process.env.OLLAMA_MODEL || "qwen2.5-coder:7b";
-const GEMINI_MODEL = process.env.GEMINI_MODEL || "gemini-2.0-flash";
+const GEMINI_MODEL = process.env.GEMINI_MODEL || "gemini-2.5-flash";
 const LLM_TIMEOUT_MS = parseInt(process.env.LLM_TIMEOUT_MS || "120000"); // 2 minutes default
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
+const genAI = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || "" });
 
 /**
  * Poliglott generálási metódus, amely támogatja a helyi (Ollama) és felhő (Gemini) modelleket.
@@ -45,12 +45,12 @@ export const generateResponse: (
         if (!process.env.GEMINI_API_KEY) {
           throw new Error("GEMINI_API_KEY not configured");
         }
-        const model = genAI.getGenerativeModel({
-          model: modelName || GEMINI_MODEL,
-        });
         const systemInstruction = "Te vagy a BAS (Brunella Agent System) Specialistája. Beszélj folyékony magyarul. Válaszaid legyenek mérnöki pontosságúak.";
-        const result = await model.generateContent(`${systemInstruction}\n\nKérés: ${prompt}`);
-        const text = result.response.text();
+        const response = await genAI.models.generateContent({
+          model: modelName || GEMINI_MODEL,
+          contents: `${systemInstruction}\n\nKérés: ${prompt}`,
+        });
+        const text = response.text ?? '';
         recordLlmUsageAndCost({
           provider: "gemini",
           model: modelName || GEMINI_MODEL,

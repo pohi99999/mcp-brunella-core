@@ -13,6 +13,7 @@ import {
 } from "@phosphor-icons/react";
 import * as api from "@/lib/apiService";
 import { toast } from "sonner";
+import { cn } from "@/lib/utils";
 
 interface ServiceStatus {
   id: string;
@@ -169,9 +170,9 @@ export function SystemHealthCard() {
   const totalCount = services.length;
 
   return (
-    <Card className="bg-transparent border-none shadow-none">
+    <Card className="glass-card border-white/10 overflow-hidden">
       <CardHeader className="flex flex-row items-center justify-between pb-3 px-4 pt-4">
-        <CardTitle className="text-xs font-medium tracking-wide text-zinc-400 flex items-center gap-2">
+        <CardTitle className="text-xs font-medium tracking-[0.28em] text-zinc-400 flex items-center gap-2 uppercase">
           <ArrowsClockwise
             size={14}
             className={isChecking ? "animate-spin text-primary" : "text-zinc-500"}
@@ -197,12 +198,12 @@ export function SystemHealthCard() {
             return (
               <div
                 key={service.id}
-                className="flex items-center justify-between px-4 py-2.5 hover:bg-white/[0.03] transition-colors"
+                className="flex items-center justify-between px-4 py-3 hover:bg-white/[0.03] transition-colors"
               >
                 <div className="flex items-center gap-2.5">
                   {getStatusIcon(service.status)}
                   <div className="min-w-0">
-                    <p className="font-medium text-xs text-zinc-200">
+                    <p className="font-medium text-xs text-zinc-100">
                       {service.name}
                     </p>
                     <p className="text-[10px] text-zinc-500 truncate max-w-[140px]">
@@ -235,7 +236,7 @@ export function SystemHealthCard() {
           })}
         </div>
 
-        <div className="px-4 py-2 border-t border-white/[0.04]">
+        <div className="px-4 py-2 border-t border-white/[0.04] bg-white/[0.02]">
           <p className="text-[9px] text-zinc-600 font-mono text-center">
             {lastCheck || "Initializing..."}
           </p>

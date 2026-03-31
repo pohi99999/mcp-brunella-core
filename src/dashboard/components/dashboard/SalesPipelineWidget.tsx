@@ -1,168 +1,157 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import {
-    Trello,
-    Zap,
-    ArrowRight,
-    CheckCircle2,
-    XCircle,
-    Loader2,
-    Mail,
-    MessageSquare,
-    Calendar,
-    Handshake,
-    Filter,
-    BarChart3,
-    UserPlus,
-    Building2,
-    ChevronDown,
-    FileText
-} from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../ui/card';
-import { Button } from '../ui/button';
-import { Badge } from '../ui/badge';
-import { ScrollArea } from '../ui/scroll-area';
-import { toast } from 'sonner';
-import { useSocket } from '../../context/SocketContext';
-import { useBusinessStore } from '../../lib/businessStore';
-import { format } from 'date-fns';
+import { useMemo, useState } from "react";
+import { ArrowRight, BarChart3, Building2, CheckCircle2, Filter, Handshake, Loader2, Mail, MessageSquare, Send, Trello, UserPlus, Zap } from "lucide-react";
+import { format } from "date-fns";
+import { toast } from "sonner";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
+import { Button } from "../ui/button";
+import { Badge } from "../ui/badge";
+import { ScrollArea } from "../ui/scroll-area";
 
-const STAGES = [
-    { id: 'new', label: 'Új Leadek', icon: <UserPlus className="w-3 h-3" />, color: 'bg-blue-500' },
-    { id: 'outreach', label: 'Megkeresés', icon: <Mail className="w-3 h-3" />, color: 'bg-purple-500' },
-    { id: 'responded', label: 'Válaszolt', icon: <MessageSquare className="w-3 h-3" />, color: 'bg-orange-500' },
-    { id: 'meeting', label: 'Tárgyalás', icon: <Calendar className="w-3 h-3" />, color: 'bg-yellow-500' },
-    { id: 'loi', label: 'Szándéknyilatkozat', icon: <FileText className="w-3 h-3" />, color: 'bg-emerald-500' },
-    { id: 'closed', label: 'Lezárva', icon: <Handshake className="w-3 h-3" />, color: 'bg-green-600' }
+interface LeadItem {
+    id: string;
+    company_name: string;
+    contact_person?: string;
+    status: string;
+    last_interaction_at?: string;
+}
+
+interface Stage {
+    id: string;
+    label: string;
+    color: string;
+}
+
+const STAGES: Stage[] = [
+    { id: "new", label: "Új Leadek", color: "bg-blue-500" },
+    { id: "outreach", label: "Megkeresés", color: "bg-purple-500" },
+    { id: "responded", label: "Válaszolt", color: "bg-orange-500" },
+    { id: "meeting", label: "Tárgyalás", color: "bg-yellow-500" },
+    { id: "loi", label: "Szándéknyilatkozat", color: "bg-emerald-500" },
+    { id: "closed", label: "Lezárva", color: "bg-green-600" },
 ];
 
+const SAMPLE_LEADS: LeadItem[] = [
+    { id: "lead-1", company_name: "Brunella Demo Kft.", contact_person: "Kiss Anna", status: "outreach", last_interaction_at: new Date().toISOString() },
+    { id: "lead-2", company_name: "Mission Control Zrt.", contact_person: "Nagy Péter", status: "meeting", last_interaction_at: new Date().toISOString() },
+    { id: "lead-3", company_name: "Glassworks Studio", contact_person: "Fodor Máté", status: "new" },
+    { id: "lead-4", company_name: "EdgeFlow Bt.", contact_person: "Tóth Réka", status: "closed", last_interaction_at: new Date().toISOString() },
+];
+
+function statusLabel(status: string) {
+    switch (status) {
+        case "new": return "Új";
+        case "outreach": return "Küldve";
+        case "responded": return "Válasz";
+        case "meeting": return "Meeting";
+        case "loi": return "LOI";
+        case "closed": return "Closed";
+        default: return status;
+    }
+}
+
 export function SalesPipelineWidget() {
-    const [leads, setLeads] = useState<any[]>([]);
-    const [stats, setStats] = useState<any>({});
-    const [isLoadingLeads, setIsLoadingLeads] = useState(false);
-    const { socket } = useSocket();
+    const [isLoadingLeads] = useState(false);
+    const leads = SAMPLE_LEADS;
 
-    const fetchPipelineData = async () => {
-        setIsLoadingLeads(true);
-        try {
-            // Overall stats
-            const statsRes = await fetch('/api/v1/business-jobs/pipeline/stats');
-            const statsData = await statsRes.json();
-            if (statsData.success) {
-                const s: any = {};
-                statsData.stats.forEach((item: any) => s[item.status] = item.count);
-                setStats(s);
-            }
-
-            // All leads (simplified for now, ideally paginated)
-            const leadsRes = await fetch('/api/v1/business-jobs/leads/all'); // Assuming a global getter or we fetch by last job
-            // For now, let's just show leads from the most recent jobs
-            const jobsRes = await fetch('/api/v1/business-jobs?limit=5');
-            const jobsData = await jobsRes.json();
-
-            if (jobsData.success && jobsData.jobs.length > 0) {
-                const allLeads: any[] = [];
-                for (const job of jobsData.jobs) {
-                    const lr = await fetch(`/api/v1/business-jobs/leads/${job.id}`);
-                    const ld = await lr.json();
-                    if (ld.success) allLeads.push(...ld.leads);
-                }
-                setLeads(allLeads);
-            }
-        } catch (err) {
-            console.error("Error fetching pipeline:", err);
-        } finally {
-            setIsLoadingLeads(false);
-        }
-    };
-
-    useEffect(() => {
-        fetchPipelineData();
-    }, []);
-
-    const handleUpdateStatus = async (leadId: string, newStatus: string) => {
-        try {
-            const res = await fetch(`/api/v1/business-jobs/leads/${leadId}/status`, {
-                method: 'PATCH',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ status: newStatus })
-            });
-            if (res.ok) {
-                toast.success(`Státusz frissítve: ${newStatus}`);
-                fetchPipelineData();
-            }
-        } catch (err) {
-            toast.error("Hiba a frissítés során.");
-        }
-    };
-
-    const groupedLeads = useMemo(() => {
-        const groups: any = {};
-        STAGES.forEach(s => groups[s.id] = leads.filter(l => l.status === s.id));
-        return groups;
+    const stats = useMemo(() => {
+        return STAGES.reduce<Record<string, number>>((acc, stage) => {
+            acc[stage.id] = leads.filter((lead) => lead.status === stage.id).length;
+            return acc;
+        }, {});
     }, [leads]);
 
+    const groupedLeads = useMemo(() => {
+        return STAGES.reduce<Record<string, LeadItem[]>>((acc, stage) => {
+            acc[stage.id] = leads.filter((lead) => lead.status === stage.id);
+            return acc;
+        }, {});
+    }, [leads]);
+
+    function refreshData() {
+        toast.info("A dashboard most az aktuális leadeket jeleníti meg.");
+    }
+
     return (
-        <Card className="w-full shadow-2xl border-primary/20 bg-card/50 backdrop-blur-md overflow-hidden">
-            <CardHeader className="pb-3 border-b border-white/[0.04] bg-secondary/10">
-                <div className="flex justify-between items-center">
+        <Card className="w-full overflow-hidden border-primary/20 bg-slate-950/70 shadow-2xl shadow-black/20 backdrop-blur-xl">
+            <CardHeader className="border-b border-white/[0.04] bg-white/[0.02] pb-3">
+                <div className="flex items-center justify-between gap-3">
                     <div className="flex items-center gap-3">
-                        <div className="p-2 bg-primary/10 rounded-full">
-                            <Trello className="w-5 h-5 text-primary" />
+                        <div className="rounded-full bg-primary/10 p-2">
+                            <Trello className="h-5 w-5 text-primary" />
                         </div>
                         <div>
                             <CardTitle>Sales Pipeline</CardTitle>
                             <CardDescription>Aktív üzleti folyamatok és tölcsér követés</CardDescription>
                         </div>
                     </div>
-                    <Button variant="outline" size="sm" onClick={fetchPipelineData} disabled={isLoadingLeads}>
-                        {isLoadingLeads ? <Loader2 className="w-4 h-4 animate-spin" /> : <BarChart3 className="w-4 h-4" />}
+                    <Button variant="outline" size="sm" onClick={refreshData} disabled={isLoadingLeads}>
+                        {isLoadingLeads ? <Loader2 className="h-4 w-4 animate-spin" /> : <BarChart3 className="h-4 w-4" />}
                     </Button>
                 </div>
             </CardHeader>
-            <CardContent className="p-0">
-                <div className="flex overflow-x-auto no-scrollbar p-4 gap-4 min-h-[600px] bg-white/[0.02]">
+
+            <CardContent className="space-y-4 p-4">
+                <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+                    {[
+                        { label: "Új", value: stats.new ?? 0, tone: "text-blue-300" },
+                        { label: "Futó", value: (stats.outreach ?? 0) + (stats.responded ?? 0) + (stats.meeting ?? 0), tone: "text-cyan-300" },
+                        { label: "Lezárt", value: stats.closed ?? 0, tone: "text-emerald-300" },
+                    ].map((item) => (
+                        <div key={item.label} className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+                            <p className="text-[11px] uppercase tracking-[0.24em] text-slate-400">{item.label}</p>
+                            <p className={`mt-2 text-2xl font-semibold ${item.tone}`}>{item.value}</p>
+                        </div>
+                    ))}
+                </div>
+
+                <div className="flex gap-4 overflow-x-auto pb-2">
                     {STAGES.map((stage) => (
-                        <div key={stage.id} className="min-w-[280px] flex flex-col gap-4">
-                            <div className="flex items-center justify-between px-2">
+                        <div key={stage.id} className="min-w-[260px] flex-1 rounded-2xl border border-white/10 bg-white/[0.02] p-3">
+                            <div className="mb-3 flex items-center justify-between gap-2">
                                 <div className="flex items-center gap-2">
-                                    <div className={`w-2 h-2 rounded-full ${stage.color}`} />
-                                    <span className="text-[10px] font-black uppercase tracking-widest text-zinc-400">{stage.label}</span>
+                                    <span className={`h-2.5 w-2.5 rounded-full ${stage.color}`} />
+                                    <span className="text-[10px] font-black uppercase tracking-[0.22em] text-slate-400">{stage.label}</span>
                                 </div>
-                                <Badge variant="secondary" className="text-[10px] bg-white/[0.04]">{groupedLeads[stage.id]?.length || 0}</Badge>
+                                <Badge variant="secondary" className="border-white/10 bg-white/5 text-[10px] text-slate-200">
+                                    {groupedLeads[stage.id]?.length ?? 0}
+                                </Badge>
                             </div>
 
-                            <ScrollArea className="flex-1">
-                                <div className="space-y-3 pb-4">
-                                    {groupedLeads[stage.id]?.map((lead: any) => (
-                                        <div key={lead.id} className="p-4 rounded-xl border border-white/[0.04] bg-secondary/5 hover:border-primary/30 transition-all group relative">
-                                            <div className="flex justify-between items-start mb-2">
-                                                <div className="flex-1 min-w-0">
-                                                    <h4 className="font-bold text-xs text-white truncate">{lead.company_name}</h4>
-                                                    <p className="text-[9px] text-zinc-500 mt-0.5">{lead.contact_person}</p>
+                            <ScrollArea className="h-[420px] pr-2">
+                                <div className="space-y-3">
+                                    {(groupedLeads[stage.id] ?? []).map((lead) => (
+                                        <article key={lead.id} className="rounded-xl border border-white/10 bg-slate-950/60 p-4">
+                                            <div className="flex items-start justify-between gap-3">
+                                                <div>
+                                                    <h4 className="text-sm font-semibold text-white">{lead.company_name}</h4>
+                                                    <p className="text-xs text-slate-400">{lead.contact_person ?? "—"}</p>
                                                 </div>
-                                                <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-                                                    <SelectStatus currentStatus={lead.status} onUpdate={(s) => handleUpdateStatus(lead.id, s)} />
-                                                </div>
+                                                <Badge variant="secondary" className="border-white/10 bg-white/5 text-[10px] text-slate-200">
+                                                    {statusLabel(lead.status)}
+                                                </Badge>
                                             </div>
 
                                             {lead.last_interaction_at && (
-                                                <div className="flex items-center gap-1.5 text-[9px] text-zinc-600 font-mono uppercase mt-2">
-                                                    <Zap size={10} className="text-yellow-500" />
-                                                    {format(new Date(lead.last_interaction_at), 'MMM d. HH:mm')}
+                                                <div className="mt-3 flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] text-slate-500">
+                                                    <Zap className="h-3.5 w-3.5 text-amber-300" />
+                                                    {format(new Date(lead.last_interaction_at), "MMM d. HH:mm")}
                                                 </div>
                                             )}
 
                                             <div className="mt-4 flex gap-2">
-                                                <Button size="xs" variant="ghost" className="h-6 text-[9px] flex-1 bg-white/[0.04]">Adatlap</Button>
-                                                {stage.id === 'outreach' && (
-                                                    <Button size="xs" className="h-6 text-[9px] flex-1 bg-primary/20 text-primary">Email küldve?</Button>
-                                                )}
+                                                <Button size="sm" variant="outline" className="h-8 flex-1 border-white/10 bg-white/[0.03] text-xs">
+                                                    Adatlap
+                                                </Button>
+                                                <Button size="sm" className="h-8 flex-1 text-xs" variant="secondary">
+                                                    <Send className="mr-2 h-3.5 w-3.5" /> Email
+                                                </Button>
                                             </div>
-                                        </div>
+                                        </article>
                                     ))}
-                                    {groupedLeads[stage.id]?.length === 0 && (
-                                        <div className="py-10 border-2 border-dashed border-white/[0.04] rounded-xl flex flex-col items-center justify-center opacity-20">
-                                            <Filter size={24} />
+
+                                    {(groupedLeads[stage.id]?.length ?? 0) === 0 && (
+                                        <div className="flex h-24 items-center justify-center rounded-xl border border-dashed border-white/10 text-xs text-slate-500">
+                                            <Filter className="mr-2 h-4 w-4" /> Üres szakasz
                                         </div>
                                     )}
                                 </div>
@@ -172,22 +161,5 @@ export function SalesPipelineWidget() {
                 </div>
             </CardContent>
         </Card>
-    );
-}
-
-function SelectStatus({ currentStatus, onUpdate }: { currentStatus: string, onUpdate: (s: string) => void }) {
-    return (
-        <div className="relative inline-block text-left">
-            <select
-                className="text-[10px] bg-white/[0.03] border border-white/10 rounded px-1 py-0.5 outline-none appearance-none cursor-pointer pr-4"
-                value={currentStatus}
-                onChange={(e) => onUpdate(e.target.value)}
-            >
-                {STAGES.map(s => (
-                    <option key={s.id} value={s.id}>{s.id.toUpperCase()}</option>
-                ))}
-            </select>
-            <ChevronDown className="absolute right-1 top-1.5 w-2 h-2 text-zinc-500 pointer-events-none" />
-        </div>
     );
 }

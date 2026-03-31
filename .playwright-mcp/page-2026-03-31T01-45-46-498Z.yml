@@ -1,0 +1,9 @@
+- generic [ref=e4]:
+  - img [ref=e7]
+  - generic [ref=e10]:
+    - heading "Brunella Cortex" [level=1] [ref=e11]
+    - paragraph [ref=e12]: NEURAL NETWORK OS v2.3.0
+  - generic [ref=e16]:
+    - generic [ref=e17]: INITIALIZING SYSTEMS
+    - generic [ref=e18]: 4%
+  - paragraph [ref=e19]: LOADING AGENT REGISTRY...

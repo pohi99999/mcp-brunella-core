@@ -18,6 +18,10 @@ import uvicorn
 import shutil
 from dotenv import load_dotenv
 
+from myai.backend.config import get_backend_config
+from myai.backend.providers import IronCladProviderGateway
+from myai.backend.schemas import ModelsResponse
+
 load_dotenv() # Load .env file
 
 try:
@@ -65,6 +69,8 @@ from myai.agents.comet.models import CometTask
 from myai.agents.comet.memory import ActionMemory
 
 app = FastAPI(title="Brunella Python Subsystem")
+backend_config = get_backend_config()
+backend_gateway = IronCladProviderGateway(backend_config)
 
 app.add_middleware(
     CORSMiddleware,
@@ -90,6 +96,16 @@ class ChatRequest(BaseModel):
 
 class ChatResponse(BaseModel):
     response: str
+
+
+@app.get("/models", response_model=ModelsResponse)
+def list_models() -> ModelsResponse:
+    return ModelsResponse(data=backend_gateway.list_models())
+
+
+@app.get("/v1/models", response_model=ModelsResponse, include_in_schema=False)
+def list_models_v1() -> ModelsResponse:
+    return list_models()
     screenshot: Optional[str] = None
     session_id: str
 

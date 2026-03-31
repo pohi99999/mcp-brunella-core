@@ -21,23 +21,15 @@ vi.mock('ollama', () => ({
     }
 }));
 
-vi.mock('@google/generative-ai', () => ({
-  GoogleGenerativeAI: class {
-    constructor(apiKey: string) { /* ... */ }
-    getGenerativeModel = vi.fn(() => ({
+vi.mock('@google/genai', () => ({
+  GoogleGenAI: class {
+    constructor(_opts: { apiKey: string }) { /* ... */ }
+    models = {
       generateContent: vi.fn().mockResolvedValue({
-        response: { text: () => 'Gemini mock response' }
+        text: 'Gemini mock response',
+        usageMetadata: { promptTokenCount: 10, candidatesTokenCount: 5 }
       })
-    }))
-  },
-  // Make sure to also mock the named export if it's used
-  default: class {
-    constructor(apiKey: string) { /* ... */ }
-    getGenerativeModel = vi.fn(() => ({
-      generateContent: vi.fn().mockResolvedValue({
-        response: { text: () => 'Gemini mock response' }
-      })
-    }))
+    };
   }
 }));
 

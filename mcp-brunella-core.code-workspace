@@ -1639,7 +1639,6 @@
 		"chat.agent.maxRequests": 1000,
 		"chat.tools.terminal.autoReplyToPrompts": true,
 		"chat.tools.terminal.ignoreDefaultAutoApproveRules": true,
-		"chat.tools.terminal.sandbox.enabled": true,
 		"chat.mcp.discovery.enabled": {
 			"claude-desktop": true,
 			"windsurf": true,
@@ -1817,7 +1816,8 @@
 		"githubCopilotApi.server.enabled": true,
 		"githubCopilotApi.server.enableHttps": true,
 		"githubCopilotApi.server.enableLogging": true,
-		"githubCopilotApi.server.enableWebSocket": true
+		"githubCopilotApi.server.enableWebSocket": true,
+		"chat.agent.sandbox": true
 	},
 	"extensions": {
 		"recommendations": [
@@ -1848,7 +1848,8 @@
 			"fabiospampinato.vscode-open-in-github",
 			"jakubkozera.github-copilot-code-reviewer",
 			"shubhj.ghcp-dashboard",
-			"google.geminicodeassist"
+			"google.geminicodeassist",
+			"conductor.conductor"
 		]
 	}
 }

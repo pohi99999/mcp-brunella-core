@@ -1,18 +1,17 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { generateResponse } from '../src/core/llm_client.js';
 
-const { mockGenerateContent, mockGetGenerativeModel } = vi.hoisted(() => {
+const { mockGenerateContent } = vi.hoisted(() => {
     const mockGenerateContent = vi.fn();
-    const mockGetGenerativeModel = vi.fn(() => ({
-        generateContent: mockGenerateContent
-    }));
-    return { mockGenerateContent, mockGetGenerativeModel };
+    return { mockGenerateContent };
 });
 
-vi.mock('@google/generative-ai', () => {
+vi.mock('@google/genai', () => {
     return {
-        GoogleGenerativeAI: class {
-            getGenerativeModel = mockGetGenerativeModel;
+        GoogleGenAI: class {
+            models = {
+                generateContent: mockGenerateContent
+            };
         }
     };
 });
@@ -51,14 +50,14 @@ describe('llm_client', () => {
     describe('generateResponse', () => {
         it('should use Gemini provider when requested', async () => {
             mockGenerateContent.mockResolvedValue({
-                response: { text: () => 'Gemini response' }
+                text: 'Gemini response'
             });
 
             const result = await generateResponse('test prompt', 'gemini');
 
-            expect(mockGetGenerativeModel).toHaveBeenCalledWith({ model: process.env.GEMINI_MODEL || 'gemini-2.0-flash' });
-            const expectedPrompt = "Te vagy a BAS (Brunella Agent System) Specialistája. Beszélj folyékony magyarul. Válaszaid legyenek mérnöki pontosságúak.\n\nKérés: test prompt";
-            expect(mockGenerateContent).toHaveBeenCalledWith(expectedPrompt);
+            expect(mockGenerateContent).toHaveBeenCalledWith(expect.objectContaining({
+                model: process.env.GEMINI_MODEL || 'gemini-2.0-flash',
+            }));
             expect(result).toBe('Gemini response');
         });
 

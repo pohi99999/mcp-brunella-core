@@ -139,8 +139,8 @@ export function TestResultsWidget() {
   if (loading) {
     return (
       <div className="space-y-4">
-        <Skeleton className="h-64 w-full" />
-        <Skeleton className="h-32 w-full" />
+        <Skeleton className="h-64 w-full rounded-2xl" />
+        <Skeleton className="h-32 w-full rounded-2xl" />
       </div>
     );
   }
@@ -148,8 +148,11 @@ export function TestResultsWidget() {
   return (
     <div className="space-y-4">
       {/* Header with Actions */}
-      <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold">Teszt Ütemezés (Test Scheduler)</h2>
+      <div className="flex items-center justify-between gap-3">
+        <div>
+          <p className="text-[10px] uppercase tracking-[0.22em] text-zinc-500">Test Scheduler</p>
+          <h2 className="text-xl font-semibold text-zinc-100">Teszt Ütemezés</h2>
+        </div>
         <div className="flex gap-2">
           <Button
             variant="outline"
@@ -161,6 +164,7 @@ export function TestResultsWidget() {
             disabled={loading}
             aria-label="Tesztek frissítése"
             title="Tesztek frissítése"
+            className="rounded-full border-white/10 bg-white/[0.02] text-zinc-100 hover:bg-white/[0.05]"
           >
             <RefreshCw className={`h-4 w-4 mr-2 ${loading ? "animate-spin" : ""}`} />
             Frissítés
@@ -168,7 +172,7 @@ export function TestResultsWidget() {
           <Button
             onClick={handleTriggerRun}
             disabled={triggering}
-            className="bg-blue-600 hover:bg-blue-700"
+            className="rounded-full bg-cyan-500 text-slate-950 hover:bg-cyan-400"
             aria-label="Tesztek futtatása"
             title="Tesztek futtatása"
           >
@@ -181,149 +185,149 @@ export function TestResultsWidget() {
       {/* Stats Cards */}
       {stats && (
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-gray-600">
+          <Card className="glass-card border-white/10 overflow-hidden">
+            <CardHeader className="pb-2 border-b border-white/[0.05] bg-white/[0.015]">
+              <CardTitle className="text-[10px] font-mono font-semibold uppercase tracking-[0.24em] text-zinc-400">
                 Összes Futás
               </CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold">{stats.totalRuns}</div>
-              <p className="text-xs text-gray-500 mt-1">lifetime</p>
+            <CardContent className="p-4">
+              <div className="text-3xl font-semibold font-mono text-zinc-100">{stats.totalRuns}</div>
+              <p className="text-xs text-zinc-500 mt-1">lifetime</p>
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-gray-600">
+          <Card className="glass-card border-white/10 overflow-hidden">
+            <CardHeader className="pb-2 border-b border-white/[0.05] bg-white/[0.015]">
+              <CardTitle className="text-[10px] font-mono font-semibold uppercase tracking-[0.24em] text-zinc-400">
                 Pass Rate (7d)
               </CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-green-600">
+            <CardContent className="p-4">
+              <div className="text-3xl font-semibold font-mono text-emerald-300">
                 {stats.sevenDayPassRate}
               </div>
-              <p className="text-xs text-gray-500 mt-1">most recent</p>
+              <p className="text-xs text-zinc-500 mt-1">most recent</p>
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-gray-600">
+          <Card className="glass-card border-white/10 overflow-hidden">
+            <CardHeader className="pb-2 border-b border-white/[0.05] bg-white/[0.015]">
+              <CardTitle className="text-[10px] font-mono font-semibold uppercase tracking-[0.24em] text-zinc-400">
                 Átlagos Futási Idő
               </CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold flex items-center gap-2">
-                <Clock className="h-5 w-5 text-orange-500" />
+            <CardContent className="p-4">
+              <div className="text-2xl font-semibold flex items-center gap-2 text-zinc-100">
+                <Clock className="h-5 w-5 text-amber-300" />
                 {stats.averageDuration}
               </div>
-              <p className="text-xs text-gray-500 mt-1">avg duration</p>
+              <p className="text-xs text-zinc-500 mt-1">avg duration</p>
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-gray-600">
+          <Card className="glass-card border-white/10 overflow-hidden">
+            <CardHeader className="pb-2 border-b border-white/[0.05] bg-white/[0.015]">
+              <CardTitle className="text-[10px] font-mono font-semibold uppercase tracking-[0.24em] text-zinc-400">
                 Utolsó Futás
               </CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold flex items-center gap-2">
+            <CardContent className="p-4">
+              <div className="text-2xl font-semibold flex items-center gap-2 text-zinc-100">
                 {stats.lastRunStatus === "passed" ? (
-                  <CheckCircle className="h-5 w-5 text-green-500" />
+                  <CheckCircle className="h-5 w-5 text-emerald-300" />
                 ) : (
-                  <XCircle className="h-5 w-5 text-red-500" />
+                  <XCircle className="h-5 w-5 text-red-300" />
                 )}
                 <span className="capitalize">{stats.lastRunStatus}</span>
               </div>
-              <p className="text-xs text-gray-500 mt-1">{stats.lastRunTime}</p>
+              <p className="text-xs text-zinc-500 mt-1">{stats.lastRunTime}</p>
             </CardContent>
           </Card>
         </div>
       )}
 
       {/* Chart */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Pass Rate Trend (7 nap)</CardTitle>
+      <Card className="glass-card border-white/10 overflow-hidden">
+        <CardHeader className="pb-3 border-b border-white/[0.05] bg-white/[0.015]">
+          <CardTitle className="text-[11px] font-mono font-semibold uppercase tracking-[0.28em] text-zinc-400">Pass Rate Trend (7 nap)</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-4 lg:p-5">
           <ResponsiveContainer width="100%" height={300}>
             <ComposedChart data={chartData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="date" />
-              <YAxis yAxisId="left" label={{ value: "Pass Rate (%)", angle: -90, position: "insideLeft" }} />
-              <YAxis yAxisId="right" orientation="right" label={{ value: "Test Count", angle: 90, position: "insideRight" }} />
-              <Tooltip />
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.08)" />
+              <XAxis dataKey="date" stroke="rgba(255,255,255,0.5)" />
+              <YAxis yAxisId="left" stroke="rgba(255,255,255,0.5)" label={{ value: "Pass Rate (%)", angle: -90, position: "insideLeft", fill: "rgba(255,255,255,0.5)" }} />
+              <YAxis yAxisId="right" orientation="right" stroke="rgba(255,255,255,0.5)" label={{ value: "Test Count", angle: 90, position: "insideRight", fill: "rgba(255,255,255,0.5)" }} />
+              <Tooltip contentStyle={{ background: "rgba(15, 23, 42, 0.96)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 16, color: "#e2e8f0" }} />
               <Legend />
               <Line
                 yAxisId="left"
                 type="monotone"
                 dataKey="passRate"
-                stroke="#10b981"
+                stroke="#22c55e"
                 strokeWidth={2}
                 name="Sikeres arány (%)"
               />
-              <Bar yAxisId="right" dataKey="passed" fill="#3b82f6" name="Sikeres" />
-              <Bar yAxisId="right" dataKey="failed" fill="#ef4444" name="Sikertelen" />
+              <Bar yAxisId="right" dataKey="passed" fill="#38bdf8" name="Sikeres" radius={[6, 6, 0, 0]} />
+              <Bar yAxisId="right" dataKey="failed" fill="#f87171" name="Sikertelen" radius={[6, 6, 0, 0]} />
             </ComposedChart>
           </ResponsiveContainer>
         </CardContent>
       </Card>
 
       {/* Recent Runs Table */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Utolsó 10 Futás</CardTitle>
+      <Card className="glass-card border-white/10 overflow-hidden">
+        <CardHeader className="pb-3 border-b border-white/[0.05] bg-white/[0.015]">
+          <CardTitle className="text-[11px] font-mono font-semibold uppercase tracking-[0.28em] text-zinc-400">Utolsó 10 Futás</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-0">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead className="border-b">
+              <thead className="border-b border-white/[0.05] text-zinc-400">
                 <tr>
-                  <th className="text-left py-2 px-4 font-medium">Státusz</th>
-                  <th className="text-left py-2 px-4 font-medium">Sikeres</th>
-                  <th className="text-left py-2 px-4 font-medium">Sikertelen</th>
-                  <th className="text-left py-2 px-4 font-medium">Futási Idő</th>
-                  <th className="text-left py-2 px-4 font-medium">Időpont</th>
+                  <th className="text-left py-3 px-4 font-medium uppercase tracking-[0.18em] text-[10px]">Státusz</th>
+                  <th className="text-left py-3 px-4 font-medium uppercase tracking-[0.18em] text-[10px]">Sikeres</th>
+                  <th className="text-left py-3 px-4 font-medium uppercase tracking-[0.18em] text-[10px]">Sikertelen</th>
+                  <th className="text-left py-3 px-4 font-medium uppercase tracking-[0.18em] text-[10px]">Futási Idő</th>
+                  <th className="text-left py-3 px-4 font-medium uppercase tracking-[0.18em] text-[10px]">Időpont</th>
                 </tr>
               </thead>
               <tbody>
                 {recentRuns.length === 0 ? (
                   <tr>
-                    <td colSpan={5} className="text-center py-4 text-gray-500">
+                    <td colSpan={5} className="text-center py-8 text-zinc-500">
                       Nincs korábbi futás
                     </td>
                   </tr>
                 ) : (
                   recentRuns.map((run) => (
-                    <tr key={run.id} className="border-b hover:bg-gray-50">
+                    <tr key={run.id} className="border-b border-white/[0.04] hover:bg-white/[0.03]">
                       <td className="py-2 px-4">
                         <span
-                          className={`px-2 py-1 rounded text-xs font-medium ${
+                          className={`px-2.5 py-1 rounded-full text-xs font-medium ${
                             run.status === "passed"
-                              ? "bg-green-100 text-green-800"
+                              ? "bg-emerald-400/10 text-emerald-200 border border-emerald-400/20"
                               : run.status === "failed"
-                                ? "bg-red-100 text-red-800"
-                                : "bg-yellow-100 text-yellow-800"
+                                ? "bg-red-400/10 text-red-200 border border-red-400/20"
+                                : "bg-amber-400/10 text-amber-200 border border-amber-400/20"
                           }`}
                         >
                           {run.status}
                         </span>
                       </td>
                       <td className="py-2 px-4">
-                        <span className="text-green-600 font-medium">
+                        <span className="text-emerald-300 font-medium">
                           {run.passed}
                         </span>
                       </td>
                       <td className="py-2 px-4">
-                        <span className="text-red-600 font-medium">
+                        <span className="text-red-300 font-medium">
                           {run.failed}
                         </span>
                       </td>
                       <td className="py-2 px-4">{run.duration}</td>
-                      <td className="py-2 px-4 text-gray-500 text-xs">
+                      <td className="py-2 px-4 text-zinc-500 text-xs">
                         {new Date(run.startedAt).toLocaleString("hu-HU")}
                       </td>
                     </tr>

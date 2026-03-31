@@ -13,6 +13,14 @@ export default defineConfig({
     testTimeout: 15000,
     fileParallelism: false,
     retry: Number.isFinite(configuredRetry) && configuredRetry > 0 ? configuredRetry : 0,
+    pool: 'forks',
+    poolOptions: {
+      forks: {
+        execArgv: ['--max-old-space-size=4096'],
+        maxForks: 1,
+        minForks: 1,
+      },
+    },
   },
   resolve: {
     alias: {

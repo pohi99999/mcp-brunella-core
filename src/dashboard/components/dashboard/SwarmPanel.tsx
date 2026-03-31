@@ -4,6 +4,9 @@
  */
 import React, { useState, useEffect } from 'react';
 import { Users, Activity, Vote, AlertCircle, Play, Square, RefreshCw } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { cn } from '@/lib/utils';
 
 interface ColonySummary {
   swarmId: string;
@@ -58,31 +61,36 @@ export default function SwarmPanel() {
   };
 
   return (
-    <div className="p-6 space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-xl font-bold flex items-center gap-2">
-          <Users className="w-5 h-5" /> Swarm Intelligence v2
-        </h2>
-        <button onClick={() => void fetchData()} className="p-2 rounded hover:bg-gray-700" title="Frissítés">
+    <div className="space-y-6 p-6">
+      <div className="flex items-end justify-between gap-4">
+        <div>
+          <p className="text-[10px] uppercase tracking-[0.22em] text-zinc-500">Swarm telemetry</p>
+          <h2 className="text-2xl font-semibold text-zinc-100 flex items-center gap-2">
+            <Users className="w-5 h-5 text-cyan-300" /> Swarm Intelligence v2
+          </h2>
+        </div>
+        <button onClick={() => void fetchData()} className="rounded-full border border-white/10 bg-white/[0.02] p-2 text-zinc-100 hover:bg-white/[0.05]" title="Frissítés">
           <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
         </button>
       </div>
 
       {error && (
-        <div className="bg-red-900/30 border border-red-700 rounded p-3 flex items-center gap-2">
-          <AlertCircle className="w-4 h-4 text-red-400" /> <span className="text-red-300">{error}</span>
+        <div className="flex items-center gap-2 rounded-xl border border-red-500/20 bg-red-500/10 p-3 text-red-200">
+          <AlertCircle className="w-4 h-4 text-red-300" /> <span>{error}</span>
         </div>
       )}
 
       {/* Colony Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {colonies.map(colony => (
-          <div key={colony.swarmId} className="bg-gray-800 rounded-lg p-4 border border-gray-700">
-            <div className="flex items-center justify-between mb-2">
-              <h3 className="font-semibold">{colony.name}</h3>
-              <span className={`text-sm font-mono ${statusColor(colony.status)}`}>{colony.status}</span>
+          <div key={colony.swarmId} className="rounded-xl border border-white/[0.05] bg-white/[0.02] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.03)]">
+            <div className="mb-2 flex items-center justify-between">
+              <h3 className="font-semibold text-zinc-100">{colony.name}</h3>
+              <Badge className={cn("border text-[10px] uppercase tracking-[0.16em]", statusColor(colony.status).replace('text-', 'bg-').replace('400', '400/10'))}>
+                {colony.status}
+              </Badge>
             </div>
-            <div className="grid grid-cols-2 gap-2 text-sm text-gray-400">
+            <div className="grid grid-cols-2 gap-2 text-sm text-zinc-400">
               <div className="flex items-center gap-1">
                 <Users className="w-3 h-3" /> {colony.agentCount} agent
               </div>
@@ -101,22 +109,22 @@ export default function SwarmPanel() {
 
       {/* Checkpoint Stats */}
       {checkpoints && (
-        <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
-          <h3 className="font-semibold mb-2 flex items-center gap-2">
-            <Vote className="w-4 h-4" /> Checkpoint Statisztikák
+        <div className="rounded-xl border border-white/[0.05] bg-white/[0.02] p-4">
+          <h3 className="mb-2 flex items-center gap-2 font-semibold text-zinc-100">
+            <Vote className="w-4 h-4 text-violet-300" /> Checkpoint Statisztikák
           </h3>
           <div className="grid grid-cols-3 gap-4 text-sm">
             <div>
-              <div className="text-gray-400">Összes checkpoint</div>
-              <div className="text-lg font-mono">{checkpoints.totalCheckpoints}</div>
+              <div className="text-zinc-500">Összes checkpoint</div>
+              <div className="font-mono text-lg text-zinc-100">{checkpoints.totalCheckpoints}</div>
             </div>
             <div>
-              <div className="text-gray-400">Colony-k</div>
-              <div className="text-lg font-mono">{checkpoints.colonies}</div>
+              <div className="text-zinc-500">Colony-k</div>
+              <div className="font-mono text-lg text-zinc-100">{checkpoints.colonies}</div>
             </div>
             <div>
-              <div className="text-gray-400">Legutóbbi</div>
-              <div className="text-sm font-mono">{checkpoints.latestAt ?? '—'}</div>
+              <div className="text-zinc-500">Legutóbbi</div>
+              <div className="font-mono text-sm text-zinc-100">{checkpoints.latestAt ?? '—'}</div>
             </div>
           </div>
         </div>

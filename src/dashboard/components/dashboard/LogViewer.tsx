@@ -25,15 +25,15 @@ export function LogViewer({ logs, user, onClearLogs }: LogViewerProps) {
   const getLevelColor = (level: LogEntry['level']) => {
     switch (level) {
       case 'info':
-        return 'bg-[var(--success)]/20 text-[var(--success)] border-[var(--success)]/30'
+        return 'bg-emerald-400/10 text-emerald-200 border-emerald-400/20'
       case 'warning':
-        return 'bg-[var(--warning)]/20 text-[var(--warning)] border-[var(--warning)]/30'
+        return 'bg-amber-400/10 text-amber-200 border-amber-400/20'
       case 'error':
-        return 'bg-destructive/20 text-destructive border-destructive/30'
+        return 'bg-red-400/10 text-red-200 border-red-400/20'
       case 'debug':
-        return 'bg-accent/20 text-accent border-accent/30'
+        return 'bg-violet-400/10 text-violet-200 border-violet-400/20'
       default:
-        return 'bg-muted text-zinc-500'
+        return 'bg-white/[0.04] text-zinc-400 border-white/[0.08]'
     }
   }
 
@@ -51,11 +51,11 @@ export function LogViewer({ logs, user, onClearLogs }: LogViewerProps) {
   }
 
   return (
-    <Card className="border-border/50">
-      <CardHeader>
+    <Card className="glass-card border-white/10 overflow-hidden shadow-[0_16px_60px_-36px_rgba(0,0,0,0.85)]">
+      <CardHeader className="pb-3 border-b border-white/[0.05] bg-white/[0.015]">
         <div className="flex items-center justify-between">
-          <CardTitle className="flex items-center gap-2 text-lg">
-            <Terminal size={24} />
+          <CardTitle className="flex items-center gap-2 text-[11px] font-mono font-semibold uppercase tracking-[0.28em] text-zinc-400">
+            <Terminal size={20} className="text-cyan-300" />
             Naplók
           </CardTitle>
           <div className="flex items-center gap-2">
@@ -64,6 +64,7 @@ export function LogViewer({ logs, user, onClearLogs }: LogViewerProps) {
                 variant={filterLevel === 'all' ? 'default' : 'ghost'}
                 size="sm"
                 onClick={() => setFilterLevel('all')}
+                className="h-8 rounded-full border border-white/10 bg-white/[0.03]"
               >
                 Összes
               </Button>
@@ -71,6 +72,7 @@ export function LogViewer({ logs, user, onClearLogs }: LogViewerProps) {
                 variant={filterLevel === 'info' ? 'default' : 'ghost'}
                 size="sm"
                 onClick={() => setFilterLevel('info')}
+                className="h-8 rounded-full border border-white/10 bg-white/[0.03]"
               >
                 Info
               </Button>
@@ -78,6 +80,7 @@ export function LogViewer({ logs, user, onClearLogs }: LogViewerProps) {
                 variant={filterLevel === 'warning' ? 'default' : 'ghost'}
                 size="sm"
                 onClick={() => setFilterLevel('warning')}
+                className="h-8 rounded-full border border-white/10 bg-white/[0.03]"
               >
                 Figyelmeztetés
               </Button>
@@ -85,6 +88,7 @@ export function LogViewer({ logs, user, onClearLogs }: LogViewerProps) {
                 variant={filterLevel === 'error' ? 'default' : 'ghost'}
                 size="sm"
                 onClick={() => setFilterLevel('error')}
+                className="h-8 rounded-full border border-white/10 bg-white/[0.03]"
               >
                 Hiba
               </Button>
@@ -97,7 +101,7 @@ export function LogViewer({ logs, user, onClearLogs }: LogViewerProps) {
                   variant="outline"
                   size="sm"
                   disabled
-                  className="flex items-center gap-2"
+                  className="flex items-center gap-2 rounded-full border-white/10 bg-white/[0.03]"
                 >
                   <Trash size={16} />
                   Törlés
@@ -108,7 +112,7 @@ export function LogViewer({ logs, user, onClearLogs }: LogViewerProps) {
                 variant="outline"
                 size="sm"
                 onClick={onClearLogs}
-                className="flex items-center gap-2"
+                className="flex items-center gap-2 rounded-full border-white/10 bg-white/[0.03]"
               >
                 <Trash size={16} />
                 Törlés
@@ -117,8 +121,8 @@ export function LogViewer({ logs, user, onClearLogs }: LogViewerProps) {
           </div>
         </div>
       </CardHeader>
-      <CardContent>
-        <ScrollArea className="h-[500px] w-full rounded-md border border-border/50 p-4">
+      <CardContent className="p-4 lg:p-5">
+        <ScrollArea className="h-[500px] w-full rounded-2xl border border-white/[0.05] bg-white/[0.015] p-4">
           {filteredLogs.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full text-zinc-500 py-12">
               <Terminal size={48} className="mb-4 opacity-50" />
@@ -130,19 +134,19 @@ export function LogViewer({ logs, user, onClearLogs }: LogViewerProps) {
                 <div
                   key={log.id}
                   className={cn(
-                    "p-3 rounded-md border transition-colors hover:bg-muted/30",
-                    "border-border/30"
+                    "p-3 rounded-2xl border transition-colors hover:bg-white/[0.03]",
+                    "border-white/[0.05] bg-white/[0.015] shadow-[inset_0_1px_0_rgba(255,255,255,0.03)]"
                   )}
                 >
                   <div className="flex items-start gap-3">
                     <Badge
                       variant="outline"
-                      className={cn("font-mono text-xs shrink-0", getLevelColor(log.level))}
+                      className={cn("font-mono text-xs shrink-0 uppercase tracking-[0.18em]", getLevelColor(log.level))}
                     >
                       {getLevelText(log.level)}
                     </Badge>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm break-words">{log.message}</p>
+                      <p className="text-sm break-words text-zinc-100">{log.message}</p>
                       <div className="flex items-center gap-2 mt-1 text-xs text-zinc-500">
                         <span className="font-mono">{formatTimestamp(log.timestamp)}</span>
                         {log.source && (

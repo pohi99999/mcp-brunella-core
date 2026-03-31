@@ -37,6 +37,7 @@ import { createCopilotBridgeRoutes } from "./copilotBridge.js";
 import { createCognitiveBridgeRoutes } from "./cognitiveBridge.js";
 import { createWorkflowRoutes } from "./workflow.js";
 import { createRemoteRoutes } from "./remote.js";
+import { createAutonomousInfraRouter } from "./autonomousInfra.js";
 // --- Activated dormant routes (2026-03-25) ---
 import { createObservabilityRouter } from "./observability.js";
 import { swarmRouter } from "./swarm.js";
@@ -132,6 +133,7 @@ export function createV1Router(): Router {
   router.use("/cognitive", createCognitiveBridgeRoutes());
   router.use("/workflow", createWorkflowRoutes());
   router.use("/remote", createRemoteRoutes());
+  router.use("/autonomous-infra", createAutonomousInfraRouter());
 
   // --- Activated dormant routes (2026-03-25) ---
   router.use("/observability", createObservabilityRouter());

@@ -1,6 +1,6 @@
 # FŐSZÁL - Egyesített Fejlesztési Napló
 
-**Generálva:** 2026-03-30 16:15
+**Generálva:** 2026-03-31 04:58
 **Script:** `scripts/sync_foszal.py`
 
 ---
@@ -28,7 +28,41 @@ start-full.bat
 
 ## Összesített Napló (Időrendben)
 
+### 2026-03-31
+
+#### 02:29 - [Copilot] Route/docs sync
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** README.md, src/server/routes/index.ts, src/server/web.ts
+
+#### 02:16 - [Copilot] Mission Control cleanup + validation
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** src/dashboard/components/dashboard/JulesPanel.tsx, src/dashboard/components/dashboard/TrackProgress.tsx, src/dashboard/components/dashboard/TrackTodoWidget.tsx
+
+#### 01:25 - [Gemini] ☁️ Cloudflare Migration & CEAN Phase 1D Completion
+- **Agent:** Gemini
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `conductor/tracks.md`, `conductor/archive/cloudflare_workers_migration_20260226/`, `.env` (Tokenek validálva), `src/server/routes/index.ts`
+
+#### 00:00 - [Claude] 7 Jules PR beépítése (Phase 1 + Phase 2) ✅
+- **Agent:** Claude
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `src/agents/types.ts`, `src/agents/GitHubModelsAgent.ts`, `src/agents/MarketIntelAgent.ts`, `src/agents/permissions.ts`, `src/tools/toolPermissions.ts`, `src/core/scheduledTasksEngine.ts`, `src/core/julesMock.ts`, `src/server/SystemController.ts`, `src/server/registry.ts`, `src/server/routes/index.ts`, `src/server/routes/federation.ts`, `src/server/routes/githubWebhook.ts` (+5 további)
+
+---
+
 ### 2026-03-30
+
+#### 16:40 - [Copilot] Archival lezárás + GitHub push rögzítése
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** .ai/copilot.md
+
+#### 15:30 - [Copilot] Lumen landing page mobiljavítás
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** F:\mcp-brunella-core\temp\Lumen-landing\app\page.tsx
 
 #### 14:25 - [Copilot] Könyvelés automatizálás lezárás
 - **Agent:** Copilot
@@ -49,11 +83,6 @@ start-full.bat
 - **Agent:** Copilot
 - **Státusz:** ✅ Befejezve
 - **Érintett fájlok:** src/utils/prebuiltTools.ts, src/utils/mcpClient.ts, src/cli.ts, src/cli/toolDiscoveryCommands.ts, start-with-copilot.bat, out/tools.json
-
-#### 12:00 - [Claude] P-Sales20260327 track lezárás — Task 10 ✅
-- **Agent:** Claude
-- **Státusz:** ✅ Befejezve
-- **Érintett fájlok:** `conductor/tracks/P-Sales20260327/meta.json` — `status: "completed"`, `progress: 100`, `completedAt` hozzáadva, mind 8 fázis `"completed"`, `conductor/tracks.md` — P-Sales eltávolítva Active-ból, új "Befejezett (Completed) (1)" szekció hozzáadva, stats frissítve (5 active → 4 active, 0 completed → 1 completed)
 
 #### 00:59 - [Copilot] Phase 4 Federated MCP closure audit + integration fix
 - **Agent:** Copilot
@@ -669,10 +698,10 @@ start-full.bat
 
 | Agent | Bejegyzések | Utolsó Aktivitás |
 |-------|-------------|------------------|
-| Claude | 85 | 2026-03-30 |
-| Gemini | 12 | 2026-03-29 |
+| Claude | 85 | 2026-03-31 |
+| Gemini | 13 | 2026-03-31 |
 | Cursor | 0 | N/A |
-| Copilot | 12 | 2026-03-28 |
+| Copilot | 16 | 2026-03-28 |
 
 ---
 

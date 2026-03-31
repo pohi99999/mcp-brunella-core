@@ -1,0 +1,41 @@
+{
+  "id": "inventory_automation_20260330",
+  "name": "Autonóm Készlet- és Leltárkezelési Rendszer — KKV",
+  "status": "ACTIVE",
+  "activated": "2026-03-30",
+  "priority": "MEDIUM",
+  "created": "2026-03-30",
+  "owner": "Pohánka Péter",
+  "progress": 0,
+  "description": "Zöldmezős, autonóm KKV készletkezelő rendszer: FIFO/WAC számviteli értékelés, prediktív AI újrarendelési ágens, leltáregyeztetési nyomozó ágens. Stack: n8n orkesztráció, Langflow AI motor, redundáns Google Sheets + SQLite/Supabase adatréteg, Brunella Dashboard + CLI.",
+  "dependencies": [],
+  "related_tracks": ["konyveles_kognitiv_bovites_20260330"],
+  "phase": "greenfield-module",
+  "tags": ["készlet", "leltár", "FIFO", "WAC", "inventory", "n8n", "Langflow", "Google Sheets", "Supabase", "KKV", "replenishment", "stocktake"],
+  "phases": {
+    "phase1": {
+      "name": "Alapadatbázis és Számviteli Készletértékelés",
+      "status": "IN_PROGRESS",
+      "estimated_days": 6,
+      "weight_percent": 30
+    },
+    "phase2": {
+      "name": "Prediktív Újrarendelési Ágens (AI Replenishment)",
+      "status": "PLANNED",
+      "estimated_days": 6,
+      "weight_percent": 30
+    },
+    "phase3": {
+      "name": "Leltáregyeztető és Nyomozó Ágens (Stocktake)",
+      "status": "PLANNED",
+      "estimated_days": 5,
+      "weight_percent": 25
+    },
+    "phase4": {
+      "name": "Integráció, Dashboard és CLI",
+      "status": "PLANNED",
+      "estimated_days": 3,
+      "weight_percent": 15
+    }
+  }
+}

@@ -4,6 +4,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { cn } from '@/lib/utils'
 
 interface TraceSpan {
   traceId: string
@@ -32,7 +33,7 @@ interface TraceSummary {
 
 function StatusBadge({ status }: { status: string }) {
   const variant = status === 'success' ? 'default' : status === 'error' ? 'destructive' : 'secondary'
-  return <Badge variant={variant}>{status}</Badge>
+  return <Badge variant={variant} className="uppercase tracking-[0.16em] text-[10px]">{status}</Badge>
 }
 
 function SpanRow({ span, depth = 0 }: { span: TraceSpan; depth?: number }) {
@@ -44,11 +45,11 @@ function SpanRow({ span, depth = 0 }: { span: TraceSpan; depth?: number }) {
 
   return (
     <div
-      className="flex items-center gap-2 py-1 px-2 hover:bg-muted/50 rounded text-sm font-mono"
+      className="flex items-center gap-2 rounded-lg border border-white/[0.04] bg-white/[0.015] py-1 px-2 text-sm font-mono hover:bg-white/[0.03]"
       style={{ paddingLeft: `${depth * 24 + 8}px` }}
     >
       <span className="text-zinc-500 w-6">{depth > 0 ? '└' : '●'}</span>
-      <span className="font-medium text-accent">{span.agentName}</span>
+      <span className="font-medium text-zinc-100">{span.agentName}</span>
       <span className="text-zinc-500">::{span.operation}</span>
       <StatusBadge status={span.status} />
       <span className="ml-auto text-zinc-500 text-xs">{durStr}</span>
@@ -137,14 +138,14 @@ export function TraceViewer() {
   const tree = buildTree(spans)
 
   return (
-    <Card className="border-border/50">
-      <CardHeader>
-        <CardTitle className="text-lg">Agent Trace Viewer</CardTitle>
+    <Card className="glass-card border-white/10 overflow-hidden">
+      <CardHeader className="pb-3 border-b border-white/[0.05] bg-white/[0.015]">
+        <CardTitle className="text-[11px] font-mono font-semibold uppercase tracking-[0.28em] text-zinc-400">Agent Trace Viewer</CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="p-4 lg:p-5">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Trace list */}
-          <div className="space-y-1 max-h-96 overflow-y-auto">
+          <div className="space-y-2 max-h-96 overflow-y-auto">
             {traces.length === 0 && (
               <p className="text-zinc-500 text-sm">No traces yet.</p>
             )}
@@ -152,12 +153,15 @@ export function TraceViewer() {
               <button
                 key={t.traceId}
                 onClick={() => setSelectedTrace(t.traceId)}
-                className={`w-full text-left p-2 rounded text-sm hover:bg-muted/50 ${
-                  selectedTrace === t.traceId ? 'bg-muted' : ''
-                }`}
+                className={cn(
+                  'w-full rounded-xl border p-3 text-left text-sm transition-colors hover:bg-white/[0.03]',
+                  selectedTrace === t.traceId
+                    ? 'border-cyan-400/30 bg-cyan-400/10'
+                    : 'border-white/[0.05] bg-white/[0.015]'
+                )}
               >
                 <div className="flex items-center justify-between">
-                  <span className="font-medium">{t.rootAgent}</span>
+                  <span className="font-medium text-zinc-100">{t.rootAgent}</span>
                   <StatusBadge status={t.status} />
                 </div>
                 <div className="text-xs text-zinc-500 mt-1">

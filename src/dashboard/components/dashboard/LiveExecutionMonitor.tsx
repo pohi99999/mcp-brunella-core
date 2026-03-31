@@ -47,10 +47,10 @@ export function LiveExecutionMonitor() {
 
   return (
     <div className="space-y-4 animate-in fade-in slide-in-from-top-4 duration-500">
-      <Card className="glass-panel border-primary/20 bg-primary/5">
-        <CardHeader className="p-4 border-b border-white/[0.04] flex flex-row items-center justify-between">
+      <Card className="glass-card border-cyan-500/20 bg-cyan-500/5 overflow-hidden shadow-[0_16px_60px_-36px_rgba(0,0,0,0.85)]">
+        <CardHeader className="p-4 border-b border-white/[0.05] bg-white/[0.015] flex flex-row items-center justify-between">
           <div className="space-y-1">
-            <CardTitle className="text-sm font-bold tracking-widest uppercase flex items-center gap-2">
+            <CardTitle className="text-[11px] font-mono font-semibold tracking-[0.28em] uppercase flex items-center gap-2 text-zinc-300">
               <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
               Live Execution Monitor
             </CardTitle>
@@ -61,7 +61,7 @@ export function LiveExecutionMonitor() {
             <Button
               variant="destructive"
               size="sm"
-              className="h-8 gap-2 bg-red-500/20 hover:bg-red-500 text-red-500 hover:text-white border border-red-500/30"
+              className="h-8 gap-2 bg-red-500/20 hover:bg-red-500 text-red-300 hover:text-white border border-red-500/30 rounded-full"
               onClick={handleAbort}
             >
               <StopCircle size={14} />
@@ -70,7 +70,7 @@ export function LiveExecutionMonitor() {
           )}
         </CardHeader>
 
-        <CardContent className="p-4 space-y-4">
+        <CardContent className="p-4 lg:p-5 space-y-4">
           {/* Progress Section */}
           <div className="space-y-2">
             <div className="flex justify-between text-[10px] font-mono text-zinc-400 uppercase">
@@ -86,8 +86,8 @@ export function LiveExecutionMonitor() {
               {robotkezSteps.map((step, idx) => (
                 <div
                   key={idx}
-                  className={cn(
-                    "flex items-start gap-3 p-3 rounded-xl border transition-all duration-300",
+                    className={cn(
+                    "flex items-start gap-3 p-3 rounded-2xl border transition-all duration-300",
                     step.status === 'working' ? "bg-primary/10 border-primary/30" :
                       step.status === 'completed' ? "bg-white/[0.04] border-emerald-500/20" :
                         "bg-white/[0.02] border-white/[0.04] opacity-60"

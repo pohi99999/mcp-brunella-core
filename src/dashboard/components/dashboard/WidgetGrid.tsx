@@ -5,7 +5,6 @@ import { RotateCcw, ShieldCheck, Bot, ListTodo, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useLayout } from "@/lib/layout/LayoutContext";
 import { useSystemSignal } from "@/hooks/useSystemSignal";
-import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
 export function WidgetGrid() {
@@ -70,89 +69,64 @@ export function WidgetGrid() {
   ];
 
   return (
-    <div className="flex flex-col gap-5 h-full">
-      <Card className="glass-card border-white/10 overflow-hidden">
-        <CardContent className="p-5 lg:p-6">
-          <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
-            <div className="space-y-3">
-              <div className="flex items-center gap-2">
-                <div className="h-2.5 w-2.5 rounded-full bg-cyan-400 shadow-[0_0_18px_rgba(34,211,238,0.55)]" />
-                <span className="text-[10px] font-mono tracking-[0.35em] text-cyan-300/80 uppercase">
-                  Mission Control
-                </span>
-              </div>
-              <div className="space-y-1">
-                <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                  <h2 className="text-2xl lg:text-3xl font-semibold tracking-tight text-white">
-                    Brunella Mission Control
-                  </h2>
-                  <span className="text-[11px] font-mono tracking-[0.3em] text-zinc-500 uppercase">
-                    {widgets.length} widgets
-                  </span>
-                </div>
-                <p className="max-w-2xl text-sm text-zinc-400">
-                  Premium dark cockpit view for operators and developers — system health, agent state,
-                  and task throughput in a single bento-grid.
-                </p>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-3 xl:grid-cols-4">
-              {statCards.map((stat) => {
-                const Icon = stat.icon;
-                return (
-                  <div
-                    key={stat.label}
-                    className={cn(
-                      "rounded-xl border border-white/10 bg-white/[0.03] px-3 py-2.5",
-                      "shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]",
-                    )}
-                  >
-                    <div className="flex items-center justify-between gap-3">
-                      <span className="text-[10px] font-medium uppercase tracking-[0.24em] text-zinc-500">
-                        {stat.label}
-                      </span>
-                      <Icon size={14} className={stat.accent} />
-                    </div>
-                    <div className="mt-2 flex items-end justify-between gap-3">
-                      <span className="text-xl font-semibold text-white tracking-tight">
-                        {stat.value}
-                      </span>
-                      <span className="text-[10px] text-zinc-500 font-mono">
-                        {stat.detail}
-                      </span>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
+    <div className="flex flex-col gap-3 h-full">
+      {/* ── Command Strip ── */}
+      <div className="shrink-0 flex items-center justify-between px-4 py-2.5 rounded-2xl border border-white/[0.07] bg-slate-950/60 backdrop-blur-xl shadow-[0_4px_20px_-8px_rgba(0,0,0,0.5)]">
+        <div className="flex items-center gap-3 min-w-0">
+          <div className="flex items-center gap-2 shrink-0">
+            <div className="h-1.5 w-1.5 rounded-full bg-cyan-400 shadow-[0_0_8px_rgba(34,211,238,0.65)] animate-pulse" />
+            <span className="text-[9px] font-mono tracking-[0.38em] text-cyan-300/80 uppercase leading-none">
+              BRUNELLA
+            </span>
           </div>
-        </CardContent>
-      </Card>
-
-      <div className="flex items-center justify-between px-1">
-        <div className="flex items-center gap-2">
-          <span className="text-[10px] font-mono tracking-[0.3em] text-zinc-500 uppercase">
-            {currentLayout.name}
-          </span>
-          <span className="h-1 w-1 rounded-full bg-zinc-600" />
-          <span className="text-[10px] text-zinc-500 font-mono tracking-widest">
-            {currentLayout.description}
+          <div className="h-3.5 w-px bg-white/[0.06] hidden sm:block" />
+          <span className="text-[9px] text-zinc-600 font-mono tracking-widest hidden sm:inline truncate">
+            {currentLayout.name.toUpperCase().replaceAll(" ", "_")} · {widgets.length} WIDGETS
           </span>
         </div>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => setLayoutMode("default-dashboard")}
-          className="text-zinc-500 hover:text-zinc-200 gap-1.5 h-8 text-xs"
-        >
-          <RotateCcw size={12} />
-          Reset layout
-        </Button>
+        <div className="flex items-center gap-1.5 shrink-0">
+          <div className="hidden sm:flex items-center gap-1.5">
+            {statCards.map((stat) => {
+              const Icon = stat.icon;
+              return (
+                <div
+                  key={stat.label}
+                  className="flex flex-col gap-0.5 px-2.5 py-1.5 rounded-xl border border-white/[0.07] bg-white/[0.025] min-w-[74px]"
+                >
+                  <div className="flex items-center gap-1">
+                    <Icon size={9} className={cn(stat.accent)} />
+                    <span className="text-[8px] font-mono uppercase tracking-[0.22em] text-zinc-600 leading-none">
+                      {stat.label}
+                    </span>
+                  </div>
+                  <div className="flex items-baseline gap-1 mt-0.5">
+                    <span className="text-[13px] font-semibold text-white tracking-tight leading-none">
+                      {stat.value}
+                    </span>
+                    <span className="text-[8px] text-zinc-600 font-mono leading-none truncate max-w-[40px]">
+                      {stat.detail}
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+          <div className="h-5 w-px bg-white/[0.06] hidden sm:block" />
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setLayoutMode("default-dashboard")}
+            className="text-zinc-600 hover:text-zinc-300 h-7 w-7"
+            title="Reset layout"
+          >
+            <RotateCcw size={11} />
+          </Button>
+        </div>
       </div>
 
+      {/* ── Bento Widget Grid ── */}
       <div
-        className="widget-grid flex-1 min-h-0 overflow-y-auto custom-scrollbar pb-4 px-1"
+        className="widget-grid flex-1 min-h-0 overflow-y-auto custom-scrollbar pb-4"
         style={{
           gridTemplateAreas: currentLayout.gridTemplateAreas.join(" "),
           gridTemplateColumns: currentLayout.gridTemplateColumns,
