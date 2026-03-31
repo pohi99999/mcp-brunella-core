@@ -41,6 +41,16 @@ export interface ChainContext {
   metadata: Record<string, unknown>;
 }
 
+export interface ToolDefinition {
+  name: string;
+  description: string;
+  inputSchema?: {
+    type: string;
+    properties?: Record<string, unknown>;
+    required?: string[];
+  };
+}
+
 // Standard Agent Response
 export interface AgentResponse {
     success?: boolean; // Legacy support

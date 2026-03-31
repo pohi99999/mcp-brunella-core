@@ -85,13 +85,47 @@ export class ScheduledTasksEngine {
       const response = await fetch(url, options);
       const status = response.ok ? 'success' : 'failed';
 
-      // Update last_run in DB
-      this.db.prepare(`
-        UPDATE scheduled_tasks 
-        SET last_run = datetime('now'),
-            next_run = datetime(datetime('now'), '+' || ? || 's')
-        WHERE id = ?
-      `).run('3600', record.id); // TODO: Calculate actual next run from cron
+      // Calculate actual next run from cron
+      let nextRun = '';
+      try {
+        // Use dynamic import to avoid static import issues in non-Node environments (e.g. Workers build)
+        const cronParser = await import('cron-parser');
+        const { CronExpressionParser } = cronParser;
+
+        let interval;
+        if (CronExpressionParser && typeof CronExpressionParser.parse === 'function') {
+            interval = CronExpressionParser.parse(record.cron_pattern);
+        }
+
+        if (interval) {
+             nextRun = interval.next().toDate().toISOString();
+        } else {
+             // If we can't parse, it might be that imports failed or structure is weird.
+             // We fallback gracefully.
+             logError('ScheduledTasksEngine', 'Could not resolve cron-parser method');
+        }
+
+      } catch (cronError) {
+        logError('ScheduledTasksEngine', `Failed to calculate next run for ${record.task_name}: ${cronError}`);
+      }
+
+      if (nextRun) {
+        // Update last_run in DB
+        this.db.prepare(`
+          UPDATE scheduled_tasks
+          SET last_run = datetime('now'),
+              next_run = datetime(?)
+          WHERE id = ?
+        `).run(nextRun, record.id);
+      } else {
+        // Fallback: If calculation failed, add 1 hour to avoid infinite loop
+         this.db.prepare(`
+          UPDATE scheduled_tasks
+          SET last_run = datetime('now'),
+              next_run = datetime(datetime('now'), '+3600s')
+          WHERE id = ?
+        `).run(record.id);
+      }
 
       logInfo('ScheduledTasksEngine', `Task executed: ${record.task_name} → ${status} (${response.status})`);
     } catch (error) {
