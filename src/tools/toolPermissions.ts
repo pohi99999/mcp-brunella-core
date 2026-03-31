@@ -42,9 +42,6 @@ export const ToolPermissionMap: Record<string, Permission[]> = {
     'http_request': [Permission.HTTP_REQUEST],
     'web_search': [Permission.HTTP_REQUEST],
 
-    // EV Hunter Tools
-    'ev_hunter_search': [Permission.BROWSER_CONTROL, Permission.HTTP_REQUEST],
-    'ev_hunter_status': [Permission.READ_FILE],
 };
 
 /**
@@ -74,7 +71,7 @@ export function checkToolPermission(
     for (const permission of requiredPermissions) {
         if (!globalPermissionManager.hasPermission(agentName, permission)) {
             const reason = `Agent ${agentName} lacks ${permission} permission for ${toolName}`;
-            globalPermissionManager.logDeniedOperation(agentName, `tool:${toolName}`, reason, toolName);
+            globalPermissionManager.logDeniedOperation(agentName, `tool:${toolName}`, toolName, reason);
             return { allowed: false, reason };
         }
     }
@@ -96,7 +93,7 @@ export function checkFilePermission(
 
     if (!globalPermissionManager.canAccessPath(agentName, filePath, operation)) {
         const reason = `Agent ${agentName} cannot ${operation} file: ${filePath}`;
-        globalPermissionManager.logDeniedOperation(agentName, `file:${operation}`, reason, filePath);
+        globalPermissionManager.logDeniedOperation(agentName, `file:${operation}`, filePath, reason);
         return { allowed: false, reason };
     }
 
