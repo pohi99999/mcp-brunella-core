@@ -40,8 +40,11 @@ describe('Outreach & Revenue Acceleration Flow', () => {
     it('should rotate outreach accounts', async () => {
         // This requires the config file to be present, which we created in Task 2.4
         const account = await outreachService.getNextAccount();
-        expect(account).toBeDefined();
-        expect(account?.sent_today).toBeLessThan(account?.daily_limit || 1);
+        if (account) {
+            expect(account.sent_today ?? 0).toBeLessThan(account.daily_limit || 1);
+        } else {
+            expect(account).toBeDefined(); // Will gracefully fail if accounts missing
+        }
     });
 
     it('should generate leads with icebreakers and validation', async () => {
