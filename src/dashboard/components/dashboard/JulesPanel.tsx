@@ -47,11 +47,14 @@ export function JulesPanel() {
   const [isLoadingRuns, setIsLoadingRuns] = useState(false);
   const [showAllSessions, setShowAllSessions] = useState(false);
   const [showAsyncTests, setShowAsyncTests] = useState(false);
+  const [hasLoadedSessions, setHasLoadedSessions] = useState(false);
+  const [hasLoadedRuns, setHasLoadedRuns] = useState(false);
 
   const WORKFLOW = "jules-async-tests.yml";
   const MAX_VISIBLE_SESSIONS = 5;
 
   const refreshSessions = async () => {
+    setHasLoadedSessions(true);
     setIsLoading(true);
     try {
       const data = await getJulesSessions();
@@ -65,6 +68,7 @@ export function JulesPanel() {
   };
 
   const refreshRuns = async () => {
+    setHasLoadedRuns(true);
     setIsLoadingRuns(true);
     try {
       const list = await getJulesWorkflowRuns({
@@ -87,7 +91,7 @@ export function JulesPanel() {
       const result = await createJulesTask(prompt);
       toast.success(`Jules task started: ${result.sessionId || "queued"}`);
       setPrompt("");
-      refreshSessions();
+      await refreshSessions();
     } catch (error) {
       toast.error("Failed to create Jules task");
     } finally {
@@ -99,22 +103,11 @@ export function JulesPanel() {
     try {
       await syncJulesSession(sessionId);
       toast.success("Sync started for session");
-      refreshSessions();
+      await refreshSessions();
     } catch (error) {
       toast.error("Sync failed");
     }
   };
-
-  useEffect(() => {
-    refreshSessions();
-    refreshRuns();
-    // Auto-refresh every 30s
-    const interval = setInterval(() => {
-      refreshSessions();
-      refreshRuns();
-    }, 30000);
-    return () => clearInterval(interval);
-  }, []);
 
   const triggerAsyncTests = async () => {
     try {
@@ -124,7 +117,7 @@ export function JulesPanel() {
         inputs: {},
       });
       toast.success("Async tesztek elindítva (workflow_dispatch)");
-      refreshRuns();
+      await refreshRuns();
     } catch (e: any) {
       toast.error(e?.message || "Nem sikerült indítani a workflow-t");
     }
@@ -142,6 +135,7 @@ export function JulesPanel() {
           size="sm"
           onClick={refreshSessions}
           disabled={isLoading}
+          title="Load Jules sessions"
         >
           <ArrowsClockwise
             size={16}
@@ -317,7 +311,9 @@ export function JulesPanel() {
                   >
                     {isLoadingRuns
                       ? "Betöltés..."
-                      : "Nincs adat (lehet hiányzik a GITHUB_TOKEN a szerveren)."}
+                      : hasLoadedRuns
+                        ? "Nincs adat (lehet hiányzik a GITHUB_TOKEN a szerveren)."
+                        : "Kattints a frissítésre a workflow futások betöltéséhez."}
                   </TableCell>
                 </TableRow>
               ) : (
@@ -394,11 +390,16 @@ export function JulesPanel() {
                   />
                 </LineChart>
               </ResponsiveContainer>
-              <div className="mt-2 text-xs text-zinc-500 text-center">
+            <div className="mt-2 text-xs text-zinc-500 text-center">
                 {runs.filter((r) => r.conclusion === "success").length} / {runs.length} successful runs (
                 {Math.round((runs.filter((r) => r.conclusion === "success").length / runs.length) * 100)}% pass rate)
               </div>
             </div>
+          </div>
+        )}
+        {!hasLoadedSessions && sessions.length === 0 && (
+          <div className="rounded-md border border-white/[0.04] bg-white/[0.02] px-3 py-2 text-xs text-zinc-500">
+            A Jules session lista kézi frissítéssel töltődik be, hogy a dashboard indításakor ne terhelje a szervert felesleges kérésekkel.
           </div>
         )}
       </CardContent>
