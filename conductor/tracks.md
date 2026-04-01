@@ -1,10 +1,10 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-04-01T01:20:00.206Z
+**Utolso frissites:** 2026-04-01T01:40:09.990Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 160 total | 5 active | 1 completed | 150 archived
+**Stats:** 161 total | 5 active | 2 completed | 150 archived
 
 ---
 
@@ -56,11 +56,15 @@
 
 ---
 
-## Befejezett (Completed - Not Archived) (1)
+## Befejezett (Completed - Not Archived) (2)
 
 - [x] **P-Sales20260327**
   - **ID:** `P-Sales20260327`
   - Mappa: ./tracks/P-Sales20260327/
+
+- [x] **Push teszt cadence optimalizáció**
+  - **ID:** `test_cadence_optimization_20260401`
+  - Mappa: ./tracks/test_cadence_optimization_20260401/
 
 ---
 

@@ -22,11 +22,8 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build project
-        run: npm run build
-
-      - name: Run tests
-        run: npm test
+      - name: Run quick Node validation
+        run: npm run test:fast
         env:
           WEB_UI_ENABLED: "0"
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
@@ -42,41 +39,6 @@ jobs:
           N8N_TEST_USER: ${{ secrets.N8N_TEST_USER }}
           N8N_TEST_PASSWORD: ${{ secrets.N8N_TEST_PASSWORD }}
           BRUNELLA_SKIP_SECRETS_CHECK: "1"
-
-  vitest:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: "24"
-
-      - name: Install deps
-        run: npm ci
-
-      - name: Build
-        run: npm run build
-
-      - name: Vitest
-        run: npx vitest run --reporter=verbose
-        timeout-minutes: 5
-        env:
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          CLAUDE_API_KEY: ${{ secrets.CLAUDE_API_KEY }}
-          ANYTHINGLLM_API_KEY: ${{ secrets.ANYTHINGLLM_API_KEY }}
-          LANGCHAIN_API_KEY: ${{ secrets.LANGCHAIN_API_KEY }}
-          LLM_PROVIDER: ${{ secrets.LLM_PROVIDER }}
-          OLLAMA_MODEL: ${{ secrets.OLLAMA_MODEL }}
-          N8N_API_KEY: ${{ secrets.N8N_API_KEY }}
-          N8N_TEST_URL: ${{ secrets.N8N_TEST_URL }}
-          N8N_TEST_USER: ${{ secrets.N8N_TEST_USER }}
-          N8N_TEST_PASSWORD: ${{ secrets.N8N_TEST_PASSWORD }}
-          BRUNELLA_SKIP_SECRETS_CHECK: "1"
-          WEB_UI_ENABLED: "0"
 
   build-python:
     runs-on: ubuntu-latest

@@ -385,3 +385,15 @@ Ezeket a módosításokat a conductor/tracks.md és a conductor/archive/ helyre 
 - A track átkerült a `conductor/archive/jules_pr_integration_20260222/` mappába.
 - A meta állapot archiváltra lett állítva, a Conductor rescan pedig 5 aktív tracket és 150 archivált tracket jelzett vissza.
 - A lezárás célja az volt, hogy a régi, duplikált Jules-anyagok többé ne legyenek aktív fejlesztési fókuszban.
+
+### 2026-04-01 02:40 - Push teszt cadence optimalizáció
+
+**Feladat:** A push-lánc átállítása gyors alaptesztre úgy, hogy helyi pushnál és normál push/PR CI-ben ne fusson teljes Vitest kör, miközben a teljes suite napi egyszer külön workflow-ban fusson.
+**Érintett fájlok:** .husky/pre-push, .github/workflows/ci.yml, .github/workflows/auto-sync.yml, .github/workflows/daily-full-tests.yml, README.md, .github/copilot-instructions.md, CLAUDE.md, conductor/tracks/test_cadence_optimization_20260401/*
+**Státusz:** ✅ Befejezve
+**Megjegyzés:**
+
+- A push hibájának gyökéroka az volt, hogy a `.husky/pre-push` saját Vitest exclude-listát futtatott, amelyből hiányzott a `test/core_tools.test.ts` kizárása, ezért a push egy gyakorlatban majdnem teljes suite-ot futtatott.
+- A hook mostantól közvetlenül a kanonikus `npm run test:fast` profilt hívja, így a gyors tesztprofil egyetlen forrásból vezérelt.
+- A normál `push` / `pull_request` CI is gyors Node-validációra állt át, a teljes `npm test` pedig külön napi scheduled workflow-ba került.
+- Validáció: `npm run test:fast` sikeres (`219` test file passed, `1` skipped; `1919` teszt passed, `41` skipped).

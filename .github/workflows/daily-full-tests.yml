@@ -1,0 +1,51 @@
+name: Daily Full Test Suite
+
+on:
+  schedule:
+    - cron: "0 2 * * *"
+  workflow_dispatch:
+
+jobs:
+  full-node-suite:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run daily full suite
+        run: npm test
+        env:
+          WEB_UI_ENABLED: "0"
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          CLAUDE_API_KEY: ${{ secrets.CLAUDE_API_KEY }}
+          ANYTHINGLLM_API_KEY: ${{ secrets.ANYTHINGLLM_API_KEY }}
+          LANGCHAIN_API_KEY: ${{ secrets.LANGCHAIN_API_KEY }}
+          LLM_PROVIDER: ${{ secrets.LLM_PROVIDER }}
+          OLLAMA_MODEL: ${{ secrets.OLLAMA_MODEL }}
+          N8N_API_KEY: ${{ secrets.N8N_API_KEY }}
+          N8N_TEST_URL: ${{ secrets.N8N_TEST_URL }}
+          N8N_TEST_USER: ${{ secrets.N8N_TEST_USER }}
+          N8N_TEST_PASSWORD: ${{ secrets.N8N_TEST_PASSWORD }}
+          BRUNELLA_SKIP_SECRETS_CHECK: "1"
+
+      - name: Publish summary
+        if: always()
+        run: |
+          echo "## Daily Full Test Suite" >> $GITHUB_STEP_SUMMARY
+          echo "- Trigger: ${{ github.event_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Ref: ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Commit: ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Time: $(date -u '+%Y-%m-%d %H:%M UTC')" >> $GITHUB_STEP_SUMMARY

@@ -1,6 +1,6 @@
 # FŐSZÁL - Egyesített Fejlesztési Napló
 
-**Generálva:** 2026-04-01 03:20
+**Generálva:** 2026-04-01 03:40
 **Script:** `scripts/sync_foszal.py`
 
 ---
@@ -29,6 +29,11 @@ start-full.bat
 ## Összesített Napló (Időrendben)
 
 ### 2026-04-01
+
+#### 02:40 - [Copilot] Push teszt cadence optimalizáció
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** .husky/pre-push, .github/workflows/ci.yml, .github/workflows/auto-sync.yml, .github/workflows/daily-full-tests.yml, README.md, .github/copilot-instructions.md, CLAUDE.md, conductor/tracks/test_cadence_optimization_20260401/*
 
 #### 01:17 - [Copilot] Jules track lezárás + archiválás
 - **Agent:** Copilot
@@ -743,7 +748,7 @@ start-full.bat
 | Claude | 85 | 2026-03-31 |
 | Gemini | 17 | 2026-03-31 |
 | Cursor | 0 | N/A |
-| Copilot | 20 | 2026-03-28 |
+| Copilot | 21 | 2026-03-28 |
 
 ---
 

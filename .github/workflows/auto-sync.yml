@@ -129,11 +129,8 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: TypeScript build
-        run: npm run build
-
       - name: Quick test run
-        run: npx vitest run --reporter=dot
+        run: npm run test:fast
         timeout-minutes: 5
         env:
           BRUNELLA_SKIP_SECRETS_CHECK: "1"

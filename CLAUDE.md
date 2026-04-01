@@ -33,8 +33,8 @@ bash scripts/sync.sh              # Git Bash / WSL
 ### 3. Rendszer Validáció
 ```bash
 npm run build                 # TypeScript fordítás (MUSZÁJ OK!)
-npm run test:fast             # Gyors tesztek (~1-2 perc) — commit előtt
-npm test                      # Teljes suite (~10 perc) — push / track lezárás előtt
+npm run test:fast             # Gyors tesztek (~1-2 perc) — commit/push előtt
+npm test                      # Teljes suite (~10 perc) — napi scheduled run / manuális release-check
 ```
 
 **Ha BUILD FAIL vagy TESZT FAIL → NE kezdj fejlesztésbe! Javítsd először!**
@@ -66,7 +66,9 @@ cd myai && pytest tests/              # Python tesztek
 # Mikor mit futtass:
 # | Esemény                          | Parancs                  |
 # | Commit előtt                     | npm run test:fast        |  ← pre-commit hook is futtatja
-# | Track lezárásakor / Push előtt   | npm test + npm run smoke |
+# | Push előtt                       | npm run test:fast        |  ← pre-push hook ezt futtatja
+# | Napi teljes kör                  | GitHub Actions daily full suite (`npm test`) |
+# | Track lezárásakor / Release előtt| npm test + npm run smoke |
 # | Napi fejlesztés                  | npm run test:fast        |
 
 # CLI
