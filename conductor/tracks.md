@@ -1,6 +1,6 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-04-01T21:37:21.196Z
+**Utolso frissites:** 2026-04-01T22:20:57.682Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
@@ -27,9 +27,9 @@
 
 ---
 
-## Aktiv Szalak (Active) (6)
+## Aktiv Szalak (Active) (5)
 
-- [ ] **Dashboard Cockpit Redesign + Stabilization** [HIGH]
+- [x] **Dashboard Cockpit Redesign + Stabilization** [HIGH]
   - **ID:** `dashboard_cockpit_redesign_20260401`
   - **Progress:** 84%
   - **Assignee:** Copilot
@@ -37,7 +37,7 @@
 
 - [ ] **Autonóm Készlet- és Leltárkezelési Rendszer — KKV** [MEDIUM]
   - **ID:** `inventory_automation_20260330`
-  - **Progress:** 28%
+  - **Progress:** 58%
   - Mappa: ./tracks/inventory_automation_20260330/
 
 - [ ] **Kognitív Könyvelés és Multi-Ágens Egyeztetés — Bővítmény** [HIGH]
@@ -82,7 +82,6 @@
 
 > Archived tracks are hidden by default. View in `conductor/archive/`
 
-- [x] **Könyvelés automatizálása** (2026-04-01T23:25:00Z)
 - [x] **006_trojan-horse-campaign** (2026-03-22T22:47:34Z)
 - [x] **Agent Architect 2.0 Meta-Ügynök** (2026-02-13)
 - [x] **Agent diagnostics and routing modernization** (2026-03-23T08:15:00Z)
@@ -94,7 +93,7 @@
 - [x] **AI Recommendation System Integration** (2026-02-17T22:45:00Z)
 - [x] **apify_deep_scraping_agent_20260223** (N/A)
 
-... and 145 more archived tracks
+... and 146 more archived tracks
 
 ---
 
