@@ -798,4 +798,3 @@ node scripts/copilot-dashboard.js cognitive query graphrag "user authentication"
 - **reflect**: MINDEN feladat utan — elmenti a tanulsagot, noveli az intelligenciat
 - **stats**: Rendszer diagnosztika — hany reteg aktiv, mennyi adat van
 - **query**: Specifikus reteg lekerdezes — pl. "volt mar hasonlo feladat?"
-

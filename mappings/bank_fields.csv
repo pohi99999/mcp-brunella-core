@@ -1,0 +1,7 @@
+Field,Source,Type,Description
+id,Bank,string,Transaction ID
+date,Bank,date,Value date
+amount,Bank,number,Amount (negative for out, positive for in)
+counterparty,Bank,string,Name of the other party
+bankAccount,Bank,string,IBAN or account number
+description,Bank,string,Communication/Reference field

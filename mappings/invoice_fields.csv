@@ -1,0 +1,11 @@
+Field,Source,Type,Description
+id,NAV/PDF,string,Invoice number
+issueDate,NAV/PDF,date,Date of issuance
+dueDate,NAV/PDF,date,Payment deadline
+partnerName,NAV/PDF,string,Name of the supplier/customer
+taxId,NAV/PDF,string,Tax identification number
+netAmount,NAV/PDF,number,Net total
+vatAmount,NAV/PDF,number,VAT total
+grossAmount,NAV/PDF,number,Gross total
+currency,NAV/PDF,string,HUF/EUR/USD
+paymentMethod,NAV/PDF,string,bank_transfer/cash/etc
