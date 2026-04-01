@@ -14,25 +14,27 @@ import { LayoutProvider } from "./lib/layout/LayoutContext"
 
 initializeNavigation();
 
-const queryClient = new QueryClient({
+const queryClient = new QueryClient( {
   defaultOptions: {
     queries: {
       retry: 1,
       refetchOnWindowFocus: false,
     },
   },
-})
+} )
 
-createRoot(document.getElementById('root')!).render(
-  <ErrorBoundary FallbackComponent={ErrorFallback}>
-    <QueryClientProvider client={queryClient}>
-      <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
-        <LayoutProvider>
-          <SocketProvider>
-            <App />
-          </SocketProvider>
-        </LayoutProvider>
-      </ThemeProvider>
-    </QueryClientProvider>
-  </ErrorBoundary>
+createRoot( document.getElementById( 'root' )! ).render(
+  <div id="spark-app">
+    <ErrorBoundary FallbackComponent={ ErrorFallback }>
+      <QueryClientProvider client={ queryClient }>
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
+          <LayoutProvider>
+            <SocketProvider>
+              <App />
+            </SocketProvider>
+          </LayoutProvider>
+        </ThemeProvider>
+      </QueryClientProvider>
+    </ErrorBoundary>
+  </div>
 )

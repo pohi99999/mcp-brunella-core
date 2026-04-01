@@ -20,17 +20,13 @@ import {
 } from "../utils/logger.js";
 import {
   corsWhitelist,
+  getCorsOrigins,
   requestId,
   requestLogging,
   apiRateLimit,
 } from "./middleware.js";
 
 const logger = new Logger("web_ui.log");
-
-const corsOriginList = (process.env.CORS_ORIGINS || "")
-  .split(",")
-  .map((s) => s.trim())
-  .filter(Boolean);
 
 const PACKAGE_VERSION = (() => {
   try {
@@ -101,7 +97,14 @@ export async function startWebServer() {
 
   app.get("/ping", (_req, res) => { res.send("pong"); });
 
-  app.use(express.json());
+  const jsonParser = express.json({ limit: "1mb" });
+  app.use((req, res, next) => {
+    if (req.method === "GET" || req.method === "HEAD" || req.method === "OPTIONS") {
+      next();
+      return;
+    }
+    jsonParser(req, res, next);
+  });
   app.use(corsWhitelist);
   app.use(requestId);
   app.use(requestLogging);
@@ -122,12 +125,28 @@ export async function startWebServer() {
   // ── Phase 1b: Socket.IO (must complete before startWebServer returns) ──
   // index.ts depends on socketService being initialized after this call.
   const { Server: SocketIOServer } = await import("socket.io");
+  const socketCorsOrigins = getCorsOrigins();
+  if (socketCorsOrigins.length === 0 && process.env.NODE_ENV === "production") {
+    logWarn(
+      "Server",
+      "CORS_ORIGINS not set in production — Socket.IO browser origins are blocked until configured",
+    );
+  }
   const io = new SocketIOServer(httpServer, {
     cors: {
-      origin:
-        corsOriginList.length > 0
-          ? corsOriginList
-          : ["http://localhost:5173", "http://localhost:3000"],
+      origin(origin, callback) {
+        if (!origin) {
+          callback(null, true);
+          return;
+        }
+
+        if (socketCorsOrigins.includes(origin)) {
+          callback(null, true);
+          return;
+        }
+
+        callback(new Error(`Socket.IO origin not allowed: ${origin}`));
+      },
       methods: ["GET", "POST"],
     },
   });
@@ -552,7 +571,11 @@ async function deferredInit(
 
   try {
     const { trackStateManager } = await import("../services/trackStateManager.js");
-    await trackStateManager.fullSync();
+    setImmediate(() => {
+      void trackStateManager.fullSync().catch((e: unknown) => {
+        logWarn("Server", `Track state manager fullSync: ${e instanceof Error ? e.message : String(e)}`);
+      });
+    });
     trackStateManager.startWatcher();
   } catch (e: unknown) {
     logWarn("Server", `Track state manager: ${e instanceof Error ? e.message : String(e)}`);
