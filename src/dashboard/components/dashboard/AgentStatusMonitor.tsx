@@ -8,81 +8,90 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 export function AgentStatusMonitor() {
   const { agents } = useSystemSignal();
 
-  // agents is a Map<string, AgentStatusEntry> — Array.from is required, Object.values(Map) returns []
   const agentsList = agents ? Array.from(agents.values()) : [];
 
-  const getStatusIcon = (status: string) => {
+  const getStatusColor = (status: string) => {
     switch (status) {
-      case 'working': return <Activity size={14} className="text-emerald-500 animate-pulse" />;
-      case 'error': return <AlertCircle size={14} className="text-red-500" />;
-      default: return <CheckCircle2 size={14} className="text-zinc-500" />;
+      case 'working': return "bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.5)]";
+      case 'error': return "bg-rose-500 shadow-[0_0_10px_rgba(244,63,94,0.5)]";
+      default: return "bg-zinc-600";
     }
   };
 
   return (
-    <Card className="glass-card border-white/10 h-full flex flex-col overflow-hidden">
-      <CardHeader className="pb-3 border-b border-white/[0.05] shrink-0 bg-white/[0.015]">
-        <CardTitle className="text-[11px] font-mono font-semibold tracking-[0.24em] uppercase text-zinc-300 flex items-center gap-2">
-          <Brain size={16} className="text-cyan-300" />
-          Agent State
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="p-0 flex-1 min-h-0">
-        <ScrollArea className="h-full">
-          <div className="divide-y divide-white/5">
-            {agentsList.length === 0 ? (
-              <div className="p-8 text-center text-xs text-zinc-500 font-mono italic">
-                NO_AGENTS_DETECTED
-              </div>
-            ) : agentsList.map((agent) => (
-              <div
-                key={agent.name}
-                  className={cn("p-3 transition-colors duration-200 group", "hover:bg-white/[0.035]")}
-                >
-                <div className="flex items-center justify-between gap-3 mb-1">
-                  <div className="flex items-center gap-2">
-                    <span className={cn(
-                      "w-1.5 h-1.5 rounded-full",
-                      agent.status === 'working' ? "bg-emerald-500 shadow-[0_0_5px_rgba(16,185,129,0.5)]" : 
-                      agent.status === 'error' ? "bg-red-500" : "bg-zinc-600"
-                    )} />
-                    <span className="font-semibold text-xs font-mono group-hover:text-cyan-200 transition-colors uppercase tracking-[0.1em]">
-                      {agent.name}
-                    </span>
-                  </div>
-                  <Badge
-                    variant={agent.status === 'working' ? 'default' : 'secondary'}
-                    className={cn(
-                      "text-[9px] h-5 px-2 font-mono tracking-[0.2em] uppercase border",
-                      agent.status === 'working'
-                        ? "bg-emerald-400/10 text-emerald-300 border-emerald-400/20"
-                        : agent.status === 'error'
-                          ? "bg-red-400/10 text-red-300 border-red-400/20"
-                          : "bg-zinc-800/70 text-zinc-300 border-white/10",
-                    )}
-                  >
-                    {agent.status.toUpperCase()}
-                  </Badge>
-                </div>
-                {agent.taskDescription && (
-                  <div className="flex items-start gap-1.5 mt-1 px-3 py-2 bg-white/[0.04] rounded-xl border border-white/[0.05]">
-                    <Clock size={10} className="text-zinc-500 mt-0.5 shrink-0" />
-                    <p className="text-[10px] text-zinc-400 font-mono line-clamp-1 italic leading-tight">
-                      {agent.taskDescription}
-                    </p>
-                  </div>
-                )}
-              </div>
-            ))}
+    <div className="flex flex-col h-full bg-zinc-950/20 backdrop-blur-xl">
+      <div className="flex items-center justify-between px-5 pt-5 pb-4 border-b border-white/[0.03]">
+        <div className="flex items-center gap-3">
+          <div className="p-1.5 rounded-md bg-white/[0.03] border border-white/[0.05]">
+            <Brain size={14} className="text-violet-400" />
           </div>
-        </ScrollArea>
-      </CardContent>
-      <div className="p-2 bg-white/[0.02] border-t border-white/[0.04] shrink-0">
-        <div className="flex justify-between items-center px-2">
-          <span className="text-[9px] font-mono text-zinc-500 uppercase tracking-widest">Active: {agentsList.filter(a => a.status === 'working').length}</span>
-          <span className="text-[9px] font-mono text-zinc-500 uppercase tracking-widest">Total: {agentsList.length}</span>
+          <div>
+            <h3 className="text-[10px] font-bold tracking-[0.2em] text-zinc-200 uppercase leading-none">
+              Agent Cluster
+            </h3>
+            <p className="text-[9px] text-zinc-500 font-mono mt-1 leading-none uppercase tracking-widest">
+              Neural State
+            </p>
+          </div>
+        </div>
+        <div className="px-2 py-0.5 rounded bg-zinc-900 border border-white/[0.06] flex items-center gap-2">
+          <span className="text-[9px] font-bold text-zinc-400 font-mono">ACTIVE</span>
+          <span className="text-[10px] font-bold text-violet-400 font-mono">
+            { agentsList.filter(a => a.status === 'working').length }
+          </span>
         </div>
       </div>
-    </Card>
+
+      <div className="flex-1 overflow-y-auto custom-scrollbar">
+        <div className="divide-y divide-white/[0.03]">
+          {agentsList.length === 0 ? (
+            <div className="p-10 text-center">
+              <span className="text-[9px] font-mono text-zinc-600 uppercase tracking-widest">
+                Scanning_for_signals...
+              </span>
+            </div>
+          ) : agentsList.map((agent) => (
+            <div
+              key={agent.name}
+              className="group px-5 py-4 hover:bg-white/[0.02] transition-all duration-200"
+            >
+              <div className="flex items-center justify-between gap-4 mb-2">
+                <div className="flex items-center gap-3 min-w-0">
+                  <div className={cn("h-1.5 w-1.5 rounded-full shrink-0", getStatusColor(agent.status))} />
+                  <span className="font-bold text-[11px] text-zinc-200 uppercase tracking-wide truncate group-hover:text-white transition-colors">
+                    {agent.name}
+                  </span>
+                </div>
+                <div className="px-1.5 py-0.5 rounded-[2px] bg-white/[0.03] border border-white/[0.05] shrink-0">
+                  <span className="text-[8px] font-bold text-zinc-500 uppercase tracking-tighter">
+                    {agent.status}
+                  </span>
+                </div>
+              </div>
+              
+              {agent.taskDescription && (
+                <div className="flex items-start gap-2 px-3 py-2 bg-zinc-900/50 rounded-lg border border-white/[0.03] group-hover:border-white/[0.06] transition-colors">
+                  <div className="mt-1 h-1 w-1 rounded-full bg-zinc-700 shrink-0" />
+                  <p className="text-[10px] text-zinc-500 font-mono leading-relaxed line-clamp-2 italic">
+                    {agent.taskDescription}
+                  </p>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="px-5 py-3 border-t border-white/[0.03] bg-white/[0.01]">
+        <div className="flex items-center justify-between">
+          <span className="text-[8px] font-bold text-zinc-600 uppercase tracking-widest font-mono">
+            Cluster Integrity
+          </span>
+          <span className="text-[9px] text-zinc-500 font-mono">
+            { agentsList.length } REGISTERED
+          </span>
+        </div>
+      </div>
+    </div>
   );
 }

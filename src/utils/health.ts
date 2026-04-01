@@ -22,6 +22,16 @@ export const HEALTH_CONFIG = {
     retries: 1,
     baseUrl: process.env.PYTHON_API_URL || "http://127.0.0.1:8000",
   },
+  n8n: {
+    timeoutMs: 5_000,
+    retries: 1,
+    baseUrl: process.env.N8N_BASE_URL || "http://localhost:5678",
+  },
+  langflow: {
+    timeoutMs: 5_000,
+    retries: 1,
+    baseUrl: process.env.LANGFLOW_BASE_URL || "http://localhost:7860",
+  },
   cloudflare: {
     timeoutMs: 8_000,
     retries: 1,
@@ -51,6 +61,8 @@ export interface HealthResponse {
     agents: HealthServiceResult;
     mcp: HealthServiceResult;
     python: HealthServiceResult;
+    n8n: HealthServiceResult;
+    langflow: HealthServiceResult;
     cloudflare: HealthServiceResult;
   };
 }
@@ -141,6 +153,39 @@ export async function checkPythonHealth(): Promise<HealthServiceResult> {
     error: ok ? undefined : error,
   };
 }
+
+export async function checkN8nHealth(): Promise<HealthServiceResult> {
+  const { baseUrl, timeoutMs, retries } = HEALTH_CONFIG.n8n;
+  const url = `${baseUrl}/healthz`;
+  const { ok, latencyMs, error } = await fetchWithRetry(
+    url,
+    { timeout: timeoutMs },
+    retries,
+  );
+  await healthLogger.log("n8n health", { ok, latencyMs, error });
+  return {
+    status: ok ? "healthy" : "unhealthy",
+    latencyMs,
+    error: ok ? undefined : error,
+  };
+}
+
+export async function checkLangflowHealth(): Promise<HealthServiceResult> {
+  const { baseUrl, timeoutMs, retries } = HEALTH_CONFIG.langflow;
+  const url = `${baseUrl}/health`;
+  const { ok, latencyMs, error } = await fetchWithRetry(
+    url,
+    { timeout: timeoutMs },
+    retries,
+  );
+  await healthLogger.log("Langflow health", { ok, latencyMs, error });
+  return {
+    status: ok ? "healthy" : "unhealthy",
+    latencyMs,
+    error: ok ? undefined : error,
+  };
+}
+
 
 export async function checkCloudflareHealth(): Promise<HealthServiceResult> {
   // Check Cloudflare Workers deployment (not AI Gateway directly)

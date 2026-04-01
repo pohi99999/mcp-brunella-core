@@ -10,9 +10,9 @@ import { arrayMove } from '@dnd-kit/sortable';
 // Define mock data using vi.hoisted so it's available in mocks
 const { mockTasks } = vi.hoisted(() => ({
   mockTasks: [
-    { id: 1, description: 'Task 1', agent: 'AgentA', status: 'running', created_at: new Date().toISOString(), startedAt: new Date().toISOString() },
-    { id: 2, description: 'Task 2', agent: 'AgentB', status: 'pending', created_at: new Date().toISOString() },
-    { id: 3, description: 'Task 3', agent: 'AgentC', status: 'paused', created_at: new Date().toISOString() },
+    { id: 1, task: 'Task 1', description: 'Task 1', agent: 'AgentA', status: 'running', created_at: new Date().toISOString(), startedAt: new Date().toISOString() },
+    { id: 2, task: 'Task 2', description: 'Task 2', agent: 'AgentB', status: 'pending', created_at: new Date().toISOString() },
+    { id: 3, task: 'Task 3', description: 'Task 3', agent: 'AgentC', status: 'paused', created_at: new Date().toISOString() },
   ]
 }));
 

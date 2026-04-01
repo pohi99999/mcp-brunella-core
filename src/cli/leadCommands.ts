@@ -13,6 +13,43 @@ import ora from "ora";
 
 const API_BASE = process.env.API_BASE_URL || "http://localhost:3000";
 
+interface LeadRunResponse {
+  jobId: string;
+  message: string;
+}
+
+interface LeadJob {
+  id: string;
+  query: string;
+  status: string;
+  created_at: string;
+}
+
+interface LeadStatusResponse {
+  jobs: LeadJob[];
+}
+
+interface LeadRecord {
+  id: string;
+  company_name: string;
+  contact_email?: string;
+  email_status?: string;
+  icebreaker_text?: string;
+  created_at: string;
+}
+
+interface LeadListResponse {
+  leads: LeadRecord[];
+}
+
+function writeLine(message = ""): void {
+  process.stdout.write(`${message}\n`);
+}
+
+function writeError(message = ""): void {
+  process.stderr.write(`${message}\n`);
+}
+
 export function registerLeadCommands(program: Command): void {
   const leads = program
     .command("leads")
@@ -43,13 +80,13 @@ export function registerLeadCommands(program: Command): void {
           process.exit(1);
         }
 
-        const data = await res.json() as { jobId: string; message: string };
+        const data = await res.json() as LeadRunResponse;
         spinner.succeed(chalk.green(`Lead mining elindítva! Job ID: ${chalk.bold(data.jobId)}`));
-        console.log(chalk.dim(`  Lekérdezés: "${query}" | Limit: ${opts.limit}`));
-        console.log(chalk.dim(`  Állapot: brunella leads status`));
+        writeLine(chalk.dim(`  Lekérdezés: "${query}" | Limit: ${opts.limit}`));
+        writeLine(chalk.dim(`  Állapot: brunella leads status`));
       } catch (e: unknown) {
         spinner.fail(chalk.red("Kapcsolódási hiba"));
-        console.error(chalk.red(e instanceof Error ? e.message : String(e)));
+        writeError(chalk.red(e instanceof Error ? e.message : String(e)));
         process.exit(1);
       }
     });
@@ -71,28 +108,28 @@ export function registerLeadCommands(program: Command): void {
           process.exit(1);
         }
 
-        const data = await res.json() as { jobs: Array<{ id: string; query: string; status: string; created_at: string }> };
+        const data = await res.json() as LeadStatusResponse;
         spinner.stop();
 
         if (!data.jobs || data.jobs.length === 0) {
-          console.log(chalk.yellow("Nincs korábbi lead mining job. Futtatás: brunella leads run"));
+          writeLine(chalk.yellow("Nincs korábbi lead mining job. Futtatás: brunella leads run"));
           return;
         }
 
-        console.log(chalk.blue("\n╔═══════════════════════════════════════════════════════════════╗"));
-        console.log(chalk.blue("║") + chalk.bold("          LEAD MINING JOB STATISZTIKA                       ") + chalk.blue("║"));
-        console.log(chalk.blue("╚═══════════════════════════════════════════════════════════════╝\n"));
+        writeLine(chalk.blue("\n╔═══════════════════════════════════════════════════════════════╗"));
+        writeLine(chalk.blue("║") + chalk.bold("          LEAD MINING JOB STATISZTIKA                       ") + chalk.blue("║"));
+        writeLine(chalk.blue("╚═══════════════════════════════════════════════════════════════╝\n"));
 
         data.jobs.forEach((job, idx) => {
           const statusColor = job.status === "completed" ? chalk.green : job.status === "failed" ? chalk.red : chalk.yellow;
-          console.log(`${chalk.bold(`#${idx + 1}`)} ${chalk.dim(job.id.slice(0, 8))}... | ${statusColor(job.status)} | "${job.query}"`);
-          console.log(chalk.dim(`   Létrehozva: ${new Date(job.created_at).toLocaleString("hu-HU")}`));
+          writeLine(`${chalk.bold(`#${idx + 1}`)} ${chalk.dim(job.id.slice(0, 8))}... | ${statusColor(job.status)} | "${job.query}"`);
+          writeLine(chalk.dim(`   Létrehozva: ${new Date(job.created_at).toLocaleString("hu-HU")}`));
         });
-        console.log();
+        writeLine();
 
       } catch (e: unknown) {
         spinner.fail(chalk.red("Kapcsolódási hiba"));
-        console.error(chalk.red(e instanceof Error ? e.message : String(e)));
+        writeError(chalk.red(e instanceof Error ? e.message : String(e)));
         process.exit(1);
       }
     });
@@ -117,43 +154,34 @@ export function registerLeadCommands(program: Command): void {
           process.exit(1);
         }
 
-        const data = await res.json() as {
-          leads: Array<{
-            id: string;
-            company_name: string;
-            contact_email?: string;
-            email_status?: string;
-            icebreaker_text?: string;
-            created_at: string;
-          }>;
-        };
+        const data = await res.json() as LeadListResponse;
         spinner.stop();
 
         if (!data.leads || data.leads.length === 0) {
-          console.log(chalk.yellow("Nincsenek leadek. Futtatás: brunella leads run"));
+          writeLine(chalk.yellow("Nincsenek leadek. Futtatás: brunella leads run"));
           return;
         }
 
         const shown = data.leads.slice(0, parseInt(opts.limit, 10));
 
-        console.log(chalk.blue(`\n═══ LEADEK (${shown.length}/${data.leads.length}) ═══\n`));
+        writeLine(chalk.blue(`\n═══ LEADEK (${shown.length}/${data.leads.length}) ═══\n`));
 
         shown.forEach((lead, idx) => {
           const emailColor = lead.email_status === "valid" ? chalk.green : lead.email_status === "invalid" ? chalk.red : chalk.yellow;
-          console.log(`${chalk.bold(`${idx + 1}.`)} ${chalk.cyan(lead.company_name)}`);
+          writeLine(`${chalk.bold(`${idx + 1}.`)} ${chalk.cyan(lead.company_name)}`);
           if (lead.contact_email) {
-            console.log(`   Email: ${emailColor(lead.contact_email)} ${lead.email_status ? `(${lead.email_status})` : ""}`);
+            writeLine(`   Email: ${emailColor(lead.contact_email)} ${lead.email_status ? `(${lead.email_status})` : ""}`);
           }
           if (lead.icebreaker_text) {
             const ib = lead.icebreaker_text.slice(0, 80);
-            console.log(`   Icebreaker: ${chalk.dim(ib)}${lead.icebreaker_text.length > 80 ? "..." : ""}`);
+            writeLine(`   Icebreaker: ${chalk.dim(ib)}${lead.icebreaker_text.length > 80 ? "..." : ""}`);
           }
         });
-        console.log();
+        writeLine();
 
       } catch (e: unknown) {
         spinner.fail(chalk.red("Kapcsolódási hiba"));
-        console.error(chalk.red(e instanceof Error ? e.message : String(e)));
+        writeError(chalk.red(e instanceof Error ? e.message : String(e)));
         process.exit(1);
       }
     });

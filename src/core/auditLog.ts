@@ -8,6 +8,7 @@
  * Non-functional: Audit write is async (non-blocking)
  */
 
+import type Database from 'better-sqlite3';
 import { logError, logInfo } from '../utils/logger.js';
 
 // ============================================================================
@@ -26,18 +27,50 @@ export interface AuditEntry {
   reason?: string;
 }
 
+interface AuditLogRow {
+  id: number;
+  timestamp: string;
+  agent_name: string;
+  action: string;
+  resource: string;
+  result: AuditResult;
+  reason: string | null;
+}
+
+interface CountRow {
+  count: number;
+}
+
+interface AgentCountRow {
+  agent_name: string;
+  result: AuditResult;
+  count: number;
+}
+
 // ============================================================================
 // DATABASE (lazy singleton)
 // ============================================================================
 
-export async function getAuditDb(): Promise<any> {
+export async function getAuditDb(): Promise<Database.Database | null> {
   return await getDb();
 }
 
-let db: any = null;
+let db: Database.Database | null = null;
 let resolvedDbPath: string | null = null;
 
-async function getDb(): Promise<any> {
+function mapAuditRow(row: AuditLogRow): AuditEntry {
+  return {
+    id: row.id,
+    timestamp: row.timestamp,
+    agentName: row.agent_name,
+    action: row.action,
+    resource: row.resource,
+    result: row.result,
+    reason: row.reason || undefined,
+  };
+}
+
+async function getDb(): Promise<Database.Database | null> {
   if (db) return db;
 
   if (typeof process === 'undefined' || !process.versions?.node) {
@@ -78,9 +111,9 @@ async function getDb(): Promise<any> {
     }
   }
 
-  const Database = (await import('better-sqlite3')).default;
+  const DatabaseConstructor = (await import('better-sqlite3')).default;
   const dbPathToUse = resolvedDbPath ?? ':memory:';
-  db = new Database(dbPathToUse);
+  db = new DatabaseConstructor(dbPathToUse);
 
   // WAL mode for concurrent reads + low-latency writes (skip for in-memory DBs)
   if (dbPathToUse !== ':memory:') {
@@ -186,17 +219,8 @@ export async function getAuditLog(limit = 50, offset = 0): Promise<AuditEntry[]>
     const stmt = database.prepare(
       'SELECT id, timestamp, agent_name, action, resource, result, reason FROM audit_log ORDER BY id DESC LIMIT ? OFFSET ?'
     );
-    const rows = stmt.all(limit, offset) as any[];
-
-    return rows.map((row: any) => ({
-      id: row.id,
-      timestamp: row.timestamp,
-      agentName: row.agent_name,
-      action: row.action,
-      resource: row.resource,
-      result: row.result as AuditResult,
-      reason: row.reason || undefined,
-    }));
+    const rows = stmt.all(limit, offset) as AuditLogRow[];
+    return rows.map(mapAuditRow);
   } catch (error: unknown) {
     const msg = error instanceof Error ? error.message : String(error);
     logError('AuditLog', `SQLite select failed: ${msg}`);
@@ -222,17 +246,8 @@ export async function getDeniedEntries(limit = 50): Promise<AuditEntry[]> {
     const stmt = database.prepare(
       'SELECT id, timestamp, agent_name, action, resource, result, reason FROM audit_log WHERE result = ? ORDER BY id DESC LIMIT ?'
     );
-    const rows = stmt.all('DENIED', limit) as any[];
-
-    return rows.map((row: any) => ({
-      id: row.id,
-      timestamp: row.timestamp,
-      agentName: row.agent_name,
-      action: row.action,
-      resource: row.resource,
-      result: row.result as AuditResult,
-      reason: row.reason || undefined,
-    }));
+    const rows = stmt.all('DENIED', limit) as AuditLogRow[];
+    return rows.map(mapAuditRow);
   } catch (error: unknown) {
     const msg = error instanceof Error ? error.message : String(error);
     logError('AuditLog', `SQLite denied query failed: ${msg}`);
@@ -280,15 +295,15 @@ export async function getAuditStats(): Promise<{
     }
 
     // SQLite aggregation
-    const totalRow = database.prepare('SELECT COUNT(*) as count FROM audit_log').get() as any;
-    const allowedRow = database.prepare('SELECT COUNT(*) as count FROM audit_log WHERE result = ?').get('ALLOWED') as any;
-    const deniedRow = database.prepare('SELECT COUNT(*) as count FROM audit_log WHERE result = ?').get('DENIED') as any;
+    const totalRow = database.prepare('SELECT COUNT(*) as count FROM audit_log').get() as CountRow | undefined;
+    const allowedRow = database.prepare('SELECT COUNT(*) as count FROM audit_log WHERE result = ?').get('ALLOWED') as CountRow | undefined;
+    const deniedRow = database.prepare('SELECT COUNT(*) as count FROM audit_log WHERE result = ?').get('DENIED') as CountRow | undefined;
 
     const agentRows = database.prepare(`
       SELECT agent_name, result, COUNT(*) as count
       FROM audit_log
       GROUP BY agent_name, result
-    `).all() as any[];
+    `).all() as AgentCountRow[];
 
     const byAgent: Record<string, { allowed: number; denied: number }> = {};
     for (const row of agentRows) {

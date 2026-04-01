@@ -19,6 +19,15 @@ interface ScheduledTask {
   last_result?: string;
 }
 
+interface TriggerTaskResult {
+  message: string;
+  result?: Record<string, unknown>;
+}
+
+function writeLine(message = ''): void {
+  process.stdout.write(`${message}\n`);
+}
+
 async function apiFetch<T>(path: string, options?: RequestInit): Promise<T> {
   const url = `${API_BASE}/api/v1/scheduled-tasks${path}`;
   const response = await fetch(url, {
@@ -53,24 +62,24 @@ export function registerScheduledTasksCommands(program: Command): void {
         spinner.stop();
 
         if (!tasks || tasks.length === 0) {
-          console.log(chalk.yellow('No scheduled tasks found.'));
+          writeLine(chalk.yellow('No scheduled tasks found.'));
           return;
         }
 
-        console.log(chalk.bold('📋 Scheduled Tasks:'));
-        console.log();
+        writeLine(chalk.bold('📋 Scheduled Tasks:'));
+        writeLine();
         
         tasks.forEach((t) => {
           const statusColor = t.last_status === 'success' ? chalk.green : t.last_status === 'failed' ? chalk.red : chalk.gray;
           const statusText = t.last_status === 'success' ? 'OK' : t.last_status === 'failed' ? 'FAIL' : '-';
           const lastRun = t.last_run_at ? new Date(t.last_run_at).toLocaleString() : 'Never';
           
-          console.log(`${chalk.cyan(t.title)} (ID: ${t.id.substring(0, 8)}...)`);
-          console.log(`  Cron:    ${chalk.yellow(t.cron_expression)}`);
-          console.log(`  Handler: ${t.handler}`);
-          console.log(`  Enabled: ${t.enabled ? chalk.green('Yes') : chalk.red('No')}`);
-          console.log(`  Last:    ${lastRun} [${statusColor(statusText)}]`);
-          console.log(chalk.dim('─'.repeat(40)));
+          writeLine(`${chalk.cyan(t.title)} (ID: ${t.id.substring(0, 8)}...)`);
+          writeLine(`  Cron:    ${chalk.yellow(t.cron_expression)}`);
+          writeLine(`  Handler: ${t.handler}`);
+          writeLine(`  Enabled: ${t.enabled ? chalk.green('Yes') : chalk.red('No')}`);
+          writeLine(`  Last:    ${lastRun} [${statusColor(statusText)}]`);
+          writeLine(chalk.dim('─'.repeat(40)));
         });
       } catch (err: unknown) {
         spinner.fail(`Failed: ${err instanceof Error ? err.message : String(err)}`);
@@ -121,12 +130,12 @@ export function registerScheduledTasksCommands(program: Command): void {
     .action(async (id) => {
       const spinner = ora(`Triggering task ${id}...`).start();
       try {
-        const result = await apiFetch<{ message: string; result: any }>(`/${id}/trigger`, {
+        const result = await apiFetch<TriggerTaskResult>(`/${id}/trigger`, {
           method: 'POST',
         });
         spinner.succeed(`${result.message}`);
         if (result.result) {
-          console.log(chalk.gray(JSON.stringify(result.result, null, 2)));
+          writeLine(chalk.gray(JSON.stringify(result.result, null, 2)));
         }
       } catch (err: unknown) {
         spinner.fail(`Failed: ${err instanceof Error ? err.message : String(err)}`);

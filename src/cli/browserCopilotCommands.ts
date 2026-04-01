@@ -7,6 +7,10 @@ const API_BASE = process.env.BRUNELLA_API_URL || 'http://localhost:3000';
 type SessionMode = 'observe' | 'guide' | 'auto';
 type EnginePreference = 'auto' | 'chrome-acp' | 'robotkez';
 
+function writeLine(message = ''): void {
+  process.stdout.write(`${message}\n`);
+}
+
 async function apiFetch<T>(path: string, options?: RequestInit): Promise<T> {
   const response = await fetch(`${API_BASE}/api/v1/browser-copilot${path}`, {
     headers: { 'Content-Type': 'application/json' },
@@ -22,19 +26,26 @@ async function apiFetch<T>(path: string, options?: RequestInit): Promise<T> {
   return data;
 }
 
-function printSession(session: Record<string, unknown>) {
-  console.log(chalk.bold.cyan('\n🧭 Browser Copilot session\n'));
-  console.log(`Állapot: ${chalk.green(String(session.status ?? 'n/a'))}`);
-  console.log(`Mód: ${chalk.yellow(String(session.mode ?? 'n/a'))}`);
-  console.log(`Viewport: ${chalk.magenta(String(session.viewportEngine ?? 'n/a'))}`);
-  console.log(`Action engine: ${chalk.blue(String(session.actionEngine ?? 'n/a'))}`);
-  console.log(`Chrome ACP: ${session.chromeAcpReachable ? chalk.green('elérhető') : chalk.gray('offline')}`);
-  console.log(`Paused: ${session.paused ? chalk.red('igen') : chalk.green('nem')}`);
+function printSession(session: Record<string, unknown>): void {
+  const lines = [
+    chalk.bold.cyan('\n🧭 Browser Copilot session\n'),
+    `Állapot: ${chalk.green(String(session.status ?? 'n/a'))}`,
+    `Mód: ${chalk.yellow(String(session.mode ?? 'n/a'))}`,
+    `Viewport: ${chalk.magenta(String(session.viewportEngine ?? 'n/a'))}`,
+    `Action engine: ${chalk.blue(String(session.actionEngine ?? 'n/a'))}`,
+    `Chrome ACP: ${session.chromeAcpReachable ? chalk.green('elérhető') : chalk.gray('offline')}`,
+    `Paused: ${session.paused ? chalk.red('igen') : chalk.green('nem')}`,
+  ];
+
   if (typeof session.currentInstruction === 'string' && session.currentInstruction) {
-    console.log(`Aktuális instrukció: ${session.currentInstruction}`);
+    lines.push(`Aktuális instrukció: ${session.currentInstruction}`);
   }
   if (typeof session.pendingInstruction === 'string' && session.pendingInstruction) {
-    console.log(`Pending guide: ${session.pendingInstruction}`);
+    lines.push(`Pending guide: ${session.pendingInstruction}`);
+  }
+
+  for (const line of lines) {
+    writeLine(line);
   }
 }
 

@@ -48,6 +48,10 @@ copilot-messages.log
 *.tar.bz2
 *.tar.xz
 *.gz
+
+# n8n book-keeping
+data/bank-imports/*.csv
+
 *.bz2
 *.xz
 

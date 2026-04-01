@@ -2,6 +2,7 @@ import { execFileSync } from 'child_process';
 import { v4 as uuidv4 } from 'uuid';
 import { agentManager } from '../agents/AgentManager.js';
 import { approvalRouter } from './approvalRouter.js';
+import { captureApprovedRemediationGoldenCandidate } from './goldenDatasetBridge.js';
 import {
   clearRemediationRuns,
   loadRemediationRuns,
@@ -18,6 +19,7 @@ import type {
   RemediationFinalApprovalState,
   RemediationFixerState,
   RemediationRunRecord,
+  RemediationRunsSummary,
   RemediationRunStatus,
   RemediationVerificationStep,
 } from './remediationRuntime.types.js';
@@ -243,20 +245,33 @@ class GitHubRemediationRuntime {
     return runId ? this.runs.get(runId) : undefined;
   }
 
-  getSummary(): Record<string, unknown> {
+  getSummary(): RemediationRunsSummary {
     this.ensureHydrated();
-    const runs = Array.from(this.runs.values());
-    const counts = runs.reduce<Record<string, number>>((acc, run) => {
+    const runs = Array.from(this.runs.values()).sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
+    const counts = runs.reduce<Partial<Record<RemediationRunStatus, number>>>((acc, run) => {
       acc[run.status] = (acc[run.status] ?? 0) + 1;
       return acc;
     }, {});
+    const latestRun = runs[0];
+    const inFlightStatuses = new Set<RemediationRunStatus>([
+      'queued',
+      'analyzing',
+      'running_fixer',
+      'verifying',
+      'awaiting_final_approval',
+    ]);
 
     return {
       total: runs.length,
       counts,
       active: this.started,
-      latestUpdatedAt: runs[0]?.updatedAt,
+      latestUpdatedAt: latestRun?.updatedAt,
       pendingFinalApproval: runs.filter((run) => run.status === 'awaiting_final_approval').length,
+      inFlight: runs.filter((run) => inFlightStatuses.has(run.status)).length,
+      latestRunId: latestRun?.id,
+      latestRunStatus: latestRun?.status,
+      latestRepositoryName: latestRun?.repositoryName,
+      latestFailureReason: latestRun?.failureReason,
     };
   }
 
@@ -312,6 +327,15 @@ class GitHubRemediationRuntime {
     this.runs.set(run.id, run);
     this.sourceDedupToRunId.set(run.sourceDedupKey, run.id);
     saveRemediationRun(run);
+    phoenixEventBus.publish('phoenix:remediation_run_updated', {
+      runId: run.id,
+      status: run.status,
+      repositoryName: run.repositoryName,
+      workflowRunId: run.workflowRunId,
+      failureReason: run.failureReason,
+      updatedAt: run.updatedAt,
+      timestamp: run.updatedAt,
+    });
   }
 
   private async processRun(runId: string): Promise<void> {
@@ -568,6 +592,16 @@ class GitHubRemediationRuntime {
     }
 
     this.persistRun(run);
+
+    if (workflow.status === 'approved') {
+      const captureResult = captureApprovedRemediationGoldenCandidate(run);
+      if (!captureResult.success) {
+        logWarn(
+          'GitHubRemediationRuntime',
+          `Approved remediation sample capture skipped: ${captureResult.message ?? 'unknown reason'}`,
+        );
+      }
+    }
   }
 
   private failRun(run: RemediationRunRecord, reason: string): void {

@@ -43,93 +43,81 @@ export function WidgetGrid ()
 
   const statCards = [
     {
-      label: "Total Tasks",
-      value: totalTasks.toLocaleString( "hu-HU" ),
-      detail: `${ pendingTasks + runningTasks } aktív`,
-      icon: ListTodo,
-      accent: "text-cyan-400",
-    },
-    {
-      label: "Success Rate",
-      value: `${ successRate.toFixed( 1 ) }%`,
-      detail: `${ taskStats?.errorCount ?? 0 } hibás`,
-      icon: ShieldCheck,
-      accent: "text-emerald-400",
-    },
-    {
-      label: "Agent State",
-      value: `${ activeAgents }/${ totalAgents || "—" }`,
-      detail: `${ agentsList.length ? "élő" : "nincs adat" }`,
-      icon: Bot,
-      accent: "text-violet-400",
-    },
-    {
       label: "System Health",
       value: `${ healthyServices }/${ serviceCount || "—" }`,
-      detail: "szolgáltatás egészség",
       icon: Sparkles,
-      accent: "text-indigo-400",
+      color: "indigo",
+    },
+    {
+      label: "Agent Cluster",
+      value: `${ activeAgents }/${ totalAgents || "—" }`,
+      icon: Bot,
+      color: "violet",
+    },
+    {
+      label: "Queue Load",
+      value: ( pendingTasks + runningTasks ).toString(),
+      icon: ListTodo,
+      color: "cyan",
+    },
+    {
+      label: "Success",
+      value: `${ Math.round( successRate ) }%`,
+      icon: ShieldCheck,
+      color: "emerald",
     },
   ];
 
   return (
-    <div className="flex flex-col gap-4 h-full">
-      {/* ── Command Strip ── */ }
-      <div className="command-strip shrink-0 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-        <div className="flex items-center gap-3 min-w-0">
-          <div className="flex items-center gap-2 shrink-0">
-            <div className="h-1.5 w-1.5 rounded-full bg-cyan-300 shadow-[0_0_10px_rgba(34,211,238,0.65)] animate-pulse" />
-            <span className="text-[9px] font-mono tracking-[0.34em] text-cyan-200/80 uppercase leading-none">
-              BRUNELLA
+    <div className="flex flex-col gap-5 h-full">
+      {/* ── Cockpit Header ── */ }
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 px-1">
+        <div className="flex items-center gap-4">
+          <div className="flex flex-col">
+            <div className="flex items-center gap-2">
+              <div className="h-2 w-2 rounded-full bg-cyan-400 shadow-[0_0_12px_rgba(34,211,238,0.8)] animate-pulse" />
+              <h2 className="text-sm font-bold tracking-tight text-white uppercase">
+                Mission Control
+              </h2>
+            </div>
+            <span className="text-[10px] text-zinc-500 font-mono tracking-widest mt-0.5">
+              { currentLayout.name.toUpperCase().replaceAll( " ", "_" ) } v2.6.0
             </span>
           </div>
-          <div className="h-3.5 w-px bg-white/[0.06] hidden sm:block" />
-          <span className="text-[9px] text-zinc-500 font-mono tracking-[0.22em] hidden sm:inline truncate">
-            { currentLayout.name.toUpperCase().replaceAll( " ", "_" ) } · { widgets.length } WIDGETS
-          </span>
-        </div>
-        <div className="flex items-center gap-2 shrink-0">
-          <div className="hidden md:flex items-center gap-2">
-            { statCards.map( ( stat ) =>
-            {
-              const Icon = stat.icon;
-              return (
-                <div key={ stat.label } className="stat-pill min-w-[88px]">
-                  <div className="stat-pill__header">
-                    <Icon size={ 9 } className={ cn( stat.accent ) } />
-                    <span className="stat-pill__label">
-                      { stat.label }
-                    </span>
-                  </div>
-                  <div className="flex items-baseline gap-1 mt-0.5">
-                    <span className="stat-pill__value">
-                      { stat.value }
-                    </span>
-                    <span className="stat-pill__detail">
-                      { stat.detail }
-                    </span>
-                  </div>
+          <div className="h-8 w-px bg-white/[0.06]" />
+          <div className="flex items-center gap-3">
+            { statCards.map( ( stat ) => (
+              <div key={ stat.label } className="group flex flex-col gap-0.5">
+                <span className="text-[9px] uppercase tracking-wider text-zinc-500 group-hover:text-zinc-400 transition-colors">
+                  { stat.label }
+                </span>
+                <div className="flex items-center gap-1.5">
+                  <stat.icon size={ 10 } className={`text-${stat.color}-400/80`} />
+                  <span className="text-xs font-bold text-zinc-200 tabular-nums">
+                    { stat.value }
+                  </span>
                 </div>
-              );
-            } ) }
+              </div>
+            ) ) }
           </div>
-          <div className="h-5 w-px bg-white/[0.06] hidden md:block" />
+        </div>
+
+        <div className="flex items-center gap-2">
           <Button
-            variant="ghost"
-            size="icon"
+            variant="outline"
+            size="sm"
             onClick={ () => setLayoutMode( "default-dashboard" ) }
-            className="text-zinc-500 hover:text-zinc-200 h-8 w-8 hover:bg-white/[0.06]"
-            title="Reset layout"
-            aria-label="Reset layout"
+            className="h-8 px-3 border-white/[0.06] bg-white/[0.02] text-zinc-400 hover:text-white hover:bg-white/[0.08] hover:border-white/[0.1] transition-all gap-2"
           >
             <RotateCcw size={ 12 } />
+            <span className="text-[10px] font-medium uppercase tracking-wide">Reset View</span>
           </Button>
         </div>
       </div>
 
-      {/* ── Bento Widget Grid ── */ }
+      {/* ── Bento Grid ── */ }
       <div
-        className="widget-grid flex-1 min-h-0 overflow-auto custom-scrollbar pb-4"
+        className="flex-1 grid gap-4 min-h-0 overflow-y-auto custom-scrollbar pr-1 pb-6"
         style={ {
           gridTemplateAreas: currentLayout.gridTemplateAreas.map( ( row: string ) => row ).join( " " ),
           gridTemplateColumns: currentLayout.gridTemplateColumns,
@@ -144,11 +132,15 @@ export function WidgetGrid ()
           return (
             <motion.div
               key={ w.id }
-              className="widget-card min-h-0"
+              className="bg-zinc-900/40 border border-white/[0.04] rounded-xl overflow-hidden shadow-2xl flex flex-col"
               style={ { gridArea: area } }
-              initial={ { opacity: 0, y: 16 } }
-              animate={ { opacity: 1, y: 0 } }
-              transition={ { duration: 0.28, delay: index * 0.03, ease: "easeOut" } }
+              initial={ { opacity: 0, scale: 0.98, y: 10 } }
+              animate={ { opacity: 1, scale: 1, y: 0 } }
+              transition={ { 
+                duration: 0.4, 
+                delay: index * 0.04, 
+                ease: [0.23, 1, 0.32, 1] 
+              } }
             >
               <Component />
             </motion.div>

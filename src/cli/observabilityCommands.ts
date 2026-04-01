@@ -1,6 +1,40 @@
 import type { Command } from 'commander';
 import { logInfo } from '../utils/logger.js';
 
+interface AgentStatusEntry {
+  name?: string;
+  [key: string]: unknown;
+}
+
+interface AgentStatusResponse {
+  agents?: AgentStatusEntry[];
+}
+
+interface TaskLogEntry {
+  timestamp: string;
+  level: string;
+  message: string;
+}
+
+interface TaskDetails {
+  agent?: string;
+  status?: string;
+  logs?: TaskLogEntry[];
+  result?: unknown;
+}
+
+interface TaskDetailsResponse {
+  task: TaskDetails;
+}
+
+function writeLine(message = ''): void {
+  process.stdout.write(`${message}\n`);
+}
+
+function writeError(message = ''): void {
+  process.stderr.write(`${message}\n`);
+}
+
 export function registerObservabilityCommands(program: Command): void {
   const obs = program
     .command('observability')
@@ -53,10 +87,10 @@ export function registerObservabilityCommands(program: Command): void {
           borderStyle: 'round',
           borderColor: 'blue',
         });
-        process.stdout.write(output + '\n');
+        writeLine(output);
       } catch (e: unknown) {
         const msg = e instanceof Error ? e.message : String(e);
-        process.stderr.write(`Hiba: ${msg}\n`);
+        writeError(`Hiba: ${msg}`);
         process.exit(1);
       }
     });
@@ -77,15 +111,13 @@ export function registerObservabilityCommands(program: Command): void {
         const chalk = (await import('chalk')).default;
 
         if (calls.length === 0) {
-          process.stdout.write(chalk.gray('Még nincsenek naplózott LLM hívások.\n'));
+          writeLine(chalk.gray('Még nincsenek naplózott LLM hívások.'));
           return;
         }
 
-        process.stdout.write(chalk.bold('📋 Legutóbbi LLM hívások:\n\n'));
-        process.stdout.write(
-          chalk.gray('  Időpont             Provider     Model              ms     Tokenek  Status\n')
-        );
-        process.stdout.write(chalk.gray('  ' + '─'.repeat(85) + '\n'));
+        writeLine(chalk.bold('📋 Legutóbbi LLM hívások:\n'));
+        writeLine(chalk.gray('  Időpont             Provider     Model              ms     Tokenek  Status'));
+        writeLine(chalk.gray('  ' + '─'.repeat(85)));
 
         for (const c of calls) {
           const status = c.success ? chalk.green('✓') : chalk.red('✗');
@@ -93,15 +125,15 @@ export function registerObservabilityCommands(program: Command): void {
           const model = (c.model || 'N/A').padEnd(18).slice(0, 18);
           const duration = String(c.duration_ms).padStart(6);
           const tokens = String(c.total_tokens).padStart(8);
-          process.stdout.write(
-            `  ${chalk.gray(c.timestamp.slice(0, 19))} ${chalk.blue(provider)} ${model} ${duration} ${tokens}  ${status}\n`
+          writeLine(
+            `  ${chalk.gray(c.timestamp.slice(0, 19))} ${chalk.blue(provider)} ${model} ${duration} ${tokens}  ${status}`
           );
         }
 
-        process.stdout.write(`\n  Összesen: ${chalk.cyan(calls.length)} hívás\n`);
+        writeLine(`\n  Összesen: ${chalk.cyan(calls.length)} hívás`);
       } catch (e: unknown) {
         const msg = e instanceof Error ? e.message : String(e);
-        process.stderr.write(`Hiba: ${msg}\n`);
+        writeError(`Hiba: ${msg}`);
         process.exit(1);
       }
     });
@@ -118,39 +150,43 @@ export function registerObservabilityCommands(program: Command): void {
         spinner.start();
 
         const statusRes = await fetch(`${API_BASE}/api/agents/status`);
-        const statusJson = statusRes.ok ? await statusRes.json() : { agents: [] };
+        const statusJson = statusRes.ok ? await statusRes.json() as AgentStatusResponse : { agents: [] };
         const agents = statusJson.agents || [];
-        const agent = agents.find((a: any) => a.name?.toLowerCase() === agentName.toLowerCase());
+        const agent = agents.find((entry) => entry.name?.toLowerCase() === agentName.toLowerCase());
 
         const diagRes = await fetch(`${API_BASE}/api/agents/diagnostics`);
         const diags = diagRes.ok ? await diagRes.json() : {};
 
         const tasksRes = await fetch(`${API_BASE}/api/tasks?limit=${opts.limit || '50'}`);
-        const tasksJson = tasksRes.ok ? await tasksRes.json() : { tasks: [] };
+        const tasksJson = tasksRes.ok ? await tasksRes.json() as { tasks?: Array<Record<string, unknown>> } : { tasks: [] };
         const allTasks = tasksJson.tasks || [];
-        const agentTasks = allTasks.filter((t: any) => t.agent && t.agent.toLowerCase() === agentName.toLowerCase()).slice(0, parseInt(opts.limit || '10', 10));
+        const agentTasks = allTasks
+          .filter((task) => typeof task.agent === 'string' && task.agent.toLowerCase() === agentName.toLowerCase())
+          .slice(0, parseInt(opts.limit || '10', 10));
 
         spinner.succeed('Lekérdezés kész');
         const chalk = (await import('chalk')).default;
-        console.log(chalk.bold(`\nAgent diagnostics: ${agentName}\n`));
+        writeLine(chalk.bold(`\nAgent diagnostics: ${agentName}\n`));
         if (agent) {
-          console.log(chalk.gray(JSON.stringify(agent, null, 2)));
+          writeLine(chalk.gray(JSON.stringify(agent, null, 2)));
         } else {
-          console.log(chalk.yellow('Agent nem található a status listában.'));
+          writeLine(chalk.yellow('Agent nem található a status listában.'));
         }
 
-        console.log(chalk.bold('\nLegutóbbi feladatok:'));
+        writeLine(chalk.bold('\nLegutóbbi feladatok:'));
         if (agentTasks.length === 0) {
-          console.log(chalk.gray('  Nincs feladat.'));
+          writeLine(chalk.gray('  Nincs feladat.'));
         } else {
           for (const t of agentTasks) {
-            console.log(chalk.gray(`  #${t.id} [${t.status}] ${t.created_at} ${t.completed_at || ''}`));
-            if (t.result) console.log(chalk.dim(`     ${JSON.stringify(typeof t.result === 'string' ? t.result : t.result).slice(0,200)}`));
+            writeLine(chalk.gray(`  #${String(t.id)} [${String(t.status)}] ${String(t.created_at)} ${String(t.completed_at || '')}`));
+            if (t.result) {
+              writeLine(chalk.dim(`     ${JSON.stringify(typeof t.result === 'string' ? t.result : t.result).slice(0, 200)}`));
+            }
           }
         }
       } catch (e: unknown) {
         const msg = e instanceof Error ? e.message : String(e);
-        console.error('Hiba:', msg);
+        writeError(`Hiba: ${msg}`);
         process.exit(1);
       }
     });
@@ -163,33 +199,34 @@ export function registerObservabilityCommands(program: Command): void {
         const API_BASE = process.env.BRUNELLA_API_URL || 'http://localhost:3000';
         const taskId = Number(taskIdStr);
         if (Number.isNaN(taskId)) {
-          console.error('Érvénytelen taskId');
+          writeError('Érvénytelen taskId');
           process.exit(1);
         }
         const res = await fetch(`${API_BASE}/api/tasks/${taskId}`);
         if (!res.ok) {
-          console.error('Task nem található');
+          writeError('Task nem található');
           process.exit(1);
         }
-        const data = await res.json();
+        const data = await res.json() as TaskDetailsResponse;
         const task = data.task;
         const chalk = (await import('chalk')).default;
-        console.log(chalk.bold(`\nTask #${taskId} — ${task.agent} — ${task.status}\n`));
+        writeLine(chalk.bold(`\nTask #${taskId} — ${task.agent ?? 'unknown'} — ${task.status ?? 'unknown'}\n`));
         if (task.logs && task.logs.length) {
           for (const log of task.logs) {
             const levelColor = log.level === 'error' ? chalk.red : (log.level === 'warn' ? chalk.yellow : chalk.gray);
-            console.log(`${chalk.gray(log.timestamp)} ${levelColor(`[${log.level}]`)} ${log.message}`);
+            writeLine(`${chalk.gray(log.timestamp)} ${levelColor(`[${log.level}]`)} ${log.message}`);
           }
         } else {
-          console.log(chalk.gray('Nincsenek naplók a taskhoz.'));
+          writeLine(chalk.gray('Nincsenek naplók a taskhoz.'));
         }
         if (task.result) {
-          console.log(chalk.bold('\nResult:\n'), JSON.stringify(task.result, null, 2));
+          writeLine(chalk.bold('\nResult:\n'));
+          writeLine(JSON.stringify(task.result, null, 2));
         }
       } catch (e: unknown) {
         const msg = e instanceof Error ? e.message : String(e);
-        console.error('Hiba:', msg);
+        writeError(`Hiba: ${msg}`);
         process.exit(1);
       }
     });
-  }
+}

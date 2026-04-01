@@ -1,0 +1,10 @@
+{
+  "snapshotId": "snapshot_github_remediation_runtime_1775079782443",
+  "snapshotPath": "F:\\mcp-brunella-core\\data\\learning-loop\\snapshots\\snapshot_github_remediation_runtime_1775079782443.jsonl",
+  "sampleCount": 1,
+  "avgQuality": 0.88,
+  "createdAt": "2026-04-01T21:43:02.443Z",
+  "source": "approved_curated_dataset",
+  "sourceFilter": "github_remediation_runtime",
+  "minQuality": 0.8
+}

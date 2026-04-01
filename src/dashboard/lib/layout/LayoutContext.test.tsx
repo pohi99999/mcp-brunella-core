@@ -45,7 +45,7 @@ describe('LayoutContext', () => {
     );
 
     expect(currentLayoutId).toBe('default-dashboard');
-    expect(screen.getByText('Default Dashboard')).toBeInTheDocument();
+    expect(screen.getByText('Mission Control')).toBeInTheDocument();
   });
 
   it('should update the layout mode when setLayoutMode is called with a valid id', () => {
@@ -67,7 +67,7 @@ describe('LayoutContext', () => {
       </LayoutProvider>
     );
 
-    expect(screen.getByTestId('layout-name').textContent).toBe('Default Dashboard');
+    expect(screen.getByTestId('layout-name').textContent).toBe('Mission Control');
 
     act(() => {
       screen.getByText('Set Dev Mode').click();
@@ -96,7 +96,7 @@ describe('LayoutContext', () => {
       </LayoutProvider>
     );
 
-    expect(screen.getByTestId('layout-name').textContent).toBe('Default Dashboard');
+    expect(screen.getByTestId('layout-name').textContent).toBe('Mission Control');
 
     act(() => {
       screen.getByText('Set Invalid Mode').click();
@@ -104,7 +104,7 @@ describe('LayoutContext', () => {
 
     // Expect no change in layout ID
     expect(currentLayoutId).toBe('default-dashboard');
-    expect(screen.getByTestId('layout-name').textContent).toBe('Default Dashboard');
+    expect(screen.getByTestId('layout-name').textContent).toBe('Mission Control');
     expect(consoleWarnSpy).toHaveBeenCalledWith('Attempted to set unknown layout mode: invalid-mode');
   });
 

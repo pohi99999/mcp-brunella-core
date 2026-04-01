@@ -50,7 +50,12 @@
       "role": "Research & Intelligence — Deep Web Scraper",
       "description": "Apify platform-alapú professzionális scraping: Google, LinkedIn, e-commerce, trendek",
       "triggers": [
-        "scrape", "google", "linkedin", "leads", "ecommerce", "apify"
+        "scrape",
+        "google",
+        "linkedin",
+        "leads",
+        "ecommerce",
+        "apify"
       ],
       "priority": 4
     },
@@ -1130,7 +1135,9 @@
       "name": "BankAgent",
       "description": "Parses bank export files (CSV) and extracts transactions.",
       "role": "Transaction Watcher",
-      "capabilities": ["parse_csv"],
+      "capabilities": [
+        "parse_csv"
+      ],
       "module": "./agents/BankAgent.js",
       "class": "BankAgent"
     },
@@ -1138,7 +1145,9 @@
       "name": "MatchingAgent",
       "description": "Matches bank transactions with pending invoices.",
       "role": "The Brain",
-      "capabilities": ["hybrid_matching"],
+      "capabilities": [
+        "hybrid_matching"
+      ],
       "module": "./agents/MatchingAgent.js",
       "class": "MatchingAgent"
     },
@@ -1146,9 +1155,158 @@
       "name": "SheetsSyncAgent",
       "description": "Syncs transaction states to Google Sheets.",
       "role": "UI Sync",
-      "capabilities": ["sheets_api"],
+      "capabilities": [
+        "sheets_api"
+      ],
       "module": "./agents/SheetsSyncAgent.js",
       "class": "SheetsSyncAgent"
+    },
+    {
+      "name": "InventoryFifoAgent",
+      "description": "FIFO alapú készletbevételezés, kiadás és ELÁBÉ (Cost of Goods Sold) kalkuláció KKV-k számára. Számvitelileg helyes, Számviteli Törvény 2000. évi C. tv. szerint.",
+      "role": "Készletkezelő — FIFO értékelés",
+      "capabilities": [
+        "fifo_receive",
+        "fifo_issue",
+        "cogs_calculation",
+        "inventory_status"
+      ],
+      "module": "./agents/InventoryFifoAgent.js",
+      "class": "InventoryFifoAgent",
+      "triggers": [
+        "inventory",
+        "fifo",
+        "receive",
+        "issue",
+        "bevételezés",
+        "kiadás",
+        "készlet",
+        "ELÁBÉ",
+        "COGS"
+      ],
+      "priority": 70,
+      "track": "inventory_automation_20260330"
+    },
+    {
+      "name": "InventoryWacAgent",
+      "description": "Súlyozott Átlagár (WAC) értékelő ágens. Napi WAC ár frissítés és WAC alapú készletkiadás KKV-k számára. Számvitelileg helyes, minden bevételezés után azonnali WAC újraszámítás.",
+      "role": "Készletkezelő — WAC (Súlyozott Átlagár) értékelés",
+      "capabilities": [
+        "wac_refresh",
+        "wac_issue",
+        "wac_recalculate"
+      ],
+      "module": "./agents/InventoryWacAgent.js",
+      "class": "InventoryWacAgent",
+      "triggers": [
+        "wac",
+        "súlyozott átlagár",
+        "weighted average",
+        "inventory_wac",
+        "készletérték"
+      ],
+      "priority": 70,
+      "track": "inventory_automation_20260330"
+    },
+    {
+      "name": "DemandForecastAgent",
+      "description": "Historikus értékesítési adatok elemzése és LLM-alapú 30 napos kereslet-előrejelzés. AI-vezérelt szezonalitás és trend detekció KKV-k számára.",
+      "role": "Kereslet-előrejelzési ágens",
+      "capabilities": [
+        "demand_forecast",
+        "sales_velocity",
+        "trend_analysis",
+        "seasonal_detection"
+      ],
+      "module": "./agents/DemandForecastAgent.js",
+      "class": "DemandForecastAgent",
+      "triggers": [
+        "kereslet előrejelzés",
+        "demand forecast",
+        "értékesítési trend",
+        "30 napos előrejelzés",
+        "szezonalitás"
+      ],
+      "priority": 65,
+      "track": "inventory_automation_20260330"
+    },
+    {
+      "name": "SafetyStockAgent",
+      "description": "Statisztikai módszerrel kiszámítja a biztonsági készlet szintjét és az újrarendelési pontot. Képlet: Z × σ × √(lead_time). 95%-os kiszolgálási szint alapértelmezetten.",
+      "role": "Biztonsági készlet kalkulátor",
+      "capabilities": [
+        "safety_stock_calculation",
+        "reorder_point_calculation",
+        "demand_variability_analysis"
+      ],
+      "module": "./agents/SafetyStockAgent.js",
+      "class": "SafetyStockAgent",
+      "triggers": [
+        "biztonsági készlet",
+        "safety stock",
+        "újrarendelési pont",
+        "reorder point",
+        "ROP",
+        "készletoptimalizálás"
+      ],
+      "priority": 65,
+      "track": "inventory_automation_20260330"
+    },
+    {
+      "name": "PurchaseOrderAgent",
+      "description": "Automatikusan azonosítja a készlethiányos termékeket, LLM-mel professzionális magyar megrendelő levelet generál és PENDING_APPROVAL PO-t hoz létre emberi jóváhagyásra (human-in-the-loop).",
+      "role": "Autonóm beszerzési rendelés generáló",
+      "capabilities": [
+        "purchase_order_generation",
+        "reorder_detection",
+        "supplier_email_draft",
+        "human_in_the_loop"
+      ],
+      "module": "./agents/PurchaseOrderAgent.js",
+      "class": "PurchaseOrderAgent",
+      "triggers": [
+        "megrendelés",
+        "purchase order",
+        "PO generálás",
+        "szállítói levél",
+        "utánpótlás",
+        "reorder"
+      ],
+      "priority": 70,
+      "track": "inventory_automation_20260330"
+    },
+    {
+      "name": "StocktakeReconciliationAgent",
+      "module": "./agents/StocktakeReconciliationAgent.js",
+      "class": "StocktakeReconciliationAgent",
+      "description": "Leltáreltérés analizátor és nyomozó.",
+      "triggers": [],
+      "priority": 50,
+      "capabilities": [
+        "inventory_reconciliation"
+      ]
+    },
+    {
+      "name": "StocktakeReportAgent",
+      "module": "./agents/StocktakeReportAgent.js",
+      "class": "StocktakeReportAgent",
+      "description": "Leltárjelentés generátor.",
+      "triggers": [],
+      "priority": 50,
+      "capabilities": [
+        "inventory_reporting"
+      ]
+    },
+    {
+      "name": "InventoryAdjustmentAgent",
+      "module": "./agents/InventoryAdjustmentAgent.js",
+      "class": "InventoryAdjustmentAgent",
+      "description": "Leltáreltérések könyvelésének előkészítése.",
+      "triggers": [],
+      "priority": 50,
+      "capabilities": [
+        "accounting_preparation"
+      ]
     }
   ]
 }

@@ -1,0 +1,53 @@
+uid=8_0 RootWebArea "⚠️ 06 - ISZ Gmail Categorizel - n8n" url="https://iszapfalo.app.n8n.cloud/workflow/LGvkbQNUm44UEoMi/debug/1898"
+  uid=9_0 link "Personal" url="https://iszapfalo.app.n8n.cloud/projects/johLSwPlUades2LG"
+    uid=9_1 generic description="Personal"
+    uid=9_2 StaticText "Personal"
+  uid=9_3 StaticText "/"
+  uid=9_4 generic
+    uid=9_5 StaticText "06 - ISZ Gmail Categorizel"
+  uid=9_6 StaticText "+ Add tag"
+  uid=9_7 button "Edit workflow description" expandable haspopup="dialog" live="polite" relevant="additions text"
+  uid=9_8 StaticText "0 / 3"
+  uid=9_9 StaticText "Active"
+  uid=9_10 switch checked
+  uid=9_11 button "Share" live="polite" relevant="additions text"
+  uid=9_12 StaticText "Saved"
+  uid=9_13 link url="https://iszapfalo.app.n8n.cloud/workflow/LGvkbQNUm44UEoMi/history"
+    uid=9_14 button live="polite" relevant="additions text"
+  uid=9_15 button expandable haspopup="menu" live="polite" relevant="additions text"
+  uid=8_17 Iframe
+    uid=8_18 RootWebArea "​" url="https://unpkg.com/github-buttons@2.29.1/dist/buttons.html#href=https%3A%2F%2Fgithub.com%2Fn8n-io%2Fn8n&title=&aria-label=Star%20n8n-io%2Fn8n%20on%20GitHub&data-color-scheme=dark&data-text=Star&data-size=large&data-show-count=true"
+      uid=8_19 link "Star n8n-io/n8n on GitHub" url="https://github.com/n8n-io/n8n"
+        uid=8_20 StaticText " "
+        uid=8_21 StaticText "Star"
+      uid=8_22 link "181978 stargazers on GitHub" url="https://github.com/n8n-io/n8n/stargazers"
+        uid=8_23 StaticText "181,978"
+  uid=8_24 radio "Editor" checked
+  uid=8_25 radio "Executions"
+  uid=8_26 radio "Evaluations"
+  uid=8_27 menubar orientation="horizontal"
+    uid=8_28 menuitem expandable
+      uid=8_29 button live="polite" relevant="additions text"
+  uid=8_30 generic
+    uid=8_31 menuitem
+    uid=8_32 menuitem
+    uid=8_33 menuitem
+    uid=8_34 button disableable disabled live="polite" relevant="additions text"
+    uid=8_35 menuitem
+    uid=8_36 menuitem
+    uid=8_37 menuitem
+  uid=8_38 StaticText "JP"
+  uid=9_16 generic
+    uid=9_17 banner
+      uid=9_18 StaticText "Logs"
+      uid=9_19 button "Pop out panel" live="polite" relevant="additions text"
+      uid=9_20 button "Open panel" live="polite" relevant="additions text"
+  uid=8_459 generic
+  uid=9_21 StaticText "Loading"
+  uid=9_22 dialog "Unpin workflow data" description="Loading this execution will unpin the data currently pinned in these nodes Gmail_Trigger" modal
+    uid=9_23 generic
+      uid=9_24 StaticText "Unpin workflow data"
+      uid=9_25 StaticText "Loading this execution will unpin the data currently pinned in these nodes"
+      uid=9_26 StaticText "Gmail_Trigger"
+      uid=9_27 button "Cancel"
+      uid=9_28 button "Unpin" focusable focused

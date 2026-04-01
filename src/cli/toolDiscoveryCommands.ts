@@ -7,9 +7,17 @@ import chalk from 'chalk';
 import { logError } from '../utils/logger.js';
 import { getPrebuiltToolCatalog, mergeToolLists, type ToolLike } from '../utils/prebuiltTools.js';
 
+function writeLine(message = ''): void {
+  process.stdout.write(`${message}\n`);
+}
+
+function writeError(message = ''): void {
+  process.stderr.write(`${message}\n`);
+}
+
 function printToolCatalog(tools: ToolLike[]) {
   if (tools.length === 0) {
-    console.log(chalk.gray('  Nincs regisztrált tool.'));
+    writeLine(chalk.gray('  Nincs regisztrált tool.'));
     return;
   }
 
@@ -18,15 +26,15 @@ function printToolCatalog(tools: ToolLike[]) {
     const state = tool.enabled === false ? chalk.yellow(' [DISABLED]') : '';
     const deprecated = tool.deprecated ? chalk.yellow(' [DEPRECATED]') : '';
     const category = tool.category ? chalk.dim(` (${tool.category})`) : '';
-    console.log(`  ${chalk.bold(tool.name)}${version}${deprecated}${state}${category}`);
+    writeLine(`  ${chalk.bold(tool.name)}${version}${deprecated}${state}${category}`);
 
     if (tool.description) {
-      console.log(`    ${chalk.gray(tool.description)}`);
+      writeLine(`    ${chalk.gray(tool.description)}`);
     }
 
     const tags = tool.tags ?? [];
     if (tags.length > 0) {
-      console.log(`    ${chalk.dim(`Tags: ${tags.map((tag) => chalk.blue(tag)).join(', ')}`)}`);
+      writeLine(`    ${chalk.dim(`Tags: ${tags.map((tag) => chalk.blue(tag)).join(', ')}`)}`);
     }
 
     const parameters = tool.parameters ?? [];
@@ -34,10 +42,10 @@ function printToolCatalog(tools: ToolLike[]) {
       const paramText = parameters
         .map((parameter) => `${parameter.name}:${parameter.type}${parameter.required ? '*' : ''}`)
         .join(', ');
-      console.log(`    ${chalk.dim(`Params: ${paramText}`)}`);
+      writeLine(`    ${chalk.dim(`Params: ${paramText}`)}`);
     }
 
-    console.log('');
+    writeLine('');
   }
 }
 
@@ -80,16 +88,16 @@ export function registerToolDiscoveryCommands(program: Command) {
         const localTools = getPrebuiltToolCatalog();
         const tools = mergeToolLists(serverTools, localTools);
 
-        console.log(chalk.bold.cyan('\n🔧 MCP Tool Registry\n'));
+        writeLine(chalk.bold.cyan('\n🔧 MCP Tool Registry\n'));
         printToolCatalog(tools);
-        console.log(chalk.gray(`  Összesen: ${tools.length} tool`));
+        writeLine(chalk.gray(`  Összesen: ${tools.length} tool`));
       } catch (e: unknown) {
         const message = e instanceof Error ? e.message : String(e);
         const fallbackTools = getPrebuiltToolCatalog();
         logError('ToolsCLI', `list hiba: ${message}`);
-        console.log(chalk.bold.cyan('\n🔧 MCP Tool Registry (local fallback)\n'));
+        writeLine(chalk.bold.cyan('\n🔧 MCP Tool Registry (local fallback)\n'));
         printToolCatalog(fallbackTools);
-        console.log(chalk.gray(`  Összesen: ${fallbackTools.length} tool`));
+        writeLine(chalk.gray(`  Összesen: ${fallbackTools.length} tool`));
       }
     });
 
@@ -104,11 +112,11 @@ export function registerToolDiscoveryCommands(program: Command) {
           : 'http://localhost:3000/api/v1/tools/stats';
         const res = await fetch(url);
         const data = await res.json();
-        console.log(chalk.bold.cyan('\n📊 Tool Metrics\n'));
-        console.log(JSON.stringify(data, null, 2));
+        writeLine(chalk.bold.cyan('\n📊 Tool Metrics\n'));
+        writeLine(JSON.stringify(data, null, 2));
       } catch (e: unknown) {
         const message = e instanceof Error ? e.message : String(e);
-        console.log(chalk.red(`Hiba: ${message}`));
+        writeError(chalk.red(`Hiba: ${message}`));
       }
     });
 
@@ -127,15 +135,15 @@ export function registerToolDiscoveryCommands(program: Command) {
         });
         const data = await res.json();
         if (data.success) {
-          console.log(chalk.green(`✅ Chain sikeresen lefutott (${data.completedSteps}/${data.totalSteps})`));
-          console.log(chalk.gray(JSON.stringify(data.result, null, 2)));
+          writeLine(chalk.green(`✅ Chain sikeresen lefutott (${data.completedSteps}/${data.totalSteps})`));
+          writeLine(chalk.gray(JSON.stringify(data.result, null, 2)));
         } else {
-          console.log(chalk.red(`❌ Chain hiba a ${data.failedAtStep ?? '?'}. lépésnél`));
-          console.log(chalk.red(data.error));
+          writeError(chalk.red(`❌ Chain hiba a ${data.failedAtStep ?? '?'}. lépésnél`));
+          writeError(chalk.red(data.error));
         }
       } catch (e: unknown) {
         const message = e instanceof Error ? e.message : String(e);
-        console.log(chalk.red(`Hiba: ${message}`));
+        writeError(chalk.red(`Hiba: ${message}`));
       }
     });
 }

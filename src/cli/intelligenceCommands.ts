@@ -3,9 +3,88 @@ import chalk from 'chalk';
 import ora from 'ora';
 import boxen from 'boxen';
 import inquirer from 'inquirer';
-import type { IntelligenceOverview, IntelligenceSignalInput, IntelligenceSignalRecord, IntelligenceSourceClass } from '../core/intelligenceMonitor.js';
+import type {
+  IntelligenceDomain,
+  IntelligenceOverview,
+  IntelligenceSignalInput,
+  IntelligenceSignalRecord,
+  IntelligenceSourceClass,
+} from '../core/intelligenceMonitor.js';
 
 const API_BASE = process.env.BRUNELLA_API_URL || 'http://localhost:3000';
+
+type TableCell = string | number | boolean | null | undefined;
+type TableRow = Record<string, TableCell>;
+
+interface AddSignalAnswers {
+  sourceClass: IntelligenceDomain;
+  source: string;
+  title: string;
+  summary: string;
+  entity: string;
+  relation: string;
+  stance: 'supports' | 'contradicts' | 'neutral';
+  biasLabel: 'low' | 'medium' | 'high' | 'unknown';
+  provenance: string;
+  confidence: number;
+}
+
+interface WatchActionAnswer {
+  action: 'overview' | 'add' | 'review' | 'exit';
+}
+
+interface ReviewSignalAnswer {
+  signalId: string;
+}
+
+interface ReviewDecisionAnswer {
+  decision: 'approve' | 'reject';
+}
+
+interface ReviewNoteAnswer {
+  note: string;
+}
+
+function writeLine(message = ''): void {
+  process.stdout.write(`${message}\n`);
+}
+
+function writeError(message = ''): void {
+  process.stderr.write(`${message}\n`);
+}
+
+function writeTable(rows: TableRow[]): void {
+  if (rows.length === 0) {
+    return;
+  }
+
+  const headers = Array.from(
+    rows.reduce((set, row) => {
+      for (const key of Object.keys(row)) {
+        set.add(key);
+      }
+
+      return set;
+    }, new Set<string>()),
+  );
+  const normalizedRows = rows.map((row) =>
+    headers.map((header) => {
+      const value = row[header];
+      return value === null || value === undefined ? '' : String(value);
+    }),
+  );
+  const widths = headers.map((header, index) =>
+    Math.max(header.length, ...normalizedRows.map((row) => row[index]?.length ?? 0)),
+  );
+  const formatRow = (cells: string[]) =>
+    cells.map((cell, index) => cell.padEnd(widths[index] ?? 0)).join(' | ');
+
+  writeLine(formatRow(headers));
+  writeLine(widths.map((width) => '-'.repeat(width)).join('-|-'));
+  for (const row of normalizedRows) {
+    writeLine(formatRow(row));
+  }
+}
 
 async function apiFetch<T>(path: string, options?: RequestInit): Promise<T> {
   const response = await fetch(`${API_BASE}${path}`, {
@@ -20,11 +99,11 @@ async function apiFetch<T>(path: string, options?: RequestInit): Promise<T> {
 }
 
 function printOverview(overview: IntelligenceOverview): void {
-  console.log(boxen(chalk.bold.cyan('🧠 Intelligence Watch — Overview'), { padding: 1, borderColor: 'cyan' }));
-  console.log(chalk.gray(`Generated: ${new Date(overview.generatedAt).toLocaleString()}`));
-  console.log();
+  writeLine(boxen(chalk.bold.cyan('🧠 Intelligence Watch — Overview'), { padding: 1, borderColor: 'cyan' }));
+  writeLine(chalk.gray(`Generated: ${new Date(overview.generatedAt).toLocaleString()}`));
+  writeLine();
 
-  console.table([
+  writeTable([
     {
       Metric: 'Signals',
       Total: overview.signals.total,
@@ -56,40 +135,43 @@ function printOverview(overview: IntelligenceOverview): void {
       SchedulerActive: overview.stats.index.schedulerActive ? 'yes' : 'no',
     },
   ]);
+  writeLine();
 
-  console.log(chalk.bold('Guardrails:'));
+  writeLine(chalk.bold('Guardrails:'));
   for (const guardrail of overview.governance.guardrails) {
-    console.log(`  ${chalk.green('•')} ${guardrail}`);
+    writeLine(`  ${chalk.green('•')} ${guardrail}`);
   }
 
   if (overview.reviewQueue.length > 0) {
-    console.log();
-    console.log(chalk.bold('Review queue:'));
+    writeLine();
+    writeLine(chalk.bold('Review queue:'));
     for (const signal of overview.reviewQueue) {
-      console.log(`  ${chalk.yellow('•')} ${signal.title} ${chalk.gray(`(${signal.sourceClass}, ${signal.score.toFixed(2)})`)}`);
+      writeLine(`  ${chalk.yellow('•')} ${signal.title} ${chalk.gray(`(${signal.sourceClass}, ${signal.score.toFixed(2)})`)}`);
     }
   }
 }
 
-async function printSignals(signals: IntelligenceSignalRecord[]): Promise<void> {
+function printSignals(signals: IntelligenceSignalRecord[]): void {
   if (signals.length === 0) {
-    console.log(chalk.yellow('Nincs elérhető jelzés.'));
+    writeLine(chalk.yellow('Nincs elérhető jelzés.'));
     return;
   }
 
-  console.table(signals.map((signal) => ({
-    ID: signal.id,
-    Class: signal.sourceClass,
-    Title: signal.title.slice(0, 48),
-    Score: signal.score.toFixed(2),
-    Status: signal.status,
-    Stance: signal.stance,
-    Updated: new Date(signal.updatedAt).toLocaleString(),
-  })));
+  writeTable(
+    signals.map((signal) => ({
+      ID: signal.id,
+      Class: signal.sourceClass,
+      Title: signal.title.slice(0, 48),
+      Score: signal.score.toFixed(2),
+      Status: signal.status,
+      Stance: signal.stance,
+      Updated: new Date(signal.updatedAt).toLocaleString(),
+    })),
+  );
 }
 
 async function addSignalInteractive(sourceClasses: IntelligenceSourceClass[]): Promise<void> {
-  const answers = await inquirer.prompt([
+  const answers = await inquirer.prompt<AddSignalAnswers>([
     { type: 'list', name: 'sourceClass', message: 'Jelzés osztálya:', choices: sourceClasses.map((cls) => ({ name: `${cls.label} (${cls.id})`, value: cls.id })) },
     { type: 'input', name: 'source', message: 'Forrás neve / URL-je:' },
     { type: 'input', name: 'title', message: 'Cím:' },
@@ -131,10 +213,10 @@ async function addSignalInteractive(sourceClasses: IntelligenceSourceClass[]): P
       body: JSON.stringify(payload),
     });
     spinner.succeed(chalk.green(`Mentve: ${saved.title}`));
-    console.log(chalk.gray(`  Status: ${saved.status} | Score: ${saved.score.toFixed(2)}`));
+    writeLine(chalk.gray(`  Status: ${saved.status} | Score: ${saved.score.toFixed(2)}`));
   } catch (error: unknown) {
     spinner.fail(chalk.red('Jelzés mentése sikertelen'));
-    console.error(chalk.red(error instanceof Error ? error.message : String(error)));
+    writeError(chalk.red(error instanceof Error ? error.message : String(error)));
   }
 }
 
@@ -144,12 +226,12 @@ async function reviewQueueInteractive(): Promise<void> {
     const signals = await apiFetch<IntelligenceSignalRecord[]>('/api/v1/intelligence/review-queue?limit=12');
     spinner.stop();
     if (signals.length === 0) {
-      console.log(chalk.green('Nincs review-ra váró jelzés.'));
+      writeLine(chalk.green('Nincs review-ra váró jelzés.'));
       return;
     }
 
-    await printSignals(signals);
-    const { signalId } = await inquirer.prompt([
+    printSignals(signals);
+    const { signalId } = await inquirer.prompt<ReviewSignalAnswer>([
       {
         type: 'list',
         name: 'signalId',
@@ -158,7 +240,7 @@ async function reviewQueueInteractive(): Promise<void> {
       },
     ]);
 
-    const { decision } = await inquirer.prompt([
+    const { decision } = await inquirer.prompt<ReviewDecisionAnswer>([
       {
         type: 'list',
         name: 'decision',
@@ -170,7 +252,7 @@ async function reviewQueueInteractive(): Promise<void> {
       },
     ]);
 
-    const { note } = await inquirer.prompt([
+    const { note } = await inquirer.prompt<ReviewNoteAnswer>([
       { type: 'input', name: 'note', message: 'Megjegyzés / indoklás (opcionális):', default: '' },
     ]);
 
@@ -182,13 +264,13 @@ async function reviewQueueInteractive(): Promise<void> {
     reviewSpinner.succeed(chalk.green(`Kész: ${updated.title} -> ${updated.status}`));
   } catch (error: unknown) {
     spinner.fail(chalk.red('Review queue betöltése sikertelen'));
-    console.error(chalk.red(error instanceof Error ? error.message : String(error)));
+    writeError(chalk.red(error instanceof Error ? error.message : String(error)));
   }
 }
 
 async function runInteractiveWatch(): Promise<void> {
   while (true) {
-    const { action } = await inquirer.prompt([
+    const { action } = await inquirer.prompt<WatchActionAnswer>([
       {
         type: 'list',
         name: 'action',
@@ -234,7 +316,7 @@ export function registerIntelligenceCommands(program: Command): void {
       try {
         if (options.json) {
           const overview = await apiFetch<IntelligenceOverview>('/api/v1/intelligence/overview');
-          console.log(JSON.stringify(overview, null, 2));
+          writeLine(JSON.stringify(overview, null, 2));
           return;
         }
 
@@ -248,7 +330,7 @@ export function registerIntelligenceCommands(program: Command): void {
 
         await runInteractiveWatch();
       } catch (error: unknown) {
-        console.error(chalk.red(error instanceof Error ? error.message : String(error)));
+        writeError(chalk.red(error instanceof Error ? error.message : String(error)));
         process.exitCode = 1;
       }
     });

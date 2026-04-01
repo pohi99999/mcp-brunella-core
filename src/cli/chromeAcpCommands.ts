@@ -19,6 +19,10 @@ interface ChromeAcpDoctorReport {
   adapterEntryPoint?: string;
 }
 
+function writeLine(message = ''): void {
+  process.stdout.write(`${message}\n`);
+}
+
 function hasBinary(binaryName: string): boolean {
   const locator = process.platform === 'win32' ? 'where' : 'which';
   const result = spawnSync(locator, [binaryName], {
@@ -65,35 +69,35 @@ async function collectDoctorReport(): Promise<ChromeAcpDoctorReport> {
 }
 
 function printDoctorReport(report: ChromeAcpDoctorReport): void {
-  console.log(chalk.bold.cyan('\n🌐 Chrome ACP állapot\n'));
-  console.log(`  acp-proxy:       ${report.proxyInstalled ? chalk.green('OK') : chalk.red('HIÁNYZIK')}`);
-  console.log(`  claude-code-acp: ${report.adapterInstalled ? chalk.green('OK') : chalk.red('HIÁNYZIK')}`);
-  console.log(`  claude:          ${report.claudeInstalled ? chalk.green('OK') : chalk.yellow('nem található')}`);
-  console.log(`  start script:    ${report.startScriptExists ? chalk.green('OK') : chalk.red('HIÁNYZIK')}`);
-  console.log(`  UI (${ACP_URL}): ${report.uiReachable ? chalk.green('ELÉRHETŐ') : chalk.yellow('nem elérhető')}`);
+  writeLine(chalk.bold.cyan('\n🌐 Chrome ACP állapot\n'));
+  writeLine(`  acp-proxy:       ${report.proxyInstalled ? chalk.green('OK') : chalk.red('HIÁNYZIK')}`);
+  writeLine(`  claude-code-acp: ${report.adapterInstalled ? chalk.green('OK') : chalk.red('HIÁNYZIK')}`);
+  writeLine(`  claude:          ${report.claudeInstalled ? chalk.green('OK') : chalk.yellow('nem található')}`);
+  writeLine(`  start script:    ${report.startScriptExists ? chalk.green('OK') : chalk.red('HIÁNYZIK')}`);
+  writeLine(`  UI (${ACP_URL}): ${report.uiReachable ? chalk.green('ELÉRHETŐ') : chalk.yellow('nem elérhető')}`);
   if (report.adapterEntryPoint) {
-    console.log(chalk.gray(`  adapter entry:   ${report.adapterEntryPoint}`));
+    writeLine(chalk.gray(`  adapter entry:   ${report.adapterEntryPoint}`));
   }
 
   if (!report.proxyInstalled || !report.adapterInstalled) {
-    console.log(chalk.yellow('\nTelepítés szükséges:'));
-    console.log(chalk.gray(`  ${INSTALL_COMMAND}`));
+    writeLine(chalk.yellow('\nTelepítés szükséges:'));
+    writeLine(chalk.gray(`  ${INSTALL_COMMAND}`));
   }
 
   if (!report.uiReachable) {
-    console.log(chalk.gray('\nIndítás után nyisd meg: http://localhost:9315'));
+    writeLine(chalk.gray('\nIndítás után nyisd meg: http://localhost:9315'));
   }
 }
 
 function startChromeAcp(): void {
   if (process.platform !== 'win32') {
-    console.log(chalk.yellow('Automatikus start jelenleg Windows scriptre van előkészítve.'));
-    console.log(chalk.gray('Futtasd kézzel: acp-proxy --no-auth claude-code-acp'));
+    writeLine(chalk.yellow('Automatikus start jelenleg Windows scriptre van előkészítve.'));
+    writeLine(chalk.gray('Futtasd kézzel: acp-proxy --no-auth claude-code-acp'));
     return;
   }
 
   if (!existsSync(WINDOWS_START_SCRIPT)) {
-    console.log(chalk.red(`Hiányzó start script: ${WINDOWS_START_SCRIPT}`));
+    writeLine(chalk.red(`Hiányzó start script: ${WINDOWS_START_SCRIPT}`));
     return;
   }
 
@@ -104,23 +108,23 @@ function startChromeAcp(): void {
   });
   child.unref();
 
-  console.log(chalk.green('Chrome ACP indítás elindítva külön ablakban.'));
-  console.log(chalk.gray(`UI: ${ACP_URL}`));
+  writeLine(chalk.green('Chrome ACP indítás elindítva külön ablakban.'));
+  writeLine(chalk.gray(`UI: ${ACP_URL}`));
 }
 
 function runInstall(): void {
-  console.log(chalk.cyan('Chrome ACP csomagok globális telepítése...'));
+  writeLine(chalk.cyan('Chrome ACP csomagok globális telepítése...'));
   const result = spawnSync('npm', INSTALL_ARGS, {
     stdio: 'inherit',
     shell: process.platform === 'win32',
   });
 
   if (result.status !== 0) {
-    console.log(chalk.red('A globális telepítés hibával állt le.'));
+    writeLine(chalk.red('A globális telepítés hibával állt le.'));
     return;
   }
 
-  console.log(chalk.green('Globális Chrome ACP telepítés kész.'));
+  writeLine(chalk.green('Globális Chrome ACP telepítés kész.'));
 }
 
 export function registerChromeAcpCommands(program: Command): void {
@@ -144,7 +148,7 @@ export function registerChromeAcpCommands(program: Command): void {
     .description('Gyors állapotlekérdezés a Chrome ACP UI-ról')
     .action(async () => {
       const reachable = await isChromeAcpReachable();
-      console.log(reachable ? chalk.green(`Chrome ACP elérhető: ${ACP_URL}`) : chalk.yellow(`Chrome ACP nem érhető el: ${ACP_URL}`));
+      writeLine(reachable ? chalk.green(`Chrome ACP elérhető: ${ACP_URL}`) : chalk.yellow(`Chrome ACP nem érhető el: ${ACP_URL}`));
     });
 
   chromeAcp
@@ -164,8 +168,8 @@ export function registerChromeAcpCommands(program: Command): void {
         return;
       }
 
-      console.log(chalk.bold.cyan('\nChrome ACP telepítés\n'));
-      console.log(chalk.gray(INSTALL_COMMAND));
+      writeLine(chalk.bold.cyan('\nChrome ACP telepítés\n'));
+      writeLine(chalk.gray(INSTALL_COMMAND));
     });
 
   chromeAcp.action(async () => {
@@ -192,13 +196,13 @@ export function registerChromeAcpCommands(program: Command): void {
         startChromeAcp();
         return;
       case 'install':
-        console.log(chalk.gray(INSTALL_COMMAND));
+        writeLine(chalk.gray(INSTALL_COMMAND));
         return;
       case 'status':
-        console.log((await isChromeAcpReachable()) ? chalk.green(`Chrome ACP elérhető: ${ACP_URL}`) : chalk.yellow(`Chrome ACP nem érhető el: ${ACP_URL}`));
+        writeLine((await isChromeAcpReachable()) ? chalk.green(`Chrome ACP elérhető: ${ACP_URL}`) : chalk.yellow(`Chrome ACP nem érhető el: ${ACP_URL}`));
         return;
       default:
-        console.log(chalk.gray('Chrome ACP művelet megszakítva.'));
+        writeLine(chalk.gray('Chrome ACP művelet megszakítva.'));
     }
   });
 }

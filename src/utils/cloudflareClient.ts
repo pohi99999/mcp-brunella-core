@@ -1,4 +1,8 @@
 import axios from "axios";
+import {
+  createZeroPromptEdgeMirrorEnvelope,
+  type ZeroPromptEdgeSummary,
+} from "../core/zeroPromptEdgeMirrorSummary.js";
 
 export interface CloudflareTaskResponse {
   success: boolean;
@@ -106,6 +110,23 @@ export class CloudflareClient {
     } catch (error: unknown) {
       const message = this.getAxiosErrorMessage(error);
       throw new Error(`History fetch failed: ${message}`);
+    }
+  }
+
+  async pushZeroPromptSummary(summary: ZeroPromptEdgeSummary): Promise<void> {
+    try {
+      const envelope = createZeroPromptEdgeMirrorEnvelope(summary);
+      await axios.post(
+        `${this.baseUrl}/zero-prompt/summary`,
+        envelope,
+        {
+          headers: this.getAuthHeaders(),
+          timeout: 60000,
+        },
+      );
+    } catch (error: unknown) {
+      const message = this.getAxiosErrorMessage(error);
+      throw new Error(`Zero-Prompt summary push failed: ${message}`);
     }
   }
 }

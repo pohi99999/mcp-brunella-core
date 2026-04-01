@@ -44,51 +44,51 @@ export function SystemHealthCard ()
       const newServices: ServiceStatus[] = [
         {
           id: "ollama",
-          name: "Ollama",
+          name: "Ollama Local",
           status: ok( health.services.ollama ) ? "healthy" : "unhealthy",
           message: ok( health.services.ollama )
-            ? "Működik"
-            : "Indítsd el: ollama serve",
+            ? "Engine ready"
+            : "Run: ollama serve",
         },
         {
           id: "anythingllm",
-          name: "AnythingLLM",
+          name: "Knowledge Base",
           status: ok( health.services.anythingllm ) ? "healthy" : "unhealthy",
           message: ok( health.services.anythingllm )
-            ? "Működik"
-            : "Service nem elérhető",
+            ? "API connected"
+            : "Service unreachable",
         },
         {
           id: "agents",
-          name: "Agents",
+          name: "Agent Cluster",
           status: ok( health.services.agents ) ? "healthy" : "unhealthy",
           message: ok( health.services.agents )
-            ? "Aktív ágensek rendelkezésre állnak"
-            : "Nincs regisztrált ágens",
+            ? "All systems nominal"
+            : "Registry empty",
         },
         {
           id: "mcp",
-          name: "MCP Servers",
+          name: "MCP Protocol",
           status: ok( health.services.mcp ) ? "healthy" : "unhealthy",
           message: ok( health.services.mcp )
-            ? "MCP kapcsolat működik"
-            : "Nincs elérhető MCP szerver",
+            ? "Protocol active"
+            : "No MCP host found",
         },
         {
           id: "python",
-          name: "Python Service",
+          name: "Python API",
           status: ok( health.services.python ) ? "healthy" : "unhealthy",
           message: ok( health.services.python )
-            ? "Python alrendszer OK"
-            : "Python server nem fut",
+            ? "Environment OK"
+            : "Process inactive",
         },
         {
           id: "cloudflare",
-          name: "Cloudflare",
+          name: "Edge Network",
           status: ok( health.services.cloudflare ) ? "healthy" : "unhealthy",
           message: ok( health.services.cloudflare )
             ? "Gateway & R2 OK"
-            : "CS csatlakozási hiba",
+            : "Auth/Connection error",
         },
       ];
 
@@ -101,7 +101,7 @@ export function SystemHealthCard ()
         prev.map( ( s ) => ( {
           ...s,
           status: "unhealthy",
-          message: "Szerver nem elérhető",
+          message: "Master node offline",
         } ) ),
       );
     } finally
@@ -114,7 +114,7 @@ export function SystemHealthCard ()
   {
     if ( serviceId === "agents" || serviceId === "mcp" )
     {
-      toast.info( `${ serviceId } állapotát a rendszer automatikusan kezeli` );
+      toast.info( `${ serviceId } managed by system kernel` );
       return;
     }
 
@@ -125,7 +125,7 @@ export function SystemHealthCard ()
       {
         if ( serviceId === "anythingllm" )
         {
-          toast.info( "AnythingLLM Desktop app – manuálisan zárd be" );
+          toast.info( "Close AnythingLLM Desktop manually" );
           return;
         }
         const result = await api.stopService( serviceId as any );
@@ -140,7 +140,7 @@ export function SystemHealthCard ()
       await checkHealth();
     } catch ( e: any )
     {
-      toast.error( e.message || "Művelet sikertelen" );
+      toast.error( e.message || "Operation failed" );
     } finally
     {
       setLoading( ( prev ) => ( { ...prev, [serviceId]: false } ) );
@@ -150,7 +150,7 @@ export function SystemHealthCard ()
   useEffect( () =>
   {
     checkHealth();
-    const interval = setInterval( checkHealth, 30000 ); // 30s as per masterplan V3
+    const interval = setInterval( checkHealth, 30000 );
     return () => clearInterval( interval );
   }, [] );
 
@@ -159,13 +159,21 @@ export function SystemHealthCard ()
     switch ( status )
     {
       case "healthy":
-        return <CheckCircle2 size={ 14 } className="text-green-500" />;
+        return (
+          <div className="h-1.5 w-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.6)]" />
+        );
       case "unhealthy":
-        return <XCircle size={ 14 } className="text-red-500" />;
+        return (
+          <div className="h-1.5 w-1.5 rounded-full bg-rose-500 shadow-[0_0_8px_rgba(244,63,94,0.6)]" />
+        );
       case "checking":
-        return <Circle size={ 14 } className="text-yellow-500 animate-pulse" />;
+        return (
+          <div className="h-1.5 w-1.5 rounded-full bg-cyan-400 shadow-[0_0_8px_rgba(34,211,238,0.6)] animate-pulse" />
+        );
       default:
-        return <AlertTriangle size={ 14 } className="text-gray-500" />;
+        return (
+          <div className="h-1.5 w-1.5 rounded-full bg-zinc-600" />
+        );
     }
   };
 
@@ -173,24 +181,34 @@ export function SystemHealthCard ()
   const totalCount = services.length;
 
   return (
-    <Card className="glass-card border-white/10 h-full overflow-hidden">
-      <CardHeader className="flex flex-row items-center justify-between pb-3 px-4 pt-4">
-        <CardTitle className="text-[11px] font-semibold tracking-[0.24em] text-zinc-300 flex items-center gap-2 uppercase">
-          <RotateCw
-            size={ 14 }
-            className={ isChecking ? "animate-spin text-cyan-300" : "text-zinc-500" }
-          />
-          System Health
-        </CardTitle>
-        <Badge
-          variant={ healthyCount === totalCount ? "default" : "destructive" }
-          className="text-[10px] font-mono px-1.5 py-0 border border-white/[0.1]"
-        >
-          { healthyCount }/{ totalCount }
-        </Badge>
-      </CardHeader>
-      <CardContent className="p-0">
-        <div className="divide-y divide-white/[0.04]">
+    <div className="flex flex-col h-full bg-zinc-950/20 backdrop-blur-xl">
+      <div className="flex items-center justify-between px-5 pt-5 pb-4 border-b border-white/[0.03]">
+        <div className="flex items-center gap-3">
+          <div className="p-1.5 rounded-md bg-white/[0.03] border border-white/[0.05]">
+            <RotateCw
+              size={ 14 }
+              className={ isChecking ? "animate-spin text-cyan-400" : "text-zinc-500" }
+            />
+          </div>
+          <div>
+            <h3 className="text-[10px] font-bold tracking-[0.2em] text-zinc-200 uppercase leading-none">
+              Health Monitor
+            </h3>
+            <p className="text-[9px] text-zinc-500 font-mono mt-1 leading-none uppercase tracking-widest">
+              Diagnostic Stream
+            </p>
+          </div>
+        </div>
+        <div className="px-2 py-0.5 rounded bg-zinc-900 border border-white/[0.06] flex items-center gap-2">
+          <span className="text-[9px] font-bold text-zinc-400 font-mono">NODE_OK</span>
+          <span className="text-[10px] font-bold text-emerald-400 font-mono">
+            { healthyCount }/{ totalCount }
+          </span>
+        </div>
+      </div>
+
+      <div className="flex-1 overflow-y-auto custom-scrollbar">
+        <div className="grid grid-cols-1 divide-y divide-white/[0.03]">
           { services.map( ( service ) =>
           {
             const isHealthy = service.status === "healthy";
@@ -202,20 +220,22 @@ export function SystemHealthCard ()
             return (
               <div
                 key={ service.id }
-                className="flex items-center justify-between px-4 py-3 hover:bg-white/[0.035] transition-colors duration-200"
+                className="flex items-center justify-between px-5 py-3.5 hover:bg-white/[0.02] transition-colors group"
               >
-                <div className="flex items-center gap-2.5">
-                  { getStatusIcon( service.status ) }
+                <div className="flex items-center gap-3.5 min-w-0">
+                  <div className="shrink-0">
+                    { getStatusIcon( service.status ) }
+                  </div>
                   <div className="min-w-0">
-                    <p className="font-medium text-xs text-zinc-100">
+                    <p className="font-bold text-[11px] text-zinc-200 uppercase tracking-wide group-hover:text-white transition-colors">
                       { service.name }
                     </p>
-                    <p className="text-[10px] text-zinc-500 truncate max-w-[180px]">
-                      { service.message || "System online" }
+                    <p className="text-[10px] text-zinc-500 font-mono mt-0.5 truncate max-w-[200px]">
+                      { service.message || "NOMINAL" }
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center gap-2 shrink-0">
+                <div className="flex items-center gap-3 shrink-0">
                   { canToggle && (
                     <Switch
                       checked={ isHealthy }
@@ -223,29 +243,33 @@ export function SystemHealthCard ()
                       onCheckedChange={ () =>
                         handleToggle( service.id, isHealthy )
                       }
-                      className="scale-75"
+                      className="scale-[0.65] data-[state=checked]:bg-emerald-500/50"
                     />
                   ) }
                   { !canToggle && (
-                    <Badge
-                      variant="outline"
-                      className="text-[9px] h-5 opacity-40 border-zinc-700"
-                    >
-                      AUTO
-                    </Badge>
+                    <div className="px-1.5 py-0.5 rounded-[2px] bg-white/[0.03] border border-white/[0.05]">
+                      <span className="text-[8px] font-bold text-zinc-600 uppercase tracking-tighter">
+                        Kernel
+                      </span>
+                    </div>
                   ) }
                 </div>
               </div>
             );
           } ) }
         </div>
+      </div>
 
-        <div className="px-4 py-2 border-t border-white/[0.04] bg-white/[0.02]">
-          <p className="text-[9px] text-zinc-600 font-mono text-center">
-            { lastCheck || "Initializing..." }
-          </p>
+      <div className="px-5 py-3 border-t border-white/[0.03] bg-white/[0.01]">
+        <div className="flex items-center justify-between">
+          <span className="text-[8px] font-bold text-zinc-600 uppercase tracking-widest font-mono">
+            Last Sequence
+          </span>
+          <span className="text-[9px] text-zinc-500 font-mono">
+            { lastCheck || "READY" }
+          </span>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }

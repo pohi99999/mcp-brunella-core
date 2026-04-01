@@ -6,6 +6,14 @@ import inquirer from "inquirer";
 
 const API_BASE = process.env.BRUNELLA_API_URL || process.env.API_BASE_URL || "http://localhost:3000";
 
+function writeLine(message = ""): void {
+  process.stdout.write(`${message}\n`);
+}
+
+function writeError(message = ""): void {
+  process.stderr.write(`${message}\n`);
+}
+
 async function fetchJson<T>(pathName: string, options?: RequestInit): Promise<T> {
   const response = await fetch(`${API_BASE}${pathName}`, {
     headers: { "Content-Type": "application/json" },
@@ -27,12 +35,12 @@ async function previewTask(task: string, defaultAgent = "Developer"): Promise<vo
     body: JSON.stringify({ task, defaultAgent }),
   });
 
-  console.log(chalk.bold.magenta(`\n🔷 Workflow Preview: ${response.workflow.name}\n`));
+  writeLine(chalk.bold.magenta(`\n🔷 Workflow Preview: ${response.workflow.name}\n`));
   response.workflow.nodes.forEach((node) => {
-    console.log(`  ${chalk.white(node.id)} ${node.label}`);
-    console.log(`    Agent: ${chalk.gray(node.agentName || "auto")} | DependsOn: ${chalk.gray((node.dependsOn || []).join(", ") || "—")}`);
+    writeLine(`  ${chalk.white(node.id)} ${node.label}`);
+    writeLine(`    Agent: ${chalk.gray(node.agentName || "auto")} | DependsOn: ${chalk.gray((node.dependsOn || []).join(", ") || "—")}`);
   });
-  console.log("");
+  writeLine("");
 }
 
 /**
@@ -51,7 +59,7 @@ async function runTask(task: string, defaultAgent = "Developer", copilotOrchestr
       status: 'queued',
       result: undefined
     });
-    console.log(chalk.cyan("[Copilot Orchestration] Workflow orchestration enabled. Dispatch naplózva."));
+    writeLine(chalk.cyan("[Copilot Orchestration] Workflow orchestration enabled. Dispatch naplózva."));
   }
   const response = await fetchJson<{
     success: boolean;
@@ -61,25 +69,25 @@ async function runTask(task: string, defaultAgent = "Developer", copilotOrchestr
     body: JSON.stringify({ task, defaultAgent }),
   });
 
-  console.log(chalk.bold.green("\n✅ Workflow futás kész\n"));
-  console.log(`  Status:      ${response.result.status}`);
-  console.log(`  Időtartam:   ${response.result.durationMs} ms`);
-  console.log(`  Node-ok:     ${response.result.completedNodeIds.join(", ") || "—"}`);
-  console.log(`  Warnings:    ${response.result.warnings.join(" | ") || "nincs"}\n`);
+  writeLine(chalk.bold.green("\n✅ Workflow futás kész\n"));
+  writeLine(`  Status:      ${response.result.status}`);
+  writeLine(`  Időtartam:   ${response.result.durationMs} ms`);
+  writeLine(`  Node-ok:     ${response.result.completedNodeIds.join(", ") || "—"}`);
+  writeLine(`  Warnings:    ${response.result.warnings.join(" | ") || "nincs"}\n`);
 }
 
 async function showStatus(): Promise<void> {
   const response = await fetchJson<{ workflows: Array<{ id: string; name: string; status: string; nodeCount: number; durationMs?: number; startedAt: string }> }>("/api/v1/tasks/workflow/status");
-  console.log(chalk.bold.blue("\n📈 Workflow státuszok\n"));
+  writeLine(chalk.bold.blue("\n📈 Workflow státuszok\n"));
   if (response.workflows.length === 0) {
-    console.log(chalk.gray("  Még nincs workflow futás.\n"));
+    writeLine(chalk.gray("  Még nincs workflow futás.\n"));
     return;
   }
 
   response.workflows.forEach((workflow) => {
-    console.log(`  ${chalk.bold(workflow.name)} (${workflow.id})`);
-    console.log(`    Status: ${workflow.status} | Node-ok: ${workflow.nodeCount} | Duration: ${workflow.durationMs ?? 0} ms`);
-    console.log(`    Start:  ${workflow.startedAt}\n`);
+    writeLine(`  ${chalk.bold(workflow.name)} (${workflow.id})`);
+    writeLine(`    Status: ${workflow.status} | Node-ok: ${workflow.nodeCount} | Duration: ${workflow.durationMs ?? 0} ms`);
+    writeLine(`    Start:  ${workflow.startedAt}\n`);
   });
 }
 
@@ -95,7 +103,7 @@ export function registerWorkflowCommands(program: Command): void {
     .action(async (task: string, options: { agent: string; copilotOrchestrate?: boolean }) => {
       await previewTask(task, options.agent);
       if (options.copilotOrchestrate) {
-        console.log(chalk.cyan("[Copilot Orchestration] Preview mode: Copilot orchestration would be triggered here."));
+        writeLine(chalk.cyan("[Copilot Orchestration] Preview mode: Copilot orchestration would be triggered here."));
       }
     });
 

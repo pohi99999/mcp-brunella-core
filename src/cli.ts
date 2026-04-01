@@ -55,6 +55,7 @@ import { registerObservabilityCommands } from "./cli/observabilityCommands.js";
 import { registerIntelligenceCommands } from "./cli/intelligenceCommands.js";
 import { registerLearningLoopCommands } from "./cli/learningLoopCommands.js";
 import { registerFederationCommands } from "./cli/federationCommands.js";
+import { registerInventoryCommands } from "./cli/inventoryCommands.js";
 import { validateAndNormalizeRegistry } from "./agents/registryValidation.js";
 import { getAssistantBlueprint, type AssistantBlueprint, type AssistantReadinessStatus } from "./core/assistantBlueprint.js";
 import { getPrebuiltToolCatalog, mergeToolLists, type ToolLike } from "./utils/prebuiltTools.js";
@@ -1883,6 +1884,7 @@ registerIntelligenceCommands(program);
 registerLearningLoopCommands(program);
 registerObservabilityCommands(program);
 registerFederationCommands(program);
+registerInventoryCommands(program);
 
 // Register Conductor commands(Track State Management) - MOVED AFTER conductorCmd definition
 

@@ -43,51 +43,72 @@ export function TerminalLog({ logs: propLogs, className }: TerminalLogProps) {
     logs.length > 0
       ? logs.map((log) => ({
           id: log.id,
-          text: log.source ? `[${log.source}] ${log.message}` : log.message,
+          text: log.source ? `[${log.source.toUpperCase()}] ${log.message}` : log.message,
           type: logTypeToTerminalType(log.type),
+          timestamp: log.timestamp || new Date().toISOString()
         }))
-      : placeholderLines
+      : placeholderLines.map(p => ({ ...p, timestamp: new Date().toISOString() }))
 
   const getLineClass = (type: string) => {
     switch (type) {
       case 'command':
-        return 'text-emerald-400'
+        return 'text-emerald-400/90'
       case 'error':
-        return 'text-red-400'
+        return 'text-rose-500/90'
       case 'info':
-        return 'text-cyan-400'
+        return 'text-cyan-400/80'
       default:
-        return 'text-zinc-300'
+        return 'text-zinc-400'
     }
   }
 
   return (
     <div
       className={cn(
-        'flex flex-col rounded-lg border border-white/[0.04] bg-black/90 overflow-hidden',
+        'flex flex-col h-full bg-zinc-950/40 backdrop-blur-md border border-white/[0.03] overflow-hidden rounded-xl shadow-inner',
         className,
       )}
     >
-      <div className="flex items-center gap-2 border-b border-white/[0.04] bg-zinc-900/80 px-3 py-2">
-        <Terminal size={14} className="text-emerald-500" />
-        <span className="text-xs font-mono text-zinc-500">terminal — mission-control</span>
+      <div className="flex items-center justify-between px-4 py-2.5 border-b border-white/[0.03] bg-white/[0.01]">
+        <div className="flex items-center gap-2.5">
+          <Terminal size={12} className="text-emerald-500/70" />
+          <span className="text-[10px] font-bold font-mono text-zinc-500 uppercase tracking-widest">System_Log_Stream</span>
+        </div>
+        <div className="flex gap-1">
+          <div className="h-1.5 w-1.5 rounded-full bg-zinc-800" />
+          <div className="h-1.5 w-1.5 rounded-full bg-zinc-800" />
+          <div className="h-1.5 w-1.5 rounded-full bg-zinc-800" />
+        </div>
       </div>
-      <ScrollArea className="h-[280px] flex-1 font-mono text-[12px] leading-relaxed">
-        <div className="space-y-0.5 p-3">
+      
+      <ScrollArea className="flex-1 font-mono text-[11px] leading-tight selection:bg-emerald-500/20">
+        <div className="p-4 space-y-1">
           {displayLines.map((line) => (
             <div
               key={line.id}
               className={cn(
-                'whitespace-pre-wrap break-all',
-                line.text ? getLineClass(line.type) : 'text-zinc-600',
+                'flex gap-3 group',
+                getLineClass(line.type)
               )}
             >
-              {line.text || ' '}
+              <span className="shrink-0 text-zinc-700 select-none opacity-0 group-hover:opacity-100 transition-opacity">
+                {new Date(line.timestamp).toLocaleTimeString('hu-HU', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+              </span>
+              <span className="whitespace-pre-wrap break-all">
+                {line.text}
+              </span>
             </div>
           ))}
           <div ref={scrollRef} />
         </div>
       </ScrollArea>
+      
+      <div className="px-4 py-1.5 bg-black/20 border-t border-white/[0.02]">
+        <div className="flex items-center gap-2">
+          <span className="text-[9px] text-emerald-500/50 font-mono animate-pulse">●</span>
+          <span className="text-[8px] text-zinc-600 font-mono uppercase tracking-tighter italic">Streaming_Kernel_Events_Active</span>
+        </div>
+      </div>
     </div>
   )
 }

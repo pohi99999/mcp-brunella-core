@@ -16,6 +16,7 @@
  */
 
 import { EventEmitter } from 'events';
+import type { RemediationRunStatus } from './remediationRuntime.types.js';
 import { logInfo, logError } from '../utils/logger.js';
 
 // ============================================================================
@@ -145,6 +146,16 @@ export interface PhoenixApprovalResolvedEvent {
   timestamp: string;
 }
 
+export interface PhoenixRemediationRunUpdatedEvent {
+  runId: string;
+  status: RemediationRunStatus;
+  repositoryName: string;
+  workflowRunId?: string;
+  failureReason?: string;
+  updatedAt: string;
+  timestamp: string;
+}
+
 export interface PhoenixEphemeralSpawnedEvent {
   agentId: string;
   parentAgentName: string;
@@ -262,6 +273,7 @@ export type PhoenixEventMap = {
   'phoenix:policy_decision': PhoenixPolicyDecisionEvent;
   'phoenix:approval_requested': PhoenixApprovalRequestedEvent;
   'phoenix:approval_resolved': PhoenixApprovalResolvedEvent;
+  'phoenix:remediation_run_updated': PhoenixRemediationRunUpdatedEvent;
   'phoenix:ephemeral_spawned': PhoenixEphemeralSpawnedEvent;
   'phoenix:ephemeral_terminated': PhoenixEphemeralTerminatedEvent;
   'phoenix:ephemeral_budget_exceeded': PhoenixEphemeralBudgetExceededEvent;

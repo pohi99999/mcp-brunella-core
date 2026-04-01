@@ -1,0 +1,11 @@
+uid=6_0 RootWebArea "n8n.io - Workflow Automation" url="https://iszapfalo.app.n8n.cloud/signin?redirect=%252Fhome%252Fcredentials%252F9yx6t71JVnl0hDva"
+  uid=6_1 StaticText "Sign in"
+  uid=6_2 StaticText "Email"
+  uid=6_3 generic
+    uid=6_4 textbox focusable focused
+  uid=6_5 StaticText "Password"
+  uid=6_6 generic
+    uid=6_7 textbox
+  uid=6_8 button "Sign in" live="polite" relevant="additions text"
+  uid=6_9 link "Forgot my password" url="https://iszapfalo.app.n8n.cloud/forgot-password"
+    uid=6_10 StaticText "Forgot my password"

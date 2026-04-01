@@ -1,0 +1,224 @@
+{
+  "name": "Brunella - WF-5 - KP Pénztár modul",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "sheets-sync",
+        "options": {}
+      },
+      "id": "webhook-sheets-sync",
+      "name": "Sheets Sync Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [100, 300]
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 1
+            }
+          ]
+        }
+      },
+      "id": "cron-trigger",
+      "name": "Cron Trigger (Hourly)",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [100, 100]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "http://localhost:3000/api/v1/bookkeeping/cash-entries",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "synced_sheets",
+              "value": "0"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "get-unsynced",
+      "name": "Get Unsynced BAS Entries",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [360, 200]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{ $json.data.length }}",
+              "operation": "larger",
+              "value2": 0
+            }
+          ]
+        }
+      },
+      "id": "if-entries-exist",
+      "name": "Has Entries?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [580, 200]
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "data",
+        "options": {}
+      },
+      "id": "split-entries",
+      "name": "Item Lists",
+      "type": "n8n-nodes-base.itemLists",
+      "typeVersion": 2.2,
+      "position": [800, 180]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_SPREADSHEET_ID_HERE",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Sheet1",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Dátum": "={{$json.date}}",
+            "Típus": "={{$json.type}}",
+            "Összeg": "={{$json.amount}}",
+            "Leírás": "={{$json.description}}",
+            "Számlaszám": "={{$json.invoice_number}}",
+            "Forrás": "={{$json.source}}",
+            "BAS ID": "={{$json.id}}"
+          }
+        },
+        "options": {}
+      },
+      "id": "google-sheets",
+      "name": "Google Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.1,
+      "position": [1020, 180],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "GOOGLE_AUTH_ID",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "PATCH",
+        "url": "={{ 'http://localhost:3000/api/v1/bookkeeping/cash-entries/' + $json.id }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\"synced_sheets\": 1}",
+        "options": {}
+      },
+      "id": "mark-synced",
+      "name": "Mark as Synced in BAS",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1240, 180]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:5678/webhook/notify",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"summary\": \"KP Pénztár Szinkronizációs Hiba\",\n  \"exceptions\": [\n    {\n      \"stage\": \"WF-5-Sheets-Sync\",\n      \"message\": \"Hiba történt a Sheets API hívás során\",\n      \"details\": \"{{ $error }}\"\n    }\n  ],\n  \"timestamp\": \"{{ $now.toISO() }}\"\n}",
+        "options": {}
+      },
+      "id": "error-notify",
+      "name": "Notify Error to WF-4",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1020, 360]
+    }
+  ],
+  "connections": {
+    "Cron Trigger (Hourly)": {
+      "main": [
+        [
+          {
+            "node": "Get Unsynced BAS Entries",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sheets Sync Webhook": {
+      "main": [
+        [
+          {
+            "node": "Get Unsynced BAS Entries",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Unsynced BAS Entries": {
+      "main": [
+        [
+          {
+            "node": "Has Entries?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Has Entries?": {
+      "main": [
+        [
+          {
+            "node": "Item Lists",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Item Lists": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "Mark as Synced in BAS",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

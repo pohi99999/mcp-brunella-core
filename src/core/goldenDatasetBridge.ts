@@ -28,6 +28,22 @@ export interface CuratedGoldenSample {
   reviewNotes?: string;
 }
 
+export interface CuratedGoldenStats {
+  totalCandidates: number;
+  approvedCount: number;
+  rejectedCount: number;
+  pendingReview: number;
+  avgQuality: number;
+  remediationDerived: {
+    totalCandidates: number;
+    approvedCount: number;
+    rejectedCount: number;
+    pendingReview: number;
+    avgQuality: number;
+    lastApprovedAt?: string;
+  };
+}
+
 export interface GoldenSample {
   prompt: string;
   completion: string;
@@ -470,6 +486,7 @@ function rowToCuratedSample(row: Record<string, unknown>): CuratedGoldenSample {
 
 export function listCuratedGoldenSamples(opts: {
   state?: CuratedGoldenApprovalState;
+  source?: string;
   limit?: number;
   offset?: number;
 }): CuratedGoldenSample[] {
@@ -477,36 +494,67 @@ export function listCuratedGoldenSamples(opts: {
   const db = getGlobalDb();
   const limit = opts.limit ?? 100;
   const offset = opts.offset ?? 0;
+  const conditions: string[] = [];
+  const params: Array<string | number> = [];
+
   if (opts.state) {
-    const rows = db.prepare(
-      'SELECT * FROM curated_golden_samples WHERE approval_state = ? ORDER BY created_at DESC LIMIT ? OFFSET ?'
-    ).all(opts.state, limit, offset) as Array<Record<string, unknown>>;
-    return rows.map(rowToCuratedSample);
+    conditions.push('approval_state = ?');
+    params.push(opts.state);
   }
+  if (opts.source) {
+    conditions.push('source = ?');
+    params.push(opts.source);
+  }
+
+  const whereClause = conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
   const rows = db.prepare(
-    'SELECT * FROM curated_golden_samples ORDER BY created_at DESC LIMIT ? OFFSET ?'
-  ).all(limit, offset) as Array<Record<string, unknown>>;
+    `SELECT * FROM curated_golden_samples ${whereClause} ORDER BY created_at DESC LIMIT ? OFFSET ?`
+  ).all(...params, limit, offset) as Array<Record<string, unknown>>;
   return rows.map(rowToCuratedSample);
 }
 
 export function captureCuratedGoldenCandidate(opts: {
+  id?: string;
   prompt: string;
   completion: string;
   source: string;
   quality?: number;
   provenance?: Record<string, unknown>;
   autoApprove?: boolean;
+  approvedAt?: string;
+  reviewedBy?: string;
+  reviewNotes?: string;
 }): { success: boolean; id?: string; message?: string } {
   ensureCuratedTable();
   const db = getGlobalDb();
-  const id = `curated_${Date.now()}_${Math.random().toString(36).slice(2)}`;
+  const id = opts.id ?? `curated_${Date.now()}_${Math.random().toString(36).slice(2)}`;
   const quality = opts.quality ?? calculateQuality(opts.prompt, opts.completion);
   const approvalState: CuratedGoldenApprovalState = opts.autoApprove ? 'approved' : 'pending';
   const now = new Date().toISOString();
   db.prepare(
-    'INSERT INTO curated_golden_samples (id, prompt, completion, source, quality, approval_state, provenance, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)'
-  ).run(id, opts.prompt, opts.completion, opts.source, quality, approvalState, opts.provenance ? JSON.stringify(opts.provenance) : null, now);
+    'INSERT INTO curated_golden_samples (id, prompt, completion, source, quality, approval_state, provenance, created_at, approved_at, reviewed_by, review_notes) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+  ).run(
+    id,
+    opts.prompt,
+    opts.completion,
+    opts.source,
+    quality,
+    approvalState,
+    opts.provenance ? JSON.stringify(opts.provenance) : null,
+    now,
+    approvalState === 'approved' ? (opts.approvedAt ?? now) : null,
+    opts.reviewedBy ?? null,
+    opts.reviewNotes ?? null,
+  );
   return { success: true, id };
+}
+
+export function getCuratedGoldenSample(sampleId: string): CuratedGoldenSample | null {
+  ensureCuratedTable();
+  const row = getGlobalDb()
+    .prepare('SELECT * FROM curated_golden_samples WHERE id = ?')
+    .get(sampleId) as Record<string, unknown> | undefined;
+  return row ? rowToCuratedSample(row) : null;
 }
 
 export function captureToolRunCandidates(limit = 50): CuratedGoldenSample[] {
@@ -555,25 +603,166 @@ export function reviewCuratedGoldenSample(
   return row ? rowToCuratedSample(row) : null;
 }
 
-export function getCuratedGoldenStats(): { total: number; pending: number; approved: number; rejected: number } {
+export function getCuratedGoldenStats(): CuratedGoldenStats {
   try {
     ensureCuratedTable();
     const db = getGlobalDb();
     const rows = db.prepare(
-      'SELECT approval_state, COUNT(*) AS count FROM curated_golden_samples GROUP BY approval_state'
-    ).all() as Array<{ approval_state: string; count: number }>;
-    const stats = { total: 0, pending: 0, approved: 0, rejected: 0 };
+      'SELECT approval_state, COUNT(*) AS count, AVG(quality) AS avg_quality FROM curated_golden_samples GROUP BY approval_state'
+    ).all() as Array<{ approval_state: string; count: number; avg_quality: number | null }>;
+    const remediationRows = db.prepare(
+      `SELECT approval_state, COUNT(*) AS count, AVG(quality) AS avg_quality, MAX(approved_at) AS last_approved_at
+       FROM curated_golden_samples
+       WHERE source = ?
+       GROUP BY approval_state`
+    ).all('github_remediation_runtime') as Array<{
+      approval_state: string;
+      count: number;
+      avg_quality: number | null;
+      last_approved_at: string | null;
+    }>;
+
+    const stats: CuratedGoldenStats = {
+      totalCandidates: 0,
+      approvedCount: 0,
+      rejectedCount: 0,
+      pendingReview: 0,
+      avgQuality: 0,
+      remediationDerived: {
+        totalCandidates: 0,
+        approvedCount: 0,
+        rejectedCount: 0,
+        pendingReview: 0,
+        avgQuality: 0,
+      },
+    };
+
+    let weightedQuality = 0;
     for (const row of rows) {
       const count = Number(row.count);
-      stats.total += count;
-      if (row.approval_state === 'pending') stats.pending = count;
-      if (row.approval_state === 'approved') stats.approved = count;
-      if (row.approval_state === 'rejected') stats.rejected = count;
+      stats.totalCandidates += count;
+      weightedQuality += (Number(row.avg_quality ?? 0) * count);
+      if (row.approval_state === 'pending') stats.pendingReview = count;
+      if (row.approval_state === 'approved') stats.approvedCount = count;
+      if (row.approval_state === 'rejected') stats.rejectedCount = count;
     }
+    if (stats.totalCandidates > 0) {
+      stats.avgQuality = Math.round((weightedQuality / stats.totalCandidates) * 100) / 100;
+    }
+
+    let remediationWeightedQuality = 0;
+    let latestApprovedAt: string | undefined;
+    for (const row of remediationRows) {
+      const count = Number(row.count);
+      stats.remediationDerived.totalCandidates += count;
+      remediationWeightedQuality += (Number(row.avg_quality ?? 0) * count);
+      if (row.approval_state === 'pending') stats.remediationDerived.pendingReview = count;
+      if (row.approval_state === 'approved') {
+        stats.remediationDerived.approvedCount = count;
+        latestApprovedAt = row.last_approved_at ?? latestApprovedAt;
+      }
+      if (row.approval_state === 'rejected') stats.remediationDerived.rejectedCount = count;
+    }
+    if (stats.remediationDerived.totalCandidates > 0) {
+      stats.remediationDerived.avgQuality =
+        Math.round((remediationWeightedQuality / stats.remediationDerived.totalCandidates) * 100) / 100;
+    }
+    stats.remediationDerived.lastApprovedAt = latestApprovedAt;
+
     return stats;
   } catch {
-    return { total: 0, pending: 0, approved: 0, rejected: 0 };
+    return {
+      totalCandidates: 0,
+      approvedCount: 0,
+      rejectedCount: 0,
+      pendingReview: 0,
+      avgQuality: 0,
+      remediationDerived: {
+        totalCandidates: 0,
+        approvedCount: 0,
+        rejectedCount: 0,
+        pendingReview: 0,
+        avgQuality: 0,
+      },
+    };
   }
+}
+
+export function captureApprovedRemediationGoldenCandidate(run: {
+  id: string;
+  repositoryName: string;
+  status: string;
+  updatedAt: string;
+  sourceEventType?: string;
+  analysis?: { summary?: string; affectedFiles?: string[] };
+  fixer?: { agentName?: string; resultSummary?: string };
+  verification?: Array<{ name: string; status: string }>;
+  finalApproval?: { response?: unknown };
+}): { success: boolean; id?: string; duplicate?: boolean; message?: string } {
+  ensureCuratedTable();
+  const existing = listCuratedGoldenSamples({
+    source: 'github_remediation_runtime',
+    state: 'approved',
+    limit: 5000,
+  }).find((sample) => {
+    const provenance = sample.provenance ?? {};
+    return provenance.kind === 'approved_remediation' && provenance.remediationRunId === run.id;
+  });
+
+  if (existing) {
+    return { success: true, id: existing.id, duplicate: true };
+  }
+
+  const affectedFiles = Array.isArray(run.analysis?.affectedFiles) ? run.analysis?.affectedFiles.join(', ') : '';
+  const verificationSummary = Array.isArray(run.verification)
+    ? run.verification.map((step) => `${step.name}:${step.status}`).join(', ')
+    : 'none';
+  const completion = [
+    `Selected fixer: ${run.fixer?.agentName ?? 'unknown'}`,
+    run.fixer?.resultSummary,
+    run.analysis?.summary,
+    affectedFiles ? `Affected files: ${affectedFiles}` : '',
+    `Verification: ${verificationSummary}`,
+    'Final operator approval granted',
+  ].filter((part): part is string => typeof part === 'string' && part.trim().length > 0).join('\n');
+
+  const prompt = [
+    'GitHub workflow failure remediation task.',
+    `Repository: ${run.repositoryName}`,
+    `Run: ${run.id}`,
+  ].join(' ');
+
+  const saved = captureCuratedGoldenCandidate({
+    id: `curated_remediation_${run.id}`,
+    prompt,
+    completion,
+    source: 'github_remediation_runtime',
+    quality: 0.95,
+    autoApprove: true,
+    approvedAt: run.updatedAt,
+    reviewedBy:
+      typeof run.finalApproval?.response === 'object' &&
+      run.finalApproval?.response !== null &&
+      'by' in run.finalApproval.response &&
+      typeof (run.finalApproval.response as { by?: unknown }).by === 'string'
+        ? (run.finalApproval.response as { by: string }).by
+        : undefined,
+    reviewNotes: 'Auto-approved remediation capture',
+    provenance: {
+      kind: 'approved_remediation',
+      remediationRunId: run.id,
+      repositoryName: run.repositoryName,
+      sourceEventType: run.sourceEventType,
+      finalApprovalResponse: run.finalApproval?.response,
+    },
+  });
+
+  return {
+    success: saved.success,
+    id: saved.id,
+    duplicate: false,
+    message: saved.message,
+  };
 }
 
 export function exportCuratedGoldenDataset(format: 'jsonl' | 'json' = 'jsonl'): string {

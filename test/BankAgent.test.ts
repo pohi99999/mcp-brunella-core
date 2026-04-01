@@ -58,7 +58,7 @@ describe('BankAgent', () => {
         const result = await agent.executeTask(mockContext);
 
         expect(result.success).toBe(false);
-        expect(result.message).toBe("Missing bankCsvPath in context");
+        expect(result.message).toBe("Missing bankFilePath (csv or json) in context");
         expect(db.saveTransaction).not.toHaveBeenCalled();
     });
 

@@ -12,7 +12,7 @@
 
 import { EventEmitter } from "events";
 import { logInfo, logError, logWarn, setAgentStatus } from "../utils/logger.js";
-import { saveTask, updateTaskStatus } from "../utils/tasksDb.js";
+import { saveTask, updateTaskStatus, loadQueuedTasksForHydration } from "../utils/tasksDb.js";
 import {
   withRetry,
   calculateDelay,
@@ -308,15 +308,35 @@ export class AgentManager extends EventEmitter {
 
     logInfo("AgentManager", `${this.agents.size} ügynök betöltve`);
 
-    // STARTUP SELF-HEALING (The "Black Box" Protocol)
-    await this.processFixQueue();
-
-    // Auto-start ügynökök
-    for (const agentConfig of this.registry.agents.filter((a) => a.autoStart)) {
-      const agent = this.agents.get(agentConfig.name);
-      if (agent?.initialize) {
-        await agent.initialize();
+    // Task rehydration — restore unfinished tasks from DB on startup
+    try {
+      const persistedTasks = await loadQueuedTasksForHydration();
+      for (const pt of persistedTasks) {
+        const status: QueuedTask["status"] = pt.status === "running" ? "pending" : (pt.status as QueuedTask["status"]);
+        if (pt.status === "running") {
+          await updateTaskStatus(pt.id, "pending");
+        }
+        this.taskQueue.push({
+          id: pt.id,
+          description: pt.task,
+          agentName: pt.agent,
+          context: pt.context ? JSON.parse(pt.context) : undefined,
+          createdAt: pt.created_at,
+          status,
+        });
       }
+      if (persistedTasks.length > 0) {
+        logInfo("AgentManager", `${persistedTasks.length} feladat visszaállítva a sorba`);
+      }
+    } catch (err) {
+      logWarn("AgentManager", `Task rehydration failed: ${err}`);
+    }
+
+    // STARTUP SELF-HEALING (The "Black Box" Protocol)
+    try {
+      await this.processFixQueue();
+    } catch (err) {
+      logWarn("AgentManager", `Self-healing unavailable: ${err}`);
     }
   }
 

@@ -25,6 +25,7 @@ vi.mock("@/lib/apiService", () => ({
     .fn()
     .mockResolvedValue({ status: { enabled: false, healthy: false } }),
   executeAgent: vi.fn().mockResolvedValue({ message: "Szia!" }),
+  orchestrateTask: vi.fn().mockResolvedValue({ message: "Szia!", success: true }),
   generateWithOllama: vi.fn().mockResolvedValue("Ollama válasz"),
   generateWithGithubModels: vi.fn().mockResolvedValue("GitHub válasz"),
   generateWithGemini: vi.fn().mockResolvedValue("Gemini válasz"),
@@ -45,6 +46,7 @@ vi.mock("@/lib/apiService", () => ({
 
 const mockedApi = api as unknown as {
   executeAgent: ReturnType<typeof vi.fn>;
+  orchestrateTask: ReturnType<typeof vi.fn>;
 };
 
 describe("NeuralLinkChat", () => {
@@ -103,8 +105,7 @@ describe("NeuralLinkChat", () => {
       expect(screen.getByText("Szia!")).toBeInTheDocument();
     });
 
-    expect(mockedApi.executeAgent).toHaveBeenCalledWith(
-      "Orchestrator",
+    expect(mockedApi.orchestrateTask).toHaveBeenCalledWith(
       "Szia",
       expect.objectContaining({ chatMode: "orchestrator" }),
     );
