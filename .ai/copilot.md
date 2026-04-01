@@ -336,3 +336,30 @@ Ezeket a módosításokat a conductor/tracks.md és a conductor/archive/ helyre 
 - Chrome DevTools MCP 375×812 mobilvizsgálat: md:hidden képek visible=true ✅, hidden md:block képek display:none ✅
 - Brunella skills: 6 skill, AgentManager.executeSkill(), CLI brunella skill lista/futrat ✅
 - npm run build ✅, npm run test:fast ✅ (1892 passed), git push main ✅
+
+### 2026-04-01 00:43 - Multi-feature session: context fusion, action contracts, edge proxy, FastMCP
+**Feladat:** Context fusion integráció, action contract alignment (press/vision-click), edge proxy hardening, AI gateway fix, FastMCP/Prefect Horizon regisztráció
+**Érintett fájlok:**
+- src/core/contextFusion.ts (ÚJ — fusion card builder: GraphRAG, reflection, memory, browser diag)
+- test/contextFusion.test.ts (ÚJ — 14 teszt)
+- src/utils/backgroundTaskManager.ts (vision-click 2-step: query→click, press support)
+- src/agents/RobotkezV2Agent.ts (press → critical action)
+- src/utils/cloudflareBrowser.ts (selector field passthrough)
+- src/dashboard/lib/apiService.ts (ExecutionStep/BrowserCopilotExecutionStep bővítés)
+- src/core/assistantBlueprint.ts (fusionCard output)
+- src/services/BrowserCopilotSessionService.ts (fusion-context injection)
+- src/utils/llmPlanner.ts (fusionContext plan prompting)
+- src/server/routes/assistant.ts (/context-fusion endpoint)
+- src/dashboard/components/dashboard/AssistantBlueprintPanel.tsx (fusion summary)
+- myai/server.py (sys.path fix import-ok előtt)
+- src/agents/EdgeProxyAgent.ts (health-check error handling)
+- src/utils/aiGateway.ts (token fallback fix + useless try/catch eltávolítás)
+- fastmcp.json (ÚJ — Prefect Horizon deployment config)
+- test/llmPlanner.test.ts, test/backgroundTaskManager.test.ts (action contract tesztek)
+**Státusz:** ✅ Befejezve
+**Megjegyzés:**
+- Context fusion: buildContextFusionCard() non-throwing, nullable sections + fusionPrompt string
+- Action contract: vision-click = query→selector→click 2-step; press requires key validation
+- FastMCP regisztráció: `myai/mcp_server.py:mcp` entry point a Prefect Horizon-on
+- MCP szerver URL: https://brunella.fastmcp.app/mcp
+- Commit: 19872aa8 (18 fájl, 852+/48-), npm run build ✅, npm run test:fast ✅ (1919 tests, 219 files)
