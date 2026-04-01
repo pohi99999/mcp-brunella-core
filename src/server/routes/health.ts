@@ -7,9 +7,14 @@ import {
   checkPythonHealth,
   checkCloudflareHealth,
   buildHealthResponse,
+  HealthResponse
 } from "../../utils/health.js";
 import { AppError } from "../../utils/AppError.js";
 import { asyncHandler } from "../middleware/errorHandler.js";
+
+let cachedHealthResponse: HealthResponse | null = null;
+let lastHealthCheckTime = 0;
+const HEALTH_CACHE_TTL_MS = 10000; // 10 seconds
 
 export function createHealthRoutes(): Router {
   const router = Router();
@@ -27,6 +32,16 @@ export function createHealthRoutes(): Router {
   router.get(
     "/",
     asyncHandler(async (req, res) => {
+      const now = Date.now();
+      if (cachedHealthResponse && now - lastHealthCheckTime < HEALTH_CACHE_TTL_MS) {
+        return res.json({
+          ...cachedHealthResponse,
+          cached: true,
+          timestamp: new Date().toISOString(),
+          requestId: (req as unknown as Record<string, unknown>).id as string
+        });
+      }
+
       const [ollama, anythingllm, python, cloudflare] = await Promise.all([
         checkOllamaHealth(),
         checkAnythingLLMHealth(),
@@ -44,6 +59,10 @@ export function createHealthRoutes(): Router {
         mcpCount,
         (req as unknown as Record<string, unknown>).id as string,
       );
+
+      cachedHealthResponse = payload;
+      lastHealthCheckTime = now;
+
       res.json(payload);
     }),
   );

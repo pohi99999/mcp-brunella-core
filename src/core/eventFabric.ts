@@ -99,13 +99,49 @@ function getNumberString(value: unknown): string | undefined {
   return getString(value);
 }
 
-function coerceRepositoryName(payload: unknown): string {
+function getRepositoryRecord(payload: unknown): Record<string, unknown> | undefined {
   if (!isRecord(payload)) {
+    return undefined;
+  }
+
+  const directRepository = isRecord(payload.repository) ? payload.repository : undefined;
+  if (directRepository) {
+    return directRepository;
+  }
+
+  const workflowRun = isRecord(payload.workflow_run) ? payload.workflow_run : undefined;
+  return isRecord(workflowRun?.repository) ? workflowRun.repository : undefined;
+}
+
+function getRepositoryOwner(payload: unknown): string | undefined {
+  const repository = getRepositoryRecord(payload);
+  const owner = isRecord(repository?.owner) ? repository.owner : undefined;
+  return getString(owner?.login);
+}
+
+function getRepositoryRepo(payload: unknown): string | undefined {
+  const repository = getRepositoryRecord(payload);
+  return getString(repository?.name);
+}
+
+function coerceRepositoryName(payload: unknown): string {
+  const repository = getRepositoryRecord(payload);
+  if (!repository) {
     return 'unknown';
   }
 
-  const repository = isRecord(payload.repository) ? payload.repository : undefined;
-  return getString(repository?.name) ?? 'unknown';
+  const fullName = getString(repository.full_name);
+  if (fullName) {
+    return fullName;
+  }
+
+  const owner = isRecord(repository.owner) ? getString(repository.owner.login) : undefined;
+  const repo = getString(repository.name);
+  if (owner && repo) {
+    return `${owner}/${repo}`;
+  }
+
+  return repo ?? 'unknown';
 }
 
 export function createEnvelope<TPayload>(params: {
@@ -181,6 +217,8 @@ export function createGithubWebhookEventEnvelope(
       getString(workflowRun?.display_title) ??
       'workflow_run';
     const isFailure = action === 'completed' && conclusion === 'failure';
+    const repositoryOwner = getRepositoryOwner(body);
+    const repositoryRepo = getRepositoryRepo(body);
 
     return createEnvelope({
       source: 'github',
@@ -196,6 +234,8 @@ export function createGithubWebhookEventEnvelope(
         workflowName,
         htmlUrl: getString(workflowRun?.html_url),
         headBranch: getString(workflowRun?.head_branch),
+        repositoryOwner,
+        repositoryRepo,
       },
       metadata: {
         provider: 'github',

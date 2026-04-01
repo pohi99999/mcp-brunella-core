@@ -1817,7 +1817,13 @@
 		"githubCopilotApi.server.enableHttps": true,
 		"githubCopilotApi.server.enableLogging": true,
 		"githubCopilotApi.server.enableWebSocket": true,
-		"chat.agent.sandbox": true
+		"chat.agent.sandbox": true,
+		"terminal.integrated.accessibleViewFocusOnCommandExecution": true,
+		"terminal.integrated.accessibleViewPreserveCursorPosition": true,
+		"terminal.integrated.allowInUntrustedWorkspace": true,
+		"terminal.integrated.allowMnemonics": true,
+		"terminal.integrated.automationProfile.windows": true
+	}
 	},
 	"extensions": {
 		"recommendations": [

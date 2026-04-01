@@ -99,12 +99,19 @@ describe('EventFabric', () => {
         name: 'CI',
         head_branch: 'main',
       },
-      repository: { name: 'pohi99999/mcp-brunella-core' },
+      repository: {
+        full_name: 'pohi99999/mcp-brunella-core',
+        name: 'mcp-brunella-core',
+        owner: { login: 'pohi99999' },
+      },
     });
 
     expect(envelope.type).toBe('github.workflow_run.failure');
     expect(envelope.priority).toBe('high');
     expect(envelope.riskHint).toBe('guarded');
+    expect(envelope.payload.repositoryName).toBe('pohi99999/mcp-brunella-core');
+    expect(envelope.payload.repositoryOwner).toBe('pohi99999');
+    expect(envelope.payload.repositoryRepo).toBe('mcp-brunella-core');
   });
 
   it('emits phoenix event_fabric signal event on accepted publish', async () => {

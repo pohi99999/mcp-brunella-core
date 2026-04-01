@@ -44,9 +44,9 @@ export class GitHubAPIClient {
   private token: string;
 
   constructor(token?: string) {
-    this.token = token || process.env.GITHUB_TOKEN || '';
+    this.token = token || process.env.GITHUB_PAT || process.env.GITHUB_TOKEN || '';
     if (!this.token) {
-      logError('GitHubAPIClient', 'GITHUB_TOKEN environment variable not set');
+      logError('GitHubAPIClient', 'GITHUB_PAT/GITHUB_TOKEN environment variable not set');
     }
   }
 

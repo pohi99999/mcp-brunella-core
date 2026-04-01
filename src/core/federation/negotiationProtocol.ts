@@ -5,6 +5,11 @@ import { evaluateAndLogPolicy } from '../policyEngine.js';
 import { phoenixEventBus } from '../phoenixEventBus.js';
 import { record as auditRecord } from '../auditLog.js';
 import { logInfo, logWarn } from '../../utils/logger.js';
+import {
+  clearNegotiationSessions,
+  loadNegotiationSessions,
+  saveNegotiationSession,
+} from '../autonomyRuntimeStore.js';
 
 // ============================================================================
 // TYPES
@@ -48,6 +53,8 @@ export interface NegotiationSession {
   createdAt: string;
   resolvedAt?: string;
   requiresApproval: boolean;
+  approvalWorkflowId?: string;
+  approvalRequestId?: string;
   transcript: NegotiationTranscriptEntry[];
 }
 
@@ -57,6 +64,28 @@ export interface NegotiationSession {
 
 class NegotiationProtocol {
   private readonly sessions = new Map<string, NegotiationSession>();
+  private hydrated = false;
+
+  private ensureHydrated(): void {
+    if (this.hydrated) {
+      return;
+    }
+
+    const restored = loadNegotiationSessions();
+    for (const session of restored) {
+      this.sessions.set(session.sessionId, session);
+    }
+    this.hydrated = true;
+  }
+
+  private persistSession(session: NegotiationSession): void {
+    saveNegotiationSession(session);
+  }
+
+  hydrateFromStore(): number {
+    this.ensureHydrated();
+    return this.sessions.size;
+  }
 
   /**
    * Initiate a negotiation offer from local BAS to a remote peer.
@@ -67,6 +96,7 @@ class NegotiationProtocol {
     capabilities: string[],
     terms: Record<string, unknown> = {},
   ): Promise<NegotiationSession> {
+    this.ensureHydrated();
     const now = new Date().toISOString();
 
     // Trust check — refuse negotiation with revoked or unknown peers
@@ -124,6 +154,7 @@ class NegotiationProtocol {
     };
 
     this.sessions.set(sessionId, session);
+    this.persistSession(session);
 
     phoenixEventBus.publish('phoenix:federation_negotiation_started', {
       sessionId,
@@ -148,6 +179,7 @@ class NegotiationProtocol {
     modifiedTerms: Record<string, unknown> = {},
     fromPeerId = 'remote',
   ): NegotiationSession | null {
+    this.ensureHydrated();
     const session = this.sessions.get(sessionId);
     if (!session || session.state !== 'offering') return null;
 
@@ -169,6 +201,7 @@ class NegotiationProtocol {
       actor: fromPeerId,
       detail: modifiedCapabilities.join(', '),
     });
+    this.persistSession(session);
 
     logInfo('NegotiationProtocol', `Counter-offer for session ${sessionId} from ${fromPeerId}`);
     return session;
@@ -179,6 +212,7 @@ class NegotiationProtocol {
    * If requiresApproval is true, creates an approval workflow first.
    */
   async accept(sessionId: string, actor = 'local'): Promise<NegotiationSession | null> {
+    this.ensureHydrated();
     const session = this.sessions.get(sessionId);
     if (!session) return null;
     if (session.state === 'accepted' || session.state === 'rejected') return session;
@@ -186,7 +220,12 @@ class NegotiationProtocol {
     const now = new Date().toISOString();
 
     if (session.requiresApproval) {
-      await approvalRouter.createWorkflowFromPolicy(
+      if (session.approvalWorkflowId && session.approvalRequestId) {
+        this.syncApprovalState(sessionId);
+        return session;
+      }
+
+      const workflow = await approvalRouter.createWorkflowFromPolicy(
         {
           actionClass: 'guarded',
           riskScore: 62,
@@ -210,6 +249,10 @@ class NegotiationProtocol {
           resource: session.initialOffer.toPeerId,
         },
       );
+      if (workflow) {
+        session.approvalWorkflowId = workflow.workflowId;
+        session.approvalRequestId = workflow.approvalRequestId;
+      }
 
       session.transcript.push({
         timestamp: now,
@@ -217,6 +260,7 @@ class NegotiationProtocol {
         actor,
         detail: 'Approval gate created',
       });
+      this.persistSession(session);
 
       logInfo('NegotiationProtocol', `Session ${sessionId} awaiting approval gate`);
       return session;
@@ -231,6 +275,7 @@ class NegotiationProtocol {
     session.agreedTerms = agreedTerms;
     session.resolvedAt = now;
     session.transcript.push({ timestamp: now, action: 'accepted', actor, detail: agreed.join(', ') });
+    this.persistSession(session);
 
     await auditRecord(
       'ALLOWED',
@@ -258,6 +303,7 @@ class NegotiationProtocol {
     reason?: string,
     actor = 'local',
   ): Promise<NegotiationSession | null> {
+    this.ensureHydrated();
     const session = this.sessions.get(sessionId);
     if (!session) return null;
     if (session.state === 'accepted' || session.state === 'rejected') return session;
@@ -267,6 +313,7 @@ class NegotiationProtocol {
     session.rejectionReason = reason;
     session.resolvedAt = now;
     session.transcript.push({ timestamp: now, action: 'rejected', actor, detail: reason });
+    this.persistSession(session);
 
     await auditRecord(
       'DENIED',
@@ -288,17 +335,63 @@ class NegotiationProtocol {
   }
 
   getSession(sessionId: string): NegotiationSession | undefined {
+    this.ensureHydrated();
+    this.syncApprovalState(sessionId);
     return this.sessions.get(sessionId);
   }
 
   listSessions(state?: NegotiationState): NegotiationSession[] {
-    const all = Array.from(this.sessions.values());
+    this.ensureHydrated();
+    const all = Array.from(this.sessions.values()).map((session) => this.syncApprovalState(session.sessionId));
     return state ? all.filter((s) => s.state === state) : all;
   }
 
   /** Clear all sessions (for testing). */
   clear(): void {
     this.sessions.clear();
+    this.hydrated = true;
+    clearNegotiationSessions();
+  }
+
+  private syncApprovalState(sessionId: string): NegotiationSession {
+    const session = this.sessions.get(sessionId);
+    if (!session || !session.requiresApproval || !session.approvalWorkflowId || session.state === 'accepted' || session.state === 'rejected') {
+      return session!;
+    }
+
+    const workflow = approvalRouter.getWorkflow(session.approvalWorkflowId);
+    if (!workflow || workflow.status === 'pending') {
+      return session;
+    }
+
+    const now = new Date().toISOString();
+    if (workflow.status === 'approved') {
+      const agreed = session.counterOffer?.modifiedCapabilities ?? session.initialOffer.capabilities;
+      const agreedTerms = session.counterOffer?.modifiedTerms ?? session.initialOffer.terms;
+      session.state = 'accepted';
+      session.agreedCapabilities = agreed;
+      session.agreedTerms = agreedTerms;
+      session.resolvedAt = now;
+      session.transcript.push({
+        timestamp: now,
+        action: 'approved_via_workflow',
+        actor: 'approval_router',
+        detail: workflow.workflowId,
+      });
+    } else {
+      session.state = 'rejected';
+      session.rejectionReason = workflow.status;
+      session.resolvedAt = now;
+      session.transcript.push({
+        timestamp: now,
+        action: 'rejected_via_workflow',
+        actor: 'approval_router',
+        detail: workflow.workflowId,
+      });
+    }
+
+    this.persistSession(session);
+    return session;
   }
 }
 

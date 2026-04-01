@@ -16,6 +16,11 @@ import { evaluateAndLogPolicy, type PolicyDecision } from './policyEngine.js';
 import { createScopedToolRegistryView, type EphemeralScopedToolRegistry } from './ephemeralScopedToolRegistry.js';
 import { phoenixEventBus } from './phoenixEventBus.js';
 import { logInfo, logWarn } from '../utils/logger.js';
+import {
+  clearEphemeralAgentRecords,
+  loadEphemeralAgentRecords,
+  saveEphemeralAgentRecord,
+} from './autonomyRuntimeStore.js';
 
 export type EphemeralAgentState = 'pending' | 'running' | 'terminated' | 'expired' | 'failed';
 
@@ -79,8 +84,54 @@ class EphemeralAgentManager {
   private readonly agents = new Map<string, EphemeralAgentRecord>();
   private readonly timers = new Map<string, ReturnType<typeof setTimeout>>();
   private readonly postmortemRecorded = new Set<string>();
+  private hydrated = false;
+
+  private ensureHydrated(): void {
+    if (this.hydrated) {
+      return;
+    }
+
+    const restored = loadEphemeralAgentRecords();
+    for (const record of restored) {
+      this.agents.set(record.id, record);
+      if (record.state === 'terminated' || record.state === 'expired') {
+        this.postmortemRecorded.add(record.id);
+      }
+    }
+    this.hydrated = true;
+  }
+
+  private persistRecord(record: EphemeralAgentRecord): void {
+    saveEphemeralAgentRecord(record);
+  }
+
+  hydrateFromStore(): number {
+    this.ensureHydrated();
+    const nowMs = Date.now();
+    for (const record of this.agents.values()) {
+      this.syncApprovalStateForRecord(record);
+
+      if (record.state === 'running' || record.state === 'pending') {
+        const expiresAtMs = Date.parse(record.lease.expiresAt);
+        if (Number.isFinite(expiresAtMs)) {
+          const remainingMs = expiresAtMs - nowMs;
+          if (remainingMs <= 0) {
+            const now = new Date().toISOString();
+            this.finalizeRecord(record, 'expired', 'rehydrated_ttl_expired', now, 'expired');
+          } else {
+            this.armTimer(record.id, remainingMs);
+          }
+        }
+      }
+
+      this.persistRecord(record);
+    }
+
+    return this.agents.size;
+  }
 
   async spawn(spec: EphemeralAgentSpec): Promise<EphemeralAgentRecord> {
+    this.ensureHydrated();
     const now = new Date().toISOString();
     const id = uuidv4();
     const ttlMs = spec.ttlMs ?? DEFAULT_TTL_MS;
@@ -120,6 +171,7 @@ class EphemeralAgentManager {
 
     this.agents.set(id, record);
     this.armTimer(id, ttlMs);
+    this.persistRecord(record);
 
     phoenixEventBus.publish('phoenix:ephemeral_spawned', {
       agentId: id,
@@ -139,6 +191,7 @@ class EphemeralAgentManager {
   }
 
   terminate(id: string, reason = 'manual'): EphemeralAgentRecord | null {
+    this.ensureHydrated();
     const record = this.agents.get(id);
     if (!record) return null;
 
@@ -159,6 +212,7 @@ class EphemeralAgentManager {
     costUsd: number,
     steps = 1,
   ): Promise<EphemeralUsageResult> {
+    this.ensureHydrated();
     const record = this.agents.get(id);
     if (!record) {
       return { killed: false };
@@ -184,10 +238,12 @@ class EphemeralAgentManager {
       return this.handleBudgetExceeded(record, 'step', record.stepsUsed, spec.stepBudget);
     }
 
+    this.persistRecord(record);
     return { killed: false };
   }
 
   getAgent(id: string): EphemeralAgentRecord | undefined {
+    this.ensureHydrated();
     const record = this.agents.get(id);
     if (!record) {
       return undefined;
@@ -198,6 +254,7 @@ class EphemeralAgentManager {
   }
 
   listAgents(state?: EphemeralAgentState): EphemeralAgentRecord[] {
+    this.ensureHydrated();
     const all = Array.from(this.agents.values());
     all.forEach((record) => this.syncApprovalStateForRecord(record));
     return state ? all.filter((agent) => agent.state === state) : all;
@@ -219,6 +276,8 @@ class EphemeralAgentManager {
     this.agents.clear();
     this.timers.clear();
     this.postmortemRecorded.clear();
+    this.hydrated = true;
+    clearEphemeralAgentRecords();
   }
 
   private armTimer(id: string, ttlMs: number): void {
@@ -256,6 +315,7 @@ class EphemeralAgentManager {
     this.clearTimer(record.id);
     this.publishTerminated(record, reason);
     this.recordPostmortem(record);
+    this.persistRecord(record);
   }
 
   private recordPostmortem(record: EphemeralAgentRecord): void {
@@ -430,8 +490,8 @@ class EphemeralAgentManager {
     const now = new Date().toISOString();
     const approval = record.approval;
 
-    if (workflow.status === 'approved') {
-      if (approval.kind === 'spawn') {
+      if (workflow.status === 'approved') {
+        if (approval.kind === 'spawn') {
         record.state = 'running';
         record.lease = {
           ...record.lease,
@@ -450,11 +510,12 @@ class EphemeralAgentManager {
         }
         this.armTimer(record.id, record.lease.ttlMs);
         record.auditTrail.push({ timestamp: now, event: 'budget_approval_granted', detail: workflow.workflowId });
-      }
+        }
 
-      record.approval = undefined;
-      return;
-    }
+        record.approval = undefined;
+        this.persistRecord(record);
+        return;
+      }
 
     const denialReason = approval.kind === 'spawn'
       ? `spawn_approval_${workflow.status}`

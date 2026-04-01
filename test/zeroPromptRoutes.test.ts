@@ -7,6 +7,7 @@ const {
   approvalRouterMock,
   notificationChannelsMock,
   eventFabricMock,
+  githubRemediationRuntimeMock,
   zeroPromptRuntimeMock,
   evaluateAndLogPolicyMock,
   listDeliveriesMock,
@@ -86,6 +87,21 @@ const {
       listDeliveries: listDeliveriesMock,
       dispatchWorkflowState: dispatchWorkflowStateMock,
     },
+    githubRemediationRuntimeMock: {
+      listRuns: vi.fn().mockReturnValue([
+        {
+          id: 'run-1',
+          status: 'awaiting_final_approval',
+          repositoryName: 'pohi99999/mcp-brunella-core',
+        },
+      ]),
+      getSummary: vi.fn().mockReturnValue({
+        total: 1,
+        counts: { awaiting_final_approval: 1 },
+        active: true,
+        pendingFinalApproval: 1,
+      }),
+    },
     eventFabricMock: {
       getStats: vi.fn().mockReturnValue({}),
       getHistory: vi.fn().mockReturnValue([]),
@@ -115,6 +131,10 @@ vi.mock('../src/utils/logger.js', () => ({
 
 vi.mock('../src/core/zeroPromptRuntime.js', () => ({
   zeroPromptRuntime: zeroPromptRuntimeMock,
+}));
+
+vi.mock('../src/core/githubRemediationRuntime.js', () => ({
+  githubRemediationRuntime: githubRemediationRuntimeMock,
 }));
 
 vi.mock('../src/core/eventFabric.js', () => ({
@@ -183,5 +203,18 @@ describe('ZeroPrompt routes', () => {
 
     expect(response.status).toBe(404);
     expect(response.body).toHaveProperty('error');
+  });
+
+  it('returns remediation runs and summary', async () => {
+    const runsResponse = await request(app).get('/api/v1/zero-prompt/remediation-runs');
+    const summaryResponse = await request(app).get('/api/v1/zero-prompt/remediation-runs/summary');
+
+    expect(runsResponse.status).toBe(200);
+    expect(runsResponse.body.count).toBe(1);
+    expect(runsResponse.body.runs[0].id).toBe('run-1');
+
+    expect(summaryResponse.status).toBe(200);
+    expect(summaryResponse.body.summary.total).toBe(1);
+    expect(summaryResponse.body.summary.pendingFinalApproval).toBe(1);
   });
 });

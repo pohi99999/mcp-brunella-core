@@ -22,10 +22,16 @@ function lazy(
     importFn()
       .then((mod) => {
         const exported = mod[exportName];
+        
+        // Express Routers are functions themselves, but they have a .stack property.
+        // Factory functions will not have a .stack property.
+        const isRouterInstance = typeof exported === "function" && "stack" in exported;
+        
         loaded =
-          typeof exported === "function"
+          typeof exported === "function" && !isRouterInstance
             ? (exported as (...a: unknown[]) => Router)(...factoryArgs)
             : (exported as Router);
+            
         loaded(req, res, next);
       })
       .catch(next);

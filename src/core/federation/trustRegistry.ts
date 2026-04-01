@@ -3,6 +3,11 @@ import { record as auditRecord } from '../auditLog.js';
 import { phoenixEventBus } from '../phoenixEventBus.js';
 import { evaluateAndLogPolicy } from '../policyEngine.js';
 import { logInfo, logWarn } from '../../utils/logger.js';
+import {
+  clearFederationPeers,
+  loadFederationPeers,
+  saveFederationPeer,
+} from '../autonomyRuntimeStore.js';
 
 // ============================================================================
 // TYPES
@@ -27,12 +32,31 @@ export interface PeerIdentity {
 
 class TrustRegistry {
   private readonly peers = new Map<string, PeerIdentity>();
+  private hydrated = false;
+
+  private ensureHydrated(): void {
+    if (this.hydrated) {
+      return;
+    }
+
+    const restored = loadFederationPeers();
+    for (const peer of restored) {
+      this.peers.set(peer.peerId, peer);
+    }
+    this.hydrated = true;
+  }
+
+  hydrateFromStore(): number {
+    this.ensureHydrated();
+    return this.peers.size;
+  }
 
   /**
    * Register a new remote peer. Runs a policy check first.
    * If the policy requires approval, the peer is set to 'pending' state.
    */
   async register(peer: Omit<PeerIdentity, 'trustState' | 'trustedAt' | 'revokedAt'>): Promise<PeerIdentity> {
+    this.ensureHydrated();
     const now = new Date().toISOString();
 
     const decision = await evaluateAndLogPolicy({
@@ -58,6 +82,7 @@ class TrustRegistry {
     };
 
     this.peers.set(peer.peerId, identity);
+    saveFederationPeer(identity);
 
     await auditRecord('ALLOWED', 'TrustRegistry', 'federation:register', peer.peerId);
 
@@ -77,12 +102,14 @@ class TrustRegistry {
    * Revoke a previously trusted peer.
    */
   async revoke(peerId: string, reason?: string): Promise<PeerIdentity | null> {
+    this.ensureHydrated();
     const peer = this.peers.get(peerId);
     if (!peer) return null;
 
     const now = new Date().toISOString();
     peer.trustState = 'revoked';
     peer.revokedAt = now;
+    saveFederationPeer(peer);
 
     await auditRecord('DENIED', 'TrustRegistry', 'federation:revoke', peerId, reason);
 
@@ -102,14 +129,17 @@ class TrustRegistry {
    * Returns 'unknown' if peer is not registered.
    */
   checkTrust(peerId: string): TrustState {
+    this.ensureHydrated();
     return this.peers.get(peerId)?.trustState ?? 'unknown';
   }
 
   getPeer(peerId: string): PeerIdentity | undefined {
+    this.ensureHydrated();
     return this.peers.get(peerId);
   }
 
   listPeers(trustState?: TrustState): PeerIdentity[] {
+    this.ensureHydrated();
     const all = Array.from(this.peers.values());
     return trustState ? all.filter((p) => p.trustState === trustState) : all;
   }
@@ -119,6 +149,7 @@ class TrustRegistry {
    * Denies unknown, pending, and revoked peers — only 'trusted' passes.
    */
   async isPeerAllowedForRouting(peerId: string): Promise<boolean> {
+    this.ensureHydrated();
     const state = this.checkTrust(peerId);
 
     if (state === 'trusted') return true;
@@ -136,6 +167,8 @@ class TrustRegistry {
   /** Clear all peers (for testing). */
   clear(): void {
     this.peers.clear();
+    this.hydrated = true;
+    clearFederationPeers();
   }
 }
 

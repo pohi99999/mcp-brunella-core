@@ -2,6 +2,11 @@ import crypto from 'crypto';
 import { v4 as uuidv4 } from 'uuid';
 import { phoenixEventBus } from '../phoenixEventBus.js';
 import { logInfo, logWarn } from '../../utils/logger.js';
+import {
+  clearCapabilityManifests,
+  loadCapabilityManifests,
+  saveCapabilityManifest,
+} from '../autonomyRuntimeStore.js';
 
 // ============================================================================
 // TYPES
@@ -59,6 +64,24 @@ const DEFAULT_MANIFEST_TTL_MS = 60 * 60 * 1000; // 1 hour
 
 class CapabilityManifestManager {
   private readonly cache = new Map<string, CapabilityManifest>();
+  private hydrated = false;
+
+  private ensureHydrated(): void {
+    if (this.hydrated) {
+      return;
+    }
+
+    const restored = loadCapabilityManifests();
+    for (const manifest of restored) {
+      this.cache.set(manifest.manifestId, manifest);
+    }
+    this.hydrated = true;
+  }
+
+  hydrateFromStore(): number {
+    this.ensureHydrated();
+    return this.cache.size;
+  }
 
   /**
    * Issue a signed capability manifest for a peer.
@@ -69,6 +92,7 @@ class CapabilityManifestManager {
     capabilities: Capability[],
     ttlMs = DEFAULT_MANIFEST_TTL_MS,
   ): CapabilityManifest {
+    this.ensureHydrated();
     const now = new Date();
     const manifestId = uuidv4();
 
@@ -85,6 +109,7 @@ class CapabilityManifestManager {
     const manifest: CapabilityManifest = { ...base, signature };
 
     this.cache.set(manifestId, manifest);
+    saveCapabilityManifest(manifest);
 
     phoenixEventBus.publish('phoenix:federation_manifest_issued', {
       manifestId,
@@ -102,6 +127,7 @@ class CapabilityManifestManager {
    * Verify a manifest's signature and expiry.
    */
   verify(manifest: CapabilityManifest): ManifestVerifyResult {
+    this.ensureHydrated();
     if (new Date(manifest.expiresAt) < new Date()) {
       logWarn('CapabilityManifest', `Manifest ${manifest.manifestId} expired`);
       return 'expired';
@@ -127,10 +153,12 @@ class CapabilityManifestManager {
   }
 
   getManifest(manifestId: string): CapabilityManifest | undefined {
+    this.ensureHydrated();
     return this.cache.get(manifestId);
   }
 
   listManifestsForPeer(peerId: string): CapabilityManifest[] {
+    this.ensureHydrated();
     return Array.from(this.cache.values()).filter((m) => m.peerId === peerId);
   }
 
@@ -138,12 +166,15 @@ class CapabilityManifestManager {
    * Return the first valid (non-expired, valid signature) manifest for a peer.
    */
   getValidManifestForPeer(peerId: string): CapabilityManifest | undefined {
+    this.ensureHydrated();
     return this.listManifestsForPeer(peerId).find((m) => this.verify(m) === 'valid');
   }
 
   /** Clear manifest cache (for testing). */
   clear(): void {
     this.cache.clear();
+    this.hydrated = true;
+    clearCapabilityManifests();
   }
 }
 

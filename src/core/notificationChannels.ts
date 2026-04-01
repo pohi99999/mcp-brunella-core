@@ -7,6 +7,11 @@ import {
   sendNotificationEmail,
 } from '../utils/notificationService.js';
 import { logError, logInfo, logWarn } from '../utils/logger.js';
+import {
+  clearNotificationDeliveries,
+  loadNotificationDeliveries,
+  saveNotificationDelivery,
+} from './autonomyRuntimeStore.js';
 
 export type NotificationChannel = 'email' | 'slack' | 'discord';
 export type NotificationDeliveryChannel = NotificationChannel | 'system';
@@ -113,9 +118,19 @@ function getResolvedEventType(status: ApprovalWorkflow['status']): NotificationE
 class NotificationChannelsService {
   private deliveries: NotificationDeliveryRecord[] = [];
   private policies = new Map<NotificationChannel, NotificationChannelPolicy>();
+  private hydratedDeliveries = false;
 
   constructor() {
     this.initializePolicies();
+  }
+
+  hydrateFromStore(): number {
+    if (!this.hydratedDeliveries) {
+      this.deliveries = loadNotificationDeliveries(HISTORY_LIMIT);
+      this.hydratedDeliveries = true;
+    }
+
+    return this.deliveries.length;
   }
 
   getPolicies(): NotificationChannelPolicy[] {
@@ -193,6 +208,7 @@ class NotificationChannelsService {
   }
 
   listDeliveries(filters: DeliveryFilters = {}): NotificationDeliveryRecord[] {
+    this.hydrateFromStore();
     const limit = filters.limit ?? 50;
     return this.deliveries
       .filter((delivery) => (filters.channel ? delivery.channel === filters.channel : true))
@@ -201,6 +217,7 @@ class NotificationChannelsService {
   }
 
   getSummary(): NotificationDeliverySummary {
+    this.hydrateFromStore();
     const summary: NotificationDeliverySummary = {
       total: this.deliveries.length,
       sent: 0,
@@ -228,6 +245,8 @@ class NotificationChannelsService {
 
   clear(): void {
     this.deliveries = [];
+    this.hydratedDeliveries = true;
+    clearNotificationDeliveries();
   }
 
   private initializePolicies(): void {
@@ -612,6 +631,7 @@ class NotificationChannelsService {
   private recordDelivery(
     partial: Omit<NotificationDeliveryRecord, 'id' | 'createdAt'>,
   ): NotificationDeliveryRecord {
+    this.hydrateFromStore();
     const record: NotificationDeliveryRecord = {
       id: uuidv4(),
       createdAt: new Date().toISOString(),
@@ -622,6 +642,7 @@ class NotificationChannelsService {
     if (this.deliveries.length > HISTORY_LIMIT) {
       this.deliveries = this.deliveries.slice(0, HISTORY_LIMIT);
     }
+    saveNotificationDelivery(record);
 
     return record;
   }

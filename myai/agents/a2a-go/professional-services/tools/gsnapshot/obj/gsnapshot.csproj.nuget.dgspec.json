@@ -13,20 +13,12 @@
         "packagesPath": "C:\\Users\\pohi9\\.nuget\\packages\\",
         "outputPath": "F:\\mcp-brunella-core\\myai\\agents\\a2a-go\\professional-services\\tools\\gsnapshot\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\pohi9\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "C:\\Users\\pohi9\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "netcoreapp5.0"
         ],
-        "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {}
-        },
         "frameworks": {
           "net5.0": {
             "targetAlias": "netcoreapp5.0",

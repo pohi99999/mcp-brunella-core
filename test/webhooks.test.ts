@@ -121,6 +121,7 @@ describe('Webhook Routes Integration', () => {
 
     expect(response.status).toBe(200);
     expect(response.body.success).toBe(true);
+    expect(response.body.remediationAccepted).toBe(true);
 
     // Verify webhook event stored
     const event = db.prepare('SELECT * FROM webhook_events').get() as any;
