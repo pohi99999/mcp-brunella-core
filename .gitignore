@@ -163,3 +163,7 @@ docs/Cégfejlesztés_Iszapafló/
 # Rust build artifacts (Tauri)
 src-tauri/target/
 n8nv2
+
+# ESLint output (large, generated)
+eslint_output.json
+eslint_report.json
