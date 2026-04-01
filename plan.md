@@ -1,15 +1,31 @@
-# CLI scripting és multi-agent orchestration — Plan
+# ContextFusion Integration Layer — Plan
 
-Elvégzett munkák:
+## Elvégzett munkák ✓
+
+- [x] `src/core/contextFusion.ts` létrehozva — `buildContextFusionCard()`, `buildBrowserDiagnosticsCard()` exportálva; minden alrendszer hívás try/catch-vel védve
+- [x] `src/core/assistantBlueprint.ts` kibővítve — `fusionCard?: ContextFusionCard` mező, `buildContextFusionCard({ initGraphRag: false })` hívás az építőben
+- [x] `src/utils/llmPlanner.ts` kibővítve — `fusionContext?: string` opció a `generateExecutionPlan()` függvénybe; kontextus injektálás a prompt elé
+- [x] `src/services/BrowserCopilotSessionService.ts` kibővítve — `getFusionContext?: () => Promise<string>` dep; fusion-aware plan closure
+- [x] `src/server/routes/assistant.ts` — `GET /context-fusion` végpont hozzáadva
+- [x] `src/dashboard/lib/apiService.ts` — `ContextFusionCard` interfész, `fusionCard` mező, `getContextFusion()` függvény
+- [x] `src/dashboard/components/dashboard/AssistantBlueprintPanel.tsx` — 3 oszlopos fusion stats rács, `GitMerge`/`Network` ikonok
+- [x] `src/cli.ts` — `"Fúziós kontextus összefoglaló"` menüpont, `printFusionCard()` helper
+- [x] `myai/server.py` — 7 bare import cserélve `try/except` + `HAS_*` feature flag mintára
+- [x] `test/contextFusion.test.ts` — 14 Vitest unit teszt (happy path, alrendszer hibák, browser fallback)
+- [x] `npm run build` → 0 TypeScript hiba
+- [x] `npm run test:fast` → 218 tesztfájl, 1956 teszt ÁTMENT, 0 regresszió
+- [x] `CHANGELOG.md` frissítve
+- [x] `plan.md` frissítve
+
+## Opcionális/követő lépések
+
+- [ ] `myai/server.py` route handlerek: `if not HAS_RAG: raise HTTPException(503)` védelmi feltételek hozzáadása a `rag_service` / `refiner` használó végpontokhoz
+- [ ] BrowserCopilot session factory: `getFusionContext` alapértelmezett bekötése az inicializálásba (jelenleg opcionálisan kell `deps`-ben átadni)
+
+---
+
+## Korábbi CLI scripting és multi-agent orchestration — Elvégzett munkák
+
 - CLI: `workflow run` parancs hozzáadva (JSON/YAML támogatás, egyszerű `steps` → belső DAG konverzió, elsődleges endpoint: `/api/v1/workflow/run`, fallback: `/api/v1/tasks/workflow/run`).
 - Backend: `src/server/routes/workflow.ts` létrehozva — `/list`, `/status`, `/run` végpontok, delegál az `agentManager.executeWorkflow`-re és a `decomposeToDAGAsync`-re.
 - Tesztek/build: `npm run build` sikeres; manuális futtatás indított példaworkflow-t (status: running).
-- Todos: `copilot-cli-scripting` befejezve, `copilot-diagnostics-logging` függőben.
-
-Következő lépések (javasolt prioritás):
-1) Dashboard: `onMultiDispatch` callback összekötése backenddel, UI visszajelzés (progress, logs, result).
-2) Diagnosztika/logging: agent logok és CLI diagnosztika parancsok implementálása (`agents diagnostics`, `tasks diagnostics`).
-3) Async job model: `workflow/run` rövid válasszal indítsa a munkát (jobId), háttér feldolgozás + polling `/workflow/status` végpont.
-4) Tesztek: unit/e2e tesztek a CLI parsing és backend futtatásra; CI integráció.
-
-Döntés szükséges: melyik legyen a következő fókusz? (Dashboard integráció / Diagnosztika / Async job / Más)
