@@ -38,6 +38,14 @@ function isRecord(v: unknown): v is Record<string, unknown> {
   return typeof v === "object" && v !== null;
 }
 
+function writeLine(message = ""): void {
+  process.stdout.write(`${message}\n`);
+}
+
+function writeError(message = ""): void {
+  process.stderr.write(`${message}\n`);
+}
+
 async function apiFetch<T>(path: string, options?: RequestInit): Promise<T> {
   const url = `${API_BASE}/api/v1/tracks${path}`;
   const response = await fetch(url, {
@@ -74,7 +82,7 @@ async function chooseTrack(): Promise<TrackTodoSummary | null> {
 
   const tracks = (list.tracks || []).sort((a, b) => b.progress - a.progress);
   if (tracks.length === 0) {
-    console.log(
+    writeLine(
       chalk.yellow(
         "Nincs aktív track (vagy nincs meta.json status=active/in_progress).",
       ),
@@ -108,22 +116,22 @@ async function showTrackProgress() {
       `/${encodeURIComponent(chosen.trackId)}/todos`,
     );
 
-    console.log(chalk.bold(`\n📌 ${data.title}`));
-    console.log(
+    writeLine(chalk.bold(`\n📌 ${data.title}`));
+    writeLine(
       chalk.dim(
         `ID: ${data.trackId} | ${data.completedCount}/${data.totalCount} | updated: ${data.updatedAt}`,
       ),
     );
-    console.log(chalk.green(renderBar(data.progress)));
+    writeLine(chalk.green(renderBar(data.progress)));
 
     if (!data.todos.length) {
-      console.log(chalk.yellow("\nNincs checkbox TODO a track.md-ben."));
+      writeLine(chalk.yellow("\nNincs checkbox TODO a track.md-ben."));
       return;
     }
 
-    console.log("");
+    writeLine("");
     for (const t of data.todos) {
-      console.log(
+      writeLine(
         `${t.completed ? chalk.green("[x]") : chalk.gray("[ ]")} ${t.text} ${chalk.dim(`(${t.id})`)}`,
       );
     }
@@ -178,7 +186,7 @@ async function showTrackProgress() {
     }
   } catch (e: unknown) {
     spinner.fail("Hiba");
-    console.error(chalk.red(e instanceof Error ? e.message : String(e)));
+    writeError(chalk.red(e instanceof Error ? e.message : String(e)));
   }
 }
 
@@ -194,19 +202,19 @@ async function listAllProgress() {
 
     const tracks = (data.tracks || []).sort((a, b) => b.progress - a.progress);
     if (!tracks.length) {
-      console.log(chalk.yellow("Nincs aktív track."));
+      writeLine(chalk.yellow("Nincs aktív track."));
       return;
     }
 
-    console.log(chalk.bold("\n📈 Aktív track progress"));
+    writeLine(chalk.bold("\n📈 Aktív track progress"));
     for (const t of tracks) {
-      console.log(
+      writeLine(
         `${chalk.cyan(t.trackId)}\n  ${t.title}\n  ${renderBar(t.progress)}  ${chalk.dim(`${t.completedCount}/${t.totalCount}`)}\n`,
       );
     }
   } catch (e: unknown) {
     spinner.fail("Hiba");
-    console.error(chalk.red(e instanceof Error ? e.message : String(e)));
+    writeError(chalk.red(e instanceof Error ? e.message : String(e)));
   }
 }
 

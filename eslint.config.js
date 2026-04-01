@@ -33,6 +33,8 @@ export default tseslint.config(
       "todo_ops.py",
       "list_tables.py",
       "show_tasks_db_tables.py",
+      "tasks/**",
+      "n8n-mcp-server/dist/**",
     ],
   },
   {

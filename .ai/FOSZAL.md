@@ -1,6 +1,6 @@
 # FŐSZÁL - Egyesített Fejlesztési Napló
 
-**Generálva:** 2026-04-01 06:21
+**Generálva:** 2026-04-02 01:07
 **Script:** `scripts/sync_foszal.py`
 
 ---
@@ -29,6 +29,16 @@ start-full.bat
 ## Összesített Napló (Időrendben)
 
 ### 2026-04-01
+
+#### 10:00 - [Gemini] 🐛 E2E Test Driven Bugfixes (Frontend & Backend)
+- **Agent:** Gemini
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `src/dashboard/components/ThemeToggle.tsx`, `src/server/routes/index.ts`
+
+#### 10:00 - [Gemini] 🐛 E2E Test Driven Bugfixes (Frontend & Backend)
+- **Agent:** Gemini
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `src/dashboard/components/ThemeToggle.tsx`, `src/server/routes/index.ts`
 
 #### 06:15 - [Copilot] AutoGen GitHub Models pilot (Python MCP)
 - **Agent:** Copilot
@@ -751,7 +761,7 @@ start-full.bat
 | Agent | Bejegyzések | Utolsó Aktivitás |
 |-------|-------------|------------------|
 | Claude | 85 | 2026-03-31 |
-| Gemini | 17 | 2026-03-31 |
+| Gemini | 19 | 2026-04-01 |
 | Cursor | 0 | N/A |
 | Copilot | 22 | 2026-03-28 |
 

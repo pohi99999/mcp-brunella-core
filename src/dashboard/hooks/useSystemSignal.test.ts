@@ -1,50 +1,37 @@
-import { renderHook, act, waitFor } from '@testing-library/react';
+import { renderHook, act } from '@testing-library/react';
 import { useSystemSignal } from './useSystemSignal';
 import { useSystemSignalStore } from '../store/systemSignalStore';
-import { io as mockedIo, Socket as MockSocket } from 'socket.io-client';
-import * as apiService from '../lib/apiService';
 
-// Mock socket.io-client
-vi.mock('socket.io-client', () => {
-  const mockSocket = {
-    on: vi.fn(),
-    off: vi.fn(),
-    emit: vi.fn(),
-    disconnect: vi.fn(),
-    connected: false,
-    io: { on: vi.fn(), off: vi.fn() }, // Mock for manager events
-  };
-  return {
-    io: vi.fn(() => mockSocket),
-  };
-});
-
-// Mock apiService
-vi.mock('../lib/apiService', () => ({
-  getTasks: vi.fn(() => Promise.resolve({ tasks: [], total: 0, limit: 0, offset: 0 })),
-  getTaskStats: vi.fn(() => Promise.resolve({ total: 0, successCount: 0, errorCount: 0, pendingCount: 0, runningCount: 0, cancelledCount: 0, successRate: 0, avgDurationMs: 0, failedByAgent: [] })),
-  checkHealth: vi.fn(() => Promise.resolve({ status: 'HEALTHY', timestamp: '', services: {} })),
-  getDeveloperMetrics: vi.fn(() => Promise.resolve({ builds: {}, tests: {}, tasks: {}, ai: {}, history: [] })),
+// vi.hoisted() biztosítja, hogy a mock socket mindkét vi.mock() factory-ban elérhető legyen
+const mockSocket = vi.hoisted(() => ({
+  on: vi.fn(),
+  off: vi.fn(),
+  emit: vi.fn(),
+  disconnect: vi.fn(),
+  connected: false as boolean,
+  io: { on: vi.fn(), off: vi.fn() },
 }));
 
-const mockSocket = mockedIo() as MockSocket;
+// SocketContext mock – useSocket() NEM dob ProviderError-t
+vi.mock('../context/SocketContext', () => ({
+  useSocket: vi.fn(() => ({ socket: mockSocket })),
+  SocketContext: {},
+}));
+
+// socket.io-client mock (kötelező az implicit import-ok miatt)
+vi.mock('socket.io-client', () => ({
+  io: vi.fn(() => mockSocket),
+}));
 
 describe('useSystemSignal', () => {
   const initialStoreState = useSystemSignalStore.getState();
 
   beforeEach(() => {
-    // Reset Zustand store to initial state before each test
     useSystemSignalStore.setState(initialStoreState, true);
     vi.clearAllMocks();
-    vi.useFakeTimers();
   });
 
-  afterEach(() => {
-    vi.runOnlyPendingTimers();
-    vi.useRealTimers();
-  });
-
-  it('should initialize with default state', () => {
+  it('should return default state from store', () => {
     const { result } = renderHook(() => useSystemSignal());
 
     expect(result.current.isConnected).toBe(false);
@@ -53,202 +40,184 @@ describe('useSystemSignal', () => {
     expect(result.current.healthStatus).toBeNull();
     expect(result.current.error).toBeNull();
     expect(result.current.isLoading).toBe(false);
+    expect(result.current.agents).toBeInstanceOf(Map);
+    expect(result.current.chatter).toEqual([]);
+    expect(result.current.robotkezPlan).toBeNull();
+    expect(result.current.robotkezSteps).toEqual([]);
   });
 
-  it('should connect and disconnect WebSocket', async () => {
-    renderHook(() => useSystemSignal());
+  it('should return socket object from SocketContext', () => {
+    const { result } = renderHook(() => useSystemSignal());
 
-    // Simulate socket connect
-    act(() => {
-      mockSocket.on.mock.calls.find((call) => call[0] === 'connect')[1]();
-    });
-    await waitFor(() => expect(useSystemSignalStore.getState().isConnected).toBe(true));
-    expect(useSystemSignalStore.getState().logs[0].message).toContain('Socket csatlakozva');
-
-    // Simulate socket disconnect
-    act(() => {
-      mockSocket.on.mock.calls.find((call) => call[0] === 'disconnect')[1]('client disconnect');
-    });
-    await waitFor(() => expect(useSystemSignalStore.getState().isConnected).toBe(false));
-    expect(useSystemSignalStore.getState().logs[0].message).toContain('Socket bontva');
+    expect(result.current.socket).toBe(mockSocket);
   });
 
-  it('should update store on system:log event', async () => {
-    renderHook(() => useSystemSignal());
+  it('should reflect isConnected changes from store', () => {
+    const { result } = renderHook(() => useSystemSignal());
 
     act(() => {
-      mockSocket.on.mock.calls.find((call) => call[0] === 'system:log')[1]({
-        message: 'Test Log', type: 'info', source: 'Test'
+      useSystemSignalStore.getState().setConnected(true);
+    });
+
+    expect(result.current.isConnected).toBe(true);
+
+    act(() => {
+      useSystemSignalStore.getState().setConnected(false);
+    });
+
+    expect(result.current.isConnected).toBe(false);
+  });
+
+  it('should reflect logs added to store', () => {
+    const { result } = renderHook(() => useSystemSignal());
+
+    act(() => {
+      useSystemSignalStore.getState().addLog({ message: 'Teszt log', type: 'info', source: 'Test' });
+    });
+
+    expect(result.current.logs).toHaveLength(1);
+    expect(result.current.logs[0].message).toBe('Teszt log');
+    expect(result.current.logs[0].type).toBe('info');
+  });
+
+  it('should reflect agent status updates from store', () => {
+    const { result } = renderHook(() => useSystemSignal());
+
+    act(() => {
+      useSystemSignalStore.getState().updateAgentStatus('AgentX', 'working', 'Doing something');
+    });
+
+    expect(result.current.agents.get('AgentX')?.status).toBe('working');
+    expect(result.current.agents.get('AgentX')?.taskDescription).toBe('Doing something');
+  });
+
+  it('should reflect multiple agent statuses via setAllAgentStatuses', () => {
+    const { result } = renderHook(() => useSystemSignal());
+
+    act(() => {
+      useSystemSignalStore.getState().setAllAgentStatuses([
+        { name: 'AgentA', status: 'idle', lastUpdated: Date.now() },
+        { name: 'AgentB', status: 'working', taskDescription: 'task', lastUpdated: Date.now() },
+      ]);
+    });
+
+    expect(result.current.agents.get('AgentA')?.status).toBe('idle');
+    expect(result.current.agents.get('AgentB')?.status).toBe('working');
+  });
+
+  it('should reflect task updates from store', () => {
+    const { result } = renderHook(() => useSystemSignal());
+
+    const mockTask = {
+      id: 't1',
+      agentName: 'TestAgent',
+      taskDescription: 'Test Task',
+      status: 'running' as const,
+      priority: 'normal' as const,
+      createdAt: Date.now(),
+      type: 'agent' as const,
+    };
+
+    act(() => {
+      useSystemSignalStore.getState().setTasks([mockTask]);
+    });
+
+    expect(result.current.tasks).toHaveLength(1);
+    expect(result.current.tasks[0].id).toBe('t1');
+  });
+
+  it('should reflect healthStatus updates from store', () => {
+    const { result } = renderHook(() => useSystemSignal());
+
+    act(() => {
+      useSystemSignalStore.getState().setHealthStatus({
+        status: 'HEALTHY',
+        timestamp: '2026-01-01T00:00:00Z',
+        services: {},
       });
     });
 
-    await waitFor(() => {
-      const logs = useSystemSignalStore.getState().logs;
-      expect(logs).toHaveLength(1);
-      expect(logs[0].message).toBe('Test Log');
-    });
+    expect(result.current.healthStatus?.status).toBe('HEALTHY');
   });
 
-  it('should update store on agent:chatter event', async () => {
-    renderHook(() => useSystemSignal());
+  it('should reflect error state from store', () => {
+    const { result } = renderHook(() => useSystemSignal());
 
     act(() => {
-      mockSocket.on.mock.calls.find((call) => call[0] === 'agent:chatter')[1]({
-        sender: 'AgentX', message: 'Hello', timestamp: 123
-      });
+      useSystemSignalStore.getState().setError('Valami hiba történt');
     });
 
-    await waitFor(() => {
-      const chatter = useSystemSignalStore.getState().chatter;
-      expect(chatter).toHaveLength(1);
-      expect(chatter[0].sender).toBe('AgentX');
-    });
-  });
-
-  it('should update store on agent:update event', async () => {
-    renderHook(() => useSystemSignal());
+    expect(result.current.error).toBe('Valami hiba történt');
 
     act(() => {
-      mockSocket.on.mock.calls.find((call) => call[0] === 'agent:update')[1]({
-        agentName: 'AgentY', status: 'working', taskDescription: 'Doing something'
-      });
+      useSystemSignalStore.getState().setError(null);
     });
 
-    await waitFor(() => {
-      const agents = useSystemSignalStore.getState().agents;
-      expect(agents.get('AgentY')?.status).toBe('working');
-      expect(agents.get('AgentY')?.taskDescription).toBe('Doing something');
-    });
+    expect(result.current.error).toBeNull();
   });
 
-  it('should handle robotkez:plan and robotkez:step events', async () => {
-    renderHook(() => useSystemSignal());
+  it('should reflect isLoading state from store', () => {
+    const { result } = renderHook(() => useSystemSignal());
 
-    const mockPlan: RobotkezPlan = {
-      taskId: '123',
+    act(() => {
+      useSystemSignalStore.getState().setLoading(true);
+    });
+
+    expect(result.current.isLoading).toBe(true);
+
+    act(() => {
+      useSystemSignalStore.getState().setLoading(false);
+    });
+
+    expect(result.current.isLoading).toBe(false);
+  });
+
+  it('should reflect cleared state after clearAllData', () => {
+    const { result } = renderHook(() => useSystemSignal());
+
+    // Feltöltjük az állapotot
+    act(() => {
+      useSystemSignalStore.getState().addLog({ message: 'Teszt', type: 'info', source: 'Test' });
+      useSystemSignalStore.getState().setConnected(true);
+      useSystemSignalStore.getState().setError('hiba');
+    });
+
+    expect(result.current.logs).toHaveLength(1);
+    expect(result.current.isConnected).toBe(true);
+
+    // clearAllData visszaállítja az alapállapotot
+    act(() => {
+      useSystemSignalStore.getState().clearAllData();
+    });
+
+    expect(result.current.logs).toHaveLength(0);
+    expect(result.current.isConnected).toBe(false);
+    expect(result.current.error).toBeNull();
+  });
+
+  it('should reflect robotkez plan and steps from store', () => {
+    const { result } = renderHook(() => useSystemSignal());
+
+    expect(result.current.robotkezPlan).toBeNull();
+    expect(result.current.robotkezSteps).toEqual([]);
+
+    const mockPlan = {
+      taskId: 'rk-123',
       plan: {
         plan: [
-          { action: 'navigate', description: 'Go to URL' },
-          { action: 'click', description: 'Click button' },
+          { action: 'navigate', description: 'Navigáció URL-re' },
+          { action: 'click', description: 'Gomb kattintás' },
         ],
-        estimatedDuration: 100,
+        estimatedDuration: 60,
       },
     };
 
     act(() => {
-      mockSocket.on.mock.calls.find((call) => call[0] === 'robotkez:plan')[1](mockPlan);
+      useSystemSignalStore.getState().setRobotkezPlan(mockPlan);
     });
 
-    await waitFor(() => {
-      const state = useSystemSignalStore.getState();
-      expect(state.robotkezPlan).toEqual(mockPlan);
-      expect(state.robotkezSteps).toHaveLength(2);
-      expect(state.robotkezSteps[0].status).toBe('pending');
-    });
-
-    act(() => {
-      mockSocket.on.mock.calls.find((call) => call[0] === 'robotkez:step')[1]({
-        index: 0, status: 'completed', screenshot: 'data:image/png;base64...'
-      });
-    });
-
-    await waitFor(() => {
-      const state = useSystemSignalStore.getState();
-      expect(state.robotkezSteps[0].status).toBe('completed');
-      expect(state.robotkezSteps[0].screenshot).toBeDefined();
-    });
-  });
-
-  it('should clear robotkez state on robotkez:aborted', async () => {
-    renderHook(() => useSystemSignal());
-
-    act(() => {
-      mockSocket.on.mock.calls.find((call) => call[0] === 'robotkez:aborted')[1]();
-    });
-
-    await waitFor(() => {
-      const state = useSystemSignalStore.getState();
-      expect(state.robotkezPlan).toBeNull();
-      expect(state.robotkezSteps).toEqual([]);
-    });
-  });
-
-  it('should fetch data via REST polling when not connected', async () => {
-    // Ensure socket is mocked as disconnected initially
-    (mockSocket as any).connected = false;
-
-    const { result } = renderHook(() => useSystemSignal());
-
-    // Advance timers for initial fetch
-    act(() => { vi.advanceTimersByTime(0); });
-
-    await waitFor(() => {
-      expect(apiService.getTasks).toHaveBeenCalledTimes(1);
-      expect(apiService.getTaskStats).toHaveBeenCalledTimes(1);
-      expect(apiService.checkHealth).toHaveBeenCalledTimes(1);
-      expect(apiService.getDeveloperMetrics).toHaveBeenCalledTimes(1);
-    });
-
-    // Simulate subsequent polling
-    act(() => { vi.advanceTimersByTime(5000); });
-
-    await waitFor(() => {
-      expect(apiService.getTasks).toHaveBeenCalledTimes(2);
-      expect(apiService.getTaskStats).toHaveBeenCalledTimes(2);
-    });
-  });
-
-  it('should fetch data via REST polling when options.enablePolling is true', async () => {
-    // Simulate socket connected to ensure it's the options that trigger polling
-    act(() => {
-      mockSocket.on.mock.calls.find((call) => call[0] === 'connect')[1]();
-    });
-    await waitFor(() => expect(useSystemSignalStore.getState().isConnected).toBe(true));
-
-    const { result } = renderHook(() => useSystemSignal({ enablePolling: true, pollingInterval: 1000 }));
-
-    // Advance timers for initial fetch
-    act(() => { vi.advanceTimersByTime(0); });
-
-    await waitFor(() => {
-      expect(apiService.getTasks).toHaveBeenCalledTimes(1);
-      expect(apiService.getTaskStats).toHaveBeenCalledTimes(1);
-    });
-
-    // Simulate subsequent polling
-    act(() => { vi.advanceTimersByTime(1000); });
-
-    await waitFor(() => {
-      expect(apiService.getTasks).toHaveBeenCalledTimes(2);
-      expect(apiService.getTaskStats).toHaveBeenCalledTimes(2);
-    });
-  });
-
-  it('should set error state if WebSocket connection fails', async () => {
-    renderHook(() => useSystemSignal());
-
-    act(() => {
-      mockSocket.on.mock.calls.find((call) => call[0] === 'connect_error')[1](new Error('Connection refused'));
-    });
-
-    await waitFor(() => {
-      expect(useSystemSignalStore.getState().error).toBe('Connection refused');
-      expect(useSystemSignalStore.getState().logs[0].message).toContain('Socket kapcsolódási hiba');
-    });
-  });
-
-  it('should set error state if REST API call fails', async () => {
-    // Mock an API service to reject
-    (apiService.getTasks as vi.Mock).mockRejectedValueOnce(new Error('Failed to fetch tasks'));
-
-    renderHook(() => useSystemSignal());
-
-    // Advance timers for initial fetch
-    act(() => { vi.advanceTimersByTime(0); });
-
-    await waitFor(() => {
-      expect(useSystemSignalStore.getState().error).toBe('Failed to fetch tasks');
-      expect(useSystemSignalStore.getState().logs[0].message).toContain('REST adatlekérdezési hiba');
-    });
+    expect(result.current.robotkezPlan?.taskId).toBe('rk-123');
+    expect(result.current.robotkezSteps).toHaveLength(2);
+    expect(result.current.robotkezSteps[0].status).toBe('pending');
   });
 });

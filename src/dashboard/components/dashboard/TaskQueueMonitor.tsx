@@ -67,7 +67,7 @@ export function TaskQueueMonitor() {
             setTotal(tasksRes.total)
             setStats(statsRes.stats)
         } catch (err: any) {
-            toast.error(`Nem sikerült betölteni az adatokat: ${err.message}`)
+            toast.error(`Fetch error: ${err.message}`)
         } finally {
             setLoading(false)
         }
@@ -75,18 +75,18 @@ export function TaskQueueMonitor() {
 
     useEffect(() => {
         fetchData()
-        const interval = setInterval(fetchData, 5000) // Refresh every 5s
+        const interval = setInterval(fetchData, 5000)
         return () => clearInterval(interval)
     }, [page])
 
     const handleExecuteNext = async () => {
         setExecuting(true)
         try {
-            const result = await executePendingTask()
-            toast.success('Feladat végrehajtása elindult')
+            await executePendingTask()
+            toast.success('Task execution initialized')
             fetchData()
         } catch (err: any) {
-            toast.error(`Végrehajtási hiba: ${err.message}`)
+            toast.error(`Execution error: ${err.message}`)
         } finally {
             setExecuting(false)
         }
@@ -95,185 +95,138 @@ export function TaskQueueMonitor() {
     const handleCancel = async (taskId: number) => {
         try {
             await cancelTask(taskId)
-            toast.info('Feladat visszavonva')
+            toast.info('Task cancelled')
             fetchData()
         } catch (err: any) {
-            toast.error(`Hiba: ${err.message}`)
+            toast.error(`Error: ${err.message}`)
         }
     }
 
     const handleRetry = async (taskId: number) => {
         try {
             await retryTask(taskId)
-            toast.success('Feladat újra sorba állítva')
+            toast.success('Task re-queued')
             fetchData()
         } catch (err: any) {
-            toast.error(`Hiba: ${err.message}`)
+            toast.error(`Error: ${err.message}`)
         }
     }
 
     const getStatusBadge = (status: TaskItem['status']) => {
         switch (status) {
             case 'done':
-                return <Badge variant="outline" className="bg-green-500/10 text-green-500 gap-1 border-green-500/20"><CheckCircle2 size={12} /> Done</Badge>
+                return <Badge variant="outline" className="bg-emerald-500/10 text-emerald-400 gap-1 border-emerald-500/20 text-[9px] uppercase tracking-tighter"><CheckCircle2 size={10} /> DONE</Badge>
             case 'running':
-                return <Badge variant="outline" className="bg-blue-500/10 text-blue-500 gap-1 border-blue-500/20 animate-pulse"><PlayCircle size={12} /> Running</Badge>
+                return <Badge variant="outline" className="bg-cyan-500/10 text-cyan-400 gap-1 border-cyan-500/20 animate-pulse text-[9px] uppercase tracking-tighter"><PlayCircle size={10} /> RUN</Badge>
             case 'error':
-                return <Badge variant="destructive" className="gap-1"><AlertCircle size={12} /> Error</Badge>
+                return <Badge variant="destructive" className="gap-1 text-[9px] uppercase tracking-tighter bg-rose-500/20 text-rose-400 border-rose-500/30"><AlertCircle size={10} /> FAIL</Badge>
             case 'cancelled':
-                return <Badge variant="secondary" className="gap-1 text-zinc-500"><XCircle size={12} /> Cancelled</Badge>
+                return <Badge variant="secondary" className="gap-1 text-zinc-500 text-[9px] uppercase tracking-tighter"><XCircle size={10} /> VOID</Badge>
             default:
-                return <Badge variant="secondary" className="gap-1"><Clock size={12} /> Pending</Badge>
+                return <Badge variant="secondary" className="gap-1 text-zinc-400 text-[9px] uppercase tracking-tighter"><Clock size={10} /> WAIT</Badge>
         }
     }
 
     const totalPages = Math.ceil(total / limit)
 
   return (
-    <div className="h-full flex flex-col overflow-hidden gap-5">
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+    <div className="h-full flex flex-col overflow-hidden gap-4">
+      {/* ── Mini Stats ── */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 px-1">
         {[
-          {
-            label: "Total Tasks",
-            value: stats?.total || 0,
-            detail: `Success ${stats?.successRate || 0}%`,
-            accent: "text-cyan-300",
-          },
-          {
-            label: "Pending / Running",
-            value: `${stats?.pendingCount || 0} / ${stats?.runningCount || 0}`,
-            detail: "Queue depth",
-            accent: "text-blue-300",
-          },
-          {
-            label: "Success / Error",
-            value: `${stats?.successCount || 0} / ${stats?.errorCount || 0}`,
-            detail: "Completion status",
-            accent: "text-emerald-300",
-          },
-          {
-            label: "Avg Duration",
-            value: `${stats?.avgDurationMs || 0}ms`,
-            detail: "Per task",
-            accent: "text-violet-300",
-          },
+          { label: "Throughput", value: stats?.total || 0, color: "cyan" },
+          { label: "Active Nodes", value: `${stats?.pendingCount || 0}/${stats?.runningCount || 0}`, color: "blue" },
+          { label: "Success Rate", value: `${stats?.successRate || 0}%`, color: "emerald" },
+          { label: "Latency", value: `${stats?.avgDurationMs || 0}ms`, color: "violet" },
         ].map((stat) => (
-          <Card key={stat.label} className="glass-card border-white/10 overflow-hidden">
-            <CardHeader className="pb-2 pt-3 px-4">
-              <CardTitle className="text-[10px] font-mono uppercase tracking-[0.24em] text-zinc-500">
-                {stat.label}
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="px-4 pb-4">
-              <div className={cn("text-2xl font-semibold font-mono tracking-tight", stat.accent)}>
-                {stat.value}
-              </div>
-              <p className="text-[10px] uppercase tracking-[0.22em] text-zinc-500 mt-1">
-                {stat.detail}
-              </p>
-            </CardContent>
-          </Card>
+          <div key={stat.label} className="bg-zinc-900/40 border border-white/[0.03] rounded-lg px-4 py-3 shadow-sm">
+            <p className="text-[8px] font-bold uppercase tracking-[0.2em] text-zinc-500 mb-1">{stat.label}</p>
+            <p className={cn("text-lg font-bold font-mono tracking-tighter", `text-${stat.color}-400/90`)}>{stat.value}</p>
+          </div>
         ))}
       </div>
 
-      <Card className="glass-card border-white/10 overflow-hidden">
-        <CardHeader className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between pb-4 px-4 pt-4">
-          <div className="space-y-1">
-            <CardTitle className="text-[11px] font-mono font-semibold tracking-[0.24em] uppercase text-zinc-300 flex items-center gap-2">
-              <ListTodo className="text-cyan-300" size={15} />
-              Task Queue
-            </CardTitle>
-            <CardDescription className="text-sm text-zinc-500">
-              Real-time view of agent task execution queue
-            </CardDescription>
+      <Card className="flex-1 bg-zinc-950/20 backdrop-blur-xl border-white/[0.04] rounded-xl overflow-hidden flex flex-col shadow-2xl">
+        <CardHeader className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between px-5 py-4 border-b border-white/[0.03]">
+          <div className="flex items-center gap-3">
+            <div className="p-1.5 rounded-md bg-white/[0.03] border border-white/[0.05]">
+              <ListTodo size={14} className="text-cyan-400" />
+            </div>
+            <div>
+              <h3 className="text-[10px] font-bold tracking-[0.2em] text-zinc-200 uppercase leading-none">Task Stream</h3>
+              <p className="text-[9px] text-zinc-500 font-mono mt-1 leading-none uppercase tracking-widest">Job Processor</p>
+            </div>
           </div>
 
           <Button
             onClick={handleExecuteNext}
             disabled={executing || !stats?.pendingCount}
-            className="gap-2 bg-cyan-500/15 hover:bg-cyan-500/25 text-cyan-100 border border-cyan-300/20 shadow-[0_0_24px_rgba(34,211,238,0.08)]"
+            size="sm"
+            className="h-8 px-4 bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 border border-cyan-500/20 text-[10px] font-bold uppercase tracking-wider transition-all"
           >
-            {executing ? <Loader2 className="w-4 h-4 animate-spin" /> : <Play className="w-4 h-4" />}
-            Execute Next Pending
+            {executing ? <Loader2 className="w-3 h-3 animate-spin mr-2" /> : <Play className="w-3 h-3 mr-2" />}
+            Execute Next
           </Button>
         </CardHeader>
-        <CardContent className="p-0">
-          <div className="overflow-x-auto">
+        
+        <CardContent className="p-0 flex-1 overflow-hidden">
+          <div className="h-full overflow-x-auto custom-scrollbar">
             <Table>
-              <TableHeader className="bg-white/[0.02]">
-                <TableRow className="border-white/[0.05] hover:bg-transparent">
-                  <TableHead className="w-[60px] text-[10px] uppercase tracking-[0.24em] text-zinc-500">ID</TableHead>
-                  <TableHead className="text-[10px] uppercase tracking-[0.24em] text-zinc-500">Agent</TableHead>
-                  <TableHead className="max-w-[300px] text-[10px] uppercase tracking-[0.24em] text-zinc-500">Description</TableHead>
-                  <TableHead className="text-[10px] uppercase tracking-[0.24em] text-zinc-500">Status</TableHead>
-                  <TableHead className="text-[10px] uppercase tracking-[0.24em] text-zinc-500">Created</TableHead>
-                  <TableHead className="text-right text-[10px] uppercase tracking-[0.24em] text-zinc-500">Actions</TableHead>
+              <TableHeader className="bg-white/[0.01]">
+                <TableRow className="border-white/[0.03] hover:bg-transparent">
+                  <TableHead className="w-[60px] text-[9px] font-bold uppercase tracking-[0.2em] text-zinc-500 pl-5">ID</TableHead>
+                  <TableHead className="text-[9px] font-bold uppercase tracking-[0.2em] text-zinc-500">Agent</TableHead>
+                  <TableHead className="text-[9px] font-bold uppercase tracking-[0.2em] text-zinc-500">Operation</TableHead>
+                  <TableHead className="text-[9px] font-bold uppercase tracking-[0.2em] text-zinc-500">Status</TableHead>
+                  <TableHead className="text-right text-[9px] font-bold uppercase tracking-[0.2em] text-zinc-500 pr-5">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {loading && tasks.length === 0 ? (
-                  <TableRow>
-                    <TableCell colSpan={6} className="h-32 text-center text-zinc-500">
-                      <div className="flex items-center justify-center gap-2">
-                        <Loader2 className="w-4 h-4 animate-spin" /> Betöltés...
-                      </div>
-                    </TableCell>
-                  </TableRow>
+                  <TableRow><TableCell colSpan={5} className="h-32 text-center text-[10px] text-zinc-600 font-mono">LOADING_SEQUENCE...</TableCell></TableRow>
                 ) : tasks.length === 0 ? (
-                  <TableRow>
-                    <TableCell colSpan={6} className="h-32 text-center text-zinc-500 italic">
-                      Nincsenek feladatok a várólistán.
-                    </TableCell>
-                  </TableRow>
+                  <TableRow><TableCell colSpan={5} className="h-32 text-center text-[10px] text-zinc-600 font-mono uppercase tracking-widest">Queue_Empty</TableCell></TableRow>
                 ) : (
                   tasks.map((task) => (
-                    <TableRow key={task.id} className="border-white/[0.04] hover:bg-white/[0.03] transition-colors">
-                      <TableCell className="font-mono text-xs text-zinc-500">#{task.id}</TableCell>
+                    <TableRow key={task.id} className="border-white/[0.02] hover:bg-white/[0.015] transition-colors group">
+                      <TableCell className="font-mono text-[10px] text-zinc-500 pl-5">#{task.id}</TableCell>
                       <TableCell>
-                        <Badge variant="outline" className="font-mono text-[10px] border-white/10 bg-white/[0.02]">
-                          {task.agent}
-                        </Badge>
+                        <span className="text-[10px] font-bold text-zinc-300 uppercase tracking-tight">{task.agent}</span>
                       </TableCell>
-                      <TableCell className="max-w-[300px] truncate group">
-                        <span className="text-sm font-medium text-zinc-100" title={task.task}>{task.task}</span>
+                      <TableCell className="max-w-[200px] truncate">
+                        <span className="text-[11px] text-zinc-400 group-hover:text-zinc-200 transition-colors" title={task.task}>{task.task}</span>
                       </TableCell>
                       <TableCell>{getStatusBadge(task.status)}</TableCell>
-                      <TableCell className="text-xs text-zinc-500 font-mono">
-                        {format(new Date(task.created_at), 'HH:mm:ss')}
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <div className="flex justify-end gap-1">
+                      <TableCell className="text-right pr-5">
+                        <div className="flex justify-end gap-1 opacity-40 group-hover:opacity-100 transition-opacity">
+                          <Button
+                            variant="ghost" size="icon"
+                            aria-label="View task details"
+                            className="h-7 w-7 text-zinc-500 hover:text-white hover:bg-white/5"
+                            onClick={() => setSelectedTask(task)}
+                          >
+                            <Eye size={12} />
+                          </Button>
                           {(task.status === 'pending' || task.status === 'running') && (
                             <Button
                               variant="ghost" size="icon"
-                              className="h-8 w-8 text-zinc-500 hover:text-destructive hover:bg-white/[0.03]"
-                              onClick={() => handleCancel(task.id)}
-                              title="Cancel task"
                               aria-label="Cancel task"
+                              className="h-7 w-7 text-zinc-500 hover:text-rose-400 hover:bg-white/5"
+                              onClick={() => handleCancel(task.id)}
                             >
-                              <XCircle size={14} />
+                              <XCircle size={12} />
                             </Button>
                           )}
                           {(task.status === 'error' || task.status === 'cancelled') && (
                             <Button
                               variant="ghost" size="icon"
-                              className="h-8 w-8 text-zinc-500 hover:text-cyan-300 hover:bg-white/[0.03]"
-                              onClick={() => handleRetry(task.id)}
-                              title="Retry task"
                               aria-label="Retry task"
+                              className="h-7 w-7 text-zinc-500 hover:text-cyan-400 hover:bg-white/5"
+                              onClick={() => handleRetry(task.id)}
                             >
-                              <RotateCw size={14} />
+                              <RotateCw size={12} />
                             </Button>
                           )}
-                          <Button
-                            variant="ghost" size="icon"
-                            className="h-8 w-8 text-zinc-500 hover:text-foreground hover:bg-white/[0.03]"
-                            onClick={() => setSelectedTask(task)}
-                            title="View task details"
-                            aria-label="View task details"
-                          >
-                            <Eye size={14} />
-                          </Button>
                         </div>
                       </TableCell>
                     </TableRow>
@@ -282,72 +235,79 @@ export function TaskQueueMonitor() {
               </TableBody>
             </Table>
           </div>
-
-          {totalPages > 1 && (
-            <div className="flex items-center justify-between px-4 py-4 border-t border-white/[0.04] bg-white/[0.015]">
-              <p className="text-xs text-zinc-500">
-                Page {page} of {totalPages}
-              </p>
-              <div className="flex gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setPage(p => Math.max(1, p - 1))}
-                  disabled={page === 1}
-                  className="h-8 border-white/10 bg-white/[0.02] hover:bg-white/[0.05]"
-                >
-                  <ChevronLeft size={14} className="mr-1" /> Prev
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setPage(p => Math.min(totalPages, p + 1))}
-                  disabled={page === totalPages}
-                  className="h-8 border-white/10 bg-white/[0.02] hover:bg-white/[0.05]"
-                >
-                  Next <ChevronRight size={14} className="ml-1" />
-                </Button>
-              </div>
-            </div>
-          )}
         </CardContent>
+
+        <div className="px-5 py-3 border-t border-white/[0.03] bg-white/[0.01] flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <span className="text-[8px] font-bold text-zinc-600 uppercase tracking-widest font-mono">Sequence Control</span>
+            <span className="text-[9px] text-zinc-500 font-mono">PAGE {page}/{totalPages || 1}</span>
+          </div>
+          <div className="flex gap-1.5">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setPage(p => Math.max(1, p - 1))}
+              disabled={page === 1}
+              className="h-6 px-2 text-[9px] text-zinc-500 hover:text-white hover:bg-white/5 uppercase font-bold"
+            >
+              Prev
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+              disabled={page === totalPages || totalPages === 0}
+              className="h-6 px-2 text-[9px] text-zinc-500 hover:text-white hover:bg-white/5 uppercase font-bold"
+            >
+              Next
+            </Button>
+          </div>
+        </div>
       </Card>
 
       <Dialog open={!!selectedTask} onOpenChange={(open) => !open && setSelectedTask(null)}>
-        <DialogContent className="max-w-2xl glass-card border-white/10">
+        <DialogContent className="max-w-2xl bg-zinc-950 border-white/[0.05] shadow-2xl">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 text-white">
-              <span className="text-zinc-500">#{selectedTask?.id}</span>
-              {selectedTask?.task}
+            <DialogTitle className="flex items-center gap-3 text-zinc-100 text-base">
+              <div className="p-1 rounded bg-white/[0.03] border border-white/[0.05]">
+                <ListTodo size={14} className="text-cyan-400" />
+              </div>
+              <span>Job Details <span className="text-zinc-600 ml-1">#{selectedTask?.id}</span></span>
             </DialogTitle>
-            <DialogDescription className="flex items-center gap-4 pt-2 text-zinc-500">
-              <Badge variant="outline" className="border-white/10">{selectedTask?.agent}</Badge>
+            <div className="flex items-center gap-3 mt-4 px-1">
+              <div className="px-2 py-0.5 rounded-[2px] bg-white/[0.03] border border-white/[0.05]">
+                <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-tight">{selectedTask?.agent}</span>
+              </div>
               {selectedTask && getStatusBadge(selectedTask.status)}
-              <span className="text-xs text-zinc-500 font-mono">
-                Created: {selectedTask?.created_at && format(new Date(selectedTask.created_at), 'yyyy-MM-dd HH:mm:ss')}
-              </span>
-            </DialogDescription>
+            </div>
           </DialogHeader>
 
-          <div className="grid gap-4 py-4">
+          <div className="grid gap-5 py-4">
             <div className="space-y-2">
-              <h4 className="text-sm font-medium leading-none text-zinc-200">Context</h4>
-              <ScrollArea className="h-[100px] w-full rounded-xl border border-white/10 p-4 bg-white/[0.02] font-mono text-xs">
+              <h4 className="text-[10px] font-bold uppercase tracking-widest text-zinc-500">Instruction</h4>
+              <div className="rounded-lg border border-white/[0.03] p-4 bg-zinc-900/50 font-mono text-[11px] text-zinc-300 leading-relaxed">
+                {selectedTask?.task}
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <h4 className="text-[10px] font-bold uppercase tracking-widest text-zinc-500">Context Pipeline</h4>
+              <ScrollArea className="h-[120px] w-full rounded-lg border border-white/[0.03] p-4 bg-zinc-900/50 font-mono text-[10px] text-zinc-400">
                 {selectedTask?.context ? (
                   <pre className="whitespace-pre-wrap">{selectedTask.context}</pre>
                 ) : (
-                  <span className="text-zinc-500 italic">No context provided</span>
+                  <span className="italic opacity-50">Empty sequence...</span>
                 )}
               </ScrollArea>
             </div>
 
             <div className="space-y-2">
-              <h4 className="text-sm font-medium leading-none text-zinc-200">Result</h4>
-              <ScrollArea className="h-[200px] w-full rounded-xl border border-white/10 p-4 bg-white/[0.02] font-mono text-xs">
+              <h4 className="text-[10px] font-bold uppercase tracking-widest text-zinc-500">Return Data</h4>
+              <ScrollArea className="h-[180px] w-full rounded-lg border border-white/[0.03] p-4 bg-zinc-900/50 font-mono text-[10px] text-zinc-400">
                 {selectedTask?.result ? (
                   <pre className="whitespace-pre-wrap">{selectedTask.result}</pre>
                 ) : (
-                  <span className="text-zinc-500 italic">No result available</span>
+                  <span className="italic opacity-50">No data returned.</span>
                 )}
               </ScrollArea>
             </div>

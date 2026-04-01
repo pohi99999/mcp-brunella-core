@@ -210,6 +210,36 @@ export class MatchingAgent implements IAgent {
     return null;
   }
 
+  /**
+   * Attempts to find a combination of invoices that sum up to the bank transaction amount.
+   * Simple version: try all combinations of 2 invoices.
+   */
+  private findMultiMatch(bankTx: BankMatchInput, pendingInvoices: MatchableInvoice[]): MatchResult[] | null {
+    const TOLERANCE = 5; // HUF
+    const targetAmount = bankTx.amount;
+
+    // Filter invoices by partner if possible to reduce search space
+    const partnerInvoices = pendingInvoices.filter(inv => 
+      inv.partner.toLowerCase().includes(bankTx.partner.toLowerCase()) ||
+      bankTx.partner.toLowerCase().includes(inv.partner.toLowerCase())
+    );
+
+    // Try combinations of 2
+    for (let i = 0; i < partnerInvoices.length; i++) {
+      for (let j = i + 1; j < partnerInvoices.length; j++) {
+        const sum = partnerInvoices[i].amount + partnerInvoices[j].amount;
+        if (Math.abs(sum - targetAmount) <= TOLERANCE) {
+          return [
+            { invoice: partnerInvoices[i], confidence: 90, type: 'HARD_MATCH' },
+            { invoice: partnerInvoices[j], confidence: 90, type: 'HARD_MATCH' }
+          ];
+        }
+      }
+    }
+
+    return null;
+  }
+
   async executeTask(context: AgentContext): Promise<AgentResult> {
     try {
       const pendingBank = getPendingTransactions('BankAgent');
@@ -265,9 +295,29 @@ export class MatchingAgent implements IAgent {
           );
           matched++;
         } else {
-          updateTransaction(tx.id, { status: 'UNMATCHED' });
-          this.persistEvent(runId, tx.id, 'UNMATCHED', null);
-          manual++;
+          // Attempt multi-match
+          const multiMatches = this.findMultiMatch(bankTx, invoices);
+          if (multiMatches) {
+            updateTransaction(tx.id, {
+              status: 'COMPLETED',
+              matchedInvoice: multiMatches.map(m => m.invoice.invoiceNumber).join(','),
+            });
+            
+            for (const m of multiMatches) {
+              if (m.invoice.originalTransaction) {
+                updateTransaction(m.invoice.originalTransaction.id, {
+                  status: 'COMPLETED',
+                  matchedInvoice: tx.id,
+                });
+              }
+              this.persistEvent(runId, tx.id, 'MATCHED', m);
+            }
+            matched++;
+          } else {
+            updateTransaction(tx.id, { status: 'UNMATCHED' });
+            this.persistEvent(runId, tx.id, 'UNMATCHED', null);
+            manual++;
+          }
         }
       }
 

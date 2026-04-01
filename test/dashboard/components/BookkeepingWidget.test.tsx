@@ -3,6 +3,7 @@ import { act, fireEvent, render, screen, waitFor } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { BookkeepingWidget } from "@/components/dashboard/BookkeepingWidget";
 import * as api from "@/lib/apiService";
+import { toast } from "sonner";
 
 vi.mock( "@/lib/apiService", () => ( {
   executeAgent: vi.fn(),
@@ -21,6 +22,13 @@ const mockedApi = api as unknown as {
   executeAgent: ReturnType<typeof vi.fn>;
   getBookkeepingStatus: ReturnType<typeof vi.fn>;
 };
+
+type ToastMock = {
+  info: ReturnType<typeof vi.fn>;
+  success: ReturnType<typeof vi.fn>;
+  error: ReturnType<typeof vi.fn>;
+};
+const mockedToast = toast as unknown as ToastMock;
 
 const statusResponse = {
   success: true,
@@ -154,5 +162,100 @@ describe( "BookkeepingWidget", () =>
     expect( screen.getByText( "42" ) ).toBeInTheDocument();
     expect( screen.getByText( "41" ) ).toBeInTheDocument();
     expect( screen.getByText( "13" ) ).toBeInTheDocument();
+  } );
+
+  describe( "error handling", () =>
+  {
+    it( "silently hides the live status panel when getBookkeepingStatus fails", async () =>
+    {
+      mockedApi.getBookkeepingStatus.mockRejectedValue( new Error( "API down" ) );
+      await act( async () =>
+      {
+        render( <BookkeepingWidget /> );
+      } );
+      await waitFor( () => expect( mockedApi.getBookkeepingStatus ).toHaveBeenCalled() );
+      expect( screen.queryByText( "Élő állapot" ) ).not.toBeInTheDocument();
+      expect( mockedToast.error ).not.toHaveBeenCalled();
+    } );
+
+    it( "sets status to ERROR and shows toast when NavAgent throws", async () =>
+    {
+      mockedApi.getBookkeepingStatus.mockResolvedValue( statusResponse );
+      mockedApi.executeAgent.mockRejectedValue( new Error( "NavAgent crash" ) );
+
+      await act( async () =>
+      {
+        render( <BookkeepingWidget /> );
+      } );
+      await screen.findByText( "1234" );
+
+      await act( async () =>
+      {
+        fireEvent.click( screen.getByRole( "button", { name: "Párosítás Futtatása" } ) );
+      } );
+
+      await waitFor( () =>
+      {
+        expect( mockedToast.error ).toHaveBeenCalledWith(
+          "Sikertelen folyamat: NavAgent crash",
+        );
+      } );
+      expect( screen.getByText( "ERROR" ) ).toBeInTheDocument();
+    } );
+
+    it( "sets status to ERROR when MatchingAgent returns success: false", async () =>
+    {
+      mockedApi.getBookkeepingStatus.mockResolvedValue( statusResponse );
+      mockedApi.executeAgent
+        .mockResolvedValueOnce( { success: true } )
+        .mockResolvedValueOnce( { success: true } )
+        .mockResolvedValueOnce( { success: false, message: "Párosítás sikertelen" } );
+
+      await act( async () =>
+      {
+        render( <BookkeepingWidget /> );
+      } );
+      await screen.findByText( "1234" );
+
+      await act( async () =>
+      {
+        fireEvent.click( screen.getByRole( "button", { name: "Párosítás Futtatása" } ) );
+      } );
+
+      await waitFor( () =>
+      {
+        expect( mockedToast.error ).toHaveBeenCalledWith(
+          "Sikertelen folyamat: Párosítás sikertelen",
+        );
+      } );
+      expect( screen.getByText( "ERROR" ) ).toBeInTheDocument();
+    } );
+
+    it( "disables the reconciliation button while the workflow is running", async () =>
+    {
+      mockedApi.getBookkeepingStatus.mockResolvedValue( statusResponse );
+      let resolveNav!: ( v: { success: boolean } ) => void;
+      mockedApi.executeAgent.mockImplementationOnce(
+        () => new Promise<{ success: boolean }>( ( res ) => { resolveNav = res; } ),
+      );
+
+      await act( async () =>
+      {
+        render( <BookkeepingWidget /> );
+      } );
+      await screen.findByText( "1234" );
+
+      const button = screen.getByRole( "button", { name: "Párosítás Futtatása" } );
+      expect( button ).not.toBeDisabled();
+
+      act( () =>
+      {
+        fireEvent.click( button );
+      } );
+      await waitFor( () => expect( button ).toBeDisabled() );
+
+      // cleanup: resolve to avoid hanging promise
+      await act( async () => { resolveNav( { success: true } ); } );
+    } );
   } );
 } );

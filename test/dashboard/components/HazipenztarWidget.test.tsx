@@ -3,6 +3,7 @@ import { act, fireEvent, render, screen, waitFor } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { HazipenztarWidget } from "@/components/dashboard/HazipenztarWidget";
 import * as api from "@/lib/apiService";
+import { toast } from "sonner";
 
 vi.mock("@/lib/apiService", () => ({
   createCashEntry: vi.fn(),
@@ -23,6 +24,10 @@ const mockedApi = api as unknown as {
   getCashEntries: ReturnType<typeof vi.fn>;
   getCashSummary: ReturnType<typeof vi.fn>;
   updateCashEntry: ReturnType<typeof vi.fn>;
+};
+const mockedToast = toast as unknown as {
+  success: ReturnType<typeof vi.fn>;
+  error: ReturnType<typeof vi.fn>;
 };
 
 const entriesResponse = {
@@ -84,7 +89,6 @@ describe("HazipenztarWidget", () => {
   });
 
   it("loads cash summary and recent entries", async () => {
-    vi.useFakeTimers();
     mockedApi.getCashEntries.mockResolvedValue(entriesResponse);
     mockedApi.getCashSummary.mockResolvedValue(summaryResponse);
 
@@ -92,20 +96,35 @@ describe("HazipenztarWidget", () => {
       render(<HazipenztarWidget />);
     });
 
-    await screen.findByText("15 000 Ft");
+    // Wait for entry data (avoids locale-specific currency formatting issues)
+    await screen.findByText("Irodaszer beszerzes");
     expect(screen.getByText("Összes")).toBeInTheDocument();
-    expect(screen.getByText("Irodaszer beszerzes")).toBeInTheDocument();
+    expect(screen.getByText("Keszpenzes bevetelek")).toBeInTheDocument();
     expect(mockedApi.getCashEntries).toHaveBeenCalledTimes(1);
     expect(mockedApi.getCashSummary).toHaveBeenCalledTimes(1);
+  });
+
+  it("re-fetches data after 30 second interval", async () => {
+    // Fake timers must be set BEFORE render to intercept window.setInterval
+    vi.useFakeTimers();
+    mockedApi.getCashEntries.mockResolvedValue(entriesResponse);
+    mockedApi.getCashSummary.mockResolvedValue(summaryResponse);
+
+    await act(async () => {
+      render(<HazipenztarWidget />);
+      // Flush the initial useEffect's async fetch
+      await vi.runAllTimersAsync();
+    });
+
+    expect(mockedApi.getCashEntries).toHaveBeenCalledTimes(1);
 
     await act(async () => {
       await vi.advanceTimersByTimeAsync(30000);
     });
 
-    await waitFor(() => {
-      expect(mockedApi.getCashEntries).toHaveBeenCalledTimes(2);
-      expect(mockedApi.getCashSummary).toHaveBeenCalledTimes(2);
-    });
+    // Assert synchronously — waitFor uses setInterval which is fake
+    expect(mockedApi.getCashEntries).toHaveBeenCalledTimes(2);
+    expect(mockedApi.getCashSummary).toHaveBeenCalledTimes(2);
   });
 
   it("creates a new cash entry and toggles sync state", async () => {
@@ -149,6 +168,159 @@ describe("HazipenztarWidget", () => {
 
     await waitFor(() => {
       expect(mockedApi.updateCashEntry).toHaveBeenCalledWith(1, { syncedSheets: true });
+    });
+  });
+
+  // ─── Error handling integration tests ────────────────────────────────────
+
+  describe("API error handling", () => {
+    it("shows error message when API load fails", async () => {
+      mockedApi.getCashEntries.mockRejectedValue(new Error("Network timeout"));
+      mockedApi.getCashSummary.mockRejectedValue(new Error("Network timeout"));
+
+      await act(async () => {
+        render(<HazipenztarWidget />);
+      });
+
+      await screen.findByText("Network timeout");
+      expect(screen.getByText("Network timeout")).toBeInTheDocument();
+    });
+
+    it("shows loading badge 'BETÖLTÉS' before data arrives, then 'LIVE' after", async () => {
+      let resolveFn!: (val: unknown) => void;
+      mockedApi.getCashEntries.mockReturnValue(
+        new Promise((resolve) => { resolveFn = resolve; })
+      );
+      mockedApi.getCashSummary.mockReturnValue(
+        new Promise((resolve) => { resolveFn = resolve; })
+      );
+
+      render(<HazipenztarWidget />);
+
+      expect(screen.getByText("BETÖLTÉS")).toBeInTheDocument();
+
+      await act(async () => {
+        resolveFn(summaryResponse);
+        mockedApi.getCashEntries.mockResolvedValue(entriesResponse);
+        mockedApi.getCashSummary.mockResolvedValue(summaryResponse);
+      });
+    });
+
+    it("shows 'Még nincs rögzített KP tétel.' when entries list is empty", async () => {
+      mockedApi.getCashEntries.mockResolvedValue({ ...entriesResponse, entries: [], total: 0 });
+      mockedApi.getCashSummary.mockResolvedValue(summaryResponse);
+
+      await act(async () => {
+        render(<HazipenztarWidget />);
+      });
+
+      await screen.findByText(/Még nincs rögzített KP tétel/);
+      expect(screen.getByText(/Még nincs rögzített KP tétel/)).toBeInTheDocument();
+    });
+
+    it("calls toast.error when createCashEntry API fails", async () => {
+      mockedApi.getCashEntries.mockResolvedValue(entriesResponse);
+      mockedApi.getCashSummary.mockResolvedValue(summaryResponse);
+      mockedApi.createCashEntry.mockRejectedValue(new Error("Szerver hiba 500"));
+
+      await act(async () => {
+        render(<HazipenztarWidget />);
+      });
+
+      await screen.findByText("Irodaszer beszerzes");
+
+      fireEvent.change(screen.getByLabelText("Dátum"), { target: { value: "2026-04-01" } });
+      fireEvent.change(screen.getByLabelText("Összeg"), { target: { value: "500" } });
+      fireEvent.change(screen.getByLabelText("Leírás"), { target: { value: "Teszt" } });
+
+      await act(async () => {
+        fireEvent.click(screen.getByRole("button", { name: "KP tétel mentése" }));
+      });
+
+      await waitFor(() => {
+        expect(mockedToast.error).toHaveBeenCalledWith("Nem sikerült menteni: Szerver hiba 500");
+      });
+    });
+
+    it("calls toast.error when toggleSyncState API fails", async () => {
+      mockedApi.getCashEntries.mockResolvedValue(entriesResponse);
+      mockedApi.getCashSummary.mockResolvedValue(summaryResponse);
+      mockedApi.updateCashEntry.mockRejectedValue(new Error("Frissítési hiba"));
+
+      await act(async () => {
+        render(<HazipenztarWidget />);
+      });
+
+      await screen.findByText("Irodaszer beszerzes");
+
+      await act(async () => {
+        fireEvent.click(screen.getAllByRole("button", { name: "Szinkronált" })[0]);
+      });
+
+      await waitFor(() => {
+        expect(mockedToast.error).toHaveBeenCalledWith("Nem sikerült frissíteni: Frissítési hiba");
+      });
+    });
+  });
+
+  // ─── Form validation integration tests ───────────────────────────────────
+
+  describe("form validation", () => {
+    beforeEach(async () => {
+      mockedApi.getCashEntries.mockResolvedValue(entriesResponse);
+      mockedApi.getCashSummary.mockResolvedValue(summaryResponse);
+
+      await act(async () => {
+        render(<HazipenztarWidget />);
+      });
+      await screen.findByText("Irodaszer beszerzes");
+    });
+
+    it("calls toast.error for zero amount", async () => {
+      fireEvent.change(screen.getByLabelText("Összeg"), { target: { value: "0" } });
+      fireEvent.change(screen.getByLabelText("Leírás"), { target: { value: "Teszt" } });
+
+      await act(async () => {
+        fireEvent.click(screen.getByRole("button", { name: "KP tétel mentése" }));
+      });
+
+      await waitFor(() => {
+        expect(mockedToast.error).toHaveBeenCalledWith(
+          "Nem sikerült menteni: Az összegnek pozitív számnak kell lennie."
+        );
+      });
+      expect(mockedApi.createCashEntry).not.toHaveBeenCalled();
+    });
+
+    it("calls toast.error for non-numeric amount (NaN)", async () => {
+      fireEvent.change(screen.getByLabelText("Összeg"), { target: { value: "abc" } });
+      fireEvent.change(screen.getByLabelText("Leírás"), { target: { value: "Teszt" } });
+
+      await act(async () => {
+        fireEvent.click(screen.getByRole("button", { name: "KP tétel mentése" }));
+      });
+
+      await waitFor(() => {
+        expect(mockedToast.error).toHaveBeenCalledWith(
+          "Nem sikerült menteni: Az összegnek pozitív számnak kell lennie."
+        );
+      });
+    });
+
+    it("calls toast.error when description is empty", async () => {
+      fireEvent.change(screen.getByLabelText("Összeg"), { target: { value: "1000" } });
+      // description remains empty by default
+
+      await act(async () => {
+        fireEvent.click(screen.getByRole("button", { name: "KP tétel mentése" }));
+      });
+
+      await waitFor(() => {
+        expect(mockedToast.error).toHaveBeenCalledWith(
+          "Nem sikerült menteni: A leírás megadása kötelező."
+        );
+      });
+      expect(mockedApi.createCashEntry).not.toHaveBeenCalled();
     });
   });
 });

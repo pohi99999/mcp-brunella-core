@@ -1,9 +1,0 @@
-field_name,description,example
-invoice_number,A számla egyedi azonosítója,INV-2026-0001
-net_amount,nettó összeg,40000
-vat_amount,ÁFA összege,8080
-gross_amount,bruttó összeg,48080
-issue_date,kiállítás dátuma,2026-03-01
-due_date,fizetési határidő,2026-03-15
-partner_taxid,partner adószáma,12345678-2-12
-payment_method,fizetési mód,bank_transfer

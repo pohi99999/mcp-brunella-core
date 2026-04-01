@@ -10,11 +10,11 @@ const defaultLayoutConfig: DashboardLayoutConfig = {
       name: 'Mission Control',
       description: 'A premium bento-grid dashboard for operational scanning.',
       gridTemplateAreas: [
-        '"health health health agents agents tasks tasks"',
-        '"health health health jules jules logs logs"',
-        '"chatter chatter tracks schedule suggestions harvest cloudflare"'
+        '"health health agents tasks"',
+        '"health health jules logs"',
+        '"chatter tracks schedule suggestions"'
       ],
-      gridTemplateColumns: 'repeat(7, minmax(180px, 1fr))',
+      gridTemplateColumns: '1.5fr 1fr 1fr 1fr',
       gridTemplateRows: 'minmax(20rem, auto) minmax(18rem, auto) minmax(16rem, auto)',
       widgetAssignments: {
         health: 'health',

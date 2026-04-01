@@ -1,0 +1,334 @@
+[
+  {
+    "updatedAt": "2026-03-30T11:35:59.422Z",
+    "createdAt": "2026-03-13T15:07:32.915Z",
+    "id": "8VqluKFPj0pkCRKR",
+    "name": "Iszapfaló - Google Calendar → Airtable Szinkron",
+    "description": null,
+    "active": true,
+    "isArchived": false,
+    "settings": {
+      "executionOrder": "v1",
+      "availableInMCP": false,
+      "callerPolicy": "workflowsFromSameOwner"
+    },
+    "versionId": "01c3995e-8e2a-4a39-994a-53132f2eeb0b",
+    "activeVersionId": "01c3995e-8e2a-4a39-994a-53132f2eeb0b",
+    "parentFolder": null,
+    "tags": [],
+    "homeProject": {
+      "id": "johLSwPlUades2LG",
+      "type": "personal",
+      "name": "József Péter Pohánka <peterpohankapersonal@gmail.com>",
+      "icon": null
+    },
+    "sharedWithProjects": [],
+    "scopes": [
+      "workflow:delete",
+      "workflow:execute",
+      "workflow:move",
+      "workflow:read",
+      "workflow:share",
+      "workflow:update"
+    ]
+  },
+  {
+    "updatedAt": "2026-03-30T11:35:43.256Z",
+    "createdAt": "2026-03-13T15:07:32.721Z",
+    "id": "ZeNCF1ZIg35bxkPl",
+    "name": "Iszapfaló - Heti Emlékeztető (Csütörtök 16:00)",
+    "description": null,
+    "active": true,
+    "isArchived": false,
+    "settings": {
+      "executionOrder": "v1",
+      "availableInMCP": false,
+      "callerPolicy": "workflowsFromSameOwner"
+    },
+    "versionId": "4e2ac1c4-5772-4dfb-b171-88979cc30f2c",
+    "activeVersionId": "4e2ac1c4-5772-4dfb-b171-88979cc30f2c",
+    "parentFolder": null,
+    "tags": [],
+    "homeProject": {
+      "id": "johLSwPlUades2LG",
+      "type": "personal",
+      "name": "József Péter Pohánka <peterpohankapersonal@gmail.com>",
+      "icon": null
+    },
+    "sharedWithProjects": [],
+    "scopes": [
+      "workflow:delete",
+      "workflow:execute",
+      "workflow:move",
+      "workflow:read",
+      "workflow:share",
+      "workflow:update"
+    ]
+  },
+  {
+    "updatedAt": "2026-03-26T06:26:51.009Z",
+    "createdAt": "2026-03-26T04:31:25.020Z",
+    "id": "SxWeeyrNe6TQ71zf",
+    "name": "07 - ISZ Heti Kontextus Csomag",
+    "description": null,
+    "active": true,
+    "isArchived": false,
+    "settings": {
+      "executionOrder": "v1",
+      "callerPolicy": "workflowsFromSameOwner",
+      "availableInMCP": false
+    },
+    "versionId": "d440537f-fc60-4913-9bc9-019515bece35",
+    "activeVersionId": "d440537f-fc60-4913-9bc9-019515bece35",
+    "parentFolder": null,
+    "tags": [],
+    "homeProject": {
+      "id": "johLSwPlUades2LG",
+      "type": "personal",
+      "name": "József Péter Pohánka <peterpohankapersonal@gmail.com>",
+      "icon": null
+    },
+    "sharedWithProjects": [],
+    "scopes": [
+      "workflow:delete",
+      "workflow:execute",
+      "workflow:move",
+      "workflow:read",
+      "workflow:share",
+      "workflow:update"
+    ]
+  },
+  {
+    "updatedAt": "2026-03-26T06:16:00.854Z",
+    "createdAt": "2026-03-18T23:34:23.191Z",
+    "id": "CAEaN0ryx5POpVSv",
+    "name": "02 - ISZ AI Agent MunkaidÔö╝─╣",
+    "description": null,
+    "active": true,
+    "isArchived": false,
+    "settings": {
+      "executionOrder": "v1",
+      "callerPolicy": "workflowsFromSameOwner",
+      "availableInMCP": false
+    },
+    "versionId": "6d1e881a-c2db-47d9-8979-14e9b9ba9ffb",
+    "activeVersionId": "6d1e881a-c2db-47d9-8979-14e9b9ba9ffb",
+    "parentFolder": null,
+    "tags": [],
+    "homeProject": {
+      "id": "johLSwPlUades2LG",
+      "type": "personal",
+      "name": "József Péter Pohánka <peterpohankapersonal@gmail.com>",
+      "icon": null
+    },
+    "sharedWithProjects": [],
+    "scopes": [
+      "workflow:delete",
+      "workflow:execute",
+      "workflow:move",
+      "workflow:read",
+      "workflow:share",
+      "workflow:update"
+    ]
+  },
+  {
+    "updatedAt": "2026-03-26T04:34:17.985Z",
+    "createdAt": "2026-03-18T23:53:55.531Z",
+    "id": "LGvkbQNUm44UEoMi",
+    "name": "06 - ISZ Gmail Categorizel",
+    "description": null,
+    "active": true,
+    "isArchived": false,
+    "settings": {
+      "executionOrder": "v1",
+      "callerPolicy": "workflowsFromSameOwner",
+      "availableInMCP": false
+    },
+    "versionId": "506a95e7-d902-451b-a92f-c52b41596805",
+    "activeVersionId": "506a95e7-d902-451b-a92f-c52b41596805",
+    "parentFolder": null,
+    "tags": [],
+    "homeProject": {
+      "id": "johLSwPlUades2LG",
+      "type": "personal",
+      "name": "József Péter Pohánka <peterpohankapersonal@gmail.com>",
+      "icon": null
+    },
+    "sharedWithProjects": [],
+    "scopes": [
+      "workflow:delete",
+      "workflow:execute",
+      "workflow:move",
+      "workflow:read",
+      "workflow:share",
+      "workflow:update"
+    ]
+  },
+  {
+    "updatedAt": "2026-03-26T03:13:56.692Z",
+    "createdAt": "2026-03-18T23:52:13.912Z",
+    "id": "hLop0AeEKH6NyUaj",
+    "name": "04 - ISZ Weekly Reminder",
+    "description": null,
+    "active": true,
+    "isArchived": false,
+    "settings": {
+      "executionOrder": "v1",
+      "callerPolicy": "workflowsFromSameOwner",
+      "availableInMCP": false
+    },
+    "versionId": "2df6eca6-c009-4a86-be0b-ef544eb181dc",
+    "activeVersionId": "2df6eca6-c009-4a86-be0b-ef544eb181dc",
+    "parentFolder": null,
+    "tags": [],
+    "homeProject": {
+      "id": "johLSwPlUades2LG",
+      "type": "personal",
+      "name": "József Péter Pohánka <peterpohankapersonal@gmail.com>",
+      "icon": null
+    },
+    "sharedWithProjects": [],
+    "scopes": [
+      "workflow:delete",
+      "workflow:execute",
+      "workflow:move",
+      "workflow:read",
+      "workflow:share",
+      "workflow:update"
+    ]
+  },
+  {
+    "updatedAt": "2026-03-26T01:27:02.407Z",
+    "createdAt": "2025-11-26T13:54:45.941Z",
+    "id": "niT8FAq0FXIZJZta",
+    "name": "Feladatok státuszállítás telegram chat",
+    "description": null,
+    "active": true,
+    "isArchived": false,
+    "settings": {
+      "executionOrder": "v1",
+      "callerPolicy": "workflowsFromSameOwner",
+      "availableInMCP": false
+    },
+    "versionId": "2d205e90-8934-4fac-8260-017165a665c8",
+    "activeVersionId": "2d205e90-8934-4fac-8260-017165a665c8",
+    "parentFolder": null,
+    "tags": [],
+    "homeProject": {
+      "id": "sOV3g1bMxi5sWoCL",
+      "type": "personal",
+      "name": "Kovásznai-Szász Gergely <iszapfalo@gmail.com>",
+      "icon": null
+    },
+    "sharedWithProjects": [
+      {
+        "id": "johLSwPlUades2LG",
+        "type": "personal",
+        "name": "József Péter Pohánka <peterpohankapersonal@gmail.com>",
+        "icon": null
+      }
+    ],
+    "scopes": [
+      "workflow:execute",
+      "workflow:read",
+      "workflow:update"
+    ]
+  },
+  {
+    "updatedAt": "2026-03-19T12:59:08.615Z",
+    "createdAt": "2026-03-19T00:40:28.528Z",
+    "id": "2h3vw6VUvsBIg6iJ",
+    "name": "01 - ISZ Error Monitoring",
+    "description": null,
+    "active": true,
+    "isArchived": false,
+    "settings": {
+      "executionOrder": "v1"
+    },
+    "versionId": "d7a08432-2960-42e3-973d-df696cf46020",
+    "activeVersionId": "d7a08432-2960-42e3-973d-df696cf46020",
+    "parentFolder": null,
+    "tags": [],
+    "homeProject": {
+      "id": "johLSwPlUades2LG",
+      "type": "personal",
+      "name": "József Péter Pohánka <peterpohankapersonal@gmail.com>",
+      "icon": null
+    },
+    "sharedWithProjects": [],
+    "scopes": [
+      "workflow:delete",
+      "workflow:execute",
+      "workflow:move",
+      "workflow:read",
+      "workflow:share",
+      "workflow:update"
+    ]
+  },
+  {
+    "updatedAt": "2026-03-19T00:58:28.950Z",
+    "createdAt": "2026-03-18T23:53:05.227Z",
+    "id": "Xo0yXlQ7oI7iOFbN",
+    "name": "05 - ISZ Geppark",
+    "description": null,
+    "active": true,
+    "isArchived": false,
+    "settings": {
+      "executionOrder": "v1"
+    },
+    "versionId": "9f0701a2-f47a-4426-a446-295eef5585a0",
+    "activeVersionId": "9f0701a2-f47a-4426-a446-295eef5585a0",
+    "parentFolder": null,
+    "tags": [],
+    "homeProject": {
+      "id": "johLSwPlUades2LG",
+      "type": "personal",
+      "name": "József Péter Pohánka <peterpohankapersonal@gmail.com>",
+      "icon": null
+    },
+    "sharedWithProjects": [],
+    "scopes": [
+      "workflow:delete",
+      "workflow:execute",
+      "workflow:move",
+      "workflow:read",
+      "workflow:share",
+      "workflow:update"
+    ]
+  },
+  {
+    "updatedAt": "2026-03-05T19:51:06.226Z",
+    "createdAt": "2025-11-26T14:30:40.283Z",
+    "id": "g1W73bdF75DeBdG7",
+    "name": "Airtable - Google Calendar feladat készítő",
+    "description": null,
+    "active": true,
+    "isArchived": false,
+    "settings": {
+      "executionOrder": "v1"
+    },
+    "versionId": "ac79314a-f28f-4b7c-b642-8b683a287077",
+    "activeVersionId": "ac79314a-f28f-4b7c-b642-8b683a287077",
+    "parentFolder": null,
+    "tags": [],
+    "homeProject": {
+      "id": "sOV3g1bMxi5sWoCL",
+      "type": "personal",
+      "name": "Kovásznai-Szász Gergely <iszapfalo@gmail.com>",
+      "icon": null
+    },
+    "sharedWithProjects": [
+      {
+        "id": "johLSwPlUades2LG",
+        "type": "personal",
+        "name": "József Péter Pohánka <peterpohankapersonal@gmail.com>",
+        "icon": null
+      }
+    ],
+    "scopes": [
+      "workflow:execute",
+      "workflow:read",
+      "workflow:update"
+    ]
+  }
+]

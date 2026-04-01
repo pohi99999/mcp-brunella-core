@@ -5,6 +5,7 @@ import type { ApprovalWorkflow } from './approvalRouter.js';
 import type { EphemeralAgentRecord } from './ephemeralAgentManager.js';
 import type { NotificationDeliveryRecord } from './notificationChannels.js';
 import type { RemediationRunRecord } from './remediationRuntime.types.js';
+import type { IssueAnalysisResult, IssueFixAttemptRecord } from '../agents/issueFixLoop.js';
 import type { CapabilityManifest } from './federation/capabilityManifest.js';
 import type { NegotiationSession } from './federation/negotiationProtocol.js';
 import type { PeerIdentity } from './federation/trustRegistry.js';
@@ -133,6 +134,21 @@ interface RemediationRunRow {
   verification_json: string;
   final_approval_json: string | null;
   failure_reason: string | null;
+}
+
+interface IssueFixAttemptRuntimeRow {
+  task_id: string;
+  record_json: string;
+  analysis_json: string | null;
+  repository_full_name: string;
+  status: IssueFixAttemptRecord['status'];
+  created_at: string;
+  updated_at: string;
+}
+
+export interface PersistedIssueFixAttemptEntry {
+  record: IssueFixAttemptRecord;
+  analysis?: IssueAnalysisResult;
 }
 
 let initialized = false;
@@ -307,6 +323,20 @@ function ensureTables(): void {
       ON remediation_runs_runtime(status, updated_at DESC);
     CREATE INDEX IF NOT EXISTS idx_remediation_runs_runtime_repo
       ON remediation_runs_runtime(repository_name, created_at DESC);
+
+    CREATE TABLE IF NOT EXISTS issue_fix_attempts_runtime (
+      task_id TEXT PRIMARY KEY,
+      record_json TEXT NOT NULL,
+      analysis_json TEXT,
+      repository_full_name TEXT NOT NULL,
+      status TEXT NOT NULL,
+      created_at TEXT NOT NULL,
+      updated_at TEXT NOT NULL
+    );
+    CREATE INDEX IF NOT EXISTS idx_issue_fix_attempts_runtime_status
+      ON issue_fix_attempts_runtime(status, updated_at DESC);
+    CREATE INDEX IF NOT EXISTS idx_issue_fix_attempts_runtime_repo
+      ON issue_fix_attempts_runtime(repository_full_name, created_at DESC);
   `);
 
   initialized = true;
@@ -608,6 +638,68 @@ export function loadRemediationRuns(): RemediationRunRecord[] {
 export function clearRemediationRuns(): void {
   ensureTables();
   getGlobalDb().prepare('DELETE FROM remediation_runs_runtime').run();
+}
+
+export function saveIssueFixAttemptRuntime(entry: PersistedIssueFixAttemptEntry): void {
+  try {
+    ensureTables();
+    getGlobalDb().prepare(`
+      INSERT INTO issue_fix_attempts_runtime (
+        task_id, record_json, analysis_json, repository_full_name, status, created_at, updated_at
+      )
+      VALUES (?, ?, ?, ?, ?, ?, ?)
+      ON CONFLICT(task_id) DO UPDATE SET
+        record_json = excluded.record_json,
+        analysis_json = excluded.analysis_json,
+        repository_full_name = excluded.repository_full_name,
+        status = excluded.status,
+        created_at = excluded.created_at,
+        updated_at = excluded.updated_at
+    `).run(
+      entry.record.taskId,
+      JSON.stringify(entry.record),
+      serializeJson(entry.analysis),
+      entry.record.repositoryFullName,
+      entry.record.status,
+      entry.record.createdAt,
+      entry.record.updatedAt,
+    );
+  } catch (error) {
+    logError('AutonomyRuntimeStore', `Failed to save issue fix attempt runtime: ${error instanceof Error ? error.message : String(error)}`);
+  }
+}
+
+export function loadIssueFixAttemptRuntimeEntries(): PersistedIssueFixAttemptEntry[] {
+  try {
+    ensureTables();
+    const rows = getGlobalDb()
+      .prepare(`
+        SELECT task_id, record_json, analysis_json, repository_full_name, status, created_at, updated_at
+        FROM issue_fix_attempts_runtime
+        ORDER BY created_at DESC
+      `)
+      .all() as IssueFixAttemptRuntimeRow[];
+
+    return rows.flatMap((row) => {
+      const record = parseJson<IssueFixAttemptRecord>(row.record_json, `issue_fix_attempt:${row.task_id}:record`);
+      if (!record) {
+        return [];
+      }
+
+      return [{
+        record,
+        analysis: parseJson<IssueAnalysisResult>(row.analysis_json, `issue_fix_attempt:${row.task_id}:analysis`),
+      }];
+    });
+  } catch (error) {
+    logError('AutonomyRuntimeStore', `Failed to load issue fix attempts: ${error instanceof Error ? error.message : String(error)}`);
+    return [];
+  }
+}
+
+export function clearIssueFixAttemptRuntimeEntries(): void {
+  ensureTables();
+  getGlobalDb().prepare('DELETE FROM issue_fix_attempts_runtime').run();
 }
 
 export function saveEphemeralAgentRecord(record: EphemeralAgentRecord): void {

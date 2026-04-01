@@ -1,0 +1,56 @@
+<evaluation>
+  <!-- n8n MCP szerver értékelési kérdések
+       Ezek a kérdések olvasható műveletek segítségével válaszolhatók meg.
+       Az LLM-nek az n8n_list_workflows, n8n_get_workflow, n8n_list_executions,
+       n8n_get_execution, n8n_list_credentials, n8n_list_tags eszközöket kell használnia. -->
+
+  <qa_pair>
+    <question>Hány aktív workflow létezik az n8n példányban összesen? Számold meg az összes aktív (active=true) workflow-t az összes oldalon lapozva.</question>
+    <answer>Függ a futó n8n példánytól — az LLM-nek lapozással kell végigmenni az összes workflow-n és megszámolni az active=true értékűeket.</answer>
+  </qa_pair>
+
+  <qa_pair>
+    <question>Melyik workflow-t módosították a legutóbb? Add meg a nevét és az updatedAt dátumát.</question>
+    <answer>Függ a futó n8n példánytól — az LLM-nek listázni kell az összes workflow-t, és megtalálni a legnagyobb updatedAt értékűt.</answer>
+  </qa_pair>
+
+  <qa_pair>
+    <question>Van-e legalább egy 'error' státuszú végrehajtás az n8n-ben? Ha igen, melyik workflow-hoz tartozik az utolsó hibás végrehajtás?</question>
+    <answer>Függ a futó n8n példánytól — az LLM-nek n8n_list_executions({status: "error"}) hívással kell ellenőriznie, és a workflowData.name-ből visszaolvasni.</answer>
+  </qa_pair>
+
+  <qa_pair>
+    <question>Hány különböző típusú credential (pl. httpBasicAuth, oAuth2Api, googleOAuth2Api) van regisztrálva az n8n-ben? Sorold fel az összes egyedi típust.</question>
+    <answer>Függ a futó n8n példánytól — az LLM-nek n8n_list_credentials lapozással kell végigmenni és összegyűjteni az egyedi type értékeket.</answer>
+  </qa_pair>
+
+  <qa_pair>
+    <question>Melyik workflow tartalmaz a legtöbb node-ot? Add meg a nevét és a node-ok számát.</question>
+    <answer>Függ a futó n8n példánytól — az LLM-nek minden workflow-ra n8n_get_workflow-t kell hívni és összehasonlítani a node_count értékeket.</answer>
+  </qa_pair>
+
+  <qa_pair>
+    <question>Hány tag (cimke) van definiálva az n8n-ben összesen, és melyik a betűrendben az első?</question>
+    <answer>Függ a futó n8n példánytól — az LLM-nek n8n_list_tags-szel kell listázni és ABC sorrendbe rendezni.</answer>
+  </qa_pair>
+
+  <qa_pair>
+    <question>Hány végrehajtás van 'success' státuszban? Ha több mint 10 oldalas a lista, csak az első 100 elemre koncentrálj és becsüld meg a teljes számot.</question>
+    <answer>Függ a futó n8n példánytól — az LLM-nek n8n_list_executions({status: "success", limit: 100}) hívássorozattal kell végigmenni és megszámolni.</answer>
+  </qa_pair>
+
+  <qa_pair>
+    <question>Van-e olyan workflow, amelynek neve tartalmazza a "Brunella" szót? Ha igen, active állapotban van-e? Add meg az összes ilyen workflow nevét és állapotát.</question>
+    <answer>Függ a futó n8n példánytól — az LLM-nek n8n_list_workflows({name: "Brunella"}) szűrővel kell keresni.</answer>
+  </qa_pair>
+
+  <qa_pair>
+    <question>Melyik credential típus szerepel a legtöbbször az n8n-ben? Ha egyforma a szám, betűrendben melyik az első?</question>
+    <answer>Függ a futó n8n példánytól — az LLM-nek az összes credential-t listázva, típusonként kell csoportosítani és a leggyakoribbat megtalálni.</answer>
+  </qa_pair>
+
+  <qa_pair>
+    <question>Melyik workflow futott a leghosszabb ideig? Számold ki a startedAt és stoppedAt különbségét másodpercekben az utolsó 50 success végrehajtáson, és add meg a leghosszabb futású workflow nevét és a futási időt.</question>
+    <answer>Függ a futó n8n példánytól — az LLM-nek n8n_list_executions({status: "success", limit: 50}) hívással kell adatot gyűjteni, majd workflowData.name + időkülönbség alapján keresni a maximumot.</answer>
+  </qa_pair>
+</evaluation>

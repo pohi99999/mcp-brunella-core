@@ -3,6 +3,61 @@ User requested that the Copilot CLI automatically connect to a local Brunella MC
 </overview>
 
 <history>
+
+### 2026-04-02 — Pre-existing hibák javítása: 0 failed (246 passed)
+**Feladat:** 6 pre-existing teszt hiba javítása + registry duplikátumok + module path hibák
+**Érintett fájlok:**
+- `src/agents/AgentManager.ts` — duplikált auto-start blokk eltávolítva, `processFixQueue` try/catch-be csomagolva, task rehydration hozzáadva
+- `src/utils/tasksDb.ts` — `loadQueuedTasksForHydration()` export function hozzáadva
+- `test/BankAgent.test.ts` — assertion szöveg frissítve (`bankFilePath` helyett `bankCsvPath`)
+- `myai/server.py` — runtime_security import + `/execute` env gate + `/harvest` secure path traversal védelem
+- `src/cli/commands/inventory-hu.ts` — type mismatch javítások (`fifo_stock_value`, `wac_stock_value`, `current_stock`, `order_qty`, `email_draft`, `CANCELLED`)
+- `src/agents/registry.json` — 3 duplikált agent eltávolítva + module path fix (`./agents/` prefix) a Stocktake* és InventoryAdjustment agentekhez
+**Státusz:** ✅ test:fast: 246 passed | 0 failed (2088 tests, 41 skipped)
+
+### 2026-04-02 — Dashboard tesztek regresszió javítás (253/253 zöld)
+**Feladat:** UI redesign utáni tesztregressziók javítása — AgentStatusMonitor (6 hiba) + TaskQueueMonitor (11 hiba)
+**Érintett fájlok:**
+- `src/dashboard/components/dashboard/AgentStatusMonitor.test.tsx` — szöveg assertiók igazítva a redesigned komponenshez (`Scanning_for_signals...`, lowercase status szövegek, `"3 REGISTERED"` footer)
+- `src/dashboard/components/dashboard/TaskQueueMonitor.tsx` — aria-label hozzáadva Eye/XCircle/RotateCw icon gombokhoz (akadálymentesség + teszt elérhetőség)
+- `test/dashboard/components/TaskQueueMonitor.test.tsx` — toast üzenetek, loading/empty szövegek, gomb accessible name-ek, pagination szöveg igazítva a redesigned komponenshez
+- `src/dashboard/components/dashboard/EphemeralAgentsPanel.test.tsx` — ÚJ 10 teszt, önmagában átmegy
+- `test/dashboard/components/SuggestedTasksWidget.test.tsx` — ÚJ 12 teszt (korábbi munkamenetből)
+**Státusz:** ✅ Dashboard suite: 253/253 passed | 0 failed (25 fájl)
+**Megjegyzés:** 6 pre-existing hiba a `test:fast` suite-ban (BankAgent, agentManagerInitialization, python_server_security) — ezek NEM dashboard-hoz kapcsolódnak, korábbi refaktorálásból erednek
+
+--- 2026-04-02 AUTONÓM KÉSZLET- ÉS LELTÁRKEZELÉS (PHASE 1 & 2 CORE) ---
+**Feladat:** A KKV Autonóm Készlet- és Leltárkezelési Rendszer (inventory_automation_20260330) Track Phase 1 és Phase 2 (Core) implementációja. Fő funkciók: FIFO/WAC készletértékelés, AI-alapú kereslet-előrejelzés, statisztikai biztonsági készlet számítás, és autonóm beszerzési rendelés (PO) tervezés.
+**Érintett fájlok:**
+  - `src/utils/inventoryDb.ts` (Kiterjesztve Phase 1 és Phase 2 lekérdezésekkel, 90 napos történeti kereslet számítás)
+  - `src/agents/DemandForecastAgent.ts` (ÚJ - LLM + történeti adat alapú előrejelzés)
+  - `src/agents/SafetyStockAgent.ts` (ÚJ - Statisztikai biztonsági készlet és ROP számítás Z=1.65 értékkel)
+  - `src/agents/PurchaseOrderAgent.ts` (ÚJ - Autonóm beszerzési rendelés generálás LLM-mel - PENDING_APPROVAL)
+  - `test/inventoryPhase2.test.ts` (ÚJ - Phase 2 unit tesztek)
+  - `test/inventoryFifo.test.ts` & `test/inventoryWac.test.ts` (Phase 1 tesztek)
+  - `src/agents/registry.json` (Phase 1 & 2 Agentek regisztrálása)
+  - `conductor/tracks/inventory_automation_20260330/meta.json` (Készültségi fok: 58%)
+**Végeredmény:** ✅ 30 passed | 0 failed teszt a Készlet/Inv fájlokra. A Phase 1 teljesen, a Phase 2 Core (Agentek és DB logika) sikeresen lezárt tesztekkel. A TypeScript fordítás (`npx tsc --noEmit`) stabil és zöld.
+**Megoldott bugok:**
+  1. `inventoryDb.ts`: Egy korábbi félresikerült replace hiba (duplikált `getValuationSummary` TS error) javítva.
+  2. `PurchaseOrderAgent.ts`: Prompt String Parser hiba (hiányzó un-escaped backtickek a template literálban) detektálva és javítva.
+
+--- 2026-04-02 00:06 DASHBOARD TESZTEK BŐVÍTÉS 3 — LLMProvidersPanel + AgentStatusMonitor + TaskQueueMonitor ---
+**Feladat:** 3 dashboard komponens teljes tesztlefedettség — 200 → 231 zöld teszt
+**Érintett fájlok:**
+  - test/dashboard/components/LLMProvidersPanel.test.tsx (ÚJ, 9 teszt)
+  - test/dashboard/components/TaskQueueMonitor.test.tsx (ÚJ, 13 teszt)
+  - src/dashboard/components/dashboard/AgentStatusMonitor.test.tsx (ÚJ, 9 teszt)
+**Végeredmény:** ✅ 231 passed | 0 failed | 23 test file
+**Megoldott bugok:**
+  1. `import React from "react"` kötelező test/ könyvtárban (nincs automatikus JSX transform)
+  2. CSS `uppercase` class ≠ JS .toUpperCase() — DOM text a eredeti case marad
+  3. `/next/i` regex "Execute Next Pending" gombot is matcheli → exact string "Next"/"Prev" kell
+  4. `#5` többször jelenik meg (table + dialog) → `within(dialog)` scope
+  5. `vi.useFakeTimers()` + `waitFor` deadlock → `vi.spyOn(globalThis, "setInterval")` pattern
+**Futtatás:** `npx vitest run --config vitest.dashboard.config.ts`
+
+</history>
 1) User reported Vite dev:ui errors (missing react/react-dom/jsx-runtime) while running the dashboard. This is a separate, unresolved issue and was noted but not changed during this task.
    - Outcome: Logged as context; not fixed here.
 
@@ -500,3 +555,84 @@ Ezeket a módosításokat a conductor/tracks.md és a conductor/archive/ helyre 
 - Az új MCP tool neve `autogen_run_task`; GitHub Models a preferált provider, de `auto` módban tokenhiány vagy GitHub futási hiba esetén Ollamára esik vissza.
 - A `.github/copilot-instructions.md` is frissítve lett a telepítési, használati és validációs tudnivalókkal.
 - Validáció: `uv run --extra dev pytest myai/tests/test_autogen_adapter.py myai/tests/test_mcp_autogen_tool.py -q` → **18 passed**.
+
+--- 2026-04-01 23:19 DASHBOARD TESZT TELJES HELYREÁLLÍTÁS ---
+
+**Feladat:** Dashboard UI redesign (midnight navy + violet paletta) után a git stash baleset miatt 46 dashboard teszt hibásodott el. Az összes tesztet helyre kellett állítani.
+
+**Elvégzett javítások (jelen munkamenet):**
+
+- `test/dashboard/components/HazipenztarWidget.test.tsx` — **3 teszt javítva**
+  - `vi.useFakeTimers()` BUG: ha render előtt aktív, a `findByText` polling (setInterval) soha nem fut le → timeout
+  - Megoldás: "loads" és "re-fetches interval" szétválasztva két külön tesztre; fake timers csak a második tesztben, render előtt
+  - `waitFor` fake timers aktív esetén → `waitFor` maga is setInterval-alapú → hang! Fix: szinkron assert `act(advanceTimersByTimeAsync)` után
+  - Locale-specifikus `Intl.NumberFormat` regex helyett: `"Irodaszer beszerzes"` entry text alapján vár
+  - Eredmény: 3/3 ✅
+
+- `test/dashboard/components/NeuralLinkChat.test.tsx` — **1 teszt javítva**
+  - Komponens `orchestratorProvider` → `api.orchestrateTask()` hívja, de a teszt `executeAgent`-et mock-olt
+  - Mock: `orchestrateTask: vi.fn().mockResolvedValue({ message: "Szia!", success: true })` hozzáadva
+  - Type definition: `orchestrateTask: ReturnType<typeof vi.fn>` hozzáadva
+  - Assertion: `mockedApi.orchestrateTask`-ra módosítva
+  - Eredmény: 3/3 ✅
+
+**Végeredmény: `npm run test:dashboard` → 175 passed | 0 failed | 19 test file ✅**
+
+**Érintett fájlok:**
+- `test/dashboard/components/HazipenztarWidget.test.tsx`
+- `test/dashboard/components/NeuralLinkChat.test.tsx`
+
+**Fontos technikai tudnivalók:**
+- `vi.useFakeTimers()` MINDIG render ELŐTT kell, ha setInterval-t teszt; különben már futó real timert nem fogja el
+- `waitFor(() => {...})` fake timers aktív esetén HANG → használj szinkron asserteket `act(advanceTimersByTimeAsync)` után
+- `Intl.NumberFormat("hu-HU")` → `\u00a0` (non-breaking space) a thousands separator; testing-library normalizálja, de biztosabb entry text alapján ellenőrizni
+- `orchestratorProvider` → `api.orchestrateTask()` (NEM `executeAgent`)
+- Pre-existing build hibák: `src/tools/learningLoopTools.ts`, `src/utils/zeroPromptEdgeMirrorService.ts` — NEM a mi változtatásaink
+
+--- 2026-04-02 INTEGRÁCIÓ TESZTEK — HazipenztarWidget hibakezelés ---
+
+**Feladat:** Dashboard integrációs tesztek bővítése: error handling és form validáció lefedettség.
+
+**Elvégzett munkák:**
+
+- `test/dashboard/components/HazipenztarWidget.test.tsx` — **+8 új integrációs teszt**
+  - `toast` import hozzáadva (sonner mock), `mockedToast` type helper
+  - **API error handling describe** (5 teszt):
+    - `shows error message when API load fails` — getCashEntries throws → piros hibaüzenet megjelenik
+    - `shows loading badge 'BETÖLTÉS' before data arrives` — kezdeti loading state validáció
+    - `shows 'Még nincs rögzített KP tétel.'` — üres entries lista state
+    - `calls toast.error when createCashEntry API fails` — backend hiba → toast.error hívás
+    - `calls toast.error when toggleSyncState API fails` — sync toggle hiba → toast.error hívás
+  - **form validation describe** (3 teszt, nested `beforeEach` pattern):
+    - `calls toast.error for zero amount` — `amount <= 0` validation path
+    - `calls toast.error for non-numeric amount (NaN)` — `!Number.isFinite(amount)` validation path
+    - `calls toast.error when description is empty` — üres leírás validation
+
+**Végeredmény: `npm run test:dashboard` → 183 passed | 0 failed | 19 test file ✅**
+(Volt: 175 passed → most: 183 passed, +8 új integrációs teszt)
+
+**Technikai megjegyzés:**
+- `type="number" min="0"` input: jsdom-ban negatív érték (`"-100"`) nem megbízható `fireEvent.change`-gel → NaN test a `!Number.isFinite()` ághoz
+- Nested `describe` + `beforeEach`: külön render + outer `vi.clearAllMocks()` → tökéletes test izolácó
+- Minden todo DONE: setup/implement/build/register/eval/elemzes/mcp-tervezes/mcp-implementalas/mcp-regisztracio/validalas/explore-dash/test-home/test-sidebar/test-layout/test-api/test-integration/validate-all
+
+**Érintett fájlok:**
+- `test/dashboard/components/HazipenztarWidget.test.tsx` (+8 teszt, 11 összesen)
+
+--- 2026-04-02 WIDGET TESZTEK BŐVÍTÉS ---
+**Feladat:** ServiceControlWidget + BookkeepingWidget error coverage
+**Elvégzett munka:**
+- 	est/dashboard/components/ServiceControlWidget.test.tsx LÉTREHOZVA (13 teszt, először tesztelve)
+  - Happy paths: service lista megjelenítés, refresh gomb, stopService/startService hívások, success toast
+  - Error paths: getServiceStatus throw→toast.error, startService success:false→toast.error, toggle throw→toast.error
+  - Special: AnythingLLM→toast.info, stopService NEM hívva; loading guard switch disable; Indul.../Leáll... badge; setInterval
+- 	est/dashboard/components/BookkeepingWidget.test.tsx BŐVÍTVE (+4 teszt, összesen 6)
+  - describe("error handling"): silent fail (nincs toast), NavAgent throw→ERROR badge+toast.error, MatchingAgent success:false→ERROR, button disabled futás alatt
+  - 	oast import + mockedToast type helper hozzáadva
+**Végeredmény: 
+pm run test:dashboard → 200 passed | 0 failed | 20 test file ✅**
+(Volt: 183 passed → most: 200 passed, +17 új teszt)
+**Érintett fájlok:**
+- 	est/dashboard/components/ServiceControlWidget.test.tsx (ÚJ, 13 teszt)
+- 	est/dashboard/components/BookkeepingWidget.test.tsx (+4 error teszt)
+- .ai/copilot.md (munkamenet napló)

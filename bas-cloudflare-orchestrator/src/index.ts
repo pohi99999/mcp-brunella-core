@@ -142,6 +142,37 @@ export default {
       }, { headers: corsHeaders });
     }
 
+    // --- ZERO-PROMPT EDGE MIRROR ---
+    if (path === "/zero-prompt/summary" && request.method === "POST") {
+      const body = await request.json() as { mirroredAt?: unknown; summary?: unknown };
+      const mirroredAt = typeof body.mirroredAt === "string" && body.mirroredAt.trim().length > 0
+        ? body.mirroredAt
+        : new Date().toISOString();
+
+      await env.D1_METADATA.prepare(`
+        INSERT INTO edge_runtime_mirror (key, summary_json, mirrored_at)
+        VALUES (?, ?, ?)
+      `).bind("zero_prompt_summary", JSON.stringify(body.summary ?? null), mirroredAt).run();
+
+      return Response.json({ success: true, mirroredAt }, { headers: corsHeaders });
+    }
+
+    if (path === "/zero-prompt/summary" && request.method === "GET") {
+      const row = await env.D1_METADATA.prepare(
+        "SELECT key, summary_json, mirrored_at FROM edge_runtime_mirror WHERE key = ?"
+      ).bind("zero_prompt_summary").first<{ key: string; summary_json: string; mirrored_at: string }>();
+
+      if (!row) {
+        return Response.json({ success: false, error: "Zero-Prompt summary not found" }, { status: 404, headers: corsHeaders });
+      }
+
+      return Response.json({
+        success: true,
+        mirroredAt: row.mirrored_at,
+        summary: JSON.parse(row.summary_json),
+      }, { headers: corsHeaders });
+    }
+
     // --- CHAT SYNC API ---
     if (path === "/chat/messages" && request.method === "GET") {
       const result = await env.D1_METADATA.prepare("SELECT * FROM chat_messages ORDER BY timestamp ASC").all();

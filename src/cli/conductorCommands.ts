@@ -7,44 +7,52 @@ import { Command } from 'commander';
 import chalk from 'chalk';
 import { trackStateManager } from '../services/trackStateManager.js';
 
+function writeLine(message = ''): void {
+  process.stdout.write(`${message}\n`);
+}
+
+function writeError(message = ''): void {
+  process.stderr.write(`${message}\n`);
+}
+
 export function registerConductorCommands(conductorCmd: Command): void {
   // brunella conductor rescan
   conductorCmd
     .command('rescan')
     .description('Rescan all tracks (active + archived) and update project_state.json')
     .option('--watch', 'Start file watcher after sync')
-    .action(async (options) => {
-      console.log(chalk.blue('🔄 Track State Manager - Full Sync\n'));
+    .action(async (options: { watch?: boolean }) => {
+      writeLine(chalk.blue('🔄 Track State Manager - Full Sync\n'));
 
       try {
-        console.log(chalk.gray('Scanning conductor/tracks/ and conductor/archive/...\n'));
+        writeLine(chalk.gray('Scanning conductor/tracks/ and conductor/archive/...\n'));
 
         await trackStateManager.fullSync();
 
         const state = trackStateManager.getState();
 
-        console.log(chalk.green('✅ Sync complete!\n'));
-        console.log(chalk.white('📊 Statistics:'));
-        console.log(chalk.white(`  Total tracks: ${state.stats.total}`));
-        console.log(chalk.cyan(`  Active: ${state.stats.active}`));
-        console.log(chalk.yellow(`  Proposed: ${state.stats.proposed}`));
-        console.log(chalk.green(`  Completed: ${state.stats.completed}`));
-        console.log(chalk.gray(`  Archived: ${state.stats.archived}`));
+        writeLine(chalk.green('✅ Sync complete!\n'));
+        writeLine(chalk.white('📊 Statistics:'));
+        writeLine(chalk.white(`  Total tracks: ${state.stats.total}`));
+        writeLine(chalk.cyan(`  Active: ${state.stats.active}`));
+        writeLine(chalk.yellow(`  Proposed: ${state.stats.proposed}`));
+        writeLine(chalk.green(`  Completed: ${state.stats.completed}`));
+        writeLine(chalk.gray(`  Archived: ${state.stats.archived}`));
 
-        console.log(chalk.white(`\n📁 Files updated:`));
-        console.log(chalk.gray(`  conductor/project_state.json`));
-        console.log(chalk.gray(`  conductor/tracks.md`));
+        writeLine(chalk.white(`\n📁 Files updated:`));
+        writeLine(chalk.gray(`  conductor/project_state.json`));
+        writeLine(chalk.gray(`  conductor/tracks.md`));
 
         if (options.watch) {
-          console.log(chalk.blue('\n👀 Starting file watcher (realtime sync)...'));
+          writeLine(chalk.blue('\n👀 Starting file watcher (realtime sync)...'));
           trackStateManager.startWatcher();
-          console.log(chalk.green('✅ File watcher active. Press Ctrl+C to stop.'));
+          writeLine(chalk.green('✅ File watcher active. Press Ctrl+C to stop.'));
           // Keep process alive
           await new Promise(() => {});
         }
       } catch (e: unknown) {
         const msg = e instanceof Error ? e.message : String(e);
-        console.error(chalk.red(`❌ Sync failed: ${msg}`));
+        writeError(chalk.red(`❌ Sync failed: ${msg}`));
         process.exit(1);
       }
     });
@@ -54,47 +62,47 @@ export function registerConductorCommands(conductorCmd: Command): void {
     .command('state')
     .description('Show current project status (tracks summary)')
     .action(async () => {
-      console.log(chalk.blue('📊 Project Status Report\n'));
+      writeLine(chalk.blue('📊 Project Status Report\n'));
 
       const state = trackStateManager.getState();
 
-      console.log(chalk.white(`Last Updated: ${state.lastUpdated}\n`));
+      writeLine(chalk.white(`Last Updated: ${state.lastUpdated}\n`));
 
-      console.log(chalk.cyan('🚀 Active Tracks:'));
+      writeLine(chalk.cyan('🚀 Active Tracks:'));
       const active = state.tracks.filter(t => t.status === 'active');
       if (active.length === 0) {
-        console.log(chalk.gray('  (none)'));
+        writeLine(chalk.gray('  (none)'));
       } else {
         active.slice(0, 10).forEach(t => {
           const progressBar = '█'.repeat(Math.floor(t.progress / 10)) + '░'.repeat(10 - Math.floor(t.progress / 10));
-          console.log(chalk.white(`  [${progressBar}] ${t.progress}% - ${t.name} (${t.priority})`));
+          writeLine(chalk.white(`  [${progressBar}] ${t.progress}% - ${t.name} (${t.priority})`));
         });
         if (active.length > 10) {
-          console.log(chalk.gray(`  ... and ${active.length - 10} more`));
+          writeLine(chalk.gray(`  ... and ${active.length - 10} more`));
         }
       }
 
-      console.log(chalk.yellow('\n📝 Proposed Tracks:'));
+      writeLine(chalk.yellow('\n📝 Proposed Tracks:'));
       const proposed = state.tracks.filter(t => t.status === 'proposed');
       if (proposed.length === 0) {
-        console.log(chalk.gray('  (none)'));
+        writeLine(chalk.gray('  (none)'));
       } else {
         proposed.slice(0, 5).forEach(t => {
-          console.log(chalk.white(`  - ${t.name} (${t.priority})`));
+          writeLine(chalk.white(`  - ${t.name} (${t.priority})`));
         });
         if (proposed.length > 5) {
-          console.log(chalk.gray(`  ... and ${proposed.length - 5} more`));
+          writeLine(chalk.gray(`  ... and ${proposed.length - 5} more`));
         }
       }
 
-      console.log(chalk.green('\n✅ Completed (Not Archived):'));
+      writeLine(chalk.green('\n✅ Completed (Not Archived):'));
       const completed = state.tracks.filter(t => t.status === 'completed' && !t._isArchived);
-      console.log(chalk.white(`  ${completed.length} tracks`));
+      writeLine(chalk.white(`  ${completed.length} tracks`));
 
-      console.log(chalk.gray('\n📦 Archived:'));
-      console.log(chalk.white(`  ${state.stats.archived} tracks`));
+      writeLine(chalk.gray('\n📦 Archived:'));
+      writeLine(chalk.white(`  ${state.stats.archived} tracks`));
 
-      console.log(chalk.white(`\n📊 Total: ${state.stats.total} tracks`));
+      writeLine(chalk.white(`\n📊 Total: ${state.stats.total} tracks`));
     });
 
   // brunella conductor list
@@ -116,10 +124,10 @@ export function registerConductorCommands(conductorCmd: Command): void {
         tracks = tracks.filter(t => t.priority === options.priority);
       }
 
-      console.log(chalk.blue(`📋 Track List (${tracks.length} tracks)\n`));
+      writeLine(chalk.blue(`📋 Track List (${tracks.length} tracks)\n`));
 
       if (tracks.length === 0) {
-        console.log(chalk.gray('No tracks found.'));
+        writeLine(chalk.gray('No tracks found.'));
         return;
       }
 
@@ -136,12 +144,12 @@ export function registerConductorCommands(conductorCmd: Command): void {
           t.priority === 'medium' ? chalk.blue('[P2]') :
           chalk.gray('[P3]');
 
-        console.log(statusColor(`${t.status.toUpperCase().padEnd(10)} ${priorityBadge} ${t.progress}% - ${t.name}`));
-        console.log(chalk.gray(`           ID: ${t.id}`));
+        writeLine(statusColor(`${t.status.toUpperCase().padEnd(10)} ${priorityBadge} ${t.progress}% - ${t.name}`));
+        writeLine(chalk.gray(`           ID: ${t.id}`));
         if (t.assignee) {
-          console.log(chalk.gray(`           Assignee: ${t.assignee}`));
+          writeLine(chalk.gray(`           Assignee: ${t.assignee}`));
         }
-        console.log('');
+        writeLine('');
       });
     });
 }

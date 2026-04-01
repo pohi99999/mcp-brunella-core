@@ -12,6 +12,8 @@
 
 import { Router } from 'express';
 import { exec } from 'child_process';
+import fs from 'node:fs/promises';
+import path from 'node:path';
 import { agentManager } from '../../agents/AgentManager.js';
 import { asyncHandler } from '../middleware/errorHandler.js';
 import { getGlobalDb } from '../../utils/globalDb.js';
@@ -21,6 +23,8 @@ import {
   checkOllamaHealth,
   checkAnythingLLMHealth,
   checkPythonHealth,
+  checkN8nHealth,
+  checkLangflowHealth,
 } from '../../utils/health.js';
 
 /**
@@ -48,10 +52,12 @@ export function createSystemControlRouter(): Router {
   router.get(
     '/status',
     asyncHandler(async (_req, res) => {
-      const [ollama, python, anythingllm] = await Promise.allSettled([
+      const [ollama, python, anythingllm, n8n, langflow] = await Promise.allSettled([
         checkOllamaHealth(),
         checkPythonHealth(),
         checkAnythingLLMHealth(),
+        checkN8nHealth(),
+        checkLangflowHealth(),
       ]);
 
       const toStatus = (r: PromiseSettledResult<{ status: string }>) => {
@@ -77,6 +83,18 @@ export function createSystemControlRouter(): Router {
           status: toStatus(anythingllm),
           lastCheck: new Date().toISOString(),
           error: anythingllm.status === 'rejected' ? String(anythingllm.reason) : undefined,
+        },
+        {
+          id: 'n8n',
+          status: toStatus(n8n),
+          lastCheck: new Date().toISOString(),
+          error: n8n.status === 'rejected' ? String(n8n.reason) : undefined,
+        },
+        {
+          id: 'langflow',
+          status: toStatus(langflow),
+          lastCheck: new Date().toISOString(),
+          error: langflow.status === 'rejected' ? String(langflow.reason) : undefined,
         },
       ];
 
@@ -107,6 +125,30 @@ export function createSystemControlRouter(): Router {
             : 'uvicorn myai.server:app --port 8000 &';
           await execAsync(cmd).catch(() => {});
           res.json({ success: true, message: 'Python szerver elindult' });
+        } else if (service === 'n8n') {
+          // n8n indítása a specifikált mappában: f:\mcp-brunella-core\n8nv2
+          const n8nPath = 'f:\\mcp-brunella-core\\n8nv2';
+          logInfo('SystemControl', `n8n indítása itt: ${n8nPath}`);
+          
+          // Ellenőrizzük, kell-e npm install
+          const hasNodeModules = await fs.access(path.join(n8nPath, 'node_modules')).then(() => true).catch(() => false);
+          if (!hasNodeModules) {
+            logInfo('SystemControl', 'node_modules hiányzik, npm install futtatása...');
+            await execAsync(`cd /d ${n8nPath} && npm install`);
+          }
+
+          // Win32 specifikus indítás háttérben
+          const cmd = `cd /d ${n8nPath} && start /B npm start`;
+          await execAsync(cmd);
+          
+          res.json({ success: true, message: 'n8n indítása elindult a háttérben' });
+        } else if (service === 'langflow') {
+          // Langflow indítása Docker-rel
+          logInfo('SystemControl', 'Langflow indítása Docker-rel');
+          const cmd = 'docker start langflow || docker run -d -p 7860:7860 --name langflow langflowai/langflow';
+          await execAsync(cmd);
+          
+          res.json({ success: true, message: 'Langflow (Docker) elindult' });
         } else if (service === 'anythingllm') {
           res.json({ success: false, message: 'AnythingLLM Desktop app – indítsd el manuálisan' });
         } else {

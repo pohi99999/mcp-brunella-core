@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-04-01T08:23:14.229Z",
+  "lastUpdated": "2026-04-01T22:20:57.682Z",
   "tracks": [
     {
       "id": "autogen_github_models_pilot_20260401",
@@ -40,11 +40,31 @@
       "_isArchived": false
     },
     {
+      "id": "dashboard_cockpit_redesign_20260401",
+      "name": "Dashboard Cockpit Redesign + Stabilization",
+      "status": "active",
+      "priority": "high",
+      "progress": 84,
+      "assignee": "Copilot",
+      "tags": [
+        "dashboard",
+        "mission-control",
+        "ux",
+        "vite",
+        "react",
+        "playwright",
+        "stabilization"
+      ],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\dashboard_cockpit_redesign_20260401",
+      "_isArchived": false
+    },
+    {
       "id": "inventory_automation_20260330",
       "name": "Autonóm Készlet- és Leltárkezelési Rendszer — KKV",
       "status": "active",
       "priority": "medium",
-      "progress": 0,
+      "progress": 58,
       "created": "2026-03-30",
       "tags": [
         "készlet",
@@ -62,29 +82,6 @@
       ],
       "dependencies": [],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\inventory_automation_20260330",
-      "_isArchived": false
-    },
-    {
-      "id": "konyveles_automatizalas",
-      "name": "Könyvelés automatizálása",
-      "status": "active",
-      "priority": "medium",
-      "progress": 0,
-      "created": "2026-03-26",
-      "tags": [
-        "finance",
-        "automation",
-        "nav",
-        "bank-reconciliation",
-        "ocr",
-        "agent"
-      ],
-      "dependencies": [
-        "NAV API hozzáférés",
-        "Bank API/CMS hozzáférés (vagy napi CSV)",
-        "Google Drive / IMAP hozzáférés"
-      ],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\konyveles_automatizalas",
       "_isArchived": false
     },
     {
@@ -1791,6 +1788,29 @@
       "_isArchived": true
     },
     {
+      "id": "konyveles_automatizalas",
+      "name": "Könyvelés automatizálása",
+      "status": "archived",
+      "priority": "medium",
+      "progress": 0,
+      "created": "2026-03-26",
+      "tags": [
+        "finance",
+        "automation",
+        "nav",
+        "bank-reconciliation",
+        "ocr",
+        "agent"
+      ],
+      "dependencies": [
+        "NAV API hozzáférés",
+        "Bank API/CMS hozzáférés (vagy napi CSV)",
+        "Google Drive / IMAP hozzáférés"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\konyveles_automatizalas",
+      "_isArchived": true
+    },
+    {
       "id": "law_detective_20260223",
       "name": "law_detective_20260223",
       "status": "archived",
@@ -2959,10 +2979,10 @@
     }
   ],
   "stats": {
-    "total": 168,
+    "total": 169,
     "active": 5,
     "completed": 4,
-    "archived": 155,
+    "archived": 156,
     "proposed": 3
   }
 }

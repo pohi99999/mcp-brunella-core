@@ -103,6 +103,19 @@ export async function updateTaskStatus(id: number | bigint, status: string, resu
     stmt.run(status, result || null, completedAt, id);
 }
 
+/**
+ * Loads unfinished tasks (pending + running) for queue rehydration on startup.
+ * Running tasks are reset to pending by the caller after recovery.
+ */
+export async function loadQueuedTasksForHydration(): Promise<TaskRow[]> {
+    const database = await getDb();
+    if (!database) return [];
+    const stmt = database.prepare(
+        "SELECT * FROM tasks WHERE status IN ('pending', 'running') ORDER BY id ASC"
+    );
+    return stmt.all() as TaskRow[];
+}
+
 export async function getTasks(limit: number = 20, offset: number = 0, status?: string): Promise<TaskRow[]> {
     const database = await getDb();
     if (!database) return [];

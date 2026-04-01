@@ -1,0 +1,31 @@
+uid=17_0 RootWebArea "Sign in to continue to n8n.cloud" url="https://accounts.google.com/v3/signin/identifier?access_type=offline&app_domain=https%3A%2F%2Foauth.n8n.cloud&client_id=498586711441-2g8u7bniqe694ng8rk12lhlao9aj7dpi.apps.googleusercontent.com&continue=https%3A%2F%2Faccounts.google.com%2Fsignin%2Foauth%2Fconsent%3Fauthuser%3Dunknown%26part%3DAJi8hAOYnhGwnStLMyd0hEojmZR1CwQ9cO60ee24Hd948j9UfFN3E-q9e_WuQlUcKFlCSEBhRmJF3vvcmpgdrNIkXBMjQg-gBhQ61571fQSVr6TX0229lodIOt6f_LOyJVhlHyk3MYOlUaq58SNbJ3f4t6DO8F9Ss6e6z0AIXkovCDyQRGGADhvUOTZFFeXnO67IGgtEGBlKrPZQcIpj-X3A_McgmTmfj3ytZ144Lqccuul9MlIQphIrEJzwqO87jRBanqO4qCH5MdBiboakQ4DHEzMzBfhTxYSB7nHCLJnRqud98i7QKpx5dKLcgPeTywIC3VFjkuXcqlNNIOIxwFgTdeFYS-ikK_pgxhjwdJktzSnXyuAr1MN6PNWNcoPT3SqEULlt8j1gOLf1LZsMaDK94ox6G5wJbAEMwTHDIE5hMIUY0Zo3GYmDnkKIwM9yZTHWxEHfEkGqQWOug05_swrFhx0KkFNnroeiqY3yLiTAVqJ9-0W_TcI%26flowName%3DGeneralOAuthFlow%26as%3DS454912861%253A1775044002663871%26client_id%3D498586711441-2g8u7bniqe694ng8rk12lhlao9aj7dpi.apps.googleusercontent.com%26requestPath%3D%252Fsignin%252Foauth%252Fconsent%23&dsh=S454912861%3A1775044002663871&flowName=GeneralOAuthFlow&o2v=1&opparams=%253F&prompt=consent&redirect_uri=https%3A%2F%2Foauth.n8n.cloud%2Foauth2%2Fcallback&response_type=code&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fgmail.labels%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fgmail.addons.current.action.compose%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fgmail.addons.current.message.action%20https%3A%2F%2Fmail.google.com%2F%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fgmail.modify%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fgmail.compose&service=lso&state=eyJ0b2tlbiI6IkQ1VlkyVktoLXhSamdHVElBVGRBRDhheV81UzdvM0VNS2h6dyIsImNpZCI6Ijl5eDZ0NzFKVm5sMGhEdmEiLCJjcmVhdGVkQXQiOjE3NzUwNDQwMDI1MTUsInVzZXJJZCI6ImRlMzNlNzZkLTdiYmYtNGRlOC05ODY3LWQ0NjQ2YTQzZWZmNCIsImhvc3QiOiJpc3phcGZhbG8uYXBwLm44bi5jbG91ZC9yZXN0In0%3D"
+  uid=18_0 main
+    uid=18_1 StaticText "Sign in with Google"
+    uid=18_2 image "n8n.cloud" url="https://lh3.googleusercontent.com/_NPFQv5fKL5FofzIkQ8R_91PMz0cQBo8z4Mqd5LJXc8GRZj_05LkpuCjTLBxCLYg_w"
+    uid=18_3 heading "Sign in" level="1"
+    uid=18_4 StaticText "to continue to "
+    uid=18_5 button "n8n.cloud"
+    uid=18_6 textbox "Email or phone" focusable focused
+    uid=18_7 generic live="polite" relevant="additions text"
+    uid=18_8 button "Forgot email?"
+    uid=18_9 StaticText "Before using this app, you can review n8n.cloud’s "
+    uid=18_10 link "privacy policy" url="https://n8n.io/legal/#privacy"
+      uid=18_11 StaticText "privacy policy"
+    uid=18_12 StaticText " and "
+    uid=18_13 link "terms of service" url="https://n8n.io/legal/#terms"
+      uid=18_14 StaticText "terms of service"
+    uid=18_15 StaticText "."
+    uid=18_16 button "Next"
+    uid=18_17 button "Create account"
+  uid=17_20 contentinfo
+    uid=17_21 combobox "Change language English (United States)" expandable haspopup="listbox" live="polite" relevant="additions text" value="English (United States)"
+    uid=17_22 link "Help" url="https://support.google.com/accounts?hl=en-US&p=account_iph"
+      uid=17_23 StaticText "Help"
+    uid=17_24 link "Privacy" url="https://accounts.google.com/TOS?loc=HU&hl=en-US&privacy=true"
+      uid=17_25 StaticText "Privacy"
+    uid=17_26 link "Terms" url="https://accounts.google.com/TOS?loc=HU&hl=en-US"
+      uid=17_27 StaticText "Terms"
+  uid=17_28 Iframe
+    uid=17_29 RootWebArea url="https://accounts.youtube.com/accounts/CheckConnection?pmpo=https%3A%2F%2Faccounts.google.com&v=-185551156&timestamp=1775044066113"
+  uid=18_18 Iframe
+    uid=18_19 RootWebArea url="https://accounts.youtube.com/accounts/CheckConnection?pmpo=https%3A%2F%2Faccounts.google.com&v=-185551156&timestamp=1775044136823"

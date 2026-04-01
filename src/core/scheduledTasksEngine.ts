@@ -22,6 +22,10 @@ interface ScheduleResult {
   nextRun?: string;
 }
 
+interface ScheduledTaskStatus extends ScheduledTaskRecord {
+  isRunning: boolean;
+}
+
 export class ScheduledTasksEngine {
   private db: Database.Database;
   private tasks: Map<string, cron.ScheduledTask> = new Map();
@@ -195,7 +199,7 @@ export class ScheduledTasksEngine {
   /**
    * Get status of a task
    */
-  getTaskStatus(taskId: string): any {
+  getTaskStatus(taskId: string): ScheduledTaskStatus | null {
     const record = this.db
       .prepare('SELECT * FROM scheduled_tasks WHERE id = ?')
       .get(taskId) as ScheduledTaskRecord | undefined;
@@ -211,7 +215,7 @@ export class ScheduledTasksEngine {
   /**
    * Get all scheduled tasks with status
    */
-  getAllTasks(): any[] {
+  getAllTasks(): ScheduledTaskStatus[] {
     const records = this.db
       .prepare('SELECT * FROM scheduled_tasks ORDER BY created_at DESC')
       .all() as ScheduledTaskRecord[];

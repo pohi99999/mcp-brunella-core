@@ -29,6 +29,12 @@ from dotenv import load_dotenv
 from myai.backend.config import get_backend_config
 from myai.backend.providers import IronCladProviderGateway
 from myai.backend.schemas import ModelsResponse
+from myai.runtime_security import (
+    is_python_execute_enabled,
+    resolve_harvest_scenario_path,
+    resolve_json_schema_source,
+    MAX_DYNAMIC_CODE_SIZE,
+)
 
 load_dotenv() # Load .env file
 
@@ -346,7 +352,18 @@ execution_scope = {
 def execute_code(req: ExecuteRequest):
     """
     Executes arbitrary Python code in a persistent global scope.
+    Gated by BRUNELLA_ENABLE_PYTHON_EXECUTE env flag for security.
     """
+    if not is_python_execute_enabled():
+        raise HTTPException(
+            status_code=403,
+            detail="Python execute is disabled. Set BRUNELLA_ENABLE_PYTHON_EXECUTE=1 to enable.",
+        )
+    if len(req.code) > MAX_DYNAMIC_CODE_SIZE:
+        raise HTTPException(
+            status_code=413,
+            detail=f"Code exceeds maximum allowed size of {MAX_DYNAMIC_CODE_SIZE} bytes.",
+        )
     global execution_scope
     try:
         # Update context if provided
@@ -386,10 +403,13 @@ async def harvest_scenario(req: HarvestRequest):
     Returns the scenario execution result.
     """
     try:
-        if not os.path.exists(req.scenario_path):
+        safe_path = resolve_harvest_scenario_path(req.scenario_path)
+        if not os.path.exists(safe_path):
             raise HTTPException(status_code=404, detail=f"Scenario not found: {req.scenario_path}")
-        result = await run_scenario(req.scenario_path, force_mode=req.force_mode)
+        result = await run_scenario(safe_path, force_mode=req.force_mode)
         return {"status": "ok", "result": result}
+    except (ValueError, HTTPException):
+        raise
     except Exception as e:
         traceback.print_exc()
         raise HTTPException(status_code=500, detail=str(e))
@@ -405,10 +425,13 @@ async def harvest_extract(req: ExtractionRequest):
             "extraction_prompt": req.extraction_prompt,
             "model": req.model,
         }
-        result = await run_structured_extraction(config, req.schema_source)
+        safe_schema = resolve_json_schema_source(req.schema_source)
+        result = await run_structured_extraction(config, safe_schema)
         if "error" in result:
             return {"status": "error", "error": result["error"], "raw_output": result.get("raw_output")}
         return {"status": "ok", "data": result["data"], "raw_output": result.get("raw_output")}
+    except (ValueError, HTTPException):
+        raise
     except Exception as e:
         traceback.print_exc()
         raise HTTPException(status_code=500, detail=str(e))

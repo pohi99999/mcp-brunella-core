@@ -4,7 +4,6 @@
     "github.copilot-chat",
     "sbroenne.windows-mcp", // MCP kliens Windowsra
     // --- PYTHON (Robotkéz & AI) ---
-    "ms-python.python",
     "ms-python.vscode-pylance",
     "charliermarsh.ruff", // Gyors Python linter (ajánlott)
     // --- NODE.JS / TYPESCRIPT ---
@@ -62,6 +61,7 @@
     "upstash.context7-mcp",
     "automatalabs.copilot-mcp",
     "dhananjaysenday.mcp--inspector",
-    "amitpatole.mcp-marketplace"
+    "amitpatole.mcp-marketplace",
+    "ms-vscode.cpptools"
   ]
 }

@@ -23,6 +23,10 @@ interface MemoryStatsResponse {
   }>;
 }
 
+function writeLine(message = ""): void {
+  process.stdout.write(`${message}\n`);
+}
+
 async function fetchJson<T>(pathName: string, options?: RequestInit): Promise<T> {
   const response = await fetch(`${API_BASE}${pathName}`, {
     headers: { "Content-Type": "application/json" },
@@ -37,18 +41,18 @@ async function fetchJson<T>(pathName: string, options?: RequestInit): Promise<T>
 
 async function showStats(): Promise<void> {
   const stats = await fetchJson<MemoryStatsResponse>("/api/v1/memory/structured/stats");
-  console.log(chalk.bold.cyan("\n🧠 Agent Memória & Tanulás\n"));
-  console.log(`  Összes entry:        ${chalk.white(stats.summary.totalEntries)}`);
-  console.log(`  Átl. confidence:     ${chalk.white(stats.summary.avgConfidence.toFixed(2))}`);
-  console.log(`  Pattern reuse:       ${chalk.white(stats.summary.totalReuses)}`);
-  console.log("");
+  writeLine(chalk.bold.cyan("\n🧠 Agent Memória & Tanulás\n"));
+  writeLine(`  Összes entry:        ${chalk.white(stats.summary.totalEntries)}`);
+  writeLine(`  Átl. confidence:     ${chalk.white(stats.summary.avgConfidence.toFixed(2))}`);
+  writeLine(`  Pattern reuse:       ${chalk.white(stats.summary.totalReuses)}`);
+  writeLine("");
 
   for (const agent of stats.agents) {
-    console.log(chalk.bold(agent.agentName));
-    console.log(`  Entries:             ${agent.totalEntries}`);
-    console.log(`  Avg confidence:      ${agent.avgConfidence.toFixed(2)}`);
-    console.log(`  Cache hits/misses:   ${agent.cache.hits}/${agent.cache.misses}`);
-    console.log(`  Hit rate:            ${(agent.cache.hitRate * 100).toFixed(1)}%\n`);
+    writeLine(chalk.bold(agent.agentName));
+    writeLine(`  Entries:             ${agent.totalEntries}`);
+    writeLine(`  Avg confidence:      ${agent.avgConfidence.toFixed(2)}`);
+    writeLine(`  Cache hits/misses:   ${agent.cache.hits}/${agent.cache.misses}`);
+    writeLine(`  Hit rate:            ${(agent.cache.hitRate * 100).toFixed(1)}%\n`);
   }
 }
 
@@ -57,7 +61,7 @@ async function purgeMemory(minConfidence = 0.5): Promise<void> {
     method: "POST",
     body: JSON.stringify({ minConfidence }),
   });
-  console.log(chalk.green(`\n✅ Törölt structured memory sorok: ${result.removed}\n`));
+  writeLine(chalk.green(`\n✅ Törölt structured memory sorok: ${result.removed}\n`));
 }
 
 async function exportMemory(format: "jsonl" | "json" = "jsonl"): Promise<void> {
@@ -68,14 +72,14 @@ async function exportMemory(format: "jsonl" | "json" = "jsonl"): Promise<void> {
   const content = await response.text();
   const filePath = path.resolve(process.cwd(), `memory-export-${Date.now()}.${format}`);
   await fs.writeFile(filePath, content, "utf8");
-  console.log(chalk.green(`\n✅ Export elkészült: ${filePath}\n`));
+  writeLine(chalk.green(`\n✅ Export elkészült: ${filePath}\n`));
 }
 
 async function syncGolden(): Promise<void> {
   const result = await fetchJson<{ success: boolean; synced: number; failed: number; skipped: number }>("/api/v1/memory/structured/golden/sync", {
     method: "POST",
   });
-  console.log(chalk.green(`\n✅ Golden sync: ${result.synced} synced / ${result.failed} failed / ${result.skipped} skipped\n`));
+  writeLine(chalk.green(`\n✅ Golden sync: ${result.synced} synced / ${result.failed} failed / ${result.skipped} skipped\n`));
 }
 
 export function registerMemoryCommands(program: Command): void {

@@ -68,3 +68,16 @@ export interface RemediationRunRecord {
   failureReason?: string;
 }
 
+export interface RemediationRunsSummary {
+  total: number;
+  counts: Partial<Record<RemediationRunStatus, number>>;
+  active: boolean;
+  latestUpdatedAt?: string;
+  pendingFinalApproval: number;
+  inFlight: number;
+  latestRunId?: string;
+  latestRunStatus?: RemediationRunStatus;
+  latestRepositoryName?: string;
+  latestFailureReason?: string;
+}
+

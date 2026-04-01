@@ -1,6 +1,5 @@
-import { render, screen, act, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { useEffect } from 'react';
 import { MissionControlLayout } from './MissionControlLayout';
 import { LayoutProvider } from '@/lib/layout/LayoutContext';
 
@@ -20,6 +19,7 @@ vi.mock('@/context/ExperimentContext', () => ({
 }));
 
 vi.mock('@/lib/apiService', () => ({
+  checkHealth: vi.fn(() => Promise.resolve({ status: 'ok' })),
   getRegistry: vi.fn(() => Promise.resolve({ agents: [] })),
   executeAgent: vi.fn(() => Promise.resolve()),
 }));
@@ -29,20 +29,9 @@ vi.mock('sonner', () => ({
 }));
 
 vi.mock('@/components/dashboard/CommandMenu', () => ({
-  CommandMenu: ({ setActiveTab, activeTab }: any) => (
+  CommandMenu: ({ activeTab }: any) => (
     <div data-testid="command-menu">Command Menu (Active: {activeTab})</div>
   ),
-}));
-
-vi.mock('@/components/SystemBootSequence', () => ({
-  SystemBootSequence: ({ onComplete }: { onComplete: () => void }) => {
-    useEffect(() => {
-      // Simulate boot completion after a short delay
-      const timer = setTimeout(() => onComplete(), 100);
-      return () => clearTimeout(timer);
-    }, [onComplete]);
-    return <div data-testid="boot-sequence">Booting...</div>;
-  },
 }));
 
 vi.mock('@/lib/navigation', () => ({
@@ -51,108 +40,103 @@ vi.mock('@/lib/navigation', () => ({
       if (tab === 'dashboard') return { component: <div data-testid="widget-grid-mock">Widget Grid Mock</div> };
       return { component: <div data-testid={`${tab}-mock`}>Tab Content: {tab}</div> };
     }),
+    getGroups: vi.fn(() => []),
+    getAllItems: vi.fn(() => []),
   },
 }));
 
 vi.mock('@/components/dashboard/DynamicSidebar', () => ({
-  DynamicSidebar: ({ activeTab, onTabChange }: any) => (
+  DynamicSidebar: ({ activeTab }: any) => (
     <div data-testid="dynamic-sidebar">Sidebar (Active: {activeTab})</div>
   ),
 }));
 
-// Mock WidgetGrid since its internal implementation changed. We want to test MissionControlLayout's integration.
 vi.mock('@/components/dashboard/WidgetGrid', () => ({
   WidgetGrid: () => <div data-testid="widget-grid">Widget Grid</div>,
 }));
 
+vi.mock('@/components/dashboard/TerminalLog', () => ({
+  TerminalLog: () => <div data-testid="terminal-log">Terminal Log</div>,
+}));
+
+vi.mock('@/components/ThemeToggle', () => ({
+  ThemeToggle: () => <button data-testid="theme-toggle">Theme</button>,
+}));
+
 describe('MissionControlLayout', () => {
   beforeEach(() => {
-    // Reset mocks before each test
     vi.clearAllMocks();
   });
 
-  it('renders successfully and boot sequence completes', async () => {
+  it('renders successfully with header and sidebar', () => {
     render(<MissionControlLayout />, { wrapper: LayoutProvider });
 
-    // Initially, boot sequence should be visible
-    expect(screen.getByTestId('boot-sequence')).toBeInTheDocument();
-
-    // After boot, it should be removed and main content visible
-    await waitFor(() => {
-      expect(screen.queryByTestId('boot-sequence')).not.toBeInTheDocument();
-    }, { timeout: 200 }); // Give enough time for the simulated boot sequence
-
-    expect(screen.getByText('Brunella Cortex')).toBeInTheDocument();
+    expect(screen.getByText('Brunella')).toBeInTheDocument();
     expect(screen.getByTestId('command-menu')).toBeInTheDocument();
     expect(screen.getByTestId('dynamic-sidebar')).toBeInTheDocument();
   });
 
-  it('displays the default layout name in the switcher', async () => {
+  it('renders the brand name and subtitle', () => {
     render(<MissionControlLayout />, { wrapper: LayoutProvider });
-    await waitFor(() => expect(screen.queryByTestId('boot-sequence')).not.toBeInTheDocument());
 
-    const layoutSwitcher = screen.getByRole('button', { name: /LAYOUT:/i });
-    expect(layoutSwitcher).toBeInTheDocument();
-    expect(layoutSwitcher).toHaveTextContent('LAYOUT: DEFAULT_DASHBOARD');
+    expect(screen.getByText('Brunella')).toBeInTheDocument();
+    expect(screen.getByText('Mission Control')).toBeInTheDocument();
+  });
+
+  it('displays the default layout name (MISSION_CONTROL) in the layout switcher button', () => {
+    render(<MissionControlLayout />, { wrapper: LayoutProvider });
+
+    // The layout switcher button shows "LAYOUT MISSION_CONTROL" (uppercased name with underscores)
+    const layoutBtn = screen.getByRole('button', { name: /LAYOUT/i });
+    expect(layoutBtn).toBeInTheDocument();
+    expect(layoutBtn).toHaveTextContent('MISSION_CONTROL');
   });
 
   it('changes layout when a new mode is selected from the dropdown', async () => {
     render(<MissionControlLayout />, { wrapper: LayoutProvider });
-    await waitFor(() => expect(screen.queryByTestId('boot-sequence')).not.toBeInTheDocument());
 
-    const layoutSwitcher = screen.getByRole('button', { name: /LAYOUT:/i });
-    await userEvent.click(layoutSwitcher);
+    const layoutBtn = screen.getByRole('button', { name: /LAYOUT/i });
+    await userEvent.click(layoutBtn);
 
-    const devModeOption = screen.getByText('Developer Mode');
+    const devModeOption = await screen.findByText('Developer Mode');
     await userEvent.click(devModeOption);
 
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: /LAYOUT:/i })).toHaveTextContent('LAYOUT: DEVELOPER_MODE');
+      expect(screen.getByRole('button', { name: /LAYOUT/i })).toHaveTextContent('DEVELOPER_MODE');
     });
   });
 
-  it('renders WidgetGrid when activeTab is dashboard', async () => {
+  it('renders WidgetGrid when activeTab is dashboard (default)', () => {
     render(<MissionControlLayout />, { wrapper: LayoutProvider });
-    await waitFor(() => expect(screen.queryByTestId('boot-sequence')).not.toBeInTheDocument());
 
     expect(screen.getByTestId('widget-grid')).toBeInTheDocument();
-    expect(screen.queryByTestId('chat-mock')).not.toBeInTheDocument();
-
-    // Simulate switching to another tab
-    act(() => {
-      const commandMenu = screen.getByTestId('command-menu');
-      // In a real scenario, CommandMenu would call setActiveTab. Mocking directly for test control.
-      // For this test, we don't have direct access to setActiveTab from MissionControlLayout. Mocking the CommandMenu behavior.
-      // A more robust test might involve rendering CommandMenu fully or using a test helper to trigger context changes.
-    });
-    // Re-render with a different active tab if direct state manipulation was possible for activeTab in this test component.
-    // For now, checking initial condition.
   });
 
-  it('applies CSS Grid styles dynamically to the main content area', async () => {
+  it('shows terminal log when terminal is expanded', async () => {
     render(<MissionControlLayout />, { wrapper: LayoutProvider });
-    await waitFor(() => expect(screen.queryByTestId('boot-sequence')).not.toBeInTheDocument());
 
-    const mainContentDiv = screen.getByRole('grid', { hidden: true }); // The main grid container
-    expect(mainContentDiv).toBeInTheDocument();
-
-    // Check for default layout grid styles
-    expect(mainContentDiv).toHaveStyle('grid-template-areas: \'header header header\' \'sidebar main-top main-top\' \'sidebar main-left main-right\' \'sidebar footer footer\'');
-    expect(mainContentDiv).toHaveStyle('grid-template-columns: auto 1fr 1fr');
-    expect(mainContentDiv).toHaveStyle('grid-template-rows: auto 1fr 1fr auto');
-
-    // Change layout to dev-mode and check styles
-    const layoutSwitcher = screen.getByRole('button', { name: /LAYOUT:/i });
-    await userEvent.click(layoutSwitcher);
-    const devModeOption = screen.getByText('Developer Mode');
-    await userEvent.click(devModeOption);
+    // Terminal starts collapsed, expand it
+    const expandBtn = screen.getByLabelText('Expand terminal');
+    await userEvent.click(expandBtn);
 
     await waitFor(() => {
-      // Re-query the element to get updated styles after state change
-      const updatedMainContentDiv = screen.getByRole('grid', { hidden: true });
-      expect(updatedMainContentDiv).toHaveStyle('grid-template-areas: \'header header header\' \'sidebar dev-main dev-main\' \'sidebar dev-bottom dev-right\' \'sidebar footer footer\'');
-      expect(updatedMainContentDiv).toHaveStyle('grid-template-columns: auto 2fr 1fr');
-      expect(updatedMainContentDiv).toHaveStyle('grid-template-rows: auto 2fr 1fr auto');
+      expect(screen.getByTestId('terminal-log')).toBeInTheDocument();
+    });
+  });
+
+  it('has a status indicator in the header', () => {
+    render(<MissionControlLayout />, { wrapper: LayoutProvider });
+
+    // Status label is rendered (OFFLINE initially, HEALTHY after health check resolves)
+    // Initially OFFLINE before the async health check
+    expect(screen.getByText('OFFLINE')).toBeInTheDocument();
+  });
+
+  it('shows HEALTHY status after a successful health check', async () => {
+    render(<MissionControlLayout />, { wrapper: LayoutProvider });
+
+    await waitFor(() => {
+      expect(screen.getByText('HEALTHY')).toBeInTheDocument();
     });
   });
 });

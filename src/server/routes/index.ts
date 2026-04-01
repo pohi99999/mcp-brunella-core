@@ -77,6 +77,7 @@ export function createV1Router(): Router {
   router.use("/tts", lazy(() => import("./tts.js"), "createTTSRoutes"));
   router.use("/brunella", lazy(() => import("./recommendation.js"), "createRecommendationRoutes"));
   router.use("/bookkeeping", lazy(() => import("./bookkeeping.js"), "createBookkeepingRoutes"));
+  router.use("/inventory", lazy(() => import("./inventory.js"), "createInventoryRoutes"));
   router.use("/machines", lazy(() => import("./machines.js"), "createMachinesRouter"));
   router.use("/enterprise", lazy(() => import("./enterprise.js"), "createEnterpriseRouter"));
   router.use("/enterprise/analytics", lazy(() => import("./enterprise.js"), "createEnterpriseAnalyticsRouter"));

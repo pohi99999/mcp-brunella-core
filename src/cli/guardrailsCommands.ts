@@ -14,6 +14,44 @@ import chalk from "chalk";
 
 const API_BASE = process.env.API_BASE_URL || "http://localhost:3000";
 
+interface GuardrailsStats {
+  strictMode: boolean;
+  confidenceThreshold: number;
+  validationsPassed: number;
+  validationsFailed: number;
+  avgConfidence?: number;
+  redactionsTriggered: number;
+}
+
+interface TelemetryModelUsage {
+  input?: number;
+  output?: number;
+}
+
+interface TelemetryStats {
+  activeSpans: number;
+  completedSpans: number;
+  totalInputTokens?: number;
+  totalOutputTokens?: number;
+  tokensByModel?: Record<string, TelemetryModelUsage>;
+}
+
+interface TelemetryTrace {
+  status: 'success' | 'error' | 'running';
+  duration: number;
+  agentName: string;
+  operation: string;
+  traceId: string;
+}
+
+function writeLine(message = ''): void {
+  process.stdout.write(`${message}\n`);
+}
+
+function writeError(message = ''): void {
+  process.stderr.write(`${message}\n`);
+}
+
 export function registerGuardrailsCommands(program: Command): void {
   const guardrails = program
     .command("guardrails")
@@ -26,19 +64,20 @@ export function registerGuardrailsCommands(program: Command): void {
       try {
         const res = await fetch(`${API_BASE}/api/v1/guardrails/stats`);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const stats = await res.json();
+        const stats = await res.json() as GuardrailsStats;
 
-        console.log(chalk.bold.green("\n🛡️  Guardrails Állapot\n"));
-        console.log(`  Strict Mode:        ${stats.strictMode ? chalk.red('BE (hard-fail)') : chalk.green('KI (soft-fail)')}`);
-        console.log(`  Confidence Küszöb:  ${chalk.cyan(stats.confidenceThreshold)}`);
-        console.log(`  Validáció OK:       ${chalk.green(stats.validationsPassed)}`);
-        console.log(`  Validáció Hiba:     ${chalk.yellow(stats.validationsFailed)}`);
-        console.log(`  Átl. Confidence:    ${chalk.cyan(stats.avgConfidence?.toFixed(2) || '—')}`);
-        console.log(`  PII Redakciók:      ${chalk.red(stats.redactionsTriggered)}`);
-        console.log("");
-      } catch (err: any) {
-        console.log(chalk.red(`\n❌ Guardrails API nem elérhető: ${err.message}`));
-        console.log(chalk.gray("  Indítsd el a szervert: npm start\n"));
+        writeLine(chalk.bold.green("\n🛡️  Guardrails Állapot\n"));
+        writeLine(`  Strict Mode:        ${stats.strictMode ? chalk.red('BE (hard-fail)') : chalk.green('KI (soft-fail)')}`);
+        writeLine(`  Confidence Küszöb:  ${chalk.cyan(stats.confidenceThreshold)}`);
+        writeLine(`  Validáció OK:       ${chalk.green(stats.validationsPassed)}`);
+        writeLine(`  Validáció Hiba:     ${chalk.yellow(stats.validationsFailed)}`);
+        writeLine(`  Átl. Confidence:    ${chalk.cyan(stats.avgConfidence?.toFixed(2) || '—')}`);
+        writeLine(`  PII Redakciók:      ${chalk.red(stats.redactionsTriggered)}`);
+        writeLine("");
+      } catch (err: unknown) {
+        const message = err instanceof Error ? err.message : String(err);
+        writeError(chalk.red(`\n❌ Guardrails API nem elérhető: ${message}`));
+        writeError(chalk.gray("  Indítsd el a szervert: npm start\n"));
       }
     });
 
@@ -51,15 +90,15 @@ export function registerGuardrailsCommands(program: Command): void {
       const { redactText } = await import("../security/redactor.js");
       const result = redactText(text);
 
-      console.log(chalk.bold("\n🔒 Redakció Eredmény\n"));
-      console.log(`  Eredeti:   ${chalk.gray(text)}`);
-      console.log(`  Redaktált: ${chalk.green(result.redacted)}`);
+      writeLine(chalk.bold("\n🔒 Redakció Eredmény\n"));
+      writeLine(`  Eredeti:   ${chalk.gray(text)}`);
+      writeLine(`  Redaktált: ${chalk.green(result.redacted)}`);
       if (result.hadFindings) {
-        console.log(`  Találatok: ${result.findings.map(f => chalk.yellow(`${f.type}(${f.count})`)).join(', ')}`);
+        writeLine(`  Találatok: ${result.findings.map(f => chalk.yellow(`${f.type}(${f.count})`)).join(', ')}`);
       } else {
-        console.log(`  ${chalk.green('Nincs PII/titok találat.')}`);
+        writeLine(`  ${chalk.green('Nincs PII/titok találat.')}`);
       }
-      console.log("");
+      writeLine("");
     });
 }
 
@@ -75,24 +114,25 @@ export function registerTelemetryCommands(program: Command): void {
       try {
         const res = await fetch(`${API_BASE}/api/v1/telemetry/stats`);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const stats = await res.json();
+        const stats = await res.json() as TelemetryStats;
 
-        console.log(chalk.bold.blue("\n📊 Telemetria Összesítő\n"));
-        console.log(`  Aktív Spanek:       ${chalk.yellow(stats.activeSpans)}`);
-        console.log(`  Befejezett Spanek:  ${chalk.green(stats.completedSpans)}`);
-        console.log(`  Input Tokenek:      ${chalk.cyan(stats.totalInputTokens?.toLocaleString() || '0')}`);
-        console.log(`  Output Tokenek:     ${chalk.cyan(stats.totalOutputTokens?.toLocaleString() || '0')}`);
+        writeLine(chalk.bold.blue("\n📊 Telemetria Összesítő\n"));
+        writeLine(`  Aktív Spanek:       ${chalk.yellow(stats.activeSpans)}`);
+        writeLine(`  Befejezett Spanek:  ${chalk.green(stats.completedSpans)}`);
+        writeLine(`  Input Tokenek:      ${chalk.cyan(stats.totalInputTokens?.toLocaleString() || '0')}`);
+        writeLine(`  Output Tokenek:     ${chalk.cyan(stats.totalOutputTokens?.toLocaleString() || '0')}`);
 
         if (stats.tokensByModel && Object.keys(stats.tokensByModel).length > 0) {
-          console.log(chalk.bold("\n  Token Használat Modell Szerint:"));
-          for (const [model, usage] of Object.entries(stats.tokensByModel) as any) {
-            console.log(`    ${chalk.gray(model)}: ↑${usage.input?.toLocaleString()} / ↓${usage.output?.toLocaleString()}`);
+          writeLine(chalk.bold("\n  Token Használat Modell Szerint:"));
+          for (const [model, usage] of Object.entries(stats.tokensByModel)) {
+            writeLine(`    ${chalk.gray(model)}: ↑${usage.input?.toLocaleString() ?? '0'} / ↓${usage.output?.toLocaleString() ?? '0'}`);
           }
         }
-        console.log("");
-      } catch (err: any) {
-        console.log(chalk.red(`\n❌ Telemetria API nem elérhető: ${err.message}`));
-        console.log(chalk.gray("  Indítsd el a szervert: npm start\n"));
+        writeLine("");
+      } catch (err: unknown) {
+        const message = err instanceof Error ? err.message : String(err);
+        writeError(chalk.red(`\n❌ Telemetria API nem elérhető: ${message}`));
+        writeError(chalk.gray("  Indítsd el a szervert: npm start\n"));
       }
     });
 
@@ -104,22 +144,23 @@ export function registerTelemetryCommands(program: Command): void {
       try {
         const res = await fetch(`${API_BASE}/api/v1/telemetry/traces?limit=${opts.n}`);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const traces = await res.json();
+        const traces = await res.json() as TelemetryTrace[];
 
-        console.log(chalk.bold.blue(`\n📋 Legutóbbi ${opts.n} Trace\n`));
+        writeLine(chalk.bold.blue(`\n📋 Legutóbbi ${opts.n} Trace\n`));
         if (traces.length === 0) {
-          console.log(chalk.gray("  Még nincs trace adat.\n"));
+          writeLine(chalk.gray("  Még nincs trace adat.\n"));
           return;
         }
 
         for (const t of traces) {
           const statusIcon = t.status === 'success' ? chalk.green('✓') : t.status === 'error' ? chalk.red('✗') : chalk.yellow('⟳');
           const durStr = t.duration > 1000 ? `${(t.duration / 1000).toFixed(1)}s` : `${t.duration}ms`;
-          console.log(`  ${statusIcon} ${chalk.bold(t.agentName)}::${t.operation} ${chalk.gray(durStr)} ${chalk.dim(t.traceId.slice(0, 8))}`);
+          writeLine(`  ${statusIcon} ${chalk.bold(t.agentName)}::${t.operation} ${chalk.gray(durStr)} ${chalk.dim(t.traceId.slice(0, 8))}`);
         }
-        console.log("");
-      } catch (err: any) {
-        console.log(chalk.red(`\n❌ Telemetria API nem elérhető: ${err.message}`));
+        writeLine("");
+      } catch (err: unknown) {
+        const message = err instanceof Error ? err.message : String(err);
+        writeError(chalk.red(`\n❌ Telemetria API nem elérhető: ${message}`));
       }
     });
 }

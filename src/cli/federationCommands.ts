@@ -6,6 +6,32 @@ import inquirer from 'inquirer';
 
 const API_BASE = process.env.BRUNELLA_API_URL || 'http://localhost:3000';
 
+interface FederationPeer {
+  peerId: string;
+  displayName: string;
+  endpoint: string;
+  trustState: string;
+  trustScore: number;
+}
+
+interface FederationNegotiationSession {
+  sessionId: string;
+  peerId: string;
+  state: string;
+  initialOffer: {
+    capabilities: string[];
+  };
+  updatedAt: string;
+}
+
+function writeLine(message = ''): void {
+  process.stdout.write(`${message}\n`);
+}
+
+function writeError(message = ''): void {
+  process.stderr.write(`${message}\n`);
+}
+
 async function apiFetch<T>(path: string, options?: RequestInit): Promise<T> {
   const response = await fetch(`${API_BASE}${path}`, {
     headers: { 'Content-Type': 'application/json' },
@@ -21,19 +47,25 @@ async function apiFetch<T>(path: string, options?: RequestInit): Promise<T> {
 async function listPeers(): Promise<void> {
   const spinner = ora('Peer-ek lekérése...').start();
   try {
-    const data = await apiFetch<{ peers: any[] }>('/api/v1/federation/peers');
+    const data = await apiFetch<{ peers: FederationPeer[] }>('/api/v1/federation/peers');
     spinner.stop();
-    console.log(chalk.bold(`
-Federált Partnerek (${data.peers.length}):`));
-    console.table(data.peers.map(p => ({
-      ID: p.peerId,
-      Név: p.displayName,
-      Endpoint: p.endpoint,
-      Állapot: p.trustState,
-      Score: p.trustScore
-    })));
-  } catch (e: any) {
-    spinner.fail(chalk.red(`Hiba: ${e.message}`));
+    writeLine(chalk.bold(`\nFederált Partnerek (${data.peers.length}):`));
+    writeLine(
+      data.peers
+        .map((peer) =>
+          [
+            `ID: ${peer.peerId}`,
+            `Név: ${peer.displayName}`,
+            `Endpoint: ${peer.endpoint}`,
+            `Állapot: ${peer.trustState}`,
+            `Score: ${peer.trustScore}`,
+          ].join(' | '),
+        )
+        .join('\n'),
+    );
+  } catch (e: unknown) {
+    const message = e instanceof Error ? e.message : String(e);
+    spinner.fail(chalk.red(`Hiba: ${message}`));
   }
 }
 
@@ -46,32 +78,39 @@ async function registerPeer(): Promise<void> {
 
   const spinner = ora('Regisztráció...').start();
   try {
-    const peer = await apiFetch('/api/v1/federation/peers/register', {
+    await apiFetch('/api/v1/federation/peers/register', {
       method: 'POST',
       body: JSON.stringify(answers)
     });
     spinner.succeed(chalk.green(`Peer regisztrálva: ${answers.peerId}`));
-  } catch (e: any) {
-    spinner.fail(chalk.red(`Hiba: ${e.message}`));
+  } catch (e: unknown) {
+    const message = e instanceof Error ? e.message : String(e);
+    spinner.fail(chalk.red(`Hiba: ${message}`));
   }
 }
 
 async function listNegotiations(): Promise<void> {
   const spinner = ora('Tárgyalások lekérése...').start();
   try {
-    const data = await apiFetch<{ sessions: any[] }>('/api/v1/federation/negotiations');
+    const data = await apiFetch<{ sessions: FederationNegotiationSession[] }>('/api/v1/federation/negotiations');
     spinner.stop();
-    console.log(chalk.bold(`
-Aktív Tárgyalások (${data.sessions.length}):`));
-    console.table(data.sessions.map(s => ({
-      ID: s.sessionId.slice(0, 8),
-      Partner: s.peerId,
-      Állapot: s.state,
-      Képességek: s.initialOffer.capabilities.join(', '),
-      Frissítve: new Date(s.updatedAt).toLocaleString()
-    })));
-  } catch (e: any) {
-    spinner.fail(chalk.red(`Hiba: ${e.message}`));
+    writeLine(chalk.bold(`\nAktív Tárgyalások (${data.sessions.length}):`));
+    writeLine(
+      data.sessions
+        .map((session) =>
+          [
+            `ID: ${session.sessionId.slice(0, 8)}`,
+            `Partner: ${session.peerId}`,
+            `Állapot: ${session.state}`,
+            `Képességek: ${session.initialOffer.capabilities.join(', ')}`,
+            `Frissítve: ${new Date(session.updatedAt).toLocaleString()}`,
+          ].join(' | '),
+        )
+        .join('\n'),
+    );
+  } catch (e: unknown) {
+    const message = e instanceof Error ? e.message : String(e);
+    spinner.fail(chalk.red(`Hiba: ${message}`));
   }
 }
 
@@ -97,8 +136,8 @@ async function runInteractiveFederation(): Promise<void> {
     if (action === 'register_peer') await registerPeer();
     if (action === 'list_negotiations') await listNegotiations();
     if (action === 'show_local') {
-        const manifest = await apiFetch<any>('/api/v1/federation/manifests/local');
-        console.log(boxen(JSON.stringify(manifest, null, 2), { title: 'Local Manifest', padding: 1 }));
+        const manifest = await apiFetch<Record<string, unknown>>('/api/v1/federation/manifests/local');
+        writeLine(boxen(JSON.stringify(manifest, null, 2), { title: 'Local Manifest', padding: 1 }));
     }
   }
 }

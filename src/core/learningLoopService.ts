@@ -38,6 +38,15 @@ export interface CuratedSnapshotResult {
   metadataPath: string;
   sampleCount: number;
   avgQuality: number;
+  sourceFilter?: string;
+  minQuality: number;
+  createdAt: string;
+}
+
+export interface LearningLoopTrainingRunMetadata extends Record<string, unknown> {
+  snapshotSource?: string;
+  minQuality?: number;
+  routineCategories?: string[];
 }
 
 export interface TrainingExecutionResult {
@@ -129,20 +138,29 @@ async function runPythonJson(scriptRelativePath: string, args: string[]): Promis
   throw lastError ?? new Error(`Unable to execute ${scriptRelativePath}`);
 }
 
-export async function createCuratedSnapshot(minQuality = 0.7): Promise<CuratedSnapshotResult> {
+export async function createCuratedSnapshot(
+  options?: number | { minQuality?: number; source?: string },
+): Promise<CuratedSnapshotResult> {
   await ensureLearningLoopDirs();
-  const approved = listCuratedGoldenSamples({ state: 'approved', limit: 5000 })
+  const minQuality = typeof options === 'number' ? options : (options?.minQuality ?? 0.7);
+  const sourceFilter = typeof options === 'object' ? options.source : undefined;
+  const approved = listCuratedGoldenSamples({ state: 'approved', source: sourceFilter, limit: 5000 })
     .filter((sample) => sample.quality >= minQuality);
 
   if (approved.length === 0) {
     throw new Error('No approved curated samples available for snapshot generation');
   }
 
-  const snapshotId = timestampId('snapshot');
+  const snapshotId = sourceFilter === 'github_remediation_runtime'
+    ? timestampId('snapshot_remediation')
+    : sourceFilter
+      ? timestampId(`snapshot_${sourceFilter.replace(/[^a-z0-9]+/gi, '_')}`)
+      : timestampId('snapshot');
   const snapshotPath = path.join(SNAPSHOT_ROOT, `${snapshotId}.jsonl`);
   const metadataPath = path.join(SNAPSHOT_ROOT, `${snapshotId}.meta.json`);
   const lines = approved.map((sample) => JSON.stringify(buildChatMlEntry(sample)));
   const avgQuality = approved.reduce((sum, sample) => sum + sample.quality, 0) / approved.length;
+  const createdAt = new Date().toISOString();
 
   await fs.writeFile(snapshotPath, lines.join('\n') + '\n', 'utf-8');
   await fs.writeFile(metadataPath, JSON.stringify({
@@ -150,12 +168,23 @@ export async function createCuratedSnapshot(minQuality = 0.7): Promise<CuratedSn
     snapshotPath,
     sampleCount: approved.length,
     avgQuality,
-    createdAt: new Date().toISOString(),
+    createdAt,
     source: 'approved_curated_dataset',
+    sourceFilter,
+    minQuality,
   }, null, 2), 'utf-8');
 
   logInfo('LearningLoop', `Curated snapshot created: ${snapshotId} (${approved.length} samples)`);
-  return { snapshotId, snapshotPath, metadataPath, sampleCount: approved.length, avgQuality };
+  return {
+    snapshotId,
+    snapshotPath,
+    metadataPath,
+    sampleCount: approved.length,
+    avgQuality,
+    sourceFilter,
+    minQuality,
+    createdAt,
+  };
 }
 
 export async function runNightlyTraining(options?: {
@@ -179,7 +208,11 @@ export async function runNightlyTraining(options?: {
     modelName: options?.modelName ?? 'brunella-reflex',
     sampleCount: snapshot.sampleCount,
     avgQuality: snapshot.avgQuality,
-    metadata: { routineCategories: options?.routineCategories ?? getDefaultRoutineCategories() },
+    metadata: {
+      routineCategories: options?.routineCategories ?? getDefaultRoutineCategories(),
+      snapshotSource: snapshot.sourceFilter,
+      minQuality: snapshot.minQuality,
+    } satisfies LearningLoopTrainingRunMetadata,
     startedAt: new Date().toISOString(),
   });
 
@@ -304,13 +337,56 @@ export async function executeLearningLoopCycle(options?: {
 
 export async function getLearningLoopOverview(): Promise<Record<string, unknown>> {
   const curatedStats = await getCuratedGoldenStats();
+  const latestSnapshot = (await listLearningLoopSnapshots())[0] ?? null;
   return {
     curatedStats,
     registry: getReflexRegistrySummary(),
     latestTrainingRuns: listTrainingRuns(10),
+    latestSnapshot,
     activeReflexModel: getActiveReflexModel(),
     approvedDatasetPreview: exportCuratedGoldenDataset('json'),
   };
+}
+
+export async function listLearningLoopSnapshots(limit = 20): Promise<CuratedSnapshotResult[]> {
+  await ensureLearningLoopDirs();
+  const entries = await fs.readdir(SNAPSHOT_ROOT, { withFileTypes: true });
+  const metadataFiles = entries
+    .filter((entry) => entry.isFile() && entry.name.endsWith('.meta.json'))
+    .map((entry) => entry.name)
+    .sort()
+    .reverse();
+
+  const snapshots: CuratedSnapshotResult[] = [];
+  for (const fileName of metadataFiles.slice(0, limit)) {
+    try {
+      const metadataPath = path.join(SNAPSHOT_ROOT, fileName);
+      const raw = await fs.readFile(metadataPath, 'utf-8');
+      const parsed = JSON.parse(raw) as Partial<CuratedSnapshotResult> & { createdAt?: string };
+      if (
+        typeof parsed.snapshotId !== 'string' ||
+        typeof parsed.snapshotPath !== 'string' ||
+        typeof parsed.sampleCount !== 'number' ||
+        typeof parsed.avgQuality !== 'number'
+      ) {
+        continue;
+      }
+      snapshots.push({
+        snapshotId: parsed.snapshotId,
+        snapshotPath: parsed.snapshotPath,
+        metadataPath,
+        sampleCount: parsed.sampleCount,
+        avgQuality: parsed.avgQuality,
+        sourceFilter: typeof parsed.sourceFilter === 'string' ? parsed.sourceFilter : undefined,
+        minQuality: typeof parsed.minQuality === 'number' ? parsed.minQuality : 0.7,
+        createdAt: typeof parsed.createdAt === 'string' ? parsed.createdAt : new Date().toISOString(),
+      });
+    } catch (error) {
+      logError('LearningLoop', `Failed to parse snapshot metadata ${fileName}: ${error instanceof Error ? error.message : String(error)}`);
+    }
+  }
+
+  return snapshots.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
 }
 
 export function promoteLearningLoopModel(modelId: string): ReflexModelRecord {

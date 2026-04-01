@@ -6,6 +6,39 @@ import { Command } from 'commander';
 import chalk from 'chalk';
 import { logInfo, logError } from '../utils/logger.js';
 
+interface SwarmColonyMetrics {
+  tasksCompleted?: number;
+  tasksFailed?: number;
+}
+
+interface SwarmColonyStatus {
+  colonyId: string;
+  name: string;
+  status: string;
+  agentCount: number;
+  leaderId?: string;
+  metrics?: SwarmColonyMetrics;
+}
+
+interface SwarmStatusResponse {
+  colonies: SwarmColonyStatus[];
+  total: number;
+}
+
+interface SwarmDispatchResponse {
+  success: boolean;
+  result?: Record<string, unknown>;
+  error?: string;
+}
+
+function writeLine(message = ''): void {
+  process.stdout.write(`${message}\n`);
+}
+
+function writeError(message = ''): void {
+  process.stderr.write(`${message}\n`);
+}
+
 export function registerSwarmCommands(program: Command) {
   const swarmV2 = program
     .command('swarm-v2')
@@ -18,22 +51,22 @@ export function registerSwarmCommands(program: Command) {
       try {
         const res = await fetch('http://localhost:3000/api/v1/swarm/status');
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const data = await res.json();
-        console.log(chalk.bold.cyan('\n🐝 Swarm Colony Status\n'));
+        const data = await res.json() as SwarmStatusResponse;
+        writeLine(chalk.bold.cyan('\n🐝 Swarm Colony Status\n'));
         if (!data.colonies || data.colonies.length === 0) {
-          console.log(chalk.gray('  Nincs aktív colony.'));
+          writeLine(chalk.gray('  Nincs aktív colony.'));
           return;
         }
         for (const c of data.colonies) {
           const statusColor = c.status === 'active' ? chalk.green : c.status === 'paused' ? chalk.yellow : chalk.gray;
-          console.log(`  ${chalk.bold(c.name)} [${statusColor(c.status)}]`);
-          console.log(`    Agents: ${c.agentCount} | Leader: ${c.leaderId || '—'}`);
-          console.log(`    Tasks: ${c.metrics?.tasksCompleted ?? 0}✓ / ${c.metrics?.tasksFailed ?? 0}✗`);
-          console.log('');
+          writeLine(`  ${chalk.bold(c.name)} [${statusColor(c.status)}]`);
+          writeLine(`    Agents: ${c.agentCount} | Leader: ${c.leaderId || '—'}`);
+          writeLine(`    Tasks: ${c.metrics?.tasksCompleted ?? 0}✓ / ${c.metrics?.tasksFailed ?? 0}✗`);
+          writeLine('');
         }
-      } catch (e) {
+      } catch (e: unknown) {
         logError('SwarmCLI', `status hiba: ${e}`);
-        console.log(chalk.red(`Hiba: ${e}`));
+        writeError(chalk.red(`Hiba: ${e instanceof Error ? e.message : String(e)}`));
       }
     });
 
@@ -49,16 +82,16 @@ export function registerSwarmCommands(program: Command) {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ task, colonyId: opts.colony }),
         });
-        const data = await res.json();
+        const data = await res.json() as SwarmDispatchResponse;
         if (data.success) {
-          console.log(chalk.green('✅ Feladat sikeresen elküldve'));
-          console.log(chalk.gray(JSON.stringify(data.result, null, 2)));
+          writeLine(chalk.green('✅ Feladat sikeresen elküldve'));
+          writeLine(chalk.gray(JSON.stringify(data.result ?? {}, null, 2)));
         } else {
-          console.log(chalk.red(`❌ Hiba: ${data.error}`));
+          writeError(chalk.red(`❌ Hiba: ${data.error ?? 'Ismeretlen hiba'}`));
         }
-      } catch (e) {
+      } catch (e: unknown) {
         logError('SwarmCLI', `dispatch hiba: ${e}`);
-        console.log(chalk.red(`Hiba: ${e}`));
+        writeError(chalk.red(`Hiba: ${e instanceof Error ? e.message : String(e)}`));
       }
     });
 
@@ -73,10 +106,10 @@ export function registerSwarmCommands(program: Command) {
           : 'http://localhost:3000/api/v1/swarm/checkpoints/stats';
         const res = await fetch(url);
         const data = await res.json();
-        console.log(chalk.bold.cyan('\n📸 Swarm Checkpoints\n'));
-        console.log(JSON.stringify(data, null, 2));
-      } catch (e) {
-        console.log(chalk.red(`Hiba: ${e}`));
+        writeLine(chalk.bold.cyan('\n📸 Swarm Checkpoints\n'));
+        writeLine(JSON.stringify(data, null, 2));
+      } catch (e: unknown) {
+        writeError(chalk.red(`Hiba: ${e instanceof Error ? e.message : String(e)}`));
       }
     });
 }

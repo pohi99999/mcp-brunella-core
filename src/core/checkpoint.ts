@@ -9,6 +9,7 @@
  * @version 1.0.0
  */
 
+import type Database from 'better-sqlite3';
 import { logInfo, logError } from '../utils/logger.js';
 
 // ---------------------------------------------------------------------------
@@ -29,13 +30,37 @@ export interface CheckpointState {
   [key: string]: unknown;
 }
 
+interface CheckpointRow {
+  id: number;
+  task_id: string;
+  step_index: number;
+  step_name: string;
+  state_json: string;
+  created_at: string;
+}
+
+interface CountRow {
+  count: number;
+}
+
 // ---------------------------------------------------------------------------
 // DATABASE (lazy singleton)
 // ---------------------------------------------------------------------------
 
-let db: any = null;
+let db: Database.Database | null = null;
 
-async function getDb(): Promise<any> {
+function mapCheckpointRow(row: CheckpointRow): Checkpoint {
+  return {
+    id: row.id,
+    taskId: row.task_id,
+    stepIndex: row.step_index,
+    stepName: row.step_name,
+    stateJson: row.state_json,
+    createdAt: row.created_at,
+  };
+}
+
+async function getDb(): Promise<Database.Database | null> {
   if (db) return db;
 
   if (typeof process === 'undefined' || !process.versions?.node) {
@@ -51,8 +76,8 @@ async function getDb(): Promise<any> {
   }
 
   const dbPath = path.default.join(dbDir, 'checkpoints.db');
-  const Database = (await import('better-sqlite3')).default;
-  db = new Database(dbPath);
+  const DatabaseConstructor = (await import('better-sqlite3')).default;
+  db = new DatabaseConstructor(dbPath);
 
   // WAL mode for concurrent reads + low-latency writes (spec: < 5ms)
   db.pragma('journal_mode = WAL');
@@ -96,9 +121,13 @@ export async function saveCheckpoint(
       'INSERT INTO checkpoints (task_id, step_index, step_name, state_json) VALUES (?, ?, ?, ?)'
     );
     const result = stmt.run(taskId, stepIndex, stepName, stateJson);
+    const insertedId =
+      typeof result.lastInsertRowid === 'bigint'
+        ? Number(result.lastInsertRowid)
+        : result.lastInsertRowid;
 
     logInfo('Checkpoint', `Saved: task=${taskId} step=${stepIndex} (${stepName})`);
-    return result.lastInsertRowid as number;
+    return insertedId;
   } catch (error: unknown) {
     const msg = error instanceof Error ? error.message : String(error);
     logError('Checkpoint', `Save failed: ${msg}`);
@@ -118,18 +147,11 @@ export async function loadCheckpoint(taskId: string): Promise<Checkpoint | null>
     const stmt = database.prepare(
       'SELECT * FROM checkpoints WHERE task_id = ? ORDER BY step_index DESC LIMIT 1'
     );
-    const row = stmt.get(taskId) as any;
+    const row = stmt.get(taskId) as CheckpointRow | undefined;
 
     if (!row) return null;
 
-    return {
-      id: row.id,
-      taskId: row.task_id,
-      stepIndex: row.step_index,
-      stepName: row.step_name,
-      stateJson: row.state_json,
-      createdAt: row.created_at
-    };
+    return mapCheckpointRow(row);
   } catch (error: unknown) {
     const msg = error instanceof Error ? error.message : String(error);
     logError('Checkpoint', `Load failed: ${msg}`);
@@ -148,16 +170,9 @@ export async function loadAllCheckpoints(taskId: string): Promise<Checkpoint[]> 
     const stmt = database.prepare(
       'SELECT * FROM checkpoints WHERE task_id = ? ORDER BY step_index ASC'
     );
-    const rows = stmt.all(taskId) as any[];
+    const rows = stmt.all(taskId) as CheckpointRow[];
 
-    return rows.map((row: any) => ({
-      id: row.id,
-      taskId: row.task_id,
-      stepIndex: row.step_index,
-      stepName: row.step_name,
-      stateJson: row.state_json,
-      createdAt: row.created_at
-    }));
+    return rows.map(mapCheckpointRow);
   } catch (error: unknown) {
     const msg = error instanceof Error ? error.message : String(error);
     logError('Checkpoint', `LoadAll failed: ${msg}`);
@@ -203,16 +218,9 @@ export async function listActiveCheckpoints(): Promise<Checkpoint[]> {
       ) latest ON c.task_id = latest.task_id AND c.step_index = latest.max_step
       ORDER BY c.created_at DESC
     `);
-    const rows = stmt.all() as any[];
+    const rows = stmt.all() as CheckpointRow[];
 
-    return rows.map((row: any) => ({
-      id: row.id,
-      taskId: row.task_id,
-      stepIndex: row.step_index,
-      stepName: row.step_name,
-      stateJson: row.state_json,
-      createdAt: row.created_at
-    }));
+    return rows.map(mapCheckpointRow);
   } catch (error: unknown) {
     const msg = error instanceof Error ? error.message : String(error);
     logError('Checkpoint', `ListActive failed: ${msg}`);
@@ -231,12 +239,12 @@ export async function getCheckpointStats(): Promise<{
     const database = await getDb();
     if (!database) return { totalCheckpoints: 0, activeTasks: 0 };
 
-    const total = database.prepare('SELECT COUNT(*) as count FROM checkpoints').get() as any;
-    const tasks = database.prepare('SELECT COUNT(DISTINCT task_id) as count FROM checkpoints').get() as any;
+    const total = database.prepare('SELECT COUNT(*) as count FROM checkpoints').get() as CountRow | undefined;
+    const tasks = database.prepare('SELECT COUNT(DISTINCT task_id) as count FROM checkpoints').get() as CountRow | undefined;
 
     return {
-      totalCheckpoints: total?.count || 0,
-      activeTasks: tasks?.count || 0
+      totalCheckpoints: total?.count ?? 0,
+      activeTasks: tasks?.count ?? 0
     };
   } catch (error: unknown) {
     const msg = error instanceof Error ? error.message : String(error);

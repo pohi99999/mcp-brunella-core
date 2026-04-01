@@ -12,10 +12,33 @@ import { listActiveCheckpoints, clearCheckpoints, getCheckpointStats } from '../
 import { getRecentDecisions } from '../core/modelRouter.js';
 import { getGoldenStats } from '../core/goldenDatasetBridge.js';
 
+function writeLine(message = ''): void {
+  process.stdout.write(`${message}\n`);
+}
+
+function getErrorMessage(error: unknown): string {
+  return error instanceof Error ? error.message : String(error);
+}
+
+function writeTable(headers: string[], rows: string[][]): void {
+  const widths = headers.map((header, index) =>
+    Math.max(header.length, ...rows.map((row) => row[index]?.length ?? 0)),
+  );
+  const formatRow = (columns: string[]) =>
+    columns.map((column, index) => column.padEnd(widths[index]!)).join(' | ');
+
+  writeLine(formatRow(headers));
+  writeLine(widths.map((width) => '-'.repeat(width)).join('-|-'));
+
+  for (const row of rows) {
+    writeLine(formatRow(row));
+  }
+}
+
 /**
  * Gold Protocol CLI Commands (G7.7)
  */
-export function registerGoldCommands(program: Command) {
+export function registerGoldCommands(program: Command): void {
   const gold = program.command('gold').description('Gold Protocol management commands');
 
   // brunella gold spec list
@@ -25,16 +48,17 @@ export function registerGoldCommands(program: Command) {
     .action(async () => {
       try {
         const specs: SpecMeta[] = await listSpecStatuses();
-        console.table(
-          specs.map((s) => ({
-            Track: s.id,
-            Status: s.spec_status,
-            Progress: `${s.progress}%`,
-            Priority: s.priority || 'normal',
-          }))
+        writeTable(
+          ['Track', 'Status', 'Progress', 'Priority'],
+          specs.map((spec) => [
+            spec.id,
+            spec.spec_status,
+            `${spec.progress}%`,
+            spec.priority || 'normal',
+          ]),
         );
-      } catch (e: any) {
-        logError('CLI', `Failed to list specs: ${e.message}`);
+      } catch (error: unknown) {
+        logError('CLI', `Failed to list specs: ${getErrorMessage(error)}`);
       }
     });
 
@@ -46,8 +70,8 @@ export function registerGoldCommands(program: Command) {
       try {
         await approveSpec(trackId);
         logInfo('CLI', `✅ Spec approved: ${trackId}`);
-      } catch (e: any) {
-        logError('CLI', `Failed to approve spec: ${e.message}`);
+      } catch (error: unknown) {
+        logError('CLI', `Failed to approve spec: ${getErrorMessage(error)}`);
       }
     });
 
@@ -59,8 +83,8 @@ export function registerGoldCommands(program: Command) {
       try {
         await rejectSpec(trackId, reason);
         logInfo('CLI', `❌ Spec rejected: ${trackId} (${reason})`);
-      } catch (e: any) {
-        logError('CLI', `Failed to reject spec: ${e.message}`);
+      } catch (error: unknown) {
+        logError('CLI', `Failed to reject spec: ${getErrorMessage(error)}`);
       }
     });
 
@@ -71,15 +95,16 @@ export function registerGoldCommands(program: Command) {
     .action(async () => {
       try {
         const checkpoints = await listActiveCheckpoints();
-        console.table(
-          checkpoints.map((cp) => ({
-            TaskId: cp.taskId,
-            Step: cp.stepName,
-            Timestamp: new Date(cp.createdAt || Date.now()).toLocaleString(),
-          }))
+        writeTable(
+          ['TaskId', 'Step', 'Timestamp'],
+          checkpoints.map((checkpoint) => [
+            checkpoint.taskId,
+            checkpoint.stepName,
+            new Date(checkpoint.createdAt || Date.now()).toLocaleString(),
+          ]),
         );
-      } catch (e: any) {
-        logError('CLI', `Failed to list checkpoints: ${e.message}`);
+      } catch (error: unknown) {
+        logError('CLI', `Failed to list checkpoints: ${getErrorMessage(error)}`);
       }
     });
 
@@ -91,8 +116,8 @@ export function registerGoldCommands(program: Command) {
       try {
         await clearCheckpoints(taskId);
         logInfo('CLI', `🗑 Cleared checkpoints for: ${taskId}`);
-      } catch (e: any) {
-        logError('CLI', `Failed to clear checkpoints: ${e.message}`);
+      } catch (error: unknown) {
+        logError('CLI', `Failed to clear checkpoints: ${getErrorMessage(error)}`);
       }
     });
 
@@ -101,19 +126,20 @@ export function registerGoldCommands(program: Command) {
     .command('router-decisions')
     .description('Show recent router decisions')
     .option('-n, --num <count>', 'Number of decisions', '10')
-    .action(async (options) => {
+    .action(async (options: { num: string }) => {
       try {
         const decisions = await getRecentDecisions(Number(options.num));
-        console.table(
-          decisions.map((d) => ({
-            Timestamp: new Date(d.timestamp).toLocaleString(),
-            Category: d.category,
-            Model: d.selectedModel,
-            Reason: d.reason.slice(0, 50),
-          }))
+        writeTable(
+          ['Timestamp', 'Category', 'Model', 'Reason'],
+          decisions.map((decision) => [
+            new Date(decision.timestamp).toLocaleString(),
+            decision.category,
+            decision.selectedModel,
+            decision.reason.slice(0, 50),
+          ]),
         );
-      } catch (e: any) {
-        logError('CLI', `Failed to list decisions: ${e.message}`);
+      } catch (error: unknown) {
+        logError('CLI', `Failed to list decisions: ${getErrorMessage(error)}`);
       }
     });
 
@@ -125,15 +151,15 @@ export function registerGoldCommands(program: Command) {
       try {
         const stats = await getGoldenStats();
         if (!stats) {
-          console.log('\n❌ Golden dataset stats unavailable (Python API offline?)\n');
+          writeLine('\n❌ Golden dataset stats unavailable (Python API offline?)\n');
           return;
         }
-        console.log('\n📊 Golden Dataset Stats:');
-        console.log(`   Samples: ${stats.totalSamples || 0}`);
-        console.log(`   New Since Training: ${stats.newSinceLastTraining || 0}`);
-        console.log(`   Last Training: ${stats.lastTrainingAt || 'Never'}`);
-      } catch (e: any) {
-        logError('CLI', `Failed to get memory stats: ${e.message}`);
+        writeLine('\n📊 Golden Dataset Stats:');
+        writeLine(`   Samples: ${stats.totalSamples || 0}`);
+        writeLine(`   New Since Training: ${stats.newSinceLastTraining || 0}`);
+        writeLine(`   Last Training: ${stats.lastTrainingAt || 'Never'}`);
+      } catch (error: unknown) {
+        logError('CLI', `Failed to get memory stats: ${getErrorMessage(error)}`);
       }
     });
 
@@ -143,21 +169,20 @@ export function registerGoldCommands(program: Command) {
     .description('Show overall Gold Protocol status')
     .action(async () => {
       try {
-        const [specs, checkpoints, stats, golden] = await Promise.all([
+        const [specs, checkpoints, golden] = await Promise.all([
           listSpecStatuses(),
           listActiveCheckpoints(),
-          getCheckpointStats(),
           getGoldenStats(),
         ]);
-        console.log('\n🏆 Gold Protocol Status:\n');
-        console.log(`  ✅ Approved Specs: ${specs.filter((s) => s.spec_status === 'approved').length}`);
-        console.log(`  ⏳ Pending Specs: ${specs.filter((s) => s.spec_status === 'pending_approval').length}`);
-        console.log(`  💾 Active Checkpoints: ${checkpoints.length}`);
-        console.log(`  📊 Golden Samples: ${golden?.totalSamples || 0}`);
-        console.log(`  📈 New Since Training: ${golden?.newSinceLastTraining || 0}`);
-        console.log();
-      } catch (e: any) {
-        logError('CLI', `Failed to get status: ${e.message}`);
+        writeLine('\n🏆 Gold Protocol Status:\n');
+        writeLine(`  ✅ Approved Specs: ${specs.filter((spec) => spec.spec_status === 'approved').length}`);
+        writeLine(`  ⏳ Pending Specs: ${specs.filter((spec) => spec.spec_status === 'pending_approval').length}`);
+        writeLine(`  💾 Active Checkpoints: ${checkpoints.length}`);
+        writeLine(`  📊 Golden Samples: ${golden?.totalSamples || 0}`);
+        writeLine(`  📈 New Since Training: ${golden?.newSinceLastTraining || 0}`);
+        writeLine();
+      } catch (error: unknown) {
+        logError('CLI', `Failed to get status: ${getErrorMessage(error)}`);
       }
     });
 }

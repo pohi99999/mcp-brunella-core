@@ -21,6 +21,12 @@ export interface AutoDeployConfig {
   projectName: string;
 }
 
+export interface AutoDeployResult {
+  success: boolean;
+  message: string;
+  details?: Record<string, unknown>;
+}
+
 export class CEANAutoDeploy {
   private wrangler: WranglerHelper;
   private config: AutoDeployConfig;
@@ -38,7 +44,7 @@ export class CEANAutoDeploy {
   /**
    * Run the full deployment pipeline
    */
-  async run(): Promise<{ success: boolean; message: string; details?: any }> {
+  async run(): Promise<AutoDeployResult> {
     try {
       logInfo('CEANAutoDeploy', `Starting AutoDeploy for ${this.config.projectName}...`);
 
