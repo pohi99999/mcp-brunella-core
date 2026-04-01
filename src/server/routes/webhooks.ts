@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 import crypto from 'crypto';
 import { logInfo, logError } from '../../utils/logger.js';
 import { JulesAutomationService } from '../../core/julesAutomationService.js';
+import { ingestGitHubWorkflowFailure } from '../../core/githubWebhookIngress.js';
 import { config } from '../../config/schema.js';
 
 interface WebhookEvent {
@@ -100,33 +101,15 @@ export function createWebhookRoutes(db: Database.Database): Router {
         }
       }
 
-      const webhookId = uuidv4();
-      const eventType = `github.${event || 'unknown'}`;
-
-      // Store webhook event
-      db.prepare(`
-        INSERT INTO webhook_events (id, type, provider, payload, processed)
-        VALUES (?, ?, ?, ?, ?)
-      `).run(webhookId, eventType, 'github', JSON.stringify(req.body), 0);
-
+      const result = ingestGitHubWorkflowFailure(db, event || 'unknown', req.body);
       logInfo('Webhooks', `GitHub ${event} event received`);
-
-      // Handle workflow_run events
-      if (event === 'workflow_run' && req.body.action === 'completed') {
-        const { workflow_run } = req.body;
-
-        if (workflow_run?.conclusion === 'failure') {
-          logInfo('Webhooks', `Workflow failure detected: ${workflow_run.id}`);
-
-          // Mark as processed
-          db.prepare('UPDATE webhook_events SET processed = 1 WHERE id = ?').run(webhookId);
-        }
-      }
 
       res.json({
         success: true,
-        webhookId,
+        webhookId: result.webhookId,
         message: 'Webhook received',
+        remediationAccepted: result.accepted,
+        remediationReason: result.reason,
       });
     } catch (error: unknown) {
       const msg = error instanceof Error ? error.message : String(error);

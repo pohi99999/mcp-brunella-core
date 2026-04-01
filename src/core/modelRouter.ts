@@ -80,15 +80,6 @@ export const MODEL_REGISTRY: ModelProfile[] = [
     speed: 'fast',
     strengths: ['code_gen', 'test_gen', 'docs', 'translation', 'simple_tasks']
   },
-  {
-    name: 'qwen2.5-coder:7b',
-    provider: 'ollama',
-    role: 'muscle',
-    contextWindow: 32768,
-    costPerToken: 0,
-    speed: 'fast',
-    strengths: ['code_gen', 'refactor', 'debug', 'test_gen']
-  },
   // Cloudflare Workers AI — free, no local GPU needed
   {
     name: '@cf/meta/llama-3.3-70b-instruct',

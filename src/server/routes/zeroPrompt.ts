@@ -2,6 +2,7 @@ import { Router, type Request, type Response } from 'express';
 import { zeroPromptRuntime } from '../../core/zeroPromptRuntime.js';
 import { eventFabric } from '../../core/eventFabric.js';
 import { approvalRouter } from '../../core/approvalRouter.js';
+import { githubRemediationRuntime } from '../../core/githubRemediationRuntime.js';
 import { notificationChannels } from '../../core/notificationChannels.js';
 import { evaluateAndLogPolicy } from '../../core/policyEngine.js';
 import { logError } from '../../utils/logger.js';
@@ -25,8 +26,10 @@ export function createZeroPromptRouter(): Router {
       const pending = approvalRouter.listWorkflows('pending');
       res.json({
         active: zeroPromptRuntime.isActive(),
+        remediationActive: githubRemediationRuntime.isActive(),
         eventFabric: stats,
         pendingApprovals: pending.length,
+        remediation: githubRemediationRuntime.getSummary(),
         timestamp: new Date().toISOString(),
       });
     } catch (e: unknown) {
@@ -98,10 +101,14 @@ export function createZeroPromptRouter(): Router {
   router.post('/start', (_req: Request, res: Response) => {
     try {
       if (zeroPromptRuntime.isActive()) {
+        if (!githubRemediationRuntime.isActive()) {
+          githubRemediationRuntime.start();
+        }
         res.json({ started: false, message: 'Zero-Prompt runtime already active' });
         return;
       }
       zeroPromptRuntime.start();
+      githubRemediationRuntime.start();
       res.json({ started: true, message: 'Zero-Prompt runtime started' });
     } catch (e: unknown) {
       logError('ZeroPromptRoute', `start error: ${e instanceof Error ? e.message : String(e)}`);
@@ -116,10 +123,14 @@ export function createZeroPromptRouter(): Router {
   router.post('/stop', (_req: Request, res: Response) => {
     try {
       if (!zeroPromptRuntime.isActive()) {
+        if (githubRemediationRuntime.isActive()) {
+          githubRemediationRuntime.stop();
+        }
         res.json({ stopped: false, message: 'Zero-Prompt runtime was not active' });
         return;
       }
       zeroPromptRuntime.stop();
+      githubRemediationRuntime.stop();
       res.json({ stopped: true, message: 'Zero-Prompt runtime stopped' });
     } catch (e: unknown) {
       logError('ZeroPromptRoute', `stop error: ${e instanceof Error ? e.message : String(e)}`);
@@ -218,6 +229,64 @@ export function createZeroPromptRouter(): Router {
   });
 
   /**
+   * GET /remediation-runs
+   * GitHub workflow failure remediation futások listája.
+   */
+  router.get('/remediation-runs', (req: Request, res: Response) => {
+    try {
+      const status = isString(req.query.status) ? req.query.status : undefined;
+      const limit = parseInt(String(req.query.limit ?? '20'), 10);
+      const validStatuses = [
+        'queued',
+        'analyzing',
+        'running_fixer',
+        'verifying',
+        'awaiting_final_approval',
+        'approved',
+        'rejected',
+        'failed',
+      ];
+      const safeStatus = status && validStatuses.includes(status) ? status : undefined;
+      const runs = githubRemediationRuntime.listRuns(
+        safeStatus as
+          | 'queued'
+          | 'analyzing'
+          | 'running_fixer'
+          | 'verifying'
+          | 'awaiting_final_approval'
+          | 'approved'
+          | 'rejected'
+          | 'failed'
+          | undefined,
+        isNaN(limit) ? 20 : limit,
+      );
+
+      res.json({
+        count: runs.length,
+        runs,
+      });
+    } catch (e: unknown) {
+      logError('ZeroPromptRoute', `remediation runs error: ${e instanceof Error ? e.message : String(e)}`);
+      res.status(500).json({ error: 'Failed to list remediation runs' });
+    }
+  });
+
+  /**
+   * GET /remediation-runs/summary
+   * Remediation futások aggregált állapota.
+   */
+  router.get('/remediation-runs/summary', (_req: Request, res: Response) => {
+    try {
+      res.json({
+        summary: githubRemediationRuntime.getSummary(),
+      });
+    } catch (e: unknown) {
+      logError('ZeroPromptRoute', `remediation summary error: ${e instanceof Error ? e.message : String(e)}`);
+      res.status(500).json({ error: 'Failed to summarize remediation runs' });
+    }
+  });
+
+  /**
    * POST /workflows/:workflowId/notify
    * Re-dispatch notification delivery for an approval workflow.
    */
@@ -248,7 +317,7 @@ export function createZeroPromptRouter(): Router {
         res.status(404).json({ error: 'Workflow not found' });
         return;
       }
-      const updated = approvalRouter.registerExternalResponse(
+      const updated = approvalRouter.respondToWorkflowByRequestId(
         workflow.approvalRequestId,
         'approve',
         req.body,
@@ -271,7 +340,7 @@ export function createZeroPromptRouter(): Router {
         res.status(404).json({ error: 'Workflow not found' });
         return;
       }
-      const updated = approvalRouter.registerExternalResponse(
+      const updated = approvalRouter.respondToWorkflowByRequestId(
         workflow.approvalRequestId,
         'reject',
         req.body,

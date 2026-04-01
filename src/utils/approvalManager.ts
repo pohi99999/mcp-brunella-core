@@ -5,6 +5,11 @@
 import { v4 as uuidv4 } from 'uuid';
 import { logInfo, logWarn } from './logger.js';
 import { activityFeed } from './activityFeed.js';
+import {
+    clearApprovalRequests,
+    loadApprovalRequests,
+    saveApprovalRequest,
+} from '../core/autonomyRuntimeStore.js';
 
 export interface ApprovalRequest {
     id: string;
@@ -23,9 +28,27 @@ export type ApprovalAction = 'approve' | 'reject';
 class ApprovalManager {
     private requests: Map<string, ApprovalRequest> = new Map();
     private readonly defaultTimeoutMs = 15 * 60 * 1000; // 15 minutes
+    private hydrated = false;
     
     // Polling interval for waitForResponse
     private readonly pollIntervalMs = 500;
+
+    private ensureHydrated(): void {
+        if (this.hydrated) {
+            return;
+        }
+
+        const restored = loadApprovalRequests();
+        for (const request of restored) {
+            this.requests.set(request.id, request);
+        }
+        this.hydrated = true;
+    }
+
+    hydrateFromStore(): number {
+        this.ensureHydrated();
+        return this.requests.size;
+    }
 
     /**
      * Create a new approval request.
@@ -37,6 +60,7 @@ class ApprovalManager {
         metadata?: any,
         timeoutMs: number = this.defaultTimeoutMs
     ): Promise<string> { // Returns ID immediately
+        this.ensureHydrated();
         const id = uuidv4();
         const now = Date.now();
         
@@ -51,6 +75,7 @@ class ApprovalManager {
         };
         
         this.requests.set(id, request);
+        saveApprovalRequest(request);
         logInfo('ApprovalManager', `New approval request [${id}]: ${type} - ${description}`);
 
         activityFeed.addActivity(
@@ -67,6 +92,7 @@ class ApprovalManager {
      * Wait for a request to be resolved.
      */
     waitForResult(id: string): Promise<boolean> {
+        this.ensureHydrated();
         return new Promise((resolve) => {
             const check = () => {
                 const req = this.requests.get(id);
@@ -82,6 +108,7 @@ class ApprovalManager {
                 } else if (Date.now() > req.expiresAt) {
                     if (req.status === 'pending') {
                         req.status = 'expired';
+                        saveApprovalRequest(req);
                         logWarn('ApprovalManager', `Request [${id}] expired`);
                         
                         activityFeed.addActivity(
@@ -104,6 +131,7 @@ class ApprovalManager {
      * Respond to an approval request
      */
     respond(id: string, action: ApprovalAction, responsePayload?: any): boolean {
+        this.ensureHydrated();
         const req = this.requests.get(id);
         if (!req) {
             logWarn('ApprovalManager', `Attempted to respond to unknown request [${id}]`);
@@ -126,6 +154,7 @@ class ApprovalManager {
         req.response = responsePayload;
         
         logInfo('ApprovalManager', `Request [${id}] ${req.status}`);
+        saveApprovalRequest(req);
 
         activityFeed.addActivity(
             action === 'approve' ? 'success' : 'warning',
@@ -141,6 +170,7 @@ class ApprovalManager {
      * Get a specific request
      */
     getRequest(id: string): ApprovalRequest | undefined {
+        this.ensureHydrated();
         return this.requests.get(id);
     }
 
@@ -148,6 +178,7 @@ class ApprovalManager {
      * List all requests, optionally filtered
      */
     listRequests(status?: ApprovalRequest['status']): ApprovalRequest[] {
+        this.ensureHydrated();
         const all = Array.from(this.requests.values()).sort((a, b) => b.createdAt - a.createdAt);
         if (status) {
             return all.filter(r => r.status === status);
@@ -159,6 +190,7 @@ class ApprovalManager {
      * Clean up old requests
      */
     cleanup(maxAgeMs: number = 24 * 60 * 60 * 1000): number {
+        this.ensureHydrated();
         const now = Date.now();
         let count = 0;
         for (const [id, req] of this.requests) {
@@ -168,6 +200,12 @@ class ApprovalManager {
             }
         }
         return count;
+    }
+
+    clear(): void {
+        this.requests.clear();
+        this.hydrated = true;
+        clearApprovalRequests();
     }
 }
 

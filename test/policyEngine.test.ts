@@ -29,7 +29,7 @@ describe('PolicyEngine', () => {
     auditRecordMock.mockReset();
   });
 
-  it('marks GitHub workflow failures as guarded approval-required decisions', async () => {
+  it('marks GitHub workflow failures as guarded remediation-first decisions', async () => {
     const { policyModule } = await freshPolicyModules();
 
     const decision = policyModule.evaluatePolicy({
@@ -48,8 +48,9 @@ describe('PolicyEngine', () => {
     });
 
     expect(decision.actionClass).toBe('guarded');
-    expect(decision.requiresApproval).toBe(true);
+    expect(decision.requiresApproval).toBe(false);
     expect(decision.riskScore).toBeGreaterThan(50);
+    expect(decision.guardrails).toContain('require_final_approval');
   });
 
   it('marks health signals as safe autonomous decisions', async () => {

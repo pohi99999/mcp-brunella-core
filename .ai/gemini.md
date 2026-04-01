@@ -1,3 +1,45 @@
+### 2026-04-01 10:00 - 🐛 E2E Test Driven Bugfixes (Frontend & Backend)
+
+**Feladat:** A Playwright E2E tesztek által felszínre hozott frontend (React JSX strict mode, LogViewer crashek) és backend (Express API 500-as Internal Server error) hibák elhárítása és stabilizálása a teljes integrált rendszerben.
+
+**Főbb eredmények:**
+- **Frontend Javítások:**
+    - A `ThemeToggle.tsx` fájlban hiányzó `import React from 'react'` hiba bepótolva a szigorú JSX fordító miatt.
+    - A `LogViewer` komponens crash problémája megoldva.
+- **Backend Lazy Router Proxy Fix:**
+    - Megtaláltam és kijavítottam az elrejtett `Cannot read properties of undefined (reading 'method')` hibát (500 Internal Server error).
+    - A hiba forrása a `src/server/routes/index.ts`-ben levő `lazy()` memóriakímélő Express betöltő volt, amely az Express Routereket tévesen paraméter nélküli factory-ként kezdeményezte futtatni.
+    - A javítással (`isRouterInstance` ellenőrzés) a hálózati kérések paraméterei helyesen futnak át, stabilizálva az összes lazán betöltött API v1 végpontot.
+
+**Érintett fájlok:**
+- `src/dashboard/components/ThemeToggle.tsx`
+- `src/server/routes/index.ts`
+
+**Státusz:** ✅ Befejezve (Szerver 3000-es port API és Dashboard 5173 stabil)
+
+---
+
+### 2026-04-01 10:00 - 🐛 E2E Test Driven Bugfixes (Frontend & Backend)
+
+**Feladat:** A Playwright E2E tesztek által felszínre hozott frontend (React JSX strict mode, LogViewer crashek) és backend (Express API 500-as Internal Server error) hibák elhárítása és stabilizálása a teljes integrált rendszerben.
+
+**Főbb eredmények:**
+- **Frontend Javítások:**
+    - A `ThemeToggle.tsx` fájlban hiányzó `import React from 'react'` hiba bepótolva a szigorú JSX fordító miatt.
+    - A `LogViewer` komponens crash problémája megoldva.
+- **Backend Lazy Router Proxy Fix:**
+    - Megtaláltam és kijavítottam az elrejtett `Cannot read properties of undefined (reading 'method')` hibát (500 Internal Server error).
+    - A hiba forrása a `src/server/routes/index.ts`-ben levő `lazy()` memóriakímélő Express betöltő volt, amely az Express Routereket tévesen paraméter nélküli factory-ként kezdeményezte futtatni.
+    - A javítással (`isRouterInstance` ellenőrzés) a hálózati kérések paraméterei helyesen futnak át, stabilizálva az összes lazán betöltött API v1 végpontot.
+
+**Érintett fájlok:**
+- `src/dashboard/components/ThemeToggle.tsx`
+- `src/server/routes/index.ts`
+
+**Státusz:** ✅ Befejezve (Szerver 3000-es port API és Dashboard 5173 stabil)
+
+---
+
 ### 2026-03-31 19:00 - 🖥️ Dashboard & CLI Deep Audit & Integration Verification
 
 **Feladat:** A Dashboard és a CLI működési funkcióinak alapos átvilágítása, különös tekintettel a PAIOS Chat interfészre, a prémium modellhívásokra (GPT-5 mini, Copilot CLI) és a háttérszolgáltatások integrációjára.

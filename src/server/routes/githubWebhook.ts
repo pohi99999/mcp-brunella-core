@@ -6,75 +6,26 @@
  * 
  * Environment Variables:
  * - GITHUB_WEBHOOK_SECRET: From GitHub App settings
- * - GITHUB_TOKEN: Personal access token for API calls
  */
 
 import { Router, type Request, type Response } from 'express';
-import crypto from 'crypto';
 import { logInfo, logError, setAgentStatus } from '../../utils/logger.js';
 import type {
   GitHubWorkflowRunPayload,
   GitHubPullRequestPayload,
   GitHubCheckRunPayload
 } from '../../types/github.js';
-import { GitHubAPIClient } from '../../core/githubAPIClient.js';
-import { DeploymentAnalyzer } from '../../tools/deploymentAnalyzer.js';
-import { processWorkflowFailure } from '../../core/julesIntegration.js';
+import { ingestGitHubWorkflowFailure, verifyGitHubWebhookSignature } from '../../core/githubWebhookIngress.js';
+import { getGlobalDb } from '../../utils/globalDb.js';
 import { savePullRequest } from '../../utils/db.js';
 
 const router = Router();
 
 // Get webhook secret from environment
 const GITHUB_WEBHOOK_SECRET = process.env.GITHUB_WEBHOOK_SECRET || '';
-const GITHUB_TOKEN = process.env.GITHUB_TOKEN || '';
 
 if (!GITHUB_WEBHOOK_SECRET) {
   logError('GitHubWebhook', 'GITHUB_WEBHOOK_SECRET environment variable not set');
-}
-
-if (!GITHUB_TOKEN) {
-  logError('GitHubWebhook', 'GITHUB_TOKEN environment variable not set');
-}
-
-/**
- * Verify GitHub webhook signature using HMAC-SHA256
- * @param request Express request
- * @param secret Webhook secret from GitHub
- * @returns true if signature is valid
- */
-function verifyGitHubSignature(request: Request, secret: string): boolean {
-  const signature = request.headers['x-hub-signature-256'];
-
-  if (!signature || typeof signature !== 'string') {
-    logError('GitHubWebhook', 'Missing or invalid X-Hub-Signature-256 header');
-    return false;
-  }
-
-  try {
-    // Get raw body for signature verification
-    const rawBody =
-      (request as unknown as Record<string, unknown>).rawBody || JSON.stringify(request.body);
-    const bodyString = typeof rawBody === 'string' ? rawBody : JSON.stringify(rawBody);
-
-    // Calculate expected signature
-    const hash = crypto.createHmac('sha256', secret).update(bodyString).digest('hex');
-
-    const expectedSignature = 'sha256=' + hash;
-
-    // Use timing-safe comparison to prevent timing attacks
-    const signatureBuffer = Buffer.from(signature);
-    const expectedBuffer = Buffer.from(expectedSignature);
-
-    if (signatureBuffer.length !== expectedBuffer.length) {
-      return false;
-    }
-
-    return crypto.timingSafeEqual(signatureBuffer, expectedBuffer);
-  } catch (e: unknown) {
-    const err = e instanceof Error ? e.message : String(e);
-    logError('GitHubWebhook', `Signature verification failed: ${err}`);
-    return false;
-  }
 }
 
 /**
@@ -103,89 +54,31 @@ async function handleWorkflowRun(payload: unknown, res: Response): Promise<void>
       return;
     }
 
-    // Extract workflow details
-    const {
-      id: runId,
-      name: workflowName,
-      conclusion,
-      head_branch: branch,
-      repository: { name: repoName, owner }
-    } = workflowRun;
-
-    logInfo(
-      'GitHubWebhook',
-      `Detected failed workflow: ${workflowName} (ID: ${runId}) on branch: ${branch}`
+    const ingest = ingestGitHubWorkflowFailure(
+      getGlobalDb(),
+      'workflow_run',
+      payload,
     );
 
-    // Queue Jules auto-fix in background (non-blocking)
-    const ownerLogin = owner?.login || 'unknown';
+    const workflowName = workflowRun.name;
+    const runId = workflowRun.id;
+    logInfo('GitHubWebhook', `Workflow failure queued via Event Fabric: ${workflowName} (${runId})`);
 
-    // Start fix workflow asynchronously
-    setImmediate(async () => {
-      try {
-        logInfo(
-          'GitHubWebhook',
-          `Starting Jules auto-fix for workflow ${runId} (${ownerLogin}/${repoName})`
-        );
-
-        const fixWorkflow = await processWorkflowFailure(ownerLogin, repoName, runId, branch);
-
-        logInfo(
-          'GitHubWebhook',
-          `Jules fix workflow complete: ${fixWorkflow.status} - PR #${fixWorkflow.prNumber || 'N/A'}`
-        );
-      } catch (fixErr: unknown) {
-        const err = fixErr instanceof Error ? fixErr.message : String(fixErr);
-        logError('GitHubWebhook', `Jules auto-fix failed: ${err}`);
-        // Error handling is done in julesIntegration, just log here
-      }
-    });
-
-    // Fetch and analyze workflow logs
-    let analysis = null;
-
-    if (GITHUB_TOKEN) {
-      try {
-        const apiClient = new GitHubAPIClient(GITHUB_TOKEN);
-        logInfo('GitHubWebhook', `Fetching logs for workflow ${runId}...`);
-
-        const logs = await apiClient.getWorkflowRunLogs(ownerLogin, repoName, runId);
-
-        if (logs) {
-          analysis = DeploymentAnalyzer.analyzeLogs(logs);
-
-          logInfo(
-            'GitHubWebhook',
-            `Analysis complete: ${analysis.category} error with ${(analysis.confidence * 100).toFixed(0)}% confidence`
-          );
-        }
-      } catch (analyzeErr: unknown) {
-        const err = analyzeErr instanceof Error ? analyzeErr.message : String(analyzeErr);
-        logError('GitHubWebhook', `Error analyzing logs: ${err}`);
-        // Continue anyway, analysis is optional
-      }
-    } else {
-      logError('GitHubWebhook', 'GITHUB_TOKEN not set, skipping error analysis');
-    }
-
-    const response = {
+    res.status(202).json({
       taskId: `workflow-${runId}`,
       status: 'processing',
       workflow: {
         id: runId,
         name: workflowName,
-        conclusion,
-        branch,
-        repo: repoName,
-        owner: owner?.login || 'unknown'
+        conclusion: workflowRun.conclusion,
+        branch: workflowRun.head_branch,
+        repo: workflowRun.repository.name,
+        owner: workflowRun.repository.owner?.login || 'unknown',
       },
-      analysis: analysis || null,
-      message: 'Workflow failure detected, error analysis queued'
-    };
-
-    logInfo('GitHubWebhook', `Queued workflow analysis: ${response.taskId}`);
-
-    res.status(202).json(response);
+      accepted: ingest.accepted,
+      webhookId: ingest.webhookId,
+      message: 'Workflow failure detected, remediation runtime queued',
+    });
   } catch (e: unknown) {
     const err = e instanceof Error ? e.message : String(e);
     logError('GitHubWebhook', `Error processing workflow_run: ${err}`);
@@ -319,7 +212,11 @@ router.post(
         });
       }
 
-      if (!verifyGitHubSignature(req, GITHUB_WEBHOOK_SECRET)) {
+      const signature = typeof req.headers['x-hub-signature-256'] === 'string'
+        ? req.headers['x-hub-signature-256']
+        : undefined;
+      const rawBody = (req as unknown as Record<string, unknown>).rawBody;
+      if (!verifyGitHubWebhookSignature(GITHUB_WEBHOOK_SECRET, signature, typeof rawBody === 'string' ? rawBody : undefined)) {
         logError('GitHubWebhook', 'Invalid webhook signature');
         return res.status(403).json({ error: 'Invalid signature' });
       }

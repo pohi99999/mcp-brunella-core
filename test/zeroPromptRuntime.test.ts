@@ -69,7 +69,7 @@ describe('ZeroPromptRuntime', () => {
     runtimeModule.zeroPromptRuntime.stop();
   });
 
-  it('creates approval workflow automatically for guarded Event Fabric signals', async () => {
+  it('does not create approval workflow automatically for remediation-first workflow failures', async () => {
     const { runtimeModule, eventFabricModule, approvalRouterModule } = await freshZeroPromptModules();
     runtimeModule.zeroPromptRuntime.start();
 
@@ -90,10 +90,9 @@ describe('ZeroPromptRuntime', () => {
     await new Promise((resolve) => setTimeout(resolve, 25));
 
     const workflows = approvalRouterModule.approvalRouter.listWorkflows();
-    expect(workflows.length).toBe(1);
-    expect(workflows[0]?.eventType).toBe('github.workflow_run.failure');
+    expect(workflows.length).toBe(0);
     expect(auditRecordMock).toHaveBeenCalled();
-    expect(dispatchApprovalRequestedMock).toHaveBeenCalledTimes(1);
+    expect(dispatchApprovalRequestedMock).not.toHaveBeenCalled();
     runtimeModule.zeroPromptRuntime.stop();
   });
 

@@ -99,11 +99,11 @@ export function evaluatePolicy(context: PolicyEvaluationContext): PolicyDecision
   if (normalizedType === 'github.workflow_run.failure') {
     return createDecision({
       actionClass: 'guarded',
-      riskScore: 68,
-      autonomyLevel: 'low',
-      requiresApproval: true,
-      reason: 'GitHub workflow hiba esetén emberi jóváhagyás szükséges a következő lépéshez.',
-      guardrails: ['require_approval', 'log_failure_context'],
+      riskScore: 64,
+      autonomyLevel: 'medium',
+      requiresApproval: false,
+      reason: 'GitHub workflow hiba esetén autonóm remediation indítható, de a lezárás előtt végső jóváhagyás szükséges.',
+      guardrails: ['spawn_ephemeral_fixer', 'run_local_verification', 'require_final_approval', 'log_failure_context'],
     });
   }
 

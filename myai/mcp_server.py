@@ -62,6 +62,8 @@ def _get_autogen_adapter():
 # --- MCP Server Setup ---
 
 mcp = FastMCP("brunella-python")
+MAX_CODE_SIZE = 16_384
+PROJECT_ROOT_REALPATH = os.path.realpath(PROJECT_ROOT)
 
 
 # --- Tool Definitions ---
@@ -79,7 +81,10 @@ def python_execute(code: str, context: Optional[str] = None) -> str:
     except json.JSONDecodeError:
         ctx = {}
 
-    local_scope = {"context": ctx, "json": json, "os": os, "sys": sys}
+    if len(code) > MAX_CODE_SIZE:
+        return json.dumps({"status": "error", "error": f"Code too large (max {MAX_CODE_SIZE} chars)"})
+
+    local_scope = {"context": ctx, "json": json}
     f = io.StringIO()
     try:
         with redirect_stdout(f):
@@ -192,7 +197,11 @@ async def harvest_scenario(scenario_path: str, force_mode: Optional[str] = None)
     """
     try:
         from myai.browser_worker import run_scenario
-        full_path = os.path.join(PROJECT_ROOT, scenario_path) if not os.path.isabs(scenario_path) else scenario_path
+        full_path = os.path.realpath(
+            os.path.join(PROJECT_ROOT, scenario_path) if not os.path.isabs(scenario_path) else scenario_path
+        )
+        if not full_path.startswith(PROJECT_ROOT_REALPATH + os.sep) and full_path != PROJECT_ROOT_REALPATH:
+            return json.dumps({"status": "error", "error": "Path traversal attempt detected"})
         if not os.path.exists(full_path):
             return json.dumps({"status": "error", "error": f"Scenario not found: {full_path}"})
         result = await run_scenario(full_path, force_mode=force_mode)

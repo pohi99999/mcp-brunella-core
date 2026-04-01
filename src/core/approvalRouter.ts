@@ -5,6 +5,11 @@ import type { EventEnvelope } from './eventFabric.js';
 import type { PolicyDecision } from './policyEngine.js';
 import { phoenixEventBus } from './phoenixEventBus.js';
 import { notificationChannels } from './notificationChannels.js';
+import {
+  clearApprovalWorkflows,
+  loadApprovalWorkflows,
+  saveApprovalWorkflow,
+} from './autonomyRuntimeStore.js';
 
 export type ApprovalWorkflowStatus = ApprovalRequest['status'];
 
@@ -62,6 +67,7 @@ function getResolutionAction(status: Exclude<ApprovalWorkflowStatus, 'pending'>)
 class ApprovalRouter {
   private workflows = new Map<string, ApprovalWorkflow>();
   private approvalRequestToWorkflow = new Map<string, string>();
+  private hydrated = false;
 
   private getCallbackSecret(): string {
     return process.env.APPROVAL_CALLBACK_SECRET || DEFAULT_CALLBACK_SECRET;
@@ -99,10 +105,34 @@ class ApprovalRouter {
     };
   }
 
+  private ensureHydrated(): void {
+    if (this.hydrated) {
+      return;
+    }
+
+    const restored = loadApprovalWorkflows();
+    for (const workflow of restored) {
+      this.workflows.set(workflow.workflowId, workflow);
+      this.approvalRequestToWorkflow.set(workflow.approvalRequestId, workflow.workflowId);
+    }
+    this.hydrated = true;
+  }
+
+  hydrateFromStore(): number {
+    this.ensureHydrated();
+    this.refreshPendingWorkflows();
+    return this.workflows.size;
+  }
+
+  private persistWorkflow(workflow: ApprovalWorkflow): void {
+    saveApprovalWorkflow(workflow);
+  }
+
   async createWorkflowFromPolicy(
     decision: PolicyDecision,
     context: ApprovalWorkflowContext,
   ): Promise<ApprovalWorkflow | null> {
+    this.ensureHydrated();
     if (!decision.requiresApproval) {
       return null;
     }
@@ -146,6 +176,7 @@ class ApprovalRouter {
 
     this.workflows.set(workflow.workflowId, workflow);
     this.approvalRequestToWorkflow.set(approvalRequestId, workflow.workflowId);
+    this.persistWorkflow(workflow);
 
     phoenixEventBus.publish('phoenix:approval_requested', {
       workflowId: workflow.workflowId,
@@ -167,6 +198,7 @@ class ApprovalRouter {
     action: ApprovalAction,
     response?: unknown,
   ): ApprovalWorkflow | null {
+    this.ensureHydrated();
     const workflow = this.getWorkflowByApprovalRequestId(approvalRequestId);
     if (!workflow) {
       return null;
@@ -177,6 +209,7 @@ class ApprovalRouter {
     workflow.updatedAt = now;
     workflow.respondedAt = now;
     workflow.response = response;
+    this.persistWorkflow(workflow);
 
     void this.propagateResolvedWorkflow(workflow as ResolvedApprovalWorkflow, action);
 
@@ -184,6 +217,7 @@ class ApprovalRouter {
   }
 
   syncWithApprovalManager(approvalRequestId: string): ApprovalWorkflow | null {
+    this.ensureHydrated();
     const workflow = this.getWorkflowByApprovalRequestId(approvalRequestId);
     if (!workflow) {
       return null;
@@ -222,6 +256,8 @@ class ApprovalRouter {
       void this.propagateResolvedWorkflow(resolvedWorkflow, getResolutionAction(resolvedWorkflow.status));
     }
 
+    this.persistWorkflow(workflow);
+
     return workflow;
   }
 
@@ -243,12 +279,14 @@ class ApprovalRouter {
   }
 
   listWorkflows(status?: ApprovalWorkflowStatus): ApprovalWorkflow[] {
+    this.ensureHydrated();
     this.refreshPendingWorkflows();
     const all = Array.from(this.workflows.values()).sort((a, b) => b.createdAt.localeCompare(a.createdAt));
     return status ? all.filter((workflow) => workflow.status === status) : all;
   }
 
   getWorkflow(workflowId: string): ApprovalWorkflow | undefined {
+    this.ensureHydrated();
     const workflow = this.workflows.get(workflowId);
     if (workflow?.status === 'pending') {
       this.syncWithApprovalManager(workflow.approvalRequestId);
@@ -257,6 +295,7 @@ class ApprovalRouter {
   }
 
   getWorkflowByApprovalRequestId(approvalRequestId: string): ApprovalWorkflow | null {
+    this.ensureHydrated();
     const workflowId = this.approvalRequestToWorkflow.get(approvalRequestId);
     if (!workflowId) {
       return null;
@@ -267,12 +306,29 @@ class ApprovalRouter {
   clear(): void {
     this.workflows.clear();
     this.approvalRequestToWorkflow.clear();
+    this.hydrated = true;
+    clearApprovalWorkflows();
+  }
+
+  respondToWorkflowByRequestId(
+    approvalRequestId: string,
+    action: ApprovalAction,
+    response?: unknown,
+  ): ApprovalWorkflow | null {
+    this.ensureHydrated();
+    const success = approvalManager.respond(approvalRequestId, action, response);
+    if (!success) {
+      return null;
+    }
+
+    return this.registerExternalResponse(approvalRequestId, action, response);
   }
 
   private async propagateResolvedWorkflow(
     workflow: ResolvedApprovalWorkflow,
     action: 'approve' | 'reject' | 'expire',
   ): Promise<void> {
+    this.persistWorkflow(workflow);
     phoenixEventBus.publish('phoenix:approval_resolved', {
       workflowId: workflow.workflowId,
       approvalRequestId: workflow.approvalRequestId,

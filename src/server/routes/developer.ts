@@ -15,6 +15,7 @@ import { approvalManager } from '../../utils/approvalManager.js';
 import { activityFeed } from '../../utils/activityFeed.js';
 import { agentManager } from '../../agents/AgentManager.js';
 import { logInfo, logError } from '../../utils/logger.js';
+import { approvalRouter } from '../../core/approvalRouter.js';
 import * as path from 'path';
 
 export function createDeveloperRoutes(): Router {
@@ -781,13 +782,61 @@ export function createDeveloperRoutes(): Router {
                 return;
             }
 
-            const success = approvalManager.respond(id, action, response);
-            if (!success) {
+            const workflow = approvalRouter.respondToWorkflowByRequestId(id, action, response);
+            if (!workflow) {
+                const success = approvalManager.respond(id, action, response);
+                if (!success) {
+                    res.status(400).json({ error: 'Failed to respond (invalid ID or status)' });
+                    return;
+                }
+            }
+
+            res.json({
+                success: true,
+                id,
+                status: action === 'approve' ? 'approved' : 'rejected',
+                workflow,
+            });
+        } catch (e: unknown) {
+            const msg = e instanceof Error ? e.message : String(e);
+            res.status(500).json({ error: msg });
+        }
+    });
+
+    // GET /approval/:id/callback — Signed approval URL bridge for email/webhook flows
+    router.get('/approval/:id/callback', (req, res) => {
+        try {
+            const { id } = req.params;
+            const action = req.query.action;
+            const token = req.query.token;
+
+            if (action !== 'approve' && action !== 'reject') {
+                res.status(400).json({ error: 'action must be approve or reject' });
+                return;
+            }
+
+            if (typeof token !== 'string' || !approvalRouter.verifyCallbackToken(id, token)) {
+                res.status(403).json({ error: 'Invalid approval callback token' });
+                return;
+            }
+
+            const workflow = approvalRouter.respondToWorkflowByRequestId(id, action, {
+                source: 'callback',
+                query: req.query,
+            });
+
+            if (!workflow) {
                 res.status(400).json({ error: 'Failed to respond (invalid ID or status)' });
                 return;
             }
 
-            res.json({ success: true, id, status: action === 'approve' ? 'approved' : 'rejected' });
+            res.json({
+                success: true,
+                id,
+                status: workflow.status,
+                workflowId: workflow.workflowId,
+                message: `Approval ${workflow.status}`,
+            });
         } catch (e: unknown) {
             const msg = e instanceof Error ? e.message : String(e);
             res.status(500).json({ error: msg });

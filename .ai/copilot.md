@@ -204,6 +204,23 @@ Ezeket a módosításokat a conductor/tracks.md és a conductor/archive/ helyre 
 
 <checkpoint_title>Auto-start Brunella & Copilot</checkpoint_title>
 
+### 2026-04-01 08:15
+**Feladat:** Autonomy runtime productionization folytatása, remediation wiring előkészítése és zárt GitHub workflow failure runbook bekötése
+**Érintett fájlok:** src/core/autonomyRuntimeStore.ts, src/core/eventFabric.ts, src/core/githubAPIClient.ts, src/core/policyEngine.ts, src/core/githubRemediationRuntime.ts, src/core/githubWebhookIngress.ts, src/core/remediationRuntime.types.ts, src/server/routes/webhooks.ts, src/server/routes/githubWebhook.ts, src/server/routes/zeroPrompt.ts, src/server/web.ts
+**Státusz:** ⏳ Folyamatban
+**Megjegyzés:**
+
+- Korábban elkészült és validált a runtime persistence + boot-time rehydration szelet: approval requests/workflows, ephemeral runtime, federation peers/manifests/negotiations, notification deliveries, valamint a valódi approval callback útvonal.
+- A `github.workflow_run.failure` policy átállt remediation-first modellre: az előzetes approval megszűnt, a végső approval a sikeres lokális verifikáció után jön.
+- Elindult a closed-loop remediation wiring:
+  - új remediation run-state perzisztencia a local SQLite runtime store-ban;
+  - új `githubRemediationRuntime` service a GitHub workflow failure események kezelésére;
+  - közös `githubWebhookIngress` helper, hogy a két GitHub webhook út ugyanarra az Event Fabric gerincre fusson;
+  - Zero-Prompt route bővítés remediation futások listájával és summary-val;
+  - szerver boot során remediation runtime hydrate/start.
+- Fontos guardrail: az autonóm remediation csak a jelenlegi workspace GitHub repójára engedélyezett, így idegen webhook repository nem indíthat helyi javító futást.
+- Következő lépés: a mostani remediation wiring build/test stabilizálása, route/import hibák kisimítása, majd célzott Vitest + build futtatás.
+
 ### 2026-03-27  
 **Feladat:** Cloudflare DNS zóna delegációs állapot, whois/NS ellenőrzés, Copilot wrapper és MCP auto-start fejlesztések dokumentálása
 **Érintett fájlok:** .vscode/tasks.json, scripts/copilot-with-brunella.ps1, scripts/copilot-with-brunella.bat, scripts/copilot-mcp-config.json

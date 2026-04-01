@@ -10,13 +10,12 @@ const defaultLayoutConfig: DashboardLayoutConfig = {
       name: 'Mission Control',
       description: 'A premium bento-grid dashboard for operational scanning.',
       gridTemplateAreas: [
-        '"health health health health health agents agents agents tasks tasks tasks tasks"',
-        '"health health health health health agents agents agents tasks tasks tasks tasks"',
-        '"jules jules jules chatter chatter chatter logs logs logs logs cloudflare cloudflare"',
-        '"suggestions suggestions tracks tracks schedule schedule schedule harvest harvest cloudflare cloudflare cloudflare"'
+        '"health health health agents agents tasks tasks"',
+        '"health health health jules jules logs logs"',
+        '"chatter chatter tracks schedule suggestions harvest cloudflare"'
       ],
-      gridTemplateColumns: 'repeat(12, minmax(0, 1fr))',
-      gridTemplateRows: 'minmax(16rem, auto) minmax(16rem, auto) minmax(14rem, auto) minmax(14rem, auto)',
+      gridTemplateColumns: 'repeat(7, minmax(180px, 1fr))',
+      gridTemplateRows: 'minmax(20rem, auto) minmax(18rem, auto) minmax(16rem, auto)',
       widgetAssignments: {
         health: 'health',
         agent_status: 'agents',
@@ -126,47 +125,54 @@ const defaultLayoutConfig: DashboardLayoutConfig = {
   ],
 };
 
-interface LayoutContextType {
+interface LayoutContextType
+{
   currentLayout: LayoutMode;
-  setLayoutMode: (modeId: LayoutModeId) => void;
+  setLayoutMode: ( modeId: LayoutModeId ) => void;
   layouts: DashboardLayoutConfig;
 }
 
-const LayoutContext = createContext<LayoutContextType | undefined>(undefined);
+const LayoutContext = createContext<LayoutContextType | undefined>( undefined );
 
-export function LayoutProvider({ children }: { children: ReactNode }) {
-  const [activeLayoutId, setActiveLayoutId] = useState<LayoutModeId>(defaultLayoutConfig.defaultMode);
+export function LayoutProvider ( { children }: { children: ReactNode } )
+{
+  const [activeLayoutId, setActiveLayoutId] = useState<LayoutModeId>( defaultLayoutConfig.defaultMode );
 
-  const currentLayout = useMemo(() =>
-    defaultLayoutConfig.modes.find(mode => mode.id === activeLayoutId) || defaultLayoutConfig.modes[0],
+  const currentLayout = useMemo( () =>
+    defaultLayoutConfig.modes.find( mode => mode.id === activeLayoutId ) || defaultLayoutConfig.modes[0],
     [activeLayoutId]
   );
 
-  const setLayoutMode = useCallback((modeId: LayoutModeId) => {
-    if (defaultLayoutConfig.modes.some(mode => mode.id === modeId)) {
-      setActiveLayoutId(modeId);
-    } else {
-      console.warn(`Attempted to set unknown layout mode: ${modeId}`);
+  const setLayoutMode = useCallback( ( modeId: LayoutModeId ) =>
+  {
+    if ( defaultLayoutConfig.modes.some( mode => mode.id === modeId ) )
+    {
+      setActiveLayoutId( modeId );
+    } else
+    {
+      console.warn( `Attempted to set unknown layout mode: ${ modeId }` );
     }
-  }, []);
+  }, [] );
 
-  const value = useMemo(() => ({
+  const value = useMemo( () => ( {
     currentLayout,
     setLayoutMode,
     layouts: defaultLayoutConfig
-  }), [currentLayout, setLayoutMode]);
+  } ), [currentLayout, setLayoutMode] );
 
   return (
-    <LayoutContext.Provider value={value}>
-      {children}
+    <LayoutContext.Provider value={ value }>
+      { children }
     </LayoutContext.Provider>
   );
 }
 
-export function useLayout() {
-  const context = useContext(LayoutContext);
-  if (context === undefined) {
-    throw new Error('useLayout must be used within a LayoutProvider');
+export function useLayout ()
+{
+  const context = useContext( LayoutContext );
+  if ( context === undefined )
+  {
+    throw new Error( 'useLayout must be used within a LayoutProvider' );
   }
   return context;
 }

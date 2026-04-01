@@ -4,191 +4,195 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Switch } from "@/components/ui/switch";
-import {
-  Circle,
-  CheckCircle,
-  Warning,
-  XCircle,
-  ArrowsClockwise,
-} from "@phosphor-icons/react";
+import { Circle, CheckCircle2, AlertTriangle, XCircle, RotateCw } from "lucide-react";
 import * as api from "@/lib/apiService";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
-interface ServiceStatus {
+interface ServiceStatus
+{
   id: string;
   name: string;
   status: "healthy" | "unhealthy" | "checking" | "starting" | "stopping";
   message?: string;
 }
 
-export function SystemHealthCard() {
-  const [services, setServices] = useState<ServiceStatus[]>([
+export function SystemHealthCard ()
+{
+  const [services, setServices] = useState<ServiceStatus[]>( [
     { id: "ollama", name: "Ollama", status: "checking" },
     { id: "anythingllm", name: "AnythingLLM", status: "checking" },
     { id: "agents", name: "Agents", status: "checking" },
     { id: "mcp", name: "MCP Servers", status: "checking" },
     { id: "python", name: "Python Service", status: "checking" },
     { id: "cloudflare", name: "Cloudflare", status: "checking" },
-  ]);
-  const [lastCheck, setLastCheck] = useState<string>("");
-  const [isChecking, setIsChecking] = useState(false);
-  const [loading, setLoading] = useState<Record<string, boolean>>({});
+  ] );
+  const [lastCheck, setLastCheck] = useState<string>( "" );
+  const [isChecking, setIsChecking] = useState( false );
+  const [loading, setLoading] = useState<Record<string, boolean>>( {} );
 
-  const checkHealth = async () => {
-    setIsChecking(true);
-    try {
+  const checkHealth = async () =>
+  {
+    setIsChecking( true );
+    try
+    {
       const health = await api.checkHealth();
-      const so = (s: { status?: string } | string) =>
-        (typeof s === "object" ? s.status : s) ?? "unhealthy";
-      const ok = (s: { status?: string } | string) => so(s) === "healthy";
+      const so = ( s: { status?: string } | string ) =>
+        ( typeof s === "object" ? s.status : s ) ?? "unhealthy";
+      const ok = ( s: { status?: string } | string ) => so( s ) === "healthy";
 
       const newServices: ServiceStatus[] = [
         {
           id: "ollama",
           name: "Ollama",
-          status: ok(health.services.ollama) ? "healthy" : "unhealthy",
-          message: ok(health.services.ollama)
+          status: ok( health.services.ollama ) ? "healthy" : "unhealthy",
+          message: ok( health.services.ollama )
             ? "Működik"
             : "Indítsd el: ollama serve",
         },
         {
           id: "anythingllm",
           name: "AnythingLLM",
-          status: ok(health.services.anythingllm) ? "healthy" : "unhealthy",
-          message: ok(health.services.anythingllm)
+          status: ok( health.services.anythingllm ) ? "healthy" : "unhealthy",
+          message: ok( health.services.anythingllm )
             ? "Működik"
             : "Service nem elérhető",
         },
         {
           id: "agents",
           name: "Agents",
-          status: ok(health.services.agents) ? "healthy" : "unhealthy",
-          message: ok(health.services.agents)
+          status: ok( health.services.agents ) ? "healthy" : "unhealthy",
+          message: ok( health.services.agents )
             ? "Aktív ágensek rendelkezésre állnak"
             : "Nincs regisztrált ágens",
         },
         {
           id: "mcp",
           name: "MCP Servers",
-          status: ok(health.services.mcp) ? "healthy" : "unhealthy",
-          message: ok(health.services.mcp)
+          status: ok( health.services.mcp ) ? "healthy" : "unhealthy",
+          message: ok( health.services.mcp )
             ? "MCP kapcsolat működik"
             : "Nincs elérhető MCP szerver",
         },
         {
           id: "python",
           name: "Python Service",
-          status: ok(health.services.python) ? "healthy" : "unhealthy",
-          message: ok(health.services.python)
+          status: ok( health.services.python ) ? "healthy" : "unhealthy",
+          message: ok( health.services.python )
             ? "Python alrendszer OK"
             : "Python server nem fut",
         },
         {
           id: "cloudflare",
           name: "Cloudflare",
-          status: ok(health.services.cloudflare) ? "healthy" : "unhealthy",
-          message: ok(health.services.cloudflare)
+          status: ok( health.services.cloudflare ) ? "healthy" : "unhealthy",
+          message: ok( health.services.cloudflare )
             ? "Gateway & R2 OK"
             : "CS csatlakozási hiba",
         },
       ];
 
-      setServices(newServices);
-      setLastCheck(new Date().toLocaleString("hu-HU"));
-    } catch (error: any) {
-      console.error("Health check error:", error);
-      setServices((prev) =>
-        prev.map((s) => ({
+      setServices( newServices );
+      setLastCheck( new Date().toLocaleString( "hu-HU" ) );
+    } catch ( error: any )
+    {
+      console.error( "Health check error:", error );
+      setServices( ( prev ) =>
+        prev.map( ( s ) => ( {
           ...s,
           status: "unhealthy",
           message: "Szerver nem elérhető",
-        })),
+        } ) ),
       );
-    } finally {
-      setIsChecking(false);
+    } finally
+    {
+      setIsChecking( false );
     }
   };
 
-  const handleToggle = async (serviceId: string, currentlyHealthy: boolean) => {
-    if (serviceId === "agents" || serviceId === "mcp") {
-      toast.info(`${serviceId} állapotát a rendszer automatikusan kezeli`);
+  const handleToggle = async ( serviceId: string, currentlyHealthy: boolean ) =>
+  {
+    if ( serviceId === "agents" || serviceId === "mcp" )
+    {
+      toast.info( `${ serviceId } állapotát a rendszer automatikusan kezeli` );
       return;
     }
 
-    setLoading((prev) => ({ ...prev, [serviceId]: true }));
-    try {
-      if (currentlyHealthy) {
-        if (serviceId === "anythingllm") {
-          toast.info("AnythingLLM Desktop app – manuálisan zárd be");
+    setLoading( ( prev ) => ( { ...prev, [serviceId]: true } ) );
+    try
+    {
+      if ( currentlyHealthy )
+      {
+        if ( serviceId === "anythingllm" )
+        {
+          toast.info( "AnythingLLM Desktop app – manuálisan zárd be" );
           return;
         }
-        const result = await api.stopService(serviceId as any);
-        if (result.success) toast.success(result.message);
-        else toast.error(result.message);
-      } else {
-        const result = await api.startService(serviceId as any);
-        if (result.success) toast.success(result.message);
-        else toast.error(result.message);
+        const result = await api.stopService( serviceId as any );
+        if ( result.success ) toast.success( result.message );
+        else toast.error( result.message );
+      } else
+      {
+        const result = await api.startService( serviceId as any );
+        if ( result.success ) toast.success( result.message );
+        else toast.error( result.message );
       }
       await checkHealth();
-    } catch (e: any) {
-      toast.error(e.message || "Művelet sikertelen");
-    } finally {
-      setLoading((prev) => ({ ...prev, [serviceId]: false }));
+    } catch ( e: any )
+    {
+      toast.error( e.message || "Művelet sikertelen" );
+    } finally
+    {
+      setLoading( ( prev ) => ( { ...prev, [serviceId]: false } ) );
     }
   };
 
-  useEffect(() => {
+  useEffect( () =>
+  {
     checkHealth();
-    const interval = setInterval(checkHealth, 30000); // 30s as per masterplan V3
-    return () => clearInterval(interval);
-  }, []);
+    const interval = setInterval( checkHealth, 30000 ); // 30s as per masterplan V3
+    return () => clearInterval( interval );
+  }, [] );
 
-  const getStatusIcon = (status: string) => {
-    switch (status) {
+  const getStatusIcon = ( status: string ) =>
+  {
+    switch ( status )
+    {
       case "healthy":
-        return (
-          <CheckCircle size={20} className="text-green-500" weight="fill" />
-        );
+        return <CheckCircle2 size={ 14 } className="text-green-500" />;
       case "unhealthy":
-        return <XCircle size={14} className="text-red-500" weight="fill" />;
+        return <XCircle size={ 14 } className="text-red-500" />;
       case "checking":
-        return (
-          <Circle
-            size={14}
-            className="text-yellow-500 animate-pulse"
-            weight="fill"
-          />
-        );
+        return <Circle size={ 14 } className="text-yellow-500 animate-pulse" />;
       default:
-        return <Warning size={14} className="text-gray-500" />;
+        return <AlertTriangle size={ 14 } className="text-gray-500" />;
     }
   };
 
-  const healthyCount = services.filter((s) => s.status === "healthy").length;
+  const healthyCount = services.filter( ( s ) => s.status === "healthy" ).length;
   const totalCount = services.length;
 
   return (
     <Card className="glass-card border-white/10 h-full overflow-hidden">
       <CardHeader className="flex flex-row items-center justify-between pb-3 px-4 pt-4">
         <CardTitle className="text-[11px] font-semibold tracking-[0.24em] text-zinc-300 flex items-center gap-2 uppercase">
-          <ArrowsClockwise
-            size={14}
-            className={isChecking ? "animate-spin text-cyan-300" : "text-zinc-500"}
+          <RotateCw
+            size={ 14 }
+            className={ isChecking ? "animate-spin text-cyan-300" : "text-zinc-500" }
           />
           System Health
         </CardTitle>
         <Badge
-          variant={healthyCount === totalCount ? "default" : "destructive"}
+          variant={ healthyCount === totalCount ? "default" : "destructive" }
           className="text-[10px] font-mono px-1.5 py-0 border border-white/[0.1]"
         >
-          {healthyCount}/{totalCount}
+          { healthyCount }/{ totalCount }
         </Badge>
       </CardHeader>
       <CardContent className="p-0">
         <div className="divide-y divide-white/[0.04]">
-          {services.map((service) => {
+          { services.map( ( service ) =>
+          {
             const isHealthy = service.status === "healthy";
             const canToggle =
               service.id === "ollama" ||
@@ -197,48 +201,48 @@ export function SystemHealthCard() {
 
             return (
               <div
-                key={service.id}
+                key={ service.id }
                 className="flex items-center justify-between px-4 py-3 hover:bg-white/[0.035] transition-colors duration-200"
               >
                 <div className="flex items-center gap-2.5">
-                  {getStatusIcon(service.status)}
+                  { getStatusIcon( service.status ) }
                   <div className="min-w-0">
                     <p className="font-medium text-xs text-zinc-100">
-                      {service.name}
+                      { service.name }
                     </p>
                     <p className="text-[10px] text-zinc-500 truncate max-w-[180px]">
-                      {service.message || "System online"}
+                      { service.message || "System online" }
                     </p>
                   </div>
                 </div>
                 <div className="flex items-center gap-2 shrink-0">
-                  {canToggle && (
+                  { canToggle && (
                     <Switch
-                      checked={isHealthy}
-                      disabled={loading[service.id] || isChecking}
-                      onCheckedChange={() =>
-                        handleToggle(service.id, isHealthy)
+                      checked={ isHealthy }
+                      disabled={ loading[service.id] || isChecking }
+                      onCheckedChange={ () =>
+                        handleToggle( service.id, isHealthy )
                       }
                       className="scale-75"
                     />
-                  )}
-                  {!canToggle && (
+                  ) }
+                  { !canToggle && (
                     <Badge
                       variant="outline"
                       className="text-[9px] h-5 opacity-40 border-zinc-700"
                     >
                       AUTO
                     </Badge>
-                  )}
+                  ) }
                 </div>
               </div>
             );
-          })}
+          } ) }
         </div>
 
         <div className="px-4 py-2 border-t border-white/[0.04] bg-white/[0.02]">
           <p className="text-[9px] text-zinc-600 font-mono text-center">
-            {lastCheck || "Initializing..."}
+            { lastCheck || "Initializing..." }
           </p>
         </div>
       </CardContent>

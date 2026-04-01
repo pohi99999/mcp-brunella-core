@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "rtDLwt8/hJ4=",
+  "dgSpecHash": "NQMTOH3pp40=",
   "success": false,
   "projectFilePath": "F:\\mcp-brunella-core\\myai\\agents\\a2a-go\\professional-services\\tools\\gsnapshot\\gsnapshot.csproj",
   "expectedPackageFiles": [
@@ -60,9 +60,9 @@
       ]
     },
     {
-      "code": "NU1101",
+      "code": "NU1100",
       "level": "Error",
-      "message": "Unable to find package ByteSize. No packages exist with this id in source(s): Microsoft Visual Studio Offline Packages",
+      "message": "Unable to resolve 'ByteSize (>= 2.0.0)' for 'netcoreapp5.0'.",
       "projectPath": "F:\\mcp-brunella-core\\myai\\agents\\a2a-go\\professional-services\\tools\\gsnapshot\\gsnapshot.csproj",
       "filePath": "F:\\mcp-brunella-core\\myai\\agents\\a2a-go\\professional-services\\tools\\gsnapshot\\gsnapshot.csproj",
       "libraryId": "ByteSize",
@@ -71,9 +71,9 @@
       ]
     },
     {
-      "code": "NU1101",
+      "code": "NU1100",
       "level": "Error",
-      "message": "Unable to find package CommandLineParser. No packages exist with this id in source(s): Microsoft Visual Studio Offline Packages",
+      "message": "Unable to resolve 'CommandLineParser (>= 2.8.0)' for 'netcoreapp5.0'.",
       "projectPath": "F:\\mcp-brunella-core\\myai\\agents\\a2a-go\\professional-services\\tools\\gsnapshot\\gsnapshot.csproj",
       "filePath": "F:\\mcp-brunella-core\\myai\\agents\\a2a-go\\professional-services\\tools\\gsnapshot\\gsnapshot.csproj",
       "libraryId": "CommandLineParser",
@@ -82,9 +82,9 @@
       ]
     },
     {
-      "code": "NU1101",
+      "code": "NU1100",
       "level": "Error",
-      "message": "Unable to find package ConsoleUI.ConsoleMenu. No packages exist with this id in source(s): Microsoft Visual Studio Offline Packages",
+      "message": "Unable to resolve 'ConsoleUI.ConsoleMenu (>= 2.1.0)' for 'netcoreapp5.0'.",
       "projectPath": "F:\\mcp-brunella-core\\myai\\agents\\a2a-go\\professional-services\\tools\\gsnapshot\\gsnapshot.csproj",
       "filePath": "F:\\mcp-brunella-core\\myai\\agents\\a2a-go\\professional-services\\tools\\gsnapshot\\gsnapshot.csproj",
       "libraryId": "ConsoleUI.ConsoleMenu",
@@ -93,9 +93,9 @@
       ]
     },
     {
-      "code": "NU1101",
+      "code": "NU1100",
       "level": "Error",
-      "message": "Unable to find package Google.Apis.Auth. No packages exist with this id in source(s): Microsoft Visual Studio Offline Packages",
+      "message": "Unable to resolve 'Google.Apis.Auth (>= 1.51.0)' for 'netcoreapp5.0'.",
       "projectPath": "F:\\mcp-brunella-core\\myai\\agents\\a2a-go\\professional-services\\tools\\gsnapshot\\gsnapshot.csproj",
       "filePath": "F:\\mcp-brunella-core\\myai\\agents\\a2a-go\\professional-services\\tools\\gsnapshot\\gsnapshot.csproj",
       "libraryId": "Google.Apis.Auth",
@@ -104,9 +104,9 @@
       ]
     },
     {
-      "code": "NU1101",
+      "code": "NU1100",
       "level": "Error",
-      "message": "Unable to find package Google.Apis.CloudResourceManager.v1. No packages exist with this id in source(s): Microsoft Visual Studio Offline Packages",
+      "message": "Unable to resolve 'Google.Apis.CloudResourceManager.v1 (>= 1.51.0.2281)' for 'netcoreapp5.0'.",
       "projectPath": "F:\\mcp-brunella-core\\myai\\agents\\a2a-go\\professional-services\\tools\\gsnapshot\\gsnapshot.csproj",
       "filePath": "F:\\mcp-brunella-core\\myai\\agents\\a2a-go\\professional-services\\tools\\gsnapshot\\gsnapshot.csproj",
       "libraryId": "Google.Apis.CloudResourceManager.v1",
@@ -115,9 +115,9 @@
       ]
     },
     {
-      "code": "NU1101",
+      "code": "NU1100",
       "level": "Error",
-      "message": "Unable to find package Google.Apis.Compute.beta. No packages exist with this id in source(s): Microsoft Visual Studio Offline Packages",
+      "message": "Unable to resolve 'Google.Apis.Compute.beta (>= 1.51.0.2272)' for 'netcoreapp5.0'.",
       "projectPath": "F:\\mcp-brunella-core\\myai\\agents\\a2a-go\\professional-services\\tools\\gsnapshot\\gsnapshot.csproj",
       "filePath": "F:\\mcp-brunella-core\\myai\\agents\\a2a-go\\professional-services\\tools\\gsnapshot\\gsnapshot.csproj",
       "libraryId": "Google.Apis.Compute.beta",
@@ -126,9 +126,9 @@
       ]
     },
     {
-      "code": "NU1101",
+      "code": "NU1100",
       "level": "Error",
-      "message": "Unable to find package Google.Apis.Compute.v1. No packages exist with this id in source(s): Microsoft Visual Studio Offline Packages",
+      "message": "Unable to resolve 'Google.Apis.Compute.v1 (>= 1.51.0.2272)' for 'netcoreapp5.0'.",
       "projectPath": "F:\\mcp-brunella-core\\myai\\agents\\a2a-go\\professional-services\\tools\\gsnapshot\\gsnapshot.csproj",
       "filePath": "F:\\mcp-brunella-core\\myai\\agents\\a2a-go\\professional-services\\tools\\gsnapshot\\gsnapshot.csproj",
       "libraryId": "Google.Apis.Compute.v1",
@@ -137,9 +137,9 @@
       ]
     },
     {
-      "code": "NU1101",
+      "code": "NU1100",
       "level": "Error",
-      "message": "Unable to find package NLog. No packages exist with this id in source(s): Microsoft Visual Studio Offline Packages",
+      "message": "Unable to resolve 'NLog (>= 4.7.7)' for 'netcoreapp5.0'.",
       "projectPath": "F:\\mcp-brunella-core\\myai\\agents\\a2a-go\\professional-services\\tools\\gsnapshot\\gsnapshot.csproj",
       "filePath": "F:\\mcp-brunella-core\\myai\\agents\\a2a-go\\professional-services\\tools\\gsnapshot\\gsnapshot.csproj",
       "libraryId": "NLog",
@@ -148,9 +148,9 @@
       ]
     },
     {
-      "code": "NU1101",
+      "code": "NU1100",
       "level": "Error",
-      "message": "Unable to find package NLog.Extensions.Logging. No packages exist with this id in source(s): Microsoft Visual Studio Offline Packages",
+      "message": "Unable to resolve 'NLog.Extensions.Logging (>= 1.7.0)' for 'netcoreapp5.0'.",
       "projectPath": "F:\\mcp-brunella-core\\myai\\agents\\a2a-go\\professional-services\\tools\\gsnapshot\\gsnapshot.csproj",
       "filePath": "F:\\mcp-brunella-core\\myai\\agents\\a2a-go\\professional-services\\tools\\gsnapshot\\gsnapshot.csproj",
       "libraryId": "NLog.Extensions.Logging",
@@ -159,9 +159,9 @@
       ]
     },
     {
-      "code": "NU1101",
+      "code": "NU1100",
       "level": "Error",
-      "message": "Unable to find package ReadLine. No packages exist with this id in source(s): Microsoft Visual Studio Offline Packages",
+      "message": "Unable to resolve 'ReadLine (>= 2.0.1)' for 'netcoreapp5.0'.",
       "projectPath": "F:\\mcp-brunella-core\\myai\\agents\\a2a-go\\professional-services\\tools\\gsnapshot\\gsnapshot.csproj",
       "filePath": "F:\\mcp-brunella-core\\myai\\agents\\a2a-go\\professional-services\\tools\\gsnapshot\\gsnapshot.csproj",
       "libraryId": "ReadLine",
@@ -170,9 +170,9 @@
       ]
     },
     {
-      "code": "NU1101",
+      "code": "NU1100",
       "level": "Error",
-      "message": "Unable to find package System.Buffers. No packages exist with this id in source(s): Microsoft Visual Studio Offline Packages",
+      "message": "Unable to resolve 'System.Buffers (>= 4.5.1)' for 'netcoreapp5.0'.",
       "projectPath": "F:\\mcp-brunella-core\\myai\\agents\\a2a-go\\professional-services\\tools\\gsnapshot\\gsnapshot.csproj",
       "filePath": "F:\\mcp-brunella-core\\myai\\agents\\a2a-go\\professional-services\\tools\\gsnapshot\\gsnapshot.csproj",
       "libraryId": "System.Buffers",
@@ -181,9 +181,9 @@
       ]
     },
     {
-      "code": "NU1101",
+      "code": "NU1100",
       "level": "Error",
-      "message": "Unable to find package Microsoft.NETCore.App.Ref. No packages exist with this id in source(s): Microsoft Visual Studio Offline Packages",
+      "message": "Unable to resolve 'Microsoft.NETCore.App.Ref (= 5.0.0)' for 'net5.0'.",
       "projectPath": "F:\\mcp-brunella-core\\myai\\agents\\a2a-go\\professional-services\\tools\\gsnapshot\\gsnapshot.csproj",
       "filePath": "F:\\mcp-brunella-core\\myai\\agents\\a2a-go\\professional-services\\tools\\gsnapshot\\gsnapshot.csproj",
       "libraryId": "Microsoft.NETCore.App.Ref",
@@ -192,9 +192,9 @@
       ]
     },
     {
-      "code": "NU1101",
+      "code": "NU1100",
       "level": "Error",
-      "message": "Unable to find package Microsoft.WindowsDesktop.App.Ref. No packages exist with this id in source(s): Microsoft Visual Studio Offline Packages",
+      "message": "Unable to resolve 'Microsoft.WindowsDesktop.App.Ref (= 5.0.0)' for 'net5.0'.",
       "projectPath": "F:\\mcp-brunella-core\\myai\\agents\\a2a-go\\professional-services\\tools\\gsnapshot\\gsnapshot.csproj",
       "filePath": "F:\\mcp-brunella-core\\myai\\agents\\a2a-go\\professional-services\\tools\\gsnapshot\\gsnapshot.csproj",
       "libraryId": "Microsoft.WindowsDesktop.App.Ref",
@@ -203,9 +203,9 @@
       ]
     },
     {
-      "code": "NU1101",
+      "code": "NU1100",
       "level": "Error",
-      "message": "Unable to find package Microsoft.AspNetCore.App.Ref. No packages exist with this id in source(s): Microsoft Visual Studio Offline Packages",
+      "message": "Unable to resolve 'Microsoft.AspNetCore.App.Ref (= 5.0.0)' for 'net5.0'.",
       "projectPath": "F:\\mcp-brunella-core\\myai\\agents\\a2a-go\\professional-services\\tools\\gsnapshot\\gsnapshot.csproj",
       "filePath": "F:\\mcp-brunella-core\\myai\\agents\\a2a-go\\professional-services\\tools\\gsnapshot\\gsnapshot.csproj",
       "libraryId": "Microsoft.AspNetCore.App.Ref",
@@ -214,9 +214,9 @@
       ]
     },
     {
-      "code": "NU1101",
+      "code": "NU1100",
       "level": "Error",
-      "message": "Unable to find package Microsoft.NETCore.App.Host.win-x64. No packages exist with this id in source(s): Microsoft Visual Studio Offline Packages",
+      "message": "Unable to resolve 'Microsoft.NETCore.App.Host.win-x64 (= 5.0.17)' for 'net5.0'.",
       "projectPath": "F:\\mcp-brunella-core\\myai\\agents\\a2a-go\\professional-services\\tools\\gsnapshot\\gsnapshot.csproj",
       "filePath": "F:\\mcp-brunella-core\\myai\\agents\\a2a-go\\professional-services\\tools\\gsnapshot\\gsnapshot.csproj",
       "libraryId": "Microsoft.NETCore.App.Host.win-x64",

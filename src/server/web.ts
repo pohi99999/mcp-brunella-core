@@ -127,7 +127,7 @@ export async function startWebServer() {
       origin:
         corsOriginList.length > 0
           ? corsOriginList
-          : ["http://localhost:5173", "http://localhost:3000", "*"],
+          : ["http://localhost:5173", "http://localhost:3000"],
       methods: ["GET", "POST"],
     },
   });
@@ -316,7 +316,30 @@ async function deferredInit(
 
   try {
     const { zeroPromptRuntime } = await import("../core/zeroPromptRuntime.js");
+    const { githubRemediationRuntime } = await import("../core/githubRemediationRuntime.js");
+    const { approvalManager } = await import("../utils/approvalManager.js");
+    const { approvalRouter } = await import("../core/approvalRouter.js");
+    const { ephemeralAgentManager } = await import("../core/ephemeralAgentManager.js");
+    const { trustRegistry } = await import("../core/federation/trustRegistry.js");
+    const { capabilityManifestManager } = await import("../core/federation/capabilityManifest.js");
+    const { negotiationProtocol } = await import("../core/federation/negotiationProtocol.js");
+    const { notificationChannels } = await import("../core/notificationChannels.js");
+
+    const restoredApprovals = approvalManager.hydrateFromStore();
+    const restoredWorkflows = approvalRouter.hydrateFromStore();
+    const restoredEphemeral = ephemeralAgentManager.hydrateFromStore();
+    const restoredPeers = trustRegistry.hydrateFromStore();
+    const restoredManifests = capabilityManifestManager.hydrateFromStore();
+    const restoredNegotiations = negotiationProtocol.hydrateFromStore();
+    const restoredDeliveries = notificationChannels.hydrateFromStore();
+    const restoredRemediationRuns = githubRemediationRuntime.hydrateFromStore();
+
     zeroPromptRuntime.start();
+    githubRemediationRuntime.start();
+    logInfo(
+      "Server",
+      `Autonomy runtime restored: approvals=${restoredApprovals}, workflows=${restoredWorkflows}, ephemeral=${restoredEphemeral}, peers=${restoredPeers}, manifests=${restoredManifests}, negotiations=${restoredNegotiations}, deliveries=${restoredDeliveries}, remediationRuns=${restoredRemediationRuns}`,
+    );
   } catch (e: unknown) {
     logWarn("Server", `ZeroPrompt runtime: ${e instanceof Error ? e.message : String(e)}`);
   }
