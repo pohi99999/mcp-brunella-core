@@ -24,25 +24,25 @@
   "history": [
     {
       "type": "task",
-      "status": "success",
-      "details": "dev-1775003351648-1",
+      "status": "error",
+      "details": "dev-1775004036984-1",
       "durationMs": 0,
-      "timestamp": 1775003351653
+      "timestamp": 1775004036989
     },
     {
       "type": "task",
-      "status": "error",
-      "details": "dev-1775003351647-1",
+      "status": "success",
+      "details": "dev-1775004036985-1",
       "durationMs": 0,
-      "timestamp": 1775003351652
+      "timestamp": 1775004036989
     }
   ]
-}  {
+}{
       "type": "task",
-      "status": "error",
-      "details": "dev-1775003351647-1",
+      "status": "success",
+      "details": "dev-1775004036985-1",
       "durationMs": 0,
-      "timestamp": 1775003351652
+      "timestamp": 1775004036989
     }
   ]
 }
