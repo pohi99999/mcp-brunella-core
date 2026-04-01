@@ -3001,3 +3001,62 @@ export async function getArchitectureStatus(): Promise<ArchitectureStatus> {
   if (!response.ok) throw new Error(`Architecture status: HTTP ${response.status}`);
   return safeJson<ArchitectureStatus>(response);
 }
+
+// -----------------------------------------------------------------------
+// BOOKKEEPING & RECONCILIATION API
+// -----------------------------------------------------------------------
+
+export interface BookkeepingTransaction {
+  id: string;
+  source: string;
+  data: any;
+  status: 'PENDING_MATCH' | 'PARTIALLY_MATCHED' | 'COMPLETED' | 'MANUAL_REVIEW' | 'UNMATCHED' | 'ERROR';
+  matchedInvoice?: string;
+}
+
+export interface BookkeepingTransactionListResponse {
+  success: boolean;
+  entries: BookkeepingTransaction[];
+  total: number;
+}
+
+export async function getBookkeepingTransactions(params: {
+  status?: string;
+  source?: string;
+  limit?: number;
+  offset?: number;
+} = {}): Promise<BookkeepingTransactionListResponse> {
+  const qs = buildQuery(params);
+  const response = await fetchWithTimeout(`${API_BASE}/api/v1/bookkeeping/transactions${qs}`);
+  if (!response.ok) throw new Error(`Transactions: HTTP ${response.status}`);
+  return safeJson<BookkeepingTransactionListResponse>(response);
+}
+
+export async function updateBookkeepingTransaction(
+  id: string,
+  updates: { status: string; matchedInvoice?: string },
+): Promise<{ success: boolean; transaction: BookkeepingTransaction }> {
+  const response = await fetchWithTimeout(`${API_BASE}/api/v1/bookkeeping/transactions/${encodeURIComponent(id)}`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(updates),
+  });
+  if (!response.ok) throw new Error(`Update transaction: HTTP ${response.status}`);
+  return safeJson(response);
+}
+
+export async function sendBookkeepingSummaryEmail(): Promise<{ success: boolean; message: string }> {
+  const response = await fetchWithTimeout(`${API_BASE}/api/v1/bookkeeping/summary-email`, {
+    method: 'POST',
+  });
+  if (!response.ok) throw new Error(`Email summary: HTTP ${response.status}`);
+  return safeJson(response);
+}
+
+export async function getReconciliationEvents(runId?: string): Promise<{ success: boolean; events: any[] }> {
+  const qs = runId ? `?run_id=${encodeURIComponent(runId)}` : '';
+  const response = await fetchWithTimeout(`${API_BASE}/api/v1/bookkeeping/reconciliation-events${qs}`);
+  if (!response.ok) throw new Error(`Events: HTTP ${response.status}`);
+  return safeJson(response);
+}
+

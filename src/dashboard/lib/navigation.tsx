@@ -48,6 +48,7 @@ import { GrantHunterWidget } from "@/components/dashboard/GrantHunterWidget";
 import { LawDetectiveWidget } from "@/components/dashboard/LawDetectiveWidget";
 import { BookkeepingWidget } from "@/components/dashboard/BookkeepingWidget";
 import { HazipenztarWidget } from "@/components/dashboard/HazipenztarWidget";
+import { FinanceReconciliationPanel } from "@/components/dashboard/FinanceReconciliationPanel";
 import { PropertyVisionaryWidget } from "@/components/dashboard/PropertyVisionaryWidget";
 import { PropertySalesWidget } from "@/components/dashboard/PropertySalesWidget";
 import { LeadsMasterMonitor } from "@/components/dashboard/LeadsMasterMonitor";
@@ -204,6 +205,7 @@ export function initializeNavigation ()
     { id: "innovation-bridge", label: "Innovation Bridge", icon: Lightbulb, component: <InnovationBridgeWidget /> },
     { id: "invoice-sync", label: "Számla Szinkron", icon: Receipt, component: <InvoiceSyncWidget /> },
     { id: "bookkeeping", label: "Könyvelés", icon: BarChart3, component: <BookkeepingWidget /> },
+    { id: "finance-reconciliation", label: "Pénzügyi Egyeztetés", icon: Receipt, component: <FinanceReconciliationPanel /> },
     { id: "kp-penztar", label: "Házipénztár", icon: Wallet, component: <HazipenztarWidget /> },
     { id: "lead-mining", label: "Lead Mining", icon: Target, component: <LeadMiningWidget /> },
     { id: "leads-master", label: "Leads Monitor", icon: DollarSign, component: <LeadsMasterMonitor /> },
@@ -259,7 +261,7 @@ export function initializeNavigation ()
   navigationRegistry.registerGroup( { title: "Core Systems", icon: Layers, items: ["dashboard", "neural-map", "system-arch", "studio", "vscode", "process-control", "service-control"] } );
   navigationRegistry.registerGroup( { title: "AI & Agents", icon: Brain, items: ["chat", "paios", "copilot-commander", "assistant-blueprint", "phoenix", "zero-prompt-notifications", "ephemeral-agents", "learning-loop", "federation", "management", "agent-diagnostics", "agent-factory", "decomposer", "incubator", "knowledge", "memory", "cognitive-memory", "user-preferences", "developer", "edge", "robotkez", "browser-copilot", "jules"] } );
   navigationRegistry.registerGroup( { title: "Enterprise", icon: Briefcase, items: ["enterprise-suite", "digital-hr", "grant-hunter", "law-detective", "property-visionary", "property-sales", "psales-intake", "psales-research", "psales-strategy", "enterprise-analytics", "intelligence-monitor"] } );
-  navigationRegistry.registerGroup( { title: "Értékesítési Központ", icon: DollarSign, items: ["trojan-horse", "lead-monitor", "demo-factory", "showcase", "campaign-studio", "leads-master", "innovation-bridge", "invoice-sync", "bookkeeping", "kp-penztar", "lead-mining", "marketwatcher", "inventory"] } );
+  navigationRegistry.registerGroup( { title: "Értékesítési Központ", icon: DollarSign, items: ["trojan-horse", "lead-monitor", "demo-factory", "showcase", "campaign-studio", "leads-master", "innovation-bridge", "invoice-sync", "bookkeeping", "finance-reconciliation", "kp-penztar", "lead-mining", "marketwatcher", "inventory"] } );
   navigationRegistry.registerGroup( { title: "Orchestration", icon: Rocket, items: ["cean", "cloudflare", "fleet_manager", "autonomy", "tasks", "workflow-engine", "swarm-panel", "tool-discovery", "tools-manager", "crawl4ai", "harvest-pipeline"] } );
   navigationRegistry.registerGroup( { title: "Project Mgmt", icon: FileText, items: ["tracks", "suggested-tasks", "tests", "spec-manager"] } );
   navigationRegistry.registerGroup( { title: "System", icon: Settings, items: ["python-workers", "files", "guardrails", "telemetry", "llm-observability", "security-panel", "chrome-acp", "settings", "n8n", "langflow", "remote-console", "admin-check", "trace-viewer", "log-viewer", "audit-log", "model-router", "scheduled-tasks", "vector-stats"] } );

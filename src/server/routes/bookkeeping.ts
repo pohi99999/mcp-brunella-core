@@ -632,5 +632,46 @@ export function createBookkeepingRoutes(): Router {
     }
   });
 
+  router.post('/summary-email', async (_req, res) => {
+    try {
+      const transactions = getAllTransactions();
+      const summary = buildSummary(transactions);
+      const exceptions = transactions.filter(t => t.status === 'UNMATCHED' || t.status === 'ERROR');
+
+      const { sendNotificationEmail, isNotificationEmailConfigured } = await import('../../utils/notificationService.js');
+
+      if (!isNotificationEmailConfigured()) {
+        res.status(503).json({ success: false, error: 'Email service not configured' });
+        return;
+      }
+
+      const html = `
+        <h2>Brunella Könyvelési Összefoglaló</h2>
+        <p><strong>Dátum:</strong> ${new Date().toLocaleDateString('hu-HU')}</p>
+        <p><strong>Összes tranzakció:</strong> ${summary.total}</p>
+        <p><strong>Sikeresen párosítva:</strong> ${summary.completed}</p>
+        <p><strong>Kivételek (beavatkozást igényel):</strong> ${exceptions.length}</p>
+        <hr/>
+        <h3>Kivételek listája:</h3>
+        <ul>
+          ${exceptions.slice(0, 10).map(e => `<li>${(e.data as any).partner || 'Ismeretlen'} - ${(e.data as any).amount} HUF (${e.status})</li>`).join('')}
+        </ul>
+        ${exceptions.length > 10 ? `<p>... és további ${exceptions.length - 10} tétel.</p>` : ''}
+      `;
+
+      await sendNotificationEmail({
+        subject: `Brunella Könyvelési Összefoglaló - ${exceptions.length} kivétel`,
+        text: `Összesen ${summary.total} tranzakcióból ${exceptions.length} igényel kézi ellenőrzést.`,
+        html
+      });
+
+      res.json({ success: true, message: 'Summary email sent' });
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      logError('BookkeepingRoutes', `Failed to send summary email: ${message}`);
+      res.status(500).json({ success: false, error: message });
+    }
+  });
+
   return router;
 }
