@@ -96,6 +96,7 @@ class HeartbeatMonitorClass {
   private intervalHandle: NodeJS.Timeout | null = null;
   private failureHandlers: Map<string, FailureHandler[]> = new Map();
   private isRunning = false;
+  private isCheckRunning = false;
   private startedAt = 0;
 
   constructor() {
@@ -136,11 +137,11 @@ class HeartbeatMonitorClass {
     logInfo('HeartbeatMonitor', `Started (interval: ${this.config.intervalMs}ms, timeout: ${this.config.timeoutMs}ms)`);
 
     // Initial check
-    this.checkAllServices();
+    void this.runChecks();
 
     // Schedule periodic checks
     this.intervalHandle = setInterval(() => {
-      this.checkAllServices();
+      void this.runChecks();
     }, this.config.intervalMs);
   }
 
@@ -166,6 +167,19 @@ class HeartbeatMonitorClass {
     // Assess system degradation after all checks complete
     const overall = this.getOverallHealth();
     degradationPolicy.assessDegradation(overall.unhealthyServices);
+  }
+
+  private async runChecks(): Promise<void> {
+    if (this.isCheckRunning) {
+      return;
+    }
+
+    this.isCheckRunning = true;
+    try {
+      await this.checkAllServices();
+    } finally {
+      this.isCheckRunning = false;
+    }
   }
 
   /**
