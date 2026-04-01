@@ -136,6 +136,7 @@ Ezeket a módosításokat a conductor/tracks.md és a conductor/archive/ helyre 
 **Érintett fájlok:** .vscode/tasks.json, scripts/copilot-with-brunella.ps1, scripts/copilot-with-brunella.bat, scripts/copilot-mcp-config.json
 **Státusz:** ✅ Befejezve
 **Megjegyzés:**
+
 - Cloudflare zóna meta-információk és whois/NS delegációs állapot ellenőrzése sikeres, a domain delegáció mostantól teljes körűen vizsgálható.
 - Copilot CLI wrapper és MCP auto-start: repo-szintű MCP config, automatikus Brunella indítás VSCode megnyitásakor, PowerShell/batch wrapper, tasks.json módosítás.
 - whois telepítve, parancssorból működik, NS rekordok és delegációs állapot mostantól ellenőrizhető.
@@ -363,3 +364,24 @@ Ezeket a módosításokat a conductor/tracks.md és a conductor/archive/ helyre 
 - FastMCP regisztráció: `myai/mcp_server.py:mcp` entry point a Prefect Horizon-on
 - MCP szerver URL: https://brunella.fastmcp.app/mcp
 - Commit: 19872aa8 (18 fájl, 852+/48-), npm run build ✅, npm run test:fast ✅ (1919 tests, 219 files)
+
+### 2026-04-01 01:xx - Jules track kuráció + régi session-artifaktok takarítása
+
+**Feladat:** A `jules_pr_integration_20260222` track felülvizsgálata, a már beépült Jules-vonalak azonosítása, valamint a repo-ban maradt régi Jules session extract mappák eltávolítása, hogy ne zavarják a jelenlegi rendszert.
+**Érintett fájlok:** .gitignore, conductor/tracks/jules_pr_integration_20260222/plan.md, conductor/tracks/jules_pr_integration_20260222/meta.json, .jules_audit_tmp/*, .tmp_jules_extract/*
+**Státusz:** ✅ Befejezve
+**Megjegyzés:**
+- A jelenlegi kódbázis alapján már bent van a FastAPI restart, cron-parser next-run, permission audit, Jules API fallback, GitHubModelsAgent tool-loop és PR tracking DB vonal; ezeket nem szabad újra vakon merge-elni.
+- GitHub keresés alapján jelenleg nincs nyitott Jules PR a `pohi99999/mcp-brunella-core` repo-ban.
+- A `.jules_audit_tmp/` és `.tmp_jules_extract/` könyvtárak régi, tracked session-artifaktok voltak; eltávolítottam őket a verziókövetésből és `.gitignore` alá tettem, hogy később se okozzanak keresési zajt vagy félreértést.
+
+### 2026-04-01 01:17 - Jules track lezárás + archiválás
+
+**Feladat:** A `jules_pr_integration_20260222` track formális lezárása, archiválása és Conductor újraszinkronizálása.
+**Érintett fájlok:** conductor/archive/jules_pr_integration_20260222/meta.json, conductor/archive/jules_pr_integration_20260222/plan.md, conductor/tracks.md, conductor/project_state.json
+**Státusz:** ✅ Befejezve
+**Megjegyzés:**
+
+- A track átkerült a `conductor/archive/jules_pr_integration_20260222/` mappába.
+- A meta állapot archiváltra lett állítva, a Conductor rescan pedig 5 aktív tracket és 150 archivált tracket jelzett vissza.
+- A lezárás célja az volt, hogy a régi, duplikált Jules-anyagok többé ne legyenek aktív fejlesztési fókuszban.

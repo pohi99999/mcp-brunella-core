@@ -1,10 +1,10 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-04-01T00:27:53.094Z
+**Utolso frissites:** 2026-04-01T01:20:00.206Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 160 total | 6 active | 1 completed | 149 archived
+**Stats:** 160 total | 5 active | 1 completed | 150 archived
 
 ---
 
@@ -27,18 +27,12 @@
 
 ---
 
-## Aktiv Szalak (Active) (6)
+## Aktiv Szalak (Active) (5)
 
 - [ ] **Autonóm Készlet- és Leltárkezelési Rendszer — KKV** [MEDIUM]
   - **ID:** `inventory_automation_20260330`
   - **Progress:** 0%
   - Mappa: ./tracks/inventory_automation_20260330/
-
-- [ ] **jules_pr_integration_20260222** [HIGH]
-  - **ID:** `jules_pr_integration_20260222`
-  - **Progress:** 18%
-  - **Assignee:** Claude + Pohánka Péter
-  - Mappa: ./tracks/jules_pr_integration_20260222/
 
 - [ ] **Könyvelés automatizálása** [MEDIUM]
   - **ID:** `konyveles_automatizalas`
@@ -70,7 +64,7 @@
 
 ---
 
-## Archivalt (Archived) (149)
+## Archivalt (Archived) (150)
 
 > Archived tracks are hidden by default. View in `conductor/archive/`
 
@@ -85,7 +79,7 @@
 - [x] **AI Recommendation System Integration** (2026-02-17T22:45:00Z)
 - [x] **apify_deep_scraping_agent_20260223** (N/A)
 
-... and 139 more archived tracks
+... and 140 more archived tracks
 
 ---
 

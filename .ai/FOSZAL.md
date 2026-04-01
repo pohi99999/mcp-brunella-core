@@ -1,6 +1,6 @@
 # FŐSZÁL - Egyesített Fejlesztési Napló
 
-**Generálva:** 2026-04-01 01:29
+**Generálva:** 2026-04-01 03:20
 **Script:** `scripts/sync_foszal.py`
 
 ---
@@ -27,6 +27,20 @@ start-full.bat
 ---
 
 ## Összesített Napló (Időrendben)
+
+### 2026-04-01
+
+#### 01:17 - [Copilot] Jules track lezárás + archiválás
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** conductor/archive/jules_pr_integration_20260222/meta.json, conductor/archive/jules_pr_integration_20260222/plan.md, conductor/tracks.md, conductor/project_state.json
+
+#### 00:43 - [Copilot] Multi-feature session: context fusion, action contracts, edge proxy, FastMCP
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** src/core/contextFusion.ts (ÚJ — fusion card builder: GraphRAG, reflection, memory, browser diag), test/contextFusion.test.ts (ÚJ — 14 teszt), src/utils/backgroundTaskManager.ts (vision-click 2-step: query→click, press support), src/agents/RobotkezV2Agent.ts (press → critical action), src/utils/cloudflareBrowser.ts (selector field passthrough) (+11 további)
+
+---
 
 ### 2026-03-31
 
@@ -729,7 +743,7 @@ start-full.bat
 | Claude | 85 | 2026-03-31 |
 | Gemini | 17 | 2026-03-31 |
 | Cursor | 0 | N/A |
-| Copilot | 18 | 2026-03-28 |
+| Copilot | 20 | 2026-03-28 |
 
 ---
 

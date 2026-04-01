@@ -133,6 +133,8 @@ _JULES_MAINTENANCE_TASKS.md
 _PROJECT_STRUCTURE.md
 _QUICK_START.md
 .tmp.driveupload/
+.jules_audit_tmp/
+.tmp_jules_extract/
 developer_metrics.json
 data/developer_metrics.json
 
