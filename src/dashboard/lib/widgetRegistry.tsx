@@ -18,6 +18,7 @@ import { CloudflareAgentsCard } from "@/components/dashboard/CloudflareAgentsCar
 import { RAGMemoryWidget } from "@/components/dashboard/RAGMemoryWidget";
 import { VectorizeAnalyticsWidget } from "@/components/dashboard/VectorizeAnalyticsWidget";
 import { InvoiceSyncWidget } from "@/components/dashboard/InvoiceSyncWidget";
+import { InvoiceAutomationWidget } from "@/components/dashboard/InvoiceAutomationWidget";
 import { MarketWatcherWidget } from "@/components/dashboard/MarketWatcherWidget";
 import { LeadMiningWidget } from "@/components/dashboard/LeadMiningWidget";
 import { EnterpriseSuitePanel } from "@/components/dashboard/EnterpriseSuitePanel";
