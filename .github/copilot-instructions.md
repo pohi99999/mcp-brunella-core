@@ -8,7 +8,7 @@
 npm run build      
                    # TypeScript fordítás (tsc + registry.json/TRIZ másolás)
 npm run test:fast                     # Gyors tesztek (~1-2 perc) — commit előtt, e2e/phase/swarm NÉLKÜL
-npm test                              # Build + teljes Vitest suite (~10 perc) — track lezáráskor/push előtt
+npm test                              # Build + teljes Vitest suite (~10 perc) — napi scheduled runhoz / manuális full checkhez
 npx vitest run test/foo.test.ts       # Egy konkrét teszt fájl
 npm run test:watch                    # Vitest watch mód (fejlesztés közben)
 npm run lint                          # ESLint (max-warnings=0)
@@ -22,7 +22,9 @@ npm run test:coverage                 # Lefedettségi jelentés
 | Esemény | Parancs |
 |---------|---------|
 | Commit előtt | `npm run test:fast` (pre-commit hook is futtatja) |
-| Track lezárásakor / Push előtt | `npm test` + `npm run smoke` |
+| Push előtt | `npm run test:fast` (pre-push hook ezt futtatja) |
+| Napi teljes kör | GitHub Actions daily full suite (`npm test`) |
+| Track lezárásakor / Release előtt | `npm test` + `npm run smoke` |
 | Napi fejlesztés | `npm run test:fast` elegendő |
 
 **Python alrendszer:**

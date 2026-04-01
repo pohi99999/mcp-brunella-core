@@ -98,8 +98,8 @@ A `README.md` a master dokumentum (~1100 sor). NE olvasd be egészben indulásko
 npm run build                 # TypeScript fordítás (MUSZÁJ OK!)
 
 # STEP 2: Test check (válaszd a megfelelőt)
-npm run test:fast             # ⚡ Gyors tesztek (~1-2 perc) — napi munka, commit előtt
-npm test                      # 🔒 Teljes suite (~10 perc) — track lezárás / push előtt
+npm run test:fast             # ⚡ Gyors tesztek (~1-2 perc) — napi munka, commit/push előtt
+npm test                      # 🔒 Teljes suite (~10 perc) — napi scheduled run / manuális release-check
 
 # STEP 3: Phoenix Protocol Állapot Ellenőrzés
 # Ellenőrizd a legfrissebb Phoenix logokat:
@@ -110,6 +110,12 @@ tail -n 50 logs/phoenix.log   # Windows: type logs\phoenix.log | more
 - **Ha BUILD FAIL** → NE kezdj fejlesztésbe! Javítsd először!
 - **Ha TESZT FAIL** → Dokumentáld TEST_RESULTS.md-ben, majd javítsd!
 - **Ha Phoenix hibát ír** → Olvasd el logs/phoenix.log-ot és reagálj rá!
+
+**Teszt cadence szabály (2026-04-01):**
+
+- helyi `pre-push` csak a `npm run test:fast` profilt futtatja,
+- a teljes Node.js tesztkör napi egyszer, külön GitHub Actions workflow-ban fut,
+- manuálisan továbbra is ajánlott teljes suite-ot futtatni nagyobb merge / release / track lezárás előtt.
 
 **🔴 KRITIKUS:** A Phoenix Protocol öngyógyító, de TE vagy felelős a logok ellenőrzéséért!
 

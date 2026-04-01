@@ -1,0 +1,24 @@
+{
+  "id": "test_cadence_optimization_20260401",
+  "trackName": "test_cadence_optimization_20260401",
+  "name": "Push teszt cadence optimalizáció",
+  "type": "Developer Experience / CI / Hooks",
+  "priority": "MEDIUM",
+  "status": "COMPLETED",
+  "progress": 100,
+  "assignee": "Copilot",
+  "createdAt": "2026-04-01T00:00:00.000Z",
+  "updatedAt": "2026-04-01T02:40:00.000Z",
+  "completedAt": "2026-04-01T02:40:00.000Z",
+  "goal": "A pushoknál csak gyors alaptesztek fussanak, miközben a teljes Node.js tesztkör napi egyszer scheduled workflow-ban fusson le.",
+  "relatedTracks": [
+    "precommit_hook_optimization_20260325"
+  ],
+  "tags": ["husky", "hooks", "ci", "vitest", "developer-experience", "github-actions"],
+  "phases": [
+    { "name": "Phase 1: Jelenlegi push-lánc audit", "status": "completed" },
+    { "name": "Phase 2: Pre-push gyorsteszt profil egységesítés", "status": "completed" },
+    { "name": "Phase 3: Daily full-suite workflow", "status": "completed" },
+    { "name": "Phase 4: Dokumentáció és Conductor szinkron", "status": "completed" }
+  ]
+}
