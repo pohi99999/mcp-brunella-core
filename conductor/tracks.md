@@ -1,10 +1,10 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-04-01T08:23:14.229Z
+**Utolso frissites:** 2026-04-01T21:37:21.196Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 168 total | 5 active | 4 completed | 155 archived
+**Stats:** 169 total | 6 active | 4 completed | 155 archived
 
 ---
 
@@ -27,14 +27,20 @@
 
 ---
 
-## Aktiv Szalak (Active) (5)
+## Aktiv Szalak (Active) (6)
+
+- [ ] **Dashboard Cockpit Redesign + Stabilization** [HIGH]
+  - **ID:** `dashboard_cockpit_redesign_20260401`
+  - **Progress:** 84%
+  - **Assignee:** Copilot
+  - Mappa: ./tracks/dashboard_cockpit_redesign_20260401/
 
 - [ ] **Autonóm Készlet- és Leltárkezelési Rendszer — KKV** [MEDIUM]
   - **ID:** `inventory_automation_20260330`
-  - **Progress:** 0%
+  - **Progress:** 28%
   - Mappa: ./tracks/inventory_automation_20260330/
 
-- [ ] **Könyvelés automatizálása** [MEDIUM]
+- [x] **Könyvelés automatizálása** [MEDIUM]
   - **ID:** `konyveles_automatizalas`
   - **Progress:** 0%
   - Mappa: ./tracks/konyveles_automatizalas/
