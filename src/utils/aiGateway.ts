@@ -71,7 +71,7 @@ export class AIGatewayClient {
       enabled: config?.enabled ?? AI_GATEWAY_ENABLED,
       cfAccountId: config?.cfAccountId || CF_ACCOUNT_ID,
       cfGatewayId: config?.cfGatewayId || CF_GATEWAY_ID,
-      cfApiToken: config?.cfApiToken || process.env.CF_API_TOKEN || process.env.CLOUDFLARE_API_TOKEN,
+      cfApiToken: config?.cfApiToken ?? process.env.CF_API_TOKEN ?? process.env.CLOUDFLARE_API_TOKEN,
       cfGlobalApiKey: config?.cfGlobalApiKey || process.env.CF_GLOBAL_API_KEY || process.env.CLOUDFLARE_GLOBAL_API_KEY,
       cfEmail: config?.cfEmail || process.env.CF_EMAIL || process.env.CLOUDFLARE_EMAIL,
       cfModel: config?.cfModel || CF_MODEL,
@@ -221,29 +221,25 @@ export class AIGatewayClient {
     this.stats.ollamaRequests++;
     const expectedDimension = options?.expectedDimension ?? 768;
 
-    try {
-      const url = `${this.config.ollamaBaseUrl}/api/embeddings`;
-      const response = await fetch(url, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        signal: AbortSignal.timeout(OLLAMA_EMBEDDING_TIMEOUT_MS),
-        body: JSON.stringify({
-          model: options?.model || "nomic-embed-text",
-          prompt: text.slice(0, 8000),
-        }),
-      });
+    const url = `${this.config.ollamaBaseUrl}/api/embeddings`;
+    const response = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      signal: AbortSignal.timeout(OLLAMA_EMBEDDING_TIMEOUT_MS),
+      body: JSON.stringify({
+        model: options?.model || "nomic-embed-text",
+        prompt: text.slice(0, 8000),
+      }),
+    });
 
-      if (!response.ok) {
-        throw new Error(`Ollama embeddings error: ${response.status}`);
-      }
-
-      const data = (await response.json()) as { embedding?: number[] };
-      this.updateLatency(Date.now() - startTime);
-
-      return data.embedding || new Array(expectedDimension).fill(0);
-    } catch (error) {
-      throw error;
+    if (!response.ok) {
+      throw new Error(`Ollama embeddings error: ${response.status}`);
     }
+
+    const data = (await response.json()) as { embedding?: number[] };
+    this.updateLatency(Date.now() - startTime);
+
+    return data.embedding || new Array(expectedDimension).fill(0);
   }
 
   /**

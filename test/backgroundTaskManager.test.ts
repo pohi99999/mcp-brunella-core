@@ -177,6 +177,33 @@ describe('BackgroundTaskManager (Phase 4)', () => {
             expect(task!.steps[1].status).toBe('error'); // Screenshot step failed
             expect(task!.steps[2].status).toBe('completed'); // But scroll continued
         });
+
+        it('should execute press and vision-click steps in the background worker', async () => {
+            const plan: ExecutionPlan = {
+                plan: [
+                    { action: 'press', key: 'Enter', description: 'Enter lenyomása' },
+                    { action: 'vision-click', target: 'Mentés gomb', description: 'Mentés gombra kattintás' }
+                ],
+                estimatedDuration: 6000,
+                backgroundEligible: false
+            };
+
+            mockSendCommand
+                .mockResolvedValueOnce({ status: 'success', message: 'Pressed Enter' })
+                .mockResolvedValueOnce({ status: 'success', selector: 'button.save' })
+                .mockResolvedValueOnce({ status: 'success' });
+
+            const taskId = await backgroundTaskManager.startTask('Press and vision task', plan);
+
+            await new Promise(resolve => setTimeout(resolve, 250));
+
+            const task = backgroundTaskManager.getTaskStatus(taskId);
+            expect(task!.status).toBe('completed');
+            expect(task!.steps).toHaveLength(2);
+            expect(mockSendCommand).toHaveBeenCalledWith({ action: 'press', key: 'Enter' });
+            expect(mockSendCommand).toHaveBeenCalledWith({ action: 'query', description: 'Mentés gomb' });
+            expect(mockSendCommand).toHaveBeenCalledWith({ action: 'click', selector: 'button.save' });
+        });
     });
 
     describe('Task Cancellation', () => {

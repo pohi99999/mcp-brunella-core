@@ -335,6 +335,31 @@ class BackgroundTaskManager {
                 });
                 break;
 
+            case 'press':
+                await persistentBrowser.sendCommand({
+                    action: 'press',
+                    key: step.key!
+                });
+                break;
+
+            case 'vision-click':
+                {
+                    const queryResponse = await persistentBrowser.sendCommand({
+                        action: 'query',
+                        description: step.target || step.description
+                    });
+
+                    if (queryResponse.status !== 'success' || typeof queryResponse.selector !== 'string' || !queryResponse.selector.trim()) {
+                        throw new Error(`Vision click selector lookup failed: ${step.description}`);
+                    }
+
+                    await persistentBrowser.sendCommand({
+                        action: 'click',
+                        selector: queryResponse.selector.trim()
+                    });
+                }
+                break;
+
             default:
                 throw new Error(`Unknown action: ${step.action}`);
         }

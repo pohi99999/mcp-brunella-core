@@ -623,6 +623,32 @@ export interface AssistantRoadmapPhase {
   deliverables: string[];
 }
 
+export interface ContextFusionCard {
+  generatedAt: string;
+  graphRag: {
+    nodes: number;
+    edges: number;
+    lessons: number;
+    nodeTypes: Record<string, number>;
+  } | null;
+  reflection: {
+    totalReflections: number;
+    avgQualityScore: number;
+    selfModelHealth: string;
+    recentContext: string;
+  } | null;
+  memory: { indexedDocuments: number } | null;
+  fusionPrompt: string;
+  browserDiagnostics?: {
+    url: string;
+    capturedAt: string;
+    jsErrors: number;
+    networkErrors: number;
+    performanceSummary: string;
+    rawSummary: string;
+  };
+}
+
 export interface AssistantBlueprint {
   assistantName: string;
   targetPlatform: string;
@@ -649,6 +675,7 @@ export interface AssistantBlueprint {
   architecture: AssistantArchitectureLayer[];
   roadmap: AssistantRoadmapPhase[];
   nextActions: string[];
+  fusionCard?: ContextFusionCard;
 }
 
 export async function getAssistantBlueprint(): Promise<AssistantBlueprint> {
@@ -661,6 +688,26 @@ export async function getAssistantBlueprint(): Promise<AssistantBlueprint> {
     throw new Error(`Assistant blueprint: HTTP ${response.status}`);
   }
   return safeJson<AssistantBlueprint>(response);
+}
+
+/**
+ * Context Fusion
+ *
+ * Fetches a compact context card aggregating GraphRAG, Reflection and Memory
+ * statistics from the running server.
+ *
+ * @returns ContextFusionCard — subsystem snapshot ready for display or LLM injection
+ */
+export async function getContextFusion(): Promise<ContextFusionCard> {
+  const response = await fetchWithTimeout(
+    `${API_BASE}/api/assistant/context-fusion`,
+    {},
+    30000,
+  );
+  if (!response.ok) {
+    throw new Error(`Context fusion: HTTP ${response.status}`);
+  }
+  return safeJson<ContextFusionCard>(response);
 }
 
 /**
@@ -2037,6 +2084,13 @@ export interface ExecutionStep {
   selector?: string;
   text?: string;
   url?: string;
+  key?: string;
+  target?: string;
+  timeout?: number;
+  direction?: 'up' | 'down' | 'left' | 'right';
+  amount?: number;
+  type?: 'text' | 'attribute' | 'html';
+  attribute?: string;
 }
 
 export interface ExecutionPlan {
@@ -2441,7 +2495,13 @@ export interface BrowserCopilotExecutionStep {
   selector?: string;
   url?: string;
   text?: string;
+  key?: string;
+  target?: string;
   timeout?: number;
+  direction?: 'up' | 'down' | 'left' | 'right';
+  amount?: number;
+  type?: 'text' | 'attribute' | 'html';
+  attribute?: string;
 }
 
 export interface BrowserCopilotExecutionPlan {

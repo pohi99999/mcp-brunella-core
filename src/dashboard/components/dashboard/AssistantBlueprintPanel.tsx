@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Brain, CheckCircle2, Clock3, Cpu, Database, Loader2, Mic, MonitorSmartphone, ShieldCheck, Sparkles, Wand2 } from 'lucide-react';
+import { Brain, CheckCircle2, Clock3, Cpu, Database, GitMerge, Loader2, Mic, MonitorSmartphone, Network, ShieldCheck, Sparkles, Wand2 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { getAssistantBlueprint, type AssistantBlueprint, type AssistantReadinessStatus } from '@/lib/apiService';
@@ -231,6 +231,52 @@ export function AssistantBlueprintPanel ()
                     </Card>
                 </div>
             </div>
+
+            { blueprint.fusionCard ? (
+                <Card className="border-zinc-800 bg-zinc-950/70">
+                    <CardHeader>
+                        <div className="flex items-center gap-2">
+                            <GitMerge className="h-4 w-4 text-cyan-400" />
+                            <CardTitle className="text-white">Fúziós Kontextus Összefoglaló</CardTitle>
+                        </div>
+                        <p className="text-xs text-zinc-500">{ new Date( blueprint.fusionCard.generatedAt ).toLocaleString( 'hu-HU' ) }</p>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="grid gap-4 md:grid-cols-3">
+                            { blueprint.fusionCard.graphRag ? (
+                                <div className="rounded-2xl border border-zinc-800 bg-zinc-900/60 p-4">
+                                    <div className="flex items-center gap-1.5 text-xs uppercase tracking-[0.2em] text-zinc-500">
+                                        <Network className="h-3.5 w-3.5" />
+                                        GraphRAG
+                                    </div>
+                                    <div className="mt-2 text-2xl font-semibold text-white">{ blueprint.fusionCard.graphRag.nodes }</div>
+                                    <div className="mt-1 text-sm text-zinc-400">entitás · { blueprint.fusionCard.graphRag.edges } kapcsolat · { blueprint.fusionCard.graphRag.lessons } tanulság</div>
+                                </div>
+                            ) : null }
+                            { blueprint.fusionCard.reflection ? (
+                                <div className="rounded-2xl border border-zinc-800 bg-zinc-900/60 p-4">
+                                    <div className="flex items-center gap-1.5 text-xs uppercase tracking-[0.2em] text-zinc-500">
+                                        <Brain className="h-3.5 w-3.5" />
+                                        Reflexió
+                                    </div>
+                                    <div className="mt-2 text-2xl font-semibold text-white">{ blueprint.fusionCard.reflection.totalReflections }</div>
+                                    <div className="mt-1 text-sm text-zinc-400">ciklus · { ( blueprint.fusionCard.reflection.avgQualityScore * 100 ).toFixed( 0 ) }% minőség · { blueprint.fusionCard.reflection.selfModelHealth }</div>
+                                </div>
+                            ) : null }
+                            { blueprint.fusionCard.memory ? (
+                                <div className="rounded-2xl border border-zinc-800 bg-zinc-900/60 p-4">
+                                    <div className="flex items-center gap-1.5 text-xs uppercase tracking-[0.2em] text-zinc-500">
+                                        <Database className="h-3.5 w-3.5" />
+                                        Memória
+                                    </div>
+                                    <div className="mt-2 text-2xl font-semibold text-white">{ blueprint.fusionCard.memory.indexedDocuments }</div>
+                                    <div className="mt-1 text-sm text-zinc-400">indexelt dokumentum (LanceDB)</div>
+                                </div>
+                            ) : null }
+                        </div>
+                    </CardContent>
+                </Card>
+            ) : null }
         </div>
     );
 }

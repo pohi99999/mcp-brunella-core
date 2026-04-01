@@ -61,13 +61,47 @@ try:
 except ImportError:
     HAS_CRAWL4AI = False
 
-from myai.rag import rag_service
-from myai.refiner_logic import refiner
-from myai.browser_worker import run_scenario, run_structured_extraction, check_setup
-from myai.utils.dataset_manager import save_gold_sample, get_dataset_stats
-from myai.agents.comet.orchestrator import CometOrchestrator
-from myai.agents.comet.models import CometTask
-from myai.agents.comet.memory import ActionMemory
+try:
+    from myai.rag import rag_service
+    HAS_RAG = True
+except ImportError:
+    rag_service = None  # type: ignore[assignment]
+    HAS_RAG = False
+
+try:
+    from myai.refiner_logic import refiner
+    HAS_REFINER = True
+except ImportError:
+    refiner = None  # type: ignore[assignment]
+    HAS_REFINER = False
+
+try:
+    from myai.browser_worker import run_scenario, run_structured_extraction, check_setup
+    HAS_BROWSER_WORKER = True
+except ImportError:
+    run_scenario = None  # type: ignore[assignment]
+    run_structured_extraction = None  # type: ignore[assignment]
+    check_setup = None  # type: ignore[assignment]
+    HAS_BROWSER_WORKER = False
+
+try:
+    from myai.utils.dataset_manager import save_gold_sample, get_dataset_stats
+    HAS_DATASET_MANAGER = True
+except ImportError:
+    save_gold_sample = None  # type: ignore[assignment]
+    get_dataset_stats = None  # type: ignore[assignment]
+    HAS_DATASET_MANAGER = False
+
+try:
+    from myai.agents.comet.orchestrator import CometOrchestrator
+    from myai.agents.comet.models import CometTask
+    from myai.agents.comet.memory import ActionMemory
+    HAS_COMET = True
+except ImportError:
+    CometOrchestrator = None  # type: ignore[assignment]
+    CometTask = None  # type: ignore[assignment]
+    ActionMemory = None  # type: ignore[assignment]
+    HAS_COMET = False
 
 app = FastAPI(title="Brunella Python Subsystem")
 backend_config = get_backend_config()
