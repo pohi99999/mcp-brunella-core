@@ -1097,6 +1097,21 @@
       "priority": 7
     },
     {
+      "name": "NavAgent",
+      "title": "NAV Compliance Agent",
+      "description": "NAV Online Számla adatok lekérése és normalizálása JSON formátumba.",
+      "class": "NavAgent",
+      "module": "./agents/NavAgent.js",
+      "capabilities": [
+        "nav_api_integration",
+        "xml_parsing",
+        "data_normalization"
+      ],
+      "category": "enterprise",
+      "status": "active",
+      "priority": 7
+    },
+    {
       "name": "BankAgent",
       "description": "Parses bank export files (CSV) and extracts transactions.",
       "role": "Transaction Watcher",
