@@ -9,7 +9,7 @@ import { Logger } from "../utils/logger.js";
 
 const reqLogger = new Logger("http.log");
 
-function getCorsOrigins() {
+export function getCorsOrigins() {
   return (process.env.CORS_ORIGINS || "")
     .split(",")
     .map((s) => s.trim())
