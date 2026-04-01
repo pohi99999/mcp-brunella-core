@@ -8,7 +8,11 @@ const BASE_URL = 'http://localhost:5678';
 const EMAIL = 'dev@localhost.com';
 const FIRST_NAME = 'Dev';
 const LAST_NAME = 'User';
-const PASSWORD = 'DevPass2026!';
+const PASSWORD = process.env.N8N_PASSWORD;
+if (!PASSWORD) {
+  console.error('[ERROR] N8N_PASSWORD environment variable is not set. Aborting.');
+  process.exit(1);
+}
 
 function iso() {
   return new Date().toISOString();

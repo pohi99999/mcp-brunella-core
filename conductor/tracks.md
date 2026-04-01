@@ -1,10 +1,10 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-04-01T02:59:01.803Z
+**Utolso frissites:** 2026-04-01T04:28:39.451Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 167 total | 5 active | 3 completed | 155 archived
+**Stats:** 168 total | 5 active | 4 completed | 155 archived
 
 ---
 
@@ -56,7 +56,11 @@
 
 ---
 
-## Befejezett (Completed - Not Archived) (3)
+## Befejezett (Completed - Not Archived) (4)
+
+- [x] **AutoGen GitHub Models pilot a Python MCP alrendszerben**
+  - **ID:** `autogen_github_models_pilot_20260401`
+  - Mappa: ./tracks/autogen_github_models_pilot_20260401/
 
 - [x] **P-Sales20260327**
   - **ID:** `P-Sales20260327`

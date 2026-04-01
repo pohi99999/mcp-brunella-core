@@ -36,7 +36,9 @@ export function AdminSelfCheckWidget() {
   }));
   const { socket } = useSocket();
 
-  const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD || 'admin';
+  // Empty string default — if VITE_ADMIN_PASSWORD is not configured the widget
+  // will reject every login attempt rather than accepting a guessable fallback.
+  const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD ?? '';
 
   // WebSocket Latency Check (Ping-Pong)
   useEffect(() => {
@@ -57,6 +59,7 @@ export function AdminSelfCheckWidget() {
       setIsAuthenticated(true);
       toast.success("Hitelesítés sikeres. Üdvözöljük az Adminisztrációs felületen!");
     } else {
+      addLog({ message: `Sikertelen admin bejelentkezés (ip: kliens oldali kezéléstár)`, type: 'warn', source: 'AdminSelfCheck' });
       toast.error("Érvénytelen jelszó.");
     }
   };

@@ -18,7 +18,16 @@ function getTestUsers(): TestUser[] {
 }
 
 function getSecret(): Uint8Array {
-  const secret = process.env.PSALES_JWT_SECRET ?? 'dev-secret-change-in-production';
+  const secret = process.env.PSALES_JWT_SECRET;
+  if (!secret) {
+    if (process.env.NODE_ENV === 'production') {
+      throw new Error(
+        'PSALES_JWT_SECRET environment variable must be set in production. Refusing to start with a weak fallback.',
+      );
+    }
+    // Development-only fallback — never use in production
+    return new TextEncoder().encode('dev-secret-change-in-production');
+  }
   return new TextEncoder().encode(secret);
 }
 

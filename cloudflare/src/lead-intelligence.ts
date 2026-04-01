@@ -310,8 +310,8 @@ async function handleGetJob(jobId: string, env: Env): Promise<Response> {
 async function handleGetLeads(url: URL, env: Env): Promise<Response> {
   const industry = url.searchParams.get('industry') || '';
   const city = url.searchParams.get('city') || 'Budapest';
-  const minScore = parseInt(url.searchParams.get('min_score') || '0');
-  const limit = Math.min(parseInt(url.searchParams.get('limit') || '50'), 100);
+  const minScore = parseInt(url.searchParams.get('min_score') || '0', 10);
+  const limit = Math.min(parseInt(url.searchParams.get('limit') || '50', 10), 100);
   const status = url.searchParams.get('status') || 'new';
 
   let query = 'SELECT * FROM leads WHERE pain_score >= ? AND status = ?';
@@ -544,7 +544,7 @@ Csak a számot válaszold!`;
     max_tokens: 5,
   }) as { response: string };
 
-  const num = parseInt(result.response?.trim() || '0');
+  const num = parseInt(result.response?.trim() || '0', 10);
   return isNaN(num) ? 0 : Math.min(20, num);
 }
 

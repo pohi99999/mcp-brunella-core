@@ -191,7 +191,7 @@ export class EnterpriseOrchestrator implements IAgent {
 
       // Create event with metadata
       const fullEvent: EnterpriseEvent = {
-        id: `evt_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+        id: `evt_${Date.now()}_${Math.random().toString(36).slice(2, 11)}`,
         timestamp: new Date(),
         retries: 0,
         ...event,

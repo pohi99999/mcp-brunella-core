@@ -32,7 +32,7 @@ export function useWorkerMetrics(workerId: string): UseWorkerMetricsResult {
         throw new Error(`Metrics fetch failed: ${response.statusText}`);
       }
       const data = await response.json();
-      setMetrics(data.data || null);
+      setMetrics((data?.data ?? data) || null);
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : 'Unknown error';
       setError(errorMessage);
@@ -66,8 +66,9 @@ export function useWorkerMetrics(workerId: string): UseWorkerMetricsResult {
       if (data.worker_id === workerId) {
         setMetrics((prev) => ({
           ...prev,
-          status: data.status,
-          last_updated: new Date().toISOString(),
+          timestamp: typeof data.timestamp === 'number'
+            ? new Date(data.timestamp).toISOString()
+            : new Date().toISOString(),
         } as WorkerMetrics));
       }
     };

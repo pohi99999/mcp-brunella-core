@@ -170,18 +170,18 @@ export function SystemHealthCard() {
   const totalCount = services.length;
 
   return (
-    <Card className="glass-card border-white/10 overflow-hidden">
+    <Card className="glass-card border-white/10 h-full overflow-hidden">
       <CardHeader className="flex flex-row items-center justify-between pb-3 px-4 pt-4">
-        <CardTitle className="text-xs font-medium tracking-[0.28em] text-zinc-400 flex items-center gap-2 uppercase">
+        <CardTitle className="text-[11px] font-semibold tracking-[0.24em] text-zinc-300 flex items-center gap-2 uppercase">
           <ArrowsClockwise
             size={14}
-            className={isChecking ? "animate-spin text-primary" : "text-zinc-500"}
+            className={isChecking ? "animate-spin text-cyan-300" : "text-zinc-500"}
           />
           System Health
         </CardTitle>
         <Badge
           variant={healthyCount === totalCount ? "default" : "destructive"}
-          className="text-[10px] font-mono px-1.5 py-0"
+          className="text-[10px] font-mono px-1.5 py-0 border border-white/[0.1]"
         >
           {healthyCount}/{totalCount}
         </Badge>
@@ -198,7 +198,7 @@ export function SystemHealthCard() {
             return (
               <div
                 key={service.id}
-                className="flex items-center justify-between px-4 py-3 hover:bg-white/[0.03] transition-colors"
+                className="flex items-center justify-between px-4 py-3 hover:bg-white/[0.035] transition-colors duration-200"
               >
                 <div className="flex items-center gap-2.5">
                   {getStatusIcon(service.status)}
@@ -206,7 +206,7 @@ export function SystemHealthCard() {
                     <p className="font-medium text-xs text-zinc-100">
                       {service.name}
                     </p>
-                    <p className="text-[10px] text-zinc-500 truncate max-w-[140px]">
+                    <p className="text-[10px] text-zinc-500 truncate max-w-[180px]">
                       {service.message || "System online"}
                     </p>
                   </div>

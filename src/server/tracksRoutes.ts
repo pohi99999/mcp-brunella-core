@@ -490,7 +490,7 @@ export function createTracksRouter(opts?: {
       const priorityMatch = lines.find((l) => l.includes("**Priority:**"));
       const priority = priorityMatch?.match(/P[0-2]/)?.[0] || "P2";
       const progressMatch = lines.find((l) => l.includes("**Progress:**"));
-      const progress = parseInt(progressMatch?.match(/\d+/)?.[0] || "0");
+      const progress = parseInt(progressMatch?.match(/\d+/)?.[0] || "0", 10);
       const createdMatch = lines.find((l) => l.includes("**Created:**"));
       const created =
         createdMatch?.match(/\d{4}-\d{2}-\d{2}/)?.[0] || "unknown";

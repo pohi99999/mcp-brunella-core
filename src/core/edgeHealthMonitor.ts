@@ -58,7 +58,7 @@ class EdgeHealthMonitorClass {
 
   constructor() {
     this.workerUrl = process.env.CLOUDFLARE_WORKER_URL || 'https://bas-orchestrator.workers.dev';
-    this.probeIntervalMs = parseInt(process.env.EDGE_HEALTH_PROBE_INTERVAL || String(DEFAULT_PROBE_INTERVAL));
+    this.probeIntervalMs = parseInt(process.env.EDGE_HEALTH_PROBE_INTERVAL || String(DEFAULT_PROBE_INTERVAL), 10);
   }
 
   /**

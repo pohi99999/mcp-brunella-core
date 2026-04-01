@@ -1,28 +1,35 @@
 import os
+import json
 import base64
-import pickle
 from typing import List
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
+from google.oauth2.credentials import Credentials
 
 SCOPES = ['https://www.googleapis.com/auth/gmail.readonly']
 
 
 def authenticate_gmail():
+    """Authenticate with Gmail using OAuth2 credentials.
+
+    Token is stored in JSON format (google.oauth2.credentials.Credentials.to_json())
+    rather than pickle, which prevents arbitrary code execution if the token file
+    is tampered with (CWE-502).
+    """
     creds = None
     if os.path.exists('token.json'):
-        with open('token.json', 'rb') as token:
-            creds = pickle.load(token)
+        with open('token.json', 'r', encoding='utf-8') as token:
+            creds = Credentials.from_authorized_user_info(json.load(token), SCOPES)
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
         else:
             flow = InstalledAppFlow.from_client_secrets_file('credentials.json', SCOPES)
             creds = flow.run_local_server(port=0)
-        with open('token.json', 'wb') as token:
-            pickle.dump(creds, token)
+        with open('token.json', 'w', encoding='utf-8') as token:
+            token.write(creds.to_json())
     return creds
 
 

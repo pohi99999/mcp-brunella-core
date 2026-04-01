@@ -6,7 +6,11 @@
 
 const BASE_URL = "https://n8n-latest-fulv.onrender.com";
 const EMAIL = "peterpohankapersonal@gmail.com";
-const PASSWORD = "Iszapfalo2026";
+const PASSWORD = process.env.N8N_PASSWORD;
+if (!PASSWORD) {
+  console.error('[ERROR] N8N_PASSWORD environment variable is not set. Aborting.');
+  process.exit(1);
+}
 
 // Ismert, MŰKÖDŐ credential-ök
 const CREDS = {

@@ -74,6 +74,7 @@ export function useFleetList(): UseFleetListResult {
       const errorMessage = err instanceof Error ? err.message : 'Unknown error';
       setError(errorMessage);
       setFleets([]);
+      setHealthData({});
     } finally {
       setLoading(false);
     }
@@ -104,6 +105,7 @@ export function useFleetList(): UseFleetListResult {
     };
 
     const handleMetricsUpdated = (data: any) => {
+      if (!data?.fleet_id) return;
       setHealthData((prev) => ({
         ...prev,
         [data.fleet_id]: data,

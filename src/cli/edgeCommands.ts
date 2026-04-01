@@ -137,7 +137,7 @@ export function registerEdgeCommands(program: Command) {
     .description("View task history")
     .option("-l, --limit <number>", "Number of tasks to show", "10")
     .action(async (options: { limit: string }) => {
-      const limit = parseInt(options.limit);
+      const limit = parseInt(options.limit, 10);
       const spinner = ora(`Fetching last ${limit} tasks...`).start();
       try {
         const data = await cloudflareClient.fetchHistory(limit);

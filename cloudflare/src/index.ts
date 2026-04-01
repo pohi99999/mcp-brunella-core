@@ -351,7 +351,7 @@ export default {
 
       // History endpoint (Phase 3)
       if (path === "/history" && request.method === "GET") {
-        const limit = parseInt(url.searchParams.get("limit") || "20");
+        const limit = parseInt(url.searchParams.get("limit") || "20", 10);
 
         try {
           const { results } = await env.DB.prepare(

@@ -12,6 +12,8 @@ export class RemoteSessionManager {
   private events = new Map<string, RemoteEvent[]>();
   private sessionTimeout = 3600000; // 1 hour default
   private maxEventsPerSession = 1000;
+  private cleanupTimer: ReturnType<typeof setInterval> | null = null;
+  private readonly CLEANUP_INTERVAL_MS = 5 * 60 * 1000; // 5 minutes
 
   /**
    * Create a new remote session
@@ -203,12 +205,32 @@ export class RemoteSessionManager {
       s => s.active && s.expiresAt > now
     );
   }
+
+  /**
+   * Start the background cleanup timer (CWE-772: resource release)
+   */
+  startCleanupTimer(): void {
+    if (this.cleanupTimer !== null) return; // already running
+    this.cleanupTimer = setInterval(() => {
+      this.cleanupExpiredSessions();
+    }, this.CLEANUP_INTERVAL_MS);
+    logInfo('RemoteSessionManager', 'Cleanup timer started');
+  }
+
+  /**
+   * Stop the background cleanup timer (call on shutdown)
+   */
+  stopCleanupTimer(): void {
+    if (this.cleanupTimer !== null) {
+      clearInterval(this.cleanupTimer);
+      this.cleanupTimer = null;
+      logInfo('RemoteSessionManager', 'Cleanup timer stopped');
+    }
+  }
 }
 
 // Singleton instance
 export const remoteSessionManager = new RemoteSessionManager();
 
-// Cleanup expired sessions every 5 minutes
-setInterval(() => {
-  remoteSessionManager.cleanupExpiredSessions();
-}, 5 * 60 * 1000);
+// Start cleanup timer — interval handle is owned by the class instance (CWE-772)
+remoteSessionManager.startCleanupTimer();

@@ -1641,8 +1641,14 @@ export class AgentManager extends EventEmitter {
     return [...this.recentWorkflowExecutions];
   }
 
-  /** Egy pending feladat azonnali feldolgozása */
+  /** Egy pending feladat azonnali feldolgozása.
+   *
+   * A `workerLoopBusy` flag-et tiszeteli: ha a batch-feldolgozó loop épp
+   * fut, kivárja a következő ciklust és null-t ad vissza, hogy a
+   * taskQueue-t ne írja felül két párhuzamos végrehajtó (CWE-820).
+   */
   async processPendingTasks(): Promise<PendingTaskProcessResult | null> {
+    if (this.workerLoopBusy) return null;
     const pending = this.taskQueue.find((t) => t.status === "pending");
     if (!pending) return null;
 

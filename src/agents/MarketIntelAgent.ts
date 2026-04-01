@@ -577,7 +577,7 @@ export class MarketIntelAgent extends BaseAgent {
     // Simulated storage (in production, would use actual LanceDB)
     for (const point of pricePoints) {
       const record: MarketIntelRecord = {
-        id: `${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+        id: `${Date.now()}_${Math.random().toString(36).slice(2, 11)}`,
         productName: point.productName,
         competitor: point.competitor,
         price: point.price,

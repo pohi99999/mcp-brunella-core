@@ -146,7 +146,7 @@ async function fetchWithRetry(
 }
 
 function generateTaskId(): string {
-  return `task_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  return `task_${Date.now()}_${Math.random().toString(36).slice(2, 11)}`;
 }
 
 async function insertTask(

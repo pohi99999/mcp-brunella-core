@@ -17,6 +17,29 @@ echo  +==================================================================+
 echo.
 
 :: ============================================================================
+:: [0/8] ZOMBIE FOLYAMATOK TISZTITASA
+:: ============================================================================
+echo [0/8] Korabbi zombie/duplicate processzek ellenorzese...
+
+:: Ha .brunella.pid letezik es a folyamat nem fut -> elavult lock torlese
+if exist "%PROJECT_ROOT%\.brunella.pid" (
+    set /p OLD_PID=<"%PROJECT_ROOT%\.brunella.pid"
+    tasklist /FI "PID eq !OLD_PID!" 2>nul | find /I "node.exe" >nul 2>&1
+    if !ERRORLEVEL! NEQ 0 (
+        del /F /Q "%PROJECT_ROOT%\.brunella.pid" >nul 2>&1
+        echo    [OK] Elavult .brunella.pid torolve (PID !OLD_PID! nem fut^)
+    ) else (
+        echo    [!!] Brunella mar fut (PID !OLD_PID!^) -- leallitas...
+        taskkill /F /PID !OLD_PID! >nul 2>&1
+        del /F /Q "%PROJECT_ROOT%\.brunella.pid" >nul 2>&1
+        timeout /t 2 /nobreak >nul
+        echo    [OK] Regi folyamat leallitva
+    )
+)
+
+echo.
+
+:: ============================================================================
 :: [1/8] DOKUMENTACIO ES KONTEXTUS FRISSITESE
 :: ============================================================================
 echo [1/8] Dokumentumok egyesitese es szinkronizalasa...

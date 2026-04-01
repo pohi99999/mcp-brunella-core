@@ -69,41 +69,38 @@ export function WidgetGrid() {
   ];
 
   return (
-    <div className="flex flex-col gap-3 h-full">
+    <div className="flex flex-col gap-4 h-full">
       {/* ── Command Strip ── */}
-      <div className="shrink-0 flex items-center justify-between px-4 py-2.5 rounded-2xl border border-white/[0.07] bg-slate-950/60 backdrop-blur-xl shadow-[0_4px_20px_-8px_rgba(0,0,0,0.5)]">
+      <div className="command-strip shrink-0 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
         <div className="flex items-center gap-3 min-w-0">
           <div className="flex items-center gap-2 shrink-0">
-            <div className="h-1.5 w-1.5 rounded-full bg-cyan-400 shadow-[0_0_8px_rgba(34,211,238,0.65)] animate-pulse" />
-            <span className="text-[9px] font-mono tracking-[0.38em] text-cyan-300/80 uppercase leading-none">
+            <div className="h-1.5 w-1.5 rounded-full bg-cyan-300 shadow-[0_0_10px_rgba(34,211,238,0.65)] animate-pulse" />
+            <span className="text-[9px] font-mono tracking-[0.34em] text-cyan-200/80 uppercase leading-none">
               BRUNELLA
             </span>
           </div>
           <div className="h-3.5 w-px bg-white/[0.06] hidden sm:block" />
-          <span className="text-[9px] text-zinc-600 font-mono tracking-widest hidden sm:inline truncate">
+          <span className="text-[9px] text-zinc-500 font-mono tracking-[0.22em] hidden sm:inline truncate">
             {currentLayout.name.toUpperCase().replaceAll(" ", "_")} · {widgets.length} WIDGETS
           </span>
         </div>
-        <div className="flex items-center gap-1.5 shrink-0">
-          <div className="hidden sm:flex items-center gap-1.5">
+        <div className="flex items-center gap-2 shrink-0">
+          <div className="hidden md:flex items-center gap-2">
             {statCards.map((stat) => {
               const Icon = stat.icon;
               return (
-                <div
-                  key={stat.label}
-                  className="flex flex-col gap-0.5 px-2.5 py-1.5 rounded-xl border border-white/[0.07] bg-white/[0.025] min-w-[74px]"
-                >
-                  <div className="flex items-center gap-1">
+                <div key={stat.label} className="stat-pill min-w-[88px]">
+                  <div className="stat-pill__header">
                     <Icon size={9} className={cn(stat.accent)} />
-                    <span className="text-[8px] font-mono uppercase tracking-[0.22em] text-zinc-600 leading-none">
+                    <span className="stat-pill__label">
                       {stat.label}
                     </span>
                   </div>
                   <div className="flex items-baseline gap-1 mt-0.5">
-                    <span className="text-[13px] font-semibold text-white tracking-tight leading-none">
+                    <span className="stat-pill__value">
                       {stat.value}
                     </span>
-                    <span className="text-[8px] text-zinc-600 font-mono leading-none truncate max-w-[40px]">
+                    <span className="stat-pill__detail">
                       {stat.detail}
                     </span>
                   </div>
@@ -111,15 +108,16 @@ export function WidgetGrid() {
               );
             })}
           </div>
-          <div className="h-5 w-px bg-white/[0.06] hidden sm:block" />
+          <div className="h-5 w-px bg-white/[0.06] hidden md:block" />
           <Button
             variant="ghost"
             size="icon"
             onClick={() => setLayoutMode("default-dashboard")}
-            className="text-zinc-600 hover:text-zinc-300 h-7 w-7"
+            className="text-zinc-500 hover:text-zinc-200 h-8 w-8 hover:bg-white/[0.06]"
             title="Reset layout"
+            aria-label="Reset layout"
           >
-            <RotateCcw size={11} />
+            <RotateCcw size={12} />
           </Button>
         </div>
       </div>

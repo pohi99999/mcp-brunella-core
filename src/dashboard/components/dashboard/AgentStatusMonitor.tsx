@@ -22,8 +22,8 @@ export function AgentStatusMonitor() {
   return (
     <Card className="glass-card border-white/10 h-full flex flex-col overflow-hidden">
       <CardHeader className="pb-3 border-b border-white/[0.05] shrink-0 bg-white/[0.015]">
-        <CardTitle className="text-[11px] font-mono font-semibold tracking-[0.28em] uppercase text-zinc-400 flex items-center gap-2">
-          <Brain size={16} className="text-cyan-400" />
+        <CardTitle className="text-[11px] font-mono font-semibold tracking-[0.24em] uppercase text-zinc-300 flex items-center gap-2">
+          <Brain size={16} className="text-cyan-300" />
           Agent State
         </CardTitle>
       </CardHeader>
@@ -37,11 +37,8 @@ export function AgentStatusMonitor() {
             ) : agentsList.map((agent) => (
               <div
                 key={agent.name}
-                className={cn(
-                  "p-3 transition-colors group",
-                  "hover:bg-white/[0.03]",
-                )}
-              >
+                  className={cn("p-3 transition-colors duration-200 group", "hover:bg-white/[0.035]")}
+                >
                 <div className="flex items-center justify-between gap-3 mb-1">
                   <div className="flex items-center gap-2">
                     <span className={cn(
@@ -49,7 +46,7 @@ export function AgentStatusMonitor() {
                       agent.status === 'working' ? "bg-emerald-500 shadow-[0_0_5px_rgba(16,185,129,0.5)]" : 
                       agent.status === 'error' ? "bg-red-500" : "bg-zinc-600"
                     )} />
-                    <span className="font-semibold text-xs font-mono group-hover:text-cyan-300 transition-colors uppercase tracking-[0.12em]">
+                    <span className="font-semibold text-xs font-mono group-hover:text-cyan-200 transition-colors uppercase tracking-[0.1em]">
                       {agent.name}
                     </span>
                   </div>

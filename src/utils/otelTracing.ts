@@ -18,10 +18,18 @@ let sdk: NodeSDK | undefined;
 /**
  * Initialize OpenTelemetry tracing with OTLP HTTP exporter.
  * Call this once at application startup, before any other imports.
+ * Skips initialization when OTEL_SDK_DISABLED=true or no explicit endpoint configured.
  */
 export function initOtelTracing(): void {
-  const otlpEndpoint =
-    process.env.OTEL_EXPORTER_OTLP_ENDPOINT ?? "http://localhost:4319";
+  if (process.env.OTEL_SDK_DISABLED === 'true') {
+    return;
+  }
+
+  const otlpEndpoint = process.env.OTEL_EXPORTER_OTLP_ENDPOINT;
+  if (!otlpEndpoint) {
+    // No collector configured — skip to avoid blocking startup
+    return;
+  }
 
   const traceExporter = new OTLPTraceExporter({
     url: `${otlpEndpoint}/v1/traces`,

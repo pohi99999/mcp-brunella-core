@@ -2,6 +2,7 @@ import { Router } from 'express';
 import path from 'path';
 import fs from 'fs';
 import { vectorizeClient } from '../../utils/vectorize.js';
+import { logWarn } from '../../utils/logger.js';
 
 // Analytics tracking for Vectorize searches
 interface SearchAnalytics {
@@ -63,6 +64,7 @@ export function createFileRoutes(): Router {
             const isAllowedExternal = fullPath.startsWith('G:\\Brunella\\.000_PROJEKTEK') || fullPath.startsWith('G:/Brunella/.000_PROJEKTEK');
             
             if (!fullPath.startsWith(process.cwd()) && !isAllowedExternal) {
+                logWarn('FilesRoute', `Access denied: path="${relPath}" resolved="${fullPath}" ip=${req.ip}`);
                 res.status(403).json({ error: 'Access denied' });
                 return;
             }
@@ -98,6 +100,7 @@ export function createFileRoutes(): Router {
             const isAllowedExternal = fullPath.startsWith('G:\\Brunella\\.000_PROJEKTEK') || fullPath.startsWith('G:/Brunella/.000_PROJEKTEK');
             
             if (!fullPath.startsWith(process.cwd()) && !isAllowedExternal) {
+                logWarn('FilesRoute', `Access denied: path="${filePath}" resolved="${fullPath}" ip=${req.ip}`);
                 res.status(403).json({ error: 'Access denied' });
                 return;
             }

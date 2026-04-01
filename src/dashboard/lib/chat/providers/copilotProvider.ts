@@ -35,8 +35,7 @@ export const copilotProvider: ChatProvider = {
         message: input.text,
         provider: "copilot",
         model: "copilot-cli",
-        systemPrompt: input.conversationPrompt,
-        history: input.history.map((m) => ({
+        conversationHistory: input.history.map((m) => ({
           role: m.role,
           content: m.content,
         })),
@@ -49,17 +48,18 @@ export const copilotProvider: ChatProvider = {
     }
 
     const data = (await response.json()) as {
-      message?: string;
-      response?: string;
+      success?: boolean;
+      summary?: string;
+      reply?: string;
       error?: string;
     };
 
-    if (data.error) {
+    if (data.error || data.success === false) {
       throw new Error(data.error);
     }
 
     return {
-      message: data.message || data.response || "No response from Copilot CLI",
+      message: data.summary || data.reply || "No response from Copilot CLI",
       executedBy: "copilot-cli",
     };
   },
