@@ -4,6 +4,7 @@ import { getBifrostGateway, type ProviderHealth, type ProviderType } from './bif
 import { GraphRagEngine } from './graphRagEngine.js';
 import { ReflectionEngine } from './reflectionEngine.js';
 import { HybridMemory } from '../utils/rag.js';
+import { buildContextFusionCard, type ContextFusionCard } from './contextFusion.js';
 
 export type AssistantReadinessStatus = 'ready' | 'partial' | 'planned';
 
@@ -53,6 +54,7 @@ export interface AssistantBlueprint {
   architecture: AssistantArchitectureLayer[];
   roadmap: AssistantRoadmapPhase[];
   nextActions: string[];
+  fusionCard?: ContextFusionCard;
 }
 
 function statusScore(status: AssistantReadinessStatus): number {
@@ -93,6 +95,9 @@ export async function getAssistantBlueprint(): Promise<AssistantBlueprint> {
 
   const hybridMemory = new HybridMemory();
   const indexedDocuments = await hybridMemory.getTableCount().catch(() => 0);
+
+  // Build fusion card — graphRag already init()ed above so skip re-init
+  const fusionCard = await buildContextFusionCard({ initGraphRag: false });
 
   const hasTauriShell = existsSync(rootPath('src-tauri', 'tauri.conf.json'));
   const hasVoiceRoute = existsSync(rootPath('src', 'server', 'routes', 'voice.ts'));
@@ -344,5 +349,6 @@ export async function getAssistantBlueprint(): Promise<AssistantBlueprint> {
       'Assistant memory profile: people, preferences, projects, routines, lessons.',
       'Approval-gated assistant action bus a veszélyes desktop műveletekhez.',
     ],
+    fusionCard,
   };
 }

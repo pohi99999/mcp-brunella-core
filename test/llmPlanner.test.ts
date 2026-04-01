@@ -249,7 +249,9 @@ describe('LLM Planner (Phase 3)', () => {
             const validPlan: ExecutionPlan = {
                 plan: [
                     { action: 'navigate', url: 'https://test.com', description: 'Test' },
-                    { action: 'click', selector: '.button', description: 'Click' }
+                    { action: 'click', selector: '.button', description: 'Click' },
+                    { action: 'press', key: 'Enter', description: 'Enter lenyomása' },
+                    { action: 'vision-click', target: 'Mentés gomb', description: 'Vizuális kattintás' }
                 ],
                 estimatedDuration: 10000,
                 backgroundEligible: false
@@ -327,6 +329,18 @@ describe('LLM Planner (Phase 3)', () => {
             };
 
             expect(() => validateExecutionPlan(validPlan)).not.toThrow();
+        });
+
+        it('should require key for press action', () => {
+            const invalidPlan = {
+                plan: [
+                    { action: 'press', description: 'Missing key' } as any
+                ],
+                estimatedDuration: 5000,
+                backgroundEligible: false
+            };
+
+            expect(() => validateExecutionPlan(invalidPlan)).toThrow('press requires "key"');
         });
     });
 });

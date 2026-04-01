@@ -14,6 +14,7 @@
 import { BaseAgent, AgentContext, AgentResult } from './BaseAgent.js';
 import { logInfo, logError, setAgentStatus } from '../utils/logger.js';
 import { getGlobalDb } from '../utils/globalDb.js';
+import type { Database } from 'better-sqlite3';
 
 // ============================================================================
 // INTERFACES
@@ -93,6 +94,26 @@ export class EdgeProxyAgent extends BaseAgent {
 
   async initialize(): Promise<void> {
     logInfo(this.name, `Inicializálás: ${this.config.workerUrl}`);
+
+    // Adatbázis séma inicializálás (ha még nincs meg a tábla)
+    try {
+      const db: Database = getGlobalDb();
+      db.exec(`
+        CREATE TABLE IF NOT EXISTS edge_tasks (
+          task_id TEXT PRIMARY KEY,
+          type TEXT,
+          status TEXT,
+          payload TEXT,
+          result TEXT,
+          created_at TEXT,
+          completed_at TEXT,
+          synced_at TEXT DEFAULT (datetime('now'))
+        );
+        CREATE INDEX IF NOT EXISTS idx_edge_tasks_status ON edge_tasks(status);
+      `);
+    } catch (error) {
+      logError(this.name, `Adatbázis hiba: ${error}`);
+    }
 
     // Kezdeti health check
     await this.checkHealth();

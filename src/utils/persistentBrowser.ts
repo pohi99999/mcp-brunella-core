@@ -26,6 +26,7 @@ export interface BrowserResponse {
     url?: string;
     title?: string; // NEW: for state results
     screenshot?: string; // base64
+    selector?: string;
     content?: string;
     data?: unknown; // NEW: for extract results
     count?: number; // NEW: number of extracted elements

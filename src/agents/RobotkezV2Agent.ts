@@ -335,11 +335,11 @@ export class RobotkezV2Agent extends BaseAgent {
           logError(this.name, `Step failed: ${step.description} - ${msg}`);
           
           // Stop on critical error
-          if (['navigate', 'click', 'type'].includes(action)) {
+          if (['navigate', 'click', 'type', 'press'].includes(action)) {
              return {
-               success: false,
-               message: `Sajnos nem sikerült végrehajtani a következő lépést: "${step.description}". Hibaüzenet: ${msg}`
-             };
+                success: false,
+                message: `Sajnos nem sikerült végrehajtani a következő lépést: "${step.description}". Hibaüzenet: ${msg}`
+              };
           }
         }
       }

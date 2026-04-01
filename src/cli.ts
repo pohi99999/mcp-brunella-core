@@ -179,6 +179,44 @@ function printAssistantRoadmap(blueprint: AssistantBlueprint): void {
   });
 }
 
+function printFusionCard( blueprint: AssistantBlueprint ): void {
+  const card = blueprint.fusionCard;
+  if ( !card ) {
+    console.log( chalk.dim( "\nFúziós kontextus adat nem elérhető." ) );
+    return;
+  }
+  console.log(
+    boxen( chalk.magenta( "Fúziós Kontextus Összefoglaló" ), {
+      padding: 1,
+      borderStyle: "round",
+      borderColor: "magenta",
+    } ),
+  );
+  if ( card.graphRag ) {
+    console.log(
+      chalk.bold( "📊 GraphRAG:" ),
+      `${card.graphRag.nodes} entitás, ${card.graphRag.edges} kapcsolat, ${card.graphRag.lessons} tanulság`,
+    );
+  }
+  if ( card.reflection ) {
+    const qualityPct = ( card.reflection.avgQualityScore * 100 ).toFixed( 0 );
+    console.log(
+      chalk.bold( "🔄 Reflexió:" ),
+      `${card.reflection.totalReflections} ciklus, átlag minőség ${qualityPct}%, self-model: ${card.reflection.selfModelHealth}`,
+    );
+  }
+  if ( card.memory ) {
+    console.log(
+      chalk.bold( "💾 Memória:" ),
+      `${card.memory.indexedDocuments} indexelt dokumentum (LanceDB)`,
+    );
+  }
+  if ( card.fusionPrompt ) {
+    console.log( chalk.cyan( "\nFúziós prompt snippet:" ) );
+    console.log( chalk.dim( card.fusionPrompt.slice( 0, 400 ) ) );
+  }
+}
+
 program
   .name("brunella")
   .description("Official CLI for Brunella Core")
@@ -313,7 +351,7 @@ program
       await client.connect({ coreOnly: true });
       // Use the agent_list tool
       const result = await client.callTool("agent_list", {});
-      // @ts-expect-error The result from agent_list tool might not have 'content[0].text'.
+      // @ts-expect-error content might be missing The result from agent_list tool might not have 'content[0].text'.
       const text = result.content?.[0]?.text;
       if (text) {
         console.log(chalk.bold("Registered Agents:"));
@@ -423,7 +461,7 @@ program
         return;
       }
 
-      const { view } = await inquirer.prompt<{ view: "summary" | "architecture" | "roadmap" | "all" }>([
+      const { view } = await inquirer.prompt<{ view: "summary" | "architecture" | "roadmap" | "fusion" | "all" }>([
         {
           type: "list",
           name: "view",
@@ -432,6 +470,7 @@ program
             { name: "Összefoglaló és readiness", value: "summary" },
             { name: "Ajánlott architektúra", value: "architecture" },
             { name: "Roadmap", value: "roadmap" },
+            { name: "Fúziós kontextus összefoglaló", value: "fusion" },
             { name: "Mindent", value: "all" },
           ],
         },
@@ -447,6 +486,10 @@ program
 
       if (view === "roadmap" || view === "all") {
         printAssistantRoadmap(blueprint);
+      }
+
+      if (view === "fusion" || view === "all") {
+        printFusionCard(blueprint);
       }
     } catch (error: unknown) {
       spinner.fail("Assistant blueprint lekérése sikertelen");
@@ -515,7 +558,7 @@ program
         if (opts.json) {
           console.log(JSON.stringify(result, null, 2));
         } else {
-          // @ts-expect-error The result.content might not be a valid array or might be missing.
+          // @ts-expect-error content might be missing The result.content might not be a valid array or might be missing.
           const text = result.content?.[0]?.text;
           if (text) {
             console.log(chalk.bold(`\n✅ ${agentName} Response:`));
@@ -1271,7 +1314,7 @@ program
         const result = await client.callTool("interpreter_run_python", {
           code,
         });
-        // @ts-expect-error The result from interpreter_run_python might not have content[0].text.
+        // @ts-expect-error content might be missing The result from interpreter_run_python might not have content[0].text.
         console.log(result.content[0].text);
       }
     } catch (e: any) {
@@ -1300,7 +1343,7 @@ conductorCmd
         task: "status",
       });
       spinner.stop();
-      // @ts-expect-error The result from agent_delegate tool might not have 'content[0].text'.
+      // @ts-expect-error content might be missing The result from agent_delegate tool might not have 'content[0].text'.
       const text = result.content?.[0]?.text || "No response";
 
       try {
@@ -1438,7 +1481,7 @@ conductorCmd
         agent_name: "ProjectConductor",
       });
       spinner.stop();
-      // @ts-expect-error The response might not have content[0].text.
+      // @ts-expect-error content might be missing The response might not have content[0].text.
       const response = result.content?.[0]?.text || "Health check completed";
       console.log(marked(response));
     } catch (e: any) {
@@ -1472,7 +1515,7 @@ conductorCmd
         task,
       });
       spinner.stop();
-      // @ts-expect-error The response might not have content[0].text.
+      // @ts-expect-error content might be missing The response might not have content[0].text.
       const response = result.content?.[0]?.text || "Done";
       console.log(marked(response));
     } catch (e: any) {
@@ -2225,13 +2268,27 @@ harvestCmd
 
 // --- swarm
 const swarmCmd = program.command('swarm').description('Swarm Colony management');
+const SWARM_CLI_HTTP_TIMEOUT_MS = Number(process.env.BRUNELLA_SWARM_CLI_HTTP_TIMEOUT_MS || '4000');
+
+async function fetchWithTimeout(url: string, init?: RequestInit): Promise<Response> {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), SWARM_CLI_HTTP_TIMEOUT_MS);
+  try {
+    return await fetch(url, {
+      ...init,
+      signal: controller.signal,
+    });
+  } finally {
+    clearTimeout(timeout);
+  }
+}
 
 swarmCmd
   .command('status')
   .description('List all swarm colonies and their status')
   .action(async () => {
     try {
-      const res = await fetch('http://localhost:3000/api/v1/swarm/status');
+      const res = await fetchWithTimeout('http://localhost:3000/api/v1/swarm/status');
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json() as { colonies?: Array<{ colonyId: string; name: string; status: string; agentCount: number }>; total?: number };
       if (!Array.isArray(data.colonies)) {
@@ -2255,7 +2312,7 @@ swarmCmd
   .option('-c, --colony <colonyId>', 'Target colony ID', 'triad-default')
   .action(async (task: string, opts: { colony: string }) => {
     try {
-      const res = await fetch('http://localhost:3000/api/v1/swarm/dispatch', {
+      const res = await fetchWithTimeout('http://localhost:3000/api/v1/swarm/dispatch', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ task, colonyId: opts.colony }),

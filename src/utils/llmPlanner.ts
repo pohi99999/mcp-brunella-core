@@ -39,6 +39,7 @@ export interface ExecutionStep {
     url?: string;
     text?: string;
     key?: string; // NEW: for press action
+    target?: string; // NEW: for vision-click action
     timeout?: number;
     direction?: 'up' | 'down' | 'left' | 'right';
     amount?: number;
@@ -103,7 +104,9 @@ export async function generateExecutionPlan(
     instruction: string, 
     options?: { 
         history?: Array<{ role: string, content: string }>,
-        browserState?: { url: string, title?: string }
+        browserState?: { url: string, title?: string },
+        /** Optional: pre-built fusion context string to inject into the LLM prompt */
+        fusionContext?: string
     }
 ): Promise<ExecutionPlan> {
     logInfo('LLMPlanner', `Generating plan for: "${instruction}"`);
@@ -117,7 +120,11 @@ export async function generateExecutionPlan(
         contextPrompt += `\nKORÁBBI BESZÉLGETÉS:\n${options.history.map(h => `${h.role}: ${h.content}`).join('\n')}\n`;
     }
 
-    const userPrompt = `${contextPrompt}\nÚJ UTASÍTÁS: ${instruction}
+    if (options?.fusionContext) {
+        contextPrompt += options.fusionContext;
+    }
+
+    const userPrompt= `${contextPrompt}\nÚJ UTASÍTÁS: ${instruction}
 
 Készíts részletes execution plan-t a fenti utasítás végrehajtásához, figyelembe véve a kontextust.`;
 
@@ -191,6 +198,8 @@ Készíts részletes execution plan-t a fenti utasítás végrehajtásához, fig
             plan.backgroundEligible = plan.estimatedDuration > 30000;
         }
 
+        validateExecutionPlan(plan);
+
         // POST-PROCESSING: Override short wait timeouts (LLM often generates too short timeouts)
         for (const step of plan.plan) {
             if (step.action === 'wait') {
@@ -226,7 +235,7 @@ export function validateExecutionPlan(plan: ExecutionPlan): boolean {
         throw new Error('Invalid plan: missing or non-array "plan" field');
     }
 
-    const validActions = ['navigate', 'click', 'type', 'scroll', 'wait', 'screenshot', 'extract'];
+        const validActions = ['navigate', 'click', 'type', 'scroll', 'wait', 'screenshot', 'extract', 'press', 'vision-click'];
 
     for (let i = 0; i < plan.plan.length; i++) {
         const step = plan.plan[i];
@@ -253,6 +262,13 @@ export function validateExecutionPlan(plan: ExecutionPlan): boolean {
                 if (!step.selector || step.text === undefined) {
                     throw new Error(`Invalid step ${i}: type requires "selector" and "text"`);
                 }
+                break;
+            case 'press':
+                if (!step.key) {
+                    throw new Error(`Invalid step ${i}: press requires "key"`);
+                }
+                break;
+            case 'vision-click':
                 break;
             case 'extract':
                 if (!step.selector) {

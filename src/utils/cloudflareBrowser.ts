@@ -61,6 +61,7 @@ export class CloudflareBrowser {
         error?: string;
         url?: string;
         screenshot?: string;
+        selector?: string;
         extractedText?: string;
         extractedHtml?: string;
         duration_ms?: number;
@@ -88,6 +89,7 @@ export class CloudflareBrowser {
         status: 'success',
         message: `Command executed in ${payload.duration_ms || 0}ms`,
         url: payload.url,
+        selector: payload.selector,
         content,
         data: {
           duration_ms: payload.duration_ms,

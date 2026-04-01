@@ -51,6 +51,12 @@ export interface BrowserCopilotDependencies {
   generatePlan: (instruction: string, history: BrowserCopilotMessage[]) => Promise<ExecutionPlan>;
   probeChromeAcp: () => Promise<boolean>;
   now: () => number;
+  /**
+   * Optional: when provided, fusion context is fetched before each planning call
+   * and threaded into the LLM prompt via `generateExecutionPlan({ fusionContext })`.
+   * When set, this overrides any custom `generatePlan` dep for plan generation.
+   */
+  getFusionContext?: () => Promise<string>;
 }
 
 async function defaultExecuteInstruction({ instruction, history }: ExecuteParams): Promise<AgentResponse> {
@@ -97,11 +103,25 @@ export class BrowserCopilotSessionService {
   private state: BrowserCopilotSessionState;
 
   constructor(deps?: Partial<BrowserCopilotDependencies>) {
+    // When getFusionContext is provided, build a fusion-aware plan generator
+    // that enriches every plan with the current subsystem context snapshot.
+    const getFusionCtx = deps?.getFusionContext;
+    const resolvedGeneratePlan: BrowserCopilotDependencies['generatePlan'] = getFusionCtx
+      ? async (instruction, history) => {
+          const fusionContext = await getFusionCtx().catch(() => '');
+          return generateExecutionPlan(instruction, {
+            history: history.map((entry) => ({ role: entry.role, content: entry.content })),
+            fusionContext,
+          });
+        }
+      : (deps?.generatePlan ?? defaultGeneratePlan);
+
     this.deps = {
       executeInstruction: deps?.executeInstruction ?? defaultExecuteInstruction,
-      generatePlan: deps?.generatePlan ?? defaultGeneratePlan,
+      generatePlan: resolvedGeneratePlan,
       probeChromeAcp: deps?.probeChromeAcp ?? defaultProbeChromeAcp,
       now: deps?.now ?? (() => Date.now()),
+      getFusionContext: getFusionCtx,
     };
 
     const now = this.deps.now();
