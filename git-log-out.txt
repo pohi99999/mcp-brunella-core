@@ -1,0 +1,5 @@
+671da2eb feat(db): PR #89 EdgeProxy DB sync + CLI ts-expect-error fixes
+19872aa8 feat(core): context-fusion integration, action contract alignment, edge proxy hardening
+d91b1886 chore(session): checkpoint before Jules PR integration merge
+71542645 fix(lumen): mobile image swap per client request
+f96dd616 fix(permissions,sdk,vitest,syncservice,bat): multi-fix stabilization
