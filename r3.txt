@@ -1,0 +1,14 @@
+[sync:bootstrap] No changes needed.
+
+> mcp-brunella-core@2.4.0 build
+> tsc && node -e "const fs=require('fs');fs.mkdirSync('build/agents',{recursive:true});fs.copyFileSync('src/agents/registry.json','build/agents/registry.json');console.log('registry.json copied to build/agents/');fs.mkdirSync('build/data',{recursive:true});fs.copyFileSync('src/data/triz_matrix.json','build/data/triz_matrix.json');fs.copyFileSync('src/data/triz_principles.json','build/data/triz_principles.json');console.log('TRIZ data copied');"
+
+registry.json copied to build/agents/
+TRIZ data copied
+No staged TS/JS files to lint.
+[fix/mobile-image-and-count 8ecb5e95] feat(db): PR #89 EdgeProxy DB sync + CLI ts-expect-error fixes
+ 7 files changed, 5733 insertions(+), 10 deletions(-)
+ create mode 100644 cmd3-commit.txt
+ create mode 100644 cmd4-push.txt
+ create mode 100644 r1.txt
+ create mode 100644 r2.txt

@@ -801,3 +801,4 @@ node scripts/copilot-dashboard.js cognitive query graphrag "user authentication"
 - **stats**: Rendszer diagnosztika — hany reteg aktiv, mennyi adat van
 - **query**: Specifikus reteg lekerdezes — pl. "volt mar hasonlo feladat?"
 
+

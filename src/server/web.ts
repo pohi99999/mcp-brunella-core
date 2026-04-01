@@ -27,12 +27,7 @@ import { toolManager } from "./ToolManager.js";
 import { mcpProcessManager } from "./McpProcessManager.js";
 import { mcpClientManager } from "../utils/mcpClientManager.js";
 import { AgentManager, agentManager, initializeAgentManager } from "../agents/AgentManager.js";
-import { InnovationBridgeAgent } from "../agents/InnovationBridgeAgent.js";
-import { DigitalHeadhunterAgent } from "../agents/DigitalHeadhunterAgent.js";
-import { GrantHunter } from "../agents/GrantHunter.js";
-import { LawDetectiveAgent } from "../agents/LawDetectiveAgent.js";
-import { PropertyVisionaryAgent } from "../agents/PropertyVisionaryAgent.js";
-import { persistentBrowser } from "../utils/persistentBrowser.js";
+
 import {
   corsWhitelist,
   requestId,
@@ -48,7 +43,7 @@ import {
   initMetrics,
   recordHttpRequest,
 } from "../utils/metrics.js";
-import { createV1Router } from "./routes/index.js";
+
 import { registerEdgeWebSocketHandlers, registerCEANWebSocketHandlers, registerFleetWebSocketHandlers } from "./websocket.js";
 import { startScheduler, stopScheduler } from "./schedulers/testRunner.js";
 import { startScheduler as startCronScheduler } from "./cron.js";
@@ -59,8 +54,7 @@ import { heartbeatMonitor } from "../utils/heartbeatMonitor.js";
 import { fastApiService } from "../services/fastApiService.js";
 import { syncService } from "../utils/syncService.js";
 import { githubPollingService } from "../core/githubPollingService.js";
-import "../core/ceanFallback.js";// Side-effect: registers Phoenix CEAN fallback handlers
-import { zeroPromptRuntime } from '../core/zeroPromptRuntime.js';
+
 
 const logger = new Logger("web_ui.log");
 
@@ -94,6 +88,34 @@ export async function startWebServer() {
     return;
   }
 
+  // ── Phase 1: Immediate HTTP server ─────────────────────────────
+  // Start listening ASAP so health-checks (/ping) and the dashboard
+  // are available while heavy initialization happens in the background.
+
+  const app = express();
+
+  app.get('/ping', (_req, res) => { res.send('pong'); });
+
+  app.use(express.json());
+  app.use(corsWhitelist);
+  app.use(requestId);
+  app.use(requestLogging);
+  app.use("/api", apiRateLimit);
+
+  // Static assets (dashboard bundle) — served immediately
+  app.use(express.static(path.join(process.cwd(), "build", "public")));
+
+  const httpServer = createServer(app);
+
+  await new Promise<void>((resolve) => {
+    httpServer.listen(config.port, () => {
+      logInfo("Server", `🌐 http://localhost:${config.port} listening (initializing...)`);
+      resolve();
+    });
+  });
+
+  // ── Phase 2: Database initialization (error-tolerant) ──────────
+
   try {
     initDb();
   } catch (e: any) {
@@ -118,6 +140,8 @@ export async function startWebServer() {
     logError("Server", `Suggested Tasks DB Init failed: ${e.message}`);
   }
 
+  // ── Phase 3: Metrics & MCP Bridge ──────────────────────────────
+
   initMetrics();
 
   logInfo("Server", "🔄 Starting MCP Bridge...");
@@ -130,21 +154,15 @@ export async function startWebServer() {
     logError("Server", `MCP config load failed: ${msg}`);
   }
 
-  const app = express();
-  
-  app.use(express.json());
-  app.use(corsWhitelist);
-  app.use(requestId);
-  app.use(requestLogging);
-  app.use("/api", apiRateLimit);
+  // ── Phase 4: API routes (deferred import for createV1Router) ───
 
   app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
+  const { createV1Router } = await import("./routes/index.js");
   const v1Router = createV1Router();
   app.use("/api/v1", v1Router);
   app.use("/api", v1Router);
 
-  // Prometheus metrics moved to router/metrics.ts or handled here for root access
   app.get("/metrics", async (_req, res) => {
     try {
       res.set("Content-Type", getPrometheusContentType());
@@ -156,7 +174,8 @@ export async function startWebServer() {
     }
   });
 
-  const httpServer = createServer(app);
+  // ── Phase 5: Socket.IO ─────────────────────────────────────────
+
   const io = new Server(httpServer, {
     cors: {
       origin:
@@ -169,17 +188,50 @@ export async function startWebServer() {
   socketService.init(io);
   initializeAgentManager(socketService);
 
-  agentManager.registerAgent(new InnovationBridgeAgent());
-  agentManager.registerAgent(new DigitalHeadhunterAgent());
-  agentManager.registerAgent(new GrantHunter());
-  agentManager.registerAgent(new LawDetectiveAgent());
-  agentManager.registerAgent(new PropertyVisionaryAgent());
+  // ── Phase 6: Agents (dynamic imports — saves ~500MB) ───────────
+
+  try {
+    const [
+      { InnovationBridgeAgent },
+      { DigitalHeadhunterAgent },
+      { GrantHunter },
+      { LawDetectiveAgent },
+      { PropertyVisionaryAgent },
+    ] = await Promise.all([
+      import("../agents/InnovationBridgeAgent.js"),
+      import("../agents/DigitalHeadhunterAgent.js"),
+      import("../agents/GrantHunter.js"),
+      import("../agents/LawDetectiveAgent.js"),
+      import("../agents/PropertyVisionaryAgent.js"),
+    ]);
+    agentManager.registerAgent(new InnovationBridgeAgent());
+    agentManager.registerAgent(new DigitalHeadhunterAgent());
+    agentManager.registerAgent(new GrantHunter());
+    agentManager.registerAgent(new LawDetectiveAgent());
+    agentManager.registerAgent(new PropertyVisionaryAgent());
+  } catch (e: unknown) {
+    const msg = e instanceof Error ? e.message : String(e);
+    logError("Server", `Specialized agent registration failed: ${msg}`);
+  }
+
+  // ── Phase 7: Phoenix, ZeroPrompt, CEAN, GitHub Polling ─────────
 
   const { phoenixEventBus } = await import('../core/phoenixEventBus.js');
   phoenixEventBus.connectSocketBroadcaster((event: string, data: unknown) => {
     socketService.emit(event, data);
   });
-  zeroPromptRuntime.start();
+
+  try {
+    const { zeroPromptRuntime } = await import('../core/zeroPromptRuntime.js');
+    zeroPromptRuntime.start();
+  } catch (e: unknown) {
+    logWarn("Server", `ZeroPrompt runtime: ${e instanceof Error ? e.message : String(e)}`);
+  }
+
+  import("../core/ceanFallback.js").catch((e: unknown) => {
+    logWarn("Server", `CEAN fallback: ${e instanceof Error ? e.message : String(e)}`);
+  });
+
   githubPollingService.loadConfig('.github-polling.json');
   githubPollingService.startPolling();
 
@@ -193,6 +245,7 @@ export async function startWebServer() {
     const statuses = agentManager.listAgentStatuses();
     socket.emit('agents:snapshot', statuses);
     socket.on("robotkez:abort", async () => {
+      const { persistentBrowser } = await import("../utils/persistentBrowser.js");
       await persistentBrowser.close();
       persistentBrowser.forceKill();
       socket.emit("robotkez:aborted", { status: "success", message: "Munkamenet megszakítva." });
@@ -214,6 +267,8 @@ export async function startWebServer() {
   registerEdgeWebSocketHandlers(io);
   registerCEANWebSocketHandlers(io);
   registerFleetWebSocketHandlers(io);
+
+  // ── Request metrics tracking ───────────────────────────────────
 
   const agentLogBuffer = new Map<string, LogEvent[]>();
   const MAX_AGENT_LOGS = 500;
@@ -280,6 +335,8 @@ export async function startWebServer() {
     io.emit("tasks_update", agentManager.getAllTasks());
   }, 5000);
 
+  // ── MCP SSE bridge ─────────────────────────────────────────────
+
   const mcpSessions = new Map<string, ActiveTransport>();
 
   app.get("/sse", async (req, res) => {
@@ -302,10 +359,8 @@ export async function startWebServer() {
     await transport.handlePostMessage(req, res);
   });
 
-  // STATIC ASSETS
-  app.use(express.static(path.join(process.cwd(), "build", "public")));
+  // ── Root & SPA fallback (must be AFTER api routes) ─────────────
 
-  // ROOT FALLBACK
   app.get("/", (_req, res) => {
     const indexPath = path.join(process.cwd(), "build", "public", "index.html");
     if (existsSync(indexPath)) {
@@ -315,7 +370,6 @@ export async function startWebServer() {
     }
   });
 
-  // SPA FALLBACK (SAFE VERSION)
   app.use((req, res, next) => {
     if (req.path.startsWith("/api") || req.path.startsWith("/socket.io") || req.path.startsWith("/audio")) {
       return next();
@@ -328,7 +382,8 @@ export async function startWebServer() {
     }
   });
 
-  // Start Sync
+  // ── Sync, schedulers, monitors ─────────────────────────────────
+
   syncService.start();
 
   app.use(globalErrorHandler);
@@ -346,7 +401,5 @@ export async function startWebServer() {
   });
   heartbeatMonitor.start();
 
-  httpServer.listen(config.port, () => {
-    logInfo("Server", `🌐 Web UI: http://localhost:${config.port}`);
-  });
+  logInfo("Server", `✅ Fully initialized on http://localhost:${config.port}`);
 }

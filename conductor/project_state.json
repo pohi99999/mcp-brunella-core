@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-04-01T01:40:09.990Z",
+  "lastUpdated": "2026-04-01T02:59:01.803Z",
   "tracks": [
     {
       "id": "cloudflare_dns_zone_reconciliation_20260325",
@@ -203,6 +203,32 @@
         "remote_layer_phase8_planetary_supersystem_20260322"
       ],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\remote_layer_phase9_emergent_superintelligence_20260322",
+      "_isArchived": false
+    },
+    {
+      "id": "system_wide_zero_mock_20260301",
+      "name": "System-Wide Zero-Mock & ReAct Upgrade",
+      "status": "completed",
+      "priority": "high",
+      "progress": 100,
+      "created": "2026-03-01",
+      "updated": "2026-04-01T00:00:00Z",
+      "completed": "2026-03-01",
+      "assignee": "Copilot",
+      "tags": [
+        "zero-mock",
+        "react",
+        "tool-calling",
+        "orchestrator",
+        "developer-agent",
+        "evaluator-agent",
+        "robotkez"
+      ],
+      "dependencies": [
+        "orchestrator_cognition_upgrade_20260320",
+        "robotkezv2-full-comet-20260215"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\system_wide_zero_mock_20260301",
       "_isArchived": false
     },
     {
@@ -1097,6 +1123,29 @@
       "_isArchived": true
     },
     {
+      "id": "deep_market_research_20260227",
+      "name": "Deep Market Research 2026 — archival alias",
+      "status": "archived",
+      "priority": "medium",
+      "progress": 100,
+      "created": "2026-02-27",
+      "updated": "2026-04-01T00:00:00Z",
+      "completed": "2026-02-27",
+      "assignee": "Copilot",
+      "tags": [
+        "sales",
+        "campaign",
+        "market-research",
+        "showcase",
+        "grants"
+      ],
+      "dependencies": [
+        "006_trojan-horse-campaign"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\deep_market_research_20260227",
+      "_isArchived": true
+    },
+    {
       "id": "developer_agent_2_0_20260206",
       "name": "DeveloperAgent 2.0/3.0 – Unified Development Platform",
       "status": "archived",
@@ -1115,6 +1164,29 @@
       ],
       "dependencies": [],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\developer_agent_2_0_20260206",
+      "_isArchived": true
+    },
+    {
+      "id": "developer_live_studio_research_20260301",
+      "name": "Developer Live Studio research",
+      "status": "archived",
+      "priority": "medium",
+      "progress": 100,
+      "created": "2026-03-01",
+      "updated": "2026-04-01T00:00:00Z",
+      "completed": "2026-03-01",
+      "assignee": "Copilot",
+      "tags": [
+        "developer-agent",
+        "zero-mock",
+        "research",
+        "live-studio"
+      ],
+      "dependencies": [
+        "system_wide_zero_mock_20260301",
+        "orchestrator_cognition_upgrade_20260320"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\developer_live_studio_research_20260301",
       "_isArchived": true
     },
     {
@@ -1974,6 +2046,27 @@
       "_isArchived": true
     },
     {
+      "id": "mobile_responsiveness_research_20260227",
+      "name": "Mobile responsiveness research",
+      "status": "archived",
+      "priority": "medium",
+      "progress": 100,
+      "created": "2026-02-27",
+      "updated": "2026-04-01T00:00:00Z",
+      "completed": "2026-02-27",
+      "assignee": "Copilot",
+      "tags": [
+        "dashboard",
+        "mobile",
+        "responsive",
+        "ui",
+        "research"
+      ],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\mobile_responsiveness_research_20260227",
+      "_isArchived": true
+    },
+    {
       "id": "modular-command-center-dashboard-v3-20260219",
       "name": "modular-command-center-dashboard-v3-20260219",
       "status": "archived",
@@ -2380,6 +2473,29 @@
       "_isArchived": true
     },
     {
+      "id": "revenue_acceleration_20260227",
+      "name": "Revenue Acceleration — archival alias",
+      "status": "archived",
+      "priority": "medium",
+      "progress": 100,
+      "created": "2026-02-27",
+      "updated": "2026-04-01T00:00:00Z",
+      "completed": "2026-02-27",
+      "assignee": "Copilot",
+      "tags": [
+        "sales",
+        "outreach",
+        "demo-factory",
+        "lead-mining",
+        "campaign"
+      ],
+      "dependencies": [
+        "006_trojan-horse-campaign"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\revenue_acceleration_20260227",
+      "_isArchived": true
+    },
+    {
       "id": "robotkezv2-full-comet-20260215",
       "name": "RobotkezV2 - Full Comet (Magyar Agentic Browser)",
       "status": "archived",
@@ -2408,6 +2524,30 @@
         "CLI framework (Commander.js)"
       ],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\robotkezv2-full-comet-20260215",
+      "_isArchived": true
+    },
+    {
+      "id": "robotkez_browser_chat_research_20260301",
+      "name": "Robotkez browser chat research",
+      "status": "archived",
+      "priority": "medium",
+      "progress": 100,
+      "created": "2026-03-01",
+      "updated": "2026-04-01T00:00:00Z",
+      "completed": "2026-03-01",
+      "assignee": "Copilot",
+      "tags": [
+        "robotkez",
+        "browser-chat",
+        "orchestrator",
+        "research",
+        "zero-mock"
+      ],
+      "dependencies": [
+        "system_wide_zero_mock_20260301",
+        "orchestrator_cognition_upgrade_20260320"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\robotkez_browser_chat_research_20260301",
       "_isArchived": true
     },
     {
@@ -2800,10 +2940,10 @@
     }
   ],
   "stats": {
-    "total": 161,
+    "total": 167,
     "active": 5,
-    "completed": 2,
-    "archived": 150,
+    "completed": 3,
+    "archived": 155,
     "proposed": 3
   }
 }

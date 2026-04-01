@@ -7,8 +7,6 @@ import { ErrorFallback } from './ErrorFallback'
 import { SocketProvider } from './context/SocketContext'
 
 import "./main.css"
-import "./styles/theme.css"
-import "./index.css"
 
 import { ThemeProvider } from "./components/ui/theme-provider"
 import { initializeNavigation } from "./lib/navigation"

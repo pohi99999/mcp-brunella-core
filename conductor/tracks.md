@@ -1,10 +1,10 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-04-01T01:40:09.990Z
+**Utolso frissites:** 2026-04-01T02:59:01.803Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 161 total | 5 active | 2 completed | 150 archived
+**Stats:** 167 total | 5 active | 3 completed | 155 archived
 
 ---
 
@@ -56,11 +56,16 @@
 
 ---
 
-## Befejezett (Completed - Not Archived) (2)
+## Befejezett (Completed - Not Archived) (3)
 
 - [x] **P-Sales20260327**
   - **ID:** `P-Sales20260327`
   - Mappa: ./tracks/P-Sales20260327/
+
+- [x] **System-Wide Zero-Mock & ReAct Upgrade**
+  - **ID:** `system_wide_zero_mock_20260301`
+  - **Completed:** 2026-03-01
+  - Mappa: ./tracks/system_wide_zero_mock_20260301/
 
 - [x] **Push teszt cadence optimalizáció**
   - **ID:** `test_cadence_optimization_20260401`
@@ -68,7 +73,7 @@
 
 ---
 
-## Archivalt (Archived) (150)
+## Archivalt (Archived) (155)
 
 > Archived tracks are hidden by default. View in `conductor/archive/`
 
@@ -83,7 +88,7 @@
 - [x] **AI Recommendation System Integration** (2026-02-17T22:45:00Z)
 - [x] **apify_deep_scraping_agent_20260223** (N/A)
 
-... and 140 more archived tracks
+... and 145 more archived tracks
 
 ---
 
