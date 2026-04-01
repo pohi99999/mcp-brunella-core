@@ -76,40 +76,58 @@ export class BankAgent implements IAgent {
   }
 
   async executeTask(context: AgentContext): Promise<AgentResult> {
-    const bankCsvPath = this.resolveCsvPath(context);
+    const bankFilePath = this.resolveCsvPath(context);
 
-    if (!bankCsvPath) {
+    if (!bankFilePath) {
       return {
         success: false,
         status: 'error',
-        message: 'Missing bankCsvPath in context',
+        message: 'Missing bankFilePath (csv or json) in context',
         data: [],
       };
     }
 
-    logInfo(this.name, `Processing bank CSV: ${bankCsvPath}`);
+    logInfo(this.name, `Processing bank file: ${bankFilePath}`);
 
     try {
-      const content = await fs.readFile(bankCsvPath, 'utf-8');
-      const lines = content.split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
-      const rows = lines.length > 0 && this.isHeaderRow(lines[0]) ? lines.slice(1) : lines;
-      const transactions: BankTransactionData[] = [];
+      const ext = path.extname(bankFilePath).toLowerCase();
+      let transactions: BankTransactionData[] = [];
 
-      for (const row of rows) {
-        try {
-          const parsed = this.parseRow(row);
-          const transaction: BookkeepingTransaction = {
-            id: `bank_${transactions.length + 1}`,
-            source: 'BankAgent',
-            data: parsed,
-            status: 'PENDING_MATCH' as TransactionStatus,
-          };
+      if (ext === '.json') {
+        const content = await fs.readFile(bankFilePath, 'utf-8');
+        const data = JSON.parse(content);
+        transactions = Array.isArray(data) ? data : (data.transactions || []);
+        
+        for (const [index, txData] of transactions.entries()) {
+            const transaction: BookkeepingTransaction = {
+                id: `bank_json_${Date.now()}_${index}`,
+                source: 'BankAgent',
+                data: txData,
+                status: 'PENDING_MATCH',
+            };
+            saveTransaction(transaction);
+        }
+      } else {
+        const content = await fs.readFile(bankFilePath, 'utf-8');
+        const lines = content.split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
+        const rows = lines.length > 0 && this.isHeaderRow(lines[0]) ? lines.slice(1) : lines;
 
-          saveTransaction(transaction);
-          transactions.push(parsed);
-        } catch (error: unknown) {
-          const rowError = error instanceof Error ? error : new Error(String(error));
-          logError(this.name, `Error parsing row '${row}':`, rowError);
+        for (const row of rows) {
+          try {
+            const parsed = this.parseRow(row);
+            const transaction: BookkeepingTransaction = {
+              id: `bank_${transactions.length + 1}`,
+              source: 'BankAgent',
+              data: parsed,
+              status: 'PENDING_MATCH' as TransactionStatus,
+            };
+
+            saveTransaction(transaction);
+            transactions.push(parsed);
+          } catch (error: unknown) {
+            const rowError = error instanceof Error ? error : new Error(String(error));
+            logError(this.name, `Error parsing row '${row}':`, rowError);
+          }
         }
       }
 
