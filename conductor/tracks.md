@@ -1,10 +1,10 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-04-01T22:20:57.682Z
+**Utolso frissites:** 2026-04-01T23:35:00.000Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 169 total | 5 active | 4 completed | 156 archived
+**Stats:** 169 total | 4 active | 4 completed | 157 archived
 
 ---
 
@@ -27,13 +27,7 @@
 
 ---
 
-## Aktiv Szalak (Active) (5)
-
-- [x] **Dashboard Cockpit Redesign + Stabilization** [HIGH]
-  - **ID:** `dashboard_cockpit_redesign_20260401`
-  - **Progress:** 84%
-  - **Assignee:** Copilot
-  - Mappa: ./tracks/dashboard_cockpit_redesign_20260401/
+## Aktiv Szalak (Active) (4)
 
 - [ ] **Autonóm Készlet- és Leltárkezelési Rendszer — KKV** [MEDIUM]
   - **ID:** `inventory_automation_20260330`
@@ -78,10 +72,11 @@
 
 ---
 
-## Archivalt (Archived) (156)
+## Archivalt (Archived) (157)
 
 > Archived tracks are hidden by default. View in `conductor/archive/`
 
+- [x] **Dashboard Cockpit Redesign + Stabilization** (2026-04-01T23:35:00Z)
 - [x] **006_trojan-horse-campaign** (2026-03-22T22:47:34Z)
 - [x] **Agent Architect 2.0 Meta-Ügynök** (2026-02-13)
 - [x] **Agent diagnostics and routing modernization** (2026-03-23T08:15:00Z)

@@ -1,0 +1,25 @@
+{
+  "id": "dashboard_cockpit_redesign_20260401",
+  "trackName": "dashboard_cockpit_redesign_20260401",
+  "name": "Dashboard Cockpit Redesign + Stabilization",
+  "type": "Dashboard / UX / Stabilization / Testing",
+  "priority": "HIGH",
+  "status": "ACTIVE",
+  "progress": 84,
+  "assignee": "Copilot",
+  "createdAt": "2026-04-01T15:30:00.000Z",
+  "updatedAt": "2026-04-01T17:25:00.000Z",
+  "goal": "A Brunella Mission Control dashboard shell teljes újratervezése prémium dark operator cockpit irányba, a kritikus timeout/build hibák javításával és célzott dashboard smoke/E2E lefedéssel.",
+  "relatedTracks": [
+    "test_cadence_optimization_20260401",
+    "system_audit_epp_v2_compliance_20260331"
+  ],
+  "tags": ["dashboard", "mission-control", "ux", "vite", "react", "playwright", "stabilization"],
+  "phases": [
+    { "name": "Phase 1: Runtime stabilization és build unblock", "status": "completed" },
+    { "name": "Phase 2: Shell-first cockpit redesign", "status": "completed" },
+    { "name": "Phase 3: Core widget polish", "status": "in_progress" },
+    { "name": "Phase 4: Dashboard smoke/E2E/test hardening", "status": "completed" },
+    { "name": "Phase 5: Documentation és handoff", "status": "completed" }
+  ]
+}
