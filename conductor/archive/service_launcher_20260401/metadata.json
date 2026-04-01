@@ -1,0 +1,8 @@
+{
+  "track_id": "service_launcher_20260401",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2026-04-02T01:00:00Z",
+  "updated_at": "2026-04-02T01:00:00Z",
+  "description": "n8n (f:\mcp-brunella-core\n8nv2) és Langflow (Docker) indítás automatizálása a Dashboardról."
+}
