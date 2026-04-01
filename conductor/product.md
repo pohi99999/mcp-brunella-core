@@ -16,3 +16,4 @@ A BAS nem csupán egy szoftver, hanem egy proaktív digitális idegrendszer és 
 4. **BAS-Bridge:** Biztonságos híd a helyi MCP mag és a felhőalapú ökoszisztéma között.
 5. **Finance Automata:** Intelligens könyvelési pipeline, amely automatizálja a számlafeldolgozást (OCR/NAV) és a banki egyeztetést.
 6. **Mission Control:** Modern, Bento-stílusú operátori cockpit a rendszer állapotának, az ágensek tevékenységének és a feladatoknak a valós idejű monitorozására és vezérlésére.
+7. **Service Launcher:** Egységesített indító felület a kritikus automatizációs komponensek (n8n, Langflow) kezelésére.

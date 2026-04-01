@@ -2,7 +2,7 @@
 
 ## Core Infrastruktúra
 - **Szerver:** MCP Brunella Core (Node.js 24+, TypeScript).
-- **Automatizálási Platform:** n8n (API-val vezérelve)
+- **Automatizálási Platform:** n8n (API-val vezérelve), Langflow (Docker alapú vizuális ágens tervező).
 - **Runtime:** Hibrid Node.js & Perzisztens Python Shell.
 - **Modellek:**
   - *Vezérlés (Local):* llama3.1:8b (Ollama)
