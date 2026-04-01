@@ -14,3 +14,4 @@ A BAS nem csupán egy szoftver, hanem egy proaktív digitális idegrendszer és 
 2. **Refiner Factory:** Adattudós ügynökök, amik JSON/Vektor formátumba hozzák a nyers adatot.
 3. **Incubator:** Speciális iparági ügynökök (pl. Pohi AI Pro) folyamatos képzése és finomhangolása.
 4. **BAS-Bridge:** Biztonságos híd a helyi MCP mag és a felhőalapú ökoszisztéma között.
+5. **Finance Automata:** Intelligens könyvelési pipeline, amely automatizálja a számlafeldolgozást (OCR/NAV) és a banki egyeztetést.
