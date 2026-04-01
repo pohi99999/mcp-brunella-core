@@ -96,5 +96,5 @@
 \
 ---
 
-## [~] Track: n8n és Langflow Indítás Automatizálása
+## [x] Track: n8n és Langflow Indítás Automatizálása
 *Link: [./conductor/tracks/service_launcher_20260401/](./conductor/tracks/service_launcher_20260401/)*

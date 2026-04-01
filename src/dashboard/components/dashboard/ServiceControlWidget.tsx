@@ -18,6 +18,8 @@ const SERVICE_LABELS: Record<string, string> = {
   ollama: "Ollama",
   anythingllm: "AnythingLLM",
   python: "Python Subsystem",
+  n8n: "n8n Automation",
+  langflow: "Langflow (Docker)",
 };
 
 const STATUS_EMOJI: Record<string, string> = {
@@ -61,7 +63,7 @@ export function ServiceControlWidget() {
           toast.info("AnythingLLM Desktop app – manuálisan zárd be");
           return;
         }
-        const result = await api.stopService(serviceId as "ollama" | "python");
+        const result = await api.stopService(serviceId as any);
         if (result.success) {
           toast.success(result.message);
         } else {
@@ -69,7 +71,7 @@ export function ServiceControlWidget() {
         }
       } else {
         const result = await api.startService(
-          serviceId as "ollama" | "python" | "anythingllm",
+          serviceId as any,
         );
         if (result.success) {
           toast.success(result.message);
@@ -85,24 +87,48 @@ export function ServiceControlWidget() {
     }
   };
 
+  const startAutomationStack = async () => {
+    toast.info("Automation Stack indítása...");
+    try {
+      await Promise.all([
+        api.startService("n8n"),
+        api.startService("langflow")
+      ]);
+      toast.success("n8n és Langflow indítási parancs kiküldve");
+      fetchStatus();
+    } catch (e: any) {
+      toast.error("Hiba a stack indításakor");
+    }
+  };
+
   return (
     <Card className="bg-transparent border-none shadow-none">
       <CardHeader className="flex flex-row items-center justify-between pb-2">
         <CardTitle className="flex items-center gap-2 text-base font-medium text-zinc-200">
           Rendszervezérlő
         </CardTitle>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={fetchStatus}
-          disabled={isRefreshing}
-          className="text-zinc-400 hover:text-zinc-200"
-        >
-          <ArrowsClockwise
-            size={14}
-            className={isRefreshing ? "animate-spin" : ""}
-          />
-        </Button>
+        <div className="flex gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={startAutomationStack}
+            className="h-7 text-[10px] uppercase tracking-wider border-cyan-500/30 text-cyan-400 hover:bg-cyan-500/10"
+          >
+            Start Stack
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={fetchStatus}
+            disabled={isRefreshing}
+            className="text-zinc-400 hover:text-zinc-200"
+          >
+            <ArrowsClockwise
+              size={14}
+              className={isRefreshing ? "animate-spin" : ""}
+            />
+          </Button>
+        </div>
       </CardHeader>
       <CardContent className="space-y-3">
         {services.map((svc, i) => {

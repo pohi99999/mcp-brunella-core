@@ -1907,7 +1907,7 @@ export async function getServiceStatus(): Promise<ServiceState[]> {
 }
 
 export async function startService(
-  service: "ollama" | "python" | "anythingllm",
+  service: "ollama" | "python" | "anythingllm" | "n8n" | "langflow",
 ): Promise<{ success: boolean; message: string }> {
   const response = await fetch(`${API_BASE}/api/system/start-service`, {
     method: "POST",
@@ -1924,7 +1924,7 @@ export async function startService(
 }
 
 export async function stopService(
-  service: "ollama" | "python",
+  service: "ollama" | "python" | "n8n" | "langflow",
 ): Promise<{ success: boolean; message: string }> {
   const response = await fetch(`${API_BASE}/api/system/stop-service`, {
     method: "POST",

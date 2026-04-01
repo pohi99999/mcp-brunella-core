@@ -229,6 +229,8 @@ export function buildHealthResponse(
   ollama: HealthServiceResult,
   anythingllm: HealthServiceResult,
   python: HealthServiceResult,
+  n8n: HealthServiceResult,
+  langflow: HealthServiceResult,
   cloudflare: HealthServiceResult,
   agentsCount: number,
   mcpServersCount: number,
@@ -243,19 +245,23 @@ export function buildHealthResponse(
   const allOk =
     ollama.status === "healthy" &&
     anythingllm.status === "healthy" &&
-    python.status === "healthy";
+    python.status === "healthy" &&
+    n8n.status === "healthy" &&
+    langflow.status === "healthy";
   const anyOk =
     ollama.status === "healthy" ||
     anythingllm.status === "healthy" ||
     agentsCount > 0 ||
     mcpServersCount > 0 ||
-    python.status === "healthy";
+    python.status === "healthy" ||
+    n8n.status === "healthy" ||
+    langflow.status === "healthy";
   const status = allOk ? "ok" : anyOk ? "degraded" : "error";
 
   return {
     status,
     timestamp: new Date().toISOString(),
     requestId,
-    services: { ollama, anythingllm, agents, mcp, python, cloudflare },
+    services: { ollama, anythingllm, agents, mcp, python, n8n, langflow, cloudflare },
   };
 }
