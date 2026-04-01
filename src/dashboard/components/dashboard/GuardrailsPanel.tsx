@@ -7,6 +7,7 @@
  */
 import { useState, useEffect, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 import { Shield, AlertTriangle, CheckCircle, Lock, BarChart3, RefreshCw } from "lucide-react";
 
 const API_BASE = "http://localhost:3000";
@@ -23,8 +24,10 @@ interface GuardrailsStats {
 export function GuardrailsPanel() {
   const [stats, setStats] = useState<GuardrailsStats | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   const fetchStats = useCallback(async () => {
+    setIsRefreshing(true);
     try {
       const res = await fetch(`${API_BASE}/api/v1/guardrails/stats`);
       if (res.ok) {
@@ -41,6 +44,7 @@ export function GuardrailsPanel() {
         confidenceThreshold: 0.6,
       });
     } finally {
+      setIsRefreshing(false);
       setLoading(false);
     }
   }, []);
@@ -59,9 +63,19 @@ export function GuardrailsPanel() {
           <Shield className="h-5 w-5 text-green-500" />
           Guardrails & Evaluáció
         </h2>
-        <button onClick={fetchStats} className="p-2 hover:bg-accent rounded-md">
-          <RefreshCw className="h-4 w-4" />
-        </button>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <button
+              onClick={fetchStats}
+              className="p-2 hover:bg-accent rounded-md focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none"
+              aria-label="Frissítés"
+              disabled={isRefreshing}
+            >
+              <RefreshCw className={`h-4 w-4 ${isRefreshing ? "animate-spin" : ""}`} />
+            </button>
+          </TooltipTrigger>
+          <TooltipContent>Frissítés</TooltipContent>
+        </Tooltip>
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
