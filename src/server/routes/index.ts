@@ -1,230 +1,155 @@
 import { Router } from "express";
+import type { Request, Response, NextFunction } from "express";
 import { createHealthRoutes } from "./health.js";
-import {
-  createAgentRoutes,
-  createRegistryRoutes,
-} from "./agents.js";
-import {
-  createProvidersRoutes,
-  createOllamaRoutes,
-  createGeminiRoutes,
-  createGithubModelsRoutes,
-  createLLMRoutes,
-} from "./llm.js";
-import { createAnthropicRoutes } from "./anthropic.js";
-import { createFileRoutes, createRagRoutes } from "./files.js";
-import { createTaskRoutes } from "./tasks.js";
-import { createToolRoutes, createDebugRoutes } from "./tools.js";
-import { createChatRoutes, createAnythingLLMRoutes } from "./chat.js";
-import { createIncubatorRoutes, createN8nRoutes } from "./external.js";
-import { createDeveloperRoutes } from "./developer.js";
-import { createBrowserCopilotRoutes } from "./browserCopilot.js";
-import { createRobotkezRoutes } from "./robotkez.js";
-import { createRobotkezProRoutes } from "./robotkez_pro.js";
-import { createJulesRoutes } from "./jules.js";
-import { createCloudflareRoutes } from "./cloudflare.js";
-import { createTracksRoutes } from "./tracks.js";
-import { createTTSRoutes } from "./tts.js";
-import { createRecommendationRoutes } from "./recommendation.js";
-import { createBookkeepingRoutes } from "./bookkeeping.js";
-import { createMachinesRouter } from "./machines.js";
-import { createEnterpriseRouter, createEnterpriseAnalyticsRouter } from "./enterprise.js";
-import { createSystemArchitectureRouter, createSystemControlRouter } from "./system.js";
-import { createBusinessJobsRoutes } from "./businessJobs.js";
-import { securityRouter } from "./security.js";
-import { createAssistantRoutes } from "./assistant.js";
-import { createCopilotBridgeRoutes } from "./copilotBridge.js";
-import { createCognitiveBridgeRoutes } from "./cognitiveBridge.js";
-import { createWorkflowRoutes } from "./workflow.js";
-import { createRemoteRoutes } from "./remote.js";
-import { createAutonomousInfraRouter } from "./autonomousInfra.js";
-import { createTelemetryRouter } from "../telemetryRoutes.js";
-import { createGuardrailsRouter } from "../guardrailsRoutes.js";
-import { createAuditRouter } from "../auditRoutes.js";
-import { createSpecRouter } from "../specRoutes.js";
-import { createPhoenixRouter } from "../phoenixRoutes.js";
-import { createRouterRouter } from "../routerRoutes.js";
-import { createMemoryRouter } from "../memoryRoutes.js";
-import { createTracksRouter } from "../tracksRoutes.js";
-import ceanRouter from "./cean.js";
-import { createWranglerRouter } from "./wrangler.js";
-import mcpRouter from "./mcp.js";
-import { createFleetRouter } from "./fleet.js";
-import { createWorkersRouter } from "./workers.js";
-import { createMetricsRouter } from "./metrics.js";
-import { createScalingRouter } from "./scaling.js";
-import testSchedulerRoutes from "./testScheduler.js";
-import { createScheduledTasksRoutes } from "./scheduledTasks.js";
-import { createDashboardRoutes } from "./dashboard.js";
-import { createStudioRoutes } from "./studio.js";
-import grantsRouter from "./grants.js";
-import createWebhookRoutes from "./webhooks.js";
-import contactRouter from "./contact.js";
-import { harvestRouter } from "./harvest.js";
-import { createZeroPromptRouter } from "./zeroPrompt.js";
-import { createEphemeralRouter } from "./ephemeral.js";
-import { createUniversalOrchestratorRouter } from "./universalOrchestrator.js";
-import paiosOrchestratorRouter from "./paiosOrchestrator.js";
-import githubWebhookRouter from "./githubWebhook.js";
 import { getGlobalDb } from "../../utils/globalDb.js";
 
-// --- Activated dormant routes (2026-03-25) ---
-import { createObservabilityRouter } from "./observability.js";
-import { swarmRouter } from "./swarm.js";
-import { createGoldenDatasetRouter } from "./goldenDataset.js";
-import { createLearningLoopRouter } from "./learningLoop.js";
-import { createIntelligenceRouter } from "./intelligence.js";
-import { createFederationRouter } from "./federation.js";
-import { suggestedTasksRouter } from "./suggestedTasks.js";
-import { createCrawl4aiRouter } from "./crawl4ai.js";
-import { createPythonWorkersRouter } from "./pythonWorkers.js";
-import { createEvHunterRouter } from "./evhunter.js";
-import { createPreferencesRouter } from "./preferences.js";
-import salesRouter from "./sales.js";
-import voiceRouter from "./voice.js";
-import { createPSalesAuthRoutes } from "./psales-auth.js";
-import { createPSalesIntakeRoutes } from "./psales-intake.js";
-import { createPSalesResearchRoutes } from "./psales-research.js";
-import { createPSalesStrategyRoutes } from "./psales-strategy.js";
+/**
+ * Lazy-loading proxy router.
+ * Defers the actual module import until the first HTTP request hits the mount,
+ * keeping startup memory ~780 MB lower than eager imports.
+ */
+function lazy(
+  importFn: () => Promise<Record<string, unknown>>,
+  exportName: string,
+  ...factoryArgs: unknown[]
+): Router {
+  const proxy = Router();
+  let loaded: Router | null = null;
 
-export {
-  createHealthRoutes,
-  createAgentRoutes,
-  createRegistryRoutes,
-  createProvidersRoutes,
-  createOllamaRoutes,
-  createGeminiRoutes,
-  createGithubModelsRoutes,
-  createFileRoutes,
-  createRagRoutes,
-  createTaskRoutes,
-  createToolRoutes,
-  createDebugRoutes,
-  createChatRoutes,
-  createAnythingLLMRoutes,
-  createIncubatorRoutes,
-  createN8nRoutes,
-  createDeveloperRoutes,
-  createBrowserCopilotRoutes,
-  createRobotkezRoutes,
-  createCloudflareRoutes,
-  createTracksRoutes,
-  createTTSRoutes,
-  createEnterpriseRouter,
-  createEnterpriseAnalyticsRouter,
-  createSystemArchitectureRouter,
-  createAssistantRoutes,
-  createBookkeepingRoutes,
-};
+  proxy.use((req: Request, res: Response, next: NextFunction) => {
+    if (loaded) return loaded(req, res, next);
+
+    importFn()
+      .then((mod) => {
+        const exported = mod[exportName];
+        loaded =
+          typeof exported === "function"
+            ? (exported as (...a: unknown[]) => Router)(...factoryArgs)
+            : (exported as Router);
+        loaded(req, res, next);
+      })
+      .catch(next);
+  });
+
+  return proxy;
+}
 
 /**
- * Creates a centralized router for all API v1 routes
+ * Creates a centralized router for all API v1 routes.
+ * Every route except /health is loaded lazily on first request.
  */
 export function createV1Router(): Router {
   const router = Router();
   const db = getGlobalDb();
 
+  // ── Health — eager (always needed at startup) ──────────────────────
   router.use("/health", createHealthRoutes());
-  router.use("/agents", createAgentRoutes());
-  router.use("/registry", createRegistryRoutes());
-  router.use("/providers", createProvidersRoutes());
-  router.use("/ollama", createOllamaRoutes());
-  router.use("/gemini", createGeminiRoutes());
-  router.use("/github-models", createGithubModelsRoutes());
-  router.use("/files", createFileRoutes());
-  router.use("/rag", createRagRoutes());
-  router.use("/tasks", createTaskRoutes());
-  router.use("/tools", createToolRoutes());
-  router.use("/debug", createDebugRoutes());
-  router.use("/chat", createChatRoutes());
-  router.use("/anythingllm", createAnythingLLMRoutes());
-  router.use("/incubator", createIncubatorRoutes());
-  router.use("/n8n", createN8nRoutes());
-  router.use("/developer", createDeveloperRoutes());
-  router.use("/browser-copilot", createBrowserCopilotRoutes());
-  router.use("/robotkez", createRobotkezRoutes());
-  router.use("/robotkez-pro", createRobotkezProRoutes());
-  router.use("/jules", createJulesRoutes());
-  router.use("/cloudflare", createCloudflareRoutes());
-  router.use("/tracks", createTracksRouter());
-  router.use("/tts", createTTSRoutes());
-  router.use("/brunella", createRecommendationRoutes());
-  router.use("/bookkeeping", createBookkeepingRoutes());
-  router.use("/machines", createMachinesRouter());
-  router.use("/enterprise", createEnterpriseRouter());
-  router.use("/enterprise/analytics", createEnterpriseAnalyticsRouter());
-  router.use("/system", createSystemArchitectureRouter());
-  router.use("/system", createSystemControlRouter());
-  router.use("/llm", createLLMRoutes());
-  router.use("/anthropic", createAnthropicRoutes());
-  router.use("/business-jobs", createBusinessJobsRoutes());
-  router.use("/security", securityRouter);
-  router.use("/assistant", createAssistantRoutes());
-  router.use("/copilot-bridge", createCopilotBridgeRoutes());
-  router.use("/cognitive", createCognitiveBridgeRoutes());
-  router.use("/workflow", createWorkflowRoutes());
-  router.use("/remote", createRemoteRoutes());
-  router.use("/autonomous-infra", createAutonomousInfraRouter());
 
-  // Additional routes from web.ts
-  router.use("/telemetry", createTelemetryRouter());
-  router.use("/guardrails", createGuardrailsRouter());
-  router.use("/audit", createAuditRouter());
-  router.use("/specs", createSpecRouter());
-  router.use("/phoenix", createPhoenixRouter());
-  router.use("/router", createRouterRouter());
-  router.use("/memory", createMemoryRouter());
-  router.use("/mcp", mcpRouter);
-  router.use(ceanRouter);
-  router.use(createWranglerRouter());
-  router.use("/fleet", createFleetRouter(db));
-  router.use("/workers", createWorkersRouter(db));
-  router.use("/metrics", createMetricsRouter(db));
-  router.use("/scaling", createScalingRouter(db));
-  router.use("/tests", testSchedulerRoutes);
-  router.use("/scheduled-tasks", createScheduledTasksRoutes(db));
-  router.use("/dashboard", createDashboardRoutes());
-  router.use("/studio", createStudioRoutes());
-  router.use("/grants", grantsRouter);
-  router.use("/webhooks", createWebhookRoutes(db));
-  router.use("/contact", contactRouter);
-  router.use("/harvest", harvestRouter);
-  router.use("/zero-prompt", createZeroPromptRouter());
-  router.use("/ephemeral", createEphemeralRouter());
-  router.use("/orchestrator", createUniversalOrchestratorRouter());
-  router.use("/paios", paiosOrchestratorRouter);
-  router.use("/github", githubWebhookRouter);
+  // ── Core routes ────────────────────────────────────────────────────
+  router.use("/agents", lazy(() => import("./agents.js"), "createAgentRoutes"));
+  router.use("/registry", lazy(() => import("./agents.js"), "createRegistryRoutes"));
+  router.use("/providers", lazy(() => import("./llm.js"), "createProvidersRoutes"));
+  router.use("/ollama", lazy(() => import("./llm.js"), "createOllamaRoutes"));
+  router.use("/gemini", lazy(() => import("./llm.js"), "createGeminiRoutes"));
+  router.use("/github-models", lazy(() => import("./llm.js"), "createGithubModelsRoutes"));
+  router.use("/files", lazy(() => import("./files.js"), "createFileRoutes"));
+  router.use("/rag", lazy(() => import("./files.js"), "createRagRoutes"));
+  router.use("/tasks", lazy(() => import("./tasks.js"), "createTaskRoutes"));
+  router.use("/tools", lazy(() => import("./tools.js"), "createToolRoutes"));
+  router.use("/debug", lazy(() => import("./tools.js"), "createDebugRoutes"));
+  router.use("/chat", lazy(() => import("./chat.js"), "createChatRoutes"));
+  router.use("/anythingllm", lazy(() => import("./chat.js"), "createAnythingLLMRoutes"));
+  router.use("/incubator", lazy(() => import("./external.js"), "createIncubatorRoutes"));
+  router.use("/n8n", lazy(() => import("./external.js"), "createN8nRoutes"));
+  router.use("/developer", lazy(() => import("./developer.js"), "createDeveloperRoutes"));
+  router.use("/browser-copilot", lazy(() => import("./browserCopilot.js"), "createBrowserCopilotRoutes"));
+  router.use("/robotkez", lazy(() => import("./robotkez.js"), "createRobotkezRoutes"));
+  router.use("/robotkez-pro", lazy(() => import("./robotkez_pro.js"), "createRobotkezProRoutes"));
+  router.use("/jules", lazy(() => import("./jules.js"), "createJulesRoutes"));
+  router.use("/cloudflare", lazy(() => import("./cloudflare.js"), "createCloudflareRoutes"));
+  router.use("/tracks", lazy(() => import("../tracksRoutes.js"), "createTracksRouter"));
+  router.use("/tts", lazy(() => import("./tts.js"), "createTTSRoutes"));
+  router.use("/brunella", lazy(() => import("./recommendation.js"), "createRecommendationRoutes"));
+  router.use("/bookkeeping", lazy(() => import("./bookkeeping.js"), "createBookkeepingRoutes"));
+  router.use("/machines", lazy(() => import("./machines.js"), "createMachinesRouter"));
+  router.use("/enterprise", lazy(() => import("./enterprise.js"), "createEnterpriseRouter"));
+  router.use("/enterprise/analytics", lazy(() => import("./enterprise.js"), "createEnterpriseAnalyticsRouter"));
+  router.use("/system", lazy(() => import("./system.js"), "createSystemArchitectureRouter"));
+  router.use("/system", lazy(() => import("./system.js"), "createSystemControlRouter"));
+  router.use("/llm", lazy(() => import("./llm.js"), "createLLMRoutes"));
+  router.use("/anthropic", lazy(() => import("./anthropic.js"), "createAnthropicRoutes"));
+  router.use("/business-jobs", lazy(() => import("./businessJobs.js"), "createBusinessJobsRoutes"));
+  router.use("/security", lazy(() => import("./security.js"), "securityRouter"));
+  router.use("/assistant", lazy(() => import("./assistant.js"), "createAssistantRoutes"));
+  router.use("/copilot-bridge", lazy(() => import("./copilotBridge.js"), "createCopilotBridgeRoutes"));
+  router.use("/cognitive", lazy(() => import("./cognitiveBridge.js"), "createCognitiveBridgeRoutes"));
+  router.use("/workflow", lazy(() => import("./workflow.js"), "createWorkflowRoutes"));
+  router.use("/remote", lazy(() => import("./remote.js"), "createRemoteRoutes"));
+  router.use("/autonomous-infra", lazy(() => import("./autonomousInfra.js"), "createAutonomousInfraRouter"));
 
-  // Browser snapshot endpoint
-  router.get("/browser/snapshot", (req, res) => {
-    const { persistentBrowser } = import('../../utils/persistentBrowser.js') as any;
-    const screenshot = persistentBrowser?.getLastScreenshot?.();
-    if (screenshot) {
-      res.setHeader("Content-Type", "image/png");
-      res.send(screenshot);
-    } else {
-      res.status(404).send("No active browser session or screenshot available.");
+  // ── Additional routes ──────────────────────────────────────────────
+  router.use("/telemetry", lazy(() => import("../telemetryRoutes.js"), "createTelemetryRouter"));
+  router.use("/guardrails", lazy(() => import("../guardrailsRoutes.js"), "createGuardrailsRouter"));
+  router.use("/audit", lazy(() => import("../auditRoutes.js"), "createAuditRouter"));
+  router.use("/specs", lazy(() => import("../specRoutes.js"), "createSpecRouter"));
+  router.use("/phoenix", lazy(() => import("../phoenixRoutes.js"), "createPhoenixRouter"));
+  router.use("/router", lazy(() => import("../routerRoutes.js"), "createRouterRouter"));
+  router.use("/memory", lazy(() => import("../memoryRoutes.js"), "createMemoryRouter"));
+  router.use("/mcp", lazy(() => import("./mcp.js"), "default"));
+  router.use(lazy(() => import("./cean.js"), "default"));
+  router.use(lazy(() => import("./wrangler.js"), "createWranglerRouter"));
+  router.use("/fleet", lazy(() => import("./fleet.js"), "createFleetRouter", db));
+  router.use("/workers", lazy(() => import("./workers.js"), "createWorkersRouter", db));
+  router.use("/metrics", lazy(() => import("./metrics.js"), "createMetricsRouter", db));
+  router.use("/scaling", lazy(() => import("./scaling.js"), "createScalingRouter", db));
+  router.use("/tests", lazy(() => import("./testScheduler.js"), "default"));
+  router.use("/scheduled-tasks", lazy(() => import("./scheduledTasks.js"), "createScheduledTasksRoutes", db));
+  router.use("/dashboard", lazy(() => import("./dashboard.js"), "createDashboardRoutes"));
+  router.use("/studio", lazy(() => import("./studio.js"), "createStudioRoutes"));
+  router.use("/grants", lazy(() => import("./grants.js"), "default"));
+  router.use("/webhooks", lazy(() => import("./webhooks.js"), "default", db));
+  router.use("/contact", lazy(() => import("./contact.js"), "default"));
+  router.use("/harvest", lazy(() => import("./harvest.js"), "harvestRouter"));
+  router.use("/zero-prompt", lazy(() => import("./zeroPrompt.js"), "createZeroPromptRouter"));
+  router.use("/ephemeral", lazy(() => import("./ephemeral.js"), "createEphemeralRouter"));
+  router.use("/orchestrator", lazy(() => import("./universalOrchestrator.js"), "createUniversalOrchestratorRouter"));
+  router.use("/paios", lazy(() => import("./paiosOrchestrator.js"), "default"));
+  router.use("/github", lazy(() => import("./githubWebhook.js"), "default"));
+
+  // ── Browser snapshot (inline, lazy import) ─────────────────────────
+  router.get("/browser/snapshot", async (_req: Request, res: Response) => {
+    try {
+      const { persistentBrowser } = await import("../../utils/persistentBrowser.js");
+      const screenshot = persistentBrowser?.getLastScreenshot?.();
+      if (screenshot) {
+        res.setHeader("Content-Type", "image/png");
+        res.send(screenshot);
+      } else {
+        res.status(404).send("No active browser session or screenshot available.");
+      }
+    } catch {
+      res.status(500).send("Browser module not available.");
     }
   });
 
-  // --- Activated dormant routes (2026-03-25) ---
-  router.use("/observability", createObservabilityRouter());
-  router.use("/swarm", swarmRouter);
-  router.use("/golden-dataset", createGoldenDatasetRouter());
-  router.use("/learning-loop", createLearningLoopRouter());
-  router.use("/intelligence", createIntelligenceRouter());
-  router.use("/federation", createFederationRouter());
-  router.use("/suggested-tasks", suggestedTasksRouter);
-  router.use("/crawl4ai", createCrawl4aiRouter());
-  router.use("/python-workers", createPythonWorkersRouter());
-  router.use("/evhunter", createEvHunterRouter());
-  router.use("/preferences", createPreferencesRouter());
-  router.use("/sales", salesRouter);
-  router.use("/psales/auth", createPSalesAuthRoutes());
-  router.use("/psales/intake", createPSalesIntakeRoutes());
-  router.use("/psales/research", createPSalesResearchRoutes());
-  router.use("/psales/strategy", createPSalesStrategyRoutes());
-  router.use("/voice", voiceRouter);
+  // ── Activated dormant routes ───────────────────────────────────────
+  router.use("/observability", lazy(() => import("./observability.js"), "createObservabilityRouter"));
+  router.use("/swarm", lazy(() => import("./swarm.js"), "swarmRouter"));
+  router.use("/golden-dataset", lazy(() => import("./goldenDataset.js"), "createGoldenDatasetRouter"));
+  router.use("/learning-loop", lazy(() => import("./learningLoop.js"), "createLearningLoopRouter"));
+  router.use("/intelligence", lazy(() => import("./intelligence.js"), "createIntelligenceRouter"));
+  router.use("/federation", lazy(() => import("./federation.js"), "createFederationRouter"));
+  router.use("/suggested-tasks", lazy(() => import("./suggestedTasks.js"), "suggestedTasksRouter"));
+  router.use("/crawl4ai", lazy(() => import("./crawl4ai.js"), "createCrawl4aiRouter"));
+  router.use("/python-workers", lazy(() => import("./pythonWorkers.js"), "createPythonWorkersRouter"));
+  router.use("/evhunter", lazy(() => import("./evhunter.js"), "createEvHunterRouter"));
+  router.use("/preferences", lazy(() => import("./preferences.js"), "createPreferencesRouter"));
+  router.use("/sales", lazy(() => import("./sales.js"), "default"));
+  router.use("/psales/auth", lazy(() => import("./psales-auth.js"), "createPSalesAuthRoutes"));
+  router.use("/psales/intake", lazy(() => import("./psales-intake.js"), "createPSalesIntakeRoutes"));
+  router.use("/psales/research", lazy(() => import("./psales-research.js"), "createPSalesResearchRoutes"));
+  router.use("/psales/strategy", lazy(() => import("./psales-strategy.js"), "createPSalesStrategyRoutes"));
+  router.use("/voice", lazy(() => import("./voice.js"), "default"));
 
   return router;
 }

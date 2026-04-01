@@ -1656,7 +1656,7 @@
 		"chatgpt.runCodexInWindowsSubsystemForLinux": true,
 		"cloudflareDevTools.api.email": "peterpohankapersonal@gmail.com",
 		"cloudflareDevTools.api.key": "3d477d3095d6174dd1f904c710c22763f7655",
-		"cloudflareDevTools.api.zoneID": "JKzw_6uD_XBmvr8rlBxGASyhIzeU8xp0ueKI6Fxk",
+		"cloudflareDevTools.api.zoneID": "033dddf69066b073f6f5cbea7f3b5f5d",
 		"dataWrangler.startInEditModeForNotebookEntrypoints": true,
 		"dataWrangler.experiments.autoDetectCsvDelimiter": true,
 		"dataWrangler.experiments.fastCsvParsing": true,
@@ -1849,7 +1849,11 @@
 			"jakubkozera.github-copilot-code-reviewer",
 			"shubhj.ghcp-dashboard",
 			"google.geminicodeassist",
-			"conductor.conductor"
+			"conductor.conductor",
+			"mehrdadalemzadeh.anything-llm",
+			"github.copilot",
+			"upstash.context7-mcp",
+			"automatalabs.copilot-mcp"
 		]
 	}
 }

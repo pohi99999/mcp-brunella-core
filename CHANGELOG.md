@@ -10,6 +10,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Added
 
+- **Conductor legacy task sync** (`conductor/tracks/system_wide_zero_mock_20260301`,
+  `conductor/archive/*_research_*`, `conductor/archive/deep_market_research_20260227`,
+  `conductor/archive/revenue_acceleration_20260227`): Audited the eight legacy root `tasks/*`
+  folders and synchronized the missing historical/completed records into the conductor system.
+  Added one new completed canonical track for the system-wide Zero-Mock/ReAct rollout and five
+  archival entries for research-only or duplicate legacy task packs.
+
 - **ContextFusion integration layer** (`src/core/contextFusion.ts`): New shared module that
   aggregates live signals from GraphRAG, ReflectionEngine, HybridMemory, and browser diagnostics
   into a single `ContextFusionCard`. Every subsystem call is individually guarded with try/catch

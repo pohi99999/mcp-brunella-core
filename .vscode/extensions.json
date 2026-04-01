@@ -56,6 +56,10 @@
     "jakubkozera.github-copilot-code-reviewer",
     "shubhj.ghcp-dashboard",
     "google.geminicodeassist",
-    "conductor.conductor"
+    "conductor.conductor",
+    "mehrdadalemzadeh.anything-llm",
+    "github.copilot",
+    "upstash.context7-mcp",
+    "automatalabs.copilot-mcp"
   ]
 }
