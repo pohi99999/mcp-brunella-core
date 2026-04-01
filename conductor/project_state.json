@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-04-01T00:27:53.094Z",
+  "lastUpdated": "2026-04-01T01:20:00.206Z",
   "tracks": [
     {
       "id": "cloudflare_dns_zone_reconciliation_20260325",
@@ -43,18 +43,6 @@
       ],
       "dependencies": [],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\inventory_automation_20260330",
-      "_isArchived": false
-    },
-    {
-      "id": "jules_pr_integration_20260222",
-      "name": "jules_pr_integration_20260222",
-      "status": "active",
-      "priority": "high",
-      "progress": 18,
-      "assignee": "Claude + Pohánka Péter",
-      "tags": [],
-      "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\jules_pr_integration_20260222",
       "_isArchived": false
     },
     {
@@ -1681,6 +1669,18 @@
       "_isArchived": true
     },
     {
+      "id": "jules_pr_integration_20260222",
+      "name": "Jules PR Integration",
+      "status": "archived",
+      "priority": "high",
+      "progress": 100,
+      "assignee": "Claude + Pohánka Péter",
+      "tags": [],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\jules_pr_integration_20260222",
+      "_isArchived": true
+    },
+    {
       "id": "law_detective_20260223",
       "name": "law_detective_20260223",
       "status": "archived",
@@ -2782,9 +2782,9 @@
   ],
   "stats": {
     "total": 160,
-    "active": 6,
+    "active": 5,
     "completed": 1,
-    "archived": 149,
+    "archived": 150,
     "proposed": 3
   }
 }
