@@ -1082,6 +1082,21 @@
       "priority": 1
     },
     {
+      "name": "EmailAgent",
+      "title": "Email Intake Agent",
+      "description": "Számlák figyelése emailben és GDrive-on, PDF mentés egyedi azonosítóval.",
+      "class": "EmailAgent",
+      "module": "./agents/EmailAgent.js",
+      "capabilities": [
+        "email_watching",
+        "file_management",
+        "naming_convention"
+      ],
+      "category": "enterprise",
+      "status": "active",
+      "priority": 7
+    },
+    {
       "name": "BankAgent",
       "description": "Parses bank export files (CSV) and extracts transactions.",
       "role": "Transaction Watcher",
