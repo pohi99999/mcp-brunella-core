@@ -15,7 +15,7 @@
 ## Adat & Memória
 - **Vektor Store:** LanceDB (hibrid, lokális/Python & Node.js írás) / Qdrant vagy Milvus (skálázott).
 - **Adatbázis:** SQLite (better-sqlite3) a tranzakcióknak.
-- **Ingestion:** Playwright (böngészés), Python Refiner (zajszűrés), Unstructured.io (PDF).
+- **Ingestion:** Playwright (böngészés), Python Refiner (zajszűrés), Unstructured.io (PDF), Gemini Vision (OCR).
 - **Strukturált Adatkimenet:** Pydantic (Python) a böngésző ügynök (Robotkéz) strukturált JSON kimenetéhez.
 
 ## Felhő Integráció (BAS-Bridge)
