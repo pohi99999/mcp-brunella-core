@@ -1,0 +1,15 @@
+{
+  "id": "INV-2026-0001",
+  "source": "email",
+  "partner": {
+    "name": "Kovács Kft.",
+    "taxId": "12345678-2-12",
+    "bankAccount": "HU0123456789"
+  },
+  "amounts": { "net": 40000, "vat": 10800, "gross": 50800 },
+  "currency": "HUF",
+  "issueDate": "2026-03-01",
+  "dueDate": "2026-03-15",
+  "paymentMethod": "bank_transfer",
+  "pdfPath": "data/invoices/Kovacs_2026-03-01_50800.pdf"
+}
