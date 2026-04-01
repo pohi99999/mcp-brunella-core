@@ -19,7 +19,7 @@ jobs:
           node-version: '20'
 
       - name: Install Node Dependencies
-        run: npm install -g pnpm && pnpm install --frozen-lockfile
+        run: npm ci
 
       # 2. Python Környezet (Robotkéz/MyAI)
       - name: Setup Python
@@ -35,7 +35,7 @@ jobs:
 
       # 3. Run Tests (includes build via package.json)
       - name: Run Tests
-        run: pnpm test
+        run: npm test
         env:
           WEB_UI_ENABLED: '0'
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
