@@ -1112,6 +1112,21 @@
       "priority": 7
     },
     {
+      "name": "OCRAgent",
+      "title": "OCR Extraction Agent",
+      "description": "Számla adatok kinyerése PDF fájlokból OCR és Vision LLM segítségével.",
+      "class": "OCRAgent",
+      "module": "./agents/OCRAgent.js",
+      "capabilities": [
+        "ocr_extraction",
+        "vision_analysis",
+        "invoice_parsing"
+      ],
+      "category": "enterprise",
+      "status": "active",
+      "priority": 7
+    },
+    {
       "name": "BankAgent",
       "description": "Parses bank export files (CSV) and extracts transactions.",
       "role": "Transaction Watcher",
