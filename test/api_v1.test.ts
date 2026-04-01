@@ -10,10 +10,12 @@ vi.mock('../src/utils/health.js', () => ({
   checkOllamaHealth: vi.fn().mockResolvedValue({ status: 'ok', model: 'llama3' }),
   checkAnythingLLMHealth: vi.fn().mockResolvedValue({ status: 'ok' }),
   checkPythonHealth: vi.fn().mockResolvedValue({ status: 'ok' }),
+  checkN8nHealth: vi.fn().mockResolvedValue({ status: 'ok' }),
+  checkLangflowHealth: vi.fn().mockResolvedValue({ status: 'ok' }),
   checkCloudflareHealth: vi.fn().mockResolvedValue({ status: 'healthy' }),
-  buildHealthResponse: vi.fn().mockImplementation((ol, al, py, cf, ac, mc, rid) => ({
+  buildHealthResponse: vi.fn().mockImplementation((ol, al, py, n8n, lf, cf, ac, mc, rid) => ({
     status: 'ok',
-    components: { ollama: ol, anythingllm: al, python: py, cloudflare: cf },
+    components: { ollama: ol, anythingllm: al, python: py, n8n, langflow: lf, cloudflare: cf },
     stats: { agents: ac, mcp: mc },
     requestId: rid
   }))
