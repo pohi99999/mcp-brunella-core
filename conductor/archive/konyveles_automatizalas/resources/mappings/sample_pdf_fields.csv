@@ -1,0 +1,8 @@
+field_name,description,example
+invoice_number,PDF-en szereplő számlaszám,INV-2026-0001
+net_amount,nettó összeg a PDF-en,40000
+vat_amount,ÁFA a PDF-en,8080
+gross_amount,bruttó a PDF-en,48080
+issue_date,kiállítás dátuma a PDF-en,2026-03-01
+partner_name,Partner neve a PDF-en,Kovács Kft.
+partner_vat,Partner adószáma a PDF-en,12345678-2-12

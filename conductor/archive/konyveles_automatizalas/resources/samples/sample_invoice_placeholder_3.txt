@@ -1,0 +1,7 @@
+Placeholder for invoice PDF
+Invoice ID: INV-2026-0003
+Partner: Nagy és Társa Kft.
+Net: 9800
+VAT: 2352
+Gross: 12152
+IssueDate: 2026-03-03

@@ -4,7 +4,7 @@
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 169 total | 6 active | 4 completed | 155 archived
+**Stats:** 169 total | 5 active | 4 completed | 156 archived
 
 ---
 
@@ -39,11 +39,6 @@
   - **ID:** `inventory_automation_20260330`
   - **Progress:** 28%
   - Mappa: ./tracks/inventory_automation_20260330/
-
-- [x] **Könyvelés automatizálása** [MEDIUM]
-  - **ID:** `konyveles_automatizalas`
-  - **Progress:** 0%
-  - Mappa: ./tracks/konyveles_automatizalas/
 
 - [ ] **Kognitív Könyvelés és Multi-Ágens Egyeztetés — Bővítmény** [HIGH]
   - **ID:** `konyveles_kognitiv_bovites_20260330`
@@ -83,10 +78,11 @@
 
 ---
 
-## Archivalt (Archived) (155)
+## Archivalt (Archived) (156)
 
 > Archived tracks are hidden by default. View in `conductor/archive/`
 
+- [x] **Könyvelés automatizálása** (2026-04-01T23:25:00Z)
 - [x] **006_trojan-horse-campaign** (2026-03-22T22:47:34Z)
 - [x] **Agent Architect 2.0 Meta-Ügynök** (2026-02-13)
 - [x] **Agent diagnostics and routing modernization** (2026-03-23T08:15:00Z)
