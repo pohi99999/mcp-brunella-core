@@ -1,0 +1,19 @@
+On branch fix/mobile-image-and-count
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+  (commit or discard the untracked or modified content in submodules)
+	modified:   data/event_fabric_history.jsonl
+	modified:   myai/data/training/golden_dataset.jsonl
+	modified:   temp/Lumen-landing (modified content, untracked content)
+	modified:   temp/my_websitev2 (modified content)
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	cmd1-status.txt
+	git-log-out.txt
+	git-log-out2.txt
+	git-push-out.txt
+	read-test.txt
+
+no changes added to commit (use "git add" and/or "git commit -a")
