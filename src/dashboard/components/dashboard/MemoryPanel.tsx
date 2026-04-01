@@ -17,11 +17,13 @@ function formatPct(value: number): string {
 export function MemoryPanel() {
     const [stats, setStats] = useState<StructuredMemoryStatsResponse | null>(null);
     const [loading, setLoading] = useState(true);
+    const [isRefreshing, setIsRefreshing] = useState(false);
     const [busyAction, setBusyAction] = useState<string | null>(null);
     const [message, setMessage] = useState<string>("");
 
-    const load = useCallback(async () => {
-        setLoading(true);
+    const load = useCallback(async (manualRefresh = false) => {
+        if (manualRefresh) setIsRefreshing(true);
+        else setLoading(true);
         try {
             const response = await getStructuredMemoryStats();
             setStats(response);
@@ -29,11 +31,12 @@ export function MemoryPanel() {
             setMessage(error instanceof Error ? error.message : String(error));
         } finally {
             setLoading(false);
+            setIsRefreshing(false);
         }
     }, []);
 
     useEffect(() => {
-        void load();
+        void load(false);
     }, [load]);
 
     const handlePurge = useCallback(async () => {
@@ -96,11 +99,12 @@ export function MemoryPanel() {
                     <Tooltip>
                         <TooltipTrigger asChild>
                             <button
-                                onClick={ () => void load() }
-                                className="rounded-md p-2 hover:bg-accent focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                                onClick={ () => void load(true) }
+                                disabled={ isRefreshing }
+                                className="rounded-md p-2 hover:bg-accent focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:opacity-50"
                                 aria-label="Adatok frissítése"
                             >
-                                <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
+                                <RefreshCw className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`} />
                             </button>
                         </TooltipTrigger>
                         <TooltipContent>
