@@ -1,0 +1,11 @@
+{
+  "id": "INV-2026-0001",
+  "partner": "Kovács Kft.",
+  "net": 40000,
+  "vat": 8080,
+  "gross": 48080,
+  "issueDate": "2026-03-01",
+  "paymentMethod": "bank_transfer",
+  "pdfPath": "conductor/tracks/konyveles_automatizalas/resources/samples/sample_invoice_placeholder.txt",
+  "navXmlPath": "conductor/tracks/konyveles_automatizalas/resources/samples/sample_nav_invoice.xml"
+}
