@@ -85,6 +85,12 @@ import { ModelRouterPanel } from "@/components/dashboard/ModelRouterPanel";
 import { ScheduledTasksPanel } from "@/components/dashboard/ScheduledTasksPanel";
 import { SpecManagerPanel } from "@/components/dashboard/SpecManagerPanel";
 import { VectorizeAnalyticsWidget } from "@/components/dashboard/VectorizeAnalyticsWidget";
+import { AgentFactory } from "@/components/dashboard/AgentFactory";
+import { AgentToolsManager } from "@/components/dashboard/AgentToolsManager";
+import { HarvestPipelineWidget } from "@/components/dashboard/HarvestPipelineWidget";
+import { ProcessControlWidget } from "@/components/dashboard/ProcessControlWidget";
+import { ServiceControlWidget } from "@/components/dashboard/ServiceControlWidget";
+import { ProjectExplorer } from "@/components/dashboard/ProjectExplorer";
 import { logInfo } from "@/utils/logger";
 
 const LazyEnterpriseAnalyticsWidget = React.lazy( async () =>
