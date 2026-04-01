@@ -1,0 +1,20 @@
+{
+  "$schema": "https://gofastmcp.com/public/schemas/fastmcp.json/v1.json",
+  "source": {
+    "path": "myai/mcp_server.py",
+    "entrypoint": "mcp"
+  },
+  "environment": {
+    "python": ">=3.12",
+    "dependencies": [
+      "fastmcp>=2.14.3",
+      "lancedb",
+      "chromadb",
+      "python-dotenv"
+    ]
+  },
+  "deployment": {
+    "transport": "sse",
+    "log_level": "INFO"
+  }
+}
