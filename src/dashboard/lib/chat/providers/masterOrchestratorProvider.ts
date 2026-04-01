@@ -38,7 +38,10 @@ export class MasterOrchestratorProvider implements ChatProvider {
     try {
       const response = await api.executeAgent("orchestrator", text);
       return {
-        message: response.data?.message || "A helyi orkesztrátor megkezdte a feladat végrehajtását.",
+        message:
+          (response && typeof response === "object" && "message" in (response as Record<string, unknown>)
+            ? String((response as Record<string, unknown>).message ?? "")
+            : "") || "A helyi orkesztrátor megkezdte a feladat végrehajtását.",
         executedBy: "Local Orchestrator",
         thoughts: analysis.reasoning,
         contextUsed: ["Local Workspace"]

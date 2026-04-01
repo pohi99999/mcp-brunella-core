@@ -130,8 +130,8 @@ export function TaskQueueMonitor() {
     const totalPages = Math.ceil(total / limit)
 
   return (
-    <div className="space-y-6">
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+    <div className="space-y-5">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         {[
           {
             label: "Total Tasks",
@@ -160,7 +160,7 @@ export function TaskQueueMonitor() {
         ].map((stat) => (
           <Card key={stat.label} className="glass-card border-white/10 overflow-hidden">
             <CardHeader className="pb-2 pt-3 px-4">
-              <CardTitle className="text-[10px] font-mono uppercase tracking-[0.28em] text-zinc-500">
+              <CardTitle className="text-[10px] font-mono uppercase tracking-[0.24em] text-zinc-500">
                 {stat.label}
               </CardTitle>
             </CardHeader>
@@ -179,8 +179,8 @@ export function TaskQueueMonitor() {
       <Card className="glass-card border-white/10 overflow-hidden">
         <CardHeader className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between pb-4 px-4 pt-4">
           <div className="space-y-1">
-            <CardTitle className="text-[11px] font-mono font-semibold tracking-[0.28em] uppercase text-zinc-400 flex items-center gap-2">
-              <ListTodo className="text-cyan-400" size={15} />
+            <CardTitle className="text-[11px] font-mono font-semibold tracking-[0.24em] uppercase text-zinc-300 flex items-center gap-2">
+              <ListTodo className="text-cyan-300" size={15} />
               Task Queue
             </CardTitle>
             <CardDescription className="text-sm text-zinc-500">
@@ -191,7 +191,7 @@ export function TaskQueueMonitor() {
           <Button
             onClick={handleExecuteNext}
             disabled={executing || !stats?.pendingCount}
-            className="gap-2 bg-cyan-500/15 hover:bg-cyan-500/25 text-cyan-100 border border-cyan-400/20 shadow-[0_0_24px_rgba(34,211,238,0.08)]"
+            className="gap-2 bg-cyan-500/15 hover:bg-cyan-500/25 text-cyan-100 border border-cyan-300/20 shadow-[0_0_24px_rgba(34,211,238,0.08)]"
           >
             {executing ? <Loader2 className="w-4 h-4 animate-spin" /> : <Play className="w-4 h-4" />}
             Execute Next Pending

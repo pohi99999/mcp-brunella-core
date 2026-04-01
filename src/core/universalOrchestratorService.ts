@@ -101,6 +101,7 @@ const PROVIDER_MAP: Record<string, ProviderType> = {
   anthropic: 'anthropic',
   cloudflare: 'cloudflare',
   ollama: 'ollama',
+  copilot: 'copilot',
 };
 
 const MAGYAR_SYSTEM_PROMPT = (toolList: string, agentCapabilities: string): string => `\

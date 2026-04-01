@@ -60,6 +60,8 @@
     "mehrdadalemzadeh.anything-llm",
     "github.copilot",
     "upstash.context7-mcp",
-    "automatalabs.copilot-mcp"
+    "automatalabs.copilot-mcp",
+    "dhananjaysenday.mcp--inspector",
+    "amitpatole.mcp-marketplace"
   ]
 }

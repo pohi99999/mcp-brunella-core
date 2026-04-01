@@ -2017,7 +2017,7 @@ testsCmd
   .command("results [count]")
   .description("Show recent test run results")
   .action(async (count: string) => {
-    const limit = parseInt(count || "10");
+    const limit = parseInt(count || "10", 10);
     const baseUrl = String(
       configManager.get("serverUrl") || "http://localhost:3000",
     ).replace(/\/$/, "");

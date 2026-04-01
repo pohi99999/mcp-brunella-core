@@ -5,10 +5,39 @@
  * - Resource management
  */
 
-import { execSync } from 'child_process';
-import { existsSync, readFileSync } from 'fs';
+import { execFileSync } from 'child_process';
+import { existsSync } from 'fs';
 import path from 'path';
 import { logInfo, logError } from './logger.js';
+
+/**
+ * Validates that a value is a safe Cloudflare resource identifier.
+ * Only alphanumerics, hyphens and underscores are permitted.
+ * Prevents OS-command injection when values are passed as CLI arguments.
+ */
+function sanitizeIdentifier(value: string, label: string): string {
+  if (!/^[a-zA-Z0-9_-]+$/.test(value)) {
+    throw new Error(
+      `Invalid ${label}: "${value}". Only alphanumeric characters, hyphens and underscores are allowed.`,
+    );
+  }
+  return value;
+}
+
+/**
+ * Validates that schemaPath resolves to a location inside the project root.
+ * Prevents relative/absolute path traversal (CWE-22, CWE-23, CWE-36).
+ */
+function validateSchemaPath(schemaPath: string): string {
+  const resolved = path.resolve(schemaPath);
+  const projectRoot = process.cwd();
+  if (!resolved.startsWith(projectRoot + path.sep) && resolved !== projectRoot) {
+    throw new Error(
+      `Schema path "${schemaPath}" is outside the project directory. Path traversal is not permitted.`,
+    );
+  }
+  return resolved;
+}
 
 export interface WranglerConfig {
   projectName: string;
@@ -32,7 +61,7 @@ export class WranglerHelper {
    */
   async checkWranglerInstalled(): Promise<boolean> {
     try {
-      execSync('wrangler --version', { stdio: 'pipe' });
+      execFileSync('wrangler', ['--version'], { stdio: 'pipe' });
       logInfo('WranglerHelper', 'Wrangler CLI is installed');
       return true;
     } catch (e: unknown) {
@@ -62,12 +91,13 @@ export class WranglerHelper {
    */
   async initializeD1(databaseName: string): Promise<string | null> {
     try {
-      logInfo('WranglerHelper', `Initializing D1 database: ${databaseName}`);
-      const output = execSync(`wrangler d1 create ${databaseName}`, {
+      const safeName = sanitizeIdentifier(databaseName, 'databaseName');
+      logInfo('WranglerHelper', `Initializing D1 database: ${safeName}`);
+      const output = execFileSync('wrangler', ['d1', 'create', safeName], {
         encoding: 'utf-8',
         env: { ...process.env, CLOUDFLARE_API_TOKEN: this.config.apiToken },
       });
-      logInfo('WranglerHelper', `D1 database created: ${databaseName}`);
+      logInfo('WranglerHelper', `D1 database created: ${safeName}`);
       return output;
     } catch (e: unknown) {
       const error = e instanceof Error ? e.message : String(e);
@@ -82,21 +112,22 @@ export class WranglerHelper {
    */
   async runD1Migration(databaseId: string, schemaPath: string): Promise<boolean> {
     try {
-      if (!existsSync(schemaPath)) {
-        logError('WranglerHelper', `Schema file not found: ${schemaPath}`);
+      const safeId = sanitizeIdentifier(databaseId, 'databaseId');
+      const safePath = validateSchemaPath(schemaPath);
+
+      if (!existsSync(safePath)) {
+        logError('WranglerHelper', `Schema file not found: ${safePath}`);
         return false;
       }
 
-      logInfo('WranglerHelper', `Running D1 migration from: ${schemaPath}`);
-      const schemaContent = readFileSync(schemaPath, 'utf-8');
-      
-      // Write schema to temp file and execute
-      execSync(
-        `wrangler d1 execute ${databaseId} --file="${schemaPath}"`,
+      logInfo('WranglerHelper', `Running D1 migration from: ${safePath}`);
+      execFileSync(
+        'wrangler',
+        ['d1', 'execute', safeId, `--file=${safePath}`],
         {
           encoding: 'utf-8',
           env: { ...process.env, CLOUDFLARE_API_TOKEN: this.config.apiToken },
-        }
+        },
       );
 
       logInfo('WranglerHelper', 'D1 migration completed successfully');
@@ -114,13 +145,17 @@ export class WranglerHelper {
    */
   async executeD1Query(databaseId: string, query: string): Promise<unknown | null> {
     try {
+      const safeId = sanitizeIdentifier(databaseId, 'databaseId');
       logInfo('WranglerHelper', `Executing D1 query: ${query.slice(0, 50)}...`);
-      const output = execSync(
-        `wrangler d1 execute ${databaseId} --command="${query}"`,
+      // Pass --command as a separate argument — execFileSync never invokes a shell,
+      // so the query value cannot cause command injection.
+      const output = execFileSync(
+        'wrangler',
+        ['d1', 'execute', safeId, '--command', query],
         {
           encoding: 'utf-8',
           env: { ...process.env, CLOUDFLARE_API_TOKEN: this.config.apiToken },
-        }
+        },
       );
       return JSON.parse(output);
     } catch (e: unknown) {
@@ -143,7 +178,7 @@ export class WranglerHelper {
         return false;
       }
 
-      execSync('wrangler publish', {
+      execFileSync('wrangler', ['publish'], {
         cwd: process.cwd(),
         env: { ...process.env, CLOUDFLARE_API_TOKEN: this.config.apiToken },
       });
@@ -163,7 +198,7 @@ export class WranglerHelper {
   async listD1Databases(): Promise<unknown | null> {
     try {
       logInfo('WranglerHelper', 'Listing D1 databases...');
-      const output = execSync('wrangler d1 list', {
+      const output = execFileSync('wrangler', ['d1', 'list'], {
         encoding: 'utf-8',
         env: { ...process.env, CLOUDFLARE_API_TOKEN: this.config.apiToken },
       });

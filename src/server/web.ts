@@ -1,11 +1,13 @@
-import "dotenv/config"; // CRITICAL: Load .env before anything else
+// ── Lightweight static imports (Node built-ins + tiny deps) ──────
+// ALL heavy modules (AgentManager, Socket.IO, Swagger, DB, schedulers,
+// services, websocket handlers, metrics) are loaded dynamically inside
+// startWebServer / deferredInit to prevent OOM at module-load time.
+import "dotenv/config";
 import express from "express";
 import { createServer } from "http";
-import { Server } from "socket.io";
+import type { Server as HttpServer } from "http";
 import path from "path";
-import { readFileSync, existsSync } from "fs";
-import os from "os";
-import swaggerUi from "swagger-ui-express";
+import { readFileSync, writeFileSync, unlinkSync, existsSync } from "fs";
 import { config } from "../config/schema.js";
 import {
   Logger,
@@ -16,45 +18,12 @@ import {
   logError,
   logWarn,
 } from "../utils/logger.js";
-import { initDb, saveMessage, getMessages } from "../utils/db.js";
-import { initTasksDb } from "../utils/tasksDb.js";
-import { getGlobalDb, closeGlobalDb } from "../utils/globalDb.js";
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { SSEServerTransport } from "@modelcontextprotocol/sdk/server/sse.js";
-import { registerAllTools } from "./registry.js";
-import { v4 as uuidv4 } from "uuid";
-import { toolManager } from "./ToolManager.js";
-import { mcpProcessManager } from "./McpProcessManager.js";
-import { mcpClientManager } from "../utils/mcpClientManager.js";
-import { AgentManager, agentManager, initializeAgentManager } from "../agents/AgentManager.js";
-
 import {
   corsWhitelist,
   requestId,
   requestLogging,
   apiRateLimit,
 } from "./middleware.js";
-import { swaggerSpec } from "./swagger.js";
-import { socketService } from "./SocketService.js";
-import { globalErrorHandler } from "./middleware/errorHandler.js";
-import {
-  getPrometheusContentType,
-  getPrometheusMetrics,
-  initMetrics,
-  recordHttpRequest,
-} from "../utils/metrics.js";
-
-import { registerEdgeWebSocketHandlers, registerCEANWebSocketHandlers, registerFleetWebSocketHandlers } from "./websocket.js";
-import { startScheduler, stopScheduler } from "./schedulers/testRunner.js";
-import { startScheduler as startCronScheduler } from "./cron.js";
-import { scheduledTasksRunner } from "./schedulers/scheduledTasksRunner.js";
-import { initTestResultsDb } from "../core/testResultsService.js";
-import { initSuggestedTasksDb } from "../core/suggestedTasksScanner.js";
-import { heartbeatMonitor } from "../utils/heartbeatMonitor.js";
-import { fastApiService } from "../services/fastApiService.js";
-import { syncService } from "../utils/syncService.js";
-import { githubPollingService } from "../core/githubPollingService.js";
-
 
 const logger = new Logger("web_ui.log");
 
@@ -62,11 +31,6 @@ const corsOriginList = (process.env.CORS_ORIGINS || "")
   .split(",")
   .map((s) => s.trim())
   .filter(Boolean);
-
-interface ActiveTransport {
-  transport: SSEServerTransport;
-  server: McpServer;
-}
 
 const PACKAGE_VERSION = (() => {
   try {
@@ -79,6 +43,45 @@ const PACKAGE_VERSION = (() => {
   }
 })();
 
+// ── Singleton guard: exported so index.ts can close it on shutdown ─
+export let activeHttpServer: HttpServer | null = null;
+
+/** Graceful HTTP server teardown — call from shutdown handlers */
+export function shutdownWebServer(): Promise<void> {
+  return new Promise((resolve) => {
+    if (!activeHttpServer) { resolve(); return; }
+    activeHttpServer.close(() => resolve());
+    // Force-close after 5 s to avoid hang
+    setTimeout(() => resolve(), 5000);
+  });
+}
+
+// PID lockfile path — one per working directory
+const PID_FILE = path.join(process.cwd(), ".brunella.pid");
+
+/** Write PID file; call once on server start */
+function acquirePidLock(): void {
+  if (existsSync(PID_FILE)) {
+    const raw = (() => { try { return readFileSync(PID_FILE, "utf-8").trim(); } catch { return ""; } })();
+    const oldPid = parseInt(raw, 10);
+    if (!isNaN(oldPid)) {
+      try {
+        process.kill(oldPid, 0); // throws ESRCH if process is dead
+        logWarn("Server",
+          `Brunella mar fut! (PID ${oldPid}) — az uj folyamat KILEP, hogy megelozze a duplikaciót.\n` +
+          `Ha le van allva, torold: del .brunella.pid`);
+        process.exit(1);
+      } catch {
+        // Stale lockfile from a previous crash
+        logInfo("Server", `Elavult PID-fajl torölve (PID ${oldPid} mar nem fut)`);
+      }
+    }
+  }
+  writeFileSync(PID_FILE, String(process.pid), "utf-8");
+  // Remove on any form of exit
+  process.once("exit", () => { try { unlinkSync(PID_FILE); } catch { /* ignore */ } });
+}
+
 export async function startWebServer() {
   const webUiEnabled =
     process.env.WEB_UI_ENABLED !== "0" &&
@@ -88,13 +91,15 @@ export async function startWebServer() {
     return;
   }
 
-  // ── Phase 1: Immediate HTTP server ─────────────────────────────
-  // Start listening ASAP so health-checks (/ping) and the dashboard
-  // are available while heavy initialization happens in the background.
+  // ── Singleton guard: prevent duplicate server processes ────────
+  acquirePidLock();
 
+  // ── Phase 1: Immediate HTTP server ─────────────────────────────
+  // Start listening ASAP so /ping and the dashboard are available
+  // while heavy initialization happens in the background.
   const app = express();
 
-  app.get('/ping', (_req, res) => { res.send('pong'); });
+  app.get("/ping", (_req, res) => { res.send("pong"); });
 
   app.use(express.json());
   app.use(corsWhitelist);
@@ -102,61 +107,115 @@ export async function startWebServer() {
   app.use(requestLogging);
   app.use("/api", apiRateLimit);
 
-  // Static assets (dashboard bundle) — served immediately
   app.use(express.static(path.join(process.cwd(), "build", "public")));
 
   const httpServer = createServer(app);
+  activeHttpServer = httpServer; // expose for graceful shutdown
 
   await new Promise<void>((resolve) => {
     httpServer.listen(config.port, () => {
-      logInfo("Server", `🌐 http://localhost:${config.port} listening (initializing...)`);
+      logInfo("Server", `http://localhost:${config.port} listening (initializing...)`);
       resolve();
     });
   });
 
+  // ── Phase 1b: Socket.IO (must complete before startWebServer returns) ──
+  // index.ts depends on socketService being initialized after this call.
+  const { Server: SocketIOServer } = await import("socket.io");
+  const io = new SocketIOServer(httpServer, {
+    cors: {
+      origin:
+        corsOriginList.length > 0
+          ? corsOriginList
+          : ["http://localhost:5173", "http://localhost:3000", "*"],
+      methods: ["GET", "POST"],
+    },
+  });
+  const { socketService } = await import("./SocketService.js");
+  socketService.init(io);
+
+  // ── Fire-and-forget: heavy background initialization ───────────
+  deferredInit(app, httpServer, io).catch((e) => {
+    logError("Server", `Deferred init error: ${e instanceof Error ? e.message : String(e)}`);
+  });
+}
+
+// Yield control to the event loop so HTTP requests are processed between phases.
+const yieldToEventLoop = () => new Promise<void>(r => setImmediate(r));
+
+// ── Background initialization (Phases 2-7) ────────────────────────
+// Each phase dynamically imports its dependencies so they are loaded
+// on-demand instead of at module-load time.
+// CRITICAL: yieldToEventLoop() between phases prevents event loop starvation.
+async function deferredInit(
+  app: express.Express,
+  httpServer: HttpServer,
+  io: InstanceType<typeof import("socket.io").Server>,
+) {
   // ── Phase 2: Database initialization (error-tolerant) ──────────
-
   try {
+    const { initDb } = await import("../utils/db.js");
     initDb();
-  } catch (e: any) {
-    logError("Server", `DB Init failed: ${e.message}`);
+  } catch (e: unknown) {
+    logError("Server", `DB Init failed: ${e instanceof Error ? e.message : String(e)}`);
   }
 
   try {
+    const { initTasksDb } = await import("../utils/tasksDb.js");
     initTasksDb();
-  } catch (e: any) {
-    logError("Server", `Tasks DB Init failed: ${e.message}`);
+  } catch (e: unknown) {
+    logError("Server", `Tasks DB Init failed: ${e instanceof Error ? e.message : String(e)}`);
   }
 
   try {
+    const { initTestResultsDb } = await import("../core/testResultsService.js");
     await initTestResultsDb("data/brunella.db");
-  } catch (e: any) {
-    logError("Server", `Test Results DB Init failed: ${e.message}`);
+  } catch (e: unknown) {
+    logError("Server", `Test Results DB Init failed: ${e instanceof Error ? e.message : String(e)}`);
   }
 
   try {
+    const { initSuggestedTasksDb } = await import("../core/suggestedTasksScanner.js");
     await initSuggestedTasksDb("data/brunella.db");
-  } catch (e: any) {
-    logError("Server", `Suggested Tasks DB Init failed: ${e.message}`);
+  } catch (e: unknown) {
+    logError("Server", `Suggested Tasks DB Init failed: ${e instanceof Error ? e.message : String(e)}`);
   }
+
+  logInfo("Server", "Phase 2 complete: databases initialized");
+  await yieldToEventLoop();
 
   // ── Phase 3: Metrics & MCP Bridge ──────────────────────────────
-
+  const {
+    initMetrics,
+    getPrometheusContentType,
+    getPrometheusMetrics,
+    recordHttpRequest,
+  } = await import("../utils/metrics.js");
   initMetrics();
 
-  logInfo("Server", "🔄 Starting MCP Bridge...");
+  let mcpProcMgrRef: any = null;
+
   try {
-    await mcpProcessManager.loadConfig();
-    const configured = mcpProcessManager.getServersStatus();
-    logInfo("Server", `📋 ${configured.length} MCP server(s) configured`);
+    const mod = await import("./McpProcessManager.js");
+    mcpProcMgrRef = mod.mcpProcessManager;
+    await mod.mcpProcessManager.loadConfig();
+    const configured = mod.mcpProcessManager.getServersStatus();
+    logInfo("Server", `${configured.length} MCP server(s) configured`);
   } catch (e: unknown) {
-    const msg = e instanceof Error ? e.message : String(e);
-    logError("Server", `MCP config load failed: ${msg}`);
+    logError("Server", `MCP config load failed: ${e instanceof Error ? e.message : String(e)}`);
   }
 
-  // ── Phase 4: API routes (deferred import for createV1Router) ───
+  logInfo("Server", "Phase 3 complete: metrics & MCP bridge");
+  await yieldToEventLoop();
 
-  app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+  // ── Phase 4: API routes + Swagger ──────────────────────────────
+  try {
+    const swaggerUi = (await import("swagger-ui-express")).default;
+    const { swaggerSpec } = await import("./swagger.js");
+    app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+  } catch (e: unknown) {
+    logWarn("Server", `Swagger init failed: ${e instanceof Error ? e.message : String(e)}`);
+  }
 
   const { createV1Router } = await import("./routes/index.js");
   const v1Router = createV1Router();
@@ -169,27 +228,22 @@ export async function startWebServer() {
       const metrics = await getPrometheusMetrics();
       res.end(metrics);
     } catch (e: unknown) {
-      const message = e instanceof Error ? e.message : String(e);
-      res.status(500).json({ error: message });
+      res.status(500).json({ error: e instanceof Error ? e.message : String(e) });
     }
   });
 
-  // ── Phase 5: Socket.IO ─────────────────────────────────────────
+  logInfo("Server", "Phase 4 complete: API routes mounted");
+  await yieldToEventLoop();
 
-  const io = new Server(httpServer, {
-    cors: {
-      origin:
-        corsOriginList.length > 0
-          ? corsOriginList
-          : ["http://localhost:5173", "http://localhost:3000", "*"],
-      methods: ["GET", "POST"],
-    },
-  });
-  socketService.init(io);
+  // ── Phase 5: AgentManager + ToolManager + Socket handlers ──────
+  const { socketService } = await import("./SocketService.js");
+  const { agentManager, initializeAgentManager } = await import("../agents/AgentManager.js");
+  const { toolManager } = await import("./ToolManager.js");
+
+  // Wire up socketService so agents can broadcast status updates
   initializeAgentManager(socketService);
 
-  // ── Phase 6: Agents (dynamic imports — saves ~500MB) ───────────
-
+  // Specialized agents (dynamic — saves ~500MB at startup)
   try {
     const [
       { InnovationBridgeAgent },
@@ -210,19 +264,58 @@ export async function startWebServer() {
     agentManager.registerAgent(new LawDetectiveAgent());
     agentManager.registerAgent(new PropertyVisionaryAgent());
   } catch (e: unknown) {
-    const msg = e instanceof Error ? e.message : String(e);
-    logError("Server", `Specialized agent registration failed: ${msg}`);
+    logError("Server", `Specialized agent registration failed: ${e instanceof Error ? e.message : String(e)}`);
   }
 
-  // ── Phase 7: Phoenix, ZeroPrompt, CEAN, GitHub Polling ─────────
+  // WebSocket connection handlers
+  io.on("connection", (socket) => {
+    const statuses = agentManager.listAgentStatuses();
+    socket.emit("agents:snapshot", statuses);
+    socket.on("robotkez:abort", async () => {
+      const { persistentBrowser } = await import("../utils/persistentBrowser.js");
+      await persistentBrowser.close();
+      persistentBrowser.forceKill();
+      socket.emit("robotkez:aborted", { status: "success", message: "Munkamenet megszakítva." });
+    });
+  });
 
-  const { phoenixEventBus } = await import('../core/phoenixEventBus.js');
-  phoenixEventBus.connectSocketBroadcaster((event: string, data: unknown) => {
-    socketService.emit(event, data);
+  io.of("/robotkez-overlay").on("connection", (socket) => {
+    socket.on("user_message", async (msg: { text: string }) => {
+      try {
+        const { robotkezBridge } = await import("../orchestrator/robotkez_bridge.js");
+        const response = await robotkezBridge.handleMessage(msg.text);
+        socket.emit("message", { text: response });
+      } catch (e: unknown) {
+        socket.emit("message", { text: `Hiba: ${e instanceof Error ? e.message : String(e)}` });
+      }
+    });
   });
 
   try {
-    const { zeroPromptRuntime } = await import('../core/zeroPromptRuntime.js');
+    const { registerEdgeWebSocketHandlers, registerCEANWebSocketHandlers, registerFleetWebSocketHandlers } =
+      await import("./websocket.js");
+    registerEdgeWebSocketHandlers(io);
+    registerCEANWebSocketHandlers(io);
+    registerFleetWebSocketHandlers(io);
+  } catch (e: unknown) {
+    logWarn("Server", `WebSocket handlers: ${e instanceof Error ? e.message : String(e)}`);
+  }
+
+  logInfo("Server", "Phase 5 complete: agents & websocket handlers");
+  await yieldToEventLoop();
+
+  // ── Phase 6: Phoenix, ZeroPrompt, CEAN, Pipeline ───────────────
+  try {
+    const { phoenixEventBus } = await import("../core/phoenixEventBus.js");
+    phoenixEventBus.connectSocketBroadcaster((event: string, data: unknown) => {
+      socketService.emit(event, data);
+    });
+  } catch (e: unknown) {
+    logWarn("Server", `Phoenix EventBus: ${e instanceof Error ? e.message : String(e)}`);
+  }
+
+  try {
+    const { zeroPromptRuntime } = await import("../core/zeroPromptRuntime.js");
     zeroPromptRuntime.start();
   } catch (e: unknown) {
     logWarn("Server", `ZeroPrompt runtime: ${e instanceof Error ? e.message : String(e)}`);
@@ -232,43 +325,37 @@ export async function startWebServer() {
     logWarn("Server", `CEAN fallback: ${e instanceof Error ? e.message : String(e)}`);
   });
 
-  githubPollingService.loadConfig('.github-polling.json');
-  githubPollingService.startPolling();
+  try {
+    const { githubPollingService } = await import("../core/githubPollingService.js");
+    githubPollingService.loadConfig(".github-polling.json");
+    githubPollingService.startPolling();
+  } catch (e: unknown) {
+    logWarn("Server", `GitHub polling: ${e instanceof Error ? e.message : String(e)}`);
+  }
 
-  // Bridge pipelineRunner progress events to Socket.IO (BrunellaStudio + developer dashboard)
-  const { pipelineRunner } = await import('../agents/developerPipeline.js');
-  pipelineRunner.on('progress', (event: unknown) => {
-    socketService.emit('developer:progress', event);
-  });
-
-  io.on("connection", (socket) => {
-    const statuses = agentManager.listAgentStatuses();
-    socket.emit('agents:snapshot', statuses);
-    socket.on("robotkez:abort", async () => {
-      const { persistentBrowser } = await import("../utils/persistentBrowser.js");
-      await persistentBrowser.close();
-      persistentBrowser.forceKill();
-      socket.emit("robotkez:aborted", { status: "success", message: "Munkamenet megszakítva." });
+  try {
+    const { pipelineRunner } = await import("../agents/developerPipeline.js");
+    pipelineRunner.on("progress", (event: unknown) => {
+      socketService.emit("developer:progress", event);
     });
-  });
+  } catch (e: unknown) {
+    logWarn("Server", `Pipeline runner: ${e instanceof Error ? e.message : String(e)}`);
+  }
 
-  io.of('/robotkez-overlay').on('connection', (socket) => {
-    socket.on('user_message', async (msg) => {
-      try {
-        const { robotkezBridge } = await import('../orchestrator/robotkez_bridge.js');
-        const response = await robotkezBridge.handleMessage(msg.text);
-        socket.emit('message', { text: response });
-      } catch (e: any) {
-        socket.emit('message', { text: `Hiba történt: ${e.message}` });
-      }
-    });
-  });
+  logInfo("Server", "Phase 6 complete: Phoenix, ZeroPrompt, CEAN");
+  await yieldToEventLoop();
 
-  registerEdgeWebSocketHandlers(io);
-  registerCEANWebSocketHandlers(io);
-  registerFleetWebSocketHandlers(io);
+  // ── Phase 6.5: Start AgentManager worker loop ──────────────────
+  // (only deferredInit does this; index.ts only does it in MCP/TTY mode)
+  try {
+    agentManager.startWorkerLoop();
+  } catch (e: unknown) {
+    logWarn("Server", `Worker loop start: ${e instanceof Error ? e.message : String(e)}`);
+  }
+  await yieldToEventLoop();
 
-  // ── Request metrics tracking ───────────────────────────────────
+  // ── Phase 7: Request metrics, log forwarding, system intervals ─
+  const os = await import("os");
 
   const agentLogBuffer = new Map<string, LogEvent[]>();
   const MAX_AGENT_LOGS = 500;
@@ -313,33 +400,56 @@ export async function startWebServer() {
     socketService.updateAgentStatus(entry.agent, entry.status as any, entry.task);
   });
 
-  setInterval(() => {
-    const totalMem = os.totalmem();
-    const freeMem = os.freemem();
-    const cpus = os.cpus();
-    const cpuUsage = cpus.reduce((acc, cpu) => {
-      const total = Object.values(cpu.times).reduce((a, b) => a + b, 0);
-      return acc + ((total - cpu.times.idle) / total) * 100;
-    }, 0) / cpus.length;
-    io.emit("metrics_update", {
-      requestsPerMinute: lastMinuteRequests,
-      activeConnections: io.sockets.sockets.size,
-      errorRate: lastMinuteRequests > 0 ? (lastMinuteErrors / lastMinuteRequests) * 100 : 0,
-      averageResponseTime: 0,
-      cpuUsage: Math.round(cpuUsage * 100) / 100,
-      memoryUsage: ((totalMem - freeMem) / totalMem) * 100,
-    });
-    io.emit("mcp_servers_status", mcpProcessManager.getServersStatus());
-    io.emit("agent_update", agentManager.listAgentDefinitions());
-    io.emit("tools_update", toolManager.getToolDefinitions());
-    io.emit("tasks_update", agentManager.getAllTasks());
-  }, 5000);
+  // System metrics broadcast — staggered recurring setTimeout (not setInterval)
+  // Uses setTimeout chain so each tick yields before scheduling the next
+  const mcpProcMgr = mcpProcMgrRef ?? (await import("./McpProcessManager.js")).mcpProcessManager;
+  function scheduleMetricsBroadcast() {
+    setTimeout(() => {
+      try {
+        const totalMem = os.totalmem();
+        const freeMem = os.freemem();
+        const cpus = os.cpus();
+        const cpuUsage = cpus.reduce((acc, cpu) => {
+          const total = Object.values(cpu.times).reduce((a, b) => a + b, 0);
+          return acc + ((total - cpu.times.idle) / total) * 100;
+        }, 0) / cpus.length;
+        io.emit("metrics_update", {
+          requestsPerMinute: lastMinuteRequests,
+          activeConnections: io.sockets.sockets.size,
+          errorRate: lastMinuteRequests > 0 ? (lastMinuteErrors / lastMinuteRequests) * 100 : 0,
+          averageResponseTime: 0,
+          cpuUsage: Math.round(cpuUsage * 100) / 100,
+          memoryUsage: ((totalMem - freeMem) / totalMem) * 100,
+        });
+        io.emit("mcp_servers_status", mcpProcMgr.getServersStatus());
+        // Stagger heavy agent/tool data emissions into setImmediate so event loop breathes
+        setImmediate(() => {
+          try {
+            io.emit("agent_update", agentManager.listAgentDefinitions());
+            io.emit("tools_update", toolManager.getToolDefinitions());
+          } catch { /* non-critical */ }
+          setImmediate(() => {
+            try {
+              io.emit("tasks_update", agentManager.getAllTasks());
+            } catch { /* non-critical */ }
+          });
+        });
+      } catch (e: unknown) {
+        logWarn("Server", `Metrics broadcast error: ${e instanceof Error ? e.message : String(e)}`);
+      }
+      scheduleMetricsBroadcast();
+    }, 5000);
+  }
+  scheduleMetricsBroadcast();
 
   // ── MCP SSE bridge ─────────────────────────────────────────────
-
-  const mcpSessions = new Map<string, ActiveTransport>();
+  const mcpSessions = new Map<string, { transport: any; server: any }>();
 
   app.get("/sse", async (req, res) => {
+    const { McpServer } = await import("@modelcontextprotocol/sdk/server/mcp.js");
+    const { SSEServerTransport } = await import("@modelcontextprotocol/sdk/server/sse.js");
+    const { v4: uuidv4 } = await import("uuid");
+    const { registerAllTools } = await import("./registry.js");
     const sessionId = uuidv4();
     const transport = new SSEServerTransport(`/messages?sessionId=${sessionId}`, res);
     const server = new McpServer({ name: "mcp-brunella-core-web", version: PACKAGE_VERSION });
@@ -359,8 +469,7 @@ export async function startWebServer() {
     await transport.handlePostMessage(req, res);
   });
 
-  // ── Root & SPA fallback (must be AFTER api routes) ─────────────
-
+  // ── Root & SPA fallback (MUST be AFTER api routes) ─────────────
   app.get("/", (_req, res) => {
     const indexPath = path.join(process.cwd(), "build", "public", "index.html");
     if (existsSync(indexPath)) {
@@ -382,24 +491,62 @@ export async function startWebServer() {
     }
   });
 
-  // ── Sync, schedulers, monitors ─────────────────────────────────
+  // ── Schedulers, sync, heartbeat (last phase) ───────────────────
+  try {
+    const { syncService } = await import("../utils/syncService.js");
+    syncService.start();
+  } catch (e: unknown) {
+    logWarn("Server", `Sync service: ${e instanceof Error ? e.message : String(e)}`);
+  }
 
-  syncService.start();
+  try {
+    const { globalErrorHandler } = await import("./middleware/errorHandler.js");
+    app.use(globalErrorHandler);
+  } catch (e: unknown) {
+    logWarn("Server", `Error handler: ${e instanceof Error ? e.message : String(e)}`);
+  }
 
-  app.use(globalErrorHandler);
+  try {
+    const { startScheduler } = await import("./schedulers/testRunner.js");
+    startScheduler();
+  } catch (e: unknown) {
+    logWarn("Server", `Test runner scheduler: ${e instanceof Error ? e.message : String(e)}`);
+  }
 
-  startScheduler();
-  startCronScheduler();
-  scheduledTasksRunner.start();
-  const { trackStateManager } = await import("../services/trackStateManager.js");
-  await trackStateManager.fullSync();
-  trackStateManager.startWatcher();
-  heartbeatMonitor.onFailure("fastapi", async (health) => {
-    logError("Phoenix", `FastAPI service failed: ${health.error}`);
-    logInfo("Phoenix", "Triggering FastAPI silent restart...");
-    await fastApiService.restart();
-  });
-  heartbeatMonitor.start();
+  try {
+    const { startScheduler: startCronScheduler } = await import("./cron.js");
+    startCronScheduler();
+  } catch (e: unknown) {
+    logWarn("Server", `Cron scheduler: ${e instanceof Error ? e.message : String(e)}`);
+  }
 
-  logInfo("Server", `✅ Fully initialized on http://localhost:${config.port}`);
+  try {
+    const { scheduledTasksRunner } = await import("./schedulers/scheduledTasksRunner.js");
+    scheduledTasksRunner.start();
+  } catch (e: unknown) {
+    logWarn("Server", `Scheduled tasks runner: ${e instanceof Error ? e.message : String(e)}`);
+  }
+
+  try {
+    const { trackStateManager } = await import("../services/trackStateManager.js");
+    await trackStateManager.fullSync();
+    trackStateManager.startWatcher();
+  } catch (e: unknown) {
+    logWarn("Server", `Track state manager: ${e instanceof Error ? e.message : String(e)}`);
+  }
+
+  try {
+    const { heartbeatMonitor } = await import("../utils/heartbeatMonitor.js");
+    const { fastApiService } = await import("../services/fastApiService.js");
+    heartbeatMonitor.onFailure("fastapi", async (health) => {
+      logError("Phoenix", `FastAPI service failed: ${health.error}`);
+      logInfo("Phoenix", "Triggering FastAPI silent restart...");
+      await fastApiService.restart();
+    });
+    heartbeatMonitor.start();
+  } catch (e: unknown) {
+    logWarn("Server", `Heartbeat monitor: ${e instanceof Error ? e.message : String(e)}`);
+  }
+
+  logInfo("Server", `Fully initialized on http://localhost:${config.port}`);
 }

@@ -47,11 +47,11 @@ export function MissionControlLayout() {
   const statusLabel = isConnected ? coreStatus : "OFFLINE";
 
   return (
-    <div className="min-h-screen md:max-h-screen flex flex-col md:overflow-hidden bg-[#030308] bg-grid-pattern text-slate-100">
+    <div className="min-h-screen md:max-h-screen flex flex-col md:overflow-hidden bg-[#05070d] bg-grid-pattern text-slate-100">
       <CommandMenu setActiveTab={setActiveTab} activeTab={activeTab} />
 
       {/* ─── Header ─── */}
-      <header className="h-16 shrink-0 border-b border-white/[0.08] bg-slate-950/60 backdrop-blur-2xl flex items-center justify-between px-4 md:px-5 z-30 sticky top-0 shadow-[0_24px_90px_-40px_rgba(0,0,0,0.95)]">
+      <header className="h-16 shrink-0 border-b border-white/[0.08] bg-slate-950/70 backdrop-blur-2xl flex items-center justify-between px-4 md:px-5 z-30 sticky top-0 shadow-[0_30px_90px_-48px_rgba(2,6,23,0.95)]">
         <div className="flex items-center gap-3">
           <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
             <SheetTrigger asChild>
@@ -65,12 +65,12 @@ export function MissionControlLayout() {
           </Sheet>
 
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-cyan-500/10 flex items-center justify-center border border-cyan-400/20 shadow-[0_0_24px_rgba(34,211,238,0.14)]">
-              <Zap size={14} className="text-primary" />
+            <div className="w-8 h-8 rounded-xl bg-cyan-400/10 flex items-center justify-center border border-cyan-300/20 shadow-[0_0_28px_rgba(34,211,238,0.12)]">
+              <Zap size={14} className="text-cyan-300" />
             </div>
             <div className="flex flex-col leading-none">
               <span className="text-sm font-semibold tracking-tight text-white">Brunella</span>
-              <span className="text-[10px] font-mono text-zinc-500 tracking-[0.3em] uppercase">Mission Control</span>
+              <span className="text-[10px] font-mono text-zinc-500 tracking-[0.28em] uppercase">Mission Control</span>
             </div>
           </div>
 
@@ -123,7 +123,7 @@ export function MissionControlLayout() {
         </div>
 
         <div className="flex items-center gap-3">
-          <div className="hidden md:flex items-center gap-2 bg-white/[0.04] border border-white/[0.08] px-3 py-1.5 rounded-full">
+          <div className="hidden md:flex items-center gap-2 bg-white/[0.035] border border-white/[0.08] px-3 py-1.5 rounded-full">
             <div className="relative flex items-center">
               <div className={cn("w-1.5 h-1.5 rounded-full", statusColor)} />
               {coreStatus === 'HEALTHY' && (
@@ -162,7 +162,7 @@ export function MissionControlLayout() {
           >
             <button
               onClick={() => setTerminalCollapsed(!terminalCollapsed)}
-              className="w-full h-8 flex items-center justify-center gap-2 text-[10px] font-mono text-zinc-500 hover:text-zinc-300 transition-colors border-b border-white/[0.04] cursor-row-resize tracking-[0.3em]"
+              className="w-full h-8 flex items-center justify-center gap-2 text-[10px] font-mono text-zinc-500 hover:text-zinc-300 transition-colors border-b border-white/[0.04] cursor-row-resize tracking-[0.28em]"
               aria-label={terminalCollapsed ? "Expand terminal" : "Collapse terminal"}
             >
               <div className="w-8 h-0.5 rounded-full bg-zinc-700" />

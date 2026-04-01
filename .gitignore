@@ -5,6 +5,9 @@
 credentials.json
 config/outreach_accounts.json
 
+# PID lockfile (auto-generated at runtime, never commit)
+.brunella.pid
+
 # Google credentials & tokens (NEVER commit!)
 credentials/google-oauth2-credentials.json
 credentials/google-service-account.json

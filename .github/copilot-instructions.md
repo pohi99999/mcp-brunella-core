@@ -31,6 +31,10 @@ npm run test:coverage                 # Lefedettségi jelentés
 ```bash
 cd myai && uv sync                    # Python függőségek (uv a csomagkezelő)
 cd myai && pytest tests/              # Python tesztek
+
+# AutoGen GitHub Models pilot (repo gyökérből, optional extra)
+uv sync --extra autogen               # autogen-agentchat + autogen-ext[openai,azure]
+uv run --extra dev pytest myai/tests/test_autogen_adapter.py myai/tests/test_mcp_autogen_tool.py -q
 ```
 
 **Rendszer indítás (Windows):**
@@ -54,6 +58,8 @@ Hibrid Node.js + Python multi-agent rendszer, Model Context Protocol (MCP) kommu
 **Node.js backend** (`src/`): TypeScript ESM, Express 4, Socket.IO. ~51 REST API route fájl a `src/server/routes/`-ban. WebSocket: `src/server/SocketService.ts`.
 
 **Python alrendszer** (`myai/`): FastAPI + FastMCP. Böngésző automatizálás (Playwright/browser-use), vektor DB-k (LanceDB, ChromaDB), ML pipeline-ok. A Node.js `pythonShell.ts`-en keresztül kommunikál vele.
+
+**AutoGen pilot (`myai/backend/autogen_adapter.py`)**: izolált GitHub Models-first adapter optional `autogen` extrával. Az MCP belépési pont a `myai/mcp_server.py` fájlban az `autogen_run_task` tool; `auto` módban GitHub Models a preferált provider, de tokenhiány vagy futási hiba esetén Ollamára esik vissza.
 
 **Dashboard** (`src/dashboard/`): React 19 + Vite + Tailwind v4 + Radix UI. Saját `vite.config.ts`, külön build: `npm run build:ui`. Új panelek regisztrációja: `src/dashboard/lib/navigation.tsx` (NavigationRegistry).
 
@@ -259,6 +265,14 @@ import { describe, it, expect, vi } from 'vitest';
 - Strict Pydantic modellek adatcseréhez
 - MCP szerverek: FastMCP ≥2.14.3 (`@mcp.tool()` dekorátor, stdio transport)
 - Böngésző automatizálás: `browser_use` könyvtár (RobotkezV2)
+
+### AutoGen GitHub Models pilot (`myai/`)
+
+- A pilot szándékosan **izolált adapter** a `myai/backend/autogen_adapter.py` alatt — **ne** a megosztott provider gateway-be drótozd első körben.
+- Függőségek külön optional extra alatt vannak: `uv sync --extra autogen`.
+- MCP belépési pont: `autogen_run_task(task, system_message?, prefer_provider?, model?)` a `myai/mcp_server.py` fájlban.
+- Provider stratégia: `github` | `ollama` | `auto`; az `auto` GitHub Models-first, de runtime hibánál Ollama fallbacket használ.
+- Validációs minimum a pilot módosításakor: `uv run --extra dev pytest myai/tests/test_autogen_adapter.py myai/tests/test_mcp_autogen_tool.py -q`.
 
 ### Commit konvenció
 
@@ -680,6 +694,10 @@ Minden Dashboard komponens elérhető és regisztrálva van a `NavigationRegistr
 | `n8n.ts` | n8n_* | n8n workflow integráció (trigger, status) |
 | `negotiationEngine.ts` | negotiate_* | Targyalasi strategia es kimenet elemzes |
 | `toolPermissions.ts` | permissions_* | Tool hozzaferes RBAC ellenorzes |
+
+### Python MCP pilot tool
+
+- `myai/mcp_server.py` → `autogen_run_task`: AutoGen AssistantAgent futtatás GitHub Models-first routinggal, Ollama fallbackkel és JSON válasz envelope-pal.
 
 ---
 

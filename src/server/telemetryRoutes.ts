@@ -97,7 +97,7 @@ export function createTelemetryRouter(): Router {
    */
   router.get('/traces', (req, res) => {
     try {
-      const limit = parseInt(req.query.limit as string) || 20;
+      const limit = parseInt(req.query.limit as string, 10) || 20;
       const traceIds = getRecentTraceIds(limit);
 
       const traces = traceIds.map(traceId => {

@@ -226,6 +226,8 @@ class WorkerThreadWrapper extends EventEmitter {
 
 export class WorkerThreadPool extends EventEmitter {
   private workers: WorkerThreadWrapper[] = [];
+  /** Tracks how many workers are currently being created (concurrent async spawns). */
+  private creatingWorkers = 0;
   private taskQueue: Array<{
     task: WorkerTask;
     resolve: (result: WorkerResult) => void;
@@ -289,9 +291,16 @@ export class WorkerThreadPool extends EventEmitter {
     // Try to find an idle worker
     let worker = this.workers.find(w => w.isIdle());
 
-    // If no idle worker and pool can grow, create new worker
-    if (!worker && this.workers.length < this.config.maxThreads) {
-      worker = await this.createWorker();
+    // If no idle worker and pool can grow, create new worker.
+    // Include in-flight creations in the capacity check to prevent overshoot
+    // when multiple callers race through this branch concurrently (CWE-662).
+    if (!worker && (this.workers.length + this.creatingWorkers) < this.config.maxThreads) {
+      this.creatingWorkers++;
+      try {
+        worker = await this.createWorker();
+      } finally {
+        this.creatingWorkers--;
+      }
     }
 
     // If still no worker available, queue the task

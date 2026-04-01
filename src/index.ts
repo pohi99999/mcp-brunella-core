@@ -10,80 +10,120 @@ async function main() {
     process.versions.node
   ) {
     // Dynamic imports to prevent bundling Node-native modules in Worker builds
+    console.error("[BOOT] 1/6 Loading dotenv...");
     await import("dotenv/config");
 
-    // Initialize OpenTelemetry tracing BEFORE other imports
-    const { initOtelTracing } = await import("./utils/otelTracing.js");
-    initOtelTracing();
-    const { McpServer } =
-      await import("@modelcontextprotocol/sdk/server/mcp.js");
-    const { StdioServerTransport } =
-      await import("@modelcontextprotocol/sdk/server/stdio.js");
+    // ── Phase 0: Lightweight imports only ────────────────────────
+    // Heavy modules (AgentManager, registry) are imported AFTER the
+    // web server is listening to avoid OOM before the event loop runs.
+    const otelDisabled = ["1", "true", "yes", "on"].includes(
+      (process.env.OTEL_SDK_DISABLED ?? "").trim().toLowerCase(),
+    );
+    const otelEndpoint = (process.env.OTEL_EXPORTER_OTLP_ENDPOINT ?? "").trim();
+
+    if (otelDisabled || !otelEndpoint) {
+      console.error(
+        "[BOOT] 2/6 Skipping OTel init (disabled or no OTLP endpoint)",
+      );
+    } else {
+      console.error("[BOOT] 2/6 Loading OTel module...");
+      const { initOtelTracing } = await import("./utils/otelTracing.js");
+      console.error("[BOOT] 3/6 Calling initOtelTracing...");
+      initOtelTracing();
+    }
+    console.error("[BOOT] 4/6 Loading web server module...");
     const { startWebServer } = await import("./server/web.js");
-    const { registerAllTools } = await import("./server/registry.js");
-    const { initializeAgentManager } = await import("./agents/AgentManager.js"); // agentManager removed from destructuring
-    const { socketService } = await import("./server/SocketService.js");
+    console.error("[BOOT] 5/6 Loading validateSecrets...");
     const { validateSecrets } = await import("./utils/validateSecrets.js");
     const { readFileSync } = await import("fs");
 
-    // Read version from package.json
-    const pkgVersion = (() => {
-      try {
-        const pkg = JSON.parse(readFileSync("package.json", "utf-8"));
-        return typeof pkg.version === "string" ? pkg.version : "1.0.0";
-      } catch {
-        return "1.0.0";
-      }
-    })();
-
-    // Create server instance
-    const server = new McpServer({
-      name: "mcp-brunella-core",
-      version: pkgVersion,
-    });
-
+    console.error("[BOOT] 5b/6 Calling validateSecrets...");
     validateSecrets();
 
-    // Start web server first to initialize socketService and agentManager
+    // ── Phase 1: Start web server (Express listen + Socket.IO) ──
+    // Returns as soon as :3000 is accepting connections.
+    // deferredInit() runs in the background handling routes, agents, etc.
+    console.error("[BOOT] 6/6 Calling startWebServer...");
     await startWebServer();
-    const initializedAgentManager = initializeAgentManager(socketService); // Call the initializer and capture the returned instance
+    console.error("[BOOT] DONE — startWebServer returned");
 
-    // Register Tools - agentManager should now be initialized
-    await registerAllTools(server);
-
-    // Start Autonomous Worker Loop
-    initializedAgentManager.startWorkerLoop();
-
-    // Only connect MCP stdio transport when running interactively (Claude Desktop / terminal)
-    // In background/headless mode (stdin is not a TTY), skip stdio to avoid blocking the event loop
+    // ── Phase 2: MCP stdio (ONLY when running interactively) ──
+    // In web-only mode (no TTY), everything is handled by deferredInit in web.ts.
+    // This avoids double-loading heavy modules and event loop starvation.
     if (process.stdin.isTTY) {
+      const { McpServer } =
+        await import("@modelcontextprotocol/sdk/server/mcp.js");
+      const { StdioServerTransport } =
+        await import("@modelcontextprotocol/sdk/server/stdio.js");
+      const { registerAllTools } = await import("./server/registry.js");
+
+      const pkgVersion = (() => {
+        try {
+          const pkg = JSON.parse(readFileSync("package.json", "utf-8"));
+          return typeof pkg.version === "string" ? pkg.version : "1.0.0";
+        } catch {
+          return "1.0.0";
+        }
+      })();
+
+      const server = new McpServer({
+        name: "mcp-brunella-core",
+        version: pkgVersion,
+      });
+
+      await registerAllTools(server);
+
       const transport = new StdioServerTransport();
       await server.connect(transport);
       console.error("MCP Brunella Core Server running on stdio");
+
+      // Graceful shutdown for MCP mode
+      const shutdown = async (signal: string) => {
+        console.error(`\n[Shutdown] ${signal} received`);
+        try {
+          const { agentManager } = await import("./agents/AgentManager.js");
+          agentManager.stopWorkerLoop();
+          const { remoteSessionManager } = await import("./core/RemoteSessionManager.js");
+          remoteSessionManager.stopCleanupTimer();
+          const { stopLangSmithFlush } = await import("./utils/agentTracer.js");
+          stopLangSmithFlush();
+          const { shutdownWebServer } = await import("./server/web.js");
+          await shutdownWebServer();
+          const { shutdownOtelTracing } = await import("./utils/otelTracing.js");
+          await shutdownOtelTracing();
+          await server.close?.();
+        } catch (e) {
+          console.error("[Shutdown] Error:", e);
+        }
+        process.exit(0);
+      };
+      process.on("SIGTERM", () => shutdown("SIGTERM"));
+      process.on("SIGINT", () => shutdown("SIGINT"));
     } else {
       console.error("MCP Brunella Core Server running in web-only mode (no stdin TTY)");
+
+      // Graceful shutdown for web-only mode
+      const shutdown = async (signal: string) => {
+        console.error(`\n[Shutdown] ${signal} received`);
+        try {
+          const { agentManager } = await import("./agents/AgentManager.js");
+          agentManager.stopWorkerLoop();
+          const { remoteSessionManager } = await import("./core/RemoteSessionManager.js");
+          remoteSessionManager.stopCleanupTimer();
+          const { stopLangSmithFlush } = await import("./utils/agentTracer.js");
+          stopLangSmithFlush();
+          const { shutdownWebServer } = await import("./server/web.js");
+          await shutdownWebServer();
+          const { shutdownOtelTracing } = await import("./utils/otelTracing.js");
+          await shutdownOtelTracing();
+        } catch (e) {
+          console.error("[Shutdown] Error:", e);
+        }
+        process.exit(0);
+      };
+      process.on("SIGTERM", () => shutdown("SIGTERM"));
+      process.on("SIGINT", () => shutdown("SIGINT"));
     }
-
-    // Graceful shutdown handling
-    const shutdown = async (signal: string) => {
-      console.error(
-        `\n[Shutdown] Received ${signal}, graceful shutdown initiated...`,
-      );
-      try {
-        initializedAgentManager.stopWorkerLoop(); // Use the captured instance
-        // Flush and shut down OpenTelemetry before exit
-        const { shutdownOtelTracing } = await import("./utils/otelTracing.js");
-        await shutdownOtelTracing();
-        await server.close?.();
-        console.error("[Shutdown] Cleanup complete.");
-      } catch (e) {
-        console.error("[Shutdown] Error during cleanup:", e);
-      }
-      process.exit(0);
-    };
-
-    process.on("SIGTERM", () => shutdown("SIGTERM"));
-    process.on("SIGINT", () => shutdown("SIGINT"));
   } else {
     console.warn(
       "MCP Brunella Core: Non-Node.js environment detected. Skipping Node-specific initialization.",

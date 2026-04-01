@@ -1,0 +1,24 @@
+{
+  "id": "autogen_github_models_pilot_20260401",
+  "trackName": "autogen_github_models_pilot_20260401",
+  "name": "AutoGen GitHub Models pilot a Python MCP alrendszerben",
+  "type": "Python / MCP / LLM Integration",
+  "priority": "HIGH",
+  "status": "COMPLETED",
+  "progress": 100,
+  "assignee": "Copilot",
+  "createdAt": "2026-04-01T00:00:00.000Z",
+  "updatedAt": "2026-04-01T06:15:00.000Z",
+  "completedAt": "2026-04-01T06:15:00.000Z",
+  "goal": "GitHub Models-first AutoGen pilot adapter és MCP eszköz létrehozása a Brunella Python alrendszerben, minimalizált kockázattal és célzott tesztekkel.",
+  "relatedTracks": [
+    "test_cadence_optimization_20260401"
+  ],
+  "tags": ["autogen", "github-models", "python", "mcp", "pilot", "ollama-fallback"],
+  "phases": [
+    { "name": "Phase 1: Adapter design és provider routing", "status": "completed" },
+    { "name": "Phase 2: MCP tool integráció", "status": "completed" },
+    { "name": "Phase 3: Python unit tesztek", "status": "completed" },
+    { "name": "Phase 4: Validáció és dokumentáció", "status": "completed" }
+  ]
+}

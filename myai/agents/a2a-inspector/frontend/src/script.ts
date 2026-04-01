@@ -446,7 +446,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
 
-      const messageId = `msg-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+      const messageId = `msg-${Date.now()}-${Math.random().toString(36).slice(2, 11)}`;
       const metadata = getMessageMetadata();
 
       // Use the sanitized message when displaying it locally
@@ -469,7 +469,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   socket.on('agent_response', (event: AgentResponseEvent) => {
-    const displayMessageId = `display-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    const displayMessageId = `display-${Date.now()}-${Math.random().toString(36).slice(2, 11)}`;
     messageJsonStore[displayMessageId] = event;
 
     const validationErrors = event.validation_errors || [];

@@ -16,7 +16,12 @@ const DEV_SECRET = 'brunella-dev-secret-do-not-use-in-production';
 function getSecret(): string {
   const secret = process.env.REMOTE_AUTH_SECRET;
   if (!secret) {
-    logWarn('RemoteAuth', 'REMOTE_AUTH_SECRET not set — using dev fallback. Set in production!');
+    if (process.env.NODE_ENV === 'production') {
+      throw new Error(
+        'REMOTE_AUTH_SECRET environment variable must be set in production. Refusing to sign tokens with the dev fallback.',
+      );
+    }
+    logWarn('RemoteAuth', 'REMOTE_AUTH_SECRET not set — using dev fallback. NEVER deploy without this variable set!');
     return DEV_SECRET;
   }
   return secret;

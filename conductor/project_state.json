@@ -1,6 +1,25 @@
 {
-  "lastUpdated": "2026-04-01T02:59:01.803Z",
+  "lastUpdated": "2026-04-01T04:28:39.451Z",
   "tracks": [
+    {
+      "id": "autogen_github_models_pilot_20260401",
+      "name": "AutoGen GitHub Models pilot a Python MCP alrendszerben",
+      "status": "completed",
+      "priority": "high",
+      "progress": 100,
+      "assignee": "Copilot",
+      "tags": [
+        "autogen",
+        "github-models",
+        "python",
+        "mcp",
+        "pilot",
+        "ollama-fallback"
+      ],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\autogen_github_models_pilot_20260401",
+      "_isArchived": false
+    },
     {
       "id": "cloudflare_dns_zone_reconciliation_20260325",
       "name": "Cloudflare DNS Zone Reconciliation for Custom Domains",
@@ -2940,9 +2959,9 @@
     }
   ],
   "stats": {
-    "total": 167,
+    "total": 168,
     "active": 5,
-    "completed": 3,
+    "completed": 4,
     "archived": 155,
     "proposed": 3
   }

@@ -523,7 +523,7 @@ except Exception as e:
     isDuplicate: boolean
   ): Promise<void> {
     const record: InvoiceRecord = {
-      id: `INV_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+      id: `INV_${Date.now()}_${Math.random().toString(36).slice(2, 11)}`,
       invoiceNumber: invoiceData.invoiceNumber || 'UNKNOWN',
       vendorName: invoiceData.vendorName || 'UNKNOWN',
       amount: invoiceData.amount || 0,

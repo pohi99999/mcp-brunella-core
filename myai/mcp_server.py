@@ -15,7 +15,8 @@ import json
 import traceback
 import io
 from contextlib import redirect_stdout
-from typing import Optional
+import logging
+from typing import Literal, Optional
 
 # Ensure project root is on sys.path
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -24,9 +25,12 @@ if PROJECT_ROOT not in sys.path:
 
 from fastmcp import FastMCP
 
+logger = logging.getLogger(__name__)
+
 # Lazy-load heavy modules to keep startup fast
 _refiner = None
 _rag_service = None
+_autogen_adapter = None
 
 
 def _get_refiner():
@@ -43,6 +47,16 @@ def _get_rag():
         from myai.rag import rag_service
         _rag_service = rag_service
     return _rag_service
+
+
+def _get_autogen_adapter():
+    global _autogen_adapter
+    if _autogen_adapter is None:
+        from myai.backend.autogen_adapter import build_autogen_adapter
+        from myai.backend.config import get_backend_config
+
+        _autogen_adapter = build_autogen_adapter(get_backend_config())
+    return _autogen_adapter
 
 
 # --- MCP Server Setup ---
@@ -118,6 +132,55 @@ async def rag_search(query: str, limit: int = 5) -> str:
 
 
 @mcp.tool()
+async def autogen_run_task(
+    task: str,
+    system_message: Optional[str] = None,
+    prefer_provider: Literal["auto", "github", "ollama"] = "auto",
+    model: Optional[str] = None,
+) -> str:
+    """Run a single AutoGen AssistantAgent task with GitHub Models first.
+
+    Falls back to Ollama when prefer_provider='auto' and GitHub Models is unavailable
+    or runtime execution fails.
+
+    Args:
+        task: Natural language instruction or prompt for the AutoGen assistant.
+        system_message: Optional system instruction to override the default Brunella prompt.
+        prefer_provider: Provider selection strategy: 'auto', 'github', or 'ollama'.
+        model: Optional explicit model override for the selected provider.
+    """
+    try:
+        adapter = _get_autogen_adapter()
+        result = await adapter.run(
+            task,
+            system_message=system_message,
+            prefer_provider=prefer_provider,
+            model=model,
+        )
+        return json.dumps(
+            {
+                "status": "success",
+                "provider": result.provider,
+                "model": result.model,
+                "output": result.output,
+                "stop_reason": result.stop_reason,
+                "message_count": result.message_count,
+            },
+            ensure_ascii=False,
+        )
+    except Exception as e:
+        logger.exception(
+            "autogen_run_task failed",
+            extra={
+                "prefer_provider": prefer_provider,
+                "model": model,
+                "task_length": len(task.strip()),
+            },
+        )
+        return json.dumps({"status": "error", "error": str(e)})
+
+
+@mcp.tool()
 async def harvest_scenario(scenario_path: str, force_mode: Optional[str] = None) -> str:
     """Run a browser automation scenario using Playwright.
     
@@ -183,12 +246,39 @@ def system_health() -> str:
         ("lancedb", "lancedb"),
         ("chromadb", "chromadb"),
         ("langchain", "langchain"),
+        ("autogen_agentchat", "autogen_agentchat"),
+        ("autogen_ext", "autogen_ext"),
     ]:
         try:
             __import__(module_name)
             checks[label] = "available"
         except ImportError:
             checks[label] = "not_installed"
+
+    github_token = os.getenv("GITHUB_PAT") or os.getenv("GITHUB_TOKEN")
+    checks["github_models_token"] = "configured" if github_token else "missing"
+
+    try:
+        from azure.core.credentials import AzureKeyCredential  # noqa: F401
+
+        checks["azure_core"] = "available"
+    except ImportError:
+        checks["azure_core"] = "not_installed"
+
+    try:
+        adapter = _get_autogen_adapter()
+        checks["autogen_pilot"] = "available" if adapter.enabled else "not_installed"
+        checks["autogen_ollama_ready"] = "ready" if adapter.enabled else "not_ready"
+        checks["autogen_github_ready"] = (
+            "ready"
+            if adapter.enabled and bool(github_token) and checks["azure_core"] == "available"
+            else "not_ready"
+        )
+    except Exception:
+        logger.exception("system_health failed to initialize AutoGen pilot adapter")
+        checks["autogen_pilot"] = "error"
+        checks["autogen_ollama_ready"] = "error"
+        checks["autogen_github_ready"] = "error"
 
     return json.dumps({"status": "ok", "capabilities": checks})
 

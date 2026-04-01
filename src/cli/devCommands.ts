@@ -504,7 +504,7 @@ export function registerDevCommands(program: Command): void {
                     method: 'POST',
                     body: JSON.stringify({
                         filePath: file,
-                        options: { maxFiles: parseInt(opts.max) || 10 },
+                        options: { maxFiles: parseInt(opts.max, 10) || 10 },
                     }),
                 });
 
@@ -603,7 +603,7 @@ export function registerDevCommands(program: Command): void {
                 console.log(`\n  Files: ${coverage.filesWithTests} tested / ${coverage.filesWithoutTests} untested / ${coverage.totalFiles} total`);
 
                 // Worst files
-                const worstLimit = parseInt(opts.worst) || 10;
+                const worstLimit = parseInt(opts.worst, 10) || 10;
                 const worst = coverage.worstFiles.slice(0, worstLimit);
                 if (worst.length > 0) {
                     console.log(`\n${chalk.bold('⚠ Lowest Coverage Files:')}`);
@@ -680,7 +680,7 @@ export function registerDevCommands(program: Command): void {
         .option('-n, --limit <count>', 'Number of entries', '10')
         .action(async (opts: { limit: string }) => {
             try {
-                const limit = parseInt(opts.limit) || 10;
+                const limit = parseInt(opts.limit, 10) || 10;
                 const result = await apiFetch<{
                     history: Array<{
                         taskId: string;
@@ -1714,7 +1714,7 @@ export function registerDevCommands(program: Command): void {
         .option('-w, --watch', 'Watch mode (poll for new events)')
         .action(async (opts: { limit: string; json?: boolean; watch?: boolean }) => {
             try {
-                const limit = parseInt(opts.limit) || 20;
+                const limit = parseInt(opts.limit, 10) || 20;
 
                 const fetchAndShow = async (lastId?: string) => {
                     const result = await apiFetch<{ activities: any[] }>(`/feed?limit=${limit}`);
@@ -1903,7 +1903,7 @@ export function registerDevCommands(program: Command): void {
         .option('--limit <n>', 'Maximum sorok száma', '20')
         .option('--json', 'Nyers JSON kimenet')
         .action(async (opts: { limit: string; json?: boolean }) => {
-            const limit = parseInt(opts.limit) || 20;
+            const limit = parseInt(opts.limit, 10) || 20;
             const spinner = ora('Postmortems lekérése...').start();
             try {
                 const data = await apiFetch<{ postmortems: unknown[] }>(`/ephemeral/postmortems?limit=${limit}`);

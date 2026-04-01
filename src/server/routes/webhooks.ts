@@ -223,7 +223,7 @@ export function createWebhookRoutes(db: Database.Database): Router {
    */
   router.get('/webhook-events', (req: Request, res: Response) => {
     try {
-      const limit = Math.min(parseInt(req.query.limit as string) || 50, 100);
+      const limit = Math.min(parseInt(req.query.limit as string, 10) || 50, 100);
       const events = db
         .prepare(`
           SELECT * FROM webhook_events 
@@ -252,7 +252,7 @@ export function createWebhookRoutes(db: Database.Database): Router {
    */
   router.post('/webhook-events/cleanup', (req: Request, res: Response) => {
     try {
-      const daysOld = parseInt(req.body.daysOld) || 7;
+      const daysOld = parseInt(req.body.daysOld, 10) || 7;
       const result = db.prepare(`
         DELETE FROM webhook_events 
         WHERE created_at < datetime('now', '-' || ? || ' days')

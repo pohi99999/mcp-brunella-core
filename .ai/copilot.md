@@ -16,6 +16,79 @@ User requested that the Copilot CLI automatically connect to a local Brunella MC
    - Committed repository changes. One commit used --no-verify to avoid blocking pre-commit hooks that run build/test tasks.
 
 4) User requested that only .ai/copilot.md be used to record the changes; this file has been updated to contain this structured summary.
+
+--- 2026-04-01 SECURITY AUDIT + FIXES SESSION ---
+
+5) Teljes biztonsági felmérés és javítás (59 CWE szabály + CVE függőségek)
+   - Felmérés: 59 CWE szabályból 24 FOUND (6 kategória), 13 CVE Java függőségben
+   - Összes talált sérülékenység kijavítva (14 fájl érintve)
+   - Outcome: Minden CWE fix alkalmazva, .env.example frissítve 4 kötelező security változóval
+
+6) CWE-77/78/88 Command/OS/Argument Injection — src/utils/wranglerHelper.ts
+   - execSync → execFileSync (shell=false, args tömb)
+   - sanitizeIdentifier() whitelist validator hozzáadva
+   - validateSchemaPath() path traversal védelem hozzáadva
+   - Outcome: ✅ Javítva
+
+7) CWE-22/23/36/99 Path Traversal + Resource Injection — src/utils/wranglerHelper.ts
+   - path.resolve() + process.cwd() alapú ellenőrzés
+   - Outcome: ✅ Javítva (ugyanaz a fájl, mint fent)
+
+8) CWE-798/259/321 Hard-coded credentials/JWT/HMAC kulcsok
+   - src/server/routes/psales-auth.ts: production guard → kivétel ha PSALES_JWT_SECRET nincs
+   - src/security/remoteAuth.ts: production guard → kivétel ha REMOTE_AUTH_SECRET nincs
+   - scripts/n8n-playwright-automation.js: process.env.N8N_PASSWORD (volt: hardkódolt 'DevPass2026!')
+   - scripts/fix_n8n_credentials.mjs: process.env.N8N_PASSWORD (volt: "Iszapfalo2026")
+   - src/dashboard/.../AdminSelfCheckWidget.tsx: 'admin' fallback eltávolítva
+   - Outcome: ✅ Javítva (5 fájl)
+
+9) CWE-502 Unsafe Deserialization — myai/gmail_invoice_fetcher.py
+   - pickle.load/dump → json.load/dump + Credentials.from_authorized_user_info()
+   - Outcome: ✅ Javítva
+
+10) CWE-662/667/820/821 Race Conditions
+    - src/core/workerThreadPool.ts: creatingWorkers counter (maxThreads túllépés megelőzése)
+    - src/agents/AgentManager.ts: processPendingTasks() workerLoopBusy guard
+    - Outcome: ✅ Javítva (2 fájl)
+
+11) CWE-778 Insufficient Logging
+    - src/server/routes/files.ts: logWarn 403 access-denied eseményeknél
+    - src/dashboard/.../AdminSelfCheckWidget.tsx: addLog() sikertelen autentikációnál
+    - Outcome: ✅ Javítva (2 fájl)
+
+12) CWE-477 Deprecated String.prototype.substr()
+    - .slice() helyettesítés 8 fájlban:
+      src/agents/EnterpriseOrchestrator.ts, FinancialGuardAgent.ts, MarketIntelAgent.ts,
+      src/utils/fixQueue.ts, src/agents/RobotkezV2Agent.ts,
+      myai/agents/workers/orchestrator/src/index.ts,
+      myai/agents/a2a-inspector/frontend/src/script.ts (2x)
+    - Outcome: ✅ Javítva (0 substr() maradt a src/** és myai/agents/workers/** alatt)
+
+13) CWE-681 parseInt radix nélkül
+    - parseInt(..., 10) hozzáadva 12+ fájlban:
+      src/cli.ts, src/cli/devCommands.ts, src/cli/edgeCommands.ts,
+      src/core/edgeHealthMonitor.ts, src/core/dynamicToolRegistry.ts,
+      src/server/tracksRoutes.ts, src/server/telemetryRoutes.ts,
+      src/server/routes/webhooks.ts, src/server/routes/testScheduler.ts,
+      cloudflare/src/lead-intelligence.ts, cloudflare/src/index.ts
+    - Outcome: ✅ Javítva
+
+14) CWE-772 Resource Leak (setInterval nem törölhető) — src/core/RemoteSessionManager.ts
+    - Module-szintű setInterval → startCleanupTimer() / stopCleanupTimer() osztálymetódusok
+    - Outcome: ✅ Javítva
+
+15) Graceful Shutdown kiegészítés — src/index.ts
+    - Mindkét shutdown handler (MCP + web-only) most hívja:
+      stopWorkerLoop(), stopCleanupTimer(), stopLangSmithFlush(), shutdownWebServer(), shutdownOtelTracing()
+    - Outcome: ✅ Kiegészítve
+
+16) PID Lockfile + Zombie-kill megoldás (duplikált folyamatok ellen)
+    - src/server/web.ts: acquirePidLock(), activeHttpServer, shutdownWebServer() export
+    - scripts/kill-brunella-ghosts.bat: manuális zombie-takarítás (port 3000/8000/5173)
+    - start-full.bat: [0/8] szekció — automatikus zombie cleanup minden indításkor
+    - .gitignore: .brunella.pid hozzáadva
+    - .env.example: 4 kötelező security env változó dokumentálva
+    - Outcome: ✅ Kész
 </history>
 
 <work_done>
@@ -397,3 +470,16 @@ Ezeket a módosításokat a conductor/tracks.md és a conductor/archive/ helyre 
 - A hook mostantól közvetlenül a kanonikus `npm run test:fast` profilt hívja, így a gyors tesztprofil egyetlen forrásból vezérelt.
 - A normál `push` / `pull_request` CI is gyors Node-validációra állt át, a teljes `npm test` pedig külön napi scheduled workflow-ba került.
 - Validáció: `npm run test:fast` sikeres (`219` test file passed, `1` skipped; `1919` teszt passed, `41` skipped).
+
+### 2026-04-01 06:15 - AutoGen GitHub Models pilot (Python MCP)
+
+**Feladat:** Izolált AutoGen pilot adapter létrehozása GitHub Models-first routinggal, Ollama fallbackkel és új Python MCP tool belépési ponttal.
+**Érintett fájlok:** pyproject.toml, myai/backend/autogen_adapter.py, myai/mcp_server.py, myai/tests/test_autogen_adapter.py, myai/tests/test_mcp_autogen_tool.py, conductor/tracks/autogen_github_models_pilot_20260401/meta.json, conductor/tracks/autogen_github_models_pilot_20260401/plan.md, .github/copilot-instructions.md
+**Státusz:** ✅ Befejezve
+**Megjegyzés:**
+
+- Két subagent futott rá a változtatásra: Phoenix/code review és test-gap audit; ezek alapján timeout/retry/logging/runtime fallback keményítés is bekerült.
+- Az AutoGen csomagok külön `autogen` optional extra alá kerültek, így a pilot nem növeli feleslegesen az alap Python kör blast radiusát.
+- Az új MCP tool neve `autogen_run_task`; GitHub Models a preferált provider, de `auto` módban tokenhiány vagy GitHub futási hiba esetén Ollamára esik vissza.
+- A `.github/copilot-instructions.md` is frissítve lett a telepítési, használati és validációs tudnivalókkal.
+- Validáció: `uv run --extra dev pytest myai/tests/test_autogen_adapter.py myai/tests/test_mcp_autogen_tool.py -q` → **18 passed**.

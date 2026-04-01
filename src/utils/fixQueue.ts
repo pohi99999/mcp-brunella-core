@@ -41,7 +41,7 @@ export function addToFixQueue(
     const queue: FixItem[] = JSON.parse(
       fs.readFileSync(FIX_QUEUE_FILE, "utf-8"),
     );
-    const id = `fix-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`;
+    const id = `fix-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
 
     // Avoid duplicates (simple check based on description)
     if (
