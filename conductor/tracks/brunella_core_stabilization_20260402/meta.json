@@ -1,0 +1,22 @@
+{
+  "id": "brunella_core_stabilization_20260402",
+  "title": "Brunella Core Stabilization",
+  "status": "active",
+  "priority": "critical",
+  "createdAt": "2026-04-02",
+  "owner": "GitHub Copilot",
+  "progress": 0,
+  "tags": [
+    "brunella",
+    "stability",
+    "node",
+    "python",
+    "supervision",
+    "oom",
+    "runtime",
+    "dashboard"
+  ],
+  "sourceDocument": "User direction + architecture review 2026-04-02",
+  "phase": 1,
+  "dependencies": []
+}

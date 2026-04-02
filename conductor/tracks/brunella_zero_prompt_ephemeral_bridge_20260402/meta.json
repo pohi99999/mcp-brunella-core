@@ -1,0 +1,25 @@
+{
+  "id": "brunella_zero_prompt_ephemeral_bridge_20260402",
+  "title": "Brunella Zero-Prompt → Ephemeral Agent Bridge",
+  "status": "proposed",
+  "priority": "high",
+  "createdAt": "2026-04-02",
+  "owner": "GitHub Copilot",
+  "progress": 0,
+  "tags": [
+    "brunella",
+    "zero-prompt",
+    "ephemeral-agents",
+    "policy",
+    "autonomy",
+    "agent-spawn",
+    "proactive"
+  ],
+  "sourceDocument": "User direction + architecture review 2026-04-02",
+  "phase": 4,
+  "dependencies": [
+    "brunella_core_stabilization_20260402",
+    "brunella_identity_project_maintainer_20260402",
+    "brunella_reflection_continual_learning_20260402"
+  ]
+}

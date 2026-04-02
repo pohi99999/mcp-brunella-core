@@ -1,0 +1,23 @@
+{
+  "id": "brunella_identity_project_maintainer_20260402",
+  "title": "Brunella Identity + Project Maintainer",
+  "status": "proposed",
+  "priority": "high",
+  "createdAt": "2026-04-02",
+  "owner": "GitHub Copilot",
+  "progress": 0,
+  "tags": [
+    "brunella",
+    "identity",
+    "orchestrator",
+    "project-maintainer",
+    "janitor",
+    "scheduler",
+    "repo-hygiene"
+  ],
+  "sourceDocument": "User direction + architecture review 2026-04-02",
+  "phase": 2,
+  "dependencies": [
+    "brunella_core_stabilization_20260402"
+  ]
+}

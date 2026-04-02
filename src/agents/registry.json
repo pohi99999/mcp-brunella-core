@@ -104,6 +104,38 @@
       "priority": 6
     },
     {
+      "name": "ReconciliationIngestion",
+      "title": "Reconciliation Ingestion Agent",
+      "role": "Pénzügyi adat ingesztor",
+      "description": "Banki kivonatok, NAV XML-ek és számlák beolvasása, normalizálása.",
+      "class": "ReconciliationIngestionAgent",
+      "module": "./agents/ReconciliationIngestionAgent.js",
+      "capabilities": [
+        "finance-ingestion",
+        "data-normalization",
+        "accounting-parsing"
+      ],
+      "category": "finance",
+      "status": "active",
+      "priority": 8
+    },
+    {
+      "name": "AdvancedMatching",
+      "title": "Advanced Matching Agent",
+      "role": "Intelligens párosító motor",
+      "description": "Számlák és kifizetések kognitív, többlépcsős párosítása és egyeztetése.",
+      "class": "AdvancedMatchingAgent",
+      "module": "./agents/AdvancedMatchingAgent.js",
+      "capabilities": [
+        "smart-reconciliation",
+        "partial-payment-split",
+        "fx-recalculation"
+      ],
+      "category": "finance",
+      "status": "active",
+      "priority": 9
+    },
+    {
       "name": "PropertyVisionary",
       "title": "Property Visionary",
       "description": "Ingatlan elemző és befektetési tanácsadó ágens.",
@@ -255,6 +287,71 @@
         "edgeproxyagent"
       ],
       "priority": 1
+    },
+    {
+      "name": "ReconciliationException",
+      "module": "./agents/ReconciliationExceptionAgent.js",
+      "class": "ReconciliationExceptionAgent",
+      "role": "Pénzügyi kivételkezelő",
+      "description": "Párosítatlan tételek elemzése és javaslatok készítése.",
+      "category": "finance",
+      "triggers": [
+        "reconciliationexception",
+        "kivetel"
+      ],
+      "priority": 2
+    },
+    {
+      "name": "ReconciliationCommunication",
+      "module": "./agents/ReconciliationCommunicationAgent.js",
+      "class": "ReconciliationCommunicationAgent",
+      "role": "Pénzügyi kommunikátor",
+      "description": "E-mail tervezetek készítése partnereknek tisztázandó banki tételek ügyében.",
+      "category": "finance",
+      "triggers": [
+        "reconciliationcommunication",
+        "financeemail"
+      ],
+      "priority": 2
+    },
+    {
+      "name": "NavCrossCheck",
+      "module": "./agents/NavCrossCheckAgent.js",
+      "class": "NavCrossCheckAgent",
+      "role": "NAV validátor",
+      "description": "Számlák adatainak összevetése a NAV Online Számla rendszeréből származó adatokkal.",
+      "category": "finance",
+      "triggers": [
+        "navcrosscheck",
+        "navcheck"
+      ],
+      "priority": 2
+    },
+    {
+      "name": "AnomalyDetection",
+      "module": "./agents/AnomalyDetectionAgent.js",
+      "class": "AnomalyDetectionAgent",
+      "role": "Pénzügyi anomáliadetektáló",
+      "description": "Duplikált számlák, szokatlan árak és tranzakciós minták azonosítása.",
+      "category": "finance",
+      "triggers": [
+        "anomalydetection",
+        "anomaly"
+      ],
+      "priority": 2
+    },
+    {
+      "name": "CashFlowPrediction",
+      "module": "./agents/CashFlowPredictionAgent.js",
+      "class": "CashFlowPredictionAgent",
+      "role": "Cash-flow elemző",
+      "description": "Pénzforgalmi előrejelzés készítése historikus adatok és nyitott tételek alapján.",
+      "category": "finance",
+      "triggers": [
+        "cashflowprediction",
+        "forecast"
+      ],
+      "priority": 2
     },
     {
       "name": "email_triage",
