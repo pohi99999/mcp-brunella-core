@@ -4,6 +4,21 @@ User requested that the Copilot CLI automatically connect to a local Brunella MC
 
 <history>
 
+### 2026-04-02 — CLI teszt mock javítás + force push (git filter-repo utáni LFS sync)
+**Feladat:** 5 CLI teszt fájl spy mintájának javítása + taskDecomposer Commander.js opts bug + GitHub push
+**Érintett fájlok:**
+- `test/securityCommands.test.ts` — `process.stdout.write` spy → `console.log` spy (Vitest kompatibilis)
+- `test/marketCommands.test.ts` — ugyanaz a spy csere
+- `test/taskCommands.test.ts` — ugyanaz a spy csere
+- `test/taskDecomposerCommands.test.ts` — spy csere + Commander.js opts javítás
+- `test/crawl4aiCommands.test.ts` — spy csere
+- `src/cli/taskDecomposerCommands.ts` — `cmd?.opts?.()` → `cmdOpts ?? {}` (Commander.js opts fix)
+**Technikai részletek:**
+- Vitest NEM routeálja `console.log`-ot `process.stdout.write`-on, ezért `vi.spyOn(process.stdout, 'write')` üres marad
+- git filter-repo (eslint_output.json 186MB eltávolítása) után LFS objektumok hiányoztak → `git lfs push --all` (3224 obj, ~2.5GB)
+- Force push szükséges volt a history rewrite miatt
+**Státusz:** ✅ test:fast: 2131 passed | 41 skipped (253/254 fájl) — push OK
+
 ### 2026-04-02 — Pre-existing hibák javítása: 0 failed (246 passed)
 **Feladat:** 6 pre-existing teszt hiba javítása + registry duplikátumok + module path hibák
 **Érintett fájlok:**
@@ -618,6 +633,42 @@ Ezeket a módosításokat a conductor/tracks.md és a conductor/archive/ helyre 
 
 **Érintett fájlok:**
 - `test/dashboard/components/HazipenztarWidget.test.tsx` (+8 teszt, 11 összesen)
+
+### 2026-04-01 23:44 - CLI cleanup expansion
+**Feladat:** A Brunella CLI production-hardening folytatása kis, validált batch-ekben: a megmaradt közvetlen `console.*` kimenetek helperes `stdout/stderr` mintára cserélése, célzott CLI tesztek hozzáadása, a `task` parancscsoport típbiztosítása, valamint a session állapot naplózása.
+**Érintett fájlok:**
+- `src/cli/memoryCommands.ts`
+- `src/cli/leadCommands.ts`
+- `src/cli/goldCommands.ts`
+- `src/cli/workflowCommands.ts`
+- `src/cli/dashboardCommands.ts`
+- `src/cli/conductorCommands.ts`
+- `src/cli/intelligenceCommands.ts`
+- `src/cli/observabilityCommands.ts`
+- `src/cli/chromeAcpCommands.ts`
+- `src/cli/crawl4aiCommands.ts`
+- `src/cli/taskDecomposerCommands.ts`
+- `src/cli/marketCommands.ts`
+- `src/cli/securityCommands.ts`
+- `src/cli/taskCommands.ts`
+- `test/observabilityCommands.test.ts`
+- `test/chromeAcpCommands.test.ts`
+- `test/crawl4aiCommands.test.ts`
+- `test/taskDecomposerCommands.test.ts`
+- `test/marketCommands.test.ts`
+- `test/securityCommands.test.ts`
+- `test/taskCommands.test.ts`
+- `C:\Users\pohi9\.copilot\session-state\0deb969b-b418-4453-ada3-cfe9bc410c74\plan.md`
+- `.ai/copilot.md`
+**Státusz:** ✅ Befejezve
+**Megjegyzés:**
+- Egységes CLI cleanup minta rögzült: `writeLine()` / `writeError()` helper használat, a meglévő spinner- és exit-viselkedés változatlanul hagyásával.
+- A `taskCommands.ts` körben explicit guardok és lokális típusok kerültek be a task-result, context parse és interaktív prompt útvonalak köré; új fókuszált teszt készült a közvetlen, JSON-context, structured-result és interactive flow esetekre.
+- A `taskDecomposerCommands.ts` szeletben valódi funkcionális hibát is javítottam: a `Commander` action callback hibás `cmd?.opts()` mintát használt, ezért a `--json` flag nem működött megbízhatóan; most közvetlen options objektumot kezel.
+- A `security`, `market`, `crawl4ai`, `chromeAcp` és `observability` parancscsoportok külön célzott tesztfájlokat kaptak, a lokális CLI UX megőrzése mellett.
+- Validáció zöld: `npx vitest run test\intelligenceCommands.test.ts`, `test\observabilityCommands.test.ts`, `test\chromeAcpCommands.test.ts`, `test\crawl4aiCommands.test.ts`, `test\taskDecomposerCommands.test.ts`, `test\marketCommands.test.ts`, `test\securityCommands.test.ts`, `test\taskCommands.test.ts`, valamint minden batch után `npm run build` ✅.
+- A session `plan.md` frissítve lett a mostani CLI hullám állapotára; jelenleg már csak a két korábbi blocked tétel maradt nyitva (`remediation-cli-cleanup`, `analyze-n8n-pro-docs`).
+- Kérés szerint a `.ai/copilot.md` ezentúl a jelentősebb Copilot-változásokat is külön bejegyzésben fogja naplózni.
 
 --- 2026-04-02 WIDGET TESZTEK BŐVÍTÉS ---
 **Feladat:** ServiceControlWidget + BookkeepingWidget error coverage

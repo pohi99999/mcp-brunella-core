@@ -1,6 +1,6 @@
 # FŐSZÁL - Egyesített Fejlesztési Napló
 
-**Generálva:** 2026-04-02 01:07
+**Generálva:** 2026-04-02 02:49
 **Script:** `scripts/sync_foszal.py`
 
 ---
@@ -29,6 +29,11 @@ start-full.bat
 ## Összesített Napló (Időrendben)
 
 ### 2026-04-01
+
+#### 23:44 - [Copilot] CLI cleanup expansion
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `src/cli/memoryCommands.ts`, `src/cli/leadCommands.ts`, `src/cli/goldCommands.ts`, `src/cli/workflowCommands.ts`, `src/cli/dashboardCommands.ts` (+18 további)
 
 #### 10:00 - [Gemini] 🐛 E2E Test Driven Bugfixes (Frontend & Backend)
 - **Agent:** Gemini
@@ -763,7 +768,7 @@ start-full.bat
 | Claude | 85 | 2026-03-31 |
 | Gemini | 19 | 2026-04-01 |
 | Cursor | 0 | N/A |
-| Copilot | 22 | 2026-03-28 |
+| Copilot | 23 | 2026-03-28 |
 
 ---
 

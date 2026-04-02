@@ -1,7 +1,7 @@
 # 🌌 BRUNELLA MASTER CONTEXT (Élő Rendszertérkép)
 
 **Verzió:** 2.4.0
-**Frissítve:** 2026-04-01
+**Frissítve:** 2026-04-02
 **Státusz:** ACTIVE (Élő rendszer)
 
 ---
@@ -20,7 +20,7 @@ A **Brunella Agent System (BAS)** egy hibrid, multi-agent AI ökoszisztéma, ame
 
 ## 2. 🤖 Az Ügynök Sereg (The Legion)
 
-A rendszer **58** regisztrált ügynökkel rendelkezik.
+A rendszer **69** regisztrált ügynökkel rendelkezik.
 
 ### 👑 Vezérkar (Core Leadership)
 | Ügynök | Szerep | Képességek |
@@ -90,9 +90,20 @@ A rendszer **58** regisztrált ügynökkel rendelkezik.
 | **task_decomposer** | undefined | task_decomposition, dag, preview |
 | **UXDesigner** | User Experience Designer Agent |  |
 | **voice** | undefined | voice_command_refinement, multimodal_context_analysis |
+| **EmailAgent** | undefined | email_watching, file_management, naming_convention |
+| **NavAgent** | undefined | nav_api_integration, xml_parsing, data_normalization |
+| **OCRAgent** | undefined | ocr_extraction, vision_analysis, invoice_parsing |
 | **BankAgent** | Transaction Watcher | parse_csv |
 | **MatchingAgent** | The Brain | hybrid_matching |
 | **SheetsSyncAgent** | UI Sync | sheets_api |
+| **InventoryFifoAgent** | Készletkezelő — FIFO értékelés | fifo_receive, fifo_issue, cogs_calculation |
+| **InventoryWacAgent** | Készletkezelő — WAC (Súlyozott Átlagár) értékelés | wac_refresh, wac_issue, wac_recalculate |
+| **DemandForecastAgent** | Kereslet-előrejelzési ágens | demand_forecast, sales_velocity, trend_analysis |
+| **SafetyStockAgent** | Biztonsági készlet kalkulátor | safety_stock_calculation, reorder_point_calculation, demand_variability_analysis |
+| **PurchaseOrderAgent** | Autonóm beszerzési rendelés generáló | purchase_order_generation, reorder_detection, supplier_email_draft |
+| **StocktakeReconciliationAgent** | undefined | inventory_reconciliation |
+| **StocktakeReportAgent** | undefined | inventory_reporting |
+| **InventoryAdjustmentAgent** | undefined | accounting_preparation |
 
 
 ---
