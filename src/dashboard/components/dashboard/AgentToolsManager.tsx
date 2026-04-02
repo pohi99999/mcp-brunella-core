@@ -523,6 +523,8 @@ export function AgentToolsManager({ tools, user, onUpdateTools }: AgentToolsMana
                             variant="ghost"
                             size="icon"
                             onClick={() => handleDeleteTool(tool.id)}
+                            aria-label="Tool törlése"
+                            title="Tool törlése"
                           >
                             <Trash size={18} className="text-destructive" />
                           </Button>
