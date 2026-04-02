@@ -60,9 +60,17 @@ const CREATE_TABLE_SQL = `
 
 export class EventBus {
   private listeners: Map<string, Array<Listener>>;
-  private insertStmt: Database.Statement;
+  private insertStmt: Database.Statement | null;
 
-  constructor(private db: Database.Database) {
+  constructor(private db: Database.Database | null) {
+    this.listeners = new Map();
+
+    if (!this.db) {
+      this.insertStmt = null;
+      logInfo('EventBus', 'SQLite persistence unavailable, falling back to in-memory mode');
+      return;
+    }
+
     // Enable WAL mode for concurrent reads + low-latency writes
     this.db.pragma('journal_mode = WAL');
 
@@ -73,8 +81,6 @@ export class EventBus {
     this.insertStmt = this.db.prepare(
       'INSERT INTO event_bus (ts, source, type, payload) VALUES (?, ?, ?, ?)'
     );
-
-    this.listeners = new Map();
   }
 
   /**
@@ -82,10 +88,12 @@ export class EventBus {
    */
   emit(event: BusEvent): void {
     // Persist to DB first
-    try {
-      this.insertStmt.run(Date.now(), event.source, event.type, JSON.stringify(event.payload));
-    } catch (err) {
-      logError('EventBus', `Failed to persist event ${event.type}: ${err}`);
+    if (this.insertStmt) {
+      try {
+        this.insertStmt.run(Date.now(), event.source, event.type, JSON.stringify(event.payload));
+      } catch (err) {
+        logError('EventBus', `Failed to persist event ${event.type}: ${err}`);
+      }
     }
 
     // Notify type-specific listeners
@@ -137,15 +145,20 @@ export class EventBus {
 // SINGLETON
 // ---------------------------------------------------------------------------
 
-function createSingletonDb(): Database.Database {
+function createSingletonDb(): Database.Database | null {
   const dbDir = path.join(process.cwd(), 'data');
   if (!fs.existsSync(dbDir)) {
     fs.mkdirSync(dbDir, { recursive: true });
   }
   const dbPath = path.join(dbDir, 'brunella.db');
-  const instance = new Database(dbPath);
-  logInfo('EventBus', `Singleton connected to ${dbPath}`);
-  return instance;
+  try {
+    const instance = new Database(dbPath);
+    logInfo('EventBus', `Singleton connected to ${dbPath}`);
+    return instance;
+  } catch (err) {
+    logError('EventBus', `SQLite event bus unavailable, continuing without persistence: ${err}`);
+    return null;
+  }
 }
 
 export const eventBus = new EventBus(createSingletonDb());

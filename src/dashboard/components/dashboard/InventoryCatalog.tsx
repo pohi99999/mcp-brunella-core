@@ -1,224 +1,101 @@
-/**
- * Agent & Tool Catalog - Mission Control 2.0
- * Bento Grid: Agents + Tools, Test Run modal
- * Adatforrás: GET /api/agents, GET /api/tools
- */
+import { useEffect, useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Package, MagnifyingGlass, ChartLineUp } from "@phosphor-icons/react";
+import * as api from "@/lib/apiService";
+import { InventoryRadarWidget } from "./InventoryRadarWidget";
 
-import { useEffect, useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter,
-} from '@/components/ui/dialog';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Robot, Wrench, Play, MagnifyingGlass } from '@phosphor-icons/react';
-import * as api from '@/lib/apiService';
-import { toast } from 'sonner';
-
-interface AgentDef {
-  name: string;
-  description?: string;
-  role?: string;
-  status?: string;
-}
-
-interface ToolDef {
-  id?: string;
-  name: string;
-  description?: string;
-  parameters?: { name: string; type: string; required?: boolean }[];
-  category?: string;
+interface ValuationRow {
+    sku: string;
+    name: string;
+    unit: string;
+    valuation_method: string;
+    current_stock: number;
+    fifo_stock_value: number;
+    wac_stock_value: number;
 }
 
 export function InventoryCatalog() {
-  const [agents, setAgents] = useState<AgentDef[]>([]);
-  const [tools, setTools] = useState<ToolDef[]>([]);
-  const [query, setQuery] = useState('');
-  const [activeTool, setActiveTool] = useState<ToolDef | null>(null);
-  const [toolArgs, setToolArgs] = useState<Record<string, string>>({});
-  const [runningTool, setRunningTool] = useState(false);
+    const [items, setItems] = useState<ValuationRow[]>([]);
+    const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    api.getAgents().then(setAgents).catch(() => setAgents([]));
-    api.getTools().then((data) => setTools(Array.isArray(data) ? data : data?.tools || [])).catch(() => setTools([]));
-  }, []);
+    useEffect(() => {
+        async function load() {
+            try {
+                const data = await api.fetchInventoryValuation();
+                setItems(data || []);
+            } catch (error) {
+                console.error("Error loading inventory catalog:", error);
+            } finally {
+                setLoading(false);
+            }
+        }
+        load();
+    }, []);
 
-  const filteredAgents = agents.filter(
-    (a) =>
-      !query ||
-      `${a.name} ${a.description || ''} ${a.role || ''}`.toLowerCase().includes(query.toLowerCase())
-  );
-  const filteredTools = tools.filter(
-    (t) =>
-      !query ||
-      `${t.name} ${t.description || ''}`.toLowerCase().includes(query.toLowerCase())
-  );
+    return (
+        <div className="space-y-6">
+            <div className="flex flex-col gap-2">
+                <h2 className="text-2xl font-bold text-white tracking-tight">Készlet- és Leltárkezelés</h2>
+                <p className="text-zinc-400 text-sm">Autonóm FIFO/WAC értékelés és láncolt készletradar.</p>
+            </div>
 
-  const runTool = async () => {
-    if (!activeTool) return;
-    setRunningTool(true);
-    try {
-      const args: Record<string, unknown> = {};
-      activeTool.parameters?.forEach((p) => {
-        const v = toolArgs[p.name] ?? '';
-        if (p.type === 'number') args[p.name] = Number(v) || 0;
-        else if (p.type === 'boolean') args[p.name] = v === 'true';
-        else args[p.name] = v;
-      });
-      const result = await api.executeTool(activeTool.name, args);
-      toast.success('Tool lefuttatva', {
-        description: typeof result === 'string' ? result.slice(0, 80) + '...' : JSON.stringify(result).slice(0, 80),
-      });
-      setActiveTool(null);
-    } catch (e: any) {
-      toast.error(e.message || 'Tool futtatás sikertelen');
-    } finally {
-      setRunningTool(false);
-    }
-  };
+            <InventoryRadarWidget />
 
-  const openToolModal = (tool: ToolDef) => {
-    const init: Record<string, string> = {};
-    tool.parameters?.forEach((p) => (init[p.name] = ''));
-    setToolArgs(init);
-    setActiveTool(tool);
-  };
-
-  return (
-    <div className="space-y-4">
-      <div className="flex items-center gap-2">
-        <div className="relative flex-1">
-          <MagnifyingGlass size={16} className="absolute left-2 top-1/2 -translate-y-1/2 text-zinc-500" />
-          <Input
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Keresés ügynök vagy eszköz..."
-            className="pl-8 bg-zinc-900/60 border-white/[0.04]"
-          />
+            <Card className="bg-zinc-900/40 border-white/[0.04]">
+                <CardHeader>
+                    <CardTitle className="text-lg font-medium flex items-center gap-2">
+                        <Package size={20} className="text-blue-400" />
+                        Termékleltár & Értékelés
+                    </CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <ScrollArea className="h-[500px]">
+                        <Table>
+                            <TableHeader className="bg-white/[0.02]">
+                                <TableRow className="border-white/[0.04]">
+                                    <TableHead className="text-zinc-400 font-medium">SKU</TableHead>
+                                    <TableHead className="text-zinc-400 font-medium">Név</TableHead>
+                                    <TableHead className="text-zinc-400 font-medium text-right">Készlet</TableHead>
+                                    <TableHead className="text-zinc-400 font-medium text-right">Módszer</TableHead>
+                                    <TableHead className="text-zinc-400 font-medium text-right">FIFO Érték</TableHead>
+                                    <TableHead className="text-zinc-400 font-medium text-right">WAC Érték</TableHead>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                                {items.length > 0 ? (
+                                    items.map((item) => (
+                                        <TableRow key={item.sku} className="border-white/[0.04] hover:bg-white/[0.01]">
+                                            <TableCell className="font-mono text-[11px] text-zinc-300">{item.sku}</TableCell>
+                                            <TableCell className="text-sm text-zinc-200">{item.name}</TableCell>
+                                            <TableCell className="text-right">
+                                                <Badge variant={item.current_stock <= 0 ? "destructive" : "outline"} className="text-xs">
+                                                    {item.current_stock} {item.unit}
+                                                </Badge>
+                                            </TableCell>
+                                            <TableCell className="text-right text-xs text-zinc-500 uppercase">{item.valuation_method}</TableCell>
+                                            <TableCell className="text-right text-sm font-medium text-white">
+                                                {item.fifo_stock_value.toLocaleString("hu-HU")} Ft
+                                            </TableCell>
+                                            <TableCell className="text-right text-sm text-zinc-400 italic">
+                                                {item.wac_stock_value.toLocaleString("hu-HU")} Ft
+                                            </TableCell>
+                                        </TableRow>
+                                    ))
+                                ) : (
+                                    <TableRow>
+                                        <TableCell colSpan={6} className="h-24 text-center text-zinc-500 italic">
+                                            {loading ? "Adatok betöltése..." : "Nincs elérhető készletadat."}
+                                        </TableCell>
+                                    </TableRow>
+                                )}
+                            </TableBody>
+                        </Table>
+                    </ScrollArea>
+                </CardContent>
+            </Card>
         </div>
-      </div>
-
-      <Tabs defaultValue="agents" className="w-full">
-        <TabsList className="bg-zinc-900/60 border border-white/[0.04]">
-          <TabsTrigger value="agents" className="gap-2">
-            <Robot size={16} />
-            Ügynökök ({agents.length})
-          </TabsTrigger>
-          <TabsTrigger value="tools" className="gap-2">
-            <Wrench size={16} />
-            Eszközök ({tools.length})
-          </TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="agents" className="mt-4">
-          <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-            {filteredAgents.map((agent) => (
-              <Card key={agent.name} className="bg-transparent border-none shadow-none">
-                <CardHeader className="pb-2">
-                  <div className="flex items-center gap-2">
-                    <div className="h-8 w-8 rounded-full bg-emerald-500/20 flex items-center justify-center">
-                      <Robot size={16} className="text-emerald-400" />
-                    </div>
-                    <CardTitle className="text-sm font-medium">{agent.name}</CardTitle>
-                  </div>
-                  <p className="text-xs text-zinc-500 line-clamp-2">{agent.description || agent.role}</p>
-                  <Badge variant="outline" className="w-fit text-xs">
-                    {agent.status || 'loaded'}
-                  </Badge>
-                </CardHeader>
-              </Card>
-            ))}
-            {filteredAgents.length === 0 && (
-              <p className="col-span-full text-sm text-zinc-500">Nincs ügynök</p>
-            )}
-          </div>
-        </TabsContent>
-
-        <TabsContent value="tools" className="mt-4">
-          <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-            {filteredTools.map((tool) => (
-              <Card key={tool.id || tool.name} className="bg-transparent border-none shadow-none">
-                <CardHeader className="pb-2">
-                  <div className="flex items-start justify-between gap-2">
-                    <div>
-                      <CardTitle className="text-sm font-medium">{tool.name}</CardTitle>
-                      <p className="text-xs text-zinc-500 line-clamp-2 mt-1">{tool.description}</p>
-                    </div>
-                    <Badge variant="secondary" className="text-[10px] shrink-0">
-                      {tool.category || 'tool'}
-                    </Badge>
-                  </div>
-                  {tool.parameters && tool.parameters.length > 0 && (
-                    <div className="flex flex-wrap gap-1 mt-2">
-                      {tool.parameters.map((p) => (
-                        <Badge key={p.name} variant="outline" className="text-[10px]">
-                          {p.name}: {p.type}
-                        </Badge>
-                      ))}
-                    </div>
-                  )}
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    className="mt-2 gap-1"
-                    onClick={() => openToolModal(tool)}
-                  >
-                    <Play size={12} />
-                    Test Run
-                  </Button>
-                </CardHeader>
-              </Card>
-            ))}
-            {filteredTools.length === 0 && (
-              <p className="col-span-full text-sm text-zinc-500">Nincs eszköz</p>
-            )}
-          </div>
-        </TabsContent>
-      </Tabs>
-
-      <Dialog open={!!activeTool} onOpenChange={(o) => !o && setActiveTool(null)}>
-        <DialogContent className="border-white/[0.04] bg-zinc-950">
-          <DialogHeader>
-            <DialogTitle>{activeTool?.name}</DialogTitle>
-            <DialogDescription>{activeTool?.description}</DialogDescription>
-          </DialogHeader>
-          <div className="space-y-3">
-            {activeTool?.parameters?.map((p) => (
-              <div key={p.name} className="space-y-1">
-                <Label className="text-zinc-400">
-                  {p.name} {p.required && '*'}
-                </Label>
-                <Input
-                  value={toolArgs[p.name] ?? ''}
-                  onChange={(e) => setToolArgs((prev) => ({ ...prev, [p.name]: e.target.value }))}
-                  placeholder={`${p.type}`}
-                  className="bg-white/[0.03] border-white/[0.04] rounded-lg"
-                />
-              </div>
-            ))}
-            {activeTool && (!activeTool.parameters || activeTool.parameters.length === 0) && (
-              <p className="text-sm text-zinc-500">Nincs paraméter</p>
-            )}
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setActiveTool(null)}>
-              Mégse
-            </Button>
-            <Button onClick={runTool} disabled={runningTool}>
-              {runningTool ? 'Futtatás...' : 'Futtatás'}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-    </div>
-  );
+    );
 }

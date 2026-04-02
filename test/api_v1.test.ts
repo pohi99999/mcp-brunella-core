@@ -70,6 +70,28 @@ describe('API v1 Route Tests', () => {
         requestId: 'test-request-id'
       }));
     });
+
+    it('should return liveness payload', async () => {
+      const response = await request(app).get('/api/health/live');
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual(expect.objectContaining({
+        status: 'alive',
+        process: 'brunella-core'
+      }));
+    });
+
+    it('should return readiness payload', async () => {
+      const response = await request(app).get('/api/health/ready');
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual(expect.objectContaining({
+        status: 'ready',
+        ready: true,
+        agents: 2,
+        mcpServers: 1
+      }));
+    });
   });
 
   describe('Error Handling Integration', () => {

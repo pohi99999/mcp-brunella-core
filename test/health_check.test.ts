@@ -32,10 +32,10 @@ describe('Health Check Script', () => {
             if (url.includes(':8000/health')) {
                 return Promise.resolve({ ok: true });
             }
-            if (url.includes('/api/health')) {
+            if (url.includes('/readyz')) {
                 return Promise.resolve({
                     ok: true,
-                    json: () => Promise.resolve({ status: 'ok' }),
+                    json: () => Promise.resolve({ status: 'ready', ready: true }),
                 });
             }
             return Promise.reject(new Error('Unknown URL'));

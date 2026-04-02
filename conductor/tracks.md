@@ -47,17 +47,12 @@
 
 ---
 
-## Aktiv Szalak (Active) (5)
+## Aktiv Szalak (Active) (3)
 
 - [ ] **Brunella Core Stabilization** [CRITICAL]
   - **ID:** `brunella_core_stabilization_20260402`
   - **Progress:** 0%
   - Mappa: ./tracks/brunella_core_stabilization_20260402/
-
-- [ ] **Autonóm Készlet- és Leltárkezelési Rendszer — KKV** [MEDIUM]
-  - **ID:** `inventory_automation_20260330`
-  - **Progress:** 85%
-  - Mappa: ./tracks/inventory_automation_20260330/
 
 - [ ] **n8n Könyvelési Pipeline — Bank + KP + szamlazz.hu** [HIGH]
   - **ID:** `n8n_konyveles_pipeline_20260328`
@@ -92,10 +87,11 @@
 
 ---
 
-## Archivalt (Archived) (157)
+## Archivalt (Archived) (158)
 
 > Archived tracks are hidden by default. View in `conductor/archive/`
 
+- [x] **inventory_automation_20260330** (2026-04-02T07:05:00Z)
 - [x] **006_trojan-horse-campaign** (2026-03-22T22:47:34Z)
 - [x] **Agent Architect 2.0 Meta-Ügynök** (2026-02-13)
 - [x] **Agent diagnostics and routing modernization** (2026-03-23T08:15:00Z)

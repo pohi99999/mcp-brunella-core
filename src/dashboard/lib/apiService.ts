@@ -3060,3 +3060,41 @@ export async function getReconciliationEvents(runId?: string): Promise<{ success
   return safeJson(response);
 }
 
+// -----------------------------------------------------------------------
+// INVENTORY & STOCK MANAGEMENT API
+// -----------------------------------------------------------------------
+
+export interface InventoryValuationRow {
+  sku: string;
+  name: string;
+  unit: string;
+  valuation_method: string;
+  current_stock: number;
+  fifo_stock_value: number;
+  wac_stock_value: number;
+}
+
+export interface InventoryStocktakeSummary {
+  id: string;
+  sku: string;
+  name: string;
+  discrepancy: number;
+  discrepancy_value: number;
+  status: string;
+  created_at: string;
+}
+
+export async function fetchInventoryValuation(): Promise<InventoryValuationRow[]> {
+  const response = await fetchWithTimeout(`${API_BASE}/api/inventory/valuation`, {}, 15000);
+  if (!response.ok) throw new Error(`Inventory valuation: HTTP ${response.status}`);
+  const data = await safeJson<{ success: boolean; summary: InventoryValuationRow[] }>(response);
+  return data.summary || [];
+}
+
+export async function fetchOpenStocktakes(): Promise<InventoryStocktakeSummary[]> {
+  const response = await fetchWithTimeout(`${API_BASE}/api/inventory/stocktake/open`, {}, 10000);
+  if (!response.ok) throw new Error(`Open stocktakes: HTTP ${response.status}`);
+  const data = await safeJson<{ success: boolean; stocktakes: InventoryStocktakeSummary[] }>(response);
+  return data.stocktakes || [];
+}
+

@@ -1,12 +1,45 @@
 import { describe, it, expect } from 'vitest';
-import Database from 'better-sqlite3';
 import { EventBus, BusEvent } from '../src/core/eventBus.js';
 
 interface EventRow { id: number; ts: number; source: string; type: string; payload: string; consumed: number; }
 
+type EventBusDb = ConstructorParameters<typeof EventBus>[0];
+
+function createMockDb(): { db: EventBusDb; rows: EventRow[] } {
+  const rows: EventRow[] = [];
+
+  const db = {
+    pragma: (_statement: string) => {},
+    exec: (_sql: string) => {},
+    prepare: (sql: string) => {
+      if (sql.startsWith('INSERT INTO event_bus')) {
+        return {
+          run: (ts: number, source: string, type: string, payload: string) => {
+            rows.push({
+              id: rows.length + 1,
+              ts,
+              source,
+              type,
+              payload,
+              consumed: 0,
+            });
+          },
+        };
+      }
+
+      throw new Error(`Unsupported SQL in test double: ${sql}`);
+    },
+  };
+
+  return {
+    db: db as unknown as EventBusDb,
+    rows,
+  };
+}
+
 describe('EventBus', () => {
   it('emit stores event in SQLite and notifies listeners', () => {
-    const db = new Database(':memory:');
+    const { db, rows } = createMockDb();
     const bus = new EventBus(db);
 
     const received: BusEvent[] = [];
@@ -18,14 +51,14 @@ describe('EventBus', () => {
     expect(received[0].type).toBe('task.completed');
 
     // Verify DB row
-    const row = db.prepare('SELECT * FROM event_bus WHERE type = ?').get('task.completed') as EventRow;
+    const row = rows.find((entry) => entry.type === 'task.completed');
     expect(row).toBeDefined();
     expect(row.source).toBe('TestAgent');
     expect(JSON.parse(row.payload)).toEqual({ taskId: 't1' });
   });
 
   it('wildcard listener receives all events', () => {
-    const db = new Database(':memory:');
+    const { db } = createMockDb();
     const bus = new EventBus(db);
 
     const all: unknown[] = [];
@@ -38,7 +71,7 @@ describe('EventBus', () => {
   });
 
   it('off removes listener', () => {
-    const db = new Database(':memory:');
+    const { db } = createMockDb();
     const bus = new EventBus(db);
 
     let count = 0;
@@ -49,5 +82,19 @@ describe('EventBus', () => {
     bus.emit({ source: 'S', type: 'system.failover', payload: {} });
 
     expect(count).toBe(1);
+  });
+
+  it('works in in-memory mode when SQLite is unavailable', () => {
+    const bus = new EventBus(null);
+
+    const received: BusEvent[] = [];
+    bus.on('*', (e) => received.push(e));
+
+    expect(() => {
+      bus.emit({ source: 'Fallback', type: 'system.recovered', payload: { mode: 'memory' } });
+    }).not.toThrow();
+
+    expect(received).toHaveLength(1);
+    expect(received[0].payload).toEqual({ mode: 'memory' });
   });
 });

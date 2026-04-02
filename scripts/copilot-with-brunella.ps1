@@ -1,6 +1,6 @@
 Param(
-    [string]$McpUrl = "http://localhost:3000",
-    [string]$StartCmd = "start-full.bat",
+    [string]$McpUrl = "http://localhost:3000/readyz",
+    [string]$StartCmd = "inditas.bat",
     [int]$TimeoutSec = 120
 )
 

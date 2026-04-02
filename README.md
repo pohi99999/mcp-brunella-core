@@ -334,10 +334,18 @@ mcp-brunella-core/
 ### Indítás
 
 ```bash
-# Teljes rendszer indítás (ajánlott - Windows)
-start-full.bat
+# Kanonikus kezi stable inditas (ajanlott - Windows operator mod)
+inditas.bat
 
-# VAGY manuálisan:
+# Kozvetlen stable console fallback (ha nincs service telepitve)
+Inditsd_Brunellat_Stabil.bat
+
+# Stable runtime kezzel, kulon terminálokban
+npm run build:stable
+npm run start:python:stable   # Python (:8000)
+npm run start:stable          # Brunella Core + Dashboard (:3000)
+
+# Development only
 npm install && npm run build
 npm run dev          # Backend (:3000)
 npm run dev:ui       # Dashboard (:5173)
@@ -346,6 +354,10 @@ npm run dev:ui       # Dashboard (:5173)
 cd myai
 uv sync              # Függőségek telepítése
 uvicorn server:app --reload --port 8000
+
+# Host-native supervision
+powershell -ExecutionPolicy Bypass -File scripts\supervisors\windows\install-windows-services.ps1
+bash scripts/supervisors/linux/install-systemd-services.sh
 ```
 
 ### Build & Teszt (KÖTELEZŐ munka előtt/után!)
@@ -1139,18 +1151,19 @@ brunella robotkez status      # Agent status
 ### Quick Start
 
 ```bash
-# Start backend
-npm run dev
+# Stable control plane
+npm run build:stable
+npm run start:python:stable
 
-# Start Python API (optional)
-cd myai && uvicorn server:app --reload --port 8000
+# Kulon terminalban:
+npm run start:stable
 
 # Test MCP tools
 curl http://localhost:3000/api/v1/mcp/tools | python -m json.tool
 
 # View dashboard
-npm run dev:ui
-# Navigate to: MCP Command Center (Shield icon in sidebar)
+# Stable dashboard: http://localhost:3000
+# Dev dashboard only: npm run dev:ui -> http://localhost:5173
 ```
 
 ### Components

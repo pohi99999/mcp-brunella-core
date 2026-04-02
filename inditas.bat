@@ -1,196 +1,56 @@
 @echo off
 setlocal EnableDelayedExpansion
 chcp 65001 >nul 2>&1
-title BRUNELLA AGENT SYSTEM - TELJES INDITAS
+title Brunella Agent System - Canonical Stable Launcher
 
-set "ROOT=%~dp0"
-if "%ROOT:~-1%"=="\" set "ROOT=%ROOT:~0,-1%"
-cd /d "%ROOT%"
+set "PROJECT_ROOT=%~dp0"
+if "%PROJECT_ROOT:~-1%"=="\" set "PROJECT_ROOT=%PROJECT_ROOT:~0,-1%"
+cd /d "%PROJECT_ROOT%"
+
+set "CORE_READY_URL=http://localhost:3000/readyz"
+set "DASHBOARD_URL=http://localhost:3000"
 
 echo.
-echo  +========================================================================+
-echo  ^|                                                                        ^|
-echo  ^|   BRUNELLA AGENT SYSTEM  -  TELJES INDITAS (LATHATO KONZOLOKKAL)      ^|
-echo  ^|                                                                        ^|
-echo  +========================================================================+
-echo.
-echo  Projekt: %ROOT%
-echo  Ido    : %DATE% %TIME%
+echo  +======================================================================+
+echo  ^|   BRUNELLA AGENT SYSTEM - STABLE MANUAL ENTRYPOINT                  ^|
+echo  ^|   Windows service ha elerheto, egyebkent stable console fallback    ^|
+echo  +======================================================================+
 echo.
 
-:: =========================================================================
-:: [1/9] GITHUB SZINKRONIZACIO (fetch + pull + Jules PR check)
-:: =========================================================================
-echo  [1/9] GitHub szinkronizacio...
-where git >nul 2>&1
+sc query "BrunellaCore" >nul 2>&1
 if !ERRORLEVEL! EQU 0 (
-    git fetch origin >nul 2>&1
-    if !ERRORLEVEL! EQU 0 (
-        echo    [OK] Git fetch kész.
-        :: Pull ha nincs uncommitted change
-        git diff --quiet >nul 2>&1
-        if !ERRORLEVEL! EQU 0 (
-            git pull origin main --ff-only >nul 2>&1
-            if !ERRORLEVEL! EQU 0 (
-                echo    [OK] Git pull kész ^(fast-forward^).
-            ) else (
-                echo    [!!] Git pull nem sikerult ^(merge conflict?^). Kézi merge szukseges.
-            )
-        ) else (
-            echo    [--] Uncommitted valtozasok vannak, pull kihagyva.
-        )
-    ) else (
-        echo    [!!] Git fetch nem sikerult ^(nincs halozat?^).
-    )
+  echo [1/3] Windows service mod eszlelve - BrunellaCore inditasa...
+  sc start "BrunellaCore" >nul 2>&1
+  if !ERRORLEVEL! EQU 0 (
+    echo    [OK] BrunellaCore service inditva vagy mar fut.
+  ) else (
+    echo    [--] BrunellaCore service mar fut vagy keszenleti allapotban van.
+  )
 
-    :: Jules PR check
-    where gh >nul 2>&1
-    if !ERRORLEVEL! EQU 0 (
-        for /f %%c in ('gh pr list --state open --limit 10 --json number 2^>nul ^| findstr /c:"number" ^| find /c "number"') do set "PR_COUNT=%%c"
-        if defined PR_COUNT if !PR_COUNT! GTR 0 (
-            echo    [!!] !PR_COUNT! nyitott PR talalhato ^(Jules?^). Ellenorizd: gh pr list
-        ) else (
-            echo    [OK] Nincs nyitott PR.
-        )
-    ) else (
-        echo    [--] GitHub CLI ^(gh^) nem elerheto, Jules PR check kihagyva.
-    )
-) else (
-    echo    [--] Git nem talalhato, szinkron kihagyva.
-)
-echo.
+  echo [2/3] Ready allapot varakozasa...
+  set /a ATTEMPTS=0
+  :wait_service_ready
+  curl -s --max-time 2 "%CORE_READY_URL%" >nul 2>&1
+  if !ERRORLEVEL! EQU 0 goto service_ready
+  if !ATTEMPTS! GEQ 20 goto service_timeout
+  set /a ATTEMPTS+=1
+  timeout /t 2 >nul
+  goto wait_service_ready
 
-:: =========================================================================
-:: [2/9] DOKUMENTACIO FRISSITES
-:: =========================================================================
-echo  [2/9] Dokumentaciok frissitese...
+  :service_ready
+  echo    [OK] Brunella Core ready.
+  goto open_dashboard
 
-:: FOSZAL naplo frissites
-where python >nul 2>&1
-if !ERRORLEVEL! EQU 0 (
-    if exist "%ROOT%\scripts\sync_foszal.py" (
-        python "%ROOT%\scripts\sync_foszal.py" >nul 2>&1
-        if !ERRORLEVEL! EQU 0 (
-            echo    [OK] FOSZAL.md frissitve.
-        ) else (
-            echo    [--] FOSZAL szinkron hiba ^(nem kritikus^).
-        )
-    )
-
-    :: Conductor szinkron
-    if exist "%ROOT%\scripts\sync_conductor.py" (
-        python "%ROOT%\scripts\sync_conductor.py" >nul 2>&1
-        if !ERRORLEVEL! EQU 0 (
-            echo    [OK] conductor/tracks.md frissitve.
-        ) else (
-            echo    [--] Conductor szinkron hiba ^(nem kritikus^).
-        )
-    )
-) else (
-    echo    [--] Python nem talalhato, dokumentacio szinkron kihagyva.
+  :service_timeout
+  echo    [--] Ready timeout. Megnyitom a dashboardot, de a service meg indulhat.
+  goto open_dashboard
 )
 
-:: Master Context frissites
-if exist "%ROOT%\scripts\update_master_context.ts" (
-    call npx tsx "%ROOT%\scripts\update_master_context.ts" >nul 2>&1
-    if !ERRORLEVEL! EQU 0 (
-        echo    [OK] BRUNELLA_MASTER_CONTEXT.md generalva.
-    ) else (
-        echo    [--] Master context frissites kihagyva.
-    )
-)
-echo.
+echo [1/3] Windows service nincs telepitve - stable console fallback indul...
+call "%PROJECT_ROOT%\Inditsd_Brunellat_Stabil.bat" %*
+exit /b %ERRORLEVEL%
 
-:: =========================================================================
-:: [3/9] OLLAMA (AI Motor)
-:: =========================================================================
-echo  [3/9] Ollama ellenorzese...
-curl -s --max-time 2 http://localhost:11434/api/tags >nul 2>&1
-if !ERRORLEVEL! EQU 0 (
-    echo    [OK] Ollama mar fut - http://localhost:11434
-) else (
-    echo    [..] Ollama inditasa kulon konzolban...
-    start "BAS | Ollama :11434" cmd /k call "%ROOT%\scripts\launchers\launch_ollama_console.bat"
-)
-echo.
-
-:: =========================================================================
-:: [4/9] ANYTHINGLLM
-:: =========================================================================
-echo  [4/9] AnythingLLM ellenorzese...
-curl -s --max-time 2 http://localhost:3001/api/ping >nul 2>&1
-if !ERRORLEVEL! EQU 0 (
-    echo    [OK] AnythingLLM mar fut - http://localhost:3001
-) else (
-    echo    [..] AnythingLLM inditasa...
-    start "BAS | AnythingLLM :3001" cmd /k call "%ROOT%\scripts\launchers\launch_anythingllm_console.bat"
-)
-echo.
-
-:: =========================================================================
-:: [5/9] WINDOWS AUTOMATION BRIDGE
-:: =========================================================================
-echo  [5/9] Windows Automation Bridge ellenorzese...
-call :is_bridge_running
-if !ERRORLEVEL! EQU 0 (
-    echo    [OK] Windows Bridge mar fut.
-) else (
-    echo    [..] Windows Bridge inditasa kulon konzolban...
-    start "BAS | Windows Bridge" cmd /k call "%ROOT%\scripts\launchers\launch_windows_bridge_console.bat"
-)
-echo.
-
-:: =========================================================================
-:: [6/9] PYTHON FASTAPI BACKEND
-:: =========================================================================
-echo  [6/9] Python FastAPI backend ellenorzese...
-curl -s --max-time 2 http://localhost:8000/health >nul 2>&1
-if !ERRORLEVEL! EQU 0 (
-    echo    [OK] Python API mar fut - http://localhost:8000
-) else (
-    echo    [..] Python FastAPI inditasa kulon konzolban...
-    start "BAS | Python FastAPI :8000" cmd /k call "%ROOT%\scripts\launchers\launch_python_api_console.bat"
-)
-echo.
-
-:: =========================================================================
-:: [7/9] NODE.JS BACKEND (npm run dev — LATHATO LOGOKKAL)
-:: =========================================================================
-echo  [7/9] Node.js backend ellenorzese...
-curl -s --max-time 2 http://localhost:3000/api/health >nul 2>&1
-if !ERRORLEVEL! EQU 0 (
-    echo    [OK] Backend mar fut - http://localhost:3000
-) else (
-    echo    [..] Node.js backend inditasa LATHATO konzolban...
-    start "BAS | Node.js Backend :3000" cmd /k call "%ROOT%\scripts\launchers\launch_backend_console.bat"
-)
-echo.
-
-:: =========================================================================
-:: [8/9] DASHBOARD UI (npm run dev:ui)
-:: =========================================================================
-echo  [8/9] Dashboard UI ellenorzese...
-call :is_dashboard_running
-if !ERRORLEVEL! EQU 0 (
-    echo    [OK] Dashboard mar fut - http://localhost:5173
-) else (
-    echo    [..] Dashboard UI inditasa kulon konzolban...
-    start "BAS | Dashboard UI :5173" cmd /k call "%ROOT%\scripts\launchers\launch_dashboard_console.bat"
-)
-echo.
-
-:: =========================================================================
-:: [9/9] STARTUP SMOKE TEST
-:: =========================================================================
-echo  [9/9] Startup smoke test futtatasa...
-call npx tsx scripts/startup_smoke_test.ts
-if !ERRORLEVEL! EQU 0 (
-    echo    [OK] Minden szolgaltatas elerheto!
-) else (
-    echo    [!!] HIBA: Legalabb egy kritikus szolgaltatas nem elerheto!
-)
-echo.
-:: =========================================================================
-:: INDITAS KESZ!
-:: =========================================================================
-echo  [OK] BAS rendszer inditasa befejezve.
+:open_dashboard
+echo [3/3] Dashboard megnyitasa...
+start "" "%DASHBOARD_URL%"
+exit /b 0
