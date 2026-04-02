@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-04-02T06:25:50.624Z",
+  "lastUpdated": "2026-04-02T14:36:49.929Z",
   "tracks": [
     {
       "id": "autogen_github_models_pilot_20260401",
@@ -25,7 +25,7 @@
       "name": "Brunella Core Stabilization",
       "status": "active",
       "priority": "critical",
-      "progress": 70,
+      "progress": 95,
       "updated": "2026-04-02",
       "tags": [
         "brunella",
@@ -83,6 +83,51 @@
         "brunella_core_stabilization_20260402"
       ],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\brunella_identity_project_maintainer_20260402",
+      "_isArchived": false
+    },
+    {
+      "id": "brunella_reflection_continual_learning_20260402",
+      "name": "Brunella Reflection / Continual Learning Activation",
+      "status": "completed",
+      "priority": "high",
+      "progress": 100,
+      "tags": [
+        "brunella",
+        "reflection",
+        "continual-learning",
+        "memory",
+        "learning-loop",
+        "golden-dataset",
+        "self-improvement"
+      ],
+      "dependencies": [
+        "brunella_core_stabilization_20260402",
+        "brunella_identity_project_maintainer_20260402"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\brunella_reflection_continual_learning_20260402",
+      "_isArchived": false
+    },
+    {
+      "id": "brunella_zero_prompt_ephemeral_bridge_20260402",
+      "name": "Brunella Zero-Prompt → Ephemeral Agent Bridge",
+      "status": "completed",
+      "priority": "high",
+      "progress": 100,
+      "tags": [
+        "brunella",
+        "zero-prompt",
+        "ephemeral-agents",
+        "policy",
+        "autonomy",
+        "agent-spawn",
+        "proactive"
+      ],
+      "dependencies": [
+        "brunella_core_stabilization_20260402",
+        "brunella_identity_project_maintainer_20260402",
+        "brunella_reflection_continual_learning_20260402"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\brunella_zero_prompt_ephemeral_bridge_20260402",
       "_isArchived": false
     },
     {
@@ -566,51 +611,6 @@
       ],
       "dependencies": [],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\brunella_function_matrix_20260325",
-      "_isArchived": true
-    },
-    {
-      "id": "brunella_reflection_continual_learning_20260402",
-      "name": "Brunella Reflection / Continual Learning Activation",
-      "status": "archived",
-      "priority": "high",
-      "progress": 100,
-      "tags": [
-        "brunella",
-        "reflection",
-        "continual-learning",
-        "memory",
-        "learning-loop",
-        "golden-dataset",
-        "self-improvement"
-      ],
-      "dependencies": [
-        "brunella_core_stabilization_20260402",
-        "brunella_identity_project_maintainer_20260402"
-      ],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\brunella_reflection_continual_learning_20260402",
-      "_isArchived": true
-    },
-    {
-      "id": "brunella_zero_prompt_ephemeral_bridge_20260402",
-      "name": "Brunella Zero-Prompt → Ephemeral Agent Bridge",
-      "status": "archived",
-      "priority": "high",
-      "progress": 100,
-      "tags": [
-        "brunella",
-        "zero-prompt",
-        "ephemeral-agents",
-        "policy",
-        "autonomy",
-        "agent-spawn",
-        "proactive"
-      ],
-      "dependencies": [
-        "brunella_core_stabilization_20260402",
-        "brunella_identity_project_maintainer_20260402",
-        "brunella_reflection_continual_learning_20260402"
-      ],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\brunella_zero_prompt_ephemeral_bridge_20260402",
       "_isArchived": true
     },
     {
@@ -3091,8 +3091,8 @@
   "stats": {
     "total": 174,
     "active": 4,
-    "completed": 4,
-    "archived": 160,
+    "completed": 6,
+    "archived": 158,
     "proposed": 5
   }
 }

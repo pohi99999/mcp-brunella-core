@@ -300,4 +300,109 @@ export class ReflectionEngine {
   getMetaInsights(category?: 'pattern' | 'anomaly' | 'recommendation' | 'warning') {
     return this.metaReasoner.getInsights(category);
   }
+
+  /**
+   * Detect recurring pain points — agents or task categories that repeatedly fail.
+   * Returns patterns sorted by severity (most problematic first).
+   */
+  detectPainPoints(): PainPoint[] {
+    const decisions = this.metaReasoner.getDecisions();
+    const failureMap = new Map<string, { agent: string; count: number; errors: string[] }>();
+
+    for (const d of decisions) {
+      if (d.outcome === 'failure') {
+        const key = d.decisionMaker;
+        const entry = failureMap.get(key) ?? { agent: key, count: 0, errors: [] };
+        entry.count++;
+        if (d.outcomeDetails) entry.errors.push(d.outcomeDetails.slice(0, 80));
+        failureMap.set(key, entry);
+      }
+    }
+
+    const total = decisions.length;
+    const painPoints: PainPoint[] = [];
+
+    for (const [, entry] of failureMap) {
+      const failureRate = total > 0 ? entry.count / total : 0;
+      if (entry.count >= 2) {
+        const topErrors = [...new Set(entry.errors)].slice(0, 3);
+        painPoints.push({
+          agent: entry.agent,
+          failureCount: entry.count,
+          failureRate,
+          severity: failureRate > 0.5 ? 'high' : failureRate > 0.25 ? 'medium' : 'low',
+          topErrors,
+          recommendation: `Fontold meg ${entry.agent} helyett alternatív ágens használatát, vagy növeld a retry limitet.`,
+        });
+      }
+    }
+
+    return painPoints.sort((a, b) => b.failureCount - a.failureCount);
+  }
+
+  /**
+   * Run nightly learning cycle — forced MetaReasoner reasoning, SelfModel full reflection,
+   * pain point detection, and consolidated log.
+   * Should be called by ScheduledTasksRunner at 02:00 daily.
+   */
+  async runNightlyCycle(): Promise<NightlyCycleResult> {
+    logInfo('ReflectionEngine', 'Nightly learning cycle started...');
+
+    // 1. Force MetaReasoner reasoning
+    const insights = this.metaReasoner.reason();
+
+    // 2. Force SelfModel full reflection
+    this.selfModel.reflect();
+    const selfState = this.selfModel.getState();
+
+    // 3. Detect pain points
+    const painPoints = this.detectPainPoints();
+
+    // 4. Persist consolidated lesson to GraphRAG
+    const graphRag = GraphRagEngine.getInstance();
+    if (painPoints.length > 0) {
+      graphRag.storeLesson(
+        `nightly-cycle-${Date.now()}`,
+        'ReflectionEngine',
+        'nightly_learning_cycle',
+        `Visszatérő problémák (${painPoints.length} pattern): ${painPoints.map(p => `${p.agent} (${p.failureCount}x, ${p.severity})`).join('; ')}`,
+        0.7,
+      );
+    }
+
+    const stats = this.getStats();
+    logInfo(
+      'ReflectionEngine',
+      `Nightly cycle done: ${insights.length} insights, ${painPoints.length} pain points, health=${selfState.health}, reflections=${stats.totalReflections}`,
+    );
+
+    return {
+      insights,
+      painPoints,
+      selfModelHealth: selfState.health,
+      coherence: selfState.coherence,
+      stats,
+      ranAt: new Date().toISOString(),
+    };
+  }
+}
+
+// ─── Exported types ───────────────────────────────────────────────────────────
+
+export interface PainPoint {
+  agent: string;
+  failureCount: number;
+  failureRate: number;
+  severity: 'low' | 'medium' | 'high';
+  topErrors: string[];
+  recommendation: string;
+}
+
+export interface NightlyCycleResult {
+  insights: MetaInsight[];
+  painPoints: PainPoint[];
+  selfModelHealth: string;
+  coherence: number;
+  stats: ReflectionStats;
+  ranAt: string;
 }
