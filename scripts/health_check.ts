@@ -209,11 +209,46 @@ async function checkNodeBackend(): Promise<CheckResult> {
       signal: AbortSignal.timeout(5000),
     });
     if (resp.ok) {
-      const data = (await resp.json()) as { status?: string; ready?: boolean };
+      const data = (await resp.json()) as {
+        status?: string;
+        ready?: boolean;
+        runtime?: {
+          memory?: {
+            heapUsedMb?: number;
+            heapLimitMb?: number;
+            heapUtilizationPercent?: number;
+            state?: "healthy" | "warn" | "critical";
+          };
+          budget?: {
+            configuredHeapMb?: number | null;
+            runtimeMemoryLimitMb?: number | null;
+            restartThresholdMb?: number | null;
+            effectiveHeapLimitMb?: number;
+            state?: "aligned" | "drift" | "invalid" | "unconfigured";
+          };
+        };
+      };
+      const memory = data.runtime?.memory;
+      const budget = data.runtime?.budget;
+      const memorySummary = memory
+        ? ` heap=${memory.heapUsedMb ?? "?"}/${memory.heapLimitMb ?? "?"}MB (${memory.heapUtilizationPercent ?? "?"}%)`
+        : "";
+      const budgetSummary = budget
+        ? ` budget=${budget.configuredHeapMb ?? "?"}/${budget.runtimeMemoryLimitMb ?? "?"}MB restart=${budget.restartThresholdMb ?? "?"}MB actual=${budget.effectiveHeapLimitMb ?? "?"}MB contract=${budget.state ?? "?"}`
+        : "";
+      const memoryState = memory?.state;
+      const budgetState = budget?.state;
       return {
         name: "Node.js Backend",
-        status: data.ready === false ? "warn" : "pass",
-        message: `status=${data.status || "unknown"}`,
+        status:
+          data.ready === false ||
+          memoryState === "warn" ||
+          memoryState === "critical" ||
+          budgetState === "drift" ||
+          budgetState === "invalid"
+            ? "warn"
+            : "pass",
+        message: `status=${data.status || "unknown"}${memorySummary}${budgetSummary}${memoryState ? ` [${memoryState}]` : ""}${budgetState ? ` [contract:${budgetState}]` : ""}`,
         durationMs: Date.now() - start,
       };
     }

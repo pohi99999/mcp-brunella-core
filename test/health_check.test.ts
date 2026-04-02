@@ -35,7 +35,20 @@ describe('Health Check Script', () => {
             if (url.includes('/readyz')) {
                 return Promise.resolve({
                     ok: true,
-                    json: () => Promise.resolve({ status: 'ready', ready: true }),
+                    json: () =>
+                        Promise.resolve({
+                            status: 'ready',
+                            ready: true,
+                            runtime: {
+                                budget: {
+                                    configuredHeapMb: 1536,
+                                    runtimeMemoryLimitMb: 2048,
+                                    restartThresholdMb: 1792,
+                                    effectiveHeapLimitMb: 1584,
+                                    state: 'aligned',
+                                },
+                            },
+                        }),
                 });
             }
             return Promise.reject(new Error('Unknown URL'));
@@ -114,5 +127,54 @@ describe('Health Check Script', () => {
 
         expect(report.failCount).toBeGreaterThan(0);
         expect(report.overall).toBe('unhealthy');
+    });
+
+    it('should warn when runtime memory pressure is elevated', async () => {
+        mockFetch.mockImplementation((url: string) => {
+            if (url.includes('/api/tags')) {
+                return Promise.resolve({
+                    ok: true,
+                    json: () => Promise.resolve({ models: [{ name: 'llama3.1:8b' }] }),
+                });
+            }
+            if (url.includes(':8000/health')) {
+                return Promise.resolve({ ok: true, json: () => Promise.resolve({ status: 'ok' }) });
+            }
+            if (url.includes('/readyz')) {
+                return Promise.resolve({
+                    ok: true,
+                    json: () =>
+                        Promise.resolve({
+                            status: 'ready',
+                            ready: true,
+                            runtime: {
+                                memory: {
+                                    heapUsedMb: 2300,
+                                    heapLimitMb: 3072,
+                                    heapUtilizationPercent: 74.9,
+                                    state: 'warn',
+                                },
+                                budget: {
+                                    configuredHeapMb: 1536,
+                                    runtimeMemoryLimitMb: 2048,
+                                    restartThresholdMb: 1792,
+                                    effectiveHeapLimitMb: 3072,
+                                    state: 'drift',
+                                },
+                            },
+                        }),
+                });
+            }
+            return Promise.resolve({ ok: true, json: () => Promise.resolve({}) });
+        });
+
+        const { runHealthCheck } = await import('../scripts/health_check.ts');
+        const report = await runHealthCheck();
+
+        const nodeCheck = report.checks.find((c: { name: string }) => c.name === 'Node.js Backend');
+        expect(nodeCheck).toBeDefined();
+        expect(nodeCheck!.status).toBe('warn');
+        expect(nodeCheck!.message).toContain('[warn]');
+        expect(nodeCheck!.message).toContain('[contract:drift]');
     });
 });

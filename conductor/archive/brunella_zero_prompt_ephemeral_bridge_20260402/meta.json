@@ -1,11 +1,11 @@
 {
   "id": "brunella_zero_prompt_ephemeral_bridge_20260402",
   "title": "Brunella Zero-Prompt → Ephemeral Agent Bridge",
-  "status": "proposed",
+  "status": "completed",
   "priority": "high",
   "createdAt": "2026-04-02",
   "owner": "GitHub Copilot",
-  "progress": 0,
+  "progress": 100,
   "tags": [
     "brunella",
     "zero-prompt",

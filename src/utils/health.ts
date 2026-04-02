@@ -3,6 +3,7 @@
  */
 
 import { Logger } from "./logger.js";
+import type { RuntimeTelemetry } from "./runtimeTelemetry.js";
 
 const healthLogger = new Logger("health.log");
 
@@ -55,6 +56,7 @@ export interface HealthResponse {
   status: "ok" | "degraded" | "error";
   timestamp: string;
   requestId?: string;
+  runtime?: RuntimeTelemetry;
   services: {
     ollama: HealthServiceResult;
     anythingllm: HealthServiceResult;

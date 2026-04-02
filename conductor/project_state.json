@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-04-02T04:14:59.303Z",
+  "lastUpdated": "2026-04-02T06:25:50.624Z",
   "tracks": [
     {
       "id": "autogen_github_models_pilot_20260401",
@@ -25,7 +25,8 @@
       "name": "Brunella Core Stabilization",
       "status": "active",
       "priority": "critical",
-      "progress": 0,
+      "progress": 70,
+      "updated": "2026-04-02",
       "tags": [
         "brunella",
         "stability",
@@ -85,51 +86,6 @@
       "_isArchived": false
     },
     {
-      "id": "brunella_reflection_continual_learning_20260402",
-      "name": "Brunella Reflection / Continual Learning Activation",
-      "status": "proposed",
-      "priority": "high",
-      "progress": 0,
-      "tags": [
-        "brunella",
-        "reflection",
-        "continual-learning",
-        "memory",
-        "learning-loop",
-        "golden-dataset",
-        "self-improvement"
-      ],
-      "dependencies": [
-        "brunella_core_stabilization_20260402",
-        "brunella_identity_project_maintainer_20260402"
-      ],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\brunella_reflection_continual_learning_20260402",
-      "_isArchived": false
-    },
-    {
-      "id": "brunella_zero_prompt_ephemeral_bridge_20260402",
-      "name": "Brunella Zero-Prompt → Ephemeral Agent Bridge",
-      "status": "proposed",
-      "priority": "high",
-      "progress": 0,
-      "tags": [
-        "brunella",
-        "zero-prompt",
-        "ephemeral-agents",
-        "policy",
-        "autonomy",
-        "agent-spawn",
-        "proactive"
-      ],
-      "dependencies": [
-        "brunella_core_stabilization_20260402",
-        "brunella_identity_project_maintainer_20260402",
-        "brunella_reflection_continual_learning_20260402"
-      ],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\brunella_zero_prompt_ephemeral_bridge_20260402",
-      "_isArchived": false
-    },
-    {
       "id": "cloudflare_dns_zone_reconciliation_20260325",
       "name": "Cloudflare DNS Zone Reconciliation for Custom Domains",
       "status": "archived",
@@ -146,31 +102,6 @@
         "cloudflare_full_optimization_20260325"
       ],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\cloudflare_dns_zone_reconciliation_20260325",
-      "_isArchived": false
-    },
-    {
-      "id": "inventory_automation_20260330",
-      "name": "Autonóm Készlet- és Leltárkezelési Rendszer — KKV",
-      "status": "active",
-      "priority": "medium",
-      "progress": 85,
-      "created": "2026-03-30",
-      "tags": [
-        "készlet",
-        "leltár",
-        "FIFO",
-        "WAC",
-        "inventory",
-        "n8n",
-        "Langflow",
-        "Google Sheets",
-        "Supabase",
-        "KKV",
-        "replenishment",
-        "stocktake"
-      ],
-      "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\inventory_automation_20260330",
       "_isArchived": false
     },
     {
@@ -635,6 +566,51 @@
       ],
       "dependencies": [],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\brunella_function_matrix_20260325",
+      "_isArchived": true
+    },
+    {
+      "id": "brunella_reflection_continual_learning_20260402",
+      "name": "Brunella Reflection / Continual Learning Activation",
+      "status": "archived",
+      "priority": "high",
+      "progress": 100,
+      "tags": [
+        "brunella",
+        "reflection",
+        "continual-learning",
+        "memory",
+        "learning-loop",
+        "golden-dataset",
+        "self-improvement"
+      ],
+      "dependencies": [
+        "brunella_core_stabilization_20260402",
+        "brunella_identity_project_maintainer_20260402"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\brunella_reflection_continual_learning_20260402",
+      "_isArchived": true
+    },
+    {
+      "id": "brunella_zero_prompt_ephemeral_bridge_20260402",
+      "name": "Brunella Zero-Prompt → Ephemeral Agent Bridge",
+      "status": "archived",
+      "priority": "high",
+      "progress": 100,
+      "tags": [
+        "brunella",
+        "zero-prompt",
+        "ephemeral-agents",
+        "policy",
+        "autonomy",
+        "agent-spawn",
+        "proactive"
+      ],
+      "dependencies": [
+        "brunella_core_stabilization_20260402",
+        "brunella_identity_project_maintainer_20260402",
+        "brunella_reflection_continual_learning_20260402"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\brunella_zero_prompt_ephemeral_bridge_20260402",
       "_isArchived": true
     },
     {
@@ -1756,6 +1732,31 @@
       ],
       "dependencies": [],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\innovation_bridge_20260225",
+      "_isArchived": true
+    },
+    {
+      "id": "inventory_automation_20260330",
+      "name": "Autonóm Készlet- és Leltárkezelési Rendszer — KKV",
+      "status": "archived",
+      "priority": "medium",
+      "progress": 100,
+      "created": "2026-03-30",
+      "tags": [
+        "készlet",
+        "leltár",
+        "FIFO",
+        "WAC",
+        "inventory",
+        "n8n",
+        "Langflow",
+        "Google Sheets",
+        "Supabase",
+        "KKV",
+        "replenishment",
+        "stocktake"
+      ],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\inventory_automation_20260330",
       "_isArchived": true
     },
     {
@@ -3089,9 +3090,9 @@
   ],
   "stats": {
     "total": 174,
-    "active": 5,
+    "active": 4,
     "completed": 4,
-    "archived": 157,
-    "proposed": 7
+    "archived": 160,
+    "proposed": 5
   }
 }
