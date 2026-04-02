@@ -1,0 +1,60 @@
+{
+  "version": 1,
+  "skills": {
+    "cloud-solution-architect": {
+      "source": "microsoft/skills",
+      "sourceType": "github",
+      "computedHash": "795afdce5756dc2ffca413443c60acdd1d756aa065382d9a562fd7fd13c7dd12"
+    },
+    "continual-learning": {
+      "source": "microsoft/skills",
+      "sourceType": "github",
+      "computedHash": "7e6eef17feb93dfbbb3d2d2caca76ddc7da65f7ae41f7cdd6d4478c24c278044"
+    },
+    "copilot-sdk": {
+      "source": "microsoft/skills",
+      "sourceType": "github",
+      "computedHash": "0e26306a3d7e09f0cc666d1ec874da0d500793eee50f99a1e8c55c81e0889ac6"
+    },
+    "entra-agent-id": {
+      "source": "microsoft/skills",
+      "sourceType": "github",
+      "computedHash": "f94b14a8352b2e1223733cf9812c1750e21ce4a3215384e3394bbcee5fa925f4"
+    },
+    "frontend-design-review": {
+      "source": "microsoft/skills",
+      "sourceType": "github",
+      "computedHash": "ab7eeeef16d3583172fe0a91a42b85c79cd5e29f79e027dbaa886fce5087e055"
+    },
+    "github-issue-creator": {
+      "source": "microsoft/skills",
+      "sourceType": "github",
+      "computedHash": "e8a86a044d852af96262352424070bfe791a7421a0e246fa6c16465b25071930"
+    },
+    "mcp-builder": {
+      "source": "microsoft/skills",
+      "sourceType": "github",
+      "computedHash": "6e630f08b8ba5973a8fadeacf4e948971ba9b4f7b8552d8194aa10277b4ae6d9"
+    },
+    "microsoft-docs": {
+      "source": "microsoft/skills",
+      "sourceType": "github",
+      "computedHash": "4f74ef0fb7127b151a00eee34cf7484414ea85965a2e7681b5775e9ee9484b37"
+    },
+    "podcast-generation": {
+      "source": "microsoft/skills",
+      "sourceType": "github",
+      "computedHash": "20c506b52321fa0c1141eb2bf4f66569fee0e76d74e84098bad1535b7716ce42"
+    },
+    "skill-creator": {
+      "source": "microsoft/skills",
+      "sourceType": "github",
+      "computedHash": "0f49bc58414893e38ff80fc26f30ff446d631d22710a6d75134670616d8c5668"
+    },
+    "using-superpowers": {
+      "source": "obra/superpowers",
+      "sourceType": "github",
+      "computedHash": "e0eced9fbb205c212f420aded0c6f2bf5d5f059254679a8459b4fe72390160be"
+    }
+  }
+}

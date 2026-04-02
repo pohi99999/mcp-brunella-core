@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-04-01T22:20:57.682Z",
+  "lastUpdated": "2026-04-02T02:07:42.732Z",
   "tracks": [
     {
       "id": "autogen_github_models_pilot_20260401",
@@ -40,31 +40,11 @@
       "_isArchived": false
     },
     {
-      "id": "dashboard_cockpit_redesign_20260401",
-      "name": "Dashboard Cockpit Redesign + Stabilization",
-      "status": "active",
-      "priority": "high",
-      "progress": 84,
-      "assignee": "Copilot",
-      "tags": [
-        "dashboard",
-        "mission-control",
-        "ux",
-        "vite",
-        "react",
-        "playwright",
-        "stabilization"
-      ],
-      "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\dashboard_cockpit_redesign_20260401",
-      "_isArchived": false
-    },
-    {
       "id": "inventory_automation_20260330",
       "name": "Autonóm Készlet- és Leltárkezelési Rendszer — KKV",
       "status": "active",
       "priority": "medium",
-      "progress": 58,
+      "progress": 85,
       "created": "2026-03-30",
       "tags": [
         "készlet",
@@ -1063,6 +1043,26 @@
       ],
       "dependencies": [],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\dashboard-todo-widget-20260211",
+      "_isArchived": true
+    },
+    {
+      "id": "dashboard_cockpit_redesign_20260401",
+      "name": "Dashboard Cockpit Redesign + Stabilization",
+      "status": "archived",
+      "priority": "high",
+      "progress": 84,
+      "assignee": "Copilot",
+      "tags": [
+        "dashboard",
+        "mission-control",
+        "ux",
+        "vite",
+        "react",
+        "playwright",
+        "stabilization"
+      ],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\dashboard_cockpit_redesign_20260401",
       "_isArchived": true
     },
     {
@@ -2980,9 +2980,9 @@
   ],
   "stats": {
     "total": 169,
-    "active": 5,
+    "active": 4,
     "completed": 4,
-    "archived": 156,
+    "archived": 157,
     "proposed": 3
   }
 }
