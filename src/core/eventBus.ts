@@ -60,7 +60,14 @@ const CREATE_TABLE_SQL = `
 
 export class EventBus {
   private listeners: Map<string, Array<Listener>>;
-  private insertStmt: Database.Statement | null;
+  private insertStmt: Database.Statement | null = null;
+
+  private degradeToMemory(reason: unknown): void {
+    this.insertStmt = null;
+    this.db = null;
+    logError('EventBus', `SQLite event bus unavailable, continuing without persistence: ${reason}`);
+    logInfo('EventBus', 'SQLite persistence unavailable, falling back to in-memory mode');
+  }
 
   constructor(private db: Database.Database | null) {
     this.listeners = new Map();
@@ -71,16 +78,20 @@ export class EventBus {
       return;
     }
 
-    // Enable WAL mode for concurrent reads + low-latency writes
-    this.db.pragma('journal_mode = WAL');
+    try {
+      // Enable WAL mode for concurrent reads + low-latency writes
+      this.db.pragma('journal_mode = WAL');
 
-    // Create table if not exists
-    this.db.exec(CREATE_TABLE_SQL);
+      // Create table if not exists
+      this.db.exec(CREATE_TABLE_SQL);
 
-    // Prepare insert statement once for performance
-    this.insertStmt = this.db.prepare(
-      'INSERT INTO event_bus (ts, source, type, payload) VALUES (?, ?, ?, ?)'
-    );
+      // Prepare insert statement once for performance
+      this.insertStmt = this.db.prepare(
+        'INSERT INTO event_bus (ts, source, type, payload) VALUES (?, ?, ?, ?)'
+      );
+    } catch (err) {
+      this.degradeToMemory(err);
+    }
   }
 
   /**

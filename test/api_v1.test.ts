@@ -67,7 +67,15 @@ describe('API v1 Route Tests', () => {
           agents: 2,
           mcp: 1
         }),
-        requestId: 'test-request-id'
+        requestId: 'test-request-id',
+        runtime: expect.objectContaining({
+          pid: expect.any(Number),
+          memory: expect.objectContaining({
+            rssMb: expect.any(Number),
+            heapUsedMb: expect.any(Number),
+            state: expect.any(String)
+          })
+        })
       }));
     });
 
@@ -77,7 +85,13 @@ describe('API v1 Route Tests', () => {
       expect(response.status).toBe(200);
       expect(response.body).toEqual(expect.objectContaining({
         status: 'alive',
-        process: 'brunella-core'
+        process: 'brunella-core',
+        runtime: expect.objectContaining({
+          pid: expect.any(Number),
+          memory: expect.objectContaining({
+            rssMb: expect.any(Number)
+          })
+        })
       }));
     });
 
@@ -89,7 +103,12 @@ describe('API v1 Route Tests', () => {
         status: 'ready',
         ready: true,
         agents: 2,
-        mcpServers: 1
+        mcpServers: 1,
+        runtime: expect.objectContaining({
+          memory: expect.objectContaining({
+            heapUtilizationPercent: expect.any(Number)
+          })
+        })
       }));
     });
   });

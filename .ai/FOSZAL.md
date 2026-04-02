@@ -1,6 +1,6 @@
 # FŐSZÁL - Egyesített Fejlesztési Napló
 
-**Generálva:** 2026-04-02 06:08
+**Generálva:** 2026-04-02 08:30
 **Script:** `scripts/sync_foszal.py`
 
 ---
@@ -28,17 +28,21 @@ start-full.bat
 
 ## Összesített Napló (Időrendben)
 
+### 2026-04-02
+
+#### 07:15 - [Gemini] 📦 Autonóm Készlet- és Leltárkezelési Rendszer Szállítás
+- **Agent:** Gemini
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `src/dashboard/components/dashboard/InventoryRadarWidget.tsx`, `src/dashboard/components/dashboard/InventoryCatalog.tsx`, `src/dashboard/lib/navigation.tsx`, `test/dashboard/components/InventoryCatalog.test.tsx`, `test/dashboard/components/InventoryRadarWidget.test.tsx` (+1 további)
+
+---
+
 ### 2026-04-01
 
 #### 23:44 - [Copilot] CLI cleanup expansion
 - **Agent:** Copilot
 - **Státusz:** ✅ Befejezve
 - **Érintett fájlok:** `src/cli/memoryCommands.ts`, `src/cli/leadCommands.ts`, `src/cli/goldCommands.ts`, `src/cli/workflowCommands.ts`, `src/cli/dashboardCommands.ts` (+18 további)
-
-#### 10:00 - [Gemini] 🐛 E2E Test Driven Bugfixes (Frontend & Backend)
-- **Agent:** Gemini
-- **Státusz:** ✅ Befejezve
-- **Érintett fájlok:** `src/dashboard/components/ThemeToggle.tsx`, `src/server/routes/index.ts`
 
 #### 10:00 - [Gemini] 🐛 E2E Test Driven Bugfixes (Frontend & Backend)
 - **Agent:** Gemini
@@ -766,7 +770,7 @@ start-full.bat
 | Agent | Bejegyzések | Utolsó Aktivitás |
 |-------|-------------|------------------|
 | Claude | 85 | 2026-03-31 |
-| Gemini | 19 | 2026-04-01 |
+| Gemini | 19 | 2026-04-02 |
 | Cursor | 0 | N/A |
 | Copilot | 23 | 2026-03-28 |
 

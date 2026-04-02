@@ -37,6 +37,10 @@ function Ensure-Service {
 Assert-Administrator
 
 $RepoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..\..\..")).Path
+$CoreNodeMaxOldSpaceSize = if ($env:BRUNELLA_NODE_MAX_OLD_SPACE_SIZE) { $env:BRUNELLA_NODE_MAX_OLD_SPACE_SIZE } else { "1536" }
+$CoreRuntimeMemoryLimitMb = if ($env:BRUNELLA_RUNTIME_MEMORY_LIMIT_MB) { $env:BRUNELLA_RUNTIME_MEMORY_LIMIT_MB } else { "2048" }
+$CoreRuntimeRestartThresholdMb = if ($env:BRUNELLA_RUNTIME_RESTART_THRESHOLD_MB) { $env:BRUNELLA_RUNTIME_RESTART_THRESHOLD_MB } else { "1792" }
+$NodeCommand = Get-Command node.exe -ErrorAction Stop
 $PwshPath = if (Test-Path (Join-Path $PSHOME "pwsh.exe")) {
     Join-Path $PSHOME "pwsh.exe"
 } else {
@@ -46,7 +50,12 @@ $PwshPath = if (Test-Path (Join-Path $PSHOME "pwsh.exe")) {
 $PythonRunner = Join-Path $RepoRoot "scripts\supervisors\windows\run-brunella-python.ps1"
 $CoreRunner = Join-Path $RepoRoot "scripts\supervisors\windows\run-brunella-core.ps1"
 $PythonBinaryPath = "`"$PwshPath`" -NoProfile -ExecutionPolicy Bypass -File `"$PythonRunner`""
-$CoreBinaryPath = "`"$PwshPath`" -NoProfile -ExecutionPolicy Bypass -File `"$CoreRunner`""
+$CoreBinaryPath = "`"$PwshPath`" -NoProfile -ExecutionPolicy Bypass -File `"$CoreRunner`" -NodeMaxOldSpaceSize $CoreNodeMaxOldSpaceSize -RuntimeMemoryLimitMb $CoreRuntimeMemoryLimitMb -RuntimeRestartThresholdMb $CoreRuntimeRestartThresholdMb"
+
+& $NodeCommand.Source (Join-Path $RepoRoot "scripts\service-preflight.mjs") --platform windows
+if ($LASTEXITCODE -ne 0) {
+    throw "Service preflight failed. Fix the reported issues before installing Windows services."
+}
 
 Ensure-Service `
     -Name "BrunellaPython" `
@@ -69,5 +78,6 @@ if ($StartServices) {
 Write-Host "Windows services configured:" -ForegroundColor Cyan
 Write-Host "  BrunellaPython" -ForegroundColor Green
 Write-Host "  BrunellaCore" -ForegroundColor Green
+Write-Host "  runtime contract: heap=$CoreNodeMaxOldSpaceSize MB limit=$CoreRuntimeMemoryLimitMb MB restart=$CoreRuntimeRestartThresholdMb MB" -ForegroundColor Green
 Write-Host ""
 Write-Host "Canonical manual entrypoint remains: inditas.bat" -ForegroundColor Yellow

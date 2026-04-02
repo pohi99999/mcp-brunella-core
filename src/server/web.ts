@@ -25,6 +25,7 @@ import {
   requestLogging,
   apiRateLimit,
 } from "./middleware.js";
+import { getRuntimeTelemetry } from "../utils/runtimeTelemetry.js";
 
 const logger = new Logger("web_ui.log");
 
@@ -143,13 +144,15 @@ export async function startWebServer() {
 
   app.get("/ping", (_req, res) => { res.send("pong"); });
   app.get("/livez", (_req, res) => {
+    const runtime = getRuntimeTelemetry();
     res.status(200).json({
       status: "alive",
       phase: runtimeStatus.phase,
       ready: runtimeStatus.ready,
-      pid: process.pid,
-      uptimeSeconds: Math.round(process.uptime()),
+      pid: runtime.pid,
+      uptimeSeconds: runtime.uptimeSeconds,
       version: PACKAGE_VERSION,
+      runtime,
     });
   });
   app.get("/readyz", (_req, res) => {
@@ -157,6 +160,7 @@ export async function startWebServer() {
     const uiRequired = process.env.NODE_ENV === "production" && webUiEnabled;
     const ready = runtimeStatus.ready && (!uiRequired || uiBuilt);
     const statusCode = ready ? 200 : runtimeStatus.phase === "error" ? 500 : 503;
+    const runtime = getRuntimeTelemetry();
 
     res.status(statusCode).json({
       status: ready ? "ready" : runtimeStatus.phase === "error" ? "error" : "starting",
@@ -166,6 +170,7 @@ export async function startWebServer() {
       uiRequired,
       startedAt: runtimeStatus.startedAt,
       lastError: runtimeStatus.lastError,
+      runtime,
     });
   });
 

@@ -11,6 +11,7 @@ import {
   buildHealthResponse,
   HealthResponse
 } from "../../utils/health.js";
+import { getRuntimeTelemetry } from "../../utils/runtimeTelemetry.js";
 import { AppError } from "../../utils/AppError.js";
 import { asyncHandler } from "../middleware/errorHandler.js";
 
@@ -22,11 +23,13 @@ export function createHealthRoutes(): Router {
   const router = Router();
 
   router.get("/live", (_req, res) => {
+    const runtime = getRuntimeTelemetry();
     res.json({
       status: "alive",
       process: "brunella-core",
-      pid: process.pid,
-      uptimeSeconds: Math.round(process.uptime()),
+      pid: runtime.pid,
+      uptimeSeconds: runtime.uptimeSeconds,
+      runtime,
     });
   });
 
@@ -34,12 +37,14 @@ export function createHealthRoutes(): Router {
     const agentsCount = agentManager.listAgents().length;
     const mcpCount = mcpProcessManager.getServersStatus().length;
     const ready = agentsCount > 0 && mcpCount >= 0;
+    const runtime = getRuntimeTelemetry();
 
     res.status(ready ? 200 : 503).json({
       status: ready ? "ready" : "starting",
       ready,
       agents: agentsCount,
       mcpServers: mcpCount,
+      runtime,
     });
   });
 
@@ -87,6 +92,8 @@ export function createHealthRoutes(): Router {
         mcpCount,
         (req as unknown as Record<string, unknown>).id as string,
       );
+
+      payload.runtime = getRuntimeTelemetry();
 
       cachedHealthResponse = payload;
       lastHealthCheckTime = now;

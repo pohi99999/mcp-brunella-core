@@ -11,12 +11,22 @@ REPO_ROOT="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
 SERVICE_USER="${SUDO_USER:-${USER:-root}}"
 SERVICE_GROUP="$(id -gn "${SERVICE_USER}")"
 SYSTEMD_DIR="/etc/systemd/system"
+CORE_NODE_HEAP_MB="${BRUNELLA_NODE_MAX_OLD_SPACE_SIZE:-1536}"
+CORE_RUNTIME_LIMIT_MB="${BRUNELLA_RUNTIME_MEMORY_LIMIT_MB:-2048}"
+CORE_RESTART_THRESHOLD_MB="${BRUNELLA_RUNTIME_RESTART_THRESHOLD_MB:-1792}"
 
 chmod +x \
   "${REPO_ROOT}/scripts/supervisors/linux/run-brunella-core.sh" \
   "${REPO_ROOT}/scripts/supervisors/linux/run-brunella-python.sh"
 
-cat > "${SYSTEMD_DIR}/brunella-python.service" <<EOF
+if ! command -v node >/dev/null 2>&1; then
+  echo "node is required to run the Brunella service preflight." >&2
+  exit 1
+fi
+
+node "${REPO_ROOT}/scripts/service-preflight.mjs" --platform linux
+
+cat >"${SYSTEMD_DIR}/brunella-python.service" <<EOF
 [Unit]
 Description=Brunella Python Runtime
 After=network-online.target
@@ -38,7 +48,7 @@ TimeoutStopSec=30
 WantedBy=multi-user.target
 EOF
 
-cat > "${SYSTEMD_DIR}/brunella-core.service" <<EOF
+cat >"${SYSTEMD_DIR}/brunella-core.service" <<EOF
 [Unit]
 Description=Brunella Core Control Plane
 After=network-online.target brunella-python.service
@@ -53,6 +63,9 @@ WorkingDirectory=${REPO_ROOT}
 Environment=NODE_ENV=production
 Environment=WEB_UI_ENABLED=true
 Environment=BRUNELLA_WORKSPACE_ROOT=${REPO_ROOT}
+Environment=BRUNELLA_NODE_MAX_OLD_SPACE_SIZE=${CORE_NODE_HEAP_MB}
+Environment=BRUNELLA_RUNTIME_MEMORY_LIMIT_MB=${CORE_RUNTIME_LIMIT_MB}
+Environment=BRUNELLA_RUNTIME_RESTART_THRESHOLD_MB=${CORE_RESTART_THRESHOLD_MB}
 ExecStart=${REPO_ROOT}/scripts/supervisors/linux/run-brunella-core.sh
 Restart=always
 RestartSec=5
@@ -70,5 +83,7 @@ systemctl enable --now brunella-python.service brunella-core.service
 echo "systemd services installed and started:"
 echo "  brunella-python.service"
 echo "  brunella-core.service"
+echo "  runtime contract: heap=${CORE_NODE_HEAP_MB}MB limit=${CORE_RUNTIME_LIMIT_MB}MB restart=${CORE_RESTART_THRESHOLD_MB}MB"
+echo "  install preflight: passed"
 echo
 echo "Canonical manual entrypoint remains: inditas.bat (Windows) or npm run start:stable + npm run start:python:stable"

@@ -97,4 +97,26 @@ describe('EventBus', () => {
     expect(received).toHaveLength(1);
     expect(received[0].payload).toEqual({ mode: 'memory' });
   });
+
+  it('falls back to in-memory mode when SQLite init fails after open', () => {
+    const bus = new EventBus({
+      pragma: () => {
+        throw new Error('disk I/O error');
+      },
+      exec: () => {},
+      prepare: () => {
+        throw new Error('should not prepare after pragma failure');
+      },
+    } as unknown as EventBusDb);
+
+    const received: BusEvent[] = [];
+    bus.on('*', (event) => received.push(event));
+
+    expect(() => {
+      bus.emit({ source: 'Fallback', type: 'system.recovered', payload: { stage: 'init' } });
+    }).not.toThrow();
+
+    expect(received).toHaveLength(1);
+    expect(received[0].payload).toEqual({ stage: 'init' });
+  });
 });

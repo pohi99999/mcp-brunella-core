@@ -356,9 +356,29 @@ uv sync              # Függőségek telepítése
 uvicorn server:app --reload --port 8000
 
 # Host-native supervision
+npm run services:preflight
 powershell -ExecutionPolicy Bypass -File scripts\supervisors\windows\install-windows-services.ps1
 bash scripts/supervisors/linux/install-systemd-services.sh
+
+# Service operations
+npm run services:status:windows
+npm run services:status:linux
+npm run services:uninstall:windows
+npm run services:uninstall:linux
 ```
+
+Stable runtime contract (minden stable indítási út ugyanazt a budgetet használja):
+
+```bash
+BRUNELLA_NODE_MAX_OLD_SPACE_SIZE=1536         # Node heap budget (MB)
+BRUNELLA_RUNTIME_MEMORY_LIMIT_MB=2048         # Teljes runtime envelope (MB)
+BRUNELLA_RUNTIME_RESTART_THRESHOLD_MB=1792    # Supervisor restart threshold (MB)
+```
+
+- A `scripts/start-stable.mjs` ezt a contractet validálja boot előtt.
+- Ha a launcher más heap budgettel indul, a stable startup fail-fast leáll.
+- Docker / PM2 / Windows service / systemd ugyanarra a contractre van igazítva.
+- A `npm run services:preflight` service install előtt ellenőrzi a stable buildet, a Python runtime-ot és a `logs`/`data` írhatóságát.
 
 ### Build & Teszt (KÖTELEZŐ munka előtt/után!)
 
@@ -373,6 +393,7 @@ npx vitest run test/foo.test.ts  # Egy specifikus teszt
 
 # Gyors health check
 npm run smoke        # Ollama, Express, FastAPI ellenőrzés
+npm run health       # Teljes health riport, runtime memória telemetriával
 ```
 
 ### CLI Parancsok

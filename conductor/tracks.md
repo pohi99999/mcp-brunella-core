@@ -1,14 +1,14 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-04-02T04:14:59.303Z
+**Utolso frissites:** 2026-04-02T06:25:50.624Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 169 total | 3 active | 4 completed | 158 archived
+**Stats:** 174 total | 4 active | 4 completed | 160 archived
 
 ---
 
-## Tervezett Szalak (Proposed) (7)
+## Tervezett Szalak (Proposed) (5)
 
 - [ ] **Brunella Federation — Later Phase Priority** [MEDIUM]
   - **ID:** `brunella_federation_phase5_20260402`
@@ -19,16 +19,6 @@
   - **ID:** `brunella_identity_project_maintainer_20260402`
   - **Progress:** 0%
   - Mappa: ./tracks/brunella_identity_project_maintainer_20260402/
-
-- [ ] **Brunella Reflection / Continual Learning Activation** [HIGH]
-  - **ID:** `brunella_reflection_continual_learning_20260402`
-  - **Progress:** 0%
-  - Mappa: ./tracks/brunella_reflection_continual_learning_20260402/
-
-- [ ] **Brunella Zero-Prompt → Ephemeral Agent Bridge** [HIGH]
-  - **ID:** `brunella_zero_prompt_ephemeral_bridge_20260402`
-  - **Progress:** 0%
-  - Mappa: ./tracks/brunella_zero_prompt_ephemeral_bridge_20260402/
 
 - [ ] **PohiAIPro Logistics Vertical — Brunella integráció** [HIGH]
   - **ID:** `logistics_vertical_20260222`
@@ -47,12 +37,18 @@
 
 ---
 
-## Aktiv Szalak (Active) (3)
+## Aktiv Szalak (Active) (4)
 
 - [ ] **Brunella Core Stabilization** [CRITICAL]
   - **ID:** `brunella_core_stabilization_20260402`
-  - **Progress:** 0%
+  - **Progress:** 70%
+  - **Updated:** 2026-04-02
   - Mappa: ./tracks/brunella_core_stabilization_20260402/
+
+- [ ] **Kognitív Könyvelés és Multi-Ágens Egyeztetés — Bővítmény** [HIGH]
+  - **ID:** `konyveles_kognitiv_bovites_20260330`
+  - **Progress:** 0%
+  - Mappa: ./tracks/konyveles_kognitiv_bovites_20260330/
 
 - [ ] **n8n Könyvelési Pipeline — Bank + KP + szamlazz.hu** [HIGH]
   - **ID:** `n8n_konyveles_pipeline_20260328`
@@ -87,11 +83,10 @@
 
 ---
 
-## Archivalt (Archived) (158)
+## Archivalt (Archived) (160)
 
 > Archived tracks are hidden by default. View in `conductor/archive/`
 
-- [x] **inventory_automation_20260330** (2026-04-02T07:05:00Z)
 - [x] **006_trojan-horse-campaign** (2026-03-22T22:47:34Z)
 - [x] **Agent Architect 2.0 Meta-Ügynök** (2026-02-13)
 - [x] **Agent diagnostics and routing modernization** (2026-03-23T08:15:00Z)
@@ -102,9 +97,8 @@
 - [x] **aider_integration_20260222** (N/A)
 - [x] **AI Recommendation System Integration** (2026-02-17T22:45:00Z)
 - [x] **apify_deep_scraping_agent_20260223** (N/A)
-- [x] **Kognitív Könyvelés és Multi-Ágens Egyeztetés — Bővítmény** (2026-04-02)
 
-... and 148 more archived tracks
+... and 150 more archived tracks
 
 ---
 

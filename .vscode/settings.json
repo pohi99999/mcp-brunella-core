@@ -1228,7 +1228,6 @@
     "chat.edits2.enabled": true,
     "chat.tools.terminal.autoReplyToPrompts": true,
     "chat.tools.terminal.ignoreDefaultAutoApproveRules": true,
-    "chat.tools.terminal.sandbox.enabled": true,
     "chat.mcp.discovery.enabled": {
         "claude-desktop": true,
         "windsurf": true,
@@ -1375,5 +1374,6 @@
     ],
     "windowsaistudio.enableCudaForResourceUsage": true,
     "appmod.experimental.task.rearchitecture": true,
-    "appmod.javaUpgrade.enableQuickPick": true
+    "appmod.javaUpgrade.enableQuickPick": true,
+    "chat.agent.sandbox": true
 }
