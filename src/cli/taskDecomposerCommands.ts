@@ -85,9 +85,9 @@ export function registerTaskDecomposerCommands(program: Command) {
     .action(
       async (
         taskArg?: string,
-        cmd?: { opts: () => { agent?: string; json?: boolean } },
+        cmdOpts?: { agent?: string; json?: boolean },
       ) => {
-        const opts = cmd?.opts?.() ?? {};
+        const opts = cmdOpts ?? {};
         let task = String(taskArg || "").trim();
 
         if (!task) {
