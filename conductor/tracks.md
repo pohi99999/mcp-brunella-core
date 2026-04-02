@@ -4,7 +4,7 @@
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 174 total | 5 active | 4 completed | 157 archived
+**Stats:** 169 total | 3 active | 4 completed | 158 archived
 
 ---
 
@@ -59,11 +59,6 @@
   - **Progress:** 85%
   - Mappa: ./tracks/inventory_automation_20260330/
 
-- [ ] **Kognitív Könyvelés és Multi-Ágens Egyeztetés — Bővítmény** [HIGH]
-  - **ID:** `konyveles_kognitiv_bovites_20260330`
-  - **Progress:** 0%
-  - Mappa: ./tracks/konyveles_kognitiv_bovites_20260330/
-
 - [ ] **n8n Könyvelési Pipeline — Bank + KP + szamlazz.hu** [HIGH]
   - **ID:** `n8n_konyveles_pipeline_20260328`
   - **Progress:** 85%
@@ -111,8 +106,9 @@
 - [x] **aider_integration_20260222** (N/A)
 - [x] **AI Recommendation System Integration** (2026-02-17T22:45:00Z)
 - [x] **apify_deep_scraping_agent_20260223** (N/A)
+- [x] **Kognitív Könyvelés és Multi-Ágens Egyeztetés — Bővítmény** (2026-04-02)
 
-... and 147 more archived tracks
+... and 148 more archived tracks
 
 ---
 
