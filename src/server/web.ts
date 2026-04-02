@@ -39,6 +39,46 @@ const PACKAGE_VERSION = (() => {
   }
 })();
 
+const UI_PUBLIC_DIR = path.join(process.cwd(), "build", "public");
+const UI_INDEX_PATH = path.join(UI_PUBLIC_DIR, "index.html");
+
+type RuntimePhase =
+  | "booting"
+  | "listening"
+  | "socket-ready"
+  | "db-ready"
+  | "metrics-ready"
+  | "routes-ready"
+  | "agents-ready"
+  | "autonomy-ready"
+  | "ready"
+  | "error";
+
+interface RuntimeStatus {
+  phase: RuntimePhase;
+  ready: boolean;
+  startedAt: string;
+  lastError?: string;
+}
+
+const runtimeStatus: RuntimeStatus = {
+  phase: "booting",
+  ready: false,
+  startedAt: new Date().toISOString(),
+};
+
+function setRuntimeStatus(update: Partial<RuntimeStatus>): void {
+  Object.assign(runtimeStatus, update);
+}
+
+function allowUiDevFallback(): boolean {
+  if (process.env.NODE_ENV === "production") {
+    return false;
+  }
+
+  return process.env.UI_DEV_FALLBACK !== "0" && process.env.UI_DEV_FALLBACK !== "false";
+}
+
 // ── Singleton guard: exported so index.ts can close it on shutdown ─
 export let activeHttpServer: HttpServer | null = null;
 
@@ -89,6 +129,12 @@ export async function startWebServer() {
 
   // ── Singleton guard: prevent duplicate server processes ────────
   acquirePidLock();
+  setRuntimeStatus({
+    phase: "booting",
+    ready: false,
+    startedAt: new Date().toISOString(),
+    lastError: undefined,
+  });
 
   // ── Phase 1: Immediate HTTP server ─────────────────────────────
   // Start listening ASAP so /ping and the dashboard are available
@@ -96,6 +142,32 @@ export async function startWebServer() {
   const app = express();
 
   app.get("/ping", (_req, res) => { res.send("pong"); });
+  app.get("/livez", (_req, res) => {
+    res.status(200).json({
+      status: "alive",
+      phase: runtimeStatus.phase,
+      ready: runtimeStatus.ready,
+      pid: process.pid,
+      uptimeSeconds: Math.round(process.uptime()),
+      version: PACKAGE_VERSION,
+    });
+  });
+  app.get("/readyz", (_req, res) => {
+    const uiBuilt = existsSync(UI_INDEX_PATH);
+    const uiRequired = process.env.NODE_ENV === "production" && webUiEnabled;
+    const ready = runtimeStatus.ready && (!uiRequired || uiBuilt);
+    const statusCode = ready ? 200 : runtimeStatus.phase === "error" ? 500 : 503;
+
+    res.status(statusCode).json({
+      status: ready ? "ready" : runtimeStatus.phase === "error" ? "error" : "starting",
+      ready,
+      phase: runtimeStatus.phase,
+      uiBuilt,
+      uiRequired,
+      startedAt: runtimeStatus.startedAt,
+      lastError: runtimeStatus.lastError,
+    });
+  });
 
   const jsonParser = express.json({ limit: "1mb" });
   app.use((req, res, next) => {
@@ -110,7 +182,7 @@ export async function startWebServer() {
   app.use(requestLogging);
   app.use("/api", apiRateLimit);
 
-  app.use(express.static(path.join(process.cwd(), "build", "public")));
+  app.use(express.static(UI_PUBLIC_DIR));
 
   const httpServer = createServer(app);
   activeHttpServer = httpServer; // expose for graceful shutdown
@@ -118,6 +190,7 @@ export async function startWebServer() {
   await new Promise<void>((resolve) => {
     httpServer.listen(config.port, () => {
       logInfo("Server", `http://localhost:${config.port} listening (initializing...)`);
+      setRuntimeStatus({ phase: "listening" });
       resolve();
     });
   });
@@ -152,10 +225,13 @@ export async function startWebServer() {
   });
   const { socketService } = await import("./SocketService.js");
   socketService.init(io);
+  setRuntimeStatus({ phase: "socket-ready" });
 
   // ── Fire-and-forget: heavy background initialization ───────────
   deferredInit(app, httpServer, io).catch((e) => {
-    logError("Server", `Deferred init error: ${e instanceof Error ? e.message : String(e)}`);
+    const message = e instanceof Error ? e.message : String(e);
+    setRuntimeStatus({ phase: "error", ready: false, lastError: message });
+    logError("Server", `Deferred init error: ${message}`);
   });
 }
 
@@ -201,6 +277,7 @@ async function deferredInit(
   }
 
   logInfo("Server", "Phase 2 complete: databases initialized");
+  setRuntimeStatus({ phase: "db-ready" });
   await yieldToEventLoop();
 
   // ── Phase 3: Metrics & MCP Bridge ──────────────────────────────
@@ -225,6 +302,7 @@ async function deferredInit(
   }
 
   logInfo("Server", "Phase 3 complete: metrics & MCP bridge");
+  setRuntimeStatus({ phase: "metrics-ready" });
   await yieldToEventLoop();
 
   // ── Phase 4: API routes + Swagger ──────────────────────────────
@@ -252,6 +330,7 @@ async function deferredInit(
   });
 
   logInfo("Server", "Phase 4 complete: API routes mounted");
+  setRuntimeStatus({ phase: "routes-ready" });
   await yieldToEventLoop();
 
   // ── Phase 5: AgentManager + ToolManager + Socket handlers ──────
@@ -321,6 +400,7 @@ async function deferredInit(
   }
 
   logInfo("Server", "Phase 5 complete: agents & websocket handlers");
+  setRuntimeStatus({ phase: "agents-ready" });
   await yieldToEventLoop();
 
   // ── Phase 6: Phoenix, ZeroPrompt, CEAN, Pipeline ───────────────
@@ -385,6 +465,7 @@ async function deferredInit(
   }
 
   logInfo("Server", "Phase 6 complete: Phoenix, ZeroPrompt, CEAN");
+  setRuntimeStatus({ phase: "autonomy-ready" });
   await yieldToEventLoop();
 
   // ── Phase 6.5: Start AgentManager worker loop ──────────────────
@@ -513,24 +594,37 @@ async function deferredInit(
 
   // ── Root & SPA fallback (MUST be AFTER api routes) ─────────────
   app.get("/", (_req, res) => {
-    const indexPath = path.join(process.cwd(), "build", "public", "index.html");
-    if (existsSync(indexPath)) {
-      res.sendFile(indexPath);
-    } else {
-      res.redirect("http://localhost:5173");
+    if (existsSync(UI_INDEX_PATH)) {
+      res.sendFile(UI_INDEX_PATH);
+      return;
     }
+
+    if (allowUiDevFallback()) {
+      res.redirect("http://localhost:5173");
+      return;
+    }
+
+    res.status(503).json({
+      error: "Dashboard static build is missing",
+      expectedPath: UI_INDEX_PATH,
+    });
   });
 
   app.use((req, res, next) => {
     if (req.path.startsWith("/api") || req.path.startsWith("/socket.io") || req.path.startsWith("/audio")) {
       return next();
     }
-    const indexPath = path.join(process.cwd(), "build", "public", "index.html");
-    if (existsSync(indexPath)) {
-      res.sendFile(indexPath);
-    } else {
-      next();
+    if (existsSync(UI_INDEX_PATH)) {
+      res.sendFile(UI_INDEX_PATH);
+      return;
     }
+
+    if (allowUiDevFallback()) {
+      res.redirect(`http://localhost:5173${req.originalUrl}`);
+      return;
+    }
+
+    next();
   });
 
   // ── Schedulers, sync, heartbeat (last phase) ───────────────────
@@ -594,5 +688,6 @@ async function deferredInit(
     logWarn("Server", `Heartbeat monitor: ${e instanceof Error ? e.message : String(e)}`);
   }
 
+  setRuntimeStatus({ phase: "ready", ready: true, lastError: undefined });
   logInfo("Server", `Fully initialized on http://localhost:${config.port}`);
 }

@@ -30,6 +30,7 @@ interface CheckResult {
 interface HealthReport {
   timestamp: string;
   overall: "healthy" | "degraded" | "unhealthy";
+  runtimeOverall: "healthy" | "degraded" | "unhealthy";
   checks: CheckResult[];
   passCount: number;
   warnCount: number;
@@ -204,15 +205,15 @@ async function checkNodeBackend(): Promise<CheckResult> {
   const start = Date.now();
   const port = process.env.PORT || "3000";
   try {
-    const resp = await fetch(`http://localhost:${port}/api/health`, {
+    const resp = await fetch(`http://localhost:${port}/readyz`, {
       signal: AbortSignal.timeout(5000),
     });
     if (resp.ok) {
-      const data = (await resp.json()) as { status?: string };
+      const data = (await resp.json()) as { status?: string; ready?: boolean };
       return {
         name: "Node.js Backend",
-        status: "pass",
-        message: `status=${data.status}`,
+        status: data.ready === false ? "warn" : "pass",
+        message: `status=${data.status || "unknown"}`,
         durationMs: Date.now() - start,
       };
     }
@@ -424,9 +425,21 @@ export async function runHealthCheck(): Promise<HealthReport> {
   else if (warnCount > 0) overall = "degraded";
   else overall = "healthy";
 
+  const runtimeChecks = checks.filter((check) =>
+    ["Node.js Backend", "Python FastAPI", "Build", "SQLite DBs"].includes(check.name),
+  );
+  const runtimeFailCount = runtimeChecks.filter((check) => check.status === "fail").length;
+  const runtimeWarnCount = runtimeChecks.filter((check) => check.status === "warn").length;
+
+  let runtimeOverall: "healthy" | "degraded" | "unhealthy";
+  if (runtimeFailCount > 0) runtimeOverall = "unhealthy";
+  else if (runtimeWarnCount > 0) runtimeOverall = "degraded";
+  else runtimeOverall = "healthy";
+
   return {
     timestamp: new Date().toISOString(),
     overall,
+    runtimeOverall,
     checks,
     passCount,
     warnCount,
@@ -464,6 +477,7 @@ function printReport(report: HealthReport): void {
     `  ${overallIcon} Összesítés: ${report.passCount} PASS, ${report.warnCount} WARN, ${report.failCount} FAIL`,
   );
   console.log(`  📊 Állapot: ${report.overall.toUpperCase()}`);
+  console.log(`  ⚙️ Runtime: ${report.runtimeOverall.toUpperCase()}`);
   console.log(`  🕐 ${report.timestamp}\n`);
 }
 

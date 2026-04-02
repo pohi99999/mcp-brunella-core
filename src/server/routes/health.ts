@@ -21,6 +21,28 @@ const HEALTH_CACHE_TTL_MS = 10000; // 10 seconds
 export function createHealthRoutes(): Router {
   const router = Router();
 
+  router.get("/live", (_req, res) => {
+    res.json({
+      status: "alive",
+      process: "brunella-core",
+      pid: process.pid,
+      uptimeSeconds: Math.round(process.uptime()),
+    });
+  });
+
+  router.get("/ready", (_req, res) => {
+    const agentsCount = agentManager.listAgents().length;
+    const mcpCount = mcpProcessManager.getServersStatus().length;
+    const ready = agentsCount > 0 && mcpCount >= 0;
+
+    res.status(ready ? 200 : 503).json({
+      status: ready ? "ready" : "starting",
+      ready,
+      agents: agentsCount,
+      mcpServers: mcpCount,
+    });
+  });
+
   /**
    * @swagger
    * /api/health:

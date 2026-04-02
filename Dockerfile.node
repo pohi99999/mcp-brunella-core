@@ -8,7 +8,7 @@ RUN npm ci
 
 COPY . .
 
-RUN npm run build
+RUN npm run build:stable
 
 FROM node:24-alpine
 
@@ -16,13 +16,27 @@ WORKDIR /app
 
 ENV NODE_ENV=production
 
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+
 COPY --from=build /app/package*.json ./
 
-RUN npm ci --omit=dev
+RUN apk add --no-cache --virtual .build-deps python3 make g++ \
+  && npm ci --omit=dev \
+  && npm rebuild better-sqlite3 --build-from-source \
+  && apk del .build-deps
 
 COPY --from=build /app/build ./build
 COPY --from=build /app/public ./public
+COPY --from=build /app/scripts/start-stable.mjs ./scripts/start-stable.mjs
+
+RUN mkdir -p /app/data /app/logs \
+  && chown -R appuser:appgroup /app
+
+USER appuser
 
 EXPOSE 3000
 
-CMD ["node", "build/index.js"]
+HEALTHCHECK --interval=15s --timeout=5s --start-period=45s --retries=3 \
+  CMD wget -qO- http://127.0.0.1:3000/readyz >/dev/null || exit 1
+
+CMD ["node", "--max-old-space-size=1536", "scripts/start-stable.mjs"]

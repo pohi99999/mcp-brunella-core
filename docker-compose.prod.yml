@@ -1,29 +1,55 @@
-version: "3.9"
-
 services:
   brunella-core:
     build:
       context: .
       dockerfile: Dockerfile.node
     container_name: brunella-core
+    init: true
     environment:
       NODE_ENV: production
       PORT: 3000
+      PYTHON_API_URL: http://brunella-ai:8000
+      PYTHON_BASE_URL: http://brunella-ai:8000
+      BRUNELLA_PYTHON_API_URL: http://brunella-ai:8000
       OLLAMA_BASE_URL: ${OLLAMA_BASE_URL:-http://host.docker.internal:11434}
       BRUNELLA_WORKSPACE_ROOT: /app
     ports:
       - "3000:3000"
     restart: unless-stopped
+    stop_grace_period: 30s
+    mem_limit: 2g
+    memswap_limit: 2g
     depends_on:
-      - brunella-ai
+      brunella-ai:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:3000/readyz >/dev/null || exit 1"]
+      interval: 15s
+      timeout: 5s
+      start_period: 45s
+      retries: 3
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
   brunella-ai:
     build:
       context: .
       dockerfile: Dockerfile.python
     container_name: brunella-ai
+    init: true
     environment:
       PYTHONUNBUFFERED: 1
     ports:
       - "8000:8000"
     restart: unless-stopped
+    stop_grace_period: 20s
+    mem_limit: 1g
+    memswap_limit: 1g
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:8000/health >/dev/null || exit 1"]
+      interval: 10s
+      timeout: 4s
+      start_period: 20s
+      retries: 3
+    extra_hosts:
+      - "host.docker.internal:host-gateway"

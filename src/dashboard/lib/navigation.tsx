@@ -17,6 +17,7 @@ import { BrowserCopilotPanel } from "@/components/dashboard/BrowserCopilotPanel"
 import { PAIOSOrchestratorChat } from "@/components/dashboard/PAIOSOrchestratorChat";
 import { PhoenixEventsPanel } from "@/components/dashboard/PhoenixEventsPanel";
 import { AgentManagementPanel } from "@/components/dashboard/AgentManagementPanel";
+import { AgentToolCatalog } from "@/components/dashboard/AgentToolCatalog";
 import { TaskQueueMonitor } from "@/components/dashboard/TaskQueueMonitor";
 import { KnowledgeBasePanel } from "@/components/dashboard/KnowledgeBasePanel";
 import { IncubatorPanel } from "@/components/dashboard/IncubatorPanel";
@@ -186,7 +187,7 @@ export function initializeNavigation ()
       label: "Enterprise Analytics",
       icon: BarChart3,
       component: (
-        <Suspense fallback={ <div className="p-4 text-sm text-zinc-400">Enterprise Analytics betöltése...</div> }>
+        <Suspense fallback={<div className="p-4 text-sm text-zinc-400">Enterprise Analytics betöltése...</div>}>
           <LazyEnterpriseAnalyticsWidget />
         </Suspense>
       ),
@@ -226,10 +227,10 @@ export function initializeNavigation ()
     { id: "settings", label: "System Config", icon: Settings, component: <SettingsPanel /> },
     { id: "guardrails", label: "Guardrails", icon: ShieldAlert, component: <GuardrailsPanel /> },
     { id: "telemetry", label: "Telemetria", icon: Gauge, component: <TelemetryPanel /> },
-    { id: "chrome-acp", label: "Chrome ACP", icon: Code2, component: <EmbeddedWorkflow title="Chrome ACP Browser" url="http://localhost:9315" icon={ <Code2 size={ 20 } /> } allowSameOrigin={ true } /> },
-    { id: "n8n", label: "n8n Automation", icon: Workflow, component: <EmbeddedWorkflow title="n8n Automation" url="http://localhost:5678" icon={ <Workflow size={ 20 } /> } /> },
-    { id: "langflow", label: "Langflow Orchestration", icon: Sparkles, component: <EmbeddedWorkflow title="Langflow Orchestration" url="http://localhost:3000" icon={ <Sparkles size={ 20 } /> } /> },
-    { id: "vscode", label: "VSCode Stream", icon: Code2, component: <EmbeddedWorkflow title="VSCode — Brunella Workspace" url="http://localhost:8080" icon={ <Code2 size={ 20 } /> } allowSameOrigin={ true } /> },
+    { id: "chrome-acp", label: "Chrome ACP", icon: Code2, component: <EmbeddedWorkflow title="Chrome ACP Browser" url="http://localhost:9315" icon={<Code2 size={20} />} allowSameOrigin={true} /> },
+    { id: "n8n", label: "n8n Automation", icon: Workflow, component: <EmbeddedWorkflow title="n8n Automation" url="http://localhost:5678" icon={<Workflow size={20} />} /> },
+    { id: "langflow", label: "Langflow Orchestration", icon: Sparkles, component: <EmbeddedWorkflow title="Langflow Orchestration" url="http://localhost:3000" icon={<Sparkles size={20} />} /> },
+    { id: "vscode", label: "VSCode Stream", icon: Code2, component: <EmbeddedWorkflow title="VSCode — Brunella Workspace" url="http://localhost:8080" icon={<Code2 size={20} />} allowSameOrigin={true} /> },
     { id: "swarm-panel", label: "Swarm Intelligence", icon: Users, component: <SwarmPanel /> },
     { id: "tool-discovery", label: "Tool Discovery", icon: Wrench, component: <ToolDiscoveryPanel /> },
     { id: "security-panel", label: "Security Monitor", icon: Shield, component: <SecurityPanel /> },
@@ -250,6 +251,7 @@ export function initializeNavigation ()
     { id: "vector-stats", label: "Vector Analytics", icon: BarChart3, component: <VectorizeAnalyticsWidget /> },
     { id: "agent-factory", label: "Agent Factory", icon: Sparkles, component: <AgentFactory /> },
     { id: "tools-manager", label: "Tool Manager", icon: Wrench, component: <AgentToolsManager /> },
+    { id: "agent-tool-catalog", label: "Agent & Tool Catalog", icon: Rocket, component: <AgentToolCatalog /> },
     { id: "harvest-pipeline", label: "Harvest Pipeline", icon: Activity, component: <HarvestPipelineWidget /> },
     { id: "process-control", label: "Process Control", icon: Gauge, component: <ProcessControlWidget /> },
     { id: "service-control", label: "Service Control", icon: Settings, component: <ServiceControlWidget /> },

@@ -17,11 +17,12 @@ interface EndpointCheck {
 }
 
 const ENDPOINTS: Omit<EndpointCheck, "status" | "responseTime" | "error">[] = [
-  { name: "Express Backend",   url: "http://localhost:3000/api/health",  optional: false },
-  { name: "FastAPI Python",    url: "http://localhost:8000/health",      optional: true },
-  { name: "Dashboard UI",      url: "http://localhost:5173",             optional: true },
-  { name: "Ollama LLM",        url: "http://localhost:11434/api/tags",   optional: false },
-  { name: "AnythingLLM",       url: "http://localhost:3001/api/health",  optional: true },
+  { name: "Brunella Core Ready", url: "http://localhost:3000/readyz",      optional: false },
+  { name: "Dashboard UI",        url: "http://localhost:3000/",            optional: false },
+  { name: "FastAPI Python",      url: "http://localhost:8000/health",      optional: false },
+  { name: "Dashboard Dev UI",    url: "http://localhost:5173",             optional: true },
+  { name: "Ollama LLM",          url: "http://localhost:11434/api/tags",   optional: false },
+  { name: "AnythingLLM",         url: "http://localhost:3001/api/health",  optional: true },
 ];
 
 async function checkEndpoint(ep: Omit<EndpointCheck, "status" | "responseTime" | "error">): Promise<EndpointCheck> {
