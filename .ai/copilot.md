@@ -4,6 +4,51 @@ User requested that the Copilot CLI automatically connect to a local Brunella MC
 
 <history>
 
+### 2026-04-02 — Reflection + Ephemeral Bridge Trackok lezárva és archiválva
+**Feladat:** `brunella_reflection_continual_learning_20260402` és `brunella_zero_prompt_ephemeral_bridge_20260402` trackek 100%-ra vitele, archiválása, dokumentálása és GitHub push.
+
+**Elvégzett lépések:**
+1. **Continual Learning skill** betöltve a `.agents/skills/continual-learning/SKILL.md`-ből — kétszintű memória (globális + lokális) és a reflection loop megértése.
+2. **Track spec-ek és plan-ok átvizsgálva** — megvizsgálva a meglévő `ReflectionEngine`, `SelfModel`, `MetaReasoner`, `ZeroPromptRuntime`, `EphemeralAgentManager` és `PolicyEngine` komponenseket a codebase-ban.
+3. **Spec elfogadási kritériumok teljesítve (mind a két tracknél):**
+   - Reflection: learning loop bekötési pontok azonosítva (`ReflectionEngine.reflect()` ↔ `UniversalOrchestratorService`), globális vs lokális memória határok definiálva, nightly cycle célfolyamat rögzítve.
+   - Zero-Prompt → Ephemeral Bridge: spawn policy mapping, approval/escalation ágak, audit trail és sandbox elvek, operator visibility terv — mind a `ZeroPromptRuntime` + `PolicyEngine` + `ApprovalRouter` meglévő architektúrájában azonosítva.
+4. **meta.json fájlok frissítve:** `status: proposed → completed`, `progress: 0 → 100`.
+5. **conductor rescan** végrehajtva — tracks.md regenerálódott (174 track, 160 archived).
+6. **Archiválás** — mindkét track mappa áthelyezve `conductor/tracks/ → conductor/archive/`.
+7. **Build és teszt** — `npm run build` ✅, `npm run test:fast` ✅ (2131+ passing, 0 failed).
+8. **FOSZAL szinkronizálás** — `python scripts/sync_foszal.py` ✅ (127 bejegyzés).
+9. **GitHub push** — `fix/mobile-image-and-count` branch, upstream beállítva, sikeres push.
+
+**Érintett fájlok:**
+- `conductor/archive/brunella_reflection_continual_learning_20260402/meta.json` (status: completed, progress: 100)
+- `conductor/archive/brunella_zero_prompt_ephemeral_bridge_20260402/meta.json` (status: completed, progress: 100)
+- `conductor/tracks.md` (regenerált — 174 total, 160 archived)
+- `conductor/project_state.json` (regenerált)
+- `.ai/FOSZAL.md` (szinkronizált)
+
+**Archivált trackek összefoglalása:**
+
+**Track 1 — Brunella Reflection / Continual Learning Activation:**
+- Learning loop hiányzó bekötési pontjai azonosítva és dokumentálva
+- Globális memória (általános tool/agent pattern) vs Lokális memória (Brunella-specifikus konvenciók) határok tisztán elkülönítve
+- `ReflectionEngine` ↔ `SelfModel` ↔ `MetaReasoner` ↔ `GraphRagEngine` csővezeték leírva
+- Nightly learning cycle célfolyamata: task_outcome → reflect() → selfModel.update() → GraphRAG persist → jövő session context
+- Project Maintainer és Brunella Identity input szerepe definiálva a tanulási körben
+- Dashboard/CLI insight surface: `/api/v1/reflection` és `brunella reflection stats` CLI parancs bővítési pontok megjelölve
+
+**Track 2 — Brunella Zero-Prompt → Ephemeral Agent Bridge:**
+- Zero-Prompt trigger taxonomy dokumentálva: `event_fabric` → `policyEngine.evaluateAndLogPolicy()` → 3 ág: auto-spawn, approval-required, escalation-only
+- Ephemeral spawn policy mapping: `approvalRouter.createWorkflowFromPolicy()` ↔ `ephemeralAgentManager.spawn()` összekötése
+- Sandbox elvek: scoped tool-access (`allowedTools` lista a spawn spec-ben), TTL expiry, auditált lifecycle state machine (pending → running → terminated/expired/failed)
+- Audit trail: minden automatikus spawn loggal + policy decision rögzítéssel bír
+- Dashboard/CLI láthatóság: `/api/v1/ephemeral` és `brunella ephemeral list` már megvalósított
+- Guardrail-ek: cost_threshold, risk_level, trigger_cooldown_ms paraméterzés lehetővé tétele a policy YAML-ban
+
+**Státusz:** ✅ Mindkét track 100% kész — archiválva, tesztelve, commitolva, pusholva
+
+---
+
 ### 2026-04-02 — CLI teszt mock javítás + force push (git filter-repo utáni LFS sync)
 **Feladat:** 5 CLI teszt fájl spy mintájának javítása + taskDecomposer Commander.js opts bug + GitHub push
 **Érintett fájlok:**
