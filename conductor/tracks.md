@@ -1,10 +1,10 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-04-02T06:25:50.624Z
+**Utolso frissites:** 2026-04-02T14:36:49.929Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 174 total | 4 active | 4 completed | 160 archived
+**Stats:** 174 total | 4 active | 6 completed | 158 archived
 
 ---
 
@@ -41,7 +41,7 @@
 
 - [ ] **Brunella Core Stabilization** [CRITICAL]
   - **ID:** `brunella_core_stabilization_20260402`
-  - **Progress:** 70%
+  - **Progress:** 95%
   - **Updated:** 2026-04-02
   - Mappa: ./tracks/brunella_core_stabilization_20260402/
 
@@ -62,11 +62,19 @@
 
 ---
 
-## Befejezett (Completed - Not Archived) (4)
+## Befejezett (Completed - Not Archived) (6)
 
 - [x] **AutoGen GitHub Models pilot a Python MCP alrendszerben**
   - **ID:** `autogen_github_models_pilot_20260401`
   - Mappa: ./tracks/autogen_github_models_pilot_20260401/
+
+- [x] **Brunella Reflection / Continual Learning Activation**
+  - **ID:** `brunella_reflection_continual_learning_20260402`
+  - Mappa: ./tracks/brunella_reflection_continual_learning_20260402/
+
+- [x] **Brunella Zero-Prompt → Ephemeral Agent Bridge**
+  - **ID:** `brunella_zero_prompt_ephemeral_bridge_20260402`
+  - Mappa: ./tracks/brunella_zero_prompt_ephemeral_bridge_20260402/
 
 - [x] **P-Sales20260327**
   - **ID:** `P-Sales20260327`
@@ -83,7 +91,7 @@
 
 ---
 
-## Archivalt (Archived) (160)
+## Archivalt (Archived) (158)
 
 > Archived tracks are hidden by default. View in `conductor/archive/`
 
@@ -98,7 +106,7 @@
 - [x] **AI Recommendation System Integration** (2026-02-17T22:45:00Z)
 - [x] **apify_deep_scraping_agent_20260223** (N/A)
 
-... and 150 more archived tracks
+... and 148 more archived tracks
 
 ---
 

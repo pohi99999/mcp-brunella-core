@@ -222,6 +222,13 @@ export class ScheduledTasksRunner {
             prompt: 'Verify if data/training/golden_dataset.jsonl has increased in size in the last 24 hours. Report status to dashboard/logs.',
             cron_expression: '0 4 * * *',
             handler: 'agent'
+          },
+          {
+            id: 'nightly-reflection-cycle',
+            title: 'Nightly Reflection & Continual Learning Cycle',
+            prompt: 'Run ReflectionEngine.runNightlyCycle(): consolidate lessons from the past day, detect pain points, update SelfModel, and persist meta-insights to GraphRAG.',
+            cron_expression: '0 2 * * *',
+            handler: 'agent'
           }
         ];
 

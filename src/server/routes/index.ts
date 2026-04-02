@@ -117,6 +117,7 @@ export function createV1Router(): Router {
   router.use("/webhooks", lazy(() => import("./webhooks.js"), "default", db));
   router.use("/contact", lazy(() => import("./contact.js"), "default"));
   router.use("/harvest", lazy(() => import("./harvest.js"), "harvestRouter"));
+  router.use("/reflection", lazy(() => import("./reflection.js"), "createReflectionRouter"));
   router.use("/zero-prompt", lazy(() => import("./zeroPrompt.js"), "createZeroPromptRouter"));
   router.use("/ephemeral", lazy(() => import("./ephemeral.js"), "createEphemeralRouter"));
   router.use("/orchestrator", lazy(() => import("./universalOrchestrator.js"), "createUniversalOrchestratorRouter"));
