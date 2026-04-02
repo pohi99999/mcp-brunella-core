@@ -1,0 +1,25 @@
+{
+  "id": "brunella_federation_phase5_20260402",
+  "title": "Brunella Federation — Later Phase Priority",
+  "status": "proposed",
+  "priority": "medium",
+  "createdAt": "2026-04-02",
+  "owner": "GitHub Copilot",
+  "progress": 0,
+  "tags": [
+    "brunella",
+    "federation",
+    "phase5",
+    "deferred",
+    "b2b",
+    "remote-layer"
+  ],
+  "sourceDocument": "User direction + architecture review 2026-04-02",
+  "phase": 5,
+  "dependencies": [
+    "brunella_core_stabilization_20260402",
+    "brunella_identity_project_maintainer_20260402",
+    "brunella_reflection_continual_learning_20260402",
+    "brunella_zero_prompt_ephemeral_bridge_20260402"
+  ]
+}

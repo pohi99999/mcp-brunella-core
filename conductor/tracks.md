@@ -1,14 +1,34 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-04-02T02:07:42.732Z
+**Utolso frissites:** 2026-04-02T04:14:59.303Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 169 total | 4 active | 4 completed | 157 archived
+**Stats:** 174 total | 5 active | 4 completed | 157 archived
 
 ---
 
-## Tervezett Szalak (Proposed) (3)
+## Tervezett Szalak (Proposed) (7)
+
+- [ ] **Brunella Federation — Later Phase Priority** [MEDIUM]
+  - **ID:** `brunella_federation_phase5_20260402`
+  - **Progress:** 0%
+  - Mappa: ./tracks/brunella_federation_phase5_20260402/
+
+- [ ] **Brunella Identity + Project Maintainer** [HIGH]
+  - **ID:** `brunella_identity_project_maintainer_20260402`
+  - **Progress:** 0%
+  - Mappa: ./tracks/brunella_identity_project_maintainer_20260402/
+
+- [ ] **Brunella Reflection / Continual Learning Activation** [HIGH]
+  - **ID:** `brunella_reflection_continual_learning_20260402`
+  - **Progress:** 0%
+  - Mappa: ./tracks/brunella_reflection_continual_learning_20260402/
+
+- [ ] **Brunella Zero-Prompt → Ephemeral Agent Bridge** [HIGH]
+  - **ID:** `brunella_zero_prompt_ephemeral_bridge_20260402`
+  - **Progress:** 0%
+  - Mappa: ./tracks/brunella_zero_prompt_ephemeral_bridge_20260402/
 
 - [ ] **PohiAIPro Logistics Vertical — Brunella integráció** [HIGH]
   - **ID:** `logistics_vertical_20260222`
@@ -27,7 +47,12 @@
 
 ---
 
-## Aktiv Szalak (Active) (4)
+## Aktiv Szalak (Active) (5)
+
+- [ ] **Brunella Core Stabilization** [CRITICAL]
+  - **ID:** `brunella_core_stabilization_20260402`
+  - **Progress:** 0%
+  - Mappa: ./tracks/brunella_core_stabilization_20260402/
 
 - [ ] **Autonóm Készlet- és Leltárkezelési Rendszer — KKV** [MEDIUM]
   - **ID:** `inventory_automation_20260330`
