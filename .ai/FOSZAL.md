@@ -1,6 +1,6 @@
 # FŐSZÁL - Egyesített Fejlesztési Napló
 
-**Generálva:** 2026-04-02 15:53
+**Generálva:** 2026-04-03 08:37
 **Script:** `scripts/sync_foszal.py`
 
 ---
@@ -27,6 +27,14 @@ start-full.bat
 ---
 
 ## Összesített Napló (Időrendben)
+
+### 2026-04-03
+
+#### 00:00 - [Copilot] Federation fail-closed hardening + Google credential contract cleanup
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+
+---
 
 ### 2026-04-02
 
@@ -772,7 +780,7 @@ start-full.bat
 | Claude | 85 | 2026-03-31 |
 | Gemini | 19 | 2026-04-02 |
 | Cursor | 0 | N/A |
-| Copilot | 23 | 2026-03-28 |
+| Copilot | 24 | 2026-04-03 |
 
 ---
 

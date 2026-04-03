@@ -25,6 +25,7 @@
 npm run build                     # TypeScript build to build/ + copy registry/TRIZ data
 npm run dev                       # Node entrypoint (Express + MCP)
 npm run dev:ui                    # Vite dashboard on :5173
+dashboard.bat                     # ✅ Browser-ready launcher: starts Ollama+FastAPI+Backend+UI, opens :5173
 start-full.bat                    # Full Windows startup (backend + FastAPI + dashboard)
 npm run smoke                     # Startup/health check
 
@@ -73,10 +74,35 @@ Local hooks are part of the workflow:
 - **`FOSZAL.md` is generated.** Update `.ai/copilot.md`, then run `python scripts/sync_foszal.py`; do not hand-edit `FOSZAL.md`.
 - **Treat core wiring files as deliberate-change areas.** `src/index.ts`, `src/server/web.ts`, `src/server/registry.ts`, `src/agents/registry.json`, `package.json`, `.env`, and `conductor/tracks.md` have broad blast radius.
 - **GitHub Models prefer `GITHUB_PAT`.** Repo docs and recent fixes treat `GITHUB_PAT` as the preferred GitHub Models credential ahead of `GITHUB_TOKEN`.
+- **Google auth has two separate credential contracts.** Service-account automation should use `GOOGLE_CREDENTIALS_FILE` or `GOOGLE_SERVICE_ACCOUNT_JSON` (preferred file: `credentials/google-service-account.json`), while interactive Workspace OAuth should use `GOOGLE_WORKSPACE_CREDENTIALS_FILE` and `GOOGLE_WORKSPACE_TOKEN_FILE` (preferred files under `credentials/`). Legacy `config/` and root-level paths are compatibility-only fallbacks and should not be introduced in new work.
+- **Federation manifest signing is fail-closed.** `src/core/federation/capabilityManifest.ts` requires `MANIFEST_SIGNING_SECRET` with at least 32 characters; there is no default shared-secret fallback anymore.
 - **Python work assumes Python 3.12+ and `uv`.** `pyproject.toml` is the source of truth for Python dependencies; the optional `autogen` extra enables the isolated AutoGen pilot used by `myai/mcp_server.py`.
+
+## Known pitfalls
+
+- **`better-sqlite3` on Node v24+**: Native bindings must match the Node ABI. After a Node upgrade, run `npm rebuild better-sqlite3`. If `deferredInit()` crashes at Phase 2 (DB init), all `/api/*` routes return 404 (only `/ping` works). Check `logs/node-server.log` first. Binary lives at `node_modules/better-sqlite3/build/Release/better_sqlite3.node`.
+- **`federation_replay_nonces_runtime` INSERT**: The `created_at` column has `NOT NULL DEFAULT datetime('now')` in DDL but SQLite `DEFAULT` does not apply on explicit-column `INSERT OR REPLACE`. Always pass `datetime('now')` explicitly in the values.
+- **Root `AGENTS.md` is Cloudflare Docs, not BAS.** The file at repo root describes the `cloudflare-docs` repo conventions — it is stale/misplaced. Ignore it for BAS work; the authoritative file is `.github/copilot-instructions.md`.
+- **`buildHealthResponse` parameter count**: The health route builder takes 10 args `(ollama, anythingllm, python, n8n, langflow, wab, cloudflare, agentCount, mcpCount, requestId)`. Test mocks must match exactly or the health payload silently returns the real value.
+- **Dashboard build is separate.** `src/dashboard/` is excluded from the main `tsconfig.json`. Use `npm run build:ui` and `npm run test:dashboard` — not `npm run build`.
+
+## Custom Copilot agents
+
+Twenty-plus domain-specific agents live in `.github/agents/*.agent.md`. Invoke them with `@<name>` in Copilot Chat for specialized workflows:
+
+| Agent | Purpose |
+| ----- | ------- |
+| `bas-orchestrator-commander` | Multi-agent workflow orchestration, Phoenix Protocol retry chains |
+| `bas-lead-developer` | End-to-end full-stack feature implementation (TDD, docs, tests) |
+| `bas-phoenix-reviewer` | Code review for EPP v2 / Phoenix Protocol compliance |
+| `bas-mcp-architect` | MCP tool design, WebSocket, TypeScript↔Python bridge |
+| `bas-web-architect` | React/Vite frontend, Playwright tests, Core Web Vitals |
+| `bas-innovation-scout` | Research new tech/tools for BAS integration |
+| `brunella-orchestrator` | Top-level cross-agent task routing with confidence scoring |
+| `strict-code-reviewer` | Strict Clean Code / SOLID review before commit |
+| `robust-test-writer` | Unit + integration tests, edge-case coverage |
 
 ## Copilot-specific reminders
 
 - Prefer extending the existing architecture over bypassing it: use route lazy-loading, `BaseAgent`, navigation registration, and `server.tool()` registration instead of ad-hoc side paths.
 - Keep AI-session docs aligned with actual behavior. The current coordination flow in `README.md`, `CLAUDE.md`, and `.ai/FOSZAL.md` assumes sync-first startup, per-agent logs, and `sync_foszal.py` after meaningful work.
-

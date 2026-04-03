@@ -25,6 +25,7 @@ from gspread_dataframe import set_with_dataframe
 import pandas as pd
 
 from myai.schemas.invoice import InvoiceData
+from myai.utils.google_credentials import resolve_google_service_account_source
 from myai.utils.phoenix_protocol import retry_on_network_error, get_checkpoint
 
 logger = logging.getLogger(__name__)
@@ -64,10 +65,13 @@ class GoogleSheetsClient:
 
     def _load_config_from_env(self) -> SheetsConfig:
         """Load configuration from environment variables."""
+        service_account_source = resolve_google_service_account_source(
+            active_logger=logger,
+        )
         return SheetsConfig(
             spreadsheet_id=os.getenv("GOOGLE_SHEETS_ID", ""),
             sheet_name=os.getenv("GOOGLE_SHEETS_NAME", "Invoices"),
-            credentials_json=os.getenv("GOOGLE_SHEETS_CREDS"),
+            credentials_json=service_account_source.value,
         )
 
     def _auth(self) -> None:

@@ -1125,6 +1125,81 @@ export interface FederationPeer {
   metadata?: Record<string, unknown>;
 }
 
+export type FederationEvidenceOutcome = 'allowed' | 'denied' | 'observed';
+
+export type FederationEvidenceKind =
+  | 'peer_registered'
+  | 'peer_revoked'
+  | 'runtime_key_staged'
+  | 'runtime_key_promoted'
+  | 'route_denied';
+
+export interface FederationEvidenceJournalEntry {
+  id: string;
+  timestamp: string;
+  peerId: string | null;
+  displayName: string | null;
+  endpoint: string | null;
+  trustState: FederationPeer['trustState'] | null;
+  kind: FederationEvidenceKind;
+  title: string;
+  detail: string;
+  outcome: FederationEvidenceOutcome;
+  keyId: string | null;
+  previousCurrentKeyId: string | null;
+  reason: string | null;
+  evidenceSources: Array<'audit' | 'phoenix'>;
+}
+
+export interface FederationPeerEvidenceSummary {
+  peerId: string;
+  displayName: string;
+  endpoint: string;
+  trustState: FederationPeer['trustState'];
+  trustedAt: string | null;
+  revokedAt: string | null;
+  currentKeyId: string | null;
+  nextKeyId: string | null;
+  rotationState: 'stable' | 'staged' | 'missing' | 'revoked';
+  lastEvidenceAt: string | null;
+  latestAction: string | null;
+  latestOutcome: FederationEvidenceOutcome | null;
+  journalCount: number;
+  registerCount: number;
+  revokeCount: number;
+  stageCount: number;
+  promoteCount: number;
+  routeDeniedCount: number;
+}
+
+export interface FederationEvidenceSnapshot {
+  timestamp: string;
+  peerFilter: string | null;
+  limit: number;
+  truncated: boolean;
+  peers: FederationPeerEvidenceSummary[];
+  journal: FederationEvidenceJournalEntry[];
+  totals: {
+    peerCount: number;
+    trustedCount: number;
+    pendingCount: number;
+    revokedCount: number;
+    peersWithNextKey: number;
+    journalCount: number;
+    deniedCount: number;
+    registerCount: number;
+    revokeCount: number;
+    stageCount: number;
+    promoteCount: number;
+    routeDeniedCount: number;
+  };
+}
+
+export interface FederationRuntimeKeyMutationInput {
+  publicKey: string;
+  keyId?: string;
+}
+
 export interface FederationCapability {
   name: string;
   description: string;
@@ -1227,6 +1302,57 @@ export async function revokeFederationPeer(peerId: string, reason: string): Prom
   return data as FederationPeer;
 }
 
+export async function stageFederationPeerRuntimeKey(
+  peerId: string,
+  input: FederationRuntimeKeyMutationInput,
+): Promise<FederationPeer> {
+  const response = await fetchWithTimeout(`${API_BASE}/api/v1/federation/peers/${encodeURIComponent(peerId)}/runtime-keys/stage`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(input),
+  });
+  const data = await safeJson<FederationPeer | { error?: string }>(response).catch(() => ({
+    error: `HTTP ${response.status}`,
+  }));
+  if (!response.ok) throw new Error(getErrorMessage(data) || 'Federation runtime key staging failed');
+  return data as FederationPeer;
+}
+
+export async function promoteFederationPeerRuntimeKey(peerId: string, reason?: string): Promise<FederationPeer> {
+  const response = await fetchWithTimeout(`${API_BASE}/api/v1/federation/peers/${encodeURIComponent(peerId)}/runtime-keys/promote`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(reason ? { reason } : {}),
+  });
+  const data = await safeJson<FederationPeer | { error?: string }>(response).catch(() => ({
+    error: `HTTP ${response.status}`,
+  }));
+  if (!response.ok) throw new Error(getErrorMessage(data) || 'Federation runtime key promotion failed');
+  return data as FederationPeer;
+}
+
+export async function getFederationEvidence(
+  options: {
+    peerId?: string;
+    limit?: number;
+  } = {},
+): Promise<FederationEvidenceSnapshot> {
+  const params = new URLSearchParams();
+  if (options.peerId?.trim()) {
+    params.set('peerId', options.peerId.trim());
+  }
+  if (typeof options.limit === 'number' && Number.isFinite(options.limit)) {
+    params.set('limit', String(options.limit));
+  }
+
+  const query = params.toString();
+  const response = await fetchWithTimeout(
+    `${API_BASE}/api/v1/federation/evidence${query ? `?${query}` : ''}`,
+  );
+  if (!response.ok) throw new Error(`Federation Evidence: HTTP ${response.status}`);
+  return safeJson<FederationEvidenceSnapshot>(response);
+}
+
 export async function getFederationNegotiations(): Promise<FederationNegotiationSession[]> {
   const response = await fetchWithTimeout(`${API_BASE}/api/v1/federation/negotiations`);
   if (!response.ok) throw new Error(`Federation Negotiations: HTTP ${response.status}`);
@@ -1236,8 +1362,11 @@ export async function getFederationNegotiations(): Promise<FederationNegotiation
 
 export async function getLocalFederationManifest(): Promise<FederationManifest> {
   const response = await fetchWithTimeout(`${API_BASE}/api/v1/federation/manifests/local`);
-  if (!response.ok) throw new Error(`Federation Manifest: HTTP ${response.status}`);
-  return safeJson<FederationManifest>(response);
+  const data = await safeJson<FederationManifest | { error?: string }>(response).catch(() => ({
+    error: `HTTP ${response.status}`,
+  }));
+  if (!response.ok) throw new Error(getErrorMessage(data) || 'Federation manifest load failed');
+  return data as FederationManifest;
 }
 
 export async function verifyFederationManifest(manifest: FederationManifest): Promise<'valid' | 'invalid_signature' | 'expired'> {
@@ -1246,8 +1375,11 @@ export async function verifyFederationManifest(manifest: FederationManifest): Pr
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(manifest),
   });
-  if (!response.ok) throw new Error(`Federation Verify: HTTP ${response.status}`);
-  const data = await safeJson<{ result: 'valid' | 'invalid_signature' | 'expired' }>(response);
+  const data = await safeJson<{ result: 'valid' | 'invalid_signature' | 'expired'; error?: string }>(response).catch(() => ({
+    error: `HTTP ${response.status}`,
+  }));
+  if (!response.ok) throw new Error(getErrorMessage(data) || 'Federation manifest verify failed');
+  if (!('result' in data)) throw new Error(getErrorMessage(data) || 'Federation manifest verify failed');
   return data.result;
 }
 

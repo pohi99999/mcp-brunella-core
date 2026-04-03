@@ -6,6 +6,7 @@ Számlák kinyerése Gmail-ből és email attachments feldolgozása.
 import os
 import logging
 import base64
+import json
 import re
 from datetime import date, datetime
 from typing import List, Dict, Any, Optional
@@ -19,6 +20,10 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
 from myai.schemas.invoice import InvoiceData
+from myai.utils.google_credentials import (
+    resolve_google_service_account_source,
+    resolve_google_workspace_oauth_paths,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -45,16 +50,32 @@ class GmailInvoiceFallback:
             user_email: Gmail felhasználó (default: 'me' = authenticated user)
         """
         self.user_email = user_email
-        self.token_file = os.getenv("GMAIL_TOKEN_FILE", "token.json")
-        self.credentials_file = credentials_file or os.getenv("GOOGLE_CREDENTIALS_FILE")
+        workspace_oauth_paths = resolve_google_workspace_oauth_paths(
+            active_logger=logger,
+        )
+        self.token_file = workspace_oauth_paths.token_path
+        service_account_source = resolve_google_service_account_source(
+            credentials_file,
+            active_logger=logger,
+        )
+        self.credentials_file = service_account_source.value
+        self.credentials_is_inline_json = service_account_source.is_inline_json
         self.service = None
         self._authenticate()
 
     def _authenticate(self) -> None:
         """Google OAuth2 autentikáció."""
         try:
-            if self.credentials_file and os.path.exists(self.credentials_file):
-                # Service account flow
+            if self.credentials_file and self.credentials_is_inline_json:
+                self.service = build(
+                    'gmail', 'v1',
+                    credentials=ServiceAccountCredentials.from_service_account_info(
+                        json.loads(self.credentials_file),
+                        scopes=GMAIL_SCOPES
+                    )
+                )
+                logger.info("[OK] Gmail API autentifikacio: Service Account (inline JSON)")
+            elif self.credentials_file and os.path.exists(self.credentials_file):
                 self.service = build(
                     'gmail', 'v1',
                     credentials=ServiceAccountCredentials.from_service_account_file(
@@ -64,6 +85,10 @@ class GmailInvoiceFallback:
                 )
                 logger.info("[OK] Gmail API autentifikacio: Service Account")
             else:
+                if self.credentials_file:
+                    logger.warning(
+                        f"[WARN] Gmail service-account file nem talalhato: {self.credentials_file}. OAuth2 fallback indul."
+                    )
                 # OAuth2 flow
                 creds = None
                 if os.path.exists(self.token_file):

@@ -13,6 +13,7 @@ import { FederatedAgentManager } from '../src/agents/federation/FederatedAgentMa
 import { AutoJoin } from '../src/mesh/autoJoin.js';
 import { generateKeyPairSync } from 'crypto';
 import { inspectFederationPublicKey } from '../src/security/federationPeerProof.js';
+import { phoenixEventBus } from '../src/core/phoenixEventBus.js';
 
 // ─── MeshNode ────────────────────────────────────────────────────────────────
 
@@ -582,13 +583,20 @@ describe('FederatedAgentManager', () => {
   const originalFetch = globalThis.fetch;
   const localKeyPair = generateKeyPairSync('ed25519');
   const remoteKeyPair = generateKeyPairSync('ed25519');
+  const fallbackKeyPair = generateKeyPairSync('ed25519');
   const localPrivateKeyPem = localKeyPair.privateKey.export({ type: 'pkcs8', format: 'pem' }).toString();
   const localPublicKeyPem = localKeyPair.publicKey.export({ type: 'spki', format: 'pem' }).toString();
   const remotePublicKeyPem = remoteKeyPair.publicKey.export({ type: 'spki', format: 'pem' }).toString();
   const remoteFingerprint = inspectFederationPublicKey(remotePublicKeyPem).publicKeyFingerprint;
+  const fallbackPublicKeyPem = fallbackKeyPair.publicKey.export({ type: 'spki', format: 'pem' }).toString();
+  const fallbackFingerprint = inspectFederationPublicKey(fallbackPublicKeyPem).publicKeyFingerprint;
   let localNode: MeshNode;
   let manager: MeshManager;
   let federation: FederatedAgentManager;
+
+  async function flushDiscoverySync(): Promise<void> {
+    await new Promise((resolve) => setTimeout(resolve, 0));
+  }
 
   beforeEach(() => {
     process.env.FEDERATION_LOCAL_PRIVATE_KEY = localPrivateKeyPem;
@@ -609,6 +617,7 @@ describe('FederatedAgentManager', () => {
     delete process.env.FEDERATION_LOCAL_PRIVATE_KEY;
     delete process.env.FEDERATION_LOCAL_PUBLIC_KEY;
     delete process.env.FEDERATION_LOCAL_PEER_ID;
+    federation.dispose();
     localNode.stop();
   });
 
@@ -665,6 +674,98 @@ describe('FederatedAgentManager', () => {
 
     federation.unregisterAgent('rm-me');
     expect(federation.getAgent('rm-me')).toBeUndefined();
+  });
+
+  it('should sync peer agents through signed federation discovery using trusted endpoint metadata', async () => {
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        agents: [
+          {
+            agentId: 'discovered-agent',
+            name: 'DiscoveredAgent',
+            nodeId: 'spoofed-node',
+            host: 'http://spoofed-remote:3000',
+            capabilities: ['agent_execute'],
+            status: 'available',
+            lastSeen: Date.now(),
+          },
+        ],
+      }),
+    });
+    globalThis.fetch = fetchMock as typeof globalThis.fetch;
+
+    const { trustRegistry } = await import('../src/core/federation/trustRegistry.js');
+    await trustRegistry.register({
+      peerId: 'remote-discovery-peer',
+      displayName: 'Remote Discovery',
+      endpoint: 'http://trusted-remote:3000',
+      publicKey: remotePublicKeyPem,
+    });
+
+    manager.registerPeer({
+      nodeId: 'remote-discovery-peer',
+      label: 'Remote Discovery',
+      host: 'http://spoofed-remote:3000',
+      capabilities: ['agent_execute'],
+      status: 'online',
+      lastHeartbeat: Date.now(),
+      joinedAt: Date.now(),
+    });
+
+    await flushDiscoverySync();
+
+    expect(fetchMock).toHaveBeenCalledWith(
+      'http://trusted-remote:3000/api/v1/federation/agents',
+      expect.objectContaining({
+        method: 'GET',
+        headers: expect.objectContaining({
+          'x-federation-peer-id': 'local',
+          'x-federation-signature-scheme': 'asymmetric-v1',
+          'x-federation-target-key-id': remoteFingerprint,
+        }),
+      }),
+    );
+    expect(federation.getAgent('discovered-agent')).toEqual(
+      expect.objectContaining({
+        nodeId: 'remote-discovery-peer',
+        host: 'http://trusted-remote:3000',
+        capabilities: ['agent_execute'],
+      }),
+    );
+  });
+
+  it('should skip peer agent discovery for non-trusted federation peers', async () => {
+    const fetchMock = vi.fn();
+    globalThis.fetch = fetchMock as typeof globalThis.fetch;
+
+    const { trustRegistry } = await import('../src/core/federation/trustRegistry.js');
+    await trustRegistry.register({
+      peerId: 'pending-discovery-peer',
+      displayName: 'Pending Discovery',
+      endpoint: 'http://pending-remote:3000',
+      publicKey: remotePublicKeyPem,
+    });
+    const pendingPeer = trustRegistry.getPeer('pending-discovery-peer');
+    if (!pendingPeer) {
+      throw new Error('Expected pending discovery peer to exist');
+    }
+    pendingPeer.trustState = 'pending';
+
+    manager.registerPeer({
+      nodeId: 'pending-discovery-peer',
+      label: 'Pending Discovery',
+      host: 'http://pending-remote:3000',
+      capabilities: ['agent_execute'],
+      status: 'online',
+      lastHeartbeat: Date.now(),
+      joinedAt: Date.now(),
+    });
+
+    await flushDiscoverySync();
+
+    expect(fetchMock).not.toHaveBeenCalled();
+    expect(federation.listAgentsOnNode('pending-discovery-peer')).toEqual([]);
   });
 
   it('should return error for unknown agent in executeRemote', async () => {
@@ -755,6 +856,134 @@ describe('FederatedAgentManager', () => {
         }),
       }),
     );
+  });
+
+  it('should retry remote execution with the next runtime key after auth rejection', async () => {
+    const fetchMock = vi.fn()
+      .mockResolvedValueOnce({
+        ok: false,
+        status: 401,
+        statusText: 'Unauthorized',
+        text: async () => 'Unauthorized: Federation target key binding mismatch',
+      } as Response)
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ ok: true }),
+      } as Response);
+    globalThis.fetch = fetchMock as typeof globalThis.fetch;
+
+    federation.registerAgent({
+      agentId: 'remote-agent',
+      name: 'RemoteAgent',
+      nodeId: 'remote',
+      host: 'http://remote:3000',
+      capabilities: ['agent_execute'],
+      status: 'available',
+      lastSeen: Date.now(),
+    });
+
+    const { trustRegistry } = await import('../src/core/federation/trustRegistry.js');
+    await trustRegistry.register({
+      peerId: 'remote',
+      displayName: 'Remote',
+      endpoint: 'http://remote:3000',
+      publicKey: remotePublicKeyPem,
+      metadata: {
+        nextPublicKey: fallbackPublicKeyPem,
+      },
+    });
+
+    const result = await federation.executeRemote({
+      agentId: 'remote-agent',
+      taskType: 'diagnose',
+      input: { scope: 'tests' },
+      fromNodeId: 'local',
+    });
+
+    expect(result.status).toBe('success');
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+    expect(fetchMock.mock.calls[0]?.[1]).toEqual(expect.objectContaining({
+      headers: expect.objectContaining({
+        'x-federation-target-key-id': remoteFingerprint,
+      }),
+    }));
+    expect(fetchMock.mock.calls[1]?.[1]).toEqual(expect.objectContaining({
+      headers: expect.objectContaining({
+        'x-federation-target-key-id': fallbackFingerprint,
+      }),
+    }));
+  });
+
+  it('evicts revoked peer agents when revoke is published', async () => {
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({ ok: true }),
+    });
+    globalThis.fetch = fetchMock as typeof globalThis.fetch;
+
+    federation.registerAgent({
+      agentId: 'remote-agent',
+      name: 'RemoteAgent',
+      nodeId: 'remote',
+      host: 'http://remote:3000',
+      capabilities: ['agent_execute'],
+      status: 'available',
+      lastSeen: Date.now(),
+    });
+
+    const { trustRegistry } = await import('../src/core/federation/trustRegistry.js');
+    await trustRegistry.register({
+      peerId: 'remote',
+      displayName: 'Remote',
+      endpoint: 'http://remote:3000',
+      publicKey: remotePublicKeyPem,
+    });
+
+    phoenixEventBus.publish('phoenix:federation_peer_revoked', {
+      peerId: 'remote',
+      displayName: 'Remote',
+      reason: 'compromised',
+      timestamp: new Date().toISOString(),
+    });
+
+    expect(federation.getAgent('remote-agent')).toBeUndefined();
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it('fails closed for revoked peers even if a stale agent entry still exists', async () => {
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({ ok: true }),
+    });
+    globalThis.fetch = fetchMock as typeof globalThis.fetch;
+    const { trustRegistry } = await import('../src/core/federation/trustRegistry.js');
+
+    federation.registerAgent({
+      agentId: 'remote-agent-2',
+      name: 'RemoteAgent2',
+      nodeId: 'remote',
+      host: 'http://remote:3000',
+      capabilities: ['agent_execute'],
+      status: 'available',
+      lastSeen: Date.now(),
+    });
+
+    const peer = trustRegistry.getPeer('remote');
+    if (!peer) {
+      throw new Error('Expected trusted federation peer to exist for stale-entry test');
+    }
+    peer.trustState = 'revoked';
+
+    const result = await federation.executeRemote({
+      agentId: 'remote-agent-2',
+      taskType: 'diagnose',
+      input: { scope: 'tests' },
+      fromNodeId: 'local',
+    });
+
+    expect(result.status).toBe('error');
+    expect(result.error).toContain('not trusted');
+    expect(fetchMock).not.toHaveBeenCalled();
   });
 });
 

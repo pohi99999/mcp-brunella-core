@@ -31,6 +31,15 @@ services:
       timeout: 5s
       start_period: 45s
       retries: 3
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,nodev,size=256m
+    volumes:
+      - brunella_core_data:/app/data
+      - brunella_core_logs:/app/logs
     extra_hosts:
       - "host.docker.internal:host-gateway"
 
@@ -54,5 +63,18 @@ services:
       timeout: 4s
       start_period: 20s
       retries: 3
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,nodev,size=256m
+    volumes:
+      - brunella_ai_logs:/app/logs
     extra_hosts:
       - "host.docker.internal:host-gateway"
+
+volumes:
+  brunella_core_data:
+  brunella_core_logs:
+  brunella_ai_logs:

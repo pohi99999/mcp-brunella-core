@@ -1,11 +1,11 @@
 {
   "id": "brunella_federation_phase5_20260402",
   "title": "Brunella Federation — Phase 5 Execute Hardening",
-  "status": "active",
+  "status": "completed",
   "priority": "medium",
   "createdAt": "2026-04-02",
   "owner": "GitHub Copilot",
-  "progress": 75,
+  "progress": 100,
   "tags": [
     "brunella",
     "federation",
@@ -24,5 +24,5 @@
     "brunella_reflection_continual_learning_20260402",
     "brunella_zero_prompt_ephemeral_bridge_20260402"
   ],
-  "verificationNotes": "Signed fail-closed execute route, outbound sender identity fix, agents discovery route, focused federation tests green"
+  "verificationNotes": "Federation execute, discovery, operator mutation routes, operator evidence surface, and manifest signing contract are fail-closed with runtime lifecycle evidence, revoke propagation invalidation, manifest route auth+validation, and focused federation/backend/dashboard validation green"
 }

@@ -4,6 +4,118 @@ User requested that the Copilot CLI automatically connect to a local Brunella MC
 
 <history>
 
+### 2026-04-03 - Federation fail-closed hardening + Google credential contract cleanup
+
+**Feladat:** A federation execute es manifest surface fail-closed lezarasa signed runtime key foundationnel, a Google credential-kezelés drift megszüntetése, valamint a megmaradt `ReconciliationIngestionAgent` lint-hiba javítása.
+
+**Erintett fajlok:**
+- `src/security/federationPeerAuth.ts`
+- `src/core/federation/remoteRequest.ts`
+- `src/core/federation/trustRegistry.ts`
+- `src/core/federation/evidence.ts`
+- `src/core/federation/capabilityManifest.ts`
+- `src/core/federation/federatedGateway.ts`
+- `src/server/routes/federation.ts`
+- `src/agents/federation/FederatedAgentManager.ts`
+- `src/cli/federationCommands.ts`
+- `src/dashboard/components/FederationCenter.tsx`
+- `src/dashboard/lib/apiService.ts`
+- `src/utils/googleAuth.ts`
+- `src/cli/workspaceCommands.ts`
+- `myai/utils/google_credentials.py`
+- `myai/clients/google_sheets_client.py`
+- `myai/clients/gmail_invoice_fallback.py`
+- `myai/gmail_invoice_fetcher.py`
+- `.env.example`
+- `.gitignore`
+- `SECURITY.md`
+- `docs/GOOGLE_WORKSPACE_SETUP.md`
+- `docs/services/invoice-to-sheets.md`
+- `config/safe_zones.json`
+- `config/google-service-account.json.example`
+- `conductor/tracks/brunella_federation_phase5_20260402/meta.json`
+- `conductor/tracks/brunella_federation_phase5_20260402/plan.md`
+- `src/agents/ReconciliationIngestionAgent.ts`
+
+**Megjegyzes:**
+- A federation execute inbound/outbound surface mar asymmterikus request signingra es peer key ID bindingre tamaszkodik; a remote hivasok target current/next kulcs ellen mennek, 401 eseten kontrollalt key-fallbackkel.
+- A trust registry minimalis current/next runtime keyring foundationt kapott stage/promote flow-val, revoke propagationgel es operator evidence snapshot surface-szel.
+- A capability manifest signingbol kikerult a default shared-secret fallback; `MANIFEST_SIGNING_SECRET` nelkul vagy 32 karakternel rovidebb secrettel az issue fail-closed, verify pedig nem nyit vissza implicit downgrade-ra.
+- A Google credential surface ket kulon kontraktusra lett szetvalasztva:
+  - service-account/invoice flow: `GOOGLE_CREDENTIALS_FILE` vagy `GOOGLE_SERVICE_ACCOUNT_JSON`, preferalt lokalis path `./credentials/google-service-account.json`
+  - interactive Workspace OAuth: `GOOGLE_WORKSPACE_CREDENTIALS_FILE` es `GOOGLE_WORKSPACE_TOKEN_FILE`, preferalt lokalis pathok `./credentials/google-oauth2-credentials.json` es `./credentials/google-token.json`
+- A legacy `config/` es root-level Google credential/token pathok csak warningos fallbackkent maradtak bent a kompatibilitas miatt; canonical uj setuphoz mar nem ezek az ajanlottak.
+- A megmaradt repo-lint blocker a `src/agents/ReconciliationIngestionAgent.ts` fajlban lokalisan javitva lett a felesleges kezdo assignment eltavolitasaval.
+
+**Validacio:**
+- `npm run build`
+- `npx vitest run test\googleAuth.test.ts test\unifiedWorkspace.test.ts`
+- `python -m pytest test\google_credentials_helper_test.py test\google_sheets_client_phase4_test.py test\invoice_automation_e2e_test.py -q`
+- `python -m pytest test\google_credentials_helper_test.py test\gmail_invoice_fetcher_test.py test\google_sheets_client_phase4_test.py test\invoice_automation_e2e_test.py -q`
+- federation celzott route/unit/dashboard korok zolden lefutottak
+- `npx eslint src\agents\ReconciliationIngestionAgent.ts`
+
+**Statusz:** ✅ Befejezve
+
+---
+
+### 2026-04-03 — better-sqlite3 ABI javítás + 13 teszt fix + dashboard.bat + Copilot testreszabások
+
+**Feladat:** Dashboard 404 diagnosztika, 13 failing teszt javítása, dashboard.bat launcher, és Copilot workspace testreszabások létrehozása.
+
+**Gyökér ok:** `better-sqlite3` v12.6.2 natív binding hiányzott Node v24 (ABI 137) alá → `deferredInit()` Phase 2 (DB init) crashelt → minden `/api/*` route 404-et adott vissza (csak `/ping` működött).
+
+**Javítás:** `npm rebuild better-sqlite3` → binary: `node_modules/better-sqlite3/build/Release/better_sqlite3.node`
+
+**Javított tesztek (13 → 0 fail):**
+
+| Teszt fájl | Probléma | Megoldás |
+| ----- | ------- | ------- |
+| `dockerComposeProdHardening.test.ts` (5) | Hiányzó `security_opt`, `cap_drop`, named volumes | `docker-compose.prod.yml` hardening |
+| `api_v1.test.ts` | `checkWabHealth` not mocked + 10-arg eltolás | Mock hozzáadva, 10-param mock javítva |
+| `health_runtime_rollout.test.ts` | Hiányzó `/runtime-drift` route | Új endpoint + `globalDb.ts` journal funkciók |
+| `observabilityRoutes.test.ts` (2) | Hiányzó rollout journal GET/POST | Új route-ok `observability.ts`-ben |
+| `scheduledTasksRunner_projectMaintainer.test.ts` | Ismeretlen `project_maintainer` handler | Handler + return value hozzáadva |
+| `federationReplayGuard.test.ts` | `NOT NULL constraint: created_at` | `datetime('now')` explicit az INSERT-ben |
+
+**Érintett forrásfájlok:**
+
+- `docker-compose.prod.yml` — `security_opt: [no-new-privileges:true]`, `cap_drop: [ALL]`, `tmpfs`, 3 named volume
+- `src/utils/globalDb.ts` — `RuntimeThresholdRolloutJournalSummary` interfész + 3 új DB funció (`query/record/getLatest`)
+- `src/server/routes/health.ts` — `GET /runtime-drift` endpoint hozzáadva
+- `src/server/routes/observability.ts` — `GET/POST /runtime-threshold-rollouts` hozzáadva
+- `src/server/schedulers/scheduledTasksRunner.ts` — `project_maintainer` handler branch + `return result`
+- `src/core/autonomyRuntimeStore.ts` — `federation_replay_nonces_runtime` INSERT-be `datetime('now')` explicit
+- `test/api_v1.test.ts` — `checkWabHealth` mock + `buildHealthResponse` 10-arg mock javítás
+
+**Létrehozott fájlok:**
+
+- `dashboard.bat` — Dupla kattintásra elindítja az Ollama+FastAPI+Backend+UI-t, health check után megnyitja `:5173`-t
+- `.github/instructions/test-conventions.instructions.md` (`applyTo: "test/**"`)
+  - Vitest `vi.*` API-k, `fileParallelism: false`, 15s timeout
+  - `buildHealthResponse` 10 paraméter dokumentálva
+  - `better-sqlite3` ABI csapda + `federation_replay_nonces_runtime` NOT NULL csapda
+- `.github/instructions/python-conventions.instructions.md` (`applyTo: "myai/**"`)
+  - `uv` kötelező, Pydantic BaseModel minden adatstruktúrához
+  - Emoji tiltás logban (Windows UnicodeEncodeError megelőzés)
+  - FastMCP `>= 2.14.3` verziókövetelmény
+- `.github/prompts/new-feature.prompt.md` — EPP v2 vezérelt 5-fázisú feature workflow
+  - Track létrehozás → route → Dashboard panel → CLI → tesztek → track lezárás
+  - 10-pontos cross-surface ellenőrzőlista
+
+**Módosított dokumentumok:**
+
+- `.github/copilot-instructions.md` — `dashboard.bat` para + **Known pitfalls** szekció + **Custom Copilot agents** tábla
+
+**Build & teszt:**
+
+- `npm run build` ✅ 0 hiba
+- Célzott suite: 6 fájl, 17 teszt → **17/17 passed**
+
+**Státusz:** ✅ Minden javítás deploy-ready, lint-clean
+
+---
+
 ### 2026-04-02 — Reflection + Ephemeral Bridge Trackok lezárva és archiválva
 **Feladat:** `brunella_reflection_continual_learning_20260402` és `brunella_zero_prompt_ephemeral_bridge_20260402` trackek 100%-ra vitele, archiválása, dokumentálása és GitHub push.
 

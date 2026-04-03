@@ -1,5 +1,9 @@
 # Számlázz.hu & Google Sheets Automatizáció - Phase 1 Setup Guide
 
+> Legacy archived setup note: this document predates the current credential hardening contract.
+> For new setups, prefer `GOOGLE_CREDENTIALS_FILE=./credentials/google-service-account.json`
+> or `GOOGLE_SERVICE_ACCOUNT_JSON`, and do not recreate `config/google-service-account.json`.
+
 ## 📋 Phase 1: Környezet és Séma Definíció
 
 Ez a útmutató a Invoice Automation track Phase 1 completionhoz kell.
@@ -14,12 +18,12 @@ Ez a útmutató a Invoice Automation track Phase 1 completionhoz kell.
 2. **.env konfigurálás** ✅
    - Fájl: `.env`
    - SZAMLAZZ_HU_API_KEY, SZAMLAZZ_HU_ACCOUNT_ID
-   - GOOGLE_SHEETS_ID, GOOGLE_CLOUD_CREDENTIALS_PATH
+   - GOOGLE_SHEETS_ID, GOOGLE_CREDENTIALS_FILE
    - INVOICE_AUTO_SYNC_ENABLED, INVOICE_AUTO_SYNC_CRON
 
 3. **Google Sheets Service Account javaslat** ✅
    - Sablonfájl: `config/google-service-account.json.example`
-   - El kell készíteni az actual credential fájlt: `config/google-service-account.json`
+   - Az actual credential fájlt új setupnál `credentials/google-service-account.json` alá tedd
 
 ---
 
@@ -53,7 +57,7 @@ Ez a útmutató a Invoice Automation track Phase 1 completionhoz kell.
    - Click on "brunella-invoice-bot"
    - Tab: Keys
    - Add Key → Create new key → JSON
-   - **Másold a JSON fájlt** → `config/google-service-account.json`
+   - **Másold a JSON fájlt** → `credentials/google-service-account.json`
 6. Az **PROJECT_ID** másolás a `.env`-be:
    ```env
    GOOGLE_PROJECT_ID=your-project-id-12345

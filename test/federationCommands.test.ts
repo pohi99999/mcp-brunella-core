@@ -38,7 +38,7 @@ describe('Federation CLI Commands', () => {
     expect(federation).toBeDefined();
     expect(federation?.aliases()).toContain('fed');
     expect(federation?.commands.map((command) => command.name())).toEqual(
-      expect.arrayContaining(['status', 'peers', 'negotiations']),
+      expect.arrayContaining(['status', 'peers', 'negotiations', 'evidence', 'stage-runtime-key', 'promote-runtime-key']),
     );
   });
 
@@ -149,5 +149,69 @@ describe('Federation CLI Commands', () => {
       configurable: true,
       value: originalIsTTY,
     });
+  });
+
+  it('should render federation evidence output to stdout', async () => {
+    const program = new Command();
+    registerFederationCommands(program);
+
+    vi.spyOn(globalThis, 'fetch').mockResolvedValue({
+      ok: true,
+      text: () =>
+        Promise.resolve(
+          JSON.stringify({
+            timestamp: '2026-04-03T09:00:00.000Z',
+            truncated: false,
+            peers: [
+              {
+                peerId: 'peer-1',
+                trustState: 'trusted',
+                currentKeyId: 'current-key',
+                nextKeyId: 'next-key',
+                rotationState: 'staged',
+                lastEvidenceAt: '2026-04-03T09:00:00.000Z',
+                latestAction: 'Next kulcs stage-elve',
+                stageCount: 1,
+                promoteCount: 0,
+                revokeCount: 0,
+              },
+            ],
+            journal: [
+              {
+                timestamp: '2026-04-03T09:00:00.000Z',
+                peerId: 'peer-1',
+                title: 'Next kulcs stage-elve',
+                detail: 'Key ID: next-key',
+                outcome: 'allowed',
+                keyId: 'next-key',
+                evidenceSources: ['phoenix', 'audit'],
+              },
+            ],
+            totals: {
+              peerCount: 1,
+              trustedCount: 1,
+              pendingCount: 0,
+              revokedCount: 0,
+              peersWithNextKey: 1,
+              deniedCount: 0,
+              stageCount: 1,
+              promoteCount: 0,
+              revokeCount: 0,
+            },
+          }),
+        ),
+    } as Response);
+    const stdoutSpy = vi.spyOn(process.stdout, 'write').mockReturnValue(true);
+
+    await program.parseAsync(['node', 'test', 'federation', 'evidence']);
+
+    const output = stdoutSpy.mock.calls.map(([chunk]) => String(chunk)).join('');
+    expect(output).toContain('Federation Evidence');
+    expect(output).toContain('Peer rollout állapotok');
+    expect(output).toContain('Rotation: staged');
+    expect(output).toContain('Operator journal');
+    expect(output).toContain('Next kulcs stage-elve');
+    expect(output).toContain('Forrás: phoenix+audit');
+    expect(spinnerStop).toHaveBeenCalled();
   });
 });

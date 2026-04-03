@@ -1,5 +1,17 @@
 import { Router } from 'express';
-import { queryLlmCalls, getLlmCallStats, type LlmCallQuery } from '../../utils/globalDb.js';
+import {
+  queryLlmCalls,
+  getLlmCallStats,
+  queryRuntimeThresholdRolloutJournalSummaries,
+  recordRuntimeThresholdRolloutJournal,
+  type LlmCallQuery,
+} from '../../utils/globalDb.js';
+import { getRuntimeDriftSnapshot } from '../../utils/runtimeDriftMonitor.js';
+import {
+  buildThresholdRolloutPlan,
+  renderThresholdRolloutPlan,
+  readRepoRuntimeContract,
+} from '../../utils/runtimeThresholdRollout.js';
 import { logError } from '../../utils/logger.js';
 
 export function createObservabilityRouter(): Router {
@@ -80,6 +92,64 @@ export function createObservabilityRouter(): Router {
     } catch (e: unknown) {
       const error = e instanceof Error ? e.message : String(e);
       logError('ObservabilityRoute', `GET /timeline failed: ${error}`);
+      res.status(500).json({ success: false, error });
+    }
+  });
+
+  /**
+   * GET /api/v1/observability/runtime-threshold-rollouts
+   * List recorded rollout journal entries.
+   */
+  router.get('/runtime-threshold-rollouts', (req, res) => {
+    try {
+      const limit = typeof req.query.limit === 'string' ? parseInt(req.query.limit, 10) : 50;
+      const offset = typeof req.query.offset === 'string' ? parseInt(req.query.offset, 10) : 0;
+      const approvalTicket = typeof req.query.approvalTicket === 'string' ? req.query.approvalTicket : undefined;
+      const entries = queryRuntimeThresholdRolloutJournalSummaries({ approvalTicket, limit, offset });
+      res.json({ success: true, entries, count: entries.length });
+    } catch (e: unknown) {
+      const error = e instanceof Error ? e.message : String(e);
+      logError('ObservabilityRoute', `GET /runtime-threshold-rollouts failed: ${error}`);
+      res.status(500).json({ success: false, error });
+    }
+  });
+
+  /**
+   * POST /api/v1/observability/runtime-threshold-rollouts
+   * Record an approved rollout journal entry.
+   */
+  router.post('/runtime-threshold-rollouts', (req, res) => {
+    try {
+      const { approvedBy, approvalTicket, approvedAt, changeWindow, notes } = req.body as {
+        approvedBy: string;
+        approvalTicket: string;
+        approvedAt: string;
+        changeWindow: string;
+        notes?: string;
+      };
+
+      const snapshot = getRuntimeDriftSnapshot();
+      const contract = readRepoRuntimeContract(process.cwd());
+      const plan = buildThresholdRolloutPlan(snapshot.summary.recommendation, contract);
+      const rendered = renderThresholdRolloutPlan(snapshot.summary, {
+        approvedBy,
+        approvalTicket,
+        approvedAt,
+        changeWindow,
+        notes,
+      });
+
+      const entry = recordRuntimeThresholdRolloutJournal(
+        { approvedBy, approvalTicket, approvedAt, changeWindow, notes },
+        { summary: snapshot.summary as unknown as Record<string, unknown> },
+        plan as unknown as Record<string, unknown>,
+        rendered.renderedPlan,
+      );
+
+      res.status(201).json({ success: true, entry });
+    } catch (e: unknown) {
+      const error = e instanceof Error ? e.message : String(e);
+      logError('ObservabilityRoute', `POST /runtime-threshold-rollouts failed: ${error}`);
       res.status(500).json({ success: false, error });
     }
   });

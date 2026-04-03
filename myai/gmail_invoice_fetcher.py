@@ -7,6 +7,7 @@ from googleapiclient.errors import HttpError
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
+from myai.utils.google_credentials import resolve_google_workspace_oauth_paths
 
 SCOPES = ['https://www.googleapis.com/auth/gmail.readonly']
 
@@ -18,17 +19,24 @@ def authenticate_gmail():
     rather than pickle, which prevents arbitrary code execution if the token file
     is tampered with (CWE-502).
     """
+    workspace_oauth_paths = resolve_google_workspace_oauth_paths()
     creds = None
-    if os.path.exists('token.json'):
-        with open('token.json', 'r', encoding='utf-8') as token:
+    if os.path.exists(workspace_oauth_paths.token_path):
+        with open(workspace_oauth_paths.token_path, 'r', encoding='utf-8') as token:
             creds = Credentials.from_authorized_user_info(json.load(token), SCOPES)
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
         else:
-            flow = InstalledAppFlow.from_client_secrets_file('credentials.json', SCOPES)
+            flow = InstalledAppFlow.from_client_secrets_file(
+                workspace_oauth_paths.credentials_path,
+                SCOPES,
+            )
             creds = flow.run_local_server(port=0)
-        with open('token.json', 'w', encoding='utf-8') as token:
+        token_dir = os.path.dirname(workspace_oauth_paths.preferred_token_path)
+        if token_dir:
+            os.makedirs(token_dir, exist_ok=True)
+        with open(workspace_oauth_paths.preferred_token_path, 'w', encoding='utf-8') as token:
             token.write(creds.to_json())
     return creds
 

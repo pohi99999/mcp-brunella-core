@@ -3,8 +3,11 @@ import { generateKeyPairSync } from 'crypto';
 import express from 'express';
 import request from 'supertest';
 import { createFederationRouter } from '../src/server/routes/federation.js';
+import { generateRemoteToken } from '../src/security/remoteAuth.js';
 import { signFederationRequest } from '../src/security/federationPeerAuth.js';
 import { inspectFederationPublicKey } from '../src/security/federationPeerProof.js';
+import { record as auditRecord, clearAuditLog, closeAuditDb } from '../src/core/auditLog.js';
+import { phoenixEventBus } from '../src/core/phoenixEventBus.js';
 
 const federationMocks = vi.hoisted(() => ({
   listPeers: vi.fn(),
@@ -14,9 +17,14 @@ const federationMocks = vi.hoisted(() => ({
   checkTrust: vi.fn(),
   register: vi.fn(),
   revoke: vi.fn(),
+  stageNextRuntimeKey: vi.fn(),
+  promoteNextRuntimeKey: vi.fn(),
   issue: vi.fn(),
+  getValidManifestForPeer: vi.fn(),
   listManifestsForPeer: vi.fn(),
   verify: vi.fn(),
+  assertSigningSecretConfigured: vi.fn(),
+  isCapabilityManifestConfigError: vi.fn((error: unknown) => error instanceof Error && error.name === 'CapabilityManifestConfigError'),
   listSessions: vi.fn(),
   createOffer: vi.fn(),
   accept: vi.fn(),
@@ -37,6 +45,8 @@ vi.mock('../src/core/federation/trustRegistry.js', () => ({
     checkTrust: federationMocks.checkTrust,
     register: federationMocks.register,
     revoke: federationMocks.revoke,
+    stageNextRuntimeKey: federationMocks.stageNextRuntimeKey,
+    promoteNextRuntimeKey: federationMocks.promoteNextRuntimeKey,
   },
 }));
 
@@ -49,9 +59,12 @@ vi.mock('../src/core/federation/federationReplayGuard.js', () => ({
 vi.mock('../src/core/federation/capabilityManifest.js', () => ({
   capabilityManifestManager: {
     issue: federationMocks.issue,
+    getValidManifestForPeer: federationMocks.getValidManifestForPeer,
     listManifestsForPeer: federationMocks.listManifestsForPeer,
     verify: federationMocks.verify,
+    assertSigningSecretConfigured: federationMocks.assertSigningSecretConfigured,
   },
+  isCapabilityManifestConfigError: federationMocks.isCapabilityManifestConfigError,
 }));
 
 vi.mock('../src/core/federation/negotiationProtocol.js', () => ({
@@ -104,23 +117,51 @@ describe('Federation routes', () => {
   const remoteFingerprint = inspectFederationPublicKey(remotePublicKeyPem).publicKeyFingerprint;
   let app: express.Express;
 
-  function createSignedHeaders(path: string, body: unknown): Record<string, string> {
+  function createFederationApp(remoteAddress?: string): express.Express {
+    const testApp = express();
+    testApp.use(express.json());
+    if (remoteAddress) {
+      testApp.use((req, _res, next) => {
+        const socket = req.socket as typeof req.socket & { remoteAddress?: string };
+        try {
+          Object.defineProperty(socket, 'remoteAddress', {
+            value: remoteAddress,
+            configurable: true,
+          });
+        } catch {
+          socket.remoteAddress = remoteAddress;
+        }
+        next();
+      });
+    }
+    testApp.use('/api/v1/federation', createFederationRouter());
+    return testApp;
+  }
+
+  function createSignedHeaders(
+    path: string,
+    body: unknown,
+    method: 'GET' | 'POST' = 'POST',
+  ): Record<string, string> {
     return signFederationRequest({
       peerId: 'peer-1',
       privateKey: remotePrivateKeyPem,
       publicKey: remotePublicKeyPem,
-      method: 'POST',
+      method,
       path,
       body,
       targetPeerPublicKey: localPublicKeyPem,
     });
   }
 
-  beforeEach(() => {
+  beforeEach(async () => {
     vi.clearAllMocks();
+    await clearAuditLog();
+    phoenixEventBus.clearHistory();
     process.env.FEDERATION_LOCAL_PRIVATE_KEY = localPrivateKeyPem;
     process.env.FEDERATION_LOCAL_PUBLIC_KEY = localPublicKeyPem;
     process.env.FEDERATION_LOCAL_PEER_ID = 'local-federation-node';
+    process.env.REMOTE_AUTH_SECRET = 'test-remote-secret';
 
     federationMocks.listPeers.mockReturnValue([
       { peerId: 'peer-1', displayName: 'Peer 1', endpoint: 'https://peer-1', trustState: 'trusted' },
@@ -150,6 +191,30 @@ describe('Federation routes', () => {
       trustState: 'revoked',
       revokedAt: '2026-03-30T10:00:00.000Z',
     });
+    federationMocks.stageNextRuntimeKey.mockResolvedValue({
+      peerId: 'peer-1',
+      displayName: 'Peer 1',
+      endpoint: 'https://peer-1',
+      trustState: 'trusted',
+      metadata: {
+        runtimeKeys: {
+          current: { keyId: remoteFingerprint, publicKey: remotePublicKeyPem },
+          next: { keyId: 'next-key', publicKey: 'next-public-key' },
+        },
+      },
+    });
+    federationMocks.promoteNextRuntimeKey.mockResolvedValue({
+      peerId: 'peer-1',
+      displayName: 'Peer 1',
+      endpoint: 'https://peer-1',
+      trustState: 'trusted',
+      publicKey: 'next-public-key',
+      metadata: {
+        runtimeKeys: {
+          current: { keyId: 'next-key', publicKey: 'next-public-key' },
+        },
+      },
+    });
     federationMocks.issue.mockImplementation((peerId: string, capabilities: Array<{ name: string }>) => ({
       manifestId: 'manifest-1',
       peerId,
@@ -159,8 +224,10 @@ describe('Federation routes', () => {
       expiresAt: '2026-03-30T11:00:00.000Z',
       signature: 'signature',
     }));
+    federationMocks.getValidManifestForPeer.mockReturnValue(undefined);
     federationMocks.listManifestsForPeer.mockReturnValue([]);
     federationMocks.verify.mockReturnValue('valid');
+    federationMocks.assertSigningSecretConfigured.mockReturnValue(undefined);
     federationMocks.listSessions.mockReturnValue([
       {
         sessionId: 'session-1',
@@ -232,15 +299,17 @@ describe('Federation routes', () => {
       return null;
     });
 
-    app = express();
-    app.use(express.json());
-    app.use('/api/v1/federation', createFederationRouter());
+    app = createFederationApp();
   });
 
-  afterEach(() => {
+  afterEach(async () => {
+    await clearAuditLog();
+    await closeAuditDb();
+    phoenixEventBus.clearHistory();
     delete process.env.FEDERATION_LOCAL_PRIVATE_KEY;
     delete process.env.FEDERATION_LOCAL_PUBLIC_KEY;
     delete process.env.FEDERATION_LOCAL_PEER_ID;
+    delete process.env.REMOTE_AUTH_SECRET;
   });
 
   it('lists registered peers', async () => {
@@ -264,10 +333,168 @@ describe('Federation routes', () => {
     });
   });
 
+  it('rejects remote anonymous peer registration', async () => {
+    const remoteApp = createFederationApp('10.0.0.5');
+    const response = await request(remoteApp)
+      .post('/api/v1/federation/peers/register')
+      .send({ peerId: 'peer-2', displayName: 'Peer 2', endpoint: 'https://peer-2' });
+
+    expect(response.status).toBe(401);
+    expect(federationMocks.register).not.toHaveBeenCalled();
+  });
+
+  it('allows remote authenticated peer registration', async () => {
+    const remoteApp = createFederationApp('10.0.0.5');
+    const response = await request(remoteApp)
+      .post('/api/v1/federation/peers/register')
+      .set('Authorization', `Bearer ${generateRemoteToken('ops-user')}`)
+      .send({ peerId: 'peer-2', displayName: 'Peer 2', endpoint: 'https://peer-2' });
+
+    expect(response.status).toBe(201);
+    expect(federationMocks.register).toHaveBeenCalledWith({
+      peerId: 'peer-2',
+      displayName: 'Peer 2',
+      endpoint: 'https://peer-2',
+    });
+  });
+
+  it('revokes peers through the router', async () => {
+    const response = await request(app)
+      .post('/api/v1/federation/peers/peer-1/revoke')
+      .send({ reason: 'Security breach' });
+
+    expect(response.status).toBe(200);
+    expect(response.body.trustState).toBe('revoked');
+    expect(federationMocks.revoke).toHaveBeenCalledWith('peer-1', 'Security breach');
+  });
+
+  it('rejects remote anonymous peer revocation', async () => {
+    const remoteApp = createFederationApp('10.0.0.5');
+    const response = await request(remoteApp)
+      .post('/api/v1/federation/peers/peer-1/revoke')
+      .send({ reason: 'Security breach' });
+
+    expect(response.status).toBe(401);
+    expect(federationMocks.revoke).not.toHaveBeenCalled();
+  });
+
+  it('stages the next runtime key through the router', async () => {
+    const response = await request(app)
+      .post('/api/v1/federation/peers/peer-1/runtime-keys/stage')
+      .send({ publicKey: 'next-public-key', keyId: 'next-key' });
+
+    expect(response.status).toBe(200);
+    expect(federationMocks.stageNextRuntimeKey).toHaveBeenCalledWith('peer-1', 'next-public-key', 'next-key');
+  });
+
+  it('rejects remote anonymous runtime key staging', async () => {
+    const remoteApp = createFederationApp('10.0.0.5');
+    const response = await request(remoteApp)
+      .post('/api/v1/federation/peers/peer-1/runtime-keys/stage')
+      .send({ publicKey: 'next-public-key', keyId: 'next-key' });
+
+    expect(response.status).toBe(401);
+    expect(federationMocks.stageNextRuntimeKey).not.toHaveBeenCalled();
+  });
+
+  it('promotes the staged next runtime key through the router', async () => {
+    const response = await request(app)
+      .post('/api/v1/federation/peers/peer-1/runtime-keys/promote')
+      .send({ reason: 'remote rollout confirmed' });
+
+    expect(response.status).toBe(200);
+    expect(federationMocks.promoteNextRuntimeKey).toHaveBeenCalledWith('peer-1', 'remote rollout confirmed');
+  });
+
+  it('rejects remote anonymous runtime key promotion', async () => {
+    const remoteApp = createFederationApp('10.0.0.5');
+    const response = await request(remoteApp)
+      .post('/api/v1/federation/peers/peer-1/runtime-keys/promote')
+      .send({ reason: 'remote rollout confirmed' });
+
+    expect(response.status).toBe(401);
+    expect(federationMocks.promoteNextRuntimeKey).not.toHaveBeenCalled();
+  });
+
+  it('builds federation operator evidence for loopback operators', async () => {
+    const now = new Date().toISOString();
+    federationMocks.getPeerRuntimeKeys.mockReturnValue([
+      { keyId: remoteFingerprint, publicKey: remotePublicKeyPem, status: 'current' },
+      { keyId: 'next-key', publicKey: 'next-public-key', status: 'next' },
+    ]);
+
+    await auditRecord('ALLOWED', 'TrustRegistry', 'federation:runtime-key:stage', 'peer-1/next-key');
+    await auditRecord('DENIED', 'TrustRegistry', 'federation:revoke', 'peer-1', 'Security breach');
+    phoenixEventBus.publish('phoenix:federation_runtime_key_staged', {
+      peerId: 'peer-1',
+      keyId: 'next-key',
+      previousCurrentKeyId: remoteFingerprint,
+      timestamp: now,
+    });
+    phoenixEventBus.publish('phoenix:federation_peer_revoked', {
+      peerId: 'peer-1',
+      displayName: 'Peer 1',
+      reason: 'Security breach',
+      timestamp: now,
+    });
+
+    const response = await request(app).get('/api/v1/federation/evidence?limit=10');
+
+    expect(response.status).toBe(200);
+    expect(response.body.peers).toEqual([
+      expect.objectContaining({
+        peerId: 'peer-1',
+        currentKeyId: remoteFingerprint,
+        nextKeyId: 'next-key',
+        stageCount: 1,
+        revokeCount: 1,
+      }),
+    ]);
+    expect(response.body.journal).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          kind: 'runtime_key_staged',
+          peerId: 'peer-1',
+          keyId: 'next-key',
+          evidenceSources: expect.arrayContaining(['phoenix', 'audit']),
+        }),
+        expect.objectContaining({
+          kind: 'peer_revoked',
+          peerId: 'peer-1',
+          outcome: 'denied',
+          evidenceSources: expect.arrayContaining(['phoenix', 'audit']),
+        }),
+      ]),
+    );
+  });
+
+  it('rejects remote anonymous evidence reads', async () => {
+    const remoteApp = createFederationApp('10.0.0.5');
+    const response = await request(remoteApp).get('/api/v1/federation/evidence');
+
+    expect(response.status).toBe(401);
+  });
+
+  it('allows remote authenticated evidence reads', async () => {
+    const remoteApp = createFederationApp('10.0.0.5');
+    const response = await request(remoteApp)
+      .get('/api/v1/federation/evidence')
+      .set('Authorization', `Bearer ${generateRemoteToken('ops-user')}`);
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        peers: expect.any(Array),
+        journal: expect.any(Array),
+      }),
+    );
+  });
+
   it('builds the local manifest from real registry sources', async () => {
     const response = await request(app).get('/api/v1/federation/manifests/local');
 
     expect(response.status).toBe(200);
+    expect(federationMocks.getValidManifestForPeer).toHaveBeenCalledWith('local-federation-node');
     expect(federationMocks.issue).toHaveBeenCalledOnce();
     expect(federationMocks.issue.mock.calls[0][1]).toEqual(expect.arrayContaining([
       expect.objectContaining({ name: 'dynamic-tool', version: '2.0.0', deprecated: true }),
@@ -277,8 +504,149 @@ describe('Federation routes', () => {
     expect(federationMocks.issue.mock.calls[0][0]).toBe('local-federation-node');
   });
 
-  it('lists local agents for federation discovery', async () => {
+  it('fails closed when local manifest signing config is missing', async () => {
+    federationMocks.getValidManifestForPeer.mockReturnValueOnce(undefined);
+    federationMocks.issue.mockImplementationOnce(() => {
+      const error = new Error('Capability manifest signing requires MANIFEST_SIGNING_SECRET to be configured with at least 32 characters.');
+      error.name = 'CapabilityManifestConfigError';
+      throw error;
+    });
+
+    const response = await request(app).get('/api/v1/federation/manifests/local');
+
+    expect(response.status).toBe(503);
+    expect(response.body.error).toContain('MANIFEST_SIGNING_SECRET');
+  });
+
+  it('fails closed when manifest verification config is missing', async () => {
+    federationMocks.assertSigningSecretConfigured.mockImplementationOnce(() => {
+      const error = new Error('Capability manifest signing requires MANIFEST_SIGNING_SECRET to be configured with at least 32 characters.');
+      error.name = 'CapabilityManifestConfigError';
+      throw error;
+    });
+
+    const response = await request(app)
+      .post('/api/v1/federation/manifests/verify')
+      .send({
+        manifestId: '550e8400-e29b-41d4-a716-446655440000',
+        peerId: 'peer-1',
+        capabilities: [],
+        version: '1.0',
+        issuedAt: '2026-03-30T10:00:00.000Z',
+        expiresAt: '2026-03-30T11:00:00.000Z',
+        signature: 'a'.repeat(64),
+      });
+
+    expect(response.status).toBe(503);
+    expect(response.body.error).toContain('MANIFEST_SIGNING_SECRET');
+  });
+
+  it('reuses an existing valid local manifest instead of issuing a new one', async () => {
+    federationMocks.getValidManifestForPeer.mockReturnValueOnce({
+      manifestId: 'manifest-existing',
+      peerId: 'local-federation-node',
+      capabilities: [{ name: 'agent_list', description: 'Lists agents' }],
+      version: '1.0',
+      issuedAt: '2026-03-30T10:00:00.000Z',
+      expiresAt: '2026-03-30T11:00:00.000Z',
+      signature: 'a'.repeat(64),
+    });
+
+    const response = await request(app).get('/api/v1/federation/manifests/local');
+
+    expect(response.status).toBe(200);
+    expect(response.body.manifestId).toBe('manifest-existing');
+    expect(federationMocks.issue).not.toHaveBeenCalled();
+  });
+
+  it('rejects remote anonymous local manifest reads', async () => {
+    const remoteApp = createFederationApp('10.0.0.5');
+    const response = await request(remoteApp).get('/api/v1/federation/manifests/local');
+
+    expect(response.status).toBe(401);
+  });
+
+  it('allows remote authenticated local manifest reads', async () => {
+    const remoteApp = createFederationApp('10.0.0.5');
+    const response = await request(remoteApp)
+      .get('/api/v1/federation/manifests/local')
+      .set('Authorization', `Bearer ${generateRemoteToken('ops-user')}`);
+
+    expect(response.status).toBe(200);
+  });
+
+  it('rejects remote anonymous manifest verification', async () => {
+    const remoteApp = createFederationApp('10.0.0.5');
+    const response = await request(remoteApp)
+      .post('/api/v1/federation/manifests/verify')
+      .send({
+        manifestId: '550e8400-e29b-41d4-a716-446655440000',
+        peerId: 'peer-1',
+        capabilities: [],
+        version: '1.0',
+        issuedAt: '2026-03-30T10:00:00.000Z',
+        expiresAt: '2026-03-30T11:00:00.000Z',
+        signature: 'a'.repeat(64),
+      });
+
+    expect(response.status).toBe(401);
+  });
+
+  it('rejects remote anonymous peer manifest reads', async () => {
+    const remoteApp = createFederationApp('10.0.0.5');
+    const response = await request(remoteApp).get('/api/v1/federation/manifests/peer/peer-1');
+
+    expect(response.status).toBe(401);
+  });
+
+  it('allows remote authenticated peer manifest reads', async () => {
+    federationMocks.listManifestsForPeer.mockReturnValueOnce([
+      {
+        manifestId: 'manifest-peer-1',
+        peerId: 'peer-1',
+        capabilities: [{ name: 'agent_list', description: 'Lists agents' }],
+        version: '1.0',
+        issuedAt: '2026-03-30T10:00:00.000Z',
+        expiresAt: '2026-03-30T11:00:00.000Z',
+        signature: 'a'.repeat(64),
+      },
+    ]);
+    const remoteApp = createFederationApp('10.0.0.5');
+    const response = await request(remoteApp)
+      .get('/api/v1/federation/manifests/peer/peer-1')
+      .set('Authorization', `Bearer ${generateRemoteToken('ops-user')}`);
+
+    expect(response.status).toBe(200);
+    expect(response.body.count).toBe(1);
+  });
+
+  it('rejects invalid peer ids on manifest peer reads', async () => {
+    const response = await request(app).get(`/api/v1/federation/manifests/peer/${'a'.repeat(257)}`);
+
+    expect(response.status).toBe(400);
+    expect(response.body.error).toBe('Invalid peerId');
+  });
+
+  it('fails closed for invalid manifest verify payload shape', async () => {
+    const response = await request(app)
+      .post('/api/v1/federation/manifests/verify')
+      .send({ manifestId: 'manifest-1' });
+
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual({ result: 'invalid_signature' });
+    expect(federationMocks.verify).not.toHaveBeenCalled();
+  });
+
+  it('rejects unsigned federation agent discovery requests', async () => {
     const response = await request(app).get('/api/v1/federation/agents');
+
+    expect(response.status).toBe(401);
+  });
+
+  it('lists local agents for signed federation discovery', async () => {
+    const response = await request(app)
+      .get('/api/v1/federation/agents')
+      .set(createSignedHeaders('/api/v1/federation/agents', undefined, 'GET'));
 
     expect(response.status).toBe(200);
     expect(response.body.count).toBe(2);
@@ -296,6 +664,15 @@ describe('Federation routes', () => {
         capabilities: ['route'],
       }),
     ]);
+  });
+
+  it('rejects signed federation agent discovery from non-trusted peers', async () => {
+    federationMocks.checkTrust.mockReturnValue('pending');
+    const response = await request(app)
+      .get('/api/v1/federation/agents')
+      .set(createSignedHeaders('/api/v1/federation/agents', undefined, 'GET'));
+
+    expect(response.status).toBe(403);
   });
 
   it('rejects unsigned federation execute requests', async () => {

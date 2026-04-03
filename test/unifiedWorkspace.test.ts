@@ -163,7 +163,7 @@ vi.mock('fs/promises', async (importOriginal) => {
     default: actual,
     ...actual,
     readFile: vi.fn(async (path: string) => {
-      if (path.includes('google_credentials.json')) {
+      if (path.includes('google-oauth2-credentials.json') || path.includes('google_credentials.json')) {
         return JSON.stringify({
           installed: {
             client_id: 'mock_client_id',
@@ -172,7 +172,7 @@ vi.mock('fs/promises', async (importOriginal) => {
           },
         });
       }
-      if (path.includes('google_token.json')) {
+      if (path.includes('google-token.json') || path.includes('google_token.json')) {
         return JSON.stringify({
           access_token: 'mock_access_token',
           refresh_token: 'mock_refresh_token',

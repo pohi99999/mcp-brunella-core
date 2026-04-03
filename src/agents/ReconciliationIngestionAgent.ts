@@ -22,7 +22,7 @@ export class ReconciliationIngestionAgent extends BaseAgent {
       return { success: false, message: 'No data provided for ingestion' };
     }
 
-    let normalizedEntries = [];
+    let normalizedEntries: Array<Record<string, unknown>>;
 
     try {
       if (format === 'nav_xml' || (format === 'auto' && data.includes('<invoiceData'))) {

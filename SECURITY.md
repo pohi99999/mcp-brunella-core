@@ -51,7 +51,11 @@ The following patterns are **ALWAYS BLOCKED**, regardless of Safe Zone:
 ### Critical Files
 - `.env`, `.env.*` - Environment variables
 - `*.key`, `*.pem` - Cryptographic keys
+- `credentials.json`, `token.json` - Legacy Google OAuth secrets
 - `config/google-service-account.json` - Service account credentials
+- `credentials/google-service-account.json` - Service account credentials
+- `config/google_credentials.json`, `config/google_token.json` - Legacy Google Workspace OAuth secrets
+- `credentials/google-oauth2-credentials.json`, `credentials/google-token.json` - Google Workspace OAuth secrets
 
 ### System Directories
 - `.git/**` - Git repository internals
@@ -150,9 +154,12 @@ result = await manager.executeCode(
    ```
 
 2. **Never hardcode credentials** in code or config files
-   - Use environment variables (`.env`)
-   - Keep `.env` in `.gitignore`
-   - Use Safe Zone validator to prevent `.env` access
+    - Use environment variables (`.env`)
+    - Keep `.env` in `.gitignore`
+    - Use Safe Zone validator to prevent `.env` access
+    - Prefer `GOOGLE_CREDENTIALS_FILE` or `GOOGLE_SERVICE_ACCOUNT_JSON` for invoice automation service accounts
+    - Prefer `GOOGLE_WORKSPACE_CREDENTIALS_FILE` and `GOOGLE_WORKSPACE_TOKEN_FILE` for interactive Google Workspace OAuth
+    - Do not fall back to repository-root `credentials.json` or `token.json` in new setups
 
 3. **Validate user input** before passing to MCP tools
    ```typescript
@@ -162,10 +169,15 @@ result = await manager.executeCode(
    ```
 
 4. **Review audit logs regularly**
-   ```bash
-   # View recent denied operations
-   tail -f logs/mcp_audit.log | grep DENIED
-   ```
+    ```bash
+    # View recent denied operations
+    tail -f logs/mcp_audit.log | grep DENIED
+    ```
+
+5. **Set required federation secrets in every environment**
+   - `REMOTE_AUTH_SECRET` must be set for remote operator auth
+   - `MANIFEST_SIGNING_SECRET` must be set to a random 32+ character secret for federation manifest signing
+   - Do not rely on development fallbacks for production federation surfaces
 
 ### For Agent Developers
 

@@ -9,9 +9,10 @@
 import { EventEmitter } from 'events';
 import { logInfo, logWarn, logError } from '../../utils/logger.js';
 import { trustRegistry } from '../../core/federation/trustRegistry.js';
+import { phoenixEventBus } from '../../core/phoenixEventBus.js';
+import { postSignedFederationJson } from '../../core/federation/remoteRequest.js';
 import type { MeshNodeInfo } from '../../mesh/meshNode.js';
 import type { MeshManager } from '../../mesh/meshManager.js';
-import { signFederationRequest } from '../../security/federationPeerAuth.js';
 
 export interface FederatedAgent {
   agentId: string;
@@ -45,14 +46,27 @@ export interface RemoteExecutionResult {
 export class FederatedAgentManager extends EventEmitter {
   private agents = new Map<string, FederatedAgent>();
   private meshManager: MeshManager;
+  private readonly onPeerJoined: (peer: MeshNodeInfo) => void;
+  private readonly onPeerLeft: (peer: MeshNodeInfo) => void;
+  private readonly onPeerRevoked: (event: { peerId: string }) => void;
 
   constructor(meshManager: MeshManager) {
     super();
     this.meshManager = meshManager;
+    this.onPeerJoined = (peer: MeshNodeInfo) => {
+      void this.syncFromPeer(peer);
+    };
+    this.onPeerLeft = (peer: MeshNodeInfo) => {
+      this.removeAgentsForNode(peer.nodeId, 'departed');
+    };
+    this.onPeerRevoked = ({ peerId }) => {
+      this.removeAgentsForNode(peerId, 'revoked');
+    };
 
     // Auto-update agent registry when peers change
-    this.meshManager.on('peer:joined', (peer: MeshNodeInfo) => this.syncFromPeer(peer));
-    this.meshManager.on('peer:left', (peer: MeshNodeInfo) => this.removeAgentsForNode(peer.nodeId));
+    this.meshManager.on('peer:joined', this.onPeerJoined);
+    this.meshManager.on('peer:left', this.onPeerLeft);
+    phoenixEventBus.subscribe('phoenix:federation_peer_revoked', this.onPeerRevoked);
   }
 
   /** Register a local or remote agent */
@@ -137,9 +151,19 @@ export class FederatedAgentManager extends EventEmitter {
         };
       }
 
+      if (trustRegistry.checkTrust(peer.peerId) !== 'trusted') {
+        agent.status = 'available';
+        return {
+          agentId: request.agentId,
+          nodeId: agent.nodeId,
+          status: 'error',
+          error: `Federation peer ${peer.peerId} is not trusted`,
+          executionTime: Date.now() - startTime,
+        };
+      }
+
       const peerRuntimeKeys = trustRegistry.getPeerRuntimeKeys(peer.peerId);
-      const targetKey = peerRuntimeKeys.find((key) => key.status === 'current') ?? peerRuntimeKeys[0];
-      if (!targetKey) {
+      if (peerRuntimeKeys.length === 0) {
         agent.status = 'available';
         return {
           agentId: request.agentId,
@@ -150,56 +174,25 @@ export class FederatedAgentManager extends EventEmitter {
         };
       }
 
-      const url = `${agent.host.replace(/\/+$/, '')}${requestPath}`;
-      const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), timeoutMs);
-
-      let res: Response;
-      try {
-        res = await fetch(url, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            ...signFederationRequest({
-              method: 'POST',
-              path: requestPath,
-              body: {
-                capabilityName: 'agent_execute',
-                payload: {
-                  agentName: agent.name,
-                  task: request.taskType,
-                  context: JSON.stringify({
-                    ...request.input,
-                    fromNodeId: request.fromNodeId,
-                  }),
-                },
-              },
-              targetKeyId: targetKey.keyId,
-              targetPeerPublicKey: targetKey.publicKey,
-            }),
-          },
-          body: JSON.stringify({
-            capabilityName: 'agent_execute',
-            payload: {
-              agentName: agent.name,
-              task: request.taskType,
-              context: JSON.stringify({
-                ...request.input,
-                fromNodeId: request.fromNodeId,
-              }),
-            },
+      const requestBody = {
+        capabilityName: 'agent_execute',
+        payload: {
+          agentName: agent.name,
+          task: request.taskType,
+          context: JSON.stringify({
+            ...request.input,
+            fromNodeId: request.fromNodeId,
           }),
-          signal: controller.signal,
-        });
-      } finally {
-        clearTimeout(timeout);
-      }
+        },
+      };
 
-      if (!res.ok) {
-        throw new Error(`Remote execution returned ${res.status}: ${res.statusText}`);
-      }
-
-      const data = await res.json() as Record<string, unknown>;
+      const data = await postSignedFederationJson<Record<string, unknown>>({
+        endpointBase: agent.host,
+        path: requestPath,
+        body: requestBody,
+        timeoutMs,
+        targetKeys: peerRuntimeKeys,
+      });
       agent.status = 'available';
       this.emit('agent:available', agent);
 
@@ -230,38 +223,69 @@ export class FederatedAgentManager extends EventEmitter {
   /** Sync agent list from a newly joined peer */
   private async syncFromPeer(peer: MeshNodeInfo): Promise<void> {
     try {
-      const url = `${peer.host}/api/v1/federation/agents`;
-      const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 10_000);
-
-      let res: Response;
-      try {
-        res = await fetch(url, {
-          signal: controller.signal,
-        });
-      } finally {
-        clearTimeout(timeout);
-      }
-
-      if (!res.ok) {
-        logWarn('FederatedAgentManager', `Failed to sync agents from ${peer.nodeId}: ${res.status}`);
+      const trustedPeer =
+        trustRegistry.getPeer(peer.nodeId) ?? trustRegistry.findPeerByEndpoint(peer.host);
+      if (!trustedPeer) {
+        logWarn(
+          'FederatedAgentManager',
+          `Skipping agent sync for ${peer.nodeId}: federation peer metadata missing`,
+        );
         return;
       }
 
-      const data = await res.json() as { agents: FederatedAgent[] };
-      for (const agent of data.agents) {
-        this.registerAgent({ ...agent, nodeId: peer.nodeId, host: peer.host });
+      const trustState = trustRegistry.checkTrust(trustedPeer.peerId);
+      if (trustState !== 'trusted') {
+        logWarn(
+          'FederatedAgentManager',
+          `Skipping agent sync for ${trustedPeer.peerId}: federation peer is ${trustState}`,
+        );
+        return;
       }
 
-      logInfo('FederatedAgentManager', `Synced ${data.agents.length} agents from peer ${peer.nodeId}`);
+      const peerRuntimeKeys = trustRegistry.getPeerRuntimeKeys(trustedPeer.peerId);
+      if (peerRuntimeKeys.length === 0) {
+        logWarn(
+          'FederatedAgentManager',
+          `Skipping agent sync for ${trustedPeer.peerId}: federation runtime key missing`,
+        );
+        return;
+      }
+
+      const data = await postSignedFederationJson<{ agents?: FederatedAgent[] }>({
+        endpointBase: trustedPeer.endpoint,
+        path: '/api/v1/federation/agents',
+        method: 'GET',
+        timeoutMs: 10_000,
+        targetKeys: peerRuntimeKeys,
+      });
+
+      const agents = Array.isArray(data.agents) ? data.agents : [];
+      for (const agent of agents) {
+        this.registerAgent({
+          ...agent,
+          nodeId: peer.nodeId,
+          host: trustedPeer.endpoint,
+        });
+      }
+
+      logInfo(
+        'FederatedAgentManager',
+        `Synced ${agents.length} agents from peer ${trustedPeer.peerId}`,
+      );
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : String(err);
       logWarn('FederatedAgentManager', `Agent sync from ${peer.nodeId} failed: ${msg}`);
     }
   }
 
+  dispose(): void {
+    this.meshManager.off('peer:joined', this.onPeerJoined);
+    this.meshManager.off('peer:left', this.onPeerLeft);
+    phoenixEventBus.unsubscribe('phoenix:federation_peer_revoked', this.onPeerRevoked);
+  }
+
   /** Remove all agents belonging to a node that left */
-  private removeAgentsForNode(nodeId: string): void {
+  private removeAgentsForNode(nodeId: string, reason: 'departed' | 'revoked' = 'departed'): void {
     let removed = 0;
     for (const [agentId, agent] of this.agents.entries()) {
       if (agent.nodeId === nodeId) {
@@ -270,7 +294,8 @@ export class FederatedAgentManager extends EventEmitter {
       }
     }
     if (removed > 0) {
-      logInfo('FederatedAgentManager', `Removed ${removed} agents from departed node ${nodeId}`);
+      const stateLabel = reason === 'revoked' ? 'revoked peer' : 'departed node';
+      logInfo('FederatedAgentManager', `Removed ${removed} agents from ${stateLabel} ${nodeId}`);
     }
   }
 }

@@ -16,11 +16,13 @@ describe('FederatedGateway', () => {
   const remotePublicKeyPem = remoteKeyPair.publicKey.export({ type: 'spki', format: 'pem' }).toString();
   const remoteFingerprint = inspectFederationPublicKey(remotePublicKeyPem).publicKeyFingerprint;
   const fallbackPublicKeyPem = fallbackKeyPair.publicKey.export({ type: 'spki', format: 'pem' }).toString();
+  const fallbackFingerprint = inspectFederationPublicKey(fallbackPublicKeyPem).publicKeyFingerprint;
 
   beforeEach(() => {
     trustRegistry.clear();
     capabilityManifestManager.clear();
     vi.clearAllMocks();
+    process.env.MANIFEST_SIGNING_SECRET = 'test-manifest-secret-0123456789abcd';
     process.env.FEDERATION_LOCAL_PRIVATE_KEY = localPrivateKeyPem;
     process.env.FEDERATION_LOCAL_PUBLIC_KEY = localPublicKeyPem;
     process.env.FEDERATION_LOCAL_PEER_ID = 'local-bas';
@@ -28,6 +30,7 @@ describe('FederatedGateway', () => {
 
   afterEach(() => {
     globalThis.fetch = originalFetch;
+    delete process.env.MANIFEST_SIGNING_SECRET;
     delete process.env.FEDERATION_LOCAL_PRIVATE_KEY;
     delete process.env.FEDERATION_LOCAL_PUBLIC_KEY;
     delete process.env.FEDERATION_LOCAL_PEER_ID;
@@ -63,6 +66,22 @@ describe('FederatedGateway', () => {
 
     const candidates = federatedGateway.discoverCapability('c1');
     expect(candidates.length).toBe(0);
+  });
+
+  it('fails closed for capability discovery when manifest signing config is missing', async () => {
+    await trustRegistry.register({
+      peerId: 'peer-1',
+      displayName: 'Peer 1',
+      endpoint: 'http://p1',
+    });
+
+    capabilityManifestManager.issue('peer-1', [
+      { name: 'web_search', description: 'desc' },
+    ]);
+    delete process.env.MANIFEST_SIGNING_SECRET;
+
+    const candidates = federatedGateway.discoverCapability('web_search');
+    expect(candidates).toEqual([]);
   });
 
   it('should route to the best candidate by trust score', async () => {
@@ -128,6 +147,51 @@ describe('FederatedGateway', () => {
         }),
       }),
     );
+  });
+
+  it('retries with the next runtime key when the current key is rejected', async () => {
+    await trustRegistry.register({
+      peerId: 'p1',
+      displayName: 'D1',
+      endpoint: 'http://p1',
+      publicKey: remotePublicKeyPem,
+      metadata: {
+        nextPublicKey: fallbackPublicKeyPem,
+      },
+    });
+    capabilityManifestManager.issue('p1', [{ name: 'c1', description: 'd1' }]);
+
+    const fetchMock = vi.fn()
+      .mockResolvedValueOnce({
+        ok: false,
+        status: 401,
+        statusText: 'Unauthorized',
+        text: async () => 'Unauthorized: Federation target key binding mismatch',
+      } as Response)
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ result: 'next-key-success' }),
+      } as Response);
+    globalThis.fetch = fetchMock as typeof globalThis.fetch;
+
+    const result = await federatedGateway.execute({
+      capabilityName: 'c1',
+      payload: { data: 'test' },
+    });
+
+    expect(result.success).toBe(true);
+    expect(result.data).toEqual({ result: 'next-key-success' });
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+    expect(fetchMock.mock.calls[0]?.[1]).toEqual(expect.objectContaining({
+      headers: expect.objectContaining({
+        'x-federation-target-key-id': remoteFingerprint,
+      }),
+    }));
+    expect(fetchMock.mock.calls[1]?.[1]).toEqual(expect.objectContaining({
+      headers: expect.objectContaining({
+        'x-federation-target-key-id': fallbackFingerprint,
+      }),
+    }));
   });
 
   it('falls back to the next trusted peer when the preferred peer keeps failing', async () => {

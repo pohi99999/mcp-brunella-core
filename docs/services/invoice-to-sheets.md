@@ -25,7 +25,12 @@ Az **Invoice to Sheets Automation** egy intelligens adminisztrációs megoldás,
 A szolgáltatás élesítéséhez az alábbi lépésekre van szükség:
 
 ### 1. Google API Hozzáférés
-A kliensnek biztosítania kell egy `google_credentials.json` fájlt, amely tartalmazza a Desktop App OAuth2 kliens adatait.
+A kliensnek Google service-account hitelesítést kell biztosítania a Sheets szinkronhoz:
+
+- `GOOGLE_CREDENTIALS_FILE=./credentials/google-service-account.json`, vagy
+- `GOOGLE_SERVICE_ACCOUNT_JSON={...}` inline secret injectionnel.
+
+Az interaktív BAS Google Workspace tooling külön Desktop OAuth2 credential surface-et használ (`google-oauth2-credentials.json`), ezt nem kell összekeverni a service-account alapú invoice automatizálással.
 
 ### 2. Engedélyek
 A rendszernek hozzáférést kell adni az alábbi scope-okhoz:
