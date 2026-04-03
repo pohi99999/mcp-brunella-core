@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { ToolRegistry } from '../src/core/toolRegistry.js';
 import { executeLocalTool } from '../src/server/toolRegistry.js';
 
@@ -37,5 +37,40 @@ describe('ToolRegistry', () => {
 
   it('should fail fast when a local tool handler is missing', async () => {
     await expect(executeLocalTool('missing-tool', {})).rejects.toThrow('Tool handler not registered: missing-tool');
+  });
+
+  it('should build registered tool metadata without recursively importing the registry', async () => {
+    vi.resetModules();
+    const toolRegistry = await import('../src/server/toolRegistry.js');
+
+    toolRegistry.registerToolDefinition({
+      name: 'health_probe',
+      description: 'Monitor backend health',
+      inputSchema: {
+        type: 'object',
+        properties: {
+          target: { type: 'string' },
+          verbose: { type: 'boolean' },
+        },
+        required: ['target'],
+      },
+    });
+
+    const tools = toolRegistry.getRegisteredToolsList();
+
+    expect(tools).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: 'health_probe',
+          name: 'health_probe',
+          category: 'monitoring',
+          enabled: true,
+          parameters: expect.arrayContaining([
+            { name: 'target', type: 'string', required: true },
+            { name: 'verbose', type: 'boolean', required: false },
+          ]),
+        }),
+      ]),
+    );
   });
 });
