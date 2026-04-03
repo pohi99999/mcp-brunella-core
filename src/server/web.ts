@@ -429,6 +429,11 @@ async function deferredInit(
     const { negotiationProtocol } = await import("../core/federation/negotiationProtocol.js");
     const { notificationChannels } = await import("../core/notificationChannels.js");
 
+    try {
+      capabilityManifestManager.assertSigningSecretConfigured();
+    } catch (e: unknown) {
+      logWarn("Server", `Federation manifest signing: ${e instanceof Error ? e.message : String(e)}`);
+    }
     const restoredApprovals = approvalManager.hydrateFromStore();
     const restoredWorkflows = approvalRouter.hydrateFromStore();
     const restoredEphemeral = ephemeralAgentManager.hydrateFromStore();

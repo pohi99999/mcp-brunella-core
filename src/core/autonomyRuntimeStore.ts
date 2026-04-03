@@ -1112,8 +1112,8 @@ export function saveFederationReplayNonce(entry: {
     ensureTables();
     getGlobalDb().prepare(`
       INSERT OR REPLACE INTO federation_replay_nonces_runtime
-        (replay_key, peer_id, nonce, request_id, expires_at)
-      VALUES (?, ?, ?, ?, ?)
+        (replay_key, peer_id, nonce, request_id, expires_at, created_at)
+      VALUES (?, ?, ?, ?, ?, datetime('now'))
     `).run(entry.replayKey, entry.peerId, entry.nonce, entry.requestId ?? null, entry.expiresAt);
   } catch (error) {
     logError('AutonomyRuntimeStore', `Failed to save federation replay nonce: ${error instanceof Error ? error.message : String(error)}`);

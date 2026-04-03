@@ -33,6 +33,11 @@ export interface PeerRuntimeKeyBinding {
   status: 'current' | 'next';
 }
 
+interface PeerRuntimeKeyStoredBinding {
+  keyId: string;
+  publicKey: string;
+}
+
 function isObjectRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null;
 }
@@ -59,6 +64,13 @@ function buildRuntimeKeyBinding(
   } catch {
     return null;
   }
+}
+
+function toStoredRuntimeKeyBinding(binding: PeerRuntimeKeyBinding): PeerRuntimeKeyStoredBinding {
+  return {
+    keyId: binding.keyId,
+    publicKey: binding.publicKey,
+  };
 }
 
 // ============================================================================
@@ -171,6 +183,117 @@ class TrustRegistry {
   getPeer(peerId: string): PeerIdentity | undefined {
     this.ensureHydrated();
     return this.peers.get(peerId);
+  }
+
+  private getMutablePeerMetadata(peer: PeerIdentity): Record<string, unknown> {
+    return isObjectRecord(peer.metadata) ? { ...peer.metadata } : {};
+  }
+
+  private getMutableRuntimeKeys(metadata: Record<string, unknown>): Record<string, unknown> {
+    return isObjectRecord(metadata.runtimeKeys) ? { ...metadata.runtimeKeys } : {};
+  }
+
+  async stageNextRuntimeKey(
+    peerId: string,
+    publicKey: string,
+    keyId?: string,
+  ): Promise<PeerIdentity | null> {
+    this.ensureHydrated();
+    const peer = this.peers.get(peerId);
+    if (!peer) {
+      return null;
+    }
+
+    const nextKey = buildRuntimeKeyBinding(publicKey, 'next', keyId);
+    if (!nextKey) {
+      throw new Error('Érvénytelen federation runtime public key.');
+    }
+
+    const currentKey = this.getPeerRuntimeKeys(peerId).find((binding) => binding.status === 'current');
+    if (currentKey?.keyId === nextKey.keyId) {
+      throw new Error('A következő runtime kulcs nem egyezhet meg a jelenlegi current kulccsal.');
+    }
+
+    const metadata = this.getMutablePeerMetadata(peer);
+    const runtimeKeys = this.getMutableRuntimeKeys(metadata);
+    if (currentKey) {
+      runtimeKeys.current = toStoredRuntimeKeyBinding(currentKey);
+    }
+    runtimeKeys.next = toStoredRuntimeKeyBinding(nextKey);
+
+    metadata.runtimeKeys = runtimeKeys;
+    metadata.nextPublicKey = nextKey.publicKey;
+    metadata.nextKeyId = nextKey.keyId;
+    peer.metadata = metadata;
+    saveFederationPeer(peer);
+
+    const timestamp = new Date().toISOString();
+    await auditRecord(
+      'ALLOWED',
+      'TrustRegistry',
+      'federation:runtime-key:stage',
+      `${peerId}/${nextKey.keyId}`,
+    );
+
+    phoenixEventBus.publish('phoenix:federation_runtime_key_staged', {
+      peerId,
+      keyId: nextKey.keyId,
+      previousCurrentKeyId: currentKey?.keyId ?? null,
+      timestamp,
+    });
+
+    logInfo('TrustRegistry', `Staged next runtime key ${nextKey.keyId} for ${peerId}`);
+    return peer;
+  }
+
+  async promoteNextRuntimeKey(peerId: string, reason?: string): Promise<PeerIdentity | null> {
+    this.ensureHydrated();
+    const peer = this.peers.get(peerId);
+    if (!peer) {
+      return null;
+    }
+
+    const runtimeKeyBindings = this.getPeerRuntimeKeys(peerId);
+    const currentKey = runtimeKeyBindings.find((binding) => binding.status === 'current');
+    const nextKey = runtimeKeyBindings.find((binding) => binding.status === 'next');
+    if (!nextKey) {
+      throw new Error(`Nincs stage-elt next runtime kulcs ehhez a peerhez: ${peerId}`);
+    }
+
+    const metadata = this.getMutablePeerMetadata(peer);
+    const runtimeKeys = this.getMutableRuntimeKeys(metadata);
+    peer.publicKey = nextKey.publicKey;
+    runtimeKeys.current = toStoredRuntimeKeyBinding({
+      ...nextKey,
+      status: 'current',
+    });
+    delete runtimeKeys.next;
+
+    metadata.runtimeKeys = runtimeKeys;
+    delete metadata.nextPublicKey;
+    delete metadata.nextKeyId;
+    peer.metadata = metadata;
+    saveFederationPeer(peer);
+
+    const timestamp = new Date().toISOString();
+    await auditRecord(
+      'ALLOWED',
+      'TrustRegistry',
+      'federation:runtime-key:promote',
+      `${peerId}/${nextKey.keyId}`,
+      reason,
+    );
+
+    phoenixEventBus.publish('phoenix:federation_runtime_key_promoted', {
+      peerId,
+      keyId: nextKey.keyId,
+      previousCurrentKeyId: currentKey?.keyId ?? null,
+      reason: reason ?? null,
+      timestamp,
+    });
+
+    logInfo('TrustRegistry', `Promoted runtime key ${nextKey.keyId} to current for ${peerId}`);
+    return peer;
   }
 
   getPeerRuntimeKeys(peerId: string): PeerRuntimeKeyBinding[] {

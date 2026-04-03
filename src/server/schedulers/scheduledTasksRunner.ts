@@ -383,6 +383,15 @@ export class ScheduledTasksRunner {
           durationMs: Date.now() - new Date(startTime).getTime(),
         });
         eventFabric.publish(envelope);
+      } else if (task.handler === 'project_maintainer') {
+        const { runProjectMaintainerReport } = await import('../services/projectMaintainerService.js');
+        const { ReflectionEngine } = await import('../../core/reflectionEngine.js');
+        const pmMeta = this.parseTaskMetadata(task);
+        const dryRun = typeof pmMeta.dryRun === 'boolean' ? pmMeta.dryRun : true;
+        const triggeredBy = typeof pmMeta.triggeredBy === 'string' ? pmMeta.triggeredBy : 'scheduler';
+        const report = await runProjectMaintainerReport({ dryRun, triggeredBy });
+        await ReflectionEngine.getInstance().ingestProjectMaintainerReport(report);
+        result = report;
       } else {
         throw new Error(`Unknown handler: ${task.handler}`);
       }
@@ -390,6 +399,7 @@ export class ScheduledTasksRunner {
       // Update DB with success
       this.updateTaskStatus(task.id, 'success', result);
       logInfo('ScheduledTasksRunner', `Task executed successfully: ${task.title}`);
+      return result;
 
     } catch (error) {
       const errorMsg = error instanceof Error ? error.message : String(error);

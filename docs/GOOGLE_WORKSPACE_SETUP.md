@@ -49,7 +49,8 @@ In your new project, enable the following APIs:
 
 4. **Download Credentials**:
    - Click the **Download** icon (⬇️) next to your new OAuth 2.0 Client
-   - Save as: `f:\mcp-brunella-core\config\google_credentials.json`
+   - Save as: `f:\mcp-brunella-core\credentials\google-oauth2-credentials.json`
+   - Optional: set `GOOGLE_WORKSPACE_CREDENTIALS_FILE` if you want to use a different gitignored path
 
 **Example credentials structure** (yours will have real values):
 ```json
@@ -80,9 +81,9 @@ brunella workspace auth
 3. Accept permissions (Gmail, Drive, Sheets, Calendar)
 4. Copy the authorization code from the browser
 5. Paste it into the terminal
-6. ✅ Token saved to `config/google_token.json`
+6. ✅ Token saved to `credentials/google-token.json`
 
-**Security Note**: The token is stored locally and used for all API operations. Do NOT commit `google_token.json` to git (already in `.gitignore`).
+**Security Note**: The token is stored locally and used for all API operations. Do NOT commit `google-token.json` to git (already in `.gitignore`).
 
 ### Step 5: Verify Authentication
 
@@ -97,9 +98,9 @@ brunella workspace status
 📊 Google Workspace Status
 
 Credentials: ✔ Found
-  f:\mcp-brunella-core\config\google_credentials.json
+  f:\mcp-brunella-core\credentials\google-oauth2-credentials.json
 Token:       ✔ Found
-  f:\mcp-brunella-core\config\google_token.json
+  f:\mcp-brunella-core\credentials\google-token.json
 
 Token Status: ✔ Valid
   Expires: 2026-02-20 18:45:33
@@ -205,8 +206,9 @@ console.log(`Event created: ${htmlLink}`);
 
 ### Credential Storage
 
-- ✅ **DO**: Store `google_credentials.json` in `config/` (gitignored)
-- ✅ **DO**: Store `google_token.json` in `config/` (gitignored)
+- ✅ **DO**: Store `google-oauth2-credentials.json` in `credentials/` (gitignored)
+- ✅ **DO**: Store `google-token.json` in `credentials/` (gitignored)
+- ✅ **DO**: Set `GOOGLE_WORKSPACE_CREDENTIALS_FILE` / `GOOGLE_WORKSPACE_TOKEN_FILE` if you use a custom gitignored location
 - ❌ **DON'T**: Commit credentials to version control
 - ❌ **DON'T**: Share credentials in chat/email
 
@@ -236,11 +238,11 @@ brunella workspace auth  # Re-authenticate
 
 ### "Failed to load Google credentials"
 
-**Cause**: `google_credentials.json` not found or invalid.
+**Cause**: `google-oauth2-credentials.json` not found or invalid.
 
 **Solution**:
 1. Download OAuth 2.0 credentials from Google Cloud Console
-2. Save as `f:\mcp-brunella-core\config\google_credentials.json`
+2. Save as `f:\mcp-brunella-core\credentials\google-oauth2-credentials.json`
 3. Verify structure matches the example above
 
 ### "Token expired" or "Invalid authentication credentials"
@@ -299,5 +301,7 @@ brunella workspace auth  # Re-authenticate
 - **Production**: For production deployments, consider service accounts and Workspace domain-wide delegation
 
 ---
+
+**Legacy note**: `config\google_credentials.json` and `config\google_token.json` are still read as compatibility fallbacks, but new setups should use the `credentials\` paths above.
 
 **Need help?** Check the BAS documentation or open an issue on GitHub.

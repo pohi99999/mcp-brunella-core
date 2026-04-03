@@ -26,6 +26,12 @@ describe('TrustRegistry', () => {
   });
 
   it('should revoke a trusted peer', async () => {
+    const revokedEvents: Array<{ peerId: string; reason: string }> = [];
+    const onRevoked = (event: { peerId: string; reason: string }) => {
+      revokedEvents.push(event);
+    };
+    phoenixEventBus.subscribe('phoenix:federation_peer_revoked', onRevoked);
+
     await trustRegistry.register({
       peerId: 'peer-1',
       displayName: 'Test Peer',
@@ -37,6 +43,14 @@ describe('TrustRegistry', () => {
     expect(revoked?.trustState).toBe('revoked');
     expect(revoked?.revokedAt).toBeDefined();
     expect(trustRegistry.checkTrust('peer-1')).toBe('revoked');
+    expect(revokedEvents).toEqual([
+      expect.objectContaining({
+        peerId: 'peer-1',
+        reason: 'Security breach',
+      }),
+    ]);
+
+    phoenixEventBus.unsubscribe('phoenix:federation_peer_revoked', onRevoked);
   });
 
   it('should return unknown for non-registered peers', () => {
@@ -100,5 +114,37 @@ describe('TrustRegistry', () => {
       expect.objectContaining({ keyId: nextFingerprint, status: 'next' }),
     ]);
     expect(trustRegistry.getPeerRuntimeKeyId('peer-runtime-keys')).toBe(currentFingerprint);
+  });
+
+  it('stages and promotes federation runtime keys', async () => {
+    const currentKeyPair = generateKeyPairSync('ed25519');
+    const nextKeyPair = generateKeyPairSync('ed25519');
+    const currentPublicKeyPem = currentKeyPair.publicKey.export({ type: 'spki', format: 'pem' }).toString();
+    const nextPublicKeyPem = nextKeyPair.publicKey.export({ type: 'spki', format: 'pem' }).toString();
+    const currentFingerprint = inspectFederationPublicKey(currentPublicKeyPem).publicKeyFingerprint;
+    const nextFingerprint = inspectFederationPublicKey(nextPublicKeyPem).publicKeyFingerprint;
+
+    await trustRegistry.register({
+      peerId: 'peer-promote',
+      displayName: 'Promote Peer',
+      endpoint: 'http://localhost:8084',
+      publicKey: currentPublicKeyPem,
+    });
+
+    const staged = await trustRegistry.stageNextRuntimeKey('peer-promote', nextPublicKeyPem, 'next-key');
+    expect(staged?.metadata).toEqual(expect.objectContaining({
+      runtimeKeys: expect.objectContaining({
+        current: expect.objectContaining({ keyId: currentFingerprint }),
+        next: expect.objectContaining({ keyId: 'next-key' }),
+      }),
+    }));
+
+    const promoted = await trustRegistry.promoteNextRuntimeKey('peer-promote', 'approved rollout');
+    expect(promoted?.publicKey).toBe(nextPublicKeyPem.trim());
+    expect(trustRegistry.getPeerRuntimeKeys('peer-promote')).toEqual([
+      expect.objectContaining({ keyId: 'next-key', status: 'current' }),
+    ]);
+    expect(trustRegistry.getPeerRuntimeKeyId('peer-promote')).toBe('next-key');
+    expect(nextFingerprint).toBeDefined();
   });
 });

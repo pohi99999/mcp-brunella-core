@@ -563,12 +563,234 @@ export function getToolRunStats(): ToolRunStats {
 
 
 export interface RuntimeThresholdRolloutJournalSummary {
-  id?: string;
-  createdAt?: string;
-  action?: string;
-  confidence?: string;
-  rationale?: string;
-  thresholdsBefore?: Record<string, unknown>;
-  thresholdsAfter?: Record<string, unknown>;
-  metadata?: Record<string, unknown>;
+  id: number;
+  recordedAt: string;
+  approvedBy: string;
+  approvalTicket: string;
+  approvedAt: string;
+  changeWindow: string;
+  notes?: string | null;
+  overallAction: string;
+  confidence: string;
+  overallState: string;
+  sampleCount: number;
+  lastSampleAt?: string | null;
+  canApply: boolean;
+  applyReadOnlyReason?: string | null;
+  summary?: Record<string, unknown>;
+  plan?: Record<string, unknown>;
+  renderedPlan?: string | null;
+}
+
+export interface RecordRolloutJournalInput {
+  approvedBy: string;
+  approvalTicket: string;
+  approvedAt: string;
+  changeWindow: string;
+  notes?: string | null;
+  summary?: Record<string, unknown>;
+  plan?: Record<string, unknown>;
+  renderedPlan?: string | null;
+}
+
+export function queryRuntimeThresholdRolloutJournalSummaries(opts: {
+  approvalTicket?: string;
+  limit?: number;
+  offset?: number;
+}): RuntimeThresholdRolloutJournalSummary[] {
+  try {
+    const db = getGlobalDb();
+    db.prepare(`
+      CREATE TABLE IF NOT EXISTS runtime_threshold_rollout_journal (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        recorded_at TEXT NOT NULL,
+        approved_by TEXT NOT NULL,
+        approval_ticket TEXT NOT NULL,
+        approved_at TEXT NOT NULL,
+        change_window TEXT NOT NULL,
+        notes TEXT,
+        overall_action TEXT NOT NULL,
+        confidence TEXT NOT NULL,
+        overall_state TEXT NOT NULL,
+        sample_count INTEGER NOT NULL DEFAULT 0,
+        last_sample_at TEXT,
+        can_apply INTEGER NOT NULL DEFAULT 1,
+        apply_readonly_reason TEXT,
+        summary_json TEXT,
+        plan_json TEXT,
+        rendered_plan TEXT
+      )
+    `).run();
+
+    const limit = opts.limit ?? 50;
+    const offset = opts.offset ?? 0;
+    let query = `SELECT * FROM runtime_threshold_rollout_journal`;
+    const params: unknown[] = [];
+
+    if (opts.approvalTicket) {
+      query += ` WHERE approval_ticket = ?`;
+      params.push(opts.approvalTicket);
+    }
+
+    query += ` ORDER BY id DESC LIMIT ? OFFSET ?`;
+    params.push(limit, offset);
+
+    const rows = db.prepare(query).all(...params) as Array<Record<string, unknown>>;
+    return rows.map((r) => ({
+      id: r.id as number,
+      recordedAt: r.recorded_at as string,
+      approvedBy: r.approved_by as string,
+      approvalTicket: r.approval_ticket as string,
+      approvedAt: r.approved_at as string,
+      changeWindow: r.change_window as string,
+      notes: r.notes as string | null,
+      overallAction: r.overall_action as string,
+      confidence: r.confidence as string,
+      overallState: r.overall_state as string,
+      sampleCount: r.sample_count as number,
+      lastSampleAt: r.last_sample_at as string | null,
+      canApply: Boolean(r.can_apply),
+      applyReadonlyReason: r.apply_readonly_reason as string | null,
+    }));
+  } catch (e) {
+    logError('GlobalDb', `Failed to query rollout journal: ${e instanceof Error ? e.message : String(e)}`);
+    return [];
+  }
+}
+
+export function recordRuntimeThresholdRolloutJournal(
+  input: RecordRolloutJournalInput,
+  snapshot: { summary?: Record<string, unknown> },
+  plan: Record<string, unknown>,
+  renderedPlan?: string,
+): RuntimeThresholdRolloutJournalSummary {
+  const db = getGlobalDb();
+  db.prepare(`
+    CREATE TABLE IF NOT EXISTS runtime_threshold_rollout_journal (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      recorded_at TEXT NOT NULL,
+      approved_by TEXT NOT NULL,
+      approval_ticket TEXT NOT NULL,
+      approved_at TEXT NOT NULL,
+      change_window TEXT NOT NULL,
+      notes TEXT,
+      overall_action TEXT NOT NULL,
+      confidence TEXT NOT NULL,
+      overall_state TEXT NOT NULL,
+      sample_count INTEGER NOT NULL DEFAULT 0,
+      last_sample_at TEXT,
+      can_apply INTEGER NOT NULL DEFAULT 1,
+      apply_readonly_reason TEXT,
+      summary_json TEXT,
+      plan_json TEXT,
+      rendered_plan TEXT
+    )
+  `).run();
+
+  const recordedAt = new Date().toISOString();
+  const summary = snapshot.summary ?? {};
+  const overallAction = (plan['overallAction'] as string) ?? 'observe';
+  const confidence = (plan['confidence'] as string) ?? 'low';
+  const overallState = (summary['overallState'] as string) ?? 'collecting';
+  const sampleCount = (summary['sampleCount'] as number) ?? 0;
+  const lastSampleAt = (summary['lastSampleAt'] as string) ?? null;
+  const canApply = Boolean(plan['canApply'] ?? true);
+  const applyReadonlyReason = (plan['applyReadOnlyReason'] as string) ?? null;
+
+  const result = db.prepare(`
+    INSERT INTO runtime_threshold_rollout_journal
+      (recorded_at, approved_by, approval_ticket, approved_at, change_window, notes,
+       overall_action, confidence, overall_state, sample_count, last_sample_at,
+       can_apply, apply_readonly_reason, summary_json, plan_json, rendered_plan)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `).run(
+    recordedAt,
+    input.approvedBy,
+    input.approvalTicket,
+    input.approvedAt,
+    input.changeWindow,
+    input.notes ?? null,
+    overallAction,
+    confidence,
+    overallState,
+    sampleCount,
+    lastSampleAt,
+    canApply ? 1 : 0,
+    applyReadonlyReason,
+    JSON.stringify(summary),
+    JSON.stringify(plan),
+    renderedPlan ?? null,
+  );
+
+  return {
+    id: result.lastInsertRowid as number,
+    recordedAt,
+    approvedBy: input.approvedBy,
+    approvalTicket: input.approvalTicket,
+    approvedAt: input.approvedAt,
+    changeWindow: input.changeWindow,
+    notes: input.notes ?? null,
+    overallAction,
+    confidence,
+    overallState,
+    sampleCount,
+    lastSampleAt,
+    canApply,
+    applyReadOnlyReason: applyReadonlyReason,
+    summary,
+    plan,
+    renderedPlan: renderedPlan ?? null,
+  };
+}
+
+export function getLatestRuntimeThresholdRolloutJournalSummary(): RuntimeThresholdRolloutJournalSummary | null {
+  try {
+    const db = getGlobalDb();
+    db.prepare(`
+      CREATE TABLE IF NOT EXISTS runtime_threshold_rollout_journal (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        recorded_at TEXT NOT NULL,
+        approved_by TEXT NOT NULL,
+        approval_ticket TEXT NOT NULL,
+        approved_at TEXT NOT NULL,
+        change_window TEXT NOT NULL,
+        notes TEXT,
+        overall_action TEXT NOT NULL,
+        confidence TEXT NOT NULL,
+        overall_state TEXT NOT NULL,
+        sample_count INTEGER NOT NULL DEFAULT 0,
+        last_sample_at TEXT,
+        can_apply INTEGER NOT NULL DEFAULT 1,
+        apply_readonly_reason TEXT,
+        summary_json TEXT,
+        plan_json TEXT,
+        rendered_plan TEXT
+      )
+    `).run();
+
+    const row = db.prepare(
+      `SELECT * FROM runtime_threshold_rollout_journal ORDER BY id DESC LIMIT 1`
+    ).get() as Record<string, unknown> | undefined;
+    if (!row) return null;
+
+    return {
+      id: row.id as number,
+      recordedAt: row.recorded_at as string,
+      approvedBy: row.approved_by as string,
+      approvalTicket: row.approval_ticket as string,
+      approvedAt: row.approved_at as string,
+      changeWindow: row.change_window as string,
+      notes: row.notes as string | null,
+      overallAction: row.overall_action as string,
+      confidence: row.confidence as string,
+      overallState: row.overall_state as string,
+      sampleCount: row.sample_count as number,
+      lastSampleAt: row.last_sample_at as string | null,
+      canApply: Boolean(row.can_apply),
+      applyReadOnlyReason: row.apply_readonly_reason as string | null,
+    };
+  } catch (e) {
+    logError('GlobalDb', `Failed to get latest rollout journal: ${e instanceof Error ? e.message : String(e)}`);
+    return null;
+  }
 }

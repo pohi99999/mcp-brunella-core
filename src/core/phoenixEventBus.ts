@@ -259,6 +259,21 @@ export interface PhoenixFederationNegotiationCompletedEvent {
   timestamp: string;
 }
 
+export interface PhoenixFederationRuntimeKeyStagedEvent {
+  peerId: string;
+  keyId: string;
+  previousCurrentKeyId: string | null;
+  timestamp: string;
+}
+
+export interface PhoenixFederationRuntimeKeyPromotedEvent {
+  peerId: string;
+  keyId: string;
+  previousCurrentKeyId: string | null;
+  reason: string | null;
+  timestamp: string;
+}
+
 export type PhoenixEventMap = {
   'phoenix:agent_failed': PhoenixAgentFailedEvent;
   'phoenix:failover_triggered': PhoenixFailoverTriggeredEvent;
@@ -285,6 +300,8 @@ export type PhoenixEventMap = {
   'phoenix:federation_route_resolved': PhoenixFederationRouteResolvedEvent;
   'phoenix:federation_negotiation_started': PhoenixFederationNegotiationStartedEvent;
   'phoenix:federation_negotiation_completed': PhoenixFederationNegotiationCompletedEvent;
+  'phoenix:federation_runtime_key_staged': PhoenixFederationRuntimeKeyStagedEvent;
+  'phoenix:federation_runtime_key_promoted': PhoenixFederationRuntimeKeyPromotedEvent;
 };
 
 export type PhoenixEventName = keyof PhoenixEventMap;

@@ -12,10 +12,15 @@ import ora from 'ora';
 import inquirer from 'inquirer';
 import { google } from 'googleapis';
 import * as fs from 'fs/promises';
-import * as path from 'path';
 import { existsSync } from 'fs';
 import open from 'open';
 import { logInfo, logError } from '../utils/logger.js';
+import {
+  createGoogleWorkspaceOAuthClient,
+  ensureGoogleWorkspaceAuthDirectories,
+  getGoogleAuth,
+  getGoogleWorkspaceAuthPaths,
+} from '../utils/googleAuth.js';
 
 const SCOPES = [
   'https://www.googleapis.com/auth/gmail.modify',
@@ -23,10 +28,6 @@ const SCOPES = [
   'https://www.googleapis.com/auth/drive',
   'https://www.googleapis.com/auth/calendar',
 ];
-
-const CONFIG_DIR = path.join(process.cwd(), 'config');
-const CREDENTIALS_PATH = path.join(CONFIG_DIR, 'google_credentials.json');
-const TOKEN_PATH = path.join(CONFIG_DIR, 'google_token.json');
 
 /**
  * Register workspace commands
@@ -42,9 +43,10 @@ export function registerWorkspaceCommands(program: Command): void {
     .description('Authenticate with Google Workspace APIs')
     .action(async () => {
       console.log(chalk.bold('\n🔐 Google Workspace Authentication\n'));
+      const authPaths = getGoogleWorkspaceAuthPaths();
 
       // Check if credentials file exists
-      if (!existsSync(CREDENTIALS_PATH)) {
+      if (!existsSync(authPaths.credentialsPath)) {
         console.log(chalk.red('❌ Google credentials not found!'));
         console.log(
           chalk.yellow(
@@ -53,7 +55,16 @@ export function registerWorkspaceCommands(program: Command): void {
         );
         console.log(chalk.cyan('   1. Go to https://console.cloud.google.com/apis/credentials'));
         console.log(chalk.cyan('   2. Create OAuth 2.0 Client ID (Desktop app)'));
-        console.log(chalk.cyan(`   3. Download JSON and save as:\n      ${CREDENTIALS_PATH}\n`));
+        console.log(
+          chalk.cyan(
+            `   3. Download JSON and save as:\n      ${authPaths.preferredCredentialsPath}\n`,
+          ),
+        );
+        console.log(
+          chalk.dim(
+            'Optional override: set GOOGLE_WORKSPACE_CREDENTIALS_FILE to a different gitignored path.',
+          ),
+        );
         console.log(
           chalk.dim('See docs/GOOGLE_WORKSPACE_SETUP.md for detailed instructions.')
         );
@@ -61,20 +72,8 @@ export function registerWorkspaceCommands(program: Command): void {
       }
 
       try {
-        // Create config directory if not exists
-        await fs.mkdir(CONFIG_DIR, { recursive: true });
-
-        // Load credentials
-        const credContent = await fs.readFile(CREDENTIALS_PATH, 'utf-8');
-        const credentials = JSON.parse(credContent);
-        const { client_secret, client_id, redirect_uris } =
-          credentials.installed || credentials.web;
-
-        const oAuth2Client = new google.auth.OAuth2(
-          client_id,
-          client_secret,
-          redirect_uris[0]
-        );
+        await ensureGoogleWorkspaceAuthDirectories(authPaths);
+        const { oAuth2Client, paths } = await createGoogleWorkspaceOAuthClient();
 
         // Generate auth URL
         const authUrl = oAuth2Client.generateAuthUrl({
@@ -106,13 +105,20 @@ export function registerWorkspaceCommands(program: Command): void {
         oAuth2Client.setCredentials(tokens);
 
         // Save tokens
-        await fs.writeFile(TOKEN_PATH, JSON.stringify(tokens, null, 2));
+        await fs.writeFile(paths.preferredTokenPath, JSON.stringify(tokens, null, 2));
 
         spinner.succeed('Tokens saved successfully!');
 
         console.log(chalk.green('\n✅ Google Workspace authentication complete!\n'));
-        console.log(chalk.dim(`Token saved to: ${TOKEN_PATH}`));
+        console.log(chalk.dim(`Token saved to: ${paths.preferredTokenPath}`));
         console.log(chalk.dim('This token will be used for all Google API operations.\n'));
+        if (paths.usingLegacyCredentialsPath) {
+          console.log(
+            chalk.yellow(
+              `⚠ Legacy credentials path still in use: ${paths.credentialsPath}\n   Preferred path: ${paths.preferredCredentialsPath}\n`,
+            ),
+          );
+        }
 
         logInfo('WorkspaceCLI', 'Google Workspace authentication successful');
       } catch (error: unknown) {
@@ -128,21 +134,22 @@ export function registerWorkspaceCommands(program: Command): void {
     .description('Check Google Workspace authentication status')
     .action(async () => {
       console.log(chalk.bold('\n📊 Google Workspace Status\n'));
+      const authPaths = getGoogleWorkspaceAuthPaths();
 
-      const hasCredentials = existsSync(CREDENTIALS_PATH);
-      const hasToken = existsSync(TOKEN_PATH);
+      const hasCredentials = existsSync(authPaths.credentialsPath);
+      const hasToken = existsSync(authPaths.tokenPath);
 
       console.log(`Credentials: ${hasCredentials ? chalk.green('✔ Found') : chalk.red('✘ Missing')}`);
       console.log(`Token:       ${hasToken ? chalk.green('✔ Found') : chalk.red('✘ Missing')}`);
 
       if (hasCredentials) {
-        console.log(chalk.dim(`  ${CREDENTIALS_PATH}`));
+        console.log(chalk.dim(`  ${authPaths.credentialsPath}`));
       }
       if (hasToken) {
-        console.log(chalk.dim(`  ${TOKEN_PATH}`));
+        console.log(chalk.dim(`  ${authPaths.tokenPath}`));
 
         try {
-          const tokenContent = await fs.readFile(TOKEN_PATH, 'utf-8');
+          const tokenContent = await fs.readFile(authPaths.tokenPath, 'utf-8');
           const token = JSON.parse(tokenContent);
 
           if (token.expiry_date) {
@@ -168,6 +175,21 @@ export function registerWorkspaceCommands(program: Command): void {
         }
       }
 
+      if (authPaths.usingLegacyCredentialsPath) {
+        console.log(
+          chalk.yellow(
+            `\n⚠ Legacy credentials path detected. Preferred path: ${authPaths.preferredCredentialsPath}`
+          ),
+        );
+      }
+      if (authPaths.usingLegacyTokenPath) {
+        console.log(
+          chalk.yellow(
+            `⚠ Legacy token path detected. Preferred path: ${authPaths.preferredTokenPath}\n`
+          ),
+        );
+      }
+
       if (!hasCredentials || !hasToken) {
         console.log(
           chalk.yellow(
@@ -185,27 +207,15 @@ export function registerWorkspaceCommands(program: Command): void {
     .description('Test Google Workspace API connectivity')
     .action(async () => {
       console.log(chalk.bold('\n🧪 Testing Google Workspace APIs\n'));
+      const authPaths = getGoogleWorkspaceAuthPaths();
 
-      if (!existsSync(TOKEN_PATH)) {
+      if (!existsSync(authPaths.tokenPath)) {
         console.log(chalk.red('❌ Not authenticated. Run `brunella workspace auth` first.\n'));
         return;
       }
 
       try {
-        const credContent = await fs.readFile(CREDENTIALS_PATH, 'utf-8');
-        const credentials = JSON.parse(credContent);
-        const { client_secret, client_id, redirect_uris } =
-          credentials.installed || credentials.web;
-
-        const oAuth2Client = new google.auth.OAuth2(
-          client_id,
-          client_secret,
-          redirect_uris[0]
-        );
-
-        const tokenContent = await fs.readFile(TOKEN_PATH, 'utf-8');
-        const token = JSON.parse(tokenContent);
-        oAuth2Client.setCredentials(token);
+        const oAuth2Client = await getGoogleAuth();
 
         console.log(chalk.cyan('Testing Gmail API...'));
         const gmail = google.gmail({ version: 'v1', auth: oAuth2Client });

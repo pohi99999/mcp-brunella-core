@@ -1,19 +1,15 @@
 import {
   createHash,
-  createHmac,
   createPrivateKey,
   createPublicKey,
   randomUUID,
   sign as signWithPrivateKey,
-  timingSafeEqual,
   verify as verifyWithPublicKey,
 } from 'crypto';
-import { logWarn } from '../utils/logger.js';
 import { inspectFederationPublicKey } from './federationPeerProof.js';
 
-const DEV_SECRET = 'brunella-federation-dev-secret-do-not-use-in-production';
 export const FEDERATION_AUTH_MAX_CLOCK_SKEW_MS = 5 * 60_000;
-export type FederationRuntimeSignatureScheme = 'asymmetric-v1' | 'hmac-sha256-v1';
+export type FederationRuntimeSignatureScheme = 'asymmetric-v1';
 export interface FederationRuntimePublicKeyBinding {
   keyId: string;
   publicKey: string;
@@ -41,7 +37,6 @@ export interface SignedFederationRequest {
   keyId?: string;
   targetKeyId?: string;
   targetPeerPublicKey?: string;
-  allowLegacyHmacFallback?: boolean;
   timestamp?: string;
   nonce?: string;
   requestId?: string;
@@ -65,7 +60,6 @@ export interface FederationRequestVerificationInput {
   expectedPeerKeys?: FederationRuntimePublicKeyBinding[];
   localKeyId?: string;
   localKeyIds?: string[];
-  allowLegacyHmacFallback?: boolean;
   allowedSignatureSchemes?: FederationRuntimeSignatureScheme[];
   nowMs?: number;
 }
@@ -80,21 +74,6 @@ export interface FederationRequestVerificationResult {
   timestamp?: string;
   nonce?: string;
   requestId?: string;
-}
-
-function getSecret(): string {
-  const secret = process.env.FEDERATION_AUTH_SECRET;
-  if (!secret) {
-    if (process.env.NODE_ENV === 'production') {
-      throw new Error(
-        'FEDERATION_AUTH_SECRET environment variable must be set in production. Refusing to sign federation requests with the dev fallback.',
-      );
-    }
-    logWarn('FederationPeerAuth', 'FEDERATION_AUTH_SECRET not set — using dev fallback. NEVER deploy signed federation traffic without this variable set!');
-    return DEV_SECRET;
-  }
-
-  return secret;
 }
 
 function normalizePath(path: string): string {
@@ -142,10 +121,6 @@ function buildSignaturePayload(input: {
   ].join('\n');
 }
 
-function signLegacyPayload(payload: string): string {
-  return createHmac('sha256', getSecret()).update(payload).digest('hex');
-}
-
 function decodeSignature(signature: string): Buffer {
   const trimmed = signature.trim();
   if (!trimmed) {
@@ -191,29 +166,13 @@ function verifyAsymmetricPayload(payload: string, signature: string, publicKeyPe
   }
 }
 
-function isLegacyHmacFallbackEnabled(explicit?: boolean): boolean {
-  if (explicit !== undefined) {
-    return explicit;
-  }
-
-  const envFlag = process.env.FEDERATION_AUTH_ALLOW_LEGACY_HMAC?.trim().toLowerCase();
-  if (envFlag === 'true') {
-    return true;
-  }
-  if (envFlag === 'false') {
-    return false;
-  }
-
-  return false;
-}
-
 function normalizeSignatureScheme(signatureScheme?: string): FederationRuntimeSignatureScheme | null {
   const normalized = signatureScheme?.trim().toLowerCase();
   if (!normalized) {
     return null;
   }
 
-  if (normalized === 'asymmetric-v1' || normalized === 'hmac-sha256-v1') {
+  if (normalized === 'asymmetric-v1') {
     return normalized;
   }
 
@@ -353,56 +312,30 @@ export function signFederationRequest(input: SignedFederationRequest): Record<st
     keyId: input.keyId,
   });
 
-  if (localKey && targetKeyId) {
-    const payload = buildSignaturePayload({
-      peerId,
-      keyId: localKey.keyId,
-      targetKeyId,
-      method: input.method,
-      path: input.path,
-      timestamp,
-      nonce,
-      requestId,
-      bodySha256,
-    });
-    const signature = signAsymmetricPayload(payload, localKey.privateKeyPem);
-
-    return {
-      [FEDERATION_AUTH_HEADER.peerId]: peerId,
-      [FEDERATION_AUTH_HEADER.keyId]: localKey.keyId,
-      [FEDERATION_AUTH_HEADER.targetKeyId]: targetKeyId,
-      [FEDERATION_AUTH_HEADER.signatureScheme]: 'asymmetric-v1',
-      [FEDERATION_AUTH_HEADER.timestamp]: timestamp,
-      [FEDERATION_AUTH_HEADER.nonce]: nonce,
-      [FEDERATION_AUTH_HEADER.requestId]: requestId,
-      [FEDERATION_AUTH_HEADER.bodySha256]: bodySha256,
-      [FEDERATION_AUTH_HEADER.signature]: signature,
-    };
-  }
-
-  if (!isLegacyHmacFallbackEnabled(input.allowLegacyHmacFallback)) {
+  if (!localKey || !targetKeyId) {
     throw new Error(
-      'Federation runtime signing requires FEDERATION_LOCAL_PRIVATE_KEY and a target peer key binding. Legacy HMAC fallback is disabled.',
+      'Federation runtime signing requires FEDERATION_LOCAL_PRIVATE_KEY and a target peer key binding.',
     );
   }
 
-  const signature = signLegacyPayload(
-    buildSignaturePayload({
-      peerId,
-      keyId: input.keyId ?? 'legacy-hmac',
-      targetKeyId: targetKeyId ?? 'legacy-hmac',
-      method: input.method,
-      path: input.path,
-      timestamp,
-      nonce,
-      requestId,
-      bodySha256,
-    }),
-  );
+  const payload = buildSignaturePayload({
+    peerId,
+    keyId: localKey.keyId,
+    targetKeyId,
+    method: input.method,
+    path: input.path,
+    timestamp,
+    nonce,
+    requestId,
+    bodySha256,
+  });
+  const signature = signAsymmetricPayload(payload, localKey.privateKeyPem);
 
   return {
     [FEDERATION_AUTH_HEADER.peerId]: peerId,
-    [FEDERATION_AUTH_HEADER.signatureScheme]: 'hmac-sha256-v1',
+    [FEDERATION_AUTH_HEADER.keyId]: localKey.keyId,
+    [FEDERATION_AUTH_HEADER.targetKeyId]: targetKeyId,
+    [FEDERATION_AUTH_HEADER.signatureScheme]: 'asymmetric-v1',
     [FEDERATION_AUTH_HEADER.timestamp]: timestamp,
     [FEDERATION_AUTH_HEADER.nonce]: nonce,
     [FEDERATION_AUTH_HEADER.requestId]: requestId,
@@ -450,10 +383,30 @@ export function verifyFederationRequest(
     ...(input.localKeyIds ?? []).map((key) => key.trim()).filter(Boolean),
     input.localKeyId?.trim(),
   ].filter((key): key is string => Boolean(key))));
+  if (expectedPeerKeys.length === 0) {
+    return { valid: false, reason: 'Trusted peer public key missing for federation verification' };
+  }
+  if (!keyId) {
+    return { valid: false, reason: 'Federation key id missing' };
+  }
+  const matchingPeerKey = expectedPeerKeys.find((key) => key.keyId === keyId);
+  if (!matchingPeerKey) {
+    return { valid: false, reason: 'Federation key binding mismatch' };
+  }
+  if (!targetKeyId) {
+    return { valid: false, reason: 'Federation target key id missing' };
+  }
+  if (localKeyIds.length === 0) {
+    return { valid: false, reason: 'Local federation key id not configured' };
+  }
+  if (!localKeyIds.includes(targetKeyId)) {
+    return { valid: false, reason: 'Federation target key binding mismatch' };
+  }
+
   const payload = buildSignaturePayload({
     peerId: input.peerId,
-    keyId: keyId ?? 'legacy-hmac',
-    targetKeyId: targetKeyId ?? 'legacy-hmac',
+    keyId,
+    targetKeyId,
     method: input.method,
     path: input.path,
     timestamp: input.timestamp,
@@ -461,73 +414,8 @@ export function verifyFederationRequest(
     requestId: input.requestId,
     bodySha256: input.bodySha256,
   });
-
-  if (signatureScheme === 'asymmetric-v1') {
-    if (expectedPeerKeys.length === 0) {
-      return { valid: false, reason: 'Trusted peer public key missing for federation verification' };
-    }
-    if (!keyId) {
-      return { valid: false, reason: 'Federation key id missing' };
-    }
-    const matchingPeerKey = expectedPeerKeys.find((key) => key.keyId === keyId);
-    if (!matchingPeerKey) {
-      return { valid: false, reason: 'Federation key binding mismatch' };
-    }
-    if (!targetKeyId) {
-      return { valid: false, reason: 'Federation target key id missing' };
-    }
-    if (localKeyIds.length === 0) {
-      return { valid: false, reason: 'Local federation key id not configured' };
-    }
-    if (!localKeyIds.includes(targetKeyId)) {
-      return { valid: false, reason: 'Federation target key binding mismatch' };
-    }
-    if (!verifyAsymmetricPayload(payload, input.signature, matchingPeerKey.publicKey)) {
-      return { valid: false, reason: 'Invalid federation signature' };
-    }
-
-    return {
-      valid: true,
-      peerId: input.peerId,
-      keyId,
-      targetKeyId,
-      signatureScheme,
-      timestamp: input.timestamp,
-      nonce: input.nonce,
-      requestId: input.requestId,
-    };
-  }
-
-  if (!isLegacyHmacFallbackEnabled(input.allowLegacyHmacFallback)) {
-    return { valid: false, reason: 'Legacy federation HMAC fallback disabled' };
-  }
-
-  const expectedSignature = signLegacyPayload(
-    buildSignaturePayload({
-      peerId: input.peerId,
-      keyId: keyId ?? 'legacy-hmac',
-      targetKeyId: targetKeyId ?? 'legacy-hmac',
-      method: input.method,
-      path: input.path,
-      timestamp: input.timestamp,
-      nonce: input.nonce,
-      requestId: input.requestId,
-      bodySha256: input.bodySha256,
-    }),
-  );
-
-  const signatureBuffer = Buffer.from(input.signature, 'hex');
-  const expectedBuffer = Buffer.from(expectedSignature, 'hex');
-  if (signatureBuffer.length !== expectedBuffer.length) {
+  if (!verifyAsymmetricPayload(payload, input.signature, matchingPeerKey.publicKey)) {
     return { valid: false, reason: 'Invalid federation signature' };
-  }
-
-  try {
-    if (!timingSafeEqual(signatureBuffer, expectedBuffer)) {
-      return { valid: false, reason: 'Invalid federation signature' };
-    }
-  } catch {
-    return { valid: false, reason: 'Federation signature comparison failed' };
   }
 
   return {

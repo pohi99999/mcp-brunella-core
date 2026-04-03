@@ -5,29 +5,58 @@ import { Badge } from './ui/badge.js';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs.js';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table.js';
 import { Input } from './ui/input.js';
+import { Textarea } from './ui/textarea.js';
+import { ScrollArea } from './ui/scroll-area.js';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select.js';
 import { toast } from 'sonner';
-import { Globe, Handshake, FileCode, RefreshCw, PlusCircle } from 'lucide-react';
+import { Globe, Handshake, FileCode, RefreshCw, PlusCircle, Fingerprint, History, ShieldAlert, ShieldCheck } from 'lucide-react';
 import
   {
+    getFederationEvidence,
     getFederationNegotiations,
     getFederationPeers,
     getLocalFederationManifest,
+    type FederationEvidenceSnapshot,
+    promoteFederationPeerRuntimeKey,
     registerFederationPeer,
     revokeFederationPeer,
+    stageFederationPeerRuntimeKey,
     verifyFederationManifest,
     type FederationManifest,
     type FederationNegotiationSession,
     type FederationPeer,
   } from '@/lib/apiService';
 
+function isFederationManifestCandidate( value: unknown ): value is FederationManifest
+{
+  if ( !value || typeof value !== 'object' )
+  {
+    return false;
+  }
+
+  const candidate = value as Record<string, unknown>;
+  return typeof candidate.manifestId === 'string'
+    && typeof candidate.peerId === 'string'
+    && Array.isArray( candidate.capabilities )
+    && typeof candidate.version === 'string'
+    && typeof candidate.issuedAt === 'string'
+    && typeof candidate.expiresAt === 'string'
+    && typeof candidate.signature === 'string';
+}
+
 export function FederationCenter ()
 {
   const [peers, setPeers] = useState<FederationPeer[]>( [] );
   const [negotiations, setNegotiations] = useState<FederationNegotiationSession[]>( [] );
   const [localManifest, setLocalManifest] = useState<FederationManifest | null>( null );
+  const [evidence, setEvidence] = useState<FederationEvidenceSnapshot | null>( null );
   const [loading, setLoading] = useState( false );
   const [verifyInput, setVerifyInput] = useState( '' );
   const [peerForm, setPeerForm] = useState( { peerId: '', displayName: '', endpoint: '' } );
+  const [runtimeKeyPeerId, setRuntimeKeyPeerId] = useState( '' );
+  const [nextRuntimeKeyPem, setNextRuntimeKeyPem] = useState( '' );
+  const [nextRuntimeKeyId, setNextRuntimeKeyId] = useState( '' );
+  const [promoteReason, setPromoteReason] = useState( '' );
 
   const fetchPeers = async () =>
   {
@@ -47,12 +76,18 @@ export function FederationCenter ()
     setLocalManifest( data );
   };
 
+  const fetchEvidence = async () =>
+  {
+    const data = await getFederationEvidence();
+    setEvidence( data );
+  };
+
   const refreshAll = async () =>
   {
     setLoading( true );
     try
     {
-      await Promise.all( [fetchPeers(), fetchNegotiations(), fetchLocalManifest()] );
+      await Promise.all( [fetchPeers(), fetchNegotiations(), fetchLocalManifest(), fetchEvidence()] );
     } catch ( error )
     {
       const message = error instanceof Error ? error.message : 'Ismeretlen hiba';
@@ -74,7 +109,7 @@ export function FederationCenter ()
     {
       await revokeFederationPeer( peerId, 'Manual revocation via Dashboard' );
       toast.success( `Peer ${ peerId } visszavonva` );
-      await fetchPeers();
+      await Promise.all( [fetchPeers(), fetchEvidence()] );
     } catch ( error )
     {
       const message = error instanceof Error ? error.message : 'Ismeretlen hiba';
@@ -107,11 +142,76 @@ export function FederationCenter ()
     }
   };
 
+  const handleStageRuntimeKey = async () =>
+  {
+    if ( !runtimeKeyPeerId )
+    {
+      toast.error( 'Válassz ki egy federált partnert.' );
+      return;
+    }
+
+    if ( !nextRuntimeKeyPem.trim() )
+    {
+      toast.error( 'A következő runtime public key kötelező.' );
+      return;
+    }
+
+    try
+    {
+      await stageFederationPeerRuntimeKey( runtimeKeyPeerId, {
+        publicKey: nextRuntimeKeyPem.trim(),
+        keyId: nextRuntimeKeyId.trim() || undefined,
+      } );
+      toast.success( `Next runtime kulcs stage-elve: ${ runtimeKeyPeerId }` );
+      setNextRuntimeKeyPem( '' );
+      setNextRuntimeKeyId( '' );
+      await Promise.all( [fetchPeers(), fetchEvidence()] );
+    } catch ( error )
+    {
+      const message = error instanceof Error ? error.message : 'Ismeretlen hiba';
+      toast.error( `Runtime key stage sikertelen: ${ message }` );
+    }
+  };
+
+  const handlePromoteRuntimeKey = async () =>
+  {
+    if ( !runtimeKeyPeerId )
+    {
+      toast.error( 'Válassz ki egy federált partnert.' );
+      return;
+    }
+
+    try
+    {
+      await promoteFederationPeerRuntimeKey( runtimeKeyPeerId, promoteReason.trim() || undefined );
+      toast.success( `Runtime kulcs promotálva: ${ runtimeKeyPeerId }` );
+      setPromoteReason( '' );
+      await Promise.all( [fetchPeers(), fetchEvidence()] );
+    } catch ( error )
+    {
+      const message = error instanceof Error ? error.message : 'Ismeretlen hiba';
+      toast.error( `Runtime key promóció sikertelen: ${ message }` );
+    }
+  };
+
   const handleVerify = async () =>
   {
     try
     {
-      const manifest = JSON.parse( verifyInput ) as FederationManifest;
+      if ( verifyInput.length > 65_536 )
+      {
+        toast.error( 'A manifest JSON túl nagy. Maximum 64 KB engedélyezett.' );
+        return;
+      }
+
+      const parsed = JSON.parse( verifyInput ) as unknown;
+      if ( !isFederationManifestCandidate( parsed ) )
+      {
+        toast.error( 'Érvénytelen manifest JSON szerkezet.' );
+        return;
+      }
+
+      const manifest = parsed;
       const result = await verifyFederationManifest( manifest );
       toast.success( `Manifest ellenőrzés eredménye: ${ result }` );
     } catch ( error )
@@ -136,6 +236,37 @@ export function FederationCenter ()
     if ( state === 'trusted' ) return 'default';
     if ( state === 'pending' ) return 'secondary';
     return 'destructive';
+  };
+
+  const formatEvidenceTimestamp = ( timestamp: string | null ) =>
+  {
+    if ( !timestamp ) return '—';
+    return new Date( timestamp ).toLocaleString( 'hu-HU' );
+  };
+
+  const operatorEvidence = evidence?.journal ?? [];
+  const rolloutPeers = evidence?.peers ?? [];
+
+  const getEvidenceOutcomeLabel = ( outcome: NonNullable<FederationEvidenceSnapshot['journal'][number]['outcome']> ) =>
+  {
+    if ( outcome === 'allowed' ) return 'ALLOWED';
+    if ( outcome === 'denied' ) return 'DENIED';
+    return 'OBSERVED';
+  };
+
+  const getEvidenceOutcomeTone = ( outcome: NonNullable<FederationEvidenceSnapshot['journal'][number]['outcome']> ) =>
+  {
+    if ( outcome === 'allowed' ) return 'border-emerald-500/30 bg-emerald-500/10 text-emerald-200';
+    if ( outcome === 'denied' ) return 'border-rose-500/30 bg-rose-500/10 text-rose-200';
+    return 'border-cyan-500/30 bg-cyan-500/10 text-cyan-200';
+  };
+
+  const getRotationTone = ( rotationState: FederationEvidenceSnapshot['peers'][number]['rotationState'] ) =>
+  {
+    if ( rotationState === 'staged' ) return 'border-cyan-500/30 bg-cyan-500/10 text-cyan-200';
+    if ( rotationState === 'revoked' ) return 'border-rose-500/30 bg-rose-500/10 text-rose-200';
+    if ( rotationState === 'missing' ) return 'border-amber-500/30 bg-amber-500/10 text-amber-200';
+    return 'border-emerald-500/30 bg-emerald-500/10 text-emerald-200';
   };
 
   return (
@@ -231,6 +362,244 @@ export function FederationCenter ()
                   ) }
                 </TableBody>
               </Table>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Runtime key lifecycle</CardTitle>
+              <CardDescription>Stage-eld a következő runtime kulcsot, majd promotáld current állapotba.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid gap-3 md:grid-cols-2">
+                <div className="space-y-2">
+                  <p className="text-sm font-medium">Federált partner</p>
+                  <Select value={ runtimeKeyPeerId } onValueChange={ setRuntimeKeyPeerId }>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Válassz peert" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      { peers.map( ( peer ) => (
+                        <SelectItem key={ peer.peerId } value={ peer.peerId }>
+                          { peer.peerId }
+                        </SelectItem>
+                      ) ) }
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <p className="text-sm font-medium">Next key ID (opcionális)</p>
+                  <Input
+                    value={ nextRuntimeKeyId }
+                    placeholder="fingerprint vagy explicit key id"
+                    onChange={ ( event ) => setNextRuntimeKeyId( event.target.value ) }
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <p className="text-sm font-medium">Next runtime public key (PEM)</p>
+                <Textarea
+                  value={ nextRuntimeKeyPem }
+                  placeholder="-----BEGIN PUBLIC KEY-----"
+                  onChange={ ( event ) => setNextRuntimeKeyPem( event.target.value ) }
+                />
+                <div className="flex justify-end">
+                  <Button onClick={ handleStageRuntimeKey }>Next kulcs stage-elése</Button>
+                </div>
+              </div>
+
+              <div className="space-y-2 border-t pt-4">
+                <p className="text-sm font-medium">Promóció oka (opcionális)</p>
+                <Input
+                  value={ promoteReason }
+                  placeholder="pl. remote rollout confirmed"
+                  onChange={ ( event ) => setPromoteReason( event.target.value ) }
+                />
+                <div className="flex justify-end">
+                  <Button variant="outline" onClick={ handlePromoteRuntimeKey }>Next kulcs promotálása</Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="overflow-hidden border-cyan-500/20 bg-[radial-gradient(circle_at_top_left,_rgba(34,211,238,0.16),_transparent_35%),linear-gradient(180deg,rgba(15,23,42,0.96),rgba(2,8,23,0.92))]">
+            <CardHeader className="border-b border-white/6">
+              <div className="flex flex-col gap-5 xl:flex-row xl:items-start xl:justify-between">
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.28em] text-cyan-200/80">
+                    <History className="h-4 w-4" />
+                    Federation Evidence
+                  </div>
+                  <CardTitle className="text-2xl font-semibold tracking-tight text-white">Operator journal</CardTitle>
+                  <CardDescription className="max-w-2xl text-slate-300/80">
+                    Runtime key rollout, peer revoke és trust-határesetek egy közös, auditált operátori feedben.
+                  </CardDescription>
+                </div>
+
+                <div className="grid gap-2 sm:grid-cols-2 xl:min-w-[360px]">
+                  <div className="rounded-2xl border border-white/8 bg-white/4 px-4 py-3">
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-slate-400">Trusted peers</p>
+                    <p className="mt-2 text-2xl font-semibold text-white">{ evidence?.totals.trustedCount ?? 0 }</p>
+                    <p className="text-xs text-slate-400">Pending: { evidence?.totals.pendingCount ?? 0 }</p>
+                  </div>
+                  <div className="rounded-2xl border border-cyan-500/20 bg-cyan-500/8 px-4 py-3">
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-cyan-200/80">Rotation staged</p>
+                    <p className="mt-2 text-2xl font-semibold text-white">{ evidence?.totals.peersWithNextKey ?? 0 }</p>
+                    <p className="text-xs text-cyan-100/70">Stage: { evidence?.totals.stageCount ?? 0 } • Promote: { evidence?.totals.promoteCount ?? 0 }</p>
+                  </div>
+                  <div className="rounded-2xl border border-rose-500/20 bg-rose-500/8 px-4 py-3">
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-rose-200/80">Denied trail</p>
+                    <p className="mt-2 text-2xl font-semibold text-white">{ evidence?.totals.deniedCount ?? 0 }</p>
+                    <p className="text-xs text-rose-100/70">Revoke: { evidence?.totals.revokeCount ?? 0 }</p>
+                  </div>
+                  <div className="rounded-2xl border border-white/8 bg-white/4 px-4 py-3">
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-slate-400">Journal feed</p>
+                    <p className="mt-2 text-2xl font-semibold text-white">{ evidence?.totals.journalCount ?? 0 }</p>
+                    <p className="text-xs text-slate-400">
+                      { evidence?.truncated ? 'Rövidített feed, az API további bejegyzést tartalmaz.' : 'A legfrissebb operator evidence.' }
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </CardHeader>
+
+            <CardContent className="grid gap-6 px-6 py-6 xl:grid-cols-[minmax(0,1.25fr)_360px]">
+              <div className="rounded-3xl border border-white/8 bg-slate-950/70 shadow-[inset_0_1px_0_rgba(255,255,255,0.03)]">
+                <div className="flex items-center justify-between border-b border-white/6 px-5 py-4">
+                  <div>
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-slate-400">Runtime rollout feed</p>
+                    <p className="mt-1 text-sm text-slate-300">Stage, promote, revoke és route outcome események</p>
+                  </div>
+                  <Badge variant="outline" className="border-cyan-500/30 bg-cyan-500/10 text-cyan-100">
+                    { operatorEvidence.length } entry
+                  </Badge>
+                </div>
+
+                <ScrollArea className="h-[420px]">
+                  <div className="relative space-y-3 px-5 py-5 before:absolute before:bottom-5 before:left-[1.35rem] before:top-5 before:w-px before:bg-gradient-to-b before:from-cyan-400/50 before:via-white/10 before:to-transparent">
+                    { operatorEvidence.length === 0 ? (
+                      <div className="rounded-2xl border border-dashed border-white/10 bg-white/[0.03] px-5 py-6 text-sm text-slate-400">
+                        Még nincs federation operator evidence. A stage/promote/revoke műveletek itt jelennek meg.
+                      </div>
+                    ) : (
+                      operatorEvidence.map( ( entry ) => (
+                        <div key={ entry.id } className="relative pl-10">
+                          <div className="absolute left-[0.72rem] top-5 h-3 w-3 rounded-full border border-slate-950 bg-cyan-300 shadow-[0_0_0_4px_rgba(8,15,30,0.9)]" />
+                          <div className="rounded-2xl border border-white/8 bg-white/[0.03] px-4 py-4 shadow-[0_16px_40px_-24px_rgba(0,0,0,0.85)]">
+                            <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                              <div className="space-y-2">
+                                <div className="flex flex-wrap items-center gap-2">
+                                  <Badge variant="outline" className={ getEvidenceOutcomeTone( entry.outcome ) }>
+                                    { getEvidenceOutcomeLabel( entry.outcome ) }
+                                  </Badge>
+                                  <span className="text-sm font-semibold text-white">{ entry.title }</span>
+                                  { entry.peerId && (
+                                    <Badge variant="outline" className="border-white/10 bg-white/[0.04] text-slate-200">
+                                      { entry.peerId }
+                                    </Badge>
+                                  ) }
+                                </div>
+                                <p className="text-sm leading-6 text-slate-300">{ entry.detail }</p>
+                                <div className="flex flex-wrap items-center gap-2 text-xs text-slate-400">
+                                  { entry.keyId && (
+                                    <span className="rounded-full border border-white/10 bg-white/[0.04] px-2 py-1 font-mono text-[11px] text-slate-200">
+                                      key:{ entry.keyId }
+                                    </span>
+                                  ) }
+                                  { entry.previousCurrentKeyId && (
+                                    <span className="rounded-full border border-white/10 bg-white/[0.04] px-2 py-1 font-mono text-[11px] text-slate-200">
+                                      prev:{ entry.previousCurrentKeyId }
+                                    </span>
+                                  ) }
+                                  <span className="rounded-full border border-white/10 bg-white/[0.04] px-2 py-1 uppercase tracking-[0.2em] text-[10px]">
+                                    { entry.evidenceSources.join( '+' ) }
+                                  </span>
+                                </div>
+                              </div>
+                              <div className="text-right text-xs text-slate-400">
+                                <p className="font-mono tracking-wide text-slate-300">{ formatEvidenceTimestamp( entry.timestamp ) }</p>
+                                <p className="mt-1">{ entry.displayName ?? 'Federation operator action' }</p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ) )
+                    ) }
+                  </div>
+                </ScrollArea>
+              </div>
+
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-slate-400">Rollout matrix</p>
+                    <p className="mt-1 text-sm text-slate-300">Peerenkénti current/next key és legutóbbi operator action</p>
+                  </div>
+                  <Fingerprint className="h-4 w-4 text-cyan-300" />
+                </div>
+
+                { rolloutPeers.length === 0 ? (
+                  <div className="rounded-2xl border border-dashed border-white/10 bg-white/[0.03] px-4 py-5 text-sm text-slate-400">
+                    Nincs federált partner vagy operator evidence.
+                  </div>
+                ) : (
+                  rolloutPeers.map( ( peer ) => (
+                    <div key={ peer.peerId } className="rounded-2xl border border-white/8 bg-slate-950/70 px-4 py-4 shadow-[0_18px_45px_-30px_rgba(0,0,0,0.85)]">
+                      <div className="flex items-start justify-between gap-3">
+                        <div>
+                          <p className="text-sm font-semibold text-white">{ peer.displayName }</p>
+                          <p className="mt-1 text-xs font-mono text-slate-400">{ peer.peerId }</p>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Badge variant={ getTrustVariant( peer.trustState ) }>{ peer.trustState }</Badge>
+                          <Badge variant="outline" className={ getRotationTone( peer.rotationState ) }>
+                            { peer.rotationState }
+                          </Badge>
+                        </div>
+                      </div>
+
+                      <div className="mt-4 grid gap-3 rounded-2xl border border-white/6 bg-white/[0.03] p-3">
+                        <div className="flex items-center justify-between text-xs">
+                          <span className="uppercase tracking-[0.22em] text-slate-500">Current</span>
+                          <span className="font-mono text-slate-200">{ peer.currentKeyId ?? '—' }</span>
+                        </div>
+                        <div className="flex items-center justify-between text-xs">
+                          <span className="uppercase tracking-[0.22em] text-slate-500">Next</span>
+                          <span className="font-mono text-cyan-100">{ peer.nextKeyId ?? '—' }</span>
+                        </div>
+                        <div className="grid grid-cols-3 gap-2 pt-1 text-center text-xs">
+                          <div className="rounded-xl border border-white/6 bg-white/[0.03] px-2 py-2">
+                            <p className="text-[10px] uppercase tracking-[0.22em] text-slate-500">Stage</p>
+                            <p className="mt-1 text-sm font-semibold text-white">{ peer.stageCount }</p>
+                          </div>
+                          <div className="rounded-xl border border-white/6 bg-white/[0.03] px-2 py-2">
+                            <p className="text-[10px] uppercase tracking-[0.22em] text-slate-500">Promote</p>
+                            <p className="mt-1 text-sm font-semibold text-white">{ peer.promoteCount }</p>
+                          </div>
+                          <div className="rounded-xl border border-white/6 bg-white/[0.03] px-2 py-2">
+                            <p className="text-[10px] uppercase tracking-[0.22em] text-slate-500">Revoke</p>
+                            <p className="mt-1 text-sm font-semibold text-white">{ peer.revokeCount }</p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="mt-4 flex items-start gap-3 rounded-2xl border border-white/6 bg-white/[0.03] px-3 py-3">
+                        { peer.latestOutcome === 'denied' ? (
+                          <ShieldAlert className="mt-0.5 h-4 w-4 text-rose-300" />
+                        ) : (
+                          <ShieldCheck className="mt-0.5 h-4 w-4 text-emerald-300" />
+                        ) }
+                        <div className="min-w-0">
+                          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-500">Legutóbbi művelet</p>
+                          <p className="mt-1 text-sm text-slate-200">{ peer.latestAction ?? 'Még nincs operator action' }</p>
+                          <p className="mt-1 text-xs text-slate-400">{ formatEvidenceTimestamp( peer.lastEvidenceAt ) }</p>
+                        </div>
+                      </div>
+                    </div>
+                  ) )
+                ) }
+              </div>
             </CardContent>
           </Card>
         </TabsContent>

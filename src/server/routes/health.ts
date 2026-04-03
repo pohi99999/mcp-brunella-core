@@ -15,6 +15,9 @@ import {
 import { getRuntimeTelemetry } from "../../utils/runtimeTelemetry.js";
 import { AppError } from "../../utils/AppError.js";
 import { asyncHandler } from "../middleware/errorHandler.js";
+import { getRuntimeDriftSnapshot } from "../../utils/runtimeDriftMonitor.js";
+import { buildThresholdRolloutPlan, readRepoRuntimeContract } from "../../utils/runtimeThresholdRollout.js";
+import { getLatestRuntimeThresholdRolloutJournalSummary } from "../../utils/globalDb.js";
 
 let cachedHealthResponse: HealthResponse | null = null;
 let lastHealthCheckTime = 0;
@@ -102,6 +105,27 @@ export function createHealthRoutes(): Router {
       lastHealthCheckTime = now;
 
       res.json(payload);
+    }),
+  );
+
+  /**
+   * GET /api/health/runtime-drift
+   * Runtime drift snapshot with threshold rollout plan and latest journal entry.
+   */
+  router.get(
+    "/runtime-drift",
+    asyncHandler(async (_req, res) => {
+      const snapshot = getRuntimeDriftSnapshot();
+      const contract = readRepoRuntimeContract(process.cwd());
+      const rollout = buildThresholdRolloutPlan(snapshot.summary.recommendation, contract);
+      const latestJournalEntry = getLatestRuntimeThresholdRolloutJournalSummary();
+      res.json({
+        summary: snapshot.summary,
+        samples: snapshot.samples,
+        rollout,
+        latestJournalEntry,
+        timestamp: new Date().toISOString(),
+      });
     }),
   );
 

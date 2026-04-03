@@ -24,13 +24,11 @@ describe('federationPeerAuth', () => {
     delete process.env.FEDERATION_LOCAL_PUBLIC_KEY;
     delete process.env.FEDERATION_LOCAL_NEXT_PUBLIC_KEY;
     delete process.env.FEDERATION_LOCAL_NEXT_KEY_ID;
-    delete process.env.FEDERATION_AUTH_ALLOW_LEGACY_HMAC;
   });
 
   it('verifies asymmetric runtime federation signatures bound to both peer fingerprints', () => {
     process.env.FEDERATION_LOCAL_PRIVATE_KEY = localPrivateKeyPem;
     process.env.FEDERATION_LOCAL_PUBLIC_KEY = localPublicKeyPem;
-    process.env.FEDERATION_AUTH_ALLOW_LEGACY_HMAC = 'false';
 
     const headers = signFederationRequest({
       peerId: 'peer-remote',
@@ -69,7 +67,6 @@ describe('federationPeerAuth', () => {
   it('rejects asymmetric runtime federation signatures when the target fingerprint does not match the local key', () => {
     process.env.FEDERATION_LOCAL_PRIVATE_KEY = localPrivateKeyPem;
     process.env.FEDERATION_LOCAL_PUBLIC_KEY = localPublicKeyPem;
-    process.env.FEDERATION_AUTH_ALLOW_LEGACY_HMAC = 'false';
 
     const wrongTargetKeyPair = generateKeyPairSync('ed25519');
     const wrongTargetPublicKeyPem = wrongTargetKeyPair.publicKey.export({ type: 'spki', format: 'pem' }).toString();
@@ -181,7 +178,44 @@ describe('federationPeerAuth', () => {
     expect(verification.targetKeyId).toBe(nextLocalFingerprint);
   });
 
-  it('does not implicitly downgrade to legacy hmac signing in test mode', () => {
+  it('rejects unsupported federation signature schemes', () => {
+    process.env.FEDERATION_LOCAL_PRIVATE_KEY = localPrivateKeyPem;
+    process.env.FEDERATION_LOCAL_PUBLIC_KEY = localPublicKeyPem;
+
+    const headers = signFederationRequest({
+      peerId: 'peer-remote',
+      privateKey: remotePrivateKeyPem,
+      publicKey: remotePublicKeyPem,
+      method: 'POST',
+      path: '/api/v1/federation/execute',
+      body: { capabilityName: 'agent_list' },
+      targetPeerPublicKey: localPublicKeyPem,
+    });
+
+    const verification = verifyFederationRequest({
+      peerId: headers['x-federation-peer-id'],
+      keyId: headers['x-federation-key-id'],
+      targetKeyId: headers['x-federation-target-key-id'],
+      signatureScheme: 'hmac-sha256-v1',
+      method: 'POST',
+      path: '/api/v1/federation/execute',
+      body: { capabilityName: 'agent_list' },
+      timestamp: headers['x-federation-timestamp'],
+      nonce: headers['x-federation-nonce'],
+      requestId: headers['x-federation-request-id'],
+      bodySha256: headers['x-federation-body-sha256'],
+      signature: headers['x-federation-signature'],
+      expectedPublicKey: remotePublicKeyPem,
+      expectedKeyId: remoteFingerprint,
+      localKeyIds: getLocalFederationKeyIds(),
+      allowedSignatureSchemes: ['asymmetric-v1'],
+    });
+
+    expect(verification.valid).toBe(false);
+    expect(verification.reason).toContain('Unsupported federation signature scheme');
+  });
+
+  it('fails closed when federation signing key material is missing', () => {
     expect(() =>
       signFederationRequest({
         peerId: 'peer-remote',
@@ -189,6 +223,6 @@ describe('federationPeerAuth', () => {
         path: '/api/v1/federation/execute',
         body: { capabilityName: 'agent_list' },
       }),
-    ).toThrow(/Legacy HMAC fallback is disabled/);
+    ).toThrow(/requires FEDERATION_LOCAL_PRIVATE_KEY and a target peer key binding/);
   });
 });
