@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Play, Square, Camera, RefreshCw, Terminal, Activity, Globe, Loader2 } from 'lucide-react';
+import { Play, Square, Camera, RefreshCw, Terminal, Activity, Globe, Loader2, Zap } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../ui/card';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
@@ -81,7 +81,7 @@ export function RobotkezPanel() {
     const fetchN8nWorkflows = async () => {
         setN8nLoading(true);
         try {
-            const data = await getN8nWorkflows();
+            const data = await getN8nWorkflows() as any;
             setN8nWorkflows(data.data || []);
         } catch (err: any) {
             console.error('n8n error:', err);
@@ -248,7 +248,15 @@ export function RobotkezPanel() {
                         <Camera className="w-4 h-4 text-primary" />
                         Élő Nézet (5mp frissítés)
                     </CardTitle>
-                    <Button variant="ghost" size="icon" onClick={refreshData} className="h-8 w-8" disabled={isRefreshing}>
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={refreshData}
+                        className="h-8 w-8 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                        disabled={isRefreshing}
+                        title="Képernyő frissítése"
+                        aria-label="Képernyő frissítése"
+                    >
                         <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
                     </Button>
                 </CardHeader>
