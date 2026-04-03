@@ -45,8 +45,19 @@
 - új célzott teszt került be a preflight contractra (`test/service_preflight.test.ts`)
 - célzott lint + build + Vitest kör és teljes `npm run test:fast` sikeresen lefutott
 
+## 2026-04-03 - Rendszerellenőrzés és gyors runtime stabilizáció
+
+- teljes lokális runtime ellenőrzés lefutott a Brunella core, dashboard, Python és Ollama komponensekre
+- a `src/server/toolRegistry.ts` rekurzív registry-import hurka megszűnt; emiatt a backend ismét stabilan válaszol a `3000`-es porton (`/ping`, `/readyz`)
+- új regressziós teszt került be a tool metadata építésre (`test/toolRegistry.test.ts`)
+- a Linux supervisor loader Windows checkout melletti CRLF hibája javítva lett (`.gitattributes`, `scripts/supervisors/linux/load-runtime-threshold-env.sh`)
+- a gyors validáció zöld: `npm run test:fast` → `273 passed | 1 skipped`
+- a Copilot napló és a FOSZÁL összefoglaló frissítve lett a rendszerellenőrzési kör eredményeivel
+- a smoke kör tartalmilag lefutott, de a Windows oldali `UV_HANDLE_CLOSING` assertion és a `langflow` / `wab` degradált health külön utánkövetést igényel
+
 ## Következő fókusz
 
 - a Python runtime/container hardening felhozatala a Node stable szintjére
 - a Python runtime rollout és container security parity felhozatala a Node stable szintjére
 - az új runtime contract alapján heap/OOM drift operátori megfigyelése stable üzemben
+- a Windows oldali smoke/assertion zaj és a `langflow` / `wab` degradált health kivizsgálása

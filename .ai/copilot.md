@@ -4,6 +4,36 @@ User requested that the Copilot CLI automatically connect to a local Brunella MC
 
 <history>
 
+### 2026-04-03 — Teljes rendszerellenőrzés + runtime/toolRegistry fix + shell LF hardening
+
+**Feladat:** Brunella teljes rendszerellenőrzés futó környezetben: bootstrap/szinkron állapot felmérése, szerverkapcsolatok ellenőrzése, alap validáció futtatása, conductor track állapot áttekintése, és a Copilot memóriaállapot frissítése.
+
+**Érintett fájlok:**
+- `src/server/toolRegistry.ts`
+- `test/toolRegistry.test.ts`
+- `.gitattributes`
+- `scripts/supervisors/linux/load-runtime-threshold-env.sh`
+- `.ai/copilot.md`
+
+**Mit találtunk és javítottunk:**
+- A `npm run dev` alatt a backend azért hallgatott el a 3000-es porton, mert a `tools_update` broadcast útvonalon a `getRegisteredToolsList()` rekurzívan importálta vissza a `registry.js`-t; ez ESM loader recursion / event-loop starvation helyzetet okozott.
+- A javítás után a tool metadata közvetlenül az in-memory `registeredToolDefinitions` listából épül fel, és külön regressziós teszt védi a nem rekurzív működést.
+- A `test/linuxRuntimeThresholdLoader.test.ts` két hibája valós CRLF problémából jött: a `scripts/supervisors/linux/load-runtime-threshold-env.sh` Windows checkoutban CRLF-es volt. Hozzáadtam a `*.sh text eol=lf` szabályt a `.gitattributes`-hez, és a scriptet ténylegesen LF-re normalizáltam.
+
+**Rendszerállapot / validáció:**
+- `npm run test:fast` → **273 passed | 1 skipped**, zöld.
+- Backend health végül helyreállt: `ping` → `pong`, `readyz` → `ready`, `/api/health` → `degraded` csak azért, mert `AnythingLLM` opcionálisan nem elérhető, illetve `langflow` / `wab` health down.
+- `npm run smoke` tartalmilag lefutott: **5/6 elérhető**, csak az opcionális `AnythingLLM` hiányzik; a script Windows alatt a végén még kidob egy `UV_HANDLE_CLOSING` async assertiont, ezt most nem bővítettem tovább.
+- A `conductor/tracks.md` jelenlegi auto-sync állapota: **185 total | 7 active | 172 archived**.
+
+**Megjegyzés:**
+- A hivatalos `scripts\sync.ps1` indítás a meglévő dirty worktree miatt biztonságosan abortált; nem stash-eltem idegen módosításokat.
+- A backend indulása automatikusan újraírja a `conductor/project_state.json` és `conductor/tracks.md` fájlokat a TrackStateManager fullSync miatt.
+
+**Státusz:** ✅ Befejezve
+
+---
+
 ### 2026-04-03 — Track archivalization + tracks.md cleanup + FOSZAL sync
 
 **Feladat:** conductor/tracks.md és a fizikai track mappák szinkronizálása — 15 completed track archiválása, orphan mappák eltávolítása, jules stale entry javítása.

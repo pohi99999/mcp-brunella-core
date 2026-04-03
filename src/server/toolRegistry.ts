@@ -43,7 +43,61 @@ export function getAllToolDefinitions(): ToolDefinition[] {
   return registeredToolDefinitions;
 }
 
-export async function getRegisteredToolsList(): Promise<RegisteredToolInfo[]> {
-  const { getRegisteredToolsList: regList } = await import("./registry.js");
-  return regList();
+function getParameterType(schema: unknown): string {
+  if (typeof schema !== "object" || schema === null) {
+    return "unknown";
+  }
+
+  const schemaRecord = schema as Record<string, unknown>;
+  return typeof schemaRecord.type === "string" ? schemaRecord.type : "unknown";
+}
+
+function getToolCategory(definition: ToolDefinition): RegisteredToolInfo["category"] {
+  const normalized = `${definition.name} ${definition.description}`.toLowerCase();
+
+  if (
+    normalized.includes("health") ||
+    normalized.includes("metric") ||
+    normalized.includes("monitor")
+  ) {
+    return "monitoring";
+  }
+
+  if (
+    normalized.includes("config") ||
+    normalized.includes("setting") ||
+    normalized.includes("env")
+  ) {
+    return "configuration";
+  }
+
+  if (
+    normalized.includes("server") ||
+    normalized.includes("agent") ||
+    normalized.includes("mcp")
+  ) {
+    return "server";
+  }
+
+  return "custom";
+}
+
+export function getRegisteredToolsList(): RegisteredToolInfo[] {
+  return registeredToolDefinitions.map((definition) => {
+    const properties = definition.inputSchema?.properties ?? {};
+    const required = new Set(definition.inputSchema?.required ?? []);
+
+    return {
+      id: definition.name,
+      name: definition.name,
+      description: definition.description,
+      enabled: true,
+      category: getToolCategory(definition),
+      parameters: Object.entries(properties).map(([name, schema]) => ({
+        name,
+        type: getParameterType(schema),
+        required: required.has(name),
+      })),
+    };
+  });
 }
