@@ -155,7 +155,8 @@ export class BifrostGateway {
     });
 
     // 3. GitHub Models (Microsoft-hosted, GPT-4o)
-    const githubToken = process.env.GITHUB_PAT || process.env.GITHUB_TOKEN;
+    // GH_TOKEN = user PAT (GitHub doesn't allow secrets named GITHUB_*)
+    const githubToken = process.env.GH_TOKEN || process.env.GITHUB_PAT || process.env.GITHUB_TOKEN;
     this.providers.set('github', {
       type: 'github',
       enabled: !!(githubToken && githubToken !== ''),

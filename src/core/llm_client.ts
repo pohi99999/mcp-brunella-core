@@ -61,9 +61,9 @@ export const generateResponse: (
       }
 
       if (provider === "github") {
-        const apiKey = process.env.GITHUB_TOKEN || process.env.GITHUB_PAT;
+        const apiKey = process.env.GH_TOKEN || process.env.GITHUB_TOKEN || process.env.GITHUB_PAT;
         if (!apiKey) {
-          throw new Error("GITHUB_TOKEN or GITHUB_PAT not configured");
+          throw new Error("GH_TOKEN or GITHUB_TOKEN not configured");
         }
 
         const modelRaw = modelName || "gpt-4.1";

@@ -136,6 +136,7 @@ describe('issueFixLoop', () => {
     });
 
     it('should fail fast when GitHub auth is missing', async () => {
+        delete process.env.GH_TOKEN;
         delete process.env.GITHUB_PAT;
         delete process.env.GITHUB_TOKEN;
 
@@ -145,7 +146,7 @@ describe('issueFixLoop', () => {
                 owner: 'owner',
                 repo: 'repo',
             }),
-        ).rejects.toThrow(/GITHUB_PAT or GITHUB_TOKEN/i);
+        ).rejects.toThrow(/GH_TOKEN|GITHUB_PAT|GITHUB_TOKEN/i);
     });
 
     it('should honor explicit file hints before inferred issue body hints', async () => {
