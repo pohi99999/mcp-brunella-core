@@ -1,0 +1,76 @@
+name: "Copilot Setup Steps"
+
+# Keep the base environment deterministic and lightweight for Copilot cloud agent.
+# Install the BAS toolchains and dependencies here, then let the agent run only the
+# build/tests it actually needs for the task at hand.
+#
+# Optional provider and integration secrets belong in:
+# Settings -> Environments -> copilot
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - .github/workflows/copilot-setup-steps.yml
+  pull_request:
+    paths:
+      - .github/workflows/copilot-setup-steps.yml
+
+jobs:
+  # GitHub Copilot only recognizes this workflow when the job name is exactly this.
+  copilot-setup-steps:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    timeout-minutes: 35
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          lfs: true
+
+      - name: Pull Git LFS objects
+        run: git lfs pull
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: "npm"
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install uv
+        run: python -m pip install --upgrade pip uv
+
+      - name: Install JavaScript dependencies
+        run: npm ci
+
+      - name: Rebuild better-sqlite3 for the active Node ABI
+        run: npm rebuild better-sqlite3
+
+      - name: Build Brunella core
+        run: npm run build
+
+      - name: Install Python dependencies
+        run: uv sync --frozen --extra dev
+
+      - name: Configure BAS defaults
+        run: |
+          echo "BRUNELLA_SKIP_SECRETS_CHECK=1" >> "$GITHUB_ENV"
+          echo "WEB_UI_ENABLED=0" >> "$GITHUB_ENV"
+          echo "NODE_ENV=test" >> "$GITHUB_ENV"
+          echo "PYTHONPATH=$GITHUB_WORKSPACE" >> "$GITHUB_ENV"
+          echo "$GITHUB_WORKSPACE/.venv/bin" >> "$GITHUB_PATH"
+
+      # Playwright browser installation is intentionally left out here because it is
+      # only needed for dedicated E2E work and would slow every Copilot session down.
+      - name: Show toolchain versions
+        run: |
+          node --version
+          npm --version
+          python --version
+          uv --version
