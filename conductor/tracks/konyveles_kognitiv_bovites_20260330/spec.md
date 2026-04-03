@@ -4,7 +4,24 @@
 **Prioritás:** HIGH
 **Tulajdonos:** Pohánka Péter
 **Létrehozva:** 2026-03-30
-**Alap-track:** `n8n_konyveles_pipeline_20260328` (85% készre épít)
+**Utolsó audit:** 2026-04-03
+**Alap-track:** `n8n_konyveles_pipeline_20260328` (COMPLETED) + `konyveles_phase3_20260403` (szükésgés előfeltétel)
+
+---
+
+## ⛔ BLOKKOLVA — Előfeltételek
+
+> **Ez a track NEM kezdhető el, amíg `konyveles_phase3_20260403` nincs 100%-on lezárva.**
+> A kognitív réteg a live pipeline-ra épít — ha NavAgent, IMAP, WF-6..9 nincs éles állapotban, a kognitív bővítmény is csak mock adatokon futna.
+
+| Előfeltétel | Státusz |
+|-------------|--------|
+| `konyveles_phase3_20260403` lezárva és archiválva | ❌ Folyamatban |
+| LanceDB lokálisan telepítve (`uv add lancedb` a `myai/` projektben) | ❓ Ismeretlen |
+| Langflow instance elérhető (`localhost:7860`) | ❓ Ismeretlen |
+| `data/accounting-kb/` mappa létrehozva, cégdokumentumok összegyűjtve | ❌ Nincs |
+
+> **WF számozás megjegyzés:** Ez a track `WF-K1..WF-K4` nevű n8n workflow-okat hoz létre, hogy ne ütközzön a Phase 3 `WF-6..WF-9` workflow-jaival.
 
 ---
 
@@ -39,10 +56,10 @@ Langflow (kognitív motor)
   └── cashflow-prediction-chain   (előrejelzés)
 ─────────────────────────────────────────────────────────────
 n8n Új Workflow-ok
-  ├── WF-6: Advanced Reconciliation
-  ├── WF-7: Exception + Communication
-  ├── WF-8: Anomaly Monitor (Cron)
-  └── WF-9: Human-in-Loop Approval
+  ├── WF-K1: Advanced Reconciliation
+  ├── WF-K2: Exception + Communication
+  ├── WF-K3: Anomaly Monitor (Cron)
+  └── WF-K4: Human-in-Loop Approval
 ─────────────────────────────────────────────────────────────
 BAS Új Ágensek (src/agents/)
   ├── ReconciliationIngestionAgent.ts
@@ -140,7 +157,7 @@ interface ReconciliationException {
 
 | Réteg | Technológia | Megjegyzés |
 |---|---|---|
-| Orkesztráció | n8n (self-hosted vagy cloud) | WF-6..WF-9 új workflow-ok |
+| Orkesztráció | n8n (self-hosted vagy cloud) | WF-K1..WF-K4 új workflow-ok |
 | Kognitív motor | Langflow (self-hosted) | RAG láncok, ágens hierarchia |
 | Vektortár | LanceDB (`data/brunella_lancedb/accounting_kb`) | Meglévő LanceDB mellé |
 | LLM | Gemini Pro / GPT-4o (Brain) | Magas komplexitás → Cloud |

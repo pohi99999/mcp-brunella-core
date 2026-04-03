@@ -5,6 +5,20 @@
 **Prioritás:** HIGH
 **Tulajdonos:** Pohánka Péter
 **Létrehozva:** 2026-04-03
+**Utolsó audit:** 2026-04-03
+
+---
+
+## ⚠️ ELŐFELTÉTELEK — ezek nélkül nem indulhat el a munka
+
+| Előfeltétel | Státusz | Teendő |
+|-------------|---------|--------|
+| `SZAMLAZZ_HU_API_KEY` — szamlazz.hu agentkulcs | ❓ Ismeretlen | `.env`-ben beállítani, fel kell ellenőrizni hogy él-e |
+| NAV Online Számla API auth (`NAV_USERNAME`, `NAV_PASSWORD`, `NAV_SIGNING_KEY`, `NAV_EXCHANGE_KEY`) | ❓ Ismeretlen | NAV technikai felhasználó + tanúsítvány szükséges |
+| Gmail/IMAP credential (`GMAIL_IMAP_USER` + `GMAIL_APP_PASSWORD` vagy OAuth2) | ❓ Ismeretlen | n8n credential vault-ban konfigurálni |
+| Bank CSV éles path (`data/bank-imports/`) | ❌ Nincs | `BankAgent.ts` jelenleg hardcoded sample CSV-re mutat |
+
+> **Ha bármelyik credential hiányzik, az adott workflow (WF) elkezdése blokkolva van. A Phase 0 mindig előbb fut.**
 
 ---
 
@@ -30,6 +44,12 @@ A lezárt Phase 1+2 infrastruktúrára (n8n + BAS + Google Sheets ✅) épülve:
 | Google Sheets `Könyvelés-KP` | ✅ `1A78ojE_3SvVQJst9xJUKHHLgeFrSpq2vvpAXEAml_fg` | |
 | Service Account | ✅ `brunella-sheets@brunella-core.iam.gserviceaccount.com` | `config/google-service-account.json` |
 | BAS `/api/v1/bookkeeping/status` | ✅ GET + PATCH | `src/server/routes/bookkeeping.ts` |
+| NavAgent.ts | ⚠️ LÉTEZIK, DE 100% MOCK | `src/agents/NavAgent.ts` — live NAV API-ra cserélendő Phase 3b-ben |
+| SzamlazzHuAgent.ts | ❌ NEM LÉTEZIK | Csak `src/tools/getSzamlazzInvoices.ts` MCP tool van — agent Phase 3a-ban készül |
+| BankAgent.ts | ⚠️ LÉTEZIK, DE SAMPLE CSV-RE MUTAT | `src/agents/BankAgent.ts` — éles path konfig szükséges (Phase 0) |
+| NavAgent.ts | ⚠️ LÉTEZIK, DE 100% MOCK | `src/agents/NavAgent.ts` — live NAV API-ra cserélendő Phase 3b-ben |
+| SzamlazzHuAgent.ts | ❌ NEM LÉTEZIK | Csak `src/tools/getSzamlazzInvoices.ts` MCP tool van — agent Phase 3a-ban készül |
+| BankAgent.ts | ⚠️ LÉTEZIK, DE SAMPLE CSV-RE MUTAT | `src/agents/BankAgent.ts` — éles path konfig szükséges (Phase 0) |
 | Python Sheets kliens | ✅ `myai/clients/google_sheets_client.py` | |
 | Playwright E2E tesztek | ✅ `test/e2e/n8n-konyveles-wf5.spec.ts` | |
 
