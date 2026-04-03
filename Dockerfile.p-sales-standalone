@@ -12,7 +12,7 @@ COPY . .
 
 RUN npx vite build --config vite.p-sales.config.ts
 
-FROM nginx:1.27-alpine
+FROM nginx:1.29-alpine
 
 COPY nginx.p-sales.conf /etc/nginx/conf.d/default.conf
 COPY --from=build /app/build/p-sales-standalone /usr/share/nginx/html
