@@ -1,14 +1,51 @@
 # Végrehajtási Terv: Kognitív Könyvelés és Multi-Ágens Egyeztetés — Bővítmény
 
 **Track ID:** `konyveles_kognitiv_bovites_20260330`
-**Kapcsolódó alap-track:** `n8n_konyveles_pipeline_20260328` (85% kész)
-**Becsült idő:** Phase 1: 5 nap · Phase 2: 7 nap · Phase 3: 5 nap · Phase 4: 3 nap
+**Kapcsolódó alap-track:** `n8n_konyveles_pipeline_20260328` (COMPLETED)
+**Blokkoló előfeltétel:** `konyveles_phase3_20260403` (live pipeline — **ELŐBB KELL LEZÁRNI!**)
+**Becsült idő:** Phase 0: 1 nap · Phase 1: 5 nap · Phase 2: 7 nap · Phase 3: 5 nap · Phase 4: 3 nap
+**Utolsó audit:** 2026-04-03
+
+---
+
+## ✅ MÁR MEGÉPÍTVE (nem kell újra)
+
+- ✅ `BankAgent.ts`, `NavAgent.ts`, `MatchingAgent.ts` — alap egyeztetési logika
+- ✅ `bookkeeping_db.ts` — SQLite séma (bővítésre szorul Phase 2-ben)
+- ✅ `src/tools/getSzamlazzInvoices.ts` — MCP tool wrapper
+
+## ❌ NINCS MEGÉPÍTVE (ez a track feladata)
+
+- ❌ `src/core/accountingKnowledgeBase.ts` (Phase 1)
+- ❌ `src/utils/accountingKbIngest.ts` (Phase 1)
+- ❌ `src/mcp/accountingKnowledgeMcp.ts` (Phase 1)
+- ❌ Langflow flow-ok: accounting-rag-chain, reconciliation-exception stb. (Phase 1-3)
+- ❌ `ReconciliationIngestionAgent.ts`, `AdvancedMatchingAgent.ts` (Phase 2)
+- ❌ `ReconciliationExceptionAgent.ts`, `ReconciliationCommunicationAgent.ts` (Phase 2)
+- ❌ `NavCrossCheckAgent.ts` (Phase 2)
+- ❌ `AnomalyDetectionAgent.ts`, `CashFlowPredictionAgent.ts` (Phase 3)
+- ❌ n8n WF-K1, WF-K2, WF-K3, WF-K4 workflow-ok (Phase 2-3)
+- ❌ `AccountingKbWidget.tsx`, `CashFlowWidget.tsx` (Phase 4)
+
+---
+
+## Phase 0 — Előfeltétel Ellenőrzés ⛔ BLOKKOLVA (1 nap)
+
+> **STOP.** Ezt a fázist csak akkor kezd el, ha `konyveles_phase3_20260403` archivált!
+
+- [ ] `konyveles_phase3_20260403` státuszának ellenőrzése → archivált?
+- [ ] LanceDB telepítve: `cd myai && uv add lancedb` → `python -c "import lancedb; print('OK')"`
+- [ ] Langflow instance fut: `http://localhost:7860` elérhető?
+- [ ] `data/accounting-kb/` mappa létrehozása
+- [ ] Könyvvizsgálati/számviteli politika PDF-ek összegyűjtése `data/accounting-kb/`-ba
+- [ ] Egységes számlatükör JSON elkészítése: `data/accounting-kb/chart_of_accounts.json`
 
 ---
 
 ## Phase 1 — Számviteli Tudásbázis és MCP Integráció (25%)
 
 **Cél:** A rendszer ne "fekete dobozként" kezelje a könyvelési logikát, hanem a cég saját számviteli politikája alapján döntsön.
+**Állapot: PLANNED (nem IN_PROGRESS — semmi sem épült meg belőle!)**
 
 ### 1.1 Tudásbázis adatok összegyűjtése és vektorizálása
 - [ ] Belső számviteli politika PDF-ek és szabályzatok összegyűjtése (`data/accounting-kb/`)
@@ -50,7 +87,7 @@
   - Többlépéses egyeztetési logika: egzakt match → összeg-tartomány match → szemantikus match
   - Árfolyam-különbözet kezelés: MNB API lekérdezés az adott napi árfolyamhoz
   - Részleges fizetés split: egy banki utalás → több számla arányos párosítása
-- [ ] n8n workflow (WF-6): Reconciliation trigger → Ingesztor ágens → Párosító ágens → eredmény SQLite-ba
+- [ ] n8n workflow (WF-K1): Reconciliation trigger → Ingesztor ágens → Párosító ágens → eredmény SQLite-ba
 
 ### 2.2 Kivételkezelő (Exception) Ágens
 - [ ] `ReconciliationExceptionAgent.ts` implementálása
@@ -59,14 +96,14 @@
   - Megjegyzés rovat szemantikai elemzése (NLP): "részfizetés", "előleg", "stornó" kulcsszavak
   - Döntési fa: valószínű ok azonosítása (időbeli eltolódás / összevont tétel / hibás közlemény / valós kivétel)
   - Output: strukturált kivétel rekord + javasolt akció
-- [ ] n8n "Exception Queue" workflow (WF-7): rendszeres futás (2 óránként), Human-in-Loop értesítés
+- [ ] n8n "Exception Queue" workflow (WF-K2): rendszeres futás (2 óránként), Human-in-Loop értesítés
 
 ### 2.3 Kommunikációs Ágens
 - [ ] `ReconciliationCommunicationAgent.ts` — partner e-mail draft generálás
   - Prompt sablon: professzionális, udvarias magyarázat-kérő e-mail a partnernek
   - Változók: partner neve, számla száma, eltérő összeg, javasolt korrekció
   - Langflow-ban definiált prompt (roleplay: "Pénzügyi munkatársként írsz...")
-- [ ] n8n WF-7 kiegészítése: Gmail/SMTP send node + "Send and wait for response" jóváhagyás
+- [ ] n8n WF-K2 kiegészítése: Gmail/SMTP send node + "Send and wait for response" jóváhagyás
 - [ ] Dashboard: "Kivételek" panel az `InvoiceAutomationWidget`-ben, akció gombok (Jóváhagyás / Elutasítás / E-mail küldés)
 
 ### 2.4 NAV API v3.0 cross-reconciliation
@@ -89,7 +126,7 @@
   - Kiugró ár riasztás: partner átlagárától > 30% eltérés esetén flag
   - Szokatlan időpont: munkaidőn kívüli (éjféli) tranzakció jelzése
   - Készletforgási sebesség anomália (a készletkezelő track adataival kombinálva)
-- [ ] n8n WF-8: Cron trigger → AnomalyDetection → SQLite anomália log → riasztás
+- [ ] n8n WF-K3: Cron trigger → AnomalyDetection → SQLite anomália log → riesztás
 - [ ] Riasztási szintek: INFO / WARNING / CRITICAL (különböző csatornák: log / Slack / email)
 
 ### 3.2 Cash-flow Predikciós Ágens
@@ -102,7 +139,7 @@
 - [ ] Dashboard: "Cash-flow Predikció" widget `CashFlowWidget.tsx`
 
 ### 3.3 Human-in-the-Loop értesítési rendszer
-- [ ] n8n WF-9: "Send and wait for response" workflow
+- [ ] n8n WF-K4: "Send and wait for response" workflow
   - Anomália vagy kritikus cash-flow kockázat esetén interaktív Slack/email üzenet
   - Gombok: "Kifizetés leállítása" / "Rendben, jóváhagyom" / "Manuális review"
   - Webhook fogadja a választ → n8n továbbirányít a megfelelő ágra

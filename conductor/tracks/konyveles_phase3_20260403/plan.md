@@ -1,7 +1,72 @@
 # Végrehajtási Terv: Könyvelési Automatizálás Phase 3
 
 **Track ID:** `konyveles_phase3_20260403`
-**Becsült idő:** Phase 3a: 4 nap · 3b: 3 nap · 3c: 3 nap · 3d: 2 nap
+**Becsült idő:** Phase 0: 1 nap · Phase 3a: 4 nap · 3b: 3 nap · 3c: 3 nap · 3d: 2 nap
+**Utolsó audit:** 2026-04-03
+
+---
+
+## ✅ MÁR MEGÉPÍTVE (n8n_konyveles_pipeline_20260328-ban)
+
+> Ezeket NEM kell újra megcsinálni — csak hivatkozni rájuk.
+
+- ✅ `BankAgent.ts` — CSV parser (de sample CSV-re mutat!)
+- ✅ `NavAgent.ts` — struktúra kész, **100% MOCK** → Phase 3b-ben cserélendő
+- ✅ `MatchingAgent.ts` — heurisztikus egyeztetés, működik
+- ✅ `bookkeeping_db.ts` — SQLite séma és CRUD
+- ✅ `src/server/routes/bookkeeping.ts` — `/api/v1/bookkeeping/*` végpontok
+- ✅ `src/tools/getSzamlazzInvoices.ts` — MCP tool (de SzamlazzHuAgent nincs!)
+- ✅ n8n WF-1..WF-5 scaffoldok importálva n8n-ben
+- ✅ Google Sheets service account + `myai/clients/google_sheets_client.py`
+- ✅ `test/e2e/n8n-konyveles-wf5.spec.ts` — Playwright E2E
+
+---
+
+## Phase 0 — Credential és .env Előkészítés (1 nap) ⛔ BLOKKOLÓ
+
+> Ez a legfontosabb lépés. Nélküle a többi fázis nem indulhat.
+
+### 0.1 szamlazz.hu credential
+
+- [ ] szamlazz.hu fiókba belépés → Beállítások → API → agentkulcs ellenőrzése (él-e?)
+- [ ] `.env` bővítése:
+  ```env
+  SZAMLAZZ_HU_API_KEY=<agentkulcs>
+  SZAMLAZZ_HU_BANK_ACCOUNT=<bankszámlaszám pl. 12345678-12345678-12345678>
+  SZAMLAZZ_HU_TAX_NUMBER=<adószám pl. 12345678-2-12>
+  ```
+- [ ] Teszt hívás: `curl -X POST https://www.szamlazz.hu/szamla/ -d "action=szamla_agent_check&..."`
+
+### 0.2 NAV Online Számla API credential
+
+- [ ] NAV Online Számla regisztrációs oldalon technikai felhasználó ellenőrzése
+- [ ] `.env` bővítése:
+  ```env
+  NAV_USERNAME=<technikai felhasználónév>
+  NAV_PASSWORD=<jelszó>
+  NAV_SIGNING_KEY=<aláírókulcs>
+  NAV_EXCHANGE_KEY=<cserekulcs>
+  NAV_BASE_URL=https://api.onlineszamla.nav.gov.hu/invoiceService/v3
+  ```
+- [ ] Ha nincs hozzáférés: NavAgent mock marad, Phase 3b csak részlegesen teljesíthető
+
+### 0.3 Gmail IMAP credential
+
+- [ ] Gmail fiókban App Password generálása (ha 2FA be van kapcsolva)
+  - Google Fiók → Biztonság → Alkalmazásszintű jelszavak → "n8n IMAP"
+- [ ] n8n-be importálás: Credential → IMAP → `imap.gmail.com:993`
+- [ ] `.env` bővítése (dokumentáció célra):
+  ```env
+  GMAIL_IMAP_USER=<email>
+  GMAIL_APP_PASSWORD=<app-jelszó>
+  ```
+
+### 0.4 Bank CSV éles path
+
+- [ ] `mkdir -p data/bank-imports/` mappa létrehozása
+- [ ] `.gitignore` bővítése: `data/bank-imports/*.csv`
+- [ ] `BankAgent.ts` 20. sor javítása: sample CSV path → `data/bank-imports/`
+- [ ] `data/bank-imports/OTP_export_sample.csv.example` minta fájl hozzáadása
 
 ---
 
