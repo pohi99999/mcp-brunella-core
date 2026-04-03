@@ -4,6 +4,24 @@ User requested that the Copilot CLI automatically connect to a local Brunella MC
 
 <history>
 
+### 2026-04-03 — Track archivalization + tracks.md cleanup + FOSZAL sync
+
+**Feladat:** conductor/tracks.md és a fizikai track mappák szinkronizálása — 15 completed track archiválása, orphan mappák eltávolítása, jules stale entry javítása.
+
+**Érintett fájlok:**
+- `conductor/tracks.md` — stats frissítve (7 active | 0 completed | 179 archived), "Befejezett" szekció kiürítve, 15 track áthelyezve Archivált szekcióba
+- `conductor/project_state.json` — frissítve
+- `.ai/FOSZAL.md` — `sync_foszal.py` által regenerálva
+
+**Mit találtunk:**
+- 14 track a "Befejezett (Not Archived)" szekciónban már fizikailag az `archive/`-ban volt, a `tracks.md` stale maradt
+- `jules_pr_integration_20260222` ACTIVE-ként szerepelt tracks.md-ben, de `archive/`-ban volt archived/100% státusszal (tracks/ mappa már nem létezett)
+- 9 db "orphan" track mappa volt `conductor/tracks/`-ban amelyek track.md-ben sehol nem szerepeltek, de already az archive/-ban voltak (stale copy)
+
+**Státusz:** ✅ Befejezve — commit: `1510190cb`
+
+---
+
 ### 2026-04-03 — MCP auto-start lifecycle manager + delegated review
 
 **Feladat:** A Brunella Core indulásakor a fontos helyi MCP szerverek automatikus csatlakoztatása, úgy hogy a `brunella-core` saját magát `self` szerverként jelöli és nem spawnolja újra önmagát.
