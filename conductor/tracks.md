@@ -1,10 +1,10 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-04-03T01:44:00.287Z
+**Utolso frissites:** 2026-04-03T06:03:07.233Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 192 total | 9 active | 12 completed | 164 archived
+**Stats:** 193 total | 8 active | 14 completed | 164 archived
 
 ---
 
@@ -42,7 +42,7 @@
 
 ---
 
-## Aktiv Szalak (Active) (9)
+## Aktiv Szalak (Active) (8)
 
 - [ ] **apify_deep_scraping_agent_20260223** [LOW]
   - **ID:** `apify_deep_scraping_agent_20260223`
@@ -55,12 +55,6 @@
   - **Progress:** 80%
   - **Updated:** 2026-04-02
   - Mappa: ./tracks/brunella_core_stabilization_20260402/
-
-- [ ] **Brunella Federation — Phase 5 Execute Hardening** [MEDIUM]
-  - **ID:** `brunella_federation_phase5_20260402`
-  - **Progress:** 75%
-  - **Updated:** 2026-04-03
-  - Mappa: ./tracks/brunella_federation_phase5_20260402/
 
 - [ ] **Hyperdrive Connection Pooling D1 Teljesítményhez** [LOW]
   - **ID:** `cf_hyperdrive_d1_20260323`
@@ -84,10 +78,10 @@
   - **Progress:** 0%
   - Mappa: ./tracks/konyveles_kognitiv_bovites_20260330/
 
-- [ ] **n8n Könyvelési Pipeline — Bank + KP + szamlazz.hu** [HIGH]
-  - **ID:** `n8n_konyveles_pipeline_20260328`
-  - **Progress:** 85%
-  - Mappa: ./tracks/n8n_konyveles_pipeline_20260328/
+- [ ] **Könyvelési Automatizálás Phase 3 — szamlazz.hu + WF-6..9 + NAV Live + IMAP** [HIGH]
+  - **ID:** `konyveles_phase3_20260403`
+  - **Progress:** 0%
+  - Mappa: ./tracks/konyveles_phase3_20260403/
 
 - [ ] **Brunella Remote Layer — Fázis 1: Remote Foundation** [HIGH]
   - **ID:** `remote_layer_phase1_foundation_20260322`
@@ -96,11 +90,15 @@
 
 ---
 
-## Befejezett (Completed - Not Archived) (12)
+## Befejezett (Completed - Not Archived) (14)
 
 - [x] **AutoGen GitHub Models pilot a Python MCP alrendszerben**
   - **ID:** `autogen_github_models_pilot_20260401`
   - Mappa: ./tracks/autogen_github_models_pilot_20260401/
+
+- [x] **Brunella Federation — Phase 5 Execute Hardening**
+  - **ID:** `brunella_federation_phase5_20260402`
+  - Mappa: ./tracks/brunella_federation_phase5_20260402/
 
 - [x] **Brunella Reflection / Continual Learning Activation**
   - **ID:** `brunella_reflection_continual_learning_20260402`
@@ -113,6 +111,11 @@
 - [x] **MCP Config Sync: mcp_servers.json ↔ .vscode/mcp.json**
   - **ID:** `mcp_sync_config_20260403`
   - Mappa: ./tracks/mcp_sync_config_20260403/
+
+- [x] **n8n Könyvelési Pipeline — Bank + KP + szamlazz.hu**
+  - **ID:** `n8n_konyveles_pipeline_20260328`
+  - **Completed:** 2026-04-03
+  - Mappa: ./tracks/n8n_konyveles_pipeline_20260328/
 
 - [x] **P-Sales20260327**
   - **ID:** `P-Sales20260327`

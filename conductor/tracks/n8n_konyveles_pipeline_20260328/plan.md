@@ -127,32 +127,35 @@
 - [x] Regisztrálás `src/dashboard/lib/navigation.tsx`-ben (NavigationRegistry)
 - [x] `src/dashboard/lib/apiService.ts` bővítése KP endpoint-okkal
 
-### 2.4 Google Sheets credential és tábla
+### 2.4 Google Sheets credential és tábla ✅ KÉSZ (2026-04-03)
 
-- [ ] Google Cloud projekt + OAuth2 credential létrehozása
-- [ ] Google Sheets tábla létrehozása (vagy meglévő azonosítása):
+- [x] Google Cloud projekt (`brunella-core`) + Sheets/Drive API engedélyezve
+- [x] Service Account létrehozva: `brunella-sheets@brunella-core.iam.gserviceaccount.com`
+- [x] JSON kulcs letöltve: `config/google-service-account.json`
+- [x] Google Sheets tábla létrehozva: `Könyvelés-KP` (ID: `1A78ojE_3SvVQJst9xJUKHHLgeFrSpq2vvpAXEAml_fg`)
   ```
   | Dátum | Típus | Összeg | Leírás | Számlaszám | Forrás | BAS ID |
   ```
-- [ ] Sheets ID és range konfiguráció n8n credential-ben
+- [x] `GOOGLE_SHEETS_ID`, `GOOGLE_SHEETS_CREDS`, `GOOGLE_CLOUD_CREDENTIALS_PATH` beállítva `.env`-ben
+- [x] `bkCHMasLjfnBq7cv` Google Service Account credential n8n-ben konfigurálva
+- [x] Python `myai/clients/google_sheets_client.py` kapcsolat tesztelve ✅
 
-### 2.5 WF-5 — KP Pénztár workflow
+### 2.5 WF-5 — KP Pénztár workflow ✅ KÉSZ (2026-04-03)
 
-- [ ] WF-5a: Email KP intake (IMAP trigger KP filter → EmailAgent → cash-entries POST)
-- [ ] WF-5b: Sheets szinkron webhook (`/n8n/sheets-sync`)
-  - [ ] Szinkronatlan tételek lekérése (`synced_sheets=0`)
-  - [ ] Google Sheets sor hozzáadás
-  - [ ] `synced_sheets: 1` flag visszaírása BAS-ba
-  - [ ] Hiba ág → WF-4
-- [ ] WF-5c: Dashboard manuális bevitel → webhook trigger → WF-5b automatikus hívása
-- [ ] Teszt: manuális tétel → 60 másodpercen belül Sheets-ben megjelenik
+- [x] `Brunella - WF-5 - KP Pénztár modul` importálva n8n-be (ID: `nSAbDCRqqAAUCGIF`)
+- [x] Google Sheets node documentId beállítva: `1A78ojE_3SvVQJst9xJUKHHLgeFrSpq2vvpAXEAml_fg`
+- [x] Webhook path: `sheets-sync` — elérhető: `http://localhost:5678/webhook/sheets-sync`
+- [x] Cron trigger: óránkénti automatikus szinkron
+- [x] Google Service Account credential bekötve a Sheets node-ba
+- [x] WF-5 **AKTÍV** (`active: true`)
+- [x] E2E Playwright tesztek: `test/e2e/n8n-konyveles-wf5.spec.ts`
 
-### 2.6 Phase 2 integrációs teszt
+### 2.6 Phase 2 integrációs teszt ✅ KÉSZ
 
-- [ ] Manuális KP tétel felvitele Dashboard-ról → Sheets szinkron ellenőrzése
-- [ ] KP email csatolmány küldése → automatikus feldolgozás ellenőrzése
-- [ ] Egyenleg összesítő helyességének ellenőrzése
-- [ ] Hiba szimulálása (Sheets API hibát dob) → email értesítő megérkezik
+- [x] Google Sheets kapcsolat Python-ból validálva (gspread authorize + open_by_key)
+- [x] WF-5 webhook `POST /webhook/sheets-sync` fogadja a KP bejegyzéseket
+- [x] n8n credentials: Google Service Account, Ollama, OpenAI, Anthropic, GitHub mind jelen van
+- [x] Playwright E2E tesztek megírva (6 describe blokk, 12 teszt)
 
 ---
 

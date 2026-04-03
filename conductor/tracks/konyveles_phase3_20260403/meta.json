@@ -1,0 +1,36 @@
+{
+  "id": "konyveles_phase3_20260403",
+  "name": "Könyvelési Automatizálás Phase 3 — szamlazz.hu + WF-6..9 + NAV Live + IMAP",
+  "status": "ACTIVE",
+  "priority": "HIGH",
+  "created": "2026-04-03",
+  "owner": "Pohánka Péter",
+  "progress": 0,
+  "description": "A lezárt n8n_konyveles_pipeline_20260328 track folytatása. Teljes szamlazz.hu integráció (API v3), WF-6: kimenő számlázás, WF-7: IMAP bejövő email intake live, WF-8: NAV XML live validáció, WF-9: összesítő report email. Bank CSV watch élesítése, SMTP credential konfigurálása, Playwright tesztek bővítése.",
+  "parent_track": "n8n_konyveles_pipeline_20260328",
+  "dependencies": ["n8n_konyveles_pipeline_20260328", "konyveles_automatizalas"],
+  "phase": "pipeline-phase3",
+  "tags": ["n8n", "szamlazz.hu", "NAV", "IMAP", "könyvelés", "bank", "WF-6", "WF-7", "WF-8", "WF-9"],
+  "phases": {
+    "phase3a": {
+      "name": "szamlazz.hu API integráció + WF-6 Kimenő Számlázás",
+      "status": "PLANNED",
+      "estimated_days": 4
+    },
+    "phase3b": {
+      "name": "WF-7 IMAP Email Intake live + WF-8 NAV XML Live",
+      "status": "PLANNED",
+      "estimated_days": 3
+    },
+    "phase3c": {
+      "name": "WF-9 Report Email + Bank CSV watch élesítés",
+      "status": "PLANNED",
+      "estimated_days": 3
+    },
+    "phase3d": {
+      "name": "E2E tesztek bővítése + produkciós hardening",
+      "status": "PLANNED",
+      "estimated_days": 2
+    }
+  }
+}
