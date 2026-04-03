@@ -72,6 +72,8 @@ Local hooks are part of the workflow:
 - **New features usually need cross-surface wiring.** For product-facing work, check whether you also need a route mount in `src/server/routes/index.ts`, a dashboard registration in `src/dashboard/lib/navigation.tsx`, a CLI registration in `src/cli.ts` or `src/cli/*Commands.ts`, and an agent registry entry in `src/agents/registry.json`.
 - **If you implement `IAgent` directly, reset status in `finally`.** `BaseAgent` handles `setAgentStatus(..., "idle")` automatically, but bare `IAgent` implementations must do it themselves.
 - **`FOSZAL.md` is generated.** Update `.ai/copilot.md`, then run `python scripts/sync_foszal.py`; do not hand-edit `FOSZAL.md`.
+- **MCP auto-start is now driven by `mcp_servers.json`.** `src/server/McpProcessManager.ts` resolves `autoStart`, `requiredEnv`, `envFromHost`, `platforms`, and retry metadata from that file; keep the config declarative instead of hardcoding startup lists in `index.ts` or `web.ts`.
+- **`brunella-core` is a `self` MCP entry, not a child process.** The core marks itself running during startup and only external stdio servers are auto-connected; do not reintroduce recursive `node ./build/index.js` spawning from inside the core process.
 - **Treat core wiring files as deliberate-change areas.** `src/index.ts`, `src/server/web.ts`, `src/server/registry.ts`, `src/agents/registry.json`, `package.json`, `.env`, and `conductor/tracks.md` have broad blast radius.
 - **GitHub Models prefer `GITHUB_PAT`.** Repo docs and recent fixes treat `GITHUB_PAT` as the preferred GitHub Models credential ahead of `GITHUB_TOKEN`.
 - **Google auth has two separate credential contracts.** Service-account automation should use `GOOGLE_CREDENTIALS_FILE` or `GOOGLE_SERVICE_ACCOUNT_JSON` (preferred file: `credentials/google-service-account.json`), while interactive Workspace OAuth should use `GOOGLE_WORKSPACE_CREDENTIALS_FILE` and `GOOGLE_WORKSPACE_TOKEN_FILE` (preferred files under `credentials/`). Legacy `config/` and root-level paths are compatibility-only fallbacks and should not be introduced in new work.
@@ -85,6 +87,7 @@ Local hooks are part of the workflow:
 - **Root `AGENTS.md` is Cloudflare Docs, not BAS.** The file at repo root describes the `cloudflare-docs` repo conventions — it is stale/misplaced. Ignore it for BAS work; the authoritative file is `.github/copilot-instructions.md`.
 - **`buildHealthResponse` parameter count**: The health route builder takes 10 args `(ollama, anythingllm, python, n8n, langflow, wab, cloudflare, agentCount, mcpCount, requestId)`. Test mocks must match exactly or the health payload silently returns the real value.
 - **Dashboard build is separate.** `src/dashboard/` is excluded from the main `tsconfig.json`. Use `npm run build:ui` and `npm run test:dashboard` — not `npm run build`.
+- **Do not recursively spawn `brunella-core` from MCP auto-start.** The self MCP status is tracked through `markInternalServerRunning()` / `markInternalServerStopped()`, while only external stdio MCP servers should be started through `mcpClientManager`.
 
 ## Custom Copilot agents
 

@@ -75,6 +75,8 @@ async function main() {
 
       const transport = new StdioServerTransport();
       await server.connect(transport);
+      const { mcpProcessManager } = await import("./server/McpProcessManager.js");
+      mcpProcessManager.markInternalServerRunning("brunella-core");
       console.error("MCP Brunella Core Server running on stdio");
 
       // Graceful shutdown for MCP mode
@@ -83,6 +85,9 @@ async function main() {
         try {
           const { agentManager } = await import("./agents/AgentManager.js");
           agentManager.stopWorkerLoop();
+          const { mcpProcessManager } = await import("./server/McpProcessManager.js");
+          await mcpProcessManager.stopAll();
+          mcpProcessManager.markInternalServerStopped("brunella-core");
           const { remoteSessionManager } = await import("./core/RemoteSessionManager.js");
           remoteSessionManager.stopCleanupTimer();
           const { stopLangSmithFlush } = await import("./utils/agentTracer.js");
@@ -108,6 +113,9 @@ async function main() {
         try {
           const { agentManager } = await import("./agents/AgentManager.js");
           agentManager.stopWorkerLoop();
+          const { mcpProcessManager } = await import("./server/McpProcessManager.js");
+          await mcpProcessManager.stopAll();
+          mcpProcessManager.markInternalServerStopped("brunella-core");
           const { remoteSessionManager } = await import("./core/RemoteSessionManager.js");
           remoteSessionManager.stopCleanupTimer();
           const { stopLangSmithFlush } = await import("./utils/agentTracer.js");

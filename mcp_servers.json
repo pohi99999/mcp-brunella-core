@@ -1,40 +1,194 @@
 [
   {
     "name": "brunella-core",
-    "command": "node",
-    "args": ["./build/index.js"],
-    "description": "Brunella Agent System — fő MCP szerver",
-    "disabled": false
-  },
-  {
-    "name": "sqlite",
-    "command": "npx",
-    "args": [
-      "-y",
-      "@modelcontextprotocol/server-sqlite",
-      "./data/brunella.db"
-    ],
-    "description": "SQLite MCP server — adatbázis lekérdezések (disabled: csomag nem elérhető npm-en)",
-    "disabled": true
+    "transport": "self",
+    "args": [],
+    "description": "Brunella Agent System - belso core MCP szerver (a sajat processz jelenti)",
+    "autoStart": true,
+    "required": true,
+    "disabled": false,
+    "requiredEnv": [],
+    "connectRetries": 0,
+    "retryDelayMs": 1000
   },
   {
     "name": "filesystem",
+    "transport": "stdio",
     "command": "npx",
     "args": [
       "-y",
       "@modelcontextprotocol/server-filesystem",
-      "F:\\mcp-brunella-core"
+      "${WORKSPACE_ROOT}",
+      "${USER_HOME}"
     ],
-    "description": "Filesystem MCP server — fájlrendszer hozzáférés",
-    "disabled": false
+    "description": "Filesystem MCP server - workspace es user home hozzaferes",
+    "autoStart": true,
+    "required": false,
+    "disabled": false,
+    "requiredEnv": [],
+    "connectRetries": 0,
+    "retryDelayMs": 1000
+  },
+  {
+    "name": "memory",
+    "transport": "stdio",
+    "command": "npx",
+    "args": [
+      "-y",
+      "@modelcontextprotocol/server-memory"
+    ],
+    "env": {
+      "MEMORY_FILE_PATH": "${WORKSPACE_ROOT}\\data\\mcp_memory.json"
+    },
+    "description": "Memory MCP server - lokalis memoria tarolo",
+    "autoStart": true,
+    "required": false,
+    "disabled": false,
+    "requiredEnv": [],
+    "connectRetries": 0,
+    "retryDelayMs": 1000
+  },
+  {
+    "name": "sequential-thinking",
+    "transport": "stdio",
+    "command": "npx",
+    "args": [
+      "-y",
+      "@modelcontextprotocol/server-sequential-thinking"
+    ],
+    "description": "Sequential Thinking MCP server - strukturalt gondolkodasi seged",
+    "autoStart": true,
+    "required": false,
+    "disabled": false,
+    "requiredEnv": [],
+    "connectRetries": 0,
+    "retryDelayMs": 1000
+  },
+  {
+    "name": "github",
+    "transport": "stdio",
+    "command": "docker",
+    "args": [
+      "run",
+      "-i",
+      "--rm",
+      "-e",
+      "GITHUB_PERSONAL_ACCESS_TOKEN",
+      "ghcr.io/github/github-mcp-server:0.31.0"
+    ],
+    "envFromHost": {
+      "GITHUB_PERSONAL_ACCESS_TOKEN": [
+        "GITHUB_PERSONAL_ACCESS_TOKEN",
+        "GITHUB_PAT",
+        "GITHUB_TOKEN"
+      ]
+    },
+    "description": "GitHub MCP server - dockeres GitHub integracio",
+    "autoStart": true,
+    "required": false,
+    "disabled": false,
+    "requiredEnv": [
+      "GITHUB_PERSONAL_ACCESS_TOKEN"
+    ],
+    "connectRetries": 1,
+    "retryDelayMs": 1500
+  },
+  {
+    "name": "chrome-devtools",
+    "transport": "stdio",
+    "command": "npx",
+    "args": [
+      "--registry",
+      "https://registry.npmjs.org",
+      "chrome-devtools-mcp@0.17.0"
+    ],
+    "description": "Chrome DevTools MCP server - bongeszo diagnosztika",
+    "autoStart": true,
+    "required": false,
+    "disabled": false,
+    "requiredEnv": [],
+    "connectRetries": 1,
+    "retryDelayMs": 1500
+  },
+  {
+    "name": "playwright",
+    "transport": "stdio",
+    "command": "npx",
+    "args": [
+      "@playwright/mcp@latest"
+    ],
+    "description": "Playwright MCP server - browser automatizalas",
+    "autoStart": true,
+    "required": false,
+    "disabled": false,
+    "requiredEnv": [],
+    "connectRetries": 1,
+    "retryDelayMs": 1500
   },
   {
     "name": "windows_automation_bridge",
+    "transport": "stdio",
     "command": "python",
     "args": [
       "windows_bridge/wab_server.py"
     ],
-    "description": "Windows Automation Bridge — natív PowerShell és fájlrendszer hozzáférés",
-    "disabled": false
+    "description": "Windows Automation Bridge - natív Windows automatizalas",
+    "autoStart": true,
+    "required": false,
+    "disabled": false,
+    "requiredEnv": [],
+    "platforms": [
+      "win32"
+    ],
+    "connectRetries": 0,
+    "retryDelayMs": 1000
+  },
+  {
+    "name": "sqlite",
+    "transport": "stdio",
+    "command": "npx",
+    "args": [
+      "-y",
+      "@modelcontextprotocol/server-sqlite",
+      "${WORKSPACE_ROOT}\\data\\brunella.db"
+    ],
+    "description": "SQLite MCP server - jelenleg kikapcsolva, mert a csomag nem stabil a projektben",
+    "autoStart": false,
+    "required": false,
+    "disabled": true,
+    "requiredEnv": [],
+    "connectRetries": 0,
+    "retryDelayMs": 1000
+  },
+  {
+    "name": "vscode-mcp",
+    "transport": "stdio",
+    "command": "code",
+    "args": [
+      "--version"
+    ],
+    "description": "Helyfoglaló a jovobeli VS Code MCP integraciohoz; alapbol tiltva",
+    "autoStart": false,
+    "required": false,
+    "disabled": true,
+    "requiredEnv": [],
+    "connectRetries": 0,
+    "retryDelayMs": 1000
+  },
+  {
+    "name": "copilot-mcp",
+    "transport": "stdio",
+    "command": "node",
+    "args": [
+      "-e",
+      "console.log('copilot-mcp placeholder')"
+    ],
+    "description": "Helyfoglaló a jovobeli Copilot MCP integraciohoz; alapbol tiltva",
+    "autoStart": false,
+    "required": false,
+    "disabled": true,
+    "requiredEnv": [],
+    "connectRetries": 0,
+    "retryDelayMs": 1000
   }
 ]
