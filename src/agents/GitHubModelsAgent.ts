@@ -67,11 +67,11 @@ export class GitHubModelsAgent implements IAgent {
 
     try {
       // Validate GitHub PAT
-      const apiKey = process.env.GITHUB_TOKEN || process.env.GITHUB_PAT;
+      const apiKey = process.env.GH_TOKEN || process.env.GITHUB_TOKEN || process.env.GITHUB_PAT;
       if (!apiKey) {
         return {
           status: 'error',
-          error: 'GITHUB_TOKEN or GITHUB_PAT not configured in .env'
+          error: 'GH_TOKEN or GITHUB_TOKEN not configured in .env'
         };
       }
 
@@ -128,7 +128,7 @@ export class GitHubModelsAgent implements IAgent {
    * Supports function calling (MCP tools átadása)
    */
   private async callGitHubModels(messages: Array<{ role: string; content: string | null; tool_calls?: any[] }>): Promise<string> {
-    const apiKey = process.env.GITHUB_TOKEN || process.env.GITHUB_PAT;
+    const apiKey = process.env.GH_TOKEN || process.env.GITHUB_TOKEN || process.env.GITHUB_PAT;
     const currentMessages = [...messages];
     let iteration = 0;
     const MAX_ITERATIONS = 10;

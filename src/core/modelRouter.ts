@@ -320,7 +320,7 @@ function findBestCloud(task: TaskProfile, cfg: RouterConfig): ModelProfile {
   // Check API key availability
   const available = cloudModels.filter(m => {
     if (m.provider === 'gemini') return !!process.env.GEMINI_API_KEY;
-    if (m.provider === 'github') return !!(process.env.GITHUB_TOKEN || process.env.GITHUB_PAT);
+    if (m.provider === 'github') return !!(process.env.GH_TOKEN || process.env.GITHUB_TOKEN || process.env.GITHUB_PAT);
     if (m.provider === 'cloudflare') return !!((process.env.CF_AI_API_TOKEN || process.env.CF_API_TOKEN) && process.env.AI_GATEWAY_ENABLED === 'true');
     return true;
   });

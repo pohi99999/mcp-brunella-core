@@ -196,8 +196,8 @@ async function fetchGitHubQueryResults(query: string, maxResults: number): Promi
     headers: {
       Accept: 'application/vnd.github+json',
       'User-Agent': 'Brunella-AIResearchWeekly',
-      ...(process.env.GITHUB_PAT || process.env.GITHUB_TOKEN
-        ? { Authorization: `Bearer ${process.env.GITHUB_PAT || process.env.GITHUB_TOKEN}` }
+      ...(process.env.GH_TOKEN || process.env.GITHUB_PAT || process.env.GITHUB_TOKEN
+        ? { Authorization: `Bearer ${process.env.GH_TOKEN || process.env.GITHUB_PAT || process.env.GITHUB_TOKEN}` }
         : {}),
     },
     signal: AbortSignal.timeout(20_000),
