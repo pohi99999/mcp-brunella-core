@@ -4,6 +4,31 @@ User requested that the Copilot CLI automatically connect to a local Brunella MC
 
 <history>
 
+### 2026-04-03 — MCP auto-start lifecycle manager + delegated review
+
+**Feladat:** A Brunella Core indulásakor a fontos helyi MCP szerverek automatikus csatlakoztatása, úgy hogy a `brunella-core` saját magát `self` szerverként jelöli és nem spawnolja újra önmagát.
+
+**Érintett fájlok:**
+- `mcp_servers.json`
+- `src/server/McpProcessManager.ts`
+- `src/utils/mcpClientManager.ts`
+- `src/server/web.ts`
+- `src/index.ts`
+- `test/mcpProcessManager.test.ts`
+- `.github/copilot-instructions.md`
+
+**Megjegyzés:**
+- A `mcp_servers.json` most már támogatja az `autoStart`, `required`, `requiredEnv`, `envFromHost`, `platforms`, `connectRetries` és `retryDelayMs` mezőket.
+- Az auto-startolt szerverek között most szerepel a `filesystem`, `memory`, `sequential-thinking`, `github`, `chrome-devtools`, `playwright` és `windows_automation_bridge`.
+- A `vscode-mcp` és `copilot-mcp` bejegyzések elő vannak készítve, de jelenleg szándékosan `disabled` állapotú placeholderök.
+- Az `mcp-builder` skill be lett töltve, és külön code-review agent auditálta az implementációt; a talált 4 lifecycle/race probléma javítva lett.
+
+**Validáció:**
+- `npm run build`
+- `npx vitest run test\\mcpProcessManager.test.ts`
+
+**Státusz:** ✅ Befejezve
+
 ### 2026-04-03 — GH_TOKEN auth fix + E2E teszt javítások + branch cleanup
 
 **Feladat:** GitHub `GITHUB_PAT` secret névprobléma javítása (GitHub tiltja a `GITHUB_` prefix-szel kezdődő secret neveket), E2E tesztcsomag stabilitás helyreállítása, majd a repository ág-felhalmozódásának teljes megtisztítása.

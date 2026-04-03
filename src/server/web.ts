@@ -294,14 +294,23 @@ async function deferredInit(
   } = await import("../utils/metrics.js");
   initMetrics();
 
-  let mcpProcMgrRef: any = null;
+  let mcpProcMgrRef: typeof import("./McpProcessManager.js").mcpProcessManager | null = null;
 
   try {
     const mod = await import("./McpProcessManager.js");
     mcpProcMgrRef = mod.mcpProcessManager;
     await mod.mcpProcessManager.loadConfig();
+    if (!process.stdin.isTTY) {
+      mod.mcpProcessManager.markInternalServerRunning("brunella-core");
+    }
     const configured = mod.mcpProcessManager.getServersStatus();
     logInfo("Server", `${configured.length} MCP server(s) configured`);
+    void mod.mcpProcessManager.startAutoStartServers().catch((e: unknown) => {
+      logError(
+        "Server",
+        `MCP auto-start failed: ${e instanceof Error ? e.message : String(e)}`,
+      );
+    });
   } catch (e: unknown) {
     logError("Server", `MCP config load failed: ${e instanceof Error ? e.message : String(e)}`);
   }
