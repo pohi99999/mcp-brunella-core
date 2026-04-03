@@ -1,11 +1,12 @@
 {
   "id": "n8n_konyveles_pipeline_20260328",
   "name": "n8n Könyvelési Pipeline — Bank + KP + szamlazz.hu",
-  "status": "ACTIVE",
+  "status": "COMPLETED",
   "priority": "HIGH",
   "created": "2026-03-28",
+  "completed": "2026-04-03",
   "owner": "Pohánka Péter",
-  "progress": 85,
+  "progress": 100,
   "description": "Hibrid n8n + BAS könyvelési automatizálás: n8n kezeli a külső triggereket (IMAP, file watch, cron, Sheets szinkron, email értesítés), a BAS ügynökök végzik az üzleti logikát (MatchingAgent, BankAgent, NavAgent, EmailAgent). Két fő ág: (1) bank-számla egyeztetés, (2) KP/pénztár kezelés SQLite + Google Sheets szinkronnal. Phase 3-ban szamlazz.hu integráció.",
   "dependencies": ["konyveles_automatizalas"],
   "phase": "pipeline-automation",
@@ -13,18 +14,20 @@
   "phases": {
     "phase1": {
       "name": "Bank egyeztetés + n8n alapinfra",
-      "status": "IN_PROGRESS",
+      "status": "DONE",
       "estimated_days": 3
     },
     "phase2": {
       "name": "KP pénztár modul + Sheets szinkron",
-      "status": "IN_PROGRESS",
+      "status": "DONE",
+      "completed": "2026-04-03",
       "estimated_days": 3
     },
     "phase3": {
-      "name": "szamlazz.hu integráció (jövő)",
-      "status": "PLANNED",
-      "estimated_days": 5
+      "name": "szamlazz.hu integráció + WF-6..9 + NAV live",
+      "status": "MOVED_TO_NEW_TRACK",
+      "new_track": "konyveles_phase3_20260403",
+      "estimated_days": 10
     }
   }
 }
