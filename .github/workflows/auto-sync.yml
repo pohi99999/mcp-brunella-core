@@ -125,12 +125,17 @@ jobs:
         with:
           node-version: "24"
           cache: "npm"
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 10
+
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Quick test run
-        run: npm run test:fast
+        run: pnpm run test:fast
         timeout-minutes: 5
         env:
           BRUNELLA_SKIP_SECRETS_CHECK: "1"
@@ -168,10 +173,10 @@ jobs:
           cache: "npm"
 
       - name: Install deps
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Build
-        run: npm run build
+        run: pnpm run build
 
       - name: Generate project state snapshot
         run: |

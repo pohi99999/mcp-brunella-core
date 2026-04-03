@@ -11,3 +11,7 @@
 ## 2025-04-03 - Refresh Button Accessibility in RobotkezPanel
 **Learning:** Manual refresh buttons using icons (like `RefreshCw`) require explicit `title` and `aria-label` properties, as well as distinct `focus-visible` states to be keyboard accessible.
 **Action:** Added `aria-label`, `title`, and `focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring` to the refresh button in `RobotkezPanel.tsx`. Also fixed the missing `Zap` import.
+
+## 2025-04-03 - CI Failures (npm vs pnpm)
+**Learning:** `package.json` scripts and GitHub Actions workflows were using `npm` commands which broke due to peer dependencies during `npm ci` and directly conflicted with the AGENTS.md rule requiring exclusively `pnpm`.
+**Action:** Replaced `npm` commands with `pnpm` equivalents in `package.json` and all `github/workflows/*` configurations.

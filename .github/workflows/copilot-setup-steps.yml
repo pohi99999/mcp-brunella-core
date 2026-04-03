@@ -36,7 +36,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "24"
-          cache: "npm"
+          cache: "npm"      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 10
+
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -47,13 +51,13 @@ jobs:
         run: python -m pip install --upgrade pip uv
 
       - name: Install JavaScript dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Rebuild better-sqlite3 for the active Node ABI
         run: npm rebuild better-sqlite3
 
       - name: Build Brunella core
-        run: npm run build
+        run: pnpm run build
 
       - name: Install Python dependencies
         run: uv sync --frozen --extra dev

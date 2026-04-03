@@ -40,16 +40,21 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
+          cache: 'pnpm'
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 10
+
 
       - name: 🔧 Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: 🏗️ Build main project
-        run: npm run build
+        run: pnpm run build
 
       - name: 🧪 Run tests
-        run: npm test
+        run: pnpm test
 
       - name: 🔍 Setup Wrangler
         run: npm install -g wrangler@latest
@@ -57,8 +62,8 @@ jobs:
       - name: ✨ Validate test-worker build
         run: |
           cd myai/agents/workers/cean-test
-          npm ci
-          npm run build
+          pnpm install --frozen-lockfile
+          pnpm run build
 
       - name: 🎯 Dry-run deploy (validation only)
         run: |
@@ -90,13 +95,18 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
+          cache: 'pnpm'
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 10
+
 
       - name: 🔧 Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: 🏗️ Build main project
-        run: npm run build
+        run: pnpm run build
 
       - name: 🔍 Setup Wrangler
         run: npm install -g wrangler@latest
@@ -107,8 +117,8 @@ jobs:
       - name: 📤 Deploy test-worker to Cloudflare
         run: |
           cd myai/agents/workers/cean-test
-          npm ci
-          npm run build
+          pnpm install --frozen-lockfile
+          pnpm run build
           wrangler deploy --env production
 
       - name: 🔄 Create deployment comment
