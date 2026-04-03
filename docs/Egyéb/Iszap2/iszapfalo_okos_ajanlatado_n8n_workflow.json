@@ -1,0 +1,130 @@
+{
+  "name": "Iszapfaló - Okos Ajánlatadó Asszisztens",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "okos-ajanlatado",
+        "options": {}
+      },
+      "id": "e67ebf1d-9377-4b71-b0e5-7b56ff1c1103",
+      "name": "Webhook (Bejövő E-mail szimuláció)",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        100,
+        300
+      ],
+      "webhookId": "iszapfalo-okos-ajanlatado"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:7860/api/v1/run/YOUR_LANGFLOW_ID_FOR_QUOTES",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"input_value\": \"Feladó: {{ $json.body.nev }} ({{ $json.body.email }})\\nÜzenet: {{ $json.body.uzenet }}\",\n  \"output_type\": \"chat\",\n  \"input_type\": \"chat\",\n  \"tweaks\": {}\n}",
+        "options": {}
+      },
+      "id": "5bdc32fa-e16e-44dc-bd05-59b56f8f5d02",
+      "name": "Hívás Langflow felé (RAG)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        340,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Kinyerjük a Langflow válaszát (A markdown szöveget)\nconst ajanlatSzoveg = $input.item.json.outputs[0].outputs[0].results.message.data.text;\n\nreturn {\n  json: {\n    ugyfel_neve: $node[\"Webhook (Bejövő E-mail szimuláció)\"].json.body.nev,\n    ugyfel_email: $node[\"Webhook (Bejövő E-mail szimuláció)\"].json.body.email,\n    kimeneti_ajanlat: ajanlatSzoveg\n  }\n};"
+      },
+      "id": "18f50106-9ab8-466d-ad50-1af406e12365",
+      "name": "Válasz Extrahálása",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        560,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "TE_TELEGRAM_CHAT_ID",
+        "text": "=🤖 *ÚJ AUTOMATIKUS AJÁNLAT-TERVEZET KÉSZÜLT* 🤖\n\n*Ügyfél:* {{ $json.ugyfel_neve }}\n\n*Javasolt válasz:*
+{{ $json.kimeneti_ajanlat }}
+
+---\n_Kérlek ellenőrizd, mielőtt elküldöd!_",
+        "additionalFields": {
+          "parse_mode": "Markdown"
+        }
+      },
+      "id": "eab07d72-bdf9-42b7-84bc-7c3c0ef01a7c",
+      "name": "Vezetőség Értesítése (Telegram)",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.1,
+      "position": [
+        780,
+        300
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "TE_TELEGRAM_CREDENTIAL_ID",
+          "name": "Telegram API"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook (Bejövő E-mail szimuláció)": {
+      "main": [
+        [
+          {
+            "node": "Hívás Langflow felé (RAG)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Hívás Langflow felé (RAG)": {
+      "main": [
+        [
+          {
+            "node": "Válasz Extrahálása",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Válasz Extrahálása": {
+      "main": [
+        [
+          {
+            "node": "Vezetőség Értesítése (Telegram)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "f7ab0cc3-0cf4-49c0-9515-5d9c228220f1",
+  "id": "2",
+  "tags": []
+}

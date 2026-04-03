@@ -1,0 +1,1302 @@
+{
+  "name": "Gmail kategorizáló",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "simple": false,
+        "filters": {},
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        624,
+        -1056
+      ],
+      "id": "34508ad9-064d-4a29-a1c0-82d215021faa",
+      "name": "Gmail Trigger",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "rvmMqY8aMOU4tgNq",
+          "name": "iszapfalo"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "text": "={{ $json.text }}",
+        "guardrails": {
+          "jailbreak": {
+            "value": {
+              "threshold": 0.7
+            }
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.guardrails",
+      "typeVersion": 1,
+      "position": [
+        1040,
+        -1056
+      ],
+      "id": "0fa52f3d-5a1b-4fef-b1ed-bfbf15c9eaeb",
+      "name": "Guardrails"
+    },
+    {
+      "parameters": {
+        "chatId": "8468817202",
+        "text": "=A rendszer nem engedte tovább a következő üzenetet, mert veszélyesnek ítélte: {{ $('Gmail Trigger').item.json.snippet }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1184,
+        -816
+      ],
+      "id": "dbe4fc61-1720-48d8-ab3a-7ad32501a128",
+      "name": "Send a text message",
+      "webhookId": "b9f3b2e8-ba4c-4694-b0c8-0f677499b77e",
+      "credentials": {
+        "telegramApi": {
+          "id": "Z5xPHNqsZKTxTYb6",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "claude-sonnet-4-5-20250929",
+          "cachedResultName": "Claude Sonnet 4.5"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.3,
+      "position": [
+        1504,
+        -800
+      ],
+      "id": "62f8f462-3215-41f0-a548-c6ac36b6a139",
+      "name": "Anthropic Chat Model1",
+      "credentials": {
+        "anthropicApi": {
+          "id": "LYnF9jhIVY7mxdTz",
+          "name": "Anthropic account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"labels\": [\"❗_Sürgős\", \"💡_Ajánlatkérés\", \"🛠_Kotrás\"],\n  \"confidence\": 0.95,\n  \"reasoning\": \"Sürgős kulcsszó + új projekt + kotrás szolgáltatás\",\n  \"categories\": {\n    \"bejovo\": [\"❗_Sürgős\", \"💡_Ajánlatkérés\"],\n    \"admin\": [],\n    \"tevekenyseg\": [\"🛠_Kotrás\"],\n    \"rendszer\": []\n  }\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        1760,
+        -800
+      ],
+      "id": "4164c9f1-b8f7-404f-ba23-07b415e8434a",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "output.labels",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        1904,
+        -1056
+      ],
+      "id": "0f4e39c4-9153-45dc-ad9e-75f6cec2276e",
+      "name": "Split Out"
+    },
+    {
+      "parameters": {
+        "resource": "label",
+        "returnAll": true
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        2112,
+        -1056
+      ],
+      "id": "1c2e3c55-47d1-414f-b2e2-65250e0f6285",
+      "name": "Get many labels",
+      "webhookId": "b38e2f6d-93c0-4a07-80d2-3658353b27f5",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "rvmMqY8aMOU4tgNq",
+          "name": "iszapfalo"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "label",
+        "returnAll": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Return_All', ``, 'boolean') }}"
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.1,
+      "position": [
+        1632,
+        -800
+      ],
+      "id": "9b74ff3a-68a2-4d44-a919-d9446dae36ee",
+      "name": "Címkék",
+      "webhookId": "99a2987b-3440-4061-8e2b-90fd239956d0",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "rvmMqY8aMOU4tgNq",
+          "name": "iszapfalo"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const labels = $input.all();\nconst outputs = $(\"Split Out\").all();\n\nconst pairedLabels = outputs.map((output) => {\n  const matchedLabel = labels.find(\n    (label) => label?.json?.name === output?.json[\"output.labels\"],\n  );\n  return matchedLabel ? { ...output.json, ...matchedLabel.json } : output.json;\n});\n\nconst uniquePairedLabels = Array.from(\n  new Set(pairedLabels.map(JSON.stringify)),\n).map(JSON.parse);\n\nreturn uniquePairedLabels.map((item) => ({ json: item }));\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2304,
+        -1056
+      ],
+      "id": "df191f6b-1e2d-4c31-aa0b-028cbf02d55c",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "claude-sonnet-4-5-20250929",
+          "cachedResultName": "Claude Sonnet 4.5"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.3,
+      "position": [
+        1024,
+        -848
+      ],
+      "id": "99c9f8b8-36dc-4fc5-9817-1aadaeb11a00",
+      "name": "Anthropic Chat Model3",
+      "credentials": {
+        "anthropicApi": {
+          "id": "LYnF9jhIVY7mxdTz",
+          "name": "Anthropic account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "addLabels",
+        "messageId": "={{ $json.threadID }}",
+        "labelIds": "={{ $json.id }}"
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        2704,
+        -1056
+      ],
+      "id": "dd55b2bd-50bb-41ce-acf4-14bf0456c615",
+      "name": "Add label to message",
+      "webhookId": "88c28687-3336-4829-b83f-54b5cb2935e0",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "rvmMqY8aMOU4tgNq",
+          "name": "iszapfalo"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineAll",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        2512,
+        -1056
+      ],
+      "id": "d49d2db9-874f-497f-8db7-644e217fd3b0",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "25f55531-348d-46b8-a9ff-cbcb67910b99",
+              "name": "threadID",
+              "value": "={{ $json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "5b13cbbe-d669-4288-aba6-3e5bc88ce6a2",
+              "name": "message",
+              "value": "={{ $json.snippet }}",
+              "type": "string"
+            },
+            {
+              "id": "ce33c0bb-7e9e-48c0-b30d-b3f8e689789e",
+              "name": "from",
+              "value": "={{ $json.From }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        832,
+        -992
+      ],
+      "id": "69fdd762-83b3-4076-a0ea-54a9c0b33c87",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Email tárgya: {{ $('Gmail Trigger1').item.json.Subject }}\nEmail feladója: {{ $('Gmail Trigger1').item.json.From }}\nEmail törzse: {{ $('Gmail Trigger1').item.json.snippet }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=Te egy email kategorizáló asszisztens vagy az Iszapfaló Kft. számára, amely iszapkotrási és vízgazdálkodási szolgáltatásokat nyújt.\n\nFELADATOD:\n\nElemezd a bejövő emaileket és válaszd ki a megfelelő Gmail címkéket a hierarchikus címkerendszerből. Egy emailhez TÖBB címke is kiválasztható, de MINDIG válassz legalább egyet minden főkategóriából ahol releváns.\n\nHIERARCHIKUS CÍMKE STRUKTÚRA:\n\n📁 1_Bejövő (Prioritás és Típus)\n├── Sürgős - Azonnali intézkedést igényel\n├── Ajánlatkérés - Új üzleti lehetőség\n├── Folyamatban - Aktív projekthez kapcsolódó kommunikáció\n└── Kérdés - Válaszra váró kérdés\n\n📁 2_Admin (Adminisztratív)\n├── Számlázás - Számlák, díjbekérők, fizetések\n├── Szerződés - Szerződések, megrendelők\n└── Belső - Csapattagok közötti kommunikáció\n\n📁 3_Tevékenység (Szolgáltatás típusa)\n├── Kotrás - Mederkotrás, iszapkitermelés\n├── Felmérés - Állapotfelmérés, dokumentáció, mérés\n├── Biológia - Biológiai kezelések, vízminőség, algakezelés\n└── Tanácsadás - Szakértői vélemény, tervezés, konzultáció\n\n📁 4_Rendszer (Automatizáció státusza)\n├── Feldolgozva - Sikeresen feldolgozva (automatikusan)\n├── Hiba - Feldolgozási hiba történt (automatikusan)\n└── Spam - Spam, irreleváns tartalom\n\n---\n\nKATEGORIZÁLÁSI SZABÁLYOK:\n\n📁 1_BEJÖVŐ KATEGÓRIÁK:\n\nSürgős:\n- Kulcsszavak: sürgős, azonnali, határidő, kritikus, ma, holnap, hétvégéig, haladéktalanul, mára, holnapra\n- Projekt érték ≥20 millió Ft\n- Tender/közbeszerzés rövid leadási határidővel (< 48 óra)\n- Hiánypótlás + határidő\n- MINDIG kombinálható más címkékkel\n- Példa: \"Sürgős ajánlatkérés kotrásra\" → Sürgős + Ajánlatkérés + Kotrás\n\nAjánlatkérés:\n- Új üzleti lehetőség, potenciális projekt\n- Kulcsszavak: ajánlatkérés, árajánlat, RFP, RFQ, tender, pályázat, költségbecslés, mennyibe kerül, árat kérnék, kalkulációt kérek\n- NEM folyamatban lévő projekt\n- Indítja az \"Új Projekt\" workflow-t\n- Példa: \"Kérem árajánlatukat tó felmérésére\" → Ajánlatkérés + Felmérés\n\nFolyamatban:\n- Aktív, már létező projekthez kapcsolódó email\n- Jellemzők: Re:, Fwd: prefix az email tárgyban\n- Hivatkozás korábbi kommunikációra\n- Helyszíni bejárás egyeztetése meglévő projektnél\n- Projekt státusz frissítés\n- Példa: \"Re: Balaton projekt - helyszíni időpont\" → Folyamatban + Kotrás\n\nKérdés:\n- Email kérdést tartalmaz, amire válaszolni kell\n- Tisztázó kérdések, információkérés\n- Technikai részletek pontosítása\n- Lehet kombinálva Ajánlatkérés vagy Folyamatban címkékkel\n- Példa: \"Milyen engedélyek kellenek a kotráshoz?\" → Kérdés + Ajánlatkérés + Kotrás\n\n---\n\n📁 2_ADMIN KATEGÓRIÁK:\n\nSzámlázás:\n- MINDEN számla (bejövő beszállítói ÉS AI platform számlák)\n- Díjbekérő, fizetési felszólítás\n- Számla kiegyenlítésre vonatkozó levelek\n- Elszámolás, könyvelés\n- Kulcsszavak: számla, invoice, receipt, billing, díjbekérő, fizetés, átutalás\n- Feladók: könyvelő, beszállítók, n8n.io, openai.com, airtable.com, stb.\n- Példa: \"Invoice from n8n - $49\" → Számlázás\n- Példa: \"Mellékeljük a novemberi könyvelési számlát\" → Számlázás\n\nSzerződés:\n- Szerződéstervezet, megrendelő\n- Aláírt szerződés megküldése\n- Szerződés módosítás, kiegészítés\n- Hivatalos megállapodások\n- Kulcsszavak: szerződés, megrendelő, hivatalos formában, aláírás, kiegészítés\n- Példa: \"Mellékeljük az aláírt szerződést\" → Szerződés + Folyamatban\n\nBelső:\n- Csapattagok közötti kommunikáció\n- Email címek: @iszapfalo.hu domainről @iszapfalo.hu-ra\n- \"FIGYELD\" jelzésű emailek\n- Belső megbeszélések, koordináció\n- Feladók: bartos.istvan@iszapfalo.hu, kovasznai.gergely@iszapfalo.hu, iszapfalo@gmail.com\n- Példa: \"FIGYELD - Eger tó projekt holnap\" → Belső + Folyamatban\n\n---\n\n📁 3_TEVÉKENYSÉG KATEGÓRIÁK (szolgáltatás típusa):\n\nKotrás:\n- Mederkotrás, iszapkotrás, iszapkitermelés\n- Kulcsszavak: kotrás, kotorás, mederkotrás, mederrendezés, hidromechanizáció, iszapkitermelés, víztelenítés, depónia, medertisztítás\n- m³ mennyiség + tó/folyó/csatorna kontextus\n- Kombinálható más szolgáltatásokkal\n- Példa: \"5000 m³ iszapkotrás Balaton\" → Ajánlatkérés + Kotrás\n\nFelmérés:\n- Állapotfelmérés, mérés, dokumentáció\n- Kulcsszavak: felmérés, mérés, állapotfelmérés, bemérés, dokumentáció, térképezés, ultrahangos, pontszerű mérés, fotorealisztikus\n- Gyakran \"előprojekt\" kotrás előtt\n- Példa: \"Tó ultrahangos felmérése\" → Ajánlatkérés + Felmérés\n\nBiológia:\n- Biológiai kezelések, vízminőség javítás\n- Kulcsszavak: algakezelés, víztisztítás, monitoring, vízminőség, oxigénszint, eutrofizáció, pelyhesítés, élőhely fejlesztés\n- Példa: \"Tó algakezelése kérése\" → Ajánlatkérés + Biológia\n\nTanácsadás:\n- Szakértői vélemény, konzultáció\n- Kulcsszavak: tanácsadás, konzultáció, szakértői vélemény, tervezés, engedélyeztetés, hatástanulmány, környezeti hatásvizsgálat\n- Hatósági dokumentumok, engedélyek\n- Példa: \"Vízjogi engedély tanácsadás\" → Ajánlatkérés + Tanácsadás\n\n---\n\n📁 4_RENDSZER KATEGÓRIÁK (NE HASZNÁLD - automatikus):\n\nFeldolgozva:\n- NE használd, az n8n workflow automatikusan hozzáadja sikeres feldolgozás után\n- Jelzi hogy az email már bekerült az Airtable-be\n\nHiba:\n- NE használd, az n8n workflow automatikusan hozzáadja hiba esetén\n- Jelzi hogy manuális beavatkozás szükséges\n\nSpam:\n- Hírlevél, newsletter, marketing, reklám\n- Irreleváns szolgáltatások (IT szoftver, biztosítás, autó, webshop)\n- Tömeges kiküldés jelei: \"unsubscribe\", \"leiratkozás\"\n- Ha SPAM → CSAK Spam címke, semmi más!\n- Példa: \"Hírlevél: Black Friday akciók\" → Spam\n\n---\n\nDÖNTÉSI ALGORITMUS (lépésről lépésre):\n\n1. SPAM ellenőrzés:\n   Ha SPAM → CSAK Spam → VÉGE\n\n2. Bejövő kategória kiválasztása (1 vagy több):\n   - Sürgős? → Sürgős\n   - Új ajánlatkérés? → Ajánlatkérés\n   - Folyamatban lévő projekt? → Folyamatban\n   - Tartalmaz kérdést? → Kérdés\n\n3. Admin kategória (ha releváns):\n   - Számla? → Számlázás\n   - Szerződés? → Szerződés\n   - Belső levél? → Belső\n\n4. Tevékenység kategória (1 vagy több):\n   - Kotrás? → Kotrás\n   - Felmérés? → Felmérés\n   - Biológia? → Biológia\n   - Tanácsadás? → Tanácsadás\n\n5. Rendszer kategória:\n   - NE használd (automatikus)\n\n\nMinden esetben használd a Címkék gmail tool-t hogy visszakapd, hogy milyen címkék vannak, és a Felcímkézés tool-t, hogy rátedd a címkét a bejövő e-mailre az alábbi leírás alapján."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        1424,
+        -32
+      ],
+      "id": "55929196-5356-4216-bb67-e2aac4bc9255",
+      "name": "AI Agent1"
+    },
+    {
+      "parameters": {
+        "text": "={{ $json.snippet }}",
+        "guardrails": {
+          "jailbreak": {
+            "value": {
+              "threshold": 0.7
+            }
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.guardrails",
+      "typeVersion": 1,
+      "position": [
+        1024,
+        -32
+      ],
+      "id": "7d286ee0-0f36-4f37-b99d-f2d07e568e48",
+      "name": "Guardrails1"
+    },
+    {
+      "parameters": {
+        "chatId": "8468817202",
+        "text": "=A rendszer nem engedte tovább a következő üzenetet, mert veszélyesnek ítélte: {{ $('Gmail Trigger1').item.json.snippet }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1168,
+        208
+      ],
+      "id": "234705d5-f804-4eeb-aefe-a59d0bf5d8bb",
+      "name": "Send a text message1",
+      "webhookId": "b9f3b2e8-ba4c-4694-b0c8-0f677499b77e",
+      "credentials": {
+        "telegramApi": {
+          "id": "Z5xPHNqsZKTxTYb6",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "claude-sonnet-4-5-20250929",
+          "cachedResultName": "Claude Sonnet 4.5"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.3,
+      "position": [
+        1376,
+        224
+      ],
+      "id": "39f7246f-7bc8-415d-b517-cb53059a989a",
+      "name": "Anthropic Chat Model",
+      "credentials": {
+        "anthropicApi": {
+          "id": "LYnF9jhIVY7mxdTz",
+          "name": "Anthropic account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"labels\": [\"❗_Sürgős\", \"💡_Ajánlatkérés\", \"🛠_Kotrás\"],\n  \"confidence\": 0.95,\n  \"reasoning\": \"Sürgős kulcsszó + új projekt + kotrás szolgáltatás\",\n  \"categories\": {\n    \"bejovo\": [\"❗_Sürgős\", \"💡_Ajánlatkérés\"],\n    \"admin\": [],\n    \"tevekenyseg\": [\"🛠_Kotrás\"],\n    \"rendszer\": []\n  }\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        1632,
+        224
+      ],
+      "id": "869d01e2-79ae-4edf-9035-1c05a0f8d37a",
+      "name": "Structured Output Parser1"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "output.labels",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        1776,
+        -32
+      ],
+      "id": "3b1175ec-b421-4e5a-8a71-92a0c8f3cf23",
+      "name": "Split Out1"
+    },
+    {
+      "parameters": {
+        "resource": "label",
+        "returnAll": true
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1984,
+        -32
+      ],
+      "id": "8f6551c3-28fd-4e76-b9df-cfa497fe08f8",
+      "name": "Get many labels1",
+      "webhookId": "b38e2f6d-93c0-4a07-80d2-3658353b27f5",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "rvmMqY8aMOU4tgNq",
+          "name": "iszapfalo"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "label",
+        "returnAll": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Return_All', ``, 'boolean') }}"
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.1,
+      "position": [
+        1504,
+        224
+      ],
+      "id": "481dd147-2f33-4261-8b1b-fe84cd50f6f9",
+      "name": "Címkék1",
+      "webhookId": "99a2987b-3440-4061-8e2b-90fd239956d0",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "rvmMqY8aMOU4tgNq",
+          "name": "iszapfalo"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const labels = $input.all();\nconst outputs = $(\"Split Out1\").all();\n\nconst pairedLabels = outputs.map((output) => {\n  const matchedLabel = labels.find(\n    (label) => label?.json?.name === output?.json[\"output.labels\"],\n  );\n  return matchedLabel ? { ...output.json, ...matchedLabel.json } : output.json;\n});\n\nconst uniquePairedLabels = Array.from(\n  new Set(pairedLabels.map(JSON.stringify)),\n).map(JSON.parse);\n\nreturn uniquePairedLabels.map((item) => ({ json: item }));\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2176,
+        -32
+      ],
+      "id": "a809c317-211d-4186-9c40-ede574e22d55",
+      "name": "Code in JavaScript1"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "claude-sonnet-4-5-20250929",
+          "cachedResultName": "Claude Sonnet 4.5"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.3,
+      "position": [
+        1008,
+        176
+      ],
+      "id": "186dbcc9-b6c0-4fa3-804b-41cef9eaa0ce",
+      "name": "Anthropic Chat Model4",
+      "credentials": {
+        "anthropicApi": {
+          "id": "LYnF9jhIVY7mxdTz",
+          "name": "Anthropic account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "addLabels",
+        "messageId": "={{ $json.threadID }}",
+        "labelIds": "={{ $json.id }}"
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        2816,
+        -32
+      ],
+      "id": "6c6c9bf3-4eb9-45ff-8a4b-7bc486b7deb1",
+      "name": "Add label to message1",
+      "webhookId": "88c28687-3336-4829-b83f-54b5cb2935e0",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "rvmMqY8aMOU4tgNq",
+          "name": "iszapfalo"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineAll",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        2384,
+        -32
+      ],
+      "id": "a87a8107-5e79-4383-91db-9fed509ed778",
+      "name": "Merge1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "25f55531-348d-46b8-a9ff-cbcb67910b99",
+              "name": "threadID",
+              "value": "={{ $json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "5b13cbbe-d669-4288-aba6-3e5bc88ce6a2",
+              "name": "message",
+              "value": "={{ $json.snippet }}",
+              "type": "string"
+            },
+            {
+              "id": "ce33c0bb-7e9e-48c0-b30d-b3f8e689789e",
+              "name": "from",
+              "value": "={{ $json.From }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1120,
+        624
+      ],
+      "id": "00de5a26-f290-4399-be79-2fb5ee8b04be",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        560,
+        -32
+      ],
+      "id": "20356b29-8d73-4bfb-9e8d-2227c7620797",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "limit": 1,
+        "filters": {
+          "labelIds": [
+            "SENT"
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        752,
+        -32
+      ],
+      "id": "fd748ef2-6806-4b20-a926-4db07e714bb9",
+      "name": "Get many messages",
+      "webhookId": "4fd74ec7-7cef-4713-8376-4010d397f105",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "rvmMqY8aMOU4tgNq",
+          "name": "iszapfalo"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "appU3xQMuAmpmmCEy",
+          "mode": "list",
+          "cachedResultName": "Folyamatfigyelő Rendszer",
+          "cachedResultUrl": "https://airtable.com/appU3xQMuAmpmmCEy"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblCR2aIaM4aNmsSm",
+          "mode": "list",
+          "cachedResultName": "Partnerek",
+          "cachedResultUrl": "https://airtable.com/appU3xQMuAmpmmCEy/tblCR2aIaM4aNmsSm"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Email": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Email', ``, 'string') }}",
+            "Phone": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Phone', ``, 'string') }}",
+            "Weboldal": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Weboldal', ``, 'string') }}",
+            "Cegnev": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Cegnev', ``, 'string') }}",
+            "Adoszam": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Adoszam', ``, 'string') }}",
+            "Kapcsolattarto nev": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Kapcsolattarto_nev', ``, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Cegnev",
+              "displayName": "Cegnev",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Adoszam",
+              "displayName": "Adoszam",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Kapcsolattarto nev",
+              "displayName": "Kapcsolattarto nev",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Phone",
+              "displayName": "Phone",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Weboldal",
+              "displayName": "Weboldal",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtableTool",
+      "typeVersion": 2.1,
+      "position": [
+        1328,
+        -1504
+      ],
+      "id": "c710aec9-d127-4061-a165-9fd5bbdce8c7",
+      "name": "Create a record in Airtable",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "c0DCvOcS3pwQNv2V",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "appU3xQMuAmpmmCEy",
+          "mode": "list",
+          "cachedResultName": "Folyamatfigyelő Rendszer",
+          "cachedResultUrl": "https://airtable.com/appU3xQMuAmpmmCEy"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblCR2aIaM4aNmsSm",
+          "mode": "list",
+          "cachedResultName": "Partnerek",
+          "cachedResultUrl": "https://airtable.com/appU3xQMuAmpmmCEy/tblCR2aIaM4aNmsSm"
+        },
+        "filterByFormula": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Filter_By_Formula', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtableTool",
+      "typeVersion": 2.1,
+      "position": [
+        1168,
+        -1504
+      ],
+      "id": "3a41e3d2-d3cb-4428-90d6-6af164770957",
+      "name": "Search records in Airtable",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "c0DCvOcS3pwQNv2V",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "8468817202",
+        "text": "={{ $json.output }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1488,
+        -1696
+      ],
+      "id": "115d50ed-d8df-4a61-b531-bac32e9a45c0",
+      "name": "Send a text message2",
+      "webhookId": "8fe29d6b-703a-48ec-873a-ed70bf28334d",
+      "credentials": {
+        "telegramApi": {
+          "id": "Z5xPHNqsZKTxTYb6",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Az e-mail tartalma: {{ $json.text }}\nAz e-mail feladója: {{ $json.from.text }}\nAz e-mail tárgya: {{ $json.subject }}",
+        "options": {
+          "systemMessage": "=Feladat: Partneradatok ellenőrzése és rögzítése Airtable-ben.\n\nKRITIKUS FONTOSSÁGÚ SZABÁLY (Airtable Mezőnevek):\nAz AI hajlamos átírni a mezőneveket. EZT TILOS TENNI.\nA mezőneveket BETŰRE PONTOSAN kell használnod, SZÓKÖZÖKKEL együtt.\n\nHELYES MEZŐNEVEK (Másold ki innen):\n- \"Kapcsolattarto nev\" (Vigyázz: Két szó, szóközzel elválasztva!)\n- \"Cegnev\"\n- \"Email\"\n- \"Phone\"\n- \"Weboldal\"\n- \"Adoszam\"\n\nTILOS HASZNÁLNI:\n- \"kapcsolattarto_nev\" (Soha ne tegyél alulvonást szóköz helyett!)\n- \"kapcsolattartoNev\"\n- \"email_address\"\n\nLÉPÉSEK:\n\n1. KERESÉS (Search tool):\nEllenőrizd, hogy létezik-e a partner.\nHasználd a fenti HELYES mezőneveket a szűréshez.\nPélda helyes szűrésre: { \"Kapcsolattarto nev\": \"Vas Katalin\" } vagy { \"Email\": \"minta@email.hu\" }\n\n2. DÖNTÉS:\n- HA van találat: STOP.\n- HA nincs találat: Létrehozás.\n\n3. LÉTREHOZÁS (Create tool):\nTöltsd ki a mezőket a kinyert adatokkal. Ha nincs adat, hagyd üresen (null)."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        1024,
+        -1696
+      ],
+      "id": "41e5d971-84b4-4605-87ad-19401bdc2293",
+      "name": "CRM agent"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Email tárgya: {{ $('Gmail Trigger').item.json.subject }}\nEmail feladója: {{ $('Gmail Trigger').item.from.text }}\nEmail törzse: {{ $('Gmail Trigger').item.json.text }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=Te egy email kategorizáló asszisztens vagy az Iszapfaló Kft. számára, amely iszapkotrási és vízgazdálkodási szolgáltatásokat nyújt.\n\nFELADATOD:\n\nElemezd a bejövő emaileket és válaszd ki a megfelelő Gmail címkéket a hierarchikus címkerendszerből. Egy emailhez TÖBB címke is kiválasztható, de MINDIG válassz legalább egyet minden főkategóriából ahol releváns.\n\nHIERARCHIKUS CÍMKE STRUKTÚRA:\n\n📁 1_Bejövő (Prioritás és Típus)\n├── Sürgős - Azonnali intézkedést igényel\n├── Ajánlatkérés - Új üzleti lehetőség\n├── Folyamatban - Aktív projekthez kapcsolódó kommunikáció\n└── Kérdés - Válaszra váró kérdés\n\n📁 2_Admin (Adminisztratív)\n├── Számlázás - Számlák, díjbekérők, fizetések\n├── Szerződés - Szerződések, megrendelők\n└── Belső - Csapattagok közötti kommunikáció\n\n📁 3_Tevékenység (Szolgáltatás típusa)\n├── Kotrás - Mederkotrás, iszapkitermelés\n├── Felmérés - Állapotfelmérés, dokumentáció, mérés\n├── Biológia - Biológiai kezelések, vízminőség, algakezelés\n└── Tanácsadás - Szakértői vélemény, tervezés, konzultáció\n\n📁 4_Rendszer (Automatizáció státusza)\n├── Feldolgozva - Sikeresen feldolgozva (automatikusan)\n├── Hiba - Feldolgozási hiba történt (automatikusan)\n└── Spam - Spam, irreleváns tartalom\n\n---\n\nKATEGORIZÁLÁSI SZABÁLYOK:\n\n📁 1_BEJÖVŐ KATEGÓRIÁK:\n\nSürgős:\n- Kulcsszavak: sürgős, azonnali, határidő, kritikus, ma, holnap, hétvégéig, haladéktalanul, mára, holnapra\n- Projekt érték ≥20 millió Ft\n- Tender/közbeszerzés rövid leadási határidővel (< 48 óra)\n- Hiánypótlás + határidő\n- MINDIG kombinálható más címkékkel\n- Példa: \"Sürgős ajánlatkérés kotrásra\" → Sürgős + Ajánlatkérés + Kotrás\n\nAjánlatkérés:\n- Új üzleti lehetőség, potenciális projekt\n- Kulcsszavak: ajánlatkérés, árajánlat, RFP, RFQ, tender, pályázat, költségbecslés, mennyibe kerül, árat kérnék, kalkulációt kérek\n- NEM folyamatban lévő projekt\n- Indítja az \"Új Projekt\" workflow-t\n- Példa: \"Kérem árajánlatukat tó felmérésére\" → Ajánlatkérés + Felmérés\n\nFolyamatban:\n- Aktív, már létező projekthez kapcsolódó email\n- Jellemzők: Re:, Fwd: prefix az email tárgyban\n- Hivatkozás korábbi kommunikációra\n- Helyszíni bejárás egyeztetése meglévő projektnél\n- Projekt státusz frissítés\n- Példa: \"Re: Balaton projekt - helyszíni időpont\" → Folyamatban + Kotrás\n\nKérdés:\n- Email kérdést tartalmaz, amire válaszolni kell\n- Tisztázó kérdések, információkérés\n- Technikai részletek pontosítása\n- Lehet kombinálva Ajánlatkérés vagy Folyamatban címkékkel\n- Példa: \"Milyen engedélyek kellenek a kotráshoz?\" → Kérdés + Ajánlatkérés + Kotrás\n\n---\n\n📁 2_ADMIN KATEGÓRIÁK:\n\nSzámlázás:\n- MINDEN számla (bejövő beszállítói ÉS AI platform számlák)\n- Díjbekérő, fizetési felszólítás\n- Számla kiegyenlítésre vonatkozó levelek\n- Elszámolás, könyvelés\n- Kulcsszavak: számla, invoice, receipt, billing, díjbekérő, fizetés, átutalás\n- Feladók: könyvelő, beszállítók, n8n.io, openai.com, airtable.com, stb.\n- Példa: \"Invoice from n8n - $49\" → Számlázás\n- Példa: \"Mellékeljük a novemberi könyvelési számlát\" → Számlázás\n\nSzerződés:\n- Szerződéstervezet, megrendelő\n- Aláírt szerződés megküldése\n- Szerződés módosítás, kiegészítés\n- Hivatalos megállapodások\n- Kulcsszavak: szerződés, megrendelő, hivatalos formában, aláírás, kiegészítés\n- Példa: \"Mellékeljük az aláírt szerződést\" → Szerződés + Folyamatban\n\nBelső:\n- Csapattagok közötti kommunikáció\n- Email címek: @iszapfalo.hu domainről @iszapfalo.hu-ra\n- \"FIGYELD\" jelzésű emailek\n- Belső megbeszélések, koordináció\n- Feladók: bartos.istvan@iszapfalo.hu, kovasznai.gergely@iszapfalo.hu, iszapfalo@gmail.com\n- Példa: \"FIGYELD - Eger tó projekt holnap\" → Belső + Folyamatban\n\n---\n\n📁 3_TEVÉKENYSÉG KATEGÓRIÁK (szolgáltatás típusa):\n\nKotrás:\n- Mederkotrás, iszapkotrás, iszapkitermelés\n- Kulcsszavak: kotrás, kotorás, mederkotrás, mederrendezés, hidromechanizáció, iszapkitermelés, víztelenítés, depónia, medertisztítás\n- m³ mennyiség + tó/folyó/csatorna kontextus\n- Kombinálható más szolgáltatásokkal\n- Példa: \"5000 m³ iszapkotrás Balaton\" → Ajánlatkérés + Kotrás\n\nFelmérés:\n- Állapotfelmérés, mérés, dokumentáció\n- Kulcsszavak: felmérés, mérés, állapotfelmérés, bemérés, dokumentáció, térképezés, ultrahangos, pontszerű mérés, fotorealisztikus\n- Gyakran \"előprojekt\" kotrás előtt\n- Példa: \"Tó ultrahangos felmérése\" → Ajánlatkérés + Felmérés\n\nBiológia:\n- Biológiai kezelések, vízminőség javítás\n- Kulcsszavak: algakezelés, víztisztítás, monitoring, vízminőség, oxigénszint, eutrofizáció, pelyhesítés, élőhely fejlesztés\n- Példa: \"Tó algakezelése kérése\" → Ajánlatkérés + Biológia\n\nTanácsadás:\n- Szakértői vélemény, konzultáció\n- Kulcsszavak: tanácsadás, konzultáció, szakértői vélemény, tervezés, engedélyeztetés, hatástanulmány, környezeti hatásvizsgálat\n- Hatósági dokumentumok, engedélyek\n- Példa: \"Vízjogi engedély tanácsadás\" → Ajánlatkérés + Tanácsadás\n\n---\n\n📁 4_RENDSZER KATEGÓRIÁK (NE HASZNÁLD - automatikus):\n\nFeldolgozva:\n- NE használd, az n8n workflow automatikusan hozzáadja sikeres feldolgozás után\n- Jelzi hogy az email már bekerült az Airtable-be\n\nHiba:\n- NE használd, az n8n workflow automatikusan hozzáadja hiba esetén\n- Jelzi hogy manuális beavatkozás szükséges\n\nSpam:\n- Hírlevél, newsletter, marketing, reklám\n- Irreleváns szolgáltatások (IT szoftver, biztosítás, autó, webshop)\n- Tömeges kiküldés jelei: \"unsubscribe\", \"leiratkozás\"\n- Ha SPAM → CSAK Spam címke, semmi más!\n- Példa: \"Hírlevél: Black Friday akciók\" → Spam\n\n---\n\nDÖNTÉSI ALGORITMUS (lépésről lépésre):\n\n1. SPAM ellenőrzés:\n   Ha SPAM → CSAK Spam → VÉGE\n\n2. Bejövő kategória kiválasztása (1 vagy több):\n   - Sürgős? → Sürgős\n   - Új ajánlatkérés? → Ajánlatkérés\n   - Folyamatban lévő projekt? → Folyamatban\n   - Tartalmaz kérdést? → Kérdés\n\n3. Admin kategória (ha releváns):\n   - Számla? → Számlázás\n   - Szerződés? → Szerződés\n   - Belső levél? → Belső\n\n4. Tevékenység kategória (1 vagy több):\n   - Kotrás? → Kotrás\n   - Felmérés? → Felmérés\n   - Biológia? → Biológia\n   - Tanácsadás? → Tanácsadás\n\n5. Rendszer kategória:\n   - NE használd (automatikus)\n\n\nMinden esetben használd a Címkék gmail tool-t hogy visszakapd, hogy milyen címkék vannak, és a Felcímkézés tool-t, hogy rátedd a címkét a bejövő e-mailre az alábbi leírás alapján."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        1552,
+        -1056
+      ],
+      "id": "bf9403ed-7ee6-4b35-90d3-28e7885279a2",
+      "name": "E-mail kategorizáló"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "claude-sonnet-4-5-20250929",
+          "cachedResultName": "Claude Sonnet 4.5"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.3,
+      "position": [
+        992,
+        -1504
+      ],
+      "id": "bb74e2fa-ba1f-4ef6-8cf0-49e65b0769f6",
+      "name": "Anthropic Chat Model2",
+      "credentials": {
+        "anthropicApi": {
+          "id": "LYnF9jhIVY7mxdTz",
+          "name": "Anthropic account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "### Adatvédelmi rendszer, ha olyan e-mailt észlel, ami külső támadást tartalmaz, akkor telegrammon keresztül értesít",
+        "height": 464,
+        "width": 544,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        800,
+        -1120
+      ],
+      "typeVersion": 1,
+      "id": "1fa0f778-f4e0-40df-9829-bf3abb1ed6df",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "### E-mail kategóriák lekérése és a megfelelő kategória kiválasztása",
+        "height": 464,
+        "width": 432,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1424,
+        -1120
+      ],
+      "typeVersion": 1,
+      "id": "dd46c044-7a39-4d4c-a68c-b6face0f2b17",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "### Labelek hozzáadása",
+        "height": 224,
+        "width": 1024,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1888,
+        -1120
+      ],
+      "typeVersion": 1,
+      "id": "469ec7c9-28f5-4ac6-b136-c4462ddd8819",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "### Airtable CRM rendszer, megnézi, hogy bent van-e az a partner a rendszerünkben, ha nincs, akkor hozzáadja az infóit a partnerek fülhöz",
+        "height": 480,
+        "width": 512,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        944,
+        -1792
+      ],
+      "typeVersion": 1,
+      "id": "5f85a7d6-2b89-4115-a306-277a9e178b7c",
+      "name": "Sticky Note3"
+    }
+  ],
+  "pinData": {
+    "Gmail Trigger": [
+      {
+        "json": {
+          "id": "19ac06813283a652",
+          "threadId": "19abeca4e238bd44",
+          "labelIds": [
+            "UNREAD",
+            "IMPORTANT",
+            "CATEGORY_UPDATES",
+            "INBOX"
+          ],
+          "sizeEstimate": 12929,
+          "headers": {
+            "delivered-to": "Delivered-To: iszapfalo@gmail.com",
+            "received": "Received: from mail-sor-f73.google.com (mail-sor-f73.google.com. [209.85.220.73])\r\n        by mx.google.com with SMTPS id 98e67ed59e1d1-34727be236fsor8667692a91.4.2025.11.26.05.43.57\r\n        for <iszapfalo@gmail.com>\r\n        (Google Transport Security);\r\n        Wed, 26 Nov 2025 05:43:57 -0800 (PST)",
+            "x-received": "X-Received: by 2002:a17:90b:524b:b0:340:b86b:39c7 with SMTP id\r\n 98e67ed59e1d1-34733e725c9mr18679450a91.11.1764164637001; Wed, 26 Nov 2025\r\n 05:43:57 -0800 (PST)",
+            "arc-seal": "ARC-Seal: i=1; a=rsa-sha256; t=1764164637; cv=none;\r\n        d=google.com; s=arc-20240605;\r\n        b=J5r/nkA0tQSMwJSefp/CLPqG5FtfVrqVkMXdTrsQE7SEGhPVO7nGD5s6zj5UuiBt96\r\n         b/LPbzyRDkah+FF6sMYFkpovsPsKhNPg4pLx+nUSO7Fz35ajZ7cUfvRukzFzAm8gqYbk\r\n         jjkxwpSZR75cpMFu1OftaroZghxsQB7jzlLRyqhPlsAMBqcYGjD2+TdlcmnlKGtJR81P\r\n         uWBrjI/NuvH9hr9IBY/JcmLPsNhxGCUuhpzNDJS82Af1jIr2kn4olSC49RDE368QVhKz\r\n         BtTDlK/8CKc6uMxzLJIL+hdXvdAVfo9ykAIrJjE9B+RbAvpuXTvGr0gfv9vl+jBPxbpI\r\n         onQA==",
+            "arc-message-signature": "ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;\r\n        h=to:from:subject:message-id:gmsai:feedback-id:date:mime-version\r\n         :dkim-signature;\r\n        bh=vCwXbYJOEIiKXjH4TZx4pnxo9dFGdN8ZZVDPoqZnnzY=;\r\n        fh=eYCJtW+wMbGM2bGN9CP6M1QZZSUUhJmSCNLgOJbJCzY=;\r\n        b=S1MmRDwmBv4do/blNeloypP6sLRmqBiEFg0CTHxksvR070zh/ROPwP5naC1YRDaUZt\r\n         tPtvOo+2SAY+7+0KszUEunwNQUKBMge636hIschZ9ub9zoADNJt6R+yygeeTT6iFwT6W\r\n         YNM/cBunBcEx5Atulu2mu5lV6SjBoJi9IqHz+GDf2aOqQOGku23AemojhZ8TvXGMMK2q\r\n         s3WB92bgcMZBlmr6aEkotwrqkK7YVO/ALQ4sPo+agVVbImZzvhXi76bvRvkIqmTmI43V\r\n         G6tJV3N0cWWPZanOK7Y22fod2WCa5+6qknEolO+98zK2b6W5LnRYj+gfEHoGmtnUhAlW\r\n         1V2A==;\r\n        dara=google.com",
+            "arc-authentication-results": "ARC-Authentication-Results: i=1; mx.google.com;\r\n       dkim=pass header.i=@accounts.google.com header.s=20230601 header.b=k0fu9qbr;\r\n       spf=pass (google.com: domain of 3hqqnaqgtcri56-9w73gsuu6c5ba.y66y3w.u640ahs7xs36y4s03.u64@gaia.bounces.google.com designates 209.85.220.73 as permitted sender) smtp.mailfrom=3HQQnaQgTCRI56-9w73Gsuu6C5BA.y66y3w.u640AHs7xs36y4s03.u64@gaia.bounces.google.com;\r\n       dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=accounts.google.com;\r\n       dara=pass header.i=@gmail.com",
+            "return-path": "Return-Path: <3HQQnaQgTCRI56-9w73Gsuu6C5BA.y66y3w.u640AHs7xs36y4s03.u64@gaia.bounces.google.com>",
+            "received-spf": "Received-SPF: pass (google.com: domain of 3hqqnaqgtcri56-9w73gsuu6c5ba.y66y3w.u640ahs7xs36y4s03.u64@gaia.bounces.google.com designates 209.85.220.73 as permitted sender) client-ip=209.85.220.73;",
+            "authentication-results": "Authentication-Results: mx.google.com;\r\n       dkim=pass header.i=@accounts.google.com header.s=20230601 header.b=k0fu9qbr;\r\n       spf=pass (google.com: domain of 3hqqnaqgtcri56-9w73gsuu6c5ba.y66y3w.u640ahs7xs36y4s03.u64@gaia.bounces.google.com designates 209.85.220.73 as permitted sender) smtp.mailfrom=3HQQnaQgTCRI56-9w73Gsuu6C5BA.y66y3w.u640AHs7xs36y4s03.u64@gaia.bounces.google.com;\r\n       dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=accounts.google.com;\r\n       dara=pass header.i=@gmail.com",
+            "dkim-signature": "DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;\r\n        d=accounts.google.com; s=20230601; t=1764164637; x=1764769437; dara=google.com;\r\n        h=to:from:subject:message-id:gmsai:feedback-id:date:mime-version:from\r\n         :to:cc:subject:date:message-id:reply-to;\r\n        bh=vCwXbYJOEIiKXjH4TZx4pnxo9dFGdN8ZZVDPoqZnnzY=;\r\n        b=k0fu9qbrNU1lvECeHm8HC4cxxLgdOSdz8Z5fb168e3OGoFqmbcjD3Gjho68VSjFZwb\r\n         KjEMQKtaeFeq2A6OSJZ2/dqZTYXqUjF6u3TY8HQKW3ko13Lp4Zg1jdKLcuSO4235vdlA\r\n         cbT/x5h/Z+vISGVerM2o141P/xcHS0eMF2XEGLrylc8YYlf4IIK/2ADoDHuh5EVShrSE\r\n         BDDeqbxM5QQni0w+WVHoVVm77G4g7sm0Z1pokQEhSt5ZTrTimAk2rCHLYXRmTE8JKUzk\r\n         EIsjSFJWIVJbbs/snmidP8LH+/ludky7s9bkF8ni/VH+OReHnI6xali93ZEnZgsfgKTp\r\n         ciLQ==",
+            "x-google-dkim-signature": "X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;\r\n        d=1e100.net; s=20230601; t=1764164637; x=1764769437;\r\n        h=to:from:subject:message-id:gmsai:feedback-id:date:mime-version\r\n         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;\r\n        bh=vCwXbYJOEIiKXjH4TZx4pnxo9dFGdN8ZZVDPoqZnnzY=;\r\n        b=vLg5PwiRyW1BQsCcE2CMd7UQ8Kq5cg1U62AUG/C2jhhXKVAElr9JESnQ0bP1Hz7Tpn\r\n         m/8XviQ6Dxz1cA5jIHpM8mZeizbQd79C8kZfiZS1r1IB9uzmgB4lOOCrdLCby5+SK5Jz\r\n         4/g4NURS/ppRGdWl9CotoIHSkXv2DSQxR5si47zEIzWMRgupnWHpNcMnNO92nHSkcmi5\r\n         XNwdtvCEvr2LVcia8b4RMGtKvLgcMyOsBX+ZG2/sCy+G3/sob4FXZt4OCvHSafHK1hjI\r\n         M4fFPEvswK7HioO+WkdRxUfe8q0ki5cM2KKgAnyXm6oCi67pEWnfvMjWuKNJuVFTh9D6\r\n         19yQ==",
+            "x-gm-message-state": "X-Gm-Message-State: AOJu0YxL+n1r2mkb/tpJH6IPNtx72zgGWS38IkWMHMXFpNKjUtflffPA\r\n\tx7V1BCHiBdWW2O5DOBZFmEkc7IgTrLl5GaMvleSizsbFqNRet/dd/lmPMEBPN5+xfG0i14YCUuZ\r\n\tfaXBVkE9GbylBMjuPzBVifvumc0WK0c1EA5WKHJk=",
+            "x-google-smtp-source": "X-Google-Smtp-Source: AGHT+IHn/uqfsHeoaqV0jqQT+vPvMY+Kl5gzIB/j558Qxu8caWjpy7WbvVrGlZ/Ib5fVdIta15OQPF8OM5ryyOMb0pg8/A==",
+            "mime-version": "MIME-Version: 1.0",
+            "date": "Date: Wed, 26 Nov 2025 13:43:55 GMT",
+            "x-account-notification-type": "X-Account-Notification-Type: 325",
+            "feedback-id": "Feedback-ID: 325:account-notifier",
+            "gmsai": "gmsai: true",
+            "x-notifications": "X-Notifications: 4749601379460000",
+            "x-notifications-bounce-info": "X-Notifications-Bounce-Info: AU8hbIlyXBcqun3nAcLll5NSm7Xh-oQj_hYBQQx-SQguYV-b6TXUn7DFjWiGhZYFd2XWgK2XOcvEvbJaZjBUi6on90allRL9DcNlAWIsWzwF7XxrGBl8kRcsGBD4Ofa549iabJCTnrpIgRGvnq-FvfnFV7uvF1K9Dc8pq7WIA6DaGY2Xm1wnpFRCctkrCJbllHFMrPgt2jmC9rGHNjAwNjA0MDQxNTM1NTk2OTMzMg",
+            "message-id": "Message-ID: <3QyriAbCm_toBWSdO0IUaQ@notifications.google.com>",
+            "subject": "Subject: =?UTF-8?B?Qml6dG9uc8OhZ2kgw6lydGVzw610w6lz?=",
+            "from": "From: Google <no-reply@accounts.google.com>",
+            "to": "To: iszapfalo@gmail.com",
+            "content-type": "Content-Type: multipart/alternative; boundary=\"0000000000008387db06447f9692\""
+          },
+          "html": "<!DOCTYPE html><html lang=\"en\"><head><meta name=\"format-detection\" content=\"email=no\"/><meta name=\"format-detection\" content=\"date=no\"/><style nonce=\"bzqsQPZSKH89sqMUwpJnXA\">.awl a {color: #FFFFFF; text-decoration: none;} .abml a {color: #000000; font-family: Roboto-Medium,Helvetica,Arial,sans-serif; font-weight: bold; text-decoration: none;} .adgl a {color: rgba(0, 0, 0, 0.87); text-decoration: none;} .afal a {color: #b0b0b0; text-decoration: none;} @media screen and (min-width: 600px) {.v2sp {padding: 6px 30px 0px;} .v2rsp {padding: 0px 10px;}} @media screen and (min-width: 600px) {.mdv2rw {padding: 40px 40px;}} </style><link href=\"//fonts.googleapis.com/css?family=Google+Sans\" rel=\"stylesheet\" type=\"text/css\" nonce=\"bzqsQPZSKH89sqMUwpJnXA\"/></head><body style=\"margin: 0; padding: 0;\" bgcolor=\"#FFFFFF\"><table width=\"100%\" height=\"100%\" style=\"min-width: 348px;\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\" lang=\"en\"><tr height=\"32\" style=\"height: 32px;\"><td></td></tr><tr align=\"center\"><td><div itemscope itemtype=\"//schema.org/EmailMessage\"><div itemprop=\"action\" itemscope itemtype=\"//schema.org/ViewAction\"><link itemprop=\"url\" href=\"https://accounts.google.com/AccountChooser?Email=iszapfalo@gmail.com&amp;continue=https://myaccount.google.com/alert/nt/1764164635874?rfn%3D325%26rfnc%3D1%26eid%3D-4220615400516214742%26et%3D0\"/><meta itemprop=\"name\" content=\"Tevékenységek áttekintése\"/></div></div><table border=\"0\" cellspacing=\"0\" cellpadding=\"0\" style=\"padding-bottom: 20px; max-width: 516px; min-width: 220px;\"><tr><td width=\"8\" style=\"width: 8px;\"></td><td><div style=\"border-style: solid; border-width: thin; border-color:#dadce0; border-radius: 8px; padding: 40px 20px;\" align=\"center\" class=\"mdv2rw\"><img src=\"https://www.gstatic.com/images/branding/googlelogo/2x/googlelogo_color_74x24dp.png\" width=\"74\" height=\"24\" aria-hidden=\"true\" style=\"margin-bottom: 16px;\" alt=\"Google\"><div style=\"font-family: &#39;Google Sans&#39;,Roboto,RobotoDraft,Helvetica,Arial,sans-serif;border-bottom: thin solid #dadce0; color: rgba(0,0,0,0.87); line-height: 32px; padding-bottom: 24px;text-align: center; word-break: break-word;\"><div style=\"font-size: 24px;\">Új bejelentkezés a következő eszközön: Mac </div><table align=\"center\" style=\"margin-top:8px;\"><tr style=\"line-height: normal;\"><td align=\"right\" style=\"padding-right:8px;\"><img width=\"20\" height=\"20\" style=\"width: 20px; height: 20px; vertical-align: sub; border-radius: 50%;;\" src=\"https://lh3.googleusercontent.com/a/ACg8ocJYgjgK8JkyCt3vNXJFWI4nRXj07WKiWc8zjTO_6T06AStxGdE=s96-c\" alt=\"\"></td><td><a style=\"font-family: &#39;Google Sans&#39;,Roboto,RobotoDraft,Helvetica,Arial,sans-serif;color: rgba(0,0,0,0.87); font-size: 14px; line-height: 20px;\">iszapfalo@gmail.com</a></td></tr></table> </div><div style=\"font-family: Roboto-Regular,Helvetica,Arial,sans-serif; font-size: 14px; color: rgba(0,0,0,0.87); line-height: 20px;padding-top: 20px; text-align: center;\">Új bejelentkezést észleltünk a Google-fiókjába a következő eszközön: Mac. Ha Ön kezdeményezte a bejelentkezést, nincs más teendője. Ha nem, segítünk megőrizni fiókja biztonságát.<div style=\"padding-top: 32px; text-align: center;\"><a href=\"https://accounts.google.com/AccountChooser?Email=iszapfalo@gmail.com&amp;continue=https://myaccount.google.com/alert/nt/1764164635874?rfn%3D325%26rfnc%3D1%26eid%3D-4220615400516214742%26et%3D0\" target=\"_blank\" link-id=\"main-button-link\" style=\"font-family: &#39;Google Sans Flex&#39;,&#39;Google Sans Text&#39;,&#39;Google Sans&#39;,&#39;Noto Sans&#39;,Arial,Helvetica,sans-serif; line-height: 16px; color: #ffffff; font-weight: 500; text-decoration: none; font-size: 14px;display:inline-block;padding: 12px 24px;background-color: #0b57d0; border-radius: 9999px; min-width: 64px;\">Tevékenységek áttekintése</a></div></div><div style=\"padding-top: 20px; font-size: 12px; line-height: 16px; color: #5f6368; letter-spacing: 0.3px; text-align: center\">A biztonsági tevékenységeket a következő oldalon is megtekintheti:<br><a href=\"https://myaccount.google.com/notifications\" style=\"text-decoration: none; color: #4285F4;\" target=\"_blank\">https://myaccount.google.com/notifications</a></div></div><div style=\"text-align: left;\"><div style=\"font-family: Roboto-Regular,Helvetica,Arial,sans-serif;color: rgba(0,0,0,0.54); font-size: 11px; line-height: 18px; padding-top: 12px; text-align: center;\"><div>Ezt az e-mailt azért kapta, hogy tájékoztassuk Önt a Google-fiókot és a szolgáltatásokat érintő fontos változásokról.</div><div style=\"direction: ltr;\">&copy; 2025 Google Ireland Ltd., <a class=\"afal\" style=\"font-family: Roboto-Regular,Helvetica,Arial,sans-serif;color: rgba(0,0,0,0.54); font-size: 11px; line-height: 18px; padding-top: 12px; text-align: center;\">Gordon House, Barrow Street, Dublin 4, Ireland</a></div></div></div></td><td width=\"8\" style=\"width: 8px;\"></td></tr></table></td></tr><tr height=\"32\" style=\"height: 32px;\"><td></td></tr></table></body></html>",
+          "text": "[image: Google]\nÚj bejelentkezés a következő eszközön: Mac\n\n\niszapfalo@gmail.com\nÚj bejelentkezést észleltünk a Google-fiókjába a következő eszközön: Mac.\nHa Ön kezdeményezte a bejelentkezést, nincs más teendője. Ha nem, segítünk\nmegőrizni fiókja biztonságát.\nTevékenységek áttekintése\n<https://accounts.google.com/AccountChooser?Email=iszapfalo@gmail.com&continue=https://myaccount.google.com/alert/nt/1764164635874?rfn%3D325%26rfnc%3D1%26eid%3D-4220615400516214742%26et%3D0>\nA biztonsági tevékenységeket a következő oldalon is megtekintheti:\nhttps://myaccount.google.com/notifications\nEzt az e-mailt azért kapta, hogy tájékoztassuk Önt a Google-fiókot és a\nszolgáltatásokat érintő fontos változásokról.\n© 2025 Google Ireland Ltd., Gordon House, Barrow Street, Dublin 4, Ireland\n",
+          "textAsHtml": "<p>[image: Google]<br/>&Uacute;j bejelentkez&eacute;s a k&ouml;vetkez&odblac; eszk&ouml;z&ouml;n: Mac</p><p><a href=\"mailto:iszapfalo@gmail.com\">iszapfalo@gmail.com</a><br/>&Uacute;j bejelentkez&eacute;st &eacute;szlelt&uuml;nk a Google-fi&oacute;kj&aacute;ba a k&ouml;vetkez&odblac; eszk&ouml;z&ouml;n: Mac.<br/>Ha &Ouml;n kezdem&eacute;nyezte a bejelentkez&eacute;st, nincs m&aacute;s teend&odblac;je. Ha nem, seg&iacute;t&uuml;nk<br/>meg&odblac;rizni fi&oacute;kja biztons&aacute;g&aacute;t.<br/>Tev&eacute;kenys&eacute;gek &aacute;ttekint&eacute;se<br/>&lt;<a href=\"https://accounts.google.com/AccountChooser?Email=iszapfalo@gmail.com&continue=https://myaccount.google.com/alert/nt/1764164635874?rfn%3D325%26rfnc%3D1%26eid%3D-4220615400516214742%26et%3D0\">https://accounts.google.com/AccountChooser?Email=iszapfalo@gmail.com&continue=https://myaccount.google.com/alert/nt/1764164635874?rfn%3D325%26rfnc%3D1%26eid%3D-4220615400516214742%26et%3D0</a>&gt;<br/>A biztons&aacute;gi tev&eacute;kenys&eacute;geket a k&ouml;vetkez&odblac; oldalon is megtekintheti:<br/><a href=\"https://myaccount.google.com/notifications\">https://myaccount.google.com/notifications</a><br/>Ezt az e-mailt az&eacute;rt kapta, hogy t&aacute;j&eacute;koztassuk &Ouml;nt a Google-fi&oacute;kot &eacute;s a<br/>szolg&aacute;ltat&aacute;sokat &eacute;rint&odblac; fontos v&aacute;ltoz&aacute;sokr&oacute;l.<br/>&copy; 2025 Google Ireland Ltd., Gordon House, Barrow Street, Dublin 4, Ireland</p>",
+          "subject": "Biztonsági értesítés",
+          "date": "2025-11-26T13:43:55.000Z",
+          "to": {
+            "value": [
+              {
+                "address": "iszapfalo@gmail.com",
+                "name": ""
+              }
+            ],
+            "html": "<span class=\"mp_address_group\"><a href=\"mailto:iszapfalo@gmail.com\" class=\"mp_address_email\">iszapfalo@gmail.com</a></span>",
+            "text": "iszapfalo@gmail.com"
+          },
+          "from": {
+            "value": [
+              {
+                "address": "no-reply@accounts.google.com",
+                "name": "Google"
+              }
+            ],
+            "html": "<span class=\"mp_address_group\"><span class=\"mp_address_name\">Google</span> &lt;<a href=\"mailto:no-reply@accounts.google.com\" class=\"mp_address_email\">no-reply@accounts.google.com</a>&gt;</span>",
+            "text": "\"Google\" <no-reply@accounts.google.com>"
+          },
+          "messageId": "<3QyriAbCm_toBWSdO0IUaQ@notifications.google.com>"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Gmail Trigger": {
+      "main": [
+        [
+          {
+            "node": "Guardrails",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "CRM agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Guardrails": {
+      "main": [
+        [
+          {
+            "node": "E-mail kategorizáló",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Anthropic Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "E-mail kategorizáló",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "E-mail kategorizáló",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "Get many labels",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Címkék": {
+      "ai_tool": [
+        [
+          {
+            "node": "E-mail kategorizáló",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get many labels": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Anthropic Chat Model3": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Guardrails",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Add label to message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "AI Agent1": {
+      "main": [
+        [
+          {
+            "node": "Split Out1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Guardrails1": {
+      "main": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send a text message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Anthropic Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser1": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out1": {
+      "main": [
+        [
+          {
+            "node": "Get many labels1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get many labels1": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Címkék1": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript1": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Anthropic Chat Model4": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Guardrails1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge1": {
+      "main": [
+        [
+          {
+            "node": "Add label to message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Get many messages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get many messages": {
+      "main": [
+        [
+          {
+            "node": "Guardrails1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a record in Airtable": {
+      "ai_tool": [
+        [
+          {
+            "node": "CRM agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search records in Airtable": {
+      "ai_tool": [
+        [
+          {
+            "node": "CRM agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CRM agent": {
+      "main": [
+        []
+      ]
+    },
+    "E-mail kategorizáló": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Anthropic Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "CRM agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "95c39923-0acf-495a-905c-1ab4d95eda8f",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "a7576b16e98cbf37006c19c85fae86e69da0274709522b26bcd2189c72eaf05f"
+  },
+  "id": "t12ZW64DFqNMPfu9",
+  "tags": []
+}

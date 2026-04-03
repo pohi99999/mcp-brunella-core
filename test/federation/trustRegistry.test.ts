@@ -1,6 +1,8 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { generateKeyPairSync } from 'crypto';
 import { trustRegistry } from '../../src/core/federation/trustRegistry.js';
 import { phoenixEventBus } from '../../src/core/phoenixEventBus.js';
+import { inspectFederationPublicKey } from '../../src/security/federationPeerProof.js';
 
 describe('TrustRegistry', () => {
   beforeEach(() => {
@@ -72,5 +74,31 @@ describe('TrustRegistry', () => {
     expect(trustRegistry.listPeers('trusted').length).toBe(1);
     expect(trustRegistry.listPeers('revoked').length).toBe(1);
     expect(trustRegistry.listPeers().length).toBe(2);
+  });
+
+  it('returns current and next federation runtime keys from peer metadata', async () => {
+    const currentKeyPair = generateKeyPairSync('ed25519');
+    const nextKeyPair = generateKeyPairSync('ed25519');
+    const currentPublicKeyPem = currentKeyPair.publicKey.export({ type: 'spki', format: 'pem' }).toString();
+    const nextPublicKeyPem = nextKeyPair.publicKey.export({ type: 'spki', format: 'pem' }).toString();
+    const currentFingerprint = inspectFederationPublicKey(currentPublicKeyPem).publicKeyFingerprint;
+    const nextFingerprint = inspectFederationPublicKey(nextPublicKeyPem).publicKeyFingerprint;
+
+    await trustRegistry.register({
+      peerId: 'peer-runtime-keys',
+      displayName: 'Runtime Keys',
+      endpoint: 'http://localhost:8083',
+      publicKey: currentPublicKeyPem,
+      metadata: {
+        nextPublicKey: nextPublicKeyPem,
+      },
+    });
+
+    const runtimeKeys = trustRegistry.getPeerRuntimeKeys('peer-runtime-keys');
+    expect(runtimeKeys).toEqual([
+      expect.objectContaining({ keyId: currentFingerprint, status: 'current' }),
+      expect.objectContaining({ keyId: nextFingerprint, status: 'next' }),
+    ]);
+    expect(trustRegistry.getPeerRuntimeKeyId('peer-runtime-keys')).toBe(currentFingerprint);
   });
 });

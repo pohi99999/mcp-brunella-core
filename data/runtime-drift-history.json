@@ -1,0 +1,387 @@
+[
+  {
+    "timestamp": "2026-04-02T20:17:21.060Z",
+    "node": {
+      "pid": 32396,
+      "uptimeSeconds": 8,
+      "memory": {
+        "rssMb": 340.3,
+        "heapTotalMb": 266.6,
+        "heapUsedMb": 180.3,
+        "externalMb": 4.8,
+        "arrayBuffersMb": 1,
+        "heapLimitMb": 1728,
+        "heapUtilizationPercent": 10.4,
+        "state": "healthy"
+      },
+      "budget": {
+        "configuredHeapMb": 1536,
+        "runtimeMemoryLimitMb": 2048,
+        "restartThresholdMb": 1792,
+        "effectiveHeapLimitMb": 1728,
+        "heapDriftMb": 192,
+        "headroomMb": 512,
+        "source": "env",
+        "state": "aligned"
+      }
+    },
+    "python": {
+      "status": "healthy",
+      "pid": 46216,
+      "uptimeSeconds": 2787,
+      "memoryRssMb": null,
+      "memoryLimitMb": null,
+      "memoryState": "unknown"
+    }
+  },
+  {
+    "timestamp": "2026-04-02T20:23:25.039Z",
+    "node": {
+      "pid": 51064,
+      "uptimeSeconds": 3,
+      "memory": {
+        "rssMb": 338.4,
+        "heapTotalMb": 265.1,
+        "heapUsedMb": 178.2,
+        "externalMb": 4.8,
+        "arrayBuffersMb": 1,
+        "heapLimitMb": 1728,
+        "heapUtilizationPercent": 10.3,
+        "state": "healthy"
+      },
+      "budget": {
+        "configuredHeapMb": 1536,
+        "runtimeMemoryLimitMb": 2048,
+        "restartThresholdMb": 1792,
+        "effectiveHeapLimitMb": 1728,
+        "heapDriftMb": 192,
+        "headroomMb": 512,
+        "source": "env",
+        "state": "aligned"
+      }
+    },
+    "python": {
+      "status": "healthy",
+      "pid": 46216,
+      "uptimeSeconds": 3151,
+      "memoryRssMb": null,
+      "memoryLimitMb": null,
+      "memoryState": "unknown"
+    }
+  },
+  {
+    "timestamp": "2026-04-02T20:24:41.459Z",
+    "node": {
+      "pid": 30148,
+      "uptimeSeconds": 3,
+      "memory": {
+        "rssMb": 339,
+        "heapTotalMb": 266.4,
+        "heapUsedMb": 180.1,
+        "externalMb": 4.8,
+        "arrayBuffersMb": 1,
+        "heapLimitMb": 1728,
+        "heapUtilizationPercent": 10.4,
+        "state": "healthy"
+      },
+      "budget": {
+        "configuredHeapMb": 1536,
+        "runtimeMemoryLimitMb": 2048,
+        "restartThresholdMb": 1792,
+        "effectiveHeapLimitMb": 1728,
+        "heapDriftMb": 192,
+        "headroomMb": 512,
+        "source": "env",
+        "state": "aligned"
+      }
+    },
+    "python": {
+      "status": "healthy",
+      "pid": 46216,
+      "uptimeSeconds": 3227,
+      "memoryRssMb": null,
+      "memoryLimitMb": null,
+      "memoryState": "unknown"
+    }
+  },
+  {
+    "timestamp": "2026-04-02T20:25:56.039Z",
+    "node": {
+      "pid": 38136,
+      "uptimeSeconds": 3,
+      "memory": {
+        "rssMb": 338,
+        "heapTotalMb": 265.6,
+        "heapUsedMb": 178.3,
+        "externalMb": 4.8,
+        "arrayBuffersMb": 1,
+        "heapLimitMb": 1728,
+        "heapUtilizationPercent": 10.3,
+        "state": "healthy"
+      },
+      "budget": {
+        "configuredHeapMb": 1536,
+        "runtimeMemoryLimitMb": 2048,
+        "restartThresholdMb": 1792,
+        "effectiveHeapLimitMb": 1728,
+        "heapDriftMb": 192,
+        "headroomMb": 512,
+        "source": "env",
+        "state": "aligned"
+      }
+    },
+    "python": {
+      "status": "healthy",
+      "pid": 46216,
+      "uptimeSeconds": 3302,
+      "memoryRssMb": null,
+      "memoryLimitMb": null,
+      "memoryState": "unknown"
+    }
+  },
+  {
+    "timestamp": "2026-04-02T20:27:11.440Z",
+    "node": {
+      "pid": 48708,
+      "uptimeSeconds": 3,
+      "memory": {
+        "rssMb": 338.3,
+        "heapTotalMb": 266.2,
+        "heapUsedMb": 179.5,
+        "externalMb": 4.8,
+        "arrayBuffersMb": 1,
+        "heapLimitMb": 1728,
+        "heapUtilizationPercent": 10.4,
+        "state": "healthy"
+      },
+      "budget": {
+        "configuredHeapMb": 1536,
+        "runtimeMemoryLimitMb": 2048,
+        "restartThresholdMb": 1792,
+        "effectiveHeapLimitMb": 1728,
+        "heapDriftMb": 192,
+        "headroomMb": 512,
+        "source": "env",
+        "state": "aligned"
+      }
+    },
+    "python": {
+      "status": "healthy",
+      "pid": 46216,
+      "uptimeSeconds": 3377,
+      "memoryRssMb": null,
+      "memoryLimitMb": null,
+      "memoryState": "unknown"
+    }
+  },
+  {
+    "timestamp": "2026-04-02T20:28:26.236Z",
+    "node": {
+      "pid": 35220,
+      "uptimeSeconds": 3,
+      "memory": {
+        "rssMb": 338.7,
+        "heapTotalMb": 266.2,
+        "heapUsedMb": 179.3,
+        "externalMb": 4.8,
+        "arrayBuffersMb": 1,
+        "heapLimitMb": 1728,
+        "heapUtilizationPercent": 10.4,
+        "state": "healthy"
+      },
+      "budget": {
+        "configuredHeapMb": 1536,
+        "runtimeMemoryLimitMb": 2048,
+        "restartThresholdMb": 1792,
+        "effectiveHeapLimitMb": 1728,
+        "heapDriftMb": 192,
+        "headroomMb": 512,
+        "source": "env",
+        "state": "aligned"
+      }
+    },
+    "python": {
+      "status": "healthy",
+      "pid": 46216,
+      "uptimeSeconds": 3452,
+      "memoryRssMb": null,
+      "memoryLimitMb": null,
+      "memoryState": "unknown"
+    }
+  },
+  {
+    "timestamp": "2026-04-02T20:29:50.281Z",
+    "node": {
+      "pid": 33872,
+      "uptimeSeconds": 3,
+      "memory": {
+        "rssMb": 336.7,
+        "heapTotalMb": 263.8,
+        "heapUsedMb": 176.4,
+        "externalMb": 4.8,
+        "arrayBuffersMb": 1,
+        "heapLimitMb": 1728,
+        "heapUtilizationPercent": 10.2,
+        "state": "healthy"
+      },
+      "budget": {
+        "configuredHeapMb": 1536,
+        "runtimeMemoryLimitMb": 2048,
+        "restartThresholdMb": 1792,
+        "effectiveHeapLimitMb": 1728,
+        "heapDriftMb": 192,
+        "headroomMb": 512,
+        "source": "env",
+        "state": "aligned"
+      }
+    },
+    "python": {
+      "status": "healthy",
+      "pid": 46216,
+      "uptimeSeconds": 3536,
+      "memoryRssMb": null,
+      "memoryLimitMb": null,
+      "memoryState": "unknown"
+    }
+  },
+  {
+    "timestamp": "2026-04-02T20:31:17.015Z",
+    "node": {
+      "pid": 19732,
+      "uptimeSeconds": 3,
+      "memory": {
+        "rssMb": 337.4,
+        "heapTotalMb": 265.2,
+        "heapUsedMb": 177.8,
+        "externalMb": 4.8,
+        "arrayBuffersMb": 1,
+        "heapLimitMb": 1728,
+        "heapUtilizationPercent": 10.3,
+        "state": "healthy"
+      },
+      "budget": {
+        "configuredHeapMb": 1536,
+        "runtimeMemoryLimitMb": 2048,
+        "restartThresholdMb": 1792,
+        "effectiveHeapLimitMb": 1728,
+        "heapDriftMb": 192,
+        "headroomMb": 512,
+        "source": "env",
+        "state": "aligned"
+      }
+    },
+    "python": {
+      "status": "healthy",
+      "pid": 46216,
+      "uptimeSeconds": 3623,
+      "memoryRssMb": null,
+      "memoryLimitMb": null,
+      "memoryState": "unknown"
+    }
+  },
+  {
+    "timestamp": "2026-04-02T20:32:31.550Z",
+    "node": {
+      "pid": 47096,
+      "uptimeSeconds": 3,
+      "memory": {
+        "rssMb": 336,
+        "heapTotalMb": 263.8,
+        "heapUsedMb": 176.6,
+        "externalMb": 4.8,
+        "arrayBuffersMb": 1,
+        "heapLimitMb": 1728,
+        "heapUtilizationPercent": 10.2,
+        "state": "healthy"
+      },
+      "budget": {
+        "configuredHeapMb": 1536,
+        "runtimeMemoryLimitMb": 2048,
+        "restartThresholdMb": 1792,
+        "effectiveHeapLimitMb": 1728,
+        "heapDriftMb": 192,
+        "headroomMb": 512,
+        "source": "env",
+        "state": "aligned"
+      }
+    },
+    "python": {
+      "status": "healthy",
+      "pid": 46216,
+      "uptimeSeconds": 3697,
+      "memoryRssMb": null,
+      "memoryLimitMb": null,
+      "memoryState": "unknown"
+    }
+  },
+  {
+    "timestamp": "2026-04-02T20:33:46.649Z",
+    "node": {
+      "pid": 28428,
+      "uptimeSeconds": 3,
+      "memory": {
+        "rssMb": 336.8,
+        "heapTotalMb": 263.8,
+        "heapUsedMb": 176.3,
+        "externalMb": 4.8,
+        "arrayBuffersMb": 1,
+        "heapLimitMb": 1728,
+        "heapUtilizationPercent": 10.2,
+        "state": "healthy"
+      },
+      "budget": {
+        "configuredHeapMb": 1536,
+        "runtimeMemoryLimitMb": 2048,
+        "restartThresholdMb": 1792,
+        "effectiveHeapLimitMb": 1728,
+        "heapDriftMb": 192,
+        "headroomMb": 512,
+        "source": "env",
+        "state": "aligned"
+      }
+    },
+    "python": {
+      "status": "healthy",
+      "pid": 46216,
+      "uptimeSeconds": 3772,
+      "memoryRssMb": null,
+      "memoryLimitMb": null,
+      "memoryState": "unknown"
+    }
+  },
+  {
+    "timestamp": "2026-04-02T20:35:01.169Z",
+    "node": {
+      "pid": 20248,
+      "uptimeSeconds": 3,
+      "memory": {
+        "rssMb": 339.5,
+        "heapTotalMb": 266.4,
+        "heapUsedMb": 179.9,
+        "externalMb": 4.8,
+        "arrayBuffersMb": 1,
+        "heapLimitMb": 1728,
+        "heapUtilizationPercent": 10.4,
+        "state": "healthy"
+      },
+      "budget": {
+        "configuredHeapMb": 1536,
+        "runtimeMemoryLimitMb": 2048,
+        "restartThresholdMb": 1792,
+        "effectiveHeapLimitMb": 1728,
+        "heapDriftMb": 192,
+        "headroomMb": 512,
+        "source": "env",
+        "state": "aligned"
+      }
+    },
+    "python": {
+      "status": "healthy",
+      "pid": 46216,
+      "uptimeSeconds": 3847,
+      "memoryRssMb": null,
+      "memoryLimitMb": null,
+      "memoryState": "unknown"
+    }
+  }
+]

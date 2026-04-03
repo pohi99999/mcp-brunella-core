@@ -1,0 +1,129 @@
+{
+  "search_session": {
+    "session_id": "2025-12-03_12-54_AKTIV",
+    "start_time": "2025-12-03T12:54:00",
+    "end_time": "2025-12-03T12:56:00",
+    "strategy": "AI-vezérelt EKR Keresési Stratégia - CSAK AKTÍV TENDEREK",
+    "filter": "Aktuális üzleti lehetőség (le nem járt határidő)",
+    "search_date": "2025-12-03",
+    "status": "completed"
+  },
+  "search_results": [
+    {
+      "search_id": 1,
+      "keyword": "iszapkotrás",
+      "priority": "magas",
+      "category": "Alaptevékenység",
+      "results_count_active": 0,
+      "results_count_total": 26,
+      "url": "https://ekr.gov.hu/eljarastar/?kifejezes=iszapkotr%C3%A1s&aktualis=true&order=MEGINDITAS_DATUMA_DESC",
+      "timestamp": "2025-12-03T12:54:10",
+      "status": "completed"
+    },
+    {
+      "search_id": 2,
+      "keyword": "mederkotrás",
+      "priority": "magas",
+      "category": "Alaptevékenység",
+      "results_count_active": 1,
+      "results_count_total": 135,
+      "url": "https://ekr.gov.hu/eljarastar/?kifejezes=mederkotr%C3%A1s&aktualis=true&order=MEGINDITAS_DATUMA_DESC",
+      "timestamp": "2025-12-03T12:54:21",
+      "status": "completed",
+      "notable_tenders": [
+        {
+          "title": "Tápió-Hajta kisvízfolyásainak komplex fejlesztése",
+          "organization": "Duna-Ipoly Nemzeti Park Igazgatóság",
+          "deadline": "2026.02.02. 10:00"
+        }
+      ]
+    },
+    {
+      "search_id": 3,
+      "keyword": "tókotrás",
+      "priority": "magas",
+      "category": "Alaptevékenység",
+      "results_count_active": 0,
+      "results_count_total": 6,
+      "url": "https://ekr.gov.hu/eljarastar/?kifejezes=t%C3%B3kotr%C3%A1s&aktualis=true&order=MEGINDITAS_DATUMA_DESC",
+      "timestamp": "2025-12-03T12:55:10",
+      "status": "completed"
+    },
+    {
+      "search_id": 4,
+      "keyword": "kotrás",
+      "priority": "magas",
+      "category": "Alaptevékenység",
+      "results_count_active": 2,
+      "results_count_total": 390,
+      "url": "https://ekr.gov.hu/eljarastar/?kifejezes=kotr%C3%A1s&aktualis=true&order=MEGINDITAS_DATUMA_DESC",
+      "timestamp": "2025-12-03T12:55:20",
+      "status": "completed"
+    },
+    {
+      "search_id": 5,
+      "keyword": "csapadékvíz",
+      "priority": "magas",
+      "category": "Alaptevékenység",
+      "results_count_active": 48,
+      "results_count_total": 7326,
+      "url": "https://ekr.gov.hu/eljarastar/?kifejezes=csapad%C3%A9kv%C3%ADz&aktualis=true&order=MEGINDITAS_DATUMA_DESC",
+      "timestamp": "2025-12-03T12:55:30",
+      "status": "completed"
+    },
+    {
+      "search_id": 6,
+      "keyword": "vízrendezés",
+      "priority": "magas",
+      "category": "Alaptevékenység",
+      "results_count_active": 0,
+      "results_count_total": 411,
+      "url": "https://ekr.gov.hu/eljarastar/?kifejezes=v%C3%ADzrendez%C3%A9s&aktualis=true&order=MEGINDITAS_DATUMA_DESC",
+      "timestamp": "2025-12-03T12:55:40",
+      "status": "completed"
+    },
+    {
+      "search_id": 7,
+      "keyword": "vízépítés",
+      "priority": "magas",
+      "category": "Alaptevékenység",
+      "results_count_active": 11,
+      "results_count_total": 1256,
+      "url": "https://ekr.gov.hu/eljarastar/?kifejezes=v%C3%ADz%C3%A9p%C3%ADt%C3%A9s&aktualis=true&order=MEGINDITAS_DATUMA_DESC",
+      "timestamp": "2025-12-03T12:55:50",
+      "status": "completed"
+    },
+    {
+      "search_id": 8,
+      "keyword": "iszapkezelés",
+      "priority": "magas",
+      "category": "Alaptevékenység",
+      "results_count_active": 0,
+      "results_count_total": 29,
+      "url": "https://ekr.gov.hu/eljarastar/?kifejezes=iszapkezel%C3%A9s&aktualis=true&order=MEGINDITAS_DATUMA_DESC",
+      "timestamp": "2025-12-03T12:55:55",
+      "status": "completed"
+    },
+    {
+      "search_id": 9,
+      "keyword": "víztelenített iszap",
+      "priority": "magas",
+      "category": "Alaptevékenység",
+      "results_count_active": 4,
+      "results_count_total": 84,
+      "url": "https://ekr.gov.hu/eljarastar/?kifejezes=v%C3%ADztelen%C3%ADtett+iszap&aktualis=true&order=MEGINDITAS_DATUMA_DESC",
+      "timestamp": "2025-12-03T12:56:00",
+      "status": "completed"
+    }
+  ],
+  "performance_metrics": {
+    "total_searches_planned": 9,
+    "searches_completed": 9,
+    "total_active_results": 66,
+    "total_all_results": 9663,
+    "active_percentage": 0.68,
+    "coverage_percentage": 100.0,
+    "execution_time_minutes": 2.0,
+    "estimated_completion": "completed"
+  }
+}

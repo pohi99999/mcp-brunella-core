@@ -560,3 +560,15 @@ export function getToolRunStats(): ToolRunStats {
     return { totalRuns: 0, successRate: 100, avgDurationMs: 0, byTool: [] };
   }
 }
+
+
+export interface RuntimeThresholdRolloutJournalSummary {
+  id?: string;
+  createdAt?: string;
+  action?: string;
+  confidence?: string;
+  rationale?: string;
+  thresholdsBefore?: Record<string, unknown>;
+  thresholdsAfter?: Record<string, unknown>;
+  metadata?: Record<string, unknown>;
+}

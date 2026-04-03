@@ -337,6 +337,17 @@ function ensureTables(): void {
       ON issue_fix_attempts_runtime(status, updated_at DESC);
     CREATE INDEX IF NOT EXISTS idx_issue_fix_attempts_runtime_repo
       ON issue_fix_attempts_runtime(repository_full_name, created_at DESC);
+
+    CREATE TABLE IF NOT EXISTS federation_replay_nonces_runtime (
+      replay_key TEXT PRIMARY KEY,
+      peer_id TEXT NOT NULL,
+      nonce TEXT NOT NULL,
+      request_id TEXT,
+      expires_at INTEGER NOT NULL,
+      created_at TEXT NOT NULL DEFAULT (datetime('now'))
+    );
+    CREATE INDEX IF NOT EXISTS idx_federation_replay_nonces_expires
+      ON federation_replay_nonces_runtime(expires_at);
   `);
 
   initialized = true;
@@ -1087,4 +1098,45 @@ export function loadNotificationDeliveries(limit = 200): NotificationDeliveryRec
 export function clearNotificationDeliveries(): void {
   ensureTables();
   getGlobalDb().prepare('DELETE FROM notification_deliveries_runtime').run();
+}
+
+export function saveFederationReplayNonce(entry: {
+  replayKey: string;
+  peerId: string;
+  nonce: string;
+  requestId?: string;
+  expiresAt: number;
+  nowMs: number;
+}): void {
+  try {
+    ensureTables();
+    getGlobalDb().prepare(`
+      INSERT OR REPLACE INTO federation_replay_nonces_runtime
+        (replay_key, peer_id, nonce, request_id, expires_at)
+      VALUES (?, ?, ?, ?, ?)
+    `).run(entry.replayKey, entry.peerId, entry.nonce, entry.requestId ?? null, entry.expiresAt);
+  } catch (error) {
+    logError('AutonomyRuntimeStore', `Failed to save federation replay nonce: ${error instanceof Error ? error.message : String(error)}`);
+  }
+}
+
+export function hasFederationReplayNonce(replayKey: string, nowMs = Date.now()): boolean {
+  try {
+    ensureTables();
+    const row = getGlobalDb().prepare(
+      'SELECT replay_key FROM federation_replay_nonces_runtime WHERE replay_key = ? AND expires_at > ?'
+    ).get(replayKey, nowMs);
+    return row !== undefined;
+  } catch {
+    return false;
+  }
+}
+
+export function clearFederationReplayNonces(): void {
+  try {
+    ensureTables();
+    getGlobalDb().prepare('DELETE FROM federation_replay_nonces_runtime').run();
+  } catch (error) {
+    logError('AutonomyRuntimeStore', `Failed to clear federation replay nonces: ${error instanceof Error ? error.message : String(error)}`);
+  }
 }
