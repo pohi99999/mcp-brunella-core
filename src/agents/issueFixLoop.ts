@@ -569,8 +569,8 @@ export async function analyzeIssueForFixLoop(
     throw new Error('Repository owner/repo is required for issue analysis');
   }
 
-  if (!process.env.GITHUB_PAT && !process.env.GITHUB_TOKEN) {
-    throw new Error('GITHUB_PAT or GITHUB_TOKEN is required for issue analysis');
+  if (!process.env.GH_TOKEN && !process.env.GITHUB_PAT && !process.env.GITHUB_TOKEN) {
+    throw new Error('GH_TOKEN or GITHUB_TOKEN is required for issue analysis');
   }
 
   const githubClient = new GitHubAPIClient();
