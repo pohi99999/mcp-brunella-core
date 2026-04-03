@@ -16,11 +16,13 @@ function formatPct(value: number): string {
 export function MemoryPanel() {
     const [stats, setStats] = useState<StructuredMemoryStatsResponse | null>(null);
     const [loading, setLoading] = useState(true);
+    const [isRefreshing, setIsRefreshing] = useState(false);
     const [busyAction, setBusyAction] = useState<string | null>(null);
     const [message, setMessage] = useState<string>("");
 
-    const load = useCallback(async () => {
-        setLoading(true);
+    const load = useCallback(async (manualRefresh = false) => {
+        if (manualRefresh) setIsRefreshing(true);
+        else setLoading(true);
         try {
             const response = await getStructuredMemoryStats();
             setStats(response);
@@ -28,11 +30,12 @@ export function MemoryPanel() {
             setMessage(error instanceof Error ? error.message : String(error));
         } finally {
             setLoading(false);
+            setIsRefreshing(false);
         }
     }, []);
 
     useEffect(() => {
-        void load();
+        void load(false);
     }, [load]);
 
     const handlePurge = useCallback(async () => {
@@ -92,16 +95,22 @@ export function MemoryPanel() {
                     Agent Memória & Tanulás
                 </h2>
                 <div className="flex items-center gap-2">
-                    <button onClick={ () => void load() } className="rounded-md p-2 hover:bg-accent" title="Frissítés">
-                        <RefreshCw className="h-4 w-4" />
+                    <button
+                        onClick={ () => void load(true) }
+                        disabled={ isRefreshing }
+                        className="rounded-md p-2 hover:bg-accent focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:opacity-50"
+                        title="Frissítés"
+                        aria-label="Adatok frissítése"
+                    >
+                        <RefreshCw className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`} />
                     </button>
-                    <button onClick={ () => void handlePurge() } disabled={ busyAction !== null } className="rounded-md border px-3 py-2 text-sm hover:bg-accent disabled:opacity-50">
+                    <button onClick={ () => void handlePurge() } disabled={ busyAction !== null } className="rounded-md border px-3 py-2 text-sm hover:bg-accent disabled:opacity-50 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring">
                         <Trash2 className="mr-2 inline h-4 w-4" /> Purge
                     </button>
-                    <button onClick={ () => void handleExport() } disabled={ busyAction !== null } className="rounded-md border px-3 py-2 text-sm hover:bg-accent disabled:opacity-50">
+                    <button onClick={ () => void handleExport() } disabled={ busyAction !== null } className="rounded-md border px-3 py-2 text-sm hover:bg-accent disabled:opacity-50 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring">
                         <Download className="mr-2 inline h-4 w-4" /> Export
                     </button>
-                    <button onClick={ () => void handleSync() } disabled={ busyAction !== null } className="rounded-md border px-3 py-2 text-sm hover:bg-accent disabled:opacity-50">
+                    <button onClick={ () => void handleSync() } disabled={ busyAction !== null } className="rounded-md border px-3 py-2 text-sm hover:bg-accent disabled:opacity-50 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring">
                         <Upload className="mr-2 inline h-4 w-4" /> Sync D1
                     </button>
                 </div>
