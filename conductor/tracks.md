@@ -1,29 +1,34 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-04-02T14:36:49.929Z
+**Utolso frissites:** 2026-04-03T01:44:00.287Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 174 total | 4 active | 6 completed | 158 archived
+**Stats:** 192 total | 9 active | 12 completed | 164 archived
 
 ---
 
-## Tervezett Szalak (Proposed) (5)
-
-- [ ] **Brunella Federation — Later Phase Priority** [MEDIUM]
-  - **ID:** `brunella_federation_phase5_20260402`
-  - **Progress:** 0%
-  - Mappa: ./tracks/brunella_federation_phase5_20260402/
+## Tervezett Szalak (Proposed) (6)
 
 - [ ] **Brunella Identity + Project Maintainer** [HIGH]
   - **ID:** `brunella_identity_project_maintainer_20260402`
   - **Progress:** 0%
   - Mappa: ./tracks/brunella_identity_project_maintainer_20260402/
 
+- [ ] **Cloudflare Workers Migration — 16 Agent Edge Orkesztrátor** [HIGH]
+  - **ID:** `cloudflare_workers_migration_20260226`
+  - **Progress:** 0%
+  - Mappa: ./tracks/cloudflare_workers_migration_20260226/
+
 - [ ] **PohiAIPro Logistics Vertical — Brunella integráció** [HIGH]
   - **ID:** `logistics_vertical_20260222`
   - **Progress:** 5%
   - Mappa: ./tracks/logistics_vertical_20260222/
+
+- [ ] **OWL-inspirált Multi-Agent Conflict Resolution (AgentCoordinator)** [HIGH]
+  - **ID:** `owl_agent_coordinator_20260321`
+  - **Progress:** 0%
+  - Mappa: ./tracks/owl_agent_coordinator_20260321/
 
 - [ ] **Brunella Remote Layer — Fázis 8: Planet-Scale Supersystem** [CRITICAL]
   - **ID:** `remote_layer_phase8_planetary_supersystem_20260322`
@@ -37,13 +42,42 @@
 
 ---
 
-## Aktiv Szalak (Active) (4)
+## Aktiv Szalak (Active) (9)
+
+- [ ] **apify_deep_scraping_agent_20260223** [LOW]
+  - **ID:** `apify_deep_scraping_agent_20260223`
+  - **Progress:** 60%
+  - **Assignee:** Claude (Phase 1-2 Complete)
+  - Mappa: ./tracks/apify_deep_scraping_agent_20260223/
 
 - [ ] **Brunella Core Stabilization** [CRITICAL]
   - **ID:** `brunella_core_stabilization_20260402`
-  - **Progress:** 95%
+  - **Progress:** 80%
   - **Updated:** 2026-04-02
   - Mappa: ./tracks/brunella_core_stabilization_20260402/
+
+- [ ] **Brunella Federation — Phase 5 Execute Hardening** [MEDIUM]
+  - **ID:** `brunella_federation_phase5_20260402`
+  - **Progress:** 75%
+  - **Updated:** 2026-04-03
+  - Mappa: ./tracks/brunella_federation_phase5_20260402/
+
+- [ ] **Hyperdrive Connection Pooling D1 Teljesítményhez** [LOW]
+  - **ID:** `cf_hyperdrive_d1_20260323`
+  - **Progress:** 30%
+  - Mappa: ./tracks/cf_hyperdrive_d1_20260323/
+
+- [ ] **Cloudflare Token Separation: BAS vs Personal Account** [HIGH]
+  - **ID:** `cloudflare_token_separation_20260403`
+  - **Progress:** 40%
+  - **Updated:** 2026-04-03
+  - Mappa: ./tracks/cloudflare_token_separation_20260403/
+
+- [ ] **jules_pr_integration_20260222** [HIGH]
+  - **ID:** `jules_pr_integration_20260222`
+  - **Progress:** 18%
+  - **Assignee:** Claude + Pohánka Péter
+  - Mappa: ./tracks/jules_pr_integration_20260222/
 
 - [ ] **Kognitív Könyvelés és Multi-Ágens Egyeztetés — Bővítmény** [HIGH]
   - **ID:** `konyveles_kognitiv_bovites_20260330`
@@ -62,7 +96,7 @@
 
 ---
 
-## Befejezett (Completed - Not Archived) (6)
+## Befejezett (Completed - Not Archived) (12)
 
 - [x] **AutoGen GitHub Models pilot a Python MCP alrendszerben**
   - **ID:** `autogen_github_models_pilot_20260401`
@@ -76,9 +110,25 @@
   - **ID:** `brunella_zero_prompt_ephemeral_bridge_20260402`
   - Mappa: ./tracks/brunella_zero_prompt_ephemeral_bridge_20260402/
 
+- [x] **MCP Config Sync: mcp_servers.json ↔ .vscode/mcp.json**
+  - **ID:** `mcp_sync_config_20260403`
+  - Mappa: ./tracks/mcp_sync_config_20260403/
+
 - [x] **P-Sales20260327**
   - **ID:** `P-Sales20260327`
   - Mappa: ./tracks/P-Sales20260327/
+
+- [x] **Brunella Personal Assistant — Windows MVP Foundation**
+  - **ID:** `personal_assistant_windows_mvp_20260323`
+  - Mappa: ./tracks/personal_assistant_windows_mvp_20260323/
+
+- [x] **README Bootstrap & Health Fixek**
+  - **ID:** `readme_bootstrap_health_fixes_20260324`
+  - Mappa: ./tracks/readme_bootstrap_health_fixes_20260324/
+
+- [x] **RobotkezV2 Comet-szintű Upgrade — Önjavító Multi-Agent Browser**
+  - **ID:** `robotkez_comet_upgrade_20260222`
+  - Mappa: ./tracks/robotkez_comet_upgrade_20260222/
 
 - [x] **System-Wide Zero-Mock & ReAct Upgrade**
   - **ID:** `system_wide_zero_mock_20260301`
@@ -89,9 +139,17 @@
   - **ID:** `test_cadence_optimization_20260401`
   - Mappa: ./tracks/test_cadence_optimization_20260401/
 
+- [x] **VSCode Auto-Build Task (TypeScript watch)**
+  - **ID:** `vscode_auto_build_20260403`
+  - Mappa: ./tracks/vscode_auto_build_20260403/
+
+- [x] **Windows Bridge Health Check Endpoint**
+  - **ID:** `windows_bridge_health_20260403`
+  - Mappa: ./tracks/windows_bridge_health_20260403/
+
 ---
 
-## Archivalt (Archived) (158)
+## Archivalt (Archived) (164)
 
 > Archived tracks are hidden by default. View in `conductor/archive/`
 
@@ -106,7 +164,7 @@
 - [x] **AI Recommendation System Integration** (2026-02-17T22:45:00Z)
 - [x] **apify_deep_scraping_agent_20260223** (N/A)
 
-... and 148 more archived tracks
+... and 154 more archived tracks
 
 ---
 

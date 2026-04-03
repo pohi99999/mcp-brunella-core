@@ -7,6 +7,7 @@ import {
   checkPythonHealth,
   checkN8nHealth,
   checkLangflowHealth,
+  checkWabHealth,
   checkCloudflareHealth,
   buildHealthResponse,
   HealthResponse
@@ -71,12 +72,13 @@ export function createHealthRoutes(): Router {
         });
       }
 
-      const [ollama, anythingllm, python, n8n, langflow, cloudflare] = await Promise.all([
+      const [ollama, anythingllm, python, n8n, langflow, wab, cloudflare] = await Promise.all([
         checkOllamaHealth(),
         checkAnythingLLMHealth(),
         checkPythonHealth(),
         checkN8nHealth(),
         checkLangflowHealth(),
+        checkWabHealth(),
         checkCloudflareHealth(),
       ]);
       const agentsCount = agentManager.listAgents().length;
@@ -87,6 +89,7 @@ export function createHealthRoutes(): Router {
         python,
         n8n,
         langflow,
+        wab,
         cloudflare,
         agentsCount,
         mcpCount,

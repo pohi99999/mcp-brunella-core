@@ -1,10 +1,17 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { generateKeyPairSync } from 'crypto';
 import express from 'express';
 import request from 'supertest';
 import { createFederationRouter } from '../src/server/routes/federation.js';
+import { signFederationRequest } from '../src/security/federationPeerAuth.js';
+import { inspectFederationPublicKey } from '../src/security/federationPeerProof.js';
 
 const federationMocks = vi.hoisted(() => ({
   listPeers: vi.fn(),
+  getPeer: vi.fn(),
+  getPeerRuntimeKeyId: vi.fn(),
+  getPeerRuntimeKeys: vi.fn(),
+  checkTrust: vi.fn(),
   register: vi.fn(),
   revoke: vi.fn(),
   issue: vi.fn(),
@@ -18,13 +25,24 @@ const federationMocks = vi.hoisted(() => ({
   getDynamicToolRegistry: vi.fn(),
   getToolRegistry: vi.fn(),
   getRegisteredToolsList: vi.fn(),
+  consume: vi.fn(),
 }));
 
 vi.mock('../src/core/federation/trustRegistry.js', () => ({
   trustRegistry: {
     listPeers: federationMocks.listPeers,
+    getPeer: federationMocks.getPeer,
+    getPeerRuntimeKeyId: federationMocks.getPeerRuntimeKeyId,
+    getPeerRuntimeKeys: federationMocks.getPeerRuntimeKeys,
+    checkTrust: federationMocks.checkTrust,
     register: federationMocks.register,
     revoke: federationMocks.revoke,
+  },
+}));
+
+vi.mock('../src/core/federation/federationReplayGuard.js', () => ({
+  federationReplayGuard: {
+    consume: federationMocks.consume,
   },
 }));
 
@@ -63,15 +81,62 @@ vi.mock('../src/server/registry.js', () => ({
   getRegisteredToolsList: federationMocks.getRegisteredToolsList,
 }));
 
+vi.mock('../src/server/toolRegistry.js', () => ({
+  executeLocalTool: federationMocks.execute,
+}));
+
+vi.mock('../src/agents/AgentManager.js', () => ({
+  agentManager: {
+    listAgents: vi.fn(),
+    getAgent: vi.fn(),
+  },
+}));
+
+import { agentManager } from '../src/agents/AgentManager.js';
+
 describe('Federation routes', () => {
+  const localKeyPair = generateKeyPairSync('ed25519');
+  const remoteKeyPair = generateKeyPairSync('ed25519');
+  const localPrivateKeyPem = localKeyPair.privateKey.export({ type: 'pkcs8', format: 'pem' }).toString();
+  const localPublicKeyPem = localKeyPair.publicKey.export({ type: 'spki', format: 'pem' }).toString();
+  const remotePrivateKeyPem = remoteKeyPair.privateKey.export({ type: 'pkcs8', format: 'pem' }).toString();
+  const remotePublicKeyPem = remoteKeyPair.publicKey.export({ type: 'spki', format: 'pem' }).toString();
+  const remoteFingerprint = inspectFederationPublicKey(remotePublicKeyPem).publicKeyFingerprint;
   let app: express.Express;
+
+  function createSignedHeaders(path: string, body: unknown): Record<string, string> {
+    return signFederationRequest({
+      peerId: 'peer-1',
+      privateKey: remotePrivateKeyPem,
+      publicKey: remotePublicKeyPem,
+      method: 'POST',
+      path,
+      body,
+      targetPeerPublicKey: localPublicKeyPem,
+    });
+  }
 
   beforeEach(() => {
     vi.clearAllMocks();
+    process.env.FEDERATION_LOCAL_PRIVATE_KEY = localPrivateKeyPem;
+    process.env.FEDERATION_LOCAL_PUBLIC_KEY = localPublicKeyPem;
+    process.env.FEDERATION_LOCAL_PEER_ID = 'local-federation-node';
 
     federationMocks.listPeers.mockReturnValue([
       { peerId: 'peer-1', displayName: 'Peer 1', endpoint: 'https://peer-1', trustState: 'trusted' },
     ]);
+    federationMocks.getPeer.mockReturnValue({
+      peerId: 'peer-1',
+      displayName: 'Peer 1',
+      endpoint: 'https://peer-1',
+      trustState: 'trusted',
+      publicKey: remotePublicKeyPem,
+    });
+    federationMocks.getPeerRuntimeKeyId.mockReturnValue(remoteFingerprint);
+    federationMocks.getPeerRuntimeKeys.mockReturnValue([
+      { keyId: remoteFingerprint, publicKey: remotePublicKeyPem, status: 'current' },
+    ]);
+    federationMocks.checkTrust.mockReturnValue('trusted');
     federationMocks.register.mockResolvedValue({
       peerId: 'peer-2',
       displayName: 'Peer 2',
@@ -138,10 +203,44 @@ describe('Federation routes', () => {
         { name: 'delegate_Developer', description: 'Delegates to Developer agent' },
       ],
     });
+    federationMocks.consume.mockReturnValue(true);
+    vi.mocked(agentManager.listAgents).mockReturnValue([
+      { name: 'Developer', description: 'Developer agent', status: 'idle' },
+      { name: 'Orchestrator', description: 'Orchestrator agent', status: 'working' },
+    ]);
+    vi.mocked(agentManager.getAgent).mockImplementation((name: string) => {
+      if (name === 'Developer') {
+        return {
+          name: 'Developer',
+          role: 'developer',
+          description: 'Developer agent',
+          capabilities: ['code', 'agent_execute'],
+          execute: vi.fn(),
+        };
+      }
+
+      if (name === 'Orchestrator') {
+        return {
+          name: 'Orchestrator',
+          role: 'orchestrator',
+          description: 'Orchestrator agent',
+          capabilities: ['route'],
+          execute: vi.fn(),
+        };
+      }
+
+      return null;
+    });
 
     app = express();
     app.use(express.json());
     app.use('/api/v1/federation', createFederationRouter());
+  });
+
+  afterEach(() => {
+    delete process.env.FEDERATION_LOCAL_PRIVATE_KEY;
+    delete process.env.FEDERATION_LOCAL_PUBLIC_KEY;
+    delete process.env.FEDERATION_LOCAL_PEER_ID;
   });
 
   it('lists registered peers', async () => {
@@ -175,15 +274,88 @@ describe('Federation routes', () => {
       expect.objectContaining({ name: 'agent_list' }),
       expect.objectContaining({ name: 'delegate_Developer' }),
     ]));
+    expect(federationMocks.issue.mock.calls[0][0]).toBe('local-federation-node');
   });
 
-  it('executes remote federation requests through the gateway', async () => {
+  it('lists local agents for federation discovery', async () => {
+    const response = await request(app).get('/api/v1/federation/agents');
+
+    expect(response.status).toBe(200);
+    expect(response.body.count).toBe(2);
+    expect(response.body.agents).toEqual([
+      expect.objectContaining({
+        agentId: 'Developer',
+        nodeId: 'local-federation-node',
+        status: 'available',
+        capabilities: ['code', 'agent_execute'],
+      }),
+      expect.objectContaining({
+        agentId: 'Orchestrator',
+        nodeId: 'local-federation-node',
+        status: 'busy',
+        capabilities: ['route'],
+      }),
+    ]);
+  });
+
+  it('rejects unsigned federation execute requests', async () => {
     const response = await request(app)
       .post('/api/v1/federation/execute')
       .send({ capabilityName: 'agent_list', payload: { sample: true } });
 
+    expect(response.status).toBe(401);
+    expect(federationMocks.execute).not.toHaveBeenCalled();
+  });
+
+  it('rejects signed federation capability requests from non-trusted peers', async () => {
+    federationMocks.checkTrust.mockReturnValue('pending');
+    const body = { capabilityName: 'agent_list', payload: { sample: true } };
+    const response = await request(app)
+      .post('/api/v1/federation/capabilities/execute')
+      .set(createSignedHeaders('/api/v1/federation/capabilities/execute', body))
+      .send(body);
+
+    expect(response.status).toBe(403);
+    expect(federationMocks.execute).not.toHaveBeenCalled();
+  });
+
+  it('rejects replayed signed federation capability requests', async () => {
+    federationMocks.consume.mockReturnValue(false);
+    const body = { capabilityName: 'agent_list', payload: { sample: true } };
+    const response = await request(app)
+      .post('/api/v1/federation/capabilities/execute')
+      .set(createSignedHeaders('/api/v1/federation/capabilities/execute', body))
+      .send(body);
+
+    expect(response.status).toBe(409);
+    expect(federationMocks.execute).not.toHaveBeenCalled();
+  });
+
+  it('executes signed remote federation requests through the local capability executor', async () => {
+    const body = { capabilityName: 'agent_list', payload: { sample: true } };
+    const response = await request(app)
+      .post('/api/v1/federation/execute')
+      .set(createSignedHeaders('/api/v1/federation/execute', body))
+      .send(body);
+
     expect(response.status).toBe(200);
     expect(response.body.success).toBe(true);
-    expect(federationMocks.execute).toHaveBeenCalledWith({ capabilityName: 'agent_list', payload: { sample: true } });
+    expect(federationMocks.execute).toHaveBeenCalledWith('agent_list', { sample: true });
+    expect(federationMocks.execute).toHaveBeenCalledTimes(1);
+  });
+
+  it('rejects inbound execute requests that try to re-route remotely', async () => {
+    const body = {
+      capabilityName: 'agent_list',
+      payload: { sample: true },
+      preferredPeerId: 'peer-2',
+    };
+    const response = await request(app)
+      .post('/api/v1/federation/execute')
+      .set(createSignedHeaders('/api/v1/federation/execute', body))
+      .send(body);
+
+    expect(response.status).toBe(400);
+    expect(federationMocks.execute).not.toHaveBeenCalled();
   });
 });

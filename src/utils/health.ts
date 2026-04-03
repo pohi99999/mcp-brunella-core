@@ -33,6 +33,11 @@ export const HEALTH_CONFIG = {
     retries: 1,
     baseUrl: process.env.LANGFLOW_BASE_URL || "http://localhost:7860",
   },
+  wab: {
+    timeoutMs: 3_000,
+    retries: 0,
+    baseUrl: process.env.WAB_HEALTH_URL || "http://127.0.0.1:3002",
+  },
   cloudflare: {
     timeoutMs: 8_000,
     retries: 1,
@@ -65,6 +70,7 @@ export interface HealthResponse {
     python: HealthServiceResult;
     n8n: HealthServiceResult;
     langflow: HealthServiceResult;
+    wab: HealthServiceResult;
     cloudflare: HealthServiceResult;
   };
 }
@@ -189,6 +195,22 @@ export async function checkLangflowHealth(): Promise<HealthServiceResult> {
 }
 
 
+export async function checkWabHealth(): Promise<HealthServiceResult> {
+  const { baseUrl, timeoutMs, retries } = HEALTH_CONFIG.wab;
+  const url = `${baseUrl}/health`;
+  const { ok, latencyMs, error } = await fetchWithRetry(
+    url,
+    { timeout: timeoutMs },
+    retries,
+  );
+  await healthLogger.log("WAB health", { ok, latencyMs, error });
+  return {
+    status: ok ? "healthy" : "unhealthy",
+    latencyMs,
+    error: ok ? undefined : error,
+  };
+}
+
 export async function checkCloudflareHealth(): Promise<HealthServiceResult> {
   // Check Cloudflare Workers deployment (not AI Gateway directly)
   const workerUrl = process.env.CLOUDFLARE_WORKER_URL;
@@ -233,6 +255,7 @@ export function buildHealthResponse(
   python: HealthServiceResult,
   n8n: HealthServiceResult,
   langflow: HealthServiceResult,
+  wab: HealthServiceResult,
   cloudflare: HealthServiceResult,
   agentsCount: number,
   mcpServersCount: number,
@@ -264,6 +287,6 @@ export function buildHealthResponse(
     status,
     timestamp: new Date().toISOString(),
     requestId,
-    services: { ollama, anythingllm, agents, mcp, python, n8n, langflow, cloudflare },
+    services: { ollama, anythingllm, agents, mcp, python, n8n, langflow, wab, cloudflare },
   };
 }

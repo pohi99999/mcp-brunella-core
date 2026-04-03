@@ -34,9 +34,7 @@ export function registerToolDefinition(def: ToolDefinition) {
 export async function executeLocalTool(name: string, args: unknown): Promise<unknown> {
   const handler = toolHandlers.get(name);
   if (!handler) {
-    // Fallback: try registry.ts (avoids circular dep by lazy import)
-    const { executeLocalTool: registryExec } = await import("./registry.js");
-    return registryExec(name, args);
+    throw new Error(`Tool handler not registered: ${name}`);
   }
   return handler(args);
 }

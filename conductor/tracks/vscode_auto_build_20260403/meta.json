@@ -1,0 +1,20 @@
+{
+  "id": "vscode_auto_build_20260403",
+  "title": "VSCode Auto-Build Task (TypeScript watch)",
+  "status": "completed",
+  "priority": "low",
+  "createdAt": "2026-04-03",
+  "owner": "Claude Code",
+  "progress": 100,
+  "tags": [
+    "vscode",
+    "build",
+    "dx",
+    "typescript",
+    "tasks"
+  ],
+  "sourceDocument": "System audit 2026-04-03 — .vscode/tasks.json nincs auto-build trigger",
+  "phase": 1,
+  "updated": "2026-04-03",
+  "dependencies": []
+}

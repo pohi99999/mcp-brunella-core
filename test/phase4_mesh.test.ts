@@ -11,6 +11,8 @@ import { OfflineSync } from '../src/core/offlineSync.js';
 import { PhoenixReplication } from '../src/core/phoenixReplication.js';
 import { FederatedAgentManager } from '../src/agents/federation/FederatedAgentManager.js';
 import { AutoJoin } from '../src/mesh/autoJoin.js';
+import { generateKeyPairSync } from 'crypto';
+import { inspectFederationPublicKey } from '../src/security/federationPeerProof.js';
 
 // ─── MeshNode ────────────────────────────────────────────────────────────────
 
@@ -577,11 +579,21 @@ describe('PhoenixReplication', () => {
 // ─── FederatedAgentManager ───────────────────────────────────────────────────
 
 describe('FederatedAgentManager', () => {
+  const originalFetch = globalThis.fetch;
+  const localKeyPair = generateKeyPairSync('ed25519');
+  const remoteKeyPair = generateKeyPairSync('ed25519');
+  const localPrivateKeyPem = localKeyPair.privateKey.export({ type: 'pkcs8', format: 'pem' }).toString();
+  const localPublicKeyPem = localKeyPair.publicKey.export({ type: 'spki', format: 'pem' }).toString();
+  const remotePublicKeyPem = remoteKeyPair.publicKey.export({ type: 'spki', format: 'pem' }).toString();
+  const remoteFingerprint = inspectFederationPublicKey(remotePublicKeyPem).publicKeyFingerprint;
   let localNode: MeshNode;
   let manager: MeshManager;
   let federation: FederatedAgentManager;
 
   beforeEach(() => {
+    process.env.FEDERATION_LOCAL_PRIVATE_KEY = localPrivateKeyPem;
+    process.env.FEDERATION_LOCAL_PUBLIC_KEY = localPublicKeyPem;
+    process.env.FEDERATION_LOCAL_PEER_ID = 'local';
     localNode = new MeshNode({
       nodeId: 'local',
       label: 'Local',
@@ -593,6 +605,10 @@ describe('FederatedAgentManager', () => {
   });
 
   afterEach(() => {
+    globalThis.fetch = originalFetch;
+    delete process.env.FEDERATION_LOCAL_PRIVATE_KEY;
+    delete process.env.FEDERATION_LOCAL_PUBLIC_KEY;
+    delete process.env.FEDERATION_LOCAL_PEER_ID;
     localNode.stop();
   });
 
@@ -681,6 +697,64 @@ describe('FederatedAgentManager', () => {
     });
     expect(result.status).toBe('error');
     expect(result.error).toContain('busy');
+  });
+
+  it('should send signed agent_execute capability payload for remote execution', async () => {
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({ ok: true }),
+    });
+    globalThis.fetch = fetchMock as typeof globalThis.fetch;
+
+    federation.registerAgent({
+      agentId: 'remote-agent',
+      name: 'RemoteAgent',
+      nodeId: 'remote',
+      host: 'http://remote:3000',
+      capabilities: ['agent_execute'],
+      status: 'available',
+      lastSeen: Date.now(),
+    });
+
+    const { trustRegistry } = await import('../src/core/federation/trustRegistry.js');
+    await trustRegistry.register({
+      peerId: 'remote',
+      displayName: 'Remote',
+      endpoint: 'http://remote:3000',
+      publicKey: remotePublicKeyPem,
+    });
+
+    const result = await federation.executeRemote({
+      agentId: 'remote-agent',
+      taskType: 'diagnose',
+      input: { scope: 'tests' },
+      fromNodeId: 'local',
+    });
+
+    expect(result.status).toBe('success');
+    expect(fetchMock).toHaveBeenCalledWith(
+      'http://remote:3000/api/v1/federation/execute',
+      expect.objectContaining({
+        method: 'POST',
+        headers: expect.objectContaining({
+          'Content-Type': 'application/json',
+          'x-federation-peer-id': 'local',
+          'x-federation-signature-scheme': 'asymmetric-v1',
+          'x-federation-target-key-id': remoteFingerprint,
+        }),
+        body: JSON.stringify({
+          capabilityName: 'agent_execute',
+          payload: {
+            agentName: 'RemoteAgent',
+            task: 'diagnose',
+            context: JSON.stringify({
+              scope: 'tests',
+              fromNodeId: 'local',
+            }),
+          },
+        }),
+      }),
+    );
   });
 });
 

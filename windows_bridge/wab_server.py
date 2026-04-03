@@ -1,10 +1,15 @@
 import subprocess
 import textwrap
 import logging
+import platform
+import time
 from typing import Optional
 from pathlib import Path
 from pydantic import BaseModel
 from fastmcp import FastMCP
+
+WAB_VERSION = "0.2.0"
+WAB_START_TIME = time.time()
 
 BASE_DIR = Path(__file__).parent.absolute()
 log_dir = BASE_DIR / "logs"
@@ -96,6 +101,23 @@ def fs_op(action: str, src: str = None, dst: str = None, path: str = None) -> di
         return run_powershell(cmd)
 
     return {"ok": False, "error": f"unknown action: {action}"}
+
+@mcp.tool()
+def wab_health() -> dict:
+    """
+    Windows Automation Bridge allapot ellenorzese.
+    Visszaadja a verziot, uptime-ot es a PowerShell elerhetoseget.
+    """
+    uptime_seconds = round(time.time() - WAB_START_TIME)
+    ps_ok = run_powershell("echo health_ok")
+    return {
+        "status": "ok",
+        "service": "windows-automation-bridge",
+        "version": WAB_VERSION,
+        "uptime_seconds": uptime_seconds,
+        "platform": platform.system(),
+        "powershell_available": ps_ok.get("ok", False),
+    }
 
 if __name__ == "__main__":
     mcp.run()

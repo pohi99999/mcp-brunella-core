@@ -1,0 +1,20 @@
+{
+  "id": "cloudflare_token_separation_20260403",
+  "title": "Cloudflare Token Separation: BAS vs Personal Account",
+  "status": "active",
+  "priority": "high",
+  "createdAt": "2026-04-03",
+  "owner": "Claude Code",
+  "progress": 40,
+  "tags": [
+    "cloudflare",
+    "security",
+    "token",
+    "env",
+    "infrastructure"
+  ],
+  "sourceDocument": "System audit 2026-04-03 — CF token nem különül el a személyes és BAS account között",
+  "phase": 1,
+  "updated": "2026-04-03",
+  "dependencies": []
+}

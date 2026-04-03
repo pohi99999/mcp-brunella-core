@@ -16,6 +16,8 @@
     "sync:doc-stats": "tsx scripts/sync_doc_stats.ts",
     "sync:doc-stats:check": "tsx scripts/sync_doc_stats.ts --dry-run --fail-on-drift",
     "agent:health": "tsx scripts/agent_health_check.ts",
+    "mcp:sync": "node scripts/sync_mcp_config.js",
+    "mcp:validate": "node scripts/validate_mcp_config.js",
     "start": "npm run start:stable",
     "start:stable": "node --max-old-space-size=1536 scripts/start-stable.mjs",
     "start:python:stable": "cd myai && uv run uvicorn server:app --host 0.0.0.0 --port 8000",

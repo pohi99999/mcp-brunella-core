@@ -1,11 +1,16 @@
 import { Router } from 'express';
+import type { Request, Response } from 'express';
+import { agentManager } from '../../agents/AgentManager.js';
+import type { FederatedAgent } from '../../agents/federation/FederatedAgentManager.js';
 import { trustRegistry } from '../../core/federation/trustRegistry.js';
 import { capabilityManifestManager } from '../../core/federation/capabilityManifest.js';
-import { federatedGateway } from '../../core/federation/federatedGateway.js';
 import { negotiationProtocol } from '../../core/federation/negotiationProtocol.js';
 import { getDynamicToolRegistry } from '../../core/dynamicToolRegistry.js';
 import { getToolRegistry } from '../../core/toolRegistry.js';
 import { getRegisteredToolsList } from '../registry.js';
+import { authFederationPeer } from '../middleware/federationAuth.js';
+import { executeLocalTool } from '../toolRegistry.js';
+import { getLocalFederationPeerId } from '../../security/federationPeerAuth.js';
 import { logError } from '../../utils/logger.js';
 
 async function buildLocalCapabilities() {
@@ -53,8 +58,88 @@ async function buildLocalCapabilities() {
     .sort((left, right) => left.name.localeCompare(right.name));
 }
 
+function mapFederatedAgentStatus(status: string): FederatedAgent['status'] {
+  switch (status) {
+    case 'working':
+      return 'busy';
+    case 'error':
+    case 'unloaded':
+      return 'offline';
+    default:
+      return 'available';
+  }
+}
+
+function buildLocalFederatedAgents(req: Request): FederatedAgent[] {
+  const localPeerId = getLocalFederationPeerId();
+  const host =
+    process.env.BRUNELLA_API_URL?.trim().replace(/\/+$/, '') ||
+    `${req.protocol}://${req.get('host') ?? 'localhost:3000'}`;
+  const lastSeen = Date.now();
+
+  return agentManager
+    .listAgents()
+    .map((agentSummary) => {
+      const agent = agentManager.getAgent(agentSummary.name);
+      return {
+        agentId: agentSummary.name,
+        name: agentSummary.name,
+        nodeId: localPeerId,
+        host,
+        capabilities: agent?.capabilities ?? [],
+        status: mapFederatedAgentStatus(agentSummary.status),
+        lastSeen,
+        description: agentSummary.description || agent?.description,
+      };
+    })
+    .sort((left, right) => left.name.localeCompare(right.name));
+}
+
 export function createFederationRouter(): Router {
   const router = Router();
+
+  const isToolExecutionFailure = (result: unknown): boolean => {
+    if (typeof result !== 'object' || result === null) {
+      return false;
+    }
+
+    if ('isError' in result && result.isError === true) {
+      return true;
+    }
+
+    if ('success' in result && result.success === false) {
+      return true;
+    }
+
+    return false;
+  };
+
+  const executeFederatedCapability = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const { capabilityName, payload, preferredPeerId, timeoutMs } = req.body as {
+        capabilityName: string;
+        payload: unknown;
+        preferredPeerId?: string;
+        timeoutMs?: number;
+      };
+      if (!capabilityName || payload === undefined) {
+        res.status(400).json({ error: 'capabilityName és payload kötelező' });
+        return;
+      }
+
+      if (preferredPeerId !== undefined || timeoutMs !== undefined) {
+        res.status(400).json({ error: 'A federation execute inbound route csak lokális capability végrehajtást fogad.' });
+        return;
+      }
+
+      const result = await executeLocalTool(capabilityName, payload);
+      res.status(isToolExecutionFailure(result) ? 502 : 200).json(result);
+    } catch (e: unknown) {
+      const message = e instanceof Error ? e.message : String(e);
+      logError('FederationRoute', `federation execute hiba: ${message}`);
+      res.status(500).json({ error: message });
+    }
+  };
 
   // ── Peers ──────────────────────────────────────────────────────────────────
 
@@ -80,11 +165,16 @@ export function createFederationRouter(): Router {
     res.json(peer);
   });
 
+  router.get('/agents', (req, res) => {
+    const agents = buildLocalFederatedAgents(req);
+    res.json({ agents, count: agents.length });
+  });
+
   // ── Manifests ──────────────────────────────────────────────────────────────
 
   router.get('/manifests/local', async (req, res) => {
     const capabilities = await buildLocalCapabilities();
-    const manifest = capabilityManifestManager.issue('local-bas', capabilities);
+    const manifest = capabilityManifestManager.issue(getLocalFederationPeerId(), capabilities);
     res.json(manifest);
   });
 
@@ -125,31 +215,7 @@ export function createFederationRouter(): Router {
 
   // ── Capabilities execute ───────────────────────────────────────────────────
 
-  router.post('/capabilities/execute', async (req, res): Promise<void> => {
-    try {
-      const { capabilityName, payload, preferredPeerId, timeoutMs } = req.body as {
-        capabilityName: string;
-        payload: unknown;
-        preferredPeerId?: string;
-        timeoutMs?: number;
-      };
-      if (!capabilityName || payload === undefined) {
-        res.status(400).json({ error: 'capabilityName és payload kötelező' });
-        return;
-      }
-      const result = await federatedGateway.execute({
-        capabilityName,
-        payload,
-        preferredPeerId,
-        timeoutMs,
-      });
-      res.status(result.success ? 200 : 502).json(result);
-    } catch (e: unknown) {
-      const message = e instanceof Error ? e.message : String(e);
-      logError('FederationRoute', `capabilities/execute hiba: ${message}`);
-      res.status(500).json({ error: message });
-    }
-  });
+  router.post('/capabilities/execute', authFederationPeer, executeFederatedCapability);
 
   router.post('/negotiations/:id/reject', async (req, res) => {
     const session = await negotiationProtocol.reject(req.params.id, req.body.reason);
@@ -159,15 +225,7 @@ export function createFederationRouter(): Router {
 
   // ── Execution ──────────────────────────────────────────────────────────────
 
-  router.post('/execute', async (req, res) => {
-    try {
-      const result = await federatedGateway.execute(req.body);
-      res.json(result);
-    } catch (error: unknown) {
-      const message = error instanceof Error ? error.message : String(error);
-      res.status(500).json({ error: message });
-    }
-  });
+  router.post('/execute', authFederationPeer, executeFederatedCapability);
 
   return router;
 }

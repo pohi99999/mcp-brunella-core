@@ -67,7 +67,8 @@
 		"sqlite": {
 			"type": "stdio",
 			"command": "npx",
-			"args": ["-y", "@modelcontextprotocol/server-sqlite", "data/brunella.db"]
+			"args": ["-y", "@modelcontextprotocol/server-sqlite", "data/brunella.db"],
+			"disabled": true
 		},
 		"fetch": {
 			"type": "stdio",

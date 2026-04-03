@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { ToolRegistry } from '../src/core/toolRegistry.js';
+import { executeLocalTool } from '../src/server/toolRegistry.js';
 
 describe('ToolRegistry', () => {
   it('should load tools from registry.json on init', async () => {
@@ -32,5 +33,9 @@ describe('ToolRegistry', () => {
     const agentTools = tools.filter(t => t.name.startsWith('delegate_'));
     expect(agentTools.length).toBeGreaterThan(40);
     registry.destroy();
+  });
+
+  it('should fail fast when a local tool handler is missing', async () => {
+    await expect(executeLocalTool('missing-tool', {})).rejects.toThrow('Tool handler not registered: missing-tool');
   });
 });

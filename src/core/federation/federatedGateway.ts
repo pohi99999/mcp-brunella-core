@@ -3,6 +3,7 @@ import { trustRegistry } from './trustRegistry.js';
 import { capabilityManifestManager } from './capabilityManifest.js';
 import { record as auditRecord } from '../auditLog.js';
 import { phoenixEventBus } from '../phoenixEventBus.js';
+import { signFederationRequest } from '../../security/federationPeerAuth.js';
 import { logInfo, logError } from '../../utils/logger.js';
 
 // ============================================================================
@@ -213,6 +214,7 @@ class FederatedGateway {
       for (let attempt = 1; attempt <= DEFAULT_MAX_ATTEMPTS_PER_PEER; attempt += 1) {
         try {
           const data = await this.callRemotePeer(
+            peerId,
             peer.endpoint,
             request.capabilityName,
             request.payload,
@@ -256,27 +258,48 @@ class FederatedGateway {
   }
 
   private async callRemotePeer(
+    peerId: string,
     endpoint: string,
     capabilityName: string,
     payload: unknown,
     timeoutMs: number,
   ): Promise<unknown> {
+    const requestPath = '/api/v1/federation/capabilities/execute';
+    const requestBody = { capabilityName, payload };
+    const peerRuntimeKeys = trustRegistry.getPeerRuntimeKeys(peerId);
+    const targetKey = peerRuntimeKeys.find((key) => key.status === 'current') ?? peerRuntimeKeys[0];
+    if (!targetKey) {
+      throw new Error(`Federation peer ${peerId} has no runtime public key configured`);
+    }
+
+    const endpointBase = endpoint.replace(/\/+$/, '');
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), timeoutMs);
 
     try {
       const response = await fetch(
-        `${endpoint}/capability/${encodeURIComponent(capabilityName)}`,
+        `${endpointBase}${requestPath}`,
         {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
+          headers: {
+            'Content-Type': 'application/json',
+            ...signFederationRequest({
+              method: 'POST',
+              path: requestPath,
+              body: requestBody,
+              targetKeyId: targetKey.keyId,
+              targetPeerPublicKey: targetKey.publicKey,
+            }),
+          },
+          body: JSON.stringify(requestBody),
           signal: controller.signal,
         },
       );
 
       if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        const errorBody = await response.text();
+        const suffix = errorBody ? ` ${errorBody}` : '';
+        throw new Error(`HTTP ${response.status}: ${response.statusText}${suffix}`);
       }
 
       return await response.json() as unknown;

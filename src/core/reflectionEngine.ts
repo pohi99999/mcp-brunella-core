@@ -385,6 +385,27 @@ export class ReflectionEngine {
       ranAt: new Date().toISOString(),
     };
   }
+
+  ingestProjectMaintainerReport(report: unknown): void {
+    // Store the maintainer report as a TaskOutcome reflection
+    try {
+      if (report && typeof report === 'object') {
+        const r = report as Record<string, unknown>;
+        this.reflect({
+          taskId: `pm-report-${Date.now()}`,
+          agent: 'ProjectMaintainerAgent',
+          task: String(r['action'] ?? 'maintainer-report'),
+          result: r['status'] === 'error' ? 'failure' : 'success',
+          output: String(r['message'] ?? ''),
+          durationMs: 0,
+          errorMessage: r['status'] === 'error' ? String(r['message'] ?? 'unknown') : undefined,
+          metadata: r,
+        }).catch(() => undefined);
+      }
+    } catch {
+      // Non-critical: ingestion failure should not break the route
+    }
+  }
 }
 
 // ─── Exported types ───────────────────────────────────────────────────────────

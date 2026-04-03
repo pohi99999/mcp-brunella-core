@@ -167,3 +167,4 @@ n8nv2
 # ESLint output (large, generated)
 eslint_output.json
 eslint_report.json
+playwright-report/

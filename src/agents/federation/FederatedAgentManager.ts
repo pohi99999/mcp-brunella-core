@@ -8,8 +8,10 @@
 
 import { EventEmitter } from 'events';
 import { logInfo, logWarn, logError } from '../../utils/logger.js';
+import { trustRegistry } from '../../core/federation/trustRegistry.js';
 import type { MeshNodeInfo } from '../../mesh/meshNode.js';
 import type { MeshManager } from '../../mesh/meshManager.js';
+import { signFederationRequest } from '../../security/federationPeerAuth.js';
 
 export interface FederatedAgent {
   agentId: string;
@@ -122,17 +124,76 @@ export class FederatedAgentManager extends EventEmitter {
       agent.status = 'busy';
       this.emit('agent:busy', agent);
 
-      const url = `${agent.host}/api/v1/federation/execute`;
+      const requestPath = '/api/v1/federation/execute';
+      const peer = trustRegistry.getPeer(agent.nodeId) ?? trustRegistry.findPeerByEndpoint(agent.host);
+      if (!peer) {
+        agent.status = 'available';
+        return {
+          agentId: request.agentId,
+          nodeId: agent.nodeId,
+          status: 'error',
+          error: `Federation peer metadata missing for ${agent.nodeId}`,
+          executionTime: Date.now() - startTime,
+        };
+      }
+
+      const peerRuntimeKeys = trustRegistry.getPeerRuntimeKeys(peer.peerId);
+      const targetKey = peerRuntimeKeys.find((key) => key.status === 'current') ?? peerRuntimeKeys[0];
+      if (!targetKey) {
+        agent.status = 'available';
+        return {
+          agentId: request.agentId,
+          nodeId: agent.nodeId,
+          status: 'error',
+          error: `Federation runtime key missing for ${peer.peerId}`,
+          executionTime: Date.now() - startTime,
+        };
+      }
+
+      const url = `${agent.host.replace(/\/+$/, '')}${requestPath}`;
       const controller = new AbortController();
       const timeout = setTimeout(() => controller.abort(), timeoutMs);
 
-      const res = await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(request),
-        signal: controller.signal,
-      });
-      clearTimeout(timeout);
+      let res: Response;
+      try {
+        res = await fetch(url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            ...signFederationRequest({
+              method: 'POST',
+              path: requestPath,
+              body: {
+                capabilityName: 'agent_execute',
+                payload: {
+                  agentName: agent.name,
+                  task: request.taskType,
+                  context: JSON.stringify({
+                    ...request.input,
+                    fromNodeId: request.fromNodeId,
+                  }),
+                },
+              },
+              targetKeyId: targetKey.keyId,
+              targetPeerPublicKey: targetKey.publicKey,
+            }),
+          },
+          body: JSON.stringify({
+            capabilityName: 'agent_execute',
+            payload: {
+              agentName: agent.name,
+              task: request.taskType,
+              context: JSON.stringify({
+                ...request.input,
+                fromNodeId: request.fromNodeId,
+              }),
+            },
+          }),
+          signal: controller.signal,
+        });
+      } finally {
+        clearTimeout(timeout);
+      }
 
       if (!res.ok) {
         throw new Error(`Remote execution returned ${res.status}: ${res.statusText}`);
@@ -173,10 +234,14 @@ export class FederatedAgentManager extends EventEmitter {
       const controller = new AbortController();
       const timeout = setTimeout(() => controller.abort(), 10_000);
 
-      const res = await fetch(url, {
-        signal: controller.signal,
-      });
-      clearTimeout(timeout);
+      let res: Response;
+      try {
+        res = await fetch(url, {
+          signal: controller.signal,
+        });
+      } finally {
+        clearTimeout(timeout);
+      }
 
       if (!res.ok) {
         logWarn('FederatedAgentManager', `Failed to sync agents from ${peer.nodeId}: ${res.status}`);

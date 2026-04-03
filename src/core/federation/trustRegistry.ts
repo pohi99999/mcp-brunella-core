@@ -2,6 +2,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { record as auditRecord } from '../auditLog.js';
 import { phoenixEventBus } from '../phoenixEventBus.js';
 import { evaluateAndLogPolicy } from '../policyEngine.js';
+import { inspectFederationPublicKey } from '../../security/federationPeerProof.js';
 import { logInfo, logWarn } from '../../utils/logger.js';
 import {
   clearFederationPeers,
@@ -24,6 +25,40 @@ export interface PeerIdentity {
   trustedAt?: string;
   revokedAt?: string;
   metadata?: Record<string, unknown>;
+}
+
+export interface PeerRuntimeKeyBinding {
+  keyId: string;
+  publicKey: string;
+  status: 'current' | 'next';
+}
+
+function isObjectRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null;
+}
+
+function buildRuntimeKeyBinding(
+  publicKey: unknown,
+  status: 'current' | 'next',
+  explicitKeyId?: unknown,
+): PeerRuntimeKeyBinding | null {
+  if (typeof publicKey !== 'string' || !publicKey.trim()) {
+    return null;
+  }
+
+  try {
+    const publicKeyInfo = inspectFederationPublicKey(publicKey);
+    return {
+      keyId:
+        typeof explicitKeyId === 'string' && explicitKeyId.trim()
+          ? explicitKeyId.trim()
+          : publicKeyInfo.publicKeyFingerprint,
+      publicKey: publicKeyInfo.normalizedPublicKey,
+      status,
+    };
+  } catch {
+    return null;
+  }
 }
 
 // ============================================================================
@@ -136,6 +171,55 @@ class TrustRegistry {
   getPeer(peerId: string): PeerIdentity | undefined {
     this.ensureHydrated();
     return this.peers.get(peerId);
+  }
+
+  getPeerRuntimeKeys(peerId: string): PeerRuntimeKeyBinding[] {
+    this.ensureHydrated();
+    const peer = this.peers.get(peerId);
+    if (!peer) {
+      return [];
+    }
+
+    const metadata = isObjectRecord(peer.metadata) ? peer.metadata : undefined;
+    const runtimeKeys = metadata && isObjectRecord(metadata.runtimeKeys)
+      ? metadata.runtimeKeys
+      : undefined;
+    const currentRuntimeKey = isObjectRecord(runtimeKeys?.current)
+      ? runtimeKeys.current
+      : undefined;
+    const nextRuntimeKey = isObjectRecord(runtimeKeys?.next)
+      ? runtimeKeys.next
+      : undefined;
+
+    const keys = [
+      buildRuntimeKeyBinding(
+        currentRuntimeKey?.publicKey ?? peer.publicKey,
+        'current',
+        currentRuntimeKey?.keyId,
+      ),
+      buildRuntimeKeyBinding(
+        nextRuntimeKey?.publicKey ?? metadata?.nextPublicKey,
+        'next',
+        nextRuntimeKey?.keyId ?? metadata?.nextKeyId,
+      ),
+    ].filter((key): key is PeerRuntimeKeyBinding => key !== null);
+
+    return Array.from(
+      new Map(keys.map((key) => [key.keyId, key])).values(),
+    );
+  }
+
+  getPeerRuntimeKeyId(peerId: string): string | undefined {
+    const keys = this.getPeerRuntimeKeys(peerId);
+    return keys.find((key) => key.status === 'current')?.keyId ?? keys[0]?.keyId;
+  }
+
+  findPeerByEndpoint(endpoint: string): PeerIdentity | undefined {
+    this.ensureHydrated();
+    const normalizedEndpoint = endpoint.replace(/\/+$/, '');
+    return Array.from(this.peers.values()).find(
+      (peer) => peer.endpoint.replace(/\/+$/, '') === normalizedEndpoint,
+    );
   }
 
   listPeers(trustState?: TrustState): PeerIdentity[] {
