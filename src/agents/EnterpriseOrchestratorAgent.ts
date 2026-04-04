@@ -27,6 +27,7 @@ import {
 } from '../types/enterprise.js';
 import { logInfo, logError, setAgentStatus } from '../utils/logger.js';
 import { v4 as uuidv4 } from 'uuid';
+import { lanceDBClient } from '../utils/lancedb_client.js';
 
 /**
  * Enterprise Orchestrator - Main coordination agent for the BAS Enterprise Suite
@@ -435,8 +436,16 @@ export class EnterpriseOrchestratorAgent extends OrchestratorAgent {
     response: EnterpriseAgentResponse
   ): Promise<void> {
     try {
-      // TODO: Implement LanceDB storage
-      logInfo(this.name, `Would store execution history for event ${event.id}`);
+      await lanceDBClient.addData('enterprise_events', {
+        id: event.id,
+        module: event.module,
+        type: event.type,
+        status: response.status,
+        timestamp: new Date().toISOString(),
+        error: response.error || null,
+        data: JSON.stringify(response.data)
+      });
+      logInfo(this.name, `Stored execution history for event ${event.id}`);
     } catch (error) {
       logError(this.name, `Failed to store execution history: ${error}`);
     }
@@ -470,12 +479,27 @@ export class EnterpriseOrchestratorAgent extends OrchestratorAgent {
    * Monitor execution status of an event
    */
   async monitorExecution(eventId: string): Promise<{status: string; details: string}> {
-    // TODO: Implement real monitoring via LanceDB/SQLite query
     logInfo(this.name, `Monitoring execution for event ${eventId}`);
-    return {
-      status: 'completed',
-      details: 'Mock monitoring result'
-    };
+    try {
+      const results = await lanceDBClient.query('enterprise_events', `id = "${eventId}"`, 1);
+      if (results && results.length > 0) {
+        const record = results[0];
+        return {
+          status: String(record.status),
+          details: record.error ? String(record.error) : 'Execution recorded successfully'
+        };
+      }
+      return {
+        status: 'not_found',
+        details: `No execution history found for event ${eventId}`
+      };
+    } catch (error) {
+      logError(this.name, `Failed to monitor execution: ${error}`);
+      return {
+        status: 'error',
+        details: 'Failed to query execution history'
+      };
+    }
   }
 }
 
