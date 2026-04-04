@@ -1,10 +1,10 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-04-04T12:50:27.355Z
+**Utolso frissites:** 2026-04-04T18:27:11.581Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 212 total | 25 active | 14 completed | 166 archived
+**Stats:** 212 total | 24 active | 15 completed | 166 archived
 
 ---
 
@@ -42,13 +42,7 @@
 
 ---
 
-## Aktiv Szalak (Active) (25)
-
-- [ ] **apify_deep_scraping_agent_20260223** [LOW]
-  - **ID:** `apify_deep_scraping_agent_20260223`
-  - **Progress:** 60%
-  - **Assignee:** Claude (Phase 1-2 Complete)
-  - Mappa: ./tracks/apify_deep_scraping_agent_20260223/
+## Aktiv Szalak (Active) (24)
 
 - [ ] **Brunella Core Stabilization** [CRITICAL]
   - **ID:** `brunella_core_stabilization_20260402`
@@ -206,7 +200,11 @@
 
 ---
 
-## Befejezett (Completed - Not Archived) (14)
+## Befejezett (Completed - Not Archived) (15)
+
+- [x] **apify_deep_scraping_agent_20260223**
+  - **ID:** `apify_deep_scraping_agent_20260223`
+  - Mappa: ./tracks/apify_deep_scraping_agent_20260223/
 
 - [x] **AutoGen GitHub Models pilot a Python MCP alrendszerben**
   - **ID:** `autogen_github_models_pilot_20260401`

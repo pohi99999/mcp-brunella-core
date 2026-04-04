@@ -1,143 +1,223 @@
-import { describe, it, expect, beforeAll, vi } from 'vitest';
+import { beforeEach, afterAll, describe, expect, it, vi } from 'vitest';
+
+const apifyMocks = vi.hoisted(() => ({
+  actorCall: vi.fn(),
+  actor: vi.fn(),
+  datasetListItems: vi.fn(),
+  dataset: vi.fn(),
+}));
+
+vi.mock('apify-client', () => ({
+  ApifyClient: vi.fn().mockImplementation(() => ({
+    actor: apifyMocks.actor,
+    dataset: apifyMocks.dataset,
+  })),
+}));
+
 import { ApifyScrapingAgent } from '../src/agents/ApifyScrapingAgent.js';
 
+const originalToken = process.env.APIFY_API_TOKEN;
+
+function configureMockClient(items: unknown[]) {
+  apifyMocks.actor.mockReturnValue({ call: apifyMocks.actorCall });
+  apifyMocks.dataset.mockReturnValue({ listItems: apifyMocks.datasetListItems });
+  apifyMocks.actorCall.mockResolvedValue({ defaultDatasetId: 'dataset-1' });
+  apifyMocks.datasetListItems.mockResolvedValue({ items });
+}
+
+async function createAgent() {
+  const agent = new ApifyScrapingAgent();
+  await agent.initialize();
+  return agent;
+}
+
+beforeEach(() => {
+  vi.clearAllMocks();
+  process.env.APIFY_API_TOKEN = 'test-token';
+});
+
+afterAll(() => {
+  if (originalToken === undefined) {
+    delete process.env.APIFY_API_TOKEN;
+  } else {
+    process.env.APIFY_API_TOKEN = originalToken;
+  }
+});
+
 describe('ApifyScrapingAgent', () => {
-  let agent: ApifyScrapingAgent;
-
-  beforeAll(async () => {
-    agent = new ApifyScrapingAgent();
-    await agent.initialize();
-  });
-
   it('should have correct metadata', () => {
+    const agent = new ApifyScrapingAgent();
+
     expect(agent.name).toBe('ApifyScraping');
     expect(agent.role).toBe('Research & Intelligence — Deep Web Scraper');
     expect(agent.capabilities).toContain('google_search');
     expect(agent.capabilities).toContain('linkedin_leads');
     expect(agent.capabilities).toContain('ecommerce_scrape');
+    expect(agent.capabilities).toContain('trend_analysis');
   });
 
-  it('should return error when APIFY_API_TOKEN is missing', async () => {
-    const originalToken = process.env.APIFY_API_TOKEN;
+  it('maps Google search results from Apify output', async () => {
+    configureMockClient([
+      {
+        title: 'AI Startups 2026',
+        url: 'https://example.com/startups',
+        description: 'Coverage of AI startup activity',
+      },
+    ]);
+
+    const agent = await createAgent();
+    const result = await agent.googleSearch('AI startups 2026', 3);
+
+    expect(apifyMocks.actor).toHaveBeenCalledWith('apify/google-search-scraper');
+    expect(apifyMocks.actorCall).toHaveBeenCalledWith({
+      queries: 'AI startups 2026',
+      maxResultsPerPage: 3,
+      languageCode: 'hu',
+    });
+    expect(result).toEqual([
+      {
+        title: 'AI Startups 2026',
+        url: 'https://example.com/startups',
+        snippet: 'Coverage of AI startup activity',
+        position: 1,
+      },
+    ]);
+  });
+
+  it('maps LinkedIn lead results from Apify output', async () => {
+    configureMockClient([
+      {
+        fullName: 'Jane Doe',
+        headline: 'CEO',
+        company: 'Acme',
+        url: 'https://www.linkedin.com/in/janedoe',
+        location: 'Budapest',
+        email: 'jane@acme.test',
+      },
+    ]);
+
+    const agent = await createAgent();
+    const result = await agent.linkedinLeads('https://www.linkedin.com/search/results/people/?keywords=CEO', 2);
+
+    expect(apifyMocks.actor).toHaveBeenCalledWith('apify/linkedin-profile-scraper');
+    expect(apifyMocks.actorCall).toHaveBeenCalledWith({
+      startUrls: [{ url: 'https://www.linkedin.com/search/results/people/?keywords=CEO' }],
+      maxItems: 2,
+    });
+    expect(result).toEqual([
+      {
+        name: 'Jane Doe',
+        title: 'CEO',
+        company: 'Acme',
+        url: 'https://www.linkedin.com/in/janedoe',
+        location: 'Budapest',
+        email: 'jane@acme.test',
+      },
+    ]);
+  });
+
+  it('maps ecommerce product results from Apify output', async () => {
+    configureMockClient([
+      {
+        title: 'Laptop Pro',
+        price: { value: 999, currency: 'USD' },
+        url: 'https://shop.example/laptop',
+        thumbnailImage: 'https://img.example/laptop.jpg',
+        stars: 4.7,
+        reviews: 123,
+      },
+    ]);
+
+    const agent = await createAgent();
+    const result = await agent.ecommerceProducts('https://shop.example/search?q=laptop', 4);
+
+    expect(apifyMocks.actor).toHaveBeenCalledWith('apify/amazon-crawler');
+    expect(apifyMocks.actorCall).toHaveBeenCalledWith({
+      startUrls: [{ url: 'https://shop.example/search?q=laptop' }],
+      maxItems: 4,
+    });
+    expect(result).toEqual([
+      {
+        name: 'Laptop Pro',
+        price: '999',
+        currency: 'USD',
+        url: 'https://shop.example/laptop',
+        imageUrl: 'https://img.example/laptop.jpg',
+        rating: 4.7,
+        reviews: 123,
+      },
+    ]);
+  });
+
+  it('maps trend results from Apify output', async () => {
+    configureMockClient([
+      {
+        retweetCount: 42,
+        likeCount: 100,
+        sentiment: 'positive',
+        url: 'https://twitter.com/example/status/1',
+        createdAt: '2026-04-01T12:00:00Z',
+      },
+    ]);
+
+    const agent = await createAgent();
+    const result = await agent.trendData('agentic workflows', 'twitter', 6);
+
+    expect(apifyMocks.actor).toHaveBeenCalledWith('apify/twitter-scraper');
+    expect(apifyMocks.actorCall).toHaveBeenCalledWith({
+      searchTerms: ['agentic workflows'],
+      maxItems: 6,
+    });
+    expect(result).toEqual([
+      {
+        topic: 'agentic workflows',
+        source: 'twitter',
+        volume: 42,
+        sentiment: 'positive',
+        url: 'https://twitter.com/example/status/1',
+        timestamp: '2026-04-01T12:00:00Z',
+      },
+    ]);
+  });
+
+  it('auto-detects google capability during execute', async () => {
+    configureMockClient([
+      {
+        title: 'Logistics Startups',
+        url: 'https://example.com/logistics',
+        description: 'Logistics companies worth watching',
+      },
+    ]);
+
+    const agent = await createAgent();
+    const result = await agent.execute('Bármi', {
+      capability: 'google',
+      query: 'logistics startups 2026',
+      limit: 5,
+    });
+
+    expect(result.status).toBe('success');
+    expect(result.metadata).toEqual({
+      type: 'google_search',
+      count: 1,
+    });
+    expect(result.data).toEqual([
+      {
+        title: 'Logistics Startups',
+        url: 'https://example.com/logistics',
+        snippet: 'Logistics companies worth watching',
+        position: 1,
+      },
+    ]);
+  });
+
+  it('returns a clear error when APIFY_API_TOKEN is missing', async () => {
     delete process.env.APIFY_API_TOKEN;
 
-    const testAgent = new ApifyScrapingAgent();
-    const result = await testAgent.execute('Keress cégeket');
+    const agent = new ApifyScrapingAgent();
+    const result = await agent.execute('Keress cégeket');
 
     expect(result.status).toBe('error');
     expect(result.error).toContain('APIFY_API_TOKEN');
-    
-    // Restore token
-    if (originalToken) {
-      process.env.APIFY_API_TOKEN = originalToken;
-    }
-  });
-
-  it('should handle gracefully when token is placeholder', async () => {
-    const originalToken = process.env.APIFY_API_TOKEN;
-    process.env.APIFY_API_TOKEN = 'your_apify_token_here';
-
-    const testAgent = new ApifyScrapingAgent();
-    await testAgent.initialize();
-    const result = await testAgent.execute('Keress cégeket');
-
-    expect(result.status).toBe('error');
-    expect(result.error).toContain('APIFY_API_TOKEN');
-    
-    // Restore token
-    if (originalToken) {
-      process.env.APIFY_API_TOKEN = originalToken;
-    }
-  });
-
-  it('should detect google capability from task', async () => {
-    // Mock implementation
-    const task = 'Keress rá a google-n: AI startups 2026';
-    
-    // Ha nincs Apify token, skip
-    if (!process.env.APIFY_API_TOKEN || process.env.APIFY_API_TOKEN === 'your_apify_token_here') {
-      const result = await agent.execute(task);
-      expect(result.status).toBe('error');
-      return;
-    }
-
-    // Ha van token, ellenőrizzük a capability detection-t
-    // (Valós Apify hívás itt futna, de azt csak integration testben teszteljük)
-    expect(task.toLowerCase()).toContain('google');
-  });
-
-  it('should detect linkedin capability from task', async () => {
-    const task = 'linkedin: https://www.linkedin.com/search/results/people/?keywords=CEO';
-    expect(task.toLowerCase()).toContain('linkedin');
-  });
-
-  it('should detect ecommerce capability from task', async () => {
-    const task = 'Amazon termékek: https://www.amazon.com/s?k=laptop';
-    expect(task.toLowerCase()).toContain('amazon');
-  });
-
-  it('should use context override for capability', async () => {
-    // Skip ha nincs Apify token
-    if (!process.env.APIFY_API_TOKEN || process.env.APIFY_API_TOKEN === 'your_apify_token_here') {
-      return;
-    }
-
-    const context = {
-      capability: 'google',
-      query: 'test query',
-      limit: 5,
-    };
-
-    // A context.capability felülírja az auto-detect-et
-    expect(context.capability).toBe('google');
-  });
-
-  it('should extract URL from task string', async () => {
-    const task = 'Scrape this: https://example.com/products';
-    const urlMatch = task.match(/https?:\/\/[^\s]+/);
-    
-    expect(urlMatch).toBeTruthy();
-    expect(urlMatch?.[0]).toBe('https://example.com/products');
-  });
-
-  it('should default to google search when capability is ambiguous', async () => {
-    // Skip ha nincs Apify token
-    if (!process.env.APIFY_API_TOKEN || process.env.APIFY_API_TOKEN === 'your_apify_token_here') {
-      return;
-    }
-
-    const task = 'Keresd meg a legjobb AI eszközöket';
-    // Nincs explicit "google" kulcsszó, de az alapértelmezett google search lesz
-    expect(task).toBeTruthy();
-  });
-});
-
-describe('ApifyScrapingAgent - Integration Tests (csak valós API token esetén)', () => {
-  let agent: ApifyScrapingAgent;
-
-  beforeAll(async () => {
-    agent = new ApifyScrapingAgent();
-    await agent.initialize();
-  });
-
-  it.skip('should perform real Google search (SKIP by default - requires APIFY_API_TOKEN)', async () => {
-    // Csak akkor futtatjuk, ha van valós Apify token
-    if (!process.env.APIFY_API_TOKEN || process.env.APIFY_API_TOKEN === 'your_apify_token_here') {
-      return;
-    }
-
-    const result = await agent.googleSearch('AI agent frameworks 2026', 5);
-    
-    expect(result).toBeInstanceOf(Array);
-    expect(result.length).toBeGreaterThan(0);
-    expect(result[0]).toHaveProperty('title');
-    expect(result[0]).toHaveProperty('url');
-    expect(result[0]).toHaveProperty('snippet');
-  });
-
-  it.skip('should perform real LinkedIn search (SKIP - requires cookie setup)', async () => {
-    // LinkedIn scraping komplex - cookie-t és session-t igényel
-    // Csak dokumentációs célra van itt
-    expect(true).toBe(true);
   });
 });
