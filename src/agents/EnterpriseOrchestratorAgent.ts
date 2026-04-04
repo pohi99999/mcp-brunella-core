@@ -358,7 +358,7 @@ Return strictly the JSON object.`;
 
       if (response.success && response.content) {
         try {
-          const contentStr = response.content.trim().replace(/^\`\`\`json\n/, '').replace(/\n\`\`\`$/, '');
+          const contentStr = response.content.trim().replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '');
           const parsed = JSON.parse(contentStr);
           if (parsed && parsed.type && parsed.data) {
             return parsed as ModulePayload;
