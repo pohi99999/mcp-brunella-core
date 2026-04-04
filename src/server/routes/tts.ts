@@ -7,6 +7,7 @@
 import { Router } from 'express';
 import { textToSpeech, VoiceOption, TTSModel } from '../../utils/tts.js';
 import { logInfo, logError } from '../../utils/logger.js';
+import { loadPaiosConfig } from '../../config/paiosConfig.js';
 
 export function createTTSRoutes(): Router {
   const router = Router();
@@ -29,6 +30,7 @@ export function createTTSRoutes(): Router {
   router.post('/', async (req, res) => {
     try {
       const { text, voice, model, speed } = req.body;
+      const voiceDefaults = loadPaiosConfig().voice;
 
       if (!text || typeof text !== 'string' || text.trim().length === 0) {
         res.status(400).json({
@@ -37,12 +39,12 @@ export function createTTSRoutes(): Router {
         return;
       }
 
-      logInfo('TTS API', `Request: "${text.slice(0, 50)}..." (voice: ${voice || 'nova'})`);
+      logInfo('TTS API', `Request: "${text.slice(0, 50)}..." (voice: ${voice || voiceDefaults.response_voice})`);
 
       const audioBlob = await textToSpeech(text, {
-        voice: voice as VoiceOption,
-        model: model as TTSModel,
-        speed: speed ? parseFloat(speed) : undefined,
+        voice: (voice as VoiceOption | undefined) ?? voiceDefaults.response_voice,
+        model: (model as TTSModel | undefined) ?? voiceDefaults.tts_model,
+        speed: speed ? parseFloat(speed) : voiceDefaults.speed,
       });
 
       // Convert Blob to Buffer for Express response
@@ -83,9 +85,7 @@ export function createTTSRoutes(): Router {
         { id: 'tts-1-hd', name: 'HD', description: 'Slower, higher quality' },
       ],
       default: {
-        voice: 'nova',
-        model: 'tts-1',
-        speed: 1.0,
+        ...loadPaiosConfig().voice,
       }
     });
   });

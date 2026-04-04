@@ -24,6 +24,10 @@ if PROJECT_ROOT not in sys.path:
     sys.path.insert(0, PROJECT_ROOT)
 
 from fastmcp import FastMCP
+from myai.runtime_security import (
+    is_python_execute_enabled,
+    MAX_DYNAMIC_CODE_SIZE,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -62,7 +66,6 @@ def _get_autogen_adapter():
 # --- MCP Server Setup ---
 
 mcp = FastMCP("brunella-python")
-MAX_CODE_SIZE = 16_384
 PROJECT_ROOT_REALPATH = os.path.realpath(PROJECT_ROOT)
 
 
@@ -81,8 +84,21 @@ def python_execute(code: str, context: Optional[str] = None) -> str:
     except json.JSONDecodeError:
         ctx = {}
 
-    if len(code) > MAX_CODE_SIZE:
-        return json.dumps({"status": "error", "error": f"Code too large (max {MAX_CODE_SIZE} chars)"})
+    if not is_python_execute_enabled():
+        return json.dumps(
+            {
+                "status": "error",
+                "error": "Python execute is disabled. Set BRUNELLA_ENABLE_PYTHON_EXECUTE=1 to enable.",
+            }
+        )
+
+    if len(code) > MAX_DYNAMIC_CODE_SIZE:
+        return json.dumps(
+            {
+                "status": "error",
+                "error": f"Code too large (max {MAX_DYNAMIC_CODE_SIZE} chars)",
+            }
+        )
 
     local_scope = {"context": ctx, "json": json}
     f = io.StringIO()

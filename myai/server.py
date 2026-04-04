@@ -11,13 +11,14 @@ if PROJECT_ROOT not in sys.path:
 import json
 import traceback
 import io
+import base64
 import asyncio
 from dataclasses import dataclass
 from datetime import datetime
 from uuid import uuid4
 from pathlib import Path
 from contextlib import redirect_stdout
-from typing import Any, Dict, Optional, Union
+from typing import Any, Dict, List, Optional, Union
 from fastapi import FastAPI, HTTPException, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, StreamingResponse
@@ -137,6 +138,27 @@ class ChatRequest(BaseModel):
 
 class ChatResponse(BaseModel):
     response: str
+    session_id: str
+    screenshot: Optional[str] = None
+
+
+class RAGQueryRequest(BaseModel):
+    """Request payload for the /rag/query endpoint, consumed by ResearcherAgent."""
+    query: str
+    limit: int = 5
+
+
+class RAGResultItem(BaseModel):
+    """Single RAG search result item, mirroring RAGResult in ResearcherAgent.ts."""
+    text: str
+    source: str
+    page_num: int
+    score: float
+
+
+class RAGQueryResponse(BaseModel):
+    """Response envelope for /rag/query; results list may be empty."""
+    results: List[RAGResultItem]
 
 
 @app.get("/models", response_model=ModelsResponse)
@@ -147,8 +169,6 @@ def list_models() -> ModelsResponse:
 @app.get("/v1/models", response_model=ModelsResponse, include_in_schema=False)
 def list_models_v1() -> ModelsResponse:
     return list_models()
-    screenshot: Optional[str] = None
-    session_id: str
 
 @app.post("/browser/chat", response_model=ChatResponse)
 async def browser_chat(request: ChatRequest):
@@ -395,6 +415,32 @@ def refine_data(req: RefineRequest):
     except Exception as e:
         traceback.print_exc()
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/rag/query", response_model=RAGQueryResponse)
+async def rag_query(req: RAGQueryRequest) -> RAGQueryResponse:
+    """
+    Query the RAG knowledge base for relevant context.
+
+    Called by ResearcherAgent (TypeScript) when the task includes keywords
+    such as 'rag', 'tudásbázis', 'belső', or 'internal'.
+
+    Requires lancedb; returns HTTP 503 when the RAG service is unavailable
+    so the caller can degrade gracefully.
+    """
+    if not HAS_RAG:
+        raise HTTPException(
+            status_code=503,
+            detail="RAG service unavailable: lancedb is not installed",
+        )
+    try:
+        raw_results = await rag_service.search(req.query, limit=min(req.limit, 20))
+        results = [RAGResultItem(**item) for item in raw_results]
+        return RAGQueryResponse(results=results)
+    except Exception as e:
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=str(e))
+
 
 @app.post("/harvest")
 async def harvest_scenario(req: HarvestRequest):
@@ -884,8 +930,6 @@ except ImportError:
     computer_use = None
     os_worker = None
     vision_worker = None
-import base64
-
 class RobotkezActionRequest(BaseModel):
     action: str
     params: dict = {}

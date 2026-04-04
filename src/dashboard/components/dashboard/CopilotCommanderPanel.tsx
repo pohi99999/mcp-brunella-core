@@ -17,7 +17,7 @@ const QUICK_COMMANDS = [
     { label: "Task Queue", icon: BarChart3, endpoint: "/api/tasks/queue", description: "Feladat sor állapota" },
     { label: "MCP Tools", icon: Zap, endpoint: "/api/tools", description: "Elérhető MCP eszközök" },
     { label: "LLM Status", icon: Cpu, endpoint: "/api/llm/status", description: "LLM provider állapot" },
-    { label: "Memory Stats", icon: Database, endpoint: "/api/memory/stats", description: "Memória statisztika" },
+    { label: "Memory Stats", icon: Database, endpoint: "/api/v1/memory/stats", description: "Memória statisztika" },
     { label: "Phoenix Events", icon: AlertCircle, endpoint: "/api/phoenix/events", description: "Utolsó phoenix események" },
     { label: "Track Status", icon: BarChart3, endpoint: "/api/tracks/status", description: "Aktív trackek" },
 ];

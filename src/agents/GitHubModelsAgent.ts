@@ -3,10 +3,11 @@
 // CREATED: 2026-02-17
 
 import { IAgent, AgentResponse, ToolDefinition } from './types.js';
-import { logInfo, logError, setAgentStatus } from '../utils/logger.js';
+import { logInfo, logError, logWarn, setAgentStatus } from '../utils/logger.js';
 import { generateResponse } from '../core/llm_client.js';
 // Static import is safe now because toolRegistry.js is clean (no Node dependencies)
 import { getAllToolDefinitions, executeLocalTool } from '../server/toolRegistry.js';
+import { checkToolPermission } from '../tools/toolPermissions.js';
 
 export interface GitHubModelsConfig {
   model?: string; // Default: gpt-4o
@@ -77,7 +78,9 @@ export class GitHubModelsAgent implements IAgent {
 
       // Auto-load tools if not provided
       if (this.config.mcpTools.length === 0) {
-        const tools = getAllToolDefinitions();
+        const tools = getAllToolDefinitions().filter((tool) =>
+          checkToolPermission(tool.name, { agentName: this.name }).allowed,
+        );
         if (tools.length > 0) {
           this.setMcpTools(tools);
         }
@@ -185,30 +188,40 @@ export class GitHubModelsAgent implements IAgent {
             logInfo(this.name, `Executing tool: ${functionName}`);
 
             let resultContent: string;
-            try {
-              const args = JSON.parse(argumentsStr);
-              const result = await executeLocalTool(functionName, args);
-              const resultObj = result as Record<string, unknown>;
 
-              // Format result for OpenAI
-              // MCP tools usually return { content: [{ type: 'text', text: '...' }] }
-              if (resultObj && resultObj.content && Array.isArray(resultObj.content)) {
-                 // Join all text parts
-                 resultContent = (resultObj.content as Array<Record<string, unknown>>)
-                    .filter((c) => c.type === 'text')
-                    .map((c) => String(c.text || ''))
-                    .join('\n');
+            const permCheck = checkToolPermission(functionName, { agentName: this.name });
+            if (!permCheck.allowed) {
+                logWarn(this.name, `Permission denied for tool '${functionName}': ${permCheck.reason}`);
+                resultContent = `Permission denied: agent '${this.name}' is not allowed to call tool '${functionName}'. Reason: ${permCheck.reason}`;
+            } else {
+                try {
+                  const args = JSON.parse(argumentsStr);
+                  const result = await executeLocalTool(functionName, args, {
+                    agentName: this.name,
+                    metadata: { source: 'github-models' },
+                  });
+                  const resultObj = result as Record<string, unknown>;
 
-                 // If no text, check for other types or dump JSON
-                 if (!resultContent && (resultObj.content as unknown[]).length > 0) {
-                     resultContent = JSON.stringify(resultObj.content);
-                 }
-              } else {
-                 resultContent = typeof result === 'string' ? result : JSON.stringify(result);
-              }
-            } catch (e: any) {
-              logError(this.name, `Tool execution failed (${functionName}): ${e.message}`);
-              resultContent = `Error executing tool ${functionName}: ${e.message}`;
+                  // Format result for OpenAI
+                  // MCP tools usually return { content: [{ type: 'text', text: '...' }] }
+                  if (resultObj && resultObj.content && Array.isArray(resultObj.content)) {
+                     // Join all text parts
+                     resultContent = (resultObj.content as Array<Record<string, unknown>>)
+                        .filter((c) => c.type === 'text')
+                        .map((c) => String(c.text || ''))
+                        .join('\n');
+
+                     // If no text, check for other types or dump JSON
+                     if (!resultContent && (resultObj.content as unknown[]).length > 0) {
+                         resultContent = JSON.stringify(resultObj.content);
+                     }
+                  } else {
+                     resultContent = typeof result === 'string' ? result : JSON.stringify(result);
+                  }
+                } catch (e: any) {
+                  logError(this.name, `Tool execution failed (${functionName}): ${e.message}`);
+                  resultContent = `Error executing tool ${functionName}: ${e.message}`;
+                }
             }
 
             // Add tool result to messages
@@ -261,10 +274,11 @@ export class GitHubModelsAgent implements IAgent {
       function: {
         name: tool.name,
         description: tool.description,
-        parameters: tool.inputSchema || {
+        parameters: (tool.inputSchema && tool.inputSchema.type === 'object' ? tool.inputSchema : undefined) || {
           type: 'object',
           properties: {},
-          required: []
+          required: [],
+          additionalProperties: false,
         }
       }
     }));

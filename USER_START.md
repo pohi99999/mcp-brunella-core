@@ -2,11 +2,42 @@
 
 Ez a dokumentum a Brunella Agent System **összes fontos parancsát** tartalmazza. Ha elakadsz, vagy "galiba van", innen puskázhatsz!
 
---- Dahboard : cd myai && uvicorn server:app --reload --port 8000
+## 🟢 1. Gyors, böngésző-kész dashboard indítás
 
-## 🟢 1. "Mindent Bele" Indítás (Ajánlott)
+Ha a dashboardon akarsz dolgozni, és azt szeretnéd, hogy a kritikus helyi szolgáltatások tényleg felálljanak, ezt használd először.
 
-Ha csak használni akarod a rendszert, ez a legegyszerűbb módja.
+**Parancs (Windows parancssor/PowerShell):**
+
+```cmd
+dashboard.bat
+```
+
+**Ez mit csinál?** (sorrendben):
+
+1. Ellenőrzi az alap toolingot (`curl`, `node`, `npm`, `node_modules`).
+2. Elindítja vagy visszaellenőrzi az **Ollama** szervert (`:11434`).
+3. Elindítja vagy visszaellenőrzi a **Python FastAPI** alrendszert (`:8000`).
+4. Elindítja vagy megvárja a **Node.js backend** `readyz` állapotát (`:3000`).
+5. Megvárja az **API health** és a **tool registry** elérhetőségét.
+6. Elindítja vagy visszaellenőrzi a **Dashboard UI**-t (`:5173`).
+7. Csak ezután nyitja meg a böngészőt.
+
+Ha nem akarod automatikusan megnyitni a böngészőt:
+
+```cmd
+set BRUNELLA_DASHBOARD_NO_BROWSER=1 && dashboard.bat
+```
+
+```powershell
+$env:BRUNELLA_DASHBOARD_NO_BROWSER = "1"
+.\dashboard.bat
+```
+
+---
+
+## 🟢 2. "Mindent Bele" Indítás (Ajánlott teljes rendszerhez)
+
+Ha az egész rendszert akarod felhúzni a teljes startup-lánccal, ez a legegyszerűbb módja.
 
 **Parancs (Windows parancssor/PowerShell):**
 
@@ -25,7 +56,7 @@ start-full.bat
 
 ---
 
-## 🔧 2. Manuális Indítás (Fejlesztéshez / Hibakereséshez)
+## 🔧 3. Manuális Indítás (Fejlesztéshez / Hibakereséshez)
 
 Ha valamelyik komponenst újra kell indítanod, vagy látni akarod a részletes hibaüzeneteit, használd a külön parancsokat külön terminál ablakokban.
 
@@ -89,7 +120,7 @@ Ha a terminálból akarsz csevegni Brunellával.
 
 ---
 
-## 🛠️ 3. Karbantartás, Frissítés & "Galibaelhárítás"
+## 🛠️ 4. Karbantartás, Frissítés & "Galibaelhárítás"
 
 Ha valami nem működik, vagy piros hibákat látsz, ezeket futtasd le sorban.
 
@@ -140,7 +171,8 @@ npm run build
 
 | Funkció | Parancs | Megjegyzés |
 | :--- | :--- | :--- |
-| **Minden indítása** | `start-full.bat` | Kényelmes, automatikus |
+| **Dashboard-ready indítás** | `dashboard.bat` | Helyi dashboard munkához, readiness-várással |
+| **Minden indítása** | `start-full.bat` | Kényelmes, automatikus, teljesebb boot |
 | **Python Szerver** | `cd myai && uvicorn server:app --reload --port 8000` | Ha az AI/Hang nem válaszol |
 | **Node Szerver** | `npm run dev` | Ha az API/Socket.IO áll |
 | **UI Indítás** | `npm run dev:ui` | Ha a böngésző nem tölt be |

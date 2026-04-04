@@ -29,24 +29,66 @@ interface RegistryStats {
   publishers: string[];
 }
 
+function safeNumber(value: unknown, fallback = 0): number {
+  const parsed = typeof value === 'number' ? value : Number(value);
+  return Number.isFinite(parsed) ? parsed : fallback;
+}
+
+function normalizeTool(tool: Partial<ToolInfo> | null | undefined, index: number): ToolInfo {
+  return {
+    id: tool?.id ?? `tool-${index}`,
+    name: tool?.name ?? 'unknown-tool',
+    version: tool?.version ?? '0.0.0',
+    description: tool?.description ?? 'No description available',
+    publishedBy: tool?.publishedBy ?? 'unknown',
+    tags: Array.isArray(tool?.tags) ? tool.tags.filter((tag): tag is string => typeof tag === 'string') : [],
+    deprecated: Boolean(tool?.deprecated),
+    totalCalls: safeNumber(tool?.totalCalls),
+    errorRate: safeNumber(tool?.errorRate),
+    avgLatencyMs: safeNumber(tool?.avgLatencyMs),
+  };
+}
+
+function normalizeStats(stats: Partial<RegistryStats> | null | undefined): RegistryStats {
+  return {
+    totalTools: safeNumber(stats?.totalTools),
+    deprecatedTools: safeNumber(stats?.deprecatedTools),
+    totalCalls: safeNumber(stats?.totalCalls),
+    avgLatencyMs: safeNumber(stats?.avgLatencyMs),
+    publishers: Array.isArray(stats?.publishers) ? stats.publishers.filter((publisher): publisher is string => typeof publisher === 'string') : [],
+  };
+}
+
 export default function ToolDiscoveryPanel() {
   const [tools, setTools] = useState<ToolInfo[]>([]);
   const [stats, setStats] = useState<RegistryStats | null>(null);
   const [filter, setFilter] = useState('');
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [expandedTool, setExpandedTool] = useState<string | null>(null);
 
   async function fetchData() {
     setLoading(true);
+    setError(null);
     try {
       const [toolsRes, statsRes] = await Promise.all([
         fetch('/api/v1/tools/registry'),
         fetch('/api/v1/tools/stats'),
       ]);
-      if (toolsRes.ok) setTools(await toolsRes.json());
-      if (statsRes.ok) setStats(await statsRes.json());
-    } catch {
-      // silent
+
+      if (!toolsRes.ok || !statsRes.ok) {
+        throw new Error(`Tool discovery unavailable (${toolsRes.status}/${statsRes.status})`);
+      }
+
+      const [toolsData, statsData] = await Promise.all([toolsRes.json(), statsRes.json()]);
+      const normalizedTools = Array.isArray(toolsData)
+        ? toolsData.map((tool, index) => normalizeTool(tool as Partial<ToolInfo>, index))
+        : [];
+
+      setTools(normalizedTools);
+      setStats(normalizeStats(statsData as Partial<RegistryStats>));
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Tool discovery unavailable');
     } finally {
       setLoading(false);
     }
@@ -76,7 +118,7 @@ export default function ToolDiscoveryPanel() {
 
       {/* Stats Cards */}
       {stats && (
-        <div className="grid grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
           <div className="rounded-xl border border-white/[0.05] bg-white/[0.02] p-3 text-center">
             <div className="font-mono text-2xl font-semibold text-zinc-100">{stats.totalTools}</div>
             <div className="text-xs text-zinc-500">Tool-ok</div>
@@ -94,6 +136,18 @@ export default function ToolDiscoveryPanel() {
             <div className="text-xs text-zinc-500">Deprecated</div>
           </div>
         </div>
+      )}
+
+      {error && (
+        <Card className="border-amber-400/20 bg-amber-400/10">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-amber-100">
+              <AlertTriangle className="h-4 w-4" />
+              Tool discovery unavailable
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="text-sm text-amber-50/90">{error}</CardContent>
+        </Card>
       )}
 
       {/* Search */}

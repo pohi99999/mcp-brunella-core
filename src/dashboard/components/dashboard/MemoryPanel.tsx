@@ -74,7 +74,17 @@ export function MemoryPanel() {
         setBusyAction("sync");
         try {
             const result = await syncGoldenMirror();
-            setMessage(`Golden mirror sync: ${result.synced} synced / ${result.failed} failed`);
+            if (result.mode === "local-only") {
+                setMessage(
+                    `Golden mirror sync skipped: D1 nincs konfigurálva (${result.skipped} pending locally).`
+                );
+            } else if ((result.errors?.length ?? 0) > 0) {
+                setMessage(
+                    `Golden mirror sync: ${result.synced} synced / ${result.failed} failed · ${result.errors?.[0]}`
+                );
+            } else {
+                setMessage(`Golden mirror sync: ${result.synced} synced / ${result.failed} failed`);
+            }
             await load();
         } catch (error) {
             setMessage(error instanceof Error ? error.message : String(error));

@@ -6,14 +6,92 @@ import type { Request, Response, NextFunction } from "express";
 import { rateLimit } from "express-rate-limit";
 import { v4 as uuidv4 } from "uuid";
 import { Logger } from "../utils/logger.js";
+import { verifyRemoteToken } from "../security/remoteAuth.js";
 
 const reqLogger = new Logger("http.log");
+const DEV_CORS_ORIGINS = [
+  "http://localhost:5173",
+  "http://127.0.0.1:5173",
+  "http://[::1]:5173",
+];
+
+function normalizeRemoteAddress(address?: string | null): string {
+  if (!address) {
+    return "";
+  }
+
+  if (address.startsWith("::ffff:")) {
+    return address.slice(7);
+  }
+
+  return address;
+}
+
+export function isLoopbackRequest(req: Request): boolean {
+  const remoteAddress = normalizeRemoteAddress(
+    req.socket.remoteAddress || req.ip || null,
+  );
+
+  return remoteAddress === "127.0.0.1" || remoteAddress === "::1";
+}
+
+function getBearerToken(req: Request): string | undefined {
+  const authHeader = req.headers.authorization;
+  if (!authHeader?.startsWith("Bearer ")) {
+    return undefined;
+  }
+
+  return authHeader.slice(7).trim();
+}
+
+export function requireOperatorAccess(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  const configuredApiKey = process.env.BRUNELLA_API_KEY?.trim();
+  const bearerToken = getBearerToken(req);
+  const headerApiKey =
+    typeof req.headers["x-api-key"] === "string"
+      ? req.headers["x-api-key"].trim()
+      : undefined;
+
+  if (configuredApiKey && (headerApiKey === configuredApiKey || bearerToken === configuredApiKey)) {
+    next();
+    return;
+  }
+
+  if (bearerToken) {
+    const result = verifyRemoteToken(bearerToken);
+    if (result.valid) {
+      req.remoteUser = result.claims;
+      next();
+      return;
+    }
+  }
+
+  if (isLoopbackRequest(req)) {
+    next();
+    return;
+  }
+
+  res.status(401).json({
+    error:
+      "Unauthorized: operator access requires loopback, BRUNELLA_API_KEY, or a valid Bearer token",
+  });
+}
 
 export function getCorsOrigins() {
-  return (process.env.CORS_ORIGINS || "")
+  const configuredOrigins = (process.env.CORS_ORIGINS || "")
     .split(",")
     .map((s) => s.trim())
     .filter(Boolean);
+
+  if (process.env.NODE_ENV !== "production") {
+    return Array.from(new Set([...configuredOrigins, ...DEV_CORS_ORIGINS]));
+  }
+
+  return configuredOrigins;
 }
 
 function corsWhitelist(req: Request, res: Response, next: NextFunction) {
@@ -32,7 +110,7 @@ function corsWhitelist(req: Request, res: Response, next: NextFunction) {
     res.setHeader("Access-Control-Allow-Origin", origin);
   }
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, X-API-Key");
   if (req.method === "OPTIONS") {
     res.status(204).end();
     return;
@@ -71,4 +149,9 @@ const apiRateLimit = rateLimit({
   legacyHeaders: false,
 });
 
-export { corsWhitelist, requestId, requestLogging, apiRateLimit };
+export {
+  corsWhitelist,
+  requestId,
+  requestLogging,
+  apiRateLimit,
+};

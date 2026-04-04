@@ -1,5 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { MissionControlLayout } from './MissionControlLayout';
 import { LayoutProvider } from '@/lib/layout/LayoutContext';
 
@@ -96,10 +95,11 @@ describe('MissionControlLayout', () => {
     render(<MissionControlLayout />, { wrapper: LayoutProvider });
 
     const layoutBtn = screen.getByRole('button', { name: /LAYOUT/i });
-    await userEvent.click(layoutBtn);
+    fireEvent.pointerDown(layoutBtn);
+    fireEvent.click(layoutBtn);
 
-    const devModeOption = await screen.findByText('Developer Mode');
-    await userEvent.click(devModeOption);
+    const devModeOption = await screen.findByRole('menuitem', { name: /Developer Mode/i });
+    fireEvent.click(devModeOption);
 
     await waitFor(() => {
       expect(screen.getByRole('button', { name: /LAYOUT/i })).toHaveTextContent('DEVELOPER_MODE');
@@ -117,7 +117,7 @@ describe('MissionControlLayout', () => {
 
     // Terminal starts collapsed, expand it
     const expandBtn = screen.getByLabelText('Expand terminal');
-    await userEvent.click(expandBtn);
+    fireEvent.click(expandBtn);
 
     await waitFor(() => {
       expect(screen.getByTestId('terminal-log')).toBeInTheDocument();
@@ -129,14 +129,14 @@ describe('MissionControlLayout', () => {
 
     // Status label is rendered (OFFLINE initially, HEALTHY after health check resolves)
     // Initially OFFLINE before the async health check
-    expect(screen.getByText('OFFLINE')).toBeInTheDocument();
+    expect(screen.getByText(/CORE OFFLINE/)).toBeInTheDocument();
   });
 
   it('shows HEALTHY status after a successful health check', async () => {
     render(<MissionControlLayout />, { wrapper: LayoutProvider });
 
     await waitFor(() => {
-      expect(screen.getByText('HEALTHY')).toBeInTheDocument();
+      expect(screen.getByText(/CORE HEALTHY/)).toBeInTheDocument();
     });
   });
 });

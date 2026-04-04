@@ -5,7 +5,7 @@
 import { Command } from 'commander';
 import chalk from 'chalk';
 import { logError } from '../utils/logger.js';
-import { getPrebuiltToolCatalog, mergeToolLists, type ToolLike } from '../utils/prebuiltTools.js';
+import { type ToolLike } from '../utils/prebuiltTools.js';
 
 function writeLine(message = ''): void {
   process.stdout.write(`${message}\n`);
@@ -64,6 +64,10 @@ function extractToolArray(value: unknown): ToolLike[] {
   return [];
 }
 
+function getToolsApiBaseUrl(): string {
+  return (process.env.BRUNELLA_SERVER_URL || 'http://localhost:3000').replace(/\/$/, '');
+}
+
 export function registerToolDiscoveryCommands(program: Command) {
   const toolDiscovery = program
     .command('tool-discovery')
@@ -73,44 +77,46 @@ export function registerToolDiscoveryCommands(program: Command) {
     .command('list')
     .description('Összes regisztrált tool listázása')
     .option('-t, --tag <tag>', 'Szűrés tag alapján')
-    .option('--deprecated', 'Deprecated tool-ok mutatása')
+      .option('--deprecated', 'Deprecated tool-ok mutatása')
     .action(async (opts: { tag?: string; deprecated?: boolean }) => {
       try {
-        let url = 'http://localhost:3000/api/v1/tools/registry';
+        let url = `${getToolsApiBaseUrl()}/api/v1/tools/registry`;
         const params: string[] = [];
         if (opts.tag) params.push(`tag=${opts.tag}`);
         if (opts.deprecated) params.push('deprecated=true');
         if (params.length) url += `?${params.join('&')}`;
 
         const res = await fetch(url);
+        if (!res.ok) {
+          throw new Error(`HTTP ${res.status} ${res.statusText}`);
+        }
         const data: unknown = await res.json();
-        const serverTools = extractToolArray(data);
-        const localTools = getPrebuiltToolCatalog();
-        const tools = mergeToolLists(serverTools, localTools);
+        const tools = extractToolArray(data);
 
         writeLine(chalk.bold.cyan('\n🔧 MCP Tool Registry\n'));
         printToolCatalog(tools);
         writeLine(chalk.gray(`  Összesen: ${tools.length} tool`));
       } catch (e: unknown) {
         const message = e instanceof Error ? e.message : String(e);
-        const fallbackTools = getPrebuiltToolCatalog();
         logError('ToolsCLI', `list hiba: ${message}`);
-        writeLine(chalk.bold.cyan('\n🔧 MCP Tool Registry (local fallback)\n'));
-        printToolCatalog(fallbackTools);
-        writeLine(chalk.gray(`  Összesen: ${fallbackTools.length} tool`));
+        writeError(chalk.red(`Hiba: ${message}`));
+        writeError(chalk.gray('A tool registry jelenleg csak élő szerverválaszból tekinthető hitelesnek.'));
       }
     });
 
   toolDiscovery
     .command('metrics')
     .description('Tool metrikák lekérdezése')
-    .option('-i, --id <toolId>', 'Specifikus tool ID')
+      .option('-i, --id <toolId>', 'Specifikus tool ID')
     .action(async (opts: { id?: string }) => {
       try {
         const url = opts.id
-          ? `http://localhost:3000/api/v1/tools/metrics/${opts.id}`
-          : 'http://localhost:3000/api/v1/tools/stats';
+          ? `${getToolsApiBaseUrl()}/api/v1/tools/metrics/${opts.id}`
+          : `${getToolsApiBaseUrl()}/api/v1/tools/stats`;
         const res = await fetch(url);
+        if (!res.ok) {
+          throw new Error(`HTTP ${res.status} ${res.statusText}`);
+        }
         const data = await res.json();
         writeLine(chalk.bold.cyan('\n📊 Tool Metrics\n'));
         writeLine(JSON.stringify(data, null, 2));
@@ -124,15 +130,18 @@ export function registerToolDiscoveryCommands(program: Command) {
     .command('chain')
     .description('Tool chain futtatása')
     .argument('<steps...>', 'Tool ID-k sorrendben (pl. parser transformer formatter)')
-    .option('-i, --input <json>', 'Kezdő input JSON')
+      .option('-i, --input <json>', 'Kezdő input JSON')
     .action(async (steps: string[], opts: { input?: string }) => {
       try {
         const input = opts.input ? JSON.parse(opts.input) : {};
-        const res = await fetch('http://localhost:3000/api/v1/tools/chain', {
+        const res = await fetch(`${getToolsApiBaseUrl()}/api/v1/tools/chain`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ steps, input }),
         });
+        if (!res.ok) {
+          throw new Error(`HTTP ${res.status} ${res.statusText}`);
+        }
         const data = await res.json();
         if (data.success) {
           writeLine(chalk.green(`✅ Chain sikeresen lefutott (${data.completedSteps}/${data.totalSteps})`));

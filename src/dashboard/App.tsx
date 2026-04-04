@@ -27,69 +27,58 @@ function SplashScreen({ onDone }: { onDone: () => void }) {
 
   return (
     <motion.div
-      className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#020205]"
+      className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#020202]"
       initial={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5, ease: 'easeInOut' }}
     >
-      {/* Background grid */}
-      <div className="absolute inset-0 bg-grid-pattern opacity-30" />
+      <div className="absolute inset-0 bg-grid-pattern opacity-[0.12]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.08),transparent_36%)]" />
 
-      {/* Glow pulse */}
-      <div className="absolute w-[400px] h-[400px] rounded-full bg-primary/5 blur-3xl animate-pulse" />
-
-      {/* Logo */}
       <motion.div
         className="relative flex flex-col items-center gap-6"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: 'easeOut' }}
       >
-        <div className="relative">
-          <div className="w-20 h-20 rounded-2xl bg-primary/10 border border-primary/30 flex items-center justify-center shadow-[0_0_40px_rgba(var(--primary),0.3)]">
-            <Zap size={40} className="text-primary animate-pulse" />
+        <div className="relative flex h-20 w-20 items-center justify-center rounded-[1.75rem] border border-white/10 bg-white/[0.03] shadow-[0_30px_80px_-50px_rgba(0,0,0,0.95)]">
+          <div className="absolute inset-[10px] rounded-[1.2rem] border border-white/8 bg-black/60" />
+          <div className="relative flex h-11 w-11 items-center justify-center rounded-2xl bg-white text-black">
+            <Zap size={20} className="text-black" />
           </div>
-          {/* Orbiting ring */}
-          <motion.div
-            className="absolute inset-[-8px] rounded-2xl border border-primary/20"
-            animate={{ rotate: 360 }}
-            transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
-          />
         </div>
 
         <div className="text-center">
-          <h1 className="text-3xl font-bold tracking-tighter text-white uppercase italic">
-            Brunella Cortex
+          <h1 className="text-3xl font-semibold tracking-[-0.04em] text-white">
+            Brunella
           </h1>
-          <p className="text-xs font-mono text-primary/60 tracking-[0.3em] mt-1">
-            NEURAL NETWORK OS v2.3.0
+          <p className="mt-2 text-[11px] font-medium uppercase tracking-[0.38em] text-white/45">
+            Dashboard boot sequence
           </p>
         </div>
 
-        {/* Progress bar */}
         <div className="w-64 flex flex-col gap-2">
-          <div className="h-[2px] bg-white/10 rounded-full overflow-hidden">
+          <div className="h-[2px] bg-white/8 rounded-full overflow-hidden">
             <motion.div
-              className="h-full bg-primary rounded-full shadow-[0_0_8px_rgba(var(--primary),0.8)]"
+              className="h-full bg-white rounded-full"
               style={{ width: `${progress * 100}%` }}
             />
           </div>
-          <div className="flex justify-between text-[9px] font-mono text-zinc-600 uppercase tracking-widest">
-            <span>INITIALIZING SYSTEMS</span>
+          <div className="flex justify-between text-[9px] font-mono text-white/35 uppercase tracking-[0.3em]">
+            <span>Preparing workspace</span>
             <span>{Math.round(progress * 100)}%</span>
           </div>
         </div>
 
-        {/* Status messages */}
         <motion.p
-          className="text-[10px] font-mono text-zinc-500 tracking-widest"
+          className="text-[10px] font-mono text-white/40 tracking-[0.32em] uppercase"
           animate={{ opacity: [0.4, 1, 0.4] }}
           transition={{ duration: 1.5, repeat: Infinity }}
         >
-          {progress < 0.35 ? 'LOADING AGENT REGISTRY...' :
-           progress < 0.65 ? 'CONNECTING NEURAL NODES...' :
-           progress < 0.9  ? 'SYNCHRONIZING CORTEX...' :
-                             'ONLINE'}
+          {progress < 0.35 ? 'Loading agents' :
+           progress < 0.65 ? 'Connecting services' :
+           progress < 0.9  ? 'Synchronizing dashboard' :
+                             'Ready'}
         </motion.p>
       </motion.div>
     </motion.div>

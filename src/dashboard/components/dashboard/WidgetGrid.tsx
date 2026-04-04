@@ -1,16 +1,43 @@
-import React from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { WIDGET_REGISTRY } from "@/lib/widgetRegistry";
-import { RotateCcw, ShieldCheck, Bot, ListTodo, Sparkles } from "lucide-react";
+import { RotateCcw, ShieldCheck, Bot, ListTodo, Sparkles, Activity } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useLayout } from "@/lib/layout/LayoutContext";
 import { useSystemSignal } from "@/hooks/useSystemSignal";
-import { cn } from "@/lib/utils";
-
 export function WidgetGrid ()
 {
   const { currentLayout, setLayoutMode } = useLayout();
   const { agents, taskStats, healthStatus } = useSystemSignal();
+  const [useCompactLayout, setUseCompactLayout] = useState( false );
+
+  useEffect( () =>
+  {
+    if ( typeof window === "undefined" ) return;
+
+    const mediaQuery = window.matchMedia( "(max-width: 1279px)" );
+    const syncLayout = () => setUseCompactLayout( mediaQuery.matches );
+
+    syncLayout();
+
+    if ( typeof mediaQuery.addEventListener === "function" )
+    {
+      mediaQuery.addEventListener( "change", syncLayout );
+      return () => mediaQuery.removeEventListener( "change", syncLayout );
+    }
+
+    mediaQuery.addListener( syncLayout );
+    return () => mediaQuery.removeListener( syncLayout );
+  }, [] );
+
+  const definedGridAreas = useMemo( () =>
+    new Set(
+      currentLayout.gridTemplateAreas
+        .flatMap( ( row ) => row.replaceAll( '"', '' ).trim().split( /\s+/ ) )
+        .filter( ( area ) => area.length > 0 && area !== '.' )
+    ),
+    [currentLayout.gridTemplateAreas]
+  );
 
   const widgets = Object.entries( currentLayout.widgetAssignments )
     .map( ( [widgetId] ) =>
@@ -43,85 +70,101 @@ export function WidgetGrid ()
 
   const statCards = [
     {
-      label: "System Health",
+      label: "Health",
       value: `${ healthyServices }/${ serviceCount || "—" }`,
       icon: Sparkles,
-      color: "indigo",
+      colorClass: "text-white/76",
+      detail: healthStatus?.status?.toUpperCase() ?? "NO_SIGNAL",
     },
     {
-      label: "Agent Cluster",
+      label: "Agents",
       value: `${ activeAgents }/${ totalAgents || "—" }`,
       icon: Bot,
-      color: "violet",
+      colorClass: "text-white/76",
+      detail: activeAgents > 0 ? "ACTIVE" : "STANDBY",
     },
     {
-      label: "Queue Load",
+      label: "Queue",
       value: ( pendingTasks + runningTasks ).toString(),
       icon: ListTodo,
-      color: "cyan",
+      colorClass: "text-white/76",
+      detail: `${ totalTasks } TOTAL`,
     },
     {
       label: "Success",
       value: `${ Math.round( successRate ) }%`,
       icon: ShieldCheck,
-      color: "emerald",
+      colorClass: successRate >= 90 ? "text-emerald-300" : "text-amber-300",
+      detail: pendingTasks > 0 ? `${ pendingTasks } PENDING` : "STABLE",
     },
   ];
 
   return (
-    <div className="flex flex-col gap-5 h-full">
+    <div className="flex h-full w-full flex-col gap-5">
       {/* ── Cockpit Header ── */ }
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 px-1">
-        <div className="flex items-center gap-4">
-          <div className="flex flex-col">
-            <div className="flex items-center gap-2">
-              <div className="h-2 w-2 rounded-full bg-cyan-400 shadow-[0_0_12px_rgba(34,211,238,0.8)] animate-pulse" />
-              <h2 className="text-sm font-bold tracking-tight text-white uppercase">
-                Mission Control
-              </h2>
+      <section className="command-strip gap-4 rounded-[1.5rem]" data-testid="mc-command-strip">
+        <div className="flex min-w-0 flex-1 flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+          <div className="flex min-w-0 items-start gap-3">
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-white/[0.08] bg-white/[0.03] shadow-[0_22px_52px_-40px_rgba(0,0,0,0.96)]">
+              <Activity size={ 16 } className="text-white" />
             </div>
-            <span className="text-[10px] text-zinc-500 font-mono tracking-widest mt-0.5">
-              { currentLayout.name.toUpperCase().replaceAll( " ", "_" ) } v2.6.0
-            </span>
+            <div className="min-w-0">
+              <div className="flex items-center gap-2">
+                <div className="h-1.5 w-1.5 rounded-full bg-white/80 shadow-[0_0_10px_rgba(255,255,255,0.2)]" />
+                <h2 className="text-sm font-semibold uppercase tracking-[0.2em] text-white">
+                  Mission Control
+                </h2>
+              </div>
+              <p className="mt-1 max-w-2xl text-sm leading-relaxed text-white/56">
+                Corporate cockpit for live system posture, queue visibility, and agent coordination.
+              </p>
+              <span className="mt-2 inline-flex rounded-full border border-white/[0.07] bg-white/[0.025] px-2.5 py-1 text-[10px] font-mono tracking-[0.26em] text-white/42">
+                { currentLayout.name.toUpperCase().replaceAll( " ", "_" ) }
+              </span>
+            </div>
           </div>
-          <div className="h-8 w-px bg-white/[0.06]" />
-          <div className="flex items-center gap-3">
+
+          <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-4">
             { statCards.map( ( stat ) => (
-              <div key={ stat.label } className="group flex flex-col gap-0.5">
-                <span className="text-[9px] uppercase tracking-wider text-zinc-500 group-hover:text-zinc-400 transition-colors">
-                  { stat.label }
-                </span>
-                <div className="flex items-center gap-1.5">
-                  <stat.icon size={ 10 } className={`text-${stat.color}-400/80`} />
-                  <span className="text-xs font-bold text-zinc-200 tabular-nums">
-                    { stat.value }
-                  </span>
+              <div key={ stat.label } className="stat-pill min-w-[7.25rem]">
+                <div className="stat-pill__header">
+                  <stat.icon size={ 11 } className={ stat.colorClass } />
+                  <span className="stat-pill__label">{ stat.label }</span>
                 </div>
+                <span className="stat-pill__value tabular-nums">{ stat.value }</span>
+                <span className="stat-pill__detail max-w-none">{ stat.detail }</span>
               </div>
             ) ) }
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex shrink-0 items-center gap-2 self-start lg:self-center">
           <Button
             variant="outline"
             size="sm"
             onClick={ () => setLayoutMode( "default-dashboard" ) }
-            className="h-8 px-3 border-white/[0.06] bg-white/[0.02] text-zinc-400 hover:text-white hover:bg-white/[0.08] hover:border-white/[0.1] transition-all gap-2"
+            className="h-10 gap-2 rounded-xl border-white/[0.08] bg-white/[0.025] px-3.5 text-white/68 transition-all hover:border-white/[0.14] hover:bg-white/[0.05] hover:text-white"
           >
             <RotateCcw size={ 12 } />
-            <span className="text-[10px] font-medium uppercase tracking-wide">Reset View</span>
+            <span className="text-[10px] font-medium uppercase tracking-[0.26em]">Reset View</span>
           </Button>
         </div>
-      </div>
+      </section>
 
       {/* ── Bento Grid ── */ }
       <div
-        className="flex-1 grid gap-4 min-h-0 overflow-y-auto custom-scrollbar pr-1 pb-6"
+        className="flex-1 grid w-full min-h-0 min-w-0 gap-4 overflow-y-auto custom-scrollbar pr-1 pb-6"
         style={ {
-          gridTemplateAreas: currentLayout.gridTemplateAreas.map( ( row: string ) => row ).join( " " ),
-          gridTemplateColumns: currentLayout.gridTemplateColumns,
-          gridTemplateRows: currentLayout.gridTemplateRows,
+          ...( useCompactLayout
+            ? {
+                gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 20rem), 1fr))",
+                gridAutoRows: "minmax(16rem, auto)",
+              }
+            : {
+                gridTemplateAreas: currentLayout.gridTemplateAreas.map( ( row: string ) => row ).join( " " ),
+                gridTemplateColumns: currentLayout.gridTemplateColumns,
+                gridTemplateRows: currentLayout.gridTemplateRows,
+              } ),
         } }
       >
         { widgets.map( ( w, index ) =>
@@ -132,13 +175,13 @@ export function WidgetGrid ()
           return (
             <motion.div
               key={ w.id }
-              className="bg-zinc-900/40 border border-white/[0.04] rounded-xl overflow-hidden shadow-2xl flex flex-col"
-              style={ { gridArea: area } }
-              initial={ { opacity: 0, scale: 0.98, y: 10 } }
+              className="widget-card flex min-h-0 min-w-0 flex-col"
+              style={ !useCompactLayout && definedGridAreas.has( area ) ? { gridArea: area } : undefined }
+              initial={ { opacity: 0, scale: 0.985, y: 10 } }
               animate={ { opacity: 1, scale: 1, y: 0 } }
               transition={ { 
-                duration: 0.4, 
-                delay: index * 0.04, 
+                duration: 0.36, 
+                delay: index * 0.035, 
                 ease: [0.23, 1, 0.32, 1] 
               } }
             >

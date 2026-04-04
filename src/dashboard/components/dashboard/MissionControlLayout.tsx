@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import { Zap, ChevronDown, ChevronRight, Menu, X, Mail, Github, Calendar, Sparkles, HardDrive } from "lucide-react";
+import { Zap, ChevronDown, ChevronRight, Menu, Mail, Github, Calendar, Sparkles, HardDrive } from "lucide-react";
 import * as api from "@/lib/apiService";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetDescription, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
@@ -47,52 +47,66 @@ export function MissionControlLayout() {
   const statusLabel = isConnected ? coreStatus : "OFFLINE";
 
   return (
-    <div className="min-h-screen md:max-h-screen flex flex-col md:overflow-hidden bg-[#05070d] bg-grid-pattern text-slate-100">
+    <div className="relative min-h-screen md:max-h-screen flex flex-col overflow-x-hidden md:overflow-hidden bg-[var(--shell-bg)] text-white">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.06),transparent_28%),radial-gradient(circle_at_80%_0%,rgba(255,255,255,0.025),transparent_22%),linear-gradient(180deg,rgba(255,255,255,0.018),transparent_14%),linear-gradient(180deg,#050505,#010101)]" />
+      <div className="pointer-events-none absolute inset-0 bg-grid-pattern opacity-[0.06]" />
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-white/[0.035] via-white/[0.015] to-transparent" />
+      <div className="relative z-10 flex min-h-screen flex-col">
       <CommandMenu setActiveTab={setActiveTab} activeTab={activeTab} />
 
       {/* ─── Header ─── */}
-      <header className="h-16 shrink-0 border-b border-white/[0.08] bg-slate-950/70 backdrop-blur-2xl flex items-center justify-between px-4 md:px-5 z-30 sticky top-0 shadow-[0_30px_90px_-48px_rgba(2,6,23,0.95)]">
+      <header className="h-16 shrink-0 border-b border-white/[0.06] bg-black/70 backdrop-blur-2xl flex items-center justify-between px-4 md:px-5 z-30 sticky top-0 shadow-[0_28px_88px_-60px_rgba(0,0,0,0.98)]">
         <div className="flex items-center gap-3">
-          <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
-            <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="md:hidden h-8 w-8 text-zinc-400 hover:text-white">
-                <Menu className="h-4 w-4" />
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="left" className="p-0 w-64 border-r border-white/[0.06] bg-slate-950">
-              <DynamicSidebar activeTab={activeTab} onTabChange={(tab) => { setActiveTab(tab); setMobileMenuOpen(false); }} />
-            </SheetContent>
-          </Sheet>
+            <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+              <SheetTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  aria-label="Open navigation menu"
+                  title="Open navigation menu"
+                  className="md:hidden h-9 w-9 rounded-xl text-white/55 hover:text-white hover:bg-white/[0.04]"
+                >
+                  <Menu className="h-4 w-4" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="left" className="w-[min(22rem,92vw)] border-r border-white/[0.08] bg-black/95 p-0">
+                <SheetTitle className="sr-only">Navigation menu</SheetTitle>
+                <SheetDescription className="sr-only">
+                  Switch between dashboard sections and system surfaces.
+                </SheetDescription>
+                <DynamicSidebar activeTab={activeTab} forceExpanded onTabChange={(tab) => { setActiveTab(tab); setMobileMenuOpen(false); }} />
+              </SheetContent>
+            </Sheet>
 
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-cyan-400/10 flex items-center justify-center border border-cyan-300/20 shadow-[0_0_28px_rgba(34,211,238,0.12)]">
-              <Zap size={14} className="text-cyan-300" />
+              <div className="flex h-9 w-9 items-center justify-center rounded-2xl border border-white/[0.08] bg-white/[0.035] shadow-[0_20px_48px_-34px_rgba(0,0,0,0.96)]">
+              <Zap size={14} className="text-white" />
             </div>
             <div className="flex flex-col leading-none">
               <span className="text-sm font-semibold tracking-tight text-white">Brunella</span>
-              <span className="text-[10px] font-mono text-zinc-500 tracking-[0.28em] uppercase">Mission Control</span>
+              <span className="text-[10px] font-mono uppercase tracking-[0.28em] text-white/40">Mission Control</span>
             </div>
           </div>
 
-          <div className="h-4 w-px bg-white/[0.06] mx-1 hidden sm:block" />
+          <div className="mx-1 hidden h-4 w-px bg-white/[0.06] sm:block" />
 
           {activeItem && (
-            <div className="hidden sm:flex items-center gap-1.5 text-[11px]">
-              <span className="text-zinc-600 font-mono">MC</span>
-              <ChevronRight size={10} className="text-zinc-700" />
-              <span className="text-zinc-400 font-medium">{activeItem.label}</span>
+              <div className="hidden rounded-full border border-white/[0.07] bg-white/[0.02] px-2.5 py-1 sm:flex items-center gap-1.5 text-[11px]">
+              <span className="font-mono text-white/30">MC</span>
+              <ChevronRight size={10} className="text-white/20" />
+              <span className="font-medium text-white/68">{activeItem.label}</span>
             </div>
           )}
 
-          <div className="h-4 w-px bg-white/[0.06] mx-1 hidden sm:block" />
+          <div className="mx-1 hidden h-4 w-px bg-white/[0.06] sm:block" />
 
           <nav className="hidden xl:flex items-center gap-0.5">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="text-xs font-mono text-zinc-500 hover:text-zinc-300 px-2 h-8 gap-1">
-                  <span className="text-zinc-600">LAYOUT</span>
-                  <span className="text-zinc-200 font-medium">{currentLayout.name.toUpperCase().replaceAll(' ', '_')}</span>
-                  <ChevronDown size={12} className="text-zinc-600" />
+                <Button variant="ghost" size="sm" className="h-8 gap-1 rounded-xl px-2 text-xs font-mono text-white/45 hover:bg-white/[0.035] hover:text-white">
+                  <span className="text-white/30">LAYOUT</span>
+                  <span className="text-white font-medium">{currentLayout.name.toUpperCase().replaceAll(' ', '_')}</span>
+                  <ChevronDown size={12} className="text-white/30" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-48" align="start">
@@ -106,7 +120,7 @@ export function MissionControlLayout() {
               </DropdownMenuContent>
             </DropdownMenu>
 
-            <div className="h-4 w-px bg-white/[0.06] mx-1" />
+             <div className="mx-1 h-4 w-px bg-white/[0.06]" />
 
             {[
               { href: "https://mail.google.com/mail/u/0/", icon: Mail, label: "Gmail" },
@@ -115,22 +129,22 @@ export function MissionControlLayout() {
               { href: "https://drive.google.com/drive/my-drive", icon: HardDrive, label: "Drive" },
               { href: "https://gemini.google.com/u/0/gem/c9db4e33647c", icon: Sparkles, label: "Gemini" },
             ].map(({ href, icon: Icon, label }) => (
-              <Button key={label} variant="ghost" size="icon" asChild title={label} className="text-zinc-500 hover:text-zinc-200 h-8 w-8">
-                <a href={href} target="_blank" rel="noreferrer"><Icon size={14} /></a>
-              </Button>
-            ))}
+                <Button key={label} variant="ghost" size="icon" asChild title={label} className="h-8 w-8 rounded-xl text-white/40 hover:bg-white/[0.035] hover:text-white">
+                  <a href={href} target="_blank" rel="noreferrer"><Icon size={14} /></a>
+                </Button>
+              ))}
           </nav>
         </div>
 
         <div className="flex items-center gap-3">
-          <div className="hidden md:flex items-center gap-2 bg-white/[0.035] border border-white/[0.08] px-3 py-1.5 rounded-full">
+          <div className="hidden rounded-full border border-white/[0.07] bg-white/[0.025] px-3 py-1.5 shadow-[0_18px_42px_-28px_rgba(0,0,0,0.96)] md:flex items-center gap-2">
             <div className="relative flex items-center">
               <div className={cn("w-1.5 h-1.5 rounded-full", statusColor)} />
               {coreStatus === 'HEALTHY' && (
                 <div className={cn("absolute w-1.5 h-1.5 rounded-full animate-ping opacity-60", statusColor)} />
               )}
             </div>
-            <span className="text-[10px] font-medium tracking-[0.24em] text-zinc-300">{statusLabel}</span>
+            <span className="text-[10px] font-medium tracking-[0.24em] text-white/75">CORE {statusLabel}</span>
           </div>
           <ThemeToggle />
         </div>
@@ -142,38 +156,43 @@ export function MissionControlLayout() {
         </div>
 
         <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
-          <main className="flex-1 flex flex-col min-h-0 p-3 md:p-4 relative">
+            <main className="relative flex flex-1 flex-col min-h-0 p-3 md:p-5">
             {activeTab === 'dashboard' ? (
-              <div className="flex-1 min-h-0 overflow-y-auto custom-scrollbar">
+              <div className="glass-panel flex-1 min-h-0 overflow-hidden rounded-[1.75rem] p-2.5 md:p-3.5">
+                <div className="flex h-full min-h-0 overflow-y-auto custom-scrollbar">
                 <WidgetGrid />
+                </div>
               </div>
             ) : (
-              <div className="flex-1 min-h-0 overflow-y-auto custom-scrollbar">
-                {activeItem?.component || <div className="text-zinc-500 font-mono text-sm">CONTENT_MISSING: {activeTab}</div>}
+              <div className="glass-panel flex-1 min-h-0 overflow-hidden rounded-[1.75rem] p-3.5 md:p-4.5">
+                <div className="flex h-full min-h-0 overflow-y-auto custom-scrollbar">
+                  {activeItem?.component || <div className="text-white/45 font-mono text-sm">CONTENT_MISSING: {activeTab}</div>}
+                </div>
               </div>
             )}
           </main>
 
           <footer
             className={cn(
-              "border-t border-white/[0.08] bg-slate-950/70 backdrop-blur-2xl shrink-0 z-40 overflow-hidden transition-[height] duration-300 ease-out",
+               "shrink-0 z-40 overflow-hidden border-t border-white/[0.06] bg-black/70 backdrop-blur-2xl transition-[height] duration-300 ease-out",
               terminalCollapsed ? "h-8" : "h-36"
             )}
           >
             <button
               onClick={() => setTerminalCollapsed(!terminalCollapsed)}
-              className="w-full h-8 flex items-center justify-center gap-2 text-[10px] font-mono text-zinc-500 hover:text-zinc-300 transition-colors border-b border-white/[0.04] cursor-row-resize tracking-[0.28em]"
-              aria-label={terminalCollapsed ? "Expand terminal" : "Collapse terminal"}
-            >
-              <div className="w-8 h-0.5 rounded-full bg-zinc-700" />
-              <span>{terminalCollapsed ? "SHOW LOG" : "TERMINAL"}</span>
-              <div className="w-8 h-0.5 rounded-full bg-zinc-700" />
-            </button>
+                className="flex h-8 w-full cursor-row-resize items-center justify-center gap-2 border-b border-white/[0.05] text-[10px] font-mono tracking-[0.28em] text-white/40 transition-colors hover:bg-white/[0.02] hover:text-white/75"
+                aria-label={terminalCollapsed ? "Expand terminal" : "Collapse terminal"}
+              >
+                <div className="h-0.5 w-8 rounded-full bg-white/[0.16]" />
+                <span>{terminalCollapsed ? "SHOW LOG" : "TERMINAL"}</span>
+                <div className="h-0.5 w-8 rounded-full bg-white/[0.16]" />
+              </button>
             {!terminalCollapsed && (
               <TerminalLog className="h-[calc(100%-2rem)] border-none rounded-none bg-transparent" />
             )}
           </footer>
         </div>
+      </div>
       </div>
     </div>
   );

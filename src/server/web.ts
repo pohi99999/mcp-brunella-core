@@ -24,6 +24,7 @@ import {
   requestId,
   requestLogging,
   apiRateLimit,
+  requireOperatorAccess,
 } from "./middleware.js";
 import { getRuntimeTelemetry } from "../utils/runtimeTelemetry.js";
 
@@ -102,15 +103,19 @@ function acquirePidLock(): void {
     const raw = (() => { try { return readFileSync(PID_FILE, "utf-8").trim(); } catch { return ""; } })();
     const oldPid = parseInt(raw, 10);
     if (!isNaN(oldPid)) {
-      try {
-        process.kill(oldPid, 0); // throws ESRCH if process is dead
-        logWarn("Server",
-          `Brunella mar fut! (PID ${oldPid}) — az uj folyamat KILEP, hogy megelozze a duplikaciót.\n` +
-          `Ha le van allva, torold: del .brunella.pid`);
-        process.exit(1);
-      } catch {
-        // Stale lockfile from a previous crash
-        logInfo("Server", `Elavult PID-fajl torölve (PID ${oldPid} mar nem fut)`);
+      // PM2 restart loop protection: if the lock already points to the current
+      // process, do not self-block on restart.
+      if (oldPid !== process.pid) {
+        try {
+          process.kill(oldPid, 0); // throws ESRCH if process is dead
+          logWarn("Server",
+            `Brunella mar fut! (PID ${oldPid}) — az uj folyamat KILEP, hogy megelozze a duplikaciót.\n` +
+            `Ha le van allva, torold: del .brunella.pid`);
+          process.exit(1);
+        } catch {
+          // Stale lockfile from a previous crash
+          logInfo("Server", `Elavult PID-fajl torölve (PID ${oldPid} mar nem fut)`);
+        }
       }
     }
   }
@@ -587,7 +592,7 @@ async function deferredInit(
   // ── MCP SSE bridge ─────────────────────────────────────────────
   const mcpSessions = new Map<string, { transport: any; server: any }>();
 
-  app.get("/sse", async (req, res) => {
+  app.get("/sse", requireOperatorAccess, async (req, res) => {
     const { McpServer } = await import("@modelcontextprotocol/sdk/server/mcp.js");
     const { SSEServerTransport } = await import("@modelcontextprotocol/sdk/server/sse.js");
     const { v4: uuidv4 } = await import("uuid");
@@ -601,7 +606,7 @@ async function deferredInit(
     await server.connect(transport);
   });
 
-  app.post("/messages", async (req, res) => {
+  app.post("/messages", requireOperatorAccess, async (req, res) => {
     const sessionId = req.query.sessionId as string;
     if (!sessionId || !mcpSessions.has(sessionId)) {
       res.status(404).send("Session not found");

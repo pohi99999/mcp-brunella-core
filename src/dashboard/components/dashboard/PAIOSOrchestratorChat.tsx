@@ -112,6 +112,13 @@ interface PaiosChatResponse {
 }
 
 type ModelProvider = 'gemini' | 'github' | 'ollama' | 'anthropic' | 'cloudflare' | 'copilot';
+type VoiceOption = 'alloy' | 'echo' | 'fable' | 'onyx' | 'nova' | 'shimmer';
+
+interface PaiosVoiceConfig {
+    response_voice: VoiceOption;
+    tts_model: 'tts-1' | 'tts-1-hd';
+    speed: number;
+}
 
 interface BrowserSpeechRecognitionResultEvent {
     results: ArrayLike<ArrayLike<{ transcript: string }>>;
@@ -210,6 +217,18 @@ function createSessionId(): string {
     return `dashboard-${Date.now()}-${randomPart}`;
 }
 
+function selectPreferredSpeechVoice(voices: SpeechSynthesisVoice[], preferredVoice: VoiceOption): SpeechSynthesisVoice | undefined {
+    const normalizedPreferredVoice = preferredVoice.toLowerCase();
+    const femaleHints = ['female', 'woman', 'samantha', 'zira', 'eva', 'anna', 'katja', 'julia', 'victoria'];
+    const preferredLocaleVoices = voices.filter((voice) => voice.lang.toLowerCase().startsWith('hu'));
+
+    return voices.find((voice) => voice.name.toLowerCase().includes(normalizedPreferredVoice))
+        ?? preferredLocaleVoices.find((voice) => femaleHints.some((hint) => voice.name.toLowerCase().includes(hint)))
+        ?? preferredLocaleVoices[0]
+        ?? voices.find((voice) => femaleHints.some((hint) => voice.name.toLowerCase().includes(hint)))
+        ?? voices[0];
+}
+
 export function PAIOSOrchestratorChat() {
     const [messages, setMessages] = useState<ChatMessage[]>([]);
     const [input, setInput] = useState('');
@@ -217,6 +236,11 @@ export function PAIOSOrchestratorChat() {
     const [providerCatalog, setProviderCatalog] = useState<LLMCatalogProvider[]>(FALLBACK_PROVIDER_CATALOG);
     const [selectedProvider, setSelectedProvider] = useState<ModelProvider>('github');
     const [selectedModel, setSelectedModel] = useState<string>(PROVIDER_VISUALS.github.defaultModel);
+    const [voiceConfig, setVoiceConfig] = useState<PaiosVoiceConfig>({
+        response_voice: 'nova',
+        tts_model: 'tts-1',
+        speed: 1,
+    });
     const [sessionId, setSessionId] = useState<string>(() => {
         if (typeof window === 'undefined') {
             return createSessionId();
@@ -252,6 +276,20 @@ export function PAIOSOrchestratorChat() {
 
                 if (isMounted && supportedProviders.length > 0) {
                     setProviderCatalog(supportedProviders);
+                }
+
+                const configResponse = await fetch('/api/paios/config');
+                if (!configResponse.ok) {
+                    return;
+                }
+
+                const config = await configResponse.json() as { voice?: Partial<PaiosVoiceConfig> };
+                if (isMounted && config.voice) {
+                    setVoiceConfig((current) => ({
+                        response_voice: config.voice?.response_voice ?? current.response_voice,
+                        tts_model: config.voice?.tts_model ?? current.tts_model,
+                        speed: typeof config.voice?.speed === 'number' ? config.voice.speed : current.speed,
+                    }));
                 }
             } catch {
                 // Csendes fallback a lokális alaplistára
@@ -328,9 +366,9 @@ export function PAIOSOrchestratorChat() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     text: plainText.slice(0, 4000),
-                    voice: 'nova',
-                    model: 'tts-1',
-                    speed: 1.0,
+                    voice: voiceConfig.response_voice,
+                    model: voiceConfig.tts_model,
+                    speed: voiceConfig.speed,
                 }),
             });
 
@@ -343,7 +381,7 @@ export function PAIOSOrchestratorChat() {
                 audio.onended = () => { setIsSpeaking(false); URL.revokeObjectURL(audioUrl); };
                 audio.onerror = () => { setIsSpeaking(false); URL.revokeObjectURL(audioUrl); };
                 await audio.play();
-                toast.success('🎙️ Brunella beszél... (Nova)');
+                toast.success(`🎙️ Brunella beszél... (${voiceConfig.response_voice})`);
                 return;
             }
         } catch {
@@ -355,7 +393,12 @@ export function PAIOSOrchestratorChat() {
             window.speechSynthesis.cancel();
             const utterance = new SpeechSynthesisUtterance(plainText.slice(0, 500));
             utterance.lang = 'hu-HU';
-            utterance.rate = 1.05;
+            utterance.rate = voiceConfig.speed;
+            const voices = window.speechSynthesis.getVoices();
+            const preferredVoice = selectPreferredSpeechVoice(voices, voiceConfig.response_voice);
+            if (preferredVoice) {
+                utterance.voice = preferredVoice;
+            }
             utterance.onend = () => setIsSpeaking(false);
             utterance.onerror = () => setIsSpeaking(false);
             window.speechSynthesis.speak(utterance);

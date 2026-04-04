@@ -7,6 +7,7 @@ import {
 } from "react";
 import { io, type Socket } from "socket.io-client";
 import { useSystemSignalStore } from "../store/systemSignalStore";
+import { getSocketOrigin } from "../lib/backendOrigin";
 import {
   getTasks,
   getTaskStats,
@@ -64,7 +65,7 @@ interface SocketContextValue {
 
 const SocketContext = createContext<SocketContextValue | null>(null);
 
-const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || "";
+const SOCKET_URL = getSocketOrigin();
 
 export function SocketProvider({ children }: { children: ReactNode }) {
   const [socketInstance, setSocketInstance] = useState<Socket | null>(null);

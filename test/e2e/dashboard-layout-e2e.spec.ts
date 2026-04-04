@@ -18,11 +18,13 @@ test.describe('Brunella Mission Control Dashboard Layout E2E', () => {
     test('Dashboard layout, widgets and interactive elements', async ({ page }) => {
         await page.goto('/');
 
-        // 1. Verify active widgets (Stats and Health)
-        await expect(page.locator('text=Total Tasks').first()).toBeVisible({ timeout: 10000 });
-        await expect(page.locator('text=Success Rate').first()).toBeVisible();
-        await expect(page.locator('text=Agent State').first()).toBeVisible();
-        await expect(page.locator('text=System Health').first()).toBeVisible();
+        // 1. Verify the current Mission Control shell summary strip
+        await expect(page.getByRole('heading', { name: /Mission Control/i })).toBeVisible({ timeout: 10000 });
+        await expect(page.getByRole('button', { name: /Reset View/i })).toBeVisible();
+        await expect(page.getByText(/^Health$/i).first()).toBeVisible();
+        await expect(page.getByText(/^Agents$/i).first()).toBeVisible();
+        await expect(page.getByText(/^Queue$/i).first()).toBeVisible();
+        await expect(page.getByText(/^Success$/i).first()).toBeVisible();
 
         // 2. Interact with Theme toggle (dark/light/system)
         // Usually there is a theme toggle button in the header
@@ -41,20 +43,26 @@ test.describe('Brunella Mission Control Dashboard Layout E2E', () => {
 
         // 4. Mobile Menu toggle
         // Simulate mobile viewport to see mobile menu toggle
-        await page.setViewportSize({ width: 375, height: 812 });
-        // Give the UI time to react to the resize
-        await page.waitForTimeout(1000);
-        
-        try {
-            const mobileMenuToggle = page.locator('header button').last();
-            if (await mobileMenuToggle.isVisible()) {
-                await mobileMenuToggle.click({ force: true, timeout: 5000 });
-                await page.waitForTimeout(500); 
-                await page.keyboard.press('Escape'); // Try closing it
-            }
-        } catch (e: any) {
-            console.log('Mobile menu toggle click failed:', e.message);
-        }
+        await page.setViewportSize({ width: 390, height: 844 });
+        await page.reload();
+        await expect(page.getByRole('heading', { name: /Mission Control/i })).toBeVisible({ timeout: 10000 });
+
+        const mobileMenuToggle = page.getByRole('button', { name: 'Open navigation menu' });
+        await expect(mobileMenuToggle).toBeVisible({ timeout: 5000 });
+        await mobileMenuToggle.click({ force: true, timeout: 5000 });
+
+        const mobileDrawer = page.getByRole('dialog');
+        await expect(mobileDrawer).toBeVisible({ timeout: 5000 });
+        await expect(mobileDrawer).toContainText(/Mission Control/i);
+        await expect(mobileDrawer).toContainText(/Cognitive Memory/i);
+
+        const hasHorizontalOverflow = await page.evaluate(
+            () => document.body.scrollWidth > document.body.clientWidth
+        );
+        expect(hasHorizontalOverflow).toBeFalsy();
+
+        await page.keyboard.press('Escape');
+        await expect(mobileDrawer).toBeHidden({ timeout: 5000 });
 
         // Revert to desktop for terminal check
         await page.setViewportSize({ width: 1280, height: 800 });

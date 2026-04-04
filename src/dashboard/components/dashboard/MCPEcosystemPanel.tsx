@@ -139,6 +139,13 @@ const STATIC_SERVERS: Omit<MCPServer, "tools" | "toolCount" | "status">[] = [
     color: "#06b6d4",
   },
   {
+    id: "brunella-remote",
+    label: "brunella-remote",
+    description: "Remote Brunella FastMCP deployment — hosted MCP endpoint",
+    icon: <Shield size={16} />,
+    color: "#38bdf8",
+  },
+  {
     id: "n8n-server",
     label: "n8n-mcp-server",
     description: "n8n workflow automation — workflows, executions, credentials",

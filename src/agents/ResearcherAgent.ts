@@ -9,6 +9,17 @@ interface RAGResult {
   score: number;
 }
 
+interface RAGQueryRequest {
+  query: string;
+  limit: number;
+}
+
+interface RAGQueryResponse {
+  results?: RAGResult[];
+}
+
+const PYTHON_RAG_QUERY_URL = "http://127.0.0.1:8000/rag/query";
+
 export class ResearcherAgent extends BaseAgent {
   name = "Researcher";
   description =
@@ -19,18 +30,22 @@ export class ResearcherAgent extends BaseAgent {
   private async queryRAG(query: string): Promise<RAGResult[]> {
     try {
       logInfo("ResearcherAgent", `Querying RAG Knowledge Base: ${query}`);
-      const response = await fetch("http://127.0.0.1:8000/rag/query", {
+      const requestBody: RAGQueryRequest = {
+        query,
+        limit: 5,
+      };
+      const response = await fetch(PYTHON_RAG_QUERY_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query: query, limit: 5 }),
+        body: JSON.stringify(requestBody),
       });
 
       if (!response.ok) {
         throw new Error(`RAG API error: ${response.statusText}`);
       }
 
-      const data = await response.json();
-      return data.results || [];
+      const data: RAGQueryResponse = (await response.json()) as RAGQueryResponse;
+      return Array.isArray(data.results) ? data.results : [];
     } catch (error) {
       logError("ResearcherAgent", `RAG query failed: ${error}`);
       return [];

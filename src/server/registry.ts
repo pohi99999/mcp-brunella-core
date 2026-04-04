@@ -1,6 +1,7 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { logWarn } from "../utils/logger.js";
+import { wrapToolHandler } from "../core/toolRunCapture.js";
 import {
   registerToolHandler,
   registerToolDefinition,
@@ -13,6 +14,174 @@ import {
 export { getAllToolDefinitions, executeLocalTool, getRegisteredToolsList };
 
 let agentManager: any = null;
+
+function isZodSchemaLike(value: unknown): boolean {
+  return Boolean(
+    value &&
+      typeof value === "object" &&
+      typeof (value as { safeParse?: unknown }).safeParse === "function",
+  );
+}
+
+function isJsonSchemaLike(value: unknown): boolean {
+  return Boolean(
+    value &&
+      typeof value === "object" &&
+      !Array.isArray(value) &&
+      (
+        typeof (value as { type?: unknown }).type === "string" ||
+        "properties" in (value as Record<string, unknown>) ||
+        "$schema" in (value as Record<string, unknown>)
+      ),
+  );
+}
+
+function isPlainZodShape(value: unknown): value is Record<string, z.ZodTypeAny> {
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    return false;
+  }
+
+  const entries = Object.values(value);
+  return entries.length === 0 || entries.every((entry) => isZodSchemaLike(entry));
+}
+
+function unwrapZodType(schema: z.ZodTypeAny): z.ZodTypeAny {
+  if (schema instanceof z.ZodOptional || schema instanceof z.ZodNullable) {
+    return unwrapZodType(schema.unwrap());
+  }
+
+  if (schema instanceof z.ZodDefault) {
+    return unwrapZodType(schema._def.innerType);
+  }
+
+  if (schema instanceof z.ZodEffects) {
+    return unwrapZodType(schema._def.schema);
+  }
+
+  return schema;
+}
+
+function basicObjectJsonSchema(
+  shape: Record<string, z.ZodTypeAny>,
+): { type: string; properties: Record<string, unknown>; required?: string[]; additionalProperties?: boolean } {
+  const properties = Object.fromEntries(
+    Object.entries(shape).map(([key, value]) => {
+      const unwrapped = unwrapZodType(value);
+      const description =
+        typeof unwrapped.description === "string" && unwrapped.description.length > 0
+          ? { description: unwrapped.description }
+          : {};
+
+      let schema: Record<string, unknown>;
+      if (unwrapped instanceof z.ZodString) {
+        schema = { type: "string", ...description };
+      } else if (unwrapped instanceof z.ZodNumber) {
+        schema = { type: "number", ...description };
+      } else if (unwrapped instanceof z.ZodBoolean) {
+        schema = { type: "boolean", ...description };
+      } else if (unwrapped instanceof z.ZodArray) {
+        schema = { type: "array", ...description };
+      } else {
+        schema = { type: "string", ...description };
+      }
+
+      return [key, schema];
+    }),
+  );
+  const required = Object.entries(shape)
+    .filter(([, value]) => !(typeof value.isOptional === "function" && value.isOptional()))
+    .map(([key]) => key);
+
+  return sanitizeJsonSchema({
+    type: "object",
+    properties,
+    required,
+    additionalProperties: false,
+  });
+}
+
+function sanitizeJsonSchema(schema: Record<string, unknown> | undefined): {
+  type: string;
+  properties: Record<string, unknown>;
+  required?: string[];
+  additionalProperties?: boolean;
+} {
+  if (!schema || typeof schema !== "object") {
+    return { type: "object", properties: {}, additionalProperties: false };
+  }
+
+  const sanitized: Record<string, unknown> = { ...schema };
+  delete sanitized.$schema;
+  delete sanitized.$ref;
+  delete sanitized.definitions;
+
+  if (sanitized.type !== "object") {
+    sanitized.type = "object";
+  }
+
+  if (
+    !sanitized.properties ||
+    typeof sanitized.properties !== "object" ||
+    Array.isArray(sanitized.properties)
+  ) {
+    sanitized.properties = {};
+  }
+
+  if (!Array.isArray(sanitized.required)) {
+    delete sanitized.required;
+  }
+
+  if (typeof sanitized.additionalProperties !== "boolean") {
+    sanitized.additionalProperties = false;
+  }
+
+  return sanitized as {
+    type: string;
+    properties: Record<string, unknown>;
+    required?: string[];
+    additionalProperties?: boolean;
+  };
+}
+
+export function normalizeToolInputSchema(
+  parameters: unknown,
+  zodToJsonSchema?: (
+    schema: z.ZodTypeAny,
+    options?: Record<string, unknown>,
+  ) => Record<string, unknown>,
+): { type: string; properties: Record<string, unknown>; required?: string[]; additionalProperties?: boolean } {
+  if (isJsonSchemaLike(parameters)) {
+    return sanitizeJsonSchema(parameters as Record<string, unknown>);
+  }
+
+  if (zodToJsonSchema && isZodSchemaLike(parameters)) {
+    return sanitizeJsonSchema(
+      zodToJsonSchema(parameters as z.ZodTypeAny, {
+        target: "openApi3",
+        $refStrategy: "none",
+      }),
+    );
+  }
+
+  if (parameters instanceof z.ZodObject) {
+    return basicObjectJsonSchema(parameters.shape);
+  }
+
+  if (zodToJsonSchema && isPlainZodShape(parameters)) {
+    return sanitizeJsonSchema(
+      zodToJsonSchema(z.object(parameters), {
+        target: "openApi3",
+        $refStrategy: "none",
+      }),
+    );
+  }
+
+  if (isPlainZodShape(parameters)) {
+    return basicObjectJsonSchema(parameters);
+  }
+
+  return sanitizeJsonSchema(undefined);
+}
 
 export async function registerAgents() {
   if (!agentManager) {
@@ -56,20 +225,14 @@ export async function registerAllTools(server: McpServer) {
   const originalTool = server.tool.bind(server);
   // @ts-expect-error patching server.tool for tool registration tracking
   server.tool = (name: string, description: string, parameters: any, handler: any) => {
+    const wrappedHandler = wrapToolHandler(name, handler as (...args: any[]) => any) as typeof handler;
+
     // 1. Store handler for local execution
-    registerToolHandler(name, handler);
+    registerToolHandler(name, wrappedHandler);
 
     // 2. Convert schema and store definition for agents
     try {
-      // If parameters is a Zod schema, convert it
-      let jsonSchema: any;
-      if (isNode && zodToJsonSchema && parameters && typeof parameters.parse === 'function') {
-         jsonSchema = zodToJsonSchema(parameters);
-         if ('$schema' in jsonSchema) delete (jsonSchema as any).$schema;
-      } else {
-         // Assume it's already a schema or undefined, or we can't convert
-         jsonSchema = parameters || { type: "object", properties: {} };
-      }
+      const jsonSchema = normalizeToolInputSchema(parameters, zodToJsonSchema);
 
       registerToolDefinition({
         name,
@@ -85,7 +248,7 @@ export async function registerAllTools(server: McpServer) {
       });
     }
 
-    return originalTool(name, description, parameters, handler);
+    return originalTool(name, description, parameters, wrappedHandler);
   };
 
   if (isNode) {

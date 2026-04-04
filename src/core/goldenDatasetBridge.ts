@@ -61,6 +61,10 @@ export interface GoldenDatasetStats {
   totalSamples: number;
   newSinceLastTraining: number;
   lastTrainingAt?: string;
+  sources?: Record<string, number>;
+  avgQuality?: number;
+  fileSizeMb?: number;
+  status?: string;
 }
 
 // ============================================================================
@@ -85,6 +89,53 @@ const MAX_HASH_CACHE = 500;
  */
 function quickHash(str: string): string {
   return fnvHash(str);
+}
+
+function markGoldenSampleRemoteStatus(sampleHash: string, remoteStatus: 'pending' | 'synced' | 'failed'): void {
+  ensureGoldenLocalTable();
+  const nowIso = new Date().toISOString();
+
+  getGlobalDb().prepare(`
+    UPDATE golden_samples
+    SET remote_status = ?, remote_synced_at = ?, updated_at = ?
+    WHERE sample_hash = ?
+  `).run(remoteStatus, remoteStatus === 'synced' ? nowIso : null, nowIso, sampleHash);
+}
+
+async function saveGoldenSampleViaPython(sample: GoldenSample): Promise<GoldenSaveResult> {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), SAVE_TIMEOUT_MS);
+
+  try {
+    const response = await fetch(`${PYTHON_BASE_URL}/incubator/gold-sample`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        prompt: sample.prompt,
+        completion: sample.completion,
+        source: sample.source,
+        quality: sample.quality,
+      }),
+      signal: controller.signal,
+    });
+
+    clearTimeout(timeoutId);
+
+    if (!response.ok) {
+      throw new Error(`Python API error: ${response.status} ${response.statusText}`);
+    }
+
+    const data = await response.json() as { message?: string; stats?: Record<string, unknown> };
+    return {
+      success: true,
+      message: data.message ?? 'Saved to Python backup',
+      stats: data.stats,
+    };
+  } catch (fetchError: unknown) {
+    clearTimeout(timeoutId);
+    const msg = fetchError instanceof Error ? fetchError.message : String(fetchError);
+    return { success: false, message: `Save failed: ${msg}` };
+  }
 }
 
 function ensureGoldenLocalTable(): void {
@@ -141,6 +192,19 @@ export function saveGoldenSampleLocal(sample: GoldenSample): GoldenSaveResult {
     updated_at: nowIso,
   });
 
+  captureCuratedGoldenCandidate({
+    id: `curated_tool_${sampleHash}`,
+    prompt: sample.prompt,
+    completion: sample.completion,
+    source: sample.source,
+    quality: sample.quality,
+    provenance: {
+      kind: 'golden_local_mirror',
+      sampleHash,
+      mirroredAt: nowIso,
+    },
+  });
+
   return {
     success: true,
     message: 'Saved to local golden mirror',
@@ -148,13 +212,14 @@ export function saveGoldenSampleLocal(sample: GoldenSample): GoldenSaveResult {
   };
 }
 
-export async function syncLocalToD1(): Promise<{ synced: number; failed: number; skipped: number }> {
+export async function syncLocalToD1(): Promise<{
+  synced: number;
+  failed: number;
+  skipped: number;
+  errors: string[];
+  mode: 'cloud' | 'local-only';
+}> {
   ensureGoldenLocalTable();
-  const d1Adapter = getD1Adapter();
-  if (!d1Adapter) {
-    return { synced: 0, failed: 0, skipped: 0 };
-  }
-
   const db = getGlobalDb();
   const rows = db.prepare(`
     SELECT *
@@ -162,41 +227,67 @@ export async function syncLocalToD1(): Promise<{ synced: number; failed: number;
     WHERE remote_status != 'synced'
     ORDER BY created_at ASC
   `).all() as Array<Record<string, unknown>>;
+  const d1Adapter = getD1Adapter();
+  if (!d1Adapter) {
+    return {
+      synced: 0,
+      failed: 0,
+      skipped: rows.length,
+      errors: rows.length > 0 ? ['D1 adapter not configured'] : [],
+      mode: 'local-only',
+    };
+  }
 
   let synced = 0;
   let failed = 0;
+  const errors: string[] = [];
 
   for (const row of rows) {
-    try {
-      const result = await d1Adapter.insertGoldenSample({
-        id: `golden_${String(row.sample_hash)}`,
-        instruction: String(row.prompt),
-        output: String(row.completion),
-        source: String(row.source),
-      });
+    const sampleHash = String(row.sample_hash);
+    const sample: GoldenSample = {
+      prompt: String(row.prompt),
+      completion: String(row.completion),
+      source: String(row.source),
+      quality: Number(row.quality),
+    };
 
-      if (result.status === 'error') {
-        throw new Error(result.error || 'Unknown D1 sync error');
+    try {
+      let syncedRemotely = false;
+
+      if (d1Adapter) {
+        const result = await d1Adapter.insertGoldenSample({
+          id: `golden_${sampleHash}`,
+          instruction: sample.prompt,
+          output: sample.completion,
+          source: sample.source,
+        });
+
+        if (result.status === 'success') {
+          syncedRemotely = true;
+        } else {
+          logError('GoldenBridge', `D1 mirror sync failed for ${sampleHash}: ${result.error ?? 'Unknown D1 sync error'}`);
+        }
       }
 
-      db.prepare(`
-        UPDATE golden_samples
-        SET remote_status = 'synced', remote_synced_at = ?, updated_at = ?
-        WHERE sample_hash = ?
-      `).run(new Date().toISOString(), new Date().toISOString(), String(row.sample_hash));
+      if (!syncedRemotely) {
+        const pythonResult = await saveGoldenSampleViaPython(sample);
+        if (!pythonResult.success) {
+          throw new Error(pythonResult.message || 'Unknown Python sync error');
+        }
+      }
+
+      markGoldenSampleRemoteStatus(sampleHash, 'synced');
       synced += 1;
     } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
       failed += 1;
-      db.prepare(`
-        UPDATE golden_samples
-        SET remote_status = 'failed', updated_at = ?
-        WHERE sample_hash = ?
-      `).run(new Date().toISOString(), String(row.sample_hash));
-      logError('GoldenBridge', `Local->D1 sync failed for ${String(row.sample_hash)}: ${error instanceof Error ? error.message : String(error)}`);
+      errors.push(message);
+      markGoldenSampleRemoteStatus(sampleHash, 'failed');
+      logError('GoldenBridge', `Local->remote sync failed for ${sampleHash}: ${message}`);
     }
   }
 
-  return { synced, failed, skipped: 0 };
+  return { synced, failed, skipped: 0, errors, mode: 'cloud' };
 }
 
 export function exportGoldenDataset(format: 'jsonl' | 'json' = 'jsonl'): string {
@@ -293,6 +384,8 @@ export async function saveGoldenSample(sample: GoldenSample): Promise<GoldenSave
       return localResult;
     }
 
+    const sampleHash = quickHash(`${sample.prompt}|||${sample.completion}`);
+
     // Save to D1 (cloud-first strategy)
     const d1Adapter = getD1Adapter();
     if (d1Adapter) {
@@ -309,12 +402,7 @@ export async function saveGoldenSample(sample: GoldenSample): Promise<GoldenSave
         }
         
         logInfo('GoldenBridge', `Sample saved to D1 from ${sample.source} (quality: ${sample.quality.toFixed(2)})`);
-        ensureGoldenLocalTable();
-        getGlobalDb().prepare(`
-          UPDATE golden_samples
-          SET remote_status = 'synced', remote_synced_at = ?, updated_at = ?
-          WHERE sample_hash = ?
-        `).run(new Date().toISOString(), new Date().toISOString(), quickHash(`${sample.prompt}|||${sample.completion}`));
+        markGoldenSampleRemoteStatus(sampleHash, 'synced');
         return { 
           success: true, 
           message: 'Saved to D1 cloud storage',
@@ -334,42 +422,19 @@ export async function saveGoldenSample(sample: GoldenSample): Promise<GoldenSave
     }
 
     // Fallback: Python backend (legacy support)
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), SAVE_TIMEOUT_MS);
-
-    try {
-      const response = await fetch(`${PYTHON_BASE_URL}/incubator/gold-sample`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          prompt: sample.prompt,
-          completion: sample.completion,
-          source: sample.source,
-          quality: sample.quality
-        }),
-        signal: controller.signal
-      });
-
-      clearTimeout(timeoutId);
-
-      if (!response.ok) {
-        throw new Error(`Python API error: ${response.status} ${response.statusText}`);
-      }
-
-      const data = await response.json();
-      ensureGoldenLocalTable();
-      getGlobalDb().prepare(`
-        UPDATE golden_samples
-        SET remote_status = 'synced', remote_synced_at = ?, updated_at = ?
-        WHERE sample_hash = ?
-      `).run(new Date().toISOString(), new Date().toISOString(), quickHash(`${sample.prompt}|||${sample.completion}`));
+    const pythonResult = await saveGoldenSampleViaPython(sample);
+    if (pythonResult.success) {
+      markGoldenSampleRemoteStatus(sampleHash, 'synced');
       logInfo('GoldenBridge', `Sample saved to Python backup from ${sample.source} (quality: ${sample.quality.toFixed(2)})`);
-      return { success: true, message: data.message, stats: { ...data.stats, mirror: 'sqlite' } };
-    } catch (fetchError: unknown) {
-      clearTimeout(timeoutId);
-      const msg = fetchError instanceof Error ? fetchError.message : String(fetchError);
-      return { success: false, message: `Save failed: ${msg}` };
+      return {
+        success: true,
+        message: pythonResult.message,
+        stats: { ...(pythonResult.stats ?? {}), mirror: 'sqlite' },
+      };
     }
+
+    markGoldenSampleRemoteStatus(sampleHash, 'failed');
+    return pythonResult;
   } catch (error: unknown) {
     const msg = error instanceof Error ? error.message : String(error);
     logError('GoldenBridge', `Save failed: ${msg}`);
@@ -424,10 +489,30 @@ export async function getGoldenStats(): Promise<GoldenDatasetStats | null> {
 
       if (!response.ok) return null;
 
-      const data = await response.json();
+      const data = await response.json() as { stats?: Record<string, unknown> };
+      const pythonStats = data.stats ?? {};
+      const pythonTotalSamples = Number(pythonStats.totalSamples ?? pythonStats.total_samples ?? 0);
+      const pythonNewSinceLastTraining = Number(pythonStats.newSinceLastTraining ?? pythonStats.new_since_last_training ?? 0);
+      const pythonAvgQuality = Number(pythonStats.avgQuality ?? pythonStats.avg_quality ?? 0);
+      const pythonFileSizeMb = Number(pythonStats.fileSizeMb ?? pythonStats.file_size_mb ?? 0);
+      const normalizedSources = typeof pythonStats.sources === 'object' && pythonStats.sources !== null
+        ? Object.fromEntries(
+            Object.entries(pythonStats.sources as Record<string, unknown>).map(([key, value]) => [key, Number(value)])
+          )
+        : undefined;
+
       return {
-        ...(data.stats as GoldenDatasetStats),
-        totalSamples: Math.max(Number(localRow.total_samples ?? 0), Number((data.stats as GoldenDatasetStats).totalSamples ?? 0)),
+        totalSamples: Math.max(Number(localRow.total_samples ?? 0), pythonTotalSamples),
+        newSinceLastTraining: Number.isFinite(pythonNewSinceLastTraining) ? pythonNewSinceLastTraining : 0,
+        lastTrainingAt: typeof pythonStats.lastTrainingAt === 'string'
+          ? pythonStats.lastTrainingAt
+          : typeof pythonStats.last_training_at === 'string'
+            ? pythonStats.last_training_at
+            : undefined,
+        sources: normalizedSources,
+        avgQuality: Number.isFinite(pythonAvgQuality) ? pythonAvgQuality : undefined,
+        fileSizeMb: Number.isFinite(pythonFileSizeMb) ? pythonFileSizeMb : undefined,
+        status: typeof pythonStats.status === 'string' ? pythonStats.status : undefined,
       };
     } catch (fetchError) {
       clearTimeout(timeoutId);
@@ -465,6 +550,28 @@ function ensureCuratedTable(): void {
     );
     CREATE INDEX IF NOT EXISTS idx_curated_approval_state ON curated_golden_samples(approval_state);
   `);
+
+  db.prepare(`
+    UPDATE curated_golden_samples
+    SET approval_state = 'pending'
+    WHERE approval_state = 'candidate'
+  `).run();
+
+  ensureGoldenLocalTable();
+  db.prepare(`
+    INSERT OR IGNORE INTO curated_golden_samples (
+      id, prompt, completion, source, quality, approval_state, created_at
+    )
+    SELECT
+      'curated_tool_' || sample_hash,
+      prompt,
+      completion,
+      source,
+      quality,
+      'pending',
+      created_at
+    FROM golden_samples
+  `).run();
 }
 
 function rowToCuratedSample(row: Record<string, unknown>): CuratedGoldenSample {
@@ -491,6 +598,7 @@ export function listCuratedGoldenSamples(opts: {
   offset?: number;
 }): CuratedGoldenSample[] {
   ensureCuratedTable();
+  captureToolRunCandidates();
   const db = getGlobalDb();
   const limit = opts.limit ?? 100;
   const offset = opts.offset ?? 0;
@@ -531,8 +639,40 @@ export function captureCuratedGoldenCandidate(opts: {
   const quality = opts.quality ?? calculateQuality(opts.prompt, opts.completion);
   const approvalState: CuratedGoldenApprovalState = opts.autoApprove ? 'approved' : 'pending';
   const now = new Date().toISOString();
+  const existing = db.prepare(
+    'SELECT approval_state AS approvalState, approved_at AS approvedAt, reviewed_by AS reviewedBy, review_notes AS reviewNotes FROM curated_golden_samples WHERE id = ?'
+  ).get(id) as {
+    approvalState?: string;
+    approvedAt?: string | null;
+    reviewedBy?: string | null;
+    reviewNotes?: string | null;
+  } | undefined;
   db.prepare(
-    'INSERT INTO curated_golden_samples (id, prompt, completion, source, quality, approval_state, provenance, created_at, approved_at, reviewed_by, review_notes) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+    `INSERT INTO curated_golden_samples (
+      id, prompt, completion, source, quality, approval_state, provenance, created_at, approved_at, reviewed_by, review_notes
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ON CONFLICT(id) DO UPDATE SET
+      prompt = excluded.prompt,
+      completion = excluded.completion,
+      source = excluded.source,
+      quality = excluded.quality,
+      provenance = COALESCE(excluded.provenance, curated_golden_samples.provenance),
+      approval_state = CASE
+        WHEN curated_golden_samples.approval_state IN ('approved', 'rejected') THEN curated_golden_samples.approval_state
+        ELSE excluded.approval_state
+      END,
+      approved_at = CASE
+        WHEN curated_golden_samples.approval_state = 'approved' THEN curated_golden_samples.approved_at
+        ELSE excluded.approved_at
+      END,
+      reviewed_by = CASE
+        WHEN curated_golden_samples.approval_state IN ('approved', 'rejected') THEN curated_golden_samples.reviewed_by
+        ELSE excluded.reviewed_by
+      END,
+      review_notes = CASE
+        WHEN curated_golden_samples.approval_state IN ('approved', 'rejected') THEN curated_golden_samples.review_notes
+        ELSE excluded.review_notes
+      END`
   ).run(
     id,
     opts.prompt,
@@ -542,9 +682,9 @@ export function captureCuratedGoldenCandidate(opts: {
     approvalState,
     opts.provenance ? JSON.stringify(opts.provenance) : null,
     now,
-    approvalState === 'approved' ? (opts.approvedAt ?? now) : null,
-    opts.reviewedBy ?? null,
-    opts.reviewNotes ?? null,
+    approvalState === 'approved' ? (opts.approvedAt ?? now) : existing?.approvedAt ?? null,
+    opts.reviewedBy ?? existing?.reviewedBy ?? null,
+    opts.reviewNotes ?? existing?.reviewNotes ?? null,
   );
   return { success: true, id };
 }
@@ -559,28 +699,43 @@ export function getCuratedGoldenSample(sampleId: string): CuratedGoldenSample | 
 
 export function captureToolRunCandidates(limit = 50): CuratedGoldenSample[] {
   ensureCuratedTable();
-  ensureGoldenLocalTable();
   const db = getGlobalDb();
   const rows = db.prepare(
-    'SELECT * FROM golden_samples ORDER BY created_at DESC LIMIT ?'
+    'SELECT * FROM tool_runs WHERE success = 1 ORDER BY timestamp DESC LIMIT ?'
   ).all(limit) as Array<Record<string, unknown>>;
   const results: CuratedGoldenSample[] = [];
   for (const row of rows) {
-    const id = `curated_tool_${String(row['sample_hash'])}`;
+    const id = `curated_tool_run_${String(row['id'])}`;
     const exists = db.prepare('SELECT id FROM curated_golden_samples WHERE id = ?').get(id);
     if (exists) continue;
-    const now = new Date().toISOString();
-    db.prepare(
-      'INSERT OR IGNORE INTO curated_golden_samples (id, prompt, completion, source, quality, approval_state, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)'
-    ).run(id, String(row['prompt']), String(row['completion']), String(row['source']), Number(row['quality']), 'pending', now);
+    const prompt = `Tool execution request\nTool: ${String(row['tool_name'])}\nInput:\n${String(row['input_params'] ?? '(empty)')}`.slice(0, 4000);
+    const completion = `Tool execution response\nTool: ${String(row['tool_name'])}\nOutput:\n${String(row['output_data'] ?? '(empty)')}`.slice(0, 8000);
+    const createdAt = String(row['timestamp'] ?? new Date().toISOString());
+    const quality = Math.max(
+      Number(row['quality_score'] ?? 0),
+      calculateQuality(prompt, completion),
+    );
+    captureCuratedGoldenCandidate({
+      id,
+      prompt,
+      completion,
+      source: `tool_run:${String(row['tool_name'])}`,
+      quality,
+      provenance: {
+        kind: 'tool_run_capture',
+        toolRunId: row['id'],
+        toolName: row['tool_name'],
+        timestamp: row['timestamp'],
+      },
+    });
     results.push({
       id,
-      prompt: String(row['prompt']),
-      completion: String(row['completion']),
-      source: String(row['source']),
-      quality: Number(row['quality']),
+      prompt,
+      completion,
+      source: `tool_run:${String(row['tool_name'])}`,
+      quality,
       approvalState: 'pending',
-      createdAt: now,
+      createdAt,
     });
   }
   return results;
@@ -606,6 +761,7 @@ export function reviewCuratedGoldenSample(
 export function getCuratedGoldenStats(): CuratedGoldenStats {
   try {
     ensureCuratedTable();
+    captureToolRunCandidates(200);
     const db = getGlobalDb();
     const rows = db.prepare(
       'SELECT approval_state, COUNT(*) AS count, AVG(quality) AS avg_quality FROM curated_golden_samples GROUP BY approval_state'

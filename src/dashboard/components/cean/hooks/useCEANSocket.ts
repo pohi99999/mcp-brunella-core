@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
 import { logInfo, logError } from '@/utils/logger';
+import { getSocketOrigin } from '@/lib/backendOrigin';
 
 /**
  * Socket.IO hook for CEAN real-time events
@@ -11,7 +12,7 @@ export const useCEANSocket = () => {
 
   useEffect(() => {
     try {
-      const socket = io(window.location.origin, {
+      const socket = io(getSocketOrigin(), {
         path: '/socket.io',
         transports: ['websocket', 'polling'],
       });

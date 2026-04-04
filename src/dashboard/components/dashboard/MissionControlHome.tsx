@@ -32,22 +32,22 @@ function SummaryCard ( { accent, detail, icon: Icon, label, testId, value }: Sum
 {
     return (
         <div
-            className="relative overflow-hidden rounded-xl border border-[#1b1e33] bg-[#090b18] px-4 pb-4 pt-3.5 transition-all duration-200 hover:border-[#252843]"
+            className="relative overflow-hidden rounded-2xl border border-white/[0.07] bg-[linear-gradient(180deg,rgba(13,13,14,0.94),rgba(8,8,9,0.9))] px-4 pb-4 pt-3.5 shadow-[0_22px_52px_-38px_rgba(0,0,0,0.98)] transition-all duration-200 hover:border-white/[0.12] hover:bg-[linear-gradient(180deg,rgba(15,15,16,0.96),rgba(10,10,11,0.92))]"
             data-testid={ testId }
         >
-            <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#6d63f0]/25 to-transparent" />
+            <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/12 to-transparent" />
             <div className="flex items-center justify-between gap-2">
-                <span className="text-[9.5px] font-semibold uppercase tracking-[0.22em] text-[#2c3054]">
+                <span className="text-[9.5px] font-semibold uppercase tracking-[0.22em] text-white/35">
                     { label }
                 </span>
-                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border border-[#1e2240] bg-[#0e1028]">
+                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-xl border border-white/[0.07] bg-white/[0.025]">
                     <Icon size={ 13 } className={ accent } />
                 </span>
             </div>
-            <div className="mt-3.5 text-[1.85rem] font-bold leading-none tracking-tight text-[#eaecf8]">
+            <div className="mt-3.5 text-[1.85rem] font-semibold leading-none tracking-tight text-white">
                 { value }
             </div>
-            <p className="mt-1.5 truncate text-[10.5px] text-[#2c3054]">{ detail }</p>
+            <p className="mt-1.5 truncate text-[10.5px] text-white/42">{ detail }</p>
         </div>
     );
 }
@@ -89,7 +89,7 @@ export function MissionControlHome ()
             value: `${ ( taskStats?.runningCount ?? 0 ) + ( taskStats?.pendingCount ?? 0 ) }`,
             detail: `${ taskStats?.total ?? 0 } összes task`,
             icon: ListTodo,
-            accent: "text-[#8b82f4]",
+            accent: "text-white",
             testId: "mc-kpi-queue",
         },
         {
@@ -97,7 +97,7 @@ export function MissionControlHome ()
             value: `${ ( taskStats?.successRate ?? 0 ).toFixed( 1 ) }%`,
             detail: `${ taskStats?.errorCount ?? 0 } hibás futás`,
             icon: ShieldCheck,
-            accent: "text-[#22c55e]",
+            accent: "text-emerald-300",
             testId: "mc-kpi-success-rate",
         },
         {
@@ -105,7 +105,7 @@ export function MissionControlHome ()
             value: `${ activeAgents }/${ totalAgents || 0 }`,
             detail: isConnected ? "socket él" : "offline telemetria",
             icon: Bot,
-            accent: "text-[#818cf8]",
+            accent: "text-sky-200",
             testId: "mc-kpi-agents",
         },
         {
@@ -113,7 +113,7 @@ export function MissionControlHome ()
             value: `${ healthyServices }/${ serviceCount || 0 }`,
             detail: healthStatus?.status ?? "nincs health adat",
             icon: Sparkles,
-            accent: "text-[#6d63f0]",
+            accent: "text-zinc-100",
             testId: "mc-kpi-health",
         },
         {
@@ -123,7 +123,7 @@ export function MissionControlHome ()
                 ? `${ Math.round( developerMetrics.builds.lastDurationMs / 1000 ) }s utolsó build`
                 : "nincs build telemetria",
             icon: Cpu,
-            accent: developerMetrics?.builds.lastStatus === "success" ? "text-[#22c55e]" : "text-[#f59e0b]",
+            accent: developerMetrics?.builds.lastStatus === "success" ? "text-emerald-300" : "text-amber-300",
             testId: "mc-kpi-build",
         },
     ];
@@ -201,27 +201,24 @@ export function MissionControlHome ()
     return (
         <div className="flex min-h-full flex-col gap-4" data-testid="mc-dashboard-home">
             { /* Header strip */ }
-            <section
-                className="rounded-xl border border-[#1b1e33] bg-[#090b18] p-4"
-                data-testid="mc-summary-strip"
-            >
+            <section className="command-strip block rounded-[1.75rem] p-5" data-testid="mc-summary-strip">
                 <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                     <div>
-                        <div className="flex items-center gap-1.5 text-[9.5px] font-semibold uppercase tracking-[0.22em] text-[#2c3054]">
-                            <Activity size={ 10 } className="text-[#6d63f0]/80" />
+                        <div className="flex items-center gap-1.5 text-[9.5px] font-semibold uppercase tracking-[0.22em] text-white/38">
+                            <Activity size={ 10 } className="text-white/72" />
                             Operator overview
                         </div>
-                        <h2 className="mt-1.5 text-xl font-bold tracking-tight text-[#eaecf8]">
+                        <h2 className="mt-1.5 text-xl font-semibold tracking-tight text-white">
                             Mission Control cockpit
                         </h2>
-                        <p className="mt-1.5 text-[12px] leading-relaxed text-[#3a4468]">
-                            Rendszer-egészség, agent aktivitás és task queue — valós idejű áttekintés.
+                        <p className="mt-1.5 max-w-2xl text-[12px] leading-relaxed text-white/54">
+                            Rendszer-egészség, agent aktivitás és task queue egy letisztult, magas kontrasztú cockpit nézetben.
                         </p>
                     </div>
                     <Button
                         variant="outline"
                         size="sm"
-                        className="shrink-0 gap-2 rounded-lg border-[#1c1f34] bg-[#0b0d1e] text-[12px] text-[#5a6890] hover:bg-[#0f1228] hover:text-[#c8d0f0]"
+                        className="h-10 shrink-0 gap-2 rounded-xl border-white/[0.08] bg-white/[0.025] px-3.5 text-[12px] text-white/68 hover:bg-white/[0.05] hover:text-white"
                         onClick={ () => setLayoutMode( "default-dashboard" ) }
                     >
                         <RefreshCcw size={ 12 } />

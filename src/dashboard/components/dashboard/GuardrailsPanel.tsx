@@ -9,7 +9,8 @@ import { useState, useEffect, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Shield, AlertTriangle, CheckCircle, Lock, BarChart3, RefreshCw } from "lucide-react";
 
-const API_BASE = "http://localhost:3000";
+// Same-origin: works via Vite proxy in dev and directly in production.
+const API_BASE = "";
 
 interface GuardrailsStats {
   validationsPassed: number;

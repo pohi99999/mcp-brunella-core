@@ -108,7 +108,12 @@ class TechHarvester:
         self.max_items = self.settings.get("maxItemsPerSource", 5)
         self.timeout = self.settings.get("timeoutSeconds", 60)
         self.headless = self.settings.get("headless", True)
-        self.output_dir = Path(self.settings.get("output_dir", "temp/harvest_results"))
+        output_dir_setting = (
+            self.settings.get("output_dir")
+            or self.settings.get("outputDir")
+            or "temp/harvest_results"
+        )
+        self.output_dir = Path(output_dir_setting)
 
         # Create output directory
         self.output_dir.mkdir(parents=True, exist_ok=True)
@@ -131,7 +136,29 @@ class TechHarvester:
         """Close Playwright browser."""
         if self.browser:
             await self.browser.close()
+            self.browser = None
             self.logger.info("Browser closed")
+
+    def _describe_target(self, target: Dict[str, Any]) -> str:
+        """Return a human-readable target descriptor for logging."""
+        if target.get("type") == "apify":
+            query = target.get("query")
+            actor_id = target.get("actor_id")
+            if query and actor_id:
+                return f"Apify actor={actor_id} query={query}"
+            if query:
+                return f"Apify query={query}"
+            if actor_id:
+                return f"Apify actor={actor_id}"
+            return "Apify target"
+
+        if target.get("url"):
+            return str(target["url"])
+
+        if target.get("source"):
+            return str(target["source"])
+
+        return "No URL configured"
 
     async def harvest_source_with_browser_use(self, target: Dict[str, Any]) -> List[Dict[str, Any]]:
         """
@@ -358,34 +385,37 @@ Return the results as a structured JSON array.
         self.logger.info("=" * 80)
 
         start_time = datetime.utcnow()
+        requires_browser = any(target.get("type") != "apify" for target in self.targets)
 
-        # Initialize browser
-        await self.initialize_browser()
+        try:
+            if requires_browser:
+                await self.initialize_browser()
 
-        # Harvest each source
-        for target in self.targets:
-            self.logger.info("")
-            self.logger.info("-" * 80)
-            self.logger.info("Processing source: %s", target["name"])
-            self.logger.info("URL: %s", target["url"])
-            self.logger.info("-" * 80)
+            # Harvest each source
+            for target in self.targets:
+                self.logger.info("")
+                self.logger.info("-" * 80)
+                self.logger.info("Processing source: %s", target["name"])
+                self.logger.info("Target: %s", self._describe_target(target))
+                self.logger.info("-" * 80)
 
-            try:
-                if mode == "browser-use" and HAS_BROWSER_USE:
-                    items = await self.harvest_source_with_browser_use(target)
-                else:
-                    items = await self.harvest_source_with_playwright(target)
+                try:
+                    if target.get("type") == "apify":
+                        items = await self.harvest_source_with_apify(target)
+                    elif mode == "browser-use" and HAS_BROWSER_USE:
+                        items = await self.harvest_source_with_browser_use(target)
+                    else:
+                        items = await self.harvest_source_with_playwright(target)
 
-                self.results.extend(items)
+                    self.results.extend(items)
 
-                self.logger.info("Collected %d items from %s", len(items), target["name"])
+                    self.logger.info("Collected %d items from %s", len(items), target["name"])
 
-            except Exception as e:
-                self.logger.error("Failed to harvest %s: %s", target["name"], str(e))
-                continue
-
-        # Close browser
-        await self.close_browser()
+                except Exception as e:
+                    self.logger.error("Failed to harvest %s: %s", target["name"], str(e))
+                    continue
+        finally:
+            await self.close_browser()
 
         # Save results
         output_file = self._save_results()

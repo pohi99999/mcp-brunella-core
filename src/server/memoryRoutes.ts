@@ -12,7 +12,7 @@
  */
 
 import { Router } from "express";
-import { exportGoldenDataset, getGoldenStats, syncLocalToD1 } from "../core/goldenDatasetBridge.js";
+import { exportGoldenDataset, getCuratedGoldenStats, getGoldenStats, syncLocalToD1 } from "../core/goldenDatasetBridge.js";
 import { getIndexStatus, scheduleReindex } from "../core/codebaseIndexer.js";
 import { exportStructuredMemories, getMemoryStats, getRecentPatternReuses, purgeExpired, queryMemory } from "../core/structuredMemory.js";
 import { socketService } from "./SocketService.js";
@@ -27,10 +27,15 @@ export function createMemoryRouter(): Router {
    */
   router.get("/stats", async (_req, res) => {
     try {
-      const golden = await getGoldenStats();
+      const golden = (await getGoldenStats()) ?? {
+        totalSamples: 0,
+        newSinceLastTraining: 0,
+        lastTrainingAt: undefined,
+      };
+      const curated = getCuratedGoldenStats();
       const index = getIndexStatus(); // Already sync, returns status object
 
-      res.json({ golden, index });
+      res.json({ golden, curated, index });
     } catch (e: any) {
       res.status(500).json({ error: e.message });
     }

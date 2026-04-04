@@ -12,6 +12,19 @@
     "retryDelayMs": 1000
   },
   {
+    "name": "brunella-remote",
+    "transport": "http",
+    "url": "https://Brunella-Agents-System-Server.fastmcp.app/mcp",
+    "args": [],
+    "description": "Remote Brunella FastMCP deployment",
+    "autoStart": true,
+    "required": false,
+    "disabled": false,
+    "requiredEnv": [],
+    "connectRetries": 1,
+    "retryDelayMs": 1500
+  },
+  {
     "name": "filesystem",
     "transport": "stdio",
     "command": "npx",

@@ -1,8 +1,6 @@
-import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-// vi.hoisted() — mock adatok early binding, mielőtt a vi.mock() factory-k futnak
 const { mockGroups, mockItems, mockGetGroups, mockGetAllItems } = vi.hoisted(() => {
   const dashboardIcon = () => <svg aria-label="icon-dashboard" />;
   const tasksIcon = () => <svg aria-label="icon-tasks" />;
@@ -28,7 +26,6 @@ const { mockGroups, mockItems, mockGetGroups, mockGetAllItems } = vi.hoisted(() 
   };
 });
 
-// navigationRegistry mock — a valódi singleton helyett a mock verziót használjuk
 vi.mock("@/lib/navigation", () => ({
   navigationRegistry: {
     getGroups: mockGetGroups,
@@ -48,8 +45,8 @@ describe("DynamicSidebar", () => {
   it("renders group titles from navigationRegistry", () => {
     render(<DynamicSidebar activeTab="dashboard" onTabChange={vi.fn()} />);
 
-    expect(screen.getByText("Core Systems")).toBeInTheDocument();
-    expect(screen.getByText("Operations")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Core Systems/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Operations/i })).toBeInTheDocument();
   });
 
   it("renders navigation items as buttons with aria-label", () => {
@@ -59,20 +56,20 @@ describe("DynamicSidebar", () => {
     expect(screen.getByRole("button", { name: "Task Queue" })).toBeInTheDocument();
   });
 
-  it("calls onTabChange with item id when a navigation button is clicked", async () => {
+  it("calls onTabChange with item id when a navigation button is clicked", () => {
     const onTabChange = vi.fn();
     render(<DynamicSidebar activeTab="dashboard" onTabChange={onTabChange} />);
 
-    await userEvent.click(screen.getByRole("button", { name: "Cloudflare Deploy" }));
+    fireEvent.click(screen.getByRole("button", { name: "Cloudflare Deploy" }));
 
     expect(onTabChange).toHaveBeenCalledWith("cloudflare");
   });
 
-  it("calls onTabChange with the correct id for multiple items", async () => {
+  it("calls onTabChange with the correct id for multiple items", () => {
     const onTabChange = vi.fn();
     render(<DynamicSidebar activeTab="dashboard" onTabChange={onTabChange} />);
 
-    await userEvent.click(screen.getByRole("button", { name: "Task Queue" }));
+    fireEvent.click(screen.getByRole("button", { name: "Task Queue" }));
     expect(onTabChange).toHaveBeenCalledWith("tasks");
   });
 
@@ -80,15 +77,14 @@ describe("DynamicSidebar", () => {
     render(<DynamicSidebar activeTab="cloudflare" onTabChange={vi.fn()} />);
 
     const activeBtn = screen.getByRole("button", { name: "Cloudflare Deploy" });
-    // Az aktív gomb bg-cyan-300/[0.1] osztályt kap
-    expect(activeBtn.className).toContain("bg-cyan-300");
+    expect(activeBtn.className).toContain("bg-white/[0.08]");
   });
 
   it("does not apply active styling to inactive items", () => {
     render(<DynamicSidebar activeTab="cloudflare" onTabChange={vi.fn()} />);
 
     const inactiveBtn = screen.getByRole("button", { name: "Task Queue" });
-    expect(inactiveBtn.className).not.toContain("bg-cyan-300");
+    expect(inactiveBtn.className).not.toContain("bg-white/[0.08]");
   });
 
   it("updates active item styling when activeTab prop changes", () => {
@@ -96,12 +92,20 @@ describe("DynamicSidebar", () => {
       <DynamicSidebar activeTab="tasks" onTabChange={vi.fn()} />,
     );
 
-    expect(screen.getByRole("button", { name: "Task Queue" }).className).toContain("bg-cyan-300");
+    expect(screen.getByRole("button", { name: "Task Queue" }).className).toContain("bg-white/[0.08]");
 
     rerender(<DynamicSidebar activeTab="cloudflare" onTabChange={vi.fn()} />);
 
-    expect(screen.getByRole("button", { name: "Cloudflare Deploy" }).className).toContain("bg-cyan-300");
-    expect(screen.getByRole("button", { name: "Task Queue" }).className).not.toContain("bg-cyan-300");
+    expect(screen.getByRole("button", { name: "Cloudflare Deploy" }).className).toContain("bg-white/[0.08]");
+    expect(screen.getByRole("button", { name: "Task Queue" }).className).not.toContain("bg-white/[0.08]");
+  });
+
+  it("shows full navigation labels when forced expanded", () => {
+    const { container } = render(<DynamicSidebar activeTab="dashboard" onTabChange={vi.fn()} forceExpanded />);
+
+    expect(container.querySelector("aside")).toHaveClass("w-full");
+    expect(screen.getByText("Operator sections")).toBeInTheDocument();
+    expect(screen.getByText("DISCONNECT")).toBeInTheDocument();
   });
 
   it("renders the footer with Master Admin identity", () => {
@@ -125,16 +129,14 @@ describe("DynamicSidebar", () => {
 
     render(<DynamicSidebar activeTab="dashboard" onTabChange={vi.fn()} />);
 
-    expect(screen.getByText("Ghost Group")).toBeInTheDocument();
-    // No buttons except Disconnect footer button
+    expect(screen.getByRole("button", { name: /Ghost Group/i })).toBeInTheDocument();
     const buttons = screen.getAllByRole("button");
-    expect(buttons).toHaveLength(1); // only Disconnect
+    expect(buttons).toHaveLength(2);
   });
 
   it("renders all items from multiple groups without duplication", () => {
     render(<DynamicSidebar activeTab="dashboard" onTabChange={vi.fn()} />);
 
-    // Cloudflare in Core Systems, Tasks in Operations
     const cloudflareButtons = screen.getAllByRole("button", { name: "Cloudflare Deploy" });
     const tasksButtons = screen.getAllByRole("button", { name: "Task Queue" });
 
@@ -148,7 +150,6 @@ describe("DynamicSidebar", () => {
 
     render(<DynamicSidebar activeTab="dashboard" onTabChange={vi.fn()} />);
 
-    // Footer still renders
     expect(screen.getByText("Master Admin")).toBeInTheDocument();
   });
 
@@ -164,5 +165,33 @@ describe("DynamicSidebar", () => {
 
     const btn = screen.getByRole("button", { name: "Cloudflare Deploy" });
     expect(btn).toHaveAttribute("title", "Cloudflare Deploy");
+  });
+
+  it("collapses and expands top-level groups", () => {
+    render(<DynamicSidebar activeTab="dashboard" onTabChange={vi.fn()} />);
+
+    const groupToggle = screen.getByRole("button", { name: /Core Systems/i });
+    expect(groupToggle).toHaveAttribute("aria-expanded", "true");
+    expect(screen.getByRole("button", { name: "Cloudflare Deploy" })).toBeInTheDocument();
+
+    fireEvent.click(groupToggle);
+    expect(groupToggle).toHaveAttribute("aria-expanded", "false");
+    expect(screen.queryByRole("button", { name: "Cloudflare Deploy" })).not.toBeInTheDocument();
+
+    fireEvent.click(groupToggle);
+    expect(groupToggle).toHaveAttribute("aria-expanded", "true");
+    expect(screen.getByRole("button", { name: "Cloudflare Deploy" })).toBeInTheDocument();
+  });
+
+  it("re-expands the group containing the active tab when activeTab changes", () => {
+    const { rerender } = render(<DynamicSidebar activeTab="dashboard" onTabChange={vi.fn()} />);
+
+    fireEvent.click(screen.getByRole("button", { name: /Core Systems/i }));
+    expect(screen.queryByRole("button", { name: "Cloudflare Deploy" })).not.toBeInTheDocument();
+
+    rerender(<DynamicSidebar activeTab="cloudflare" onTabChange={vi.fn()} />);
+
+    expect(screen.getByRole("button", { name: /Core Systems/i })).toHaveAttribute("aria-expanded", "true");
+    expect(screen.getByRole("button", { name: "Cloudflare Deploy" })).toBeInTheDocument();
   });
 });

@@ -996,12 +996,26 @@ export async function exportStructuredMemory(format: 'jsonl' | 'json' = 'jsonl')
   return response.text();
 }
 
-export async function syncGoldenMirror(): Promise<{ success: boolean; synced: number; failed: number; skipped: number }> {
+export async function syncGoldenMirror(): Promise<{
+  success: boolean;
+  synced: number;
+  failed: number;
+  skipped: number;
+  errors?: string[];
+  mode?: 'cloud' | 'local-only';
+}> {
   const response = await fetchWithTimeout(`${API_BASE}/api/v1/memory/structured/golden/sync`, {
     method: 'POST',
   });
   if (!response.ok) throw new Error(`Golden Mirror Sync: HTTP ${response.status}`);
-  return safeJson<{ success: boolean; synced: number; failed: number; skipped: number }>(response);
+  return safeJson<{
+    success: boolean;
+    synced: number;
+    failed: number;
+    skipped: number;
+    errors?: string[];
+    mode?: 'cloud' | 'local-only';
+  }>(response);
 }
 
 export async function previewWorkflow(task: string, defaultAgent?: string): Promise<WorkflowPreviewResponse> {

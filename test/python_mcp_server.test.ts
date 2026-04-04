@@ -61,6 +61,18 @@ describe("Python MCP Server (myai/mcp_server.py)", () => {
     expect(content).toContain("def system_health");
   });
 
+  it("should gate python_execute behind the runtime security flag", () => {
+    const serverPath = path.resolve(
+      config.workspaceRoot,
+      "myai",
+      "mcp_server.py",
+    );
+    const content = fs.readFileSync(serverPath, "utf-8");
+
+    expect(content).toContain("is_python_execute_enabled");
+    expect(content).toContain("BRUNELLA_ENABLE_PYTHON_EXECUTE=1");
+  });
+
   it("should define stdio and sse transport modes", () => {
     const serverPath = path.resolve(
       config.workspaceRoot,
@@ -118,4 +130,34 @@ describe("Python MCP Server (myai/mcp_server.py)", () => {
     },
     15000,
   );
+
+  it("should expose screenshot and session_id in the browser chat response model", () => {
+    const serverPath = path.resolve(
+      config.workspaceRoot,
+      "myai",
+      "server.py",
+    );
+    const content = fs.readFileSync(serverPath, "utf-8");
+
+    expect(content).toMatch(
+      /class ChatResponse\(BaseModel\):[\s\S]*response: str[\s\S]*session_id: str[\s\S]*screenshot: Optional\[str\] = None/,
+    );
+  });
+
+  it("should expose the /rag/query FastAPI contract used by ResearcherAgent", () => {
+    const serverPath = path.resolve(
+      config.workspaceRoot,
+      "myai",
+      "server.py",
+    );
+    const content = fs.readFileSync(serverPath, "utf-8");
+
+    expect(content).toContain('class RAGQueryRequest(BaseModel):');
+    expect(content).toContain("query: str");
+    expect(content).toContain("limit: int = 5");
+    expect(content).toContain("class RAGQueryResponse(BaseModel):");
+    expect(content).toContain("results: List[RAGResultItem]");
+    expect(content).toContain('@app.post("/rag/query", response_model=RAGQueryResponse)');
+    expect(content).toContain("detail=\"RAG service unavailable: lancedb is not installed\"");
+  });
 });

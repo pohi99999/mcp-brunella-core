@@ -32,12 +32,37 @@ export function TerminalLog({ logs: propLogs, className }: TerminalLogProps) {
   const { logs: signalLogs } = useSystemSignal();
   const logs = propLogs || signalLogs || [];
   const scrollRef = useRef<HTMLDivElement>(null);
+  const scrollAreaRef = useRef<HTMLDivElement>(null);
+  const stickToBottomRef = useRef(true);
 
   useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollIntoView({ behavior: 'smooth' });
+    const viewport = scrollAreaRef.current?.querySelector('[data-slot="scroll-area-viewport"]') as HTMLDivElement | null;
+    if (!viewport) {
+      return;
     }
-  }, [logs]);
+
+    const updateStickiness = () => {
+      stickToBottomRef.current =
+        viewport.scrollHeight - viewport.scrollTop - viewport.clientHeight <= 80;
+    };
+
+    updateStickiness();
+    viewport.addEventListener('scroll', updateStickiness);
+
+    return () => viewport.removeEventListener('scroll', updateStickiness);
+  }, []);
+
+  useEffect(() => {
+    if (!stickToBottomRef.current || !scrollRef.current) {
+      return;
+    }
+
+    const animationFrame = requestAnimationFrame(() => {
+      scrollRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    });
+
+    return () => cancelAnimationFrame(animationFrame);
+  }, [logs.length]);
 
   const displayLines =
     logs.length > 0
@@ -81,7 +106,10 @@ export function TerminalLog({ logs: propLogs, className }: TerminalLogProps) {
         </div>
       </div>
       
-      <ScrollArea className="flex-1 font-mono text-[11px] leading-tight selection:bg-emerald-500/20">
+      <ScrollArea
+        ref={scrollAreaRef}
+        className="flex-1 font-mono text-[11px] leading-tight selection:bg-emerald-500/20"
+      >
         <div className="p-4 space-y-1">
           {displayLines.map((line) => (
             <div

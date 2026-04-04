@@ -1,6 +1,5 @@
 import React from "react";
-import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { MissionControlHome } from "./MissionControlHome";
 
@@ -139,11 +138,11 @@ describe( "MissionControlHome", () =>
         expect( screen.getByTestId( "mc-widget-harvest_pipeline" ) ).toBeInTheDocument();
     } );
 
-    it( "should_reset_cockpit_when_reset_button_is_clicked_and_default_layout_is_requested", async () =>
+    it( "should_reset_cockpit_when_reset_button_is_clicked_and_default_layout_is_requested", () =>
     {
         render( <MissionControlHome /> );
 
-        await userEvent.click( screen.getByRole( "button", { name: /Reset cockpit/i } ) );
+        fireEvent.click( screen.getByRole( "button", { name: /Reset cockpit/i } ) );
 
         expect( setLayoutModeMock ).toHaveBeenCalledWith( "default-dashboard" );
     } );

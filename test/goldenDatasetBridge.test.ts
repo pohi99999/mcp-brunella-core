@@ -48,9 +48,16 @@ function createFakeDb() {
           const sampleHash = String(args.at(-1));
           const current = goldenRows.get(sampleHash);
           if (current) {
-            current.remote_status = sql.includes("remote_status = 'synced'") ? 'synced' : 'failed';
-            current.remote_synced_at = typeof args[0] === 'string' ? String(args[0]) : current.remote_synced_at;
-            current.updated_at = typeof args[1] === 'string' ? String(args[1]) : current.updated_at;
+            const remoteStatusArg = typeof args[0] === 'string' && (args[0] === 'pending' || args[0] === 'synced' || args[0] === 'failed')
+              ? String(args[0])
+              : undefined;
+            current.remote_status = remoteStatusArg
+              ? remoteStatusArg
+              : (sql.includes("remote_status = 'synced'") ? 'synced' : 'failed');
+            current.remote_synced_at = typeof args[1] === 'string' ? String(args[1]) : current.remote_synced_at;
+            current.updated_at = typeof args[2] === 'string'
+              ? String(args[2])
+              : (typeof args[1] === 'string' ? String(args[1]) : current.updated_at);
             goldenRows.set(sampleHash, current);
           }
           return { changes: current ? 1 : 0 };
@@ -64,7 +71,12 @@ function createFakeDb() {
         }
         return undefined;
       },
-      all: () => [],
+      all: () => {
+        if (sql.includes('FROM golden_samples')) {
+          return Array.from(goldenRows.values());
+        }
+        return [];
+      },
     }),
   };
 }
@@ -81,6 +93,7 @@ import {
   getGoldenStats,
   autoSaveGoldenSample,
   calculateQuality,
+  syncLocalToD1,
   type GoldenSample,
   type GoldenSaveResult,
   type GoldenDatasetStats
@@ -185,6 +198,37 @@ describe('goldenDatasetBridge', () => {
       expect(stats?.totalSamples).toBe(42);
     });
 
+    it('should normalize snake_case stats from Python API', async () => {
+      vi.mocked(getD1Adapter).mockReturnValueOnce({
+        getAllGoldenSamples: vi.fn().mockRejectedValue(new Error('D1 error')),
+      } as any);
+
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          stats: {
+            total_samples: 1568,
+            avg_quality: 0.65,
+            file_size_mb: 1.53,
+            status: 'READY',
+            sources: { researcher: 3, voice: 1 },
+          },
+        }),
+      });
+
+      const stats = await getGoldenStats();
+
+      expect(stats).toEqual({
+        totalSamples: 1568,
+        newSinceLastTraining: 0,
+        lastTrainingAt: undefined,
+        sources: { researcher: 3, voice: 1 },
+        avgQuality: 0.65,
+        fileSizeMb: 1.53,
+        status: 'READY',
+      });
+    });
+
     it('should return null on API failure', async () => {
       // Mock D1 adapter to fail so it falls back to Python
       vi.mocked(getD1Adapter).mockReturnValueOnce({
@@ -195,6 +239,30 @@ describe('goldenDatasetBridge', () => {
 
       const stats = await getGoldenStats();
       expect(stats).toEqual({ totalSamples: 0, newSinceLastTraining: 0 });
+    });
+  });
+
+  describe('syncLocalToD1', () => {
+    it('should fall back to Python sync when D1 returns an error', async () => {
+      saveGoldenSampleLocalForTest();
+      vi.mocked(getD1Adapter).mockReturnValueOnce({
+        insertGoldenSample: vi.fn().mockResolvedValue({
+          status: 'error',
+          error: 'D1 worker returned HTML instead of JSON',
+        }),
+      } as unknown as ReturnType<typeof getD1Adapter>);
+
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ message: 'saved via python backup', stats: { totalSamples: 1 } }),
+      });
+
+      const result = await syncLocalToD1();
+
+      expect(result.synced).toBe(1);
+      expect(result.failed).toBe(0);
+      expect(goldenRows.values().next().value.remote_status).toBe('synced');
+      expect(mockFetch).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -264,3 +332,16 @@ describe('goldenDatasetBridge', () => {
     });
   });
 });
+
+function saveGoldenSampleLocalForTest(): void {
+  goldenRows.set('sample-hash-1', {
+    sample_hash: 'sample-hash-1',
+    prompt: 'How should MCP tool results be captured safely for later learning?',
+    completion: 'Persist successful executions into a durable table and review them before promotion.',
+    source: 'TestRecoveryAgent',
+    quality: 0.91,
+    remote_status: 'failed',
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+  });
+}
