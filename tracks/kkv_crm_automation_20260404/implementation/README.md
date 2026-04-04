@@ -40,3 +40,8 @@ Developer notes
 Next actions
 - Implement TASK-CRM-002: export n8n skeleton JSON + local transform script.
 - Implement TASK-CRM-001 in parallel: provision OAuth client in CRM sandbox and store creds in `credentials/` (encrypted in secrets store, not in repo).
+
+How to run local transform test
+1. From the repository root, run:
+  node tracks/kkv_crm_automation_20260404/tests/transform.test.js
+2. The script runs assertion-based checks and prints a success message on pass.
