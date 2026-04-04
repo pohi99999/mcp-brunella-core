@@ -19,7 +19,7 @@ interface FederationPeerRequestContext {
   timestamp: string;
 }
 
-declare module 'express-serve-static-core' {
+declare module 'express' {
   interface Request {
     federationPeer?: FederationPeerRequestContext;
   }
