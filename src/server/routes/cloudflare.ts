@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { agentManager } from "../../agents/AgentManager.js";
 import { cloudflareClient } from "../../utils/cloudflareClient.js";
+import { getCloudflareAuthHeaders } from "../../utils/cloudflareConfig.js";
 
 type ChatHistoryItem = {
   role: "user" | "assistant";
@@ -40,26 +41,6 @@ type WorkerTaskProxyResponse = {
   result?: unknown;
   error?: string;
 };
-
-function getCloudflareAuthHeaders(): Record<string, string> {
-  const headers: Record<string, string> = {
-    "Content-Type": "application/json",
-  };
-
-  const apiToken = process.env.CLOUDFLARE_API_TOKEN || process.env.CF_API_TOKEN;
-  const ceanApiKey = process.env.CEAN_API_KEY;
-
-  if (apiToken) {
-    headers.Authorization = `Bearer ${apiToken}`;
-    headers["X-BAS-API-Key"] = apiToken;
-  }
-
-  if (ceanApiKey) {
-    headers["X-CEAN-API-Key"] = ceanApiKey;
-  }
-
-  return headers;
-}
 
 function getCloudflareChatBaseUrl(): string {
   return (
@@ -383,7 +364,7 @@ export function createCloudflareRoutes(): Router {
         dashboardUrl: process.env.CLOUDFLARE_TUNNEL_DASHBOARD_URL || null,
       },
       auth: {
-        hasCloudflareApiToken: Boolean(process.env.CLOUDFLARE_API_TOKEN || process.env.CF_API_TOKEN),
+        hasCloudflareApiToken: Boolean(process.env.CF_BAS_API_TOKEN || process.env.CLOUDFLARE_API_TOKEN || process.env.CF_API_TOKEN),
         hasCeanApiKey: Boolean(process.env.CEAN_API_KEY),
       },
     };

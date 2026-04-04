@@ -5,13 +5,14 @@
 A rendszer jelenleg kevert token névhasználatot alkalmaz:
 
 | Változó | Hol van | Mit jelent |
-|---------|---------|-----------|
-| `CF_ACCOUNT_ID` | `.env`, `src/utils/aiGateway.ts` | CF Account ID |
-| `CF_TOKEN` | `.env.example` | Általános CF token |
-| `CF_API_TOKEN` | `src/` sok helyen | Workers AI / API token |
+| --- | --- | --- |
+| `CF_BAS_ACCOUNT_ID` | `.env.example`, `src/utils/*`, `.github/workflows/` | BAS Cloudflare account |
+| `CF_BAS_API_TOKEN` | `.env.example`, `src/utils/*`, `.github/workflows/` | BAS Workers/KV/D1/R2 token |
+| `CF_PERSONAL_ACCOUNT_ID` | `.env.example` | Személyes Cloudflare account |
+| `CF_PERSONAL_API_TOKEN` | `.env.example` | Személyes Cloudflare token |
 | `CF_AI_API_TOKEN` | `.env.example`, `src/core/bifrost_gateway.ts` | Workers AI specifikus token |
-| `CLOUDFLARE_API_TOKEN` | `.github/workflows/`, `src/server/routes/cloudflare.ts` | GitHub Actions / deploy token |
-| `CLOUDFLARE_ACCOUNT_ID` | `.github/workflows/`, `src/utils/browserRendering.ts` | GitHub Actions account ID |
+| `CLOUDFLARE_API_TOKEN` | Legacy alias | BAS token backward compat |
+| `CLOUDFLARE_ACCOUNT_ID` | Legacy alias | BAS account backward compat |
 
 ---
 
@@ -32,7 +33,7 @@ CF_BAS_API_TOKEN=your_bas_workers_token
 # Workers AI inference token
 # Scope: Workers AI:Read, AI Gateway:Read
 CF_AI_API_TOKEN=your_ai_gateway_token
-CF_AI_GATEWAY_ENABLED=true
+AI_GATEWAY_ENABLED=true
 ```
 
 ### Személyes account (DNS, Pages — CSAK ha szükséges)
@@ -49,7 +50,7 @@ CF_PERSONAL_API_TOKEN=your_personal_token  # Scope: Zone:Read, DNS:Edit
 
 ### 1. BAS Workers Token
 
-1. Menj: https://dash.cloudflare.com/profile/api-tokens
+1. Menj: `https://dash.cloudflare.com/profile/api-tokens`
 2. Kattints: **Create Token**
 3. Válassz: **Edit Cloudflare Workers** sablon VAGY Custom token
 4. Scope-ok (csak az szükséges):
@@ -65,9 +66,9 @@ CF_PERSONAL_API_TOKEN=your_personal_token  # Scope: Zone:Read, DNS:Edit
 
 GitHub repository → Settings → Secrets and variables → Actions:
 
-```
-CLOUDFLARE_ACCOUNT_ID  = CF_BAS_ACCOUNT_ID értéke
-CLOUDFLARE_API_TOKEN   = CF_BAS_API_TOKEN értéke
+```txt
+CF_BAS_ACCOUNT_ID      = BAS account értéke
+CF_BAS_API_TOKEN       = BAS token értéke
 ```
 
 ---
@@ -78,15 +79,15 @@ CLOUDFLARE_API_TOKEN   = CF_BAS_API_TOKEN értéke
 
 Az összes érintett fájl:
 - `src/utils/aiGateway.ts` — `CF_ACCOUNT_ID`, `CF_API_TOKEN`, `CF_AI_API_TOKEN`
-- `src/utils/cloudflareClient.ts` — `CLOUDFLARE_API_TOKEN`, `CF_API_TOKEN`
-- `src/utils/browserRendering.ts` — `CF_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`
-- `src/server/routes/cloudflare.ts` — `CLOUDFLARE_API_TOKEN`, `CF_API_TOKEN`
+- `src/utils/cloudflareClient.ts` — `CF_BAS_API_TOKEN`, `CF_API_TOKEN`
+- `src/utils/browserRendering.ts` — `CF_BAS_API_TOKEN`, `CF_BAS_ACCOUNT_ID`
+- `src/server/routes/cloudflare.ts` — `CF_BAS_API_TOKEN`, `CF_API_TOKEN`
 - `src/core/bifrost_gateway.ts` — `CF_AI_API_TOKEN`, `CF_API_TOKEN`, `CF_TOKEN`
 - `src/core/modelRouter.ts` — `CF_AI_API_TOKEN`, `CF_API_TOKEN`
-- `src/server/routes/llm.ts` — `CLOUDFLARE_API_TOKEN`, `CF_API_TOKEN`
-- `.github/workflows/bas-cloud-sync.yml` — `CLOUDFLARE_API_TOKEN`
-- `.github/workflows/bas-local-sync.yml` — `CLOUDFLARE_API_TOKEN`
-- `.github/workflows/deploy-edge-agents.yml` — `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`
+- `src/server/routes/llm.ts` — `CF_BAS_API_TOKEN`, `CF_API_TOKEN`
+- `.github/workflows/bas-cloud-sync.yml` — `CF_BAS_API_TOKEN`
+- `.github/workflows/bas-local-sync.yml` — `CF_BAS_API_TOKEN`
+- `.github/workflows/deploy-edge-agents.yml` — `CF_BAS_API_TOKEN`, `CF_BAS_ACCOUNT_ID`
 
 ### Fázis 2: Egységesítés (TEENDŐ)
 

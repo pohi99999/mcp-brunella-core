@@ -1,5 +1,6 @@
 import { vectorizeClient } from '../src/utils/vectorize.js';
 import { logInfo, logError, logWarn } from '../src/utils/logger.js';
+import { getBasCloudflareAccountId, getBasCloudflareApiToken } from '../src/utils/cloudflareConfig.js';
 import * as dotenv from 'dotenv';
 
 dotenv.config();
@@ -108,10 +109,10 @@ async function getTrackedVectors(): Promise<Array<{ id: string; metadata?: Recor
  */
 async function deleteVectorBatch(ids: string[]): Promise<void> {
   const baseUrl = 'https://api.cloudflare.com/client/v4';
-  const accountId = process.env.CLOUDFLARE_ACCOUNT_ID || process.env.CF_ACCOUNT_ID;
+  const accountId = getBasCloudflareAccountId();
   const indexName = process.env.CF_VECTORIZE_INDEX || 'brunella-agent-memory';
   
-  const apiToken = process.env.CLOUDFLARE_API_TOKEN;
+  const apiToken = getBasCloudflareApiToken();
   const globalApiKey = process.env.CLOUDFLARE_GLOBAL_API_KEY || process.env.CF_GLOBAL_API_KEY;
   const email = process.env.CLOUDFLARE_EMAIL || process.env.CF_EMAIL;
 

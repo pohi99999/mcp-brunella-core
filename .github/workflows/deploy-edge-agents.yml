@@ -18,8 +18,10 @@ on:
       - 'src/types/cean.ts'
 
 env:
-  CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-  CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+  CF_BAS_API_TOKEN: ${{ secrets['CF_BAS_API_TOKEN'] }}
+  CF_BAS_ACCOUNT_ID: ${{ secrets['CF_BAS_ACCOUNT_ID'] }}
+  CLOUDFLARE_API_TOKEN: ${{ secrets['CF_BAS_API_TOKEN'] }}
+  CLOUDFLARE_ACCOUNT_ID: ${{ secrets['CF_BAS_ACCOUNT_ID'] }}
 
 jobs:
   # ============================================================================
@@ -79,7 +81,6 @@ jobs:
   deploy:
     name: 🚀 Deploy to Cloudflare
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     needs: build
     
     steps:
@@ -103,6 +104,9 @@ jobs:
 
       - name: 🔐 Verify Cloudflare auth
         run: wrangler whoami
+        env:
+          CF_BAS_API_TOKEN: ${{ secrets['CF_BAS_API_TOKEN'] }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets['CF_BAS_API_TOKEN'] }}
 
       - name: 📤 Deploy test-worker to Cloudflare
         run: |
@@ -110,13 +114,16 @@ jobs:
           npm ci
           npm run build
           wrangler deploy --env production
+        env:
+          CF_BAS_API_TOKEN: ${{ secrets['CF_BAS_API_TOKEN'] }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets['CF_BAS_API_TOKEN'] }}
 
       - name: 🔄 Create deployment comment
         if: always()
         uses: actions/github-script@v6
         with:
           script: |
-            const deploymentUrl = `https://cean-test.${process.env.CLOUDFLARE_ACCOUNT_ID}.workers.dev`;
+            const deploymentUrl = `https://cean-test.${process.env.CF_BAS_ACCOUNT_ID}.workers.dev`;
             const status = '${{ job.status }}';
             const comment = status === 'success' 
               ? `✅ **Deployment Successful!**\n\n- Worker: \`cean-test\`\n- URL: ${deploymentUrl}\n- Endpoints:\n  - GET \`/health\`\n  - POST \`/test/d1\`\n  - POST \`/test/r1\`\n  - GET \`/test/metrics\``
@@ -137,7 +144,6 @@ jobs:
   verify:
     name: 🩺 Post-Deploy Health Check
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     needs: deploy
     
     steps:
@@ -146,7 +152,7 @@ jobs:
 
       - name: 🔍 Check health endpoint
         run: |
-          RESPONSE=$(curl -s -w "\n%{http_code}" https://cean-test.${CLOUDFLARE_ACCOUNT_ID}.workers.dev/health)
+          RESPONSE=$(curl -s -w "\n%{http_code}" https://cean-test.${CF_BAS_ACCOUNT_ID}.workers.dev/health)
           HTTP_STATUS=$(echo "$RESPONSE" | tail -n1)
           BODY=$(echo "$RESPONSE" | head -n-1)
           

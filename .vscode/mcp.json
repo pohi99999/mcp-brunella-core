@@ -63,8 +63,8 @@
 			"command": "npx",
 			"args": ["-y", "@cloudflare/mcp-server-cloudflare"],
 			"env": {
-				"CLOUDFLARE_ACCOUNT_ID": "${input:cloudflareAccountId}",
-				"CLOUDFLARE_API_TOKEN": "${input:cloudflareApiToken}"
+				"CLOUDFLARE_ACCOUNT_ID": "${input:cloudflareBasAccountId}",
+				"CLOUDFLARE_API_TOKEN": "${input:cloudflareBasApiToken}"
 			}
 		},
 		"sqlite": {
@@ -123,15 +123,15 @@
 			"password": true
 		},
 		{
-			"id": "cloudflareAccountId",
+			"id": "cloudflareBasAccountId",
 			"type": "promptString",
-			"description": "Cloudflare Account ID",
+			"description": "BAS Cloudflare Account ID",
 			"password": false
 		},
 		{
-			"id": "cloudflareApiToken",
+			"id": "cloudflareBasApiToken",
 			"type": "promptString",
-			"description": "Cloudflare API Token (Workers/KV/D1/R2 permissions)",
+			"description": "BAS Cloudflare API Token (Workers/KV/D1/R2 permissions)",
 			"password": true
 		}
 	]

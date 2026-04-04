@@ -19,9 +19,10 @@ jobs:
 
     steps:
       - name: Validate Secrets
+        shell: bash
         run: |
-          if [ -z "${{ secrets.CLOUDFLARE_API_TOKEN }}" ]; then
-            echo "::error::CLOUDFLARE_API_TOKEN secret is not set"
+          if [ -z "${{ secrets['CF_BAS_API_TOKEN'] }}" ]; then
+            echo "::error::CF_BAS_API_TOKEN secret is not set"
             exit 1
           fi
 
@@ -37,18 +38,19 @@ jobs:
         run: pip install uv
 
       - name: Install Python dependencies
+        shell: bash
         run: |
           cd myai
           uv sync
-        shell: bash
 
       - name: Run Sync Script
+        shell: bash
         run: |
           cd myai
           python sync_to_r2.py ${{ github.event.inputs.sync_type || 'full' }}
-        shell: bash
         env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CF_BAS_API_TOKEN: ${{ secrets['CF_BAS_API_TOKEN'] }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets['CF_BAS_API_TOKEN'] }}
           LANCEDB_PATH: "F:/mcp-brunella-core/.lancedb"
           R2_BUCKET: "vodor1"
           R2_PREFIX: "Brunella_core"

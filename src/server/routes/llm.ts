@@ -402,9 +402,9 @@ export function createLLMRoutes(): Router {
 
             if (provider === 'cloudflare') {
                 try {
+                    const cfToken = process.env.CF_BAS_API_TOKEN || process.env.CLOUDFLARE_API_TOKEN || process.env.CF_API_TOKEN;
                     const cfUrl = process.env.CLOUDFLARE_D1_WORKER_URL || process.env.CLOUDFLARE_WORKER_URL;
                     if (!cfUrl) throw new Error('CLOUDFLARE_WORKER_URL nincs beállítva');
-                    const cfToken = process.env.CLOUDFLARE_API_TOKEN || process.env.CF_API_TOKEN;
                     const ceanApiKey = process.env.CEAN_API_KEY;
                     const headers: Record<string, string> = {
                         'Content-Type': 'application/json',

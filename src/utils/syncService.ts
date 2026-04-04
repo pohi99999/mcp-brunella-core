@@ -1,13 +1,9 @@
 import axios from "axios";
 import { logInfo, logError } from "./logger.js";
 import { generateResponse } from "../core/llm_client.js";
+import { getCloudflareAuthHeaders, getCloudflareChatSyncUrl } from "./cloudflareConfig.js";
 
-const CLOUDFLARE_CHAT_SYNC_URL = (
-  process.env.CLOUDFLARE_CHAT_SYNC_URL ||
-  process.env.CLOUDFLARE_CHAT_URL ||
-  process.env.CLOUDFLARE_WORKER_URL ||
-  "https://bas-orchestrator.peterpohankapersonal.workers.dev"
-).replace(/\/+$/, "");
+const CLOUDFLARE_CHAT_SYNC_URL = getCloudflareChatSyncUrl();
 const SYNC_INTERVAL_MS = 5000;
 
 interface ChatMessage {
@@ -29,17 +25,7 @@ class SyncService {
   private initialized = false;
 
   private buildHeaders(): Record<string, string> {
-    const token = (process.env.CLOUDFLARE_API_TOKEN || "").replace(/"/g, "").trim();
-    const headers: Record<string, string> = {
-      "Content-Type": "application/json",
-    };
-
-    if (token) {
-      headers.Authorization = `Bearer ${token}`;
-      headers["X-CEAN-API-Key"] = token; // legacy support
-    }
-
-    return headers;
+    return getCloudflareAuthHeaders();
   }
 
   /** On first start, set lastProcessedId to current max so historical messages are skipped. */

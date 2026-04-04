@@ -1,4 +1,5 @@
 import { logError, logInfo } from './logger.js';
+import { getBasCloudflareApiToken } from './cloudflareConfig.js';
 
 /**
  * KV Cache adapter (Cloudflare KV + local memory fallback)
@@ -12,7 +13,7 @@ export class KvCache {
 
   constructor() {
     this.baseUrl = (process.env.CLOUDFLARE_WORKER_URL || '').replace(/\/+$/, '');
-    this.token = process.env.CF_AI_API_TOKEN || process.env.CLOUDFLARE_API_TOKEN;
+    this.token = getBasCloudflareApiToken() || process.env.CF_AI_API_TOKEN;
     this.namespace = process.env.CF_KV_NAMESPACE || process.env.CF_KV_NAMESPACE_ID;
   }
 
