@@ -1,4 +1,5 @@
 import type { NextFunction, Request, Response } from 'express';
+
 import { federationReplayGuard } from '../../core/federation/federationReplayGuard.js';
 import { trustRegistry } from '../../core/federation/trustRegistry.js';
 import {
@@ -19,11 +20,7 @@ interface FederationPeerRequestContext {
   timestamp: string;
 }
 
-declare module 'express' {
-  interface Request {
-    federationPeer?: FederationPeerRequestContext;
-  }
-}
+
 
 function normalizeRemoteAddress(value: string | undefined): string | undefined {
   if (!value) {
@@ -126,7 +123,7 @@ export function authFederationPeer(req: Request, res: Response, next: NextFuncti
     return;
   }
 
-  req.federationPeer = {
+  (req as any).federationPeer = {
     peerId,
     keyId: verification.keyId,
     targetKeyId: verification.targetKeyId,
