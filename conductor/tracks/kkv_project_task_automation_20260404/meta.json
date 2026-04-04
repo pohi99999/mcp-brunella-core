@@ -1,0 +1,15 @@
+{
+  "id": "kkv_project_task_automation_20260404",
+  "name": "KKV projekt es feladat automatizalas",
+  "title": "KKV projekt es feladat automatizalas",
+  "status": "active",
+  "priority": "medium",
+  "created": "2026-04-04",
+  "updated": "2026-04-04",
+  "assignee": "GitHub Copilot",
+  "progress": 0,
+  "tags": ["kkv", "project", "tasks", "deadlines", "notion", "n8n"],
+  "dependencies": [],
+  "sourceDocument": "User-provided KKV n8n workflow pack",
+  "phase": 1
+}

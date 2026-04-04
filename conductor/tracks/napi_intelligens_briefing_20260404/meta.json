@@ -1,0 +1,15 @@
+{
+  "id": "napi_intelligens_briefing_20260404",
+  "name": "Napi intelligens reggeli briefing ugynok",
+  "title": "Napi intelligens reggeli briefing ugynok",
+  "status": "active",
+  "priority": "high",
+  "created": "2026-04-04",
+  "updated": "2026-04-04",
+  "assignee": "GitHub Copilot",
+  "progress": 0,
+  "tags": ["briefing", "gmail", "calendar", "linear", "google-chat", "n8n", "gpt-4o"],
+  "dependencies": [],
+  "sourceDocument": "User-provided Napi Intelligens Briefing Agent workflow plan",
+  "phase": 1
+}

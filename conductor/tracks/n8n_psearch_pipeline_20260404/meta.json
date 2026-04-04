@@ -1,0 +1,15 @@
+{
+  "id": "n8n_psearch_pipeline_20260404",
+  "name": "P-Search n8n Pipeline - palyazat- es hitelkereso workflow-k",
+  "title": "P-Search n8n Pipeline - palyazat- es hitelkereso workflow-k",
+  "status": "active",
+  "priority": "high",
+  "created": "2026-04-04",
+  "updated": "2026-04-04",
+  "assignee": "GitHub Copilot",
+  "progress": 0,
+  "tags": ["n8n", "psearch", "grants", "loans", "workflow", "automation"],
+  "dependencies": [],
+  "sourceDocument": ".worktrees\\n8n_workflow_tervek.md",
+  "phase": 1
+}

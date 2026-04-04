@@ -4,6 +4,43 @@ User requested that the Copilot CLI automatically connect to a local Brunella MC
 
 <history>
 
+### 2026-04-04 — Workflow source analysis → active conductor track batches
+
+**Feladat:** A felhasználó azt kérte, hogy több workflow-forrásból teljes conductor track-csomag készüljön: a `.worktrees\n8n_workflow_tervek.md`, `.worktrees\cloudflare_böngészőrend.md`, `nova.zip` tartalmából, egy nagy KKV n8n workflow gyűjteményből, valamint egy külön "Napi Intelligens Briefing Agent" tervből.
+
+**Érintett fájlok:**
+- `conductor/project_state.json`
+- `conductor/tracks.md`
+- `conductor/tracks/cloudflare_edge_browser_orchestration_20260404/`
+- `conductor/tracks/n8n_psearch_pipeline_20260404/`
+- `conductor/tracks/n8n_psales_human_loop_20260404/`
+- `conductor/tracks/n8n_bookkeeping_phase3_finalization_20260404/`
+- `conductor/tracks/nova_knowledge_workflows_20260404/`
+- `conductor/tracks/nova_multiagent_gatekeeper_20260404/`
+- `conductor/tracks/kkv_inventory_automation_20260404/`
+- `conductor/tracks/kkv_hr_automation_20260404/`
+- `conductor/tracks/kkv_crm_automation_20260404/`
+- `conductor/tracks/kkv_finance_automation_20260404/`
+- `conductor/tracks/kkv_marketing_automation_20260404/`
+- `conductor/tracks/kkv_customer_service_ai_20260404/`
+- `conductor/tracks/kkv_project_task_automation_20260404/`
+- `conductor/tracks/napi_intelligens_briefing_20260404/`
+
+**Mit találtunk és javítottunk:**
+- A `conductor/tracks.md` nem kézzel szerkesztendő állomány, hanem generált index; a helyes workflow a track mappák létrehozása és a `npx tsx src/cli.ts conductor rescan` futtatása.
+- A `.worktrees` forrásokból és a `nova.zip` tartalmából 6 külön aktív track készült, mert a P-Search, P-Sales, bookkeeping Phase 3, Nova knowledge workflow, Nova multi-agent gatekeeper és Cloudflare edge browser orchestration külön rendszerszintű munkafonalat képviselnek.
+- A KKV workflow csomagot nem 14 apró trackre, hanem 7 üzleti domain trackre bontottam, hogy a conductor felület kezelhető maradjon, miközben a workflow-azonosítók a `plan.md` és `spec.md` fájlokban megmaradnak.
+- A napi briefing tervet 1 trackként modelleztem, mert a Gmail / Calendar / Linear / Google Chat reader ágak ugyanannak az orchestration rendszernek a sub-workflow-i; a phase-2 bővítések ugyanebben a trackben maradtak.
+- A tiszta worktree-ben újragenerált conductor index eredménye: **212 total / 27 active / 6 proposed / 14 completed / 164 archived**.
+- A rescan közbeni meta.json hiányra figyelmeztető üzenetek pre-existing track mappákból jöttek; ezeket nem módosítottam.
+
+**Validáció:**
+- `npx tsx src/cli.ts conductor rescan` → **212 total / 27 active**, a frissen létrehozott trackek megjelentek az Active szekcióban.
+
+**Státusz:** ✅ Befejezve
+
+---
+
 ### 2026-04-04 — Coverage remediation + dashboard shell stabilization + Python test hardening
 
 **Feladat:** A Brunella repo tesztlefedettségi hiányainak célzott pótlása, a dashboard shell mobil/theme flake-ek megszüntetése, valamint a `myai` Python tesztkör Windows/Python 3.14 alatti stabilizálása.

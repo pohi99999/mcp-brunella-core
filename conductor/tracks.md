@@ -1,10 +1,10 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-04-04T03:00:00.729Z
+**Utolso frissites:** 2026-04-04T04:12:38.703Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 193 total | 8 active | 14 completed | 164 archived
+**Stats:** 212 total | 27 active | 14 completed | 164 archived
 
 ---
 
@@ -42,32 +42,7 @@
 
 ---
 
-## Aktiv Szalak (Active) (13)
-
-- [ ] **Logging Audit — console.log elimináció és Logger standardizálás** [HIGH]
-  - **ID:** `logging_refactor_20260404`
-  - **Progress:** 0%
-  - Mappa: ./tracks/logging_refactor_20260404/
-
-- [ ] **Type Safety Enforcement — any elimináció és Type Guard implementáció** [HIGH]
-  - **ID:** `type_safety_enforcement_20260404`
-  - **Progress:** 0%
-  - Mappa: ./tracks/type_safety_enforcement_20260404/
-
-- [ ] **Error Handling Standardization — catch (e: unknown) és Error wrapping** [HIGH]
-  - **ID:** `error_handling_standard_20260404`
-  - **Progress:** 0%
-  - Mappa: ./tracks/error_handling_standard_20260404/
-
-- [ ] **Technical Debt Cleanup — TODO konverzió és elavult kód elimináció** [MEDIUM]
-  - **ID:** `technical_debt_cleanup_20260404`
-  - **Progress:** 0%
-  - Mappa: ./tracks/technical_debt_cleanup_20260404/
-
-- [ ] **Modular State Refactor — Globális változók Dependency Injection alapú refaktora** [MEDIUM]
-  - **ID:** `modular_state_refactor_20260404`
-  - **Progress:** 0%
-  - Mappa: ./tracks/modular_state_refactor_20260404/
+## Aktiv Szalak (Active) (27)
 
 - [ ] **apify_deep_scraping_agent_20260223** [LOW]
   - **ID:** `apify_deep_scraping_agent_20260223`
@@ -86,17 +61,79 @@
   - **Progress:** 30%
   - Mappa: ./tracks/cf_hyperdrive_d1_20260323/
 
+- [ ] **Cloudflare edge browser orchestration es Robotkez integracio** [HIGH]
+  - **ID:** `cloudflare_edge_browser_orchestration_20260404`
+  - **Progress:** 0%
+  - **Assignee:** GitHub Copilot
+  - **Updated:** 2026-04-04
+  - Mappa: ./tracks/cloudflare_edge_browser_orchestration_20260404/
+
 - [ ] **Cloudflare Token Separation: BAS vs Personal Account** [HIGH]
   - **ID:** `cloudflare_token_separation_20260403`
   - **Progress:** 40%
   - **Updated:** 2026-04-03
   - Mappa: ./tracks/cloudflare_token_separation_20260403/
 
+- [ ] **Error Handling Standardization — catch (e: unknown) és Error wrapping** [HIGH]
+  - **ID:** `error_handling_standard_20260404`
+  - **Progress:** 0%
+  - **Updated:** 2026-04-04
+  - Mappa: ./tracks/error_handling_standard_20260404/
+
 - [ ] **jules_pr_integration_20260222** [HIGH]
   - **ID:** `jules_pr_integration_20260222`
   - **Progress:** 18%
   - **Assignee:** Claude + Pohánka Péter
   - Mappa: ./tracks/jules_pr_integration_20260222/
+
+- [ ] **KKV CRM es lead-utanakovetes automatizalas** [HIGH]
+  - **ID:** `kkv_crm_automation_20260404`
+  - **Progress:** 0%
+  - **Assignee:** GitHub Copilot
+  - **Updated:** 2026-04-04
+  - Mappa: ./tracks/kkv_crm_automation_20260404/
+
+- [ ] **KKV ugyfelszolgalati AI es ticketkezeles** [HIGH]
+  - **ID:** `kkv_customer_service_ai_20260404`
+  - **Progress:** 0%
+  - **Assignee:** GitHub Copilot
+  - **Updated:** 2026-04-04
+  - Mappa: ./tracks/kkv_customer_service_ai_20260404/
+
+- [ ] **KKV penzugyi emlekezteto es jovahagyasi automatizalas** [HIGH]
+  - **ID:** `kkv_finance_automation_20260404`
+  - **Progress:** 0%
+  - **Assignee:** GitHub Copilot
+  - **Updated:** 2026-04-04
+  - Mappa: ./tracks/kkv_finance_automation_20260404/
+
+- [ ] **KKV HR es dolgozoi adminisztracio automatizalas** [HIGH]
+  - **ID:** `kkv_hr_automation_20260404`
+  - **Progress:** 0%
+  - **Assignee:** GitHub Copilot
+  - **Updated:** 2026-04-04
+  - Mappa: ./tracks/kkv_hr_automation_20260404/
+
+- [ ] **KKV keszlet es leltar automatizalas** [HIGH]
+  - **ID:** `kkv_inventory_automation_20260404`
+  - **Progress:** 0%
+  - **Assignee:** GitHub Copilot
+  - **Updated:** 2026-04-04
+  - Mappa: ./tracks/kkv_inventory_automation_20260404/
+
+- [ ] **KKV marketing es kommunikacios automatizalas** [MEDIUM]
+  - **ID:** `kkv_marketing_automation_20260404`
+  - **Progress:** 0%
+  - **Assignee:** GitHub Copilot
+  - **Updated:** 2026-04-04
+  - Mappa: ./tracks/kkv_marketing_automation_20260404/
+
+- [ ] **KKV projekt es feladat automatizalas** [MEDIUM]
+  - **ID:** `kkv_project_task_automation_20260404`
+  - **Progress:** 0%
+  - **Assignee:** GitHub Copilot
+  - **Updated:** 2026-04-04
+  - Mappa: ./tracks/kkv_project_task_automation_20260404/
 
 - [ ] **Kognitív Könyvelés és Multi-Ágens Egyeztetés — Bővítmény** [HIGH]
   - **ID:** `konyveles_kognitiv_bovites_20260330`
@@ -109,10 +146,76 @@
   - **Progress:** 0%
   - Mappa: ./tracks/konyveles_phase3_20260403/
 
+- [ ] **Logging Audit — console.log elimináció és Logger standardizálás** [HIGH]
+  - **ID:** `logging_refactor_20260404`
+  - **Progress:** 0%
+  - **Updated:** 2026-04-04
+  - Mappa: ./tracks/logging_refactor_20260404/
+
+- [ ] **Modular State Refactor — Globális változók Dependency Injection alapú refaktora** [MEDIUM]
+  - **ID:** `modular_state_refactor_20260404`
+  - **Progress:** 0%
+  - **Updated:** 2026-04-04
+  - Mappa: ./tracks/modular_state_refactor_20260404/
+
+- [ ] **Konyvelesi n8n Phase 3 finalizalas** [CRITICAL]
+  - **ID:** `n8n_bookkeeping_phase3_finalization_20260404`
+  - **Progress:** 0%
+  - **Assignee:** GitHub Copilot
+  - **Updated:** 2026-04-04
+  - Mappa: ./tracks/n8n_bookkeeping_phase3_finalization_20260404/
+
+- [ ] **P-Sales human-in-loop n8n pipeline** [HIGH]
+  - **ID:** `n8n_psales_human_loop_20260404`
+  - **Progress:** 0%
+  - **Assignee:** GitHub Copilot
+  - **Updated:** 2026-04-04
+  - Mappa: ./tracks/n8n_psales_human_loop_20260404/
+
+- [ ] **P-Search n8n Pipeline - palyazat- es hitelkereso workflow-k** [HIGH]
+  - **ID:** `n8n_psearch_pipeline_20260404`
+  - **Progress:** 0%
+  - **Assignee:** GitHub Copilot
+  - **Updated:** 2026-04-04
+  - Mappa: ./tracks/n8n_psearch_pipeline_20260404/
+
+- [ ] **Napi intelligens reggeli briefing ugynok** [HIGH]
+  - **ID:** `napi_intelligens_briefing_20260404`
+  - **Progress:** 0%
+  - **Assignee:** GitHub Copilot
+  - **Updated:** 2026-04-04
+  - Mappa: ./tracks/napi_intelligens_briefing_20260404/
+
+- [ ] **Nova tudasbazis es interakcios workflow-k** [HIGH]
+  - **ID:** `nova_knowledge_workflows_20260404`
+  - **Progress:** 0%
+  - **Assignee:** GitHub Copilot
+  - **Updated:** 2026-04-04
+  - Mappa: ./tracks/nova_knowledge_workflows_20260404/
+
+- [ ] **Nova multi-agent gatekeeper architektura** [HIGH]
+  - **ID:** `nova_multiagent_gatekeeper_20260404`
+  - **Progress:** 0%
+  - **Assignee:** GitHub Copilot
+  - **Updated:** 2026-04-04
+  - Mappa: ./tracks/nova_multiagent_gatekeeper_20260404/
+
 - [ ] **Brunella Remote Layer — Fázis 1: Remote Foundation** [HIGH]
   - **ID:** `remote_layer_phase1_foundation_20260322`
   - **Progress:** 0%
   - Mappa: ./tracks/remote_layer_phase1_foundation_20260322/
+
+- [ ] **Technical Debt Cleanup — TODO konverzió és elavult kód elimináció** [MEDIUM]
+  - **ID:** `technical_debt_cleanup_20260404`
+  - **Progress:** 0%
+  - **Updated:** 2026-04-04
+  - Mappa: ./tracks/technical_debt_cleanup_20260404/
+
+- [ ] **Type Safety Enforcement — any elimináció és Type Guard implementáció** [HIGH]
+  - **ID:** `type_safety_enforcement_20260404`
+  - **Progress:** 0%
+  - **Updated:** 2026-04-04
+  - Mappa: ./tracks/type_safety_enforcement_20260404/
 
 ---
 

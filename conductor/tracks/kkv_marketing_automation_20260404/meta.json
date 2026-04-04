@@ -1,0 +1,15 @@
+{
+  "id": "kkv_marketing_automation_20260404",
+  "name": "KKV marketing es kommunikacios automatizalas",
+  "title": "KKV marketing es kommunikacios automatizalas",
+  "status": "active",
+  "priority": "medium",
+  "created": "2026-04-04",
+  "updated": "2026-04-04",
+  "assignee": "GitHub Copilot",
+  "progress": 0,
+  "tags": ["kkv", "marketing", "social", "newsletter", "content", "n8n"],
+  "dependencies": [],
+  "sourceDocument": "User-provided KKV n8n workflow pack",
+  "phase": 1
+}

@@ -1,0 +1,15 @@
+{
+  "id": "kkv_crm_automation_20260404",
+  "name": "KKV CRM es lead-utanakovetes automatizalas",
+  "title": "KKV CRM es lead-utanakovetes automatizalas",
+  "status": "active",
+  "priority": "high",
+  "created": "2026-04-04",
+  "updated": "2026-04-04",
+  "assignee": "GitHub Copilot",
+  "progress": 0,
+  "tags": ["kkv", "crm", "lead", "follow-up", "sales", "n8n"],
+  "dependencies": [],
+  "sourceDocument": "User-provided KKV n8n workflow pack",
+  "phase": 1
+}
