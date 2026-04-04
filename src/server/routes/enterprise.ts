@@ -14,6 +14,7 @@
 import { Router, Request, Response } from 'express';
 import { agentManager } from '../../agents/AgentManager.js';
 import { EnterpriseOrchestratorAgent } from '../../agents/EnterpriseOrchestratorAgent.js';
+import { taskQueueManager } from '../../agents/taskQueue.js';
 import { logInfo, logError } from '../../utils/logger.js';
 
 interface Module {
@@ -247,14 +248,24 @@ export function createEnterpriseRouter(): Router {
 
   /**
    * GET /api/enterprise/history
-   * Get execution history (placeholder - integrate with task queue later)
+   * Get execution history
    */
   router.get('/history', async (req: Request, res: Response) => {
     try {
       logInfo('EnterpriseAPI', 'Fetching execution history');
+      const limit = parseInt(req.query.limit as string) || 50;
 
-      // TODO: Integrate with TaskQueueManager for real history
-      const history: any[] = [];
+      const tasks = taskQueueManager.getTasks();
+
+      const history = tasks
+        .sort((a, b) => b.createdAt - a.createdAt)
+        .slice(0, limit)
+        .map(task => ({
+          id: task.id,
+          module: task.type,
+          status: task.status,
+          timestamp: task.createdAt
+        }));
 
       res.json({
         status: 'success',
