@@ -1,6 +1,6 @@
 # FŐSZÁL - Egyesített Fejlesztési Napló
 
-**Generálva:** 2026-04-04 14:50
+**Generálva:** 2026-04-04 20:48
 **Script:** `scripts/sync_foszal.py`
 
 ---
@@ -28,11 +28,17 @@ start-full.bat
 
 ## Összesített Napló (Időrendben)
 
-### 2026-04-03
+### 2026-04-04
 
-#### 00:00 - [Copilot] Federation fail-closed hardening + Google credential contract cleanup
+#### 18:47 - [Copilot] Brunella core stabilization lezárás
 - **Agent:** Copilot
 - **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `scripts/health_check.ts`, `scripts/health_check.js`, `test/health_check.test.ts`, `conductor/tracks/brunella_core_stabilization_20260402/meta.json`, `conductor/tracks/brunella_core_stabilization_20260402/plan.md`, `conductor/tracks/brunella_core_stabilization_20260402/spec.md`, `conductor/archive/brunella_core_stabilization_20260402/`
+
+#### 18:27 - [Copilot] Apify deep scraping track lezárás
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `test/apifyScrapingAgent.test.ts`, `docs/agents/ApifyScrapingAgent.md`, `conductor/tracks/apify_deep_scraping_agent_20260223/meta.json`, `conductor/tracks/apify_deep_scraping_agent_20260223/plan.md`, `conductor/tracks.md`, `conductor/project_state.json`
 
 ---
 
@@ -780,7 +786,7 @@ start-full.bat
 | Claude | 85 | 2026-03-31 |
 | Gemini | 19 | 2026-04-02 |
 | Cursor | 0 | N/A |
-| Copilot | 24 | 2026-04-03 |
+| Copilot | 25 | 2026-03-28 |
 
 ---
 

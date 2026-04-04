@@ -132,7 +132,7 @@ async function checkCloudflare() {
     }
     // R2 Check
     let r2Status = "warn";
-    let r2Message = "";
+    let r2Message;
     const r2Url = process.env.S3_API || `https://${accountId}.r2.cloudflarestorage.com`;
     if (accountId) {
         try {

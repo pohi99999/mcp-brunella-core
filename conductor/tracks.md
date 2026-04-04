@@ -1,10 +1,10 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-04-04T18:27:11.581Z
+**Utolso frissites:** 2026-04-04T18:47:06.571Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 212 total | 24 active | 15 completed | 166 archived
+**Stats:** 212 total | 23 active | 15 completed | 167 archived
 
 ---
 
@@ -42,13 +42,7 @@
 
 ---
 
-## Aktiv Szalak (Active) (24)
-
-- [ ] **Brunella Core Stabilization** [CRITICAL]
-  - **ID:** `brunella_core_stabilization_20260402`
-  - **Progress:** 85%
-  - **Updated:** 2026-04-03
-  - Mappa: ./tracks/brunella_core_stabilization_20260402/
+## Aktiv Szalak (Active) (23)
 
 - [ ] **Hyperdrive Connection Pooling D1 Teljesítményhez** [LOW]
   - **ID:** `cf_hyperdrive_d1_20260323`
@@ -266,7 +260,7 @@
 
 ---
 
-## Archivalt (Archived) (166)
+## Archivalt (Archived) (167)
 
 > Archived tracks are hidden by default. View in `conductor/archive/`
 
@@ -281,7 +275,7 @@
 - [x] **AI Recommendation System Integration** (2026-02-17T22:45:00Z)
 - [x] **apify_deep_scraping_agent_20260223** (N/A)
 
-... and 156 more archived tracks
+... and 157 more archived tracks
 
 ---
 

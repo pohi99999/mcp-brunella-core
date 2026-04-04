@@ -7,6 +7,7 @@ Leírás:
 Ez a track célja, hogy kis- és középvállalkozások számára teljes körű CRM-integrációs és lead-utánkövetési automatizálási csomagot hozzon létre. Tartalmazza a bejövő leadek fogadását (webhookok, űrlapok), deduplikációt, lead scoringot, automatisált értesítéseket és emberi jóváhagyási folyamatokat (human-in-loop), valamint riportálást és monitoringot.
 
 Fő komponensek:
+
 - Integrációk: HubSpot, Pipedrive, Zoho CRM (prioritás: HubSpot)
 - Ingest pipeline: webhook → n8n flow → dedupe → lead store
 - Lead scoring: szabályalapú + LLM segédlet (prototípus)
@@ -15,6 +16,7 @@ Fő komponensek:
 - Monitoring & reporting: napi összegzések, funnel metrikák
 
 Success criteria (acceptance):
+
 - Bejövő lead sikeres fogadása és tárolása (end-to-end flow teszt)
 - Automatikus deduplikáció 99%+ a teszt adatokon
 - Lead scoring működik alap-szabályokkal; a top-10% leadek routolása automatikus

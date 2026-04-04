@@ -191,7 +191,7 @@ async function checkCloudflare(): Promise<CheckResult> {
   const r2Url =
     process.env.S3_API || `https://${basAccountId}.r2.cloudflarestorage.com`;
 
-  if (accountId) {
+  if (basAccountId) {
     try {
       const resp = await fetch(r2Url, { signal: AbortSignal.timeout(5000) });
       // R2 usually returns 403 on root GET without auth, which is FINE (it exists)

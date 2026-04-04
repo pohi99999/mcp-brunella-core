@@ -1,4 +1,5 @@
-# Implementációs terv — Ugyfelszolgalati AI
+ # Implementációs terv — Ugyfelszolgalati AI
+
 
 1) Csatorna mapping & ingestion (2d)
 2) Klasszifikációs modell/LLM prompttervezés (3d)

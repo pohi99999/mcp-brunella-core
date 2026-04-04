@@ -1,11 +1,11 @@
 {
   "id": "brunella_core_stabilization_20260402",
   "title": "Brunella Core Stabilization",
-  "status": "active",
+  "status": "completed",
   "priority": "critical",
   "createdAt": "2026-04-02",
   "owner": "GitHub Copilot",
-  "progress": 85,
+  "progress": 100,
   "tags": [
     "brunella",
     "stability",
@@ -18,6 +18,7 @@
   ],
   "sourceDocument": "User direction + architecture review 2026-04-02",
   "phase": 1,
-  "updated": "2026-04-03",
+  "updated": "2026-04-04",
+  "completedAt": "2026-04-04",
   "dependencies": []
 }

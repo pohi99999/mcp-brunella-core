@@ -1,4 +1,5 @@
-# Implementációs terv — Pénzügyi automatizálás
+ # Implementációs terv — Pénzügyi automatizálás
+
 
 1) Számla ingestion mapping (2d)
 2) Dedupe & match logic (3d)

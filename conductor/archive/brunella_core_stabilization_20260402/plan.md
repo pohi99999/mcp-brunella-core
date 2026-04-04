@@ -61,3 +61,8 @@
 - a Python runtime rollout és container security parity felhozatala a Node stable szintjére
 - az új runtime contract alapján heap/OOM drift operátori megfigyelése stable üzemben
 - a Windows oldali smoke/assertion zaj és a `langflow` / `wab` degradált health kivizsgálása
+
+## Zárás
+
+- A stable core runtime, supervision, startup, és health contract work lezárult.
+- A fennmaradó Windows smoke/assertion és `langflow` / `wab` megfigyelések külön operational follow-upként kezelhetők, ezért ehhez a trackhez nem kell új fejlesztési tracket nyitni.
