@@ -356,24 +356,53 @@ A GitHub nem engedi `GITHUB_PAT` nevű environment secret létrehozását (tilto
 
 A `copilot` GitHub Actions environment-ben ellenőrizve lett a 39 secret helyes beállítása. A `GITHUB_PAT` → `GH_TOKEN` átmenet dokumentálva lett a csapatnak.
 
-**Érintett tesztfájlok:**
-- `test/issueFixLoop.test.ts`
-- `test/e2e/smoke-v3.spec.ts`
-- `test/e2e/dashboard-comprehensive.spec.ts`
-- `test/e2e/system-integrity.spec.ts` (ÚJ)
-
-**Végső HEAD:** `dbfe43e07` — `fix(auth+test): GH_TOKEN fallback + E2E test fixes (#133)` a `main` ágon
-
-**Státusz:** ✅ Minden fejlesztés merge-elve mainba, 0 nyitott ág, 272 teszt zöld
+**Érintett fajlok:**
+-- `src/cli/federationCommands.ts`
+-- `src/dashboard/components/FederationCenter.tsx`
+-- `src/dashboard/lib/apiService.ts`
+-- `src/utils/googleAuth.ts`
+-- `src/cli/workspaceCommands.ts`
+-- `myai/utils/google_credentials.py`
+-- `myai/clients/google_sheets_client.py`
+-- `myai/clients/gmail_invoice_fallback.py`
+-- `myai/gmail_invoice_fetcher.py`
+-- `.env.example`
+-- `.gitignore`
+-- `SECURITY.md`
+-- `docs/GOOGLE_WORKSPACE_SETUP.md`
+-- `docs/services/invoice-to-sheets.md`
+-- `config/safe_zones.json`
+-- `config/google-service-account.json.example`
+-- `conductor/tracks/brunella_federation_phase5_20260402/meta.json`
 
 ---
 
-### 2026-04-03 - Federation fail-closed hardening + Google credential contract cleanup
+### 2026-04-04 — KKV track scaffolding (automatikus hozzáadás)
 
-**Feladat:** A federation execute es manifest surface fail-closed lezarasa signed runtime key foundationnel, a Google credential-kezelés drift megszüntetése, valamint a megmaradt `ReconciliationIngestionAgent` lint-hiba javítása.
+Az alábbi KKV domain trackekhez vázlat-spec/plan/meta fájlok kerültek létrehozásra a `tracks/` könyvtárban. Ezek a kezdeti implantok célja, hogy a fejlesztési munkát 1) priorizálhatóvá, 2) mérhetővé és 3) CI/QA-val integrálhatóvá tegyék.
 
-**Erintett fajlok:**
-- `src/security/federationPeerAuth.ts`
+- `kkv_crm_automation_20260404` — KKV CRM és lead-utanakovetes automatizálás
+  - Spec, plan és meta létrehozva: `tracks/kkv_crm_automation_20260404/{spec.md,plan.md,meta.json}`
+  - Status: active — progress: 0%
+  - Következő lépés: discovery + HubSpot sandbox validáció
+
+- `kkv_customer_service_ai_20260404` — KKV ügyfélszolgálati AI és ticketkezelés
+  - Spec/plan/meta létrehozva: `tracks/kkv_customer_service_ai_20260404/`
+  - Status: active — progress: 0%
+  - Következő lépés: csatorna mapping & RAG prototípus
+
+- `kkv_finance_automation_20260404` — KKV pénzügyi emlékeztető és jóváhagyási automatizálás
+  - Spec/plan/meta létrehozva: `tracks/kkv_finance_automation_20260404/`
+  - Status: active — progress: 0%
+  - Következő lépés: számla ingestion mapping + compliance review
+
+- `kkv_hr_automation_20260404` — KKV HR és dolgozói adminisztráció automatizálás
+  - Spec/plan/meta létrehozva: `tracks/kkv_hr_automation_20260404/`
+  - Status: active — progress: 0%
+  - Következő lépés: onboarding playbook és account-provisioning terv
+
+Megjegyzés: minden trackhez további, finomabb subtasks (n8n flows, connector-specific subtasks) szükséges a 100% eléréséhez; ezeket a `plan.md`-ben részletesen felsoroltuk, és sprintenként ütemezhetőek. A következő lépésként commitoljuk a vázlatfájlokat és frissítjük a conductor indexet (`npx tsx src/cli.ts conductor rescan`).
+
 - `src/core/federation/remoteRequest.ts`
 - `src/core/federation/trustRegistry.ts`
 - `src/core/federation/evidence.ts`
