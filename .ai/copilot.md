@@ -4,6 +4,36 @@ User requested that the Copilot CLI automatically connect to a local Brunella MC
 
 <history>
 
+### 2026-04-04 — Cloudflare edge browser orchestration completion and archive
+
+**Feladat:** A `cloudflare_edge_browser_orchestration_20260404` track edge-browser részének lezárása, a Cloudflare tunnel browser endpoint támogatásának beépítése, majd a kész track archiválása és a conductor index frissítése.
+
+**Érintett fájlok:**
+
+- `src/utils/browserEndpoint.ts` (ÚJ)
+- `src/services/BrowserCopilotSessionService.ts`
+- `src/cli/browserCopilotCommands.ts`
+- `src/cli/edgeCommands.ts`
+- `src/server/routes/cloudflare.ts`
+- `src/dashboard/lib/apiService.ts`
+- `docs/cloudflare/BROWSER_ORCHESTRATION.md` (ÚJ)
+- `docs/cloudflare/README.md`
+- `test/browserCopilotSessionService.test.ts`
+- `test/browserCopilotCommands.test.ts`
+- `conductor/archive/cloudflare_edge_browser_orchestration_20260404/meta.json`
+- `conductor/archive/cloudflare_edge_browser_orchestration_20260404/plan.md`
+- `conductor/archive/cloudflare_edge_browser_orchestration_20260404/spec.md`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:**
+
+- A Browser Copilot most a `CLOUDFLARE_TUNNEL_BROWSER_URL` → `CHROME_ACP_URL` → `BROWSER_ACP_URL` → `http://localhost:9315` prioritást használja, és a kiválasztott endpoint a session state-ben is látszik.
+- A Cloudflare config válasz, a CLI riport és a dokumentáció is megkapta az edge browser endpointot és a n8n / Robotkez contract leírását.
+- A build és a browser-related Vitest csomag zölden futott; további track nem szükséges ehhez a témához, a következő lépés a már meglévő aktív trackek valamelyike lehet.
+
+---
+
 ### 2026-04-04 — Cloudflare Token Separation archive closure
 
 **Feladat:** A már befejezett `cloudflare_token_separation_20260403` track lezárása archív állapotba, hogy a conductor index is 100%-os, lezárt trackként kezelje.

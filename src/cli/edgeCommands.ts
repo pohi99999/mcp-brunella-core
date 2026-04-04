@@ -251,6 +251,7 @@ export function registerEdgeCommands(program: Command) {
             apiUrl: string | null;
             n8nUrl: string | null;
             browserUrl: string | null;
+            browserEndpoint: string;
             dashboardUrl: string | null;
           };
           auth: {
@@ -278,6 +279,7 @@ export function registerEdgeCommands(program: Command) {
         console.log(chalk.dim(`  api:     ${data.tunnel.apiUrl || "(not set)"}`));
         console.log(chalk.dim(`  n8n:     ${data.tunnel.n8nUrl || "(not set)"}`));
         console.log(chalk.dim(`  browser: ${data.tunnel.browserUrl || "(not set)"}`));
+        console.log(chalk.dim(`  browser endpoint: ${data.tunnel.browserEndpoint}`));
         console.log(chalk.dim(`  dashboard: ${data.tunnel.dashboardUrl || "(not set)"}`));
 
         console.log(chalk.bold("\nAuth"));

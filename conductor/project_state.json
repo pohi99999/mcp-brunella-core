@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-04-04T12:27:21.820Z",
+  "lastUpdated": "2026-04-04T12:50:27.355Z",
   "tracks": [
     {
       "id": "apify_deep_scraping_agent_20260223",
@@ -173,29 +173,6 @@
         "cloudflare_full_optimization_20260325"
       ],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\cloudflare_dns_zone_reconciliation_20260325",
-      "_isArchived": false
-    },
-    {
-      "id": "cloudflare_edge_browser_orchestration_20260404",
-      "name": "Cloudflare edge browser orchestration es Robotkez integracio",
-      "status": "active",
-      "priority": "high",
-      "progress": 0,
-      "created": "2026-04-04",
-      "updated": "2026-04-04",
-      "assignee": "GitHub Copilot",
-      "tags": [
-        "cloudflare",
-        "browser-rendering",
-        "playwright",
-        "robotkez",
-        "cdp",
-        "n8n"
-      ],
-      "dependencies": [
-        "cloudflare_workers_migration_20260226"
-      ],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\cloudflare_edge_browser_orchestration_20260404",
       "_isArchived": false
     },
     {
@@ -1541,6 +1518,29 @@
       ],
       "dependencies": [],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\cloudflare_edge_agents_network_20260215",
+      "_isArchived": true
+    },
+    {
+      "id": "cloudflare_edge_browser_orchestration_20260404",
+      "name": "Cloudflare edge browser orchestration es Robotkez integracio",
+      "status": "archived",
+      "priority": "high",
+      "progress": 100,
+      "created": "2026-04-04",
+      "updated": "2026-04-04",
+      "assignee": "GitHub Copilot",
+      "tags": [
+        "cloudflare",
+        "browser-rendering",
+        "playwright",
+        "robotkez",
+        "cdp",
+        "n8n"
+      ],
+      "dependencies": [
+        "cloudflare_workers_migration_20260226"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\cloudflare_edge_browser_orchestration_20260404",
       "_isArchived": true
     },
     {
@@ -3834,9 +3834,9 @@
   ],
   "stats": {
     "total": 212,
-    "active": 26,
+    "active": 25,
     "completed": 14,
-    "archived": 165,
+    "archived": 166,
     "proposed": 6
   }
 }
