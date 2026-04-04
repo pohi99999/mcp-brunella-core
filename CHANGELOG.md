@@ -8,7 +8,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### Fixed
+
+- **pytest Windows permission errors** (`myai/pytest.ini`, `myai/tests/conftest.py`, `myai/workers/lancedb_batch.py`, `myai/tests/test_media_factory.py`, `myai/tests/test_workers_lancedb_batch.py`, `myai/.gitignore`): Resolved all `PermissionError: [WinError 5] Access denied` failures on Windows by implementing a comprehensive fix:
+  - Created `pytest.ini` configuration to use local `.pytest_tmp` directory instead of system TEMP (avoids Windows permission issues)
+  - Added Windows-specific fixtures in `conftest.py` for proper cleanup and garbage collection
+  - Fixed critical LanceDB connection leaks in `lancedb_batch.py` by adding `try...finally` blocks with explicit `db.close()` and garbage collection (prevents file locks on Windows)
+  - Enhanced `tmp_campaigns_dir` fixture in `test_media_factory.py` to use `yield` pattern with explicit cleanup
+  - Updated `test_batch_ingestion` to use isolated database paths via new `isolated_lancedb_path` fixture
+  - All affected tests now pass consistently on Windows: 19 passed, 2 skipped (integration tests requiring external dependencies)
+  - See `myai/PYTEST_WINDOWS_FIX_REPORT.md` for detailed root cause analysis and technical documentation
+
 ### Added
+
+- **Runtime learning + harvest hardening** (`src/core/goldenDatasetBridge.ts`, `src/server/registry.ts`, `src/config/paiosConfig.ts`, `src/server/routes/tts.ts`, `src/dashboard/components/dashboard/PAIOSOrchestratorChat.tsx`, `myai/agents/tech_harvester.py`): Golden mirror sync now falls back to the Python incubator when the D1 worker returns malformed HTML/JSON, curated golden samples normalize legacy `candidate` rows into `pending`, local golden samples automatically appear in the approval queue, MCP tools are now instrumented into `tool_runs`, PAIOS exposes/configures a Nova-first voice profile end-to-end, and the harvester safely supports Apify targets without `url` while avoiding unnecessary browser startup.
 
 - **Conductor legacy task sync** (`conductor/tracks/system_wide_zero_mock_20260301`,
   `conductor/archive/*_research_*`, `conductor/archive/deep_market_research_20260227`,
@@ -99,6 +112,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   also refreshed after a successful reconciliation run.
 
 ### Tests
+
+- Added targeted regression coverage for the runtime fixes: `test/goldenDatasetBridge.test.ts` now verifies Python fallback during mirror sync, `test/paiosConfig.test.ts` now validates Nova voice defaults and invalid voice speed rejection, and `myai/tests/test_tech_harvester.py` covers Apify target execution without a `url` or browser bootstrap.
 
 - Added 2 new fuzzy-matching tests to `test/MatchingAgent.test.ts`:
   `should return a FUZZY_MATCH when partner partially matches and amounts are identical` and

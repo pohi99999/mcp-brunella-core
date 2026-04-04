@@ -1,10 +1,10 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-04-03T20:56:56.821Z
+**Utolso frissites:** 2026-04-04T03:00:00.729Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 193 total | 7 active | 0 completed | 179 archived
+**Stats:** 193 total | 8 active | 14 completed | 164 archived
 
 ---
 
@@ -42,7 +42,32 @@
 
 ---
 
-## Aktiv Szalak (Active) (7)
+## Aktiv Szalak (Active) (13)
+
+- [ ] **Logging Audit — console.log elimináció és Logger standardizálás** [HIGH]
+  - **ID:** `logging_refactor_20260404`
+  - **Progress:** 0%
+  - Mappa: ./tracks/logging_refactor_20260404/
+
+- [ ] **Type Safety Enforcement — any elimináció és Type Guard implementáció** [HIGH]
+  - **ID:** `type_safety_enforcement_20260404`
+  - **Progress:** 0%
+  - Mappa: ./tracks/type_safety_enforcement_20260404/
+
+- [ ] **Error Handling Standardization — catch (e: unknown) és Error wrapping** [HIGH]
+  - **ID:** `error_handling_standard_20260404`
+  - **Progress:** 0%
+  - Mappa: ./tracks/error_handling_standard_20260404/
+
+- [ ] **Technical Debt Cleanup — TODO konverzió és elavult kód elimináció** [MEDIUM]
+  - **ID:** `technical_debt_cleanup_20260404`
+  - **Progress:** 0%
+  - Mappa: ./tracks/technical_debt_cleanup_20260404/
+
+- [ ] **Modular State Refactor — Globális változók Dependency Injection alapú refaktora** [MEDIUM]
+  - **ID:** `modular_state_refactor_20260404`
+  - **Progress:** 0%
+  - Mappa: ./tracks/modular_state_refactor_20260404/
 
 - [ ] **apify_deep_scraping_agent_20260223** [LOW]
   - **ID:** `apify_deep_scraping_agent_20260223`
@@ -52,8 +77,8 @@
 
 - [ ] **Brunella Core Stabilization** [CRITICAL]
   - **ID:** `brunella_core_stabilization_20260402`
-  - **Progress:** 80%
-  - **Updated:** 2026-04-02
+  - **Progress:** 85%
+  - **Updated:** 2026-04-03
   - Mappa: ./tracks/brunella_core_stabilization_20260402/
 
 - [ ] **Hyperdrive Connection Pooling D1 Teljesítményhez** [LOW]
@@ -67,9 +92,16 @@
   - **Updated:** 2026-04-03
   - Mappa: ./tracks/cloudflare_token_separation_20260403/
 
+- [ ] **jules_pr_integration_20260222** [HIGH]
+  - **ID:** `jules_pr_integration_20260222`
+  - **Progress:** 18%
+  - **Assignee:** Claude + Pohánka Péter
+  - Mappa: ./tracks/jules_pr_integration_20260222/
+
 - [ ] **Kognitív Könyvelés és Multi-Ágens Egyeztetés — Bővítmény** [HIGH]
   - **ID:** `konyveles_kognitiv_bovites_20260330`
   - **Progress:** 0%
+  - **Updated:** 2026-04-03
   - Mappa: ./tracks/konyveles_kognitiv_bovites_20260330/
 
 - [ ] **Könyvelési Automatizálás Phase 3 — szamlazz.hu + WF-6..9 + NAV Live + IMAP** [HIGH]
@@ -81,6 +113,68 @@
   - **ID:** `remote_layer_phase1_foundation_20260322`
   - **Progress:** 0%
   - Mappa: ./tracks/remote_layer_phase1_foundation_20260322/
+
+---
+
+## Befejezett (Completed - Not Archived) (14)
+
+- [x] **AutoGen GitHub Models pilot a Python MCP alrendszerben**
+  - **ID:** `autogen_github_models_pilot_20260401`
+  - Mappa: ./tracks/autogen_github_models_pilot_20260401/
+
+- [x] **Brunella Federation — Phase 5 Execute Hardening**
+  - **ID:** `brunella_federation_phase5_20260402`
+  - Mappa: ./tracks/brunella_federation_phase5_20260402/
+
+- [x] **Brunella Reflection / Continual Learning Activation**
+  - **ID:** `brunella_reflection_continual_learning_20260402`
+  - Mappa: ./tracks/brunella_reflection_continual_learning_20260402/
+
+- [x] **Brunella Zero-Prompt → Ephemeral Agent Bridge**
+  - **ID:** `brunella_zero_prompt_ephemeral_bridge_20260402`
+  - Mappa: ./tracks/brunella_zero_prompt_ephemeral_bridge_20260402/
+
+- [x] **MCP Config Sync: mcp_servers.json ↔ .vscode/mcp.json**
+  - **ID:** `mcp_sync_config_20260403`
+  - Mappa: ./tracks/mcp_sync_config_20260403/
+
+- [x] **n8n Könyvelési Pipeline — Bank + KP + szamlazz.hu**
+  - **ID:** `n8n_konyveles_pipeline_20260328`
+  - **Completed:** 2026-04-03
+  - Mappa: ./tracks/n8n_konyveles_pipeline_20260328/
+
+- [x] **P-Sales20260327**
+  - **ID:** `P-Sales20260327`
+  - Mappa: ./tracks/P-Sales20260327/
+
+- [x] **Brunella Personal Assistant — Windows MVP Foundation**
+  - **ID:** `personal_assistant_windows_mvp_20260323`
+  - Mappa: ./tracks/personal_assistant_windows_mvp_20260323/
+
+- [x] **README Bootstrap & Health Fixek**
+  - **ID:** `readme_bootstrap_health_fixes_20260324`
+  - Mappa: ./tracks/readme_bootstrap_health_fixes_20260324/
+
+- [x] **RobotkezV2 Comet-szintű Upgrade — Önjavító Multi-Agent Browser**
+  - **ID:** `robotkez_comet_upgrade_20260222`
+  - Mappa: ./tracks/robotkez_comet_upgrade_20260222/
+
+- [x] **System-Wide Zero-Mock & ReAct Upgrade**
+  - **ID:** `system_wide_zero_mock_20260301`
+  - **Completed:** 2026-03-01
+  - Mappa: ./tracks/system_wide_zero_mock_20260301/
+
+- [x] **Push teszt cadence optimalizáció**
+  - **ID:** `test_cadence_optimization_20260401`
+  - Mappa: ./tracks/test_cadence_optimization_20260401/
+
+- [x] **VSCode Auto-Build Task (TypeScript watch)**
+  - **ID:** `vscode_auto_build_20260403`
+  - Mappa: ./tracks/vscode_auto_build_20260403/
+
+- [x] **Windows Bridge Health Check Endpoint**
+  - **ID:** `windows_bridge_health_20260403`
+  - Mappa: ./tracks/windows_bridge_health_20260403/
 
 ---
 
@@ -98,21 +192,6 @@
 - [x] **aider_integration_20260222** (N/A)
 - [x] **AI Recommendation System Integration** (2026-02-17T22:45:00Z)
 - [x] **apify_deep_scraping_agent_20260223** (N/A)
-- [x] **AutoGen GitHub Models pilot** (2026-04-01)
-- [x] **Brunella Federation Phase 5 Execute Hardening** (2026-04-02)
-- [x] **Brunella Reflection / Continual Learning Activation** (2026-04-02)
-- [x] **Brunella Zero-Prompt → Ephemeral Agent Bridge** (2026-04-02)
-- [x] **jules_pr_integration_20260222** (2026-04-01)
-- [x] **MCP Config Sync: mcp_servers.json ↔ .vscode/mcp.json** (2026-04-03)
-- [x] **n8n Könyvelési Pipeline — Bank + KP + szamlazz.hu** (2026-04-03)
-- [x] **P-Sales20260327** (2026-03-27)
-- [x] **Brunella Personal Assistant — Windows MVP Foundation** (2026-03-23)
-- [x] **README Bootstrap & Health Fixek** (2026-03-24)
-- [x] **RobotkezV2 Comet-szintű Upgrade** (2026-03-22)
-- [x] **System-Wide Zero-Mock & ReAct Upgrade** (2026-03-01)
-- [x] **Push teszt cadence optimalizáció** (2026-04-01)
-- [x] **VSCode Auto-Build Task (TypeScript watch)** (2026-04-03)
-- [x] **Windows Bridge Health Check Endpoint** (2026-04-03)
 
 ... and 154 more archived tracks
 
