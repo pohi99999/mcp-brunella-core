@@ -18,6 +18,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "24"
+          cache: "npm"
 
       - name: Install dependencies
         run: npm ci
@@ -82,7 +83,6 @@ jobs:
 
       - name: Install Node deps & build
         run: npm ci && npm run build
-
       - name: PythonShell tests
         run: node --loader ts-node/esm --test test/python_shell.test.ts
         env:
@@ -99,11 +99,11 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "24"
+          cache: "npm"
 
       - name: Install dependencies
         run: npm ci
 
       - name: Run linter
         run: npm run lint
-        continue-on-error: true

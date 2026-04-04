@@ -29,7 +29,6 @@ jobs:
         with:
           node-version: "24"
           cache: "npm"
-
       - name: Install dependencies
         run: npm ci
 
@@ -66,6 +65,8 @@ jobs:
           tags: |
             ghcr.io/${{ github.repository_owner }}/mcp-brunella-core:latest
             ghcr.io/${{ github.repository_owner }}/mcp-brunella-core:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
           labels: |
             org.opencontainers.image.source=${{ github.repositoryUrl }}
             org.opencontainers.image.revision=${{ github.sha }}
@@ -97,6 +98,8 @@ jobs:
           tags: |
             ghcr.io/${{ github.repository_owner }}/mcp-brunella-ai:latest
             ghcr.io/${{ github.repository_owner }}/mcp-brunella-ai:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
           labels: |
             org.opencontainers.image.source=${{ github.repositoryUrl }}
             org.opencontainers.image.revision=${{ github.sha }}

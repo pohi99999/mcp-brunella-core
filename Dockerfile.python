@@ -2,25 +2,36 @@ FROM python:3.12-slim
 
 WORKDIR /app
 
-ENV PYTHONUNBUFFERED=1
+ENV PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1
 
-RUN pip install --no-cache-dir --upgrade pip \
-	&& pip install --no-cache-dir uv
+# Non-root felhasználó létrehozása (biztonsági követelmény: least privilege)
+RUN groupadd -r appgroup && useradd -r -g appgroup appuser
+
+RUN pip install --upgrade pip \
+    && pip install uv
 
 COPY pyproject.toml .
-# Install dependencies from pyproject.toml
-# We use --system to install into the system python (safe in container)
+# Függőségek telepítése a forráskód előtt (jobb layer cache hatékonyság)
 COPY myai/requirements.txt /app/myai/requirements.txt
 
 RUN uv pip install --system -r /app/myai/requirements.txt
 
 COPY myai/ ./myai/
-RUN mkdir -p logs
+RUN mkdir -p /app/logs \
+    && chown -R appuser:appgroup /app
 
 ENV PYTHONPATH=/app
+
+# Váltás nem-root felhasználóra a futtatáshoz
+USER appuser
 
 WORKDIR /app/myai
 
 EXPOSE 8000
+
+# Egészségügyi ellenőrzés — ha a FastAPI kiveszik, Docker automatikusan restartol
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+  CMD python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health')" || exit 1
 
 CMD ["uvicorn", "server:app", "--host", "0.0.0.0", "--port", "8000"]
