@@ -211,6 +211,7 @@ export class PermissionManager {
             'Evaluator': 'EVALUATOR',
             'Voice': 'VOICE',
             'Orchestrator': 'ADMIN',  // Orchestrator has full access
+            'GitHubModels': 'ADMIN',
         };
 
         for (const [agentName, profileName] of Object.entries(agentProfiles)) {

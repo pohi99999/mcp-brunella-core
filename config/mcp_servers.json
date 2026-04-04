@@ -6,6 +6,11 @@
     "description": "The primary BAS controller (Host)"
   },
   {
+    "name": "brunella-remote",
+    "description": "Remote Brunella FastMCP deployment",
+    "disabled": false
+  },
+  {
     "name": "github",
     "command": "npx",
     "args": ["-y", "@modelcontextprotocol/server-github"],

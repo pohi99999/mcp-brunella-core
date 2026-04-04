@@ -14,6 +14,11 @@ export interface ToolExecutionContext {
  * Permission requirements for MCP tools
  */
 export const ToolPermissionMap: Record<string, Permission[]> = {
+    // Agent orchestration meta-tools
+    'agent_delegate': [],
+    'agent_execute': [],
+    'ping': [],
+
     // Browser Tools
     'harvest_scenario': [Permission.BROWSER_CONTROL, Permission.HTTP_REQUEST],
     'harvest_extract': [Permission.BROWSER_CONTROL, Permission.HTTP_REQUEST],
@@ -65,10 +70,16 @@ export function checkToolPermission(
     // Get required permissions for tool
     const requiredPermissions = ToolPermissionMap[toolName];
 
-    // If tool not in map, allow by default (backwards compatibility)
+    // If tool not in map, deny for non-admin agents instead of failing open.
     if (!requiredPermissions) {
-        logWarn('ToolPermissions', `Tool ${toolName} not in permission map - allowing by default`);
-        return { allowed: true };
+        if (globalPermissionManager.hasPermission(agentName, Permission.ADMIN)) {
+            logWarn('ToolPermissions', `Tool ${toolName} not in permission map - allowing for admin agent ${agentName}`);
+            return { allowed: true };
+        }
+
+        const reason = `Tool ${toolName} is not explicitly allowlisted for agent ${agentName}`;
+        globalPermissionManager.logDeniedOperation(agentName, `tool:${toolName}`, reason, toolName);
+        return { allowed: false, reason };
     }
 
     // Check each required permission

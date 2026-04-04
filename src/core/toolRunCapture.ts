@@ -8,26 +8,28 @@
 import { recordToolRun } from '../utils/globalDb.js';
 import { logInfo, logError } from '../utils/logger.js';
 
-type ToolHandler = (params: unknown) => Promise<unknown>;
-
 /**
  * Wrap an MCP tool handler so every invocation is recorded in the tool_runs table.
  */
-export function wrapToolHandler(toolName: string, handler: ToolHandler): ToolHandler {
-  return async (params: unknown): Promise<unknown> => {
+export function wrapToolHandler<TArgs extends unknown[], TResult>(
+  toolName: string,
+  handler: (...args: TArgs) => Promise<TResult> | TResult,
+): (...args: TArgs) => Promise<TResult> {
+  return async (...args: TArgs): Promise<TResult> => {
     const start = Date.now();
     try {
-      const result = await handler(params);
+      const result = await handler(...args);
       const duration = Date.now() - start;
 
       const resultObj = (typeof result === 'object' && result !== null)
         ? result as Record<string, unknown>
         : undefined;
       const success = resultObj?.success !== false;
+      const serializedInput = JSON.stringify(args.length <= 1 ? args[0] : args);
 
       recordToolRun({
         tool_name: toolName,
-        input_params: JSON.stringify(params),
+        input_params: serializedInput,
         output_data: JSON.stringify(result).slice(0, 10_000),
         success: success ? 1 : 0,
         duration_ms: duration,
@@ -39,10 +41,11 @@ export function wrapToolHandler(toolName: string, handler: ToolHandler): ToolHan
     } catch (e: unknown) {
       const duration = Date.now() - start;
       const error = e instanceof Error ? e.message : String(e);
+      const serializedInput = JSON.stringify(args.length <= 1 ? args[0] : args);
 
       recordToolRun({
         tool_name: toolName,
-        input_params: JSON.stringify(params),
+        input_params: serializedInput,
         output_data: JSON.stringify({ error }),
         success: 0,
         duration_ms: duration,

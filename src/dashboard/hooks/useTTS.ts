@@ -53,8 +53,9 @@ export function useTTS() {
       setIsSpeaking(true);
 
       try {
-        // Call backend TTS API
-        const response = await fetch('http://localhost:3000/api/tts', {
+        // Call backend TTS API – relative URL works via Vite proxy in dev and
+        // is served from the same origin in production.
+        const response = await fetch('/api/tts', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

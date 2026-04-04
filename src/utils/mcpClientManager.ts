@@ -1,5 +1,7 @@
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
+import { StreamableHTTPClientTransport } from "@modelcontextprotocol/sdk/client/streamableHttp.js";
+import { SSEClientTransport } from "@modelcontextprotocol/sdk/client/sse.js";
 import { readFileSync } from "fs";
 import { resolve } from "path";
 import { logWarn } from "./logger.js";
@@ -18,10 +20,22 @@ export interface McpStdioConnectionRequest {
   onError?: (error: Error) => void;
 }
 
+export interface McpHttpConnectionRequest {
+  name: string;
+  url: string;
+  onClose?: () => void;
+  onError?: (error: Error) => void;
+}
+
 export interface McpClientConnection {
   client: Client;
   pid: number | null;
 }
+
+type ManagedTransport =
+  | StdioClientTransport
+  | StreamableHTTPClientTransport
+  | SSEClientTransport;
 
 function toChildEnvironment(env: Record<string, string> = {}): Record<string, string> {
   const inherited: Record<string, string> = {};
@@ -39,7 +53,7 @@ function toChildEnvironment(env: Record<string, string> = {}): Record<string, st
 
 export class McpClientManager {
   private clients = new Map<string, Client>();
-  private transports = new Map<string, StdioClientTransport>();
+  private transports = new Map<string, ManagedTransport>();
   private pendingConnections = new Map<string, Promise<McpClientConnection>>();
 
   async connectStdio(
@@ -51,7 +65,7 @@ export class McpClientManager {
     if (existingClient && existingTransport) {
       return {
         client: existingClient,
-        pid: existingTransport.pid,
+        pid: existingTransport instanceof StdioClientTransport ? existingTransport.pid : null,
       };
     }
 
@@ -61,6 +75,32 @@ export class McpClientManager {
     }
 
     const connectionPromise = this.createConnection(request).finally(() => {
+      this.pendingConnections.delete(request.name);
+    });
+
+    this.pendingConnections.set(request.name, connectionPromise);
+    return connectionPromise;
+  }
+
+  async connectHttp(
+    request: McpHttpConnectionRequest,
+  ): Promise<McpClientConnection> {
+    const existingClient = this.clients.get(request.name);
+    const existingTransport = this.transports.get(request.name);
+
+    if (existingClient && existingTransport) {
+      return {
+        client: existingClient,
+        pid: null,
+      };
+    }
+
+    const pending = this.pendingConnections.get(request.name);
+    if (pending) {
+      return pending;
+    }
+
+    const connectionPromise = this.createHttpConnection(request).finally(() => {
       this.pendingConnections.delete(request.name);
     });
 
@@ -123,12 +163,88 @@ export class McpClientManager {
     }
   }
 
+  private createClient(): Client {
+    return new Client(
+      { name: "brunella-gateway", version: pkg.version },
+      { capabilities: {} },
+    );
+  }
+
+  private attachTransportHandlers(
+    requestName: string,
+    transport: ManagedTransport,
+    client: Client,
+    onClose?: () => void,
+    onError?: (error: Error) => void,
+  ): void {
+    transport.onclose = () => {
+      this.clients.delete(requestName);
+      this.transports.delete(requestName);
+      onClose?.();
+    };
+
+    transport.onerror = (error: Error) => {
+      onError?.(error);
+    };
+  }
+
+  private async createHttpConnection(
+    request: McpHttpConnectionRequest,
+  ): Promise<McpClientConnection> {
+    const baseUrl = new URL(request.url);
+    const firstClient = this.createClient();
+    const streamableTransport = new StreamableHTTPClientTransport(baseUrl);
+    this.attachTransportHandlers(
+      request.name,
+      streamableTransport,
+      firstClient,
+      request.onClose,
+      request.onError,
+    );
+
+    try {
+      await firstClient.connect(streamableTransport);
+      this.clients.set(request.name, firstClient);
+      this.transports.set(request.name, streamableTransport);
+      return {
+        client: firstClient,
+        pid: null,
+      };
+    } catch {
+      await streamableTransport.close().catch(() => undefined);
+    }
+
+    const fallbackClient = this.createClient();
+    const sseTransport = new SSEClientTransport(baseUrl);
+    this.attachTransportHandlers(
+      request.name,
+      sseTransport,
+      fallbackClient,
+      request.onClose,
+      request.onError,
+    );
+
+    try {
+      await fallbackClient.connect(sseTransport);
+      this.clients.set(request.name, fallbackClient);
+      this.transports.set(request.name, sseTransport);
+      return {
+        client: fallbackClient,
+        pid: null,
+      };
+    } catch (error: unknown) {
+      await sseTransport.close().catch(() => undefined);
+      throw error;
+    }
+  }
+
   getClient(name: string): Client | undefined {
     return this.clients.get(name);
   }
 
   getPid(name: string): number | null {
-    return this.transports.get(name)?.pid ?? null;
+    const transport = this.transports.get(name);
+    return transport instanceof StdioClientTransport ? transport.pid : null;
   }
 
   getClientNames(): string[] {

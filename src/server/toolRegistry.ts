@@ -5,7 +5,12 @@
  */
 
 import type { ToolDefinition } from "../agents/types.js";
+import {
+  checkToolPermission,
+  type ToolExecutionContext,
+} from "../tools/toolPermissions.js";
 export type { ToolDefinition };
+export type { ToolExecutionContext };
 
 // Tool list for dashboard display
 export interface RegisteredToolInfo {
@@ -31,7 +36,16 @@ export function registerToolDefinition(def: ToolDefinition) {
   }
 }
 
-export async function executeLocalTool(name: string, args: unknown): Promise<unknown> {
+export async function executeLocalTool(
+  name: string,
+  args: unknown,
+  context: ToolExecutionContext = {},
+): Promise<unknown> {
+  const permissionCheck = checkToolPermission(name, context);
+  if (!permissionCheck.allowed) {
+    throw new Error(permissionCheck.reason || `Tool execution denied: ${name}`);
+  }
+
   const handler = toolHandlers.get(name);
   if (!handler) {
     throw new Error(`Tool handler not registered: ${name}`);

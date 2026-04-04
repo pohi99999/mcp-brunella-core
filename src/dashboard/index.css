@@ -5,31 +5,40 @@
 
 @layer base {
   :root {
-    --background: 224 32% 8%;
-    --foreground: 210 40% 98%;
-    --card: 224 28% 10%;
-    --card-foreground: 210 40% 98%;
+    --background: 0 0% 2%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 5%;
+    --card-foreground: 0 0% 98%;
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
     --primary: 201 92% 62%;
     --primary-foreground: 210 40% 98%;
-    --secondary: 222 22% 17%;
-    --secondary-foreground: 210 40% 95%;
-    --muted: 222 18% 16%;
-    --muted-foreground: 218 14% 66%;
-    --accent: 229 42% 22%;
-    --accent-foreground: 210 40% 95%;
+    --secondary: 0 0% 9%;
+    --secondary-foreground: 0 0% 95%;
+    --muted: 0 0% 11%;
+    --muted-foreground: 0 0% 62%;
+    --accent: 0 0% 13%;
+    --accent-foreground: 0 0% 95%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
-    --border: 220 20% 22%;
-    --input: 220 20% 22%;
+    --border: 0 0% 16%;
+    --input: 0 0% 16%;
     --ring: 201 92% 62%;
     --radius: 0.625rem;
 
-    /* Glassmorphism (Icy Light) */
-    --glass-bg: rgba(10, 14, 24, 0.74);
-    --glass-border: rgba(148, 163, 184, 0.16);
-    --glass-shadow: 0 18px 52px -28px rgba(2, 6, 23, 0.82);
+    --glass-bg: linear-gradient(180deg, rgba(12, 12, 13, 0.92), rgba(5, 5, 6, 0.9));
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --glass-shadow: 0 36px 120px -68px rgba(0, 0, 0, 0.98);
+    --shell-bg: #010101;
+    --shell-sheen: rgba(255, 255, 255, 0.045);
+    --surface-1: rgba(11, 11, 12, 0.92);
+    --surface-2: rgba(16, 16, 18, 0.88);
+    --surface-3: rgba(255, 255, 255, 0.03);
+    --surface-border: rgba(255, 255, 255, 0.08);
+    --surface-border-strong: rgba(255, 255, 255, 0.14);
+    --surface-shadow: 0 30px 90px -60px rgba(0, 0, 0, 0.96);
+    --surface-shadow-hover: 0 36px 100px -62px rgba(0, 0, 0, 0.98);
+    --surface-highlight: inset 0 1px 0 rgba(255, 255, 255, 0.05);
 
     /* Dashboard layout */
     --header-h: 3.5rem;
@@ -41,30 +50,39 @@
   }
 
   .dark {
-    --background: 224 32% 8%;
-    --foreground: 210 40% 98%;
-    --card: 224 28% 10%;
-    --card-foreground: 210 40% 98%;
+    --background: 0 0% 2%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 5%;
+    --card-foreground: 0 0% 98%;
     --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
     --primary: 201 92% 62%;
     --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 222 22% 17%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 222 18% 16%;
-    --muted-foreground: 218 14% 66%;
-    --accent: 229 42% 22%;
-    --accent-foreground: 210 40% 98%;
+    --secondary: 0 0% 9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 11%;
+    --muted-foreground: 0 0% 62%;
+    --accent: 0 0% 13%;
+    --accent-foreground: 0 0% 98%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
-    --border: 220 20% 22%;
-    --input: 220 20% 22%;
+    --border: 0 0% 16%;
+    --input: 0 0% 16%;
     --ring: 201 92% 62%;
 
-    /* Glassmorphism (Cyberpunk Dark) */
-    --glass-bg: rgba(8, 12, 22, 0.8);
-    --glass-border: rgba(148, 163, 184, 0.16);
-    --glass-shadow: 0 22px 62px -30px rgba(2, 6, 23, 0.9);
+    --glass-bg: linear-gradient(180deg, rgba(12, 12, 13, 0.94), rgba(5, 5, 6, 0.92));
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --glass-shadow: 0 36px 120px -68px rgba(0, 0, 0, 0.98);
+    --shell-bg: #010101;
+    --shell-sheen: rgba(255, 255, 255, 0.045);
+    --surface-1: rgba(11, 11, 12, 0.94);
+    --surface-2: rgba(16, 16, 18, 0.9);
+    --surface-3: rgba(255, 255, 255, 0.03);
+    --surface-border: rgba(255, 255, 255, 0.08);
+    --surface-border-strong: rgba(255, 255, 255, 0.14);
+    --surface-shadow: 0 30px 90px -60px rgba(0, 0, 0, 0.96);
+    --surface-shadow-hover: 0 36px 100px -62px rgba(0, 0, 0, 0.98);
+    --surface-highlight: inset 0 1px 0 rgba(255, 255, 255, 0.05);
   }
 }
 
@@ -74,51 +92,54 @@
   }
 
   body {
-    background-color: hsl(var(--background));
+    background-color: var(--shell-bg);
     background-image:
-      radial-gradient(circle at 10% -5%, rgba(99, 102, 241, 0.2), transparent 34%),
-      radial-gradient(circle at 85% -10%, rgba(34, 211, 238, 0.1), transparent 30%),
-      linear-gradient(180deg, rgba(2, 6, 23, 0.25), rgba(2, 6, 23, 0.65));
+      radial-gradient(circle at top, rgba(255, 255, 255, 0.06), transparent 28%),
+      radial-gradient(circle at 78% 0%, rgba(255, 255, 255, 0.025), transparent 24%),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.018), transparent 12%),
+      linear-gradient(180deg, #060606, #010101 48%, #000000);
     color: hsl(var(--foreground));
-    font-family: 'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
+    font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    background-attachment: fixed;
   }
 }
 
 @layer utilities {
-  /* Subtle dot grid instead of heavy lines */
   .bg-grid-pattern {
-    background-size: 28px 28px;
-    background-image: radial-gradient(circle, rgba(148, 163, 184, 0.12) 0.8px, transparent 0.8px);
-  }
-
-  .font-space {
-    font-family: 'Space Grotesk', sans-serif;
+    background-size: 40px 40px;
+    background-image:
+      linear-gradient(to right, rgba(255, 255, 255, 0.018) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.018) 1px, transparent 1px);
   }
 
   /* Glass morphism — unified system */
   .glass-panel {
-    background-color: var(--glass-bg);
-    backdrop-filter: blur(16px) saturate(1.2);
-    -webkit-backdrop-filter: blur(16px) saturate(1.2);
-    border: 1px solid var(--glass-border);
-    box-shadow: var(--glass-shadow);
+    background:
+      linear-gradient(180deg, var(--surface-1), var(--surface-2)),
+      linear-gradient(135deg, var(--shell-sheen), transparent 36%);
+    backdrop-filter: blur(18px) saturate(1.01);
+    -webkit-backdrop-filter: blur(18px) saturate(1.01);
+    border: 1px solid var(--surface-border);
+    box-shadow: var(--surface-shadow), var(--surface-highlight);
   }
 
   .glass-card {
-    background-color: var(--glass-bg);
-    backdrop-filter: blur(16px) saturate(1.2);
-    -webkit-backdrop-filter: blur(16px) saturate(1.2);
-    border: 1px solid var(--glass-border);
-    box-shadow: var(--glass-shadow);
+    background:
+      linear-gradient(180deg, rgba(12, 12, 13, 0.96), rgba(7, 7, 8, 0.92)),
+      linear-gradient(135deg, rgba(255, 255, 255, 0.03), transparent 40%);
+    backdrop-filter: blur(18px) saturate(1.01);
+    -webkit-backdrop-filter: blur(18px) saturate(1.01);
+    border: 1px solid var(--surface-border);
+    box-shadow: var(--surface-shadow), var(--surface-highlight);
     transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease, background-color 0.2s ease;
   }
 
   .glass-card:hover {
-    border-color: hsl(var(--primary) / 0.3);
-    box-shadow: var(--glass-shadow), 0 0 0 1px hsl(var(--primary) / 0.14);
-    transform: translateY(-1.5px);
+    border-color: var(--surface-border-strong);
+    box-shadow: var(--surface-shadow-hover), 0 0 0 1px rgba(255, 255, 255, 0.04);
+    transform: translateY(-1px);
   }
 
   .text-glow {
@@ -137,20 +158,21 @@
   .widget-card {
     position: relative;
     background:
-      linear-gradient(180deg, rgba(15, 23, 42, 0.74), rgba(15, 23, 42, 0.56));
-    backdrop-filter: blur(18px) saturate(1.15);
-    -webkit-backdrop-filter: blur(18px) saturate(1.15);
-    border: 1px solid var(--glass-border);
-    border-radius: 1rem;
-    box-shadow: var(--glass-shadow), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+      linear-gradient(180deg, rgba(12, 12, 13, 0.96), rgba(6, 6, 7, 0.92)),
+      linear-gradient(135deg, rgba(255, 255, 255, 0.028), transparent 40%);
+    backdrop-filter: blur(18px) saturate(1.01);
+    -webkit-backdrop-filter: blur(18px) saturate(1.01);
+    border: 1px solid var(--surface-border);
+    border-radius: 1.125rem;
+    box-shadow: var(--surface-shadow), var(--surface-highlight);
     overflow: hidden;
     transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
   }
 
   .widget-card:hover {
-    border-color: hsl(var(--primary) / 0.24);
-    box-shadow: var(--glass-shadow), 0 0 0 1px hsl(var(--primary) / 0.1);
-    transform: translateY(-1.5px);
+    border-color: var(--surface-border-strong);
+    box-shadow: var(--surface-shadow-hover), 0 0 0 1px rgba(255, 255, 255, 0.04);
+    transform: translateY(-1px);
   }
 
   /* Command strip — compact header bar for live system stats */
@@ -160,11 +182,13 @@
     justify-content: space-between;
     padding: 0.7rem 1rem;
     border-radius: 1rem;
-    border: 1px solid rgba(148, 163, 184, 0.18);
-    background: linear-gradient(180deg, rgba(10, 14, 24, 0.74), rgba(10, 14, 24, 0.62));
-    backdrop-filter: blur(20px) saturate(1.3);
-    -webkit-backdrop-filter: blur(20px) saturate(1.3);
-    box-shadow: 0 8px 26px -14px rgba(2, 6, 23, 0.7);
+    border: 1px solid var(--surface-border);
+    background:
+      linear-gradient(180deg, rgba(13, 13, 14, 0.9), rgba(6, 6, 7, 0.86)),
+      linear-gradient(135deg, rgba(255, 255, 255, 0.03), transparent 38%);
+    backdrop-filter: blur(18px) saturate(1.01);
+    -webkit-backdrop-filter: blur(18px) saturate(1.01);
+    box-shadow: var(--surface-shadow), var(--surface-highlight);
     flex-shrink: 0;
   }
 
@@ -175,8 +199,9 @@
     gap: 0.125rem;
     padding: 0.375rem 0.625rem;
     border-radius: 0.75rem;
-    border: 1px solid rgba(148, 163, 184, 0.16);
-    background: rgba(15, 23, 42, 0.36);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.016));
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.025);
     min-width: 4.625rem;
   }
 
@@ -191,7 +216,7 @@
     font-family: ui-monospace, monospace;
     text-transform: uppercase;
     letter-spacing: 0.22em;
-    color: rgb(82 82 91);
+    color: rgba(255, 255, 255, 0.42);
     line-height: 1;
   }
 
@@ -205,7 +230,7 @@
 
   .stat-pill__detail {
     font-size: 0.5rem;
-    color: rgb(82 82 91);
+    color: rgba(255, 255, 255, 0.38);
     font-family: ui-monospace, monospace;
     line-height: 1;
     max-width: 2.5rem;

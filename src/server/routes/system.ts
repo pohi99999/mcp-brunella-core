@@ -126,19 +126,25 @@ export function createSystemControlRouter(): Router {
           await execAsync(cmd).catch(() => {});
           res.json({ success: true, message: 'Python szerver elindult' });
         } else if (service === 'n8n') {
-          // n8n indítása a specifikált mappában: f:\mcp-brunella-core\n8nv2
-          const n8nPath = 'f:\\mcp-brunella-core\\n8nv2';
+          // Derive the n8n directory relative to the project root so this
+          // works on any machine regardless of drive letter / install path.
+          const n8nPath = path.join(process.cwd(), 'n8nv2');
+          const quotedN8nPath = `"${n8nPath}"`;
           logInfo('SystemControl', `n8n indítása itt: ${n8nPath}`);
           
           // Ellenőrizzük, kell-e npm install
           const hasNodeModules = await fs.access(path.join(n8nPath, 'node_modules')).then(() => true).catch(() => false);
           if (!hasNodeModules) {
             logInfo('SystemControl', 'node_modules hiányzik, npm install futtatása...');
-            await execAsync(`cd /d ${n8nPath} && npm install`);
+            const installCmd = process.platform === 'win32'
+              ? `cd /d ${quotedN8nPath} && npm install`
+              : `cd ${quotedN8nPath} && npm install`;
+            await execAsync(installCmd);
           }
 
-          // Win32 specifikus indítás háttérben
-          const cmd = `cd /d ${n8nPath} && start /B npm start`;
+          const cmd = process.platform === 'win32'
+            ? `cd /d ${quotedN8nPath} && start /B npm start`
+            : `cd ${quotedN8nPath} && npm start &`;
           await execAsync(cmd);
           
           res.json({ success: true, message: 'n8n indítása elindult a háttérben' });

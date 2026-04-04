@@ -55,6 +55,11 @@ describe('paiosConfig', () => {
           system_prompt_path: 'src/orchestrator/systemPrompt/paios_orchestrator_prompt.md',
           max_tasks_per_request: 5
         },
+        voice: {
+          response_voice: 'nova',
+          tts_model: 'tts-1',
+          speed: 1.0,
+        },
         providers: {
           gemini: {
             enabled: true,
@@ -76,6 +81,7 @@ describe('paiosConfig', () => {
 
       expect(config).toBeDefined();
       expect(config.orchestrator.default_model).toBe('gemini');
+      expect(config.voice.response_voice).toBe('nova');
       expect(config.providers.gemini?.enabled).toBe(true);
     });
 
@@ -90,6 +96,7 @@ describe('paiosConfig', () => {
       expect(config).toBeDefined();
       expect(config.orchestrator.default_model).toBe('local');
       expect(config.providers.local?.model).toBe('qwen2.5-coder:7b');
+      expect(config.voice.response_voice).toBe('nova');
     });
 
     it('should cache config after first load', () => {
@@ -141,6 +148,27 @@ describe('paiosConfig', () => {
           max_tasks_per_request: 25 // Too high
         },
         providers: {}
+      };
+
+      vi.mocked(fs.existsSync).mockReturnValue(true);
+      vi.mocked(fs.readFileSync).mockReturnValue(yaml.dump(invalidConfig));
+
+      expect(() => loadPaiosConfig()).toThrow();
+    });
+
+    it('should reject invalid voice speed', () => {
+      const invalidConfig = {
+        orchestrator: {
+          default_model: 'gemini',
+          system_prompt_path: 'test.md',
+          max_tasks_per_request: 5,
+        },
+        providers: {},
+        voice: {
+          response_voice: 'nova',
+          tts_model: 'tts-1',
+          speed: 5,
+        },
       };
 
       vi.mocked(fs.existsSync).mockReturnValue(true);

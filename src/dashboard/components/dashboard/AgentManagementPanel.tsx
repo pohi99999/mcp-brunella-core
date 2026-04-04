@@ -27,6 +27,8 @@ export function AgentManagementPanel() {
     const [loading, setLoading] = useState(true)
     const eventSourceRef = useRef<EventSource | null>(null)
     const logEndRef = useRef<HTMLDivElement>(null)
+    const logScrollAreaRef = useRef<HTMLDivElement>(null)
+    const stickToBottomRef = useRef(true)
 
     const fetchAgents = async () => {
         try {
@@ -46,10 +48,25 @@ export function AgentManagementPanel() {
     }, [])
 
     useEffect(() => {
-        if (logEndRef.current) {
-            logEndRef.current.scrollIntoView({ behavior: 'smooth' })
+        const viewport = logScrollAreaRef.current?.querySelector('[data-slot="scroll-area-viewport"]') as HTMLDivElement | null
+        if (!viewport) return
+
+        const updateStickiness = () => {
+            stickToBottomRef.current =
+                viewport.scrollHeight - viewport.scrollTop - viewport.clientHeight <= 80
         }
-    }, [logs])
+
+        updateStickiness()
+        viewport.addEventListener('scroll', updateStickiness)
+
+        return () => viewport.removeEventListener('scroll', updateStickiness)
+    }, [])
+
+    useEffect(() => {
+        if (stickToBottomRef.current && logEndRef.current) {
+            logEndRef.current.scrollIntoView({ behavior: 'smooth', block: 'end' })
+        }
+    }, [logs.length])
 
     const subscribeToLogs = (agentName: string) => {
         if (eventSourceRef.current) {
@@ -203,7 +220,10 @@ export function AgentManagementPanel() {
                                     </Button>
                                 </CardHeader>
                                 <CardContent className="p-0 flex-1 relative">
-                                    <ScrollArea className="h-[350px] w-full bg-white/[0.02] p-4 font-mono text-[12px]">
+                                    <ScrollArea
+                                        ref={logScrollAreaRef}
+                                        className="h-[350px] w-full bg-white/[0.02] p-4 font-mono text-[12px]"
+                                    >
                                         <div className="space-y-1">
                                             {logs.map((log, i) => (
                                                 <div key={i} className={`whitespace-pre-wrap ${log.includes('HIBA') || log.includes('error') ? 'text-red-400' :

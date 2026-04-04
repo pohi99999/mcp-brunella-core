@@ -1,8 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-const { readFileSyncMock, connectStdioMock, disconnectMock } = vi.hoisted(() => ({
+const { readFileSyncMock, connectStdioMock, connectHttpMock, disconnectMock } = vi.hoisted(() => ({
   readFileSyncMock: vi.fn(),
   connectStdioMock: vi.fn(),
+  connectHttpMock: vi.fn(),
   disconnectMock: vi.fn(),
 }));
 
@@ -13,6 +14,7 @@ vi.mock("fs", () => ({
 vi.mock("../src/utils/mcpClientManager.js", () => ({
   mcpClientManager: {
     connectStdio: connectStdioMock,
+    connectHttp: connectHttpMock,
     disconnect: disconnectMock,
   },
 }));
@@ -48,6 +50,7 @@ describe("McpProcessManager", () => {
     delete process.env.GITHUB_PERSONAL_ACCESS_TOKEN;
 
     connectStdioMock.mockResolvedValue({ client: {}, pid: 4242 });
+    connectHttpMock.mockResolvedValue({ client: {}, pid: null });
     disconnectMock.mockResolvedValue(undefined);
   });
 
@@ -133,6 +136,32 @@ describe("McpProcessManager", () => {
     expect(getStatus(manager, "github").error).toMatch(
       /Missing required environment/i,
     );
+  });
+
+  it("auto-starts configured remote http servers", async () => {
+    setConfig([
+      {
+        name: "brunella-remote",
+        transport: "http",
+        url: "https://Brunella-Agents-System-Server.fastmcp.app/mcp",
+        args: [],
+        autoStart: true,
+      },
+    ]);
+
+    const manager = new McpProcessManager();
+    await manager.loadConfig();
+    await manager.startAutoStartServers();
+
+    expect(connectHttpMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        name: "brunella-remote",
+        url: "https://Brunella-Agents-System-Server.fastmcp.app/mcp",
+      }),
+    );
+    expect(getStatus(manager, "brunella-remote").status).toBe("running");
+    expect(getStatus(manager, "brunella-remote").transport).toBe("http");
+    expect(getStatus(manager, "brunella-remote").pid).toBeNull();
   });
 
   it("skips servers that are not supported on the current platform", async () => {

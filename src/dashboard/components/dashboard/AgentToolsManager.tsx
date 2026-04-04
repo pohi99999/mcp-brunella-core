@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Switch } from '@/components/ui/switch'
@@ -15,16 +15,35 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { AgentTool, User, AgentToolParameter, ExternalApiConfig } from '@/lib/types'
 import { canPerformAction } from '@/lib/auth'
 import { externalApiService } from '@/lib/externalApiService'
+import { useMcpStore } from '@/lib/mcpStore'
+import { generateMockAgentTools } from '@/lib/mockData'
 import { Toolbox, Plus, Trash, Info, Lock, Globe, Code, Key, Clock } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 
 interface AgentToolsManagerProps {
-  tools: AgentTool[]
-  user: User
-  onUpdateTools: (tools: AgentTool[]) => void
+  tools?: AgentTool[]
+  user?: User | null
+  onUpdateTools?: (tools: AgentTool[]) => void
 }
 
-export function AgentToolsManager({ tools, user, onUpdateTools }: AgentToolsManagerProps) {
+export function AgentToolsManager({
+  tools,
+  user,
+  onUpdateTools,
+}: AgentToolsManagerProps) {
+  const storeTools = useMcpStore((state) => state.agentTools)
+  const setStoreTools = useMcpStore((state) => state.setAgentTools)
+  const fallbackTools = useMemo(() => generateMockAgentTools(), [])
+  const effectiveTools = tools ?? (storeTools.length > 0 ? storeTools : fallbackTools)
+  const effectiveUser = user ?? {
+    id: 'dashboard-admin',
+    username: 'admin',
+    role: 'admin' as const,
+    displayName: 'Dashboard Admin',
+    email: 'admin@brunella.local',
+    createdAt: new Date(0).toISOString(),
+  }
+  const updateTools = onUpdateTools ?? setStoreTools
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
   const [editingTool, setEditingTool] = useState<AgentTool | null>(null)
   const [newTool, setNewTool] = useState<Partial<AgentTool>>({
@@ -42,7 +61,7 @@ export function AgentToolsManager({ tools, user, onUpdateTools }: AgentToolsMana
   })
   const [isTestingApi, setIsTestingApi] = useState(false)
 
-  const canConfigure = canPerformAction(user, 'configureAgents')
+  const canConfigure = canPerformAction(effectiveUser, 'configureAgents')
 
   const handleToggleTool = (toolId: string) => {
     if (!canConfigure) {
@@ -50,12 +69,12 @@ export function AgentToolsManager({ tools, user, onUpdateTools }: AgentToolsMana
       return
     }
 
-    const updatedTools = tools.map(tool =>
+    const updatedTools = effectiveTools.map(tool =>
       tool.id === toolId ? { ...tool, enabled: !tool.enabled } : tool
     )
-    onUpdateTools(updatedTools)
+    updateTools(updatedTools)
 
-    const tool = tools.find(t => t.id === toolId)
+    const tool = effectiveTools.find(t => t.id === toolId)
     toast.success(
       `Tool ${tool?.enabled ? 'letiltva' : 'engedélyezve'}`,
       { description: tool?.name }
@@ -89,7 +108,7 @@ export function AgentToolsManager({ tools, user, onUpdateTools }: AgentToolsMana
       externalApi: apiConfig.url ? (apiConfig as ExternalApiConfig) : undefined,
     }
 
-    onUpdateTools([...tools, tool])
+    updateTools([...effectiveTools, tool])
     setNewTool({
       name: '',
       description: '',
@@ -160,9 +179,9 @@ export function AgentToolsManager({ tools, user, onUpdateTools }: AgentToolsMana
   const handleDeleteTool = (toolId: string) => {
     if (!canConfigure) return
 
-    const tool = tools.find(t => t.id === toolId)
-    const updatedTools = tools.filter(tool => tool.id !== toolId)
-    onUpdateTools(updatedTools)
+    const tool = effectiveTools.find(t => t.id === toolId)
+    const updatedTools = effectiveTools.filter(tool => tool.id !== toolId)
+    updateTools(updatedTools)
     toast.success('Tool törölve', { description: tool?.name })
   }
 
@@ -425,7 +444,7 @@ export function AgentToolsManager({ tools, user, onUpdateTools }: AgentToolsMana
 
         <ScrollArea className="h-[500px] pr-4">
           <div className="space-y-3">
-            {tools.length === 0 ? (
+            {effectiveTools.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-12 text-center">
                 <Toolbox size={64} weight="duotone" className="text-zinc-500 mb-4" />
                 <h3 className="text-lg font-medium mb-2">Még nincsenek tool-ok</h3>
@@ -436,7 +455,7 @@ export function AgentToolsManager({ tools, user, onUpdateTools }: AgentToolsMana
                 </p>
               </div>
             ) : (
-              tools.map((tool) => (
+              effectiveTools.map((tool) => (
                 <Card key={tool.id} className="border-border/50">
                   <CardContent className="p-4">
                     <div className="flex items-start justify-between gap-4">

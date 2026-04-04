@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useSystemSignal } from "@/hooks/useSystemSignal";
+import { getSocketOrigin } from "@/lib/backendOrigin";
 import {
   CloudArrowUp,
   CheckCircle,
@@ -46,9 +47,7 @@ export function EdgePanel() {
   };
 
   const wsUrl = useMemo(() => {
-    const baseUrl =
-      import.meta.env.VITE_SOCKET_URL ||
-      (import.meta.env.DEV ? "http://localhost:3000" : window.location.origin);
+    const baseUrl = getSocketOrigin();
     return `${baseUrl.replace(/^http/i, "ws")}/socket.io/?EIO=4&transport=websocket`;
   }, []);
 

@@ -66,8 +66,8 @@ export const CloudflareDeployment = () =>
         body: JSON.stringify( {
           databaseId: selectedDbId,
           apiToken,
-          workerDir: 'f:/mcp-brunella-core/myai/agents/workers/cean-test',
-          schemaPath: 'f:/mcp-brunella-core/myai/agents/workers/schema/d1_schema.sql',
+          workerDir: 'myai/agents/workers/cean-test',
+          schemaPath: 'myai/agents/workers/schema/d1_schema.sql',
           projectName: 'cean-test'
         } ),
       } );

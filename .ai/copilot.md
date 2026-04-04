@@ -358,6 +358,73 @@ A `copilot` GitHub Actions environment-ben ellenőrizve lett a 39 secret helyes 
   - `test/inventoryPhase2.test.ts` (ÚJ - Phase 2 unit tesztek)
   - `test/inventoryFifo.test.ts` & `test/inventoryWac.test.ts` (Phase 1 tesztek)
   - `src/agents/registry.json` (Phase 1 & 2 Agentek regisztrálása)
+
+---
+
+### 2026-04-04 — Dashboard shell stabilization + mobile UX + memory/golden consistency
+
+**Feladat:** A dashboard egykattintásos indítási útjának és a Mission Control UI-nak stabilizálása, mobil/reszponzív UX javítása, runtime hibák elhárítása, golden/memory állapot egységesítése, valamint Playwright + célzott UI/Python regressziós validáció lefuttatása.
+
+**Érintett fő fájlok:**
+- `dashboard.bat`
+- `USER_START.md`
+- `src/dashboard/components/dashboard/MissionControlLayout.tsx`
+- `src/dashboard/components/dashboard/WidgetGrid.tsx`
+- `src/dashboard/components/dashboard/DynamicSidebar.tsx`
+- `src/dashboard/components/dashboard/TerminalLog.tsx`
+- `src/dashboard/components/dashboard/CognitiveMemoryPanel.tsx`
+- `src/dashboard/components/dashboard/AgentToolsManager.tsx`
+- `src/dashboard/components/dashboard/MemoryPanel.tsx`
+- `src/dashboard/components/dashboard/PythonWorkersPanel.tsx`
+- `src/dashboard/components/dashboard/PAIOSOrchestratorChat.tsx`
+- `src/dashboard/components/ui/button.tsx`
+- `src/dashboard/components/ui/command.tsx`
+- `src/dashboard/components/ui/sheet.tsx`
+- `src/dashboard/context/SocketContext.tsx`
+- `src/dashboard/hooks/useMCP.ts`
+- `src/dashboard/hooks/useTTS.ts`
+- `src/dashboard/lib/backendOrigin.ts`
+- `src/dashboard/index.css`
+- `src/dashboard/index.html`
+- `src/server/middleware.ts`
+- `src/server/memoryRoutes.ts`
+- `src/server/routes/pythonWorkers.ts`
+- `src/server/routes/tts.ts`
+- `src/core/goldenDatasetBridge.ts`
+- `test/e2e/dashboard-layout-e2e.spec.ts`
+- `test/goldenDatasetBridge.test.ts`
+- `myai/tests/test_tech_harvester.py`
+
+**Mit találtunk és javítottunk:**
+- A `dashboard.bat` korábban optimista startup-flow-val dolgozott; readiness-check alapú indításra lett keményítve, így a böngésző csak valóban használható állapotban nyílik meg.
+- A dashboard socket kliensek több helyen rossz/orphan backend-originre mutattak; egységes `backendOrigin` helper került be, és a helyi dev Socket.IO CORS contract kiegészült a 5173-as dashboard originjeivel.
+- A Mission Control mobil shellben helyreállt a drawer/dialog akadálymentesség: ref-forwarding, title/description, label-elt hamburger gomb, stabil mobil menü.
+- A log panel többé nem kényszeríti vissza a felhasználót az aljára, ha korábbi logokat olvas.
+- A sidebar főcsoportjai újra összecsukhatók, így hosszú menü esetén a navigáció kezelhető marad.
+- A Cognitive Memory és Agent Tool Manager runtime-hibák védettebb adatnormalizálást kaptak.
+- A PAIOS hang visszaállt a női `nova` alapértelmezésre; ezt backend oldalon és a dashboard chat felületen is ellenőriztük.
+- A golden mirror sync jelenleg sikeres, a harvest pipeline is újrafutott és sikeresen zárult.
+- A `getGoldenStats()` Python fallback korábban snake_case adatot szórt vissza hibás camelCase mezőkkel; ezt normalizáltam, így a dashboard immár a valós golden dataset méretet és minőségi adatokat látja.
+
+**Validáció:**
+- `npx playwright test test/e2e/dashboard-layout-e2e.spec.ts --project=chromium`
+- `npm run build`
+- `npm run build:ui`
+- `npm run test:ui -- src/dashboard/components/dashboard/CognitiveMemoryPanel.test.tsx src/dashboard/components/dashboard/AgentToolsManager.test.tsx src/dashboard/components/dashboard/PythonWorkersPanel.test.tsx src/dashboard/components/dashboard/ToolDiscoveryPanel.test.tsx src/dashboard/components/dashboard/TerminalLog.test.tsx src/dashboard/components/dashboard/WidgetGrid.test.tsx src/dashboard/hooks/useMCP.test.ts`
+- `npx vitest run test\\goldenDatasetBridge.test.ts test\\paiosConfig.test.ts --reporter=dot`
+- `python -m pytest myai\\tests\\test_tech_harvester.py -q`
+
+**Rendszerállapot a javítások után:**
+- `GET /api/v1/python-workers/harvest-status` → `success`
+- `POST /api/v1/memory/structured/golden/sync` → `success`
+- `GET /api/v1/tts/voices` → default `nova`
+- `GET /api/v1/memory/stats` → normalizált camelCase payload, valós `totalSamples: 1568`
+
+**Megjegyzés:**
+- A `build:ui` még mindig jelez nagy fő chunkot (`index` ~1.12 MB); ez jelenleg csak optimalizációs follow-up, nem funkcionalitási blocker.
+- A Python 3.14 környezetből külső könyvtári deprecation warningok maradtak (`browser_use`, `langchain_core`, `datetime.utcnow()`), de a funkcionális regressziók nincsenek jelen.
+
+**Státusz:** ✅ Befejezve
   - `conductor/tracks/inventory_automation_20260330/meta.json` (Készültségi fok: 58%)
 **Végeredmény:** ✅ 30 passed | 0 failed teszt a Készlet/Inv fájlokra. A Phase 1 teljesen, a Phase 2 Core (Agentek és DB logika) sikeresen lezárt tesztekkel. A TypeScript fordítás (`npx tsc --noEmit`) stabil és zöld.
 **Megoldott bugok:**

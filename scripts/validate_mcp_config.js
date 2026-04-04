@@ -52,9 +52,15 @@ if (!existsSync(internalPath)) {
     } else {
       ok(`${data.length} szerver bejegyzes talalhato`);
       data.forEach((s, i) => {
+        const transport = s.transport === 'self' || s.transport === 'http' ? s.transport : 'stdio';
         if (!s.name) fail(`[${i}] Hianyzik a "name" mezo`);
-        if (!s.command) fail(`[${i}] Hianyzik a "command" mezo`);
-        if (!Array.isArray(s.args)) fail(`[${i}] Az "args" nem tomb`);
+        if (transport === 'stdio') {
+          if (!s.command) fail(`[${i}] "${s.name}": stdio tipusnal hianyzik a "command" mezo`);
+          if (!Array.isArray(s.args)) fail(`[${i}] "${s.name}": stdio tipusnal az "args" nem tomb`);
+        }
+        if (transport === 'http' && !s.url) {
+          fail(`[${i}] "${s.name}": http tipusnal hianyzik az "url" mezo`);
+        }
         if (s.disabled === undefined) warn(`[${i}] "${s.name}": nincs "disabled" mezo — feltételezve: false`);
       });
     }

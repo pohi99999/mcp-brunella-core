@@ -11,6 +11,7 @@ import { z } from 'zod';
 import yaml from 'js-yaml';
 import fs from 'fs';
 import path from 'path';
+import { logError, logInfo, logWarn } from '../utils/logger.js';
 
 // ============================================================================
 // ZOD SCHEMAS
@@ -22,6 +23,13 @@ const ProviderSchema = z.object({
   api_key_env: z.string().optional(),
   base_url_env: z.string().optional(),
   gateway_url_env: z.string().optional(),
+  fallback_models: z.array(z.string()).optional(),
+});
+
+const PaiosVoiceSchema = z.object({
+  response_voice: z.enum(['alloy', 'echo', 'fable', 'onyx', 'nova', 'shimmer']).default('nova'),
+  tts_model: z.enum(['tts-1', 'tts-1-hd']).default('tts-1'),
+  speed: z.number().min(0.25).max(4).default(1),
 });
 
 export const OrchestrationConcurrencySchema = z.object({
@@ -32,6 +40,7 @@ export const OrchestrationConcurrencySchema = z.object({
 export const PAIOSConfigSchema = z.object({
   orchestrator: z.object({
     default_model: z.enum(['github', 'gemini', 'local', 'anthropic', 'cloudflare', 'copilot']).default('github'),
+    system_prompt_path: z.string().optional(),
     max_tasks_per_request: z.number().int().min(1).max(20).default(5),
     concurrency: OrchestrationConcurrencySchema.default({
       profile: 'balanced',
@@ -58,6 +67,11 @@ export const PAIOSConfigSchema = z.object({
     phoenix_events_enabled: z.boolean().default(true),
     model_selector_enabled: z.boolean().default(true),
   }).optional(),
+  voice: PaiosVoiceSchema.default({
+    response_voice: 'nova',
+    tts_model: 'tts-1',
+    speed: 1,
+  }),
 });
 
 export type PAIOSConfig = z.infer<typeof PAIOSConfigSchema>;
@@ -85,11 +99,12 @@ export function loadPaiosConfig(configPath = 'paios.config.yaml'): PAIOSConfig {
 
   // If config file doesn't exist, use .env fallback
   if (!fs.existsSync(fullPath)) {
-    console.warn(`[PAIOS Config] File not found: ${fullPath} - using .env fallback`);
+    logWarn('PAIOS Config', `File not found: ${fullPath} - using .env fallback`);
     
     const fallbackConfig = {
       orchestrator: {
         default_model: (process.env.PAIOS_DEFAULT_MODEL as ModelProvider) ?? 'github',
+        system_prompt_path: process.env.PAIOS_SYSTEM_PROMPT_PATH,
         max_tasks_per_request: 5,
         concurrency: {
           profile: 'balanced',
@@ -108,6 +123,11 @@ export function loadPaiosConfig(configPath = 'paios.config.yaml'): PAIOSConfig {
           api_key_env: 'GEMINI_API_KEY',
         },
       },
+      voice: {
+        response_voice: 'nova',
+        tts_model: 'tts-1',
+        speed: 1,
+      },
     };
 
     cachedConfig = PAIOSConfigSchema.parse(fallbackConfig);
@@ -122,11 +142,11 @@ export function loadPaiosConfig(configPath = 'paios.config.yaml'): PAIOSConfig {
     // Validate with Zod
     cachedConfig = PAIOSConfigSchema.parse(rawConfig);
     
-    console.log(`[PAIOS Config] Loaded from ${fullPath}`);
+    logInfo('PAIOS Config', `Loaded from ${fullPath}`);
     return cachedConfig;
   } catch (error) {
     if (error instanceof z.ZodError) {
-      console.error('[PAIOS Config] Validation failed:', error.errors);
+      logError('PAIOS Config', `Validation failed: ${JSON.stringify(error.errors)}`);
       throw new Error(`PAIOS config validation failed: ${error.errors.map(e => e.message).join(', ')}`);
     }
     throw error;

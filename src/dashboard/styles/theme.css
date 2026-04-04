@@ -72,14 +72,14 @@
 */
 @layer base {
   :root {
-    --color-bg-base: #020203;
-    --color-bg-card: #09090b;
-    --color-border-subtle: rgba(39, 39, 42, 0.5); /* zinc-800/50 */
-    --color-text-muted: #71717a; /* zinc-500 */
+    --color-bg-base: #010101;
+    --color-bg-card: #0b0b0c;
+    --color-border-subtle: rgba(255, 255, 255, 0.08);
+    --color-text-muted: #9ca3af;
   }
 
   body {
-    @apply antialiased text-zinc-300 bg-[#020203];
+    @apply antialiased text-zinc-200 bg-[#010101];
     font-feature-settings: "cv02", "cv03", "cv04", "ss01";
   }
 
@@ -264,5 +264,7 @@
     --color-bg: var(--color-neutral-1);
     --color-bg-inset: #000000;
     --color-bg-overlay: var(--color-neutral-3);
+    --color-fg-secondary: rgba(255, 255, 255, 0.68);
+    --color-focus-ring: var(--color-accent-8);
   }
 }

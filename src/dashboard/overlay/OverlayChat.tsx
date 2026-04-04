@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { io, Socket } from 'socket.io-client';
+import { getSocketOrigin } from '@/lib/backendOrigin';
 
 interface Message {
   id: string;
@@ -16,9 +17,8 @@ export function OverlayChat() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Attempt to connect to the backend (assuming it runs on localhost:3000)
-    // In a real scenario, this URL might need to be injected or dynamic
-    const newSocket = io('http://localhost:3000/robotkez-overlay', {
+    const newSocket = io(`${getSocketOrigin()}/robotkez-overlay`, {
+      path: '/socket.io',
       transports: ['websocket', 'polling']
     });
 

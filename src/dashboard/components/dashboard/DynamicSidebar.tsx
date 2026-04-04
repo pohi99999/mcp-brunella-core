@@ -1,96 +1,141 @@
-import React from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { cn } from "@/lib/utils";
-import { Shield, LogOut, Activity } from "lucide-react";
+import { Shield, LogOut, Activity, ChevronDown, ChevronRight } from "lucide-react";
 import { navigationRegistry } from "@/lib/navigation";
 
 interface DynamicSidebarProps {
   activeTab: string;
   onTabChange: (tab: string) => void;
+  forceExpanded?: boolean;
 }
 
-export function DynamicSidebar({ activeTab, onTabChange }: DynamicSidebarProps) {
+export function DynamicSidebar({ activeTab, onTabChange, forceExpanded = false }: DynamicSidebarProps) {
   const groups = navigationRegistry.getGroups();
   const items = navigationRegistry.getAllItems();
+  const [collapsedGroups, setCollapsedGroups] = useState<Record<string, boolean>>({});
 
   const findItem = (id: string) => items.find(item => item.id === id);
+  const activeGroupTitle = useMemo(
+    () => groups.find((group) => group.items.includes(activeTab))?.title,
+    [activeTab, groups],
+  );
+
+  useEffect(() => {
+    setCollapsedGroups((prev) => {
+      const next = { ...prev };
+      for (const group of groups) {
+        if (!(group.title in next)) {
+          next[group.title] = false;
+        }
+      }
+      return next;
+    });
+  }, [groups]);
+
+  useEffect(() => {
+    if (!activeGroupTitle) return;
+    setCollapsedGroups((prev) =>
+      prev[activeGroupTitle] ? { ...prev, [activeGroupTitle]: false } : prev
+    );
+  }, [activeGroupTitle]);
+
+  const toggleGroup = (title: string) => {
+    setCollapsedGroups((prev) => ({
+      ...prev,
+      [title]: !prev[title],
+    }));
+  };
 
   return (
-    <aside className="w-14 lg:w-64 flex flex-col py-3 z-10 transition-all duration-300 shrink-0">
-      <div className="glass-panel rounded-2xl flex-1 flex flex-col overflow-hidden mx-1.5 border border-white/10 bg-slate-950/75 shadow-[0_28px_80px_-46px_rgba(2,6,23,0.95)]">
-        <div className="px-3 py-3 border-b border-white/[0.05] flex items-center justify-between">
-          <div className="hidden lg:flex flex-col">
-            <span className="text-[10px] font-mono tracking-[0.28em] uppercase text-zinc-500">Navigation</span>
-            <span className="text-[11px] text-zinc-400">Operator sections</span>
+    <aside className={cn("z-10 flex shrink-0 flex-col py-4 transition-all duration-300", forceExpanded ? "w-full" : "w-16 lg:w-[17rem]")}>
+      <div className="glass-panel mx-1.5 flex flex-1 flex-col overflow-hidden rounded-[1.6rem] border border-white/[0.08]">
+        <div className="flex items-center justify-between border-b border-white/[0.05] px-3.5 py-3.5">
+          <div className={cn("flex flex-col", forceExpanded ? "flex" : "hidden lg:flex")}>
+            <span className="text-[10px] font-mono tracking-[0.28em] uppercase text-white/42">Navigation</span>
+            <span className="text-[11px] text-white/55">Operator sections</span>
           </div>
-          <Activity size={13} className="text-cyan-300" />
+          <div className="flex h-8 w-8 items-center justify-center rounded-xl border border-white/[0.07] bg-white/[0.025]">
+            <Activity size={13} className="text-white/82" />
+          </div>
         </div>
 
-        <div className="flex-1 overflow-y-auto custom-scrollbar py-2.5 px-1.5 space-y-3">
+        <div className="custom-scrollbar flex-1 space-y-3 overflow-y-auto px-2 py-3">
           {groups.map((group) => (
             <div key={group.title} className="space-y-1">
-              {/* Group header — non-clickable section label */}
-              <div className="flex items-center gap-2 px-2.5 py-1">
-                <group.icon size={11} className="text-zinc-600 shrink-0" />
-                <span className="hidden lg:inline text-[9px] font-semibold uppercase tracking-[0.24em] text-zinc-600">
+              <button
+                type="button"
+                onClick={() => toggleGroup(group.title)}
+                aria-expanded={!collapsedGroups[group.title]}
+                aria-controls={`sidebar-group-${group.title}`}
+                className="flex w-full items-center gap-2 rounded-xl px-2.5 py-2 text-left transition-colors hover:bg-white/[0.025] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/30"
+              >
+                <group.icon size={11} className="shrink-0 text-white/28" />
+                <span className={cn("text-[9px] font-semibold uppercase tracking-[0.24em] text-white/36", forceExpanded ? "inline" : "hidden lg:inline")}>
                   {group.title}
                 </span>
-              </div>
-              {/* Group items */}
-              {group.items.map(itemId => {
-                const item = findItem(itemId);
-                if (!item) return null;
-                const isActive = activeTab === item.id;
-                return (
-                  <button
-                    key={item.id}
-                    onClick={() => onTabChange(item.id)}
-                    aria-label={item.label}
-                    title={item.label}
-                    className={cn(
-                      "w-full flex items-center gap-2.5 rounded-xl px-2.5 py-2 transition-all duration-200 group relative",
-                      "text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.045]",
-                      "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary/50",
-                      isActive && "bg-cyan-300/[0.1] text-white border border-cyan-300/[0.2] shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]",
-                    )}
-                  >
-                    {isActive && (
-                      <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-4 bg-cyan-300 rounded-r-full shadow-[0_0_8px_rgba(34,211,238,0.5)]" />
-                    )}
-                    <div className="w-4 h-4 flex items-center justify-center shrink-0 ml-0.5">
-                      <item.icon
-                        size={14}
+                <span className={cn("ml-auto text-white/26", forceExpanded ? "inline" : "hidden lg:inline")}>
+                  {collapsedGroups[group.title] ? <ChevronRight size={12} /> : <ChevronDown size={12} />}
+                </span>
+              </button>
+              {!collapsedGroups[group.title] && (
+                <div id={`sidebar-group-${group.title}`}>
+                  {group.items.map(itemId => {
+                    const item = findItem(itemId);
+                    if (!item) return null;
+                    const isActive = activeTab === item.id;
+                    return (
+                      <button
+                        key={item.id}
+                        onClick={() => onTabChange(item.id)}
+                        aria-label={item.label}
+                        title={item.label}
                         className={cn(
-                          isActive ? "text-cyan-300" : "text-zinc-600 group-hover:text-zinc-400",
-                          "transition-colors duration-200",
+                           "group relative flex w-full items-center gap-2.5 rounded-2xl px-2.5 py-2.5 transition-all duration-200",
+                            "text-white/56 hover:bg-white/[0.04] hover:text-white/88",
+                              "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/30",
+                              isActive && "bg-white/[0.08] text-white border border-white/[0.14] shadow-[0_16px_36px_-28px_rgba(255,255,255,0.22),inset_0_1px_0_rgba(255,255,255,0.08)]",
+                          )}
+                      >
+                        {isActive && (
+                          <div className="absolute left-0 top-1/2 h-4 w-[3px] -translate-y-1/2 rounded-r-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.18)]" />
                         )}
-                      />
-                    </div>
-                    <span className="hidden lg:inline text-xs font-medium tracking-wide truncate">
-                      {item.label}
-                    </span>
-                  </button>
-                );
-              })}
+                        <div className="w-4 h-4 flex items-center justify-center shrink-0 ml-0.5">
+                          <item.icon
+                            size={14}
+                            className={cn(
+                               isActive ? "text-white" : "text-white/34 group-hover:text-white/58",
+                              "transition-colors duration-200",
+                            )}
+                          />
+                        </div>
+                        <span className={cn("text-xs font-medium tracking-wide truncate", forceExpanded ? "inline" : "hidden lg:inline")}>
+                          {item.label}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
             </div>
           ))}
         </div>
 
-        <div className="px-3 py-3 border-t border-white/[0.05]">
-          <div className="flex items-center gap-2.5 mb-2.5">
-            <div className="w-8 h-8 rounded-xl bg-zinc-800/80 border border-white/[0.08] flex items-center justify-center shrink-0">
-              <Shield size={12} className="text-primary" />
+        <div className="border-t border-white/[0.05] px-3.5 py-3.5">
+          <div className="mb-2.5 flex items-center gap-2.5">
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl border border-white/[0.07] bg-white/[0.025]">
+              <Shield size={12} className="text-white" />
             </div>
-            <div className="flex flex-col min-w-0 hidden lg:flex">
-              <span className="text-[10px] font-semibold text-zinc-300 truncate">Master Admin</span>
-              <span className="text-[9px] font-mono text-emerald-400/70 tracking-[0.24em]">AUTHORIZED</span>
+            <div className={cn("flex min-w-0 flex-col", forceExpanded ? "flex" : "hidden lg:flex")}>
+              <span className="text-[10px] font-semibold text-white/80 truncate">Master Admin</span>
+              <span className="text-[9px] font-mono text-emerald-300/75 tracking-[0.24em]">AUTHORIZED</span>
             </div>
           </div>
           <button
             aria-label="Disconnect"
             title="Disconnect"
-            className="w-full text-[10px] font-medium text-zinc-600 hover:text-zinc-300 transition-colors flex items-center justify-between py-1.5 border-t border-white/[0.04] pt-2.5 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary/50 rounded px-1 tracking-[0.24em]"
+            className="flex w-full items-center justify-between rounded-xl border-t border-white/[0.05] px-1 py-1.5 pt-2.5 text-[10px] font-medium tracking-[0.24em] text-white/38 transition-colors hover:text-white/72 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/30"
           >
-            <span className="hidden lg:inline">DISCONNECT</span>
+            <span className={cn(forceExpanded ? "inline" : "hidden lg:inline")}>DISCONNECT</span>
             <LogOut size={11} />
           </button>
         </div>

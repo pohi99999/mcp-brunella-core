@@ -9,9 +9,10 @@ export interface McpServerEnv {
 
 export interface McpServerConfig {
   name: string;
-  transport: "self" | "stdio";
+  transport: "self" | "stdio" | "http";
   command?: string;
   args: string[];
+  url?: string;
   env?: McpServerEnv;
   envFromHost?: Record<string, string[]>;
   cwd?: string;
@@ -28,7 +29,7 @@ export interface McpServerConfig {
 export interface ServerStatus {
   name: string;
   status: "running" | "stopped" | "starting" | "error" | "disabled" | "skipped";
-  transport: "self" | "stdio";
+  transport: "self" | "stdio" | "http";
   autoStart: boolean;
   pid: number | null;
   description?: string;
@@ -213,8 +214,6 @@ export class McpProcessManager {
       return false;
     }
 
-    const args = config.args.map((arg) => this.resolveTemplate(arg));
-    const cwd = this.resolveWorkingDirectory(config.cwd);
     const attempts = Math.max(1, config.connectRetries + 1);
     const retryDelayMs = Math.max(0, config.retryDelayMs);
 
@@ -222,24 +221,42 @@ export class McpProcessManager {
 
     for (let attempt = 1; attempt <= attempts; attempt += 1) {
       try {
-        logInfo(
-          "MCP",
-          `Starting external MCP server: ${name} (${config.command ?? ""} ${args.join(" ")})`,
-        );
+        const connection = await (async () => {
+          if (config.transport === "http") {
+            const url = this.resolveTemplate(config.url ?? "");
+            logInfo("MCP", `Connecting remote MCP server: ${name} (${url})`);
+            return mcpClientManager.connectHttp({
+              name,
+              url,
+              onClose: () => {
+                this.handleTransportClose(name);
+              },
+              onError: (error) => {
+                this.handleTransportError(name, error);
+              },
+            });
+          }
 
-        const connection = await mcpClientManager.connectStdio({
-          name,
-          command: config.command ?? "",
-          args,
-          env: resolvedEnv.env,
-          cwd,
-          onClose: () => {
-            this.handleTransportClose(name);
-          },
-          onError: (error) => {
-            this.handleTransportError(name, error);
-          },
-        });
+          const args = config.args.map((arg) => this.resolveTemplate(arg));
+          const cwd = this.resolveWorkingDirectory(config.cwd);
+          logInfo(
+            "MCP",
+            `Starting external MCP server: ${name} (${config.command ?? ""} ${args.join(" ")})`,
+          );
+          return mcpClientManager.connectStdio({
+            name,
+            command: config.command ?? "",
+            args,
+            env: resolvedEnv.env,
+            cwd,
+            onClose: () => {
+              this.handleTransportClose(name);
+            },
+            onError: (error) => {
+              this.handleTransportError(name, error);
+            },
+          });
+        })();
 
         this.serverStatuses.set(name, {
           ...this.createInitialStatus(config),
@@ -415,14 +432,28 @@ export class McpProcessManager {
       return null;
     }
 
-    const transport = entry.transport === "self" ? "self" : "stdio";
+    const transport =
+      entry.transport === "self"
+        ? "self"
+        : entry.transport === "http"
+          ? "http"
+          : "stdio";
     const command =
       transport === "stdio" && typeof entry.command === "string"
         ? entry.command
         : undefined;
+    const url =
+      transport === "http" && typeof entry.url === "string"
+        ? entry.url.trim()
+        : undefined;
 
     if (transport === "stdio" && !command) {
       logWarn("MCP", `Skipping MCP config "${name}": missing command`);
+      return null;
+    }
+
+    if (transport === "http" && !url) {
+      logWarn("MCP", `Skipping MCP config "${name}": missing url`);
       return null;
     }
 
@@ -445,6 +476,7 @@ export class McpProcessManager {
       transport,
       command,
       args,
+      url,
       env,
       envFromHost,
       cwd: typeof entry.cwd === "string" ? entry.cwd : undefined,

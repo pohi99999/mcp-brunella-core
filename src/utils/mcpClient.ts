@@ -1,19 +1,21 @@
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
+import { StreamableHTTPClientTransport } from "@modelcontextprotocol/sdk/client/streamableHttp.js";
+import { SSEClientTransport } from "@modelcontextprotocol/sdk/client/sse.js";
 import path from "path";
 import fs from "fs";
-import { logError, logInfo } from "./logger.js";
+import { logError, logInfo, logWarn } from "./logger.js";
 import {
-  getPrebuiltToolCatalog,
   hasPrebuiltTool,
-  mergeToolLists,
   type ToolLike,
 } from "./prebuiltTools.js";
 
 interface McpServerConfig {
   name: string;
-  command: string;
-  args: string[];
+  transport?: "self" | "stdio" | "http";
+  command?: string;
+  args?: string[];
+  url?: string;
   env?: Record<string, string>;
   disabled?: boolean;
 }
@@ -27,6 +29,8 @@ export class BrunellaClient {
   private clients: Map<string, Client> = new Map();
   private transports: Map<string, any> = new Map();
   private toolCache: Map<string, string> = new Map(); // tool name -> server name
+  /** Names of servers whose transport is "self" and that could not be reached via SSE. */
+  private selfServers: Set<string> = new Set();
 
   async connect(options: ConnectOptions = {}) {
     if (process.env.BRUNELLA_MCP_DISABLED === '1') {
@@ -43,7 +47,9 @@ export class BrunellaClient {
     );
 
     const servers = options.coreOnly
-      ? allServers.filter((server) => server.name === "brunella-core")
+      ? allServers.filter(
+          (server) => server.name === "brunella-core" || server.name === "brunella-remote",
+        )
       : allServers;
 
     const defaultTimeout = Number(process.env.BRUNELLA_MCP_CONNECT_TIMEOUT_MS || "8000");
@@ -55,11 +61,96 @@ export class BrunellaClient {
     }
 
     const connectOne = async (server: McpServerConfig): Promise<void> => {
-      let transport: StdioClientTransport | undefined;
+      let transport:
+        | StdioClientTransport
+        | StreamableHTTPClientTransport
+        | SSEClientTransport
+        | undefined;
       try {
-        const command = server.command;
-        const args = [...server.args];
+        const transportType = server.transport ?? "stdio";
+        if (transportType === "self") {
+          // Attempt to reach the self-managed server's SSE endpoint.
+          // The BAS HTTP server exposes /sse on the main web port (default 3000).
+          const port = process.env.PORT ?? '3000';
+          const sseUrl = new URL(`http://127.0.0.1:${port}/sse`);
+          const sseClient = new Client(
+            { name: `brunella-cli-${server.name}`, version: "1.0.0" },
+            { capabilities: {} },
+          );
+          const sseTransport = new SSEClientTransport(sseUrl);
+          const selfTimeout = 2000; // short — server is local or not running
+          try {
+            await Promise.race([
+              sseClient.connect(sseTransport),
+              new Promise<never>((_, reject) =>
+                setTimeout(() => reject(new Error(`SSE self-connect timeout (${selfTimeout}ms)`)), selfTimeout)
+              ),
+            ]);
+            this.clients.set(server.name, sseClient);
+            this.transports.set(server.name, sseTransport);
+            logInfo("MCP", `Self-managed server '${server.name}' connected via SSE at ${sseUrl}`);
+          } catch (e: unknown) {
+            if (sseTransport?.close) {
+              try { await sseTransport.close(); } catch { /* best effort */ }
+            }
+            const msg = e instanceof Error ? e.message : String(e);
+            this.selfServers.add(server.name);
+             logWarn(
+               "MCP",
+               `Self-managed server '${server.name}' not reachable (${msg}). ` +
+               `Prebuilt fallback metadata is disabled for safety. Start the server to get live definitions.`
+             );
+           }
+          return;
+        }
 
+        if (transportType === "http") {
+          if (!server.url) {
+            throw new Error(`HTTP MCP server '${server.name}' is missing a url`);
+          }
+
+          const baseUrl = new URL(server.url);
+          const client = new Client(
+            { name: `brunella-cli-${server.name}`, version: "1.0.0" },
+            { capabilities: {} },
+          );
+
+          const tryConnect = async (
+            candidate:
+              | StreamableHTTPClientTransport
+              | SSEClientTransport,
+          ): Promise<void> => {
+            transport = candidate;
+            await Promise.race([
+              client.connect(candidate),
+              new Promise<never>((_, reject) => {
+                setTimeout(() => {
+                  reject(new Error(`Connect timeout (${timeoutMs}ms)`));
+                }, timeoutMs);
+              }),
+            ]);
+          };
+
+          try {
+            await tryConnect(new StreamableHTTPClientTransport(baseUrl));
+          } catch {
+            if (transport?.close) {
+              try { await transport.close(); } catch { /* best effort */ }
+            }
+            await tryConnect(new SSEClientTransport(baseUrl));
+          }
+
+          this.clients.set(server.name, client);
+          this.transports.set(server.name, transport);
+          return;
+        }
+
+        const command = server.command;
+        if (!command) {
+          throw new Error(`Stdio MCP server '${server.name}' is missing a command`);
+        }
+
+        const args = [...(server.args ?? [])];
         if (server.name === "brunella-core" && args[0] === "./build/index.js") {
           args[0] = path.resolve(process.cwd(), "build", "index.js");
         }
@@ -111,7 +202,15 @@ export class BrunellaClient {
 
   async listTools() {
     if (this.clients.size === 0) {
-      return { tools: getPrebuiltToolCatalog() };
+      if (this.selfServers.size > 0) {
+        logWarn(
+          "MCP",
+          `No live MCP connections. Returning an empty tool list instead of stale prebuilt metadata. ` +
+          `Unreachable self-managed servers: ${[...this.selfServers].join(', ')}. ` +
+          `Start the BAS HTTP server to enable live tool definitions.`
+        );
+      }
+      return { tools: [] as ToolLike[] };
     }
 
     const liveTools: ToolLike[] = [];
@@ -130,7 +229,7 @@ export class BrunellaClient {
       }
     }
 
-    return { tools: mergeToolLists(liveTools, getPrebuiltToolCatalog()) };
+    return { tools: liveTools };
   }
 
   async callTool(name: string, args: any) {
@@ -163,8 +262,13 @@ export class BrunellaClient {
       }
     }
     if (hasPrebuiltTool(name)) {
+      if (this.selfServers.has("brunella-core")) {
+        throw new Error(
+          `Tool '${name}' is only known from the local prebuilt catalog, but brunella-core is self-managed and currently not connected. Start the BAS HTTP server or use brunella-remote for live tool execution.`,
+        );
+      }
       throw new Error(
-        `Tool '${name}' is present in out/tools.json, but no connected MCP server exposes it.`,
+        `Tool '${name}' exists in the prebuilt catalog, but no connected MCP server exposes it.`,
       );
     }
     throw new Error(`Tool '${name}' not found on any connected MCP server.`);

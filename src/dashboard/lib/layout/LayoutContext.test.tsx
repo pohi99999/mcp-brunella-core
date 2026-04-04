@@ -125,4 +125,25 @@ describe('LayoutContext', () => {
     expect(allLayouts.modes.length).toBeGreaterThan(0);
     expect(allLayouts.defaultMode).toBeDefined();
   });
+
+  it('default dashboard layout should define grid areas for every assigned widget', () => {
+    let currentLayout: ReturnType<typeof useLayout>['currentLayout'] | undefined;
+
+    const TestComponent = () => {
+      currentLayout = useLayout().currentLayout;
+      return null;
+    };
+
+    render(
+      <LayoutProvider>
+        <TestComponent />
+      </LayoutProvider>
+    );
+
+    const gridAreas = currentLayout?.gridTemplateAreas.join(' ') ?? '';
+    for (const area of Object.values(currentLayout?.widgetAssignments ?? {})) {
+      expect(gridAreas).toContain(area);
+    }
+    expect(currentLayout?.gridTemplateColumns).toContain('minmax(0');
+  });
 });

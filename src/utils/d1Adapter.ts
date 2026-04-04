@@ -96,7 +96,33 @@ export class D1Adapter {
         };
       }
 
-      const result = (await response.json()) as D1QueryResult<T>;
+      const rawBody = await response.text();
+      const contentType = response.headers.get('content-type') || 'unknown';
+
+      if (!contentType.toLowerCase().includes('application/json')) {
+        const snippet = rawBody.replace(/\s+/g, ' ').slice(0, 200);
+        const error = `Expected JSON from D1 worker, received ${contentType}: ${snippet}`;
+        logError('D1 Adapter', error);
+
+        return {
+          status: 'error',
+          error,
+        };
+      }
+
+      let result: D1QueryResult<T>;
+      try {
+        result = JSON.parse(rawBody) as D1QueryResult<T>;
+      } catch {
+        const snippet = rawBody.replace(/\s+/g, ' ').slice(0, 200);
+        const error = `Failed to parse D1 worker JSON response: ${snippet}`;
+        logError('D1 Adapter', error);
+
+        return {
+          status: 'error',
+          error,
+        };
+      }
 
       const duration = Date.now() - startTime;
       logInfo(

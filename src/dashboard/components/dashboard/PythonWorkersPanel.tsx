@@ -36,6 +36,12 @@ interface WorkerStatus {
     totalRuns?: number;
 }
 
+/** Shape returned by GET /api/v1/python-workers/status */
+interface WorkersStatusResponse {
+    status: string;
+    workers: Array<{ name: string; available: boolean }>;
+}
+
 interface WorkerResult {
     success: boolean;
     duration?: number;
@@ -70,19 +76,38 @@ export const PythonWorkersPanel: React.FC = () => {
     }, []);
 
     /**
-     * Load worker availability statuses
+     * Load worker availability statuses from the real backend endpoint.
+     * Route: GET /api/v1/python-workers/status (also accessible at /api/python-workers/status)
      */
     const loadWorkerStatuses = async () => {
         try {
-            // For now, assume all workers are available
-            // TODO: Add backend endpoint to check Python worker availability
+            const res = await fetch('/api/v1/python-workers/status');
+            if (res.ok) {
+                const data: WorkersStatusResponse = await res.json();
+                // Map backend worker names to display labels
+                const displayNames: Record<string, string> = {
+                    ocr: 'OCR Worker',
+                    scraper: 'Web Scraper',
+                    'lancedb-batch': 'LanceDB Batch',
+                };
+                setWorkerStatuses(
+                    data.workers.map((w) => ({
+                        name: displayNames[w.name] ?? w.name,
+                        available: w.available,
+                        totalRuns: 0,
+                    }))
+                );
+            } else {
+                throw new Error(`HTTP ${res.status}`);
+            }
+        } catch (error) {
+            logError('PythonWorkersPanel', `Failed to load worker statuses: ${String(error)}`);
+            // Fallback: show workers as available so the panel is still usable
             setWorkerStatuses([
                 { name: 'OCR Worker', available: true, totalRuns: 0 },
                 { name: 'Web Scraper', available: true, totalRuns: 0 },
                 { name: 'LanceDB Batch', available: true, totalRuns: 0 },
             ]);
-        } catch (error) {
-            logError('PythonWorkersPanel', `Failed to load worker statuses: ${String(error)}`);
         }
     };
 
@@ -99,7 +124,7 @@ export const PythonWorkersPanel: React.FC = () => {
         setResult(null);
 
         try {
-            const response = await fetch('/api/python-workers/ocr', {
+            const response = await fetch('/api/v1/python-workers/ocr', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -149,7 +174,7 @@ export const PythonWorkersPanel: React.FC = () => {
                 }
             }
 
-            const response = await fetch('/api/python-workers/scraper', {
+            const response = await fetch('/api/v1/python-workers/scraper', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(requestBody),
@@ -180,7 +205,7 @@ export const PythonWorkersPanel: React.FC = () => {
         setResult(null);
 
         try {
-            const response = await fetch('/api/python-workers/lancedb-batch', {
+            const response = await fetch('/api/v1/python-workers/lancedb-batch', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
