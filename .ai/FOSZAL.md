@@ -1,6 +1,6 @@
 # FŐSZÁL - Egyesített Fejlesztési Napló
 
-**Generálva:** 2026-04-04 20:48
+**Generálva:** 2026-04-04 21:17
 **Script:** `scripts/sync_foszal.py`
 
 ---
@@ -39,6 +39,11 @@ start-full.bat
 - **Agent:** Copilot
 - **Státusz:** ✅ Befejezve
 - **Érintett fájlok:** `test/apifyScrapingAgent.test.ts`, `docs/agents/ApifyScrapingAgent.md`, `conductor/tracks/apify_deep_scraping_agent_20260223/meta.json`, `conductor/tracks/apify_deep_scraping_agent_20260223/plan.md`, `conductor/tracks.md`, `conductor/project_state.json`
+
+#### 00:00 - [Copilot] Hyperdrive D1 not-needed archive closure
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `conductor/archive/cf_hyperdrive_d1_20260323/meta.json`, `conductor/archive/cf_hyperdrive_d1_20260323/plan.md`, `conductor/archive/cf_hyperdrive_d1_20260323/spec.md`, `conductor/project_state.json`, `conductor/tracks.md`
 
 ---
 
@@ -786,7 +791,7 @@ start-full.bat
 | Claude | 85 | 2026-03-31 |
 | Gemini | 19 | 2026-04-02 |
 | Cursor | 0 | N/A |
-| Copilot | 25 | 2026-03-28 |
+| Copilot | 26 | 2026-04-04 |
 
 ---
 

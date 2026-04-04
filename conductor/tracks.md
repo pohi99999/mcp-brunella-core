@@ -1,10 +1,10 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-04-04T19:01:37.098Z
+**Utolso frissites:** 2026-04-04T19:15:28.890Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 212 total | 23 active | 15 completed | 167 archived
+**Stats:** 211 total | 22 active | 15 completed | 167 archived
 
 ---
 
@@ -42,12 +42,7 @@
 
 ---
 
-## Aktiv Szalak (Active) (23)
-
-- [ ] **Hyperdrive Connection Pooling D1 Teljesítményhez** [LOW]
-  - **ID:** `cf_hyperdrive_d1_20260323`
-  - **Progress:** 30%
-  - Mappa: ./tracks/cf_hyperdrive_d1_20260323/
+## Aktiv Szalak (Active) (22)
 
 - [ ] **Error Handling Standardization — catch (e: unknown) és Error wrapping** [HIGH]
   - **ID:** `error_handling_standard_20260404`

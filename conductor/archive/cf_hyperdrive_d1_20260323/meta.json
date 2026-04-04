@@ -1,12 +1,13 @@
 {
   "id": "cf_hyperdrive_d1_20260323",
   "name": "Hyperdrive Connection Pooling D1 Teljesítményhez",
-  "status": "IN_PROGRESS",
+  "status": "archived",
   "priority": "LOW",
   "created": "2026-03-23",
   "owner": "Pohánka Péter",
-  "progress": 30,
+  "progress": 100,
   "description": "Hyperdrive connection pooling D1 teljesítmény javításhoz. Opcionális - csak ha D1 query latency probléma jelentkezik.",
+  "archiveReason": "Hyperdrive is designed for external PostgreSQL/MySQL databases, not for Cloudflare D1. D1 is a native Cloudflare database that is already optimized for Workers and does not support Hyperdrive connection pooling.",
   "dependencies": [],
   "phase": "optimization"
 }
