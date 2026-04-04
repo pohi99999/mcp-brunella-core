@@ -31,6 +31,7 @@ function printSession(session: Record<string, unknown>): void {
     chalk.bold.cyan('\n🧭 Browser Copilot session\n'),
     `Állapot: ${chalk.green(String(session.status ?? 'n/a'))}`,
     `Mód: ${chalk.yellow(String(session.mode ?? 'n/a'))}`,
+    `Browser endpoint: ${chalk.gray(String(session.browserEndpoint ?? 'n/a'))}`,
     `Viewport: ${chalk.magenta(String(session.viewportEngine ?? 'n/a'))}`,
     `Action engine: ${chalk.blue(String(session.actionEngine ?? 'n/a'))}`,
     `Chrome ACP: ${session.chromeAcpReachable ? chalk.green('elérhető') : chalk.gray('offline')}`,

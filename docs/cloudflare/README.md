@@ -9,6 +9,7 @@
 | Fájl | Leírás |
 |------|--------|
 | **[INFRASTRUCTURE.md](./INFRASTRUCTURE.md)** | 🌟 **MASTER** - Teljes infrastruktúra áttekintés, 6 deployed + 5 planned worker, összes szolgáltatás (Tunnel, AI Gateway, Browser Rendering, R2, D1, Vectorize, KV, Durable Objects), költség modell, deployment, troubleshooting |
+| **[BROWSER_ORCHESTRATION.md](./BROWSER_ORCHESTRATION.md)** | 🧭 Cloudflare edge browser orchestration, Browser Copilot endpoint-felbontás, n8n / Robotkez contract, diagnosztika és E2E validáció |
 | **[DIAGRAM.txt](./DIAGRAM.txt)** | 📊 ASCII diagram - Teljes rendszer vizualizáció (workers, pipeline flow, cost breakdown) |
 
 ---

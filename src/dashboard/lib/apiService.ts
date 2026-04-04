@@ -272,6 +272,7 @@ export interface CloudflareRuntimeConfig {
     apiUrl: string | null;
     n8nUrl: string | null;
     browserUrl: string | null;
+    browserEndpoint: string;
     dashboardUrl: string | null;
   };
   auth: {
@@ -2663,6 +2664,7 @@ export interface BrowserCopilotSessionState {
   status: BrowserCopilotStatus;
   mode: BrowserCopilotMode;
   enginePreference: BrowserCopilotEnginePreference;
+  browserEndpoint: string;
   viewportEngine: 'chrome-acp' | 'robotkez';
   actionEngine: 'robotkez';
   chromeAcpReachable: boolean;

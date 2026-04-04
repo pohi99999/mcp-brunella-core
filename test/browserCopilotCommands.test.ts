@@ -45,6 +45,7 @@ describe('Browser Copilot CLI Commands', () => {
         session: {
           status: 'active',
           mode: 'guide',
+          browserEndpoint: 'https://browser.example.com',
           viewportEngine: 'chrome-acp',
           actionEngine: 'robotkez',
           chromeAcpReachable: true,
@@ -69,6 +70,7 @@ describe('Browser Copilot CLI Commands', () => {
     expect(output).toContain('Browser Copilot session');
     expect(output).toContain('Állapot: active');
     expect(output).toContain('Mód: guide');
+    expect(output).toContain('Browser endpoint: https://browser.example.com');
     expect(output).toContain('Viewport: chrome-acp');
     expect(output).toContain('Action engine: robotkez');
     expect(output).toContain('Chrome ACP: elérhető');

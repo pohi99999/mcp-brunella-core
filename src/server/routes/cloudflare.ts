@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { agentManager } from "../../agents/AgentManager.js";
 import { cloudflareClient } from "../../utils/cloudflareClient.js";
+import { resolveBrowserCopilotEndpoint } from "../../utils/browserEndpoint.js";
 import { getCloudflareAuthHeaders } from "../../utils/cloudflareConfig.js";
 
 type ChatHistoryItem = {
@@ -348,6 +349,7 @@ export function createCloudflareRoutes(): Router {
 
   router.get("/config", (_req, res) => {
     const tunnelEnabled = process.env.CLOUDFLARE_TUNNEL_ENABLED === "true";
+    const browserEndpoint = resolveBrowserCopilotEndpoint();
     const config = {
       edge: {
         enabled: process.env.EDGE_ENABLED === "true",
@@ -361,6 +363,7 @@ export function createCloudflareRoutes(): Router {
         apiUrl: process.env.CLOUDFLARE_TUNNEL_URL || null,
         n8nUrl: process.env.CLOUDFLARE_TUNNEL_N8N_URL || null,
         browserUrl: process.env.CLOUDFLARE_TUNNEL_BROWSER_URL || null,
+        browserEndpoint,
         dashboardUrl: process.env.CLOUDFLARE_TUNNEL_DASHBOARD_URL || null,
       },
       auth: {

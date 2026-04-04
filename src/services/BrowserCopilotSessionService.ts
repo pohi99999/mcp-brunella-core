@@ -2,6 +2,7 @@ import { RobotkezV2Agent } from '../agents/RobotkezV2Agent.js';
 import { type AgentResponse } from '../agents/types.js';
 import { socketService } from '../server/SocketService.js';
 import { type ExecutionPlan, generateExecutionPlan } from '../utils/llmPlanner.js';
+import { resolveBrowserCopilotEndpoint } from '../utils/browserEndpoint.js';
 import { logError, logInfo, logWarn } from '../utils/logger.js';
 
 export type BrowserCopilotMode = 'observe' | 'guide' | 'auto';
@@ -27,6 +28,7 @@ export interface BrowserCopilotSessionState {
   status: BrowserCopilotStatus;
   mode: BrowserCopilotMode;
   enginePreference: BrowserCopilotEnginePreference;
+  browserEndpoint: string;
   viewportEngine: 'chrome-acp' | 'robotkez';
   actionEngine: 'robotkez';
   chromeAcpReachable: boolean;
@@ -81,7 +83,7 @@ async function defaultGeneratePlan(instruction: string, history: BrowserCopilotM
 
 async function defaultProbeChromeAcp(): Promise<boolean> {
   try {
-    const response = await fetch('http://localhost:9315', { method: 'GET' });
+    const response = await fetch(resolveBrowserCopilotEndpoint(), { method: 'GET' });
     return response.ok;
   } catch {
     return false;
@@ -130,6 +132,7 @@ export class BrowserCopilotSessionService {
       status: 'idle',
       mode: 'auto',
       enginePreference: 'auto',
+      browserEndpoint: resolveBrowserCopilotEndpoint(),
       viewportEngine: 'robotkez',
       actionEngine: 'robotkez',
       chromeAcpReachable: false,
@@ -158,6 +161,7 @@ export class BrowserCopilotSessionService {
       status: 'idle',
       mode: this.state.mode,
       enginePreference: this.state.enginePreference,
+      browserEndpoint: resolveBrowserCopilotEndpoint(),
       viewportEngine: this.state.viewportEngine,
       actionEngine: 'robotkez',
       chromeAcpReachable: this.state.chromeAcpReachable,
@@ -270,7 +274,7 @@ export class BrowserCopilotSessionService {
       return this.getState();
     }
 
-    const pendingInstruction = this.state.pendingInstruction;
+    const { pendingInstruction } = this.state;
     this.state.pendingInstruction = undefined;
     await this.executeInstruction(pendingInstruction);
     return this.getState();
@@ -305,6 +309,7 @@ export class BrowserCopilotSessionService {
   }
 
   private async refreshViewport(): Promise<void> {
+    this.state.browserEndpoint = resolveBrowserCopilotEndpoint();
     const chromeAcpReachable = await this.deps.probeChromeAcp();
     this.state.chromeAcpReachable = chromeAcpReachable;
 
