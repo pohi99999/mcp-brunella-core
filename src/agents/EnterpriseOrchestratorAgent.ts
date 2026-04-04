@@ -9,6 +9,7 @@
  * @version 1.0.0
  */
 
+import { getBifrostGateway } from "../core/bifrost_gateway.js";
 import { OrchestratorAgent } from './OrchestratorAgent.js';
 import { AgentResponse } from './types.js';
 import { agentManager } from './AgentManager.js';
@@ -326,9 +327,51 @@ export class EnterpriseOrchestratorAgent extends OrchestratorAgent {
    * This is a simplified parser - in production, would use LLM for complex extraction
    */
   private async extractPayload(input: string, module: ModuleType): Promise<ModulePayload> {
-    // Placeholder: Return minimal valid payload structure
-    // TODO: Implement LLM-based entity extraction for complex payloads
+    try {
+      const gateway = getBifrostGateway();
 
+      const systemPrompt = `You are an enterprise data extraction AI.
+Your task is to extract a structured JSON payload from the user's natural language input for the "${module}" module.
+
+Return ONLY valid JSON. Do not wrap it in markdown block quotes like \`\`\`json.
+The structure should follow the Enterprise Suite specification for the given module.`;
+
+      const prompt = `Extract structured data for the "${module}" module from this input:
+"${input}"
+
+Expected formats by module:
+HR: { "type": "recruitment" | "conflict_analysis" | "csr_opportunity", "data": { ... } }
+FINANCE: { "type": "invoice_processing" | "grant_eligibility" | "procurement_negotiation", "data": { ... } }
+SALES: { "type": "lead_generation" | "market_intel" | "campaign_automation", "data": { ... } }
+LOGISTICS: { "type": "shipment_tracking" | "complaint_generation" | "route_optimization", "data": { ... } }
+INTELLIGENCE: { "type": "competitor_analysis" | "law_monitoring" | "trend_detection", "data": { ... } }
+WIKI: { "type": "index_project" | "search_knowledge" | "archive_documents", "data": { ... } }
+
+Return strictly the JSON object.`;
+
+      const response = await gateway.generate({
+        prompt,
+        systemPrompt,
+        taskType: 'general',
+        temperature: 0.1
+      });
+
+      if (response.success && response.content) {
+        try {
+          const contentStr = response.content.trim().replace(/^\`\`\`json\n/, '').replace(/\n\`\`\`$/, '');
+          const parsed = JSON.parse(contentStr);
+          if (parsed && parsed.type && parsed.data) {
+            return parsed as ModulePayload;
+          }
+        } catch (e) {
+          logError(this.name, `Failed to parse LLM extracted payload: ${e}`);
+        }
+      }
+    } catch (e) {
+      logError(this.name, `LLM payload extraction failed: ${e}`);
+    }
+
+    // Fallback: Return minimal valid payload structure if LLM fails
     switch (module) {
       case 'HR':
         return {
