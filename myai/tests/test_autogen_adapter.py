@@ -34,6 +34,14 @@ def make_config(**overrides: object) -> BackendConfig:
     return replace(base_config, **overrides)
 
 
+@pytest.fixture(autouse=True)
+def clear_github_model_env(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.delenv("GITHUB_PAT", raising=False)
+    monkeypatch.delenv("GITHUB_TOKEN", raising=False)
+    monkeypatch.delenv("AUTOGEN_OLLAMA_MODEL", raising=False)
+    monkeypatch.delenv("OLLAMA_MODEL", raising=False)
+
+
 class FakeMessage:
     def __init__(self, content: object):
         self.content = content

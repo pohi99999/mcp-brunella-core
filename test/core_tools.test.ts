@@ -15,7 +15,12 @@ describe('Core Tools', () => {
     transport = new StdioClientTransport({
         command: process.execPath,
         args: [buildPath],
-        env: { ...process.env, WEB_UI_ENABLED: "0", BRUNELLA_SKIP_SECRETS_CHECK: "1" }
+        env: {
+          ...process.env,
+          WEB_UI_ENABLED: "0",
+          BRUNELLA_SKIP_SECRETS_CHECK: "1",
+          BRUNELLA_FORCE_STDIO: "1",
+        }
     });
     client = new Client({ name: "test-client", version: "1.0.0" });
     await client.connect(transport);

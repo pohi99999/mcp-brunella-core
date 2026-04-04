@@ -95,6 +95,7 @@ __pycache__/
 build/
 test-results/
 .lancedb/
+.pytest_tmp/
 .venv/
 Ollama/
 AnythingLLM/

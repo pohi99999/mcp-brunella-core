@@ -50,6 +50,7 @@ autogen = [
 # interpreter extra removed: open-interpreter pins tiktoken<0.8.0, incompatible with Python 3.13+
 
 [tool.pytest.ini_options]
+addopts = "--basetemp=.pytest_tmp"
 markers = [
     "e2e: end-to-end invoice automation smoke tests",
 ]

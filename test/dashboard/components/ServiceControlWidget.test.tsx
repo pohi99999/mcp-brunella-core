@@ -85,7 +85,7 @@ describe("ServiceControlWidget", () => {
     expect(mockedApi.getServiceStatus).toHaveBeenCalledTimes(1);
 
     await act(async () => {
-      fireEvent.click(screen.getByRole("button"));
+      fireEvent.click(screen.getByRole("button", { name: /refresh service status/i }));
     });
     expect(mockedApi.getServiceStatus).toHaveBeenCalledTimes(2);
   });

@@ -62,11 +62,36 @@ def sample_trends() -> list[TrendItemInput]:
 
 @pytest.fixture
 def tmp_campaigns_dir(monkeypatch, tmp_path):
-    """Ideiglenes _KNOWLEDGE_BASE/campaigns könyvtár a tesztekhez."""
+    """
+    Temporary _KNOWLEDGE_BASE/campaigns directory for tests.
+
+    Uses yield pattern to ensure proper cleanup after test completion.
+    This is critical on Windows to release file locks before pytest
+    attempts to clean up tmp_path.
+    """
     campaigns_dir = tmp_path / "_KNOWLEDGE_BASE" / "campaigns"
     campaigns_dir.mkdir(parents=True)
     monkeypatch.setattr("myai.workers.media_factory.CAMPAIGNS_BASE", campaigns_dir)
-    return campaigns_dir
+
+    yield campaigns_dir
+
+    # Explicit cleanup to ensure file handles are released
+    # Small delay for Windows file system to release locks
+    import time
+    import shutil
+    import gc
+
+    gc.collect()  # Force garbage collection
+    time.sleep(0.1)  # Give subprocess time to release locks
+
+    # Clean up the knowledge base directory tree
+    if campaigns_dir.parent.parent.exists():
+        try:
+            shutil.rmtree(campaigns_dir.parent.parent, ignore_errors=True)
+        except PermissionError as e:
+            # Log but don't fail test - pytest will handle final cleanup
+            import logging
+            logging.warning(f"Cleanup warning (non-critical): {e}")
 
 
 # ─────────────────────────────────────────────────────────────────────────────

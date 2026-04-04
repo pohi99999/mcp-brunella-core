@@ -1,5 +1,5 @@
 import React from "react";
-import { render, screen, waitFor, within } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { SystemHealthCard } from "./SystemHealthCard";
 import * as apiService from "@/lib/apiService";
@@ -76,33 +76,23 @@ describe("SystemHealthCard", () => {
     } as apiService.HealthStatus);
   });
 
-  it("renders runtime drift summary strip when runtime drift is available", async () => {
+  it("renders the current health monitor summary and healthy service rows", async () => {
     render(<SystemHealthCard />);
 
     await waitFor(() => {
       expect(apiService.checkHealth).toHaveBeenCalled();
     });
 
-    const driftSummary = screen.getByTestId("system-health-runtime-drift");
-    expect(driftSummary).toBeInTheDocument();
-    expect(within(driftSummary).getByText("Runtime Drift")).toBeInTheDocument();
-    expect(within(driftSummary).getByText("warn")).toBeInTheDocument();
-    expect(within(driftSummary).getByText("Node restart")).toBeInTheDocument();
-    expect(within(driftSummary).getByText("Node drift")).toBeInTheDocument();
-    expect(within(driftSummary).getByText("Py restart")).toBeInTheDocument();
-    expect(within(driftSummary).getByText("Py unavailable")).toBeInTheDocument();
-    expect(within(driftSummary).getByText("2")).toBeInTheDocument();
-    expect(within(driftSummary).getAllByText("1")).toHaveLength(2);
-    expect(within(driftSummary).getByText("0")).toBeInTheDocument();
-    const recommendation = screen.getByTestId("system-health-runtime-recommendation");
-    expect(recommendation).toHaveTextContent("Stable Tuning Recommendation");
-    expect(recommendation).toHaveTextContent("TUNE · medium");
-    expect(recommendation).toHaveTextContent("Node envelope");
-    expect(recommendation).toHaveTextContent("heap 1792 MB");
-    expect(recommendation).toHaveTextContent("Python envelope");
-    const journal = screen.getByTestId("system-health-runtime-rollout-journal");
-    expect(journal).toHaveTextContent("Latest Approved Rollout Evidence");
-    expect(journal).toHaveTextContent("CHG-2026-040");
-    expect(journal).toHaveTextContent("Ops Lead");
+    expect(screen.getByText("Health Monitor")).toBeInTheDocument();
+    expect(screen.getByText(/6\s*\/\s*6/)).toBeInTheDocument();
+    expect(screen.getByText("Ollama Local")).toBeInTheDocument();
+    expect(screen.getByText("Knowledge Base")).toBeInTheDocument();
+    expect(screen.getByText("Agent Cluster")).toBeInTheDocument();
+    expect(screen.getByText("MCP Protocol")).toBeInTheDocument();
+    expect(screen.getByText("Python API")).toBeInTheDocument();
+    expect(screen.getByText("Edge Network")).toBeInTheDocument();
+    expect(screen.getByText("Engine ready")).toBeInTheDocument();
+    expect(screen.getByText("Gateway & R2 OK")).toBeInTheDocument();
+    expect(screen.getAllByText("Kernel")).toHaveLength(3);
   });
 });

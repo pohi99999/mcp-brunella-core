@@ -240,10 +240,41 @@ class TestLanceDBIntegration:
         # This test would require model download
         pytest.skip("Requires model download and network access")
 
-    def test_batch_ingestion(self, tmp_path):
-        """Test full batch ingestion pipeline"""
-        # This test would require full setup
-        pytest.skip("Requires LanceDB setup and embeddings")
+    def test_batch_ingestion(self, tmp_path, isolated_lancedb_path):
+        """
+        Test full batch ingestion pipeline.
+
+        Uses isolated_lancedb_path to ensure database files are properly
+        scoped to tmp_path and cleaned up after test completion.
+        """
+        # Create test data file
+        data_file = tmp_path / "test_data.csv"
+        with open(data_file, 'w', newline='', encoding='utf-8') as f:
+            writer = csv.DictWriter(f, fieldnames=["id", "text", "category"])
+            writer.writeheader()
+            writer.writerow({"id": "1", "text": "Test document for ingestion", "category": "test"})
+
+        # Create ingestion request with isolated database path
+        request = IngestionRequest(
+            file_path=str(data_file),
+            table_name="test_table",
+            db_path=isolated_lancedb_path,  # Use isolated path from fixture
+            overwrite=True,
+            text_field="text",
+            metadata_fields=["id", "category"],
+            batch_size=10,
+        )
+
+        # Import here to avoid import errors when dependencies not installed
+        from lancedb_batch import ingest_batch
+
+        # Run ingestion
+        response = ingest_batch(request)
+
+        # Verify response
+        assert response.success
+        assert response.records_processed >= 1
+        assert response.table_name == "test_table"
 
 
 if __name__ == "__main__":

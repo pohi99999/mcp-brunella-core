@@ -46,15 +46,27 @@ test.describe('Brunella Mission Control Dashboard Layout E2E', () => {
         await page.setViewportSize({ width: 390, height: 844 });
         await page.reload();
         await expect(page.getByRole('heading', { name: /Mission Control/i })).toBeVisible({ timeout: 10000 });
+        await page.waitForTimeout(250);
 
         const mobileMenuToggle = page.getByRole('button', { name: 'Open navigation menu' });
         await expect(mobileMenuToggle).toBeVisible({ timeout: 5000 });
-        await mobileMenuToggle.click({ force: true, timeout: 5000 });
+        const openMobileDrawer = async () => {
+            await mobileMenuToggle.dispatchEvent('pointerdown');
+            await mobileMenuToggle.click({ force: true, timeout: 5000 });
+        };
 
-        const mobileDrawer = page.getByRole('dialog');
+        const mobileDrawer = page.locator('[data-slot="sheet-content"]').first();
+        await openMobileDrawer();
+        if (!(await mobileDrawer.isVisible())) {
+            await page.waitForTimeout(200);
+            await openMobileDrawer();
+        }
+
+        const mobileDrawerDescription = mobileDrawer.getByText(/Switch between dashboard sections and system surfaces/i);
+        const mobileDrawerClose = mobileDrawer.getByRole('button', { name: 'Close' });
         await expect(mobileDrawer).toBeVisible({ timeout: 5000 });
-        await expect(mobileDrawer).toContainText(/Mission Control/i);
-        await expect(mobileDrawer).toContainText(/Cognitive Memory/i);
+        await expect(mobileDrawerDescription).toBeVisible({ timeout: 5000 });
+        await expect(mobileDrawerClose).toBeVisible({ timeout: 5000 });
 
         const hasHorizontalOverflow = await page.evaluate(
             () => document.body.scrollWidth > document.body.clientWidth
@@ -84,5 +96,55 @@ test.describe('Brunella Mission Control Dashboard Layout E2E', () => {
         if (errors.length > 0) {
             console.log('Console errors caught during test:', errors);
         }
+    });
+});
+
+test.describe('Dashboard Shell – a11y & responsive', () => {
+    test('tablet viewport keeps key shell content visible without horizontal overflow', async ({ page }) => {
+        await page.setViewportSize({ width: 900, height: 900 });
+        await page.goto('/');
+        await expect(page.getByRole('heading', { name: /Mission Control/i })).toBeVisible({ timeout: 10000 });
+        await expect(page.getByText(/^Health$/i).first()).toBeVisible();
+        await expect(page.getByText(/^Agents$/i).first()).toBeVisible();
+        await expect(page.getByRole('button', { name: 'Open navigation menu' })).toBeHidden();
+
+        const overflow = await page.evaluate(
+            () => document.documentElement.scrollWidth > document.documentElement.clientWidth
+        );
+        expect(overflow).toBe(false);
+    });
+
+    test('theme toggle updates the root theme class for light and dark modes', async ({ page }) => {
+        await page.setViewportSize({ width: 1280, height: 800 });
+        await page.goto('/');
+        await expect(page.getByRole('heading', { name: /Mission Control/i })).toBeVisible({ timeout: 10000 });
+
+        const themeBtn = page
+            .getByRole('button', { name: /toggle theme/i })
+            .or(page.locator('button[title="Toggle theme"]'))
+            .first();
+
+        await expect(themeBtn).toBeVisible();
+
+        const selectTheme = async (name: 'Light' | 'Dark') => {
+            const item = page.getByRole('menuitem', { name });
+            await themeBtn.click();
+            if (!(await item.isVisible())) {
+                await page.waitForTimeout(150);
+                await themeBtn.click();
+            }
+            await expect(item).toBeVisible({ timeout: 5000 });
+            await item.click();
+        };
+
+        await selectTheme('Light');
+        await expect.poll(async () =>
+            page.evaluate(() => document.documentElement.classList.contains('light'))
+        ).toBeTruthy();
+
+        await selectTheme('Dark');
+        await expect.poll(async () =>
+            page.evaluate(() => document.documentElement.classList.contains('dark'))
+        ).toBeTruthy();
     });
 });

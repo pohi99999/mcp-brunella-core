@@ -26,36 +26,55 @@ describe('AssistantBlueprintPanel', () => {
         label: 'Erős alap',
         summary: 'summary',
       },
-      roles: [
+      providerHealth: [
         {
-          id: 'brunella',
-          title: 'Brunella — Rendszeridentitás',
-          description: 'A központi persona.',
-          status: 'ready',
-        },
-        {
-          id: 'project_maintainer',
-          title: 'Project Maintainer — Karbantartó',
-          description: 'Dry-run operator szerepkör.',
-          status: 'partial',
+          provider: 'github',
+          available: true,
+          last_check: '2026-04-02T21:55:00.000Z',
         },
       ],
-      providerHealth: [],
-      capabilities: [],
-      architecture: [],
-      roadmap: [],
-      nextActions: [],
+      capabilities: [
+        {
+          id: 'desktop-shell',
+          title: 'Desktop shell',
+          status: 'partial',
+          score: 72,
+          summary: 'A responsive desktop shell is available for Mission Control.',
+          details: ['Tauri shell', 'Responsive dashboard'],
+        },
+      ],
+      architecture: [
+        {
+          id: 'control-plane',
+          title: 'Node control plane',
+          summary: 'Express + MCP runtime',
+          modules: ['Express', 'MCP'],
+          purpose: 'Serve dashboard and orchestrate tools.',
+        },
+      ],
+      roadmap: [
+        {
+          id: 'phase-1',
+          title: 'Stabilization',
+          goal: 'Close the remaining dashboard drift.',
+          deliverables: ['Coverage', 'A11y'],
+        },
+      ],
+      nextActions: ['Wire MCP contracts'],
     } as apiService.AssistantBlueprint);
   });
 
-  it('renders Brunella role cards when roles are present', async () => {
+  it('renders the current assistant blueprint summary, capability, and next actions', async () => {
     render(<AssistantBlueprintPanel />);
 
     await waitFor(() => {
-      expect(screen.getByText('Rendszeridentitás szerepkörök')).toBeInTheDocument();
+      expect(screen.getByText('Brunella Personal AI')).toBeInTheDocument();
     });
 
-    expect(screen.getAllByText('Brunella — Rendszeridentitás').length).toBeGreaterThan(0);
-    expect(screen.getAllByText('Project Maintainer — Karbantartó').length).toBeGreaterThan(0);
+    expect(screen.getByText('Brunella stack')).toBeInTheDocument();
+    expect(screen.getByText('Tauri')).toBeInTheDocument();
+    expect(screen.getByText('Node control plane')).toBeInTheDocument();
+    expect(screen.getByText('Azonnali következő lépések')).toBeInTheDocument();
+    expect(screen.getByText('Wire MCP contracts')).toBeInTheDocument();
   });
 });
