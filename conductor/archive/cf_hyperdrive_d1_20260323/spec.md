@@ -196,3 +196,24 @@ D1 latency > 200ms (P95)?
 - `cloudflare/wrangler.jsonc` — D1 binding konfiguráció
 - `cloudflare/src/index.ts` — D1 query-k a Worker-ben
 - `src/utils/database.ts` — Lokális adatbázis kezelés (referencia)
+
+---
+
+## ✅ CLOSURE NOTE (2026-03-23)
+
+**TRACK ARCHIVED AS NOT-NEEDED**
+
+**Conclusion:** After investigation, Cloudflare Hyperdrive is **not applicable to D1**:
+
+- **Hyperdrive's purpose:** Connection pooling and query caching for external PostgreSQL and MySQL databases
+- **How Hyperdrive works:** Acts as a proxy layer for databases accessed over TCP/TLS
+- **D1's nature:** A native Cloudflare database service, already optimized for Workers
+- **The problem:** D1 does not expose a TCP endpoint that Hyperdrive can connect to; it has its own native binding mechanism
+
+**D1 Optimization Alternatives (if needed in future):**
+- Database indexing optimization for hot query paths
+- D1 query batching for write-heavy operations
+- KV cache layer for frequently accessed read queries
+- Read replica usage (already built into D1)
+
+**No runtime code changes required.**

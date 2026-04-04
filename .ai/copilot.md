@@ -6,6 +6,26 @@ User requested that the Copilot CLI automatically connect to a local Brunella MC
 
 ## History
 
+### 2026-04-04 - Hyperdrive D1 not-needed archive closure
+
+**Feladat:** A `cf_hyperdrive_d1_20260323` track lezárása, miután ellenőriztük, hogy a Cloudflare Hyperdrive nem alkalmazható a D1 natív binding modelljére, ezért nincs szükség runtime módosításra.
+
+**Érintett fájlok:**
+
+- `conductor/archive/cf_hyperdrive_d1_20260323/meta.json`
+- `conductor/archive/cf_hyperdrive_d1_20260323/plan.md`
+- `conductor/archive/cf_hyperdrive_d1_20260323/spec.md`
+- `conductor/project_state.json`
+- `conductor/tracks.md`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:**
+
+- A track `archived` állapotba került `progress: 100` mellett.
+- Hyperdrive nem támogatja a D1-hez szükséges binding mintát, ezért külön follow-up track sem szükséges.
+- A következő munka az `error_handling_standard_20260404` track.
+
 ### 2026-04-04 — Cloudflare edge browser orchestration completion and archive
 
 **Feladat:** A `cloudflare_edge_browser_orchestration_20260404` track edge-browser részének lezárása, a Cloudflare tunnel browser endpoint támogatásának beépítése, majd a kész track archiválása és a conductor index frissítése.

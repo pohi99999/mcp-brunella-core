@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-04-04T19:01:37.098Z",
+  "lastUpdated": "2026-04-04T19:15:28.890Z",
   "tracks": [
     {
       "id": "apify_deep_scraping_agent_20260223",
@@ -121,18 +121,6 @@
         "brunella_reflection_continual_learning_20260402"
       ],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\brunella_zero_prompt_ephemeral_bridge_20260402",
-      "_isArchived": false
-    },
-    {
-      "id": "cf_hyperdrive_d1_20260323",
-      "name": "Hyperdrive Connection Pooling D1 Teljesítményhez",
-      "status": "active",
-      "priority": "low",
-      "progress": 30,
-      "created": "2026-03-23",
-      "tags": [],
-      "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\cf_hyperdrive_d1_20260323",
       "_isArchived": false
     },
     {
@@ -1305,7 +1293,7 @@
       "name": "Hyperdrive Connection Pooling D1 Teljesítményhez",
       "status": "archived",
       "priority": "low",
-      "progress": 30,
+      "progress": 100,
       "created": "2026-03-23",
       "tags": [],
       "dependencies": [],
@@ -3833,8 +3821,8 @@
     }
   ],
   "stats": {
-    "total": 212,
-    "active": 23,
+    "total": 211,
+    "active": 22,
     "completed": 15,
     "archived": 167,
     "proposed": 6
