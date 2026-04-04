@@ -259,8 +259,39 @@ export const PipelineVisualizer = ({
       <div className="rounded-lg border border-gray-200 dark:border-gray-800 overflow-x-auto bg-white dark:bg-gray-900">
         <canvas
           ref={canvasRef}
-          onClick={(e) => {
-            // TODO: Add click handling for node selection
+          onClick={(e: any) => {
+            const rect = canvasRef.current?.getBoundingClientRect();
+            if (!rect) return;
+
+            const clickX = e.clientX - rect.left;
+            const clickY = e.clientY - rect.top;
+
+            let clickedNodeId = null;
+
+            for (const node of pipeline.nodes) {
+              const nodeWidth = 120;
+              const nodeHeight = 60;
+
+              const col = Math.floor((node.id.charCodeAt(0) + node.id.length) % 5);
+              const row = Math.floor(
+                (node.id.charCodeAt(0) + node.id.length * 2) % 4,
+              );
+
+              const x = 50 + col * 150;
+              const y = 50 + row * 80;
+
+              if (
+                clickX >= x &&
+                clickX <= x + nodeWidth &&
+                clickY >= y &&
+                clickY <= y + nodeHeight
+              ) {
+                clickedNodeId = node.id;
+                break;
+              }
+            }
+
+            setSelectedNode(clickedNodeId);
           }}
           className="block w-full"
         />
