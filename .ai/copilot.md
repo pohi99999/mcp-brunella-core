@@ -4,6 +4,23 @@ User requested that the Copilot CLI automatically connect to a local Brunella MC
 
 <history>
 
+### 2026-04-04 — Cloudflare Token Separation archive closure
+
+**Feladat:** A már befejezett `cloudflare_token_separation_20260403` track lezárása archív állapotba, hogy a conductor index is 100%-os, lezárt trackként kezelje.
+
+**Érintett fájlok:**
+- `conductor/archive/cloudflare_token_separation_20260403/meta.json`
+- `conductor/tracks.md`
+- `conductor/project_state.json`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:**
+- A track mappát áthelyeztem az archive alá, a meta státuszt `archived`-re és a progress-t `100`-ra állítottam.
+- A következő lépés nem új track létrehozása ehhez a témához, hanem a meglévő `cloudflare_edge_browser_orchestration_20260404` aktív track folytatása.
+
+---
+
 ### 2026-04-04 — Cloudflare token separation track javításai
 
 **Feladat:** A `cloudflare_token_separation_20260403` track compile- és workflow-hibáinak javítása, majd a módosított Cloudflare token névhasználat dokumentálása és validálása.

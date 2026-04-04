@@ -1,10 +1,10 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-04-04T04:12:38.703Z
+**Utolso frissites:** 2026-04-04T12:27:21.820Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 212 total | 27 active | 14 completed | 164 archived
+**Stats:** 212 total | 26 active | 14 completed | 165 archived
 
 ---
 
@@ -42,7 +42,7 @@
 
 ---
 
-## Aktiv Szalak (Active) (27)
+## Aktiv Szalak (Active) (26)
 
 - [ ] **apify_deep_scraping_agent_20260223** [LOW]
   - **ID:** `apify_deep_scraping_agent_20260223`
@@ -67,12 +67,6 @@
   - **Assignee:** GitHub Copilot
   - **Updated:** 2026-04-04
   - Mappa: ./tracks/cloudflare_edge_browser_orchestration_20260404/
-
-- [ ] **Cloudflare Token Separation: BAS vs Personal Account** [HIGH]
-  - **ID:** `cloudflare_token_separation_20260403`
-  - **Progress:** 40%
-  - **Updated:** 2026-04-03
-  - Mappa: ./tracks/cloudflare_token_separation_20260403/
 
 - [ ] **Error Handling Standardization — catch (e: unknown) és Error wrapping** [HIGH]
   - **ID:** `error_handling_standard_20260404`
@@ -281,7 +275,7 @@
 
 ---
 
-## Archivalt (Archived) (164)
+## Archivalt (Archived) (165)
 
 > Archived tracks are hidden by default. View in `conductor/archive/`
 
@@ -296,7 +290,7 @@
 - [x] **AI Recommendation System Integration** (2026-02-17T22:45:00Z)
 - [x] **apify_deep_scraping_agent_20260223** (N/A)
 
-... and 154 more archived tracks
+... and 155 more archived tracks
 
 ---
 
