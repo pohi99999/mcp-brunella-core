@@ -83,7 +83,6 @@
     "@github/copilot-sdk": "^0.1.23",
     "@google/genai": "^1.47.0",
     "@hookform/resolvers": "^5.2.2",
-    "@lancedb/lancedb": "^0.23.0",
     "@modelcontextprotocol/sdk": "^1.26.0",
     "@ngrok/ngrok": "^1.7.0",
     "@octokit/rest": "^22.0.1",
@@ -128,7 +127,6 @@
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
     "@types/node": "^22.13.4",
-    "apache-arrow": "18.1.0",
     "apify-client": "^2.22.3",
     "axios": "^1.7.9",
     "better-sqlite3": "^12.8.0",
@@ -184,7 +182,8 @@
     "toml": "^3.0.0",
     "uuid": "^11.0.5",
     "zod": "^3.24.2",
-    "zustand": "^5.0.11"
+    "zustand": "^5.0.11",
+    "apache-arrow": "18.1.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",
