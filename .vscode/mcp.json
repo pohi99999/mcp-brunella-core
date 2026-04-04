@@ -1,9 +1,12 @@
-
-
+{
 	"servers": {
 		"brunella": {
 			"type": "http",
 			"url": "http://localhost:3000/sse"
+		},
+		"brunella-remote": {
+			"type": "http",
+			"url": "https://Brunella-Agents-System-Server.fastmcp.app/mcp"
 		},
 		"io.github.ChromeDevTools/chrome-devtools-mcp": {
 			"type": "stdio",
@@ -93,8 +96,9 @@
 			"command": "npx",
 			"args": [
 				"-y", "@modelcontextprotocol/server-filesystem",
-				"F:\\mcp-brunella-core",
-				"C:\\Users\\pohi9"
+				"C:\\",
+				"C:\\Users\\pohi9",
+				"F:\\mcp-brunella-core"
 			]
 		},
 		"microsoft/playwright-mcp": {

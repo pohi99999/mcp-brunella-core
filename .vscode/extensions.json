@@ -62,6 +62,7 @@
     "automatalabs.copilot-mcp",
     "dhananjaysenday.mcp--inspector",
     "amitpatole.mcp-marketplace",
-    "ms-vscode.cpptools"
+    "ms-vscode.cpptools",
+    "almenon.arepl"
   ]
 }

@@ -1,0 +1,14 @@
+{
+  "id": "logging_refactor_20260404",
+  "title": "Logging Audit — console.log elimináció és Logger standardizálás",
+  "status": "active",
+  "priority": "high",
+  "createdAt": "2026-04-04",
+  "owner": "Gemini",
+  "progress": 0,
+  "tags": ["logging", "standard", "audit", "observability"],
+  "sourceDocument": "Gemini System Audit 2026-04-04",
+  "phase": 1,
+  "updated": "2026-04-04",
+  "dependencies": []
+}

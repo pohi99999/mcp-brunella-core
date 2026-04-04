@@ -1,5 +1,14 @@
 # ContextFusion Integration Layer — Plan
 
+## 2026-04-04 Runtime wiring fixes ✓
+
+- [x] Golden mirror sync now retries through the Python incubator path when the D1 worker returns malformed/HTML responses, so legacy failed samples can be recovered safely.
+- [x] Curated golden dataset normalization now migrates legacy `candidate` state to `pending` and automatically mirrors local golden samples into the approval queue.
+- [x] MCP tool registration now wraps handlers with tool-run capture so successful tool executions start landing in `tool_runs` for later curation.
+- [x] PAIOS voice configuration now exposes a first-class `voice` section, defaults to female Nova, and the orchestrator chat honors that config for backend TTS plus browser fallback.
+- [x] Harvest pipeline now supports Apify targets without `url`, skips unnecessary browser boot for pure Apify runs, and respects both `output_dir` and `outputDir` config keys.
+- [x] Validation completed: `npm run build`, `npx vitest run test/goldenDatasetBridge.test.ts test/paiosConfig.test.ts`, `python -m pytest myai/tests/test_tech_harvester.py`.
+
 ## Elvégzett munkák ✓
 
 - [x] `src/core/contextFusion.ts` létrehozva — `buildContextFusionCard()`, `buildBrowserDiagnosticsCard()` exportálva; minden alrendszer hívás try/catch-vel védve

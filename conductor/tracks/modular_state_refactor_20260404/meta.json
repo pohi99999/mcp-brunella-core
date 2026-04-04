@@ -1,0 +1,14 @@
+{
+  "id": "modular_state_refactor_20260404",
+  "title": "Modular State Refactor — Globális változók Dependency Injection alapú refaktora",
+  "status": "active",
+  "priority": "medium",
+  "createdAt": "2026-04-04",
+  "owner": "Gemini",
+  "progress": 0,
+  "tags": ["architecture", "solid", "di", "database"],
+  "sourceDocument": "Gemini System Audit 2026-04-04",
+  "phase": 1,
+  "updated": "2026-04-04",
+  "dependencies": ["type_safety_enforcement_20260404"]
+}

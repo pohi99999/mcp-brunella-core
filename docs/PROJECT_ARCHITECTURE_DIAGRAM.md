@@ -18,7 +18,7 @@ graph TB
 
     subgraph "🧠 NODE.JS BACKEND - Port 3000"
         EXPRESS[⚡ Express Server<br/>REST API + Socket.IO]
-        MCP_SERVER[📡 MCP Server<br/>StdioServerTransport]
+        MCP_SERVER[📡 MCP Server<br/>Mixed transports]
         ORCHESTRATOR[🎯 OrchestratorAgent<br/>Top-level Planner]
 
         subgraph "14 AI AGENTS"
@@ -564,8 +564,9 @@ graph TB
 ```
 
 **MCP Server Config (mcp_servers.json):**
-- 11 MCP server regisztrálva
-- StdioServerTransport (default)
+- 12 MCP server regisztrálva
+- Vegyes transportok: `self`, `stdio`, `http`
+- `brunella-remote` FastMCP endpoint: `https://Brunella-Agents-System-Server.fastmcp.app/mcp`
 - Tool registry 50+ eszköz
 
 ---

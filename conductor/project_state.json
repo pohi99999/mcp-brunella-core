@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-04-03T20:56:56.821Z",
+  "lastUpdated": "2026-04-04T03:00:00.729Z",
   "tracks": [
     {
       "id": "apify_deep_scraping_agent_20260223",
@@ -37,8 +37,8 @@
       "name": "Brunella Core Stabilization",
       "status": "active",
       "priority": "critical",
-      "progress": 80,
-      "updated": "2026-04-02",
+      "progress": 85,
+      "updated": "2026-04-03",
       "tags": [
         "brunella",
         "stability",
@@ -230,6 +230,7 @@
       "priority": "high",
       "progress": 0,
       "created": "2026-03-30",
+      "updated": "2026-04-03",
       "tags": [
         "könyvelés",
         "MCP",
@@ -240,10 +241,11 @@
         "anomáliadetektálás",
         "NAV",
         "n8n",
-        "RAG"
+        "RAG",
+        "kognitív"
       ],
       "dependencies": [
-        "konyveles_automatizalas",
+        "konyveles_phase3_20260403",
         "n8n_konyveles_pipeline_20260328"
       ],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\konyveles_kognitiv_bovites_20260330",
