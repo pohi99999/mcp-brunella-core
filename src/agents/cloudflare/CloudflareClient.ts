@@ -12,6 +12,7 @@
 import { EdgeProxyAgent } from "../EdgeProxyAgent.js";
 import { AgentContext } from "../BaseAgent.js";
 import { logInfo, logError } from "../../utils/logger.js";
+import { ensureError } from "../../utils/ensureError.js";
 
 // ============================================================================
 // INTERFACES
@@ -58,8 +59,9 @@ class CloudflareClientClass {
       await this.edgeAgent.initialize();
       this.initialized = true;
       logInfo("CloudflareClient", "Initialized successfully");
-    } catch (error: any) {
-      logError("CloudflareClient", `Initialization failed: ${error.message}`);
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      logError("CloudflareClient", `Initialization failed: ${err.message}`);
       throw error;
     }
   }
@@ -95,8 +97,9 @@ class CloudflareClientClass {
         taskId,
         status: "pending",
       };
-    } catch (error: any) {
-      logError("CloudflareClient", `submitTask error: ${error.message}`);
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      logError("CloudflareClient", `submitTask error: ${err.message}`);
       throw error;
     }
   }
@@ -137,11 +140,12 @@ class CloudflareClientClass {
             ? "Processing..."
             : taskStatus.status,
       };
-    } catch (error: any) {
-      logError("CloudflareClient", `checkStatus error: ${error.message}`);
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      logError("CloudflareClient", `checkStatus error: ${err.message}`);
       return {
         status: "error",
-        error: error.message,
+        error: err.message,
       };
     }
   }
@@ -182,8 +186,9 @@ class CloudflareClientClass {
         response,
         model: "cloudflare-worker-ai",
       };
-    } catch (error: any) {
-      logError("CloudflareClient", `chat error: ${error.message}`);
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      logError("CloudflareClient", `chat error: ${err.message}`);
       throw error;
     }
   }

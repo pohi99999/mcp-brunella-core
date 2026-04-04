@@ -1,24 +1,19 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-04-04T19:15:28.890Z
+**Utolso frissites:** 2026-04-04T21:58:34.548Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 211 total | 22 active | 15 completed | 167 archived
+**Stats:** 211 total | 21 active | 15 completed | 169 archived
 
 ---
 
-## Tervezett Szalak (Proposed) (6)
+## Tervezett Szalak (Proposed) (5)
 
 - [ ] **Brunella Identity + Project Maintainer** [HIGH]
   - **ID:** `brunella_identity_project_maintainer_20260402`
   - **Progress:** 0%
   - Mappa: ./tracks/brunella_identity_project_maintainer_20260402/
-
-- [ ] **Cloudflare Workers Migration — 16 Agent Edge Orkesztrátor** [HIGH]
-  - **ID:** `cloudflare_workers_migration_20260226`
-  - **Progress:** 0%
-  - Mappa: ./tracks/cloudflare_workers_migration_20260226/
 
 - [ ] **PohiAIPro Logistics Vertical — Brunella integráció** [HIGH]
   - **ID:** `logistics_vertical_20260222`
@@ -42,13 +37,7 @@
 
 ---
 
-## Aktiv Szalak (Active) (22)
-
-- [ ] **Error Handling Standardization — catch (e: unknown) és Error wrapping** [HIGH]
-  - **ID:** `error_handling_standard_20260404`
-  - **Progress:** 0%
-  - **Updated:** 2026-04-04
-  - Mappa: ./tracks/error_handling_standard_20260404/
+## Aktiv Szalak (Active) (21)
 
 - [ ] **jules_pr_integration_20260222** [HIGH]
   - **ID:** `jules_pr_integration_20260222`
@@ -189,7 +178,12 @@
 
 ---
 
-## Befejezett (Completed - Not Archived) (15)
+## Befejezett (Completed - Not Archived) (16)
+
+- [x] **Cloudflare Workers Migration — 16 Agent Edge Orkesztrátor**
+  - **ID:** `cloudflare_workers_migration_20260226`
+  - **Completed:** 2026-04-04
+  - Mappa: ./tracks/cloudflare_workers_migration_20260226/
 
 - [x] **apify_deep_scraping_agent_20260223**
   - **ID:** `apify_deep_scraping_agent_20260223`
@@ -255,7 +249,7 @@
 
 ---
 
-## Archivalt (Archived) (167)
+## Archivalt (Archived) (169)
 
 > Archived tracks are hidden by default. View in `conductor/archive/`
 
@@ -270,7 +264,7 @@
 - [x] **AI Recommendation System Integration** (2026-02-17T22:45:00Z)
 - [x] **apify_deep_scraping_agent_20260223** (N/A)
 
-... and 157 more archived tracks
+... and 159 more archived tracks
 
 ---
 

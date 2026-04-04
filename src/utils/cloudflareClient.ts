@@ -83,7 +83,7 @@ export class CloudflareClient {
         },
         {
           headers: this.getAuthHeaders(),
-          timeout: 60000, // A kódgenerálás eltarthat egy ideig
+          timeout: 60000,
         },
       );
 
@@ -91,6 +91,52 @@ export class CloudflareClient {
     } catch (error: unknown) {
       const message = this.getAxiosErrorMessage(error);
       throw new Error(`Cloudflare submission failed: ${message}`);
+    }
+  }
+
+  async dispatch(
+    agent: string,
+    task: string,
+    context: Record<string, unknown> = {},
+    requestId?: string
+  ): Promise<any> {
+    try {
+      const response = await axios.post(
+        `${this.baseUrl}/dispatch`,
+        { agent, task, context, requestId },
+        {
+          headers: this.getAuthHeaders(),
+          timeout: 90000,
+        }
+      );
+      return response.data;
+    } catch (error: unknown) {
+      const message = this.getAxiosErrorMessage(error);
+      throw new Error(`Cloudflare dispatch failed: ${message}`);
+    }
+  }
+
+  async fetchWorkers(): Promise<any[]> {
+    try {
+      const response = await axios.get(`${this.baseUrl}/workers`, {
+        headers: this.getAuthHeaders()
+      });
+      return response.data;
+    } catch (error: unknown) {
+      const message = this.getAxiosErrorMessage(error);
+      throw new Error(`Workers fetch failed: ${message}`);
+    }
+  }
+
+  async fetchRouting(): Promise<any[]> {
+    try {
+      const response = await axios.get(`${this.baseUrl}/routing`, {
+        headers: this.getAuthHeaders()
+      });
+      return response.data;
+    } catch (error: unknown) {
+      const message = this.getAxiosErrorMessage(error);
+      throw new Error(`Routing fetch failed: ${message}`);
     }
   }
 

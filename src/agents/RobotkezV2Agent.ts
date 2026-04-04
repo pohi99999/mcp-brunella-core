@@ -14,7 +14,8 @@
  */
 
 import { BaseAgent, AgentContext, AgentResult } from './BaseAgent.js';
-import { logInfo, logWarn, logError, setAgentStatus } from '../utils/logger.js';
+import { logInfo, logWarn, logError, logDebug, setAgentStatus } from '../utils/logger.js';
+import { ensureError } from '../utils/ensureError.js';
 import { backgroundTaskManager } from '../utils/backgroundTaskManager.js';
 import { BrowserCommand } from '../utils/persistentBrowser.js';
 import { getRobotkezBrowserEngine } from '../utils/browserEngine.js';
@@ -68,8 +69,9 @@ export class RobotkezV2Agent extends BaseAgent {
       }
 
       return data.response;
-    } catch (error) {
-      logError(this.name, `Chat error: ${error}`);
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      logError(this.name, `Chat error: ${err.message}`);
       return 'Hiba történt a böngésző interakcióban. Kérlek próbáld újra.';
     }
   }
@@ -86,9 +88,10 @@ export class RobotkezV2Agent extends BaseAgent {
       await this.saveScreenshot(sessionId, screenshot);
 
       return screenshot;
-    } catch (error) {
-      logError(this.name, `Screenshot error: ${error}`);
-      throw error;
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      logError(this.name, `Screenshot error: ${err.message}`);
+      throw err;
     }
   }
 
@@ -110,8 +113,9 @@ export class RobotkezV2Agent extends BaseAgent {
       );
 
       logInfo(this.name, `Screenshot mentve: ${sessionDir}/${filename}`);
-    } catch (err) {
-      logError(this.name, `Failed to save screenshot: ${err}`);
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      logError(this.name, `Failed to save screenshot: ${err.message}`);
     }
   }
 
@@ -199,6 +203,18 @@ export class RobotkezV2Agent extends BaseAgent {
         };
       }
 
+      if (!plan && !task) {
+        plan = {
+          plan: [{
+            action: 'navigate',
+            url: 'https://www.google.com/search?q=',
+            description: 'Üres keresés indítása'
+          }],
+          estimatedDuration: 5000,
+          backgroundEligible: false
+        };
+      }
+
       // 2. LLM Plan Generation (if not already parsed or for Phase 3+)
       if (!plan) {
         try {
@@ -212,15 +228,18 @@ export class RobotkezV2Agent extends BaseAgent {
                   title: stateResponse.title
                 };
              }
-          } catch {
-             // Ignored
-          }
+           } catch (error: unknown) {
+              const err = ensureError(error);
+              logDebug(this.name, `Ignoring browser state read error: ${err.message}`);
+           }
 
           plan = await generateExecutionPlan(task, {
             history: context.swarm?.history,
             browserState: browserState
           });
-        } catch {
+        } catch (error: unknown) {
+          const err = ensureError(error);
+          logDebug(this.name, `Plan generation fallback: ${err.message}`);
           // Final fallback
           plan = {
             plan: [{ action: 'navigate', url: `https://www.google.com/search?q=${encodeURIComponent(task)}`, description: 'Általános keresés indítása' }],
@@ -348,8 +367,9 @@ export class RobotkezV2Agent extends BaseAgent {
       let screenshotResult;
       try {
         screenshotResult = await browserEngine.sendCommand({ action: 'screenshot' });
-      } catch {
-        // Ignored
+      } catch (error: unknown) {
+        const err = ensureError(error);
+        logDebug(this.name, `Ignoring auto-screenshot error: ${err.message}`);
       }
 
       const isScreenshotTask = taskLower.includes('képernyőkép');
@@ -367,12 +387,12 @@ export class RobotkezV2Agent extends BaseAgent {
         }
       };
 
-    } catch (e: unknown) {
-      const msg = e instanceof Error ? e.message : String(e);
-      logError(this.name, `Execution failed: ${msg}`);
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      logError(this.name, `Execution failed: ${err.message}`);
       return {
         success: false,
-        message: `Hiba történt a végrehajtás során: ${msg}`
+        message: `Hiba történt a végrehajtás során: ${err.message}`
       };
     } finally {
       setAgentStatus(this.name, 'idle');
