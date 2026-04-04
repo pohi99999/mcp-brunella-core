@@ -25,6 +25,7 @@ vi.mock('../src/server/SocketService.js', () => ({
 vi.mock('../src/utils/logger.js', () => ({
   logInfo: vi.fn(),
   logError: vi.fn(),
+  logWarn: vi.fn(),
 }));
 
 // ====================================================================
