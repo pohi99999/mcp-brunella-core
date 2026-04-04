@@ -1,6 +1,7 @@
 import { IAgent, AgentResponse } from './types.js';
 import type { AgentContext, AgentResult } from './BaseAgent.js';
-import { logInfo, logError, logWarn, setAgentStatus } from '../utils/logger.js';
+import { logInfo, logError, logWarn, logDebug, setAgentStatus } from '../utils/logger.js';
+import { ensureError } from '../utils/ensureError.js';
 import {
   getPendingTransactions,
   updateTransaction,
@@ -160,7 +161,9 @@ export class MatchingAgent implements IAgent {
             score += 15;
           }
         }
-      } catch {
+      } catch (error: unknown) {
+        const err = ensureError(error);
+        logDebug(this.name, `Ignoring invoice date parse error: ${err.message}`);
         // ignore unparseable dates
       }
     }
@@ -328,7 +331,7 @@ export class MatchingAgent implements IAgent {
         data: { total: pendingBank.length, matched, manual, runId },
       };
     } catch (error: unknown) {
-      const err = error instanceof Error ? error : new Error(String(error));
+      const err = ensureError(error);
       logError(this.name, 'executeTask failed:', err);
       return {
         success: false,
@@ -358,7 +361,8 @@ export class MatchingAgent implements IAgent {
         matchType: match?.type,
         confidence: match?.confidence,
       });
-    } catch (err) {
+    } catch (error: unknown) {
+      const err = ensureError(error);
       logError(this.name, `Failed to persist reconciliation event for ${txId}:`, err);
     }
   }

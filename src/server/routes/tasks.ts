@@ -2,6 +2,8 @@ import { Router } from 'express';
 import { getTasks, getTaskCount, getTaskById, getTaskStats } from '../../utils/tasksDb.js';
 import { agentManager } from '../../agents/AgentManager.js';
 import { decomposeToDAGAsync } from '../../agents/taskDecomposerCore.js';
+import { ensureError } from '../../utils/ensureError.js';
+import { logDebug } from '../../utils/logger.js';
 
 export function createTaskRoutes(): Router {
     const router = Router();
@@ -96,7 +98,10 @@ export function createTaskRoutes(): Router {
             try {
                 if (task.result) {
                     let parsed: any = null;
-                    try { parsed = JSON.parse(task.result); } catch { parsed = null; }
+                    try { parsed = JSON.parse(task.result); } catch (error: unknown) {
+                        logDebug('TasksRoutes', `Task result parse skipped: ${ensureError(error).message}`);
+                        parsed = null;
+                    }
                     const traceId = parsed?.metadata?.traceId || parsed?.traceId || (parsed?.data && parsed.data.traceId);
                     if (traceId) {
                         const { getTraceSpans } = await import('../../utils/agentTracer.js');
@@ -109,8 +114,8 @@ export function createTaskRoutes(): Router {
                         }));
                     }
                 }
-            } catch {
-                // ignore tracing errors
+            } catch (error: unknown) {
+                logDebug('TasksRoutes', `Trace lookup skipped: ${ensureError(error).message}`);
             }
 
             res.json({ task: { ...task, logs } });

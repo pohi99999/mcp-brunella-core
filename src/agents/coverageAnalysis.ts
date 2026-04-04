@@ -8,7 +8,8 @@
 //   3. Computing per-file and aggregate metrics
 //   4. Identifying uncovered files / functions
 
-import { logInfo, logError } from '../utils/logger.js';
+import { logInfo, logError, logDebug } from '../utils/logger.js';
+import { ensureError } from '../utils/ensureError.js';
 import fs from 'fs/promises';
 import path from 'path';
 import { execFile } from 'child_process';
@@ -143,16 +144,18 @@ export class CoverageAnalyzer {
         let rawJson: string;
         try {
             rawJson = await fs.readFile(coveragePath, 'utf-8');
-        } catch {
-            logError('CoverageAnalyzer', `Coverage file not found: ${coveragePath}`);
+        } catch (error: unknown) {
+            const err = ensureError(error);
+            logError('CoverageAnalyzer', `Coverage file not found: ${coveragePath} (${err.message})`);
             return this.emptySummary();
         }
 
         let coverageData: Record<string, unknown>;
         try {
             coverageData = JSON.parse(rawJson) as Record<string, unknown>;
-        } catch {
-            logError('CoverageAnalyzer', 'Failed to parse coverage JSON');
+        } catch (error: unknown) {
+            const err = ensureError(error);
+            logError('CoverageAnalyzer', `Failed to parse coverage JSON: ${err.message}`);
             return this.emptySummary();
         }
 
@@ -309,8 +312,9 @@ export class CoverageAnalyzer {
                     coveredPaths,
                     untested
                 );
-            } catch {
-                // src dir might not exist
+            } catch (error: unknown) {
+                const err = ensureError(error);
+                logDebug('CoverageAnalyzer', `Skipping missing source dir ${srcDir}: ${err.message}`);
             }
         }
 
@@ -326,7 +330,9 @@ export class CoverageAnalyzer {
             try {
                 await fs.access(testFile);
                 // Test exists but file wasn't in coverage → might still be covered indirectly
-            } catch {
+            } catch (error: unknown) {
+                const err = ensureError(error);
+                logDebug('CoverageAnalyzer', `Test file not accessible ${testFile}: ${err.message}`);
                 truly.push(srcFile);
             }
         }

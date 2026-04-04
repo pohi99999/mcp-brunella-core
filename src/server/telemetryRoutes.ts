@@ -18,6 +18,7 @@ import {
   getTracerStats,
   type TraceSpan,
 } from '../utils/agentTracer.js';
+import { ensureError } from '../utils/ensureError.js';
 
 // Cost rates per 1K tokens (USD) — configurable via env
 const COST_PER_1K: Record<string, { input: number; output: number }> = {
@@ -86,8 +87,9 @@ export function createTelemetryRouter(): Router {
         byAgent: summary.byAgent,
         byModel: summary.byModel,
       });
-    } catch (e: any) {
-      res.status(500).json({ error: e.message });
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      res.status(500).json({ error: err.message });
     }
   });
 
@@ -115,8 +117,9 @@ export function createTelemetryRouter(): Router {
       });
 
       res.json({ traces });
-    } catch (e: any) {
-      res.status(500).json({ error: e.message });
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      res.status(500).json({ error: err.message });
     }
   });
 
@@ -135,8 +138,9 @@ export function createTelemetryRouter(): Router {
       }
 
       res.json({ traceId, spans });
-    } catch (e: any) {
-      res.status(500).json({ error: e.message });
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      res.status(500).json({ error: err.message });
     }
   });
 
@@ -149,8 +153,9 @@ export function createTelemetryRouter(): Router {
       const allSpans = getRecentSpans(2000);
       const cost = calculateCost(allSpans);
       res.json(cost);
-    } catch (e: any) {
-      res.status(500).json({ error: e.message });
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      res.status(500).json({ error: err.message });
     }
   });
 
@@ -171,8 +176,9 @@ export function createTelemetryRouter(): Router {
           runningFor: Date.now() - s.startTime,
         })),
       });
-    } catch (e: any) {
-      res.status(500).json({ error: e.message });
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      res.status(500).json({ error: err.message });
     }
   });
 

@@ -8,6 +8,7 @@ import { Router } from 'express';
 import { textToSpeech, VoiceOption, TTSModel } from '../../utils/tts.js';
 import { logInfo, logError } from '../../utils/logger.js';
 import { loadPaiosConfig } from '../../config/paiosConfig.js';
+import { ensureError } from '../../utils/ensureError.js';
 
 export function createTTSRoutes(): Router {
   const router = Router();
@@ -57,10 +58,11 @@ export function createTTSRoutes(): Router {
       res.send(buffer);
 
       logInfo('TTS API', `Response sent: ${buffer.length} bytes`);
-    } catch (error: any) {
-      logError('TTS API', `Error: ${error.message}`);
+    } catch (error: unknown) {
+      const normalized = ensureError(error);
+      logError('TTS API', `Error: ${normalized.message}`, normalized);
       res.status(500).json({
-        error: error.message || 'TTS generation failed'
+        error: normalized.message || 'TTS generation failed'
       });
     }
   });

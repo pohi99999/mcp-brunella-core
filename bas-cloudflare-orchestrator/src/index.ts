@@ -40,6 +40,7 @@ interface Env {
   R2_PREFIX: string;
 
   CLOUDFLARE_API_TOKEN: string;
+  BAS_API_KEY: string;
 }
 
 export default {
@@ -50,7 +51,7 @@ export default {
     const corsHeaders = {
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-      "Access-Control-Allow-Headers": "Content-Type, Authorization",
+      "Access-Control-Allow-Headers": "Content-Type, Authorization, X-BAS-API-Key",
     };
 
     if (request.method === "OPTIONS") {
@@ -59,12 +60,105 @@ export default {
 
     // --- SECURITY CHECK ---
     const authHeader = request.headers.get("Authorization");
+    const basKeyHeader = request.headers.get("X-BAS-API-Key");
+    
+    // Legacy token check
     if (path.startsWith("/chat/") || path.startsWith("/swarm/")) {
        const expectedToken = (env.CLOUDFLARE_API_TOKEN || "").trim();
        const receivedToken = (authHeader || "").replace("Bearer ", "").trim();
        if (expectedToken && receivedToken !== expectedToken) {
-         return Response.json({ error: "Unauthorized" }, { status: 401, headers: corsHeaders });
+         return Response.json({ error: "Unauthorized (Legacy)" }, { status: 401, headers: corsHeaders });
        }
+    }
+
+    // Modern BAS API Key check
+    if (path.startsWith("/dispatch") || path.startsWith("/workers") || path.startsWith("/routing")) {
+      const expectedKey = (env.BAS_API_KEY || "").trim();
+      if (expectedKey && basKeyHeader !== expectedKey) {
+        return Response.json({ error: "Unauthorized (BAS Key)" }, { status: 401, headers: corsHeaders });
+      }
+    }
+
+    // --- DISPATCH: Route task to specific agent worker ---
+    if (path === "/dispatch" && request.method === "POST") {
+      const body = await request.json() as any;
+      const { agent, task, context, requestId } = body;
+
+      if (!agent || !task) {
+        return Response.json({ error: "agent and task required" }, { status: 400, headers: corsHeaders });
+      }
+
+      const reqId = requestId || `req_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+
+      // 1. Lookup worker URL from D1
+      const routing = await env.D1_METADATA.prepare(
+        "SELECT worker_url FROM worker_routing WHERE agent_name = ? AND is_healthy = 1"
+      ).bind(agent).first<{ worker_url: string }>();
+
+      if (!routing) {
+        return Response.json({ error: `No healthy worker found for agent: ${agent}`, status: "fallback" }, { status: 404, headers: corsHeaders });
+      }
+
+      // 2. Record task in D1
+      await env.D1_METADATA.prepare(
+        "INSERT INTO worker_tasks (id, agent_name, worker_url, task, context, status) VALUES (?, ?, ?, ?, ?, 'running')"
+      ).bind(reqId, agent, routing.worker_url, task, JSON.stringify(context || {})).run();
+
+      // 3. Proxy to Agent Worker (Async/Fire-and-forget or Sync depending on needs)
+      // For now, we attempt a sync call to the worker
+      try {
+        const workerResponse = await fetch(`${routing.worker_url}/execute`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-BAS-API-Key": env.BAS_API_KEY
+          },
+          body: JSON.stringify({ agent, task, context, requestId: reqId })
+        });
+
+        const result = await workerResponse.json() as any;
+
+        // Update D1 with result
+        await env.D1_METADATA.prepare(
+          "UPDATE worker_tasks SET status = 'completed', result = ?, completed_at = CURRENT_TIMESTAMP WHERE id = ?"
+        ).bind(JSON.stringify(result), reqId).run();
+
+        return Response.json({ requestId: reqId, status: "completed", workerUrl: routing.worker_url, result }, { headers: corsHeaders });
+      } catch (err: any) {
+        await env.D1_METADATA.prepare(
+          "UPDATE worker_tasks SET status = 'failed', error = ?, completed_at = CURRENT_TIMESTAMP WHERE id = ?"
+        ).bind(err.message, reqId).run();
+
+        return Response.json({ requestId: reqId, status: "failed", error: err.message }, { status: 500, headers: corsHeaders });
+      }
+    }
+
+    // --- WORKERS: List all managed workers ---
+    if (path === "/workers" && request.method === "GET") {
+      const workers = await env.D1_METADATA.prepare("SELECT * FROM worker_routing").all();
+      return Response.json(workers.results, { headers: corsHeaders });
+    }
+
+    // --- ROUTING: Get current routing table ---
+    if (path === "/routing" && request.method === "GET") {
+      const routing = await env.D1_METADATA.prepare("SELECT agent_name, worker_url FROM worker_routing WHERE is_healthy = 1").all();
+      return Response.json(routing.results, { headers: corsHeaders });
+    }
+
+    // --- TASK STATUS: Get or update task status ---
+    if (path.startsWith("/task-status/") && (request.method === "GET" || request.method === "POST")) {
+      const reqId = path.split("/")[2];
+      if (request.method === "GET") {
+        const task = await env.D1_METADATA.prepare("SELECT * FROM worker_tasks WHERE id = ?").bind(reqId).first();
+        return task ? Response.json(task, { headers: corsHeaders }) : Response.json({ error: "Not found" }, { status: 404, headers: corsHeaders });
+      }
+      if (request.method === "POST") {
+        const body = await request.json() as any;
+        await env.D1_METADATA.prepare(
+          "UPDATE worker_tasks SET status = ?, result = ?, error = ?, completed_at = CURRENT_TIMESTAMP WHERE id = ?"
+        ).bind(body.status, JSON.stringify(body.result || null), body.error || null, reqId).run();
+        return Response.json({ success: true }, { headers: corsHeaders });
+      }
     }
 
     // --- SWARM ROUTES (swarmCreate, swarmHandoff, swarmArtifact) ---

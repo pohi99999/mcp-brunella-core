@@ -1,6 +1,7 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { chatWithOllama } from "../core/llm_client.js";
+import { mcpCatch, mcpText } from "../utils/mcpResponse.js";
 
 export function registerOllamaTool(server: McpServer) {
     server.tool(
@@ -13,19 +14,9 @@ export function registerOllamaTool(server: McpServer) {
         async ({ model, prompt }) => {
             try {
                 const response = await chatWithOllama(prompt, model);
-                
-                return {
-                    content: [{
-                        type: "text",
-                        text: response
-                    }]
-                };
-
-            } catch (error: any) {
-                return {
-                    isError: true,
-                    content: [{ type: "text", text: `Ollama error: ${error.message}` }]
-                };
+                return mcpText(response);
+            } catch (error: unknown) {
+                return mcpCatch(error, "ollama_generate");
             }
         }
     );

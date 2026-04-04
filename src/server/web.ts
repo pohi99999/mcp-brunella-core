@@ -17,8 +17,10 @@ import {
   logInfo,
   logError,
   logWarn,
+  logDebug,
 } from "../utils/logger.js";
 import { ensureError } from "../utils/ensureError.js";
+import type { AgentStatusPayload } from "./SocketService.js";
 import {
   corsWhitelist,
   getCorsOrigins,
@@ -83,6 +85,10 @@ function allowUiDevFallback(): boolean {
   return process.env.UI_DEV_FALLBACK !== "0" && process.env.UI_DEV_FALLBACK !== "false";
 }
 
+function toAgentStatusPayload(status: string): AgentStatusPayload {
+  return status === "idle" || status === "working" || status === "error" ? status : "working";
+}
+
 // ── Singleton guard: exported so index.ts can close it on shutdown ─
 export let activeHttpServer: HttpServer | null = null;
 
@@ -138,7 +144,7 @@ function acquirePidLock(): void {
     try {
       unlinkSync(PID_FILE);
     } catch (error: unknown) {
-      console.warn(`[${new Date().toISOString()}] [WARN]`, `Failed to remove PID file on exit: ${ensureError(error).message}`);
+      logWarn("Server", `Failed to remove PID file on exit: ${ensureError(error).message}`);
     }
   });
 }
@@ -566,7 +572,7 @@ async function deferredInit(
   });
 
   logEmitter.on("agent_status", (entry: AgentStatusEvent) => {
-    socketService.updateAgentStatus(entry.agent, entry.status as any, entry.task);
+    socketService.updateAgentStatus(entry.agentName, toAgentStatusPayload(entry.status), entry.message);
   });
 
   // System metrics broadcast — staggered recurring setTimeout (not setInterval)
@@ -596,15 +602,19 @@ async function deferredInit(
           try {
             io.emit("agent_update", agentManager.listAgentDefinitions());
             io.emit("tools_update", toolManager.getToolDefinitions());
-          } catch { /* non-critical */ }
+          } catch (error: unknown) {
+            logDebug("Server", `Agent/tool update emit skipped: ${ensureError(error).message}`);
+          }
           setImmediate(() => {
             try {
               io.emit("tasks_update", agentManager.getAllTasks());
-            } catch { /* non-critical */ }
+            } catch (error: unknown) {
+              logDebug("Server", `Task update emit skipped: ${ensureError(error).message}`);
+            }
           });
         });
       } catch (e: unknown) {
-        logWarn("Server", `Metrics broadcast error: ${e instanceof Error ? e.message : String(e)}`);
+        logWarn("Server", `Metrics broadcast error: ${ensureError(e).message}`);
       }
       scheduleMetricsBroadcast();
     }, 5000);

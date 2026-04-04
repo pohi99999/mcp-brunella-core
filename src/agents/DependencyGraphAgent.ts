@@ -9,7 +9,8 @@
  */
 
 import { IAgent, AgentResponse } from './types.js';
-import { logInfo, logError, setAgentStatus } from '../utils/logger.js';
+import { logInfo, logError, logDebug, setAgentStatus } from '../utils/logger.js';
+import { ensureError } from '../utils/ensureError.js';
 import { config } from '../config/index.js';
 import fs from 'fs/promises';
 import path from 'path';
@@ -107,8 +108,9 @@ async function extractImports(filePath: string): Promise<string[]> {
         for (const match of requireImports) {
             imports.push(match[1]);
         }
-    } catch {
-        // File unreadable, return empty
+    } catch (error: unknown) {
+        const err = ensureError(error);
+        logDebug(SOURCE, `File unreadable, returning empty imports for ${filePath}: ${err.message}`);
     }
 
     return imports;
@@ -187,8 +189,9 @@ async function scanSourceFiles(
                 }
             }
         }
-    } catch {
-        // Directory unreadable
+    } catch (error: unknown) {
+        const err = ensureError(error);
+        logDebug(SOURCE, `Directory unreadable during scan of ${dir}: ${err.message}`);
     }
 
     return files;

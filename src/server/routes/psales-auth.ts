@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { SignJWT, jwtVerify } from 'jose';
-import { logInfo, logError } from '../../utils/logger.js';
+import { logInfo, logError, logDebug } from '../../utils/logger.js';
+import { ensureError } from '../../utils/ensureError.js';
 
 interface TestUser {
   email: string;
@@ -12,7 +13,8 @@ interface TestUser {
 function getTestUsers(): TestUser[] {
   try {
     return JSON.parse(process.env.PSALES_TEST_USERS ?? '[]') as TestUser[];
-  } catch {
+  } catch (error: unknown) {
+    logDebug('PSalesAuth', `Unable to parse PSALES_TEST_USERS: ${ensureError(error).message}`);
     return [];
   }
 }
@@ -60,8 +62,8 @@ export function createPSalesAuthRoutes(): Router {
       logInfo('PSalesAuth', `Sikeres bejelentkezés: ${email} (${user.role})`);
       return res.json({ token, email: user.email, role: user.role });
     } catch (e: unknown) {
-      const error = e instanceof Error ? e.message : String(e);
-      logError('PSalesAuth', `JWT hiba: ${error}`);
+      const normalized = ensureError(e);
+      logError('PSalesAuth', `JWT hiba: ${normalized.message}`, normalized);
       return res.status(500).json({ error: 'Token generálás sikertelen' });
     }
   });
@@ -82,7 +84,8 @@ export function createPSalesAuthRoutes(): Router {
         return res.status(401).json({ valid: false, error: 'Érvénytelen token tartalom' });
       }
       return res.json({ valid: true, email, role });
-    } catch {
+    } catch (error: unknown) {
+      logDebug('PSalesAuth', `Token verification failed: ${ensureError(error).message}`);
       return res.status(401).json({ valid: false, error: 'Érvénytelen vagy lejárt token' });
     }
   });

@@ -2,7 +2,8 @@
 // PURPOSE: Code Review engine for Developer Agent 3.0 (P4)
 // VERSION: 3.0
 
-import { logInfo, logError } from '../utils/logger.js';
+import { logInfo, logError, logDebug } from '../utils/logger.js';
+import { ensureError } from '../utils/ensureError.js';
 import { generateResponse } from '../core/llm_client.js';
 import fs from 'fs/promises';
 import path from 'path';
@@ -306,7 +307,9 @@ export class CodeReviewEngine {
                 summary: typeof parsed.summary === 'string' ? parsed.summary : 'No summary provided',
                 score: typeof parsed.score === 'number' ? Math.max(0, Math.min(100, parsed.score)) : 50,
             };
-        } catch {
+        } catch (error: unknown) {
+            const err = ensureError(error);
+            logDebug('CodeReview', `Failed to parse review response: ${err.message}`);
             return {
                 findings: [{ severity: 'info', message: raw.slice(0, 500), rule: 'PARSE_ERROR' }],
                 summary: 'Failed to parse LLM review response',

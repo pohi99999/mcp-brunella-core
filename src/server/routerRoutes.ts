@@ -12,6 +12,7 @@
 
 import { Router } from 'express';
 import { MODEL_REGISTRY, getRecentDecisions } from '../core/modelRouter.js';
+import { ensureError } from '../utils/ensureError.js';
 
 export function createRouterRouter(): Router {
   const router = Router();
@@ -26,8 +27,9 @@ export function createRouterRouter(): Router {
         ...profile,
       }));
       res.json({ models });
-    } catch (e: any) {
-      res.status(500).json({ error: e.message });
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      res.status(500).json({ error: err.message });
     }
   });
 
@@ -40,8 +42,9 @@ export function createRouterRouter(): Router {
       const limit = 50;
       const decisions = getRecentDecisions(limit);
       res.json({ decisions });
-    } catch (e: any) {
-      res.status(500).json({ error: e.message });
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      res.status(500).json({ error: err.message });
     }
   });
 
@@ -59,8 +62,9 @@ export function createRouterRouter(): Router {
       // Store override in memory (simple implementation)
       // In real system, would use Redis or similar
       res.json({ success: true, message: `Override set: ${modelId} (reason: ${reason || 'manual'})` });
-    } catch (e: any) {
-      res.status(500).json({ error: e.message });
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      res.status(500).json({ error: err.message });
     }
   });
 
@@ -87,8 +91,9 @@ export function createRouterRouter(): Router {
       });
 
       res.json(stats);
-    } catch (e: any) {
-      res.status(500).json({ error: e.message });
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      res.status(500).json({ error: err.message });
     }
   });
 

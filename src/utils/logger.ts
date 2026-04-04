@@ -22,6 +22,8 @@ export interface LogEvent {
   timestamp: string;
   level: LogLevel;
   message: string;
+  source?: string;
+  agent?: string;
   details?: unknown;
 }
 
@@ -30,12 +32,14 @@ export interface AgentStatusEvent {
   status: string;
   message?: string;
   timestamp: string;
+  agent?: string;
+  task?: string;
 }
 
 export const logEmitter = new EventEmitter();
 
 function emitLog(level: LogLevel, message: string, details?: unknown) {
-  const event: LogEvent = { timestamp: getTimestamp(), level, message, details };
+  const event: LogEvent = { timestamp: getTimestamp(), level, message, source: message, details };
   try {
     logEmitter.emit('log', event);
   } catch (error: unknown) {
@@ -73,7 +77,14 @@ export function logDebug(message: string, ...args: unknown[]) {
 }
 
 export function setAgentStatus(agentName: string, status: string, message?: string) {
-  const ev: AgentStatusEvent = { agentName, status, message, timestamp: getTimestamp() };
+  const ev: AgentStatusEvent = {
+    agentName,
+    agent: agentName,
+    status,
+    message,
+    task: message,
+    timestamp: getTimestamp(),
+  };
   try {
     logEmitter.emit('agentStatus', ev);
   } catch (error: unknown) {

@@ -1,6 +1,8 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { Logger } from "../utils/logger.js";
+import { mcpError, mcpText } from "../utils/mcpResponse.js";
+import { ensureError } from "../utils/ensureError.js";
 
 const logger = new Logger('claude.log');
 
@@ -56,19 +58,12 @@ export function registerClaudeTool(server: McpServer) {
                 
                 await logger.log(`Response received`, { id: data.id });
 
-                return {
-                    content: [{
-                        type: "text",
-                        text: textContent
-                    }]
-                };
+                return mcpText(textContent);
 
-            } catch (error: any) {
-                await logger.log(`Error`, { message: error.message });
-                return {
-                    isError: true,
-                    content: [{ type: "text", text: `Claude error: ${error.message}` }]
-                };
+            } catch (error: unknown) {
+                const normalized = ensureError(error);
+                await logger.log(`Error`, { message: normalized.message });
+                return mcpError(`Claude error: ${normalized.message}`);
             }
         }
     );

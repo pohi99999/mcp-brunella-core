@@ -70,8 +70,9 @@ export function registerMonitorTools(server: McpServer) {
         return {
           content: [{ type: "text", text: lastLines }]
         };
-      } catch (e: any) {
-        return { isError: true, content: [{ type: "text", text: `Error reading log: ${e.message}` }] };
+      } catch (error: unknown) {
+        const err = error instanceof Error ? error : new Error(String(error));
+        return { isError: true, content: [{ type: "text", text: `Error reading log: ${err.message}` }] };
       }
     }
   );

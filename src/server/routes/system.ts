@@ -18,7 +18,8 @@ import { agentManager } from '../../agents/AgentManager.js';
 import { asyncHandler } from '../middleware/errorHandler.js';
 import { getGlobalDb } from '../../utils/globalDb.js';
 import { getRAGCount } from '../../utils/rag.js';
-import { logInfo, logError } from '../../utils/logger.js';
+import { logInfo, logError, logDebug } from '../../utils/logger.js';
+import { ensureError } from '../../utils/ensureError.js';
 import {
   checkOllamaHealth,
   checkAnythingLLMHealth,
@@ -115,15 +116,20 @@ export function createSystemControlRouter(): Router {
       try {
         if (service === 'ollama') {
           const cmd = process.platform === 'win32' ? 'start /B ollama serve' : 'ollama serve &';
-          await execAsync(cmd).catch(() => {
+          await execAsync(cmd).catch((error: unknown) => {
             // background process – hiba várható ha már fut
+            const normalized = ensureError(error);
+            logDebug('SystemControl', `Ollama start skipped: ${normalized.message}`);
           });
           res.json({ success: true, message: 'Ollama elindult' });
         } else if (service === 'python') {
           const cmd = process.platform === 'win32'
             ? 'start /B uvicorn myai.server:app --port 8000'
             : 'uvicorn myai.server:app --port 8000 &';
-          await execAsync(cmd).catch(() => {});
+          await execAsync(cmd).catch((error: unknown) => {
+            const normalized = ensureError(error);
+            logDebug('SystemControl', `Python start skipped: ${normalized.message}`);
+          });
           res.json({ success: true, message: 'Python szerver elindult' });
         } else if (service === 'n8n') {
           // Derive the n8n directory relative to the project root so this
@@ -133,7 +139,13 @@ export function createSystemControlRouter(): Router {
           logInfo('SystemControl', `n8n indítása itt: ${n8nPath}`);
           
           // Ellenőrizzük, kell-e npm install
-          const hasNodeModules = await fs.access(path.join(n8nPath, 'node_modules')).then(() => true).catch(() => false);
+          let hasNodeModules = false;
+          try {
+            await fs.access(path.join(n8nPath, 'node_modules'));
+            hasNodeModules = true;
+          } catch (error: unknown) {
+            logDebug('SystemControl', `n8n node_modules hiányzik: ${ensureError(error).message}`);
+          }
           if (!hasNodeModules) {
             logInfo('SystemControl', 'node_modules hiányzik, npm install futtatása...');
             const installCmd = process.platform === 'win32'
@@ -236,16 +248,18 @@ export function createSystemArchitectureRouter(): Router {
         sqliteTasksPending = pending?.count ?? 0;
         sqliteTasksDone = done?.count ?? 0;
         sqliteTasksFailed = failed?.count ?? 0;
-      } catch (e) {
-        logError('SystemArchitecture', `SQLite lekérdezés hiba: ${e}`);
+      } catch (error: unknown) {
+        const normalized = ensureError(error);
+        logError('SystemArchitecture', `SQLite lekérdezés hiba: ${normalized.message}`, normalized);
       }
 
       // ── Ingestion réteg (LanceDB RAG) ────────────────────────────────────
       let lancedbRows = 0;
       try {
         lancedbRows = await getRAGCount();
-      } catch (e) {
-        logError('SystemArchitecture', `LanceDB count hiba: ${e}`);
+      } catch (error: unknown) {
+        const normalized = ensureError(error);
+        logError('SystemArchitecture', `LanceDB count hiba: ${normalized.message}`, normalized);
       }
 
       // ── Security réteg (E2B + Guardrails + Golden Dataset) ───────────────
@@ -258,8 +272,8 @@ export function createSystemArchitectureRouter(): Router {
           .prepare('SELECT COUNT(*) as count FROM golden_samples')
           .get() as { count: number } | undefined;
         goldenSamples = gs?.count ?? 0;
-      } catch {
-        // golden_samples tábla csak D1-ben van — helyi fallback: 0
+      } catch (error: unknown) {
+        logDebug('SystemArchitecture', `golden_samples fallback skipped: ${ensureError(error).message}`);
       }
 
       const payload = {

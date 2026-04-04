@@ -173,8 +173,9 @@ except Exception as e:
             success: result.success,
             data: result,
           });
-        } catch {
-          logError("writeSheetsInvoices", "JSON parse error");
+        } catch (error: unknown) {
+          const err = error instanceof Error ? error : new Error(String(error));
+          logError("writeSheetsInvoices", `JSON parse error: ${err.message}`);
           resolve({
             success: false,
             error: `Parse error: ${output.substring(0, 200)}`,
@@ -182,12 +183,12 @@ except Exception as e:
         }
       });
     });
-  } catch (e) {
-    const error = e instanceof Error ? e.message : String(e);
-    logError("writeSheetsInvoices", error);
+  } catch (error: unknown) {
+    const err = error instanceof Error ? error : new Error(String(error));
+    logError("writeSheetsInvoices", err.message);
     return {
       success: false,
-      error,
+      error: err.message,
     };
   }
 }

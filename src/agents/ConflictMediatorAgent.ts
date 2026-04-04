@@ -1,5 +1,6 @@
 import { IAgent, AgentResponse } from './types.js';
-import { logInfo, logError, setAgentStatus } from '../utils/logger.js';
+import { logInfo, logError, logDebug, setAgentStatus } from '../utils/logger.js';
+import { ensureError } from '../utils/ensureError.js';
 
 /**
  * Communication Data
@@ -97,7 +98,9 @@ export class ConflictMediatorAgent implements IAgent {
       let taskData: any = {};
       try {
         taskData = JSON.parse(task);
-      } catch {
+      } catch (error: unknown) {
+        const err = ensureError(error);
+        logDebug(this.name, `Ignoring task JSON parse error: ${err.message}`);
         taskData = { message: task };
       }
 
@@ -159,10 +162,10 @@ export class ConflictMediatorAgent implements IAgent {
 
       // Default: analyze communication
       return await this.analyzeCommunication(task, context);
-    } catch (e: unknown) {
-      const error = e instanceof Error ? e.message : String(e);
-      logError(this.name, error);
-      return { status: 'error', error };
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      logError(this.name, err.message);
+      return { status: 'error', error: err.message };
     } finally {
       setAgentStatus(this.name, 'idle');
     }

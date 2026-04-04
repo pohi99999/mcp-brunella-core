@@ -3,6 +3,7 @@ import { z } from "zod";
 import path from "path";
 import { execCommand } from "../utils/exec.js";
 import { config } from "../config/index.js";
+import { mcpCatch, mcpText } from "../utils/mcpResponse.js";
 
 const WHITELISTED_COMMANDS = ['run', 'ask', 'task', 'agent'];
 
@@ -38,18 +39,10 @@ export function registerJulesCliTool(server: McpServer) {
                     timeout: 120000 // Jules agents might take longer
                 });
 
-                return {
-                    content: [{
-                        type: "text",
-                        text: `Exit Code: ${result.exitCode}\n\nSTDOUT:\n${result.stdout}\n\nSTDERR:\n${result.stderr}`
-                    }]
-                };
+                return mcpText(`Exit Code: ${result.exitCode}\n\nSTDOUT:\n${result.stdout}\n\nSTDERR:\n${result.stderr}`);
 
-            } catch (error: any) {
-                return {
-                    isError: true,
-                    content: [{ type: "text", text: `Execution error: ${error.message}` }]
-                };
+            } catch (error: unknown) {
+                return mcpCatch(error, "jules_cli");
             }
         }
     );

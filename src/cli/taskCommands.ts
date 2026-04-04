@@ -15,6 +15,7 @@ import { Command } from 'commander';
 import chalk from 'chalk';
 import ora from 'ora';
 import inquirer from 'inquirer';
+import { ensureError } from '../utils/ensureError.js';
 
 const API_BASE = process.env.BRUNELLA_API_URL || 'http://localhost:3000';
 
@@ -102,8 +103,9 @@ export function registerTaskCommands(program: Command) {
                 if (options.context) {
                     try {
                         context = JSON.parse(options.context);
-                    } catch (e) {
-                        spinner.fail(chalk.red('Érvénytelen JSON kontextus'));
+                    } catch (error: unknown) {
+                        const err = ensureError(error);
+                        spinner.fail(chalk.red(`Érvénytelen JSON kontextus: ${err.message}`));
                         process.exit(1);
                     }
                 }
@@ -128,9 +130,10 @@ export function registerTaskCommands(program: Command) {
                     spinner.fail(chalk.red('Hiba történt'));
                     console.log(chalk.red(`\n❌ Státusz: ${result.status}`));
                 }
-            } catch (e: any) {
+            } catch (error: unknown) {
+                const err = ensureError(error);
                 spinner.fail(chalk.red('API hiba'));
-                console.log(chalk.red(`\n❌ Hiba: ${e.message}`));
+                console.log(chalk.red(`\n❌ Hiba: ${err.message}`));
                 process.exit(1);
             }
         });
@@ -235,12 +238,13 @@ async function startInteractiveTaskMode() {
                     await executeTask(predefined);
                 }
             }
-        } catch (e: any) {
-            if (e.message?.includes('User force closed')) {
+        } catch (error: unknown) {
+            const err = ensureError(error);
+            if (err.message?.includes('User force closed')) {
                 console.log(chalk.yellow('\n👋 Viszlát!'));
                 running = false;
             } else {
-                console.log(chalk.red(`\n❌ Hiba: ${e.message}`));
+                console.log(chalk.red(`\n❌ Hiba: ${err.message}`));
             }
         }
     }
@@ -282,9 +286,10 @@ async function executeTask(taskDescription: string) {
             spinner.fail(chalk.red('Hiba történt'));
             console.log(chalk.red(`\n❌ Státusz: ${result.status}`));
         }
-    } catch (e: any) {
+    } catch (error: unknown) {
+        const err = ensureError(error);
         spinner.fail(chalk.red('API hiba'));
-        console.log(chalk.red(`\n❌ Hiba: ${e.message}`));
+        console.log(chalk.red(`\n❌ Hiba: ${err.message}`));
 
         // Pause to let user see the error
         await inquirer.prompt([

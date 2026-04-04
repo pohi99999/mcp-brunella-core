@@ -5,6 +5,8 @@ import chalk from "chalk";
 import inquirer from "inquirer";
 import ora from "ora";
 import { BrunellaClient } from "../utils/mcpClient.js";
+import { ensureError } from "../utils/ensureError.js";
+import { logDebug } from "../utils/logger.js";
 
 type AgentResponse = {
   status: "success" | "error" | "delegated";
@@ -71,7 +73,8 @@ function isDecompositionResult(v: unknown): v is DecompositionResult {
 function tryParseJson(text: string): unknown {
   try {
     return JSON.parse(text);
-  } catch {
+  } catch (error: unknown) {
+    logDebug("TaskDecomposer", `Task decomposition JSON parse failed: ${ensureError(error).message}`);
     return null;
   }
 }

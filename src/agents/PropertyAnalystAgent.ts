@@ -14,7 +14,8 @@
  */
 
 import { BaseAgent, AgentContext, AgentResult } from "./BaseAgent.js";
-import { logInfo, logError } from "../utils/logger.js";
+import { logInfo, logError, logDebug } from "../utils/logger.js";
+import { ensureError } from '../utils/ensureError.js';
 import { spawn } from "child_process";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -57,7 +58,9 @@ function callVisionWorker(filePath: string, mock = false): Promise<VisionRespons
       }
       try {
         resolve(JSON.parse(stdout.trim()) as VisionResponse);
-      } catch {
+      } catch (error: unknown) {
+        const err = ensureError(error);
+        logDebug('PropertyAnalyst', `Vision worker JSON parse error: ${err.message}`);
         reject(new Error(`JSON parse hiba. stdout="${stdout.slice(0, 200)}"`));
       }
     });
@@ -110,8 +113,10 @@ function callCMAWorker(location: string, type: string, area: number, mock = fals
       if (code !== 0) return reject(new Error(stderr || `CMA Exit code ${code}`));
       try {
         resolve(JSON.parse(stdout.trim()));
-      } catch {
-        reject(new Error("CMA JSON parse hiba."));
+      } catch (error: unknown) {
+        const err = ensureError(error);
+        logDebug('PropertyAnalyst', `CMA worker JSON parse error: ${err.message}`);
+        reject(new Error(`CMA JSON parse hiba. ${err.message}`));
       }
     });
   });
@@ -204,10 +209,10 @@ export class PropertyAnalystAgent extends BaseAgent {
       let visionResp: VisionResponse;
       try {
         visionResp = await callVisionWorker(filePath, mock);
-      } catch (e: unknown) {
-        const err = e instanceof Error ? e.message : String(e);
-        logError(this.name, `vision_worker hiba: ${err}`);
-        return { success: false, message: `OCR worker hiba: ${err}` };
+      } catch (error: unknown) {
+        const err = ensureError(error);
+        logError(this.name, `vision_worker hiba: ${err.message}`);
+        return { success: false, message: `OCR worker hiba: ${err.message}` };
       }
 
       if (!visionResp.success || !visionResp.asset) {
@@ -263,9 +268,9 @@ export class PropertyAnalystAgent extends BaseAgent {
           message: `📊 CMA Piacelemzés kész: ${cmaReport.estimate.value_eur.toLocaleString("hu-HU")} EUR | Score: ${cmaReport.investment_score}/10\n${cmaReport.recommendation}`,
           data: cmaReport,
         };
-      } catch (e: unknown) {
-        const err = e instanceof Error ? e.message : String(e);
-        logError(this.name, `CMA hiba: ${err}. Visszalépés alapértékelésre.`);
+      } catch (error: unknown) {
+        const err = ensureError(error);
+        logError(this.name, `CMA hiba: ${err.message}. Visszalépés alapértékelésre.`);
         const valuation = estimateValue(asset);
         return {
           success: true,

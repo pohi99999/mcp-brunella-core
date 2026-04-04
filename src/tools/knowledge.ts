@@ -4,6 +4,7 @@ import fs from 'fs/promises';
 import path from 'path';
 import { config } from '../config/index.js';
 import { searchRAG, addToIndex } from '../utils/rag.js';
+import { logDebug } from '../utils/logger.js';
 
 const KNOWLEDGE_ROOTS = ['02_PROJECTS', '03_LIBRARY', '07_KNOWLEDGE_BASE'];
 
@@ -27,9 +28,18 @@ async function searchFiles(dir: string, pattern: string, results: string[]) {
           if (content.toLowerCase().includes(pattern.toLowerCase())) {
             results.push(fullPath);
           }
-                    } catch (e) { /* non-critical */ }      }
+        } catch (error: unknown) {
+          // Non-critical: file read errors during search are expected for locked/inaccessible files
+          const err = error instanceof Error ? error : new Error(String(error));
+          logDebug('knowledge_search', `Skipped file ${fullPath}: ${err.message}`);
+        }
+      }
     }
-  } catch (e) { /* non-critical */ }
+  } catch (error: unknown) {
+    // Non-critical: directory read errors during search are expected
+    const err = error instanceof Error ? error : new Error(String(error));
+    logDebug('searchFiles', `Skipped directory ${dir}: ${err.message}`);
+  }
 }
 
 export function registerKnowledgeTools(server: McpServer) {
@@ -75,10 +85,11 @@ export function registerKnowledgeTools(server: McpServer) {
                     text: JSON.stringify(results, null, 2)
                 }]
             };
-        } catch (e: any) {
+        } catch (error: unknown) {
+            const err = error instanceof Error ? error : new Error(String(error));
             return {
                 isError: true,
-                content: [{ type: "text", text: `RAG Error: ${e.message}` }]
+                content: [{ type: "text", text: `RAG Error: ${err.message}` }]
             };
         }
     }
@@ -99,8 +110,9 @@ export function registerKnowledgeTools(server: McpServer) {
             return {
                 content: [{ type: "text", text: `Indexed: ${file_path}` }]
             };
-        } catch (e: any) {
-            return { isError: true, content: [{ type: "text", text: `Error: ${e.message}` }] };
+        } catch (error: unknown) {
+            const err = error instanceof Error ? error : new Error(String(error));
+            return { isError: true, content: [{ type: "text", text: `Error: ${err.message}` }] };
         }
     }
   );
@@ -119,7 +131,11 @@ export function registerKnowledgeTools(server: McpServer) {
             try {
                 const content = await fs.readFile(fullPath, 'utf-8');
                 context += `\n--- FILE: ${filePath} ---\n${content}\n`;
-            } catch (e) { /* non-critical */ }
+            } catch (error: unknown) {
+                // Non-critical: file read errors during context building are expected
+                const err = error instanceof Error ? error : new Error(String(error));
+                logDebug('knowledge_read_context', `Skipped file ${filePath}: ${err.message}`);
+            }
         }
         return {
             content: [{ type: "text", text: context }]

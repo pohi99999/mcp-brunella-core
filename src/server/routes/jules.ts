@@ -2,9 +2,15 @@ import { Router } from "express";
 import { exec } from "child_process";
 import path from "path";
 import { fileURLToPath } from "url";
-import { logError, logInfo, logWarn } from "../../utils/logger.js";
+import { logError, logInfo, logWarn, logDebug } from "../../utils/logger.js";
 import { getGlobalDb } from "../../utils/globalDb.js";
 import { JulesAutomationService } from "../../core/julesAutomationService.js";
+import { ensureError } from "../../utils/ensureError.js";
+
+interface GithubApiError extends Error {
+  statusCode?: number;
+  data?: unknown;
+}
 
 // Helper to run shell commands
 const runCommand = (command: string): Promise<string> => {
@@ -12,7 +18,7 @@ const runCommand = (command: string): Promise<string> => {
     exec(command, { cwd: process.cwd() }, (error, stdout, stderr) => {
       if (error) {
         logError("JulesRoutes", `Exec error: ${error.message}`);
-        reject(error.message);
+        reject(error);
         return;
       }
       if (stderr && !stderr.includes("Created session")) {
@@ -46,8 +52,8 @@ function getGithubToken(): string | undefined {
 async function githubFetchJson(url: string, init?: RequestInit): Promise<any> {
   const token = getGithubToken();
   if (!token) {
-    const err = new Error("GitHub token missing (set GITHUB_TOKEN)");
-    (err as any).statusCode = 503;
+    const err = new Error("GitHub token missing (set GITHUB_TOKEN)") as GithubApiError;
+    err.statusCode = 503;
     throw err;
   }
 
@@ -67,7 +73,8 @@ async function githubFetchJson(url: string, init?: RequestInit): Promise<any> {
     ? (() => {
         try {
           return JSON.parse(text);
-        } catch {
+        } catch (error: unknown) {
+          logDebug("JulesRoutes", `GitHub API response parse fallback: ${ensureError(error).message}`);
           return { raw: text };
         }
       })()
@@ -78,13 +85,24 @@ async function githubFetchJson(url: string, init?: RequestInit): Promise<any> {
       data && (data.message as string)
         ? `GitHub API error: ${data.message}`
         : `GitHub API error: HTTP ${response.status}`,
-    );
-    (err as any).statusCode = response.status;
-    (err as any).data = data;
+    ) as GithubApiError;
+    err.statusCode = response.status;
+    err.data = data;
     throw err;
   }
 
   return data;
+}
+
+function getHttpStatus(error: unknown): number {
+  if (typeof error === 'object' && error !== null && 'statusCode' in error) {
+    const statusCode = (error as { statusCode?: unknown }).statusCode;
+    if (typeof statusCode === 'number' && Number.isFinite(statusCode)) {
+      return statusCode;
+    }
+  }
+
+  return 500;
 }
 
 export function createJulesRoutes(): Router {
@@ -121,8 +139,8 @@ export function createJulesRoutes(): Router {
       const data = await githubFetchJson(url);
       res.json({ workflow, runs: data.workflow_runs || [] });
     } catch (e: unknown) {
-      const msg = e instanceof Error ? e.message : String(e);
-      const status = (e as any)?.statusCode || 500;
+      const msg = ensureError(e).message;
+      const status = getHttpStatus(e);
       res.status(status).json({ error: msg });
     }
   });
@@ -156,9 +174,12 @@ export function createJulesRoutes(): Router {
 
       res.json({ success: true, workflow, ref });
     } catch (e: unknown) {
-      const msg = e instanceof Error ? e.message : String(e);
-      const status = (e as any)?.statusCode || 500;
-      res.status(status).json({ error: msg });
+      const normalized = ensureError(e);
+      const status = typeof e === "object" && e !== null && "statusCode" in e
+        ? Number((e as { statusCode?: unknown }).statusCode) || 500
+        : 500;
+      logError("JulesRoutes", `Workflow dispatch failed: ${normalized.message}`, normalized);
+      res.status(status).json({ error: normalized.message });
     }
   });
 
@@ -190,8 +211,10 @@ export function createJulesRoutes(): Router {
       });
 
       res.json({ sessions });
-    } catch (error) {
-      res.status(500).json({ error: String(error) });
+    } catch (error: unknown) {
+      const normalized = ensureError(error);
+      logError("JulesRoutes", `Session listing failed: ${normalized.message}`, normalized);
+      res.status(500).json({ error: normalized.message });
     }
   });
 
@@ -221,8 +244,10 @@ export function createJulesRoutes(): Router {
         sessionId,
         output: stdout,
       });
-    } catch (error) {
-      res.status(500).json({ error: String(error) });
+    } catch (error: unknown) {
+      const normalized = ensureError(error);
+      logError("JulesRoutes", `Task creation failed: ${normalized.message}`, normalized);
+      res.status(500).json({ error: normalized.message });
     }
   });
 
@@ -238,8 +263,10 @@ export function createJulesRoutes(): Router {
         `python "${scriptPath}" pull "${sessionId}"`,
       );
       res.json({ success: true, output: stdout });
-    } catch (error) {
-      res.status(500).json({ error: String(error) });
+    } catch (error: unknown) {
+      const normalized = ensureError(error);
+      logError("JulesRoutes", `Session sync failed: ${normalized.message}`, normalized);
+      res.status(500).json({ error: normalized.message });
     }
   });
 
@@ -255,8 +282,9 @@ export function createJulesRoutes(): Router {
       const tasks = julesService.getImportedTasks();
       res.json({ success: true, count: tasks.length, tasks });
     } catch (e: unknown) {
-      const msg = e instanceof Error ? e.message : String(e);
-      res.status(500).json({ success: false, error: msg });
+      const normalized = ensureError(e);
+      logError("JulesRoutes", `Automation task listing failed: ${normalized.message}`, normalized);
+      res.status(500).json({ success: false, error: normalized.message });
     }
   });
 
@@ -279,8 +307,9 @@ export function createJulesRoutes(): Router {
 
       res.json({ success: true, result });
     } catch (e: unknown) {
-      const msg = e instanceof Error ? e.message : String(e);
-      res.status(500).json({ success: false, error: msg });
+      const normalized = ensureError(e);
+      logError("JulesRoutes", `Automation import failed: ${normalized.message}`, normalized);
+      res.status(500).json({ success: false, error: normalized.message });
     }
   });
 

@@ -1,4 +1,6 @@
 import { differenceInDays, parseISO } from 'date-fns';
+import { logDebug } from '../utils/logger.js';
+import { ensureError } from '../utils/ensureError.js';
 
 export interface MatchInvoice {
   invoiceNumber: string;
@@ -49,8 +51,9 @@ export function findFuzzyMatch(tx: MatchBankTx, invoices: MatchInvoice[]): Fuzzy
       if (diff === 0) score += 30;
       else if (diff <= 3) score += 20;
       else if (diff <= 7) score += 10;
-    } catch {
-      // Ignore date parsing errors in scoring
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      logDebug('Matcher', `Ignoring date parsing error in scoring: ${err.message}`);
     }
 
     // 3. Reference/InvoiceNumber Match (20 points)
