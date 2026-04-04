@@ -27,6 +27,8 @@ from fastmcp import FastMCP
 from myai.runtime_security import (
     is_python_execute_enabled,
     MAX_DYNAMIC_CODE_SIZE,
+    resolve_harvest_scenario_path,
+    resolve_json_schema_source,
 )
 
 logger = logging.getLogger(__name__)
@@ -212,16 +214,14 @@ async def harvest_scenario(scenario_path: str, force_mode: Optional[str] = None)
         force_mode: Force execution mode — 'api' or 'ui'. None for auto-detect.
     """
     try:
+        full_path = resolve_harvest_scenario_path(scenario_path)
         from myai.browser_worker import run_scenario
-        full_path = os.path.realpath(
-            os.path.join(PROJECT_ROOT, scenario_path) if not os.path.isabs(scenario_path) else scenario_path
-        )
-        if not full_path.startswith(PROJECT_ROOT_REALPATH + os.sep) and full_path != PROJECT_ROOT_REALPATH:
-            return json.dumps({"status": "error", "error": "Path traversal attempt detected"})
         if not os.path.exists(full_path):
             return json.dumps({"status": "error", "error": f"Scenario not found: {full_path}"})
         result = await run_scenario(full_path, force_mode=force_mode)
         return json.dumps({"status": "success", "result": result}, ensure_ascii=False, default=str)
+    except ValueError as e:
+        return json.dumps({"status": "error", "error": str(e)})
     except Exception as e:
         return json.dumps({"status": "error", "error": str(e)})
 
@@ -239,16 +239,19 @@ async def harvest_extract(target_url: str, schema_source: str, extraction_prompt
         model: LLM model to use for extraction.
     """
     try:
+        safe_schema_source = resolve_json_schema_source(schema_source)
         from myai.browser_worker import run_structured_extraction
         config = {
             "target_url": target_url,
             "extraction_prompt": extraction_prompt,
             "model": model,
         }
-        result = await run_structured_extraction(config, schema_source)
+        result = await run_structured_extraction(config, safe_schema_source)
         if "error" in result:
             return json.dumps({"status": "error", "error": result["error"]}, default=str)
         return json.dumps({"status": "success", "data": result.get("data")}, ensure_ascii=False, default=str)
+    except ValueError as e:
+        return json.dumps({"status": "error", "error": str(e)})
     except Exception as e:
         return json.dumps({"status": "error", "error": str(e)})
 
@@ -277,7 +280,9 @@ def system_health() -> str:
         try:
             __import__(module_name)
             checks[label] = "available"
-        except ImportError:
+        except Exception:
+            # Catch all exceptions, not just ImportError
+            # Some modules (e.g., chromadb) may raise pydantic.v1.ConfigError on Python 3.14+
             checks[label] = "not_installed"
 
     github_token = os.getenv("GITHUB_PAT") or os.getenv("GITHUB_TOKEN")

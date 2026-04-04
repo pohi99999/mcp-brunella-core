@@ -121,6 +121,8 @@ export function ServiceControlWidget() {
             size="sm"
             onClick={fetchStatus}
             disabled={isRefreshing}
+            aria-label="Refresh service status"
+            title="Refresh service status"
             className="text-zinc-400 hover:text-zinc-200"
           >
             <ArrowsClockwise

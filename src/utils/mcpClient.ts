@@ -252,13 +252,21 @@ export class BrunellaClient {
       }
     }
 
-    // Fallback: Search for which client has this tool
-    for (const [serverName, client] of this.clients) {
-      const result = await client.listTools();
-      const tool = result.tools.find((t) => t.name === name);
-      if (tool) {
-        this.toolCache.set(name, serverName); // Update cache
-        return client.callTool({ name, arguments: args });
+     // Fallback: Search for which client has this tool
+     for (const [serverName, client] of this.clients) {
+      try {
+        const result = await client.listTools();
+        const tool = result.tools.find((t) => t.name === name);
+        if (tool) {
+          this.toolCache.set(name, serverName); // Update cache
+          return client.callTool({ name, arguments: args });
+        }
+      } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : String(error);
+        logError(
+          "MCP",
+          `Tool lookup for '${name}' failed on server '${serverName}', continuing search... (${message})`,
+        );
       }
     }
     if (hasPrebuiltTool(name)) {

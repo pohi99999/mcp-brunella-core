@@ -4,6 +4,75 @@ User requested that the Copilot CLI automatically connect to a local Brunella MC
 
 <history>
 
+### 2026-04-04 — Coverage remediation + dashboard shell stabilization + Python test hardening
+
+**Feladat:** A Brunella repo tesztlefedettségi hiányainak célzott pótlása, a dashboard shell mobil/theme flake-ek megszüntetése, valamint a `myai` Python tesztkör Windows/Python 3.14 alatti stabilizálása.
+
+**Érintett fájlok:**
+- `src/index.ts`
+- `src/server/web.ts`
+- `src/utils/mcpClient.ts`
+- `package.json`
+- `package-lock.json`
+- `vite.config.ts`
+- `src/dashboard/components/dashboard/ServiceControlWidget.tsx`
+- `src/dashboard/components/dashboard/AssistantBlueprintPanel.test.tsx`
+- `src/dashboard/components/dashboard/SystemHealthCard.test.tsx`
+- `src/dashboard/components/dashboard/MissionControlLayout.test.tsx`
+- `src/dashboard/components/ThemeToggle.test.tsx`
+- `src/dashboard/components/ui/theme-provider.test.tsx`
+- `test/core_tools.test.ts`
+- `test/dashboard/components/ServiceControlWidget.test.tsx`
+- `test/dashboard/components/ThemeProvider.test.tsx`
+- `test/e2e/dashboard-layout-e2e.spec.ts`
+- `test/GitHubModelsAgent.test.ts`
+- `test/mcpClient.test.ts`
+- `test/mcpClientManager.test.ts`
+- `test/mcpDiscovery.test.ts`
+- `test/middlewareAuth.test.ts`
+- `test/toolDiscoveryCommands.test.ts`
+- `test/goldenDatasetBridge.test.ts`
+- `test/goldenDatasetBridge.curated.test.ts`
+- `myai/mcp_server.py`
+- `myai/pytest.ini`
+- `pyproject.toml`
+- `.gitignore`
+- `myai/tests/conftest.py`
+- `myai/tests/test_autogen_adapter.py`
+- `myai/tests/test_media_factory.py`
+- `myai/tests/test_workers_lancedb_batch.py`
+- `myai/tests/test_mcp_server_security.py`
+- `myai/tests/test_mcp_server_tools.py`
+- `myai/tests/test_runtime_security.py`
+- `myai/workers/lancedb_batch.py`
+
+**Mit találtunk és javítottunk:**
+- A `test/core_tools.test.ts` child-process stdio indulása nem volt megbízható nem-interaktív környezetben. A megoldás egy env-gated `BRUNELLA_FORCE_STDIO` override lett `src/index.ts` és `src/server/web.ts` oldalon, így a teszt valódi MCP stdio útvonalat tud futtatni TTY nélkül is.
+- A `src/utils/mcpClient.ts` fallback-keresése túl korán megállt, ha egy kliens `listTools()` hívása hibára futott. A lookup most már naplóz és továbbmegy a következő élő MCP kliensre, így nem esik stale/false negative állapotba egyetlen hibás szerver miatt.
+- A dashboard shell theme dropdown Playwright tesztje flaky volt. A `dashboard-layout-e2e.spec.ts` helper most egyszer újranyitja a menüt, ha az első kattintás után még nem látszik a cél `menuitem`, így a Chromium kör stabil lett retry nélkül is.
+- A dashboard unit coverage bővült a shell, theme és accessibility irányba: `MissionControlLayout`, `ThemeToggle`, `ThemeProvider`, `ServiceControlWidget`, `AssistantBlueprintPanel`, `SystemHealthCard`.
+- A build warning csökkentésére a `vite.config.ts` manuális chunkolást kapott (`vendor-react`, `vendor-motion`, `vendor-socket`, `vendor-charts`, `vendor-icons`, `vendor-ui`), Windows path-normalizálással.
+- A CLI / MCP / auth regressziókra külön tesztkör készült: `GitHubModelsAgent`, `mcpClient`, `mcpClientManager`, `mcpDiscovery`, `middlewareAuth`, `toolDiscoveryCommands`, valamint a curated golden dataset listing/capture útvonal.
+- A Python oldalon az env-sensitive AutoGen tesztek a lokális `GITHUB_PAT` / `GITHUB_TOKEN` / `AUTOGEN_OLLAMA_MODEL` / `OLLAMA_MODEL` miatt drifteltek. Az autouse fixture ezeket explicit törli minden teszt előtt.
+- A `myai` pytest Windows temp-path hibáit a repo-local `.pytest_tmp` basetemp és extra cleanup stabilizálta (`myai/pytest.ini`, root `pyproject.toml`, `.gitignore`, `myai/tests/conftest.py`).
+- A `myai/workers/lancedb_batch.py` most explicit DB cleanupot végez ingest és query után, így a Windows file-lock teardown hibák megszűntek.
+- A `myai/mcp_server.py` harvest tooljai most a `runtime_security` validátorokat használják (`resolve_harvest_scenario_path`, `resolve_json_schema_source`), ezért a path traversal / non-JSON schema hibák fail-closed módon kezelődnek. Emellett a `system_health()` optional import loop már nem csak `ImportError`-t, hanem általános import-time hibákat is lefed (pl. `chromadb` / `pydantic.v1.ConfigError` Python 3.14 alatt).
+
+**Validáció:**
+- `npx playwright test dashboard-layout-e2e.spec.ts --project=chromium` → **3/3 PASS**
+- `npx vitest run test\safe_zone_validator.test.ts test\zeroPromptRuntime.test.ts --reporter=dot` → **2 fájl PASS**
+- `npm run test:fast` → **exit code 0**
+- `cd myai && pytest tests/test_autogen_adapter.py tests/test_mcp_autogen_tool.py tests/test_learning_loop_training.py tests/test_media_factory.py tests/test_tools.py tests/test_workers_lancedb_batch.py -q` → **86 passed, 2 skipped**
+- `cd myai && pytest tests/` → **522 passed, 20 skipped**
+
+**Megjegyzés:**
+- A worktree erősen dirty maradt, ezért a commitnál csak a validált, coverage/stabilizációs fájlokat szabad stage-elni.
+- A `myai/.gitignore`, `myai/PYTEST_WINDOWS_FIX_REPORT.md`, Playwright page dumpok és más generált zaj nem része a kívánt commitnak.
+
+**Státusz:** ✅ Befejezve
+
+---
+
 ### 2026-04-03 — Teljes rendszerellenőrzés + runtime/toolRegistry fix + shell LF hardening
 
 **Feladat:** Brunella teljes rendszerellenőrzés futó környezetben: bootstrap/szinkron állapot felmérése, szerverkapcsolatok ellenőrzése, alap validáció futtatása, conductor track állapot áttekintése, és a Copilot memóriaállapot frissítése.

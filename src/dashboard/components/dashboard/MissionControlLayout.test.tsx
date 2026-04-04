@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { MissionControlLayout } from './MissionControlLayout';
 import { LayoutProvider } from '@/lib/layout/LayoutContext';
 
@@ -45,8 +45,13 @@ vi.mock('@/lib/navigation', () => ({
 }));
 
 vi.mock('@/components/dashboard/DynamicSidebar', () => ({
-  DynamicSidebar: ({ activeTab }: any) => (
-    <div data-testid="dynamic-sidebar">Sidebar (Active: {activeTab})</div>
+  DynamicSidebar: ({ activeTab, forceExpanded, onTabChange }: any) => (
+    <div data-testid="dynamic-sidebar" data-force-expanded={forceExpanded ? 'true' : 'false'}>
+      <span>Sidebar (Active: {activeTab})</span>
+      <button type="button" onClick={() => onTabChange('tracks')}>
+        Open Tracks
+      </button>
+    </div>
   ),
 }));
 
@@ -138,5 +143,91 @@ describe('MissionControlLayout', () => {
     await waitFor(() => {
       expect(screen.getByText(/CORE HEALTHY/)).toBeInTheDocument();
     });
+  });
+
+  // ── Mobile drawer / Sheet a11y tests ────────────────────────────────────
+  // These validate the accessibility work done on the mobile navigation Sheet:
+  // aria-label on the trigger, sr-only SheetTitle, and SheetDescription.
+
+  it('mobile menu trigger has aria-label "Open navigation menu"', () => {
+    render(<MissionControlLayout />, { wrapper: LayoutProvider });
+    // The button is md:hidden via CSS; jsdom doesn't apply CSS so it's always queryable.
+    const trigger = screen.getByRole('button', { name: 'Open navigation menu' });
+    expect(trigger).toBeInTheDocument();
+    expect(trigger).toHaveAttribute('aria-label', 'Open navigation menu');
+  });
+
+  it('mobile menu trigger also carries a matching title attribute', () => {
+    render(<MissionControlLayout />, { wrapper: LayoutProvider });
+    const trigger = screen.getByRole('button', { name: 'Open navigation menu' });
+    expect(trigger).toHaveAttribute('title', 'Open navigation menu');
+  });
+
+  it('clicking the mobile menu trigger opens the Sheet drawer with accessible title', async () => {
+    render(<MissionControlLayout />, { wrapper: LayoutProvider });
+    const trigger = screen.getByRole('button', { name: 'Open navigation menu' });
+
+    // Radix SheetTrigger uses pointer events — fire both as the real browser would.
+    fireEvent.pointerDown(trigger);
+    fireEvent.click(trigger);
+
+    // SheetTitle "Navigation menu" is sr-only but present in the DOM when open.
+    await waitFor(() => {
+      expect(screen.getByText('Navigation menu')).toBeInTheDocument();
+    });
+  });
+
+  it('the open Sheet has an accessible description about navigation', async () => {
+    render(<MissionControlLayout />, { wrapper: LayoutProvider });
+    const trigger = screen.getByRole('button', { name: 'Open navigation menu' });
+
+    fireEvent.pointerDown(trigger);
+    fireEvent.click(trigger);
+
+    await waitFor(() => {
+      expect(
+        screen.getByText(/Switch between dashboard sections/i)
+      ).toBeInTheDocument();
+    });
+  });
+
+  it('keyboard: focused trigger opens the mobile drawer; Escape closes it', async () => {
+    render(<MissionControlLayout />, { wrapper: LayoutProvider });
+
+    const trigger = screen.getByRole('button', { name: 'Open navigation menu' });
+    trigger.focus();
+    expect(trigger).toHaveFocus();
+
+    // Native <button> fires click on keyboard activation — simulate that
+    fireEvent.click(trigger);
+
+    const dialog = await screen.findByRole('dialog');
+    expect(dialog).toBeInTheDocument();
+    expect(within(dialog).getByText('Sidebar (Active: dashboard)')).toBeInTheDocument();
+    expect(within(dialog).getByTestId('dynamic-sidebar')).toHaveAttribute('data-force-expanded', 'true');
+
+    // Radix Sheet/Dialog handles Escape via keydown bubbled through the document
+    fireEvent.keyDown(dialog, { key: 'Escape', code: 'Escape' });
+
+    await waitFor(() => {
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    });
+  });
+
+  it('closes the mobile drawer after selecting a destination', async () => {
+    render(<MissionControlLayout />, { wrapper: LayoutProvider });
+    const trigger = screen.getByRole('button', { name: 'Open navigation menu' });
+
+    fireEvent.pointerDown(trigger);
+    fireEvent.click(trigger);
+
+    const dialog = await screen.findByRole('dialog');
+    fireEvent.click(within(dialog).getByRole('button', { name: /open tracks/i }));
+
+    await waitFor(() => {
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    });
+
+    expect(screen.getByTestId('tracks-mock')).toBeInTheDocument();
   });
 });

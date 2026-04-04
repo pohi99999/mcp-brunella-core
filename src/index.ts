@@ -47,10 +47,16 @@ async function main() {
     await startWebServer();
     console.error("[BOOT] DONE — startWebServer returned");
 
-    // ── Phase 2: MCP stdio (ONLY when running interactively) ──
+    // ── Phase 2: MCP stdio (interactive or explicitly forced for tests) ──
     // In web-only mode (no TTY), everything is handled by deferredInit in web.ts.
-    // This avoids double-loading heavy modules and event loop starvation.
-    if (process.stdin.isTTY) {
+    // An explicit override keeps production web-only behavior intact while
+    // still allowing child-process test harnesses to exercise stdio MCP.
+    const forceStdio = ["1", "true", "yes", "on"].includes(
+      (process.env.BRUNELLA_FORCE_STDIO ?? "").trim().toLowerCase(),
+    );
+    const shouldStartStdio = Boolean(process.stdin.isTTY) || forceStdio;
+
+    if (shouldStartStdio) {
       const { McpServer } =
         await import("@modelcontextprotocol/sdk/server/mcp.js");
       const { StdioServerTransport } =

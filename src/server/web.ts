@@ -305,7 +305,10 @@ async function deferredInit(
     const mod = await import("./McpProcessManager.js");
     mcpProcMgrRef = mod.mcpProcessManager;
     await mod.mcpProcessManager.loadConfig();
-    if (!process.stdin.isTTY) {
+    const forceStdio = ["1", "true", "yes", "on"].includes(
+      (process.env.BRUNELLA_FORCE_STDIO ?? "").trim().toLowerCase(),
+    );
+    if (!process.stdin.isTTY && !forceStdio) {
       mod.mcpProcessManager.markInternalServerRunning("brunella-core");
     }
     const configured = mod.mcpProcessManager.getServersStatus();

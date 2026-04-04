@@ -229,85 +229,100 @@ def ingest_batch(request: IngestionRequest) -> IngestionResponse:
         
         logger.info(f"Connecting to LanceDB: {db_path}")
         db = lancedb.connect(str(db_path))
-        
-        # Check if table exists
-        if request.overwrite and request.table_name in db.table_names():
-            logger.warning(f"Dropping existing table: {request.table_name}")
-            db.drop_table(request.table_name)
-        
-        # Process in batches
-        all_batch_data = []
-        records_processed = 0
-        records_failed = 0
-        
-        for i in range(0, len(records), request.batch_size):
-            batch = records[i:i + request.batch_size]
-            logger.info(f"Processing batch {i // request.batch_size + 1} ({len(batch)} records)")
-            
-            batch_data = []
-            
-            for record in batch:
+
+        try:
+            # Check if table exists
+            if request.overwrite and request.table_name in db.table_names():
+                logger.warning(f"Dropping existing table: {request.table_name}")
+                db.drop_table(request.table_name)
+
+            # Process in batches
+            all_batch_data = []
+            records_processed = 0
+            records_failed = 0
+
+            for i in range(0, len(records), request.batch_size):
+                batch = records[i:i + request.batch_size]
+                logger.info(f"Processing batch {i // request.batch_size + 1} ({len(batch)} records)")
+
+                batch_data = []
+
+                for record in batch:
+                    try:
+                        # Extract text field
+                        if request.text_field not in record:
+                            logger.warning(f"Text field '{request.text_field}' not found in record, skipping")
+                            records_failed += 1
+                            continue
+
+                        text = str(record[request.text_field])
+
+                        if not text.strip():
+                            logger.warning("Empty text field, skipping record")
+                            records_failed += 1
+                            continue
+
+                        # Generate embedding
+                        embedding = embedder.embed_single(text)
+
+                        # Build record
+                        lance_record = {
+                            "text": text,
+                            "vector": embedding,
+                            "timestamp": datetime.now().isoformat(),
+                        }
+
+                        # Add metadata fields
+                        for field in request.metadata_fields:
+                            if field in record:
+                                lance_record[field] = record[field]
+
+                        batch_data.append(lance_record)
+                        records_processed += 1
+
+                    except Exception as e:
+                        logger.error(f"Failed to process record: {e}")
+                        records_failed += 1
+
+                all_batch_data.extend(batch_data)
+
+            # Create/append to table
+            if all_batch_data:
+                logger.info(f"Writing {len(all_batch_data)} records to table '{request.table_name}'")
+
+                if request.table_name in db.table_names() and not request.overwrite:
+                    table = db.open_table(request.table_name)
+                    table.add(all_batch_data)
+                    # Note: LanceDB table objects don't require explicit close
+                else:
+                    db.create_table(request.table_name, all_batch_data)
+
+                logger.info(f"[OK] Ingestion complete: {records_processed} records")
+
+            duration = time.time() - start_time
+
+            return IngestionResponse(
+                success=True,
+                table_name=request.table_name,
+                records_processed=records_processed,
+                records_failed=records_failed,
+                db_path=str(db_path),
+                duration_seconds=duration
+            )
+
+        finally:
+            # Ensure database connection is properly closed
+            # This releases file locks on Windows, allowing pytest to clean up tmp_path
+            if hasattr(db, 'close'):
                 try:
-                    # Extract text field
-                    if request.text_field not in record:
-                        logger.warning(f"Text field '{request.text_field}' not found in record, skipping")
-                        records_failed += 1
-                        continue
-                    
-                    text = str(record[request.text_field])
-                    
-                    if not text.strip():
-                        logger.warning("Empty text field, skipping record")
-                        records_failed += 1
-                        continue
-                    
-                    # Generate embedding
-                    embedding = embedder.embed_single(text)
-                    
-                    # Build record
-                    lance_record = {
-                        "text": text,
-                        "vector": embedding,
-                        "timestamp": datetime.now().isoformat(),
-                    }
-                    
-                    # Add metadata fields
-                    for field in request.metadata_fields:
-                        if field in record:
-                            lance_record[field] = record[field]
-                    
-                    batch_data.append(lance_record)
-                    records_processed += 1
-                
+                    db.close()
                 except Exception as e:
-                    logger.error(f"Failed to process record: {e}")
-                    records_failed += 1
-            
-            all_batch_data.extend(batch_data)
-        
-        # Create/append to table
-        if all_batch_data:
-            logger.info(f"Writing {len(all_batch_data)} records to table '{request.table_name}'")
-            
-            if request.table_name in db.table_names() and not request.overwrite:
-                table = db.open_table(request.table_name)
-                table.add(all_batch_data)
-            else:
-                db.create_table(request.table_name, all_batch_data)
-            
-            logger.info(f"[OK] Ingestion complete: {records_processed} records")
-        
-        duration = time.time() - start_time
-        
-        return IngestionResponse(
-            success=True,
-            table_name=request.table_name,
-            records_processed=records_processed,
-            records_failed=records_failed,
-            db_path=str(db_path),
-            duration_seconds=duration
-        )
-    
+                    logger.debug(f"DB close warning: {e}")
+            # Force cleanup of db object to release file handles
+            del db
+            import gc
+            gc.collect()
+
     except Exception as e:
         logger.error(f"Batch ingestion failed: {e}")
         return IngestionResponse(
@@ -343,23 +358,35 @@ def query_lancedb(
     """
     if not HAS_LANCEDB:
         raise ImportError("LanceDB not installed")
-    
+
     # Connect to database
     db = lancedb.connect(db_path)
-    
-    if table_name not in db.table_names():
-        raise ValueError(f"Table '{table_name}' does not exist")
-    
-    table = db.open_table(table_name)
-    
-    # Generate query embedding
-    embedder = EmbeddingGenerator(embedding_model)
-    query_embedding = embedder.embed_single(query_text)
-    
-    # Search
-    results = table.search(query_embedding).limit(limit).to_pandas()
-    
-    return results.to_dict('records')
+
+    try:
+        if table_name not in db.table_names():
+            raise ValueError(f"Table '{table_name}' does not exist")
+
+        table = db.open_table(table_name)
+
+        # Generate query embedding
+        embedder = EmbeddingGenerator(embedding_model)
+        query_embedding = embedder.embed_single(query_text)
+
+        # Search
+        results = table.search(query_embedding).limit(limit).to_pandas()
+
+        return results.to_dict('records')
+
+    finally:
+        # Ensure database connection is properly closed
+        if hasattr(db, 'close'):
+            try:
+                db.close()
+            except Exception:
+                pass
+        del db
+        import gc
+        gc.collect()
 
 
 # ============================================================================
