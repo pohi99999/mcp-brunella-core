@@ -1,4 +1,5 @@
 import { logError } from './logger.js';
+import { getBasCloudflareAccountId, getBasCloudflareApiToken } from './cloudflareConfig.js';
 
 /**
  * Cloudflare Vectorize wrapper (with no-op fallback)
@@ -27,8 +28,8 @@ export class VectorizeClient {
 
   constructor() {
     this.baseUrl = 'https://api.cloudflare.com/client/v4';
-    this.accountId = process.env.CLOUDFLARE_ACCOUNT_ID || process.env.CF_ACCOUNT_ID;
-    this.apiToken = process.env.CF_AI_API_TOKEN || process.env.CLOUDFLARE_API_TOKEN;
+    this.accountId = getBasCloudflareAccountId();
+    this.apiToken = getBasCloudflareApiToken() || process.env.CF_AI_API_TOKEN;
     this.globalApiKey = process.env.CLOUDFLARE_GLOBAL_API_KEY || process.env.CF_GLOBAL_API_KEY;
     this.email = process.env.CLOUDFLARE_EMAIL || process.env.CF_EMAIL;
     this.indexName = process.env.CF_VECTORIZE_INDEX || 'brunella-agent-memory';

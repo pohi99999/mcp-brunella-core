@@ -13,6 +13,7 @@
  */
 
 import { logInfo, logError, logWarn } from "./logger.js";
+import { getBasCloudflareAccountId, getCloudflareApiToken } from "./cloudflareConfig.js";
 
 // ============================================================================
 // CONFIGURATION
@@ -20,9 +21,9 @@ import { logInfo, logError, logWarn } from "./logger.js";
 
 const AI_GATEWAY_ENABLED = process.env.AI_GATEWAY_ENABLED === "true";
 const CF_ACCOUNT_ID =
-  process.env.CF_ACCOUNT_ID || "dd107933ac970dac857f27cee7a7ff46";
+  getBasCloudflareAccountId() || process.env.CF_ACCOUNT_ID || "dd107933ac970dac857f27cee7a7ff46";
 const CF_GATEWAY_ID = process.env.CF_GATEWAY_ID || "brunella-gateway";
-const CF_API_TOKEN = process.env.CF_AI_API_TOKEN || process.env.CF_API_TOKEN || process.env.CF_TOKEN;
+const CF_API_TOKEN = getCloudflareApiToken() || process.env.CF_AI_API_TOKEN || process.env.CF_API_TOKEN || process.env.CF_TOKEN;
 const OLLAMA_BASE_URL = process.env.OLLAMA_BASE_URL || "http://127.0.0.1:11434";
 const OLLAMA_MODEL = process.env.OLLAMA_MODEL || "llama3.1:8b";
 const OLLAMA_EMBEDDING_TIMEOUT_MS = parseInt(process.env.OLLAMA_EMBEDDING_TIMEOUT_MS || process.env.EMBEDDING_TIMEOUT_MS || "15000", 10);

@@ -2,27 +2,70 @@ export function normalizeCloudflareBaseUrl(url: string): string {
   return url.replace(/\/+$/, '');
 }
 
-export function getCloudflareApiToken(): string | undefined {
-  const candidates = [
-    process.env.CLOUDFLARE_API_TOKEN,
-    process.env.CF_API_TOKEN,
-    process.env.CF_TOKEN,
-  ];
+type CloudflareScope = 'bas' | 'personal';
 
-  for (const candidate of candidates) {
-    if (typeof candidate === 'string' && candidate.trim().length > 0) {
-      return candidate.trim().replace(/^"|"$/g, '');
+function pickFirstEnv(...values: Array<string | undefined>): string | undefined {
+  for (const value of values) {
+    if (typeof value === 'string') {
+      const trimmed = value.trim().replace(/^"|"$/g, '');
+      if (trimmed.length > 0) {
+        return trimmed;
+      }
     }
   }
 
   return undefined;
 }
 
-export function getCeanApiKey(): string | undefined {
-  const value = process.env.CEAN_API_KEY;
-  return typeof value === 'string' && value.trim().length > 0
-    ? value.trim().replace(/^"|"$/g, '')
-    : undefined;
+export function getCloudflareAccountId(scope: CloudflareScope = 'bas'): string | undefined {
+  return scope === 'personal'
+    ? pickFirstEnv(
+      process.env.CF_PERSONAL_ACCOUNT_ID,
+      process.env.CLOUDFLARE_PERSONAL_ACCOUNT_ID,
+      process.env.CLOUDFLARE_ACCOUNT_ID,
+      process.env.CF_ACCOUNT_ID,
+      process.env.CF_BAS_ACCOUNT_ID,
+    )
+    : pickFirstEnv(
+      process.env.CF_BAS_ACCOUNT_ID,
+      process.env.CLOUDFLARE_ACCOUNT_ID,
+      process.env.CF_ACCOUNT_ID,
+      process.env.CF_PERSONAL_ACCOUNT_ID,
+    );
+}
+
+export function getCloudflareApiToken(scope: CloudflareScope = 'bas'): string | undefined {
+  return scope === 'personal'
+    ? pickFirstEnv(
+      process.env.CF_PERSONAL_API_TOKEN,
+      process.env.CLOUDFLARE_PERSONAL_API_TOKEN,
+      process.env.CLOUDFLARE_API_TOKEN,
+      process.env.CF_API_TOKEN,
+      process.env.CF_TOKEN,
+    )
+    : pickFirstEnv(
+      process.env.CF_BAS_API_TOKEN,
+      process.env.CLOUDFLARE_API_TOKEN,
+      process.env.CF_API_TOKEN,
+      process.env.CF_TOKEN,
+      process.env.CF_AI_API_TOKEN,
+    );
+}
+
+export function getBasCloudflareAccountId(): string | undefined {
+  return getCloudflareAccountId('bas');
+}
+
+export function getBasCloudflareApiToken(): string | undefined {
+  return getCloudflareApiToken('bas');
+}
+
+export function getPersonalCloudflareAccountId(): string | undefined {
+  return getCloudflareAccountId('personal');
+}
+
+export function getPersonalCloudflareApiToken(): string | undefined {
+  return getCloudflareApiToken('personal');
 }
 
 export function getCloudflareAuthHeaders(contentType = true): Record<string, string> {
@@ -32,7 +75,7 @@ export function getCloudflareAuthHeaders(contentType = true): Record<string, str
     headers['Content-Type'] = 'application/json';
   }
 
-  const apiToken = getCloudflareApiToken();
+  const apiToken = getBasCloudflareApiToken();
   const ceanApiKey = getCeanApiKey();
 
   if (apiToken) {
@@ -45,6 +88,13 @@ export function getCloudflareAuthHeaders(contentType = true): Record<string, str
   }
 
   return headers;
+}
+
+export function getCeanApiKey(): string | undefined {
+  const value = process.env.CEAN_API_KEY;
+  return typeof value === 'string' && value.trim().length > 0
+    ? value.trim().replace(/^"|"$/g, '')
+    : undefined;
 }
 
 export function getCloudflareOrchestratorUrl(): string {

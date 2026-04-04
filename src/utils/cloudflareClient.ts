@@ -3,6 +3,7 @@ import {
   createZeroPromptEdgeMirrorEnvelope,
   type ZeroPromptEdgeSummary,
 } from "../core/zeroPromptEdgeMirrorSummary.js";
+import { getBasCloudflareApiToken } from "./cloudflareConfig.js";
 
 export interface CloudflareTaskResponse {
   success: boolean;
@@ -27,7 +28,7 @@ export class CloudflareClient {
       process.env.CLOUDFLARE_D1_WORKER_URL ||
       process.env.CLOUDFLARE_WORKER_URL ||
       "https://cean-orchestrator.iam-dd1.workers.dev";
-    this.apiToken = process.env.CLOUDFLARE_API_TOKEN || process.env.CF_API_TOKEN;
+    this.apiToken = getBasCloudflareApiToken() || process.env.CF_API_TOKEN;
     this.ceanApiKey = process.env.CEAN_API_KEY;
   }
 

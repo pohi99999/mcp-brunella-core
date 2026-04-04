@@ -10,6 +10,7 @@
  */
 
 import { logInfo, logError } from './logger.js';
+import { getBasCloudflareAccountId, getBasCloudflareApiToken } from './cloudflareConfig.js';
 
 // ─── Common Types ────────────────────────────────────────────────────────────
 
@@ -154,17 +155,17 @@ export class CloudflareBrowserAPI {
     private baseUrl: string;
 
     constructor(apiToken?: string, accountId?: string) {
-        this.apiToken = apiToken || process.env.CF_API_TOKEN || process.env.CLOUDFLARE_API_TOKEN || '';
+        this.apiToken = apiToken || getBasCloudflareApiToken() || process.env.CF_API_TOKEN || '';
         this.globalApiKey = process.env.CF_GLOBAL_API_KEY || process.env.CLOUDFLARE_GLOBAL_API_KEY;
         this.email = process.env.CF_EMAIL || process.env.CLOUDFLARE_EMAIL;
-        this.accountId = accountId || process.env.CLOUDFLARE_ACCOUNT_ID || '';
+        this.accountId = accountId || getBasCloudflareAccountId() || '';
         this.baseUrl = `https://api.cloudflare.com/client/v4/accounts/${this.accountId}/browser-rendering`;
 
         if (!this.apiToken && (!this.globalApiKey || !this.email)) {
             throw new Error('Either CF_API_TOKEN or (CF_GLOBAL_API_KEY + CF_EMAIL) environment variables are required');
         }
         if (!this.accountId) {
-            throw new Error('CLOUDFLARE_ACCOUNT_ID environment variable is required');
+            throw new Error('CF_BAS_ACCOUNT_ID environment variable is required');
         }
 
         const authMethod = this.globalApiKey ? 'Global key' : 'Bearer token';

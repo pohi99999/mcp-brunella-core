@@ -4,6 +4,28 @@ User requested that the Copilot CLI automatically connect to a local Brunella MC
 
 <history>
 
+### 2026-04-04 — Cloudflare token separation track javításai
+
+**Feladat:** A `cloudflare_token_separation_20260403` track compile- és workflow-hibáinak javítása, majd a módosított Cloudflare token névhasználat dokumentálása és validálása.
+
+**Erintett fajlok:**
+- `src/server/routes/llm.ts`
+- `.github/workflows/bas-cloud-sync.yml`
+- `.github/workflows/bas-local-sync.yml`
+- `.github/workflows/deploy-edge-agents.yml`
+- `docs/cloudflare/TOKEN_SETUP.md`
+- `docs/cloudflare/README.md`
+
+**Statusz:** ✅ Befejezve
+
+**Megjegyzes:**
+- A Cloudflare LLM route-ban javitva lett a duplikalt `cfToken` deklaracio es a hianyzo `try/catch` blokk.
+- A `deploy-edge-agents` workflow-bol kikerult a `modified`-re epulo invalid context feltetel; a deploy/verify gating most egyszerubb push/main logikara epul.
+- A token setup dokumentacio megfeleloen kulonvalasztja a BAS es a szemelyes account tokeneket, valamint a `CF_AI_GATEWAY_ENABLED` nevet `AI_GATEWAY_ENABLED`-re igazitotta.
+- `npm run build` es a kapcsolodo `llm_client` / `llm_provider` Vitest file-ok sikeresen lefutottak.
+
+---
+
 ### 2026-04-04 — Workflow source analysis → active conductor track batches
 
 **Feladat:** A felhasználó azt kérte, hogy több workflow-forrásból teljes conductor track-csomag készüljön: a `.worktrees\n8n_workflow_tervek.md`, `.worktrees\cloudflare_böngészőrend.md`, `nova.zip` tartalmából, egy nagy KKV n8n workflow gyűjteményből, valamint egy külön "Napi Intelligens Briefing Agent" tervből.
@@ -38,6 +60,45 @@ User requested that the Copilot CLI automatically connect to a local Brunella MC
 - `npx tsx src/cli.ts conductor rescan` → **212 total / 27 active**, a frissen létrehozott trackek megjelentek az Active szekcióban.
 
 **Státusz:** ✅ Befejezve
+
+### 2026-04-04 — KKV n8n workflow trackek reszletesitese es conductor aktivalas
+
+**Feladat:** A user altal kuldott KKV n8n workflow csomag strukturalt beemelese a meglevo conductor trackekbe, ugy hogy a 7 domain-track kapjon reszletes `meta.json`, `plan.md` es `spec.md` tartalmat, majd a conductor allapot ujraszinkronizalodjon.
+
+**Erintett fajlok:**
+- `conductor/tracks/kkv_inventory_automation_20260404/meta.json`
+- `conductor/tracks/kkv_inventory_automation_20260404/plan.md`
+- `conductor/tracks/kkv_inventory_automation_20260404/spec.md`
+- `conductor/tracks/kkv_hr_automation_20260404/meta.json`
+- `conductor/tracks/kkv_hr_automation_20260404/plan.md`
+- `conductor/tracks/kkv_hr_automation_20260404/spec.md`
+- `conductor/tracks/kkv_crm_automation_20260404/meta.json`
+- `conductor/tracks/kkv_crm_automation_20260404/plan.md`
+- `conductor/tracks/kkv_crm_automation_20260404/spec.md`
+- `conductor/tracks/kkv_finance_automation_20260404/meta.json`
+- `conductor/tracks/kkv_finance_automation_20260404/plan.md`
+- `conductor/tracks/kkv_finance_automation_20260404/spec.md`
+- `conductor/tracks/kkv_marketing_automation_20260404/meta.json`
+- `conductor/tracks/kkv_marketing_automation_20260404/plan.md`
+- `conductor/tracks/kkv_marketing_automation_20260404/spec.md`
+- `conductor/tracks/kkv_customer_service_ai_20260404/meta.json`
+- `conductor/tracks/kkv_customer_service_ai_20260404/plan.md`
+- `conductor/tracks/kkv_customer_service_ai_20260404/spec.md`
+- `conductor/tracks/kkv_project_task_automation_20260404/meta.json`
+- `conductor/tracks/kkv_project_task_automation_20260404/plan.md`
+- `conductor/tracks/kkv_project_task_automation_20260404/spec.md`
+- `conductor/project_state.json`
+- `conductor/tracks.md`
+
+**Mit csinaltunk:**
+- A 7 meglevo KKV trackre 1:1 mappinggel raultek a user altal kuldott workflow-k: inventory, HR, CRM, finance, marketing, customer service es project/task.
+- A korabbi rovid vazlatok helyett minden track reszletes workflow-definiciot kapott triggerrel, node-lanccal, scope-pal, acceptance kriteriumokkal es rollout-megjegyzesekkel.
+- A `meta.json` fajlok geppel olvashato rollout es orchestration mezokkel bovultek: `workflowIds`, `workflowOrder`, `rolloutWave`, `rolloutOrder`, `triggerTypes`, `integrations`, `difficultySummary`, `modular`.
+- A dependency modell csak ott lett szukitve, ahol tenyleg indokolt: a marketing es az ugyfelszolgalati AI track a CRM trackre mutat, kulon umbrella track nem jott letre, mert a 7 domain-track mar teljesen lefedi a workflow packot.
+- A `npx tsx src/cli.ts conductor rescan` futtatasa frissitette a `conductor/project_state.json` es `conductor/tracks.md` allapotot.
+
+**Statusz:** ✅ Befejezve
+>>>>>>> 9c900db95 (fix(cloudflare): separate BAS and personal tokens)
 
 ---
 

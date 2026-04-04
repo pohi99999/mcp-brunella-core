@@ -15,6 +15,12 @@
 
 import fs from "node:fs";
 import path from "node:path";
+import {
+  getBasCloudflareAccountId,
+  getBasCloudflareApiToken,
+  getPersonalCloudflareAccountId,
+  getPersonalCloudflareApiToken,
+} from "../src/utils/cloudflareConfig.js";
 
 // ============================================================================
 // Types
@@ -119,54 +125,71 @@ async function checkPython(): Promise<CheckResult> {
 
 async function checkCloudflare(): Promise<CheckResult> {
   const start = Date.now();
-  const tokens = [
-    { name: "CF_API_TOKEN", val: process.env.CF_API_TOKEN },
-    { name: "CF_TOKEN", val: process.env.CF_TOKEN },
-    { name: "CLOUDFLARE_API_TOKEN", val: process.env.CLOUDFLARE_API_TOKEN },
-  ].filter((t) => !!t.val);
-
-  const accountId =
-    process.env.CF_ACCOUNT_ID || process.env.CLOUDFLARE_ACCOUNT_ID;
+  const basToken = getBasCloudflareApiToken();
+  const personalToken = getPersonalCloudflareApiToken();
+  const basAccountId = getBasCloudflareAccountId();
+  const personalAccountId = getPersonalCloudflareAccountId();
   const gatewayId = process.env.CF_GATEWAY_ID || "brunella-gateway";
 
   let aiStatus: "pass" | "fail" | "warn" = "warn";
-  let aiMessage = "Offline";
+  const tokenSummaries: string[] = [];
 
-  if (tokens.length > 0 && accountId) {
-    for (const tokenObj of tokens) {
-      try {
+  async function verifyToken(name: string, token: string | undefined, accountId?: string): Promise<void> {
+    if (!token) {
+      tokenSummaries.push(`${name}: hiányzik`);
+      return;
+    }
+
+    try {
+      const verifyResp = await fetch("https://api.cloudflare.com/client/v4/user/tokens/verify", {
+        method: "GET",
+        headers: { Authorization: `Bearer ${token}` },
+        signal: AbortSignal.timeout(5000),
+      });
+
+      if (!verifyResp.ok) {
+        tokenSummaries.push(`${name}: token HTTP ${verifyResp.status}`);
+        aiStatus = "warn";
+        return;
+      }
+
+      if (name === "BAS" && accountId) {
         const url = `https://gateway.ai.cloudflare.com/v1/${accountId}/${gatewayId}`;
         const resp = await fetch(url, {
           method: "GET",
-          headers: { Authorization: `Bearer ${tokenObj.val}` },
+          headers: { Authorization: `Bearer ${token}` },
           signal: AbortSignal.timeout(5000),
         });
 
-        // 200/404 = gateway exists, 400 = request reached CF (wrong format but token OK)
         if (resp.ok || resp.status === 404 || resp.status === 400) {
+          tokenSummaries.push(`${name}: token OK + AI Gateway OK`);
           aiStatus = "pass";
-          aiMessage = `AI Gateway OK (${tokenObj.name})`;
-          break;
+          return;
         }
-        aiMessage = `AI Gateway HTTP ${resp.status} (${tokenObj.name})`;
-        if (resp.status === 401 || resp.status === 403) {
-          aiStatus = "warn";
-          aiMessage = `AI Gateway auth issue (optional in local env): HTTP ${resp.status} (${tokenObj.name})`;
-        }
-      } catch (e) {
-        aiMessage = `AI Gateway: ${(e as Error).message}`;
-        aiStatus = "fail";
+
+        tokenSummaries.push(`${name}: token OK, AI Gateway HTTP ${resp.status}`);
+        aiStatus = resp.status === 401 || resp.status === 403 ? "warn" : "fail";
+        return;
       }
+
+      tokenSummaries.push(`${name}: token OK${accountId ? " + account present" : ""}`);
+      aiStatus = aiStatus === "fail" ? "fail" : "pass";
+    } catch (e) {
+      tokenSummaries.push(`${name}: ${(e as Error).message}`);
+      aiStatus = "fail";
     }
-  } else {
-    aiMessage = "AI Gateway: Hiányzó konfig";
   }
+
+  await verifyToken("BAS", basToken, basAccountId);
+  await verifyToken("Personal", personalToken, personalAccountId);
+
+  const aiMessage = tokenSummaries.length > 0 ? tokenSummaries.join("; ") : "AI Gateway: Hiányzó konfig";
 
   // R2 Check
   let r2Status: "pass" | "fail" | "warn" = "warn";
   let r2Message: string;
   const r2Url =
-    process.env.S3_API || `https://${accountId}.r2.cloudflarestorage.com`;
+    process.env.S3_API || `https://${basAccountId}.r2.cloudflarestorage.com`;
 
   if (accountId) {
     try {

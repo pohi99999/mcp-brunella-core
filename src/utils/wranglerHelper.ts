@@ -9,6 +9,7 @@ import { execFileSync } from 'child_process';
 import { existsSync } from 'fs';
 import path from 'path';
 import { logInfo, logError } from './logger.js';
+import { getBasCloudflareApiToken } from './cloudflareConfig.js';
 
 /**
  * Validates that a value is a safe Cloudflare resource identifier.
@@ -75,8 +76,10 @@ export class WranglerHelper {
    */
   async authenticate(apiToken: string): Promise<boolean> {
     try {
+      process.env.CF_BAS_API_TOKEN = apiToken;
       process.env.CLOUDFLARE_API_TOKEN = apiToken;
-      logInfo('WranglerHelper', 'Cloudflare API token set in environment');
+      process.env.CF_API_TOKEN = apiToken;
+      logInfo('WranglerHelper', 'Cloudflare BAS API token set in environment');
       return true;
     } catch (e: unknown) {
       const error = e instanceof Error ? e.message : String(e);
@@ -95,7 +98,12 @@ export class WranglerHelper {
       logInfo('WranglerHelper', `Initializing D1 database: ${safeName}`);
       const output = execFileSync('wrangler', ['d1', 'create', safeName], {
         encoding: 'utf-8',
-        env: { ...process.env, CLOUDFLARE_API_TOKEN: this.config.apiToken },
+        env: {
+          ...process.env,
+          CF_BAS_API_TOKEN: this.config.apiToken,
+          CLOUDFLARE_API_TOKEN: this.config.apiToken,
+          CF_API_TOKEN: this.config.apiToken,
+        },
       });
       logInfo('WranglerHelper', `D1 database created: ${safeName}`);
       return output;
@@ -126,7 +134,12 @@ export class WranglerHelper {
         ['d1', 'execute', safeId, `--file=${safePath}`],
         {
           encoding: 'utf-8',
-          env: { ...process.env, CLOUDFLARE_API_TOKEN: this.config.apiToken },
+          env: {
+            ...process.env,
+            CF_BAS_API_TOKEN: this.config.apiToken,
+            CLOUDFLARE_API_TOKEN: this.config.apiToken,
+            CF_API_TOKEN: this.config.apiToken,
+          },
         },
       );
 
@@ -154,7 +167,12 @@ export class WranglerHelper {
         ['d1', 'execute', safeId, '--command', query],
         {
           encoding: 'utf-8',
-          env: { ...process.env, CLOUDFLARE_API_TOKEN: this.config.apiToken },
+          env: {
+            ...process.env,
+            CF_BAS_API_TOKEN: this.config.apiToken,
+            CLOUDFLARE_API_TOKEN: this.config.apiToken,
+            CF_API_TOKEN: this.config.apiToken,
+          },
         },
       );
       return JSON.parse(output);

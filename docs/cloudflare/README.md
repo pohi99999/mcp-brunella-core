@@ -61,7 +61,7 @@ curl http://localhost:3000/api/health | python -m json.tool
 ### Token Verification
 ```bash
 curl -s "https://api.cloudflare.com/client/v4/user/tokens/verify" \
-  -H "Authorization: Bearer $CF_API_TOKEN" | python -m json.tool
+   -H "Authorization: Bearer $CF_BAS_API_TOKEN" | python -m json.tool
 ```
 
 ### Deploy Worker

@@ -7,7 +7,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
 // Mock environment first
 vi.stubEnv('CF_API_TOKEN', 'test-token-abc123');
-vi.stubEnv('CLOUDFLARE_ACCOUNT_ID', 'test-account-id-xyz');
+vi.stubEnv('CF_BAS_ACCOUNT_ID', 'test-account-id-xyz');
 
 // Mock logger to prevent side effects
 vi.mock('../src/utils/logger.js', () => ({
@@ -47,21 +47,27 @@ describe('CloudflareBrowserAPI', () => {
         it('should throw if API token is missing', () => {
             // Explicitly clear ALL auth-related environment variables
             const originals = {
+                CF_BAS_API_TOKEN: process.env.CF_BAS_API_TOKEN,
                 CF_API_TOKEN: process.env.CF_API_TOKEN,
                 CLOUDFLARE_API_TOKEN: process.env.CLOUDFLARE_API_TOKEN,
+                CF_TOKEN: process.env.CF_TOKEN,
                 CF_GLOBAL_API_KEY: process.env.CF_GLOBAL_API_KEY,
                 CLOUDFLARE_GLOBAL_API_KEY: process.env.CLOUDFLARE_GLOBAL_API_KEY,
                 CF_EMAIL: process.env.CF_EMAIL,
-                CLOUDFLARE_EMAIL: process.env.CLOUDFLARE_EMAIL
+                CLOUDFLARE_EMAIL: process.env.CLOUDFLARE_EMAIL,
+                CF_AI_API_TOKEN: process.env.CF_AI_API_TOKEN
             };
 
             // Delete all possible auth env vars
+            delete process.env.CF_BAS_API_TOKEN;
             delete process.env.CF_API_TOKEN;
             delete process.env.CLOUDFLARE_API_TOKEN;
+            delete process.env.CF_TOKEN;
             delete process.env.CF_GLOBAL_API_KEY;
             delete process.env.CLOUDFLARE_GLOBAL_API_KEY;
             delete process.env.CF_EMAIL;
             delete process.env.CLOUDFLARE_EMAIL;
+            delete process.env.CF_AI_API_TOKEN;
 
             try {
                 expect(() => new CloudflareBrowserAPI('', 'acc')).toThrow(
@@ -77,16 +83,28 @@ describe('CloudflareBrowserAPI', () => {
 
         it('should throw if account ID is missing', () => {
             // Save and clear account ID env var
-            const origAccId = process.env.CLOUDFLARE_ACCOUNT_ID;
+            const originals = {
+                CF_BAS_ACCOUNT_ID: process.env.CF_BAS_ACCOUNT_ID,
+                CLOUDFLARE_ACCOUNT_ID: process.env.CLOUDFLARE_ACCOUNT_ID,
+                CF_ACCOUNT_ID: process.env.CF_ACCOUNT_ID,
+                CF_PERSONAL_ACCOUNT_ID: process.env.CF_PERSONAL_ACCOUNT_ID,
+            };
+            const origAccId = process.env.CF_BAS_ACCOUNT_ID;
+            delete process.env.CF_BAS_ACCOUNT_ID;
             delete process.env.CLOUDFLARE_ACCOUNT_ID;
+            delete process.env.CF_ACCOUNT_ID;
+            delete process.env.CF_PERSONAL_ACCOUNT_ID;
 
             try {
                 expect(() => new CloudflareBrowserAPI('tok', '')).toThrow(
-                    'CLOUDFLARE_ACCOUNT_ID environment variable is required'
+                    'CF_BAS_ACCOUNT_ID environment variable is required'
                 );
             } finally {
                 // Restore original value
-                if (origAccId !== undefined) process.env.CLOUDFLARE_ACCOUNT_ID = origAccId;
+                if (originals.CF_BAS_ACCOUNT_ID !== undefined) process.env.CF_BAS_ACCOUNT_ID = originals.CF_BAS_ACCOUNT_ID;
+                if (originals.CLOUDFLARE_ACCOUNT_ID !== undefined) process.env.CLOUDFLARE_ACCOUNT_ID = originals.CLOUDFLARE_ACCOUNT_ID;
+                if (originals.CF_ACCOUNT_ID !== undefined) process.env.CF_ACCOUNT_ID = originals.CF_ACCOUNT_ID;
+                if (originals.CF_PERSONAL_ACCOUNT_ID !== undefined) process.env.CF_PERSONAL_ACCOUNT_ID = originals.CF_PERSONAL_ACCOUNT_ID;
             }
         });
     });
