@@ -9,7 +9,8 @@
 //   3. Test association — find test file for a source file (and vice versa)
 //   4. Type deps — files that export types used by the target
 
-import { logInfo } from '../utils/logger.js';
+import { logInfo, logDebug } from '../utils/logger.js';
+import { ensureError } from '../utils/ensureError.js';
 import fs from 'fs/promises';
 import path from 'path';
 
@@ -94,8 +95,9 @@ export class ContextBuilder {
             for (const imp of imports) {
                 candidates.push({ filePath: imp, reason: 'imported by target', priority: 1 });
             }
-        } catch {
-            // File might not exist yet or be unparseable
+        } catch (error: unknown) {
+            const err = ensureError(error);
+            logDebug('ContextBuilder', `Failed to parse imports for ${absoluteTarget}: ${err.message}`);
         }
 
         // Strategy 2: Directory siblings
@@ -105,8 +107,9 @@ export class ContextBuilder {
                 for (const sib of siblings) {
                     candidates.push({ filePath: sib, reason: 'sibling file', priority: 3 });
                 }
-            } catch {
-                // Directory might not exist
+            } catch (error: unknown) {
+                const err = ensureError(error);
+                logDebug('ContextBuilder', `Skipping sibling lookup for ${absoluteTarget}: ${err.message}`);
             }
         }
 
@@ -176,8 +179,9 @@ export class ContextBuilder {
                     size: content.length,
                 });
                 totalSize += content.length;
-            } catch {
-                // File doesn't exist or can't be read, skip
+            } catch (error: unknown) {
+                const err = ensureError(error);
+                logDebug('ContextBuilder', `Skipping unreadable file ${candidate.filePath}: ${err.message}`);
             }
         }
 
@@ -263,8 +267,9 @@ export class ContextBuilder {
                     await fs.access(candidate);
                     resolved.push(path.normalize(candidate));
                     break;
-                } catch {
-                    // Not found, try next
+                } catch (error: unknown) {
+                    const err = ensureError(error);
+                    logDebug('ContextBuilder', `Not found, trying next candidate ${candidate}: ${err.message}`);
                 }
             }
         }

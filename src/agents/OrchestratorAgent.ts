@@ -1,5 +1,6 @@
 import { IAgent, AgentResponse, ChainStep, ChainContext } from "./types.js";
-import { Logger, logInfo, logError, setAgentStatus } from "../utils/logger.js";
+import { Logger, logInfo, logError, logDebug, setAgentStatus } from "../utils/logger.js";
+import { ensureError } from "../utils/ensureError.js";
 import { agentManager } from "./AgentManager.js";
 import { getBifrostGateway } from "../core/bifrost_gateway.js";
 import { phoenixEventBus } from "../core/phoenixEventBus.js";
@@ -219,6 +220,27 @@ const ORCHESTRATOR_TOOLS = [
   }
 ];
 
+type OrchestratorToolCall = {
+  id: string;
+  type: 'function';
+  function: {
+    name: string;
+    arguments: string;
+  };
+};
+
+type OrchestratorAssistantMessage = {
+  role: 'assistant';
+  content: string;
+  tool_calls?: OrchestratorToolCall[];
+};
+
+type OrchestratorMessage =
+  | { role: 'system'; content: string }
+  | { role: 'user'; content: string }
+  | OrchestratorAssistantMessage
+  | { role: 'tool'; content: string; tool_call_id: string; name: string };
+
 export class OrchestratorAgent implements IAgent {
   name = "Orchestrator";
   role = "Planner & Dispatcher";
@@ -261,8 +283,9 @@ export class OrchestratorAgent implements IAgent {
             autoFix: true
           });
           this.logger.info(`Self-healing: Fix task queued for Developer (ID: ${id})`);
-        } catch (e) {
-          this.logger.error(`Self-healing: Failed to queue fix task: ${e}`);
+        } catch (error: unknown) {
+          const err = ensureError(error);
+          this.logger.error(`Self-healing: Failed to queue fix task: ${err.message}`);
         }
       }
     });
@@ -342,13 +365,13 @@ export class OrchestratorAgent implements IAgent {
           chainContext: chainContext as unknown as Record<string, unknown>,
           ...metadata,
         });
-      } catch (e: unknown) {
-        const msg = e instanceof Error ? e.message : String(e);
-        logError("OrchestratorAgent", `[Chain] Step ${i + 1} kivétel: ${msg}`);
+      } catch (error: unknown) {
+        const err = ensureError(error);
+        logError("OrchestratorAgent", `[Chain] Step ${i + 1} kivétel: ${err.message}`);
         setAgentStatus("OrchestratorAgent", "idle");
         return {
           status: "error",
-          error: `Chain leállt a(z) ${i + 1}. lépésnél (${step.agentName}): ${msg}`,
+          error: `Chain leállt a(z) ${i + 1}. lépésnél (${step.agentName}): ${err.message}`,
           data: { accumulated, failedStep: i },
         };
       }
@@ -488,7 +511,7 @@ ${agents}
 5. Ha minden szükséges eszközt meghívtál, vagy ha a feladat csak egy kérdés volt, adj egy végső, emberi választ.
 `;
 
-      const messages: unknown[] = [
+      const messages: OrchestratorMessage[] = [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: task }
       ];
@@ -506,7 +529,7 @@ ${agents}
           taskType: 'general',
           model: 'gpt-4.1',
           tools: ORCHESTRATOR_TOOLS,
-          messages: messages as any,
+          messages,
           userId: context?.userId as string | undefined,
         });
 
@@ -514,8 +537,9 @@ ${agents}
           this.logger.error(`LLM Gateway hiba: ${response.error}`);
           try {
             await machine.transition('errorOccurred');
-          } catch {
-            // ignore if transition not valid from current state
+          } catch (error: unknown) {
+            const err = ensureError(error);
+            logDebug('OrchestratorAgent', `Ignoring invalid transition after LLM failure: ${err.message}`);
           }
           return { status: 'error', error: 'Hiba az LLM kommunikációban.' };
         }
@@ -523,7 +547,7 @@ ${agents}
         const replyContent = response.content || '';
         const toolCalls = response.toolCalls;
 
-        const assistantMessage: any = { role: 'assistant', content: replyContent };
+        const assistantMessage: OrchestratorAssistantMessage = { role: 'assistant', content: replyContent };
         if (toolCalls && toolCalls.length > 0) {
           assistantMessage.tool_calls = toolCalls;
         }
@@ -591,14 +615,18 @@ ${agents}
       // Attempt to move machine to ERROR state for observability
       try {
         await machine.transition('errorOccurred');
-      } catch {
-        // ignore — machine might already be in an invalid state
+      } catch (error: unknown) {
+        const err = ensureError(error);
+        logDebug('OrchestratorAgent', `Ignoring invalid error transition: ${err.message}`);
       }
       return { status: 'error', error: msg };
     } finally {
       setAgentStatus('OrchestratorAgent', 'idle');
       this.currentMachine = null;
-      clearCheckpoints(taskId).catch(() => {/* ignore cleanup errors */});
+      clearCheckpoints(taskId).catch((error: unknown) => {
+        const err = ensureError(error);
+        logDebug('OrchestratorAgent', `Ignoring cleanup error: ${err.message}`);
+      });
     }
   }
 }

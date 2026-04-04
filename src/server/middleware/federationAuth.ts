@@ -8,6 +8,8 @@ import {
   verifyFederationRequest,
 } from '../../security/federationPeerAuth.js';
 import { authRemote } from './authRemote.js';
+import { ensureError } from '../../utils/ensureError.js';
+import { logDebug } from '../../utils/logger.js';
 
 interface FederationPeerRequestContext {
   peerId: string;
@@ -63,7 +65,9 @@ export function isHttpsEndpoint(endpoint: string): boolean {
   try {
     const parsed = new URL(endpoint);
     return parsed.protocol === 'https:';
-  } catch {
+  } catch (error: unknown) {
+    const err = ensureError(error);
+    logDebug('FederationAuth', `Invalid HTTPS endpoint ${endpoint}: ${err.message}`);
     return false;
   }
 }

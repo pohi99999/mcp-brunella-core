@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-04-04T19:15:28.890Z",
+  "lastUpdated": "2026-04-04T21:58:34.548Z",
   "tracks": [
     {
       "id": "apify_deep_scraping_agent_20260223",
@@ -140,41 +140,6 @@
         "cloudflare_full_optimization_20260325"
       ],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\cloudflare_dns_zone_reconciliation_20260325",
-      "_isArchived": false
-    },
-    {
-      "id": "cloudflare_workers_migration_20260226",
-      "name": "Cloudflare Workers Migration — 16 Agent Edge Orkesztrátor",
-      "status": "proposed",
-      "priority": "high",
-      "progress": 0,
-      "created": "2026-02-26",
-      "tags": [],
-      "dependencies": [
-        "Cloudflare account dd107933ac970dac857f27cee7a7ff46 (BAS_server) — MEGVAN",
-        "CLOUDFLARE_API_TOKEN — MEGVAN (.env-ben)",
-        "Browser Rendering API token — MEGVAN (siTRHomo1G_...)",
-        "wrangler CLI telepítve — ellenőrizd: npx wrangler --version",
-        "D1 binding: bas-metadata (1c4e7d00-7b09-4ddf-88b4-8df42e1123ab) — MEGVAN"
-      ],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\cloudflare_workers_migration_20260226",
-      "_isArchived": false
-    },
-    {
-      "id": "error_handling_standard_20260404",
-      "name": "Error Handling Standardization — catch (e: unknown) és Error wrapping",
-      "status": "active",
-      "priority": "high",
-      "progress": 0,
-      "updated": "2026-04-04",
-      "tags": [
-        "errors",
-        "standard",
-        "robustness",
-        "debugging"
-      ],
-      "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\error_handling_standard_20260404",
       "_isArchived": false
     },
     {
@@ -2087,6 +2052,42 @@
       "_isArchived": true
     },
     {
+      "id": "error_handling_implementation_20260404",
+      "name": "Error Handling Implementation - CLI catch cleanup és Error wrapping",
+      "status": "archived",
+      "priority": "high",
+      "progress": 100,
+      "updated": "2026-04-04",
+      "tags": [
+        "errors",
+        "standard",
+        "robustness",
+        "debugging"
+      ],
+      "dependencies": [
+        "error_handling_standard_20260404"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\error_handling_implementation_20260404",
+      "_isArchived": true
+    },
+    {
+      "id": "error_handling_standard_20260404",
+      "name": "Error Handling Standardization — catch (e: unknown) és Error wrapping",
+      "status": "archived",
+      "priority": "high",
+      "progress": 100,
+      "updated": "2026-04-04",
+      "tags": [
+        "errors",
+        "standard",
+        "robustness",
+        "debugging"
+      ],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\error_handling_standard_20260404",
+      "_isArchived": true
+    },
+    {
       "id": "federated_mcp_negotiation_20260329",
       "name": "Federated MCP — Negotiation Protocol",
       "status": "archived",
@@ -3822,9 +3823,9 @@
   ],
   "stats": {
     "total": 211,
-    "active": 22,
+    "active": 21,
     "completed": 15,
-    "archived": 167,
-    "proposed": 6
+    "archived": 169,
+    "proposed": 5
   }
 }

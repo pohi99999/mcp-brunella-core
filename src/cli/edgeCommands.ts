@@ -2,12 +2,14 @@ import { Command } from "commander";
 import chalk from "chalk";
 import ora from "ora";
 import { cloudflareClient } from "../utils/cloudflareClient.js";
+import { logDebug } from "../utils/logger.js";
+import { ensureError } from "../utils/ensureError.js";
+import { edgeCommand as edgeHuCommand } from "./commands/edge-hu.js";
 
 const API_BASE = process.env.BRUNELLA_API_URL || "http://localhost:3000";
 
 function getErrorMessage(error: unknown): string {
-  if (error instanceof Error) return error.message;
-  return String(error);
+  return ensureError(error).message;
 }
 
 export function registerEdgeCommands(program: Command) {
@@ -46,7 +48,8 @@ export function registerEdgeCommands(program: Command) {
         if (options.context) {
           try {
             context = JSON.parse(options.context);
-          } catch {
+          } catch (error: unknown) {
+            logDebug("EdgeCommands", `Invalid JSON context ignored: ${getErrorMessage(error)}`);
             console.warn(chalk.yellow("Invalid JSON context, ignoring."));
           }
         }
@@ -84,7 +87,8 @@ export function registerEdgeCommands(program: Command) {
           if (options.context) {
             try {
               context = JSON.parse(options.context);
-            } catch {
+            } catch (error: unknown) {
+              logDebug("EdgeCommands", `Invalid JSON context ignored: ${getErrorMessage(error)}`);
               console.warn(chalk.yellow("Invalid JSON context, ignoring."));
             }
           }

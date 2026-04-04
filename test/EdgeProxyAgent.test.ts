@@ -17,6 +17,7 @@ vi.mock('../src/utils/globalDb.js', () => ({
 vi.mock('../src/utils/logger.js', () => ({
   logInfo: vi.fn(),
   logError: vi.fn(),
+  logDebug: vi.fn(),
   setAgentStatus: vi.fn()
 }));
 
