@@ -700,6 +700,12 @@ export function getCuratedGoldenSample(sampleId: string): CuratedGoldenSample | 
 export function captureToolRunCandidates(limit = 50): CuratedGoldenSample[] {
   ensureCuratedTable();
   const db = getGlobalDb();
+  const hasToolRunsTable = Boolean(
+    db.prepare("SELECT name FROM sqlite_master WHERE type = 'table' AND name = ?").get('tool_runs')
+  );
+  if (!hasToolRunsTable) {
+    return [];
+  }
   const rows = db.prepare(
     'SELECT * FROM tool_runs WHERE success = 1 ORDER BY timestamp DESC LIMIT ?'
   ).all(limit) as Array<Record<string, unknown>>;

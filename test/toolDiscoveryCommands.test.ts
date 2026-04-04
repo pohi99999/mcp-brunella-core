@@ -1,7 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { Command } from 'commander';
 import { registerToolDiscoveryCommands } from '../src/cli/toolDiscoveryCommands.js';
-import * as prebuiltTools from '../src/utils/prebuiltTools.js';
 import * as logger from '../src/utils/logger.js';
 
 describe('Tool Discovery CLI Commands', () => {
@@ -25,6 +24,9 @@ describe('Tool Discovery CLI Commands', () => {
     registerToolDiscoveryCommands(program);
 
     vi.spyOn(globalThis, 'fetch').mockResolvedValue({
+      ok: true,
+      status: 200,
+      statusText: 'OK',
       json: () =>
         Promise.resolve({
           tools: [
@@ -37,7 +39,6 @@ describe('Tool Discovery CLI Commands', () => {
           ],
         }),
     } as Response);
-    vi.spyOn(prebuiltTools, 'getPrebuiltToolCatalog').mockReturnValue([]);
     const stdoutSpy = vi.spyOn(process.stdout, 'write').mockReturnValue(true);
 
     await program.parseAsync(['node', 'test', 'tool-discovery', 'list']);
@@ -51,27 +52,20 @@ describe('Tool Discovery CLI Commands', () => {
     expect(output).toContain('Összesen: 1 tool');
   });
 
-  it('should fall back to local tools and log the error when registry fetch fails', async () => {
+  it('should render registry fetch errors to stderr and log the error', async () => {
     const program = new Command();
     registerToolDiscoveryCommands(program);
 
     vi.spyOn(globalThis, 'fetch').mockRejectedValue(new Error('Registry unavailable'));
-    vi.spyOn(prebuiltTools, 'getPrebuiltToolCatalog').mockReturnValue([
-      {
-        name: 'fallback-tool',
-        description: 'Helyi fallback',
-      },
-    ]);
     const logErrorSpy = vi.spyOn(logger, 'logError').mockImplementation(() => {});
-    const stdoutSpy = vi.spyOn(process.stdout, 'write').mockReturnValue(true);
+    const stderrSpy = vi.spyOn(process.stderr, 'write').mockReturnValue(true);
 
     await program.parseAsync(['node', 'test', 'tool-discovery', 'list']);
 
     expect(logErrorSpy).toHaveBeenCalledWith('ToolsCLI', expect.stringContaining('Registry unavailable'));
-    const output = stdoutSpy.mock.calls.map(([chunk]) => String(chunk)).join('');
-    expect(output).toContain('MCP Tool Registry (local fallback)');
-    expect(output).toContain('fallback-tool');
-    expect(output).toContain('Összesen: 1 tool');
+    const output = stderrSpy.mock.calls.map(([chunk]) => String(chunk)).join('');
+    expect(output).toContain('Hiba: Registry unavailable');
+    expect(output).toContain('A tool registry jelenleg csak élő szerverválaszból tekinthető hitelesnek.');
   });
 
   it('should render chain errors to stderr', async () => {
@@ -79,6 +73,9 @@ describe('Tool Discovery CLI Commands', () => {
     registerToolDiscoveryCommands(program);
 
     vi.spyOn(globalThis, 'fetch').mockResolvedValue({
+      ok: true,
+      status: 200,
+      statusText: 'OK',
       json: () =>
         Promise.resolve({
           success: false,
