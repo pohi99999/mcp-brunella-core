@@ -128,7 +128,7 @@
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
     "@types/node": "^22.13.4",
-    "apache-arrow": "^21.1.0",
+    "apache-arrow": "18.1.0",
     "apify-client": "^2.22.3",
     "axios": "^1.7.9",
     "better-sqlite3": "^12.8.0",
@@ -187,7 +187,7 @@
     "zustand": "^5.0.11"
   },
   "devDependencies": {
-    "@eslint/js": "^10.0.1",
+    "@eslint/js": "^9.21.0",
     "@playwright/test": "^1.50.1",
     "@tailwindcss/vite": "^4.2.1",
     "@tauri-apps/cli": "^1.6.0",
