@@ -1,0 +1,15 @@
+{
+  "id": "kkv_hr_automation_20260404",
+  "name": "KKV HR es dolgozoi adminisztracio automatizalas",
+  "title": "KKV HR es dolgozoi adminisztracio automatizalas",
+  "status": "active",
+  "priority": "high",
+  "created": "2026-04-04",
+  "updated": "2026-04-04",
+  "assignee": "GitHub Copilot",
+  "progress": 0,
+  "tags": ["kkv", "hr", "onboarding", "leave", "timesheet", "n8n"],
+  "dependencies": [],
+  "sourceDocument": "User-provided KKV n8n workflow pack",
+  "phase": 1
+}

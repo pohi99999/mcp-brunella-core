@@ -1,0 +1,15 @@
+{
+  "id": "cloudflare_edge_browser_orchestration_20260404",
+  "name": "Cloudflare edge browser orchestration es Robotkez integracio",
+  "title": "Cloudflare edge browser orchestration es Robotkez integracio",
+  "status": "active",
+  "priority": "high",
+  "created": "2026-04-04",
+  "updated": "2026-04-04",
+  "assignee": "GitHub Copilot",
+  "progress": 0,
+  "tags": ["cloudflare", "browser-rendering", "playwright", "robotkez", "cdp", "n8n"],
+  "dependencies": ["cloudflare_workers_migration_20260226"],
+  "sourceDocument": ".worktrees\\cloudflare_bongeszorend.md",
+  "phase": 1
+}

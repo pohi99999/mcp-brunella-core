@@ -1,0 +1,15 @@
+{
+  "id": "nova_multiagent_gatekeeper_20260404",
+  "name": "Nova multi-agent gatekeeper architektura",
+  "title": "Nova multi-agent gatekeeper architektura",
+  "status": "active",
+  "priority": "high",
+  "created": "2026-04-04",
+  "updated": "2026-04-04",
+  "assignee": "GitHub Copilot",
+  "progress": 0,
+  "tags": ["nova", "multi-agent", "gatekeeper", "routing", "shared-memory", "n8n"],
+  "dependencies": ["nova_knowledge_workflows_20260404"],
+  "sourceDocument": ".worktrees\\nova.zip",
+  "phase": 1
+}

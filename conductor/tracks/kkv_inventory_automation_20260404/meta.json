@@ -1,0 +1,15 @@
+{
+  "id": "kkv_inventory_automation_20260404",
+  "name": "KKV keszlet es leltar automatizalas",
+  "title": "KKV keszlet es leltar automatizalas",
+  "status": "active",
+  "priority": "high",
+  "created": "2026-04-04",
+  "updated": "2026-04-04",
+  "assignee": "GitHub Copilot",
+  "progress": 0,
+  "tags": ["kkv", "inventory", "stock", "alerts", "n8n", "supabase"],
+  "dependencies": [],
+  "sourceDocument": "User-provided KKV n8n workflow pack",
+  "phase": 1
+}

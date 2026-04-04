@@ -1,0 +1,15 @@
+{
+  "id": "kkv_customer_service_ai_20260404",
+  "name": "KKV ugyfelszolgalati AI es ticketkezeles",
+  "title": "KKV ugyfelszolgalati AI es ticketkezeles",
+  "status": "active",
+  "priority": "high",
+  "created": "2026-04-04",
+  "updated": "2026-04-04",
+  "assignee": "GitHub Copilot",
+  "progress": 0,
+  "tags": ["kkv", "customer-service", "ai", "tickets", "email", "faq"],
+  "dependencies": [],
+  "sourceDocument": "User-provided KKV n8n workflow pack",
+  "phase": 1
+}

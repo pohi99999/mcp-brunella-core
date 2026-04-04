@@ -1,0 +1,15 @@
+{
+  "id": "kkv_finance_automation_20260404",
+  "name": "KKV penzugyi emlekezteto es jovahagyasi automatizalas",
+  "title": "KKV penzugyi emlekezteto es jovahagyasi automatizalas",
+  "status": "active",
+  "priority": "high",
+  "created": "2026-04-04",
+  "updated": "2026-04-04",
+  "assignee": "GitHub Copilot",
+  "progress": 0,
+  "tags": ["kkv", "finance", "invoice", "approval", "costs", "n8n"],
+  "dependencies": [],
+  "sourceDocument": "User-provided KKV n8n workflow pack",
+  "phase": 1
+}
