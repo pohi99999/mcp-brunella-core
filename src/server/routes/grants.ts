@@ -2,6 +2,7 @@ import express from 'express';
 import fs from 'fs/promises';
 import path from 'path';
 import { logInfo, logError } from '../../utils/logger.js';
+import { ensureError } from '../../utils/ensureError.js';
 
 const router = express.Router();
 const GRANTS_PATH = path.join(process.cwd(), 'config', 'grants_2026.json');
@@ -27,8 +28,9 @@ router.post('/advisor', async (req, res) => {
         };
 
         res.json(response);
-    } catch (err: any) {
-        logError("GrantsRouter", `Advisor error: ${err.message}`);
+    } catch (error: unknown) {
+        const normalized = ensureError(error);
+        logError("GrantsRouter", "Advisor error", normalized);
         res.status(500).json({ error: 'Failed to process grant inquiry.' });
     }
 });

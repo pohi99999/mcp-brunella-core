@@ -1,5 +1,5 @@
-const assert = require('assert');
-const { normalizeLead } = require('../src/transform.js');
+import assert from 'node:assert/strict';
+import { normalizeLead } from '../src/transform.js';
 
 function runTests() {
   // Basic normalization
@@ -27,4 +27,4 @@ function runTests() {
   console.log('All transform tests passed.');
 }
 
-if (require.main === module) runTests();
+runTests();

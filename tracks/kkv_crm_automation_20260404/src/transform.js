@@ -4,7 +4,7 @@
  * Normalizes incoming CRM lead payloads into a canonical shape used by the pipeline.
  * This is intentionally small and dependency-free so it can be unit-tested in CI easily.
  */
-function normalizeLead(raw) {
+export function normalizeLead(raw) {
   if (!raw || typeof raw !== 'object') return null;
 
   const payload = raw.payload || raw;
@@ -25,4 +25,6 @@ function normalizeLead(raw) {
   };
 }
 
-module.exports = { normalizeLead };
+// Named export is ESM; keep compatibility for CommonJS consumers if needed by also
+// providing a default namespace when imported via interop.
+export default { normalizeLead };

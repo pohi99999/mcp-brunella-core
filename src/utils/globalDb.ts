@@ -1,10 +1,17 @@
 import Database from 'better-sqlite3';
 import path from 'path';
 import { logInfo, logError } from './logger.js';
+import { ensureError } from './ensureError.js';
 import { D1Adapter, createD1Adapter } from './d1Adapter.js';
 
 let globalDb: Database.Database | null = null;
 let d1Adapter: D1Adapter | null = null;
+
+function reportDbError(operation: string, error: unknown): Error {
+  const normalized = ensureError(error);
+  logError('GlobalDb', `${operation}: ${normalized.message}`, normalized);
+  return normalized;
+}
 
 /**
  * Initialize and get the global database instance (Local SQLite)
@@ -24,9 +31,8 @@ export function getGlobalDb(): Database.Database {
     initSchema();
     
     return globalDb;
-  } catch (error) {
-    logError('GlobalDb', `Failed to open database: ${error}`);
-    throw error;
+  } catch (error: unknown) {
+    throw reportDbError('Failed to open database', error);
   }
 }
 
@@ -227,8 +233,8 @@ function initSchema(): void {
         globalDb.exec("ALTER TABLE scheduled_tasks ADD COLUMN metadata TEXT DEFAULT '{}'");
         logInfo('GlobalDb', 'Migration applied: added scheduled_tasks.metadata column');
       }
-    } catch (migrationError) {
-      logError('GlobalDb', `scheduled_tasks metadata migration failed: ${migrationError}`);
+    } catch (migrationError: unknown) {
+      reportDbError('scheduled_tasks metadata migration failed', migrationError);
     }
 
     // Create default "Brunella Agents" fleet if it doesn't exist
@@ -250,8 +256,8 @@ function initSchema(): void {
       );
       logInfo('GlobalDb', 'Default Brunella Agents fleet created');
     }
-  } catch (error) {
-    logError('GlobalDb', `Schema initialization failed: ${error}`);
+  } catch (error: unknown) {
+    reportDbError('Schema initialization failed', error);
   }
 }
 
@@ -317,8 +323,8 @@ export function recordLlmCall(record: LlmCallRecord): void {
       record.userId ?? null,
       record.costUsd ?? 0,
     );
-  } catch (e) {
-    logError('GlobalDb', `Failed to record LLM call: ${e}`);
+  } catch (error: unknown) {
+    reportDbError('Failed to record LLM call', error);
   }
 }
 
@@ -369,8 +375,8 @@ export function queryLlmCalls(query: LlmCallQuery = {}): LlmCallRow[] {
 
     return db.prepare(`SELECT * FROM llm_calls ${where} ORDER BY timestamp DESC LIMIT ? OFFSET ?`)
       .all(...params, limit, offset) as LlmCallRow[];
-  } catch (e) {
-    logError('GlobalDb', `Failed to query LLM calls: ${e}`);
+  } catch (error: unknown) {
+    reportDbError('Failed to query LLM calls', error);
     return [];
   }
 }
@@ -430,8 +436,8 @@ export function getLlmCallStats(since?: string): LlmCallStats {
       byModel,
       recentErrors,
     };
-  } catch (e) {
-    logError('GlobalDb', `Failed to get LLM call stats: ${e}`);
+  } catch (error: unknown) {
+    reportDbError('Failed to get LLM call stats', error);
     return {
       totalCalls: 0, successRate: 100, avgDurationMs: 0, totalTokens: 0,
       totalCostUsd: 0, byProvider: [], byModel: [], recentErrors: [],
@@ -493,8 +499,8 @@ export function recordToolRun(run: ToolRunRecord): void {
       run.user_id ?? null,
       run.quality_score ?? 0.5,
     );
-  } catch (e) {
-    logError('GlobalDb', `Failed to record tool run: ${e}`);
+  } catch (error: unknown) {
+    reportDbError('Failed to record tool run', error);
   }
 }
 
@@ -523,8 +529,8 @@ export function queryToolRuns(query: ToolRunQuery = {}): ToolRunRow[] {
 
     return db.prepare(`SELECT * FROM tool_runs ${where} ORDER BY timestamp DESC LIMIT ? OFFSET ?`)
       .all(...params, limit, offset) as ToolRunRow[];
-  } catch (e) {
-    logError('GlobalDb', `Failed to query tool runs: ${e}`);
+  } catch (error: unknown) {
+    reportDbError('Failed to query tool runs', error);
     return [];
   }
 }
@@ -555,8 +561,8 @@ export function getToolRunStats(): ToolRunStats {
       avgDurationMs: Math.round(totals?.avg_duration ?? 0),
       byTool,
     };
-  } catch (e) {
-    logError('GlobalDb', `Failed to get tool run stats: ${e}`);
+  } catch (error: unknown) {
+    reportDbError('Failed to get tool run stats', error);
     return { totalRuns: 0, successRate: 100, avgDurationMs: 0, byTool: [] };
   }
 }
@@ -652,8 +658,8 @@ export function queryRuntimeThresholdRolloutJournalSummaries(opts: {
       canApply: Boolean(r.can_apply),
       applyReadonlyReason: r.apply_readonly_reason as string | null,
     }));
-  } catch (e) {
-    logError('GlobalDb', `Failed to query rollout journal: ${e instanceof Error ? e.message : String(e)}`);
+  } catch (error: unknown) {
+    reportDbError('Failed to query rollout journal', error);
     return [];
   }
 }
@@ -789,8 +795,8 @@ export function getLatestRuntimeThresholdRolloutJournalSummary(): RuntimeThresho
       canApply: Boolean(row.can_apply),
       applyReadOnlyReason: row.apply_readonly_reason as string | null,
     };
-  } catch (e) {
-    logError('GlobalDb', `Failed to get latest rollout journal: ${e instanceof Error ? e.message : String(e)}`);
+  } catch (error: unknown) {
+    reportDbError('Failed to get latest rollout journal', error);
     return null;
   }
 }

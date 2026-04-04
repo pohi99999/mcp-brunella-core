@@ -18,6 +18,7 @@ import {
   logError,
   logWarn,
 } from "../utils/logger.js";
+import { ensureError } from "../utils/ensureError.js";
 import {
   corsWhitelist,
   getCorsOrigins,
@@ -36,7 +37,8 @@ const PACKAGE_VERSION = (() => {
       readFileSync(path.resolve(process.cwd(), "package.json"), "utf-8"),
     );
     return typeof pkg.version === "string" ? pkg.version : "0.0.0";
-  } catch {
+  } catch (error: unknown) {
+    logWarn("Server", `Unable to read package.json version: ${ensureError(error).message}`);
     return "0.0.0";
   }
 })();
@@ -100,7 +102,14 @@ const PID_FILE = path.join(process.cwd(), ".brunella.pid");
 /** Write PID file; call once on server start */
 function acquirePidLock(): void {
   if (existsSync(PID_FILE)) {
-    const raw = (() => { try { return readFileSync(PID_FILE, "utf-8").trim(); } catch { return ""; } })();
+    const raw = (() => {
+      try {
+        return readFileSync(PID_FILE, "utf-8").trim();
+      } catch (error: unknown) {
+        logWarn("Server", `PID lockfile read failed: ${ensureError(error).message}`);
+        return "";
+      }
+    })();
     const oldPid = parseInt(raw, 10);
     if (!isNaN(oldPid)) {
       // PM2 restart loop protection: if the lock already points to the current
@@ -112,16 +121,26 @@ function acquirePidLock(): void {
             `Brunella mar fut! (PID ${oldPid}) — az uj folyamat KILEP, hogy megelozze a duplikaciót.\n` +
             `Ha le van allva, torold: del .brunella.pid`);
           process.exit(1);
-        } catch {
-          // Stale lockfile from a previous crash
-          logInfo("Server", `Elavult PID-fajl torölve (PID ${oldPid} mar nem fut)`);
+        } catch (error: unknown) {
+          const killError = error as { code?: string };
+          if (killError.code === "ESRCH") {
+            logInfo("Server", `Elavult PID-fajl torölve (PID ${oldPid} mar nem fut)`);
+          } else {
+            logWarn("Server", `PID probe failed for ${oldPid}: ${ensureError(error).message}`);
+          }
         }
       }
     }
   }
   writeFileSync(PID_FILE, String(process.pid), "utf-8");
   // Remove on any form of exit
-  process.once("exit", () => { try { unlinkSync(PID_FILE); } catch { /* ignore */ } });
+  process.once("exit", () => {
+    try {
+      unlinkSync(PID_FILE);
+    } catch (error: unknown) {
+      console.warn(`[${new Date().toISOString()}] [WARN]`, `Failed to remove PID file on exit: ${ensureError(error).message}`);
+    }
+  });
 }
 
 export async function startWebServer() {
