@@ -1275,3 +1275,10 @@ pm run test:dashboard → 200 passed | 0 failed | 20 test file ✅**
 - 	est/dashboard/components/ServiceControlWidget.test.tsx (ÚJ, 13 teszt)
 - 	est/dashboard/components/BookkeepingWidget.test.tsx (+4 error teszt)
 - .ai/copilot.md (munkamenet napló)
+
+### 2026-04-04 18:27 - Apify deep scraping track lezárás
+
+**Feladat:** Az `apify_deep_scraping_agent_20260223` track lezárása, az ApifyScrapingAgent unit tesztjeinek mock ApifyClient alapú megerősítése, a kapcsolódó docs frissítése és a conductor állapot 100%-ra húzása.
+**Érintett fájlok:** `test/apifyScrapingAgent.test.ts`, `docs/agents/ApifyScrapingAgent.md`, `conductor/tracks/apify_deep_scraping_agent_20260223/meta.json`, `conductor/tracks/apify_deep_scraping_agent_20260223/plan.md`, `conductor/tracks.md`, `conductor/project_state.json`
+**Státusz:** ✅ Befejezve
+**Megjegyzés:** Az Apify feed már a tech harvesterben át van vezetve; a trackhez nem kellett új follow-up track. A vezető meta most completed/100, a track summary frissítve.

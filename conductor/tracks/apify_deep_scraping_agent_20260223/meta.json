@@ -2,12 +2,13 @@
   "trackName": "apify_deep_scraping_agent_20260223",
   "type": "Agent Development",
   "priority": "LOW",
-  "status": "active",
-  "progress": 60,
+  "status": "completed",
+  "progress": 100,
   "goal": "Professzionális web scraping és adatkinyerés agent: ApifyScrapingAgent, amely a meglévő browser_worker.py Playwright scrapert kiegészíti strukturált, multi-target scraping képességekkel. Célok: Google keresési eredmények, social media profilok, e-commerce adatok, LinkedIn leads. A fejlesztes.md dokumentumban 'Research & Intelligence Agent (apify-agent-skills)' névvel szerepel.",
   "assignee": "Claude (Phase 1-2 Complete)",
   "createdAt": "2026-02-23T08:00:00Z",
-  "updatedAt": "2026-02-24T00:44:00Z",
+  "updatedAt": "2026-04-04T18:24:00Z",
+  "completedAt": "2026-04-04T18:24:00Z",
   "phases": [
     {
       "name": "Phase 1: Apify SDK integráció",
@@ -28,18 +29,18 @@
         "[x] googleSearch(query, limit) → { title, url, snippet }[]",
         "[x] linkedinLeads(company, limit) → { name, title, company }[]",
         "[x] ecommerceProducts(url, selectors) → { title, price, url }[]",
-        "[ ] trendData(topic, source) → { trend, volume, related }[]"
+        "[x] trendData(topic, source) → { trend, volume, related }[]"
       ]
     },
     {
       "name": "Phase 3: Tech-Harvester integráció",
-      "status": "pending",
+      "status": "completed",
       "description": "Meglévő tech-harvester pipeline bővítése Apify forrásokkal",
       "tasks": [
-        "[ ] myai/config/sources.json: Apify actor-ok mint adatforrások",
-        "[ ] harvest_pipeline.py: ApifyScrapingAgent hívás Python-ból HTTP-n",
-        "[ ] LanceDB + Golden Dataset: scraped data indexelése",
-        "[ ] test/apifyScrapingAgent.test.ts (mock Apify client)"
+        "[x] myai/config/sources.json: Apify actor-ok mint adatforrások",
+        "[x] harvest_pipeline.py: ApifyScrapingAgent hívás Python-ból HTTP-n",
+        "[x] LanceDB + Golden Dataset: scraped data indexelése",
+        "[x] test/apifyScrapingAgent.test.ts (mock Apify client)"
       ]
     }
   ],

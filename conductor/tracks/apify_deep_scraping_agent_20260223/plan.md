@@ -7,19 +7,19 @@
 
 ## Phase 1: Apify SDK + alapstruktúra
 
-* [ ] **Task 1.1** — `npm install apify-client`
+* [x] **Task 1.1** — `npm install apify-client`
 
-* [ ] **Task 1.2** — `.env.example` bővítése:
+* [x] **Task 1.2** — `.env.example` bővítése:
   ```
   # === Apify (Professional Web Scraping) ===
   APIFY_API_TOKEN=your-apify-token-here
   ```
 
-* [ ] **Task 1.3** — `src/agents/ApifyScrapingAgent.ts` alap struktúra (IAgent)
+* [x] **Task 1.3** — `src/agents/ApifyScrapingAgent.ts` alap struktúra (IAgent)
   - `ApifyClient` inicializálás (token env-ből)
   - Ha nincs token → warning + graceful skip (ne crashelje a rendszert)
 
-* [ ] **Task 1.4** — `runActor(actorId, input, timeoutMs = 60000): Promise<unknown[]>`
+* [x] **Task 1.4** — `runActor(actorId, input, timeoutMs = 60000): Promise<unknown[]>`
   - Apify run elindítása
   - Polling loop (max timeoutMs) amíg a run kész
   - Dataset items visszaadása
@@ -28,16 +28,16 @@
 
 ## Phase 2: Specializált scraper funkciók
 
-* [ ] **Task 2.1** — `googleSearch(query, limit)` → `SearchResult[]`
+* [x] **Task 2.1** — `googleSearch(query, limit)` → `SearchResult[]`
 
-* [ ] **Task 2.2** — `linkedinLeads(searchUrl, limit)` → `LeadResult[]`
+* [x] **Task 2.2** — `linkedinLeads(searchUrl, limit)` → `LeadResult[]`
   - Megjegyzés: LinkedIn scraping Apify cookie-t igényel (dokumentáld a README-ben)
 
-* [ ] **Task 2.3** — `ecommerceProducts(startUrl, limit)` → `ProductResult[]`
+* [x] **Task 2.3** — `ecommerceProducts(startUrl, limit)` → `ProductResult[]`
 
-* [ ] **Task 2.4** — `trendData(topic, source)` → `TrendResult[]`
+* [x] **Task 2.4** — `trendData(topic, source)` → `TrendResult[]`
 
-* [ ] **Task 2.5** — `execute(task, context)`:
+* [x] **Task 2.5** — `execute(task, context)`:
   - task string alapján automatikus képesség-választás (regex: "google", "linkedin", "amazon", stb.)
   - context: `{ query?, url?, limit?, capability? }`
 
@@ -45,7 +45,7 @@
 
 ## Phase 3: Tech-Harvester integráció
 
-* [ ] **Task 3.1** — `myai/config/sources.json` bővítése Apify forrásokkal:
+* [x] **Task 3.1** — `myai/config/sources.json` bővítése Apify forrásokkal:
   ```json
   {
     "source": "apify_google",
@@ -56,7 +56,7 @@
   }
   ```
 
-* [ ] **Task 3.2** — `myai/tools/harvest_pipeline.py` bővítése:
+* [x] **Task 3.2** — `myai/tools/harvest_pipeline.py` bővítése:
   - Apify típusú forrás esetén: HTTP POST `/api/agents/ApifyScraping/execute`
   - Eredmény → LanceDB indexelés (meglévő pipeline)
 
@@ -64,7 +64,7 @@
 
 ## Phase 4: Regisztráció + tesztek
 
-* [ ] **Task 4.1** — `src/agents/registry.json` bővítése:
+* [x] **Task 4.1** — `src/agents/registry.json` bővítése:
   ```json
   {
     "name": "ApifyScraping",
@@ -75,13 +75,13 @@
   }
   ```
 
-* [ ] **Task 4.2** — `test/apifyScrapingAgent.test.ts`
+* [x] **Task 4.2** — `test/apifyScrapingAgent.test.ts`
   - Mock `apify-client`: fake dataset items
   - `googleSearch` → helyes SearchResult formátum
   - Nincs APIFY_API_TOKEN → status: 'error' + érthető üzenet
   - `execute` → capability auto-detect 'google' kulcsszó alapján
 
-* [ ] **Task 4.3** — `npm run build && npm test` → 0 hiba
+* [x] **Task 4.3** — `npm run build && npm test` → 0 hiba
 
 ---
 

@@ -1,6 +1,6 @@
 # Specifikáció: Apify Deep Scraping Agent
 **Track ID:** `apify_deep_scraping_agent_20260223`
-**Státusz:** proposed
+**Státusz:** completed
 **Prioritás:** LOW
 **Forrás:** `docs/Claude-nak/fejlesztes.md` — "Research & Intelligence Agent (apify-agent-skills)"
 
@@ -103,3 +103,9 @@ harvest_pipeline.py (Python) — HTTP-n hívja a Node backend-et
 - `myai/tools/harvest_pipeline.py` — meglévő pipeline
 - `src/utils/rag.ts` — LanceDB indexelés
 - Nincs más blocker
+
+---
+
+## 8. Lezárási megjegyzés
+
+Az Apify források már a tech-harvesterből kerülnek az ApifyScrapingAgent HTTP végpontjára, a unit tesztek mock `ApifyClient`-tel futnak, és a track 100%-on lezárva lett.
