@@ -177,4 +177,63 @@ describe('Health Check Script', () => {
         expect(nodeCheck!.message).toContain('[warn]');
         expect(nodeCheck!.message).toContain('[contract:drift]');
     });
+
+    it('should report Cloudflare health when BAS account id is configured', async () => {
+        vi.stubEnv('CF_BAS_ACCOUNT_ID', 'test-account-id-xyz');
+        vi.stubEnv('S3_API', 'https://r2.example.test');
+        vi.stubEnv('CF_BAS_API_TOKEN', '');
+        vi.stubEnv('CLOUDFLARE_API_TOKEN', '');
+        vi.stubEnv('CF_API_TOKEN', '');
+        vi.stubEnv('CF_TOKEN', '');
+        vi.stubEnv('CF_AI_API_TOKEN', '');
+        vi.stubEnv('CF_PERSONAL_API_TOKEN', '');
+        vi.stubEnv('CLOUDFLARE_PERSONAL_API_TOKEN', '');
+
+        mockFetch.mockImplementation((url: string) => {
+            if (url.includes('/api/tags')) {
+                return Promise.resolve({
+                    ok: true,
+                    json: () => Promise.resolve({ models: [{ name: 'llama3.1:8b' }] }),
+                });
+            }
+            if (url.includes(':8000/health')) {
+                return Promise.resolve({ ok: true, json: () => Promise.resolve({ status: 'ok' }) });
+            }
+            if (url.includes('/readyz')) {
+                return Promise.resolve({
+                    ok: true,
+                    json: () =>
+                        Promise.resolve({
+                            status: 'ready',
+                            ready: true,
+                            runtime: {
+                                budget: {
+                                    configuredHeapMb: 1536,
+                                    runtimeMemoryLimitMb: 2048,
+                                    restartThresholdMb: 1792,
+                                    effectiveHeapLimitMb: 1584,
+                                    state: 'aligned',
+                                },
+                            },
+                        }),
+                });
+            }
+            if (url === 'https://r2.example.test') {
+                return Promise.resolve({ ok: false, status: 403 });
+            }
+            return Promise.reject(new Error(`Unknown URL: ${url}`));
+        });
+
+        try {
+            const { runHealthCheck } = await import('../scripts/health_check.ts');
+            const report = await runHealthCheck();
+
+            const cloudflareCheck = report.checks.find((c: { name: string }) => c.name === 'Cloudflare');
+            expect(cloudflareCheck).toBeDefined();
+            expect(cloudflareCheck!.status).toBe('warn');
+            expect(cloudflareCheck!.message).toContain('R2 OK');
+        } finally {
+            vi.unstubAllEnvs();
+        }
+    });
 });

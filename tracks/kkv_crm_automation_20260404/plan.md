@@ -1,4 +1,5 @@
-# Implementációs terv — KKV CRM automatizálás
+ # Implementációs terv — KKV CRM automatizálás
+
 
 1) Discovery & integrációk kiválasztása (2d)
    - Validálni HubSpot / Pipedrive sandbox hozzáférést

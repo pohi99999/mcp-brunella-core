@@ -1,8 +1,10 @@
-﻿<overview>
-User requested that the Copilot CLI automatically connect to a local Brunella MCP server and that Brunella be started automatically when opening VS Code (Insiders) or launching the Copilot CLI. The approach: add a VS Code task configured to run on folder open and create a small wrapper (PowerShell + .bat) that ensures Brunella is running, waits for the MCP endpoint, and then launches the Copilot CLI with an optional repo-level MCP config.
-</overview>
+﻿ # Copilot Session Notes
 
-<history>
+## Overview
+
+User requested that the Copilot CLI automatically connect to a local Brunella MCP server and that Brunella be started automatically when opening VS Code (Insiders) or launching the Copilot CLI. The approach: add a VS Code task configured to run on folder open and create a small wrapper (PowerShell + .bat) that ensures Brunella is running, waits for the MCP endpoint, and then launches the Copilot CLI with an optional repo-level MCP config.
+
+## History
 
 ### 2026-04-04 — Cloudflare edge browser orchestration completion and archive
 
@@ -1311,3 +1313,10 @@ pm run test:dashboard → 200 passed | 0 failed | 20 test file ✅**
 **Érintett fájlok:** `test/apifyScrapingAgent.test.ts`, `docs/agents/ApifyScrapingAgent.md`, `conductor/tracks/apify_deep_scraping_agent_20260223/meta.json`, `conductor/tracks/apify_deep_scraping_agent_20260223/plan.md`, `conductor/tracks.md`, `conductor/project_state.json`
 **Státusz:** ✅ Befejezve
 **Megjegyzés:** Az Apify feed már a tech harvesterben át van vezetve; a trackhez nem kellett új follow-up track. A vezető meta most completed/100, a track summary frissítve.
+
+### 2026-04-04 18:47 - Brunella core stabilization lezárás
+
+**Feladat:** A `brunella_core_stabilization_20260402` track lezárása, a health check Cloudflare útvonalának javítása, majd a track archiválása és a conductor index frissítése.
+**Érintett fájlok:** `scripts/health_check.ts`, `scripts/health_check.js`, `test/health_check.test.ts`, `conductor/tracks/brunella_core_stabilization_20260402/meta.json`, `conductor/tracks/brunella_core_stabilization_20260402/plan.md`, `conductor/tracks/brunella_core_stabilization_20260402/spec.md`, `conductor/archive/brunella_core_stabilization_20260402/`
+**Státusz:** ✅ Befejezve
+**Megjegyzés:** A core runtime, supervision és health contract kész, a fennmaradó Windows smoke / `langflow` / `wab` megfigyelések külön operational follow-upként kezelhetők, új code track nélkül.

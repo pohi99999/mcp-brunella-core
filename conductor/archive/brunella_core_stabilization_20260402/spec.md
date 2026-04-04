@@ -63,3 +63,7 @@ Az aktuális fő kockázat nem újabb agent-képesség hiánya, hanem a Brunella
 ## Megjegyzés
 
 Ez a track az egész Brunella-roadmap alaprétege. Minden további autonóm, tanuló és proaktív réteg erre a stabil vezénylő magra épül.
+
+## Záró megjegyzés
+
+A core stabilizációs scope teljesült, és nem igényel külön follow-up tracket. A fennmaradó Windows smoke/assertion zaj és a `langflow` / `wab` állapotmegfigyelések jelenleg operációs jellegűek.

@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-04-04T18:27:11.581Z",
+  "lastUpdated": "2026-04-04T18:47:06.571Z",
   "tracks": [
     {
       "id": "apify_deep_scraping_agent_20260223",
@@ -30,27 +30,6 @@
       ],
       "dependencies": [],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\autogen_github_models_pilot_20260401",
-      "_isArchived": false
-    },
-    {
-      "id": "brunella_core_stabilization_20260402",
-      "name": "Brunella Core Stabilization",
-      "status": "active",
-      "priority": "critical",
-      "progress": 85,
-      "updated": "2026-04-03",
-      "tags": [
-        "brunella",
-        "stability",
-        "node",
-        "python",
-        "supervision",
-        "oom",
-        "runtime",
-        "dashboard"
-      ],
-      "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\brunella_core_stabilization_20260402",
       "_isArchived": false
     },
     {
@@ -1161,6 +1140,27 @@
       "tags": [],
       "dependencies": [],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\browser_use_harvester_20260131",
+      "_isArchived": true
+    },
+    {
+      "id": "brunella_core_stabilization_20260402",
+      "name": "Brunella Core Stabilization",
+      "status": "archived",
+      "priority": "critical",
+      "progress": 100,
+      "updated": "2026-04-04",
+      "tags": [
+        "brunella",
+        "stability",
+        "node",
+        "python",
+        "supervision",
+        "oom",
+        "runtime",
+        "dashboard"
+      ],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\brunella_core_stabilization_20260402",
       "_isArchived": true
     },
     {
@@ -3834,9 +3834,9 @@
   ],
   "stats": {
     "total": 212,
-    "active": 24,
+    "active": 23,
     "completed": 15,
-    "archived": 166,
+    "archived": 167,
     "proposed": 6
   }
 }
