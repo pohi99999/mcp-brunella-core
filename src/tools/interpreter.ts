@@ -1,6 +1,7 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { globalPythonShell } from "../utils/pythonShell.js";
+import { mcpCatch, mcpText } from "../utils/mcpResponse.js";
 
 export function registerInterpreterTools(server: McpServer) {
   server.tool(
@@ -17,14 +18,9 @@ export function registerInterpreterTools(server: McpServer) {
 
       try {
         const output = await globalPythonShell.run(code);
-        return {
-          content: [{ type: "text", text: output }]
-        };
-      } catch (e: any) {
-        return {
-          isError: true,
-          content: [{ type: "text", text: `Execution error: ${e.message}` }]
-        };
+        return mcpText(output);
+      } catch (error: unknown) {
+        return mcpCatch(error, "interpreter_run_python");
       }
     }
   );

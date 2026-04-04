@@ -14,6 +14,8 @@
  *   return mcpError("Not found: resource_id=42");
  */
 
+import { ensureError } from './ensureError.js';
+
 /** MCP text content block. */
 export interface McpTextContent {
   type: "text";
@@ -104,7 +106,7 @@ export function mcpCatch(
   toolName?: string,
   extraDetails?: Record<string, unknown>,
 ): McpToolResponse {
-  const message = e instanceof Error ? e.message : String(e);
+  const message = ensureError(e).message;
   const prefix = toolName ? `[${toolName}] ` : "";
   return mcpError(`${prefix}${message}`, extraDetails);
 }

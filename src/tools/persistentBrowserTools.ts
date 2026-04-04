@@ -1,6 +1,8 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { persistentBrowser } from "../utils/persistentBrowser.js";
+import { mcpCatch } from "../utils/mcpResponse.js";
+import { logDebug } from "../utils/logger.js";
 
 export function registerPersistentBrowserTools(server: McpServer) {
     server.tool(
@@ -13,8 +15,8 @@ export function registerPersistentBrowserTools(server: McpServer) {
             try {
                 const res = await persistentBrowser.sendCommand({ action: "launch", headless });
                 return { content: [{ type: "text", text: res.message || "Browser launched" }] };
-            } catch (e: any) {
-                return { isError: true, content: [{ type: "text", text: `Error: ${e.message}` }] };
+            } catch (error: unknown) {
+                return mcpCatch(error, "pb_launch");
             }
         }
     );
@@ -28,11 +30,13 @@ export function registerPersistentBrowserTools(server: McpServer) {
         async ({ url }) => {
             try {
                 const res = await persistentBrowser.sendCommand({ action: "navigate", url });
-                // Automatically update screenshot
-                await persistentBrowser.sendCommand({ action: "screenshot" }).catch(() => {});
+                // Automatically update screenshot - best effort, non-fatal
+                await persistentBrowser.sendCommand({ action: "screenshot" }).catch((e: unknown) => {
+                    logDebug("pb_navigate: screenshot refresh failed (non-fatal)", e);
+                });
                 return { content: [{ type: "text", text: `Navigated to ${res.url}` }] };
-            } catch (e: any) {
-                return { isError: true, content: [{ type: "text", text: `Error: ${e.message}` }] };
+            } catch (error: unknown) {
+                return mcpCatch(error, "pb_navigate");
             }
         }
     );
@@ -46,11 +50,13 @@ export function registerPersistentBrowserTools(server: McpServer) {
         async ({ selector }) => {
             try {
                 const res = await persistentBrowser.sendCommand({ action: "click", selector });
-                // Automatically take a screenshot after interaction to update view
-                await persistentBrowser.sendCommand({ action: "screenshot" }).catch(() => {});
+                // Automatically take a screenshot after interaction to update view - best effort, non-fatal
+                await persistentBrowser.sendCommand({ action: "screenshot" }).catch((e: unknown) => {
+                    logDebug("pb_click: screenshot refresh failed (non-fatal)", e);
+                });
                 return { content: [{ type: "text", text: res.message || `Clicked ${selector}` }] };
-            } catch (e: any) {
-                return { isError: true, content: [{ type: "text", text: `Error: ${e.message}` }] };
+            } catch (error: unknown) {
+                return mcpCatch(error, "pb_click");
             }
         }
     );
@@ -65,10 +71,13 @@ export function registerPersistentBrowserTools(server: McpServer) {
         async ({ selector, text }) => {
             try {
                 const res = await persistentBrowser.sendCommand({ action: "type", selector, text });
-                await persistentBrowser.sendCommand({ action: "screenshot" }).catch(() => {});
+                // Best effort screenshot refresh - non-fatal
+                await persistentBrowser.sendCommand({ action: "screenshot" }).catch((e: unknown) => {
+                    logDebug("pb_type: screenshot refresh failed (non-fatal)", e);
+                });
                 return { content: [{ type: "text", text: res.message || `Typed into ${selector}` }] };
-            } catch (e: any) {
-                return { isError: true, content: [{ type: "text", text: `Error: ${e.message}` }] };
+            } catch (error: unknown) {
+                return mcpCatch(error, "pb_type");
             }
         }
     );
@@ -81,8 +90,8 @@ export function registerPersistentBrowserTools(server: McpServer) {
             try {
                 const res = await persistentBrowser.sendCommand({ action: "screenshot" });
                 return { content: [{ type: "text", text: "Screenshot taken and view updated." }] };
-            } catch (e: any) {
-                return { isError: true, content: [{ type: "text", text: `Error: ${e.message}` }] };
+            } catch (error: unknown) {
+                return mcpCatch(error, "pb_screenshot");
             }
         }
     );
@@ -95,8 +104,8 @@ export function registerPersistentBrowserTools(server: McpServer) {
             try {
                 const res = await persistentBrowser.sendCommand({ action: "content" });
                 return { content: [{ type: "text", text: res.content || "" }] };
-            } catch (e: any) {
-                return { isError: true, content: [{ type: "text", text: `Error: ${e.message}` }] };
+            } catch (error: unknown) {
+                return mcpCatch(error, "pb_content");
             }
         }
     );
@@ -113,10 +122,13 @@ export function registerPersistentBrowserTools(server: McpServer) {
         async ({ direction, amount = 100 }) => {
             try {
                 const res = await persistentBrowser.sendCommand({ action: "scroll", direction, amount });
-                await persistentBrowser.sendCommand({ action: "screenshot" }).catch(() => {});
+                // Best effort screenshot refresh - non-fatal
+                await persistentBrowser.sendCommand({ action: "screenshot" }).catch((e: unknown) => {
+                    logDebug("pb_scroll: screenshot refresh failed (non-fatal)", e);
+                });
                 return { content: [{ type: "text", text: res.message || `Scrolled ${direction} by ${amount}px` }] };
-            } catch (e: any) {
-                return { isError: true, content: [{ type: "text", text: `Error: ${e.message}` }] };
+            } catch (error: unknown) {
+                return mcpCatch(error, "pb_scroll");
             }
         }
     );
@@ -132,8 +144,8 @@ export function registerPersistentBrowserTools(server: McpServer) {
             try {
                 const res = await persistentBrowser.sendCommand({ action: "wait", selector, timeout });
                 return { content: [{ type: "text", text: res.message || `Element ${selector} is visible` }] };
-            } catch (e: any) {
-                return { isError: true, content: [{ type: "text", text: `Error: ${e.message}` }] };
+            } catch (error: unknown) {
+                return mcpCatch(error, "pb_wait");
             }
         }
     );
@@ -161,8 +173,8 @@ export function registerPersistentBrowserTools(server: McpServer) {
                 } else {
                     return { content: [{ type: "text", text: "No data extracted" }] };
                 }
-            } catch (e: any) {
-                return { isError: true, content: [{ type: "text", text: `Error: ${e.message}` }] };
+            } catch (error: unknown) {
+                return mcpCatch(error, "pb_extract");
             }
         }
     );
@@ -177,8 +189,8 @@ export function registerPersistentBrowserTools(server: McpServer) {
             try {
                 await persistentBrowser.close();
                 return { content: [{ type: "text", text: "Browser closed" }] };
-            } catch (e: any) {
-                return { isError: true, content: [{ type: "text", text: `Error: ${e.message}` }] };
+            } catch (error: unknown) {
+                return mcpCatch(error, "pb_close");
             }
         }
     );

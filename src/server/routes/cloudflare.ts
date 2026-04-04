@@ -3,6 +3,8 @@ import { agentManager } from "../../agents/AgentManager.js";
 import { cloudflareClient } from "../../utils/cloudflareClient.js";
 import { resolveBrowserCopilotEndpoint } from "../../utils/browserEndpoint.js";
 import { getCloudflareAuthHeaders } from "../../utils/cloudflareConfig.js";
+import { ensureError } from "../../utils/ensureError.js";
+import { logDebug } from "../../utils/logger.js";
 
 type ChatHistoryItem = {
   role: "user" | "assistant";
@@ -148,8 +150,9 @@ async function checkWorkerHealth(url: string): Promise<{
 
       lastError = `HTTP ${response.status}`;
     } catch (e: unknown) {
-      const msg = e instanceof Error ? e.message : String(e);
-      lastError = msg;
+      const normalized = ensureError(e);
+      logDebug("CloudflareRoutes", `Worker status probe failed: ${normalized.message}`);
+      lastError = normalized.message;
     } finally {
       clearTimeout(timeoutId);
     }
@@ -203,8 +206,8 @@ async function postTaskToWorker(
       let parsed: unknown = text;
       try {
         parsed = text ? (JSON.parse(text) as unknown) : "";
-      } catch {
-        // Keep text response fallback
+      } catch (error: unknown) {
+        logDebug("CloudflareRoutes", `Worker response JSON parse skipped: ${ensureError(error).message}`);
       }
 
       if (response.ok) {
@@ -219,7 +222,9 @@ async function postTaskToWorker(
 
       lastError = `HTTP ${response.status}${text ? `: ${text.slice(0, 180)}` : ""}`;
     } catch (e: unknown) {
-      lastError = e instanceof Error ? e.message : String(e);
+      const normalized = ensureError(e);
+      logDebug("CloudflareRoutes", `Worker task proxy failed at ${endpoint}: ${normalized.message}`);
+      lastError = normalized.message;
     } finally {
       clearTimeout(timeoutId);
     }
@@ -307,7 +312,10 @@ async function postCloudflareChat(
       });
 
       if (!response.ok) {
-        const body = await response.text().catch(() => "");
+        const body = await response.text().catch((error: unknown) => {
+          logDebug("CloudflareRoutes", `Response body read skipped: ${ensureError(error).message}`);
+          return "";
+        });
         lastError = `HTTP ${response.status} ${response.statusText}${body ? `: ${body.slice(0, 160)}` : ""}`;
         continue;
       }
@@ -316,8 +324,8 @@ async function postCloudflareChat(
       let parsed: unknown = text;
       try {
         parsed = text ? (JSON.parse(text) as unknown) : "";
-      } catch {
-        // Keep plain text fallback
+      } catch (error: unknown) {
+        logDebug("CloudflareRoutes", `Worker response JSON parse skipped: ${ensureError(error).message}`);
       }
 
       const extracted = extractMessageFromPayload(parsed);
@@ -337,7 +345,9 @@ async function postCloudflareChat(
         endpoint,
       };
     } catch (e: unknown) {
-      lastError = e instanceof Error ? e.message : String(e);
+      const normalized = ensureError(e);
+      logDebug("CloudflareRoutes", `Cloudflare chat request failed at ${endpoint}: ${normalized.message}`);
+      lastError = normalized.message;
     }
   }
 
@@ -422,8 +432,9 @@ export function createCloudflareRoutes(): Router {
         workers: audited,
       });
     } catch (e: unknown) {
-      const msg = e instanceof Error ? e.message : String(e);
-      res.status(500).json({ error: msg });
+      const normalized = ensureError(e);
+      logDebug("CloudflareRoutes", `Worker audit failed: ${normalized.message}`);
+      res.status(500).json({ error: normalized.message });
     }
   });
 
@@ -464,8 +475,9 @@ export function createCloudflareRoutes(): Router {
 
       res.json(result);
     } catch (e: unknown) {
-      const msg = e instanceof Error ? e.message : String(e);
-      res.status(500).json({ error: msg });
+      const normalized = ensureError(e);
+      logDebug("CloudflareRoutes", `Worker task dispatch failed: ${normalized.message}`);
+      res.status(500).json({ error: normalized.message });
     }
   });
 
@@ -474,8 +486,9 @@ export function createCloudflareRoutes(): Router {
       const status = agentManager.getEdgeStatus();
       res.json({ status });
     } catch (e: unknown) {
-      const msg = e instanceof Error ? e.message : String(e);
-      res.status(500).json({ error: msg });
+      const normalized = ensureError(e);
+      logDebug("CloudflareRoutes", `Worker status lookup failed: ${normalized.message}`);
+      res.status(500).json({ error: normalized.message });
     }
   });
 
@@ -503,8 +516,9 @@ export function createCloudflareRoutes(): Router {
       const result = await cloudflareClient.submitTask(instruction, context);
       res.json(result);
     } catch (e: unknown) {
-      const msg = e instanceof Error ? e.message : String(e);
-      res.status(500).json({ error: msg });
+      const normalized = ensureError(e);
+      logDebug("CloudflareRoutes", `Worker task submit failed: ${normalized.message}`);
+      res.status(500).json({ error: normalized.message });
     }
   });
 
@@ -527,8 +541,9 @@ export function createCloudflareRoutes(): Router {
       const data = await cloudflareClient.checkStatus(taskId);
       res.json(data);
     } catch (e: unknown) {
-      const msg = e instanceof Error ? e.message : String(e);
-      res.status(500).json({ error: msg });
+      const normalized = ensureError(e);
+      logDebug("CloudflareRoutes", `Worker status history failed: ${normalized.message}`);
+      res.status(500).json({ error: normalized.message });
     }
   });
 
@@ -549,8 +564,9 @@ export function createCloudflareRoutes(): Router {
       const data = await cloudflareClient.fetchHistory(limit);
       res.json(data);
     } catch (e: unknown) {
-      const msg = e instanceof Error ? e.message : String(e);
-      res.status(500).json({ error: msg });
+      const normalized = ensureError(e);
+      logDebug("CloudflareRoutes", `Cloudflare chat failed: ${normalized.message}`);
+      res.status(500).json({ error: normalized.message });
     }
   });
 
@@ -588,8 +604,9 @@ export function createCloudflareRoutes(): Router {
       const result = await postCloudflareChat(instruction, history);
       res.json(result);
     } catch (e: unknown) {
-      const msg = e instanceof Error ? e.message : String(e);
-      res.status(502).json({ success: false, error: msg });
+      const normalized = ensureError(e);
+      logDebug("CloudflareRoutes", `Cloudflare chat proxy failed: ${normalized.message}`);
+      res.status(502).json({ success: false, error: normalized.message });
     }
   });
 

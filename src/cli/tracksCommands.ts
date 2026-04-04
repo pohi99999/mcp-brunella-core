@@ -16,6 +16,7 @@ import inquirer from 'inquirer';
 import { logInfo, logError } from '../utils/logger.js';
 import { marked } from 'marked';
 import TerminalRenderer from 'marked-terminal';
+import { ensureError } from '../utils/ensureError.js';
 
 marked.setOptions({ renderer: new TerminalRenderer() as any });
 
@@ -115,9 +116,10 @@ export function registerTracksCommands(program: Command) {
           // List tracks command
           await listTracksAction();
         }
-      } catch (e: any) {
-        spinner.fail(chalk.red(`❌ Hiba történt: ${e.message}`));
-        logError('CLI', `Track generation failed: ${e.message}`);
+      } catch (error: unknown) {
+        const err = ensureError(error);
+        spinner.fail(chalk.red(`❌ Hiba történt: ${err.message}`));
+        logError('CLI', `Track generation failed: ${err.message}`);
       }
     });
 
@@ -183,9 +185,10 @@ async function listTracksAction() {
     );
 
     console.log(chalk.dim(`\nÖsszesen: ${result.count} track\n`));
-  } catch (e: any) {
-    spinner.fail(chalk.red(`❌ Hiba: ${e.message}`));
-    logError('CLI', `List tracks failed: ${e.message}`);
+  } catch (error: unknown) {
+    const err = ensureError(error);
+    spinner.fail(chalk.red(`❌ Hiba: ${err.message}`));
+    logError('CLI', `List tracks failed: ${err.message}`);
   }
 }
 
@@ -205,9 +208,10 @@ async function viewTrackAction(trackId: string) {
 
     // Render markdown content
     console.log(marked(result.content));
-  } catch (e: any) {
-    spinner.fail(chalk.red(`❌ Hiba: ${e.message}`));
-    logError('CLI', `View track failed: ${e.message}`);
+  } catch (error: unknown) {
+    const err = ensureError(error);
+    spinner.fail(chalk.red(`❌ Hiba: ${err.message}`));
+    logError('CLI', `View track failed: ${err.message}`);
   }
 }
 
@@ -255,9 +259,10 @@ async function viewProgressAction(trackId: string) {
     const completedCount = result.todos.filter(t => t.completed).length;
     console.log(chalk.dim(`\n${completedCount} / ${result.todos.length} kész\n`));
 
-  } catch (e: any) {
-    spinner.fail(chalk.red(`❌ Hiba: ${e.message}`));
-    logError('CLI', `View progress failed: ${e.message}`);
+  } catch (error: unknown) {
+    const err = ensureError(error);
+    spinner.fail(chalk.red(`❌ Hiba: ${err.message}`));
+    logError('CLI', `View progress failed: ${err.message}`);
   }
 }
 
@@ -339,8 +344,9 @@ async function toggleTodoAction(trackId: string) {
       await toggleTodoAction(trackId);
     }
 
-  } catch (e: any) {
-    spinner.fail(chalk.red(`❌ Hiba: ${e.message}`));
-    logError('CLI', `Toggle TODO failed: ${e.message}`);
+  } catch (error: unknown) {
+    const err = ensureError(error);
+    spinner.fail(chalk.red(`❌ Hiba: ${err.message}`));
+    logError('CLI', `Toggle TODO failed: ${err.message}`);
   }
 }

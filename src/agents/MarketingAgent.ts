@@ -1,5 +1,6 @@
 import { IAgent, AgentResponse } from './types.js';
-import { logInfo, logError, setAgentStatus } from '../utils/logger.js';
+import { logInfo, logError, logDebug, setAgentStatus } from '../utils/logger.js';
+import { ensureError } from '../utils/ensureError.js';
 import { spawn } from "child_process";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -89,8 +90,9 @@ export class MarketingAgent implements IAgent {
         }
         try {
           resolve(JSON.parse(stdout.trim()));
-        } catch {
-          reject(new Error("Corporate hunter JSON parse error"));
+        } catch (error: unknown) {
+          const err = ensureError(error);
+          reject(new Error(`Corporate hunter JSON parse error: ${err.message}`));
         }
       });
     });
@@ -215,10 +217,10 @@ ${template.closing}
             message: `🏢 ${result.total_found} potenciális cég leadet találtam!`,
             data: result
           };
-        } catch (e: unknown) {
-          const error = e instanceof Error ? e.message : String(e);
-          logError(this.name, `Corporate hunting hiba: ${error}`);
-          return { status: 'error', error };
+        } catch (error: unknown) {
+          const err = ensureError(error);
+          logError(this.name, `Corporate hunting hiba: ${err.message}`);
+          return { status: 'error', error: err.message };
         }
       }
 
@@ -262,9 +264,9 @@ ${template.closing}
                 language: email.language,
                 success: result.success
               };
-            } catch (e: unknown) {
-              const error = e instanceof Error ? e.message : String(e);
-              logError(this.name, `Draft ${idx} failure: ${error}`);
+            } catch (error: unknown) {
+              const err = ensureError(error);
+              logError(this.name, `Draft ${idx} failure: ${err.message}`);
               return {
                 companyName: email.companyName,
                 success: false,
@@ -305,9 +307,9 @@ ${template.closing}
             if (crmResult.success) {
               logInfo(this.name, `✅ ${crmRows.length} lead mentve CRM-be`);
             }
-          } catch (e: unknown) {
-            const error = e instanceof Error ? e.message : String(e);
-            logError(this.name, `CRM save error: ${error}`);
+          } catch (error: unknown) {
+            const err = ensureError(error);
+            logError(this.name, `CRM save error: ${err.message}`);
           }
         }
 
@@ -330,10 +332,10 @@ ${template.closing}
         status: 'error',
         error: 'Ismeretlen feladat. Használj: "hunt companies" vagy "generate teaser emails"'
       };
-    } catch (e: unknown) {
-      const error = e instanceof Error ? e.message : String(e);
-      logError(this.name, error);
-      return { status: 'error', error };
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      logError(this.name, err.message);
+      return { status: 'error', error: err.message };
     } finally {
       setAgentStatus(this.name, 'idle');
     }

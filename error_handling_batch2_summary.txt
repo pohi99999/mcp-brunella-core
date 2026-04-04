@@ -1,0 +1,44 @@
+## Error Handling Standardization - Batch 2 Summary
+
+### Files Changed (This Session)
+- src/server/phoenixRoutes.ts (12 catch blocks)
+- src/server/tracksRoutes.ts (9 catch blocks)
+- src/server/websocket.ts (5 catch blocks)
+- src/server/SystemController.ts (4 catch blocks)
+
+Total: 30 catch blocks standardized
+
+### Patterns Applied
+1. Replaced 'catch (e: any)' → 'catch (error: unknown)'
+2. Added 'ensureError(error)' helper usage
+3. Consistent error message extraction
+4. Preserved all response shapes and status codes
+5. Used logDebug for best-effort non-fatal operations
+
+### Test/Build Status
+✅ Build: PASSED (npm run build - zero errors)
+✅ Tests: PASSED (tracks_todos_routes.test.ts - 3/3)
+✅ Type Safety: Verified (no remaining 'any' in catch blocks)
+
+### Remaining Work in src/server/
+Files with 'catch (.*: any)' patterns:
+- ToolManager.ts (1)
+- telemetryRoutes.ts (5)
+- specRoutes.ts (4)
+- routerRoutes.ts (4)
+- registry.ts (4)
+- memoryRoutes.ts (5)
+- guardrailsRoutes.ts (2)
+- auditRoutes.ts (4)
+
+Total remaining: ~29 catch blocks in 8 files
+
+### Recommendation
+The current batch (highest-value server routes) is complete and successful.
+
+OPTIONS:
+A) CLOSE TRACK - Consider this batch sufficient. The core Phoenix, Tracks, WebSocket, and System routes are now standardized. Remaining files can be addressed in future refactoring efforts.
+
+B) CONTINUE TRACK - Open a follow-up batch targeting the remaining 8 files (~29 catch blocks) to achieve complete server/ directory standardization.
+
+Suggested: Option A (CLOSE). The most critical and frequently-used routes are complete. Remaining files can be addressed opportunistically or in a dedicated cleanup sprint.

@@ -20,6 +20,8 @@ import ora from 'ora';
 import inquirer from 'inquirer';
 import { BrunellaClient } from '../utils/mcpClient.js';
 import { logInfo, logError } from '../utils/logger.js';
+import { ensureError } from '../utils/ensureError.js';
+import { logDebug } from '../utils/logger.js';
 
 const API_BASE = process.env.BRUNELLA_API_URL || 'http://localhost:3000';
 
@@ -141,8 +143,8 @@ async function pollPipeline(taskId: string, spinner: ReturnType<typeof ora>): Pr
                 }
                 return;
             }
-        } catch {
-            // Ignore polling errors, keep trying
+        } catch (error: unknown) {
+            logDebug('DevCommands', `Polling error ignored: ${ensureError(error).message}`);
         }
     }
 
@@ -179,8 +181,8 @@ export function registerDevCommands(program: Command): void {
                         });
                         context.contextFiles = ctxResult.context.files.map(f => f.relativePath);
                         spinner.text = `Context: ${ctxResult.context.files.length} files. Generating code...`;
-                    } catch {
-                        // Context gathering failed, continue without context
+                    } catch (error: unknown) {
+                        logDebug('DevCommands', `Context gathering skipped: ${ensureError(error).message}`);
                         spinner.text = 'Generating code (no context)...';
                     }
                 }
@@ -344,13 +346,17 @@ export function registerDevCommands(program: Command): void {
                             console.log(chalk.red(`\n❌ Hiba: ${pipeline.error}\n`));
                         }
 
-                    } catch (e: any) {
+                    } catch (error: unknown) {
+                        const err = ensureError(error);
+                        logDebug('DevCommands', `Dev execution failed: ${err.message}`);
                         spinner.fail(chalk.red('Hiba történt.'));
-                        console.error(chalk.red(e.message));
+                        console.error(chalk.red(err.message));
                     }
                 }
-            } catch (e: any) {
-                console.error(chalk.red(`Kapcsolati hiba: ${e.message}`));
+            } catch (error: unknown) {
+                const err = ensureError(error);
+                logDebug('DevCommands', `Dev connection failed: ${err.message}`);
+                console.error(chalk.red(`Kapcsolati hiba: ${err.message}`));
             } finally {
                 await client.close();
                 process.exit(0);

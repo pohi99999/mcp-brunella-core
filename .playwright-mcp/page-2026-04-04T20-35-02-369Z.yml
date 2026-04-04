@@ -1,0 +1,288 @@
+- generic [ref=e4]:
+  - generic [ref=e53]:
+    - img [ref=e55] [cursor=pointer]
+    - generic [ref=e57]:
+      - img [ref=e59]
+      - menubar [ref=e61]:
+        - menuitem [ref=e62]:
+          - button [ref=e64] [cursor=pointer]:
+            - img [ref=e66]
+    - generic [ref=e70]:
+      - generic [ref=e71]:
+        - generic [ref=e72]:
+          - menuitem [ref=e74] [cursor=pointer]:
+            - img [ref=e76]
+          - menuitem [ref=e81] [cursor=pointer]:
+            - img [ref=e83]
+          - menuitem [ref=e88] [cursor=pointer]:
+            - img [ref=e90]
+        - button [disabled] [ref=e93]:
+          - img [ref=e95]
+      - generic [ref=e98]:
+        - menuitem [ref=e100] [cursor=pointer]:
+          - img [ref=e102]
+        - menuitem [ref=e108] [cursor=pointer]:
+          - img [ref=e110]
+    - generic [ref=e118] [cursor=pointer]:
+      - img [ref=e119]
+      - generic [ref=e124]: JP
+  - generic [ref=e125]:
+    - generic [ref=e126]:
+      - generic [ref=e127]:
+        - generic [ref=e129]:
+          - heading "Overview" [level=2] [ref=e130]
+          - generic [ref=e131]: All the workflows, credentials and data tables you have access to
+        - generic [ref=e134]:
+          - button "Create credential" [ref=e135] [cursor=pointer]:
+            - generic [ref=e136]: Create credential
+          - button [ref=e139] [cursor=pointer]:
+            - img [ref=e141]
+      - generic [ref=e145]:
+        - link "Workflows" [ref=e147] [cursor=pointer]:
+          - /url: /home/workflows
+          - generic [ref=e148]: Workflows
+        - link "Credentials" [ref=e150] [cursor=pointer]:
+          - /url: /home/credentials
+          - generic [ref=e151]: Credentials
+        - link "Executions" [ref=e153] [cursor=pointer]:
+          - /url: /home/executions
+          - generic [ref=e154]: Executions
+        - link "Variables" [ref=e156] [cursor=pointer]:
+          - /url: /home/variables
+          - generic [ref=e157]: Variables
+        - link "Data tables" [ref=e159] [cursor=pointer]:
+          - /url: /home/datatables
+          - generic [ref=e160]: Data tables
+    - main [ref=e161]:
+      - generic [ref=e163]:
+        - generic [ref=e166]:
+          - generic [ref=e168]:
+            - img [ref=e171]
+            - textbox "Search credentials..." [ref=e175]
+          - generic [ref=e181]:
+            - combobox "Select" [ref=e182] [cursor=pointer]: Sort by last updated
+            - img [ref=e185] [cursor=pointer]
+          - button [ref=e189] [cursor=pointer]:
+            - img [ref=e191]
+        - generic [ref=e198]:
+          - generic [ref=e200] [cursor=pointer]:
+            - generic [ref=e204]:
+              - img
+            - generic [ref=e205]:
+              - heading "Gmail account 4" [level=2] [ref=e207]
+              - generic [ref=e210]:
+                - text: Gmail OAuth2 API |
+                - generic [ref=e211]: Last updated 44 minutes ago |
+                - text: Created 19 March
+            - generic [ref=e213]:
+              - generic [ref=e216]:
+                - img [ref=e218]
+                - generic [ref=e222]: Personal
+              - button [ref=e225]:
+                - img [ref=e226]
+          - generic [ref=e232] [cursor=pointer]:
+            - generic [ref=e236]:
+              - img
+            - generic [ref=e237]:
+              - heading "ISZ_Airtable_PAT_v3" [level=2] [ref=e239]
+              - generic [ref=e242]:
+                - text: Airtable Personal Access Token API |
+                - generic [ref=e243]: Last updated 1 week ago |
+                - text: Created 26 March
+            - generic [ref=e245]:
+              - generic [ref=e248]:
+                - img [ref=e250]
+                - generic [ref=e254]: Personal
+              - button [ref=e257]:
+                - img [ref=e258]
+          - generic [ref=e264] [cursor=pointer]:
+            - generic [ref=e268]:
+              - img
+            - generic [ref=e269]:
+              - heading "ISZ_Airtable_Prod_v2 Read only" [level=2] [ref=e271]:
+                - text: ISZ_Airtable_Prod_v2
+                - generic [ref=e273]: Read only
+              - generic [ref=e276]:
+                - text: Airtable Personal Access Token API |
+                - generic [ref=e277]: Last updated 2 weeks ago |
+                - text: Created 20 March
+            - generic [ref=e279]:
+              - generic [ref=e280]:
+                - generic [ref=e282]:
+                  - img [ref=e284]
+                  - generic [ref=e288]: Kovásznai-Szász Gerg...
+                - generic [ref=e289]: "+1"
+              - button [ref=e292]:
+                - img [ref=e293]
+          - generic [ref=e299] [cursor=pointer]:
+            - generic [ref=e303]:
+              - img
+            - generic [ref=e304]:
+              - heading "ISZ_Anthropic_Prod" [level=2] [ref=e306]
+              - generic [ref=e309]:
+                - text: Anthropic |
+                - generic [ref=e310]: Last updated 2 weeks ago |
+                - text: Created 18 March
+            - generic [ref=e312]:
+              - generic [ref=e315]:
+                - img [ref=e317]
+                - generic [ref=e321]: Personal
+              - button [ref=e324]:
+                - img [ref=e325]
+          - generic [ref=e331] [cursor=pointer]:
+            - generic [ref=e335]:
+              - img
+            - generic [ref=e336]:
+              - heading "ISZ_OpenAI_Prod" [level=2] [ref=e338]
+              - generic [ref=e341]:
+                - text: OpenAi |
+                - generic [ref=e342]: Last updated 2 weeks ago |
+                - text: Created 18 March
+            - generic [ref=e344]:
+              - generic [ref=e347]:
+                - img [ref=e349]
+                - generic [ref=e353]: Personal
+              - button [ref=e356]:
+                - img [ref=e357]
+          - generic [ref=e363] [cursor=pointer]:
+            - generic [ref=e367]:
+              - img
+            - generic [ref=e368]:
+              - heading "ISZ_Airtable_Prod" [level=2] [ref=e370]
+              - generic [ref=e373]:
+                - text: Airtable Personal Access Token API |
+                - generic [ref=e374]: Last updated 2 weeks ago |
+                - text: Created 18 March
+            - generic [ref=e376]:
+              - generic [ref=e379]:
+                - img [ref=e381]
+                - generic [ref=e385]: Personal
+              - button [ref=e388]:
+                - img [ref=e389]
+          - generic [ref=e395] [cursor=pointer]:
+            - generic [ref=e399]:
+              - img
+            - generic [ref=e400]:
+              - heading "ISZ_Telegram_Prod" [level=2] [ref=e402]
+              - generic [ref=e405]:
+                - text: Telegram API |
+                - generic [ref=e406]: Last updated 2 weeks ago |
+                - text: Created 18 March
+            - generic [ref=e408]:
+              - generic [ref=e411]:
+                - img [ref=e413]
+                - generic [ref=e417]: Personal
+              - button [ref=e420]:
+                - img [ref=e421]
+  - dialog [ref=e427]:
+    - generic [active] [ref=e428]:
+      - banner [ref=e429]:
+        - generic [ref=e430]:
+          - generic [ref=e431]:
+            - generic [ref=e435]:
+              - img
+            - generic [ref=e436]:
+              - generic "ISZ_Anthropic_Prod" [ref=e437]:
+                - generic [ref=e439] [cursor=pointer]: ISZ_Anthropic_Prod
+              - paragraph [ref=e440]: Anthropic
+          - button "Delete" [ref=e442] [cursor=pointer]:
+            - img [ref=e444]
+        - button "Close this dialog" [ref=e446] [cursor=pointer]:
+          - img [ref=e448]
+      - generic [ref=e452]:
+        - generic [ref=e453]:
+          - menuitem "Connection" [ref=e455] [cursor=pointer]:
+            - generic [ref=e456]: Connection
+          - menuitem "Sharing" [ref=e458] [cursor=pointer]:
+            - generic [ref=e459]: Sharing
+          - menuitem "Details" [ref=e461] [cursor=pointer]:
+            - generic [ref=e462]: Details
+        - generic [ref=e465]:
+          - generic [ref=e467]:
+            - img [ref=e468]
+            - generic [ref=e472]:
+              - generic [ref=e474]: Connection tested successfully
+              - button "Retry" [ref=e475] [cursor=pointer]:
+                - generic [ref=e476]: Retry
+          - alert [ref=e477]:
+            - generic [ref=e479]:
+              - text: Need help filling out these fields?
+              - link "Open docs" [ref=e481] [cursor=pointer]:
+                - /url: https://docs.n8n.io/integrations/builtin/credentials/anthropic/?utm_source=n8n_app&utm_medium=credential_settings&utm_campaign=create_new_credentials_modal
+                - generic [ref=e483]: Open docs
+          - generic [ref=e484]:
+            - button "n8n AI" [ref=e485] [cursor=pointer]:
+              - generic [ref=e486]:
+                - img [ref=e487]
+                - generic [ref=e489]: n8n AI
+            - generic [ref=e490]: for setup instructions
+          - generic [ref=e491]:
+            - generic [ref=e494]:
+              - generic [ref=e496]:
+                - generic [ref=e499]:
+                  - text: API Key
+                  - generic [ref=e500]: "*"
+                - generic [ref=e504]:
+                  - button [ref=e508] [cursor=pointer]:
+                    - img [ref=e509]
+                  - radiogroup [ref=e514]:
+                    - radio "Fixed" [checked] [ref=e515]:
+                      - generic [ref=e516] [cursor=pointer]: Fixed
+                    - radio "Expression" [ref=e517]:
+                      - generic [ref=e518] [cursor=pointer]: Expression
+              - 'textbox "Parameter: \"\"" [ref=e525]':
+                - /placeholder: ""
+                - text: __n8n_BLANK_VALUE_e5362baf-c777-4d57-a609-6eaf1f9e87f6
+            - generic [ref=e528]:
+              - generic [ref=e530]:
+                - generic [ref=e531]:
+                  - generic [ref=e533]: Base URL
+                  - img [ref=e535]
+                - generic [ref=e542]:
+                  - button [ref=e546] [cursor=pointer]:
+                    - img [ref=e547]
+                  - radiogroup [ref=e552]:
+                    - radio "Fixed" [checked] [ref=e553]:
+                      - generic [ref=e554] [cursor=pointer]: Fixed
+                    - radio "Expression" [ref=e555]:
+                      - generic [ref=e556] [cursor=pointer]: Expression
+              - 'textbox "Parameter: \"\"" [ref=e563]':
+                - /placeholder: ""
+                - text: https://api.anthropic.com
+            - generic [ref=e566]:
+              - generic [ref=e568]:
+                - generic [ref=e571]: Add Custom Header
+                - generic [ref=e575]:
+                  - button [ref=e579] [cursor=pointer]:
+                    - img [ref=e580]
+                  - radiogroup [ref=e585]:
+                    - radio "Fixed" [checked] [ref=e586]:
+                      - generic [ref=e587] [cursor=pointer]: Fixed
+                    - radio "Expression" [ref=e588]:
+                      - generic [ref=e589] [cursor=pointer]: Expression
+              - generic [ref=e593]:
+                - switch
+            - generic [ref=e597]:
+              - generic [ref=e599]:
+                - generic [ref=e600]:
+                  - generic [ref=e602]: Allowed HTTP Request Domains
+                  - img [ref=e604]
+                - generic [ref=e611]:
+                  - button [ref=e615] [cursor=pointer]:
+                    - img [ref=e616]
+                  - radiogroup [ref=e621]:
+                    - radio "Fixed" [checked] [ref=e622]:
+                      - generic [ref=e623] [cursor=pointer]: Fixed
+                    - radio "Expression" [ref=e624]:
+                      - generic [ref=e625] [cursor=pointer]: Expression
+              - 'generic "Parameter: \"\"" [ref=e629]':
+                - generic [ref=e633]:
+                  - combobox "Select" [ref=e634] [cursor=pointer]: All
+                  - img [ref=e637] [cursor=pointer]
+          - generic [ref=e641]:
+            - img [ref=e642]
+            - generic [ref=e646]:
+              - text: Enterprise plan users can pull in credentials from external vaults.
+              - link "More info" [ref=e647] [cursor=pointer]:
+                - /url: https://docs.n8n.io/external-secrets/
+                - generic [ref=e649]: More info

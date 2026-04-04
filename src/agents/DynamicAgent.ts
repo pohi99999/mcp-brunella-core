@@ -5,6 +5,7 @@ import toml from "toml";
 import { generateResponse } from "../core/llm_client.js";
 import { logInfo, logError, setAgentStatus } from "../utils/logger.js";
 import { addToIndex } from "../utils/rag.js";
+import { ensureError } from "../utils/ensureError.js";
 
 interface DynamicAgentConfig {
   name?: string;
@@ -123,11 +124,12 @@ export class DynamicAgent implements IAgent {
         status: "success",
         data: response,
       };
-    } catch (e: any) {
-      logError(this.name, `Execution failed: ${e.message}`);
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      logError(this.name, `Execution failed: ${err.message}`);
       return {
         status: "error",
-        error: e.message,
+        error: err.message,
       };
     } finally {
       setAgentStatus(this.name, "idle");

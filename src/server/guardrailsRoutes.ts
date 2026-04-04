@@ -9,6 +9,7 @@
 
 import { Router } from 'express';
 import { redactText } from '../security/redactor.js';
+import { ensureError } from '../utils/ensureError.js';
 
 // In-memory counters (reset on restart — later: persist to SQLite)
 const guardrailsCounters = {
@@ -58,8 +59,9 @@ export function createGuardrailsRouter(): Router {
         strictMode: process.env.GUARDRAILS_STRICT === 'true',
         confidenceThreshold: parseFloat(process.env.CONFIDENCE_THRESHOLD || '0.6'),
       });
-    } catch (e: any) {
-      res.status(500).json({ error: e.message });
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      res.status(500).json({ error: err.message });
     }
   });
 
@@ -72,8 +74,9 @@ export function createGuardrailsRouter(): Router {
       }
       const result = redactText(text);
       res.json(result);
-    } catch (e: any) {
-      res.status(500).json({ error: e.message });
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      res.status(500).json({ error: err.message });
     }
   });
 

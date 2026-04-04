@@ -25,6 +25,7 @@ import inquirer from 'inquirer';
 import { readFileSync, writeFileSync } from 'fs';
 import { homedir } from 'os';
 import { join } from 'path';
+import { ensureError } from '../utils/ensureError.js';
 
 const API_BASE = process.env.BRUNELLA_API_URL || 'http://localhost:3000';
 
@@ -134,11 +135,12 @@ export function registerRobotkezCommands(program: Command) {
                     console.log(chalk.red(`Error: ${result.error}`));
                     process.exit(1);
                 }
-            } catch (e: any) {
+            } catch (error: unknown) {
+                const err = ensureError(error);
                 spinner.fail(chalk.red('Execution error'));
-                console.log(chalk.red(e.message));
-                if (e.stack) {
-                    console.log(chalk.gray(e.stack));
+                console.log(chalk.red(err.message));
+                if (err.stack) {
+                    console.log(chalk.gray(err.stack));
                 }
                 process.exit(1);
             }
@@ -174,9 +176,10 @@ export function registerRobotkezCommands(program: Command) {
                     spinner.fail(chalk.red('Hiba történt'));
                     console.log(chalk.red(result.message));
                 }
-            } catch (e: any) {
+            } catch (error: unknown) {
+                const err = ensureError(error);
                 spinner.fail(chalk.red('API hiba'));
-                console.log(chalk.red(e.message));
+                console.log(chalk.red(err.message));
                 process.exit(1);
             }
         });
@@ -212,9 +215,10 @@ export function registerRobotkezCommands(program: Command) {
                 } else {
                     spinner.fail(chalk.red('Terv generálás sikertelen'));
                 }
-            } catch (e: any) {
+            } catch (error: unknown) {
+                const err = ensureError(error);
                 spinner.fail(chalk.red('API hiba'));
-                console.log(chalk.red(e.message));
+                console.log(chalk.red(err.message));
                 process.exit(1);
             }
         });
@@ -256,9 +260,10 @@ export function registerRobotkezCommands(program: Command) {
                 } else {
                     spinner.fail(chalk.red('Művelet sikertelen'));
                 }
-            } catch (e: any) {
+            } catch (error: unknown) {
+                const err = ensureError(error);
                 spinner.fail(chalk.red('API hiba'));
-                console.log(chalk.red(e.message));
+                console.log(chalk.red(err.message));
                 process.exit(1);
             }
         });
@@ -297,9 +302,10 @@ export function registerRobotkezCommands(program: Command) {
                 console.log(chalk.gray(`   Futó: ${chalk.blue(result.tasks.running)}`));
                 console.log(chalk.gray(`   Befejezett: ${chalk.green(result.tasks.completed)}`));
                 console.log(chalk.gray(`   Hibák: ${chalk.red(result.tasks.error)}`));
-            } catch (e: any) {
+            } catch (error: unknown) {
+                const err = ensureError(error);
                 spinner.fail(chalk.red('API hiba'));
-                console.log(chalk.red(e.message));
+                console.log(chalk.red(err.message));
                 process.exit(1);
             }
         });
@@ -333,9 +339,10 @@ export function registerRobotkezCommands(program: Command) {
                 spinner.succeed(chalk.green('Screenshot mentve!'));
                 console.log(chalk.cyan(`   📸 Fájl: ${outputPath}`));
                 console.log(chalk.gray(`   Méret: ${(buffer.byteLength / 1024).toFixed(1)} KB`));
-            } catch (e: any) {
+            } catch (error: unknown) {
+                const err = ensureError(error);
                 spinner.fail(chalk.red('Screenshot hiba'));
-                console.log(chalk.red(e.message));
+                console.log(chalk.red(err.message));
                 process.exit(1);
             }
         });
@@ -388,9 +395,10 @@ export function registerRobotkezCommands(program: Command) {
                     }
                     console.log();
                 });
-            } catch (e: any) {
+            } catch (error: unknown) {
+                const err = ensureError(error);
                 spinner.fail(chalk.red('API hiba'));
-                console.log(chalk.red(e.message));
+                console.log(chalk.red(err.message));
                 process.exit(1);
             }
         });
@@ -434,9 +442,10 @@ export function registerRobotkezCommands(program: Command) {
                 if (task.error) {
                     console.log(chalk.red(`\n❌ Hiba: ${task.error}`));
                 }
-            } catch (e: any) {
+            } catch (error: unknown) {
+                const err = ensureError(error);
                 spinner.fail(chalk.red('API hiba'));
-                console.log(chalk.red(e.message));
+                console.log(chalk.red(err.message));
                 process.exit(1);
             }
         });
@@ -464,9 +473,10 @@ export function registerRobotkezCommands(program: Command) {
                 } else {
                     spinner.fail(chalk.red('Megszakítás sikertelen'));
                 }
-            } catch (e: any) {
+            } catch (error: unknown) {
+                const err = ensureError(error);
                 spinner.fail(chalk.red('API hiba'));
-                console.log(chalk.red(e.message));
+                console.log(chalk.red(err.message));
                 process.exit(1);
             }
         });
@@ -545,16 +555,18 @@ export function registerRobotkezCommands(program: Command) {
                             spinner.fail(chalk.red('Hiba'));
                             console.log(chalk.red(`   ${result.message}`));
                         }
-                    } catch (e: any) {
+                    } catch (error: unknown) {
+                        const err = ensureError(error);
                         spinner.fail(chalk.red('API hiba'));
-                        console.log(chalk.red(`   ${e.message}`));
+                        console.log(chalk.red(`   ${err.message}`));
                     }
-                } catch (e: any) {
-                    if (e.message?.includes('User force closed')) {
+                } catch (error: unknown) {
+                    const err = ensureError(error);
+                    if (err.message?.includes('User force closed')) {
                         console.log(chalk.yellow('\n👋 Viszlát!'));
                         running = false;
                     } else {
-                        console.log(chalk.red(`Hiba: ${e.message}`));
+                        console.log(chalk.red(`Hiba: ${err.message}`));
                     }
                 }
             }

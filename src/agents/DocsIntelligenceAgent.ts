@@ -12,7 +12,8 @@
  */
 
 import { IAgent, AgentResponse } from "./types.js";
-import { logInfo, logError, setAgentStatus } from "../utils/logger.js";
+import { logInfo, logError, logDebug, setAgentStatus } from "../utils/logger.js";
+import { ensureError } from "../utils/ensureError.js";
 import { config } from "../config/index.js";
 import fs from "fs/promises";
 import path from "path";
@@ -114,8 +115,9 @@ async function extractCodeSymbols(
           symbols.push(...fileSymbols);
         }
       }
-    } catch {
-      // Directory not accessible
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      logDebug(SOURCE, `Directory not accessible while extracting code symbols from ${dir}: ${err.message}`);
     }
   }
 
@@ -253,8 +255,9 @@ async function extractFileSymbols(filePath: string): Promise<CodeSymbol[]> {
         hasJSDoc = false;
       }
     }
-  } catch {
-    // File not readable
+  } catch (error: unknown) {
+    const err = ensureError(error);
+    logDebug(SOURCE, `File not readable while extracting code symbols from ${filePath}: ${err.message}`);
   }
 
   return symbols;
@@ -323,8 +326,9 @@ async function extractDocReferences(
           references.push(...fileRefs);
         }
       }
-    } catch {
-      // Directory not accessible
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      logDebug(SOURCE, `Directory not accessible while extracting doc references from ${dir}: ${err.message}`);
     }
   }
 
@@ -390,8 +394,9 @@ async function extractFileReferences(
         }
       }
     }
-  } catch {
-    // File not readable
+  } catch (error: unknown) {
+    const err = ensureError(error);
+    logDebug(SOURCE, `File not readable while extracting doc references from ${filePath}: ${err.message}`);
   }
 
   return references;
@@ -474,7 +479,9 @@ async function findInconsistencies(
     const fullPath = path.join(config.workspaceRoot, ref.symbol);
     try {
       await fs.access(fullPath);
-    } catch {
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      logDebug(SOURCE, `Missing referenced file doc ${fullPath}: ${err.message}`);
       inconsistencies.push({
         type: "missing_file_doc",
         severity: "high",

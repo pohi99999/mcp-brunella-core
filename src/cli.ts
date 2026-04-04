@@ -22,6 +22,8 @@ import {
 import { getMemory } from "./utils/memoryContext.js";
 import { discoverSkills } from "./utils/skillsLoader.js";
 import { listHooks } from "./utils/hooks.js";
+import { logDebug } from "./utils/logger.js";
+import { ensureError } from "./utils/ensureError.js";
 import { startInteractiveMenu } from "./interactive.js";
 import { cloudflareClient } from "./utils/cloudflareClient.js";
 import { registerGoldCommands } from "./cli/goldCommands.js";
@@ -77,7 +79,7 @@ try {
     const pkg = JSON.parse(readFileSync(pkgPath, "utf-8"));
     version = pkg.version;
   }
-} catch (e) { /* non-critical */ }
+} catch (error: unknown) { /* non-critical */ }
 
 const rawArgs = process.argv.slice(2);
 const showBanner =
@@ -107,7 +109,7 @@ try {
       server_url: String(all.serverUrl ?? configManager.get("serverUrl") ?? ""),
     });
   }
-} catch (e) { /* non-critical */ }
+} catch (error: unknown) { /* non-critical */ }
 process.on("beforeExit", () => {
   flushTelemetry();
 });
@@ -281,8 +283,8 @@ program
       await client.connect({ coreOnly: true, timeoutMs: 1200 });
       console.log(chalk.green("✔ Server: Connected"));
       console.log(chalk.green("✔ MCP: Core transport reachable"));
-    } catch (e: any) {
-      console.log(chalk.red(`✖ Server: Connection failed (${e.message})`));
+    } catch (error: unknown) {
+      console.log(chalk.red(`✖ Server: Connection failed (${ensureError(error).message})`));
     } finally {
       await client.close();
       process.exit(0);
@@ -362,8 +364,8 @@ program
           chalk.yellow("No agents found or tool returned empty result."),
         );
       }
-    } catch (error: any) {
-      console.error(chalk.red("Error fetching agents:"), error.message);
+    } catch (error: unknown) {
+      console.error(chalk.red("Error fetching agents:"), ensureError(error).message);
     } finally {
       await client.close();
       process.exit(0);
@@ -395,7 +397,8 @@ program
       if (response.ok) {
         runtimeDiagnostics = await response.json();
       }
-    } catch {
+    } catch (error: unknown) {
+      logDebug("BrunellaCLI", `Diagnostics fetch skipped: ${ensureError(error).message}`);
       runtimeDiagnostics = null;
     }
 
@@ -519,8 +522,8 @@ program
       if (opts.file) {
         try {
           finalTask = readFileSync(opts.file, "utf-8");
-        } catch (e: any) {
-          console.error(chalk.red(`Error reading task file: ${e.message}`));
+        } catch (error: unknown) {
+          console.error(chalk.red(`Error reading task file: ${ensureError(error).message}`));
           process.exit(1);
         }
       } else if (task) {
@@ -535,7 +538,7 @@ program
       if (opts.context) {
         try {
           context = JSON.parse(opts.context);
-        } catch (e) {
+        } catch (error: unknown) {
           console.error(chalk.red("Invalid JSON in --context"));
           process.exit(1);
         }
@@ -568,9 +571,9 @@ program
             console.log(chalk.yellow("Agent returned empty response"));
           }
         }
-      } catch (error: any) {
+      } catch (error: unknown) {
         spinner.fail(chalk.red(`${agentName} failed`));
-        console.error(chalk.red("Error:"), error.message);
+        console.error(chalk.red("Error:"), ensureError(error).message);
         process.exit(1);
       } finally {
         await client.close();
@@ -599,7 +602,7 @@ program
           const key = parts[0];
           const value = parts.slice(1).join("=");
           parsedArgs[key] = value;
-        } else if (arg.startsWith("{")) {
+          } else if (arg.startsWith("{")) {
           try {
             const jsonArg = JSON.parse(arg) as Record<string, unknown>;
             if (jsonArg && typeof jsonArg === "object" && !Array.isArray(jsonArg)) {
@@ -607,8 +610,8 @@ program
                 parsedArgs[key] = typeof value === "string" ? value : JSON.stringify(value) ?? String(value);
               }
             }
-          } catch {
-            void 0;
+          } catch (error: unknown) {
+            logDebug("BrunellaCLI", `JSON arg parse skipped: ${ensureError(error).message}`);
           }
         }
       }
@@ -626,8 +629,8 @@ program
           if (text) console.log(text);
           else console.log(JSON.stringify(result, null, 2));
         }
-      } catch (error: any) {
-        console.error(chalk.red("Tool execution failed:"), error.message);
+      } catch (error: unknown) {
+        console.error(chalk.red("Tool execution failed:"), ensureError(error).message);
         process.exit(1);
       } finally {
         await client.close();
@@ -753,10 +756,11 @@ program
           );
 
           return providers.length > 0 ? providers : fallbackCatalog;
-        } catch {
-          return fallbackCatalog;
-        }
-      };
+          } catch (error: unknown) {
+            logDebug("BrunellaCLI", `Provider catalog fallback used: ${ensureError(error).message}`);
+            return fallbackCatalog;
+          }
+        };
 
       // Session State
       let history: Array<{ role: "user" | "assistant"; content: string }> = [];
@@ -857,9 +861,9 @@ program
             }
 
             history.push({ role: "assistant", content: approveText });
-          } catch (err: any) {
+          } catch (error: unknown) {
             spinner.stop();
-            console.error(chalk.red("Approval hiba:"), err.message);
+            console.error(chalk.red("Approval hiba:"), ensureError(error).message);
           }
           continue;
         }
@@ -906,9 +910,9 @@ program
             if (Array.isArray(progressData.suggestions) && progressData.suggestions.length > 0) {
               console.log(chalk.dim(`Javaslatok: ${progressData.suggestions.join(" | ")}`));
             }
-          } catch (err: any) {
+          } catch (error: unknown) {
             spinner.stop();
-            console.error(chalk.red("Progress lekérdezési hiba:"), err.message);
+            console.error(chalk.red("Progress lekérdezési hiba:"), ensureError(error).message);
           }
           continue;
         }
@@ -943,8 +947,8 @@ program
                 stdio: "inherit",
                 cwd: process.cwd(),
               });
-            } catch (e: any) {
-              console.log(chalk.red(`Error launching menu: ${e.message}`));
+            } catch (error: unknown) {
+              console.log(chalk.red(`Error launching menu: ${ensureError(error).message}`));
             }
             continue;
           }
@@ -970,8 +974,8 @@ program
                   `python scripts/jules_api_client.py create "${taskPrompt}"`,
                   { stdio: "inherit", cwd: process.cwd() },
                 );
-              } catch (e: any) {
-                console.log(chalk.red(`Error: ${e.message}`));
+              } catch (error: unknown) {
+                console.log(chalk.red(`Error: ${ensureError(error).message}`));
               }
             }
             continue;
@@ -985,8 +989,8 @@ program
                 stdio: "inherit",
                 cwd: process.cwd(),
               });
-            } catch (e: any) {
-              console.log(chalk.red(`Error: ${e.message}`));
+            } catch (error: unknown) {
+              console.log(chalk.red(`Error: ${ensureError(error).message}`));
             }
             continue;
           }
@@ -1004,8 +1008,8 @@ program
                 stdio: "inherit",
                 cwd: process.cwd(),
               });
-            } catch (e: any) {
-              console.log(chalk.red(`Error: ${e.message}`));
+            } catch (error: unknown) {
+              console.log(chalk.red(`Error: ${ensureError(error).message}`));
             }
             continue;
           }
@@ -1271,13 +1275,13 @@ program
           // Render Markdown
           console.log(marked(responseText));
           history.push({ role: "assistant", content: responseText });
-        } catch (err: any) {
+        } catch (error: unknown) {
           spinner.stop();
-          console.error(chalk.red("\nError:"), err.message);
+          console.error(chalk.red("\nError:"), ensureError(error).message);
         }
       }
-    } catch (e: any) {
-      console.error(chalk.red("\nConnection failed:"), e.message);
+    } catch (error: unknown) {
+      console.error(chalk.red("\nConnection failed:"), ensureError(error).message);
     } finally {
       await client.close();
       process.exit(0);
@@ -1318,8 +1322,8 @@ program
         // @ts-expect-error content might be missing The result from interpreter_run_python might not have content[0].text.
         console.log(result.content[0].text);
       }
-    } catch (e: any) {
-      console.log(chalk.red(e.message));
+    } catch (error: unknown) {
+      console.log(chalk.red(ensureError(error).message));
     } finally {
       await client.close();
       process.exit(0);
@@ -1356,12 +1360,12 @@ conductorCmd
         } else {
           console.log(marked(text));
         }
-      } catch (e) {
+      } catch (error: unknown) {
         console.log(marked(text));
       }
-    } catch (e: any) {
+    } catch (error: unknown) {
       spinner.stop();
-      console.error(chalk.red("Error:"), e.message);
+      console.error(chalk.red("Error:"), ensureError(error).message);
     } finally {
       await client.close();
       process.exit(0);
@@ -1426,21 +1430,21 @@ conductorCmd
             const json = JSON.parse(text);
             responseText =
               json.message || json.data?.text || JSON.stringify(json, null, 2);
-          } catch {
-            void 0;
+          } catch (error: unknown) {
+            logDebug("BrunellaCLI", `Response JSON parse fallback used: ${ensureError(error).message}`);
           }
 
           console.log(marked(responseText));
 
           history.push({ role: "user", content: message });
           history.push({ role: "assistant", content: responseText });
-        } catch (e: any) {
+        } catch (error: unknown) {
           spinner.stop();
-          console.error(chalk.red("Error:"), e.message);
+          console.error(chalk.red("Error:"), ensureError(error).message);
         }
       }
-    } catch (e: any) {
-      console.error(chalk.red("Connection error:"), e.message);
+    } catch (error: unknown) {
+      console.error(chalk.red("Connection error:"), ensureError(error).message);
     } finally {
       await client.close();
       process.exit(0);
@@ -1461,9 +1465,9 @@ conductorCmd
       });
       spinner.stop();
       console.log(chalk.green("✓"), result);
-    } catch (e: any) {
+    } catch (error: unknown) {
       spinner.stop();
-      console.error(chalk.red("Error:"), e.message);
+      console.error(chalk.red("Error:"), ensureError(error).message);
     } finally {
       await client.close();
       process.exit(0);
@@ -1485,9 +1489,9 @@ conductorCmd
       // @ts-expect-error content might be missing The response might not have content[0].text.
       const response = result.content?.[0]?.text || "Health check completed";
       console.log(marked(response));
-    } catch (e: any) {
+    } catch (error: unknown) {
       spinner.stop();
-      console.error(chalk.red("Error:"), e.message);
+      console.error(chalk.red("Error:"), ensureError(error).message);
     } finally {
       await client.close();
       process.exit(0);
@@ -1519,9 +1523,9 @@ conductorCmd
       // @ts-expect-error content might be missing The response might not have content[0].text.
       const response = result.content?.[0]?.text || "Done";
       console.log(marked(response));
-    } catch (e: any) {
+    } catch (error: unknown) {
       spinner.stop();
-      console.error(chalk.red("Error:"), e.message);
+      console.error(chalk.red("Error:"), ensureError(error).message);
     } finally {
       await client.close();
       process.exit(0);
@@ -1636,8 +1640,8 @@ julesCmd
             ),
           );
         }
-      } catch (e: any) {
-        console.error(chalk.red("Hiba:"), e?.message || String(e));
+      } catch (error: unknown) {
+        console.error(chalk.red("Hiba:"), ensureError(error).message || ensureError(error).message);
         process.exit(1);
       }
     },
@@ -1653,8 +1657,8 @@ julesCmd
         stdio: "inherit",
         cwd: process.cwd(),
       });
-    } catch (e: any) {
-      console.error(chalk.red("Error launching menu:"), e.message);
+    } catch (error: unknown) {
+      console.error(chalk.red("Error launching menu:"), ensureError(error).message);
       process.exit(1);
     }
   });
@@ -1682,8 +1686,8 @@ julesCmd
           stdio: "inherit",
           cwd: process.cwd(),
         });
-      } catch (e: any) {
-        console.error(chalk.red("Error:"), e.message);
+      } catch (error: unknown) {
+        console.error(chalk.red("Error:"), ensureError(error).message);
         process.exit(1);
       }
     }
@@ -1700,8 +1704,8 @@ julesCmd
         stdio: "inherit",
         cwd: process.cwd(),
       });
-    } catch (e: any) {
-      console.error(chalk.red("Error:"), e.message);
+    } catch (error: unknown) {
+      console.error(chalk.red("Error:"), ensureError(error).message);
       process.exit(1);
     }
   });
@@ -1722,8 +1726,8 @@ julesCmd
         stdio: "inherit",
         cwd: process.cwd(),
       });
-    } catch (e: any) {
-      console.error(chalk.red("Error:"), e.message);
+    } catch (error: unknown) {
+      console.error(chalk.red("Error:"), ensureError(error).message);
       process.exit(1);
     }
   });
@@ -1815,9 +1819,9 @@ Return ONLY valid JSON, no markdown, no explanation.
       } else {
         spinner.fail(chalk.red(`❌ ${result.message}`));
       }
-    } catch (e: any) {
-      spinner.fail(chalk.red(`❌ Error: ${e.message}`));
-      console.error(chalk.dim(e.stack));
+    } catch (error: unknown) {
+      spinner.fail(chalk.red(`❌ Error: ${ensureError(error).message}`));
+      console.error(chalk.dim(ensureError(error).stack));
       process.exit(1);
     }
   });
@@ -1970,9 +1974,9 @@ testsCmd
           console.log(`  ${i + 1}. ${status} (${run.passed}✓ / ${run.failed}✗) @ ${run.startedAt}`);
         });
       }
-    } catch (e: any) {
+    } catch (error: unknown) {
       spinner.stop();
-      console.error(chalk.red("Error:"), e.message);
+      console.error(chalk.red("Error:"), ensureError(error).message);
     }
   });
 
@@ -2009,9 +2013,9 @@ testsCmd
       } else {
         console.error(chalk.red("Failed to trigger test run:"), data.error);
       }
-    } catch (e: any) {
+    } catch (error: unknown) {
       spinner.stop();
-      console.error(chalk.red("Error:"), e.message);
+      console.error(chalk.red("Error:"), ensureError(error).message);
     }
   });
 
@@ -2046,9 +2050,9 @@ testsCmd
           console.log(`   Started: ${chalk.dim(new Date(run.startedAt).toLocaleString("hu-HU"))}`);
         });
       }
-    } catch (e: any) {
+    } catch (error: unknown) {
       spinner.stop();
-      console.error(chalk.red("Error:"), e.message);
+      console.error(chalk.red("Error:"), ensureError(error).message);
     }
   });
 
@@ -2101,8 +2105,8 @@ testsCmd
         writeFileSync(specPath, updated);
         spinner.succeed("✅ Track spec frissítve: completed");
         console.log(chalk.dim(`  Fájl: ${specPath}`));
-      } catch (e: any) {
-        spinner.fail("Hiba: " + e.message);
+      } catch (error: unknown) {
+        spinner.fail("Hiba: " + ensureError(error).message);
       }
       process.exit(0);
     } else if (action === "dashboard") {
@@ -2128,8 +2132,8 @@ testsCmd
       try {
         execSync("git push origin main", { cwd: process.cwd(), stdio: "pipe" });
         spinner.succeed("✅ Git push sikeres!");
-      } catch (e: any) {
-        spinner.fail("Hiba: " + e.message);
+      } catch (error: unknown) {
+        spinner.fail("Hiba: " + ensureError(error).message);
       }
       process.exit(0);
     } else if (action === "docs") {
@@ -2159,8 +2163,8 @@ testsCmd
 
         spinner.succeed("✅ README frissítve!");
         console.log(chalk.dim(`  Fájl: ${readmePath}`));
-      } catch (e: any) {
-        spinner.fail("Hiba: " + e.message);
+      } catch (error: unknown) {
+        spinner.fail("Hiba: " + ensureError(error).message);
       }
       process.exit(0);
     }
@@ -2213,9 +2217,9 @@ harvestCmd
         });
       });
 
-    } catch (error: any) {
+    } catch (error: unknown) {
       spinner.fail(chalk.red("Harvest pipeline error"));
-      console.error(chalk.red(`Error: ${error.message}`));
+      console.error(chalk.red(`Error: ${ensureError(error).message}`));
       process.exit(1);
     }
   });
@@ -2263,8 +2267,8 @@ harvestCmd
         console.log(chalk.yellow("No harvest summary found. Run 'brunella harvest run' first."));
       }
 
-    } catch (error: any) {
-      console.error(chalk.red(`Error reading harvest log: ${error.message}`));
+    } catch (error: unknown) {
+      console.error(chalk.red(`Error reading harvest log: ${ensureError(error).message}`));
     }
   });
 
@@ -2301,9 +2305,9 @@ swarmCmd
       for (const c of data.colonies) {
         console.log(`  [${c.status.toUpperCase()}] ${c.name} (${c.colonyId}) — ${c.agentCount} agents`);
       }
-    } catch (e: unknown) {
-      const msg = e instanceof Error ? e.message : String(e);
-      console.error(`Error: ${msg}`);
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      console.error(`Error: ${err.message}`);
       process.exit(1);
     }
   });
@@ -2326,9 +2330,9 @@ swarmCmd
       const data = await res.json() as { success: boolean; result: unknown };
       console.log('\nTask dispatched successfully:');
       console.log(JSON.stringify(data.result, null, 2));
-    } catch (e: unknown) {
-      const msg = e instanceof Error ? e.message : String(e);
-      console.error(`Error: ${msg}`);
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      console.error(`Error: ${err.message}`);
       process.exit(1);
     }
   });

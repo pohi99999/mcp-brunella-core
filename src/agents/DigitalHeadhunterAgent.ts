@@ -17,7 +17,8 @@
 
 import { BaseAgent } from './BaseAgent.js';
 import { AgentResponse } from './types.js';
-import { logInfo, logError, setAgentStatus } from '../utils/logger.js';
+import { logInfo, logError, logDebug, setAgentStatus } from '../utils/logger.js';
+import { ensureError } from '../utils/ensureError.js';
 import { getWorkspaceClient } from '../tools/unifiedWorkspace.js';
 import type { RecruitmentData } from '../types/enterprise.js';
 
@@ -166,12 +167,12 @@ export class DigitalHeadhunterAgent extends BaseAgent {
       };
 
     } catch (error: unknown) {
-      const errorMsg = error instanceof Error ? error.message : String(error);
-      logError(this.name, `HR screening failed: ${errorMsg}`);
+      const err = ensureError(error);
+      logError(this.name, `HR screening failed: ${err.message}`);
       
       return {
         status: 'error',
-        error: errorMsg,
+        error: err.message,
       };
     } finally {
       setAgentStatus(this.name, 'idle');
@@ -421,7 +422,9 @@ export class DigitalHeadhunterAgent extends BaseAgent {
       if (parsed.jobDescription || parsed.requiredSkills) {
         return parsed as RecruitmentData;
       }
-    } catch {
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      logDebug(this.name, `Ignoring job requirement parse error: ${err.message}`);
       // Not JSON, use defaults
     }
 

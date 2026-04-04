@@ -17,7 +17,8 @@
 
 import { BaseAgent } from './BaseAgent.js';
 import { AgentResponse } from './types.js';
-import { logInfo, logError, setAgentStatus } from '../utils/logger.js';
+import { logInfo, logError, logDebug, setAgentStatus } from '../utils/logger.js';
+import { ensureError } from '../utils/ensureError.js';
 import { getWorkspaceClient } from '../tools/unifiedWorkspace.js';
 import type { GrantEligibilityData } from '../types/enterprise.js';
 
@@ -115,7 +116,10 @@ export class GrantWatcherAgent extends BaseAgent {
       let taskData: any = {};
       try {
         taskData = JSON.parse(task);
-      } catch { /* ignore parse errors, use empty taskData */ }
+      } catch (error: unknown) {
+        const err = ensureError(error);
+        logDebug(this.name, `Ignoring grant task JSON parse error: ${err.message}`);
+      }
 
       // Transform result to match test expectations
       const transformedResult = {
@@ -154,12 +158,12 @@ export class GrantWatcherAgent extends BaseAgent {
       };
 
     } catch (error: unknown) {
-      const errorMsg = error instanceof Error ? error.message : String(error);
-      logError(this.name, `Grant monitoring failed: ${errorMsg}`);
+      const err = ensureError(error);
+      logError(this.name, `Grant monitoring failed: ${err.message}`);
       
       return {
         status: 'error',
-        error: errorMsg,
+        error: err.message,
       };
     } finally {
       setAgentStatus(this.name, 'idle');
@@ -391,8 +395,8 @@ export class GrantWatcherAgent extends BaseAgent {
       return docUrl;
 
     } catch (error: unknown) {
-      const errorMsg = error instanceof Error ? error.message : String(error);
-      logError(this.name, `Failed to generate summary doc: ${errorMsg}`);
+      const err = ensureError(error);
+      logError(this.name, `Failed to generate summary doc: ${err.message}`);
       return undefined;
     }
   }
@@ -417,7 +421,9 @@ export class GrantWatcherAgent extends BaseAgent {
           }
         };
       }
-    } catch {
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      logDebug(this.name, `Ignoring company profile JSON parse error: ${err.message}`);
       // Not JSON, use defaults
     }
 

@@ -1,3 +1,17 @@
+### 2026-04-04 23:55 - 🌐 Cloudflare Workers & CEAN 16-Agent Orkesztráció Szállítás
+
+**Feladat:** A Brunella Agent System 16 legfontosabb ágensének migrációja Cloudflare Workers-be. Orkesztrátor v2 kialakítása, D1 alapú routing és task tracking, Dashboard integráció.
+**Érintett fájlok:** 
+- bas-cloudflare-orchestrator/src/index.ts (Orchestrator v2)
+- bas-cloudflare-orchestrator/migrations/0003_worker_management.sql (D1 séma)
+- bas-cloudflare-orchestrator/workers/agents/* (16 ágens worker váz)
+- src/utils/cloudflareClient.ts (Dispatch & Workers API)
+- src/agents/EdgeProxyAgent.ts (Multi-agent routing támogatás)
+- src/dashboard/components/dashboard/CloudflareOrchestrator.tsx (Új vezérlőpult)
+- src/cli/commands/edge-hu.ts (Interaktív magyar CLI)
+**Státusz:** ✅ Befejezve
+**Megjegyzés:** A rendszer készen áll a globális skálázásra. A 16 ágens egyetlen master endpointon keresztül koordinálható. A Browser Rendering API integrálva az Edge ágensbe.
+
 ### 2026-04-02 07:15 - 📦 Autonóm Készlet- és Leltárkezelési Rendszer Szállítás
 
 **Feladat:** Az inventory management modul (InventoryRadarWidget, InventoryCatalog) 100%-os befejezése, a korábban félbehagyott könyvelési widgetek (HazipenztarWidget) stabilizálása és teljes körű tesztlefedettség (unit + dashboard) biztosítása a BAS EPP v2 protokoll szerint.
