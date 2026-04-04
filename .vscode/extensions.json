@@ -63,6 +63,8 @@
     "dhananjaysenday.mcp--inspector",
     "amitpatole.mcp-marketplace",
     "ms-vscode.cpptools",
-    "almenon.arepl"
+    "almenon.arepl",
+    "chrischinchilla.vscode-pandoc",
+    "marp-team.marp-vscode"
   ]
 }

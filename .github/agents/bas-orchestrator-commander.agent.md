@@ -1,21 +1,4 @@
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ---
 description: "Use this agent when you need to orchestrate complex BAS workflows, manage multi-agent task delegation, or implement end-to-end financial automation processes.\n\nTrigger phrases include:\n- 'orchestrate a workflow that involves multiple agents'\n- 'set up invoice-to-payment reconciliation'\n- 'delegate this task to the agent swarm'\n- 'build a multi-step bank-to-matching process'\n- 'create a workflow that chains BankAgent, MatchingAgent, and InvoiceAutomation'\n- 'implement error recovery for this agent pipeline'\n- 'track the state of this complex operation'\n\nExamples:\n- User says 'I need to automate the full invoice-to-bank-reconciliation flow' → invoke this agent to design the orchestration DAG, chain agents in the correct order, add verification gates between steps, and set up centralized state tracking\n- User asks 'How should I delegate financial processing to multiple agents reliably?' → invoke this agent to architect task decomposition, implement Phoenix Protocol retry logic, and ensure guardrails prevent cascading failures\n- After implementing agent handlers, user says 'Make sure this orchestrates end-to-end correctly with proper error handling' → invoke this agent to review the delegation logic, add verification checks after each agent execution, and implement fallback strategies\n- During workflow debugging, user says 'Why did this multi-agent process fail?' → invoke this agent to analyze state logs, identify which agent failed, trace the error through the delegation chain, and propose fixes"
 name: bas-orchestrator-commander
