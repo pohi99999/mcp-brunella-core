@@ -28,6 +28,7 @@ import { MarketWatcherConfig } from "@/components/dashboard/MarketWatcherConfig"
 import { InvoiceSyncWidget } from "@/components/dashboard/InvoiceSyncWidget";
 import { LeadMiningWidget } from "@/components/dashboard/LeadMiningWidget";
 import { TrackGenerator } from "@/components/dashboard/TrackGenerator";
+import { ConductorTracksMonitor } from "@/components/dashboard/ConductorTracksMonitor";
 import { TaskDecomposerPanel } from "@/components/dashboard/TaskDecomposerPanel";
 import { SuggestedTasksWidget } from "@/components/dashboard/SuggestedTasksWidget";
 import { CEANLayout } from "@/components/cean/CEANLayout";
@@ -175,6 +176,7 @@ export function initializeNavigation ()
     { id: "agent-diagnostics", label: "Agent Diagnostics", icon: Gauge, component: <AgentDiagnosticsPanel /> },
     { id: "decomposer", label: "Decompose", icon: Layers, component: <TaskDecomposerPanel /> },
     { id: "tracks", label: "Tracks", icon: History, component: <TrackGenerator /> },
+    { id: "conductor-monitor", label: "Conductor Monitor", icon: ClipboardList, component: <ConductorTracksMonitor /> },
     { id: "incubator", label: "Incubator", icon: FlaskConical, component: <IncubatorPanel /> },
     { id: "knowledge", label: "Neural Knowledge", icon: Brain, component: <KnowledgeBasePanel /> },
     { id: "memory", label: "Agent Memory", icon: Database, component: <MemoryPanel /> },
