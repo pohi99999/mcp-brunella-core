@@ -87,6 +87,13 @@ function buildChatMlEntry(sample: CuratedGoldenSample): Record<string, unknown> 
   const systemPrompt = typeof provenance.systemPrompt === 'string'
     ? provenance.systemPrompt
     : 'You are Brunella Reflex, a task-specialized local helper model.';
+  // Normalize approval state for downstream systems (D1 expects 'candidate'|'approved'|'rejected')
+  const approvalState = (() => {
+    const v = sample.approvalState;
+    if (typeof v !== 'string') return v;
+    if (v === 'pending') return 'candidate';
+    return v;
+  })();
 
   return {
     messages: [
@@ -98,7 +105,7 @@ function buildChatMlEntry(sample: CuratedGoldenSample): Record<string, unknown> 
       candidateId: sample.id,
       source: sample.source,
       quality: sample.quality,
-      approvalState: sample.approvalState,
+      approvalState,
       piiRedactedCount: sample.piiRedactedCount,
       createdAt: sample.createdAt,
       approvedAt: sample.approvedAt,

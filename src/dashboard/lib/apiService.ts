@@ -318,6 +318,26 @@ export interface BookkeepingStatusSummary {
   bySource: Record<string, number>;
 }
 
+export interface BookkeepingReadinessCheck {
+  id: string;
+  label: string;
+  status: "ready" | "missing";
+  required: boolean;
+  details: string;
+}
+
+export interface BookkeepingReadinessReport {
+  status: "ready" | "blocked";
+  timestamp: string;
+  summary: {
+    total: number;
+    ready: number;
+    blocked: number;
+  };
+  missing: string[];
+  checks: BookkeepingReadinessCheck[];
+}
+
 export interface BookkeepingStatusSnapshot {
   summary: Record<string, unknown>;
   exceptions: Array<Record<string, unknown>>;
@@ -331,6 +351,7 @@ export interface BookkeepingStatusResponse {
   summary: BookkeepingStatusSummary;
   pendingTransactions: number;
   snapshot: BookkeepingStatusSnapshot | null;
+  readiness?: BookkeepingReadinessReport;
   timestamp: string;
 }
 

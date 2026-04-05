@@ -1,6 +1,4 @@
 import { Router } from 'express';
-import path from 'path';
-import { promises as fs } from 'fs';
 import { agentManager } from '../../agents/AgentManager.js';
 import {
   createCashEntry,
@@ -15,7 +13,12 @@ import {
   updateTransaction,
   updateCashEntry,
 } from '../../data/bookkeeping_db.js';
+import { buildBookkeepingReadinessReport } from '../../utils/bookkeepingReadiness.js';
 import { logError, logInfo } from '../../utils/logger.js';
+import {
+  readBookkeepingStatusSnapshot,
+  writeBookkeepingStatusSnapshot,
+} from './bookkeepingStatusSnapshot.js';
 import type {
   BookkeepingTransaction,
   CashEntry,
@@ -25,6 +28,7 @@ import type {
   CashEntryType,
   TransactionStatus,
 } from '../../types/bookkeeping.d.js';
+import type { BookkeepingStatusSnapshot } from './bookkeepingStatusSnapshot.js';
 
 type BookkeepingException = Record<string, unknown>;
 
@@ -38,14 +42,6 @@ interface BookkeepingSummary {
   error: number;
   byStatus: Record<string, number>;
   bySource: Record<string, number>;
-}
-
-interface StatusSnapshot {
-  summary: Record<string, unknown>;
-  exceptions: BookkeepingException[];
-  timestamp: string;
-  updatedAt: string;
-  source: 'api' | 'n8n' | 'dashboard';
 }
 
 const STATUS_VALUES: readonly TransactionStatus[] = [
@@ -105,29 +101,6 @@ function getPositiveInteger(value: unknown, fallback: number, max = 500): number
     return fallback;
   }
   return Math.min(Math.trunc(parsed), max);
-}
-
-function getStatusSnapshotPath(): string {
-  return process.env.BOOKKEEPING_STATUS_PATH || path.join(process.cwd(), 'data', 'bookkeeping', 'status.json');
-}
-
-async function readStatusSnapshot(): Promise<StatusSnapshot | null> {
-  const snapshotPath = getStatusSnapshotPath();
-  try {
-    const text = await fs.readFile(snapshotPath, 'utf-8');
-    return JSON.parse(text) as StatusSnapshot;
-  } catch (error: unknown) {
-    if (isRecord(error) && typeof error.code === 'string' && error.code === 'ENOENT') {
-      return null;
-    }
-    throw error;
-  }
-}
-
-async function writeStatusSnapshot(snapshot: StatusSnapshot): Promise<void> {
-  const snapshotPath = getStatusSnapshotPath();
-  await fs.mkdir(path.dirname(snapshotPath), { recursive: true });
-  await fs.writeFile(snapshotPath, JSON.stringify(snapshot, null, 2), 'utf-8');
 }
 
 function buildSummary(transactions: BookkeepingTransaction[]): BookkeepingSummary {
@@ -278,18 +251,31 @@ export function createBookkeepingRoutes(): Router {
     try {
       const transactions = getAllTransactions();
       const summary = buildSummary(transactions);
-      const snapshot = await readStatusSnapshot();
+      const snapshot = await readBookkeepingStatusSnapshot();
+      const readiness = buildBookkeepingReadinessReport();
 
       res.json({
         success: true,
         summary,
         pendingTransactions: getPendingTransactions().length,
         snapshot,
+        readiness,
         timestamp: new Date().toISOString(),
       });
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : String(error);
       logError('BookkeepingRoutes', `Failed to read bookkeeping status: ${message}`);
+      res.status(500).json({ success: false, error: message });
+    }
+  });
+
+  router.get('/readiness', (_req, res) => {
+    try {
+      const readiness = buildBookkeepingReadinessReport();
+      res.json({ success: true, ...readiness });
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      logError('BookkeepingRoutes', `Failed to build bookkeeping readiness report: ${message}`);
       res.status(500).json({ success: false, error: message });
     }
   });
@@ -317,7 +303,7 @@ export function createBookkeepingRoutes(): Router {
         return;
       }
 
-      const snapshot: StatusSnapshot = {
+      const snapshot: BookkeepingStatusSnapshot = {
         summary,
         exceptions: exceptions.filter(isRecord),
         timestamp,
@@ -325,8 +311,8 @@ export function createBookkeepingRoutes(): Router {
         source: source === 'dashboard' || source === 'api' ? source : 'n8n',
       };
 
-      await writeStatusSnapshot(snapshot);
-      logInfo('BookkeepingRoutes', `Stored bookkeeping status snapshot at ${getStatusSnapshotPath()}`);
+      await writeBookkeepingStatusSnapshot(snapshot);
+      logInfo('BookkeepingRoutes', 'Stored bookkeeping status snapshot');
 
       res.json({ success: true, snapshot });
     } catch (error: unknown) {

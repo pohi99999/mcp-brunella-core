@@ -4,6 +4,7 @@ import { MatchingAgent } from './agents/MatchingAgent.js';
 import { logInfo, logError } from './utils/logger.js';
 import { initDB } from './data/bookkeeping_db.js';
 import { AgentResponse } from './agents/types.js';
+import { writeLine } from './utils/cliOutput.js';
 
 async function runBookkeepingDemo() {
   const SESSION_NAME = 'Bookkeeping_Demo_v1';
@@ -22,8 +23,8 @@ async function runBookkeepingDemo() {
     const navResult = await nav.execute('Process NAV invoices from conductor track samples') as AgentResponse;
     const bankResult = await bank.execute('Process bank transactions from conductor track samples') as AgentResponse;
 
-    console.log(`NAV Status: ${navResult.status}, Invoices found: ${Array.isArray(navResult.data) ? navResult.data.length : 0}`);
-    console.log(`Bank Status: ${bankResult.status}, Transactions found: ${Array.isArray(bankResult.data) ? bankResult.data.length : 0}`);
+    writeLine(`NAV Status: ${navResult.status}, Invoices found: ${Array.isArray(navResult.data) ? navResult.data.length : 0}`);
+    writeLine(`Bank Status: ${bankResult.status}, Transactions found: ${Array.isArray(bankResult.data) ? bankResult.data.length : 0}`);
 
     // 2. Run Matcher Agent
     const matcher = new MatchingAgent();
@@ -31,14 +32,14 @@ async function runBookkeepingDemo() {
     
     const matchingResult = await matcher.execute('Match all PENDING bank transactions') as AgentResponse;
     
-    console.log(`Matcher Status: ${matchingResult.status}`);
+    writeLine(`Matcher Status: ${matchingResult.status}`);
     if (matchingResult.data) {
       const data = matchingResult.data as { total: number; matched: number; manual: number };
-      console.log('--- Matching Summary ---');
-      console.log(`Total Handled: ${data.total}`);
-      console.log(`Auto-Completed: ${data.matched}`);
-      console.log(`Manual Review: ${data.manual}`);
-      console.log('-------------------------');
+      writeLine('--- Matching Summary ---');
+      writeLine(`Total Handled: ${data.total}`);
+      writeLine(`Auto-Completed: ${data.matched}`);
+      writeLine(`Manual Review: ${data.manual}`);
+      writeLine('-------------------------');
     }
 
     // 3. Final Verification

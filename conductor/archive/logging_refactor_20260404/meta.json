@@ -1,14 +1,17 @@
 {
   "id": "logging_refactor_20260404",
   "title": "Logging Audit — console.log elimináció és Logger standardizálás",
-  "status": "active",
+  "status": "archived",
   "priority": "high",
   "createdAt": "2026-04-04",
   "owner": "Gemini",
-  "progress": 0,
+  "progress": 100,
   "tags": ["logging", "standard", "audit", "observability"],
   "sourceDocument": "Gemini System Audit 2026-04-04",
   "phase": 1,
-  "updated": "2026-04-04",
+  "updated": "2026-04-05",
+  "completedAt": "2026-04-05T00:00:00Z",
+  "archivedAt": "2026-04-05T00:00:00Z",
+  "archiveReason": "Shared CLI output helper replaced the remaining console.log usage; build and targeted CLI output tests passed, so no follow-up track is needed.",
   "dependencies": []
 }

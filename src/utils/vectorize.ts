@@ -25,6 +25,7 @@ export class VectorizeClient {
   private readonly email?: string;
   private readonly indexName: string;
   private readonly gatewayId: string;
+  private readonly vectorDim: number;
 
   constructor() {
     this.baseUrl = 'https://api.cloudflare.com/client/v4';
@@ -34,6 +35,7 @@ export class VectorizeClient {
     this.email = process.env.CLOUDFLARE_EMAIL || process.env.CF_EMAIL;
     this.indexName = process.env.CF_VECTORIZE_INDEX || 'brunella-agent-memory';
     this.gatewayId = process.env.CF_GATEWAY_ID || 'brunella-gateway';
+    this.vectorDim = Number(process.env.CF_VECTOR_DIM ?? '384');
   }
 
   private get enabled(): boolean {
@@ -72,6 +74,10 @@ export class VectorizeClient {
         },
       );
 
+      if (!response) {
+        throw new Error('No response from embedding endpoint');
+      }
+
       if (!response.ok) {
         const err = await response.text();
         throw new Error(`Embedding failed: ${response.status} ${err}`);
@@ -81,7 +87,14 @@ export class VectorizeClient {
         result?: { data?: number[][] };
       };
 
-      return data.result?.data?.[0] || [];
+      const vec = data.result?.data?.[0] || [];
+
+      if (Array.isArray(vec) && this.vectorDim && vec.length !== this.vectorDim) {
+        // Log mismatch — do not crash here; upstream upsert will validate and skip if needed
+        logError('VectorizeClient', `embedding dimension mismatch: expected ${this.vectorDim}, got ${vec.length}`);
+      }
+
+      return vec;
     } catch (e: unknown) {
       const msg = e instanceof Error ? e.message : String(e);
       logError('VectorizeClient', `embed failed: ${msg}`);
@@ -93,14 +106,30 @@ export class VectorizeClient {
     if (!this.enabled || items.length === 0) return false;
 
     try {
+      // Validate vector dimension consistency
+      const invalid = items.filter((it) => !Array.isArray(it.values) || (this.vectorDim && it.values.length !== this.vectorDim));
+      if (invalid.length > 0) {
+        const ids = invalid.map((i) => i.id).join(', ');
+        logError('VectorizeClient', `Skipping upsert: ${invalid.length} vectors with invalid dimension (expected ${this.vectorDim}). IDs: ${ids}`);
+      }
+
+      const validItems = items.filter((it) => Array.isArray(it.values) && (!this.vectorDim || it.values.length === this.vectorDim));
+      if (validItems.length === 0) {
+        return false;
+      }
+
       const response = await fetch(
         `${this.baseUrl}/accounts/${this.accountId}/vectorize/v2/indexes/${this.indexName}/upsert`,
         {
           method: 'POST',
           headers: this.getHeaders(),
-          body: JSON.stringify({ vectors: items }),
+          body: JSON.stringify({ vectors: validItems }),
         },
       );
+
+      if (!response) {
+        throw new Error('No response from vector upsert endpoint');
+      }
 
       if (!response.ok) {
         const err = await response.text();
@@ -119,6 +148,10 @@ export class VectorizeClient {
     if (!this.enabled || values.length === 0) return [];
 
     try {
+      if (this.vectorDim && values.length !== this.vectorDim) {
+        logError('VectorizeClient', `Query aborted: vector dimension mismatch (expected ${this.vectorDim}, got ${values.length})`);
+        return [];
+      }
       const response = await fetch(
         `${this.baseUrl}/accounts/${this.accountId}/vectorize/v2/indexes/${this.indexName}/query`,
         {
@@ -157,10 +190,11 @@ export class VectorizeClient {
     return this.query(vector, topK);
   }
 
-  getStatus(): { enabled: boolean; indexName: string } {
+  getStatus(): { enabled: boolean; indexName: string; vectorDim: number } {
     return {
       enabled: this.enabled,
       indexName: this.indexName,
+      vectorDim: this.vectorDim,
     };
   }
 }

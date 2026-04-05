@@ -17,3 +17,10 @@
 ### 4. Harden es validacio
 - Audit, retry es SLA szabalyok.
 - E2E workflow-ellenorzes valos BAS route-okkal.
+
+## Lezaras
+
+- ✓ A Szamlazz.hu kuldo utvonal elkeszult es a BAS status snapshotba visszair.
+- ✓ A Python kliens tamogatja a szamla kuldeset XML payload alapjan.
+- ✓ A status snapshot kozos helperen keresztul frissul, a hiba- es sikerutakat is naplozza.
+- ✓ A kapcsolodo route- es kliens tesztek zoldok.

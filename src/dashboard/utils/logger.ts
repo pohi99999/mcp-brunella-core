@@ -21,7 +21,7 @@ function formatTime(): string {
 }
 
 export function logInfo(component: string, message: string): void {
-  console.log(
+  console.info(
     `%c[${formatTime()}] ${component}: ${message}`,
     `color: ${LOG_COLORS.INFO}; font-weight: bold;`
   );

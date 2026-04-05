@@ -7,14 +7,14 @@ describe('dashboardCommand', () => {
   let program: Command;
   let logInfoSpy: vi.SpiedFunction<typeof logger.logInfo>;
   let logErrorSpy: vi.SpiedFunction<typeof logger.logError>;
-  let consoleSpy: vi.SpiedFunction<typeof console.log>;
+  let stdoutSpy: vi.SpiedFunction<typeof process.stdout.write>;
 
   beforeEach(() => {
     program = new Command();
     dashboardCommand(program);
     logInfoSpy = vi.spyOn(logger, 'logInfo').mockImplementation(() => {});
     logErrorSpy = vi.spyOn(logger, 'logError').mockImplementation(() => {});
-    consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+    stdoutSpy = vi.spyOn(process.stdout, 'write').mockImplementation(() => true);
     vi.spyOn(process, 'exit').mockImplementation(() => { throw new Error('process.exit'); });
   });
 
@@ -44,10 +44,10 @@ describe('dashboardCommand', () => {
     await program.parseAsync(['node', 'test', 'status']);
 
     expect(logInfoSpy).toHaveBeenCalledWith('CLI', 'Lekérdezem a Dashboard állapotát...');
-    expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('Összesített állapot: HEALTHY'));
-    expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('Backend Health: HEALTHY'));
-    expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('AgentA: idle'));
-    expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('MCP1: CONNECTED'));
+    expect(stdoutSpy).toHaveBeenCalledWith(expect.stringContaining('Összesített állapot: HEALTHY'));
+    expect(stdoutSpy).toHaveBeenCalledWith(expect.stringContaining('Backend Health: HEALTHY'));
+    expect(stdoutSpy).toHaveBeenCalledWith(expect.stringContaining('AgentA: idle'));
+    expect(stdoutSpy).toHaveBeenCalledWith(expect.stringContaining('MCP1: CONNECTED'));
     expect(logErrorSpy).not.toHaveBeenCalled();
   });
 
@@ -58,7 +58,7 @@ describe('dashboardCommand', () => {
 
     expect(logInfoSpy).toHaveBeenCalledWith('CLI', 'Lekérdezem a Dashboard állapotát...');
     expect(logErrorSpy).toHaveBeenCalledWith(expect.stringContaining('Hiba a Dashboard állapotának lekérdezésekor: Network error'));
-    expect(consoleSpy).not.toHaveBeenCalledWith(expect.stringContaining('Összesített állapot'));
+    expect(stdoutSpy).not.toHaveBeenCalledWith(expect.stringContaining('Összesített állapot'));
   });
 
   it('should show help if no subcommand is provided', async () => {

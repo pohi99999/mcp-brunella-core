@@ -60,7 +60,7 @@ describe('Security CLI Commands', () => {
       bySeverity: { critical: 1, high: 1, medium: 1, low: 0 },
       alertThresholdReached: true,
     });
-    const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+    const consoleSpy = vi.spyOn(console, 'info').mockImplementation(() => {});
 
     await program.parseAsync(['node', 'test', 'security', 'audit']);
 
@@ -81,7 +81,7 @@ describe('Security CLI Commands', () => {
       { name: 'DeveloperAgent', role: 'developer' },
       { name: 'ResearcherAgent', role: 'researcher' },
     ]);
-    const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+    const consoleSpy = vi.spyOn(console, 'info').mockImplementation(() => {});
 
     await program.parseAsync(['node', 'test', 'security', 'permissions']);
 
@@ -107,7 +107,7 @@ describe('Security CLI Commands', () => {
         maxCostPerDay: 1.5,
       },
     });
-    const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+    const consoleSpy = vi.spyOn(console, 'info').mockImplementation(() => {});
 
     await program.parseAsync(['node', 'test', 'security', 'permissions', 'DeveloperAgent']);
 
@@ -133,7 +133,7 @@ describe('Security CLI Commands', () => {
       idleInstances: 2,
       poolSize: 3,
     });
-    const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+    const consoleSpy = vi.spyOn(console, 'info').mockImplementation(() => {});
 
     await program.parseAsync(['node', 'test', 'security', 'sandbox']);
 
@@ -157,7 +157,7 @@ describe('Security CLI Commands', () => {
         reason: 'Blocked destructive tool',
       },
     ]);
-    const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+    const consoleSpy = vi.spyOn(console, 'info').mockImplementation(() => {});
 
     await program.parseAsync(['node', 'test', 'security', 'violations', '--limit', '5']);
 

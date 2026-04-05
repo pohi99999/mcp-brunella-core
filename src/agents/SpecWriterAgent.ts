@@ -380,7 +380,7 @@ export class SpecWriterAgent extends BaseAgent {
 
     const layerGuidelines: Record<AppLayer, string> = {
       frontend: "Kövesd a komponens-alapú architektúrát. TypeScript strict mode. Tailwind v4 styling.",
-      backend: "ESM + .js import. Try/catch/finally. Logger helyett console.log tilos. RESTful API.",
+       backend: "ESM + .js import. Try/catch/finally. Logger használata kötelező, közvetlen logolás tilos. RESTful API.",
       database: "Pydantic modellek minden sémához. Migration script generálása kötelező.",
       infra: "Minimális cold-start. Edge-compatible. Secrets Cloudflare Workers via env.",
       ai: "Ollama/Gemini integráció. Streaming response support. Prompt injection védelem.",

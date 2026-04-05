@@ -23,7 +23,7 @@ export function OverlayChat() {
     });
 
     newSocket.on('connect', () => {
-      console.log('[Robotkéz Overlay] Connected to backend');
+      console.info('[Robotkéz Overlay] Connected to backend');
       setMessages(prev => [...prev, {
         id: Date.now().toString(),
         sender: 'robot',

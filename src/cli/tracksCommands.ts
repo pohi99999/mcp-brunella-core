@@ -17,6 +17,7 @@ import { logInfo, logError } from '../utils/logger.js';
 import { marked } from 'marked';
 import TerminalRenderer from 'marked-terminal';
 import { ensureError } from '../utils/ensureError.js';
+import { writeLine } from '../utils/cliOutput.js';
 
 marked.setOptions({ renderer: new TerminalRenderer() as any });
 
@@ -55,7 +56,7 @@ export function registerTracksCommands(program: Command) {
     .command('generate')
     .description('Új track generálása kreatív ötletből (interaktív)')
     .action(async () => {
-      console.log(chalk.blue('\n🎨 Track Generátor - EPP v2\n'));
+      writeLine(chalk.blue('\n🎨 Track Generátor - EPP v2\n'));
 
       // Interaktív idea input (inquirer.js)
       const answers = await inquirer.prompt([
@@ -70,7 +71,7 @@ export function registerTracksCommands(program: Command) {
       const { idea } = answers;
 
       if (!idea || idea.trim().length < 10) {
-        console.log(chalk.red('\n❌ Túl rövid ötlet. Legalább 2-3 mondatot írj!'));
+        writeLine(chalk.red('\n❌ Túl rövid ötlet. Legalább 2-3 mondatot írj!'));
         return;
       }
 
@@ -92,8 +93,8 @@ export function registerTracksCommands(program: Command) {
 
         spinner.succeed(chalk.green(`✨ Track generálva: ${result.trackId}`));
 
-        console.log(chalk.dim('\n📄 Előnézet:\n'));
-        console.log(chalk.gray(result.preview));
+        writeLine(chalk.dim('\n📄 Előnézet:\n'));
+        writeLine(chalk.gray(result.preview));
 
         // Következő lépés menü
         const next = await inquirer.prompt([
@@ -163,7 +164,7 @@ export function registerTracksCommands(program: Command) {
  * List all tracks (helper)
  */
 async function listTracksAction() {
-  console.log(chalk.blue('\n📋 Tracks listája\n'));
+  writeLine(chalk.blue('\n📋 Tracks listája\n'));
   const spinner = ora('Tracks betöltése...').start();
 
   try {
@@ -171,7 +172,7 @@ async function listTracksAction() {
     spinner.stop();
 
     if (result.count === 0) {
-      console.log(chalk.yellow('\n⚠️ Nincs track a rendszerben.'));
+      writeLine(chalk.yellow('\n⚠️ Nincs track a rendszerben.'));
       return;
     }
 
@@ -184,7 +185,7 @@ async function listTracksAction() {
       }))
     );
 
-    console.log(chalk.dim(`\nÖsszesen: ${result.count} track\n`));
+    writeLine(chalk.dim(`\nÖsszesen: ${result.count} track\n`));
   } catch (error: unknown) {
     const err = ensureError(error);
     spinner.fail(chalk.red(`❌ Hiba: ${err.message}`));
@@ -196,18 +197,18 @@ async function listTracksAction() {
  * View specific track (helper)
  */
 async function viewTrackAction(trackId: string) {
-  console.log(chalk.blue(`\n📖 Track részletek: ${trackId}\n`));
+  writeLine(chalk.blue(`\n📖 Track részletek: ${trackId}\n`));
   const spinner = ora('Track betöltése...').start();
 
   try {
     const result = await apiFetch<{ success: boolean; content: string; metadata: any }>(`/${trackId}`);
     spinner.stop();
 
-    console.log(chalk.green(`\n✅ ${result.metadata.title}\n`));
-    console.log(chalk.dim(`Priority: ${result.metadata.priority} | Progress: ${result.metadata.progress}%\n`));
+    writeLine(chalk.green(`\n✅ ${result.metadata.title}\n`));
+    writeLine(chalk.dim(`Priority: ${result.metadata.priority} | Progress: ${result.metadata.progress}%\n`));
 
     // Render markdown content
-    console.log(marked(result.content));
+    writeLine(marked(result.content));
   } catch (error: unknown) {
     const err = ensureError(error);
     spinner.fail(chalk.red(`❌ Hiba: ${err.message}`));
@@ -219,7 +220,7 @@ async function viewTrackAction(trackId: string) {
  * View track TODO progress (helper)
  */
 async function viewProgressAction(trackId: string) {
-  console.log(chalk.blue(`\n📊 Track TODO Progress: ${trackId}\n`));
+  writeLine(chalk.blue(`\n📊 Track TODO Progress: ${trackId}\n`));
   const spinner = ora('TODO lista betöltése...').start();
 
   try {
@@ -241,11 +242,11 @@ async function viewProgressAction(trackId: string) {
     const result = await apiFetch<TodoView>(`/${trackId}/todos`);
     spinner.stop();
 
-    console.log(chalk.green(`\n✅ ${result.trackTitle}\n`));
-    console.log(chalk.dim(`Status: ${result.status} | Progress: ${result.progress}%\n`));
+    writeLine(chalk.green(`\n✅ ${result.trackTitle}\n`));
+    writeLine(chalk.dim(`Status: ${result.status} | Progress: ${result.progress}%\n`));
 
     if (result.todos.length === 0) {
-      console.log(chalk.yellow('⚠️ Nincs TODO item ebben a track-ben.\n'));
+      writeLine(chalk.yellow('⚠️ Nincs TODO item ebben a track-ben.\n'));
       return;
     }
 
@@ -253,11 +254,11 @@ async function viewProgressAction(trackId: string) {
     result.todos.forEach((todo, index) => {
       const checkbox = todo.completed ? chalk.green('✓') : chalk.gray('☐');
       const text = todo.completed ? chalk.dim(chalk.strikethrough(todo.text)) : chalk.white(todo.text);
-      console.log(`${checkbox} ${index + 1}. ${text}`);
+      writeLine(`${checkbox} ${index + 1}. ${text}`);
     });
 
     const completedCount = result.todos.filter(t => t.completed).length;
-    console.log(chalk.dim(`\n${completedCount} / ${result.todos.length} kész\n`));
+    writeLine(chalk.dim(`\n${completedCount} / ${result.todos.length} kész\n`));
 
   } catch (error: unknown) {
     const err = ensureError(error);
@@ -270,7 +271,7 @@ async function viewProgressAction(trackId: string) {
  * Toggle TODO checkbox (interactive)
  */
 async function toggleTodoAction(trackId: string) {
-  console.log(chalk.blue(`\n✓ TODO Pipálása: ${trackId}\n`));
+  writeLine(chalk.blue(`\n✓ TODO Pipálása: ${trackId}\n`));
   const spinner = ora('TODO lista betöltése...').start();
 
   try {
@@ -293,7 +294,7 @@ async function toggleTodoAction(trackId: string) {
     spinner.stop();
 
     if (result.todos.length === 0) {
-      console.log(chalk.yellow('⚠️ Nincs TODO item ebben a track-ben.\n'));
+      writeLine(chalk.yellow('⚠️ Nincs TODO item ebben a track-ben.\n'));
       return;
     }
 
@@ -325,10 +326,10 @@ async function toggleTodoAction(trackId: string) {
     const selectedTodo = updated.todos.find(t => t.id === answer.todoId);
     if (selectedTodo) {
       const status = selectedTodo.completed ? chalk.green('✓ Kész') : chalk.gray('☐ Nyitott');
-      console.log(chalk.dim(`\n${status}: ${selectedTodo.text}\n`));
+      writeLine(chalk.dim(`\n${status}: ${selectedTodo.text}\n`));
     }
 
-    console.log(chalk.dim(`Progress: ${updated.progress}%\n`));
+    writeLine(chalk.dim(`Progress: ${updated.progress}%\n`));
 
     // Ask if user wants to continue
     const next = await inquirer.prompt([

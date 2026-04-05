@@ -2,14 +2,17 @@
   "id": "n8n_bookkeeping_phase3_finalization_20260404",
   "name": "Konyvelesi n8n Phase 3 finalizalas",
   "title": "Konyvelesi n8n Phase 3 finalizalas",
-  "status": "active",
+  "status": "archived",
   "priority": "critical",
   "created": "2026-04-04",
-  "updated": "2026-04-04",
+  "updated": "2026-04-05",
   "assignee": "GitHub Copilot",
-  "progress": 0,
+  "progress": 100,
   "tags": ["n8n", "bookkeeping", "nav", "szamlazz.hu", "reconciliation"],
   "dependencies": ["n8n_konyveles_pipeline_20260328", "konyveles_phase3_20260403"],
   "sourceDocument": ".worktrees\\n8n_workflow_tervek.md",
-  "phase": 3
+  "phase": 3,
+  "completedAt": "2026-04-05T00:00:00Z",
+  "archivedAt": "2026-04-05T00:00:00Z",
+  "archiveReason": "The missing Szamlazz.hu outbound send path, Python client support, and BAS status write-back are implemented and verified; no follow-up track is needed."
 }

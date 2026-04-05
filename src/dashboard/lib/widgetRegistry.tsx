@@ -24,6 +24,7 @@ import { LeadMiningWidget } from "@/components/dashboard/LeadMiningWidget";
 import { EnterpriseSuitePanel } from "@/components/dashboard/EnterpriseSuitePanel";
 import { InnovationBridgeWidget } from "@/components/dashboard/InnovationBridgeWidget";
 import { DigitalHRWidget } from "@/components/dashboard/DigitalHRWidget";
+import { HROnboardingWidget } from "@/components/dashboard/HROnboardingWidget";
 import { GrantHunterWidget } from "@/components/dashboard/GrantHunterWidget";
 import { LawDetectiveWidget } from "@/components/dashboard/LawDetectiveWidget";
 import { PropertyVisionaryWidget } from "@/components/dashboard/PropertyVisionaryWidget";
@@ -191,6 +192,12 @@ export const WIDGET_REGISTRY: Record<string, WidgetDefinition> = {
     label: "Digital HR",
     component: DigitalHRWidget,
     defaultSize: { w: 6, h: 8 }
+  },
+  hr_onboarding: {
+    id: "hr_onboarding",
+    label: "HR Onboarding",
+    component: HROnboardingWidget,
+    defaultSize: { w: 8, h: 9 }
   },
   grant_hunter: {
     id: "grant_hunter",

@@ -2,7 +2,12 @@
 
 ## Hatter
 
-A CRM blokk a bejovo leadek azonnali feldolgozasat es az ajanlatkuldes utani automatikus utanakovetest fedi le.
+A CRM blokk két koherens szálra bontható:
+
+1. **CRM Ingest Foundation** — webhook/email ingest, canonical transform, dedupe, CRM write, basic ack.
+2. **CRM Follow-up + Routing** — scoring, Slack/email routing, D+3 / D+7 / D+14 follow-up, cancel-on-response, human approval, reporting.
+
+A jelenlegi repo már az 1. szálat fedi le; a 2. szál külön trackként folytatandó.
 
 ## Scope
 
@@ -10,6 +15,11 @@ A CRM blokk a bejovo leadek azonnali feldolgozasat es az ajanlatkuldes utani aut
 - WF-CRM-2 ugyfel utanakovetes es follow-up sorozat
 - Gmail, Slack es CRM adattar integraciok
 - AI priorizalas es belso SLA figyeles
+
+## Szetszedett trackek
+
+- `kkv_crm_ingest_foundation_20260405` — kész
+- `kkv_crm_followup_approval_reporting_20260405` — lezárt approval/reporting slice
 
 ## Acceptance kriteriumok
 
@@ -20,4 +30,4 @@ A CRM blokk a bejovo leadek azonnali feldolgozasat es az ajanlatkuldes utani aut
 
 ## Rollout
 
-- Operativ alap track, a gyors nyerok utan erdemes felhuzni.
+- Operativ alap track; a foundation kész, a follow-up/routing külön trackként megy tovább.

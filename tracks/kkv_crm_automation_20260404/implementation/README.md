@@ -15,8 +15,8 @@ Quickstart - n8n local
      n8nio/n8n:latest
 2. Create a new workflow:
    - Trigger: Webhook (POST /webhook/crm/ingest)
-   - Transform: Function node - validate payload & normalize
-   - Persist: HTTP Request to local microservice or write to temp file
+   - Transform: Code node - validate payload & normalize
+   - Persist: HTTP Request to `POST /api/v1/crm/intake`
 
 Example webhook payload (POST /webhook/crm/ingest)
 ```json
@@ -34,14 +34,14 @@ Example webhook payload (POST /webhook/crm/ingest)
 
 Developer notes
 - Keep the transform deterministic and easily testable.
-- Add unit tests for the Function node logic (extract/normalize fields) - store tests under `tracks/kkv_crm_automation_20260404/tests/`.
-- First PR should add the n8n workflow export (JSON) and a lightweight node script that can run the same transform locally for CI.
+- Add unit tests for the normalization helper under `test/` or `tracks/kkv_crm_automation_20260404/tests/`.
+- The intake API persists to `data/crm.db` and dedupes by canonical email/phone/company/source hash.
 
 Next actions
-- Implement TASK-CRM-002: export n8n skeleton JSON + local transform script.
-- Implement TASK-CRM-001 in parallel: provision OAuth client in CRM sandbox and store creds in `credentials/` (encrypted in secrets store, not in repo).
+- Implement TASK-CRM-003: lead scoring + routing on top of the stored CRM lead records.
+- The follow-up routing track (`kkv_crm_followup_routing_20260405`) will consume the same CRM store and add D+3 / D+7 / D+14 behavior.
 
 How to run local transform test
 1. From the repository root, run:
-  node tracks/kkv_crm_automation_20260404/tests/transform.test.js
-2. The script runs assertion-based checks and prints a success message on pass.
+  npx vitest run test/crmLead.test.ts test/crmDb.test.ts
+2. The suite validates normalization and dedupe key generation.

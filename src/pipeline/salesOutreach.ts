@@ -32,11 +32,22 @@ class SalesOutreach {
             const emailDraft = copyResult.message || copyResult.data?.content;
 
             // 3. LÉPÉS: Sales - Email kiküldése vagy CRM-be rögzítése
-            const salesTask = `Rögzítsd a következő leadet a CRM-ben és készítsd elő a kiküldésre ezt az emailt:
-            Tárgy: Profit-lehetőség: ${alert.title}
-            Tartalom: ${emailDraft}`;
-            
-            await agentManager.delegate('sales', salesTask);
+            await agentManager.delegate('sales', JSON.stringify({
+                intent: 'crm_follow_up',
+                lead: {
+                    title: alert.title,
+                    source: alert.source,
+                    url: alert.url,
+                    priceEur: alert.priceEur,
+                    estimatedValueEur: alert.estimatedValueEur,
+                    score: alert.score,
+                    category: alert.category,
+                    emailDraft,
+                    company: contactInfo?.companyName ?? contactInfo?.company ?? undefined,
+                    email: contactInfo?.email ?? contactInfo?.contactEmail ?? undefined,
+                    phone: contactInfo?.phone ?? undefined,
+                }
+            }));
 
             logInfo(this.TAG, `✅ Outreach sikeresen előkészítve a következő géphez: ${alert.title}`);
 

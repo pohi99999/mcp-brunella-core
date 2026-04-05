@@ -47,7 +47,7 @@ export class SheetsSyncAgent extends BaseAgent {
             const sheetsRows = allTransactions.map(tx => this.formatRow(tx));
 
             // For MVP, we just log the rows. In a real scenario, this would update Google Sheets.
-            // To avoid console.log warnings, we can use logInfo from logger.js
+            // Keep output consistent by using logInfo from logger.js.
 
             return { success: true, message: `Synced ${allTransactions.length} transactions to Sheets`, data: sheetsRows };
         } catch (error) {

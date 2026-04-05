@@ -88,6 +88,10 @@ export function BookkeepingWidget() {
   const pendingCount = liveStatus?.pendingTransactions ?? 0;
   const exceptionCount = liveStatus?.snapshot?.exceptions?.length ?? 0;
   const totalCount = liveStatus?.summary?.total;
+  const readiness = liveStatus?.readiness;
+  const readinessValue = readiness
+    ? Math.round((readiness.summary.ready / Math.max(readiness.summary.total, 1)) * 100)
+    : 0;
 
   return (
     <Card className="glass-card border-white/[0.04] bg-white/[0.03] backdrop-blur-xl h-full flex flex-col">
@@ -120,6 +124,44 @@ export function BookkeepingWidget() {
                 <span>Várakozó tételek: {pendingCount}</span>
                 <span>Kivételek: {exceptionCount}</span>
               </div>
+            </div>
+          )}
+
+          {readiness && (
+            <div
+              className={`p-3 rounded-xl border space-y-2 ${
+                readiness.status === "ready"
+                  ? "bg-emerald-500/10 border-emerald-500/20"
+                  : "bg-amber-500/10 border-amber-500/20"
+              }`}
+            >
+              <div className="flex items-center justify-between gap-2">
+                <p className="text-[10px] text-zinc-500 uppercase font-mono tracking-wider">
+                  Phase 0 readiness
+                </p>
+                <Badge
+                  variant={readiness.status === "ready" ? "default" : "secondary"}
+                  className={
+                    readiness.status === "ready"
+                      ? "bg-emerald-500/20 text-emerald-300 border-emerald-400/30"
+                      : "bg-amber-500/20 text-amber-300 border-amber-400/30"
+                  }
+                >
+                  {readiness.status === "ready" ? "READY" : "BLOCKED"}
+                </Badge>
+              </div>
+              <Progress value={readinessValue} className="h-1 bg-white/[0.04]" />
+              <div className="flex items-center justify-between text-[10px] font-mono text-zinc-500 uppercase">
+                <span>
+                  {readiness.summary.ready}/{readiness.summary.total} kész
+                </span>
+                <span>{readiness.summary.blocked} hiányzik</span>
+              </div>
+              {readiness.missing.length > 0 ? (
+                <p className="text-xs text-zinc-300">{readiness.missing.join(" · ")}</p>
+              ) : (
+                <p className="text-xs text-emerald-300">Minden előfeltétel rendben.</p>
+              )}
             </div>
           )}
 

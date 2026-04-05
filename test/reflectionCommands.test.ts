@@ -71,7 +71,7 @@ describe('Reflection CLI commands', () => {
       }),
     } as Response);
 
-    const logSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+    const logSpy = vi.spyOn(console, 'info').mockImplementation(() => {});
     await program.parseAsync(['node', 'test', 'reflection', 'status']);
 
     const output = logSpy.mock.calls.map((args) => args.map((chunk) => String(chunk)).join(' ')).join('\n');

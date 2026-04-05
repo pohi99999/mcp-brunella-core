@@ -1,16 +1,16 @@
 {
   "id": "kkv_crm_followup_routing_20260405",
-  "name": "KKV CRM follow-up es routing",
-  "title": "KKV CRM follow-up es routing",
+  "name": "KKV CRM follow-up routing",
+  "title": "KKV CRM — Automatikus follow-up routing (lead → followup job)",
   "status": "proposed",
   "priority": "HIGH",
   "created": "2026-04-05",
   "updated": "2026-04-05",
-  "owner": "GitHub Copilot",
-  "assignee": "GitHub Copilot",
+  "owner": "bas-automation-architect",
+  "assignee": "bas-automation-architect",
   "progress": 0,
-  "tags": ["kkv", "crm", "follow-up", "routing", "scoring", "slack", "n8n"],
+  "tags": ["kkv", "crm", "followup", "routing", "n8n", "orchestrator"],
   "dependencies": ["kkv_crm_ingest_foundation_20260405"],
-  "sourceDocument": "Derived from kkv_crm_automation_20260404",
-  "phase": 2
+  "sourceDocument": "Conceived from KKV CRM automation roadmap",
+  "phase": 1
 }

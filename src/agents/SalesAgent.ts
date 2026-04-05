@@ -1,5 +1,7 @@
 import { IAgent, AgentResponse } from './types.js';
 import { logInfo, logError, setAgentStatus } from '../utils/logger.js';
+import { createCrmFollowUpPlan, ingestCrmLead } from '../data/crm_db.js';
+import { normalizeCrmLead } from '../utils/crmLead.js';
 
 /**
  * Lead Quality Score Model
@@ -30,6 +32,27 @@ interface LeadGenResult {
   }>;
   timestamp: Date;
   processingTimeMs: number;
+  crmSync?: {
+    syncedLeads: number;
+    followUpPlansCreated: number;
+  };
+}
+
+interface CrmFollowUpTask {
+  intent: 'crm_follow_up';
+  lead: {
+    title?: string;
+    source?: string;
+    company?: string;
+    email?: string;
+    phone?: string;
+    url?: string;
+    emailDraft?: string;
+    estimatedValueEur?: number;
+    priceEur?: number;
+    score?: number;
+    category?: string;
+  };
 }
 
 /**
@@ -61,6 +84,11 @@ export class SalesAgent implements IAgent {
     const startTime = Date.now();
 
     try {
+      const structuredTask = this.parseStructuredTask(task);
+      if (structuredTask?.intent === 'crm_follow_up') {
+        return await this.executeCrmFollowUpTask(structuredTask);
+      }
+
       // Step 1: Parse task parameters
       const params = this.parseTaskParameters(task);
       logInfo(this.name, `Starting lead generation: industry=${params.industry}, minEmployees=${params.minEmployees}`);
@@ -80,13 +108,20 @@ export class SalesAgent implements IAgent {
       // Step 5: Persist to LanceDB (stub for now)
       await this.persistLeadsToLanceDB(qualifiedLeads);
 
-      // Step 6: Create result
+      // Step 6: Sync qualified leads into CRM and create follow-up plans
+      const crmSync = this.syncQualifiedLeadsToCrm(qualifiedLeads);
+
+      // Step 7: Create result
       const result: LeadGenResult = {
         totalLeads: leads.length,
         qualifiedLeads: qualifiedLeads,
         draftEmails: draftEmails,
         timestamp: new Date(),
-        processingTimeMs: Date.now() - startTime
+        processingTimeMs: Date.now() - startTime,
+        crmSync: {
+          syncedLeads: crmSync.syncedLeads,
+          followUpPlansCreated: crmSync.followUpPlansCreated,
+        }
       };
 
       logInfo(this.name, `Lead generation complete: ${result.qualifiedLeads.length} qualified, ${result.draftEmails.length} drafts, ${result.processingTimeMs}ms`);
@@ -97,7 +132,9 @@ export class SalesAgent implements IAgent {
         metadata: {
           leadsProcessed: result.totalLeads,
           leadsQualified: result.qualifiedLeads.length,
-          emailsDrafted: result.draftEmails.length
+          emailsDrafted: result.draftEmails.length,
+          crmLeadsSynced: crmSync.syncedLeads,
+          followUpPlansCreated: crmSync.followUpPlansCreated,
         }
       };
     } catch (e: unknown) {
@@ -314,6 +351,106 @@ Brunella Agent System
     });
 
     logInfo(this.name, `Persisted ${leads.length} leads to LanceDB cache`);
+  }
+
+  private parseStructuredTask(task: string): CrmFollowUpTask | null {
+    try {
+      const parsed = JSON.parse(task) as Partial<CrmFollowUpTask>;
+      if (parsed && parsed.intent === 'crm_follow_up' && parsed.lead) {
+        return parsed as CrmFollowUpTask;
+      }
+    } catch {
+      return null;
+    }
+    return null;
+  }
+
+  private async executeCrmFollowUpTask(task: CrmFollowUpTask): Promise<AgentResponse> {
+    const leadPayload = {
+      source: task.lead.source || 'sales_outreach',
+      email: task.lead.email,
+      phone: task.lead.phone,
+      company: task.lead.company || task.lead.title || 'unknown',
+      createdAt: new Date().toISOString(),
+      receivedAt: new Date().toISOString(),
+      payload: {
+        ...task.lead,
+        source: task.lead.source || 'sales_outreach',
+      },
+    };
+
+    const normalized = normalizeCrmLead(leadPayload);
+    if (!normalized) {
+      return {
+        status: 'error',
+        error: 'Nem sikerült normalizálni a follow-up leadet.',
+        metadata: { crmLead: false }
+      };
+    }
+
+    const ingested = ingestCrmLead(normalized);
+    const plan = createCrmFollowUpPlan(ingested.lead.id);
+
+    return {
+      status: 'success',
+      data: {
+        crmLead: ingested.lead,
+        followUpPlan: plan?.plan ?? null,
+        decision: plan?.decision ?? null,
+        actions: plan?.actions ?? [],
+      },
+      metadata: {
+        crmLeadInserted: ingested.inserted,
+        followUpPlanCreated: Boolean(plan),
+        tier: plan?.decision.tier ?? 'nurture',
+        route: plan?.decision.route ?? 'email',
+      }
+    };
+  }
+
+  private syncQualifiedLeadsToCrm(leads: LeadScore[]): {
+    syncedLeads: number;
+    followUpPlansCreated: number;
+  } {
+    let syncedLeads = 0;
+    let followUpPlansCreated = 0;
+
+    for (const lead of leads) {
+      const normalized = normalizeCrmLead({
+        source: 'sales_agent',
+        email: lead.contactEmail ?? undefined,
+        company: lead.companyName,
+        createdAt: new Date().toISOString(),
+        receivedAt: new Date().toISOString(),
+        payload: {
+          source: 'sales_agent',
+          company: lead.companyName,
+          email: lead.contactEmail,
+          industry: lead.industry,
+          employees: lead.employees,
+          revenue: lead.revenue,
+          relevanceScore: lead.relevanceScore,
+          linkedinUrl: lead.linkedinUrl,
+          notes: lead.lastModified.toISOString(),
+        },
+      });
+
+      if (!normalized) {
+        continue;
+      }
+
+      const ingested = ingestCrmLead(normalized);
+      const plan = createCrmFollowUpPlan(ingested.lead.id);
+
+      if (ingested.inserted) {
+        syncedLeads += 1;
+      }
+      if (plan) {
+        followUpPlansCreated += 1;
+      }
+    }
+
+    return { syncedLeads, followUpPlansCreated };
   }
 }
 

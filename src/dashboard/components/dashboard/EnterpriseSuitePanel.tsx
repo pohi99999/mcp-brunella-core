@@ -25,6 +25,7 @@ import { InvoiceSyncWidget } from './InvoiceSyncWidget';
 import { MarketWatcherWidget } from './MarketWatcherWidget';
 import { InnovationBridgeWidget } from './InnovationBridgeWidget';
 import { DigitalHRWidget } from './DigitalHRWidget';
+import { HROnboardingWidget } from './HROnboardingWidget';
 import { GrantHunterWidget } from './GrantHunterWidget'; // To be created next
 
 export function EnterpriseSuitePanel() {
@@ -73,7 +74,10 @@ export function EnterpriseSuitePanel() {
                         <InnovationBridgeWidget />
                     </TabsContent>
                     <TabsContent value="hr" className="animate-in fade-in zoom-in duration-300">
-                        <DigitalHRWidget />
+                        <div className="space-y-6">
+                            <DigitalHRWidget />
+                            <HROnboardingWidget />
+                        </div>
                     </TabsContent>
                     <TabsContent value="grants" className="animate-in fade-in zoom-in duration-300">
                         <GrantHunterWidget />
