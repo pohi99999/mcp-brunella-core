@@ -27,6 +27,10 @@ vi.mock('../src/cli/commands/innovate-hu.js', () => ({
   innovateCommand: vi.fn(),
 }));
 
+vi.mock('../src/cli/commands/hr-onboarding-hu.js', () => ({
+  hrOnboardingCommand: vi.fn(),
+}));
+
 vi.mock('inquirer', () => ({
   default: {
     prompt: vi.fn(),

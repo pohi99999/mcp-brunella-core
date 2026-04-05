@@ -56,7 +56,7 @@ describe('Task CLI Commands', () => {
         executedAt: '2026-04-01T20:00:00.000Z',
       })),
     } as Response);
-    const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+    const consoleSpy = vi.spyOn(console, 'info').mockImplementation(() => {});
 
     await program.parseAsync(['node', 'test', 'task', 'írj', 'jelentést', '--context', '{"priority":"high"}']);
 
@@ -93,7 +93,7 @@ describe('Task CLI Commands', () => {
         executedAt: '2026-04-01T20:00:00.000Z',
       })),
     } as Response);
-    const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+    const consoleSpy = vi.spyOn(console, 'info').mockImplementation(() => {});
 
     await program.parseAsync(['node', 'test', 'task', 'indíts', 'workflowt']);
 
@@ -124,7 +124,7 @@ describe('Task CLI Commands', () => {
     registerTaskCommands(program);
 
     taskHarness.promptMock.mockResolvedValueOnce({ choice: 'exit' });
-    const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+    const consoleSpy = vi.spyOn(console, 'info').mockImplementation(() => {});
 
     await program.parseAsync(['node', 'test', 'task']);
 
@@ -150,7 +150,7 @@ describe('Task CLI Commands', () => {
         executedAt: '2026-04-01T20:00:00.000Z',
       })),
     } as Response);
-    const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+    const consoleSpy = vi.spyOn(console, 'info').mockImplementation(() => {});
 
     await program.parseAsync(['node', 'test', 'task', 'interactive']);
 

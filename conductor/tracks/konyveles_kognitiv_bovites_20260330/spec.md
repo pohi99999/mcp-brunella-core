@@ -19,7 +19,7 @@
 | `konyveles_phase3_20260403` lezárva és archiválva | ❌ Folyamatban |
 | LanceDB lokálisan telepítve (`uv add lancedb` a `myai/` projektben) | ❓ Ismeretlen |
 | Langflow instance elérhető (`localhost:7860`) | ❓ Ismeretlen |
-| `data/accounting-kb/` mappa létrehozva, cégdokumentumok összegyűjtve | ❌ Nincs |
+| `data/accounting-kb/` scaffold (`README.md`) | ⚠️ Részben kész | Valós PDF/DOCX tartalom még nincs összegyűjtve |
 
 > **WF számozás megjegyzés:** Ez a track `WF-K1..WF-K4` nevű n8n workflow-okat hoz létre, hogy ne ütközzön a Phase 3 `WF-6..WF-9` workflow-jaival.
 

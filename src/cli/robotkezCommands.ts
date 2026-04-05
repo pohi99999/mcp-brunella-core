@@ -26,6 +26,7 @@ import { readFileSync, writeFileSync } from 'fs';
 import { homedir } from 'os';
 import { join } from 'path';
 import { ensureError } from '../utils/ensureError.js';
+import { writeLine } from '../utils/cliOutput.js';
 
 const API_BASE = process.env.BRUNELLA_API_URL || 'http://localhost:3000';
 
@@ -120,27 +121,27 @@ export function registerRobotkezCommands(program: Command) {
 
                 if (result.status === 'success') {
                     spinner.succeed(chalk.green('Success!'));
-                    console.log(chalk.cyan('\n📝 Result:'));
+                    writeLine(chalk.cyan('\n📝 Result:'));
                     const data = result.data as any;
-                    if (data?.mode) console.log(chalk.gray(`   Mode: ${data.mode}`));
-                    if (data?.duration_ms) console.log(chalk.gray(`   Duration: ${data.duration_ms}ms`));
+                    if (data?.mode) writeLine(chalk.gray(`   Mode: ${data.mode}`));
+                    if (data?.duration_ms) writeLine(chalk.gray(`   Duration: ${data.duration_ms}ms`));
                     if (data?.screenshot_path) {
-                        console.log(chalk.green(`   Screenshot: ${data.screenshot_path}`));
+                        writeLine(chalk.green(`   Screenshot: ${data.screenshot_path}`));
                     }
                     if (result.message) {
-                        console.log(chalk.gray(`   ${result.message}`));
+                        writeLine(chalk.gray(`   ${result.message}`));
                     }
                 } else {
                     spinner.fail(chalk.red('Failed'));
-                    console.log(chalk.red(`Error: ${result.error}`));
+                    writeLine(chalk.red(`Error: ${result.error}`));
                     process.exit(1);
                 }
             } catch (error: unknown) {
                 const err = ensureError(error);
                 spinner.fail(chalk.red('Execution error'));
-                console.log(chalk.red(err.message));
+                writeLine(chalk.red(err.message));
                 if (err.stack) {
-                    console.log(chalk.gray(err.stack));
+                    writeLine(chalk.gray(err.stack));
                 }
                 process.exit(1);
             }
@@ -165,21 +166,21 @@ export function registerRobotkezCommands(program: Command) {
 
                 if (result.success) {
                     spinner.succeed(chalk.green('Feladat végrehajtva!'));
-                    console.log(chalk.cyan('\n📝 Eredmény:'), result.message);
+                    writeLine(chalk.cyan('\n📝 Eredmény:'), result.message);
 
                     if (result.data?.taskId) {
-                        console.log(chalk.yellow('\n🔄 Háttérben fut...'));
-                        console.log(chalk.gray(`   Task ID: ${result.data.taskId}`));
-                        console.log(chalk.gray(`   Becsült idő: ${formatDuration(result.data.estimatedDuration || 0)}`));
+                        writeLine(chalk.yellow('\n🔄 Háttérben fut...'));
+                        writeLine(chalk.gray(`   Task ID: ${result.data.taskId}`));
+                        writeLine(chalk.gray(`   Becsült idő: ${formatDuration(result.data.estimatedDuration || 0)}`));
                     }
                 } else {
                     spinner.fail(chalk.red('Hiba történt'));
-                    console.log(chalk.red(result.message));
+                    writeLine(chalk.red(result.message));
                 }
             } catch (error: unknown) {
                 const err = ensureError(error);
                 spinner.fail(chalk.red('API hiba'));
-                console.log(chalk.red(err.message));
+                writeLine(chalk.red(err.message));
                 process.exit(1);
             }
         });
@@ -203,22 +204,22 @@ export function registerRobotkezCommands(program: Command) {
 
                 if (result.success) {
                     spinner.succeed(chalk.green('Terv generálva!'));
-                    console.log(chalk.cyan(`\n📋 Lépések (${result.plan.plan.length}):
+                    writeLine(chalk.cyan(`\n📋 Lépések (${result.plan.plan.length}):
 `));
 
                     result.plan.plan.forEach((step: any, i: number) => {
-                        console.log(chalk.gray(`   ${i + 1}. ${step.action}: ${step.description}`));
+                        writeLine(chalk.gray(`   ${i + 1}. ${step.action}: ${step.description}`));
                     });
 
-                    console.log(chalk.yellow(`\n⏱️  Becsült idő: ${formatDuration(result.plan.estimatedDuration)}`));
-                    console.log(chalk.gray(`   Háttér jogosult: ${result.plan.backgroundEligible ? 'Igen' : 'Nem'}`));
+                    writeLine(chalk.yellow(`\n⏱️  Becsült idő: ${formatDuration(result.plan.estimatedDuration)}`));
+                    writeLine(chalk.gray(`   Háttér jogosult: ${result.plan.backgroundEligible ? 'Igen' : 'Nem'}`));
                 } else {
                     spinner.fail(chalk.red('Terv generálás sikertelen'));
                 }
             } catch (error: unknown) {
                 const err = ensureError(error);
                 spinner.fail(chalk.red('API hiba'));
-                console.log(chalk.red(err.message));
+                writeLine(chalk.red(err.message));
                 process.exit(1);
             }
         });
@@ -256,14 +257,14 @@ export function registerRobotkezCommands(program: Command) {
 
                 if (result.success) {
                     spinner.succeed(chalk.green('Művelet végrehajtva!'));
-                    console.log(chalk.cyan(result.message));
+                    writeLine(chalk.cyan(result.message));
                 } else {
                     spinner.fail(chalk.red('Művelet sikertelen'));
                 }
             } catch (error: unknown) {
                 const err = ensureError(error);
                 spinner.fail(chalk.red('API hiba'));
-                console.log(chalk.red(err.message));
+                writeLine(chalk.red(err.message));
                 process.exit(1);
             }
         });
@@ -288,24 +289,24 @@ export function registerRobotkezCommands(program: Command) {
 
                 spinner.stop();
 
-                console.log(chalk.cyan('\n🤖 Ügynök:'));
-                console.log(chalk.gray(`   Név: ${result.agent.name}`));
-                console.log(chalk.gray(`   Szerepkör: ${result.agent.role}`));
-                console.log(chalk.gray(`   Képességek: ${result.agent.capabilities.join(', ')}`));
+                writeLine(chalk.cyan('\n🤖 Ügynök:'));
+                writeLine(chalk.gray(`   Név: ${result.agent.name}`));
+                writeLine(chalk.gray(`   Szerepkör: ${result.agent.role}`));
+                writeLine(chalk.gray(`   Képességek: ${result.agent.capabilities.join(', ')}`));
 
-                console.log(chalk.cyan('\n🌐 Böngésző:'));
-                console.log(chalk.gray(`   Aktív: ${result.browser.active ? chalk.green('✅ Igen') : chalk.red('❌ Nem')}`));
-                console.log(chalk.gray(`   Motor: ${result.browser.engine}`));
+                writeLine(chalk.cyan('\n🌐 Böngésző:'));
+                writeLine(chalk.gray(`   Aktív: ${result.browser.active ? chalk.green('✅ Igen') : chalk.red('❌ Nem')}`));
+                writeLine(chalk.gray(`   Motor: ${result.browser.engine}`));
 
-                console.log(chalk.cyan('\n📋 Feladatok:'));
-                console.log(chalk.gray(`   Összes: ${result.tasks.total}`));
-                console.log(chalk.gray(`   Futó: ${chalk.blue(result.tasks.running)}`));
-                console.log(chalk.gray(`   Befejezett: ${chalk.green(result.tasks.completed)}`));
-                console.log(chalk.gray(`   Hibák: ${chalk.red(result.tasks.error)}`));
+                writeLine(chalk.cyan('\n📋 Feladatok:'));
+                writeLine(chalk.gray(`   Összes: ${result.tasks.total}`));
+                writeLine(chalk.gray(`   Futó: ${chalk.blue(result.tasks.running)}`));
+                writeLine(chalk.gray(`   Befejezett: ${chalk.green(result.tasks.completed)}`));
+                writeLine(chalk.gray(`   Hibák: ${chalk.red(result.tasks.error)}`));
             } catch (error: unknown) {
                 const err = ensureError(error);
                 spinner.fail(chalk.red('API hiba'));
-                console.log(chalk.red(err.message));
+                writeLine(chalk.red(err.message));
                 process.exit(1);
             }
         });
@@ -337,12 +338,12 @@ export function registerRobotkezCommands(program: Command) {
                 writeFileSync(outputPath, Buffer.from(buffer));
 
                 spinner.succeed(chalk.green('Screenshot mentve!'));
-                console.log(chalk.cyan(`   📸 Fájl: ${outputPath}`));
-                console.log(chalk.gray(`   Méret: ${(buffer.byteLength / 1024).toFixed(1)} KB`));
+                writeLine(chalk.cyan(`   📸 Fájl: ${outputPath}`));
+                writeLine(chalk.gray(`   Méret: ${(buffer.byteLength / 1024).toFixed(1)} KB`));
             } catch (error: unknown) {
                 const err = ensureError(error);
                 spinner.fail(chalk.red('Screenshot hiba'));
-                console.log(chalk.red(err.message));
+                writeLine(chalk.red(err.message));
                 process.exit(1);
             }
         });
@@ -378,27 +379,27 @@ export function registerRobotkezCommands(program: Command) {
                 spinner.stop();
 
                 if (result.tasks.length === 0) {
-                    console.log(chalk.yellow('\n📋 Nincsenek feladatok'));
+                    writeLine(chalk.yellow('\n📋 Nincsenek feladatok'));
                     return;
                 }
 
-                console.log(chalk.cyan(`\n📋 Feladatok (${result.count}):\n`));
+                writeLine(chalk.cyan(`\n📋 Feladatok (${result.count}):\n`));
 
                 result.tasks.forEach((task: any) => {
                     const icon = getStatusIcon(task.status);
-                    console.log(`${icon} ${chalk.bold(task.instruction.slice(0, 60))}${task.instruction.length > 60 ? '...' : ''}`);
-                    console.log(chalk.gray(`   ID: ${task.id}`));
-                    console.log(chalk.gray(`   Státusz: ${task.status} (${task.progress}%)`));
-                    console.log(chalk.gray(`   Indítva: ${formatTime(task.startedAt)}`));
+                    writeLine(`${icon} ${chalk.bold(task.instruction.slice(0, 60))}${task.instruction.length > 60 ? '...' : ''}`);
+                    writeLine(chalk.gray(`   ID: ${task.id}`));
+                    writeLine(chalk.gray(`   Státusz: ${task.status} (${task.progress}%)`));
+                    writeLine(chalk.gray(`   Indítva: ${formatTime(task.startedAt)}`));
                     if (task.error) {
-                        console.log(chalk.red(`   Hiba: ${task.error}`));
+                        writeLine(chalk.red(`   Hiba: ${task.error}`));
                     }
-                    console.log();
+                    writeLine();
                 });
             } catch (error: unknown) {
                 const err = ensureError(error);
                 spinner.fail(chalk.red('API hiba'));
-                console.log(chalk.red(err.message));
+                writeLine(chalk.red(err.message));
                 process.exit(1);
             }
         });
@@ -422,30 +423,30 @@ export function registerRobotkezCommands(program: Command) {
                 const task = result.task;
                 const icon = getStatusIcon(task.status);
 
-                console.log(chalk.cyan(`\n${icon} Feladat Részletek:\n`));
-                console.log(chalk.gray(`   ID: ${task.id}`));
-                console.log(chalk.gray(`   Utasítás: ${task.instruction}`));
-                console.log(chalk.gray(`   Státusz: ${task.status}`));
-                console.log(chalk.gray(`   Progress: ${task.progress}%`));
-                console.log(chalk.gray(`   Indítva: ${formatTime(task.startedAt)}`));
+                writeLine(chalk.cyan(`\n${icon} Feladat Részletek:\n`));
+                writeLine(chalk.gray(`   ID: ${task.id}`));
+                writeLine(chalk.gray(`   Utasítás: ${task.instruction}`));
+                writeLine(chalk.gray(`   Státusz: ${task.status}`));
+                writeLine(chalk.gray(`   Progress: ${task.progress}%`));
+                writeLine(chalk.gray(`   Indítva: ${formatTime(task.startedAt)}`));
                 if (task.completedAt) {
-                    console.log(chalk.gray(`   Befejezve: ${formatTime(task.completedAt)}`));
-                    console.log(chalk.gray(`   Időtartam: ${formatDuration(task.completedAt - task.startedAt)}`));
+                    writeLine(chalk.gray(`   Befejezve: ${formatTime(task.completedAt)}`));
+                    writeLine(chalk.gray(`   Időtartam: ${formatDuration(task.completedAt - task.startedAt)}`));
                 }
 
-                console.log(chalk.cyan(`\n📝 Lépések (${task.steps.length}):\n`));
+                writeLine(chalk.cyan(`\n📝 Lépések (${task.steps.length}):\n`));
                 task.steps.forEach((step: any, i: number) => {
                     const stepIcon = getStatusIcon(step.status);
-                    console.log(`   ${stepIcon} ${step.description}`);
+                    writeLine(`   ${stepIcon} ${step.description}`);
                 });
 
                 if (task.error) {
-                    console.log(chalk.red(`\n❌ Hiba: ${task.error}`));
+                    writeLine(chalk.red(`\n❌ Hiba: ${task.error}`));
                 }
             } catch (error: unknown) {
                 const err = ensureError(error);
                 spinner.fail(chalk.red('API hiba'));
-                console.log(chalk.red(err.message));
+                writeLine(chalk.red(err.message));
                 process.exit(1);
             }
         });
@@ -469,14 +470,14 @@ export function registerRobotkezCommands(program: Command) {
 
                 if (result.cancelled) {
                     spinner.succeed(chalk.green('Feladat megszakítva!'));
-                    console.log(chalk.cyan(result.message));
+                    writeLine(chalk.cyan(result.message));
                 } else {
                     spinner.fail(chalk.red('Megszakítás sikertelen'));
                 }
             } catch (error: unknown) {
                 const err = ensureError(error);
                 spinner.fail(chalk.red('API hiba'));
-                console.log(chalk.red(err.message));
+                writeLine(chalk.red(err.message));
                 process.exit(1);
             }
         });
@@ -490,9 +491,9 @@ export function registerRobotkezCommands(program: Command) {
         .alias('repl')
         .description('Interaktív REPL mód')
         .action(async () => {
-            console.log(chalk.cyan('\n🤖 RobotkezV2 Interaktív Mód\n'));
-            console.log(chalk.gray('   Írj magyar nyelvű utasításokat a böngésző vezérléséhez.'));
-            console.log(chalk.gray('   Kilépés: exit, quit, vagy Ctrl+C\n'));
+            writeLine(chalk.cyan('\n🤖 RobotkezV2 Interaktív Mód\n'));
+            writeLine(chalk.gray('   Írj magyar nyelvű utasításokat a böngésző vezérléséhez.'));
+            writeLine(chalk.gray('   Kilépés: exit, quit, vagy Ctrl+C\n'));
 
             let running = true;
 
@@ -510,7 +511,7 @@ export function registerRobotkezCommands(program: Command) {
                     const trimmed = instruction.trim();
                     if (!trimmed) continue;
                     if (['exit', 'quit', 'q'].includes(trimmed.toLowerCase())) {
-                        console.log(chalk.yellow('\n👋 Viszlát!'));
+                        writeLine(chalk.yellow('\n👋 Viszlát!'));
                         running = false;
                         break;
                     }
@@ -518,17 +519,17 @@ export function registerRobotkezCommands(program: Command) {
                     // Special commands
                     if (trimmed === 'status') {
                         const result = await apiFetch<any>('/status');
-                        console.log(chalk.green(`   ✅ Böngésző: ${result.browser.active ? 'Aktív' : 'Leállítva'}`));
-                        console.log(chalk.gray(`   Futó feladatok: ${result.tasks.running}`));
+                        writeLine(chalk.green(`   ✅ Böngésző: ${result.browser.active ? 'Aktív' : 'Leállítva'}`));
+                        writeLine(chalk.gray(`   Futó feladatok: ${result.tasks.running}`));
                         continue;
                     }
 
                     if (trimmed === 'help') {
-                        console.log(chalk.cyan('\n📚 Parancsok:'));
-                        console.log(chalk.gray('   status    - Ügynök státusz'));
-                        console.log(chalk.gray('   help      - Súgó'));
-                        console.log(chalk.gray('   exit/quit - Kilépés'));
-                        console.log(chalk.gray('   <utasítás> - Magyar nyelvű böngésző parancs\n'));
+                        writeLine(chalk.cyan('\n📚 Parancsok:'));
+                        writeLine(chalk.gray('   status    - Ügynök státusz'));
+                        writeLine(chalk.gray('   help      - Súgó'));
+                        writeLine(chalk.gray('   exit/quit - Kilépés'));
+                        writeLine(chalk.gray('   <utasítás> - Magyar nyelvű böngésző parancs\n'));
                         continue;
                     }
 
@@ -546,27 +547,27 @@ export function registerRobotkezCommands(program: Command) {
 
                         if (result.success) {
                             spinner.succeed(chalk.green('Kész!'));
-                            console.log(chalk.cyan(`   ${result.message}`));
+                            writeLine(chalk.cyan(`   ${result.message}`));
 
                             if (result.data?.taskId) {
-                                console.log(chalk.yellow(`   🔄 Háttérben fut (ID: ${result.data.taskId})`));
+                                writeLine(chalk.yellow(`   🔄 Háttérben fut (ID: ${result.data.taskId})`));
                             }
                         } else {
                             spinner.fail(chalk.red('Hiba'));
-                            console.log(chalk.red(`   ${result.message}`));
+                            writeLine(chalk.red(`   ${result.message}`));
                         }
                     } catch (error: unknown) {
                         const err = ensureError(error);
                         spinner.fail(chalk.red('API hiba'));
-                        console.log(chalk.red(`   ${err.message}`));
+                        writeLine(chalk.red(`   ${err.message}`));
                     }
                 } catch (error: unknown) {
                     const err = ensureError(error);
                     if (err.message?.includes('User force closed')) {
-                        console.log(chalk.yellow('\n👋 Viszlát!'));
+                        writeLine(chalk.yellow('\n👋 Viszlát!'));
                         running = false;
                     } else {
-                        console.log(chalk.red(`Hiba: ${err.message}`));
+                        writeLine(chalk.red(`Hiba: ${err.message}`));
                     }
                 }
             }

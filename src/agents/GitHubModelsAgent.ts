@@ -306,7 +306,7 @@ You have access to Brunella's MCP tools for:
 
 **Guidelines:**
 - Always follow ESM conventions (.js imports in TypeScript)
-- Use logger.ts (never console.log)
+- Use logger.ts (never direct console output)
 - Write tests for new features (Vitest)
 - Follow defensive programming (null checks, error handling)
 - Respect the Conductor track workflow

@@ -34,6 +34,17 @@ export interface TaskItem {
   result?: any;
 }
 
+export interface BusinessJob {
+  id: string;
+  type: string;
+  status: string;
+  query: string;
+  results_json?: string | null;
+  metadata?: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface SystemSignalState {
   isConnected: boolean;
   logs: LogEntry[];

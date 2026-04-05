@@ -66,7 +66,7 @@ describe("Task Decomposer CLI Commands", () => {
     decomposerHarness.callToolMock.mockResolvedValue({
       content: [{ text: '{"status":"success"}' }],
     });
-    const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+    const consoleSpy = vi.spyOn(console, 'info').mockImplementation(() => {});
     const exitSpy = vi.spyOn(process, "exit").mockImplementation(((
       code?: string | number | null | undefined,
     ) => {
@@ -134,7 +134,7 @@ describe("Task Decomposer CLI Commands", () => {
         },
       ],
     });
-    const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+    const consoleSpy = vi.spyOn(console, 'info').mockImplementation(() => {});
     vi.spyOn(process, "exit").mockImplementation(((
       code?: string | number | null | undefined,
     ) => {
@@ -212,7 +212,7 @@ describe("Task Decomposer CLI Commands", () => {
     decomposerHarness.callToolMock.mockResolvedValue({
       content: [{ text: '{"status":"success","data":{"unexpected":true}}' }],
     });
-    const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+    const consoleSpy = vi.spyOn(console, 'info').mockImplementation(() => {});
     const exitSpy = vi.spyOn(process, "exit").mockImplementation(((
       code?: string | number | null | undefined,
     ) => {

@@ -45,6 +45,7 @@ import { BrunellaStudio } from "@/components/dashboard/BrunellaStudio";
 import { CampaignStudio } from "@/components/dashboard/CampaignStudio";
 import { InnovationBridgeWidget } from "@/components/dashboard/InnovationBridgeWidget";
 import { DigitalHRWidget } from "@/components/dashboard/DigitalHRWidget";
+import { HROnboardingWidget } from "@/components/dashboard/HROnboardingWidget";
 import { GrantHunterWidget } from "@/components/dashboard/GrantHunterWidget";
 import { LawDetectiveWidget } from "@/components/dashboard/LawDetectiveWidget";
 import { BookkeepingWidget } from "@/components/dashboard/BookkeepingWidget";
@@ -220,6 +221,7 @@ export function initializeNavigation ()
     { id: "showcase", label: "AI Showcase", icon: Sparkles, component: <ShowcasePage /> },
     { id: "jules", label: "Jules AI", icon: Zap, component: <JulesPanel /> },
     { id: "digital-hr", label: "Digital HR", icon: Briefcase, component: <DigitalHRWidget /> },
+    { id: "hr-onboarding", label: "HR Onboarding", icon: Workflow, component: <HROnboardingWidget /> },
     { id: "grant-hunter", label: "Grant Hunter", icon: Search, component: <GrantHunterWidget /> },
     { id: "law-detective", label: "Law Detective", icon: Shield, component: <LawDetectiveWidget /> },
     { id: "property-visionary", label: "Property Visionary", icon: Box, component: <PropertyVisionaryWidget /> },

@@ -2,6 +2,7 @@
 Unit tesztek a Számlázz.hu API kliens számára.
 """
 
+import base64
 import pytest
 from datetime import date
 from unittest.mock import patch, MagicMock
@@ -136,9 +137,40 @@ class TestSzamlazzHuClient:
         
         assert client.test_connection() is True
 
+    @patch("myai.clients.szamlazz_hu_client.requests.Session.post")
+    def test_send_invoice_pdf_success(self, mock_post, client):
+        """Számla küldés PDF válasszal."""
+        mock_response = MagicMock()
+        mock_response.status_code = 200
+        mock_response.headers = {"Content-Type": "application/pdf"}
+        mock_response.content = b"%PDF-1.4 test pdf"
+        mock_response.text = "ignored"
+        mock_post.return_value = mock_response
+
+        result = client.send_invoice("<xml>invoice</xml>")
+
+        assert result["success"] is True
+        assert result["status_code"] == 200
+        assert result["document_type"] == "pdf"
+        assert result["response_base64"] == base64.b64encode(b"%PDF-1.4 test pdf").decode("ascii")
+
+    @patch("myai.clients.szamlazz_hu_client.requests.Session.post")
+    def test_send_invoice_api_error(self, mock_post, client):
+        """Számla küldés API hiba esetén."""
+        mock_response = MagicMock()
+        mock_response.status_code = 400
+        mock_response.json.return_value = {"error": {"message": "Bad Request"}}
+        mock_response.text = "Bad Request"
+        mock_post.return_value = mock_response
+
+        with pytest.raises(SzamlazzHuError):
+            client.send_invoice("<xml>invoice</xml>")
+
     def test_no_api_key(self):
         """API key nélküli kliens kezelése."""
         client = SzamlazzHuClient(api_key="")
         invoices = client.get_invoices()
         
         assert invoices == []
+        with pytest.raises(SzamlazzHuError):
+            client.send_invoice("<xml>invoice</xml>")

@@ -8,6 +8,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { ensureError } from './utils/ensureError.js';
+import { writeLine } from './utils/cliOutput.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -35,7 +36,7 @@ function log(message: string, type: 'info' | 'success' | 'error' | 'warn' = 'inf
         error: '❌',
         warn: '⚠️'
     };
-    console.log(`${icons[type]} ${message}`);
+    writeLine(`${icons[type]} ${message}`);
 }
 
 function runCommand(cmd: string): string {
@@ -79,7 +80,7 @@ function getJulesBranches(): JulesBranch[] {
 async function julesNew() {
     console.clear();
     log('🤖 Új Jules Task', 'info');
-    console.log('');
+    writeLine('');
 
     const answers = await inquirer.prompt([
         {
@@ -154,7 +155,7 @@ async function julesNew() {
         }
     ]);
 
-    console.log('');
+    writeLine('');
     log('🚀 Jules task indítása...', 'info');
 
     try {
@@ -163,7 +164,7 @@ async function julesNew() {
         if (methodAnswer.method === 'api') {
             // Python API client
             const output = runCommand(`python scripts/jules_api_client.py create "${prompt}"`);
-            console.log(output);
+            writeLine(output);
 
             // Parse session ID
             const match = output.match(/ID: (\d+)/);
@@ -173,7 +174,7 @@ async function julesNew() {
         } else {
             // Jules CLI
             const output = runCommand(`python scripts/jules_cli_wrapper.py new "${prompt}"`);
-            console.log(output);
+            writeLine(output);
 
             // Parse session ID
             const match = output.match(/Session ID: (\S+)/);
@@ -196,7 +197,7 @@ async function julesNew() {
             ]);
 
             if (watchAnswer.watch) {
-                console.log('');
+                writeLine('');
                 log('⏳ Watch mode - várakozás a session befejezésére...', 'info');
                 if (methodAnswer.method === 'api') {
                     runCommand(`python scripts/jules_api_client.py watch ${sessionId}`);
@@ -216,7 +217,7 @@ async function julesNew() {
 async function julesSync() {
     console.clear();
     log('🔄 Jules Sync - GitHub branch-ek pullolása', 'info');
-    console.log('');
+    writeLine('');
 
     log('Ellenőrzés...', 'info');
     const branches = getJulesBranches();
@@ -227,12 +228,12 @@ async function julesSync() {
         return;
     }
 
-    console.log('');
+    writeLine('');
     log(`${branches.length} Jules branch találva:`, 'success');
     branches.forEach((b, i) => {
-        console.log(`  ${i + 1}. ${b.name} (${b.commits} új commit)`);
+        writeLine(`  ${i + 1}. ${b.name} (${b.commits} új commit)`);
     });
-    console.log('');
+    writeLine('');
 
     const answer = await inquirer.prompt([
         {
@@ -273,9 +274,9 @@ async function julesSync() {
         const selectedBranch = branchAnswer.branch;
 
         if (answer.action === 'review') {
-            console.log('');
+            writeLine('');
             log(`Review: ${selectedBranch}`, 'info');
-            console.log('');
+            writeLine('');
             runCommand(`git log origin/${selectedBranch} -5 --oneline --stat`);
         } else {
             // Merge
@@ -296,14 +297,14 @@ async function julesSync() {
         }
     }
 
-    console.log('');
+    writeLine('');
     await mainMenu();
 }
 
 async function julesStatus() {
     console.clear();
     log('📊 Jules Status', 'info');
-    console.log('');
+    writeLine('');
 
     // Sessions (helyi)
     const sessions = loadJulesSessions();
@@ -311,10 +312,10 @@ async function julesStatus() {
         log(`Helyi sessions (${sessions.length}):`, 'info');
         sessions.slice(-5).forEach((s, i) => {
             const statusIcon = s.status === 'completed' ? '✅' : s.status === 'running' ? '⏳' : '❌';
-            console.log(`  ${statusIcon} ${s.session_id}`);
-            console.log(`     ${s.prompt.slice(0, 60)}...`);
+            writeLine(`  ${statusIcon} ${s.session_id}`);
+            writeLine(`     ${s.prompt.slice(0, 60)}...`);
         });
-        console.log('');
+        writeLine('');
     }
 
     // GitHub branches
@@ -322,9 +323,9 @@ async function julesStatus() {
     if (branches.length > 0) {
         log(`GitHub Jules branches (${branches.length}):`, 'info');
         branches.forEach((b, i) => {
-            console.log(`  ${i + 1}. ${b.name} (${b.commits} commits)`);
+            writeLine(`  ${i + 1}. ${b.name} (${b.commits} commits)`);
         });
-        console.log('');
+        writeLine('');
     }
 
     // API sessions (opcionális)
@@ -338,34 +339,34 @@ async function julesStatus() {
     ]);
 
     if (apiAnswer.showApi) {
-        console.log('');
+        writeLine('');
         log('API sessions lekérdezése...', 'info');
         runCommand('python scripts/jules_api_client.py list 10');
     }
 
-    console.log('');
+    writeLine('');
     await mainMenu();
 }
 
 async function julesHelp() {
     console.clear();
     log('📖 Jules Help', 'info');
-    console.log('');
-    console.log('Elérhető parancsok:');
-    console.log('');
-    console.log('  /jules new      - Új Jules task létrehozás');
-    console.log('  /jules sync     - GitHub Jules branch-ek pullolása');
-    console.log('  /jules status   - Jules sessions és branch-ek státusza');
-    console.log('  /jules help     - Ez a súgó');
-    console.log('  /exit           - Kilépés');
-    console.log('');
-    console.log('Interaktív használat:');
-    console.log('  1. Indítsd: node build/cli-jules-interactive.js');
-    console.log('  2. Válassz menüpontot nyilakkal');
-    console.log('  3. Enter a kiválasztáshoz');
-    console.log('');
-    console.log('Dokumentáció: JULES_INTEGRATION.md');
-    console.log('');
+    writeLine('');
+    writeLine('Elérhető parancsok:');
+    writeLine('');
+    writeLine('  /jules new      - Új Jules task létrehozás');
+    writeLine('  /jules sync     - GitHub Jules branch-ek pullolása');
+    writeLine('  /jules status   - Jules sessions és branch-ek státusza');
+    writeLine('  /jules help     - Ez a súgó');
+    writeLine('  /exit           - Kilépés');
+    writeLine('');
+    writeLine('Interaktív használat:');
+    writeLine('  1. Indítsd: node build/cli-jules-interactive.js');
+    writeLine('  2. Válassz menüpontot nyilakkal');
+    writeLine('  3. Enter a kiválasztáshoz');
+    writeLine('');
+    writeLine('Dokumentáció: JULES_INTEGRATION.md');
+    writeLine('');
 
     await inquirer.prompt([
         {
@@ -381,7 +382,7 @@ async function julesHelp() {
 // ====== MAIN MENU ======
 
 async function mainMenu() {
-    console.log('');
+    writeLine('');
     const answer = await inquirer.prompt([
         {
             type: 'list',
@@ -422,11 +423,11 @@ async function mainMenu() {
 
 async function main() {
     console.clear();
-    console.log('╔════════════════════════════════════════╗');
-    console.log('║   🤖 Brunella + Jules Integráció      ║');
-    console.log('║   Interaktív CLI Menü                  ║');
-    console.log('╚════════════════════════════════════════╝');
-    console.log('');
+    writeLine('╔════════════════════════════════════════╗');
+    writeLine('║   🤖 Brunella + Jules Integráció      ║');
+    writeLine('║   Interaktív CLI Menü                  ║');
+    writeLine('╚════════════════════════════════════════╝');
+    writeLine('');
 
     await mainMenu();
 }

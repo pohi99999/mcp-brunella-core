@@ -14,6 +14,7 @@ import {
   createStocktake
 } from '../../utils/inventoryDb.js';
 import { DemandForecastAgent, type DemandForecastTask } from '../../agents/DemandForecastAgent.js';
+import { writeLine } from '../../utils/cliOutput.js';
 
 export async function inventoryStatus(): Promise<void> {
   const spinner = ora('Készletadatok betöltése...').start();
@@ -22,11 +23,11 @@ export async function inventoryStatus(): Promise<void> {
     spinner.stop();
 
     if (items.length === 0) {
-      console.log(chalk.yellow('Nincs megjeleníthető termék az adatbázisban.'));
+      writeLine(chalk.yellow('Nincs megjeleníthető termék az adatbázisban.'));
       return;
     }
 
-    console.log(
+    writeLine(
       boxen(chalk.blue.bold('📦 Aktuális Készlet Állapot'), {
         padding: 1,
         borderColor: 'cyan',
@@ -34,14 +35,14 @@ export async function inventoryStatus(): Promise<void> {
       })
     );
 
-    console.log(
+    writeLine(
       chalk.bold.gray('SKU'.padEnd(15)) +
       chalk.bold.gray('NÉV'.padEnd(30)) +
       chalk.bold.gray('KÉSZLET'.padEnd(15)) +
       chalk.bold.gray('ROP (Min)'.padEnd(15)) +
       chalk.bold.gray('ÉRTÉKELÉS'.padEnd(10))
     );
-    console.log(chalk.gray('-'.repeat(85)));
+    writeLine(chalk.gray('-'.repeat(85)));
 
     items.forEach(item => {
       const stockStr = `${item.current_stock} ${item.unit}`;
@@ -51,7 +52,7 @@ export async function inventoryStatus(): Promise<void> {
       if (item.current_stock <= item.min_stock) stockColor = chalk.red.bold;
       else if (item.current_stock <= item.reorder_point) stockColor = chalk.yellow;
 
-      console.log(
+      writeLine(
         chalk.cyan(item.sku.padEnd(15)) +
         chalk.white(item.name.substring(0, 28).padEnd(30)) +
         stockColor(stockStr.padEnd(15)) +
@@ -59,7 +60,7 @@ export async function inventoryStatus(): Promise<void> {
         chalk.magenta(item.valuation_method.padEnd(10))
       );
     });
-    console.log('\n');
+    writeLine('\n');
   } catch (error) {
     spinner.fail(chalk.red('Hiba a készlet lekérdezésekor.'));
     console.error(error);
@@ -73,11 +74,11 @@ export async function inventoryValuation(): Promise<void> {
     spinner.stop();
 
     if (summary.length === 0) {
-      console.log(chalk.yellow('Nincsenek értékelt termékek az adatbázisban.'));
+      writeLine(chalk.yellow('Nincsenek értékelt termékek az adatbázisban.'));
       return;
     }
 
-    console.log(
+    writeLine(
       boxen(chalk.magenta.bold('📊 Készletértékelés Összesítő (ELÁBÉ / FIFO & WAC)'), {
         padding: 1,
         borderColor: 'magenta',
@@ -85,13 +86,13 @@ export async function inventoryValuation(): Promise<void> {
       })
     );
 
-    console.log(
+    writeLine(
       chalk.bold.gray('SKU'.padEnd(15)) +
       chalk.bold.gray('ÖSSZ DB'.padEnd(15)) +
       chalk.bold.gray('FIFO ÉRTÉK'.padEnd(20)) +
       chalk.bold.gray('WAC ÉRTÉK'.padEnd(20))
     );
-    console.log(chalk.gray('-'.repeat(70)));
+    writeLine(chalk.gray('-'.repeat(70)));
 
     let totalFifo = 0;
     let totalWac = 0;
@@ -99,7 +100,7 @@ export async function inventoryValuation(): Promise<void> {
     summary.forEach(row => {
       totalFifo += row.fifo_stock_value;
       totalWac += row.wac_stock_value;
-      console.log(
+      writeLine(
         chalk.cyan(row.sku.padEnd(15)) +
         chalk.white(row.current_stock.toString().padEnd(15)) +
         chalk.green(`${row.fifo_stock_value.toLocaleString('hu-HU')} Ft`.padEnd(20)) +
@@ -107,13 +108,13 @@ export async function inventoryValuation(): Promise<void> {
       );
     });
 
-    console.log(chalk.gray('-'.repeat(70)));
-    console.log(
+    writeLine(chalk.gray('-'.repeat(70)));
+    writeLine(
       chalk.bold.white('MINDÖSSZESEN:'.padEnd(30)) +
       chalk.bold.green(`${totalFifo.toLocaleString('hu-HU')} Ft (FIFO) / `) +
       chalk.bold.yellow(`${totalWac.toLocaleString('hu-HU')} Ft (WAC)`)
     );
-    console.log('\n');
+    writeLine('\n');
   } catch (error) {
     spinner.fail(chalk.red('Hiba az értékelés lekérdezésekor.'));
     console.error(error);
@@ -127,18 +128,18 @@ export async function inventoryOrderReview(): Promise<void> {
     spinner.stop();
 
     if (pendingOrders.length === 0) {
-      console.log(chalk.green('Nincs jelenleg jóváhagyásra váró (függő) beszerzési rendelés.'));
+      writeLine(chalk.green('Nincs jelenleg jóváhagyásra váró (függő) beszerzési rendelés.'));
       return;
     }
 
-    console.log(chalk.blue.bold(`\n📝 ${pendingOrders.length} db jóváhagyásra váró rendelés található.\n`));
+    writeLine(chalk.blue.bold(`\n📝 ${pendingOrders.length} db jóváhagyásra váró rendelés található.\n`));
 
     for (const order of pendingOrders) {
-      console.log(chalk.bgGray.black.bold(` RENDELÉS ID: ${order.id} | SKU: ${order.sku} `));
-      console.log(chalk.white(`Javasolt mennyiség: ${chalk.bold.green(order.order_qty)} dB`));
-      console.log(chalk.gray('--- Tervezett E-mail Szövege ---'));
-      console.log(chalk.italic.cyan(order.email_draft || 'Nincs email tartalom'));
-      console.log(chalk.gray('--------------------------------\n'));
+      writeLine(chalk.bgGray.black.bold(` RENDELÉS ID: ${order.id} | SKU: ${order.sku} `));
+      writeLine(chalk.white(`Javasolt mennyiség: ${chalk.bold.green(order.order_qty)} dB`));
+      writeLine(chalk.gray('--- Tervezett E-mail Szövege ---'));
+      writeLine(chalk.italic.cyan(order.email_draft || 'Nincs email tartalom'));
+      writeLine(chalk.gray('--------------------------------\n'));
 
       const { action } = await inquirer.prompt<{ action: string }>([
         {
@@ -158,11 +159,11 @@ export async function inventoryOrderReview(): Promise<void> {
         await updatePurchaseOrderStatus(order.id, action as 'APPROVED' | 'CANCELLED', 'CLI (Human-in-Loop)');
         updateSpinner.succeed(chalk.green(`Rendelés státusza sikeresen frissítve erre: ${action}.`));
       } else {
-        console.log(chalk.yellow('Rendelés átugorva.'));
+        writeLine(chalk.yellow('Rendelés átugorva.'));
       }
-      console.log('\n');
+      writeLine('\n');
     }
-    console.log(chalk.green.bold('Vége a rendelések listájának.'));
+    writeLine(chalk.green.bold('Vége a rendelések listájának.'));
   } catch (error) {
     spinner.fail(chalk.red('Hiba a rendelések lekérdezésekor.'));
     console.error(error);
@@ -170,7 +171,7 @@ export async function inventoryOrderReview(): Promise<void> {
 }
 
 export async function inventoryStocktake(): Promise<void> {
-  console.log(
+  writeLine(
     boxen(chalk.yellow.bold('🕵️ Interaktív Leltárfelvétel'), {
       padding: 1,
       borderColor: 'yellow',
@@ -181,7 +182,7 @@ export async function inventoryStocktake(): Promise<void> {
   try {
     const items = await getAllItems();
     if (items.length === 0) {
-      console.log(chalk.red('Nincs termék az adatbázisban a leltározáshoz.'));
+      writeLine(chalk.red('Nincs termék az adatbázisban a leltározáshoz.'));
       return;
     }
 
@@ -229,10 +230,10 @@ export async function inventoryStocktake(): Promise<void> {
 
     spinner.succeed(chalk.green('Leltárfelvétel sikeresen elmentve.'));
     if (discrepancy !== 0) {
-      console.log(chalk.red.bold(`⚠️ Eltérés észlelve: ${discrepancy > 0 ? '+' : ''}${discrepancy} db.`));
-      console.log(chalk.gray('Megjegyzés: A "StocktakeReconciliationAgent" a háttérben/végponton kivizsgálhatja az okot.'));
+      writeLine(chalk.red.bold(`⚠️ Eltérés észlelve: ${discrepancy > 0 ? '+' : ''}${discrepancy} db.`));
+      writeLine(chalk.gray('Megjegyzés: A "StocktakeReconciliationAgent" a háttérben/végponton kivizsgálhatja az okot.'));
     } else {
-      console.log(chalk.green.bold('Pipa! A fizikai és rendszerkészlet egyezik.'));
+      writeLine(chalk.green.bold('Pipa! A fizikai és rendszerkészlet egyezik.'));
     }
   } catch (error) {
     console.error(chalk.red('Hiba a leltárfelvétel közben:'), error);
@@ -246,7 +247,7 @@ export async function inventoryForecast(sku?: string): Promise<void> {
     if (!targetSku) {
       const items = await getAllItems();
       if (items.length === 0) {
-        console.log(chalk.red('Nincs termék az adatbázisban az előrejelzéshez.'));
+        writeLine(chalk.red('Nincs termék az adatbázisban az előrejelzéshez.'));
         return;
       }
       
@@ -273,7 +274,7 @@ export async function inventoryForecast(sku?: string): Promise<void> {
       
       const data = response.data as any; // The DemandForecastResult typing
       
-      console.log(
+      writeLine(
         boxen(chalk.magenta.bold('🔮 AI Kereslet-Előrejelzés / Forecast Summary'), {
           padding: 1,
           borderColor: 'magenta',
@@ -281,13 +282,13 @@ export async function inventoryForecast(sku?: string): Promise<void> {
         })
       );
       
-      console.log(chalk.bold.white(`Termék: `) + chalk.cyan(`${data.sku} - ${data.name}`));
-      console.log(chalk.bold.white(`Trend és szezonalitás detektálva: `));
-      console.log(chalk.italic.gray(` ${data.trend_description}`));
-      console.log(chalk.bold.white(`Becsült várható kereslet (következő 30 nap): `) + chalk.yellow.bold(`${data.predicted_demand_30d} db`));
-      console.log(chalk.bold.white(`Ajánlott azonnali utánpótlás (rendelés): `) + chalk.green.bold(`${data.recommended_order_qty} db`));
-      console.log(chalk.bold.white(`AI Konfidencia Szint: `) + chalk.gray(`${(data.confidence * 100).toFixed(0)}%`));
-      console.log('\n');
+      writeLine(chalk.bold.white(`Termék: `) + chalk.cyan(`${data.sku} - ${data.name}`));
+      writeLine(chalk.bold.white(`Trend és szezonalitás detektálva: `));
+      writeLine(chalk.italic.gray(` ${data.trend_description}`));
+      writeLine(chalk.bold.white(`Becsült várható kereslet (következő 30 nap): `) + chalk.yellow.bold(`${data.predicted_demand_30d} db`));
+      writeLine(chalk.bold.white(`Ajánlott azonnali utánpótlás (rendelés): `) + chalk.green.bold(`${data.recommended_order_qty} db`));
+      writeLine(chalk.bold.white(`AI Konfidencia Szint: `) + chalk.gray(`${(data.confidence * 100).toFixed(0)}%`));
+      writeLine('\n');
 
     } else {
       spinner.fail(chalk.red('Hiba a forecast készítésekor.'));

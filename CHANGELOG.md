@@ -8,6 +8,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### Added
+
+- **P-Sales human-in-loop slice — persistent SQLite storage, pause/resume/audit/weekly-status endpoints** (`src/data/psales_db.ts`, `src/agents/StrategyPlannerAgent.ts`, `src/server/routes/psales-strategy.ts`, `src/dashboard/components/dashboard/PSalesStrategyPanel.tsx`, `test/integration/psales.strategy.integration.test.ts`): Replaced the in-memory strategy plan store with a persistent SQLite database (`better-sqlite3`) and extended the P-Sales strategy API with human-in-loop controls:
+  - **`src/data/psales_db.ts`** (new): Complete persistence layer with two tables — `psales_strategy_plans` (planId, approvalState `pending|approved|rejected|paused`, JSON-serialised channels/segments/steps, resumeToken for stateless webhook callbacks) and `psales_audit_events` (full event log). Key exports: `initPSalesDb`, `closePSalesDb`, `insertStrategyPlan`, `getStrategyPlan`, `listStrategyPlans`, `updatePlanApprovalState`, `pauseStrategyPlan`, `resumeStrategyPlan`, `insertPSalesAuditEvent`, `listPSalesAuditEvents`, `getPSalesStatusSummary`. Automatically uses `:memory:` in test/CI environments.
+  - **`src/agents/StrategyPlannerAgent.ts`** (modified): Removed in-memory `planStore = new Map()`. `createPlan` and `approvePlan` now persist via `psales_db` and write audit events on every state transition.
+  - **`src/server/routes/psales-strategy.ts`** (modified): Expanded from 2 to 6 endpoints — `POST /plan` (201), `POST /approve` (200/400/404/409), `POST /pause` (200/400/404/409), `POST /resume` (200/400/404), `GET /audit` (200, optional `?planId=`, `?limit=`), `GET /weekly-status` (200, counts by state + last 10 audit events). All responses use `{ ok, ... }` shape; error bodies return `{ ok: false, error }`.
+  - **`src/dashboard/components/dashboard/PSalesStrategyPanel.tsx`** (modified): Adapted to new `{ ok, plan }` API wrapper — `generatePlan` reads `data.plan`, `handleApproval` reads `data.plan`, error toasts on `ok: false`. Added `paused` state support (blue badge, `PauseCircle` icon). Added Pause button to the pending-plan action row (`handlePause` → `POST /pause`).
+  - **`test/integration/psales.strategy.integration.test.ts`** (new): 30 integration tests (Vitest + supertest + `:memory:` DB) covering all endpoints, state transition guards (409), full create→pause→resume→approve lifecycle.
+
 ### Fixed
 
 - **pytest Windows permission errors** (`myai/pytest.ini`, `myai/tests/conftest.py`, `myai/workers/lancedb_batch.py`, `myai/tests/test_media_factory.py`, `myai/tests/test_workers_lancedb_batch.py`, `myai/.gitignore`): Resolved all `PermissionError: [WinError 5] Access denied` failures on Windows by implementing a comprehensive fix:
@@ -20,6 +29,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   - See `myai/PYTEST_WINDOWS_FIX_REPORT.md` for detailed root cause analysis and technical documentation
 
 ### Added
+
+- **HR onboarding dry-run helper split** (`src/utils/hrOnboardingDryRun.ts`, `src/server/routes/hrOnboarding.ts`, `src/dashboard/lib/hrOnboardingApi.ts`, `src/dashboard/components/dashboard/HROnboardingWidget.tsx`, `src/cli/commands/hr-onboarding-hu.ts`): Added a dedicated dry-run module wrapper and routed the dashboard, API, CLI, and HTTP flow through it so the HR onboarding slice has the requested file boundary.
 
 - **Runtime learning + harvest hardening** (`src/core/goldenDatasetBridge.ts`, `src/server/registry.ts`, `src/config/paiosConfig.ts`, `src/server/routes/tts.ts`, `src/dashboard/components/dashboard/PAIOSOrchestratorChat.tsx`, `myai/agents/tech_harvester.py`): Golden mirror sync now falls back to the Python incubator when the D1 worker returns malformed HTML/JSON, curated golden samples normalize legacy `candidate` rows into `pending`, local golden samples automatically appear in the approval queue, MCP tools are now instrumented into `tool_runs`, PAIOS exposes/configures a Nova-first voice profile end-to-end, and the harvester safely supports Apify targets without `url` while avoiding unnecessary browser startup.
 

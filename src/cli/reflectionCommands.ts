@@ -2,6 +2,7 @@ import { Command } from 'commander';
 import chalk from 'chalk';
 import boxen from 'boxen';
 import ora from 'ora';
+import { writeLine } from '../utils/cliOutput.js';
 
 interface ReflectionOverview {
   stats: {
@@ -53,32 +54,32 @@ async function apiFetch<T>(path: string, options?: RequestInit): Promise<T> {
 }
 
 function printOverview(overview: ReflectionOverview): void {
-  console.log(boxen(chalk.cyan('Reflection állapot'), { padding: 1, borderStyle: 'round' }));
-  console.log(`Reflections: ${chalk.white(String(overview.stats.totalReflections))}`);
-  console.log(`Avg quality: ${chalk.white(`${Math.round(overview.stats.avgQualityScore * 100)}%`)}`);
-  console.log(`Self-model:  ${chalk.white(overview.selfModel.health)}`);
-  console.log(`Pain points: ${chalk.white(String(overview.painPoints.length))}`);
+  writeLine(boxen(chalk.cyan('Reflection állapot'), { padding: 1, borderStyle: 'round' }));
+  writeLine(`Reflections: ${chalk.white(String(overview.stats.totalReflections))}`);
+  writeLine(`Avg quality: ${chalk.white(`${Math.round(overview.stats.avgQualityScore * 100)}%`)}`);
+  writeLine(`Self-model:  ${chalk.white(overview.selfModel.health)}`);
+  writeLine(`Pain points: ${chalk.white(String(overview.painPoints.length))}`);
 
-  console.log(chalk.bold('\nMemória boundary'));
-  console.log(`  Globális: ${overview.selfModel.memoryScopes.global.purpose}`);
-  console.log(`  Lokális : ${overview.selfModel.memoryScopes.local.purpose}`);
+  writeLine(chalk.bold('\nMemória boundary'));
+  writeLine(`  Globális: ${overview.selfModel.memoryScopes.global.purpose}`);
+  writeLine(`  Lokális : ${overview.selfModel.memoryScopes.local.purpose}`);
 
   if (overview.painPoints.length > 0) {
-    console.log(chalk.bold('\nPain points'));
+    writeLine(chalk.bold('\nPain points'));
     for (const point of overview.painPoints.slice(0, 5)) {
-      console.log(`  • ${point.agent} [${point.severity}] ${point.failureCount} hiba — ${point.recommendation}`);
+      writeLine(`  • ${point.agent} [${point.severity}] ${point.failureCount} hiba — ${point.recommendation}`);
     }
   }
 
   if (overview.insights.length > 0) {
-    console.log(chalk.bold('\nMeta insightok'));
+    writeLine(chalk.bold('\nMeta insightok'));
     for (const insight of overview.insights.slice(0, 5)) {
-      console.log(`  • [${insight.category}] ${insight.description}`);
+      writeLine(`  • [${insight.category}] ${insight.description}`);
     }
   }
 
-  console.log(chalk.bold('\nContext'));
-  console.log(chalk.dim(overview.context || 'Nincs reflection context.'));
+  writeLine(chalk.bold('\nContext'));
+  writeLine(chalk.dim(overview.context || 'Nincs reflection context.'));
 }
 
 export function registerReflectionCommands(program: Command): void {

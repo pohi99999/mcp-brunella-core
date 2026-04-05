@@ -36,7 +36,7 @@
 - [ ] `konyveles_phase3_20260403` státuszának ellenőrzése → archivált?
 - [ ] LanceDB telepítve: `cd myai && uv add lancedb` → `python -c "import lancedb; print('OK')"`
 - [ ] Langflow instance fut: `http://localhost:7860` elérhető?
-- [ ] `data/accounting-kb/` mappa létrehozása
+- [x] `data/accounting-kb/` mappa létrehozása (scaffold már megvan; jelenleg csak `README.md`)
 - [ ] Könyvvizsgálati/számviteli politika PDF-ek összegyűjtése `data/accounting-kb/`-ba
 - [ ] Egységes számlatükör JSON elkészítése: `data/accounting-kb/chart_of_accounts.json`
 

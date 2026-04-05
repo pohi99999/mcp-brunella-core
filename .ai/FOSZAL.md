@@ -1,6 +1,6 @@
 # FŐSZÁL - Egyesített Fejlesztési Napló
 
-**Generálva:** 2026-04-05 12:10
+**Generálva:** 2026-04-05 19:51
 **Script:** `scripts/sync_foszal.py`
 
 ---
@@ -30,10 +30,45 @@ start-full.bat
 
 ### 2026-04-05
 
+#### 18:21 - [Copilot] Bookkeeping phase0 readiness archive
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `conductor/archive/konyveles_phase3_readiness_20260405/meta.json`, `conductor/archive/konyveles_phase3_readiness_20260405/plan.md`, `conductor/archive/konyveles_phase3_readiness_20260405/spec.md`, `conductor/tracks/konyveles_phase3_20260403/meta.json`, `conductor/tracks/konyveles_phase3_20260403/plan.md` (+8 további)
+
+#### 17:50 - [Copilot] Konyvelesi phase 3 lezárás
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `src/server/routes/bookkeepingStatusSnapshot.ts`, `src/server/routes/szamlazz.ts`, `src/server/szamlazzBridge.ts`, `myai/clients/szamlazz_hu_client.py`, `test/szamlazz_routes.test.ts`, `test/szamlazz_hu_client_test.py`, `conductor/archive/n8n_bookkeeping_phase3_finalization_20260404/`, `conductor/project_state.json`, `conductor/tracks.md`
+
+#### 17:50 - [Copilot] P-Sales human-in-loop lezárás
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `src/data/psales_db.ts`, `src/agents/StrategyPlannerAgent.ts`, `src/server/routes/psales-strategy.ts`, `src/dashboard/components/dashboard/PSalesStrategyPanel.tsx`, `test/integration/psales.strategy.integration.test.ts`, `conductor/archive/n8n_psales_human_loop_20260404/`, `conductor/project_state.json`, `conductor/tracks.md`
+
+#### 17:45 - [Copilot] CRM follow-up health label sync
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `src/server/routes/crm.ts`, `conductor/tracks/kkv_crm_automation_20260404/spec.md`, `conductor/tracks/kkv_crm_automation_20260404/plan.md`
+
+#### 15:52 - [Copilot] CRM follow-up archive closure
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `conductor/archive/kkv_crm_followup_routing_20260405/meta.json`, `conductor/archive/kkv_crm_followup_routing_20260405/plan.md`, `conductor/archive/kkv_crm_followup_routing_20260405/spec.md`, `conductor/archive/kkv_crm_followup_approval_reporting_20260405/meta.json`, `conductor/archive/kkv_crm_followup_approval_reporting_20260405/plan.md` (+3 további)
+
+#### 00:00 - [Copilot] KKV CRM ingest alapok (kkv_crm_ingest_foundation_20260405) befejezve
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `conductor/tracks/kkv_crm_ingest_foundation_20260405/meta.json`
+
 #### 00:00 - [Copilot] Remote layer phase 1 archiválás + conductor rescan
 - **Agent:** Copilot
 - **Státusz:** ✅ Befejezve
 - **Érintett fájlok:** `conductor/archive/remote_layer_phase1_foundation_20260322/meta.json`, `conductor/archive/remote_layer_phase1_foundation_20260322/plan.md`, `conductor/archive/remote_layer_phase1_foundation_20260322/spec.md`, `src/services/trackStateManager.ts`, `conductor/project_state.json`, `conductor/tracks.md`
+
+#### 00:00 - [Copilot] KKV CRM follow-up routing + approval/reporting split
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `src/data/crm_db.ts`, `src/utils/crmFollowUp.ts`, `src/server/routes/crm.ts`, `src/server/routes/crmFollowUp.ts`, `test/crmLead.test.ts`, `test/crmDb.test.ts`, `test/crmFollowUp.test.ts`, `conductor/tracks/kkv_crm_followup_routing_20260405/meta.json`, `conductor/tracks/kkv_crm_followup_approval_reporting_20260405/meta.json`, `C:\\Users\\pohi9\\.copilot\\session-state\\5acdca8b-8bdc-459a-adce-cb9dfb3066ee\\plan.md`
 
 ---
 
@@ -810,7 +845,7 @@ start-full.bat
 | Claude | 85 | 2026-03-31 |
 | Gemini | 20 | 2026-04-04 |
 | Cursor | 0 | N/A |
-| Copilot | 28 | 2026-04-04 |
+| Copilot | 35 | 2026-04-05 |
 
 ---
 

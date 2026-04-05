@@ -7,12 +7,13 @@
    - Acceptance: legalább 1 CRM sandbox elérhető
 
 2) n8n flow építés — Ingest pipeline (3d)
-   - Webhook listener, transform, dedupe, persist
-   - Unit tesztek: bejövő mintákra
+    - Webhook listener, transform, dedupe, persist
+    - Unit tesztek: bejövő mintákra
+    - Delivered: `wf1-crm-ingest-skeleton.json` + local SQLite intake route
 
 3) CRM connector (HubSpot) — OAuth2 autentikáció (3d)
-   - Token refresh logika, hibakezelés
-   - End-to-end teszt: lead push
+    - Token refresh logika, hibakezelés
+    - End-to-end teszt: lead push
 
 4) Lead scoring & routing (4d)
    - Szabályalapú scoring motor implementálása
@@ -27,7 +28,7 @@
    - README + deploy lépések
 
 7) Rollout & QA (2d)
-   - Korlátozott hullámokban: 10 ügyfél → 50 ügyfél → teljes
+    - Korlátozott hullámokban: 10 ügyfél → 50 ügyfél → teljes
 
 Összes becsült idő: ~18 nap (team size: 2 dev, 1 devops, 1 product)
 
@@ -64,4 +65,6 @@ Részletes feladatok (TASK-CRM-xxx):
    - Acceptance: Jóváhagyás vagy elutasítás rögzítve, döntés hat a lead státuszra
    - Idő: 2d
 
-Következő lépések (ma): TASK-CRM-001 és TASK-CRM-002 elkezdése. Hozz létre n8n skeleton flow-t és egy README-t a deploy-hoz.
+Állapot:
+- TASK-CRM-002 első slice kész: n8n ingest skeleton, canonical normalization helper, SQLite perszisztencia.
+- Következő track: `kkv_crm_followup_routing_20260405` (D+3 / D+7 / D+14 routing + cancel-on-response).

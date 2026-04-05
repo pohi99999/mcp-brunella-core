@@ -107,3 +107,73 @@ jobs:
 
       - name: Run linter
         run: npm run lint
+  
+
+  integration-tests:
+    name: Integration tests (DB migrations + Vitest)
+    runs-on: ubuntu-latest
+    needs: [build-node]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup sqlite3 (system package)
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y sqlite3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Prepare test DB & run migrations
+        shell: bash
+        run: |
+          set -euo pipefail
+          # configurable paths (workflow/env can override DB_PATH / TEST_DB_PATH)
+          MIGRATIONS_DIR="${MIGRATIONS_DIR:-$GITHUB_WORKSPACE/data/migrations}"
+          DB_PATH="${DB_PATH:-$GITHUB_WORKSPACE/data/brunella.db}"
+          TEST_DB_PATH="${TEST_DB_PATH:-$GITHUB_WORKSPACE/data/test_brunnella.db}"
+
+          echo "MIGRATIONS_DIR=$MIGRATIONS_DIR"
+          echo "DB_PATH=$DB_PATH"
+          echo "TEST_DB_PATH=$TEST_DB_PATH"
+
+          mkdir -p "$(dirname "$TEST_DB_PATH")"
+
+          # Create empty sqlite DB if needed
+          sqlite3 "$TEST_DB_PATH" "PRAGMA journal_mode=WAL;"
+
+          # Apply SQL migrations from data/migrations
+          if [ -d "$MIGRATIONS_DIR" ] && ls "$MIGRATIONS_DIR"/*.sql >/dev/null 2>&1; then
+            for f in "$MIGRATIONS_DIR"/*.sql; do
+              echo "Applying migration: $f"
+              sqlite3 "$TEST_DB_PATH" < "$f"
+            done
+          else
+            echo "No SQL migrations found in $MIGRATIONS_DIR"
+          fi
+
+          # Seed DB if seed SQL exists
+          if [ -f "$MIGRATIONS_DIR/seed.sql" ]; then
+            echo "Seeding test DB"
+            sqlite3 "$TEST_DB_PATH" < "$MIGRATIONS_DIR/seed.sql"
+          else
+            echo "No seed.sql found; skipping seed step"
+          fi
+
+          # Emit a small .env.test file for integration tests to pick up; do NOT commit this
+          printf 'NODE_ENV=test\nDB_PATH=%s\n' "$TEST_DB_PATH" > .env.test
+
+      - name: Build TypeScript
+        run: npm run build
+
+      - name: Run integration Vitest suite
+        run: npx vitest run test/integration --run
+        env:
+          NODE_ENV: test
+          DB_PATH: ${{ github.workspace }}/data/test_brunnella.db

@@ -16,6 +16,7 @@ import chalk from 'chalk';
 import ora from 'ora';
 import inquirer from 'inquirer';
 import { ensureError } from '../utils/ensureError.js';
+import { writeLine } from '../utils/cliOutput.js';
 
 const API_BASE = process.env.BRUNELLA_API_URL || 'http://localhost:3000';
 
@@ -54,23 +55,23 @@ function formatTime(timestamp: string): string {
  */
 function formatTaskResult(result: any) {
     if (typeof result === 'string') {
-        console.log(chalk.cyan(`\n📋 Eredmény:\n`));
-        console.log(chalk.gray(`   ${result}`));
+        writeLine(chalk.cyan(`\n📋 Eredmény:\n`));
+        writeLine(chalk.gray(`   ${result}`));
         return;
     }
 
     if (result?.status) {
-        console.log(chalk.cyan(`\n📋 Eredmény:\n`));
-        console.log(chalk.gray(`   Státusz: ${result.status}`));
-        if (result.message) console.log(chalk.gray(`   Üzenet: ${result.message}`));
+        writeLine(chalk.cyan(`\n📋 Eredmény:\n`));
+        writeLine(chalk.gray(`   Státusz: ${result.status}`));
+        if (result.message) writeLine(chalk.gray(`   Üzenet: ${result.message}`));
         if (result.data) {
-            console.log(chalk.gray(`   Adat: ${JSON.stringify(result.data, null, 2)}`));
+            writeLine(chalk.gray(`   Adat: ${JSON.stringify(result.data, null, 2)}`));
         }
         return;
     }
 
-    console.log(chalk.cyan(`\n📋 Eredmény:\n`));
-    console.log(chalk.gray(JSON.stringify(result, null, 2)));
+    writeLine(chalk.cyan(`\n📋 Eredmény:\n`));
+    writeLine(chalk.gray(JSON.stringify(result, null, 2)));
 }
 
 export function registerTaskCommands(program: Command) {
@@ -125,15 +126,15 @@ export function registerTaskCommands(program: Command) {
                 if (result.status === 'success') {
                     spinner.succeed(chalk.green('Feladat végrehajtva!'));
                     formatTaskResult(result.result);
-                    console.log(chalk.gray(`\n⏱️  Végrehajtva: ${formatTime(result.executedAt)}`));
+                    writeLine(chalk.gray(`\n⏱️  Végrehajtva: ${formatTime(result.executedAt)}`));
                 } else {
                     spinner.fail(chalk.red('Hiba történt'));
-                    console.log(chalk.red(`\n❌ Státusz: ${result.status}`));
+                    writeLine(chalk.red(`\n❌ Státusz: ${result.status}`));
                 }
             } catch (error: unknown) {
                 const err = ensureError(error);
                 spinner.fail(chalk.red('API hiba'));
-                console.log(chalk.red(`\n❌ Hiba: ${err.message}`));
+                writeLine(chalk.red(`\n❌ Hiba: ${err.message}`));
                 process.exit(1);
             }
         });
@@ -157,13 +158,13 @@ export function registerTaskCommands(program: Command) {
  * Interactive task mode (menu-driven)
  */
 async function startInteractiveTaskMode() {
-    console.log(chalk.cyan('\n🧠 Brunella - Természetes Nyelvű Feladat Végrehajtás\n'));
-    console.log(chalk.gray('   Magyar nyelven írj bármilyen feladatot!'));
-    console.log(chalk.gray('   Példák:'));
-    console.log(chalk.gray('     - "Keress rá az AI hírekre"'));
-    console.log(chalk.gray('     - "Készíts Python scriptet CSV elemzésre"'));
-    console.log(chalk.gray('     - "Ellenőrizd a projekt státuszát"\n'));
-    console.log(chalk.gray('   Kilépés: exit, quit, vagy Ctrl+C\n'));
+    writeLine(chalk.cyan('\n🧠 Brunella - Természetes Nyelvű Feladat Végrehajtás\n'));
+    writeLine(chalk.gray('   Magyar nyelven írj bármilyen feladatot!'));
+    writeLine(chalk.gray('   Példák:'));
+    writeLine(chalk.gray('     - "Keress rá az AI hírekre"'));
+    writeLine(chalk.gray('     - "Készíts Python scriptet CSV elemzésre"'));
+    writeLine(chalk.gray('     - "Ellenőrizd a projekt státuszát"\n'));
+    writeLine(chalk.gray('   Kilépés: exit, quit, vagy Ctrl+C\n'));
 
     let running = true;
 
@@ -183,7 +184,7 @@ async function startInteractiveTaskMode() {
             ]);
 
             if (choice === 'exit') {
-                console.log(chalk.yellow('\n👋 Viszlát!'));
+                writeLine(chalk.yellow('\n👋 Viszlát!'));
                 running = false;
                 break;
             }
@@ -241,10 +242,10 @@ async function startInteractiveTaskMode() {
         } catch (error: unknown) {
             const err = ensureError(error);
             if (err.message?.includes('User force closed')) {
-                console.log(chalk.yellow('\n👋 Viszlát!'));
+                writeLine(chalk.yellow('\n👋 Viszlát!'));
                 running = false;
             } else {
-                console.log(chalk.red(`\n❌ Hiba: ${err.message}`));
+                writeLine(chalk.red(`\n❌ Hiba: ${err.message}`));
             }
         }
     }
@@ -272,7 +273,7 @@ async function executeTask(taskDescription: string) {
         if (result.status === 'success') {
             spinner.succeed(chalk.green('Feladat végrehajtva!'));
             formatTaskResult(result.result);
-            console.log(chalk.gray(`\n⏱️  Végrehajtva: ${formatTime(result.executedAt)}`));
+            writeLine(chalk.gray(`\n⏱️  Végrehajtva: ${formatTime(result.executedAt)}`));
 
             // Pause for user to see result
             await inquirer.prompt([
@@ -284,12 +285,12 @@ async function executeTask(taskDescription: string) {
             ]);
         } else {
             spinner.fail(chalk.red('Hiba történt'));
-            console.log(chalk.red(`\n❌ Státusz: ${result.status}`));
+            writeLine(chalk.red(`\n❌ Státusz: ${result.status}`));
         }
     } catch (error: unknown) {
         const err = ensureError(error);
         spinner.fail(chalk.red('API hiba'));
-        console.log(chalk.red(`\n❌ Hiba: ${err.message}`));
+        writeLine(chalk.red(`\n❌ Hiba: ${err.message}`));
 
         // Pause to let user see the error
         await inquirer.prompt([

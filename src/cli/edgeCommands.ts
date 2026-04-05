@@ -5,6 +5,7 @@ import { cloudflareClient } from "../utils/cloudflareClient.js";
 import { logDebug } from "../utils/logger.js";
 import { ensureError } from "../utils/ensureError.js";
 import { edgeCommand as edgeHuCommand } from "./commands/edge-hu.js";
+import { writeLine } from '../utils/cliOutput.js';
 
 const API_BASE = process.env.BRUNELLA_API_URL || "http://localhost:3000";
 
@@ -26,7 +27,7 @@ export function registerEdgeCommands(program: Command) {
         // Perform a simple check by fetching history with limit 1
         await cloudflareClient.fetchHistory(1);
         spinner.succeed(chalk.green("Edge Worker is Online"));
-        console.log(
+        writeLine(
           chalk.dim(
             `URL: ${cloudflareClient.getResolvedBaseUrl()}`,
           ),
@@ -57,13 +58,13 @@ export function registerEdgeCommands(program: Command) {
         const result = await cloudflareClient.submitTask(instruction, context);
         spinner.succeed(chalk.green("Task Completed"));
 
-        console.log(chalk.bold("\nResult:"));
+        writeLine(chalk.bold("\nResult:"));
         if (typeof result.result === "string") {
-          console.log(result.result);
+          writeLine(result.result);
         } else {
-          console.log(JSON.stringify(result.result, null, 2));
+          writeLine(JSON.stringify(result.result, null, 2));
         }
-        console.log(chalk.dim(`\nTask ID: ${result.taskId}`));
+        writeLine(chalk.dim(`\nTask ID: ${result.taskId}`));
       } catch (error: unknown) {
         spinner.fail(chalk.red("Task Failed"));
         console.error(chalk.red(getErrorMessage(error)));
@@ -120,14 +121,14 @@ export function registerEdgeCommands(program: Command) {
           );
 
           if (data.endpoint) {
-            console.log(chalk.dim(`Endpoint: ${data.endpoint}`));
+            writeLine(chalk.dim(`Endpoint: ${data.endpoint}`));
           }
           if (typeof data.result === "string") {
-            console.log(chalk.bold("\nResult:"));
-            console.log(data.result);
+            writeLine(chalk.bold("\nResult:"));
+            writeLine(data.result);
           } else if (typeof data.result !== "undefined") {
-            console.log(chalk.bold("\nResult:"));
-            console.log(JSON.stringify(data.result, null, 2));
+            writeLine(chalk.bold("\nResult:"));
+            writeLine(JSON.stringify(data.result, null, 2));
           }
         } catch (error: unknown) {
           spinner.fail(chalk.red("Worker task dispatch failed"));
@@ -148,11 +149,11 @@ export function registerEdgeCommands(program: Command) {
         spinner.stop();
 
         if (!data.tasks || data.tasks.length === 0) {
-          console.log(chalk.yellow("No history found."));
+          writeLine(chalk.yellow("No history found."));
           return;
         }
 
-        console.log(chalk.bold(`\nEdge Task History (${data.tasks.length}):`));
+        writeLine(chalk.bold(`\nEdge Task History (${data.tasks.length}):`));
         data.tasks.forEach((task: any) => {
           const date = new Date(task.created_at).toLocaleString();
           const statusColor =
@@ -161,7 +162,7 @@ export function registerEdgeCommands(program: Command) {
               : task.status === "failed"
                 ? chalk.red
                 : chalk.yellow;
-          console.log(
+          writeLine(
             `${chalk.dim(task.id.slice(0, 8))} [${statusColor(
               task.status,
             )}] ${date} - ${task.instruction.slice(0, 50)}${
@@ -205,7 +206,7 @@ export function registerEdgeCommands(program: Command) {
 
         spinner.succeed(chalk.green(`Audit completed: ${data.status.toUpperCase()}`));
 
-        console.log(
+        writeLine(
           chalk.dim(
             `\nSummary: total=${data.summary.total}, online=${data.summary.online}, offline=${data.summary.offline}, unknown=${data.summary.unknown}`,
           ),
@@ -222,15 +223,15 @@ export function registerEdgeCommands(program: Command) {
             typeof worker.latencyMs === "number" ? ` (${worker.latencyMs}ms)` : "";
           const kindText = worker.kind === "public" ? "public" : "internal";
 
-          console.log(
+          writeLine(
             `${statusColor(worker.status.toUpperCase())} ${chalk.bold(worker.name)} [${kindText}]${latencyText}`,
           );
-          console.log(chalk.dim(`  url: ${worker.url || "(not configured)"}`));
+          writeLine(chalk.dim(`  url: ${worker.url || "(not configured)"}`));
           if (typeof worker.statusCode === "number") {
-            console.log(chalk.dim(`  http: ${worker.statusCode}`));
+            writeLine(chalk.dim(`  http: ${worker.statusCode}`));
           }
           if (worker.error) {
-            console.log(chalk.dim(`  note: ${worker.error}`));
+            writeLine(chalk.dim(`  note: ${worker.error}`));
           }
         }
       } catch (error: unknown) {
@@ -271,28 +272,28 @@ export function registerEdgeCommands(program: Command) {
 
         spinner.succeed(chalk.green("Cloudflare runtime config loaded"));
 
-        console.log(chalk.bold("\nEdge"));
-        console.log(chalk.dim(`  enabled: ${data.edge.enabled}`));
-        console.log(chalk.dim(`  worker:  ${data.edge.workerUrl}`));
+        writeLine(chalk.bold("\nEdge"));
+        writeLine(chalk.dim(`  enabled: ${data.edge.enabled}`));
+        writeLine(chalk.dim(`  worker:  ${data.edge.workerUrl}`));
 
-        console.log(chalk.bold("\nChat"));
-        console.log(chalk.dim(`  url:     ${data.chat.url}`));
+        writeLine(chalk.bold("\nChat"));
+        writeLine(chalk.dim(`  url:     ${data.chat.url}`));
 
-        console.log(chalk.bold("\nTunnel"));
-        console.log(chalk.dim(`  enabled: ${data.tunnel.enabled}`));
-        console.log(chalk.dim(`  api:     ${data.tunnel.apiUrl || "(not set)"}`));
-        console.log(chalk.dim(`  n8n:     ${data.tunnel.n8nUrl || "(not set)"}`));
-        console.log(chalk.dim(`  browser: ${data.tunnel.browserUrl || "(not set)"}`));
-        console.log(chalk.dim(`  browser endpoint: ${data.tunnel.browserEndpoint}`));
-        console.log(chalk.dim(`  dashboard: ${data.tunnel.dashboardUrl || "(not set)"}`));
+        writeLine(chalk.bold("\nTunnel"));
+        writeLine(chalk.dim(`  enabled: ${data.tunnel.enabled}`));
+        writeLine(chalk.dim(`  api:     ${data.tunnel.apiUrl || "(not set)"}`));
+        writeLine(chalk.dim(`  n8n:     ${data.tunnel.n8nUrl || "(not set)"}`));
+        writeLine(chalk.dim(`  browser: ${data.tunnel.browserUrl || "(not set)"}`));
+        writeLine(chalk.dim(`  browser endpoint: ${data.tunnel.browserEndpoint}`));
+        writeLine(chalk.dim(`  dashboard: ${data.tunnel.dashboardUrl || "(not set)"}`));
 
-        console.log(chalk.bold("\nAuth"));
-        console.log(
+        writeLine(chalk.bold("\nAuth"));
+        writeLine(
           chalk.dim(
             `  cloudflare token: ${data.auth.hasCloudflareApiToken ? "configured" : "missing"}`,
           ),
         );
-        console.log(
+        writeLine(
           chalk.dim(
             `  CEAN api key:      ${data.auth.hasCeanApiKey ? "configured" : "missing"}`,
           ),

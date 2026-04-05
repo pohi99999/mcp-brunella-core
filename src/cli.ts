@@ -51,6 +51,7 @@ import { registerChromeAcpCommands } from "./cli/chromeAcpCommands.js";
 import { registerBrowserCopilotCommands } from "./cli/browserCopilotCommands.js";
 import { registerCrawl4aiCommands } from "./cli/crawl4aiCommands.js";
 import { registerBookkeepingCommands } from "./cli/bookkeepingCommands.js";
+import { registerHROnboardingCommands } from "./cli/hrOnboardingCommands.js";
 import { registerPropertySalesCommands } from "./cli/propertySalesCommands.js";
 import { registerMemoriaCommands } from "./cli/memoriaCommands.js";
 import { registerObservabilityCommands } from "./cli/observabilityCommands.js";
@@ -61,6 +62,7 @@ import { registerInventoryCommands } from "./cli/inventoryCommands.js";
 import { validateAndNormalizeRegistry } from "./agents/registryValidation.js";
 import { getAssistantBlueprint, type AssistantBlueprint, type AssistantReadinessStatus } from "./core/assistantBlueprint.js";
 import { getPrebuiltToolCatalog, mergeToolLists, type ToolLike } from "./utils/prebuiltTools.js";
+import { writeLine } from './utils/cliOutput.js';
 
 marked.setOptions({ renderer: new TerminalRenderer() as any });
 
@@ -88,7 +90,7 @@ const showBanner =
   ) && !(configManager.get("ui.hideBanner") as boolean);
 
 if (showBanner && rawArgs.length > 0) {
-  console.log(
+  writeLine(
     boxen(chalk.blue("Brunella CLI") + ` v${version}`, {
       padding: 1,
       borderStyle: "round",
@@ -127,7 +129,7 @@ function assistantStatusLabel(status: AssistantReadinessStatus): string {
 }
 
 function printAssistantSummary(blueprint: AssistantBlueprint): void {
-  console.log(
+  writeLine(
     boxen(chalk.cyan("Brunella Personal Assistant"), {
       padding: 1,
       borderStyle: "round",
@@ -135,60 +137,60 @@ function printAssistantSummary(blueprint: AssistantBlueprint): void {
     }),
   );
 
-  console.log(chalk.bold("Célplatform:"), blueprint.targetPlatform);
-  console.log(chalk.bold("MVP readiness:"), `${blueprint.overallReadiness.score}% · ${blueprint.overallReadiness.label}`);
-  console.log(chalk.bold("Ajánlott működés:"), `${blueprint.recommendedMode.primaryCloudProvider} → ${blueprint.recommendedMode.localFallbackProvider}`);
-  console.log(chalk.bold("Desktop shell:"), blueprint.recommendedMode.desktopShell);
-  console.log(`\n${blueprint.overallReadiness.summary}`);
+  writeLine(chalk.bold("Célplatform:"), blueprint.targetPlatform);
+  writeLine(chalk.bold("MVP readiness:"), `${blueprint.overallReadiness.score}% · ${blueprint.overallReadiness.label}`);
+  writeLine(chalk.bold("Ajánlott működés:"), `${blueprint.recommendedMode.primaryCloudProvider} → ${blueprint.recommendedMode.localFallbackProvider}`);
+  writeLine(chalk.bold("Desktop shell:"), blueprint.recommendedMode.desktopShell);
+  writeLine(`\n${blueprint.overallReadiness.summary}`);
 
-  console.log(chalk.cyan("\nKépesség állapotok:"));
+  writeLine(chalk.cyan("\nKépesség állapotok:"));
   blueprint.capabilities.forEach((capability) => {
     const color = assistantStatusColor(capability.status);
-    console.log(`  - ${chalk.bold(capability.title)} :: ${color(assistantStatusLabel(capability.status))} (${capability.score}%)`);
+    writeLine(`  - ${chalk.bold(capability.title)} :: ${color(assistantStatusLabel(capability.status))} (${capability.score}%)`);
   });
 
   if (blueprint.providerHealth.length > 0) {
-    console.log(chalk.cyan("\nProvider health:"));
+    writeLine(chalk.cyan("\nProvider health:"));
     blueprint.providerHealth.forEach((provider) => {
       const state = provider.available ? chalk.green("online") : chalk.red("offline");
       const latency = typeof provider.response_time_ms === "number" ? ` · ${provider.response_time_ms} ms` : "";
-      console.log(`  - ${provider.provider}: ${state}${latency}`);
+      writeLine(`  - ${provider.provider}: ${state}${latency}`);
     });
   }
 
-  console.log(chalk.cyan("\nAzonnali következő lépések:"));
-  blueprint.nextActions.forEach((step) => console.log(`  • ${step}`));
+  writeLine(chalk.cyan("\nAzonnali következő lépések:"));
+  blueprint.nextActions.forEach((step) => writeLine(`  • ${step}`));
 }
 
 function printAssistantArchitecture(blueprint: AssistantBlueprint): void {
-  console.log(chalk.cyan("\nAjánlott architektúra:"));
+  writeLine(chalk.cyan("\nAjánlott architektúra:"));
   blueprint.architecture.forEach((layer, index) => {
-    console.log(`\n${chalk.bold(`${index + 1}. ${layer.title}`)}`);
-    console.log(`   ${layer.summary}`);
-    console.log(`   Cél: ${layer.purpose}`);
-    console.log(`   Modulok: ${layer.modules.join(", ")}`);
+    writeLine(`\n${chalk.bold(`${index + 1}. ${layer.title}`)}`);
+    writeLine(`   ${layer.summary}`);
+    writeLine(`   Cél: ${layer.purpose}`);
+    writeLine(`   Modulok: ${layer.modules.join(", ")}`);
     if (layer.nextUpgrade) {
-      console.log(chalk.dim(`   Következő upgrade: ${layer.nextUpgrade}`));
+      writeLine(chalk.dim(`   Következő upgrade: ${layer.nextUpgrade}`));
     }
   });
 }
 
 function printAssistantRoadmap(blueprint: AssistantBlueprint): void {
-  console.log(chalk.cyan("\nRoadmap:"));
+  writeLine(chalk.cyan("\nRoadmap:"));
   blueprint.roadmap.forEach((phase) => {
-    console.log(`\n${chalk.bold(`${phase.id} — ${phase.title}`)}`);
-    console.log(`   Cél: ${phase.goal}`);
-    phase.deliverables.forEach((deliverable) => console.log(`   • ${deliverable}`));
+    writeLine(`\n${chalk.bold(`${phase.id} — ${phase.title}`)}`);
+    writeLine(`   Cél: ${phase.goal}`);
+    phase.deliverables.forEach((deliverable) => writeLine(`   • ${deliverable}`));
   });
 }
 
 function printFusionCard( blueprint: AssistantBlueprint ): void {
   const card = blueprint.fusionCard;
   if ( !card ) {
-    console.log( chalk.dim( "\nFúziós kontextus adat nem elérhető." ) );
+    writeLine( chalk.dim( "\nFúziós kontextus adat nem elérhető." ) );
     return;
   }
-  console.log(
+  writeLine(
     boxen( chalk.magenta( "Fúziós Kontextus Összefoglaló" ), {
       padding: 1,
       borderStyle: "round",
@@ -196,27 +198,27 @@ function printFusionCard( blueprint: AssistantBlueprint ): void {
     } ),
   );
   if ( card.graphRag ) {
-    console.log(
+    writeLine(
       chalk.bold( "📊 GraphRAG:" ),
       `${card.graphRag.nodes} entitás, ${card.graphRag.edges} kapcsolat, ${card.graphRag.lessons} tanulság`,
     );
   }
   if ( card.reflection ) {
     const qualityPct = ( card.reflection.avgQualityScore * 100 ).toFixed( 0 );
-    console.log(
+    writeLine(
       chalk.bold( "🔄 Reflexió:" ),
       `${card.reflection.totalReflections} ciklus, átlag minőség ${qualityPct}%, self-model: ${card.reflection.selfModelHealth}`,
     );
   }
   if ( card.memory ) {
-    console.log(
+    writeLine(
       chalk.bold( "💾 Memória:" ),
       `${card.memory.indexedDocuments} indexelt dokumentum (LanceDB)`,
     );
   }
   if ( card.fusionPrompt ) {
-    console.log( chalk.cyan( "\nFúziós prompt snippet:" ) );
-    console.log( chalk.dim( card.fusionPrompt.slice( 0, 400 ) ) );
+    writeLine( chalk.cyan( "\nFúziós prompt snippet:" ) );
+    writeLine( chalk.dim( card.fusionPrompt.slice( 0, 400 ) ) );
   }
 }
 
@@ -239,11 +241,11 @@ program
   .command("about")
   .description("Show version and runtime info")
   .action(() => {
-    console.log(chalk.bold("Brunella CLI"));
-    console.log("  Version:", version);
-    console.log("  Config:  ", configManager.userSettingsPath);
+    writeLine(chalk.bold("Brunella CLI"));
+    writeLine("  Version:", version);
+    writeLine("  Config:  ", configManager.userSettingsPath);
     if (configManager.projectSettingsPath)
-      console.log("  Project: ", configManager.projectSettingsPath);
+      writeLine("  Project: ", configManager.projectSettingsPath);
   });
 
 // --- auth
@@ -257,10 +259,10 @@ authCmd
     if (opts.apiKey) {
       configManager.set("apiKey", opts.apiKey);
       configManager.set("security.auth.selectedType", "api_key");
-      console.log(chalk.green("API key saved."));
+      writeLine(chalk.green("API key saved."));
       return;
     }
-    console.log(
+    writeLine(
       chalk.dim(
         "Auth: use --api-key <key> or set BRUNELLA_API_KEY. For OAuth, use backend login.",
       ),
@@ -272,19 +274,19 @@ program
   .command("doctor")
   .description("Run system diagnostics")
   .action(async () => {
-    console.log(chalk.bold("🩺 Brunella Doctor"));
+    writeLine(chalk.bold("🩺 Brunella Doctor"));
 
     // Check Node
-    console.log(`✔ Node: ${process.version}`);
+    writeLine(`✔ Node: ${process.version}`);
 
     // Check Server Connection
     const client = new BrunellaClient();
     try {
       await client.connect({ coreOnly: true, timeoutMs: 1200 });
-      console.log(chalk.green("✔ Server: Connected"));
-      console.log(chalk.green("✔ MCP: Core transport reachable"));
+      writeLine(chalk.green("✔ Server: Connected"));
+      writeLine(chalk.green("✔ MCP: Core transport reachable"));
     } catch (error: unknown) {
-      console.log(chalk.red(`✖ Server: Connection failed (${ensureError(error).message})`));
+      writeLine(chalk.red(`✖ Server: Connection failed (${ensureError(error).message})`));
     } finally {
       await client.close();
       process.exit(0);
@@ -296,9 +298,9 @@ program
   .command("connect <serverName>")
   .description("Connect to an external MCP server (github, chrome, docker)")
   .action(async (serverName: string) => {
-    console.log(chalk.cyan(`Connecting to ${serverName}...`));
-    console.log(chalk.dim("Feature coming soon: Dynamic MCP config update."));
-    console.log(
+    writeLine(chalk.cyan(`Connecting to ${serverName}...`));
+    writeLine(chalk.dim("Feature coming soon: Dynamic MCP config update."));
+    writeLine(
       chalk.dim(
         `Please add '${serverName}' manually to mcp_servers.json for now.`,
       ),
@@ -317,9 +319,9 @@ program
       const result = await client.listTools();
       const tools = mergeToolLists(result.tools as ToolLike[], fallbackTools);
 
-      console.log(chalk.bold(`Available Tools (${tools.length}):`));
+      writeLine(chalk.bold(`Available Tools (${tools.length}):`));
       for (const tool of tools) {
-        console.log(
+        writeLine(
           chalk.green("• " + tool.name) +
             (tool.description ? ": " + chalk.dim(tool.description) : ""),
         );
@@ -327,10 +329,10 @@ program
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : String(error);
       if (fallbackTools.length > 0) {
-        console.log(chalk.yellow("MCP kapcsolat nem elérhető, helyi tools.json fallback használata."));
-        console.log(chalk.bold(`Available Tools (${fallbackTools.length}):`));
+        writeLine(chalk.yellow("MCP kapcsolat nem elérhető, helyi tools.json fallback használata."));
+        writeLine(chalk.bold(`Available Tools (${fallbackTools.length}):`));
         for (const tool of fallbackTools) {
-          console.log(
+          writeLine(
             chalk.green("• " + tool.name) +
               (tool.description ? ": " + chalk.dim(tool.description) : ""),
           );
@@ -357,10 +359,10 @@ program
       // @ts-expect-error content might be missing The result from agent_list tool might not have 'content[0].text'.
       const text = result.content?.[0]?.text;
       if (text) {
-        console.log(chalk.bold("Registered Agents:"));
-        console.log(text);
+        writeLine(chalk.bold("Registered Agents:"));
+        writeLine(text);
       } else {
-        console.log(
+        writeLine(
           chalk.yellow("No agents found or tool returned empty result."),
         );
       }
@@ -403,29 +405,29 @@ program
     }
 
     if (cmd?.json) {
-      console.log(JSON.stringify({ localValidation, runtimeDiagnostics }, null, 2));
+      writeLine(JSON.stringify({ localValidation, runtimeDiagnostics }, null, 2));
       process.exit(0);
     }
 
-    console.log(boxen(chalk.blue("Agent diagnosztika"), {
+    writeLine(boxen(chalk.blue("Agent diagnosztika"), {
       padding: 1,
       borderStyle: "round",
       borderColor: localValidation.report.valid ? "green" : "yellow",
     }));
 
-    console.log(chalk.bold("Registry forrás:"), registryPath);
-    console.log(chalk.bold("Agentek száma:"), localValidation.report.summary.totalAgents);
-    console.log(chalk.bold("Default agent:"), localValidation.report.summary.defaultAgent);
-    console.log(chalk.bold("Schema állapot:"), localValidation.report.valid ? chalk.green("VALID") : chalk.yellow("FIGYELMET KÉR"));
+    writeLine(chalk.bold("Registry forrás:"), registryPath);
+    writeLine(chalk.bold("Agentek száma:"), localValidation.report.summary.totalAgents);
+    writeLine(chalk.bold("Default agent:"), localValidation.report.summary.defaultAgent);
+    writeLine(chalk.bold("Schema állapot:"), localValidation.report.valid ? chalk.green("VALID") : chalk.yellow("FIGYELMET KÉR"));
 
     if (localValidation.report.errors.length > 0) {
-      console.log(chalk.red("\nHibák:"));
-      localValidation.report.errors.forEach((error) => console.log(`  - ${error}`));
+      writeLine(chalk.red("\nHibák:"));
+      localValidation.report.errors.forEach((error) => writeLine(`  - ${error}`));
     }
 
     if (localValidation.report.warnings.length > 0) {
-      console.log(chalk.yellow("\nFigyelmeztetések:"));
-      localValidation.report.warnings.forEach((warning) => console.log(`  - ${warning}`));
+      writeLine(chalk.yellow("\nFigyelmeztetések:"));
+      localValidation.report.warnings.forEach((warning) => writeLine(`  - ${warning}`));
     }
 
     if (runtimeDiagnostics && typeof runtimeDiagnostics === "object") {
@@ -437,14 +439,14 @@ program
           resolutionStrategy?: string;
         }>;
       };
-      console.log(chalk.cyan("\nÉlő loader állapot (http://localhost:3000):"));
+      writeLine(chalk.cyan("\nÉlő loader állapot (http://localhost:3000):"));
       for (const agent of diagnosticsRecord.agents ?? []) {
-        console.log(
+        writeLine(
           `  - ${chalk.bold(agent.name)} :: load=${agent.loadStatus}, runtime=${agent.runtime.status}, strategy=${agent.resolutionStrategy ?? "-"}`,
         );
       }
     } else {
-      console.log(chalk.dim("\nÉlő backend diagnosztika nem volt elérhető a 3000-es porton."));
+      writeLine(chalk.dim("\nÉlő backend diagnosztika nem volt elérhető a 3000-es porton."));
     }
 
     process.exit(0);
@@ -461,7 +463,7 @@ program
       spinner.stop();
 
       if (cmd?.json) {
-        console.log(JSON.stringify(blueprint, null, 2));
+        writeLine(JSON.stringify(blueprint, null, 2));
         return;
       }
 
@@ -560,15 +562,15 @@ program
         spinner.stop();
 
         if (opts.json) {
-          console.log(JSON.stringify(result, null, 2));
+          writeLine(JSON.stringify(result, null, 2));
         } else {
           // @ts-expect-error content might be missing The result.content might not be a valid array or might be missing.
           const text = result.content?.[0]?.text;
           if (text) {
-            console.log(chalk.bold(`\n✅ ${agentName} Response:`));
-            console.log(text);
+            writeLine(chalk.bold(`\n✅ ${agentName} Response:`));
+            writeLine(text);
           } else {
-            console.log(chalk.yellow("Agent returned empty response"));
+            writeLine(chalk.yellow("Agent returned empty response"));
           }
         }
       } catch (error: unknown) {
@@ -622,12 +624,12 @@ program
         const result = await client.callTool(toolName, parsedArgs);
 
         if (opts.json) {
-          console.log(JSON.stringify(result, null, 2));
+          writeLine(JSON.stringify(result, null, 2));
         } else {
           const response = result as { content?: Array<{ text?: string }> };
           const text = response.content?.[0]?.text;
-          if (text) console.log(text);
-          else console.log(JSON.stringify(result, null, 2));
+          if (text) writeLine(text);
+          else writeLine(JSON.stringify(result, null, 2));
         }
       } catch (error: unknown) {
         console.error(chalk.red("Tool execution failed:"), ensureError(error).message);
@@ -648,32 +650,32 @@ program
   .action(async (cmd?: { opts: () => { verbose?: boolean; debug?: boolean } }) => {
     marked.setOptions({ renderer: new TerminalRenderer() as any });
 
-    console.log(chalk.cyan("Starting chat..."));
-    console.log(chalk.dim("Type 'exit' to quit"));
-    console.log(chalk.dim("Commands:"));
-    console.log(
+    writeLine(chalk.cyan("Starting chat..."));
+    writeLine(chalk.dim("Type 'exit' to quit"));
+    writeLine(chalk.dim("Commands:"));
+    writeLine(
       chalk.dim("  /switch  - Change AI Model (GPT-4.1, Gemini, Ollama)"),
     );
-    console.log(chalk.dim("  /edge    - Toggle Edge Mode (Cloudflare)"));
-    console.log(chalk.dim("  /jules   - Jules AI delegálás (new/sync/status)"));
-    console.log(
+    writeLine(chalk.dim("  /edge    - Toggle Edge Mode (Cloudflare)"));
+    writeLine(chalk.dim("  /jules   - Jules AI delegálás (new/sync/status)"));
+    writeLine(
       chalk.dim(
         "  /conductor <action> - Run Conductor tasks (status, sync, track)",
       ),
     );
-    console.log(
+    writeLine(
       chalk.dim(
         "  /mode [orchestrator|direct] - Chat motor váltás (agent delegálás / nyers LLM)",
       ),
     );
-    console.log(chalk.dim("  /progress - Session feladatok aktuális állapota"));
-    console.log(chalk.dim("  /newsession - Új operátori session indítása"));
-    console.log(chalk.dim("  /approve <id> - High-risk checkpoint jóváhagyása"));
-    console.log(chalk.dim("  /tools   - List available tools"));
-    console.log(chalk.dim("  /ls [path] - List files (Coding Agent)"));
-    console.log(chalk.dim("  /read <path> - Read file (Coding Agent)"));
-    console.log(chalk.dim("  /eval <code> - Run Python code directly"));
-    console.log(chalk.dim("  /clear   - Clear conversation history"));
+    writeLine(chalk.dim("  /progress - Session feladatok aktuális állapota"));
+    writeLine(chalk.dim("  /newsession - Új operátori session indítása"));
+    writeLine(chalk.dim("  /approve <id> - High-risk checkpoint jóváhagyása"));
+    writeLine(chalk.dim("  /tools   - List available tools"));
+    writeLine(chalk.dim("  /ls [path] - List files (Coding Agent)"));
+    writeLine(chalk.dim("  /read <path> - Read file (Coding Agent)"));
+    writeLine(chalk.dim("  /eval <code> - Run Python code directly"));
+    writeLine(chalk.dim("  /clear   - Clear conversation history"));
 
     const client = new BrunellaClient();
     try {
@@ -772,13 +774,13 @@ program
       let edgeMode = false;
       let orchestrationMode = true;
 
-      console.log(
+      writeLine(
         chalk.green(
           `\n✔ Active Model: ${chalk.bold(activeModel)} (${activeProvider})\n`,
         ),
       );
       if (traceEnabled) {
-        console.log(chalk.dim(`TRACE: role=orchestrator provider=${activeProvider} model=${activeModel}`));
+        writeLine(chalk.dim(`TRACE: role=orchestrator provider=${activeProvider} model=${activeModel}`));
       }
 
       while (true) {
@@ -800,21 +802,21 @@ program
 
         if (trimmed === "/clear") {
           history = [];
-          console.log(chalk.yellow("Conversation history cleared."));
+          writeLine(chalk.yellow("Conversation history cleared."));
           continue;
         }
 
         if (trimmed.toLowerCase() === "/newsession") {
           orchestratorSessionId = createSessionId();
           history = [];
-          console.log(chalk.green(`✔ Új operátori session: ${chalk.bold(orchestratorSessionId)}`));
+          writeLine(chalk.green(`✔ Új operátori session: ${chalk.bold(orchestratorSessionId)}`));
           continue;
         }
 
         if (trimmed.toLowerCase().startsWith("/approve")) {
           const parts = trimmed.split(" ").filter(Boolean);
           if (parts.length < 2) {
-            console.log(chalk.yellow("Használat: /approve <approval-id>"));
+            writeLine(chalk.yellow("Használat: /approve <approval-id>"));
             continue;
           }
 
@@ -850,14 +852,14 @@ program
             }
 
             const approveText = approveData.reply || "A jóváhagyás feldolgozva.";
-            console.log(marked(approveText));
+            writeLine(marked(approveText));
 
             if (Array.isArray(approveData.missionTimeline) && approveData.missionTimeline.length > 0) {
               const compactTimeline = approveData.missionTimeline
                 .slice(-5)
                 .map((entry) => `${entry.phase}[${entry.status}]`)
                 .join(" -> ");
-              console.log(chalk.dim(`Timeline: ${compactTimeline}`));
+              writeLine(chalk.dim(`Timeline: ${compactTimeline}`));
             }
 
             history.push({ role: "assistant", content: approveText });
@@ -870,7 +872,7 @@ program
 
         if (trimmed.toLowerCase() === "/progress") {
           if (!orchestrationMode) {
-            console.log(chalk.yellow("A /progress az orchestrator módban működik. Használd: /mode orchestrator"));
+            writeLine(chalk.yellow("A /progress az orchestrator módban működik. Használd: /mode orchestrator"));
             continue;
           }
 
@@ -906,9 +908,9 @@ program
               orchestratorSessionId = progressData.sessionId;
             }
             const progressText = progressData.reply || "Nincs elérhető progressz riport.";
-            console.log(marked(progressText));
+            writeLine(marked(progressText));
             if (Array.isArray(progressData.suggestions) && progressData.suggestions.length > 0) {
-              console.log(chalk.dim(`Javaslatok: ${progressData.suggestions.join(" | ")}`));
+              writeLine(chalk.dim(`Javaslatok: ${progressData.suggestions.join(" | ")}`));
             }
           } catch (error: unknown) {
             spinner.stop();
@@ -922,24 +924,24 @@ program
           const action = parts[1];
 
           if (!action || action === "help") {
-            console.log(chalk.cyan("\n🤖 Jules Commands:"));
-            console.log(
+            writeLine(chalk.cyan("\n🤖 Jules Commands:"));
+            writeLine(
               chalk.dim("  /jules new     - Új Jules task létrehozás"),
             );
-            console.log(
+            writeLine(
               chalk.dim("  /jules sync    - GitHub Jules branch-ek pullolása"),
             );
-            console.log(
+            writeLine(
               chalk.dim("  /jules status  - Sessions + branch-ek státusza"),
             );
-            console.log(
+            writeLine(
               chalk.dim("  /jules menu    - Interaktív menü indítás\n"),
             );
             continue;
           }
 
           if (action === "menu") {
-            console.log(chalk.cyan("Launching Jules interactive menu..."));
+            writeLine(chalk.cyan("Launching Jules interactive menu..."));
             // Import and run interactive menu
             try {
               const { execSync } = await import("child_process");
@@ -948,7 +950,7 @@ program
                 cwd: process.cwd(),
               });
             } catch (error: unknown) {
-              console.log(chalk.red(`Error launching menu: ${ensureError(error).message}`));
+              writeLine(chalk.red(`Error launching menu: ${ensureError(error).message}`));
             }
             continue;
           }
@@ -963,7 +965,7 @@ program
             ]);
 
             if (taskPrompt) {
-              console.log(
+              writeLine(
                 chalk.cyan(
                   `\n🚀 Jules task indítás: "${taskPrompt.slice(0, 60)}..."\n`,
                 ),
@@ -975,14 +977,14 @@ program
                   { stdio: "inherit", cwd: process.cwd() },
                 );
               } catch (error: unknown) {
-                console.log(chalk.red(`Error: ${ensureError(error).message}`));
+                writeLine(chalk.red(`Error: ${ensureError(error).message}`));
               }
             }
             continue;
           }
 
           if (action === "sync") {
-            console.log(chalk.cyan("\n🔄 Jules sync indítás...\n"));
+            writeLine(chalk.cyan("\n🔄 Jules sync indítás...\n"));
             try {
               const { execSync } = await import("child_process");
               execSync("python scripts/jules_sync_watchdog.py --once", {
@@ -990,37 +992,37 @@ program
                 cwd: process.cwd(),
               });
             } catch (error: unknown) {
-              console.log(chalk.red(`Error: ${ensureError(error).message}`));
+              writeLine(chalk.red(`Error: ${ensureError(error).message}`));
             }
             continue;
           }
 
           if (action === "status") {
-            console.log(chalk.cyan("\n📊 Jules status...\n"));
+            writeLine(chalk.cyan("\n📊 Jules status...\n"));
             try {
               const { execSync } = await import("child_process");
               execSync("python scripts/jules_api_client.py list 5", {
                 stdio: "inherit",
                 cwd: process.cwd(),
               });
-              console.log("");
+              writeLine("");
               execSync("python scripts/jules_sync_watchdog.py --check", {
                 stdio: "inherit",
                 cwd: process.cwd(),
               });
             } catch (error: unknown) {
-              console.log(chalk.red(`Error: ${ensureError(error).message}`));
+              writeLine(chalk.red(`Error: ${ensureError(error).message}`));
             }
             continue;
           }
 
-          console.log(chalk.red("Unknown Jules command. Use /jules help"));
+          writeLine(chalk.red("Unknown Jules command. Use /jules help"));
           continue;
         }
 
         if (trimmed.toLowerCase().startsWith("/edge")) {
           edgeMode = !edgeMode;
-          console.log(
+          writeLine(
             edgeMode
               ? chalk.cyan("Edge mode enabled (Cloudflare).")
               : chalk.yellow("Edge mode disabled (Local/API)."),
@@ -1041,11 +1043,11 @@ program
           } else if (parts[1] === "direct" || parts[1] === "llm") {
             orchestrationMode = false;
           } else {
-            console.log(chalk.red("Unknown mode. Use /mode orchestrator vagy /mode direct"));
+            writeLine(chalk.red("Unknown mode. Use /mode orchestrator vagy /mode direct"));
             continue;
           }
 
-          console.log(
+          writeLine(
             orchestrationMode
               ? chalk.green("✔ Chat mode: Orchestrator (tool calling + agent delegálás)")
               : chalk.yellow("✔ Chat mode: Direct LLM (nyers provider válasz)"),
@@ -1092,7 +1094,7 @@ program
             const providerEntry = catalog.find((entry) => entry.id === normalizedTarget);
 
             if (!providerEntry) {
-              console.log(
+              writeLine(
                 chalk.red(
                   "Unknown provider. Use interactive mode (just /switch) or github/gemini/anthropic/cloudflare/ollama.",
                 ),
@@ -1104,7 +1106,7 @@ program
             activeModel = providerEntry.defaultModel || providerEntry.models[0]?.name || activeModel;
           }
 
-          console.log(chalk.green(`✔ Switched to: ${chalk.bold(activeModel)}`));
+          writeLine(chalk.green(`✔ Switched to: ${chalk.bold(activeModel)}`));
           history = []; // Optional: reset history on switch? Let's keep it for context continuity if compatible, but usually safer to clear or warn.
           // For now, let's NOT clear history implicitly to allow context carry-over, but warn user manually if needed.
           continue;
@@ -1273,7 +1275,7 @@ program
           spinner.stop();
 
           // Render Markdown
-          console.log(marked(responseText));
+          writeLine(marked(responseText));
           history.push({ role: "assistant", content: responseText });
         } catch (error: unknown) {
           spinner.stop();
@@ -1293,7 +1295,7 @@ program
   .command("interpreter")
   .description("Interactive Python Interpreter")
   .action(async () => {
-    console.log(
+    writeLine(
       chalk.blue(
         boxen("Brunella Python Interpreter", {
           padding: 1,
@@ -1320,10 +1322,10 @@ program
           code,
         });
         // @ts-expect-error content might be missing The result from interpreter_run_python might not have content[0].text.
-        console.log(result.content[0].text);
+        writeLine(result.content[0].text);
       }
     } catch (error: unknown) {
-      console.log(chalk.red(ensureError(error).message));
+      writeLine(chalk.red(ensureError(error).message));
     } finally {
       await client.close();
       process.exit(0);
@@ -1354,14 +1356,14 @@ conductorCmd
       try {
         const json = JSON.parse(text);
         if (json.data && json.data.report) {
-          console.log(marked(json.data.report));
+          writeLine(marked(json.data.report));
         } else if (json.message) {
-          console.log(marked(json.message));
+          writeLine(marked(json.message));
         } else {
-          console.log(marked(text));
+          writeLine(marked(text));
         }
       } catch (error: unknown) {
-        console.log(marked(text));
+        writeLine(marked(text));
       }
     } catch (error: unknown) {
       spinner.stop();
@@ -1377,12 +1379,12 @@ conductorCmd
   .description("Interactive chat with Project Conductor")
   .action(async () => {
     process.env.BRUNELLA_QUIET_LOGS = "true";
-    console.log(
+    writeLine(
       chalk.blue(
         boxen("Project Conductor Chat", { padding: 1, borderStyle: "round" }),
       ),
     );
-    console.log(chalk.dim("Type 'exit' to quit."));
+    writeLine(chalk.dim("Type 'exit' to quit."));
 
     const client = new BrunellaClient();
     try {
@@ -1434,7 +1436,7 @@ conductorCmd
             logDebug("BrunellaCLI", `Response JSON parse fallback used: ${ensureError(error).message}`);
           }
 
-          console.log(marked(responseText));
+          writeLine(marked(responseText));
 
           history.push({ role: "user", content: message });
           history.push({ role: "assistant", content: responseText });
@@ -1464,7 +1466,7 @@ conductorCmd
         task: "sync documentation",
       });
       spinner.stop();
-      console.log(chalk.green("✓"), result);
+      writeLine(chalk.green("✓"), result);
     } catch (error: unknown) {
       spinner.stop();
       console.error(chalk.red("Error:"), ensureError(error).message);
@@ -1488,7 +1490,7 @@ conductorCmd
       spinner.stop();
       // @ts-expect-error content might be missing The response might not have content[0].text.
       const response = result.content?.[0]?.text || "Health check completed";
-      console.log(marked(response));
+      writeLine(marked(response));
     } catch (error: unknown) {
       spinner.stop();
       console.error(chalk.red("Error:"), ensureError(error).message);
@@ -1522,7 +1524,7 @@ conductorCmd
       spinner.stop();
       // @ts-expect-error content might be missing The response might not have content[0].text.
       const response = result.content?.[0]?.text || "Done";
-      console.log(marked(response));
+      writeLine(marked(response));
     } catch (error: unknown) {
       spinner.stop();
       console.error(chalk.red("Error:"), ensureError(error).message);
@@ -1583,7 +1585,7 @@ julesCmd
 
           const runs = (data?.runs || []) as Array<any>;
           if (runs.length === 0) {
-            console.log(
+            writeLine(
               chalk.yellow(
                 "Nincs futás (vagy hiányzik a GITHUB_TOKEN a szerveren).",
               ),
@@ -1591,7 +1593,7 @@ julesCmd
             return;
           }
 
-          console.log(
+          writeLine(
             chalk.bold(`\nWorkflow: ${workflow} (top ${runs.length})\n`),
           );
 
@@ -1600,8 +1602,8 @@ julesCmd
           const failureCount = runs.filter((r: any) => r.conclusion === "failure").length;
           const passRate = runs.length > 0 ? Math.round((successCount / runs.length) * 100) : 0;
 
-          console.log(chalk.cyan("📊 Trend Analysis (last " + runs.length + " runs):"));
-          console.log(
+          writeLine(chalk.cyan("📊 Trend Analysis (last " + runs.length + " runs):"));
+          writeLine(
             `  ✅ Success: ${chalk.green(successCount)} | ❌ Failure: ${chalk.red(failureCount)} | ⚡ Pass Rate: ${passRate >= 90 ? chalk.green(passRate + "%") : passRate >= 70 ? chalk.yellow(passRate + "%") : chalk.red(passRate + "%")}\n`,
           );
 
@@ -1609,8 +1611,8 @@ julesCmd
           const barLength = 40;
           const successBar = "█".repeat(Math.round((successCount / runs.length) * barLength));
           const failureBar = "█".repeat(Math.round((failureCount / runs.length) * barLength));
-          console.log(chalk.green("  Success: " + successBar));
-          console.log(chalk.red("  Failure: " + failureBar) + "\n");
+          writeLine(chalk.green("  Success: " + successBar));
+          writeLine(chalk.red("  Failure: " + failureBar) + "\n");
 
           // List runs
           for (const r of runs) {
@@ -1620,7 +1622,7 @@ julesCmd
               .slice(0, 19)
               .replace("T", " ");
             const icon = concl === "success" ? chalk.green("✅") : concl === "failure" ? chalk.red("❌") : "⏸️";
-            console.log(
+            writeLine(
               `${icon} #${r.run_number ?? r.id}  ${status} / ${concl}  (${when})`,
             );
           }
@@ -1634,7 +1636,7 @@ julesCmd
           });
           const data = (await res.json()) as any;
           if (!res.ok) throw new Error(data?.error || `HTTP ${res.status}`);
-          console.log(
+          writeLine(
             chalk.green(
               `✅ Workflow indítva: ${data.workflow} (ref=${data.ref})`,
             ),
@@ -1679,7 +1681,7 @@ julesCmd
     }
 
     if (prompt) {
-      console.log(chalk.cyan(`\n🚀 Jules task: "${prompt.slice(0, 60)}..."\n`));
+      writeLine(chalk.cyan(`\n🚀 Jules task: "${prompt.slice(0, 60)}..."\n`));
       try {
         const { execSync } = await import("child_process");
         execSync(`python scripts/jules_api_client.py create "${prompt}"`, {
@@ -1697,7 +1699,7 @@ julesCmd
   .command("sync")
   .description("Sync Jules GitHub branches (pull latest)")
   .action(async () => {
-    console.log(chalk.cyan("\n🔄 Jules sync...\n"));
+    writeLine(chalk.cyan("\n🔄 Jules sync...\n"));
     try {
       const { execSync } = await import("child_process");
       execSync("python scripts/jules_sync_watchdog.py --once", {
@@ -1714,14 +1716,14 @@ julesCmd
   .command("status")
   .description("Show Jules sessions and branch status")
   .action(async () => {
-    console.log(chalk.cyan("\n📊 Jules status...\n"));
+    writeLine(chalk.cyan("\n📊 Jules status...\n"));
     try {
       const { execSync } = await import("child_process");
       execSync("python scripts/jules_api_client.py list 5", {
         stdio: "inherit",
         cwd: process.cwd(),
       });
-      console.log("");
+      writeLine("");
       execSync("python scripts/jules_sync_watchdog.py --check", {
         stdio: "inherit",
         cwd: process.cwd(),
@@ -1756,12 +1758,12 @@ architectCmd
     }
 
     if (!desc || desc.trim().length < 10) {
-      console.log(chalk.red("\n❌ Description too short. Please provide at least 10 characters.\n"));
+      writeLine(chalk.red("\n❌ Description too short. Please provide at least 10 characters.\n"));
       return;
     }
 
-    console.log(chalk.cyan(`\n🏗️  Agent Architect - Creating agent...\n`));
-    console.log(chalk.dim(`Description: ${desc}\n`));
+    writeLine(chalk.cyan(`\n🏗️  Agent Architect - Creating agent...\n`));
+    writeLine(chalk.dim(`Description: ${desc}\n`));
 
     const spinner = ora("Analyzing description...").start();
 
@@ -1809,13 +1811,13 @@ Return ONLY valid JSON, no markdown, no explanation.
 
       if (result.success) {
         spinner.succeed(chalk.green(`✅ ${result.message}`));
-        console.log(chalk.dim(`\nAgent name: ${chalk.white(agentConfig.name)}`));
-        console.log(chalk.dim(`Role: ${chalk.white(agentConfig.role)}`));
-        console.log(chalk.dim(`Capabilities: ${chalk.white(agentConfig.capabilities.join(", "))}`));
-        console.log(chalk.dim(`\n📁 Files created:`));
-        console.log(chalk.dim(`  - myai/agents/${agentConfig.name}.toml`));
-        console.log(chalk.dim(`  - registry.json (updated)`));
-        console.log(chalk.cyan(`\n🚀 Run: ${chalk.white(`brunella agents`)}\n`));
+        writeLine(chalk.dim(`\nAgent name: ${chalk.white(agentConfig.name)}`));
+        writeLine(chalk.dim(`Role: ${chalk.white(agentConfig.role)}`));
+        writeLine(chalk.dim(`Capabilities: ${chalk.white(agentConfig.capabilities.join(", "))}`));
+        writeLine(chalk.dim(`\n📁 Files created:`));
+        writeLine(chalk.dim(`  - myai/agents/${agentConfig.name}.toml`));
+        writeLine(chalk.dim(`  - registry.json (updated)`));
+        writeLine(chalk.cyan(`\n🚀 Run: ${chalk.white(`brunella agents`)}\n`));
       } else {
         spinner.fail(chalk.red(`❌ ${result.message}`));
       }
@@ -1882,6 +1884,7 @@ registerBrowserCopilotCommands(program);
 // Register Crawl4AI & Memoria commands (Phase 3 — kutatas.md integráció)
 registerCrawl4aiCommands(program);
 registerBookkeepingCommands(program);
+registerHROnboardingCommands(program);
 registerPropertySalesCommands(program);
 registerMemoriaCommands(program);
 registerIntelligenceCommands(program);
@@ -1953,25 +1956,25 @@ testsCmd
         recentRuns: resultsPayload.data || [],
       };
 
-      console.log(chalk.bold("\n📊 Test Scheduler Status\n"));
-      console.log(`Schedule: ${chalk.cyan(data.schedule)}`);
-      console.log(`Enabled:  ${data.enabled ? chalk.green("✓") : chalk.red("✗")}`);
-      console.log(`Active:   ${data.active ? chalk.green("✓") : chalk.red("✗")}`);
+      writeLine(chalk.bold("\n📊 Test Scheduler Status\n"));
+      writeLine(`Schedule: ${chalk.cyan(data.schedule)}`);
+      writeLine(`Enabled:  ${data.enabled ? chalk.green("✓") : chalk.red("✗")}`);
+      writeLine(`Active:   ${data.active ? chalk.green("✓") : chalk.red("✗")}`);
       
       if (data.stats) {
-        console.log(chalk.bold("\n📈 Statistics (7 days)\n"));
-        console.log(`  Pass Rate:       ${chalk.green(data.stats.sevenDayPassRate)}`);
-        console.log(`  Total Runs:      ${chalk.cyan(data.stats.totalRuns)}`);
-        console.log(`  Avg Duration:    ${chalk.cyan(data.stats.averageDuration)}`);
-        console.log(`  Last Run Status: ${data.stats.lastRunStatus === "passed" ? chalk.green("✓ Passed") : chalk.red("✗ Failed")}`);
-        console.log(`  Last Run Time:   ${chalk.dim(data.stats.lastRunTime)}`);
+        writeLine(chalk.bold("\n📈 Statistics (7 days)\n"));
+        writeLine(`  Pass Rate:       ${chalk.green(data.stats.sevenDayPassRate)}`);
+        writeLine(`  Total Runs:      ${chalk.cyan(data.stats.totalRuns)}`);
+        writeLine(`  Avg Duration:    ${chalk.cyan(data.stats.averageDuration)}`);
+        writeLine(`  Last Run Status: ${data.stats.lastRunStatus === "passed" ? chalk.green("✓ Passed") : chalk.red("✗ Failed")}`);
+        writeLine(`  Last Run Time:   ${chalk.dim(data.stats.lastRunTime)}`);
       }
 
       if (data.recentRuns && data.recentRuns.length > 0) {
-        console.log(chalk.bold("\n📋 Recent Runs (Last 5)\n"));
+        writeLine(chalk.bold("\n📋 Recent Runs (Last 5)\n"));
         data.recentRuns.forEach((run: any, i: number) => {
           const status = run.status === "passed" ? chalk.green("✓") : chalk.red("✗");
-          console.log(`  ${i + 1}. ${status} (${run.passed}✓ / ${run.failed}✗) @ ${run.startedAt}`);
+          writeLine(`  ${i + 1}. ${status} (${run.passed}✓ / ${run.failed}✗) @ ${run.startedAt}`);
         });
       }
     } catch (error: unknown) {
@@ -2006,10 +2009,10 @@ testsCmd
       if (!response.ok) throw new Error(data.error || `HTTP ${response.status}`);
 
       if (data.success) {
-        console.log(chalk.bold("\n✅ Test Run Triggered\n"));
-        console.log(`Run ID:  ${chalk.cyan(data.runId)}`);
-        console.log(`Status:  ${chalk.green(data.status)}`);
-        console.log(chalk.dim("\nMonitor progress in browser or use 'brunella tests status'"));
+        writeLine(chalk.bold("\n✅ Test Run Triggered\n"));
+        writeLine(`Run ID:  ${chalk.cyan(data.runId)}`);
+        writeLine(`Status:  ${chalk.green(data.status)}`);
+        writeLine(chalk.dim("\nMonitor progress in browser or use 'brunella tests status'"));
       } else {
         console.error(chalk.red("Failed to trigger test run:"), data.error);
       }
@@ -2036,18 +2039,18 @@ testsCmd
       if (!response.ok) throw new Error("Failed to fetch results");
       
       const data = (await response.json()) as { data?: any[] };
-      console.log(chalk.bold(`\n🧪 Recent Test Runs (Last ${limit})\n`));
+      writeLine(chalk.bold(`\n🧪 Recent Test Runs (Last ${limit})\n`));
 
       const runs = data.data || [];
 
       if (runs.length === 0) {
-        console.log(chalk.dim("No test runs found"));
+        writeLine(chalk.dim("No test runs found"));
       } else {
         runs.forEach((run: any, i: number) => {
           const status = run.status === "passed" ? chalk.green("✓") : chalk.red("✗");
           const duration = run.duration || "N/A";
-          console.log(`${i + 1}. ${status} ID: ${chalk.cyan(run.id)} | ${run.passed}✓ ${run.failed}✗ | ${duration}`);
-          console.log(`   Started: ${chalk.dim(new Date(run.startedAt).toLocaleString("hu-HU"))}`);
+          writeLine(`${i + 1}. ${status} ID: ${chalk.cyan(run.id)} | ${run.passed}✓ ${run.failed}✗ | ${duration}`);
+          writeLine(`   Started: ${chalk.dim(new Date(run.startedAt).toLocaleString("hu-HU"))}`);
         });
       }
     } catch (error: unknown) {
@@ -2077,7 +2080,7 @@ testsCmd
     ]);
 
     if (action === "cancel") {
-      console.log(chalk.gray("Visszavonva."));
+      writeLine(chalk.gray("Visszavonva."));
       process.exit(0);
     }
 
@@ -2104,7 +2107,7 @@ testsCmd
           .replace(/completedAt:.*$/m, `completedAt: ${new Date().toISOString()}`);
         writeFileSync(specPath, updated);
         spinner.succeed("✅ Track spec frissítve: completed");
-        console.log(chalk.dim(`  Fájl: ${specPath}`));
+        writeLine(chalk.dim(`  Fájl: ${specPath}`));
       } catch (error: unknown) {
         spinner.fail("Hiba: " + ensureError(error).message);
       }
@@ -2121,9 +2124,9 @@ testsCmd
         shell: true,
       });
       spinner.stop();
-      console.log(chalk.green("✅ Szerver elindítva!"));
-      console.log(chalk.cyan("📱 Nyisd meg: http://localhost:3000"));
-      console.log(chalk.dim("Kilépéshez: Ctrl+C\n"));
+      writeLine(chalk.green("✅ Szerver elindítva!"));
+      writeLine(chalk.cyan("📱 Nyisd meg: http://localhost:3000"));
+      writeLine(chalk.dim("Kilépéshez: Ctrl+C\n"));
       proc.on("exit", (code) => process.exit(code || 0));
     } else if (action === "push") {
       // Git push
@@ -2162,7 +2165,7 @@ testsCmd
         }
 
         spinner.succeed("✅ README frissítve!");
-        console.log(chalk.dim(`  Fájl: ${readmePath}`));
+        writeLine(chalk.dim(`  Fájl: ${readmePath}`));
       } catch (error: unknown) {
         spinner.fail("Hiba: " + ensureError(error).message);
       }
@@ -2183,9 +2186,9 @@ harvestCmd
     const ora = (await import("ora")).default;
     const chalk = (await import("chalk")).default;
 
-    console.log(chalk.blue("\n╔════════════════════════════════════════════════════════════════╗"));
-    console.log(chalk.blue("║") + chalk.bold("           TECH-HARVESTER PIPELINE                          ") + chalk.blue("║"));
-    console.log(chalk.blue("╚════════════════════════════════════════════════════════════════╝\n"));
+    writeLine(chalk.blue("\n╔════════════════════════════════════════════════════════════════╗"));
+    writeLine(chalk.blue("║") + chalk.bold("           TECH-HARVESTER PIPELINE                          ") + chalk.blue("║"));
+    writeLine(chalk.blue("╚════════════════════════════════════════════════════════════════╝\n"));
 
     const spinner = ora("Starting harvest pipeline...").start();
 
@@ -2258,13 +2261,13 @@ harvestCmd
       }
 
       if (summaryLines.length > 0) {
-        console.log(chalk.blue("\n" + "═".repeat(80)));
-        console.log(chalk.bold("LAST HARVEST SUMMARY"));
-        console.log(chalk.blue("═".repeat(80)));
-        summaryLines.reverse().forEach((line) => console.log(line));
-        console.log(chalk.blue("═".repeat(80) + "\n"));
+        writeLine(chalk.blue("\n" + "═".repeat(80)));
+        writeLine(chalk.bold("LAST HARVEST SUMMARY"));
+        writeLine(chalk.blue("═".repeat(80)));
+        summaryLines.reverse().forEach((line) => writeLine(line));
+        writeLine(chalk.blue("═".repeat(80) + "\n"));
       } else {
-        console.log(chalk.yellow("No harvest summary found. Run 'brunella harvest run' first."));
+        writeLine(chalk.yellow("No harvest summary found. Run 'brunella harvest run' first."));
       }
 
     } catch (error: unknown) {
@@ -2301,9 +2304,9 @@ swarmCmd
         console.error('Unexpected response:', JSON.stringify(data));
         process.exit(1);
       }
-      console.log(`\nSwarm Colonies (${data.total ?? data.colonies.length} total):`);
+      writeLine(`\nSwarm Colonies (${data.total ?? data.colonies.length} total):`);
       for (const c of data.colonies) {
-        console.log(`  [${c.status.toUpperCase()}] ${c.name} (${c.colonyId}) — ${c.agentCount} agents`);
+        writeLine(`  [${c.status.toUpperCase()}] ${c.name} (${c.colonyId}) — ${c.agentCount} agents`);
       }
     } catch (error: unknown) {
       const err = ensureError(error);
@@ -2328,8 +2331,8 @@ swarmCmd
         throw new Error(err.error ?? `HTTP ${res.status}`);
       }
       const data = await res.json() as { success: boolean; result: unknown };
-      console.log('\nTask dispatched successfully:');
-      console.log(JSON.stringify(data.result, null, 2));
+      writeLine('\nTask dispatched successfully:');
+      writeLine(JSON.stringify(data.result, null, 2));
     } catch (error: unknown) {
       const err = ensureError(error);
       console.error(`Error: ${err.message}`);

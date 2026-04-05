@@ -1,0 +1,184 @@
+{
+  "name": "KKV CRM Lead Intake Skeleton",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "crm/ingest",
+        "options": {
+          "responseMode": "responseNode"
+        }
+      },
+      "id": "crm-webhook",
+      "name": "CRM Lead Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [260, 300],
+      "webhookId": "kkv-crm-lead-intake"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const input = items[0].json ?? {};\nconst payload = input.payload && typeof input.payload === 'object' ? input.payload : input;\nconst source = String(input.source ?? payload.source ?? payload.lead_source ?? 'unknown').trim() || 'unknown';\nconst email = String(payload.email ?? payload.contact_email ?? '').trim().toLowerCase() || null;\nconst phone = String(payload.phone ?? payload.contact_phone ?? '').replace(/[^0-9+]/g, '') || null;\nconst company = String(payload.company ?? payload.organization ?? '').trim() || null;\nconst receivedAt = new Date().toISOString();\nconst errors = [];\nif (!email && !phone) errors.push('email or phone is required');\nif (!company) errors.push('company is required');\nreturn [{\n  json: {\n    source,\n    receivedAt,\n    isValid: errors.length === 0,\n    validationErrors: errors,\n    lead: {\n      id: input.id ?? payload.id ?? null,\n      email,\n      phone,\n      company,\n      createdAt: String(payload.created_at ?? payload.createdAt ?? receivedAt),\n      raw: payload,\n    },\n    metadata: {\n      workflowId: 'kkv_crm_automation_20260404',\n      trigger: 'webhook',\n      channel: 'n8n'\n    }\n  }\n}];"
+      },
+      "id": "crm-normalize",
+      "name": "Normalize CRM Lead",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [520, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ $json.isValid }}",
+              "operation": "isTrue"
+            }
+          ]
+        }
+      },
+      "id": "crm-valid",
+      "name": "Lead Payload Valid?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [760, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:3000/api/v1/crm/intake",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "X-Workflow-Id",
+              "value": "kkv_crm_automation_20260404"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ source: $json.source, payload: $json.lead, metadata: $json.metadata, receivedAt: $json.receivedAt, validationErrors: $json.validationErrors }) }}",
+        "options": {}
+      },
+      "id": "crm-persist",
+      "name": "Persist Lead",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1000, 220]
+    },
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              }
+            ]
+          }
+        }
+      },
+      "id": "crm-success",
+      "name": "Return Acceptance",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1240, 220]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ ok: false, accepted: false, error: 'Validation failed', details: $json.validationErrors }) }}",
+        "options": {}
+      },
+      "id": "crm-failure",
+      "name": "Return Validation Failure",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1000, 420]
+    }
+  ],
+  "connections": {
+    "CRM Lead Webhook": {
+      "main": [
+        [
+          {
+            "node": "Normalize CRM Lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize CRM Lead": {
+      "main": [
+        [
+          {
+            "node": "Lead Payload Valid?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lead Payload Valid?": {
+      "main": [
+        [
+          {
+            "node": "Persist Lead",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Return Validation Failure",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Persist Lead": {
+      "main": [
+        [
+          {
+            "node": "Return Acceptance",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {},
+  "staticData": null,
+  "tags": [
+    {
+      "id": "kkv",
+      "name": "kkv"
+    },
+    {
+      "id": "crm",
+      "name": "crm"
+    },
+    {
+      "id": "n8n",
+      "name": "n8n"
+    }
+  ],
+  "pinData": {},
+  "versionId": "wf1-crm-ingest-skeleton",
+  "meta": {
+    "project": "kkv_crm_automation_20260404",
+    "track": "KKV CRM es lead-utanakovetes automatizalas",
+    "status": "draft"
+  }
+}
