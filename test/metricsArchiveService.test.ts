@@ -18,16 +18,25 @@ import {
   initMetricsArchive,
 } from '../src/services/metricsArchiveService.js';
 
-let db: Database.Database;
+let db: Database.Database | undefined;
 const testDbPath = path.join(process.cwd(), '.test-metrics-archive.db');
+let currentTestDbPath = testDbPath;
 
 describe('MetricsArchiveService', () => {
   beforeEach(() => {
-    // Create test database
-    if (fs.existsSync(testDbPath)) {
-      fs.unlinkSync(testDbPath);
+    // Prepare a per-run test database path. If the default test DB is locked,
+    // fall back to a unique file name to avoid Windows EBUSY collisions.
+    currentTestDbPath = testDbPath;
+    if (fs.existsSync(currentTestDbPath)) {
+      try {
+        fs.unlinkSync(currentTestDbPath);
+      } catch (e) {
+        // Could not remove (locked) — fall back to per-process unique path
+        currentTestDbPath = `${testDbPath}.${process.pid}.${Date.now()}`;
+      }
     }
-    db = new Database(testDbPath);
+
+    db = new Database(currentTestDbPath);
 
     // Create tables
     const schema = fs.readFileSync(
@@ -38,9 +47,19 @@ describe('MetricsArchiveService', () => {
   });
 
   afterEach(() => {
-    db.close();
-    if (fs.existsSync(testDbPath)) {
-      fs.unlinkSync(testDbPath);
+    if (db) {
+      try {
+        db.close();
+      } catch {}
+      // clear reference
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      db = undefined as any;
+    }
+
+    if (fs.existsSync(currentTestDbPath)) {
+      try {
+        fs.unlinkSync(currentTestDbPath);
+      } catch {}
     }
   });
 
