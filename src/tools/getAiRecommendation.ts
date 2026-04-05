@@ -8,7 +8,7 @@
  */
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { logInfo, logError } from "../utils/logger.js";
+import { logDebug, logInfo, logError } from "../utils/logger.js";
 import { HybridMemory } from "../utils/rag.js";
 
 const AGENT = "AiRecommendationTool";
@@ -44,7 +44,8 @@ async function fetchRecommendations(
       };
     }
     return { results: FALLBACK_RECS.slice(0, limit), engine: "fallback" };
-  } catch {
+  } catch (error: unknown) {
+    logDebug(AGENT, "RAG search failed, using fallback", error);
     return { results: FALLBACK_RECS.slice(0, limit), engine: "fallback" };
   }
 }

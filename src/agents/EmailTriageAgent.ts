@@ -16,7 +16,8 @@
 
 import { BaseAgent } from './BaseAgent.js';
 import { AgentResponse } from './types.js';
-import { logInfo, logError, setAgentStatus } from '../utils/logger.js';
+import { logInfo, logError, logDebug, setAgentStatus } from '../utils/logger.js';
+import { ensureError } from '../utils/ensureError.js';
 import { getWorkspaceClient } from '../tools/unifiedWorkspace.js';
 import * as fs from 'fs/promises';
 import * as path from 'path';
@@ -105,7 +106,9 @@ export class EmailTriageAgent extends BaseAgent {
       let emailData = { emailSubject: '', emailBody: '', from: '' };
       try {
         emailData = JSON.parse(task);
-      } catch {
+      } catch (error: unknown) {
+        const err = ensureError(error);
+        logDebug(this.name, `Ignoring email task JSON parse error: ${err.message}`);
         emailData.emailSubject = task;
       }
 
@@ -180,12 +183,12 @@ export class EmailTriageAgent extends BaseAgent {
       };
 
     } catch (error: unknown) {
-      const errorMsg = error instanceof Error ? error.message : String(error);
-      logError(this.name, `Email triage failed: ${errorMsg}`);
+      const err = ensureError(error);
+      logError(this.name, `Email triage failed: ${err.message}`);
       
       return {
         status: 'error',
-        error: errorMsg,
+        error: err.message,
       };
     } finally {
       setAgentStatus(this.name, 'idle');
@@ -377,8 +380,9 @@ export class EmailTriageAgent extends BaseAgent {
         .replace(/{due_date}/g, context.due_date || 'N/A')
         .replace(/{company_name}/g, process.env.COMPANY_NAME || '[Cég neve]');
         
-    } catch (error) {
-      logError(this.name, `Failed to load template ${templateName}`);
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      logError(this.name, `Failed to load template ${templateName}: ${err.message}`);
       return this.getDefaultTemplate(templateName);
     }
   }

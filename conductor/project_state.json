@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-04-04T18:47:06.571Z",
+  "lastUpdated": "2026-04-05T13:00:01.090Z",
   "tracks": [
     {
       "id": "apify_deep_scraping_agent_20260223",
@@ -124,18 +124,6 @@
       "_isArchived": false
     },
     {
-      "id": "cf_hyperdrive_d1_20260323",
-      "name": "Hyperdrive Connection Pooling D1 Teljesítményhez",
-      "status": "active",
-      "priority": "low",
-      "progress": 30,
-      "created": "2026-03-23",
-      "tags": [],
-      "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\cf_hyperdrive_d1_20260323",
-      "_isArchived": false
-    },
-    {
       "id": "cloudflare_dns_zone_reconciliation_20260325",
       "name": "Cloudflare DNS Zone Reconciliation for Custom Domains",
       "status": "archived",
@@ -157,36 +145,14 @@
     {
       "id": "cloudflare_workers_migration_20260226",
       "name": "Cloudflare Workers Migration — 16 Agent Edge Orkesztrátor",
-      "status": "proposed",
+      "status": "completed",
       "priority": "high",
-      "progress": 0,
+      "progress": 100,
       "created": "2026-02-26",
-      "tags": [],
-      "dependencies": [
-        "Cloudflare account dd107933ac970dac857f27cee7a7ff46 (BAS_server) — MEGVAN",
-        "CLOUDFLARE_API_TOKEN — MEGVAN (.env-ben)",
-        "Browser Rendering API token — MEGVAN (siTRHomo1G_...)",
-        "wrangler CLI telepítve — ellenőrizd: npx wrangler --version",
-        "D1 binding: bas-metadata (1c4e7d00-7b09-4ddf-88b4-8df42e1123ab) — MEGVAN"
-      ],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\cloudflare_workers_migration_20260226",
-      "_isArchived": false
-    },
-    {
-      "id": "error_handling_standard_20260404",
-      "name": "Error Handling Standardization — catch (e: unknown) és Error wrapping",
-      "status": "active",
-      "priority": "high",
-      "progress": 0,
       "updated": "2026-04-04",
-      "tags": [
-        "errors",
-        "standard",
-        "robustness",
-        "debugging"
-      ],
+      "tags": [],
       "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\error_handling_standard_20260404",
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\cloudflare_workers_migration_20260226",
       "_isArchived": false
     },
     {
@@ -220,6 +186,51 @@
       ],
       "dependencies": [],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\kkv_crm_automation_20260404",
+      "_isArchived": false
+    },
+    {
+      "id": "kkv_crm_followup_routing_20260405",
+      "name": "KKV CRM follow-up es routing",
+      "status": "proposed",
+      "priority": "high",
+      "progress": 0,
+      "created": "2026-04-05",
+      "updated": "2026-04-05",
+      "assignee": "GitHub Copilot",
+      "tags": [
+        "kkv",
+        "crm",
+        "follow-up",
+        "routing",
+        "scoring",
+        "slack",
+        "n8n"
+      ],
+      "dependencies": [
+        "kkv_crm_ingest_foundation_20260405"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\kkv_crm_followup_routing_20260405",
+      "_isArchived": false
+    },
+    {
+      "id": "kkv_crm_ingest_foundation_20260405",
+      "name": "KKV CRM ingest alapok",
+      "status": "proposed",
+      "priority": "high",
+      "progress": 0,
+      "created": "2026-04-05",
+      "updated": "2026-04-05",
+      "assignee": "GitHub Copilot",
+      "tags": [
+        "kkv",
+        "crm",
+        "ingest",
+        "dedupe",
+        "hubspot",
+        "n8n"
+      ],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\kkv_crm_ingest_foundation_20260405",
       "_isArchived": false
     },
     {
@@ -286,13 +297,82 @@
       "_isArchived": false
     },
     {
-      "id": "kkv_inventory_automation_20260404",
-      "name": "KKV keszlet es leltar automatizalas",
-      "status": "active",
+      "id": "kkv_hr_leave_approvals_20260405",
+      "name": "KKV HR leave approvals",
+      "status": "proposed",
       "priority": "high",
       "progress": 0,
+      "created": "2026-04-05",
+      "updated": "2026-04-05",
+      "assignee": "GitHub Copilot",
+      "tags": [
+        "kkv",
+        "hr",
+        "leave",
+        "approvals",
+        "calendar",
+        "n8n"
+      ],
+      "dependencies": [
+        "kkv_hr_onboarding_provisioning_20260405"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\kkv_hr_leave_approvals_20260405",
+      "_isArchived": false
+    },
+    {
+      "id": "kkv_hr_onboarding_provisioning_20260405",
+      "name": "KKV HR onboarding es provisioning",
+      "status": "proposed",
+      "priority": "high",
+      "progress": 0,
+      "created": "2026-04-05",
+      "updated": "2026-04-05",
+      "assignee": "GitHub Copilot",
+      "tags": [
+        "kkv",
+        "hr",
+        "onboarding",
+        "provisioning",
+        "google-workspace",
+        "slack",
+        "n8n"
+      ],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\kkv_hr_onboarding_provisioning_20260405",
+      "_isArchived": false
+    },
+    {
+      "id": "kkv_hr_timesheet_culture_20260405",
+      "name": "KKV HR timesheet es kultura automatizalas",
+      "status": "proposed",
+      "priority": "high",
+      "progress": 0,
+      "created": "2026-04-05",
+      "updated": "2026-04-05",
+      "assignee": "GitHub Copilot",
+      "tags": [
+        "kkv",
+        "hr",
+        "timesheet",
+        "reports",
+        "birthday",
+        "anniversary",
+        "n8n"
+      ],
+      "dependencies": [
+        "kkv_hr_onboarding_provisioning_20260405"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\kkv_hr_timesheet_culture_20260405",
+      "_isArchived": false
+    },
+    {
+      "id": "kkv_inventory_automation_20260404",
+      "name": "KKV keszlet es leltar automatizalas",
+      "status": "completed",
+      "priority": "high",
+      "progress": 100,
       "created": "2026-04-04",
-      "updated": "2026-04-04",
+      "updated": "2026-04-05",
       "assignee": "GitHub Copilot",
       "tags": [
         "kkv",
@@ -309,11 +389,11 @@
     {
       "id": "kkv_marketing_automation_20260404",
       "name": "KKV marketing es kommunikacios automatizalas",
-      "status": "active",
+      "status": "completed",
       "priority": "medium",
-      "progress": 0,
+      "progress": 100,
       "created": "2026-04-04",
-      "updated": "2026-04-04",
+      "updated": "2026-04-05",
       "assignee": "GitHub Copilot",
       "tags": [
         "kkv",
@@ -330,11 +410,11 @@
     {
       "id": "kkv_project_task_automation_20260404",
       "name": "KKV projekt es feladat automatizalas",
-      "status": "active",
+      "status": "completed",
       "priority": "medium",
-      "progress": 0,
+      "progress": 100,
       "created": "2026-04-04",
-      "updated": "2026-04-04",
+      "updated": "2026-04-05",
       "assignee": "GitHub Copilot",
       "tags": [
         "kkv",
@@ -689,24 +769,6 @@
       ],
       "dependencies": [],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\readme_bootstrap_health_fixes_20260324",
-      "_isArchived": false
-    },
-    {
-      "id": "remote_layer_phase1_foundation_20260322",
-      "name": "Brunella Remote Layer — Fázis 1: Remote Foundation",
-      "status": "active",
-      "priority": "high",
-      "progress": 0,
-      "tags": [
-        "remote-layer",
-        "api",
-        "websocket",
-        "mcp-router",
-        "dashboard",
-        "paios"
-      ],
-      "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\remote_layer_phase1_foundation_20260322",
       "_isArchived": false
     },
     {
@@ -1305,7 +1367,7 @@
       "name": "Hyperdrive Connection Pooling D1 Teljesítményhez",
       "status": "archived",
       "priority": "low",
-      "progress": 30,
+      "progress": 100,
       "created": "2026-03-23",
       "tags": [],
       "dependencies": [],
@@ -2096,6 +2158,42 @@
       ],
       "dependencies": [],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\epp-v2-protocol-20260211",
+      "_isArchived": true
+    },
+    {
+      "id": "error_handling_implementation_20260404",
+      "name": "Error Handling Implementation - CLI catch cleanup és Error wrapping",
+      "status": "archived",
+      "priority": "high",
+      "progress": 100,
+      "updated": "2026-04-04",
+      "tags": [
+        "errors",
+        "standard",
+        "robustness",
+        "debugging"
+      ],
+      "dependencies": [
+        "error_handling_standard_20260404"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\error_handling_implementation_20260404",
+      "_isArchived": true
+    },
+    {
+      "id": "error_handling_standard_20260404",
+      "name": "Error Handling Standardization — catch (e: unknown) és Error wrapping",
+      "status": "archived",
+      "priority": "high",
+      "progress": 100,
+      "updated": "2026-04-04",
+      "tags": [
+        "errors",
+        "standard",
+        "robustness",
+        "debugging"
+      ],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\error_handling_standard_20260404",
       "_isArchived": true
     },
     {
@@ -3178,6 +3276,24 @@
       "_isArchived": true
     },
     {
+      "id": "remote_layer_phase1_foundation_20260322",
+      "name": "Brunella Remote Layer — Fázis 1: Remote Foundation",
+      "status": "archived",
+      "priority": "high",
+      "progress": 100,
+      "tags": [
+        "remote-layer",
+        "api",
+        "websocket",
+        "mcp-router",
+        "dashboard",
+        "paios"
+      ],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\remote_layer_phase1_foundation_20260322",
+      "_isArchived": true
+    },
+    {
       "id": "remote_layer_phase2_discovery_auth_20260322",
       "name": "Brunella Remote Layer — Fázis 2: Discovery, Capability & Auth",
       "status": "archived",
@@ -3833,10 +3949,10 @@
     }
   ],
   "stats": {
-    "total": 212,
-    "active": 23,
-    "completed": 15,
-    "archived": 167,
-    "proposed": 6
+    "total": 217,
+    "active": 17,
+    "completed": 19,
+    "archived": 170,
+    "proposed": 10
   }
 }

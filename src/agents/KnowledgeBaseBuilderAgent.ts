@@ -18,7 +18,8 @@
 
 import { BaseAgent } from './BaseAgent.js';
 import { AgentResponse } from './types.js';
-import { logInfo, logError, setAgentStatus } from '../utils/logger.js';
+import { logInfo, logError, logDebug, setAgentStatus } from '../utils/logger.js';
+import { ensureError } from '../utils/ensureError.js';
 import { getWorkspaceClient } from '../tools/unifiedWorkspace.js';
 import { aiGateway } from '../utils/aiGateway.js';
 import { lanceDBClient } from '../utils/lancedb_client.js';
@@ -27,7 +28,9 @@ async function generateEmbedding(text: string): Promise<number[] | null> {
   try {
     const embedding = await aiGateway.embeddings(text);
     return embedding || null;
-  } catch {
+  } catch (error: unknown) {
+    const err = ensureError(error);
+    logDebug('KnowledgeBaseBuilder', `Embedding generation failed: ${err.message}`);
     return null;
   }
 }
@@ -127,7 +130,10 @@ export class KnowledgeBaseBuilderAgent extends BaseAgent {
       let taskData: any = {};
       try {
         taskData = JSON.parse(task);
-      } catch { /* ignore parse errors, use empty taskData */ }
+      } catch (error: unknown) {
+        const err = ensureError(error);
+        logDebug(this.name, `Ignoring knowledge base task JSON parse error: ${err.message}`);
+      }
 
       // Transform based on task type
       const responseData: any = {
@@ -186,12 +192,12 @@ export class KnowledgeBaseBuilderAgent extends BaseAgent {
       };
 
     } catch (error: unknown) {
-      const errorMsg = error instanceof Error ? error.message : String(error);
-      logError(this.name, `Knowledge base building failed: ${errorMsg}`);
+      const err = ensureError(error);
+      logError(this.name, `Knowledge base building failed: ${err.message}`);
       
       return {
         status: 'error',
-        error: errorMsg,
+        error: err.message,
       };
     } finally {
       setAgentStatus(this.name, 'idle');

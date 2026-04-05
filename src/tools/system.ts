@@ -21,8 +21,10 @@ async function logCommand(command: string, cwd: string, user: string = 'unknown'
     const logEntry = `[${new Date().toISOString()}] User: ${user} | CWD: ${cwd} | Command: ${command}\n`;
     try {
         await fs.appendFile(path.join(config.systemLogDir, 'system_commands.log'), logEntry);
-    } catch (e) {
-        console.error("Failed to write log:", e);
+    } catch (error: unknown) {
+        // Non-critical: logging failure should not interrupt command execution
+        const err = error instanceof Error ? error : new Error(String(error));
+        console.error("Failed to write log:", err.message);
     }
 }
 

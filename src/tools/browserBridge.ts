@@ -54,7 +54,7 @@ export async function runBrowserTask(taskOrPayload: string | object): Promise<st
                                 break;
                             }
                         }
-                    } catch (e) {
+                    } catch (error: unknown) {
                         continue;
                     }
                 }
@@ -70,8 +70,9 @@ export async function runBrowserTask(taskOrPayload: string | object): Promise<st
                 } else {
                     reject(new Error(result.message));
                 }
-            } catch (e: any) {
-                reject(new Error(`Nem sikerült értelmezni a Python választ: ${e.message}`));
+            } catch (error: unknown) {
+                const err = error instanceof Error ? error : new Error(String(error));
+                reject(new Error(`Nem sikerült értelmezni a Python választ: ${err.message}`));
             }
         });
     });

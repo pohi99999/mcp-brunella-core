@@ -25,7 +25,8 @@ import {
   IntelligencePayload,
   WikiPayload
 } from '../types/enterprise.js';
-import { logInfo, logError, setAgentStatus } from '../utils/logger.js';
+import { logInfo, logError, logDebug, setAgentStatus } from '../utils/logger.js';
+import { ensureError } from '../utils/ensureError.js';
 import { v4 as uuidv4 } from 'uuid';
 
 /**
@@ -114,12 +115,12 @@ export class EnterpriseOrchestratorAgent extends OrchestratorAgent {
       };
 
     } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : String(error);
-      logError(this.name, `Enterprise orchestration failed: ${errorMessage}`);
+      const err = ensureError(error);
+      logError(this.name, `Enterprise orchestration failed: ${err.message}`);
       
       return {
         status: 'error',
-        error: errorMessage
+        error: err.message
       };
     } finally {
       setAgentStatus(this.name, 'idle');
@@ -141,8 +142,9 @@ export class EnterpriseOrchestratorAgent extends OrchestratorAgent {
       if (parsed.module && parsed.type) {
         return this.validateEnterpriseEvent(parsed);
       }
-    } catch {
-      // Not JSON, proceed with natural language parsing
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      logDebug(this.name, `Ignoring enterprise intent JSON parse error: ${err.message}`);
     }
 
     // Keyword-based module detection
@@ -416,13 +418,13 @@ export class EnterpriseOrchestratorAgent extends OrchestratorAgent {
         error: agentResult?.success ? undefined : (agentResult?.message || 'Agent execution failed')
       };
     } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : String(error);
-      logError(this.name, `routeToModule failed for ${targetAgent}: ${errorMessage}`);
+      const err = ensureError(error);
+      logError(this.name, `routeToModule failed for ${targetAgent}: ${err.message}`);
       return {
         eventId: event.id,
         module: event.module,
         status: 'failure',
-        error: errorMessage
+        error: err.message
       };
     }
   }
@@ -437,8 +439,9 @@ export class EnterpriseOrchestratorAgent extends OrchestratorAgent {
     try {
       // TODO: Implement LanceDB storage
       logInfo(this.name, `Would store execution history for event ${event.id}`);
-    } catch (error) {
-      logError(this.name, `Failed to store execution history: ${error}`);
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      logError(this.name, `Failed to store execution history: ${err.message}`);
     }
   }
 

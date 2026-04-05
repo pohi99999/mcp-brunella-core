@@ -9,6 +9,7 @@ import {
   executeLocalTool,
   getRegisteredToolsList
 } from "./toolRegistry.js";
+import { ensureError } from "../utils/ensureError.js";
 
 // Re-export for compatibility
 export { getAllToolDefinitions, executeLocalTool, getRegisteredToolsList };
@@ -202,8 +203,9 @@ export async function registerAgents() {
     agentManager.registerAgent(
       new DynamicAgent(path.default.join(agentsDir, "agent_architect.toml")),
     );
-  } catch (e: any) {
-    logWarn("System", `Could not load dynamic agents: ${e.message}`);
+  } catch (error: unknown) {
+    const err = ensureError(error);
+    logWarn("System", `Could not load dynamic agents: ${err.message}`);
   }
 }
 
@@ -359,11 +361,12 @@ export async function registerAllTools(server: McpServer) {
         const text =
           typeof result === "string" ? result : JSON.stringify(result, null, 2);
         return { content: [{ type: "text" as const, text: text }] };
-      } catch (e: any) {
+      } catch (error: unknown) {
+        const err = ensureError(error);
         return {
           isError: true,
           content: [
-            { type: "text" as const, text: `Agent Error: ${e.message}` },
+            { type: "text" as const, text: `Agent Error: ${err.message}` },
           ],
         };
       }
@@ -387,13 +390,14 @@ export async function registerAllTools(server: McpServer) {
         if (typeof context === "string" && context.trim().length > 0) {
           try {
             parsedContext = JSON.parse(context) as Record<string, unknown>;
-          } catch (e: any) {
+          } catch (error: unknown) {
+            const err = ensureError(error);
             return {
               isError: true,
               content: [
                 {
                   type: "text" as const,
-                  text: `Invalid JSON in context: ${e?.message ?? String(e)}`,
+                  text: `Invalid JSON in context: ${err.message}`,
                 },
               ],
             };
@@ -408,11 +412,12 @@ export async function registerAllTools(server: McpServer) {
         const text =
           typeof result === "string" ? result : JSON.stringify(result, null, 2);
         return { content: [{ type: "text" as const, text }] };
-      } catch (e: any) {
+      } catch (error: unknown) {
+        const err = ensureError(error);
         return {
           isError: true,
           content: [
-            { type: "text" as const, text: `Agent Error: ${e.message}` },
+            { type: "text" as const, text: `Agent Error: ${err.message}` },
           ],
         };
       }

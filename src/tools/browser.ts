@@ -6,6 +6,8 @@ import { PythonShell } from 'python-shell';
 import path from 'path';
 import fs from 'fs';
 import { CloudflareBrowserAPI } from '../utils/browserRendering.js';
+import { mcpCatch, mcpError } from '../utils/mcpResponse.js';
+import { logDebug } from '../utils/logger.js';
 
 // Lazy singleton – won't throw at import time if env vars are missing
 let _cfBrowser: CloudflareBrowserAPI | null = null;
@@ -28,7 +30,8 @@ function isUrlAllowed(urlStr: string): boolean {
     if (hostname.endsWith('.local')) return false;
 
     return true;
-  } catch {
+  } catch (error: unknown) {
+    logDebug("isUrlAllowed: invalid URL", error);
     return false;
   }
 }
@@ -48,8 +51,8 @@ async function getBrowser() {
         headless: true,
         args: ['--no-sandbox', '--disable-setuid-sandbox'] // Safer in some envs, standard for server-side
       });
-    } catch (e: any) {
-      throw new Error(`Failed to load playwright: ${e.message}. Browser tools are not available in this environment.`);
+    } catch (error: unknown) {
+      throw new Error(`Failed to load playwright: ${error instanceof Error ? error.message : String(error)}. Browser tools are not available in this environment.`);
     }
   }
   return browser;
@@ -80,11 +83,8 @@ export function registerBrowserTools(server: McpServer) {
         return {
           content: [{ type: "text", text: JSON.stringify(data, null, 2) }]
         };
-      } catch (error: any) {
-        return {
-          isError: true,
-          content: [{ type: "text", text: `Harvest error: ${error.message}` }]
-        };
+      } catch (error: unknown) {
+        return mcpCatch(error, "harvest_scenario");
       }
     }
   );
@@ -109,11 +109,8 @@ export function registerBrowserTools(server: McpServer) {
         return {
           content: [{ type: "text", text: JSON.stringify(data, null, 2) }]
         };
-      } catch (error: any) {
-        return {
-          isError: true,
-          content: [{ type: "text", text: `Extract error: ${error.message}` }]
-        };
+      } catch (error: unknown) {
+        return mcpCatch(error, "harvest_extract");
       }
     }
   );
@@ -130,10 +127,7 @@ export function registerBrowserTools(server: McpServer) {
     },
     async ({ url, waitForSelector }) => {
       if (!isUrlAllowed(url)) {
-        return {
-          isError: true,
-          content: [{ type: "text", text: "Access denied: Local or file URLs are not allowed." }]
-        };
+        return mcpError("Access denied: Local or file URLs are not allowed.");
       }
 
       let page: Page | null = null;
@@ -148,8 +142,9 @@ export function registerBrowserTools(server: McpServer) {
         if (waitForSelector) {
           try {
             await page.waitForSelector(waitForSelector, { timeout: 5000 });
-          } catch (e) {
+          } catch (e: unknown) {
             // Ignore timeout, just return what we have
+            logDebug("browser_navigate: waitForSelector timed out (non-fatal)", e);
           }
         }
 
@@ -163,11 +158,8 @@ export function registerBrowserTools(server: McpServer) {
             text: `Title: ${title}\n\nContent:\n${text.slice(0, 50000)}` // Limit content
           }]
         };
-      } catch (error: any) {
-        return {
-          isError: true,
-          content: [{ type: "text", text: `Browser error: ${error.message}` }]
-        };
+      } catch (error: unknown) {
+        return mcpCatch(error, "browser_navigate");
       } finally {
         if (page) await page.close();
       }
@@ -182,7 +174,7 @@ export function registerBrowserTools(server: McpServer) {
     },
     async ({ url }) => {
       if (!isUrlAllowed(url)) {
-        return { isError: true, content: [{ type: "text", text: "Access denied." }] };
+        return mcpError("Access denied: Local or file URLs are not allowed.");
       }
 
       let page: Page | null = null;
@@ -203,11 +195,8 @@ export function registerBrowserTools(server: McpServer) {
             mimeType: "image/png"
           }]
         };
-      } catch (error: any) {
-        return {
-          isError: true,
-          content: [{ type: "text", text: `Screenshot error: ${error.message}` }]
-        };
+      } catch (error: unknown) {
+        return mcpCatch(error, "browser_screenshot");
       } finally {
         if (page) await page.close();
       }
@@ -228,10 +217,7 @@ export function registerBrowserTools(server: McpServer) {
       const scriptPath = path.resolve(process.cwd(), 'myai/browser_task_runner.py');
 
       if (!fs.existsSync(scriptPath)) {
-        return {
-          isError: true,
-          content: [{ type: "text", text: `Python script not found at: ${scriptPath}` }]
-        };
+        return mcpError(`Python script not found at: ${scriptPath}`);
       }
 
       const options = {
@@ -252,10 +238,7 @@ export function registerBrowserTools(server: McpServer) {
         const result = JSON.parse(lastMessage);
 
         if (!result.success) {
-          return {
-            isError: true,
-            content: [{ type: "text", text: `Browser task failed: ${result.error || result.final_answer}` }]
-          };
+          return mcpError(`Browser task failed: ${result.error || result.final_answer}`);
         }
 
         return {
@@ -264,11 +247,8 @@ export function registerBrowserTools(server: McpServer) {
             text: `✅ Robotkéz Eredmény:\n\n${result.final_answer}\n\nMetadata: ${JSON.stringify(result.extracted_data, null, 2)}`
           }]
         };
-      } catch (error: any) {
-        return {
-          isError: true,
-          content: [{ type: "text", text: `Python execution error: ${error.message}` }]
-        };
+      } catch (error: unknown) {
+        return mcpCatch(error, "browser_action");
       }
     }
   );
@@ -311,11 +291,11 @@ export function registerBrowserTools(server: McpServer) {
           },
           gotoOptions: { ...(waitUntil && { waitUntil }), timeout },
         });
-        if (!result.success) return { isError: true, content: [{ type: "text", text: `CF Error: ${result.error}` }] };
+        if (!result.success) return mcpError(`CF screenshot failed: ${result.error}`);
         const b64 = result.data ? result.data.toString('base64') : '';
         return { content: [{ type: "image", data: b64, mimeType: result.mimeType || "image/png" }] };
-      } catch (e: any) {
-        return { isError: true, content: [{ type: "text", text: `CF screenshot error: ${e.message}` }] };
+      } catch (error: unknown) {
+        return mcpCatch(error, "cf_screenshot");
       }
     }
   );
@@ -343,11 +323,11 @@ export function registerBrowserTools(server: McpServer) {
           pdfOptions: { format, ...(landscape && { landscape }), printBackground, ...(scale && { scale }) },
           gotoOptions: { ...(waitUntil && { waitUntil }), timeout },
         });
-        if (!result.success) return { isError: true, content: [{ type: "text", text: `CF Error: ${result.error}` }] };
+        if (!result.success) return mcpError(`CF pdf failed: ${result.error}`);
         const b64 = result.data ? result.data.toString('base64') : '';
         return { content: [{ type: "resource", resource: { uri: `data:application/pdf;base64,${b64}`, mimeType: "application/pdf", text: `PDF from ${url || 'HTML'}` } }] };
-      } catch (e: any) {
-        return { isError: true, content: [{ type: "text", text: `CF pdf error: ${e.message}` }] };
+      } catch (error: unknown) {
+        return mcpCatch(error, "cf_pdf");
       }
     }
   );
@@ -365,10 +345,10 @@ export function registerBrowserTools(server: McpServer) {
       try {
         const cf = getCfBrowser();
         const result = await cf.content({ url, gotoOptions: { ...(waitUntil && { waitUntil }), timeout } });
-        if (!result.success) return { isError: true, content: [{ type: "text", text: `CF Error: ${result.error}` }] };
+        if (!result.success) return mcpError(`CF content failed: ${result.error}`);
         return { content: [{ type: "text", text: typeof result.result === 'string' ? result.result : JSON.stringify(result.result, null, 2) }] };
-      } catch (e: any) {
-        return { isError: true, content: [{ type: "text", text: `CF content error: ${e.message}` }] };
+      } catch (error: unknown) {
+        return mcpCatch(error, "cf_content");
       }
     }
   );
@@ -385,10 +365,10 @@ export function registerBrowserTools(server: McpServer) {
       try {
         const cf = getCfBrowser();
         const result = await cf.markdown({ url, gotoOptions: { ...(waitUntil && { waitUntil }) } });
-        if (!result.success) return { isError: true, content: [{ type: "text", text: `CF Error: ${result.error}` }] };
+        if (!result.success) return mcpError(`CF markdown failed: ${result.error}`);
         return { content: [{ type: "text", text: typeof result.result === 'string' ? result.result : JSON.stringify(result.result, null, 2) }] };
-      } catch (e: any) {
-        return { isError: true, content: [{ type: "text", text: `CF markdown error: ${e.message}` }] };
+      } catch (error: unknown) {
+        return mcpCatch(error, "cf_markdown");
       }
     }
   );
@@ -405,10 +385,10 @@ export function registerBrowserTools(server: McpServer) {
       try {
         const cf = getCfBrowser();
         const result = await cf.snapshot({ url, gotoOptions: { ...(waitUntil && { waitUntil }) } });
-        if (!result.success) return { isError: true, content: [{ type: "text", text: `CF Error: ${result.error}` }] };
+        if (!result.success) return mcpError(`CF snapshot failed: ${result.error}`);
         return { content: [{ type: "text", text: JSON.stringify(result.result, null, 2) }] };
-      } catch (e: any) {
-        return { isError: true, content: [{ type: "text", text: `CF snapshot error: ${e.message}` }] };
+      } catch (error: unknown) {
+        return mcpCatch(error, "cf_snapshot");
       }
     }
   );
@@ -427,10 +407,10 @@ export function registerBrowserTools(server: McpServer) {
         const cf = getCfBrowser();
         const elements = selectors.map(s => ({ selector: s }));
         const result = await cf.scrape({ url, elements, gotoOptions: { ...(waitUntil && { waitUntil }) } });
-        if (!result.success) return { isError: true, content: [{ type: "text", text: `CF Error: ${result.error}` }] };
+        if (!result.success) return mcpError(`CF scrape failed: ${result.error}`);
         return { content: [{ type: "text", text: JSON.stringify(result.result, null, 2) }] };
-      } catch (e: any) {
-        return { isError: true, content: [{ type: "text", text: `CF scrape error: ${e.message}` }] };
+      } catch (error: unknown) {
+        return mcpCatch(error, "cf_scrape");
       }
     }
   );
@@ -448,10 +428,10 @@ export function registerBrowserTools(server: McpServer) {
       try {
         const cf = getCfBrowser();
         const result = await cf.json({ url, prompt, gotoOptions: { ...(waitUntil && { waitUntil }) } });
-        if (!result.success) return { isError: true, content: [{ type: "text", text: `CF Error: ${result.error}` }] };
+        if (!result.success) return mcpError(`CF json extraction failed: ${result.error}`);
         return { content: [{ type: "text", text: JSON.stringify(result.result, null, 2) }] };
-      } catch (e: any) {
-        return { isError: true, content: [{ type: "text", text: `CF json error: ${e.message}` }] };
+      } catch (error: unknown) {
+        return mcpCatch(error, "cf_json");
       }
     }
   );
@@ -468,10 +448,10 @@ export function registerBrowserTools(server: McpServer) {
       try {
         const cf = getCfBrowser();
         const result = await cf.links({ url, gotoOptions: { ...(waitUntil && { waitUntil }) } });
-        if (!result.success) return { isError: true, content: [{ type: "text", text: `CF Error: ${result.error}` }] };
+        if (!result.success) return mcpError(`CF links extraction failed: ${result.error}`);
         return { content: [{ type: "text", text: JSON.stringify(result.result, null, 2) }] };
-      } catch (e: any) {
-        return { isError: true, content: [{ type: "text", text: `CF links error: ${e.message}` }] };
+      } catch (error: unknown) {
+        return mcpCatch(error, "cf_links");
       }
     }
   );

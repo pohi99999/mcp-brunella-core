@@ -1,5 +1,6 @@
 import { IAgent, AgentResponse, ISwarmContext } from "./types.js";
-import { logInfo, logError, setAgentStatus } from "../utils/logger.js";
+import { logInfo, logError, logDebug, setAgentStatus } from "../utils/logger.js";
+import { ensureError } from "../utils/ensureError.js";
 import { exec } from "child_process";
 import path from "path";
 import fs from "fs/promises";
@@ -217,8 +218,9 @@ export default class DataScientistAgent implements IAgent {
     if (this.apiUrl && this.apiUrl !== "" && this.apiUrl !== "disabled") {
       try {
         return await this.callRefinerApi(content, source);
-      } catch {
-        logInfo(this.name, "API unavailable, trying E2B sandbox...");
+      } catch (error: unknown) {
+        const err = ensureError(error);
+        logDebug(this.name, `API unavailable, trying E2B sandbox: ${err.message}`);
       }
     }
 
@@ -226,8 +228,9 @@ export default class DataScientistAgent implements IAgent {
     if (this.useE2B) {
       try {
         return await this.callRefinerE2B(content, source);
-      } catch {
-        logInfo(this.name, "E2B sandbox failed, falling back to subprocess");
+      } catch (error: unknown) {
+        const err = ensureError(error);
+        logDebug(this.name, `E2B sandbox failed, falling back to subprocess: ${err.message}`);
       }
     }
 
@@ -368,10 +371,11 @@ except Exception as e:
                 ? (JSON.parse(stdout) as RefineResult)
                 : null;
               resolve(parsed);
-            } catch {
+            } catch (error: unknown) {
+              const err = ensureError(error);
               logError(
                 "DataScientist",
-                `Subprocess parse error: ${stdout} | ${stderr}`,
+                `Subprocess parse error: ${err.message} | ${stderr}`,
               );
               resolve(null);
             }

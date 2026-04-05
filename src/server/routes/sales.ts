@@ -1,5 +1,6 @@
 import express from 'express';
 import { logInfo, logError } from '../../utils/logger.js';
+import { ensureError } from '../../utils/ensureError.js';
 import fetch from 'node-fetch';
 
 const router = express.Router();
@@ -31,8 +32,9 @@ router.post('/generate-demo', async (req, res) => {
 
         const data = await response.json();
         res.json(data);
-    } catch (err: any) {
-        logError("SalesRoutes", `Demo generation failed: ${err.message}`);
+    } catch (error: unknown) {
+        const normalized = ensureError(error);
+        logError("SalesRoutes", "Demo generation failed", normalized);
         res.status(500).json({ error: 'Failed to generate demo.' });
     }
 });

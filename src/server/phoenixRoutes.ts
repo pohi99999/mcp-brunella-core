@@ -29,6 +29,7 @@ import { phoenixEventBus } from "../core/phoenixEventBus.js";
 import { failoverRegistry } from "../core/failoverRegistry.js";
 import { socketService } from "./SocketService.js";
 import { heartbeatMonitor } from "../utils/heartbeatMonitor.js";
+import { ensureError } from "../utils/ensureError.js";
 import os from "os";
 
 export function createPhoenixRouter(): Router {
@@ -42,8 +43,9 @@ export function createPhoenixRouter(): Router {
     try {
       const checkpoints = await listActiveCheckpoints();
       res.json({ checkpoints });
-    } catch (e: any) {
-      res.status(500).json({ error: e.message });
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      res.status(500).json({ error: err.message });
     }
   });
 
@@ -56,8 +58,9 @@ export function createPhoenixRouter(): Router {
       const { taskId } = req.params;
       const checkpoints = await loadAllCheckpoints(taskId);
       res.json({ taskId, checkpoints });
-    } catch (e: any) {
-      res.status(500).json({ error: e.message });
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      res.status(500).json({ error: err.message });
     }
   });
 
@@ -74,8 +77,9 @@ export function createPhoenixRouter(): Router {
         timestamp: new Date().toISOString(),
       });
       res.json({ success, message: `Checkpoints cleared for task: ${taskId}` });
-    } catch (e: any) {
-      res.status(500).json({ error: e.message });
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      res.status(500).json({ error: err.message });
     }
   });
 
@@ -87,8 +91,9 @@ export function createPhoenixRouter(): Router {
     try {
       const stats = await getCheckpointStats();
       res.json(stats);
-    } catch (e: any) {
-      res.status(500).json({ error: e.message });
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      res.status(500).json({ error: err.message });
     }
   });
 
@@ -100,8 +105,9 @@ export function createPhoenixRouter(): Router {
     try {
       const events = getRecoveryLog();
       res.json({ events });
-    } catch (e: any) {
-      res.status(500).json({ error: e.message });
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      res.status(500).json({ error: err.message });
     }
   });
 
@@ -135,8 +141,9 @@ export function createPhoenixRouter(): Router {
       };
 
       res.json(health);
-    } catch (e: any) {
-      res.status(500).json({ error: e.message });
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      res.status(500).json({ error: err.message });
     }
   });
 
@@ -167,8 +174,9 @@ export function createPhoenixRouter(): Router {
         services: servicesArray,
         timestamp: new Date().toISOString(),
       });
-    } catch (e: any) {
-      res.status(500).json({ error: e.message });
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      res.status(500).json({ error: err.message });
     }
   });
 
@@ -184,8 +192,9 @@ export function createPhoenixRouter(): Router {
     try {
       const mappings = failoverRegistry.getAllMappings();
       res.json({ mappings });
-    } catch (e: any) {
-      res.status(500).json({ error: e.message });
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      res.status(500).json({ error: err.message });
     }
   });
 
@@ -204,8 +213,9 @@ export function createPhoenixRouter(): Router {
           : undefined;
       const attempts = failoverRegistry.getAttempts(agentFilter, limit);
       res.json({ attempts, total: attempts.length });
-    } catch (e: any) {
-      res.status(500).json({ error: e.message });
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      res.status(500).json({ error: err.message });
     }
   });
 
@@ -217,8 +227,9 @@ export function createPhoenixRouter(): Router {
     try {
       const stats = failoverRegistry.getStats();
       res.json(stats);
-    } catch (e: any) {
-      res.status(500).json({ error: e.message });
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      res.status(500).json({ error: err.message });
     }
   });
 
@@ -230,8 +241,9 @@ export function createPhoenixRouter(): Router {
     try {
       const stats = phoenixEventBus.getStats();
       res.json(stats);
-    } catch (e: any) {
-      res.status(500).json({ error: e.message });
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      res.status(500).json({ error: err.message });
     }
   });
 
@@ -250,8 +262,9 @@ export function createPhoenixRouter(): Router {
           : undefined;
       const history = phoenixEventBus.getHistory(eventFilter, limit);
       res.json({ history, total: history.length });
-    } catch (e: any) {
-      res.status(500).json({ error: e.message });
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      res.status(500).json({ error: err.message });
     }
   });
 

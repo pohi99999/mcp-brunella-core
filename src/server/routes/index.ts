@@ -2,6 +2,8 @@ import { Router } from "express";
 import type { Request, Response, NextFunction } from "express";
 import { createHealthRoutes } from "./health.js";
 import { getGlobalDb } from "../../utils/globalDb.js";
+import { ensureError } from "../../utils/ensureError.js";
+import { logDebug } from "../../utils/logger.js";
 
 /**
  * Lazy-loading proxy router.
@@ -135,7 +137,8 @@ export function createV1Router(): Router {
       } else {
         res.status(404).send("No active browser session or screenshot available.");
       }
-    } catch {
+    } catch (error: unknown) {
+      logDebug("RoutesIndex", `Browser snapshot unavailable: ${ensureError(error).message}`);
       res.status(500).send("Browser module not available.");
     }
   });

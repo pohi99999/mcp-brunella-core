@@ -4,6 +4,8 @@ import { resolve } from 'path';
 import { Command } from 'commander';
 import chalk from 'chalk';
 import inquirer from 'inquirer';
+import { ensureError } from '../utils/ensureError.js';
+import { logDebug } from '../utils/logger.js';
 
 const ACP_URL = 'http://localhost:9315';
 const INSTALL_ARGS = ['install', '-g', '@chrome-acp/proxy-server', '@anthropic-ai/claude-code', '@zed-industries/claude-code-acp'];
@@ -40,7 +42,8 @@ async function isChromeAcpReachable(): Promise<boolean> {
   try {
     const response = await fetch(ACP_URL, { signal: controller.signal });
     return response.status < 500;
-  } catch {
+  } catch (error: unknown) {
+    logDebug('ChromeAcp', `Reachability probe failed: ${ensureError(error).message}`);
     return false;
   } finally {
     clearTimeout(timeout);

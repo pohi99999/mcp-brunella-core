@@ -7,6 +7,7 @@ import { execSync } from 'child_process';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { ensureError } from './utils/ensureError.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -40,7 +41,7 @@ function log(message: string, type: 'info' | 'success' | 'error' | 'warn' = 'inf
 function runCommand(cmd: string): string {
     try {
         return execSync(cmd, { cwd: REPO_ROOT, encoding: 'utf-8' });
-    } catch (e: any) {
+    } catch (error: unknown) {
         return '';
     }
 }
@@ -204,8 +205,9 @@ async function julesNew() {
                 }
             }
         }
-    } catch (e: any) {
-        log(`Hiba: ${e.message}`, 'error');
+    } catch (error: unknown) {
+        const err = ensureError(error);
+        log(`Hiba: ${err.message}`, 'error');
     }
 
     await mainMenu();
@@ -429,4 +431,7 @@ async function main() {
     await mainMenu();
 }
 
-main().catch(console.error);
+main().catch((error: unknown) => {
+    const err = ensureError(error);
+    console.error(err);
+});

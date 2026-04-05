@@ -1,5 +1,6 @@
 import { BaseAgent, AgentContext, AgentResult } from './BaseAgent.js';
 import { logInfo } from '../utils/logger.js';
+import { ensureError } from '../utils/ensureError.js';
 
 /**
  * AdvancedMatchingAgent - Részleges fizetések, árfolyam-különbözetek és 
@@ -88,8 +89,9 @@ export class AdvancedMatchingAgent extends BaseAgent {
           unmatched_invoices: unmatchedInvoices
         }
       };
-    } catch (e: any) {
-      return { success: false, message: `Matching failed: ${e.message}` };
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      return { success: false, message: `Matching failed: ${err.message}` };
     }
   }
 }

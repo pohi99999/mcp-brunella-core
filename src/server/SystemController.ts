@@ -6,7 +6,8 @@
 
 import type { ChildProcess } from 'child_process';
 import path from 'path';
-import { logInfo, logError } from '../utils/logger.js';
+import { logInfo, logError, logDebug } from '../utils/logger.js';
+import { ensureError } from '../utils/ensureError.js';
 import { checkOllamaHealth } from '../utils/health.js';
 
 export type ServiceId = 'ollama' | 'anythingllm' | 'python';
@@ -86,9 +87,10 @@ export class SystemController {
         child.unref();
         logInfo('SystemController', `AnythingLLM indítva: ${exePath}`);
         return { success: true, message: 'AnythingLLM indítva' };
-      } catch (e: any) {
-        logError('SystemController', `AnythingLLM indítás hiba: ${e.message}`);
-        return { success: false, message: e.message };
+      } catch (error: unknown) {
+        const err = ensureError(error);
+        logError('SystemController', `AnythingLLM indítás hiba: ${err.message}`);
+        return { success: false, message: err.message };
       }
     }
 
@@ -103,9 +105,10 @@ export class SystemController {
         spawnedProcesses.set(serviceId, child);
         logInfo('SystemController', 'Ollama indítva');
         return { success: true, message: 'Ollama indítva' };
-      } catch (e: any) {
-        logError('SystemController', `Ollama indítás hiba: ${e.message}`);
-        return { success: false, message: e.message };
+      } catch (error: unknown) {
+        const err = ensureError(error);
+        logError('SystemController', `Ollama indítás hiba: ${err.message}`);
+        return { success: false, message: err.message };
       }
     }
 
@@ -124,9 +127,10 @@ export class SystemController {
         child.stderr?.on('data', (d) => console.error('[Python]', d.toString()));
         logInfo('SystemController', 'Python subsystem indítva (myai/server.py)');
         return { success: true, message: 'Python subsystem indítva' };
-      } catch (e: any) {
-        logError('SystemController', `Python indítás hiba: ${e.message}`);
-        return { success: false, message: e.message };
+      } catch (error: unknown) {
+        const err = ensureError(error);
+        logError('SystemController', `Python indítás hiba: ${err.message}`);
+        return { success: false, message: err.message };
       }
     }
 
@@ -146,12 +150,13 @@ export class SystemController {
       try {
         process.kill(child.pid, 'SIGTERM');
         stoppedChild = true;
-      } catch (e: any) {
+      } catch (error: unknown) {
+        const err = ensureError(error);
         // If ESRCH, process is already gone
-        if (e.code === 'ESRCH') {
+        if ((err as any).code === 'ESRCH') {
            stoppedChild = true;
         } else {
-           return { success: false, message: e.message };
+           return { success: false, message: err.message };
         }
       }
       spawnedProcesses.delete(serviceId);
@@ -165,8 +170,13 @@ export class SystemController {
           spawn('pkill', ['ollama'], { stdio: 'ignore' });
         }
         return { success: true, message: 'Ollama leállítás parancs elküldve' };
-      } catch {
-         if (stoppedChild) return { success: true, message: 'Ollama leállítva (child process)' };
+      } catch (error: unknown) {
+         const err = ensureError(error);
+         if (stoppedChild) {
+           logDebug('SystemController', `Ollama stop command failed after child stop: ${err.message}`);
+           return { success: true, message: 'Ollama leállítva (child process)' };
+         }
+         logError('SystemController', `Ollama leállítás parancs hiba: ${err.message}`);
          return { success: false, message: 'Ollama nem fut vagy nem állítható le' };
       }
     }
@@ -204,7 +214,9 @@ export class SystemController {
           pid: child?.pid,
           lastCheck: new Date().toISOString(),
         };
-      } catch {
+      } catch (error: unknown) {
+        const err = ensureError(error);
+        logDebug('SystemController', `Python health check failed: ${err.message}`);
         return {
           id: 'python',
           status: child ? 'starting' : 'offline',
@@ -227,7 +239,9 @@ export class SystemController {
           status: res.ok ? 'online' : 'offline',
           lastCheck: new Date().toISOString(),
         };
-      } catch {
+      } catch (error: unknown) {
+        const err = ensureError(error);
+        logDebug('SystemController', `AnythingLLM health check failed: ${err.message}`);
         return {
           id: 'anythingllm',
           status: 'offline',

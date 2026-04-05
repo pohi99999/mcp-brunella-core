@@ -1,13 +1,10 @@
-// FILE: src/agents/GitHubModelsAgent.ts
-// PURPOSE: GitHub Models API (GPT-4o) wrapper agent with MCP tool support
-// CREATED: 2026-02-17
-
 import { IAgent, AgentResponse, ToolDefinition } from './types.js';
 import { logInfo, logError, logWarn, setAgentStatus } from '../utils/logger.js';
 import { generateResponse } from '../core/llm_client.js';
 // Static import is safe now because toolRegistry.js is clean (no Node dependencies)
 import { getAllToolDefinitions, executeLocalTool } from '../server/toolRegistry.js';
 import { checkToolPermission } from '../tools/toolPermissions.js';
+import { ensureError } from '../utils/ensureError.js';
 
 export interface GitHubModelsConfig {
   model?: string; // Default: gpt-4o
@@ -218,9 +215,10 @@ export class GitHubModelsAgent implements IAgent {
                   } else {
                      resultContent = typeof result === 'string' ? result : JSON.stringify(result);
                   }
-                } catch (e: any) {
-                  logError(this.name, `Tool execution failed (${functionName}): ${e.message}`);
-                  resultContent = `Error executing tool ${functionName}: ${e.message}`;
+                } catch (error: unknown) {
+                  const err = ensureError(error);
+                  logError(this.name, `Tool execution failed (${functionName}): ${err.message}`);
+                  resultContent = `Error executing tool ${functionName}: ${err.message}`;
                 }
             }
 

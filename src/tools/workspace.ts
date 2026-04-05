@@ -64,12 +64,13 @@ export function registerWorkspaceTools(server: McpServer) {
             text: JSON.stringify(listing, null, 2)
           }]
         };
-      } catch (error: any) {
+      } catch (error: unknown) {
+        const err = error instanceof Error ? error : new Error(String(error));
         return {
           isError: true,
           content: [{
             type: "text",
-            text: `Error listing directory: ${error.message}`
+            text: `Error listing directory: ${err.message}`
           }]
         };
       }
@@ -101,12 +102,13 @@ export function registerWorkspaceTools(server: McpServer) {
             text: content
           }]
         };
-      } catch (error: any) {
+      } catch (error: unknown) {
+        const err = error instanceof Error ? error : new Error(String(error));
         return {
           isError: true,
           content: [{
             type: "text",
-            text: `Error reading file: ${error.message}`
+            text: `Error reading file: ${err.message}`
           }]
         };
       }

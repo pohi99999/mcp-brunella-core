@@ -1,4 +1,6 @@
 import type { DAGWorkflow } from '../core/dagEngine.js';
+import { logDebug } from '../utils/logger.js';
+import { ensureError } from '../utils/ensureError.js';
 
 export interface MicroTask {
   id: string;
@@ -77,7 +79,9 @@ async function splitWithLLMFallback(text: string): Promise<string[]> {
       .map((l: string) => normalizeLine(l))
       .filter((l: string) => l.length > 5);
     return lines.length > 1 ? lines.slice(0, 6) : [text];
-  } catch {
+  } catch (error: unknown) {
+    const err = ensureError(error);
+    logDebug('TaskDecomposerCore', `LLM fallback failed, returning original task: ${err.message}`);
     return [text];
   }
 }

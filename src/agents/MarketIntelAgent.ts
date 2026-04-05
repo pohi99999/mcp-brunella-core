@@ -17,7 +17,8 @@
 
 import { BaseAgent, AgentContext, AgentResult } from './BaseAgent.js';
 import { AgentResponse } from './types.js';
-import { logInfo, logError, logWarn, setAgentStatus } from '../utils/logger.js';
+import { logInfo, logError, logWarn, logDebug, setAgentStatus } from '../utils/logger.js';
+import { ensureError } from '../utils/ensureError.js';
 import { agentManager } from './AgentManager.js';
 import { runPythonWorker } from '../utils/pythonShell.js';
 import { lanceDBClient } from '../utils/lancedb_client.js';
@@ -148,12 +149,12 @@ export class MarketIntelAgent extends BaseAgent {
       };
 
     } catch (error: unknown) {
-      const errorMsg = error instanceof Error ? error.message : String(error);
-      logError(this.name, `Piaci hírszerzés hiba: ${errorMsg}`);
+      const err = ensureError(error);
+      logError(this.name, `Piaci hírszerzés hiba: ${err.message}`);
       
       return {
         success: false,
-        message: errorMsg,
+        message: err.message,
       };
     }
   }
@@ -212,10 +213,10 @@ export class MarketIntelAgent extends BaseAgent {
         message: `Piaci adatok sikeresen gyűjtve és értékelve. Ajánlás: ${valuationResult.recommendation}`,
         data: marketData
       };
-    } catch (e: unknown) {
-      const error = e instanceof Error ? e.message : String(e);
-      logError(this.name, `Market monitoring failed: ${error}`);
-      return { success: false, message: `Hiba a piaci figyelés során: ${error}`, data: null };
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      logError(this.name, `Market monitoring failed: ${err.message}`);
+      return { success: false, message: `Hiba a piaci figyelés során: ${err.message}`, data: null };
     }
   }
 
@@ -278,10 +279,10 @@ export class MarketIntelAgent extends BaseAgent {
         }
       };
 
-    } catch (e: unknown) {
-      const error = e instanceof Error ? e.message : String(e);
-      logError(this.name, `Machine hunt failed: ${error}`);
-      return { success: false, message: `Hiba a gépvadászat során: ${error}` };
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      logError(this.name, `Machine hunt failed: ${err.message}`);
+      return { success: false, message: `Hiba a gépvadászat során: ${err.message}` };
     }
   }
 
@@ -307,9 +308,10 @@ export class MarketIntelAgent extends BaseAgent {
         url: draft.url,
         opportunity: opportunity.title
       };
-    } catch (e) {
-      logError(this.name, `Outreach failed: ${e}`);
-      return { status: 'failed', error: String(e) };
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      logError(this.name, `Outreach failed: ${err.message}`);
+      return { status: 'failed', error: err.message };
     }
   }
 
@@ -331,8 +333,9 @@ export class MarketIntelAgent extends BaseAgent {
         // This is a placeholder for actual tool call logic
         // await agentManager.delegate('integrator', `Indíts n8n workflow-t: ${workflowId} adatokkal: ${JSON.stringify(data)}`);
       }
-    } catch (e) {
-      logError(this.name, `Failed to trigger n8n alert: ${e}`);
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      logError(this.name, `Failed to trigger n8n alert: ${err.message}`);
     }
   }
 
@@ -415,8 +418,9 @@ export class MarketIntelAgent extends BaseAgent {
           } else if (Array.isArray(response.data)) {
             scrapedPoints = response.data;
           }
-        } catch (e) {
-          logError(this.name, `Failed to parse RobotkezV2 price JSON: ${e}`);
+        } catch (error: unknown) {
+          const err = ensureError(error);
+          logDebug(this.name, `Failed to parse RobotkezV2 price JSON: ${err.message}`);
         }
 
         if (scrapedPoints.length > 0) {
@@ -428,8 +432,9 @@ export class MarketIntelAgent extends BaseAgent {
       }
       
       logWarn(this.name, 'RobotkezV2 scraping returned no data, falling back to simulation for stability');
-    } catch (error) {
-      logError(this.name, `RobotkezV2 price scraping delegation failed: ${error}`);
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      logError(this.name, `RobotkezV2 price scraping delegation failed: ${err.message}`);
     }
 
     // Fallback to simulation (only if real fails)
@@ -607,7 +612,9 @@ export class MarketIntelAgent extends BaseAgent {
       if (parsed.productCategory) {
         return parsed as MarketIntelData;
       }
-    } catch {
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      logDebug(this.name, `Ignoring market intel JSON parse error: ${err.message}`);
       // Not JSON, parse natural language
     }
 

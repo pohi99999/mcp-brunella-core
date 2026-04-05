@@ -168,8 +168,9 @@ except Exception as e:
               },
             });
           }
-        } catch {
-          logError("getSzamlazzInvoices", "JSON parse error");
+        } catch (error: unknown) {
+          const err = error instanceof Error ? error : new Error(String(error));
+          logError("getSzamlazzInvoices", `JSON parse error: ${err.message}`);
           resolve({
             success: false,
             error: `Parse error: ${output.substring(0, 200)}`,
@@ -177,12 +178,12 @@ except Exception as e:
         }
       });
     });
-  } catch (e) {
-    const error = e instanceof Error ? e.message : String(e);
-    logError("getSzamlazzInvoices", error);
+  } catch (error: unknown) {
+    const err = error instanceof Error ? error : new Error(String(error));
+    logError("getSzamlazzInvoices", err.message);
     return {
       success: false,
-      error,
+      error: err.message,
     };
   }
 }

@@ -6,7 +6,8 @@
 
 import { BaseAgent, type AgentContext, type AgentResult } from "./BaseAgent.js";
 import { generateResponse } from "../core/llm_client.js";
-import { logInfo, logError, setAgentStatus } from "../utils/logger.js";
+import { logInfo, logError, logDebug, setAgentStatus } from "../utils/logger.js";
+import { ensureError } from "../utils/ensureError.js";
 import fs from "fs/promises";
 import path from "path";
 import type {
@@ -106,12 +107,13 @@ export class SpecWriterAgent extends BaseAgent {
 
       // Default: 3-stage track generation
       return await this.generate3StageTrack(context);
-    } catch (error: any) {
-      logError(this.name, `Error: ${error.message}`);
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      logError(this.name, `Error: ${err.message}`);
       return {
         success: false,
-        message: `SpecWriter error: ${error.message}`,
-        metadata: { error: error.message, stack: error.stack },
+        message: `SpecWriter error: ${err.message}`,
+        metadata: { error: err.message, stack: err.stack },
       };
     }
   }
@@ -484,14 +486,14 @@ export class SpecWriterAgent extends BaseAgent {
           preview: trackMarkdown.slice(0, 500) + "...",
         },
       };
-    } catch (error: any) {
-      const errorMessage =
-        error instanceof Error ? error.message : String(error);
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      const errorMessage = err.message;
       logError(this.name, `3-stage pipeline error: ${errorMessage}`);
       return {
         success: false,
         message: `Failed to generate track: ${errorMessage}`,
-        metadata: { error: errorMessage, stack: error.stack },
+        metadata: { error: errorMessage, stack: err.stack },
       };
     }
   }
@@ -580,9 +582,9 @@ export class SpecWriterAgent extends BaseAgent {
       }
 
       return parsed;
-    } catch (error: any) {
-      const errorMessage =
-        error instanceof Error ? error.message : String(error);
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      const errorMessage = err.message;
       logError(this.name, `Stage 1 error: ${errorMessage}`);
       throw new Error(`Requirement extraction failed: ${errorMessage}`);
     }
@@ -687,9 +689,10 @@ ${requirements.integrations.cli}
         "qwen2.5-coder:latest",
       );
       return trackMarkdown.trim();
-    } catch (error: any) {
-      logError(this.name, `Stage 2 error: ${error.message}`);
-      throw new Error(`Track generation failed: ${error.message}`);
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      logError(this.name, `Stage 2 error: ${err.message}`);
+      throw new Error(`Track generation failed: ${err.message}`);
     }
   }
 
@@ -776,11 +779,12 @@ ${requirements.integrations.cli}
           trackFile: trackFilePath,
         },
       };
-    } catch (error: any) {
-      logError(this.name, `Stage 3 file write error: ${error.message}`);
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      logError(this.name, `Stage 3 file write error: ${err.message}`);
       return {
         success: false,
-        message: `Failed to write track file: ${error.message}`,
+        message: `Failed to write track file: ${err.message}`,
       };
     }
   }
@@ -815,16 +819,19 @@ ${requirements.integrations.cli}
 
       try {
         trackDirs = await fs.readdir(tracksDir, { withFileTypes: true });
-      } catch (e: any) {
+      } catch (error: unknown) {
         // In test mode (or fresh setup) the tracks dir may not exist yet.
-        if (e?.code === "ENOENT") {
+        const err = ensureError(error);
+        if (typeof error === "object" && error !== null && "code" in error && (error as { code?: string }).code === "ENOENT") {
+          logDebug(this.name, `Tracks directory missing, returning empty list: ${err.message}`);
           return {
             success: true,
             message: "Found 0 track(s)",
             data: { tracks: [] },
           };
         }
-        throw e;
+        logError(this.name, `Failed to list tracks directory: ${err.message}`);
+        throw err;
       }
       const tracks = [];
 
@@ -852,9 +859,10 @@ ${requirements.integrations.cli}
             progress,
             path: trackPath,
           });
-        } catch {
+        } catch (error: unknown) {
           // Skip if track.md is missing or invalid
-          logInfo(this.name, `Skipping invalid track: ${dir.name}`);
+          const err = ensureError(error);
+          logDebug(this.name, `Skipping invalid track: ${dir.name} (${err.message})`);
         }
       }
 
@@ -863,11 +871,12 @@ ${requirements.integrations.cli}
         message: `Found ${tracks.length} track(s)`,
         data: { tracks },
       };
-    } catch (error: any) {
-      logError(this.name, `Failed to list tracks: ${error.message}`);
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      logError(this.name, `Failed to list tracks: ${err.message}`);
       return {
         success: false,
-        message: `Failed to list tracks: ${error.message}`,
+        message: `Failed to list tracks: ${err.message}`,
       };
     }
   }

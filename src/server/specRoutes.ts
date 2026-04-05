@@ -19,10 +19,11 @@ import {
   rejectSpec,
   isSpecApproved,
 } from '../agents/specStatus.js';
-import { logInfo } from '../utils/logger.js';
+import { logDebug, logInfo } from '../utils/logger.js';
 import { socketService } from './SocketService.js';
 import fs from 'fs/promises';
 import path from 'path';
+import { ensureError } from '../utils/ensureError.js';
 
 export function createSpecRouter(): Router {
   const router = Router();
@@ -35,8 +36,9 @@ export function createSpecRouter(): Router {
     try {
       const specs = await listSpecStatuses();
       res.json({ specs });
-    } catch (e: any) {
-      res.status(500).json({ error: e.message });
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      res.status(500).json({ error: err.message });
     }
   });
 
@@ -55,8 +57,9 @@ export function createSpecRouter(): Router {
       let content = '';
       try {
         content = await fs.readFile(specPath, 'utf-8');
-      } catch {
-        // spec.md not found
+      } catch (error: unknown) {
+        const err = ensureError(error);
+        logDebug('SpecRoutes', `Failed to read spec.md for ${trackId}: ${err.message}`);
       }
 
       // Try to read plan.md content
@@ -64,8 +67,9 @@ export function createSpecRouter(): Router {
       let plan = '';
       try {
         plan = await fs.readFile(planPath, 'utf-8');
-      } catch {
-        // plan.md not found
+      } catch (error: unknown) {
+        const err = ensureError(error);
+        logDebug('SpecRoutes', `Failed to read plan.md for ${trackId}: ${err.message}`);
       }
 
       res.json({
@@ -75,8 +79,9 @@ export function createSpecRouter(): Router {
         specContent: content,
         planContent: plan,
       });
-    } catch (e: any) {
-      res.status(500).json({ error: e.message });
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      res.status(500).json({ error: err.message });
     }
   });
 
@@ -96,8 +101,9 @@ export function createSpecRouter(): Router {
       } else {
         res.status(400).json({ success: false, message: 'Failed to approve spec' });
       }
-    } catch (e: any) {
-      res.status(500).json({ error: e.message });
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      res.status(500).json({ error: err.message });
     }
   });
 
@@ -118,8 +124,9 @@ export function createSpecRouter(): Router {
       } else {
         res.status(400).json({ success: false, message: 'Failed to reject spec' });
       }
-    } catch (e: any) {
-      res.status(500).json({ error: e.message });
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      res.status(500).json({ error: err.message });
     }
   });
 

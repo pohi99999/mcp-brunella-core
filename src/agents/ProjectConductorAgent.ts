@@ -1,23 +1,10 @@
-/**
- * ProjectConductorAgent - A Brunella projekt "Karmestere"
- *
- * Felelősségek:
- * 1. Projekt állapot folyamatos monitorozása
- * 2. Dokumentáció naprakészen tartása (BRUNELLA.md, konyvtarfa.md, tracks.md)
- * 3. Fejlesztési szálak (tracks) koordinálása
- * 4. Változások detektálása és naplózása
- * 5. Konfliktusok megelőzése több szálon futó fejlesztésnél
- *
- * @author Brunella Core Team
- * @version 1.0.0
- */
-
 import { BaseAgent, AgentContext, AgentResult } from "./BaseAgent.js";
-import { logInfo, logError, setAgentStatus } from "../utils/logger.js";
+import { logInfo, logError, logDebug, setAgentStatus } from "../utils/logger.js";
 import { generateResponse } from "../core/llm_client.js";
 import * as fs from "fs";
 import * as path from "path";
 import { execSync } from "child_process";
+import { ensureError } from "../utils/ensureError.js";
 
 // ============================================================================
 // INTERFACES
@@ -207,8 +194,9 @@ export class ProjectConductorAgent extends BaseAgent {
 
       // Default: Chat with Conductor (LLM fallback)
       return await this.chatWithConductor(task);
-    } catch (error) {
-      logError(this.name, `Hiba: ${error}`);
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      logError(this.name, `Hiba: ${err.message}`);
       setAgentStatus(this.name, "error");
       return {
         success: false,
@@ -259,10 +247,11 @@ A Válaszod legyen rövid, tömör, és szakmai. Markdown formázást használha
         message: response,
         data: { text: response },
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const err = ensureError(error);
       return {
         success: false,
-        message: `Nem tudtam válaszolni: ${error.message}`,
+        message: `Nem tudtam válaszolni: ${err.message}`,
         data: null,
       };
     }
@@ -358,8 +347,10 @@ ${(this.projectState.components || []).map((c) => `- **${c.name}:** ${c.status =
         }
 
         doc.lastSync = new Date().toISOString();
-      } catch (error) {
-        results.push(`❌ ${doc.path}: ${error}`);
+      } catch (error: unknown) {
+        const err = ensureError(error);
+        logDebug(this.name, `Dokumentum szinkron hiba (${doc.path}): ${err.message}`);
+        results.push(`❌ ${doc.path}: ${err.message}`);
       }
     }
 
@@ -520,8 +511,9 @@ ${(this.projectState.components || []).map((c) => `- **${c.name}:** ${c.status =
           });
 
           continue;
-        } catch (e) {
-          logError(this.name, `meta.json parse hiba (${dir}): ${e}`);
+        } catch (error: unknown) {
+          const err = ensureError(error);
+          logDebug(this.name, `meta.json parse hiba (${dir}): ${err.message}`);
           // fall through to track.md/plan.md
         }
       }
@@ -562,8 +554,9 @@ ${(this.projectState.components || []).map((c) => `- **${c.name}:** ${c.status =
           });
 
           continue;
-        } catch (e) {
-          logError(this.name, `track.md parse hiba (${dir}): ${e}`);
+        } catch (error: unknown) {
+          const err = ensureError(error);
+          logDebug(this.name, `track.md parse hiba (${dir}): ${err.message}`);
           // fall through to plan.md
         }
       }
@@ -625,7 +618,9 @@ ${(this.projectState.components || []).map((c) => `- **${c.name}:** ${c.status =
           cwd: PROJECT_ROOT,
           stdio: "pipe",
         });
-      } catch (e) {
+      } catch (error: unknown) {
+        const err = ensureError(error);
+        logDebug(this.name, `python3 unavailable, falling back to python: ${err.message}`);
         execSync(`python "${scriptPath}"`, {
           cwd: PROJECT_ROOT,
           stdio: "pipe",
@@ -637,11 +632,12 @@ ${(this.projectState.components || []).map((c) => `- **${c.name}:** ${c.status =
         message: "FOSZAL logok sikeresen szinkronizálva a Trackekkel",
         data: null,
       };
-    } catch (error) {
-      logError(this.name, `FOSZAL szinkron hiba: ${error}`);
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      logError(this.name, `FOSZAL szinkron hiba: ${err.message}`);
       return {
         success: false,
-        message: `FOSZAL szinkron hiba: ${error}`,
+        message: `FOSZAL szinkron hiba: ${err.message}`,
         data: null,
       };
     }
@@ -666,7 +662,9 @@ ${(this.projectState.components || []).map((c) => `- **${c.name}:** ${c.status =
       execSync("npm run build", { cwd: PROJECT_ROOT, stdio: "pipe" });
       health.buildStatus = true;
       logInfo(this.name, "✅ Build sikeres");
-    } catch {
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      logDebug(this.name, `Build check failed: ${err.message}`);
       health.buildStatus = false;
       health.overall = "degraded";
       logError(this.name, "❌ Build sikertelen");
@@ -681,7 +679,9 @@ ${(this.projectState.components || []).map((c) => `- **${c.name}:** ${c.status =
       });
       health.testStatus = true;
       logInfo(this.name, "✅ Tesztek sikeresek");
-    } catch {
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      logDebug(this.name, `Test check failed: ${err.message}`);
       health.testStatus = false;
       health.overall = "degraded";
       logError(this.name, "❌ Tesztek sikertelenek");
@@ -1225,8 +1225,9 @@ ${capabilities.length > 0 ? capabilities.map((c) => `- \`${c}\``).join("\n") : "
     if (fs.existsSync(STATE_FILE)) {
       try {
         return JSON.parse(fs.readFileSync(STATE_FILE, "utf-8"));
-      } catch {
-        logError(this.name, "Állapot fájl sérült, újrainicializálás...");
+      } catch (error: unknown) {
+        const err = ensureError(error);
+        logError(this.name, `Állapot fájl sérült, újrainicializálás... (${err.message})`);
       }
     }
 

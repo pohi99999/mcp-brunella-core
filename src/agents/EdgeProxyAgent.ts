@@ -12,7 +12,9 @@
  */
 
 import { BaseAgent, AgentContext, AgentResult } from './BaseAgent.js';
-import { logInfo, logError, setAgentStatus } from '../utils/logger.js';
+import { logInfo, logError, logDebug, setAgentStatus } from '../utils/logger.js';
+import { ensureError } from '../utils/ensureError.js';
+import { cloudflareClient } from '../utils/cloudflareClient.js';
 import { getGlobalDb } from '../utils/globalDb.js';
 import type { Database } from 'better-sqlite3';
 
@@ -111,8 +113,9 @@ export class EdgeProxyAgent extends BaseAgent {
         );
         CREATE INDEX IF NOT EXISTS idx_edge_tasks_status ON edge_tasks(status);
       `);
-    } catch (error) {
-      logError(this.name, `Adatbázis hiba: ${error}`);
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      logError(this.name, `Adatbázis hiba: ${err.message}`);
     }
 
     // Kezdeti health check
@@ -148,6 +151,10 @@ export class EdgeProxyAgent extends BaseAgent {
         return await this.getEdgeStatus();
       }
 
+      if (task.startsWith('dispatch')) {
+        return await this.handleDispatchCommand(context);
+      }
+
       if (task.includes('submit') || task.includes('task')) {
         return await this.submitTask(context);
       }
@@ -163,12 +170,50 @@ export class EdgeProxyAgent extends BaseAgent {
       // Default: show help
       return this.showHelp();
 
-    } catch (error) {
-      logError(this.name, `Hiba: ${error}`);
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      logError(this.name, `Hiba: ${err.message}`);
       setAgentStatus(this.name, 'error');
       return {
         success: false,
-        message: `EdgeProxy hiba: ${error}`,
+        message: `EdgeProxy hiba: ${err.message}`,
+        data: null
+      };
+    }
+  }
+
+  /**
+   * Új dispatch flow: konkrét ágens hívása az Edge-en keresztül
+   */
+  private async handleDispatchCommand(context: AgentContext): Promise<AgentResult> {
+    const parts = context.task?.split(' ') || [];
+    const agentName = parts[1];
+    const agentTask = parts.slice(2).join(' ');
+
+    if (!agentName || !agentTask) {
+      return {
+        success: false,
+        message: 'Használat: dispatch <AgentName> <feladat>',
+        data: null
+      };
+    }
+
+    logInfo(this.name, `Delegálás az Edge-re: ${agentName} -> ${agentTask}`);
+
+    try {
+      const edgeContext = (context.context as Record<string, unknown> | undefined) ?? {};
+      const result = await cloudflareClient.dispatch(agentName, agentTask, edgeContext);
+      return {
+        success: true,
+        message: `Edge dispatch sikeres: ${agentName}`,
+        data: result
+      };
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      logError(this.name, `Edge dispatch hiba: ${err.message}`);
+      return {
+        success: false,
+        message: `Edge dispatch hiba: ${err.message}`,
         data: null
       };
     }
@@ -205,7 +250,9 @@ export class EdgeProxyAgent extends BaseAgent {
         this.health.edge = 'degraded';
         this.health.latency = latency;
       }
-    } catch (error) {
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      logDebug(this.name, `Edge health check failed: ${err.message}`);
       this.health = {
         edge: 'offline',
         tunnel: 'disconnected',
@@ -310,18 +357,19 @@ export class EdgeProxyAgent extends BaseAgent {
         data: { task: result }
       };
 
-    } catch (error) {
-      logError(this.name, `Task beküldés sikertelen: ${error}`);
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      logError(this.name, `Task beküldés sikertelen: ${err.message}`);
 
       if (this.config.fallbackToLocal) {
        return {
          success: false,
-          message: `Edge hiba, lokális fallback: ${error}`,
-          data: { fallback: true, error: String(error) }
+          message: `Edge hiba, lokális fallback: ${err.message}`,
+          data: { fallback: true, error: err.message }
        };
       }
 
-      throw error;
+      throw err;
     }
   }
 
@@ -341,7 +389,9 @@ export class EdgeProxyAgent extends BaseAgent {
       }
 
       return null;
-    } catch {
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      logDebug(this.name, `Task status lookup failed for ${taskId}: ${err.message}`);
       return null;
     }
   }
@@ -365,6 +415,9 @@ export class EdgeProxyAgent extends BaseAgent {
 
     try {
       const db = getGlobalDb();
+      const existingPendingTasks = db
+        .prepare("SELECT task_id FROM edge_tasks WHERE status IN ('pending', 'dispatched')")
+        .all() as { task_id: string }[];
       let syncedCount = 0;
       let updatedCount = 0;
 
@@ -407,16 +460,14 @@ export class EdgeProxyAgent extends BaseAgent {
         syncedCount = tasks.length;
       }
 
-      // 2. Update pending tasks status
-      const pendingTasks = db.prepare("SELECT task_id FROM edge_tasks WHERE status IN ('pending', 'dispatched')").all() as { task_id: string }[];
-
+      // 2. Update only tasks that were already pending before the sync
       const updateStmt = db.prepare(`
         UPDATE edge_tasks
         SET status = ?, result = ?, completed_at = ?, synced_at = datetime('now')
         WHERE task_id = ?
       `);
 
-      for (const { task_id } of pendingTasks) {
+      for (const { task_id } of existingPendingTasks) {
         const taskStatus = await this.getTaskStatus(task_id);
         if (taskStatus) {
           updateStmt.run(
@@ -440,11 +491,12 @@ export class EdgeProxyAgent extends BaseAgent {
         }
       };
 
-    } catch (error) {
-      logError(this.name, `Szinkronizálási hiba: ${error}`);
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      logError(this.name, `Szinkronizálási hiba: ${err.message}`);
       return {
         success: false,
-        message: `Szinkronizálási hiba: ${error}`,
+        message: `Szinkronizálási hiba: ${err.message}`,
         data: { health: this.health }
       };
     }
@@ -472,12 +524,13 @@ export class EdgeProxyAgent extends BaseAgent {
           success: true,
           duration: Date.now() - start
         });
-      } catch (error) {
+      } catch (error: unknown) {
+        const err = ensureError(error);
         results.push({
           test: test.name,
          success: false,
           duration: Date.now() - start,
-          error: String(error)
+          error: err.message
         });
       }
     }

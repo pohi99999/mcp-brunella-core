@@ -7,6 +7,7 @@ import fs from 'fs/promises';
 import path from 'path';
 import { config } from '../config/index.js';
 import { addToIndex } from '../utils/rag.js';
+import { logDebug } from '../utils/logger.js';
 
 async function runRefinerSafe(content: string, source: string): Promise<any> {
     const pythonPath = path.resolve(config.workspaceRoot, '.venv/Scripts/python.exe');
@@ -32,18 +33,24 @@ except Exception as e:
 
         return new Promise((resolve) => {
             exec(`"${pythonPath}" "${tempPy}"`, async (error, stdout, stderr) => {
-                await fs.unlink(tempIn).catch(() => {});
-                await fs.unlink(tempPy).catch(() => {});
+                await fs.unlink(tempIn).catch((e: unknown) => {
+                    logDebug('runRefinerSafe: Failed to delete temp input file (non-fatal)', e);
+                });
+                await fs.unlink(tempPy).catch((e: unknown) => {
+                    logDebug('runRefinerSafe: Failed to delete temp Python file (non-fatal)', e);
+                });
                 try {
                     const parsed = stdout.trim() ? JSON.parse(stdout) : { status: "EMPTY", stderr };
                     resolve(parsed);
-                } catch (e) {
+                } catch (error: unknown) {
+                    // Non-critical: JSON parse failure is handled by returning PARSE_ERROR status
                     resolve({ status: "PARSE_ERROR", stdout, stderr });
                 }
             });
         });
-    } catch (e: any) {
-        return { status: "IO_ERROR", error: e.message };
+    } catch (error: unknown) {
+        const err = error instanceof Error ? error : new Error(String(error));
+        return { status: "IO_ERROR", error: err.message };
     }
 }
 
@@ -71,12 +78,19 @@ export function registerSwarmTools(server: McpServer) {
         const filePath = path.join(kbDir, fileName);
         const md = `# ${title}\n\n**Source:** ${url}\n\n${refined.clean_content}`;
         await fs.writeFile(filePath, md, 'utf-8');
-        try { await addToIndex(path.join('07_KNOWLEDGE_BASE', 'swarm_ingested', fileName), md); } catch { /* non-critical */ }
+        try {
+          await addToIndex(path.join('07_KNOWLEDGE_BASE', 'swarm_ingested', fileName), md);
+        } catch (error: unknown) {
+          // Non-critical: RAG indexing failure doesn't stop the ingest operation
+          const err = error instanceof Error ? error : new Error(String(error));
+          logDebug('swarm_ingest', `RAG indexing failed (non-critical): ${err.message}`);
+        }
 
         return { content: [{ type: "text", text: `Success: ${title}\nSaved: ${fileName}` }] };
-      } catch (error: any) {
+      } catch (error: unknown) {
         if (browserInstance) await browserInstance.close();
-        return { isError: true, content: [{ type: "text", text: `Failed: ${error.message}` }] };
+        const err = error instanceof Error ? error : new Error(String(error));
+        return { isError: true, content: [{ type: "text", text: `Failed: ${err.message}` }] };
       }
   });
 

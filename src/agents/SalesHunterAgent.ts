@@ -18,7 +18,8 @@
 
 import { BaseAgent, AgentContext, AgentResult } from './BaseAgent.js';
 import { AgentResponse } from './types.js';
-import { logInfo, logError, logWarn, setAgentStatus } from '../utils/logger.js';
+import { logInfo, logError, logWarn, logDebug, setAgentStatus } from '../utils/logger.js';
+import { ensureError } from '../utils/ensureError.js';
 import { getWorkspaceClient } from '../tools/unifiedWorkspace.js';
 import { agentManager } from './AgentManager.js';
 import type { LeadGenerationData, LeadRecord } from '../types/enterprise.js';
@@ -131,12 +132,12 @@ export class SalesHunterAgent extends BaseAgent {
       };
 
     } catch (error: unknown) {
-      const errorMsg = error instanceof Error ? error.message : String(error);
-      logError(this.name, `Lead generálási hiba: ${errorMsg}`);
+      const err = ensureError(error);
+      logError(this.name, `Lead generálási hiba: ${err.message}`);
       
       return {
         success: false,
-        message: errorMsg,
+        message: err.message,
       };
     }
   }
@@ -226,8 +227,9 @@ export class SalesHunterAgent extends BaseAgent {
           } else if (Array.isArray(response.data)) {
             leads = response.data;
           }
-        } catch (e) {
-          logError(this.name, `Failed to parse RobotkezV2 JSON response: ${e}`);
+        } catch (error: unknown) {
+          const err = ensureError(error);
+          logDebug(this.name, `Failed to parse RobotkezV2 JSON response: ${err.message}`);
         }
 
         if (leads.length > 0) {
@@ -239,8 +241,9 @@ export class SalesHunterAgent extends BaseAgent {
       }
       
       logWarn(this.name, 'RobotkezV2 discovery returned no data, falling back to basic mock for stability');
-    } catch (error) {
-      logError(this.name, `RobotkezV2 delegation failed: ${error}`);
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      logError(this.name, `RobotkezV2 delegation failed: ${err.message}`);
     }
 
     // Fallback to mock (only if real fails)
@@ -428,9 +431,9 @@ Relevancia pontszám: ${lead.score}/100`;
       return url;
 
     } catch (error: unknown) {
-      const errorMsg = error instanceof Error ? error.message : String(error);
-      logError(this.name, `Sheets export failed: ${errorMsg}`);
-      throw new Error(`Failed to export to Sheets: ${errorMsg}`);
+      const err = ensureError(error);
+      logError(this.name, `Sheets export failed: ${err.message}`);
+      throw new Error(`Failed to export to Sheets: ${err.message}`);
     }
   }
 
@@ -448,7 +451,9 @@ Relevancia pontszám: ${lead.score}/100`;
       if (parsed.industry) {
         return parsed as LeadGenerationData;
       }
-    } catch {
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      logDebug(this.name, `Ignoring lead request JSON parse error: ${err.message}`);
       // Not JSON, extract from natural language
     }
 

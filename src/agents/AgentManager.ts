@@ -11,7 +11,8 @@
  */
 
 import { EventEmitter } from "events";
-import { logInfo, logError, logWarn, setAgentStatus } from "../utils/logger.js";
+import { logInfo, logError, logWarn, logDebug, setAgentStatus } from "../utils/logger.js";
+import { ensureError } from "../utils/ensureError.js";
 import { saveTask, updateTaskStatus, loadQueuedTasksForHydration } from "../utils/tasksDb.js";
 import {
   withRetry,
@@ -280,10 +281,11 @@ export class AgentManager extends EventEmitter {
       this.registry.agents.map(async (agentConfig) => {
         try {
           await this.loadAgent(agentConfig);
-        } catch (error) {
+        } catch (error: unknown) {
+          const err = ensureError(error);
           this.markAgentDiagnostic(agentConfig, {
             loadStatus: "error",
-            error: error instanceof Error ? error.message : String(error),
+            error: err.message,
           });
           logError(
             "AgentManager",
@@ -328,15 +330,17 @@ export class AgentManager extends EventEmitter {
       if (persistedTasks.length > 0) {
         logInfo("AgentManager", `${persistedTasks.length} feladat visszaállítva a sorba`);
       }
-    } catch (err) {
-      logWarn("AgentManager", `Task rehydration failed: ${err}`);
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      logWarn("AgentManager", `Task rehydration failed: ${err.message}`);
     }
 
     // STARTUP SELF-HEALING (The "Black Box" Protocol)
     try {
       await this.processFixQueue();
-    } catch (err) {
-      logWarn("AgentManager", `Self-healing unavailable: ${err}`);
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      logWarn("AgentManager", `Self-healing unavailable: ${err.message}`);
     }
   }
 
@@ -384,11 +388,12 @@ export class AgentManager extends EventEmitter {
             (result as any)?.message || "Unknown error",
           );
         }
-      } catch (e) {
-        updateFixStatus(fix.id, "failed", (e as Error).message);
+      } catch (error: unknown) {
+        const err = ensureError(error);
+        updateFixStatus(fix.id, "failed", err.message);
         logError(
           "AgentManager",
-          `❌ Fix Failed: ${fix.id} - ${(e as Error).message}`,
+          `❌ Fix Failed: ${fix.id} - ${err.message}`,
         );
       }
     }
@@ -609,8 +614,9 @@ export class AgentManager extends EventEmitter {
         } else {
           return edgeResult;
         }
-      } catch (error) {
-        logError("AgentManager", `Edge hiba: ${error}`);
+      } catch (error: unknown) {
+        const err = ensureError(error);
+        logError("AgentManager", `Edge hiba: ${err.message}`);
 
         if (!this.edgeConfig.fallbackToLocal) {
           return {
@@ -806,8 +812,9 @@ export class AgentManager extends EventEmitter {
           try {
             const prevLoad = this.agentCoordinator.getLoad(agentName) || 0;
             this.agentCoordinator.setLoad(agentName, prevLoad + 1);
-          } catch {
-            /* non-critical */
+          } catch (error: unknown) {
+            const err = ensureError(error);
+            logDebug("AgentManager", `Non-critical coordinator load increment failed: ${err.message}`);
           }
 
           this.updateAgentRuntime(agentName, {
@@ -855,8 +862,9 @@ export class AgentManager extends EventEmitter {
             try {
               const prev = this.agentCoordinator.getLoad(agentName) || 0;
               this.agentCoordinator.setLoad(agentName, Math.max(0, prev - 1));
-            } catch {
-              /* non-critical */
+            } catch (error: unknown) {
+              const err = ensureError(error);
+              logDebug("AgentManager", `Non-critical coordinator load decrement failed: ${err.message}`);
             }
           }
         },
@@ -886,13 +894,15 @@ export class AgentManager extends EventEmitter {
           agent: agentName,
           resultPreview: JSON.stringify(result).slice(0, 500),
         },
-      ).catch(() => {
-        /* non-critical */
+      ).catch((error: unknown) => {
+        const err = ensureError(error);
+        logDebug("AgentManager", `Non-critical saveCheckpoint error: ${err.message}`);
       });
 
       // RULE-GD1: Auto-save golden sample on success
-      await autoSaveGoldenSample(agentName, instruction, result).catch(() => {
-        /* non-critical */
+      await autoSaveGoldenSample(agentName, instruction, result).catch((error: unknown) => {
+        const err = ensureError(error);
+        logDebug("AgentManager", `Non-critical autoSaveGoldenSample error: ${err.message}`);
       });
 
       // RULE-OB1: End trace span on success (+ confidence propagation)
@@ -906,26 +916,29 @@ export class AgentManager extends EventEmitter {
           (result as any).metadata = (result as any).metadata ?? {};
           (result as any).metadata.traceId = trace.span.traceId;
         }
-      } catch {
-        /* non-critical */
+      } catch (error: unknown) {
+        const err = ensureError(error);
+        logDebug("AgentManager", `Non-critical trace metadata attachment failed: ${err.message}`);
       }
       trace.end("success");
       recordAgentExecution(agentName, "success", Date.now() - executionStart);
 
       return result;
-    } catch (lastError: any) {
+    } catch (error: unknown) {
+      const lastError = ensureError(error);
       logError(
         "AgentManager",
-        `Végrehajtási hiba több próbálkozás után (${agentName}): ${lastError?.message || "Ismeretlen hiba"}`,
+        `Végrehajtási hiba több próbálkozás után (${agentName}): ${lastError.message}`,
       );
 
       // RULE-PH4: Git auto-checkpoint after all retries exhausted
       await gitAutoCheckpoint(
         agentName,
-        lastError?.message || "Unknown error",
-      ).catch((e: any) =>
-        logError("AgentManager", `Git recovery failed: ${e.message}`),
-      );
+        lastError.message,
+      ).catch((error: unknown) => {
+        const err = ensureError(error);
+        logError("AgentManager", `Git recovery failed: ${err.message}`);
+      });
       logRecoveryEvent(
         "crash",
         agentName,
@@ -1009,13 +1022,14 @@ export class AgentManager extends EventEmitter {
               logRecoveryEvent('failover', agentName, `Failover to ${fallbackAgent} succeeded`);
               return { ...failoverResult, executedBy: `${fallbackAgent} (failover from ${agentName})` };
             }
-          } catch (foErr: any) {
+          } catch (error: unknown) {
+            const foErr = ensureError(error);
             phoenixEventBus.publish('phoenix:failover_result', {
               originalAgent: agentName,
               fallbackAgent,
               taskInstruction: instruction,
               success: false,
-              error: foErr?.message || 'Unknown failover error',
+              error: foErr.message,
               executionTimeMs: Date.now() - failoverStart,
               timestamp: new Date().toISOString(),
             });
@@ -1024,11 +1038,11 @@ export class AgentManager extends EventEmitter {
               fallbackAgent,
               taskInstruction: instruction,
               success: false,
-              error: foErr?.message,
+              error: foErr.message,
               attemptIndex: i,
               timestamp: new Date().toISOString(),
             });
-            logError('AgentManager', `Phoenix Failover FAILED: ${agentName} → ${fallbackAgent}: ${foErr?.message}`);
+            logError('AgentManager', `Phoenix Failover FAILED: ${agentName} → ${fallbackAgent}: ${foErr.message}`);
           }
         }
 
@@ -1157,10 +1171,11 @@ export class AgentManager extends EventEmitter {
           recoveryAttempts,
         };
 
-      } catch (error: any) {
+      } catch (error: unknown) {
         // Exception thrown during execution - same recovery logic as failed result
         recoveryAttempts++;
-        const errorMsg = error?.message || 'Unknown error';
+        const err = ensureError(error);
+        const errorMsg = err.message;
 
         logWarn('AgentManager', `[Phoenix Recovery] Attempt ${attempt}/${MAX_RECOVERY_ATTEMPTS} threw exception: ${errorMsg}`);
 
@@ -1279,8 +1294,9 @@ export class AgentManager extends EventEmitter {
       logInfo('AgentManager', `[Phoenix Restart] Success: ${agentName}`);
       return true;
 
-    } catch (error: any) {
-      const errorMsg = error?.message || 'Unknown error';
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      const errorMsg = err.message;
       logError('AgentManager', `[Phoenix Restart] Failed for ${agentName}: ${errorMsg}`);
 
       phoenixEventBus.publish('phoenix:restart', {
@@ -1341,8 +1357,9 @@ export class AgentManager extends EventEmitter {
 
       return true;
 
-    } catch (error: any) {
-      const errorMsg = error?.message || 'Unknown error';
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      const errorMsg = err.message;
       logError('AgentManager', `[Phoenix Restore] State restoration failed for ${agentName}: ${errorMsg}`);
       return false;
     }
@@ -1555,9 +1572,10 @@ export class AgentManager extends EventEmitter {
       }
 
       return out;
-    } catch (e: any) {
-      if (dbId) await updateTaskStatus(dbId, "error", e.message);
-      throw e;
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      if (dbId) await updateTaskStatus(dbId, "error", err.message);
+      throw err;
     }
   }
 
@@ -1649,7 +1667,7 @@ export class AgentManager extends EventEmitter {
       summary.warnings = result.warnings.length;
 
       return result;
-    } catch (error) {
+    } catch (error: unknown) {
       summary.status = "error";
       summary.finishedAt = new Date().toISOString();
       summary.durationMs = Date.now() - new Date(summary.startedAt).getTime();
@@ -1706,10 +1724,11 @@ export class AgentManager extends EventEmitter {
         status: pending.status,
         message: result.message,
       };
-    } catch (e: any) {
+    } catch (error: unknown) {
+      const err = ensureError(error);
       pending.status = "error";
-      await updateTaskStatus(pending.id, "error", e.message);
-      return { taskId: pending.id, status: "error", message: e.message };
+      await updateTaskStatus(pending.id, "error", err.message);
+      return { taskId: pending.id, status: "error", message: err.message };
     }
   }
 
@@ -1865,8 +1884,9 @@ export class AgentManager extends EventEmitter {
       this.workerLoopBusy = true;
       try {
         await this.processPendingTasksBatch(getOrchestrationConcurrencyLimit(), true);
-      } catch (e: any) {
-        logError("AgentManager", `Worker loop error: ${e.message}`);
+      } catch (error: unknown) {
+        const err = ensureError(error);
+        logError("AgentManager", `Worker loop error: ${err.message}`);
       } finally {
         this.workerLoopBusy = false;
       }
@@ -1940,10 +1960,11 @@ export class AgentManager extends EventEmitter {
           parts.push(`[${t.agentName}]: Error: ${result.message}`);
           emit("task_error", { id, error: result.message });
         }
-      } catch (e: any) {
+      } catch (error: unknown) {
+        const err = ensureError(error);
         t.status = "error";
-        parts.push(`[${t.agentName}]: Exception: ${e.message}`);
-        emit("task_error", { id, error: e.message });
+        parts.push(`[${t.agentName}]: Exception: ${err.message}`);
+        emit("task_error", { id, error: err.message });
       }
     }
     return parts.join("\n\n");
@@ -1983,8 +2004,9 @@ export class AgentManager extends EventEmitter {
         this.registryValidationReport = report;
         return registry;
       }
-    } catch (e) {
-      logError("AgentManager", `Registry load failed: ${e}`);
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      logError("AgentManager", `Registry load failed: ${err.message}`);
     }
 
     // Fallback

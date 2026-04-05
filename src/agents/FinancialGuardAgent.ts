@@ -18,7 +18,8 @@
 
 import { BaseAgent, AgentContext, AgentResult } from './BaseAgent.js';
 import { AgentResponse } from './types.js';
-import { logInfo, logError, setAgentStatus, logWarn } from '../utils/logger.js';
+import { logInfo, logError, logWarn, logDebug, setAgentStatus } from '../utils/logger.js';
+import { ensureError } from '../utils/ensureError.js';
 import { getWorkspaceClient } from '../tools/unifiedWorkspace.js';
 import type { InvoiceData, InvoiceRecord } from '../types/enterprise.js';
 import * as fs from 'fs/promises';
@@ -170,18 +171,22 @@ export class FinancialGuardAgent extends BaseAgent {
       };
 
     } catch (error: unknown) {
-      const errorMsg = error instanceof Error ? error.message : String(error);
-      logError(this.name, `Invoice processing failed: ${errorMsg}`);
+      const err = ensureError(error);
+      logError(this.name, `Invoice processing failed: ${err.message}`);
       
       // Even on error, try to provide partial result with what we have
-      const invoiceData = await this.parseInvoiceInput(task, context).catch(() => ({
-        invoiceNumber: 'UNKNOWN',
-        amount: 0,
-        vendorName: 'UNKNOWN',
-        currency: 'HUF' as const,
-        dueDate: '2026-03-30',
-        description: errorMsg,
-      }));
+      const invoiceData = await this.parseInvoiceInput(task, context).catch((parseError: unknown) => {
+        const parseErr = ensureError(parseError);
+        logDebug(this.name, `Fallback invoice parsing failed: ${parseErr.message}`);
+        return {
+          invoiceNumber: 'UNKNOWN',
+          amount: 0,
+          vendorName: 'UNKNOWN',
+          currency: 'HUF' as const,
+          dueDate: '2026-03-30',
+          description: err.message,
+        };
+      });
 
       const transformedResult = {
         processedInvoice: {
@@ -194,17 +199,17 @@ export class FinancialGuardAgent extends BaseAgent {
         validationResults: {
           isDuplicate: false,
           anomalies: [],
-          validationErrors: [errorMsg],
+          validationErrors: [err.message],
           status: 'error'
         },
         sheetsUrl: `https://docs.google.com/spreadsheets/d/mock-finance-sheet-${Date.now()}`,
-        alerts: [errorMsg],
+        alerts: [err.message],
         status: 'error'
       };
 
       return {
         status: 'success',
-        message: `Invoice processing encountered an issue: ${errorMsg}`,
+        message: `Invoice processing encountered an issue: ${err.message}`,
         data: transformedResult,
       };
     } finally {
@@ -288,7 +293,9 @@ export class FinancialGuardAgent extends BaseAgent {
       if (parsed.invoiceNumber || parsed.amount) {
         return parsed as InvoiceData;
       }
-    } catch {
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      logDebug(this.name, `Ignoring invoice JSON parse error: ${err.message}`);
       // Not JSON, assume it's a file path
     }
 
@@ -327,9 +334,9 @@ export class FinancialGuardAgent extends BaseAgent {
       return invoiceData;
 
     } catch (error: unknown) {
-      const errorMsg = error instanceof Error ? error.message : String(error);
-      logError(this.name, `PDF extraction failed: ${errorMsg}`);
-      throw new Error(`Failed to extract invoice from PDF: ${errorMsg}`, { cause: error });
+      const err = ensureError(error);
+      logError(this.name, `PDF extraction failed: ${err.message}`);
+      throw new Error(`Failed to extract invoice from PDF: ${err.message}`, { cause: err });
     }
   }
 
@@ -366,9 +373,9 @@ except Exception as e:
 
       return result.text || "";
     } catch (error: unknown) {
-      const errorMsg = error instanceof Error ? error.message : String(error);
-      logError(this.name, `Python OCR worker failed: ${errorMsg}`);
-      throw new Error(`OCR processing failed: ${errorMsg}`, { cause: error });
+      const err = ensureError(error);
+      logError(this.name, `Python OCR worker failed: ${err.message}`);
+      throw new Error(`OCR processing failed: ${err.message}`, { cause: err });
     }
   }
 
@@ -612,9 +619,9 @@ except Exception as e:
       return { row: 2, url }; // Row number is approximate
 
     } catch (error: unknown) {
-      const errorMsg = error instanceof Error ? error.message : String(error);
-      logError(this.name, `Sheets export failed: ${errorMsg}`);
-      throw error;
+      const err = ensureError(error);
+      logError(this.name, `Sheets export failed: ${err.message}`);
+      throw err;
     }
   }
 

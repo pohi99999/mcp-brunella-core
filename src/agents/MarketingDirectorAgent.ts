@@ -7,6 +7,7 @@ import { agentManager } from './AgentManager.js';
 import { v4 as uuidv4 } from 'uuid';
 import path from 'path';
 import fs from 'fs/promises';
+import { ensureError } from '../utils/ensureError.js';
 
 export class MarketingDirectorAgent extends BaseAgent {
     name = "Marketing Director";
@@ -86,10 +87,11 @@ export class MarketingDirectorAgent extends BaseAgent {
                 data: finalResult
             };
 
-        } catch (e: any) {
-            logError(this.name, `Failed: ${e.message}`);
-            if (jobId) await updateBusinessJobStatus(jobId, 'failed', JSON.stringify({ error: e.message }));
-            return { success: false, message: e.message };
+        } catch (error: unknown) {
+            const err = ensureError(error);
+            logError(this.name, `Failed: ${err.message}`);
+            if (jobId) await updateBusinessJobStatus(jobId, 'failed', JSON.stringify({ error: err.message }));
+            return { success: false, message: err.message };
         }
     }
 }
