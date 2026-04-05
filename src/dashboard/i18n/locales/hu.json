@@ -179,5 +179,62 @@
     "none": "nincs",
     "preview_ready": "Workflow preview elkészült",
     "run_ready": "Workflow futás kész"
+  },
+  "factory": {
+    "title": "Ágens Gyár",
+    "description": "Hozz létre új, specializált ágenseket kódolás nélkül.",
+    "basic_info": "Alapadatok",
+    "identity_desc": "Határozd meg az ágens identitását.",
+    "agent_name_label": "Ágens Neve (pl. EmailWriter)",
+    "agent_name_placeholder": "Csak betűk, szóköz nélkül",
+    "role_label": "Szerepkör (pl. Marketing Szakértő)",
+    "role_placeholder": "Mit csinál ez az ágens?",
+    "description_label": "Részletes leírás",
+    "description_placeholder": "Mire használható ez az ágens?",
+    "capabilities": "Képességek",
+    "capability_placeholder": "pl. send_email",
+    "triggers": "Triggerek",
+    "trigger_placeholder": "pl. levél, üzenet",
+    "create_button": "Ágens Létrehozása",
+    "creating_button": "Születés folyamatban...",
+    "success_message": "A(z) {{name}} ágens sikeresen megszületett!",
+    "error_message": "Hiba a szülésnél",
+    "required_error": "Név és szerepkör kötelező!",
+    "remove_cap": "Képesség eltávolítása",
+    "remove_trigger": "Trigger eltávolítása"
+  },
+  "preferences": {
+    "title": "Felhasználói Preferenciák",
+    "total_prefs": "Összesen: {{count}} preferencia",
+    "user_label": "Felhasználó",
+    "type_label": "Típus",
+    "all": "Összes",
+    "tabs": {
+      "list": "Lista",
+      "add": "Új Preferencia",
+      "context": "LLM Kontextus"
+    },
+    "purge_expired": "Lejártak Törlése",
+    "loading": "Betöltés...",
+    "no_preferences": "Nincsenek preferenciák.",
+    "access_count": "{{count}}x hozzáférés",
+    "source_agent": "Forrás",
+    "form": {
+      "key": "Kulcs",
+      "key_placeholder": "pl. preferred_language",
+      "value": "Érték",
+      "value_placeholder": "pl. magyar",
+      "memory_type": "Memória típus",
+      "ttl_days": "Lejárat (nap)",
+      "save": "Mentés"
+    },
+    "context_title": "LLM Rendszer Kontextus",
+    "context_desc": "Ez a szöveg automatikusan injektálódik az LLM hívások system prompt-jába a Bifrost Gateway-en keresztül.",
+    "no_context": "Nincs kontextus — adj hozzá preferenciákat az 'Új Preferencia' tabon.",
+    "types": {
+      "semantic": "Szemantikus",
+      "episodic": "Epizodikus",
+      "procedural": "Procedurális"
+    }
   }
 }
