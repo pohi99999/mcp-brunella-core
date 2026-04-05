@@ -7,6 +7,8 @@
  * @track cf_r2_artifact_storage_20260323
  */
 
+import { safeJsonParse } from './utils/aiHelpers.js';
+
 export interface ArtifactMetadata {
   agentId: string;
   taskId: string;
@@ -108,7 +110,7 @@ export class R2ArtifactManager {
       contentType: obj.httpMetadata?.contentType || "application/octet-stream",
       size: obj.size,
       createdAt: obj.customMetadata?.createdAt || obj.uploaded.toISOString(),
-      tags: obj.customMetadata?.tags ? JSON.parse(obj.customMetadata.tags) : undefined,
+      tags: obj.customMetadata?.tags ? safeJsonParse<string[]>(obj.customMetadata.tags, []) : undefined,
     }));
   }
 

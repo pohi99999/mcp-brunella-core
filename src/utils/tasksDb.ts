@@ -1,3 +1,5 @@
+import { safeJsonParse } from './aiHelpers.js';
+
 let db: any = null;
 let path: any = null;
 let fs: any = null;
@@ -334,15 +336,15 @@ export async function loadBackgroundTask(id: string): Promise<any | null> {
     return {
         id: row.id,
         instruction: row.instruction,
-        plan: JSON.parse(row.plan),
+        plan: safeJsonParse<any>(row.plan, {}),
         status: row.status,
         progress: row.progress,
         startedAt: row.started_at,
         completedAt: row.completed_at || undefined,
-        steps: JSON.parse(row.steps),
+        steps: safeJsonParse<any[]>(row.steps, []),
         currentStepIndex: row.current_step_index,
         error: row.error || undefined,
-        checkpoints: JSON.parse(row.checkpoints)
+        checkpoints: safeJsonParse<any[]>(row.checkpoints, [])
     };
 }
 
@@ -371,15 +373,15 @@ export async function loadAllBackgroundTasks(limit: number = 50, status?: string
     return rows.map(row => ({
         id: row.id,
         instruction: row.instruction,
-        plan: JSON.parse(row.plan),
+        plan: safeJsonParse<any>(row.plan, {}),
         status: row.status,
         progress: row.progress,
         startedAt: row.started_at,
         completedAt: row.completed_at || undefined,
-        steps: JSON.parse(row.steps),
+        steps: safeJsonParse<any[]>(row.steps, []),
         currentStepIndex: row.current_step_index,
         error: row.error || undefined,
-        checkpoints: JSON.parse(row.checkpoints)
+        checkpoints: safeJsonParse<any[]>(row.checkpoints, [])
     }));
 }
 

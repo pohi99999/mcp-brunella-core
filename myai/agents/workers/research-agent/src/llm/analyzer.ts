@@ -137,8 +137,13 @@ async function analyzeWithGemini(
   // Extract JSON from markdown code blocks if present
   const jsonMatch = text.match(/```json\s*([\s\S]*?)\s*```/) || text.match(/\{[\s\S]*\}/);
   const jsonText = jsonMatch ? (jsonMatch[1] || jsonMatch[0]) : text;
-  
-  return JSON.parse(jsonText);
+
+  try {
+    return JSON.parse(jsonText);
+  } catch (e) {
+    // Fall back to a safe minimal structure to avoid throwing inside the worker
+    return { confidence_score: 0, category: 'Uncategorized', tags: [], summary: '' };
+  }
 }
 
 /**
@@ -175,6 +180,10 @@ async function analyzeWithOpenAI(
 
   const data = await response.json() as any;
   const text = data.choices?.[0]?.message?.content || '{}';
-  
-  return JSON.parse(text);
+
+  try {
+    return JSON.parse(text);
+  } catch (e) {
+    return { confidence_score: 0, category: 'Uncategorized', tags: [], summary: '' };
+  }
 }
