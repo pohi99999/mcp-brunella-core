@@ -17,7 +17,7 @@ export class BankAgent implements IAgent {
   capabilities = ['csv-parsing', 'bank-reconciliation', 'data-ingestion'];
 
   private getSamplePath(): string {
-    return path.resolve('conductor/tracks/konyveles_automatizalas/resources/samples/bank_transactions.csv');
+    return path.join(process.cwd(), 'data', 'bank-imports', 'OTP_export_sample.csv.example');
   }
 
   private resolveCsvPath(context?: AgentContext | Record<string, unknown>): string | undefined {

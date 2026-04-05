@@ -12,6 +12,50 @@ const { delegateMock } = vi.hoisted(() => ({
     delegateMock: vi.fn(),
 }));
 
+const { readinessMock, readinessReport } = vi.hoisted(() => ({
+    readinessMock: vi.fn(),
+    readinessReport: {
+        status: 'blocked',
+        timestamp: '2026-04-05T00:00:00.000Z',
+        summary: {
+            total: 4,
+            ready: 2,
+            blocked: 2,
+        },
+        missing: ['szamlazz.hu API kulcs', 'Gmail IMAP hozzáférés'],
+        checks: [
+            {
+                id: 'szamlazz-hu',
+                label: 'szamlazz.hu API kulcs',
+                status: 'ready',
+                required: true,
+                details: 'szamlazz.hu API kulcs konfigurálva.',
+            },
+            {
+                id: 'nav-online-szamla',
+                label: 'NAV Online Számla kredencial',
+                status: 'ready',
+                required: true,
+                details: 'NAV Online Számla kredencial konfigurálva.',
+            },
+            {
+                id: 'imap-access',
+                label: 'Gmail IMAP hozzáférés',
+                status: 'missing',
+                required: true,
+                details: 'Hiányzik: GMAIL_IMAP_USER, GMAIL_APP_PASSWORD',
+            },
+            {
+                id: 'bank-imports',
+                label: 'Bank import mappa',
+                status: 'missing',
+                required: true,
+                details: 'Hozd létre a mappát vagy ellenőrizd az útvonalat: data/bank-imports',
+            },
+        ],
+    },
+}));
+
 vi.mock('../src/utils/logger.js', () => ({
     logInfo: vi.fn(),
     logError: vi.fn(),
@@ -21,6 +65,10 @@ vi.mock('../src/agents/AgentManager.js', () => ({
     agentManager: {
         delegate: delegateMock,
     },
+}));
+
+vi.mock('../src/utils/bookkeepingReadiness.js', () => ({
+    buildBookkeepingReadinessReport: readinessMock,
 }));
 
 describe('Bookkeeping routes', () => {
@@ -34,6 +82,8 @@ describe('Bookkeeping routes', () => {
         initDB(':memory:');
         seedDatabase();
         delegateMock.mockReset();
+        readinessMock.mockReset();
+        readinessMock.mockReturnValue(readinessReport);
         delegateMock.mockResolvedValue({
             status: 'delegated',
         });
@@ -131,6 +181,7 @@ describe('Bookkeeping routes', () => {
             NAV: 1,
         });
         expect(getResponse.body.snapshot).toBeNull();
+        expect(getResponse.body.readiness).toEqual(readinessReport);
 
         const patchPayload = {
             summary: {
@@ -165,6 +216,18 @@ describe('Bookkeeping routes', () => {
         const storedStatus = JSON.parse(await fs.readFile(statusPath, 'utf8')) as Record<string, unknown>;
         expect(storedStatus).toMatchObject(patchPayload);
         expect(typeof storedStatus.updatedAt).toBe('string');
+    });
+
+    it('returns the readiness report through the dedicated endpoint', async () => {
+        const app = createApp();
+
+        const response = await request(app).get('/api/v1/bookkeeping/readiness');
+
+        expect(response.status).toBe(200);
+        expect(response.body).toEqual({
+            success: true,
+            ...readinessReport,
+        });
     });
 
     it('lists and reads transactions through the dedicated transaction endpoints', async () => {

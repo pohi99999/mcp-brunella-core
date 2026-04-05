@@ -61,7 +61,7 @@ describe("Crawl4AI CLI Commands", () => {
           error: "service offline",
         })),
     } as Response);
-    const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+    const consoleSpy = vi.spyOn(console, 'info').mockImplementation(() => {});
 
     await program.parseAsync(["node", "test", "crawl4ai", "status"]);
 
@@ -87,7 +87,7 @@ describe("Crawl4AI CLI Commands", () => {
           },
         })),
     } as Response);
-    const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+    const consoleSpy = vi.spyOn(console, 'info').mockImplementation(() => {});
 
     await program.parseAsync(["node", "test", "crawl4ai", "crawl", "https://example.com"]);
 
@@ -114,7 +114,7 @@ describe("Crawl4AI CLI Commands", () => {
           },
         })),
     } as Response);
-    const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+    const consoleSpy = vi.spyOn(console, 'info').mockImplementation(() => {});
 
     await program.parseAsync(["node", "test", "crawl4ai", "crawl"]);
 
@@ -139,7 +139,7 @@ describe("Crawl4AI CLI Commands", () => {
           },
         })),
     } as Response);
-    const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+    const consoleSpy = vi.spyOn(console, 'info').mockImplementation(() => {});
 
     await program.parseAsync(["node", "test", "crawl4ai", "batch", "--urls", "https://a.example", "https://b.example"]);
 

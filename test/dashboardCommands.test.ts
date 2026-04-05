@@ -61,12 +61,12 @@ describe('Dashboard CLI Commands', () => {
           },
         }),
     });
-    const stdoutSpy = vi.spyOn(process.stdout, 'write').mockReturnValue(true);
+    const stdoutSpy = vi.spyOn(process.stdout, 'write').mockImplementation(() => true);
 
     await program.parseAsync(['node', 'test', 'dashboard', 'status']);
 
     expect(dashboardHarness.logInfo).toHaveBeenCalledWith('CLI', 'Lekérdezem a Dashboard állapotát...');
-    const output = stdoutSpy.mock.calls.map(([chunk]) => String(chunk)).join('');
+    const output = stdoutSpy.mock.calls.map((args) => args.map(String).join('')).join('');
     expect(output).toContain('Brunella Dashboard Státusz');
     expect(output).toContain('Összesített állapot: healthy');
     expect(output).toContain('Backend Health: ok');
@@ -93,11 +93,11 @@ describe('Dashboard CLI Commands', () => {
           },
         }),
     });
-    const stdoutSpy = vi.spyOn(process.stdout, 'write').mockReturnValue(true);
+    const stdoutSpy = vi.spyOn(process.stdout, 'write').mockImplementation(() => true);
 
     await program.parseAsync(['node', 'test', 'status']);
 
-    const output = stdoutSpy.mock.calls.map(([chunk]) => String(chunk)).join('');
+    const output = stdoutSpy.mock.calls.map((args) => args.map(String).join('')).join('');
     expect(output).toContain('Nincs regisztrált ügynök.');
     expect(output).toContain('Nincsenek konfigurált MCP szerverek.');
   });

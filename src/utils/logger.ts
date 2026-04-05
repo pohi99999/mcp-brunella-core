@@ -64,7 +64,7 @@ export function logWarn(message: string, ...args: unknown[]) {
 
 export function logInfo(message: string, ...args: unknown[]) {
   if (LOG_LEVELS.info <= LOG_LEVELS[CURRENT_LOG_LEVEL]) {
-    console.log(`[${getTimestamp()}] [INFO]`, message, ...args);
+    console.info(`[${getTimestamp()}] [INFO]`, message, ...args);
     emitLog('info', String(message), args.length ? args : undefined);
   }
 }

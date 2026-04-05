@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-04-05T13:00:01.090Z",
+  "lastUpdated": "2026-04-05T18:00:00.462Z",
   "tracks": [
     {
       "id": "apify_deep_scraping_agent_20260223",
@@ -158,9 +158,9 @@
     {
       "id": "jules_pr_integration_20260222",
       "name": "jules_pr_integration_20260222",
-      "status": "active",
+      "status": "completed",
       "priority": "high",
-      "progress": 18,
+      "progress": 100,
       "assignee": "Claude + Pohánka Péter",
       "tags": [],
       "dependencies": [],
@@ -172,7 +172,7 @@
       "name": "KKV CRM es lead-utanakovetes automatizalas",
       "status": "active",
       "priority": "high",
-      "progress": 0,
+      "progress": 20,
       "created": "2026-04-04",
       "updated": "2026-04-04",
       "assignee": "GitHub Copilot",
@@ -190,21 +190,20 @@
     },
     {
       "id": "kkv_crm_followup_routing_20260405",
-      "name": "KKV CRM follow-up es routing",
+      "name": "KKV CRM follow-up routing",
       "status": "proposed",
       "priority": "high",
       "progress": 0,
       "created": "2026-04-05",
       "updated": "2026-04-05",
-      "assignee": "GitHub Copilot",
+      "assignee": "bas-automation-architect",
       "tags": [
         "kkv",
         "crm",
-        "follow-up",
+        "followup",
         "routing",
-        "scoring",
-        "slack",
-        "n8n"
+        "n8n",
+        "orchestrator"
       ],
       "dependencies": [
         "kkv_crm_ingest_foundation_20260405"
@@ -215,11 +214,12 @@
     {
       "id": "kkv_crm_ingest_foundation_20260405",
       "name": "KKV CRM ingest alapok",
-      "status": "proposed",
+      "status": "completed",
       "priority": "high",
-      "progress": 0,
+      "progress": 100,
       "created": "2026-04-05",
       "updated": "2026-04-05",
+      "completed": "2026-04-05",
       "assignee": "GitHub Copilot",
       "tags": [
         "kkv",
@@ -236,11 +236,11 @@
     {
       "id": "kkv_customer_service_ai_20260404",
       "name": "KKV ugyfelszolgalati AI es ticketkezeles",
-      "status": "active",
+      "status": "completed",
       "priority": "high",
-      "progress": 0,
+      "progress": 100,
       "created": "2026-04-04",
-      "updated": "2026-04-04",
+      "updated": "2026-04-05",
       "assignee": "GitHub Copilot",
       "tags": [
         "kkv",
@@ -257,11 +257,11 @@
     {
       "id": "kkv_finance_automation_20260404",
       "name": "KKV penzugyi emlekezteto es jovahagyasi automatizalas",
-      "status": "active",
+      "status": "completed",
       "priority": "high",
-      "progress": 0,
+      "progress": 100,
       "created": "2026-04-04",
-      "updated": "2026-04-04",
+      "updated": "2026-04-05",
       "assignee": "GitHub Copilot",
       "tags": [
         "kkv",
@@ -278,11 +278,11 @@
     {
       "id": "kkv_hr_automation_20260404",
       "name": "KKV HR es dolgozoi adminisztracio automatizalas",
-      "status": "active",
+      "status": "completed",
       "priority": "high",
-      "progress": 0,
+      "progress": 100,
       "created": "2026-04-04",
-      "updated": "2026-04-04",
+      "updated": "2026-04-05",
       "assignee": "GitHub Copilot",
       "tags": [
         "kkv",
@@ -317,28 +317,6 @@
         "kkv_hr_onboarding_provisioning_20260405"
       ],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\kkv_hr_leave_approvals_20260405",
-      "_isArchived": false
-    },
-    {
-      "id": "kkv_hr_onboarding_provisioning_20260405",
-      "name": "KKV HR onboarding es provisioning",
-      "status": "proposed",
-      "priority": "high",
-      "progress": 0,
-      "created": "2026-04-05",
-      "updated": "2026-04-05",
-      "assignee": "GitHub Copilot",
-      "tags": [
-        "kkv",
-        "hr",
-        "onboarding",
-        "provisioning",
-        "google-workspace",
-        "slack",
-        "n8n"
-      ],
-      "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\kkv_hr_onboarding_provisioning_20260405",
       "_isArchived": false
     },
     {
@@ -483,23 +461,6 @@
       "_isArchived": false
     },
     {
-      "id": "logging_refactor_20260404",
-      "name": "Logging Audit — console.log elimináció és Logger standardizálás",
-      "status": "active",
-      "priority": "high",
-      "progress": 0,
-      "updated": "2026-04-04",
-      "tags": [
-        "logging",
-        "standard",
-        "audit",
-        "observability"
-      ],
-      "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\logging_refactor_20260404",
-      "_isArchived": false
-    },
-    {
       "id": "logistics_vertical_20260222",
       "name": "PohiAIPro Logistics Vertical — Brunella integráció",
       "status": "proposed",
@@ -555,29 +516,6 @@
       "_isArchived": false
     },
     {
-      "id": "n8n_bookkeeping_phase3_finalization_20260404",
-      "name": "Konyvelesi n8n Phase 3 finalizalas",
-      "status": "active",
-      "priority": "critical",
-      "progress": 0,
-      "created": "2026-04-04",
-      "updated": "2026-04-04",
-      "assignee": "GitHub Copilot",
-      "tags": [
-        "n8n",
-        "bookkeeping",
-        "nav",
-        "szamlazz.hu",
-        "reconciliation"
-      ],
-      "dependencies": [
-        "n8n_konyveles_pipeline_20260328",
-        "konyveles_phase3_20260403"
-      ],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\n8n_bookkeeping_phase3_finalization_20260404",
-      "_isArchived": false
-    },
-    {
       "id": "n8n_konyveles_pipeline_20260328",
       "name": "n8n Könyvelési Pipeline — Bank + KP + szamlazz.hu",
       "status": "completed",
@@ -599,28 +537,6 @@
         "konyveles_automatizalas"
       ],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\n8n_konyveles_pipeline_20260328",
-      "_isArchived": false
-    },
-    {
-      "id": "n8n_psales_human_loop_20260404",
-      "name": "P-Sales human-in-loop n8n pipeline",
-      "status": "active",
-      "priority": "high",
-      "progress": 0,
-      "created": "2026-04-04",
-      "updated": "2026-04-04",
-      "assignee": "GitHub Copilot",
-      "tags": [
-        "n8n",
-        "psales",
-        "real-estate",
-        "human-in-loop",
-        "sales"
-      ],
-      "dependencies": [
-        "P-Sales20260327"
-      ],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\n8n_psales_human_loop_20260404",
       "_isArchived": false
     },
     {
@@ -2675,6 +2591,76 @@
       "_isArchived": true
     },
     {
+      "id": "kkv_crm_followup_approval_reporting_20260405",
+      "name": "KKV CRM follow-up approval es reporting",
+      "status": "archived",
+      "priority": "high",
+      "progress": 100,
+      "created": "2026-04-05",
+      "updated": "2026-04-05",
+      "assignee": "GitHub Copilot",
+      "tags": [
+        "kkv",
+        "crm",
+        "approval",
+        "reporting",
+        "audit",
+        "slack"
+      ],
+      "dependencies": [
+        "kkv_crm_followup_routing_20260405"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\kkv_crm_followup_approval_reporting_20260405",
+      "_isArchived": true
+    },
+    {
+      "id": "kkv_crm_followup_routing_20260405",
+      "name": "KKV CRM follow-up es routing",
+      "status": "archived",
+      "priority": "high",
+      "progress": 100,
+      "created": "2026-04-05",
+      "updated": "2026-04-05",
+      "assignee": "GitHub Copilot",
+      "tags": [
+        "kkv",
+        "crm",
+        "follow-up",
+        "routing",
+        "scoring",
+        "scheduler",
+        "slack",
+        "n8n"
+      ],
+      "dependencies": [
+        "kkv_crm_ingest_foundation_20260405"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\kkv_crm_followup_routing_20260405",
+      "_isArchived": true
+    },
+    {
+      "id": "kkv_hr_onboarding_provisioning_20260405",
+      "name": "KKV HR onboarding es provisioning",
+      "status": "archived",
+      "priority": "high",
+      "progress": 100,
+      "created": "2026-04-05",
+      "updated": "2026-04-05",
+      "assignee": "GitHub Copilot",
+      "tags": [
+        "kkv",
+        "hr",
+        "onboarding",
+        "provisioning",
+        "google-workspace",
+        "slack",
+        "n8n"
+      ],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\kkv_hr_onboarding_provisioning_20260405",
+      "_isArchived": true
+    },
+    {
       "id": "konyveles_automatizalas",
       "name": "Könyvelés automatizálása",
       "status": "archived",
@@ -2695,6 +2681,29 @@
         "Google Drive / IMAP hozzáférés"
       ],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\konyveles_automatizalas",
+      "_isArchived": true
+    },
+    {
+      "id": "konyveles_phase3_readiness_20260405",
+      "name": "Konyvelesi Phase 0 readiness",
+      "status": "archived",
+      "priority": "high",
+      "progress": 100,
+      "created": "2026-04-05",
+      "updated": "2026-04-05",
+      "assignee": "GitHub Copilot",
+      "tags": [
+        "bookkeeping",
+        "readiness",
+        "credentials",
+        "dashboard",
+        "cli",
+        "n8n"
+      ],
+      "dependencies": [
+        "n8n_konyveles_pipeline_20260328"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\konyveles_phase3_readiness_20260405",
       "_isArchived": true
     },
     {
@@ -2820,6 +2829,23 @@
       "tags": [],
       "dependencies": [],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\local_test_scheduler_20260215",
+      "_isArchived": true
+    },
+    {
+      "id": "logging_refactor_20260404",
+      "name": "Logging Audit — console.log elimináció és Logger standardizálás",
+      "status": "archived",
+      "priority": "high",
+      "progress": 100,
+      "updated": "2026-04-05",
+      "tags": [
+        "logging",
+        "standard",
+        "audit",
+        "observability"
+      ],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\logging_refactor_20260404",
       "_isArchived": true
     },
     {
@@ -3002,6 +3028,51 @@
       "tags": [],
       "dependencies": [],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\modular-command-center-dashboard-v3-20260219",
+      "_isArchived": true
+    },
+    {
+      "id": "n8n_bookkeeping_phase3_finalization_20260404",
+      "name": "Konyvelesi n8n Phase 3 finalizalas",
+      "status": "archived",
+      "priority": "critical",
+      "progress": 100,
+      "created": "2026-04-04",
+      "updated": "2026-04-05",
+      "assignee": "GitHub Copilot",
+      "tags": [
+        "n8n",
+        "bookkeeping",
+        "nav",
+        "szamlazz.hu",
+        "reconciliation"
+      ],
+      "dependencies": [
+        "n8n_konyveles_pipeline_20260328",
+        "konyveles_phase3_20260403"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\n8n_bookkeeping_phase3_finalization_20260404",
+      "_isArchived": true
+    },
+    {
+      "id": "n8n_psales_human_loop_20260404",
+      "name": "P-Sales human-in-loop n8n pipeline",
+      "status": "archived",
+      "priority": "high",
+      "progress": 100,
+      "created": "2026-04-04",
+      "updated": "2026-04-05",
+      "assignee": "GitHub Copilot",
+      "tags": [
+        "n8n",
+        "psales",
+        "real-estate",
+        "human-in-loop",
+        "sales"
+      ],
+      "dependencies": [
+        "P-Sales20260327"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\n8n_psales_human_loop_20260404",
       "_isArchived": true
     },
     {
@@ -3949,10 +4020,10 @@
     }
   ],
   "stats": {
-    "total": 217,
-    "active": 17,
-    "completed": 19,
-    "archived": 170,
-    "proposed": 10
+    "total": 220,
+    "active": 10,
+    "completed": 24,
+    "archived": 177,
+    "proposed": 8
   }
 }

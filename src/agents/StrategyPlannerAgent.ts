@@ -1,28 +1,19 @@
 import { IAgent, AgentResponse } from './types.js';
 import { logInfo, logError, setAgentStatus } from '../utils/logger.js';
 import { randomUUID } from 'crypto';
+import {
+  insertStrategyPlan,
+  getStrategyPlan,
+  updatePlanApprovalState,
+  insertPSalesAuditEvent,
+  type StrategyChannel,
+} from '../data/psales_db.js';
 
-// TODO: replace with persistent storage (D1/SQLite) when production-ready
-const planStore = new Map<string, StrategyPlan>();
-
-interface Channel {
-  name: string;
-  priority: 'high' | 'medium' | 'low';
-  description: string;
-}
-
-interface StrategyPlan {
-  planId: string;
-  propertyType: string;
-  location: string;
-  estimatedValue: number;
-  approvalState: 'pending' | 'approved' | 'rejected';
-  channels: Channel[];
-  targetSegments: string[];
-  approvalSteps: string[];
-  summary: string;
-  generatedAt: string;
-}
+/**
+ * @deprecated Use StrategyChannel from psales_db.ts.
+ * Kept as a local alias for internal channel configuration maps.
+ */
+type Channel = StrategyChannel;
 
 const CHANNEL_CONFIGS: Record<string, Channel[]> = {
   apartment: [
@@ -82,8 +73,11 @@ export class StrategyPlannerAgent implements IAgent {
       ? ['Ipari és logisztikai vevők', 'Fejlesztők', 'Befektetők', 'Önkormányzati szereplők']
       : ['Magánszemély vevők', 'Befektetők', 'Portálon aktív keresők', 'Helyi közvetítők'];
 
-    const plan: StrategyPlan = {
-      planId: randomUUID(),
+    const planId = randomUUID();
+    const generatedAt = new Date().toISOString();
+
+    const plan = insertStrategyPlan({
+      planId,
       propertyType,
       location,
       estimatedValue,
@@ -98,34 +92,48 @@ export class StrategyPlannerAgent implements IAgent {
       summary: `${location}-i ${propertyType} ingatlan értékesítési stratégiája. ` +
         `Becsült érték: ${estimatedValue.toLocaleString('hu-HU')} EUR. ` +
         `Javasolt csatornák: ${channels.map(c => c.name).join(', ')}.`,
-      generatedAt: new Date().toISOString(),
-    };
+      generatedAt,
+    });
 
-    planStore.set(plan.planId, plan);
-    logInfo(this.name, `Terv kész: ${plan.planId} (${propertyType}, ${location})`);
+    insertPSalesAuditEvent(planId, 'plan_created', {
+      actor: 'system',
+      note: `Terv generálva: ${propertyType} @ ${location}`,
+    });
 
+    logInfo(this.name, `Terv kész: ${planId} (${propertyType}, ${location})`);
     return { status: 'success', data: plan };
   }
 
   private approvePlan(ctx: Record<string, unknown>): AgentResponse {
     const planId = String(ctx['planId'] ?? '');
     const decision = String(ctx['decision'] ?? '');
+    const actor = typeof ctx['actor'] === 'string' ? ctx['actor'] : undefined;
 
-    const plan = planStore.get(planId);
-    if (!plan) {
+    if (!planId) {
+      return { status: 'error', error: 'planId kötelező' };
+    }
+
+    const existing = getStrategyPlan(planId);
+    if (!existing) {
       return { status: 'error', error: `Terv nem található: "${planId}"` };
     }
 
-    if (decision === 'approved') {
-      plan.approvalState = 'approved';
-    } else if (decision === 'rejected') {
-      plan.approvalState = 'rejected';
-    } else {
+    if (decision !== 'approved' && decision !== 'rejected') {
       return { status: 'error', error: `Érvénytelen döntés: "${decision}". Érvényes: approved, rejected.` };
     }
 
+    const updated = updatePlanApprovalState(planId, decision, { actor });
+    if (!updated) {
+      return { status: 'error', error: `Terv állapota nem módosítható (jelenlegi állapot: ${existing.approvalState})` };
+    }
+
+    insertPSalesAuditEvent(planId, decision, {
+      actor: actor ?? 'system',
+      note: `Döntés: ${decision}`,
+    });
+
     logInfo(this.name, `Terv ${decision}: ${planId}`);
-    return { status: 'success', data: { ...plan } };
+    return { status: 'success', data: updated };
   }
 }
 

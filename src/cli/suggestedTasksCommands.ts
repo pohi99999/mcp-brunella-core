@@ -3,6 +3,7 @@
 import type { Command } from 'commander';
 import chalk from 'chalk';
 import ora from 'ora';
+import { writeLine } from '../utils/cliOutput.js';
 
 const API_BASE = process.env.BRUNELLA_API_URL || 'http://localhost:3000';
 
@@ -87,8 +88,8 @@ export function registerSuggestedTasksCommands(program: Command): void {
         );
 
         if (response.count > 0) {
-          console.log();
-          console.log(chalk.bold('📋 Summary by confidence:'));
+          writeLine();
+          writeLine(chalk.bold('📋 Summary by confidence:'));
 
           // Group by confidence
           const byConfidence = response.tasks.reduce(
@@ -109,22 +110,22 @@ export function registerSuggestedTasksCommands(program: Command): void {
               const bar = confidenceColor(score)(
                 `${'▓'.repeat(Math.round(score * 20))}${'░'.repeat(20 - Math.round(score * 20))}`,
               );
-              console.log(`  ${bar} ${chalk.bold(String(count))} items (${score.toFixed(2)})`);
+              writeLine(`  ${bar} ${chalk.bold(String(count))} items (${score.toFixed(2)})`);
             });
 
           if (options.verbose) {
-            console.log();
-            console.log(chalk.bold('📄 Details:'));
+            writeLine();
+            writeLine(chalk.bold('📄 Details:'));
             response.tasks
               .sort((a, b) => b.confidence_score - a.confidence_score)
               .slice(0, 10)
               .forEach((task) => {
-                console.log(
+                writeLine(
                   `  ${confidenceColor(task.confidence_score)(
                     `[${(task.confidence_score * 100).toFixed(0)}%]`,
                   )} ${chalk.cyan(task.file_path)}:${task.line_number}`,
                 );
-                console.log(
+                writeLine(
                   `    ${chalk.gray('→')} ${task.todo_text.substring(0, 60)}`,
                 );
               });
@@ -163,13 +164,13 @@ export function registerSuggestedTasksCommands(program: Command): void {
           .slice(0, parseInt(options.limit));
 
         if (tasks.length === 0) {
-          console.log(chalk.yellow('No tasks found.'));
+          writeLine(chalk.yellow('No tasks found.'));
           return;
         }
 
-        console.log();
-        console.log(chalk.bold(`📋 Tasks (${tasks.length} shown):`));
-        console.log();
+        writeLine();
+        writeLine(chalk.bold(`📋 Tasks (${tasks.length} shown):`));
+        writeLine();
 
         tasks.forEach((task, idx) => {
           const scoreColor =
@@ -178,16 +179,16 @@ export function registerSuggestedTasksCommands(program: Command): void {
               : task.confidence_score >= 0.65
                 ? chalk.yellow
                 : chalk.green;
-          console.log(
+          writeLine(
             `${idx + 1}. ${scoreColor(`[${(task.confidence_score * 100).toFixed(0)}%]`)} ${chalk.cyan(task.file_path)}:${task.line_number}`,
           );
-          console.log(
+          writeLine(
             `   ${statusBadge(task.status)} ${task.assigned_to ? `→ ${task.assigned_to}` : 'unassigned'}`,
           );
-          console.log(
+          writeLine(
             `   ${chalk.gray('→')} ${task.todo_text.substring(0, 70)}`,
           );
-          console.log();
+          writeLine();
         });
       } catch (err: unknown) {
         spinner.fail(
@@ -225,32 +226,32 @@ export function registerSuggestedTasksCommands(program: Command): void {
           critical: response.filter((t) => t.confidence_score >= 0.8).length,
         };
 
-        console.log();
-        console.log(chalk.bold('📊 Task Statistics:'));
-        console.log();
-        console.log(
+        writeLine();
+        writeLine(chalk.bold('📊 Task Statistics:'));
+        writeLine();
+        writeLine(
           `  Total Tasks:      ${chalk.cyan(String(stats.total))}`,
         );
-        console.log(
+        writeLine(
           `  Pending:          ${chalk.yellow(String(stats.pending))}`,
         );
-        console.log(
+        writeLine(
           `  In Progress:      ${chalk.blue(String(stats.in_progress))}`,
         );
-        console.log(
+        writeLine(
           `  Completed:        ${chalk.green(String(stats.completed))}`,
         );
-        console.log(
+        writeLine(
           `  Archived:         ${chalk.gray(String(stats.archived))}`,
         );
-        console.log();
-        console.log(
+        writeLine();
+        writeLine(
           `  Avg. Confidence:  ${stats.avg_confidence}`,
         );
-        console.log(
+        writeLine(
           `  Critical (>80%):  ${chalk.red.bold(String(stats.critical))}`,
         );
-        console.log();
+        writeLine();
       } catch (err: unknown) {
         spinner.fail(
           `Failed to load stats: ${err instanceof Error ? err.message : String(err)}`,

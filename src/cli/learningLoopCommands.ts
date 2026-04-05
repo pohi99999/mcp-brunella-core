@@ -4,6 +4,7 @@ import boxen from 'boxen';
 import ora from 'ora';
 import inquirer from 'inquirer';
 import { logError } from '../utils/logger.js';
+import { writeLine } from '../utils/cliOutput.js';
 
 type EvalGateStatus = 'passed' | 'failed' | 'warning';
 type ReflexModelState = 'candidate' | 'shadow' | 'active' | 'retired';
@@ -107,35 +108,35 @@ function printOverview(data: LearningLoopOverview): void {
   const latestTraining = registry.latestTrainingRuns[0] ?? data.latestTrainingRuns[0];
   const latestEval = registry.latestEvalResults[0];
 
-  console.log(boxen(chalk.cyan('🧠 Learning Loop állapot'), { padding: 1, borderStyle: 'round' }));
-  console.log(chalk.bold('\nKurált dataset'));
-  console.log(`  Approved: ${chalk.green(String(data.curatedStats?.approvedCount ?? 0))}`);
-  console.log(`  Pending:  ${chalk.yellow(String(data.curatedStats?.pendingReview ?? 0))}`);
-  console.log(`  Rejected: ${chalk.red(String(data.curatedStats?.rejectedCount ?? 0))}`);
-  console.log(`  Quality:  ${chalk.white((data.curatedStats?.avgQuality ?? 0).toFixed(2))}`);
+  writeLine(boxen(chalk.cyan('🧠 Learning Loop állapot'), { padding: 1, borderStyle: 'round' }));
+  writeLine(chalk.bold('\nKurált dataset'));
+  writeLine(`  Approved: ${chalk.green(String(data.curatedStats?.approvedCount ?? 0))}`);
+  writeLine(`  Pending:  ${chalk.yellow(String(data.curatedStats?.pendingReview ?? 0))}`);
+  writeLine(`  Rejected: ${chalk.red(String(data.curatedStats?.rejectedCount ?? 0))}`);
+  writeLine(`  Quality:  ${chalk.white((data.curatedStats?.avgQuality ?? 0).toFixed(2))}`);
 
-  console.log(chalk.bold('\nReflex registry'));
-  console.log(`  Aktív modell: ${activeModel ? chalk.green(activeModel.version) : chalk.gray('nincs')}`);
-  console.log(`  Candidate:    ${chalk.yellow(String(registry.candidateModels.length))}`);
-  console.log(`  Shadow:       ${chalk.cyan(String(registry.shadowModels.length))}`);
-  console.log(`  Retired:      ${chalk.gray(String(registry.retiredModels.length))}`);
+  writeLine(chalk.bold('\nReflex registry'));
+  writeLine(`  Aktív modell: ${activeModel ? chalk.green(activeModel.version) : chalk.gray('nincs')}`);
+  writeLine(`  Candidate:    ${chalk.yellow(String(registry.candidateModels.length))}`);
+  writeLine(`  Shadow:       ${chalk.cyan(String(registry.shadowModels.length))}`);
+  writeLine(`  Retired:      ${chalk.gray(String(registry.retiredModels.length))}`);
 
-  console.log(chalk.bold('\nLegutóbbi futások'));
+  writeLine(chalk.bold('\nLegutóbbi futások'));
   if (latestTraining) {
-    console.log(`  Training: ${chalk.white(latestTraining.runId)} (${latestTraining.status})`);
-    console.log(`            ${latestTraining.sampleCount} minta • quality ${latestTraining.avgQuality.toFixed(2)} • ${formatTimestamp(latestTraining.completedAt ?? latestTraining.startedAt)}`);
+    writeLine(`  Training: ${chalk.white(latestTraining.runId)} (${latestTraining.status})`);
+    writeLine(`            ${latestTraining.sampleCount} minta • quality ${latestTraining.avgQuality.toFixed(2)} • ${formatTimestamp(latestTraining.completedAt ?? latestTraining.startedAt)}`);
   } else {
-    console.log(`  Training: ${chalk.gray('nincs')}`);
+    writeLine(`  Training: ${chalk.gray('nincs')}`);
   }
 
   if (latestEval) {
-    console.log(`  Eval:     ${chalk.white(latestEval.candidateVersion)} (${latestEval.gateStatus})`);
-    console.log(`            score ${latestEval.avgScore.toFixed(2)} • Δ ${latestEval.regressionDelta.toFixed(3)} • ${formatTimestamp(latestEval.createdAt)}`);
+    writeLine(`  Eval:     ${chalk.white(latestEval.candidateVersion)} (${latestEval.gateStatus})`);
+    writeLine(`            score ${latestEval.avgScore.toFixed(2)} • Δ ${latestEval.regressionDelta.toFixed(3)} • ${formatTimestamp(latestEval.createdAt)}`);
   } else {
-    console.log(`  Eval:     ${chalk.gray('nincs')}`);
+    writeLine(`  Eval:     ${chalk.gray('nincs')}`);
   }
 
-  console.log();
+  writeLine();
 }
 
 async function choosePromotableModel(): Promise<ReflexModelRecord | null> {
@@ -146,7 +147,7 @@ async function choosePromotableModel(): Promise<ReflexModelRecord | null> {
   ].filter((model) => Boolean(model.evalResultId));
 
   if (models.length === 0) {
-    console.log(chalk.yellow('\n⚠ Nincs promotálható eval-ozott modell.\n'));
+    writeLine(chalk.yellow('\n⚠ Nincs promotálható eval-ozott modell.\n'));
     return null;
   }
 
@@ -256,7 +257,7 @@ async function showMenu(): Promise<void> {
         const overview = await runWithSpinner('Candidate modellek betöltése...', () => apiFetch<LearningLoopOverview>('/overview'));
         const candidate = overview?.registry.candidateModels[0];
         if (!candidate) {
-          console.log(chalk.yellow('\n⚠ Nincs candidate modell eval futtatáshoz.\n'));
+          writeLine(chalk.yellow('\n⚠ Nincs candidate modell eval futtatáshoz.\n'));
           break;
         }
 

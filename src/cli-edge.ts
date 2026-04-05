@@ -11,6 +11,7 @@
 import { Command } from 'commander';
 import chalk from 'chalk';
 import ora from 'ora';
+import { writeLine } from './utils/cliOutput.js';
 
 const program = new Command();
 
@@ -33,15 +34,15 @@ program
       const data = await response.json();
 
       spinner.stop();
-      console.log(chalk.bold.green('\n✅ Worker Status: ONLINE\n'));
-      console.log(chalk.cyan('Service:'), data.service);
-      console.log(chalk.cyan('Version:'), data.version);
-      console.log(chalk.cyan('Architecture:'), data.architecture);
-      console.log(chalk.cyan('Status:'), data.status);
+      writeLine(chalk.bold.green('\n✅ Worker Status: ONLINE\n'));
+      writeLine(chalk.cyan('Service:'), data.service);
+      writeLine(chalk.cyan('Version:'), data.version);
+      writeLine(chalk.cyan('Architecture:'), data.architecture);
+      writeLine(chalk.cyan('Status:'), data.status);
 
-      console.log(chalk.bold('\nAvailable Endpoints:'));
+      writeLine(chalk.bold('\nAvailable Endpoints:'));
       Object.entries(data.endpoints).forEach(([key, value]) => {
-        console.log(chalk.gray(`  ${key}:`), value);
+        writeLine(chalk.gray(`  ${key}:`), value);
       });
     } catch (error: any) {
       spinner.fail(chalk.red('Worker offline or unreachable'));
@@ -77,13 +78,13 @@ program
       const data = await response.json();
 
       spinner.stop();
-      console.log(chalk.bold.green('\n✅ Task Submitted!\n'));
-      console.log(chalk.cyan('Task ID:'), data.taskId);
-      console.log(chalk.cyan('Type:'), data.type);
-      console.log(chalk.cyan('Status:'), data.message);
+      writeLine(chalk.bold.green('\n✅ Task Submitted!\n'));
+      writeLine(chalk.cyan('Task ID:'), data.taskId);
+      writeLine(chalk.cyan('Type:'), data.type);
+      writeLine(chalk.cyan('Status:'), data.message);
 
-      console.log(chalk.gray('\nCheck status with:'));
-      console.log(chalk.yellow(`  brunella edge status ${data.taskId}`));
+      writeLine(chalk.gray('\nCheck status with:'));
+      writeLine(chalk.yellow(`  brunella edge status ${data.taskId}`));
     } catch (error: any) {
       spinner.fail(chalk.red('Task submission failed'));
       console.error(chalk.red('Error:'), error.message);
@@ -108,14 +109,14 @@ program
       const data = await response.json();
 
       spinner.stop();
-      console.log(chalk.bold('\n📊 Task Status\n'));
-      console.log(chalk.cyan('Task ID:'), data.taskId);
-      console.log(chalk.cyan('Type:'), data.type);
-      console.log(chalk.cyan('Status:'), data.status);
+      writeLine(chalk.bold('\n📊 Task Status\n'));
+      writeLine(chalk.cyan('Task ID:'), data.taskId);
+      writeLine(chalk.cyan('Type:'), data.type);
+      writeLine(chalk.cyan('Status:'), data.status);
 
       if (data.result) {
-        console.log(chalk.bold('\nResult:'));
-        console.log(JSON.stringify(data.result, null, 2));
+        writeLine(chalk.bold('\nResult:'));
+        writeLine(JSON.stringify(data.result, null, 2));
       }
     } catch (error: any) {
       spinner.fail(chalk.red('Failed to fetch status'));

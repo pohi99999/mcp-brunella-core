@@ -2,14 +2,17 @@
   "id": "n8n_psales_human_loop_20260404",
   "name": "P-Sales human-in-loop n8n pipeline",
   "title": "P-Sales human-in-loop n8n pipeline",
-  "status": "active",
+  "status": "archived",
   "priority": "high",
   "created": "2026-04-04",
-  "updated": "2026-04-04",
+  "updated": "2026-04-05",
   "assignee": "GitHub Copilot",
-  "progress": 0,
+  "progress": 100,
   "tags": ["n8n", "psales", "real-estate", "human-in-loop", "sales"],
   "dependencies": ["P-Sales20260327"],
   "sourceDocument": ".worktrees\\n8n_workflow_tervek.md",
-  "phase": 1
+  "phase": 1,
+  "completedAt": "2026-04-05T00:00:00Z",
+  "archivedAt": "2026-04-05T00:00:00Z",
+  "archiveReason": "Persistent approval state, pause/resume, audit trail, weekly status reporting, and dashboard support are implemented and verified; no follow-up track is needed."
 }

@@ -79,7 +79,10 @@ export function createV1Router(): Router {
   router.use("/tts", lazy(() => import("./tts.js"), "createTTSRoutes"));
   router.use("/brunella", lazy(() => import("./recommendation.js"), "createRecommendationRoutes"));
   router.use("/bookkeeping", lazy(() => import("./bookkeeping.js"), "createBookkeepingRoutes"));
+  router.use("/invoice", lazy(() => import("./szamlazz.js"), "createSzamlazzRoutes"));
+  router.use("/szamlazz", lazy(() => import("./szamlazz.js"), "createSzamlazzRoutes"));
   router.use("/inventory", lazy(() => import("./inventory.js"), "createInventoryRoutes"));
+  router.use("/hr-onboarding", lazy(() => import("./hrOnboarding.js"), "createHROnboardingRoutes"));
   router.use("/machines", lazy(() => import("./machines.js"), "createMachinesRouter"));
   router.use("/enterprise", lazy(() => import("./enterprise.js"), "createEnterpriseRouter"));
   router.use("/enterprise/analytics", lazy(() => import("./enterprise.js"), "createEnterpriseAnalyticsRouter"));
@@ -117,6 +120,8 @@ export function createV1Router(): Router {
   router.use("/studio", lazy(() => import("./studio.js"), "createStudioRoutes"));
   router.use("/grants", lazy(() => import("./grants.js"), "default"));
   router.use("/webhooks", lazy(() => import("./webhooks.js"), "default", db));
+  // KKV follow-up webhook (lightweight receiver used by n8n/workflows)
+  router.use("/webhooks/kkv", lazy(() => import("./kkvWebhook.js"), "createKkvWebhookRoutes", db));
   router.use("/contact", lazy(() => import("./contact.js"), "default"));
   router.use("/harvest", lazy(() => import("./harvest.js"), "harvestRouter"));
   router.use("/reflection", lazy(() => import("./reflection.js"), "createReflectionRouter"));
@@ -156,6 +161,7 @@ export function createV1Router(): Router {
   router.use("/evhunter", lazy(() => import("./evhunter.js"), "createEvHunterRouter"));
   router.use("/preferences", lazy(() => import("./preferences.js"), "createPreferencesRouter"));
   router.use("/sales", lazy(() => import("./sales.js"), "default"));
+  router.use("/crm", lazy(() => import("./crm.js"), "createCrmRoutes"));
   router.use("/psales/auth", lazy(() => import("./psales-auth.js"), "createPSalesAuthRoutes"));
   router.use("/psales/intake", lazy(() => import("./psales-intake.js"), "createPSalesIntakeRoutes"));
   router.use("/psales/research", lazy(() => import("./psales-research.js"), "createPSalesResearchRoutes"));

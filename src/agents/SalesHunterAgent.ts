@@ -23,6 +23,8 @@ import { ensureError } from '../utils/ensureError.js';
 import { getWorkspaceClient } from '../tools/unifiedWorkspace.js';
 import { agentManager } from './AgentManager.js';
 import type { LeadGenerationData, LeadRecord } from '../types/enterprise.js';
+import { createCrmFollowUpPlan, ingestCrmLead } from '../data/crm_db.js';
+import { normalizeCrmLead } from '../utils/crmLead.js';
 
 // ============================================================================
 // Types
@@ -51,10 +53,15 @@ interface SalesHunterResult {
   leads: LeadProfile[];
   draftEmails: EmailDraftResult[];
   sheetsUrl?: string;
+  crmSync?: {
+    syncedLeads: number;
+    followUpPlansCreated: number;
+  };
   stats: {
     leadsFound: number;
     emailsGenerated: number;
     averageScore: number;
+    followUpPlansCreated?: number;
   };
 }
 
@@ -71,7 +78,9 @@ export class SalesHunterAgent extends BaseAgent {
     'lead_scoring',
     'email_generation',
     'crm_export',
-    'decision_maker_identification'
+    'decision_maker_identification',
+    'crm_sync',
+    'follow_up_routing'
   ];
 
   private readonly MAX_PROFILES_PER_HOUR = 50;
@@ -176,19 +185,22 @@ export class SalesHunterAgent extends BaseAgent {
       emailDraft: emailDrafts[index]
     }));
 
-    // Step 4: Calculate stats
-    const stats = {
-      totalLeads: formattedLeads.length,
-      highQuality: formattedLeads.filter(l => l.score >= 80).length,
-      avgScore: formattedLeads.reduce((sum, lead) => sum + lead.score, 0) / formattedLeads.length || 0,
-    };
+      // Step 4: Calculate stats
+      const crmSync = this.syncLeadsToCrm(formattedLeads);
+      const stats = {
+        totalLeads: formattedLeads.length,
+        highQuality: formattedLeads.filter(l => l.score >= 80).length,
+        avgScore: formattedLeads.reduce((sum, lead) => sum + lead.score, 0) / formattedLeads.length || 0,
+        followUpPlansCreated: crmSync.followUpPlansCreated,
+      };
 
-    return {
-      leads: formattedLeads,
-      emailDrafts,
-      crmExportUrl: '', // Default to empty string for test compatibility
-      stats,
-    };
+      return {
+        leads: formattedLeads,
+        emailDrafts,
+        crmExportUrl: '', // Default to empty string for test compatibility
+        crmSync,
+        stats,
+      };
   }
 
   /**
@@ -578,6 +590,52 @@ Relevancia pontszám: ${lead.score}/100`;
   private generateSurname(): string {
     const surnames = ['Nagy', 'Kovács', 'Tóth', 'Szabó', 'Horváth', 'Kiss', 'Molnár', 'Varga'];
     return surnames[Math.floor(Math.random() * surnames.length)];
+  }
+
+  private syncLeadsToCrm(leads: LeadProfile[]): {
+    syncedLeads: number;
+    followUpPlansCreated: number;
+  } {
+    let syncedLeads = 0;
+    let followUpPlansCreated = 0;
+
+    for (const lead of leads) {
+      const normalized = normalizeCrmLead({
+        source: 'sales_hunter',
+        email: lead.contactInfo,
+        company: lead.companyName,
+        createdAt: new Date().toISOString(),
+        receivedAt: new Date().toISOString(),
+        payload: {
+          source: 'sales_hunter',
+          company: lead.companyName,
+          decisionMaker: lead.decisionMaker,
+          email: lead.contactInfo,
+          linkedinUrl: lead.linkedinUrl,
+          industry: lead.industry,
+          companySize: lead.companySize,
+          location: lead.location,
+          score: lead.score,
+          notes: lead.notes,
+        },
+      });
+
+      if (!normalized) {
+        continue;
+      }
+
+      const ingested = ingestCrmLead(normalized);
+      const plan = createCrmFollowUpPlan(ingested.lead.id);
+
+      if (ingested.inserted) {
+        syncedLeads += 1;
+      }
+      if (plan) {
+        followUpPlansCreated += 1;
+      }
+    }
+
+    return { syncedLeads, followUpPlansCreated };
   }
 }
 

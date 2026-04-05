@@ -68,6 +68,30 @@ export interface CashEntrySummary {
     byType: Record<CashEntryType, number>;
 }
 
+export type BookkeepingReadinessCheckStatus = 'ready' | 'missing';
+
+export type BookkeepingReadinessStatus = 'ready' | 'blocked';
+
+export interface BookkeepingReadinessCheck {
+    id: string;
+    label: string;
+    status: BookkeepingReadinessCheckStatus;
+    required: boolean;
+    details: string;
+}
+
+export interface BookkeepingReadinessReport {
+    status: BookkeepingReadinessStatus;
+    timestamp: string;
+    summary: {
+        total: number;
+        ready: number;
+        blocked: number;
+    };
+    missing: string[];
+    checks: BookkeepingReadinessCheck[];
+}
+
 export type ReconciliationOutcome = 'MATCHED' | 'FUZZY_MATCHED' | 'UNMATCHED' | 'ERROR' | 'PARTIAL';
 
 export interface ReconciliationEvent {

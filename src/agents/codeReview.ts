@@ -60,7 +60,7 @@ Analyze the code and provide a structured review as JSON. Focus on:
 Project conventions to check:
 - ESM imports with .js extensions
 - No \`any\` types (use \`unknown\`)
-- Use logger.ts (logInfo/logError), NEVER console.log
+- Use logger.ts (logInfo/logError), never direct console output
 - Proper error handling with try/catch
 - Agents must implement IAgent interface
 
@@ -76,7 +76,7 @@ Respond ONLY with valid JSON in this format:
 const REFACTOR_SYSTEM_PROMPT = `You are an expert TypeScript/JavaScript refactoring specialist.
 Given code and a refactoring instruction, apply ONLY the requested changes.
 Maintain all existing functionality. Return ONLY the refactored code, nothing else.
-Follow BAS conventions: ESM .js imports, no any, logger.ts instead of console.log.`;
+Follow BAS conventions: ESM .js imports, no any, logger.ts instead of direct console output.`;
 
 const LANGUAGE_MAP: Record<string, string> = {
     '.ts': 'typescript',

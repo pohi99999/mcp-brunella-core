@@ -2,9 +2,10 @@ import inquirer from "inquirer";
 import chalk from "chalk";
 import boxen from "boxen";
 import { pSalesTrack, formatPSalesPhaseStatus } from "../../data/pSalesTrack.js";
+import { writeLine } from '../../utils/cliOutput.js';
 
 function printStatus(): void {
-  console.log(
+  writeLine(
     boxen(chalk.cyan.bold("🏢 P-Sales20260327"), {
       padding: 1,
       margin: 1,
@@ -13,147 +14,147 @@ function printStatus(): void {
     }),
   );
 
-  console.log(chalk.bold("Státusz:"), `${pSalesTrack.status.toUpperCase()} · ${pSalesTrack.progress}%`);
-  console.log(chalk.bold("Fókusz:"), pSalesTrack.currentFocus);
-  console.log(chalk.bold("Következő lépés:"), pSalesTrack.nextReadyStep);
-  console.log(chalk.bold("Architektúra:"), pSalesTrack.architectureDoc);
-  console.log(chalk.cyan("\nSzállítási modellek:"));
-  pSalesTrack.surfaces.forEach((surface) => console.log(`  • ${surface}`));
+  writeLine(chalk.bold("Státusz:"), `${pSalesTrack.status.toUpperCase()} · ${pSalesTrack.progress}%`);
+  writeLine(chalk.bold("Fókusz:"), pSalesTrack.currentFocus);
+  writeLine(chalk.bold("Következő lépés:"), pSalesTrack.nextReadyStep);
+  writeLine(chalk.bold("Architektúra:"), pSalesTrack.architectureDoc);
+  writeLine(chalk.cyan("\nSzállítási modellek:"));
+  pSalesTrack.surfaces.forEach((surface) => writeLine(`  • ${surface}`));
 }
 
 function printArchitecture(): void {
-  console.log(chalk.cyan.bold("\nArchitektúra összefoglaló"));
-  console.log(chalk.dim("Phase 0 output: shared core + enterprise + standalone + Cloudflare opciók."));
+  writeLine(chalk.cyan.bold("\nArchitektúra összefoglaló"));
+  writeLine(chalk.dim("Phase 0 output: shared core + enterprise + standalone + Cloudflare opciók."));
 
-  console.log(chalk.cyan("\nÜgynöki szerepkörök:"));
-  pSalesTrack.agents.forEach((agent) => console.log(`  • ${agent}`));
+  writeLine(chalk.cyan("\nÜgynöki szerepkörök:"));
+  pSalesTrack.agents.forEach((agent) => writeLine(`  • ${agent}`));
 
-  console.log(chalk.cyan("\nCloudflare opciók:"));
-  pSalesTrack.cloudflare.forEach((item) => console.log(`  • ${item}`));
+  writeLine(chalk.cyan("\nCloudflare opciók:"));
+  pSalesTrack.cloudflare.forEach((item) => writeLine(`  • ${item}`));
 }
 
 function printIntake(): void {
-  console.log(chalk.cyan.bold("\nIntake és felmérés"));
-  console.log(chalk.dim("Dokumentumfeltöltés → hiánylista → felmérő ügynök kérdések → intake státusz."));
+  writeLine(chalk.cyan.bold("\nIntake és felmérés"));
+  writeLine(chalk.dim("Dokumentumfeltöltés → hiánylista → felmérő ügynök kérdések → intake státusz."));
 
-  console.log(chalk.cyan("\nDokumentum-csomag:"));
+  writeLine(chalk.cyan("\nDokumentum-csomag:"));
   pSalesTrack.intake.documentBuckets.forEach((bucket) => {
-    console.log(chalk.bold(`  • ${bucket.title}`));
-    bucket.examples.forEach((example) => console.log(`    - ${example}`));
+    writeLine(chalk.bold(`  • ${bucket.title}`));
+    bucket.examples.forEach((example) => writeLine(`    - ${example}`));
   });
 
-  console.log(chalk.cyan("\nFelmérő kérdések:"));
+  writeLine(chalk.cyan("\nFelmérő kérdések:"));
   pSalesTrack.intake.surveyQuestions.forEach((question, index) => {
-    console.log(`  ${index + 1}. ${question}`);
+    writeLine(`  ${index + 1}. ${question}`);
   });
 
-  console.log(chalk.cyan("\nVárt outputok:"));
-  pSalesTrack.intake.outputs.forEach((output) => console.log(`  • ${output}`));
+  writeLine(chalk.cyan("\nVárt outputok:"));
+  pSalesTrack.intake.outputs.forEach((output) => writeLine(`  • ${output}`));
 }
 
 function printResearch(): void {
-  console.log(chalk.cyan.bold("\nKutatási és értékelési modell"));
-  console.log(chalk.dim("Piaci komparátok → értéktartomány → riport → stratégiai átadás."));
+  writeLine(chalk.cyan.bold("\nKutatási és értékelési modell"));
+  writeLine(chalk.dim("Piaci komparátok → értéktartomány → riport → stratégiai átadás."));
 
-  console.log(chalk.cyan("\nForrástípusok:"));
-  pSalesTrack.research.sourceTypes.forEach((sourceType) => console.log(`  • ${sourceType}`));
+  writeLine(chalk.cyan("\nForrástípusok:"));
+  pSalesTrack.research.sourceTypes.forEach((sourceType) => writeLine(`  • ${sourceType}`));
 
-  console.log(chalk.cyan("\nKomparálási kritériumok:"));
+  writeLine(chalk.cyan("\nKomparálási kritériumok:"));
   pSalesTrack.research.comparableCriteria.forEach((criterion, index) => {
-    console.log(`  ${index + 1}. ${criterion}`);
+    writeLine(`  ${index + 1}. ${criterion}`);
   });
 
-  console.log(chalk.cyan("\nÉrtéktartomány outputok:"));
-  pSalesTrack.research.valuationOutputs.forEach((output) => console.log(`  • ${output}`));
+  writeLine(chalk.cyan("\nÉrtéktartomány outputok:"));
+  pSalesTrack.research.valuationOutputs.forEach((output) => writeLine(`  • ${output}`));
 
-  console.log(chalk.cyan("\nKockázati jelzések:"));
-  pSalesTrack.research.riskFlags.forEach((risk) => console.log(`  • ${risk}`));
+  writeLine(chalk.cyan("\nKockázati jelzések:"));
+  pSalesTrack.research.riskFlags.forEach((risk) => writeLine(`  • ${risk}`));
 
-  console.log(chalk.cyan("\nRiport szekciók:"));
-  pSalesTrack.research.reportSections.forEach((section) => console.log(`  • ${section}`));
+  writeLine(chalk.cyan("\nRiport szekciók:"));
+  pSalesTrack.research.reportSections.forEach((section) => writeLine(`  • ${section}`));
 }
 
 function printStrategy(): void {
-  console.log(chalk.cyan.bold("\nStratégia és approval"));
-  console.log(chalk.dim("Kutatási eredmény → csatorna-mix → jóváhagyás → végrehajtási irány."));
+  writeLine(chalk.cyan.bold("\nStratégia és approval"));
+  writeLine(chalk.dim("Kutatási eredmény → csatorna-mix → jóváhagyás → végrehajtási irány."));
 
-  console.log(chalk.cyan("\nCsatorna-ajánlatok:"));
-  pSalesTrack.strategy.channelOptions.forEach((channel) => console.log(`  • ${channel}`));
+  writeLine(chalk.cyan("\nCsatorna-ajánlatok:"));
+  pSalesTrack.strategy.channelOptions.forEach((channel) => writeLine(`  • ${channel}`));
 
-  console.log(chalk.cyan("\nCélcsoport és döntéshozók:"));
+  writeLine(chalk.cyan("\nCélcsoport és döntéshozók:"));
   pSalesTrack.strategy.targetSegments.forEach((segment, index) => {
-    console.log(`  ${index + 1}. ${segment}`);
+    writeLine(`  ${index + 1}. ${segment}`);
   });
 
-  console.log(chalk.cyan("\nJóváhagyási lépések:"));
-  pSalesTrack.strategy.approvalSteps.forEach((step) => console.log(`  • ${step}`));
+  writeLine(chalk.cyan("\nJóváhagyási lépések:"));
+  pSalesTrack.strategy.approvalSteps.forEach((step) => writeLine(`  • ${step}`));
 
-  console.log(chalk.cyan("\nKimeneti fókuszok:"));
-  pSalesTrack.strategy.executionPaths.forEach((path) => console.log(`  • ${path}`));
+  writeLine(chalk.cyan("\nKimeneti fókuszok:"));
+  pSalesTrack.strategy.executionPaths.forEach((path) => writeLine(`  • ${path}`));
 
-  console.log(chalk.cyan("\nRiport szekciók:"));
-  pSalesTrack.strategy.reportSections.forEach((section) => console.log(`  • ${section}`));
+  writeLine(chalk.cyan("\nRiport szekciók:"));
+  pSalesTrack.strategy.reportSections.forEach((section) => writeLine(`  • ${section}`));
 
-  console.log(chalk.cyan("\nKérdések az approval előtt:"));
+  writeLine(chalk.cyan("\nKérdések az approval előtt:"));
   pSalesTrack.strategy.questions.forEach((question, index) => {
-    console.log(`  ${index + 1}. ${question}`);
+    writeLine(`  ${index + 1}. ${question}`);
   });
 }
 
 function printExecution(): void {
-  console.log(chalk.cyan.bold("\nVégrehajtás és audit"));
-  console.log(chalk.dim("Jóváhagyott terv → csatornánkénti futtatás → audit → visszajelzés."));
+  writeLine(chalk.cyan.bold("\nVégrehajtás és audit"));
+  writeLine(chalk.dim("Jóváhagyott terv → csatornánkénti futtatás → audit → visszajelzés."));
 
-  console.log(chalk.cyan("\nVégrehajtási módok:"));
-  pSalesTrack.execution.executionModes.forEach((mode) => console.log(`  • ${mode}`));
+  writeLine(chalk.cyan("\nVégrehajtási módok:"));
+  pSalesTrack.execution.executionModes.forEach((mode) => writeLine(`  • ${mode}`));
 
-  console.log(chalk.cyan("\nMérföldkövek:"));
+  writeLine(chalk.cyan("\nMérföldkövek:"));
   pSalesTrack.execution.statusMilestones.forEach((milestone, index) => {
-    console.log(`  ${index + 1}. ${milestone}`);
+    writeLine(`  ${index + 1}. ${milestone}`);
   });
 
-  console.log(chalk.cyan("\nVisszajelzési pontok:"));
-  pSalesTrack.execution.feedbackLoops.forEach((loop) => console.log(`  • ${loop}`));
+  writeLine(chalk.cyan("\nVisszajelzési pontok:"));
+  pSalesTrack.execution.feedbackLoops.forEach((loop) => writeLine(`  • ${loop}`));
 
-  console.log(chalk.cyan("\nAudit napló:"));
-  pSalesTrack.execution.auditTrail.forEach((entry) => console.log(`  • ${entry}`));
+  writeLine(chalk.cyan("\nAudit napló:"));
+  pSalesTrack.execution.auditTrail.forEach((entry) => writeLine(`  • ${entry}`));
 
-  console.log(chalk.cyan("\nRiport szekciók:"));
-  pSalesTrack.execution.reportSections.forEach((section) => console.log(`  • ${section}`));
+  writeLine(chalk.cyan("\nRiport szekciók:"));
+  pSalesTrack.execution.reportSections.forEach((section) => writeLine(`  • ${section}`));
 
-  console.log(chalk.cyan("\nKérdések a zárás előtt:"));
+  writeLine(chalk.cyan("\nKérdések a zárás előtt:"));
   pSalesTrack.execution.questions.forEach((question, index) => {
-    console.log(`  ${index + 1}. ${question}`);
+    writeLine(`  ${index + 1}. ${question}`);
   });
 }
 
 function printCloudflareOption(): void {
-  console.log(chalk.cyan.bold("\nCloudflare delivery opció"));
-  console.log(chalk.dim(pSalesTrack.cloudflareDecision.recommendedPath));
+  writeLine(chalk.cyan.bold("\nCloudflare delivery opció"));
+  writeLine(chalk.dim(pSalesTrack.cloudflareDecision.recommendedPath));
 
-  console.log(chalk.cyan("\nStorage és state:"));
-  pSalesTrack.cloudflareDecision.storageOptions.forEach((option) => console.log(`  • ${option}`));
+  writeLine(chalk.cyan("\nStorage és state:"));
+  pSalesTrack.cloudflareDecision.storageOptions.forEach((option) => writeLine(`  • ${option}`));
 
-  console.log(chalk.cyan("\nRuntime és hosting:"));
-  pSalesTrack.cloudflareDecision.runtimeOptions.forEach((option) => console.log(`  • ${option}`));
-  pSalesTrack.cloudflareDecision.hostingOptions.forEach((option) => console.log(`  • ${option}`));
+  writeLine(chalk.cyan("\nRuntime és hosting:"));
+  pSalesTrack.cloudflareDecision.runtimeOptions.forEach((option) => writeLine(`  • ${option}`));
+  pSalesTrack.cloudflareDecision.hostingOptions.forEach((option) => writeLine(`  • ${option}`));
 
-  console.log(chalk.cyan("\nDöntési szempontok:"));
+  writeLine(chalk.cyan("\nDöntési szempontok:"));
   pSalesTrack.cloudflareDecision.decisionCriteria.forEach((criterion, index) => {
-    console.log(`  ${index + 1}. ${criterion}`);
+    writeLine(`  ${index + 1}. ${criterion}`);
   });
 
-  console.log(chalk.cyan("\nNyitott kérdések:"));
+  writeLine(chalk.cyan("\nNyitott kérdések:"));
   pSalesTrack.cloudflareDecision.openQuestions.forEach((question, index) => {
-    console.log(`  ${index + 1}. ${question}`);
+    writeLine(`  ${index + 1}. ${question}`);
   });
 
-  console.log(chalk.cyan("\nGyors opciók:"));
-  pSalesTrack.cloudflare.forEach((option) => console.log(`  • ${option}`));
+  writeLine(chalk.cyan("\nGyors opciók:"));
+  pSalesTrack.cloudflare.forEach((option) => writeLine(`  • ${option}`));
 }
 
 function printPhaseRoadmap(): void {
-  console.log(chalk.cyan.bold("\nPhase roadmap"));
+  writeLine(chalk.cyan.bold("\nPhase roadmap"));
   pSalesTrack.phases.forEach((phase) => {
     const statusColor =
       phase.status === "completed"
@@ -162,11 +163,11 @@ function printPhaseRoadmap(): void {
           ? chalk.yellow
           : chalk.gray;
 
-    console.log(
+    writeLine(
       `${chalk.bold(phase.title)} · ${statusColor(formatPSalesPhaseStatus(phase.status))}`,
     );
-    console.log(chalk.dim(`  ${phase.summary}`));
-    phase.checkpoints.forEach((checkpoint) => console.log(`  • ${checkpoint}`));
+    writeLine(chalk.dim(`  ${phase.summary}`));
+    phase.checkpoints.forEach((checkpoint) => writeLine(`  • ${checkpoint}`));
   });
 }
 
@@ -229,7 +230,7 @@ async function runMenu(): Promise<void> {
 }
 
 export async function propertySalesCommand(): Promise<void> {
-  console.log(
+  writeLine(
     boxen(chalk.blue.bold("🏢 Brunella Ingatlan Értékesítési Track"), {
       padding: 1,
       margin: 1,

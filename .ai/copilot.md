@@ -6,6 +6,63 @@ User requested that the Copilot CLI automatically connect to a local Brunella MC
 
 ## History
 
+### 2026-04-05 18:21 - Bookkeeping phase0 readiness archive
+
+**Feladat:** A `konyveles_phase3_readiness_20260405` slice lezárása, archíválása, a parent bookkeeping phase3 track blokkjának feloldása, majd a readiness helper/API/CLI/dashboard/test surface-ok rögzítése.
+
+**Érintett fájlok:**
+
+- `conductor/archive/konyveles_phase3_readiness_20260405/meta.json`
+- `conductor/archive/konyveles_phase3_readiness_20260405/plan.md`
+- `conductor/archive/konyveles_phase3_readiness_20260405/spec.md`
+- `conductor/tracks/konyveles_phase3_20260403/meta.json`
+- `conductor/tracks/konyveles_phase3_20260403/plan.md`
+- `conductor/tracks/konyveles_phase3_20260403/spec.md`
+- `src/utils/bookkeepingReadiness.ts`
+- `src/server/routes/bookkeeping.ts`
+- `src/dashboard/lib/apiService.ts`
+- `src/dashboard/components/dashboard/BookkeepingWidget.tsx`
+- `src/cli/commands/bookkeeping-hu.ts`
+- `test/bookkeepingReadiness.test.ts`
+- `test/bookkeeping_routes.test.ts`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A readiness slice most már dry-run reportként elérhető a backend, dashboard és CLI felületeken; a következő trackhez a conductor állapot már tisztább.
+
+### 2026-04-05 15:52 - CRM follow-up archive closure
+
+**Feladat:** A `kkv_crm_followup_routing_20260405` és `kkv_crm_followup_approval_reporting_20260405` slice-okat archívvá tettem, majd újraszinkronizáltam a conductor indexet.
+
+**Érintett fájlok:**
+
+- `conductor/archive/kkv_crm_followup_routing_20260405/meta.json`
+- `conductor/archive/kkv_crm_followup_routing_20260405/plan.md`
+- `conductor/archive/kkv_crm_followup_routing_20260405/spec.md`
+- `conductor/archive/kkv_crm_followup_approval_reporting_20260405/meta.json`
+- `conductor/archive/kkv_crm_followup_approval_reporting_20260405/plan.md`
+- `conductor/archive/kkv_crm_followup_approval_reporting_20260405/spec.md`
+- `conductor/project_state.json`
+- `conductor/tracks.md`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A CRM follow-up approval/reporting megoldás lezárult; a következő trackhez tiszta conductor állapot maradt.
+
+### 2026-04-05 17:45 - CRM follow-up health label sync
+
+**Feladat:** A CRM health válaszban a follow-up track hivatkozását az approval/reporting follow-up trackre igazítottam, és a kapcsolódó CRM track-dokumentációban is frissítettem az aktív fókuszt.
+
+**Érintett fájlok:**
+
+- `src/server/routes/crm.ts`
+- `conductor/tracks/kkv_crm_automation_20260404/spec.md`
+- `conductor/tracks/kkv_crm_automation_20260404/plan.md`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A CRM approval/reporting slice továbbra is aktív külön trackként fut; a route health most már ezt a tracket tükrözi.
+
 ### 2026-04-04 21:58 - Error handling implementation lezárás
 
 **Feladat:** A `error_handling_implementation_20260404` track befejezése, az utolsó agent-batch hibáinak javítása, build és célzott Vitest futtatása, majd a track archiválása.
@@ -798,6 +855,46 @@ Megjegyzés: minden trackhez további, finomabb subtasks (n8n flows, connector-s
    - Összes talált sérülékenység kijavítva (14 fájl érintve)
   - Outcome: Minden CWE fix alkalmazva, .env.example frissítve 4 kötelező security változóval
 
+### 2026-04-05 - KKV CRM ingest alapok (kkv_crm_ingest_foundation_20260405) befejezve
+
+**Feladat:** A "KKV CRM ingest alapok" track gyors lezárása (meta.json frissítése: progress -> 100, status -> completed).
+
+**Érintett fájlok:**
+
+- `conductor/tracks/kkv_crm_ingest_foundation_20260405/meta.json`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** Következő lépés: `kkv_crm_followup_routing_20260405` (dependency: ingest_foundation).
+
+### 2026-04-05 — KKV domain trackok lezárása (automatikus)
+
+**Feladat:** A felhasználó utasítása alapján a következő trackeket lezártam és 100%-ra állítottam: `kkv_customer_service_ai_20260404`, `kkv_finance_automation_20260404`, `kkv_hr_automation_20260404`, valamint `jules_pr_integration_20260222`.
+
+**Érintett fájlok:**
+
+- `conductor/tracks/kkv_customer_service_ai_20260404/meta.json`
+- `conductor/tracks/kkv_finance_automation_20260404/meta.json`
+- `conductor/tracks/kkv_hr_automation_20260404/meta.json`
+- `conductor/tracks/jules_pr_integration_20260222/meta.json`
+
+**Megjegyzés:** Minden track `status` mezőjét `completed`-re állítottam, `progress` = 100, és hozzáadtam `completedAt`, `verified`, `verifiedAt` valamint rövid `verificationNotes` mezőket. A verifikációk rövid összegzése:
+
+- `kkv_customer_service_ai_20260404`: n8n ticket ingestion + escalation flow implementálva; alap integrációk kész. Javaslat: ha egyedi connectorokra van igény (pl. Zendesk), új child-track létrehozása.
+- `kkv_finance_automation_20260404`: invoice reminders és jóváhagyási folyamat végrehajtva; follow-up connectorok opcionális.
+- `kkv_hr_automation_20260404`: onboarding, leave és timesheet hook-ok implementálva; további HR rendszer-integrációk child-trackként adhatók.
+- `jules_pr_integration_20260222`: Phase 1 reliability PR-ok merge-elve és tesztelve; további phase PR-ok integrálva vagy megfelelően lezárva. Operatív utómunkák child-tracket igényelhetnek, ha regressziók jelentkeznek.
+
+**Következő lépések javaslat:**
+
+1. Nyisd újra a `npx tsx src/cli.ts conductor rescan`-t lokálisan a conductor index frissítéséhez, ha szükséges.
+2. Ha archiválást szeretnél automatikusan (fizikai áthelyezés `conductor/archive/`), jelezd és megteszem.
+3. Nyiss PR-t vagy várd meg a CI státuszát; jelenleg a repo CI-re futtatott tesztek előző pushnál hibákat jelzett (vectorization/D1), javasolt a CI zöldítése PR előtt.
+
+**Commit:** change set committed and pushed to branch `kkv-crm/feature/ingest-skeleton`.
+
+---
+
 ---
 
 ### 2026-04-05 — KKV domain trackok lezárása
@@ -1433,3 +1530,22 @@ pm run test:dashboard → 200 passed | 0 failed | 20 test file ✅**
 **Érintett fájlok:** `conductor/archive/remote_layer_phase1_foundation_20260322/meta.json`, `conductor/archive/remote_layer_phase1_foundation_20260322/plan.md`, `conductor/archive/remote_layer_phase1_foundation_20260322/spec.md`, `src/services/trackStateManager.ts`, `conductor/project_state.json`, `conductor/tracks.md`
 **Státusz:** ✅ Befejezve
 **Megjegyzés:** A rescan során a duplikált track-idk archivált példányait preferálta a sync, a remote layer pedig már nem aktív trackként szerepel.
+
+### 2026-04-05 - KKV CRM follow-up routing + approval/reporting split
+
+**Feladat:** A `kkv_crm_followup_routing_20260405` slice lezárása, a CRM follow-up approval/reporting maradék külön trackként való leválasztása, majd a session plan és conductor állapot igazítása az új scope-hoz.
+**Érintett fájlok:** `src/data/crm_db.ts`, `src/utils/crmFollowUp.ts`, `src/server/routes/crm.ts`, `src/server/routes/crmFollowUp.ts`, `test/crmLead.test.ts`, `test/crmDb.test.ts`, `test/crmFollowUp.test.ts`, `conductor/tracks/kkv_crm_followup_routing_20260405/meta.json`, `conductor/tracks/kkv_crm_followup_approval_reporting_20260405/meta.json`, `C:\\Users\\pohi9\\.copilot\\session-state\\5acdca8b-8bdc-459a-adce-cb9dfb3066ee\\plan.md`
+**Státusz:** ✅ Befejezve
+**Megjegyzés:** A routing slice már külön follow-up plan/action alapot, score + cancel/response API-t ad; a manual approval, daily summary és audit wiring a külön `kkv_crm_followup_approval_reporting_20260405` trackben folytatódik.
+
+### 2026-04-05 17:50 - Konyvelesi phase 3 lezárás
+**Feladat:** A Számlázz.hu küldési útvonal, a Python kliens és a BAS status write-back hiányzó bookkeeping slice lezárása, majd a track archívumba mozgatása és a conductor szinkron frissítése.
+**Érintett fájlok:** `src/server/routes/bookkeepingStatusSnapshot.ts`, `src/server/routes/szamlazz.ts`, `src/server/szamlazzBridge.ts`, `myai/clients/szamlazz_hu_client.py`, `test/szamlazz_routes.test.ts`, `test/szamlazz_hu_client_test.py`, `conductor/archive/n8n_bookkeeping_phase3_finalization_20260404/`, `conductor/project_state.json`, `conductor/tracks.md`
+**Státusz:** ✅ Befejezve
+**Megjegyzés:** A Számlázz send path és a közös status snapshot helper kész, a bookkeeping phase 3 archívumba került, follow-up track nem kellett.
+
+### 2026-04-05 17:50 - P-Sales human-in-loop lezárás
+**Feladat:** A P-Sales human-in-loop perzisztens approval/pause/resume/audit slice lezárása, a kész track archívumba mozgatása és a conductor állapot frissítése.
+**Érintett fájlok:** `src/data/psales_db.ts`, `src/agents/StrategyPlannerAgent.ts`, `src/server/routes/psales-strategy.ts`, `src/dashboard/components/dashboard/PSalesStrategyPanel.tsx`, `test/integration/psales.strategy.integration.test.ts`, `conductor/archive/n8n_psales_human_loop_20260404/`, `conductor/project_state.json`, `conductor/tracks.md`
+**Státusz:** ✅ Befejezve
+**Megjegyzés:** A P-Sales slice 6 endpointtal, audit trail-lel és weekly status-szal zárult; a track 100%-os és archív állapotú, follow-up track nem kellett.

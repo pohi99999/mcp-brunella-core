@@ -4,6 +4,7 @@ import chalk from 'chalk';
 import ora from 'ora';
 
 import type { RemediationRunRecord, RemediationRunStatus } from '../core/remediationRuntime.types.js';
+import { writeLine } from '../utils/cliOutput.js';
 
 const API_BASE = process.env.BRUNELLA_API_URL || 'http://localhost:3000';
 
@@ -69,7 +70,7 @@ function printSummaryCard(summary: RemediationSummaryResponse['summary']): void 
     `  Elutasítva / hiba:${chalk.red(countFor(counts, 'rejected', 'failed'))}`,
   ];
 
-  console.log(
+  writeLine(
     boxen(lines.join('\n'), {
       padding: 1,
       borderStyle: 'round',
@@ -80,7 +81,7 @@ function printSummaryCard(summary: RemediationSummaryResponse['summary']): void 
 
 function printRunsTable(runs: RemediationRunRecord[]): void {
   if (runs.length === 0) {
-    console.log(chalk.yellow('Nincs remediation futás.'));
+    writeLine(chalk.yellow('Nincs remediation futás.'));
     return;
   }
 
@@ -119,12 +120,12 @@ export function registerRemediationCommands(program: Command): void {
         spinner.stop();
 
         if (options.json) {
-          console.log(JSON.stringify({ summary: summaryResponse.summary, runs: runsResponse.runs }, null, 2));
+          writeLine(JSON.stringify({ summary: summaryResponse.summary, runs: runsResponse.runs }, null, 2));
           return;
         }
 
         printSummaryCard(summaryResponse.summary);
-        console.log();
+        writeLine();
         printRunsTable(runsResponse.runs);
       } catch (error: unknown) {
         spinner.fail(chalk.red(error instanceof Error ? error.message : String(error)));
@@ -154,11 +155,11 @@ export function registerRemediationCommands(program: Command): void {
         spinner.stop();
 
         if (options.json) {
-          console.log(JSON.stringify(response, null, 2));
+          writeLine(JSON.stringify(response, null, 2));
           return;
         }
 
-        console.log(
+        writeLine(
           boxen(chalk.bold(`🧯 Remediation futások (${response.count})`), {
             padding: 1,
             borderStyle: 'round',

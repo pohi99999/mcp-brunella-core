@@ -11,6 +11,7 @@ import { Command } from "commander";
 import chalk from "chalk";
 import ora from "ora";
 import inquirer from "inquirer";
+import { writeLine } from '../utils/cliOutput.js';
 
 const API_BASE = process.env.BRUNELLA_API_URL || "http://localhost:3000";
 
@@ -46,14 +47,14 @@ export function registerCrawl4aiCommands(program: Command): void {
 
         if (data.available) {
           spinner.succeed(chalk.green("✅ Crawl4AI elérhető"));
-          console.log(chalk.dim(`   Python API: ${data.python_api}`));
+          writeLine(chalk.dim(`   Python API: ${data.python_api}`));
         } else {
           spinner.warn(chalk.yellow("⚠️  Crawl4AI nem elérhető"));
-          console.log(chalk.dim(`   Python API: ${data.python_api}`));
+          writeLine(chalk.dim(`   Python API: ${data.python_api}`));
           if (data.error) {
-            console.log(chalk.red(`   Hiba: ${data.error}`));
+            writeLine(chalk.red(`   Hiba: ${data.error}`));
           }
-          console.log(chalk.dim("   Indítsd el: cd myai && uvicorn server:app --port 8000"));
+          writeLine(chalk.dim("   Indítsd el: cd myai && uvicorn server:app --port 8000"));
         }
       } catch (e: unknown) {
         spinner.fail(chalk.red("Kapcsolódási hiba"));
@@ -100,20 +101,20 @@ export function registerCrawl4aiCommands(program: Command): void {
 
         if (result.success && result.data) {
           spinner.succeed(chalk.green("✅ Crawl sikeres!"));
-          console.log(chalk.blue("\n╔════════════════════════════════════╗"));
-          console.log(chalk.blue("║") + chalk.bold("  CRAWL4AI EREDMÉNY                ") + chalk.blue("║"));
-          console.log(chalk.blue("╚════════════════════════════════════╝\n"));
+          writeLine(chalk.blue("\n╔════════════════════════════════════╗"));
+          writeLine(chalk.blue("║") + chalk.bold("  CRAWL4AI EREDMÉNY                ") + chalk.blue("║"));
+          writeLine(chalk.blue("╚════════════════════════════════════╝\n"));
           if (result.data.title) {
-            console.log(chalk.cyan(`  📄 Cím: ${result.data.title}`));
+            writeLine(chalk.cyan(`  📄 Cím: ${result.data.title}`));
           }
-          console.log(chalk.cyan(`  🔗 URL: ${result.data.url || url}`));
+          writeLine(chalk.cyan(`  🔗 URL: ${result.data.url || url}`));
           const markdown = result.data.markdown || "";
-          console.log(chalk.cyan(`  📊 Méret: ${markdown.length} karakter\n`));
+          writeLine(chalk.cyan(`  📊 Méret: ${markdown.length} karakter\n`));
           // Preview: első 500 karakter
           if (markdown.length > 0) {
             const preview = markdown.substring(0, 500);
-            console.log(chalk.dim("  --- Előnézet (első 500 karakter) ---"));
-            console.log(chalk.gray(`  ${preview.replace(/\n/g, "\n  ")}...`));
+            writeLine(chalk.dim("  --- Előnézet (első 500 karakter) ---"));
+            writeLine(chalk.gray(`  ${preview.replace(/\n/g, "\n  ")}...`));
           }
         } else {
           spinner.fail(chalk.red(`Crawl hiba: ${result.error || "Ismeretlen hiba"}`));
@@ -161,7 +162,7 @@ export function registerCrawl4aiCommands(program: Command): void {
           spinner.succeed(chalk.green(`✅ Batch crawl kész! ${result.data.results.length} eredmény`));
           result.data.results.forEach((r, i) => {
             const statusColor = r.status === "success" ? chalk.green : chalk.red;
-            console.log(`  ${chalk.bold(`#${i + 1}`)} ${statusColor(r.status)} | ${r.url}`);
+            writeLine(`  ${chalk.bold(`#${i + 1}`)} ${statusColor(r.status)} | ${r.url}`);
           });
         } else {
           spinner.fail(chalk.red(`Batch hiba: ${result.error || "Ismeretlen hiba"}`));

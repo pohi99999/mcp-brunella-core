@@ -3,9 +3,10 @@ import chalk from 'chalk';
 import boxen from 'boxen';
 import ora from 'ora';
 import { agentManager } from '../../agents/AgentManager.js';
+import { writeLine } from '../../utils/cliOutput.js';
 
 export async function invoiceCommand() {
-  console.log(
+  writeLine(
     boxen(chalk.green.bold('🧾 Brunella Számla Automatizálás'), {
       padding: 1,
       margin: 1,
@@ -38,20 +39,20 @@ export async function invoiceCommand() {
 
       const res = result as any;
       if (res.success) {
-        console.log(chalk.green.bold(`
+        writeLine(chalk.green.bold(`
 ✅ ${res.message}
 `));
         
         if (res.data?.results && res.data.results.length > 0) {
-          console.log(chalk.yellow.bold('--- Feldolgozott fájlok ---'));
+          writeLine(chalk.yellow.bold('--- Feldolgozott fájlok ---'));
           res.data.results.forEach((r: any) => {
             const statusIcon = r.status === 'success' ? chalk.green('✔') : chalk.red('✘');
             const info = r.status === 'success' ? `${r.vendor} (${r.amount} HUF)` : chalk.red(r.reason);
-            console.log(`${statusIcon} ${chalk.cyan(r.filename)}: ${info}`);
+            writeLine(`${statusIcon} ${chalk.cyan(r.filename)}: ${info}`);
           });
         }
       } else {
-        console.log(chalk.red.bold('\n❌ Hiba: ') + res.message);
+        writeLine(chalk.red.bold('\n❌ Hiba: ') + res.message);
       }
     } catch (error) {
       spinner.fail('Hiba a feldolgozás során.');
@@ -60,10 +61,10 @@ export async function invoiceCommand() {
   }
 
   if (action === 'status') {
-    console.log(chalk.blue.bold('\n--- Aktuális Állapot ---'));
-    console.log(`Ügynök: ${chalk.cyan('InvoiceAutomation')}`);
-    console.log(`Célmappa: ${chalk.cyan('Google Drive / Invoice')}`);
-    console.log(`Adattábla: ${chalk.cyan(process.env.INVOICE_SPREADSHEET_ID || 'Nincs megadva')}`);
-    console.log(chalk.gray('\n(Részletes statisztika a Dashboard-on érhető el)\n'));
+    writeLine(chalk.blue.bold('\n--- Aktuális Állapot ---'));
+    writeLine(`Ügynök: ${chalk.cyan('InvoiceAutomation')}`);
+    writeLine(`Célmappa: ${chalk.cyan('Google Drive / Invoice')}`);
+    writeLine(`Adattábla: ${chalk.cyan(process.env.INVOICE_SPREADSHEET_ID || 'Nincs megadva')}`);
+    writeLine(chalk.gray('\n(Részletes statisztika a Dashboard-on érhető el)\n'));
   }
 }
