@@ -10,55 +10,34 @@
  */
 
 import { Env, TaskPayload, TaskRecord, TaskResult } from "./types.js";
+import { parseAiResponse, safeJsonParse } from './lib/aiHelpers.js';
 export { EdgeCoordinator } from "./edge-coordinator.js";
 export { DailyHealthCheckWorkflow } from "./workflows/daily-health-check.js";
 export { TaskPipelineWorkflow } from "./workflows/task-pipeline.js";
 
 // Task típus osztályozás Workers AI-val (upgraded model)
-async function classifyTask(env: Env, instruction: string): Promise<string> {
+async function classifyTask(env: Env, instruction: string): Promise<{ type: string; tokens: number }>
+{
   const model = env.DEFAULT_CODE_MODEL || "@cf/meta/llama-3.3-70b-instruct-fp8-fast";
   try {
-    const response = (await env.AI.run(
-      model as any,
-      {
-        messages: [
-          {
-            role: "system",
-            content: `You are a task classifier. Classify the following task into ONE of these categories:
-- code: Programming, debugging, code review
-- research: Information gathering, web search
-- data: Data analysis, processing
-- browser: Web automation, scraping
-- general: Everything else
+    const modelName = typeof model === 'string' ? model : String(model ?? '');
+    const aiRaw = await env.AI.run(modelName as any, {
+      messages: [{ role: 'user', content: instruction }],
+      max_tokens: 50,
+    });
 
-Respond with ONLY the category name, nothing else.`,
-          },
-          {
-            role: "user",
-            content: instruction,
-          },
-        ],
-        max_tokens: 10,
-      },
-    )) as { response: string };
-
-    return response.response?.trim().toLowerCase() || "general";
+    const { text: parsedText, tokens: tokensUsed } = parseAiResponse(aiRaw);
+    const responseText = String(parsedText ?? '').trim().toLowerCase();
+    return { type: responseText || 'general', tokens: tokensUsed || 0 };
   } catch {
-    return "general";
+    return { type: 'general', tokens: 0 };
   }
 }
 
-// Lokális BAS elérése tunnelen keresztül
-async function forwardToLocal(
-  env: Env,
-  path: string,
-  options: RequestInit = {},
-): Promise<Response> {
+// Forward requests to the local tunnel (used for backstage API proxying)
+async function forwardToLocal(env: Env, path: string, options: RequestInit = {}): Promise<Response> {
   if (!env.BAS_LOCAL_URL) {
-    return new Response(JSON.stringify({ error: "Local URL not configured" }), {
-      status: 503,
-      headers: { "Content-Type": "application/json" },
-    });
+    return new Response(JSON.stringify({ error: 'Local URL not configured' }), { status: 503, headers: { 'Content-Type': 'application/json' } });
   }
 
   try {
@@ -66,22 +45,16 @@ async function forwardToLocal(
     const response = await fetch(url, {
       ...options,
       headers: {
-        ...options.headers,
-        "X-Forwarded-From": "cloudflare-worker",
+        ...(options.headers as Record<string, string> || {}),
+        'X-Forwarded-From': 'cloudflare-worker',
       },
     });
 
     return response;
   } catch (error) {
     return new Response(
-      JSON.stringify({
-        error: "Local system unreachable",
-        details: String(error),
-      }),
-      {
-        status: 502,
-        headers: { "Content-Type": "application/json" },
-      },
+      JSON.stringify({ error: 'Local system unreachable', details: String(error) }),
+      { status: 502, headers: { 'Content-Type': 'application/json' } },
     );
   }
 }
@@ -181,28 +154,29 @@ export default {
           body.model || env.DEFAULT_CODE_MODEL || "@cf/meta/llama-3.3-70b-instruct-fp8-fast";
 
         try {
-          const aiResponse = (await env.AI.run(
-            selectedModel as any,
-            {
-              messages:
-                messages.length > 0
-                  ? messages
-                  : [
-                      {
-                        role: "user",
-                        content: prompt,
-                      },
-                    ],
-              max_tokens: 900,
-            },
-          )) as { response?: string };
+          const selectedModelName = typeof selectedModel === 'string' ? selectedModel : String(selectedModel ?? '');
+          const aiRaw = await env.AI.run(selectedModelName as any, {
+            messages:
+              messages.length > 0
+                ? messages
+                : [
+                    {
+                      role: "user",
+                      content: prompt,
+                    },
+                  ],
+            max_tokens: 900,
+          });
+
+          const { text: responseText, tokens: tokensUsed } = parseAiResponse(aiRaw);
 
           return new Response(
             JSON.stringify({
               success: true,
-              model: selectedModel,
+              model: selectedModelName,
               result: {
-                response: aiResponse?.response || "",
+                response: responseText || "",
+                tokens: tokensUsed || 0,
               },
             }),
             {
@@ -241,8 +215,13 @@ export default {
         // Task ID generálás
         const taskId = `task_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
 
-        // Task osztályozás
-        const taskType = await classifyTask(env, payload.instruction);
+        // Task osztályozás (típus + token használat)
+        const classification = await classifyTask(env, payload.instruction);
+        const taskType = classification.type;
+        // annotate payload with classification tokens for downstream consumers
+        try {
+          (payload as any).classificationTokens = classification.tokens;
+        } catch {}
 
         // D1 INSERT
         try {
@@ -277,6 +256,7 @@ export default {
               type: taskType,
               priority: "normal",
               createdAt: new Date().toISOString(),
+              classificationTokens: (payload as any).classificationTokens || 0,
             } as TaskPayload);
           } catch {
             // Queue send failed — fallback to direct local dispatch
@@ -287,7 +267,7 @@ export default {
         if (env.BAS_ANALYTICS) {
           env.BAS_ANALYTICS.writeDataPoint({
             blobs: [taskId, taskType, "edge", "submitted"],
-            doubles: [0, 0],
+            doubles: [(payload as any).classificationTokens || 0, 0],
             indexes: ["task_submit"],
           });
         }
