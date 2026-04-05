@@ -2,6 +2,7 @@
  * User Preferences Panel — Dashboard komponens felhasználói preferenciák kezeléséhez
  */
 import React, { useState, useEffect, useCallback } from "react";
+import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { useSocket } from "../../context/SocketContext";
 
@@ -24,13 +25,8 @@ interface PreferenceStats {
   top_accessed?: Array<{ key: string; access_count: number }>;
 }
 
-const MEMORY_TYPE_LABELS: Record<string, { emoji: string; label: string }> = {
-  semantic: { emoji: "📚", label: "Szemantikus" },
-  episodic: { emoji: "📖", label: "Epizodikus" },
-  procedural: { emoji: "⚙️", label: "Procedurális" },
-};
-
 export function UserPreferencesPanel() {
+  const { t } = useTranslation();
   const [preferences, setPreferences] = useState<Preference[]>([]);
   const [stats, setStats] = useState<PreferenceStats | null>(null);
   const [loading, setLoading] = useState(true);
@@ -45,6 +41,12 @@ export function UserPreferencesPanel() {
   const [newType, setNewType] = useState("semantic");
   const [newTtl, setNewTtl] = useState(0);
   const [contextText, setContextText] = useState("");
+
+  const MEMORY_TYPE_LABELS: Record<string, { emoji: string; label: string }> = {
+    semantic: { emoji: "📚", label: t("preferences.types.semantic") },
+    episodic: { emoji: "📖", label: t("preferences.types.episodic") },
+    procedural: { emoji: "⚙️", label: t("preferences.types.procedural") },
+  };
 
   const fetchPreferences = useCallback(async () => {
     setLoading(true);
@@ -162,10 +164,10 @@ export function UserPreferencesPanel() {
       <Card>
         <CardHeader className="pb-2">
           <CardTitle className="text-lg flex items-center gap-2">
-            🧠 Felhasználói Preferenciák
+            🧠 {t("preferences.title")}
             {stats && (
               <span className="ml-auto text-xs text-zinc-400">
-                Összesen: {stats.total} preferencia
+                {t("preferences.total_prefs", { count: stats.total })}
               </span>
             )}
           </CardTitle>
@@ -174,7 +176,7 @@ export function UserPreferencesPanel() {
           <div className="flex items-center gap-4 flex-wrap">
             {/* User ID input */}
             <div className="flex items-center gap-2">
-              <label className="text-xs text-zinc-400">Felhasználó:</label>
+              <label className="text-xs text-zinc-400">{t("preferences.user_label")}:</label>
               <input
                 type="text"
                 value={userId}
@@ -184,16 +186,16 @@ export function UserPreferencesPanel() {
             </div>
             {/* Típus szűrő */}
             <div className="flex items-center gap-2">
-              <label className="text-xs text-zinc-400">Típus:</label>
+              <label className="text-xs text-zinc-400">{t("preferences.type_label")}:</label>
               <select
                 value={typeFilter}
                 onChange={(e) => setTypeFilter(e.target.value)}
                 className="bg-zinc-900 border border-zinc-700 rounded px-2 py-1 text-xs text-white"
               >
-                <option value="">Összes</option>
-                <option value="semantic">📚 Szemantikus</option>
-                <option value="episodic">📖 Epizodikus</option>
-                <option value="procedural">⚙️ Procedurális</option>
+                <option value="">{t("preferences.all")}</option>
+                <option value="semantic">📚 {t("preferences.types.semantic")}</option>
+                <option value="episodic">📖 {t("preferences.types.episodic")}</option>
+                <option value="procedural">⚙️ {t("preferences.types.procedural")}</option>
               </select>
             </div>
             {/* Stats badges */}
@@ -219,25 +221,25 @@ export function UserPreferencesPanel() {
           className={`px-4 py-2 rounded text-sm font-medium transition-colors ${activeTab === "list" ? "bg-blue-600 text-white" : "bg-zinc-800 text-zinc-300 hover:bg-zinc-700"}`}
           onClick={() => setActiveTab("list")}
         >
-          📋 Lista
+          📋 {t("preferences.tabs.list")}
         </button>
         <button
           className={`px-4 py-2 rounded text-sm font-medium transition-colors ${activeTab === "add" ? "bg-blue-600 text-white" : "bg-zinc-800 text-zinc-300 hover:bg-zinc-700"}`}
           onClick={() => setActiveTab("add")}
         >
-          ➕ Új Preferencia
+          ➕ {t("preferences.tabs.add")}
         </button>
         <button
           className={`px-4 py-2 rounded text-sm font-medium transition-colors ${activeTab === "context" ? "bg-blue-600 text-white" : "bg-zinc-800 text-zinc-300 hover:bg-zinc-700"}`}
           onClick={() => { setActiveTab("context"); fetchStats(); }}
         >
-          🤖 LLM Kontextus
+          🤖 {t("preferences.tabs.context")}
         </button>
         <button
           className="ml-auto px-3 py-2 rounded text-xs bg-red-900/30 text-red-400 hover:bg-red-900/50 transition-colors"
           onClick={handlePurge}
         >
-          🗑️ Lejártak Törlése
+          🗑️ {t("preferences.purge_expired")}
         </button>
       </div>
 
@@ -246,9 +248,9 @@ export function UserPreferencesPanel() {
         <Card>
           <CardContent className="pt-4">
             {loading ? (
-              <p className="text-sm text-zinc-400">Betöltés...</p>
+              <p className="text-sm text-zinc-400">{t("preferences.loading")}</p>
             ) : preferences.length === 0 ? (
-              <p className="text-sm text-zinc-400">Nincsenek preferenciák.</p>
+              <p className="text-sm text-zinc-400">{t("preferences.no_preferences")}</p>
             ) : (
               <div className="space-y-2">
                 {preferences.map((p) => (
@@ -275,7 +277,7 @@ export function UserPreferencesPanel() {
                         {p.value}
                       </p>
                       <p className="text-[10px] text-zinc-600 mt-1">
-                        {new Date(p.updated_at).toLocaleString("hu-HU")} · {p.access_count}x hozzáférés · {p.source_agent}
+                        {new Date(p.updated_at).toLocaleString("hu-HU")} · {t("preferences.access_count", { count: p.access_count })} · {t("preferences.source_agent")}: {p.source_agent}
                       </p>
                     </div>
                     <button
@@ -297,40 +299,40 @@ export function UserPreferencesPanel() {
         <Card>
           <CardContent className="pt-4 space-y-3">
             <div>
-              <label className="text-xs text-zinc-400 block mb-1">Kulcs</label>
+              <label className="text-xs text-zinc-400 block mb-1">{t("preferences.form.key")}</label>
               <input
                 type="text"
                 value={newKey}
                 onChange={(e) => setNewKey(e.target.value)}
-                placeholder="pl. preferred_language"
+                placeholder={t("preferences.form.key_placeholder")}
                 className="w-full bg-zinc-900 border border-zinc-700 rounded px-3 py-2 text-sm text-white placeholder-zinc-500 focus:border-blue-500 focus:outline-none"
               />
             </div>
             <div>
-              <label className="text-xs text-zinc-400 block mb-1">Érték</label>
+              <label className="text-xs text-zinc-400 block mb-1">{t("preferences.form.value")}</label>
               <textarea
                 value={newValue}
                 onChange={(e) => setNewValue(e.target.value)}
-                placeholder="pl. magyar"
+                placeholder={t("preferences.form.value_placeholder")}
                 rows={3}
                 className="w-full bg-zinc-900 border border-zinc-700 rounded px-3 py-2 text-sm text-white placeholder-zinc-500 focus:border-blue-500 focus:outline-none resize-y"
               />
             </div>
             <div className="flex gap-4">
               <div>
-                <label className="text-xs text-zinc-400 block mb-1">Memória típus</label>
+                <label className="text-xs text-zinc-400 block mb-1">{t("preferences.form.memory_type")}</label>
                 <select
                   value={newType}
                   onChange={(e) => setNewType(e.target.value)}
                   className="bg-zinc-900 border border-zinc-700 rounded px-3 py-2 text-sm text-white"
                 >
-                  <option value="semantic">📚 Szemantikus</option>
-                  <option value="episodic">📖 Epizodikus</option>
-                  <option value="procedural">⚙️ Procedurális</option>
+                  <option value="semantic">📚 {t("preferences.types.semantic")}</option>
+                  <option value="episodic">📖 {t("preferences.types.episodic")}</option>
+                  <option value="procedural">⚙️ {t("preferences.types.procedural")}</option>
                 </select>
               </div>
               <div>
-                <label className="text-xs text-zinc-400 block mb-1">Lejárat (nap)</label>
+                <label className="text-xs text-zinc-400 block mb-1">{t("preferences.form.ttl_days")}</label>
                 <input
                   type="number"
                   value={newTtl}
@@ -345,7 +347,7 @@ export function UserPreferencesPanel() {
               disabled={!newKey.trim() || !newValue.trim()}
               className="px-4 py-2 bg-blue-600 text-white rounded text-sm font-medium hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              💾 Mentés
+              💾 {t("preferences.form.save")}
             </button>
           </CardContent>
         </Card>
@@ -355,11 +357,11 @@ export function UserPreferencesPanel() {
       {activeTab === "context" && (
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm">🤖 LLM Rendszer Kontextus</CardTitle>
+            <CardTitle className="text-sm">🤖 {t("preferences.context_title")}</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-xs text-zinc-500 mb-3">
-              Ez a szöveg automatikusan injektálódik az LLM hívások system prompt-jába a Bifrost Gateway-en keresztül.
+              {t("preferences.context_desc")}
             </p>
             {contextText ? (
               <pre className="bg-zinc-900 p-3 rounded text-xs text-zinc-300 whitespace-pre-wrap max-h-96 overflow-auto">
@@ -367,7 +369,7 @@ export function UserPreferencesPanel() {
               </pre>
             ) : (
               <p className="text-sm text-zinc-400">
-                Nincs kontextus — adj hozzá preferenciákat az "Új Preferencia" tabon.
+                {t("preferences.no_context")}
               </p>
             )}
           </CardContent>

@@ -179,5 +179,62 @@
     "none": "none",
     "preview_ready": "Workflow preview ready",
     "run_ready": "Workflow run complete"
+  },
+  "factory": {
+    "title": "Agent Factory",
+    "description": "Create new specialized agents without coding.",
+    "basic_info": "Basic Information",
+    "identity_desc": "Define the identity of your agent.",
+    "agent_name_label": "Agent Name (e.g. EmailWriter)",
+    "agent_name_placeholder": "Only letters, no spaces",
+    "role_label": "Role (e.g. Marketing Expert)",
+    "role_placeholder": "What does this agent do?",
+    "description_label": "Detailed Description",
+    "description_placeholder": "What is this agent used for?",
+    "capabilities": "Capabilities",
+    "capability_placeholder": "e.g. send_email",
+    "triggers": "Triggers",
+    "trigger_placeholder": "e.g. letter, message",
+    "create_button": "Create Agent",
+    "creating_button": "Birth in progress...",
+    "success_message": "Agent {{name}} has been born successfully!",
+    "error_message": "Error during birth",
+    "required_error": "Name and role are required!",
+    "remove_cap": "Remove capability",
+    "remove_trigger": "Remove trigger"
+  },
+  "preferences": {
+    "title": "User Preferences",
+    "total_prefs": "Total: {{count}} preferences",
+    "user_label": "User",
+    "type_label": "Type",
+    "all": "All",
+    "tabs": {
+      "list": "List",
+      "add": "New Preference",
+      "context": "LLM Context"
+    },
+    "purge_expired": "Purge Expired",
+    "loading": "Loading...",
+    "no_preferences": "No preferences.",
+    "access_count": "{{count}}x access",
+    "source_agent": "Source",
+    "form": {
+      "key": "Key",
+      "key_placeholder": "e.g. preferred_language",
+      "value": "Value",
+      "value_placeholder": "e.g. English",
+      "memory_type": "Memory type",
+      "ttl_days": "Expiration (days)",
+      "save": "Save"
+    },
+    "context_title": "LLM System Context",
+    "context_desc": "This text is automatically injected into LLM call system prompts via the Bifrost Gateway.",
+    "no_context": "No context — add preferences in the 'New Preference' tab.",
+    "types": {
+      "semantic": "Semantic",
+      "episodic": "Episodic",
+      "procedural": "Procedural"
+    }
   }
 }
