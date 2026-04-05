@@ -11,6 +11,7 @@ import "./main.css"
 import { ThemeProvider } from "./components/ui/theme-provider"
 import { initializeNavigation } from "./lib/navigation"
 import { LayoutProvider } from "./lib/layout/LayoutContext"
+import "./i18n/config" // i18n inicializálása
 
 initializeNavigation();
 
