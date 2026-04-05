@@ -64,6 +64,7 @@
     "playwright": "^1.56.1",
     "prettier": "^3.6.2",
     "rimraf": "^6.0.1",
+    "tar": "^7.5.13",
     "tsc-multi": "^1.1.0",
     "tsx": "^4.20.6",
     "typescript": "^5.9.3",
