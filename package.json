@@ -183,10 +183,11 @@
     "uuid": "^11.0.5",
     "zod": "^3.24.2",
     "zustand": "^5.0.11",
-    "apache-arrow": "18.1.0"
+    "apache-arrow": "18.1.0",
+    "@lancedb/lancedb": "0.23.0"
   },
   "devDependencies": {
-    "@eslint/js": "^9.21.0",
+    "@eslint/js": "9.21.0",
     "@playwright/test": "^1.50.1",
     "@tailwindcss/vite": "^4.2.1",
     "@tauri-apps/cli": "^1.6.0",
@@ -206,7 +207,7 @@
     "@vitejs/plugin-react-swc": "^4.2.3",
     "@vitest/coverage-v8": "^3.0.5",
     "autoprefixer": "^10.4.20",
-    "eslint": "^9.21.0",
+    "eslint": "9.21.0",
     "eslint-plugin-react": "^7.37.4",
     "eslint-plugin-react-hooks": "^5.1.0",
     "eslint-plugin-react-refresh": "^0.4.19",
@@ -222,5 +223,10 @@
     "typescript-eslint": "^8.24.1",
     "vite": "^6.1.0",
     "vitest": "^3.0.5"
+  },
+  "overrides": {
+    "@eslint/js": "9.21.0",
+    "eslint": "9.21.0",
+    "apache-arrow": "18.1.0"
   }
 }
