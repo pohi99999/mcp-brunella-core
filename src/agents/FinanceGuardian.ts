@@ -93,7 +93,12 @@ export class FinanceGuardian extends BaseAgent {
 
     try {
       // MASTER TRACK 2: Task 1 - Gmail PDF Download
-      if (task.toLowerCase().includes('download pdf invoice from gmail') || (context.context as any)?.taskType === 'download_invoice') {
+      // Safe extraction of taskType from context
+      const taskType = context && typeof (context as Record<string, unknown>)['context'] === 'object' && (context as Record<string, unknown>)['context'] !== null
+        ? ((context as Record<string, unknown>)['context'] as Record<string, unknown>)['taskType']
+        : undefined;
+
+      if (task.toLowerCase().includes('download pdf invoice from gmail') || taskType === 'download_invoice') {
         return await this.handleGmailDownload(context);
       }
 
@@ -215,13 +220,15 @@ export class FinanceGuardian extends BaseAgent {
    * Handle invoice processing and duplicate detection
    */
   private async handleProcessInvoice(context: AgentContext): Promise<AgentResult> {
-    const invoiceData = (context.invoiceData || context.context) as any;
-    
-    if (!invoiceData || !invoiceData.invoice_number) {
+    const invoiceDataRaw = (context && ((context as Record<string, unknown>)['invoiceData'] ?? (context as Record<string, unknown>)['context'])) as unknown;
+
+    // Validate invoice data shape
+    if (!invoiceDataRaw || typeof invoiceDataRaw !== 'object' || !((invoiceDataRaw as Record<string, unknown>)['invoice_number'])) {
       return { success: false, message: "Érvénytelen számlaadatok.", data: null };
     }
+    const invoiceData = invoiceDataRaw as Record<string, unknown>;
 
-    const isDuplicate = await invoiceStore.isDuplicate(invoiceData.invoice_number);
+    const isDuplicate = await invoiceStore.isDuplicate(String(invoiceData.invoice_number));
 
     if (isDuplicate) {
       logInfo(this.name, `Duplicate invoice ignored: ${invoiceData.invoice_number}`);
