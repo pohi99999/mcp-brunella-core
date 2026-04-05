@@ -1,17 +1,17 @@
 {
-  "lastUpdated": "2026-04-05T18:00:00.462Z",
+  "lastUpdated": "2026-04-05T22:00:00.323Z",
   "tracks": [
     {
       "id": "apify_deep_scraping_agent_20260223",
       "name": "apify_deep_scraping_agent_20260223",
-      "status": "completed",
+      "status": "archived",
       "priority": "low",
-      "progress": 100,
+      "progress": 60,
       "assignee": "Claude (Phase 1-2 Complete)",
       "tags": [],
       "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\apify_deep_scraping_agent_20260223",
-      "_isArchived": false
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\apify_deep_scraping_agent_20260223",
+      "_isArchived": true
     },
     {
       "id": "autogen_github_models_pilot_20260401",
@@ -81,7 +81,7 @@
     {
       "id": "brunella_reflection_continual_learning_20260402",
       "name": "Brunella Reflection / Continual Learning Activation",
-      "status": "completed",
+      "status": "archived",
       "priority": "high",
       "progress": 100,
       "tags": [
@@ -97,13 +97,13 @@
         "brunella_core_stabilization_20260402",
         "brunella_identity_project_maintainer_20260402"
       ],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\brunella_reflection_continual_learning_20260402",
-      "_isArchived": false
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\brunella_reflection_continual_learning_20260402",
+      "_isArchived": true
     },
     {
       "id": "brunella_zero_prompt_ephemeral_bridge_20260402",
       "name": "Brunella Zero-Prompt → Ephemeral Agent Bridge",
-      "status": "completed",
+      "status": "archived",
       "priority": "high",
       "progress": 100,
       "tags": [
@@ -120,8 +120,8 @@
         "brunella_identity_project_maintainer_20260402",
         "brunella_reflection_continual_learning_20260402"
       ],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\brunella_zero_prompt_ephemeral_bridge_20260402",
-      "_isArchived": false
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\brunella_zero_prompt_ephemeral_bridge_20260402",
+      "_isArchived": true
     },
     {
       "id": "cloudflare_dns_zone_reconciliation_20260325",
@@ -139,33 +139,38 @@
       "dependencies": [
         "cloudflare_full_optimization_20260325"
       ],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\cloudflare_dns_zone_reconciliation_20260325",
-      "_isArchived": false
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\cloudflare_dns_zone_reconciliation_20260325",
+      "_isArchived": true
     },
     {
       "id": "cloudflare_workers_migration_20260226",
       "name": "Cloudflare Workers Migration — 16 Agent Edge Orkesztrátor",
-      "status": "completed",
+      "status": "archived",
       "priority": "high",
-      "progress": 100,
+      "progress": 0,
       "created": "2026-02-26",
-      "updated": "2026-04-04",
       "tags": [],
-      "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\cloudflare_workers_migration_20260226",
-      "_isArchived": false
+      "dependencies": [
+        "Cloudflare account dd107933ac970dac857f27cee7a7ff46 (BAS_server) — MEGVAN",
+        "CLOUDFLARE_API_TOKEN — MEGVAN (.env-ben)",
+        "Browser Rendering API token — MEGVAN (siTRHomo1G_...)",
+        "wrangler CLI telepítve — ellenőrizd: npx wrangler --version",
+        "D1 binding: bas-metadata (1c4e7d00-7b09-4ddf-88b4-8df42e1123ab) — MEGVAN"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\cloudflare_workers_migration_20260226",
+      "_isArchived": true
     },
     {
       "id": "jules_pr_integration_20260222",
-      "name": "jules_pr_integration_20260222",
-      "status": "completed",
+      "name": "Jules PR Integration",
+      "status": "archived",
       "priority": "high",
       "progress": 100,
       "assignee": "Claude + Pohánka Péter",
       "tags": [],
       "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\jules_pr_integration_20260222",
-      "_isArchived": false
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\jules_pr_integration_20260222",
+      "_isArchived": true
     },
     {
       "id": "kkv_crm_automation_20260404",
@@ -190,26 +195,28 @@
     },
     {
       "id": "kkv_crm_followup_routing_20260405",
-      "name": "KKV CRM follow-up routing",
-      "status": "proposed",
+      "name": "KKV CRM follow-up es routing",
+      "status": "archived",
       "priority": "high",
-      "progress": 0,
+      "progress": 100,
       "created": "2026-04-05",
       "updated": "2026-04-05",
-      "assignee": "bas-automation-architect",
+      "assignee": "GitHub Copilot",
       "tags": [
         "kkv",
         "crm",
-        "followup",
+        "follow-up",
         "routing",
-        "n8n",
-        "orchestrator"
+        "scoring",
+        "scheduler",
+        "slack",
+        "n8n"
       ],
       "dependencies": [
         "kkv_crm_ingest_foundation_20260405"
       ],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\kkv_crm_followup_routing_20260405",
-      "_isArchived": false
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\kkv_crm_followup_routing_20260405",
+      "_isArchived": true
     },
     {
       "id": "kkv_crm_ingest_foundation_20260405",
@@ -629,14 +636,15 @@
     {
       "id": "owl_agent_coordinator_20260321",
       "name": "OWL-inspirált Multi-Agent Conflict Resolution (AgentCoordinator)",
-      "status": "proposed",
+      "status": "archived",
       "priority": "high",
-      "progress": 0,
+      "progress": 100,
       "created": "2026-03-21",
+      "completed": "2026-03-28",
       "tags": [],
       "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\owl_agent_coordinator_20260321",
-      "_isArchived": false
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\owl_agent_coordinator_20260321",
+      "_isArchived": true
     },
     {
       "id": "P-Sales20260327",
@@ -652,7 +660,7 @@
     {
       "id": "personal_assistant_windows_mvp_20260323",
       "name": "Brunella Personal Assistant — Windows MVP Foundation",
-      "status": "completed",
+      "status": "archived",
       "priority": "high",
       "progress": 100,
       "tags": [
@@ -667,13 +675,13 @@
         "cli"
       ],
       "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\personal_assistant_windows_mvp_20260323",
-      "_isArchived": false
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\personal_assistant_windows_mvp_20260323",
+      "_isArchived": true
     },
     {
       "id": "readme_bootstrap_health_fixes_20260324",
       "name": "README Bootstrap & Health Fixek",
-      "status": "completed",
+      "status": "archived",
       "priority": "high",
       "progress": 100,
       "tags": [
@@ -684,8 +692,8 @@
         "registry"
       ],
       "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\readme_bootstrap_health_fixes_20260324",
-      "_isArchived": false
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\readme_bootstrap_health_fixes_20260324",
+      "_isArchived": true
     },
     {
       "id": "remote_layer_phase8_planetary_supersystem_20260322",
@@ -731,20 +739,20 @@
     {
       "id": "robotkez_comet_upgrade_20260222",
       "name": "RobotkezV2 Comet-szintű Upgrade — Önjavító Multi-Agent Browser",
-      "status": "completed",
+      "status": "archived",
       "priority": "high",
       "progress": 100,
       "created": "2026-02-22",
       "updated": "2026-03-23",
       "tags": [],
       "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\robotkez_comet_upgrade_20260222",
-      "_isArchived": false
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\robotkez_comet_upgrade_20260222",
+      "_isArchived": true
     },
     {
       "id": "system_wide_zero_mock_20260301",
       "name": "System-Wide Zero-Mock & ReAct Upgrade",
-      "status": "completed",
+      "status": "archived",
       "priority": "high",
       "progress": 100,
       "created": "2026-03-01",
@@ -764,8 +772,8 @@
         "orchestrator_cognition_upgrade_20260320",
         "robotkezv2-full-comet-20260215"
       ],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\system_wide_zero_mock_20260301",
-      "_isArchived": false
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\system_wide_zero_mock_20260301",
+      "_isArchived": true
     },
     {
       "id": "technical_debt_cleanup_20260404",
@@ -997,18 +1005,6 @@
       "_isArchived": true
     },
     {
-      "id": "apify_deep_scraping_agent_20260223",
-      "name": "apify_deep_scraping_agent_20260223",
-      "status": "archived",
-      "priority": "low",
-      "progress": 60,
-      "assignee": "Claude (Phase 1-2 Complete)",
-      "tags": [],
-      "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\apify_deep_scraping_agent_20260223",
-      "_isArchived": true
-    },
-    {
       "id": "basic-test-task-structure-20260219",
       "name": "basic-test-task-structure-20260219",
       "status": "archived",
@@ -1157,51 +1153,6 @@
       ],
       "dependencies": [],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\brunella_function_matrix_20260325",
-      "_isArchived": true
-    },
-    {
-      "id": "brunella_reflection_continual_learning_20260402",
-      "name": "Brunella Reflection / Continual Learning Activation",
-      "status": "archived",
-      "priority": "high",
-      "progress": 100,
-      "tags": [
-        "brunella",
-        "reflection",
-        "continual-learning",
-        "memory",
-        "learning-loop",
-        "golden-dataset",
-        "self-improvement"
-      ],
-      "dependencies": [
-        "brunella_core_stabilization_20260402",
-        "brunella_identity_project_maintainer_20260402"
-      ],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\brunella_reflection_continual_learning_20260402",
-      "_isArchived": true
-    },
-    {
-      "id": "brunella_zero_prompt_ephemeral_bridge_20260402",
-      "name": "Brunella Zero-Prompt → Ephemeral Agent Bridge",
-      "status": "archived",
-      "priority": "high",
-      "progress": 100,
-      "tags": [
-        "brunella",
-        "zero-prompt",
-        "ephemeral-agents",
-        "policy",
-        "autonomy",
-        "agent-spawn",
-        "proactive"
-      ],
-      "dependencies": [
-        "brunella_core_stabilization_20260402",
-        "brunella_identity_project_maintainer_20260402",
-        "brunella_reflection_continual_learning_20260402"
-      ],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\brunella_zero_prompt_ephemeral_bridge_20260402",
       "_isArchived": true
     },
     {
@@ -1462,25 +1413,6 @@
       "_isArchived": true
     },
     {
-      "id": "cloudflare_dns_zone_reconciliation_20260325",
-      "name": "Cloudflare DNS Zone Reconciliation for Custom Domains",
-      "status": "archived",
-      "priority": "high",
-      "progress": 100,
-      "tags": [
-        "cloudflare",
-        "dns",
-        "domain",
-        "tunnel",
-        "ops"
-      ],
-      "dependencies": [
-        "cloudflare_full_optimization_20260325"
-      ],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\cloudflare_dns_zone_reconciliation_20260325",
-      "_isArchived": true
-    },
-    {
       "id": "cloudflare_edge_agents_network_20260215",
       "name": "Cloudflare Edge Agents Network (CEAN)",
       "status": "archived",
@@ -1618,24 +1550,6 @@
       "tags": [],
       "dependencies": [],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\cloudflare_workers_audit_20260221",
-      "_isArchived": true
-    },
-    {
-      "id": "cloudflare_workers_migration_20260226",
-      "name": "Cloudflare Workers Migration — 16 Agent Edge Orkesztrátor",
-      "status": "archived",
-      "priority": "high",
-      "progress": 0,
-      "created": "2026-02-26",
-      "tags": [],
-      "dependencies": [
-        "Cloudflare account dd107933ac970dac857f27cee7a7ff46 (BAS_server) — MEGVAN",
-        "CLOUDFLARE_API_TOKEN — MEGVAN (.env-ben)",
-        "Browser Rendering API token — MEGVAN (siTRHomo1G_...)",
-        "wrangler CLI telepítve — ellenőrizd: npx wrangler --version",
-        "D1 binding: bas-metadata (1c4e7d00-7b09-4ddf-88b4-8df42e1123ab) — MEGVAN"
-      ],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\cloudflare_workers_migration_20260226",
       "_isArchived": true
     },
     {
@@ -2208,7 +2122,7 @@
         "agent"
       ],
       "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\financial-auditor-agent-20260214",
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\onboarding-knowledge-manager-20260214",
       "_isArchived": true
     },
     {
@@ -2579,18 +2493,6 @@
       "_isArchived": true
     },
     {
-      "id": "jules_pr_integration_20260222",
-      "name": "Jules PR Integration",
-      "status": "archived",
-      "priority": "high",
-      "progress": 100,
-      "assignee": "Claude + Pohánka Péter",
-      "tags": [],
-      "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\jules_pr_integration_20260222",
-      "_isArchived": true
-    },
-    {
       "id": "kkv_crm_followup_approval_reporting_20260405",
       "name": "KKV CRM follow-up approval es reporting",
       "status": "archived",
@@ -2611,31 +2513,6 @@
         "kkv_crm_followup_routing_20260405"
       ],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\kkv_crm_followup_approval_reporting_20260405",
-      "_isArchived": true
-    },
-    {
-      "id": "kkv_crm_followup_routing_20260405",
-      "name": "KKV CRM follow-up es routing",
-      "status": "archived",
-      "priority": "high",
-      "progress": 100,
-      "created": "2026-04-05",
-      "updated": "2026-04-05",
-      "assignee": "GitHub Copilot",
-      "tags": [
-        "kkv",
-        "crm",
-        "follow-up",
-        "routing",
-        "scoring",
-        "scheduler",
-        "slack",
-        "n8n"
-      ],
-      "dependencies": [
-        "kkv_crm_ingest_foundation_20260405"
-      ],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\kkv_crm_followup_routing_20260405",
       "_isArchived": true
     },
     {
@@ -3091,23 +2968,6 @@
       "_isArchived": true
     },
     {
-      "id": "financial-auditor-agent-20260214",
-      "name": "Data Flywheel Logikája",
-      "status": "archived",
-      "priority": "high",
-      "progress": 100,
-      "created": "2026-02-14T00:00:00Z",
-      "updated": "2026-02-21T14:20:00Z",
-      "tags": [
-        "financial",
-        "auditor",
-        "agent"
-      ],
-      "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\onboarding-knowledge-manager-20260214",
-      "_isArchived": true
-    },
-    {
       "id": "orchestrator_chat_upgrade_20260320",
       "name": "Universal Orchestrator Chat Upgrade (Dashboard + CLI)",
       "status": "archived",
@@ -3189,19 +3049,6 @@
       "_isArchived": true
     },
     {
-      "id": "owl_agent_coordinator_20260321",
-      "name": "OWL-inspirált Multi-Agent Conflict Resolution (AgentCoordinator)",
-      "status": "archived",
-      "priority": "high",
-      "progress": 100,
-      "created": "2026-03-21",
-      "completed": "2026-03-28",
-      "tags": [],
-      "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\owl_agent_coordinator_20260321",
-      "_isArchived": true
-    },
-    {
       "id": "paios_model_selector_ui_20260223",
       "name": "paios_model_selector_ui_20260223",
       "status": "archived",
@@ -3250,27 +3097,6 @@
       "_isArchived": true
     },
     {
-      "id": "personal_assistant_windows_mvp_20260323",
-      "name": "Brunella Personal Assistant — Windows MVP Foundation",
-      "status": "archived",
-      "priority": "high",
-      "progress": 100,
-      "tags": [
-        "assistant",
-        "windows",
-        "voice",
-        "graphrag",
-        "memory",
-        "robotkez",
-        "tauri",
-        "dashboard",
-        "cli"
-      ],
-      "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\personal_assistant_windows_mvp_20260323",
-      "_isArchived": true
-    },
-    {
       "id": "phoenix_protocol_v2_20260205",
       "name": "Phoenix Protocol v2 - Öngyógyító Rendszer",
       "status": "archived",
@@ -3305,23 +3131,6 @@
       ],
       "dependencies": [],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\precommit_hook_optimization_20260325",
-      "_isArchived": true
-    },
-    {
-      "id": "readme_bootstrap_health_fixes_20260324",
-      "name": "README Bootstrap & Health Fixek",
-      "status": "archived",
-      "priority": "high",
-      "progress": 100,
-      "tags": [
-        "bootstrap",
-        "smoke",
-        "health",
-        "webhook",
-        "registry"
-      ],
-      "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\readme_bootstrap_health_fixes_20260324",
       "_isArchived": true
     },
     {
@@ -3566,19 +3375,6 @@
       "_isArchived": true
     },
     {
-      "id": "robotkez_comet_upgrade_20260222",
-      "name": "RobotkezV2 Comet-szintű Upgrade — Önjavító Multi-Agent Browser",
-      "status": "archived",
-      "priority": "high",
-      "progress": 100,
-      "created": "2026-02-22",
-      "updated": "2026-03-23",
-      "tags": [],
-      "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\robotkez_comet_upgrade_20260222",
-      "_isArchived": true
-    },
-    {
       "id": "robotkez_n8n_sandbox_edzesterv",
       "name": "Robotkéz n8n Sandbox és Edzésterv",
       "status": "archived",
@@ -3749,32 +3545,6 @@
       ],
       "dependencies": [],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\system_audit_epp_v2_compliance_20260331",
-      "_isArchived": true
-    },
-    {
-      "id": "system_wide_zero_mock_20260301",
-      "name": "System-Wide Zero-Mock & ReAct Upgrade",
-      "status": "archived",
-      "priority": "high",
-      "progress": 100,
-      "created": "2026-03-01",
-      "updated": "2026-04-01T00:00:00Z",
-      "completed": "2026-03-01",
-      "assignee": "Copilot",
-      "tags": [
-        "zero-mock",
-        "react",
-        "tool-calling",
-        "orchestrator",
-        "developer-agent",
-        "evaluator-agent",
-        "robotkez"
-      ],
-      "dependencies": [
-        "orchestrator_cognition_upgrade_20260320",
-        "robotkezv2-full-comet-20260215"
-      ],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\system_wide_zero_mock_20260301",
       "_isArchived": true
     },
     {
@@ -4020,10 +3790,10 @@
     }
   ],
   "stats": {
-    "total": 220,
+    "total": 207,
     "active": 10,
-    "completed": 24,
-    "archived": 177,
-    "proposed": 8
+    "completed": 15,
+    "archived": 176,
+    "proposed": 6
   }
 }

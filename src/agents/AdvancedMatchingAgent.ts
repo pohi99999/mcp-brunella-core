@@ -13,12 +13,13 @@ export class AdvancedMatchingAgent extends BaseAgent {
   capabilities = ['smart-reconciliation', 'partial-payment-split', 'fx-recalculation'];
 
   async executeTask(context: AgentContext): Promise<AgentResult> {
-    const { task, payload } = context as any;
+    const task = typeof context?.task === 'string' ? context.task : '';
     logInfo(this.name, `Matching financial records: ${task}`);
 
-    const bankEntries = payload?.bankEntries || [];
-    const openInvoices = payload?.openInvoices || [];
-    const threshold = payload?.confidenceThreshold || 0.8;
+    const payload = context?.payload ?? {};
+    const bankEntries = Array.isArray(payload.bankEntries) ? payload.bankEntries as Array<Record<string, unknown>> : [];
+    const openInvoices = Array.isArray(payload.openInvoices) ? payload.openInvoices as Array<Record<string, unknown>> : [];
+    const threshold = typeof payload.confidenceThreshold === 'number' ? payload.confidenceThreshold : 0.8;
 
     if (bankEntries.length === 0 || openInvoices.length === 0) {
       return { 
@@ -28,28 +29,55 @@ export class AdvancedMatchingAgent extends BaseAgent {
       };
     }
 
-    const matched: any[] = [];
+    const matched: Array<Record<string, unknown>> = [];
     const unmatchedBank = [...bankEntries];
     const unmatchedInvoices = [...openInvoices];
 
     try {
       // 1. Exact Amount & Reference Match (High Confidence)
+      // Helper to safely extract numeric amount and string identifiers
+      const getAmount = (obj: Record<string, unknown> | undefined): number => {
+        if (!obj) return 0;
+        const a = obj['amount'];
+        if (typeof a === 'number') return a;
+        if (typeof a === 'string') return parseFloat(a || '0') || 0;
+        return 0;
+      };
+
+      const getId = (obj: Record<string, unknown> | undefined): string => {
+        if (!obj) return '';
+        const id = obj['id'];
+        return typeof id === 'string' ? id : String(id ?? '');
+      };
+
+      const getReference = (obj: Record<string, unknown> | undefined): string => {
+        if (!obj) return '';
+        const r = obj['reference'];
+        return typeof r === 'string' ? r : '';
+      };
+
       for (let i = unmatchedBank.length - 1; i >= 0; i--) {
         const bank = unmatchedBank[i];
-        const matchIndex = unmatchedInvoices.findIndex(inv => 
-          Math.abs(inv.amount - bank.amount) < 0.01 && 
-          (bank.reference?.includes(inv.id) || inv.id.includes(bank.reference || 'NOMATCH'))
-        );
+        const bankAmount = getAmount(bank as Record<string, unknown>);
+        const bankRef = getReference(bank as Record<string, unknown>);
+
+        const matchIndex = unmatchedInvoices.findIndex(inv => {
+          const invAmount = getAmount(inv as Record<string, unknown>);
+          const invId = getId(inv as Record<string, unknown>);
+          const amountMatch = Math.abs(invAmount - bankAmount) < 0.01;
+          const refMatch = bankRef && invId ? (bankRef.includes(invId) || invId.includes(bankRef)) : false;
+          return amountMatch && refMatch;
+        });
 
         if (matchIndex !== -1) {
           const invoice = unmatchedInvoices.splice(matchIndex, 1)[0];
           unmatchedBank.splice(i, 1);
           matched.push({
-            bank_id: bank.id,
-            invoice_id: invoice.id,
-            amount: bank.amount,
+            bank_id: getId(bank as Record<string, unknown>),
+            invoice_id: getId(invoice as Record<string, unknown>),
+            amount: bankAmount,
             method: 'exact_amount_reference',
-            confidence: 1.0
+            confidence: 1.0,
           });
         }
       }
@@ -57,19 +85,20 @@ export class AdvancedMatchingAgent extends BaseAgent {
       // 2. Amount-only Match (Medium Confidence - multiple invoices might have same amount)
       for (let i = unmatchedBank.length - 1; i >= 0; i--) {
         const bank = unmatchedBank[i];
-        const potentialMatches = unmatchedInvoices.filter(inv => Math.abs(inv.amount - bank.amount) < 0.01);
-        
+        const bankAmount = getAmount(bank as Record<string, unknown>);
+        const potentialMatches = unmatchedInvoices.filter(inv => Math.abs(getAmount(inv as Record<string, unknown>) - bankAmount) < 0.01);
+
         if (potentialMatches.length === 1) {
           const invoice = potentialMatches[0];
           const invIdx = unmatchedInvoices.indexOf(invoice);
           unmatchedInvoices.splice(invIdx, 1);
           unmatchedBank.splice(i, 1);
           matched.push({
-            bank_id: bank.id,
-            invoice_id: invoice.id,
-            amount: bank.amount,
+            bank_id: getId(bank as Record<string, unknown>),
+            invoice_id: getId(invoice as Record<string, unknown>),
+            amount: bankAmount,
             method: 'amount_only',
-            confidence: 0.85
+            confidence: 0.85,
           });
         }
       }

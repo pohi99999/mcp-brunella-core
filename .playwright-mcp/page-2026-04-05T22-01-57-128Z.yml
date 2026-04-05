@@ -1,0 +1,97 @@
+- generic [ref=e1]:
+  - generic [ref=e17]:
+    - generic [ref=e19]:
+      - generic [ref=e20]:
+        - button "View all sessions" [ref=e23] [cursor=pointer]:
+          - img
+        - button "Untitled session" [ref=e25] [cursor=pointer]
+      - generic [ref=e27]:
+        - button "500 credits" [ref=e28] [cursor=pointer]
+        - button "Quests" [ref=e29] [cursor=pointer]
+        - button "Upgrade" [ref=e30] [cursor=pointer]
+        - button [ref=e31] [cursor=pointer]:
+          - img
+        - button "Help" [ref=e32] [cursor=pointer]:
+          - img
+    - generic [ref=e37]:
+      - generic [ref=e40]:
+        - generic [ref=e41]:
+          - button [ref=e42] [cursor=pointer]:
+            - generic [ref=e43]: Untitled Session
+            - img [ref=e45]
+          - generic [ref=e48]: Select where your generations will be saved.
+        - button [ref=e49] [cursor=pointer]:
+          - generic [ref=e50]:
+            - img [ref=e51]
+            - generic [ref=e53]: Sessions
+          - generic [ref=e54]: Change folder
+      - dialog "Tools Settings" [active] [ref=e55]:
+        - generic [ref=e71]:
+          - generic [ref=e72]:
+            - tablist "Apps categories" [ref=e74]:
+              - tab "For you" [selected] [ref=e75] [cursor=pointer]:
+                - generic [ref=e76]: For you
+              - tab "Image" [ref=e77] [cursor=pointer]:
+                - generic [ref=e78]: Image
+              - tab "Video" [ref=e79] [cursor=pointer]:
+                - generic [ref=e80]: Video
+              - tab "Audio" [ref=e81] [cursor=pointer]:
+                - generic [ref=e82]: Audio
+              - tab "Models" [ref=e83] [cursor=pointer]:
+                - generic [ref=e84]: Models
+              - tab "Collections" [ref=e85] [cursor=pointer]:
+                - generic [ref=e86]: Collections
+            - button "Scroll tabs left":
+              - img
+            - button "Scroll tabs right":
+              - img
+          - tabpanel "For you" [ref=e87]:
+            - generic [ref=e88]:
+              - heading "Featured Apps" [level=3] [ref=e89]
+              - generic [ref=e90]:
+                - button "Multi-Shot Video" [ref=e91] [cursor=pointer]:
+                  - img [ref=e94]
+                  - generic [ref=e98]:
+                    - paragraph [ref=e99]: Multi-Shot Video
+                    - paragraph [ref=e100]: Generate multi-shot videos from a single prompt.
+                - button "Product Reshoot" [ref=e101] [cursor=pointer]:
+                  - img [ref=e104]
+                  - generic [ref=e109]:
+                    - paragraph [ref=e110]: Product Reshoot
+                    - paragraph [ref=e111]: Instantly change the setting, lighting, or the angle of your product.
+                - button "Expand Image" [ref=e112] [cursor=pointer]:
+                  - img [ref=e115]
+                  - generic [ref=e120]:
+                    - paragraph [ref=e121]: Expand Image
+                    - paragraph [ref=e122]: Change your image's aspect ratio.
+                - button "Remove from Video" [ref=e123] [cursor=pointer]:
+                  - img [ref=e126]
+                  - generic [ref=e130]:
+                    - paragraph [ref=e131]: Remove from Video
+                    - paragraph [ref=e132]: Remove objects without reshooting.
+                - button "Stylize Image" [ref=e133] [cursor=pointer]:
+                  - img [ref=e136]
+                  - generic [ref=e141]:
+                    - paragraph [ref=e142]: Stylize Image
+                    - paragraph [ref=e143]: Apply artistic styles to your image.
+                - button "Vary Image" [ref=e144] [cursor=pointer]:
+                  - img [ref=e147]
+                  - generic [ref=e152]:
+                    - paragraph [ref=e153]: Vary Image
+                    - paragraph [ref=e154]: Change specific elements of your image.
+                - button "Upscale Video" [ref=e155] [cursor=pointer]:
+                  - img [ref=e158]
+                  - generic [ref=e162]:
+                    - paragraph [ref=e163]: Upscale Video
+                    - paragraph [ref=e164]: Upscale video with Topaz AI.
+                - button "Edit Video" [ref=e165] [cursor=pointer]:
+                  - img [ref=e168]
+                  - generic [ref=e172]:
+                    - paragraph [ref=e173]: Edit Video
+                    - paragraph [ref=e174]: Swap backgrounds, lighting, angles - all without reshooting.
+                - button "Performance Capture with Act-Two" [ref=e175] [cursor=pointer]:
+                  - img [ref=e178]
+                  - generic [ref=e182]:
+                    - paragraph [ref=e183]: Performance Capture with Act-Two
+                    - paragraph [ref=e184]: Animate characters using driving performance videos.
+  - iframe

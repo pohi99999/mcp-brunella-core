@@ -11,7 +11,11 @@ export class AnomalyDetectionAgent extends BaseAgent {
   capabilities = ['anomaly-detection', 'duplicate-invoice-guard', 'outlier-detection'];
 
   async executeTask(context: AgentContext): Promise<AgentResult> {
-    const { task, payload } = context as any;
+    // Safe extraction from potentially untyped context
+    const task = typeof (context && (context as Record<string, unknown>)['task']) === 'string'
+      ? (context as Record<string, unknown>)['task'] as string
+      : '';
+    const payload = (context && (context as Record<string, unknown>)['payload']) ?? {};
     logInfo(this.name, `Monitoring anomalies: ${task}`);
 
     return {

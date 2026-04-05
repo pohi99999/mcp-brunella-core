@@ -23,6 +23,8 @@ interface QueueEnv {
   FAST_MODEL: string;
 }
 
+import { parseAiResponse, extractEmbedding, safeJsonParse } from './utils/aiHelpers.js';
+
 export interface TaskMessage {
   taskId: string;
   instruction: string;
@@ -94,7 +96,8 @@ async function processTask(
   const model = selectModel(env, task);
 
   try {
-    const response = (await env.AI.run(model as any, {
+    const modelName = typeof model === 'string' ? model : String(model ?? '');
+    const aiRaw = await env.AI.run(modelName as any, {
       messages: [
         {
           role: "system",
@@ -106,9 +109,11 @@ async function processTask(
         },
       ],
       max_tokens: 2048,
-    })) as { response: string; usage?: { total_tokens?: number } };
+    });
 
     const durationMs = Date.now() - startTime;
+
+    const { text: responseText, tokens: tokensUsed } = parseAiResponse(aiRaw);
 
     // Update D1 status
     await env.D1_METADATA.prepare(
@@ -116,9 +121,9 @@ async function processTask(
     )
       .bind(
         Date.now(),
-        model,
+        modelName,
         durationMs,
-        response.usage?.total_tokens || 0,
+        tokensUsed,
         task.taskId,
       )
       .run()
@@ -127,10 +132,10 @@ async function processTask(
     return {
       taskId: task.taskId,
       status: "completed",
-      result: response.response,
-      model,
+      result: responseText,
+      model: modelName,
       durationMs,
-      tokensUsed: response.usage?.total_tokens,
+      tokensUsed,
       processedAt: new Date().toISOString(),
     };
   } catch (error) {
@@ -139,23 +144,24 @@ async function processTask(
     // Try fallback model
     if (model !== env.FALLBACK_CODE_MODEL) {
       try {
-        const fallbackResponse = (await env.AI.run(
-          env.FALLBACK_CODE_MODEL as any,
-          {
-            messages: [
-              { role: "system", content: `Task type: ${task.type}` },
-              { role: "user", content: task.instruction },
-            ],
-            max_tokens: 1024,
-          },
-        )) as { response: string };
+        const fallbackModelName = typeof env.FALLBACK_CODE_MODEL === 'string' ? env.FALLBACK_CODE_MODEL : String(env.FALLBACK_CODE_MODEL ?? '');
+        const fallbackAiRaw = await env.AI.run(fallbackModelName as any, {
+          messages: [
+            { role: "system", content: `Task type: ${task.type}` },
+            { role: "user", content: task.instruction },
+          ],
+          max_tokens: 1024,
+        });
+
+        const { text: fallbackRespText, tokens: fallbackTokens } = parseAiResponse(fallbackAiRaw);
 
         return {
           taskId: task.taskId,
           status: "completed",
-          result: fallbackResponse.response,
-          model: env.FALLBACK_CODE_MODEL,
+          result: fallbackRespText,
+          model: fallbackModelName,
           durationMs: Date.now() - startTime,
+          tokensUsed: fallbackTokens || 0,
           processedAt: new Date().toISOString(),
         };
       } catch {

@@ -1,0 +1,937 @@
+- main [ref=e2]:
+  - generic [ref=e4]:
+    - link "Skip to content" [ref=e5] [cursor=pointer]:
+      - /url: "#content"
+    - navigation [ref=e7]:
+      - list [ref=e8]:
+        - listitem [ref=e9]:
+          - link "ElevenLabs" [ref=e10] [cursor=pointer]:
+            - /url: /
+            - img [ref=e11]
+        - listitem [ref=e15]:
+          - list [ref=e16]:
+            - listitem [ref=e17]:
+              - button "ElevenCreative" [ref=e18] [cursor=pointer]
+            - listitem [ref=e19]:
+              - button "ElevenAgents" [ref=e20] [cursor=pointer]
+            - listitem [ref=e21]:
+              - button "ElevenAPI" [ref=e22] [cursor=pointer]
+            - listitem [ref=e23]:
+              - button "Resources" [ref=e24] [cursor=pointer]:
+                - generic [ref=e25]: Resources
+            - listitem [ref=e26]:
+              - link "Enterprise" [ref=e27] [cursor=pointer]:
+                - /url: /enterprise
+                - generic [ref=e28]: Enterprise
+            - listitem [ref=e29]:
+              - link "Pricing" [ref=e30] [cursor=pointer]:
+                - /url: /pricing
+                - generic [ref=e31]: Pricing
+    - generic [ref=e34]:
+      - link "Log in" [ref=e35] [cursor=pointer]:
+        - /url: /app/sign-in
+      - link "Sign up" [ref=e36] [cursor=pointer]:
+        - /url: /app/sign-up
+  - generic [ref=e42]:
+    - generic [ref=e48]:
+      - generic [ref=e49]:
+        - heading "Bringing technology to life" [level=1] [ref=e50]:
+          - text: Bringing
+          - generic [ref=e51]: technology to life
+        - generic [ref=e53]:
+          - link "Sign up" [ref=e54] [cursor=pointer]:
+            - /url: /app/sign-up
+          - link "Contact sales" [ref=e55] [cursor=pointer]:
+            - /url: /contact-sales
+      - paragraph [ref=e57]: Powering the best enterprises, creators, and developers. From ElevenAgents for customer experience, ElevenCreative for content creation, to the leading AI voice generator.
+    - generic [ref=e66]:
+      - tablist [ref=e72]:
+        - tab "ElevenCreative" [selected] [ref=e73] [cursor=pointer]:
+          - generic [ref=e78]: ElevenCreative
+        - tab "ElevenAgents" [ref=e80] [cursor=pointer]:
+          - generic [ref=e85]: ElevenAgents
+        - tab "ElevenAPI" [ref=e87] [cursor=pointer]:
+          - generic [ref=e92]: ElevenAPI
+      - tabpanel "ElevenCreative" [ref=e94]:
+        - generic [ref=e96]:
+          - tablist [ref=e101]:
+            - tab "Text to Speech" [selected] [ref=e102] [cursor=pointer]:
+              - generic [ref=e105]: Text to Speech
+            - tab "Music" [ref=e107] [cursor=pointer]:
+              - generic [ref=e110]: Music
+            - tab "Speech to Text" [ref=e112] [cursor=pointer]:
+              - generic [ref=e115]: Speech to Text
+            - tab "Voice Cloning" [ref=e117] [cursor=pointer]:
+              - generic [ref=e120]: Voice Cloning
+          - tabpanel "Text to Speech" [ref=e122]:
+            - generic [ref=e123]:
+              - paragraph [ref=e124]: Text to Speech
+              - paragraph [ref=e125]: Transform text into lifelike speech across 70+ languages
+            - generic [ref=e130]:
+              - generic [ref=e131]:
+                - radiogroup "Voice" [ref=e132]:
+                  - generic [ref=e133]:
+                    - generic [ref=e134] [cursor=pointer]:
+                      - radio "Spuds Oxley" [checked] [ref=e136]
+                      - generic [ref=e137]:
+                        - img [ref=e141]
+                        - generic [ref=e144]: Spuds Oxley
+                    - button "Preview" [ref=e145] [cursor=pointer]:
+                      - img [ref=e146]
+                  - generic [ref=e149] [cursor=pointer]:
+                    - radio "James Husky Storyteller" [ref=e151]
+                    - generic [ref=e155]:
+                      - generic [ref=e156]: James
+                      - generic [ref=e157]: Husky Storyteller
+                  - generic [ref=e159] [cursor=pointer]:
+                    - radio "Cassidy Crisp Podcaster" [ref=e161]
+                    - generic [ref=e165]:
+                      - generic [ref=e166]: Cassidy
+                      - generic [ref=e167]: Crisp Podcaster
+                  - generic [ref=e169] [cursor=pointer]:
+                    - radio "Hope Social Media" [ref=e171]
+                    - generic [ref=e175]:
+                      - generic [ref=e176]: Hope
+                      - generic [ref=e177]: Social Media
+                  - generic [ref=e179] [cursor=pointer]:
+                    - radio "Michael C. Vincent Suspenseful Storyteller" [ref=e181]
+                    - generic [ref=e185]:
+                      - generic [ref=e186]: Michael C. Vincent
+                      - generic [ref=e187]: Suspenseful Storyteller
+                  - generic [ref=e189] [cursor=pointer]:
+                    - radio "Christopher British Storyteller" [ref=e191]
+                    - generic [ref=e195]:
+                      - generic [ref=e196]: Christopher
+                      - generic [ref=e197]: British Storyteller
+                  - generic [ref=e199] [cursor=pointer]:
+                    - radio "Adam Dark Storyteller" [ref=e201]
+                    - generic [ref=e205]:
+                      - generic [ref=e206]: Adam
+                      - generic [ref=e207]: Dark Storyteller
+                  - generic [ref=e209] [cursor=pointer]:
+                    - radio "John Doe Gravely Storyteller" [ref=e211]
+                    - generic [ref=e215]:
+                      - generic [ref=e216]: John Doe
+                      - generic [ref=e217]: Gravely Storyteller
+                  - generic [ref=e219] [cursor=pointer]:
+                    - radio "Mark Friendly Companion" [ref=e221]
+                    - generic [ref=e225]:
+                      - generic [ref=e226]: Mark
+                      - generic [ref=e227]: Friendly Companion
+                  - generic [ref=e229] [cursor=pointer]:
+                    - radio "Peter Confident Storyteller" [ref=e231]
+                    - generic [ref=e235]:
+                      - generic [ref=e236]: Peter
+                      - generic [ref=e237]: Confident Storyteller
+                  - generic [ref=e239] [cursor=pointer]:
+                    - radio "Arabella Romance Storyteller" [ref=e241]
+                    - generic [ref=e245]:
+                      - generic [ref=e246]: Arabella
+                      - generic [ref=e247]: Romance Storyteller
+                  - generic [ref=e249] [cursor=pointer]:
+                    - radio "Jessica Anne Bogart Romance Storyteller" [ref=e251]
+                    - generic [ref=e255]:
+                      - generic [ref=e256]: Jessica Anne Bogart
+                      - generic [ref=e257]: Romance Storyteller
+                  - generic [ref=e259] [cursor=pointer]:
+                    - radio "Ian Cartwell Mystery Storyteller" [ref=e261]
+                    - generic [ref=e265]:
+                      - generic [ref=e266]: Ian Cartwell
+                      - generic [ref=e267]: Mystery Storyteller
+                  - generic [ref=e269] [cursor=pointer]:
+                    - radio "Alex Social Media" [ref=e271]
+                    - generic [ref=e275]:
+                      - generic [ref=e276]: Alex
+                      - generic [ref=e277]: Social Media
+                  - generic [ref=e279] [cursor=pointer]:
+                    - radio "Declan Sage Authoritative Storyteller" [ref=e281]
+                    - generic [ref=e285]:
+                      - generic [ref=e286]: Declan Sage
+                      - generic [ref=e287]: Authoritative Storyteller
+                  - generic [ref=e289] [cursor=pointer]:
+                    - radio "Bradford Articulated Storyteller" [ref=e291]
+                    - generic [ref=e295]:
+                      - generic [ref=e296]: Bradford
+                      - generic [ref=e297]: Articulated Storyteller
+                  - generic [ref=e299] [cursor=pointer]:
+                    - radio "David Castlemore Newsreader" [ref=e301]
+                    - generic [ref=e305]:
+                      - generic [ref=e306]: David Castlemore
+                      - generic [ref=e307]: Newsreader
+                  - generic [ref=e309] [cursor=pointer]:
+                    - radio "Frederick Surrey Science Storyteller" [ref=e311]
+                    - generic [ref=e315]:
+                      - generic [ref=e316]: Frederick Surrey
+                      - generic [ref=e317]: Science Storyteller
+                  - generic [ref=e319] [cursor=pointer]:
+                    - radio "Jon Support Agent" [ref=e321]
+                    - generic [ref=e325]:
+                      - generic [ref=e326]: Jon
+                      - generic [ref=e327]: Support Agent
+                - generic [ref=e328]:
+                  - link "Explore 10,000+ voices" [ref=e329] [cursor=pointer]:
+                    - /url: /app/voice-library
+                  - button "Previous" [disabled] [ref=e330]:
+                    - img [ref=e331]
+                  - button "Next" [ref=e333] [cursor=pointer]:
+                    - img [ref=e334]
+              - generic [ref=e336]:
+                - generic [ref=e337]:
+                  - paragraph [ref=e338]:
+                    - generic [ref=e339]: Enter your own text
+                  - generic [ref=e341]:
+                    - generic [ref=e342]: In the ancient land of Eldoria, where skies shimmered and forests, whispered secrets to the wind, lived a dragon named Zephyros. [sarcastically] Not the “burn it all down” kind... [giggles] but he was gentle, wise, with eyes like old stars. [whispers] Even the birds fell silent when he passed.
+                    - textbox "Enter your text here, ElevenLabs AI Voice Generator will read it for you" [ref=e343]: In the ancient land of Eldoria, where skies shimmered and forests, whispered secrets to the wind, lived a dragon named Zephyros. [sarcastically] Not the “burn it all down” kind... [giggles] but he was gentle, wise, with eyes like old stars. [whispers] Even the birds fell silent when he passed.
+                - generic [ref=e345]:
+                  - generic [ref=e346]:
+                    - button "English Language" [ref=e347] [cursor=pointer]:
+                      - generic [ref=e350]: English
+                      - img [ref=e351]
+                    - combobox [ref=e355]
+                  - button "Play" [ref=e356] [cursor=pointer]
+            - link "Sign up" [ref=e358] [cursor=pointer]:
+              - /url: /app/sign-up?redirect=%2Fapp%2Fspeech-synthesis%2Ftext-to-speech
+    - generic [ref=e364]:
+      - heading "Trusted by leading developers and enterprises" [level=2] [ref=e366]
+      - link "Read all stories" [ref=e370] [cursor=pointer]:
+        - /url: /customer-stories
+    - list [ref=e385]:
+      - listitem [ref=e386]:
+        - link "Twilio" [ref=e387] [cursor=pointer]:
+          - /url: /blog/twilio-conversation-relay
+          - generic [ref=e388]: Twilio
+      - listitem [ref=e391]:
+        - link "The Walt Disney Studios" [ref=e392] [cursor=pointer]:
+          - /url: /customer-stories
+          - generic [ref=e393]: The Walt Disney Studios
+      - listitem [ref=e396]:
+        - link "KPN" [ref=e397] [cursor=pointer]:
+          - /url: /blog/kpn
+          - generic [ref=e398]: KPN
+      - listitem [ref=e401]:
+        - link "TVS" [ref=e402] [cursor=pointer]:
+          - /url: /blog/tvs-motor-multimodal-agents
+          - generic [ref=e403]: TVS
+      - listitem [ref=e406]:
+        - link "Telus Digital" [ref=e407] [cursor=pointer]:
+          - /url: /blog/fuel-ix-telus-digital
+          - generic [ref=e408]: Telus Digital
+      - listitem [ref=e411]:
+        - link "Cisco" [ref=e412] [cursor=pointer]:
+          - /url: /blog/cisco-webex
+          - generic [ref=e413]: Cisco
+      - listitem [ref=e416]:
+        - link "Epic Games" [ref=e417] [cursor=pointer]:
+          - /url: https://www.fortnite.com/news/this-will-be-a-day-long-remembered-speak-with-darth-vader-in-fortnite
+          - generic [ref=e418]: Epic Games
+      - listitem [ref=e421]:
+        - link "Nvidia" [ref=e422] [cursor=pointer]:
+          - /url: /blog/nvidia-ace-at-computex
+          - generic [ref=e423]: Nvidia
+      - listitem [ref=e426]:
+        - link "Revolut" [ref=e427] [cursor=pointer]:
+          - /url: /blog/revolut
+          - generic [ref=e428]: Revolut
+      - listitem [ref=e431]:
+        - link "Meta" [ref=e432] [cursor=pointer]:
+          - /url: /blog/meta
+          - generic [ref=e433]: Meta
+      - listitem [ref=e436]:
+        - link "Bertelsmann" [ref=e437] [cursor=pointer]:
+          - /url: /blog/bertelsmann
+          - generic [ref=e438]: Bertelsmann
+      - listitem [ref=e441]:
+        - link "Ukraine" [ref=e442] [cursor=pointer]:
+          - /url: /blog/building-the-first-agentic-government-with-ukraine
+          - generic [ref=e443]: Ukraine
+      - listitem [ref=e446]:
+        - link "deliveroo" [ref=e447] [cursor=pointer]:
+          - /url: /blog/deliveroo
+          - generic [ref=e448]: deliveroo
+      - listitem [ref=e451]:
+        - link "Chess.com" [ref=e452] [cursor=pointer]:
+          - /url: /blog/chess-dot-com-iconic-voices
+          - generic [ref=e453]: Chess.com
+      - listitem [ref=e456]:
+        - link "Deutsche Telekom" [ref=e457] [cursor=pointer]:
+          - /url: /blog/deutsche-telekom-and-elevenlabs-announce-partnership
+          - generic [ref=e458]: Deutsche Telekom
+      - listitem [ref=e461]:
+        - link "meesho" [ref=e462] [cursor=pointer]:
+          - /url: /blog/meesho
+          - generic [ref=e463]: meesho
+      - listitem [ref=e466]:
+        - link "Harvey" [ref=e467] [cursor=pointer]:
+          - /url: /blog/harvey
+          - generic [ref=e468]: Harvey
+      - listitem [ref=e471]:
+        - link "Salesforce" [ref=e472] [cursor=pointer]:
+          - /url: https://www.linkedin.com/posts/matiii_salesforce-elevenlabs-salesforce-paved-activity-7384309967354294273-OO1j/
+          - generic [ref=e473]: Salesforce
+    - heading "Two platforms built on the same research foundation" [level=2] [ref=e491]
+    - generic [ref=e497]:
+      - generic [ref=e500]:
+        - heading "ElevenCreative" [level=3] [ref=e501]
+        - paragraph [ref=e502]: Generate ultra-realistic speech, videos, music, and sound effects.
+      - img "ElevenCreative" [ref=e505]
+      - generic [ref=e507]:
+        - heading "ElevenAgents" [level=3] [ref=e508]
+        - paragraph [ref=e509]: Configure, deploy and monitor conversational agents.
+      - img "ElevenAgents" [ref=e512]
+    - generic [ref=e525]:
+      - paragraph [ref=e526]: ElevenCreative
+      - generic [ref=e527]:
+        - generic [ref=e528]:
+          - heading "Create, edit and localize in one AI platform" [level=2] [ref=e529]
+          - link "Learn more" [ref=e532] [cursor=pointer]:
+            - /url: /creative
+        - paragraph [ref=e534]: Create ultra-realistic speech, turn ideas into videos, compose music in any genre, or design immersive sound effects. Craft your next film, ad, audiobook, or podcast with our all-in-one platform.
+    - generic [ref=e540]:
+      - generic [ref=e541]:
+        - generic:
+          - generic [ref=e544]:
+            - generic [ref=e546]:
+              - generic [ref=e547]: Amidst the outer atmosphere of the planet Aurora, the sky shimmered with fractured light, as though the planet's veil were made of stained glass suspended in space.
+              - generic [ref=e548]: Sensors pulsed with irregular patterns, the kind no algorithm could quite reconcile.
+            - generic [ref=e554]:
+              - generic [ref=e556]: Amidst the outer atmosphere of the planet Aurora, the sky shimmered with fractured light, as though the planet's veil were made of stained glass suspended in space.
+              - img [ref=e558]
+          - heading "All-in-one AI editor" [level=3] [ref=e560]
+          - paragraph [ref=e561]: Create podcasts, audiobooks and voiceovers in an editor built on all of ElevenLabs’ audio research combined.
+      - generic [ref=e562]:
+        - generic:
+          - generic [ref=e567]:
+            - generic [ref=e570]:
+              - generic [ref=e571]: In the ancient land of Eldoria, where skies shimmered and forests, whispered secrets to the wind, lived a dragon named Zephyros. [sarcastically] Not the “burn it all down” kind... [giggles] but he was gentle, wise, with eyes like old stars. [whispers] Even the birds fell silent when he passed.
+              - textbox "Enter your text here, ElevenLabs AI Voice Generator will read it for you" [ref=e572]: In the ancient land of Eldoria, where skies shimmered and forests, whispered secrets to the wind, lived a dragon named Zephyros. [sarcastically] Not the “burn it all down” kind... [giggles] but he was gentle, wise, with eyes like old stars. [whispers] Even the birds fell silent when he passed.
+            - generic [ref=e574]:
+              - generic [ref=e575]:
+                - button "English Language" [ref=e576] [cursor=pointer]:
+                  - generic [ref=e579]: English
+                  - img [ref=e580]
+                - combobox [ref=e584]
+              - generic [ref=e586]:
+                - button "Spuds Oxley Voice" [ref=e587] [cursor=pointer]:
+                  - generic [ref=e590]: Spuds Oxley
+                  - img [ref=e591]
+                - combobox [ref=e595]
+              - button "Play" [ref=e596] [cursor=pointer]
+          - heading "Ultra-realistic speech" [level=3] [ref=e597]:
+            - link "Ultra-realistic speech" [ref=e598] [cursor=pointer]:
+              - /url: /text-to-speech
+              - text: Ultra-realistic speech
+              - img [ref=e599]
+          - paragraph [ref=e602]: Create controllable, expressive speech layered across 70+ languages.
+      - generic [ref=e603]:
+        - generic:
+          - generic:
+            - img
+          - heading "Music" [level=3] [ref=e604]:
+            - link "Music" [ref=e605] [cursor=pointer]:
+              - /url: /music
+              - text: Music
+              - img [ref=e606]
+          - paragraph [ref=e609]: Generate studio-quality tracks instantly, any genre, any style, vocals or instrumental.
+      - generic [ref=e610]:
+        - generic:
+          - generic:
+            - img
+          - heading "SFX" [level=3] [ref=e611]:
+            - link "SFX" [ref=e612] [cursor=pointer]:
+              - /url: /sound-effects
+              - text: SFX
+              - img [ref=e613]
+          - paragraph [ref=e616]: Create custom sound effects, soundscapes and ambient audio or search the SFX library.
+      - generic [ref=e617]:
+        - generic:
+          - generic:
+            - img
+          - heading "Voices" [level=3] [ref=e618]:
+            - link "Voices" [ref=e619] [cursor=pointer]:
+              - /url: /voice-cloning
+              - text: Voices
+              - img [ref=e620]
+          - paragraph [ref=e623]: Clone a replica of your own voice, design one from a prompt, or explore 1000s of voices from the library.
+      - generic [ref=e624]:
+        - generic:
+          - generic:
+            - img
+          - heading "Image & Video" [level=3] [ref=e625]:
+            - link "Image & Video" [ref=e626] [cursor=pointer]:
+              - /url: /image-and-video
+              - text: Image & Video
+              - img [ref=e627]
+          - paragraph [ref=e630]: Create or edit images and turn ideas into videos with leading models like Veo, Sora, Wan, Kling and Seedance.
+    - generic [ref=e635]:
+      - generic [ref=e636]:
+        - tablist [ref=e637]:
+          - tab "NVIDIA" [selected] [ref=e638] [cursor=pointer]:
+            - img [ref=e639]
+          - tab "Mozart AI" [ref=e641] [cursor=pointer]:
+            - img [ref=e642]
+          - tab "Duolingo" [ref=e644] [cursor=pointer]:
+            - img [ref=e645]
+        - generic [ref=e647]:
+          - tabpanel "NVIDIA" [ref=e648]:
+            - generic [ref=e649]:
+              - paragraph [ref=e650]:
+                - generic [ref=e651]: NVIDIA
+              - paragraph [ref=e652]: Using synthetic voice technology to power multilingual marketing content
+          - generic [ref=e654]:
+            - paragraph [ref=e655]:
+              - link "Mozart AI" [ref=e656] [cursor=pointer]:
+                - /url: /blog/mozart-ai
+                - text: Mozart AI
+                - img [ref=e657]
+            - paragraph [ref=e659]: Delivering AI music creation and low-latency streaming with Eleven Music
+          - generic [ref=e661]:
+            - paragraph [ref=e662]:
+              - generic [ref=e663]: Duolingo
+            - paragraph [ref=e664]: Character voices for learning and marketing
+      - link "Get started" [ref=e666] [cursor=pointer]:
+        - /url: /app/sign-up
+    - generic [ref=e679]:
+      - paragraph [ref=e680]: ElevenAgents
+      - generic [ref=e681]:
+        - generic [ref=e682]:
+          - heading "Deploy agents that talk, type, and take action" [level=2] [ref=e683]
+          - link "Learn more" [ref=e686] [cursor=pointer]:
+            - /url: /agents
+        - paragraph [ref=e688]: Configure, deploy and monitor natural, human-sounding agents in 70+ languages with leading accuracy and ultra-low latency across voice or chat.
+    - generic [ref=e694]:
+      - generic [ref=e695]:
+        - generic:
+          - generic [ref=e698]:
+            - generic [ref=e699]: Can I get a refund?
+            - generic [ref=e701]: Sure. Can you share your order number please?
+            - generic [ref=e702]: It's EL4543490
+            - generic [ref=e704]:
+              - generic [ref=e705]: Thank you. I have initiated the order refund process.
+              - generic [ref=e706]:
+                - img [ref=e708]
+                - generic [ref=e711]: Refund completed
+            - img [ref=e717]
+          - heading "Omnichannel agents" [level=3] [ref=e721]
+          - paragraph [ref=e722]: Agents listen, read and interact just like humans would across phone, chat, email and WhatsApp.
+      - generic [ref=e723]:
+        - generic:
+          - generic [ref=e726]:
+            - generic [ref=e727]: Success rate
+            - generic [ref=e728]: 61.5%
+            - generic [ref=e729]:
+              - generic [ref=e730]:
+                - generic [ref=e731]: 100%
+                - generic [ref=e732]: 50%
+                - generic [ref=e733]: 0%
+              - generic [ref=e735]:
+                - img
+                - generic:
+                  - generic:
+                    - generic:
+                      - generic: 87.37%
+                    - generic:
+                      - generic: 61.71%
+              - generic [ref=e736]:
+                - generic [ref=e737]: 17 Aug
+                - generic [ref=e738]: 24 Aug
+          - heading "Analytics" [level=3] [ref=e739]
+          - paragraph [ref=e740]: Easily measure success rates and CX metrics, optimizing flows over time.
+      - generic [ref=e741]:
+        - generic:
+          - generic:
+            - img
+          - heading "Testing" [level=3] [ref=e742]
+          - paragraph [ref=e743]: Simulate real-world conversations to validate agents behave as expected before deployment.
+      - generic [ref=e744]:
+        - generic:
+          - generic:
+            - img
+          - heading "Guardrails" [level=3] [ref=e745]
+          - paragraph [ref=e746]: Establish clear behavioral and compliance rules that keep agent responses aligned with policy.
+      - generic [ref=e747]:
+        - generic:
+          - generic:
+            - img
+          - heading "Workflows" [level=3] [ref=e748]
+          - paragraph [ref=e749]: Handle complex conversation flows, apply business logic and connect securely to systems.
+    - generic [ref=e754]:
+      - generic [ref=e755]:
+        - tablist [ref=e756]:
+          - tab "Deliveroo" [selected] [ref=e757] [cursor=pointer]:
+            - img [ref=e758]
+          - tab "Meesho" [ref=e760] [cursor=pointer]:
+            - img [ref=e761]
+          - tab "Cars24" [ref=e763] [cursor=pointer]:
+            - img [ref=e764]
+        - generic [ref=e766]:
+          - tabpanel "Deliveroo" [ref=e767]:
+            - generic [ref=e768]:
+              - paragraph [ref=e769]:
+                - link "Deliveroo" [ref=e770] [cursor=pointer]:
+                  - /url: /blog/deliveroo
+                  - text: Deliveroo
+                  - img [ref=e771]
+              - paragraph [ref=e773]: Using voice agents to enhance rider and restaurant experience
+          - generic [ref=e775]:
+            - paragraph [ref=e776]:
+              - link "Meesho" [ref=e777] [cursor=pointer]:
+                - /url: /blog/meesho
+                - text: Meesho
+                - img [ref=e778]
+            - paragraph [ref=e780]: Delivering real-time, multilingual customer support with voice agents
+          - generic [ref=e782]:
+            - paragraph [ref=e783]:
+              - link "Cars24" [ref=e784] [cursor=pointer]:
+                - /url: /blog/cars24
+                - text: Cars24
+                - img [ref=e785]
+            - paragraph [ref=e787]: Powering India’s largest voice-driven car retail operation
+      - link "Get started" [ref=e789] [cursor=pointer]:
+        - /url: /app/sign-up
+    - generic [ref=e802]:
+      - paragraph [ref=e803]: ElevenAPI
+      - generic [ref=e804]:
+        - heading "Or build anything with a powerful host of APIs" [level=2] [ref=e806]
+        - link "Explore docs" [ref=e810] [cursor=pointer]:
+          - /url: /docs/overview/intro
+    - generic [ref=e823]:
+      - generic [ref=e830]:
+        - heading "Text to Speech API" [level=3] [ref=e831]
+        - paragraph [ref=e833]: Independently rated the leading Text to Speech models. Choose a model to optimize for consistency, latency or emotional control. All support 29+ languages.
+        - generic [ref=e834]:
+          - generic [ref=e835]:
+            - heading "Eleven Flash" [level=4] [ref=e836]
+            - paragraph [ref=e837]: 75ms latency for conversational usecases
+          - generic [ref=e838]:
+            - heading "Eleven Multilingual" [level=4] [ref=e839]
+            - paragraph [ref=e840]: Best lifelike consistent speech
+          - generic [ref=e841]:
+            - heading "Eleven v3" [level=4] [ref=e842]
+            - paragraph [ref=e843]: Our most expressive model yet
+      - generic "Text to speech API TypeScript example" [ref=e847]:
+        - code [ref=e850]: "import { ElevenLabsClient } from \"@elevenlabs/elevenlabs-js\"; const client = new ElevenLabsClient({ apiKey: \"YOUR_API_KEY\" }); await client.textToSpeech.convert(\"JBFqnCBsd6RMkjVDRZzb\", { outputFormat: \"mp3_44100_128\", text: \"The first move is what sets everything in motion.\", modelId: \"eleven_multilingual_v2\", });"
+    - generic [ref=e864]:
+      - generic [ref=e871]:
+        - heading "Speech to Text API" [level=3] [ref=e872]
+        - paragraph [ref=e874]:
+          - text: The
+          - link "most accurate ASR model" [ref=e875] [cursor=pointer]:
+            - /url: /speech-to-text
+          - text: . Low cost and supporting speaker diarization and character level timestamps.
+        - generic [ref=e877]:
+          - heading "Eleven Scribe" [level=4] [ref=e878]
+          - paragraph [ref=e879]: 98% accuracy
+      - img "Scribe" [ref=e883]
+    - generic [ref=e896]:
+      - generic [ref=e903]:
+        - heading "Music API" [level=3] [ref=e904]
+        - paragraph [ref=e906]: Studio-grade music with natural language prompts in any genre, style or structure.
+        - generic [ref=e908]:
+          - heading "Eleven Music" [level=4] [ref=e909]
+          - paragraph [ref=e910]: Trained on licensed data and suitable for commercial use
+      - generic "Music API TypeScript example" [ref=e914]:
+        - code [ref=e917]: "import { ElevenLabsClient } from \"@elevenlabs/elevenlabs-js\"; const { music } = new ElevenLabsClient(); const compositionPlan = await music.compositionPlan.create({ prompt: \"Fast-paced electronic track for a video...\", musicLengthMs: 10000, });"
+    - heading "Showcasing the global impact of AI audio research" [level=2] [ref=e934]
+    - generic [ref=e939]:
+      - tablist "Case studies" [ref=e944]:
+        - tab "ElevenCreative" [selected] [ref=e945] [cursor=pointer]:
+          - generic [ref=e948]: ElevenCreative
+        - tab "ElevenAgents" [ref=e950] [cursor=pointer]:
+          - generic [ref=e953]: ElevenAgents
+      - tabpanel "ElevenCreative" [ref=e955]:
+        - generic [ref=e958]:
+          - generic [ref=e959]:
+            - generic [ref=e960]:
+              - link "ElevenLabs showcases multilingual AI voice technology with NVIDIA ACE at Computex" [ref=e961] [cursor=pointer]:
+                - /url: /blog/nvidia-ace-at-computex
+                - generic [ref=e967]: ElevenLabs showcases multilingual AI voice technology with NVIDIA ACE at Computex
+              - link "ElevenLabs AI voice revives Salvador Dalí with a surreal twist" [ref=e969] [cursor=pointer]:
+                - /url: /blog/elevenlabs-revives-salvador-dalis-voice-with-a-surreal-ai-twist
+                - generic [ref=e974]: ElevenLabs AI voice revives Salvador Dalí with a surreal twist
+            - generic [ref=e977]:
+              - 'link "Ukrainian public services will speak through AI: announcing a partnership with ElevenLabs" [ref=e978] [cursor=pointer]':
+                - /url: /blog/ukrainian-public-services
+                - generic [ref=e979]: "Ukrainian public services will speak through AI: announcing a partnership with ElevenLabs"
+              - link "Matthew McConaughey’s Lyrics of Livin’ expands with ElevenLabs" [ref=e981] [cursor=pointer]:
+                - /url: /blog/elevenlabs-welcomes-matthew-mcconaughey-as-new-investor
+                - generic [ref=e982]: Matthew McConaughey’s Lyrics of Livin’ expands with ElevenLabs
+          - generic [ref=e984]:
+            - link "Bringing ElevenLabs' AI voice agents to the customer service of Europe’s largest Telco" [ref=e985] [cursor=pointer]:
+              - /url: /blog/deutsche-telekom-and-elevenlabs-announce-partnership
+              - generic [ref=e991]: Bringing ElevenLabs' AI voice agents to the customer service of Europe’s largest Telco
+            - link "ElevenLabs Impact Announces $1B In-Kind Donation and Releases Original Docuseries" [ref=e993] [cursor=pointer]:
+              - /url: /blog/honoring-eric-danes-legacy-at-sxsw-advancing-1-million-voices
+              - generic [ref=e998]: ElevenLabs Impact Announces $1B In-Kind Donation and Releases Original Docuseries
+    - generic [ref=e1013]:
+      - heading "Research that redefines human technology interaction" [level=2] [ref=e1015]
+      - paragraph [ref=e1017]: Our vision is to make communication and creation with technology seamless. We build our own foundational models, beginning with the first human-like voice model and now extending far beyond voice.
+    - generic [ref=e1023]:
+      - button "Previous" [ref=e1024] [cursor=pointer]:
+        - img [ref=e1025]
+      - button "Next" [ref=e1027] [cursor=pointer]:
+        - img [ref=e1028]
+      - generic [ref=e1032]:
+        - tablist "ElevenLabs history":
+          - 'tab "Event 1: Eleven Multilingual v2. Aug 2023" [ref=e1034]'
+          - 'tab "Event 2: Eleven Turbo v2. Nov 2023" [ref=e1037]'
+          - 'tab "Event 3: Eleven Flash v2.5. Dec 2024" [ref=e1040]'
+          - 'tab "Event 4: Scribe. Feb 2025" [ref=e1043]'
+          - 'tab "Event 5: Eleven v3. Jun 2025" [ref=e1046]'
+          - 'tab "Event 6: Eleven Music. Aug 2025" [ref=e1049]'
+          - 'tab "Event 7: Scribe v2 Realtime. Nov 2025" [ref=e1052]'
+          - 'tab "Event 8: Scribe v2. Jan 2026" [selected] [ref=e1055]'
+      - generic [ref=e1058]:
+        - heading "Eleven Multilingual v2" [level=3] [ref=e1060]
+        - generic [ref=e1061]:
+          - paragraph [ref=e1062]: Our most consistent and lifelike Text to Speech model
+          - paragraph [ref=e1063]: Aug 2023
+      - generic [ref=e1064]:
+        - heading "Eleven Turbo v2" [level=3] [ref=e1066]
+        - generic [ref=e1067]:
+          - paragraph [ref=e1068]: Our high-quality, low-latency Text to Speech model
+          - paragraph [ref=e1069]: Nov 2023
+      - generic [ref=e1070]:
+        - heading "Eleven Flash v2.5" [level=3] [ref=e1072]
+        - generic [ref=e1073]:
+          - paragraph [ref=e1074]: Our ultra-low latency Text to Speech model
+          - paragraph [ref=e1075]: Dec 2024
+      - generic [ref=e1076]:
+        - heading "Scribe" [level=3] [ref=e1078]
+        - generic [ref=e1079]:
+          - paragraph [ref=e1080]: The original Scribe model, later surpassed by Scribe v2
+          - paragraph [ref=e1081]: Feb 2025
+      - generic [ref=e1082]:
+        - heading "Eleven v3" [level=3] [ref=e1084]
+        - generic [ref=e1085]:
+          - paragraph [ref=e1086]: The most expressive Text to Speech model ever released
+          - paragraph [ref=e1087]: Jun 2025
+      - generic [ref=e1088]:
+        - heading "Eleven Music" [level=3] [ref=e1090]
+        - generic [ref=e1091]:
+          - paragraph [ref=e1092]: The highest quality AI music model, trained on licensed data
+          - paragraph [ref=e1093]: Aug 2025
+      - generic [ref=e1094]:
+        - heading "Scribe v2 Realtime" [level=3] [ref=e1096]
+        - generic [ref=e1097]:
+          - paragraph [ref=e1098]: The most accurate real-time transcription model
+          - paragraph [ref=e1099]: Nov 2025
+      - 'tabpanel "Event 8: Scribe v2. Jan 2026" [ref=e1100]':
+        - heading "Scribe v2" [level=3] [ref=e1102]
+        - generic [ref=e1103]:
+          - paragraph [ref=e1104]: The most accurate transcription model ever released
+          - paragraph [ref=e1105]: Jan 2026
+    - generic [ref=e1110]:
+      - heading "Advancing research beyond voice into transcription, music, voice cloning, intelligent agents, and more." [level=3] [ref=e1111]
+      - generic [ref=e1112]:
+        - article [ref=e1113]:
+          - generic [ref=e1114]:
+            - generic [ref=e1115]:
+              - img [ref=e1118]
+              - time [ref=e1123]: Jan 2026
+            - link "Introducing Scribe v2" [ref=e1125] [cursor=pointer]:
+              - /url: /blog/introducing-scribe-v2
+              - paragraph [ref=e1127]:
+                - generic [ref=e1128]: Introducing Scribe v2
+        - article [ref=e1129]:
+          - generic [ref=e1130]:
+            - generic [ref=e1131]:
+              - img [ref=e1134]
+              - time [ref=e1136]: Aug 2025
+            - link "Eleven Music is Here" [ref=e1138] [cursor=pointer]:
+              - /url: /blog/eleven-music-is-here
+              - paragraph [ref=e1140]:
+                - generic [ref=e1141]: Eleven Music is Here
+      - link "Learn more" [ref=e1144] [cursor=pointer]:
+        - /url: /about
+        - text: Learn more
+        - img [ref=e1145]
+    - generic [ref=e1160]:
+      - heading "Safety, built in" [level=2] [ref=e1162]
+      - link "Learn more" [ref=e1166] [cursor=pointer]:
+        - /url: /safety
+    - list [ref=e1173]:
+      - listitem [ref=e1174]:
+        - generic [ref=e1175]:
+          - generic:
+            - img "Moderation"
+            - heading "Moderation" [level=3] [ref=e1176]
+            - paragraph [ref=e1177]: We actively monitor content generated with our technology.
+      - listitem [ref=e1178]:
+        - generic [ref=e1179]:
+          - generic:
+            - img "Accountability"
+            - heading "Accountability" [level=3] [ref=e1180]
+            - paragraph [ref=e1181]: We believe misuse must have consequences.
+      - listitem [ref=e1182]:
+        - generic [ref=e1183]:
+          - generic:
+            - img "Provenance"
+            - heading "Provenance" [level=3] [ref=e1184]
+            - paragraph [ref=e1185]: We believe that you should know if audio is AI-generated.
+    - generic [ref=e1191]:
+      - heading "Latest updates" [level=2] [ref=e1193]
+      - link "All posts" [ref=e1197] [cursor=pointer]:
+        - /url: /blog
+    - list [ref=e1204]:
+      - listitem [ref=e1205]:
+        - article [ref=e1206]:
+          - img "Gradient + Introducing Flows text" [ref=e1208]
+          - heading "Introducing Flows in ElevenCreative" [level=3] [ref=e1209]:
+            - link "Introducing Flows in ElevenCreative" [ref=e1210] [cursor=pointer]:
+              - /url: /blog/introducing-flows-in-elevencreative
+              - text: Introducing Flows in ElevenCreative
+          - generic [ref=e1212]:
+            - term [ref=e1213]: Category
+            - definition [ref=e1214]: Product
+            - term [ref=e1215]: Date
+            - definition [ref=e1216]:
+              - time [ref=e1217]: Mar 11, 2026
+      - listitem [ref=e1218]:
+        - article [ref=e1219]:
+          - img "ElevenLabs for Government" [ref=e1221]
+          - heading "Introducing ElevenLabs for Government" [level=3] [ref=e1222]:
+            - link "Introducing ElevenLabs for Government" [ref=e1223] [cursor=pointer]:
+              - /url: /blog/introducing-elevenlabs-for-government
+              - text: Introducing ElevenLabs for Government
+          - generic [ref=e1225]:
+            - term [ref=e1226]: Category
+            - definition [ref=e1227]: Company
+            - term [ref=e1228]: Date
+            - definition [ref=e1229]:
+              - time [ref=e1230]: Feb 11, 2026
+      - listitem [ref=e1231]:
+        - article [ref=e1232]:
+          - img "expressive mode" [ref=e1234]
+          - heading "Introducing Expressive Mode for ElevenAgents" [level=3] [ref=e1235]:
+            - link "Introducing Expressive Mode for ElevenAgents" [ref=e1236] [cursor=pointer]:
+              - /url: /blog/introducing-expressive-mode
+              - text: Introducing Expressive Mode for ElevenAgents
+          - generic [ref=e1238]:
+            - term [ref=e1239]: Category
+            - definition [ref=e1240]: Product
+            - term [ref=e1241]: Date
+            - definition [ref=e1242]:
+              - time [ref=e1243]: Feb 10, 2026
+  - generic [ref=e1246]:
+    - paragraph [ref=e1247]: The most realistic voice AI platform
+    - generic [ref=e1248]:
+      - link "Talk to sales" [ref=e1249] [cursor=pointer]:
+        - /url: /contact-sales
+      - link "Create an AI agent" [ref=e1250] [cursor=pointer]:
+        - /url: /app/agents
+  - generic [ref=e1260]:
+    - generic [ref=e1261]:
+      - link "ElevenLabs" [ref=e1262] [cursor=pointer]:
+        - /url: /
+        - img [ref=e1263]
+      - button "English" [ref=e1268] [cursor=pointer]:
+        - img [ref=e1269]
+        - text: English
+        - img [ref=e1272]
+    - list [ref=e1274]:
+      - listitem [ref=e1275]:
+        - paragraph [ref=e1276]:
+          - link "ElevenCreative" [ref=e1277] [cursor=pointer]:
+            - /url: /creative
+        - list [ref=e1278]:
+          - listitem [ref=e1279]:
+            - link "Text to Speech" [ref=e1280] [cursor=pointer]:
+              - /url: /text-to-speech
+          - listitem [ref=e1281]:
+            - link "Speech to Text" [ref=e1282] [cursor=pointer]:
+              - /url: /speech-to-text
+          - listitem [ref=e1283]:
+            - link "Voice Changer" [ref=e1284] [cursor=pointer]:
+              - /url: /voice-changer
+          - listitem [ref=e1285]:
+            - link "Text to Sound Effects" [ref=e1286] [cursor=pointer]:
+              - /url: /sound-effects
+          - listitem [ref=e1287]:
+            - link "Voice Cloning" [ref=e1288] [cursor=pointer]:
+              - /url: /voice-cloning
+          - listitem [ref=e1289]:
+            - link "Voice Isolator" [ref=e1290] [cursor=pointer]:
+              - /url: /voice-isolator
+          - listitem [ref=e1291]:
+            - link "AI Music Generator" [ref=e1292] [cursor=pointer]:
+              - /url: /music
+          - listitem [ref=e1293]:
+            - link "Studio" [ref=e1294] [cursor=pointer]:
+              - /url: /studio
+          - listitem [ref=e1295]:
+            - link "Voice Design" [ref=e1296] [cursor=pointer]:
+              - /url: /voice-design
+          - listitem [ref=e1297]:
+            - link "AI Voice Generator" [ref=e1298] [cursor=pointer]:
+              - /url: /ai-voice-generator
+          - listitem [ref=e1299]:
+            - link "AI Image Generator" [ref=e1300] [cursor=pointer]:
+              - /url: /image
+          - listitem [ref=e1301]:
+            - link "AI Video Generator" [ref=e1302] [cursor=pointer]:
+              - /url: /video
+      - listitem [ref=e1303]:
+        - paragraph [ref=e1304]:
+          - link "ElevenAgents" [ref=e1305] [cursor=pointer]:
+            - /url: /agents
+        - list [ref=e1306]:
+          - listitem [ref=e1307]:
+            - link "Voice Agents" [ref=e1308] [cursor=pointer]:
+              - /url: /voice-agents
+          - listitem [ref=e1309]:
+            - link "Conversational AI" [ref=e1310] [cursor=pointer]:
+              - /url: /conversational-ai
+          - listitem [ref=e1311]:
+            - link "Integrations" [ref=e1312] [cursor=pointer]:
+              - /url: /agents/integrations
+          - listitem [ref=e1313]:
+            - link "Telecommunications" [ref=e1314] [cursor=pointer]:
+              - /url: /agents/telecommunications
+          - listitem [ref=e1315]:
+            - link "Financial Services" [ref=e1316] [cursor=pointer]:
+              - /url: /agents/financial-services
+          - listitem [ref=e1317]:
+            - link "Healthcare" [ref=e1318] [cursor=pointer]:
+              - /url: /agents/healthcare
+          - listitem [ref=e1319]:
+            - link "Technology" [ref=e1320] [cursor=pointer]:
+              - /url: /agents/technology
+          - listitem [ref=e1321]:
+            - link "Retail & E-commerce" [ref=e1322] [cursor=pointer]:
+              - /url: /agents/retail-ecommerce
+          - listitem [ref=e1323]:
+            - link "Customer Support" [ref=e1324] [cursor=pointer]:
+              - /url: /support
+      - listitem [ref=e1325]:
+        - paragraph [ref=e1326]:
+          - link "ElevenAPI" [ref=e1327] [cursor=pointer]:
+            - /url: /api
+        - list [ref=e1328]:
+          - listitem [ref=e1329]:
+            - link "API Reference" [ref=e1330] [cursor=pointer]:
+              - /url: /docs/api-reference/text-to-speech/convert
+          - listitem [ref=e1331]:
+            - link "Agents API" [ref=e1332] [cursor=pointer]:
+              - /url: /docs/eleven-api/quickstart
+          - listitem [ref=e1333]:
+            - link "Dubbing API" [ref=e1334] [cursor=pointer]:
+              - /url: /docs/eleven-api/guides/cookbooks/dubbing
+          - listitem [ref=e1335]:
+            - link "Text to Speech API" [ref=e1336] [cursor=pointer]:
+              - /url: /text-to-speech-api
+          - listitem [ref=e1337]:
+            - link "Speech to Text API" [ref=e1338] [cursor=pointer]:
+              - /url: /speech-to-text-api
+          - listitem [ref=e1339]:
+            - link "Sound Effects API" [ref=e1340] [cursor=pointer]:
+              - /url: /docs/eleven-api/guides/cookbooks/sound-effects
+          - listitem [ref=e1341]:
+            - link "Music API" [ref=e1342] [cursor=pointer]:
+              - /url: /docs/eleven-api/guides/cookbooks/music/quickstart
+          - listitem [ref=e1343]:
+            - link "API Key" [ref=e1344] [cursor=pointer]:
+              - /url: /app/settings/api-keys
+      - listitem [ref=e1345]:
+        - paragraph [ref=e1346]:
+          - generic [ref=e1347]: Resources
+        - list [ref=e1348]:
+          - listitem [ref=e1349]:
+            - link "Blog" [ref=e1350] [cursor=pointer]:
+              - /url: /blog
+          - listitem [ref=e1351]:
+            - link "Iconic Marketplace" [ref=e1352] [cursor=pointer]:
+              - /url: /iconic-voices
+          - listitem [ref=e1353]:
+            - link "Impact Program" [ref=e1354] [cursor=pointer]:
+              - /url: /impact-program
+          - listitem [ref=e1355]:
+            - link "Startup Grants" [ref=e1356] [cursor=pointer]:
+              - /url: /startup-grants
+          - listitem [ref=e1357]:
+            - link "Help Center" [ref=e1358] [cursor=pointer]:
+              - /url: https://help.elevenlabs.io/hc/en-us
+          - listitem [ref=e1359]:
+            - link "Webinars" [ref=e1360] [cursor=pointer]:
+              - /url: /webinars
+          - listitem [ref=e1361]:
+            - link "Docs" [ref=e1362] [cursor=pointer]:
+              - /url: /docs/overview/intro
+          - listitem [ref=e1363]:
+            - link "Enterprise" [ref=e1364] [cursor=pointer]:
+              - /url: /enterprise
+          - listitem [ref=e1365]:
+            - link "Trust Center" [ref=e1366] [cursor=pointer]:
+              - /url: https://compliance.elevenlabs.io/
+          - listitem [ref=e1367]:
+            - link "India" [ref=e1368] [cursor=pointer]:
+              - /url: /india
+          - listitem [ref=e1369]:
+            - button "Cookie Settings" [ref=e1370] [cursor=pointer]
+      - listitem [ref=e1371]:
+        - paragraph [ref=e1372]:
+          - generic [ref=e1373]: Socials
+        - list [ref=e1374]:
+          - listitem [ref=e1375]:
+            - link "X" [ref=e1376] [cursor=pointer]:
+              - /url: https://x.com/intent/user?screen_name=elevenlabs
+          - listitem [ref=e1377]:
+            - link "LinkedIn" [ref=e1378] [cursor=pointer]:
+              - /url: https://www.linkedin.com/company/elevenlabsio
+          - listitem [ref=e1379]:
+            - link "GitHub" [ref=e1380] [cursor=pointer]:
+              - /url: https://github.com/elevenlabs
+          - listitem [ref=e1381]:
+            - link "YouTube" [ref=e1382] [cursor=pointer]:
+              - /url: https://www.youtube.com/@elevenlabsio?sub_confirmation=1
+          - listitem [ref=e1383]:
+            - link "Discord" [ref=e1384] [cursor=pointer]:
+              - /url: https://discord.gg/elevenlabs
+          - listitem [ref=e1385]:
+            - link "TikTok" [ref=e1386] [cursor=pointer]:
+              - /url: https://www.tiktok.com/@elevenlabs
+          - listitem [ref=e1387]:
+            - link "Instagram" [ref=e1388] [cursor=pointer]:
+              - /url: https://www.instagram.com/elevenlabsio/?hl=en
+          - listitem [ref=e1389]:
+            - link "Facebook" [ref=e1390] [cursor=pointer]:
+              - /url: https://www.facebook.com/elevenlabsio/
+          - listitem [ref=e1391]:
+            - link "Reddit" [ref=e1392] [cursor=pointer]:
+              - /url: https://www.reddit.com/r/ElevenLabs/
+      - listitem [ref=e1393]:
+        - paragraph [ref=e1394]:
+          - generic [ref=e1395]: Company
+        - list [ref=e1396]:
+          - listitem [ref=e1397]:
+            - link "About" [ref=e1398] [cursor=pointer]:
+              - /url: /about
+          - listitem [ref=e1399]:
+            - link "Careers" [ref=e1400] [cursor=pointer]:
+              - /url: /careers
+          - listitem [ref=e1401]:
+            - link "Safety" [ref=e1402] [cursor=pointer]:
+              - /url: /safety
+          - listitem [ref=e1403]:
+            - link "Brand & Press Kit" [ref=e1404] [cursor=pointer]:
+              - /url: /brand
+          - listitem [ref=e1405]:
+            - link "EU Digital Services Act (DSA)" [ref=e1406] [cursor=pointer]:
+              - /url: /digital-services-act
+          - listitem [ref=e1407]:
+            - link "ElevenLabs Summit" [ref=e1408] [cursor=pointer]:
+              - /url: /events/elevenlabs-summit
+          - listitem [ref=e1409]:
+            - link "Terms" [ref=e1410] [cursor=pointer]:
+              - /url: /terms-of-use
+          - listitem [ref=e1411]:
+            - link "Privacy" [ref=e1412] [cursor=pointer]:
+              - /url: /privacy-policy
+          - listitem [ref=e1413]:
+            - link "Modern Slavery Policy" [ref=e1414] [cursor=pointer]:
+              - /url: /modern-slavery-policy-statement
+          - listitem [ref=e1415]:
+            - link "CCPA Notice" [ref=e1416] [cursor=pointer]:
+              - /url: /ccpa-notice-at-collection
+          - listitem [ref=e1417]:
+            - link "EU-US DPF Policy" [ref=e1418] [cursor=pointer]:
+              - /url: /eu-us-data-privacy-framework-policy

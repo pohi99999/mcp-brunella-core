@@ -74,7 +74,7 @@ query = "\${task}"
                     const registry = JSON.parse(registryContent);
 
                     // Ellenőrizzük, létezik-e már
-                    const existingIndex = registry.agents.findIndex((a: any) => a.name === safeName);
+                    const existingIndex = registry.agents.findIndex((a: Record<string, unknown>) => typeof a.name === 'string' && a.name === safeName);
                     const agentEntry = {
                         name: safeName,
                         title: req.role,
@@ -124,10 +124,11 @@ query = "\${task}"
             };
 
             const newAgent = new DynamicAgent(finalAgentEntry.config);
-            // Kézzel beállítjuk az AgentManager által is elvárt mezőket
-            (newAgent as any).name = safeName;
-            (newAgent as any).description = req.description;
-            (newAgent as any).role = req.role;
+            // Kézzel beállítjuk az AgentManager által is elvárt mezőket (type-safe via unknown)
+            const newAgentRecord = newAgent as unknown as Record<string, unknown>;
+            newAgentRecord.name = safeName;
+            newAgentRecord.description = req.description;
+            newAgentRecord.role = req.role;
 
             agentManager.registerAgent(newAgent);
 

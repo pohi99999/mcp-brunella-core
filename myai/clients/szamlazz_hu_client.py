@@ -1,3 +1,39 @@
+#!/usr/bin/env python3
+'''Stub Szamlazz.hu client for Phase 3 skeleton.
+
+This module provides a non-networking stub suitable for local development and tests.
+'''
+from typing import Dict, Any
+
+
+def send_invoice_multipart(xml_bytes: bytes, metadata: dict) -> dict:
+    '''
+    Stub for sending an invoice as multipart XML.
+
+    Args:
+        xml_bytes: Raw invoice XML bytes.
+        metadata: Metadata such as invoice_number, customer info, etc.
+
+    Returns:
+        A dict simulating a provider response.
+    '''
+    if not isinstance(xml_bytes, (bytes, bytearray)):
+        raise TypeError('xml_bytes must be bytes')
+    if not isinstance(metadata, dict):
+        raise TypeError('metadata must be dict')
+
+    # Minimal, deterministic stub response for tests and local development
+    return {
+        'status': 'stubbed',
+        'message': 'send_invoice_multipart executed in stub mode',
+        'metadata': metadata,
+        'length': len(xml_bytes),
+    }
+
+
+if __name__ == '__main__':
+    sample = b'<Invoice></Invoice>'
+    print(send_invoice_multipart(sample, {'invoice_number': 'SAMPLE-1'}))
 """
 Számlázz.hu API kliens - Invoice adatok lekéréséhez.
 
