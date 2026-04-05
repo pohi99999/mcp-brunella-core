@@ -14,21 +14,32 @@ export class CampaignGeneratorAgent extends BaseAgent {
 
     try {
       // 1. Lead generálás (mock)
-      const leadResult = await agentManager.delegate('LeadMiningAgent', `Keress 10 leadet a következő témában: ${task}`) as any;
-      if (!leadResult.success) throw new Error('Lead generálás sikertelen.');
-      const leads = (leadResult.data as any)?.leads || [];
+      const leadResultRaw = await agentManager.delegate('LeadMiningAgent', `Keress 10 leadet a következő témában: ${task}`);
+      // Safe result handling
+      const leadResult = typeof leadResultRaw === 'object' && leadResultRaw !== null ? leadResultRaw as Record<string, unknown> : {};
+      const leadSuccess = Boolean(leadResult['success']);
+      if (!leadSuccess) throw new Error('Lead generálás sikertelen.');
+      let leads: unknown[] = [];
+      const leadData = leadResult['data'];
+      if (Array.isArray(leadData)) leads = leadData as unknown[];
+      else if (leadData && typeof leadData === 'object' && Array.isArray((leadData as Record<string, unknown>)['leads'])) {
+        leads = (leadData as Record<string, unknown>)['leads'] as unknown[];
+      }
       logInfo(this.name, `Lead generálás kész: ${leads.length} lead.`);
 
       // 2. Tartalom generálás (mock)
-      const copyResult = await agentManager.delegate('CopywriterAgent', `Írj 3 social media posztot a következő témában: ${task}`) as any;
-      if (!copyResult.success) throw new Error('Tartalom generálás sikertelen.');
+      const copyResultRaw = await agentManager.delegate('CopywriterAgent', `Írj 3 social media posztot a következő témában: ${task}`);
+      const copyResult = typeof copyResultRaw === 'object' && copyResultRaw !== null ? copyResultRaw as Record<string, unknown> : {};
+      if (!Boolean(copyResult['success'])) throw new Error('Tartalom generálás sikertelen.');
       logInfo(this.name, 'Social media posztok elkészültek.');
 
       // 3. Weboldal terv generálás (mock)
-      const webResult = await agentManager.delegate('UXDesignerAgent', `Tervezz egy egyoldalas landing oldalt a következőnek: ${task}`) as any;
-      if (!webResult.success) throw new Error('Weboldal tervezés sikertelen.');
+      const webResultRaw = await agentManager.delegate('UXDesignerAgent', `Tervezz egy egyoldalas landing oldalt a következőnek: ${task}`);
+      const webResult = typeof webResultRaw === 'object' && webResultRaw !== null ? webResultRaw as Record<string, unknown> : {};
+      if (!Boolean(webResult['success'])) throw new Error('Weboldal tervezés sikertelen.');
       logInfo(this.name, 'Landing oldal terv elkészült.');
       
+      // Build final report
       const finalReport = `
 # Kampány Generálva: "${task}"
 
@@ -36,10 +47,10 @@ export class CampaignGeneratorAgent extends BaseAgent {
 ${JSON.stringify(leadResult.data, null, 2)}
 
 ## 2. Social Media Posztok
-${copyResult.message}
+${typeof copyResult['message'] === 'string' ? copyResult['message'] : JSON.stringify(copyResult['data'] ?? '')}
 
 ## 3. Landing Page Terv
-${webResult.message}
+${typeof webResult['message'] === 'string' ? webResult['message'] : JSON.stringify(webResult['data'] ?? '')}
 
 ## 4. Akcióterv
 - Hétfő: Poszt 1 live
