@@ -27,7 +27,6 @@ import {
 } from '../types/enterprise.js';
 import { logInfo, logError, setAgentStatus } from '../utils/logger.js';
 import { v4 as uuidv4 } from 'uuid';
-import { lanceDBClient } from '../utils/lancedb_client.js';
 
 /**
  * Enterprise Orchestrator - Main coordination agent for the BAS Enterprise Suite
@@ -436,16 +435,23 @@ export class EnterpriseOrchestratorAgent extends OrchestratorAgent {
     response: EnterpriseAgentResponse
   ): Promise<void> {
     try {
-      await lanceDBClient.addData('enterprise_events', {
-        id: event.id,
-        module: event.module,
-        type: event.type,
-        status: response.status,
-        timestamp: new Date().toISOString(),
-        error: response.error || null,
-        data: JSON.stringify(response.data)
-      });
-      logInfo(this.name, `Stored execution history for event ${event.id}`);
+      if (typeof globalThis !== 'undefined' && (globalThis as any).process && (globalThis as any).process.versions && (globalThis as any).process.versions.node) {
+        // Use a dynamic string to prevent bundlers from analyzing the import
+        const dbClientPath = '../utils/lancedb_client.js';
+        const { lanceDBClient } = await import(/* @vite-ignore */ dbClientPath);
+        await lanceDBClient.addData('enterprise_events', {
+          id: event.id,
+          module: event.module,
+          type: event.type,
+          status: response.status,
+          timestamp: new Date().toISOString(),
+          error: response.error || null,
+          data: JSON.stringify(response.data)
+        });
+        logInfo(this.name, `Stored execution history for event ${event.id}`);
+      } else {
+        logInfo(this.name, `Skipping LanceDB storage on Edge environment for event ${event.id}`);
+      }
     } catch (error) {
       logError(this.name, `Failed to store execution history: ${error}`);
     }
@@ -481,18 +487,27 @@ export class EnterpriseOrchestratorAgent extends OrchestratorAgent {
   async monitorExecution(eventId: string): Promise<{status: string; details: string}> {
     logInfo(this.name, `Monitoring execution for event ${eventId}`);
     try {
-      const results = await lanceDBClient.query('enterprise_events', `id = "${eventId}"`, 1);
-      if (results && results.length > 0) {
-        const record = results[0];
+      if (typeof globalThis !== 'undefined' && (globalThis as any).process && (globalThis as any).process.versions && (globalThis as any).process.versions.node) {
+        const dbClientPath = '../utils/lancedb_client.js';
+        const { lanceDBClient } = await import(/* @vite-ignore */ dbClientPath);
+        const results = await lanceDBClient.query('enterprise_events', `id = "${eventId}"`, 1);
+        if (results && results.length > 0) {
+          const record = results[0];
+          return {
+            status: String(record.status),
+            details: record.error ? String(record.error) : 'Execution recorded successfully'
+          };
+        }
         return {
-          status: String(record.status),
-          details: record.error ? String(record.error) : 'Execution recorded successfully'
+          status: 'not_found',
+          details: `No execution history found for event ${eventId}`
+        };
+      } else {
+        return {
+          status: 'completed',
+          details: 'Mock monitoring result (Edge Environment)'
         };
       }
-      return {
-        status: 'not_found',
-        details: `No execution history found for event ${eventId}`
-      };
     } catch (error) {
       logError(this.name, `Failed to monitor execution: ${error}`);
       return {
