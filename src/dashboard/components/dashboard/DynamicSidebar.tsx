@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
 import { Shield, LogOut, Activity, ChevronDown, ChevronRight } from "lucide-react";
 import { navigationRegistry } from "@/lib/navigation";
@@ -10,11 +11,19 @@ interface DynamicSidebarProps {
 }
 
 export function DynamicSidebar({ activeTab, onTabChange, forceExpanded = false }: DynamicSidebarProps) {
+  const { t } = useTranslation();
   const groups = navigationRegistry.getGroups();
   const items = navigationRegistry.getAllItems();
   const [collapsedGroups, setCollapsedGroups] = useState<Record<string, boolean>>({});
 
   const findItem = (id: string) => items.find(item => item.id === id);
+  
+  // Csoport címek leképezése i18n kulcsokra
+  const getGroupTitle = (title: string) => {
+    const key = title.toLowerCase().replace(/ & /g, '_').replace(/ /g, '_');
+    return t(`nav.groups.${key}`, title);
+  };
+
   const activeGroupTitle = useMemo(
     () => groups.find((group) => group.items.includes(activeTab))?.title,
     [activeTab, groups],
@@ -51,8 +60,8 @@ export function DynamicSidebar({ activeTab, onTabChange, forceExpanded = false }
       <div className="glass-panel mx-1.5 flex flex-1 flex-col overflow-hidden rounded-[1.6rem] border border-white/[0.08]">
         <div className="flex items-center justify-between border-b border-white/[0.05] px-3.5 py-3.5">
           <div className={cn("flex flex-col", forceExpanded ? "flex" : "hidden lg:flex")}>
-            <span className="text-[10px] font-mono tracking-[0.28em] uppercase text-white/42">Navigation</span>
-            <span className="text-[11px] text-white/55">Operator sections</span>
+            <span className="text-[10px] font-mono tracking-[0.28em] uppercase text-white/42">{t("sidebar.navigation")}</span>
+            <span className="text-[11px] text-white/55">{t("sidebar.operator_sections")}</span>
           </div>
           <div className="flex h-8 w-8 items-center justify-center rounded-xl border border-white/[0.07] bg-white/[0.025]">
             <Activity size={13} className="text-white/82" />
@@ -71,7 +80,7 @@ export function DynamicSidebar({ activeTab, onTabChange, forceExpanded = false }
               >
                 <group.icon size={11} className="shrink-0 text-white/28" />
                 <span className={cn("text-[9px] font-semibold uppercase tracking-[0.24em] text-white/36", forceExpanded ? "inline" : "hidden lg:inline")}>
-                  {group.title}
+                  {getGroupTitle(group.title)}
                 </span>
                 <span className={cn("ml-auto text-white/26", forceExpanded ? "inline" : "hidden lg:inline")}>
                   {collapsedGroups[group.title] ? <ChevronRight size={12} /> : <ChevronDown size={12} />}
@@ -83,12 +92,14 @@ export function DynamicSidebar({ activeTab, onTabChange, forceExpanded = false }
                     const item = findItem(itemId);
                     if (!item) return null;
                     const isActive = activeTab === item.id;
+                    const translatedLabel = t(`nav.${item.id}`, item.label);
+                    
                     return (
                       <button
                         key={item.id}
                         onClick={() => onTabChange(item.id)}
-                        aria-label={item.label}
-                        title={item.label}
+                        aria-label={translatedLabel}
+                        title={translatedLabel}
                         className={cn(
                            "group relative flex w-full items-center gap-2.5 rounded-2xl px-2.5 py-2.5 transition-all duration-200",
                             "text-white/56 hover:bg-white/[0.04] hover:text-white/88",
@@ -109,7 +120,7 @@ export function DynamicSidebar({ activeTab, onTabChange, forceExpanded = false }
                           />
                         </div>
                         <span className={cn("text-xs font-medium tracking-wide truncate", forceExpanded ? "inline" : "hidden lg:inline")}>
-                          {item.label}
+                          {translatedLabel}
                         </span>
                       </button>
                     );
@@ -127,15 +138,15 @@ export function DynamicSidebar({ activeTab, onTabChange, forceExpanded = false }
             </div>
             <div className={cn("flex min-w-0 flex-col", forceExpanded ? "flex" : "hidden lg:flex")}>
               <span className="text-[10px] font-semibold text-white/80 truncate">Master Admin</span>
-              <span className="text-[9px] font-mono text-emerald-300/75 tracking-[0.24em]">AUTHORIZED</span>
+              <span className="text-[9px] font-mono text-emerald-300/75 tracking-[0.24em]">{t("sidebar.authorized")}</span>
             </div>
           </div>
           <button
-            aria-label="Disconnect"
-            title="Disconnect"
+            aria-label={t("sidebar.disconnect")}
+            title={t("sidebar.disconnect")}
             className="flex w-full items-center justify-between rounded-xl border-t border-white/[0.05] px-1 py-1.5 pt-2.5 text-[10px] font-medium tracking-[0.24em] text-white/38 transition-colors hover:text-white/72 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/30"
           >
-            <span className={cn(forceExpanded ? "inline" : "hidden lg:inline")}>DISCONNECT</span>
+            <span className={cn(forceExpanded ? "inline" : "hidden lg:inline")}>{t("sidebar.disconnect")}</span>
             <LogOut size={11} />
           </button>
         </div>

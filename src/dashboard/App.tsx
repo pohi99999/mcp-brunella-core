@@ -4,8 +4,10 @@ import { MissionControlLayout } from '@/components/dashboard/MissionControlLayou
 import { ExperimentProvider } from '@/context/ExperimentContext'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Zap } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 function SplashScreen({ onDone }: { onDone: () => void }) {
+  const { t } = useTranslation();
   const [progress, setProgress] = useState(0)
 
   useEffect(() => {
@@ -53,7 +55,7 @@ function SplashScreen({ onDone }: { onDone: () => void }) {
             Brunella
           </h1>
           <p className="mt-2 text-[11px] font-medium uppercase tracking-[0.38em] text-white/45">
-            Dashboard boot sequence
+            {t("splash.boot_sequence")}
           </p>
         </div>
 
@@ -65,7 +67,7 @@ function SplashScreen({ onDone }: { onDone: () => void }) {
             />
           </div>
           <div className="flex justify-between text-[9px] font-mono text-white/35 uppercase tracking-[0.3em]">
-            <span>Preparing workspace</span>
+            <span>{t("splash.preparing")}</span>
             <span>{Math.round(progress * 100)}%</span>
           </div>
         </div>
@@ -75,10 +77,10 @@ function SplashScreen({ onDone }: { onDone: () => void }) {
           animate={{ opacity: [0.4, 1, 0.4] }}
           transition={{ duration: 1.5, repeat: Infinity }}
         >
-          {progress < 0.35 ? 'Loading agents' :
-           progress < 0.65 ? 'Connecting services' :
-           progress < 0.9  ? 'Synchronizing dashboard' :
-                             'Ready'}
+          {progress < 0.35 ? t("splash.loading_agents") :
+           progress < 0.65 ? t("splash.connecting_services") :
+           progress < 0.9  ? t("splash.synchronizing") :
+                             t("splash.ready")}
         </motion.p>
       </motion.div>
     </motion.div>

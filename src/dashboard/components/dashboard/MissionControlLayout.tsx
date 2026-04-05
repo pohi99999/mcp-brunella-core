@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Zap, ChevronDown, ChevronRight, Menu, Mail, Github, Calendar, Sparkles, HardDrive } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import * as api from "@/lib/apiService";
 import { Sheet, SheetContent, SheetDescription, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
@@ -14,6 +15,7 @@ import { useLayout } from "@/lib/layout/LayoutContext";
 import { navigationRegistry } from "@/lib/navigation";
 
 export function MissionControlLayout() {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<string>("dashboard");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { currentLayout, setLayoutMode, layouts } = useLayout();
@@ -44,7 +46,7 @@ export function MissionControlLayout() {
     ? "bg-emerald-400"
     : coreStatus === 'DEGRADED' ? "bg-amber-400" : "bg-red-400";
 
-  const statusLabel = isConnected ? coreStatus : "OFFLINE";
+  const statusLabel = isConnected ? t(`common.${coreStatus.toLowerCase()}`) : t("common.offline");
 
   return (
     <div className="relative min-h-screen md:max-h-screen flex flex-col overflow-x-hidden md:overflow-hidden bg-[var(--shell-bg)] text-white">
@@ -62,17 +64,17 @@ export function MissionControlLayout() {
                 <Button
                   variant="ghost"
                   size="icon"
-                  aria-label="Open navigation menu"
-                  title="Open navigation menu"
+                  aria-label={t("common.navigation_menu")}
+                  title={t("common.navigation_menu")}
                   className="md:hidden h-9 w-9 rounded-xl text-white/55 hover:text-white hover:bg-white/[0.04]"
                 >
                   <Menu className="h-4 w-4" />
                 </Button>
               </SheetTrigger>
               <SheetContent side="left" className="w-[min(22rem,92vw)] border-r border-white/[0.08] bg-black/95 p-0">
-                <SheetTitle className="sr-only">Navigation menu</SheetTitle>
+                <SheetTitle className="sr-only">{t("common.navigation_menu")}</SheetTitle>
                 <SheetDescription className="sr-only">
-                  Switch between dashboard sections and system surfaces.
+                  {t("common.switch_sections")}
                 </SheetDescription>
                 <DynamicSidebar activeTab={activeTab} forceExpanded onTabChange={(tab) => { setActiveTab(tab); setMobileMenuOpen(false); }} />
               </SheetContent>
@@ -84,7 +86,7 @@ export function MissionControlLayout() {
             </div>
             <div className="flex flex-col leading-none">
               <span className="text-sm font-semibold tracking-tight text-white">Brunella</span>
-              <span className="text-[10px] font-mono uppercase tracking-[0.28em] text-white/40">Mission Control</span>
+              <span className="text-[10px] font-mono uppercase tracking-[0.28em] text-white/40">{t("common.mission_control")}</span>
             </div>
           </div>
 
@@ -104,13 +106,13 @@ export function MissionControlLayout() {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="sm" className="h-8 gap-1 rounded-xl px-2 text-xs font-mono text-white/45 hover:bg-white/[0.035] hover:text-white">
-                  <span className="text-white/30">LAYOUT</span>
+                  <span className="text-white/30">{t("common.layout").toUpperCase()}</span>
                   <span className="text-white font-medium">{currentLayout.name.toUpperCase().replaceAll(' ', '_')}</span>
                   <ChevronDown size={12} className="text-white/30" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-48" align="start">
-                <DropdownMenuLabel className="text-[10px] tracking-wider text-zinc-500">ELRENDEZÉS</DropdownMenuLabel>
+                <DropdownMenuLabel className="text-[10px] tracking-wider text-zinc-500">{t("common.layout_modes").toUpperCase()}</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 {layouts.modes.map((mode) => (
                   <DropdownMenuItem key={mode.id} onClick={() => setLayoutMode(mode.id)} className="cursor-pointer text-xs">
@@ -144,7 +146,7 @@ export function MissionControlLayout() {
                 <div className={cn("absolute w-1.5 h-1.5 rounded-full animate-ping opacity-60", statusColor)} />
               )}
             </div>
-            <span className="text-[10px] font-medium tracking-[0.24em] text-white/75">CORE {statusLabel}</span>
+            <span className="text-[10px] font-medium tracking-[0.24em] text-white/75">{t("common.core")} {statusLabel}</span>
           </div>
           <ThemeToggle />
         </div>
@@ -184,7 +186,7 @@ export function MissionControlLayout() {
                 aria-label={terminalCollapsed ? "Expand terminal" : "Collapse terminal"}
               >
                 <div className="h-0.5 w-8 rounded-full bg-white/[0.16]" />
-                <span>{terminalCollapsed ? "SHOW LOG" : "TERMINAL"}</span>
+                <span>{terminalCollapsed ? t("common.show_log") : t("common.terminal")}</span>
                 <div className="h-0.5 w-8 rounded-full bg-white/[0.16]" />
               </button>
             {!terminalCollapsed && (
