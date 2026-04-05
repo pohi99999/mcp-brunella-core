@@ -1,12 +1,15 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
+import { useTranslation } from "react-i18next";
 import { WIDGET_REGISTRY } from "@/lib/widgetRegistry";
 import { RotateCcw, ShieldCheck, Bot, ListTodo, Sparkles, Activity } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useLayout } from "@/lib/layout/LayoutContext";
 import { useSystemSignal } from "@/hooks/useSystemSignal";
+
 export function WidgetGrid ()
 {
+  const { t } = useTranslation();
   const { currentLayout, setLayoutMode } = useLayout();
   const { agents, taskStats, healthStatus } = useSystemSignal();
   const [useCompactLayout, setUseCompactLayout] = useState( false );
@@ -70,32 +73,32 @@ export function WidgetGrid ()
 
   const statCards = [
     {
-      label: "Health",
+      label: t("dashboard.stats.health"),
       value: `${ healthyServices }/${ serviceCount || "—" }`,
       icon: Sparkles,
       colorClass: "text-white/76",
-      detail: healthStatus?.status?.toUpperCase() ?? "NO_SIGNAL",
+      detail: healthStatus?.status?.toUpperCase() ? t(`dashboard.stats.${healthStatus.status.toLowerCase()}`, healthStatus.status.toUpperCase()) : t("dashboard.stats.no_signal"),
     },
     {
-      label: "Agents",
+      label: t("dashboard.stats.agents"),
       value: `${ activeAgents }/${ totalAgents || "—" }`,
       icon: Bot,
       colorClass: "text-white/76",
-      detail: activeAgents > 0 ? "ACTIVE" : "STANDBY",
+      detail: activeAgents > 0 ? t("dashboard.stats.active") : t("dashboard.stats.standby"),
     },
     {
-      label: "Queue",
+      label: t("dashboard.stats.queue"),
       value: ( pendingTasks + runningTasks ).toString(),
       icon: ListTodo,
       colorClass: "text-white/76",
-      detail: `${ totalTasks } TOTAL`,
+      detail: `${ totalTasks } ${t("dashboard.stats.total")}`,
     },
     {
-      label: "Success",
+      label: t("dashboard.stats.success"),
       value: `${ Math.round( successRate ) }%`,
       icon: ShieldCheck,
       colorClass: successRate >= 90 ? "text-emerald-300" : "text-amber-300",
-      detail: pendingTasks > 0 ? `${ pendingTasks } PENDING` : "STABLE",
+      detail: pendingTasks > 0 ? `${ pendingTasks } ${t("dashboard.stats.pending")}` : t("dashboard.stats.stable"),
     },
   ];
 
@@ -112,11 +115,11 @@ export function WidgetGrid ()
               <div className="flex items-center gap-2">
                 <div className="h-1.5 w-1.5 rounded-full bg-white/80 shadow-[0_0_10px_rgba(255,255,255,0.2)]" />
                 <h2 className="text-sm font-semibold uppercase tracking-[0.2em] text-white">
-                  Mission Control
+                  {t("dashboard.mission_control")}
                 </h2>
               </div>
               <p className="mt-1 max-w-2xl text-sm leading-relaxed text-white/56">
-                Corporate cockpit for live system posture, queue visibility, and agent coordination.
+                {t("dashboard.cockpit_description")}
               </p>
               <span className="mt-2 inline-flex rounded-full border border-white/[0.07] bg-white/[0.025] px-2.5 py-1 text-[10px] font-mono tracking-[0.26em] text-white/42">
                 { currentLayout.name.toUpperCase().replaceAll( " ", "_" ) }
@@ -146,7 +149,7 @@ export function WidgetGrid ()
             className="h-10 gap-2 rounded-xl border-white/[0.08] bg-white/[0.025] px-3.5 text-white/68 transition-all hover:border-white/[0.14] hover:bg-white/[0.05] hover:text-white"
           >
             <RotateCcw size={ 12 } />
-            <span className="text-[10px] font-medium uppercase tracking-[0.26em]">Reset View</span>
+            <span className="text-[10px] font-medium uppercase tracking-[0.26em]">{t("dashboard.reset_view")}</span>
           </Button>
         </div>
       </section>

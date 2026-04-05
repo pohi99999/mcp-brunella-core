@@ -104,5 +104,22 @@
     "connecting_services": "Connecting services",
     "synchronizing": "Synchronizing dashboard",
     "ready": "Ready"
+  },
+  "dashboard": {
+    "mission_control": "Mission Control",
+    "cockpit_description": "Corporate cockpit for live system posture, queue visibility, and agent coordination.",
+    "reset_view": "Reset View",
+    "stats": {
+      "health": "Health",
+      "agents": "Agents",
+      "queue": "Queue",
+      "success": "Success",
+      "no_signal": "NO_SIGNAL",
+      "active": "ACTIVE",
+      "standby": "STANDBY",
+      "total": "TOTAL",
+      "pending": "PENDING",
+      "stable": "STABLE"
+    }
   }
 }
