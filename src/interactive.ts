@@ -13,6 +13,7 @@ import chalk from 'chalk';
 import boxen from 'boxen';
 import figlet from 'figlet';
 import { configManager } from './utils/cliConfig.js';
+import { writeLine } from './utils/cliOutput.js';
 
 // ==================== i18n Translation Layer ====================
 
@@ -463,7 +464,7 @@ async function chatMenuV2(): Promise<void> {
     if (action === 'chat') {
         runCli('chat');
     } else if (action === 'edge') {
-        console.log(chalk.cyan('\n  Tipp: A chatben írd be az /edge parancsot a váltáshoz!\n'));
+        writeLine(chalk.cyan('\n  Tipp: A chatben írd be az /edge parancsot a váltáshoz!\n'));
         runCli('chat');
     } else if (action === 'jules') {
         await julesMenuV2();
@@ -727,40 +728,40 @@ async function settingsMenuV2(): Promise<void> {
     } else if (action === 'language') {
         const newLang = currentLang === 'hu' ? 'en' : 'hu';
         configManager.set('general.language', newLang);
-        console.log(chalk.green(`\n✅ Language switched to: ${newLang.toUpperCase()}\n`));
+        writeLine(chalk.green(`\n✅ Language switched to: ${newLang.toUpperCase()}\n`));
         await pause();
     } else if (action === 'theme') {
         const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
         configManager.set('ui.theme', newTheme);
-        console.log(chalk.green(`\n✅ Theme switched to: ${newTheme}\n`));
+        writeLine(chalk.green(`\n✅ Theme switched to: ${newTheme}\n`));
         await pause();
     } else if (action === 'vim_mode') {
         const current = configManager.get('general.vimMode');
         configManager.set('general.vimMode', !current);
-        console.log(chalk.green(`\n✅ Vim mode: ${!current ? 'ON' : 'OFF'}\n`));
+        writeLine(chalk.green(`\n✅ Vim mode: ${!current ? 'ON' : 'OFF'}\n`));
         await pause();
     } else if (action === 'preview') {
         const current = configManager.get('general.previewFeatures');
         configManager.set('general.previewFeatures', !current);
-        console.log(chalk.green(`\n✅ Preview features: ${!current ? 'ON' : 'OFF'}\n`));
+        writeLine(chalk.green(`\n✅ Preview features: ${!current ? 'ON' : 'OFF'}\n`));
         await pause();
     } else if (action === 'output_format') {
         const current = configManager.get('output.format') || 'text';
         const newFormat = current === 'text' ? 'json' : 'text';
         configManager.set('output.format', newFormat);
-        console.log(chalk.green(`\n✅ Output format: ${newFormat}\n`));
+        writeLine(chalk.green(`\n✅ Output format: ${newFormat}\n`));
         await pause();
     } else if (action === 'config_view') {
-        console.log(chalk.cyan('\nUser config:'));
-        console.log(JSON.stringify(configManager.getAll(), null, 2));
+        writeLine(chalk.cyan('\nUser config:'));
+        writeLine(JSON.stringify(configManager.getAll(), null, 2));
         await pause();
     } else if (action === 'config_edit') {
-        console.log(chalk.yellow(`\nEdit: ${configManager.userSettingsPath}`));
+        writeLine(chalk.yellow(`\nEdit: ${configManager.userSettingsPath}`));
         await pause();
     } else if (action === 'telemetry') {
         const current = configManager.get('telemetry.enabled');
         configManager.set('telemetry.enabled', !current);
-        console.log(chalk.green(`\n✅ Telemetry: ${!current ? 'ON' : 'OFF'}\n`));
+        writeLine(chalk.green(`\n✅ Telemetry: ${!current ? 'ON' : 'OFF'}\n`));
         await pause();
     } else if (action === 'gold') {
         runCli('gold status');
@@ -979,7 +980,7 @@ async function chatMenu(): Promise<void> {
 
     if (action === 'chat') { runCli('chat'); }
     else if (action === 'edge') {
-        console.log(chalk.cyan('\n  Tipp: A chatben írd be az /edge parancsot a váltáshoz!\n'));
+        writeLine(chalk.cyan('\n  Tipp: A chatben írd be az /edge parancsot a váltáshoz!\n'));
         runCli('chat');
     }
     else if (action === 'jules') {
@@ -1041,10 +1042,10 @@ export async function startInteractiveMenu(): Promise<void> {
         console.clear();
 
         // ASCII Banner (figlet)
-        console.log(chalk.cyan(figlet.textSync('BRUNELLA', { font: 'Standard' })));
-        console.log(chalk.dim(`  v${version} — ${t('banner.subtitle')}`));
-        console.log(chalk.dim(`  ${t('banner.subtitle2')}\n`));
-        console.log(chalk.dim(`  ${t('banner.workspace')} ${process.cwd()}\n`));
+        writeLine(chalk.cyan(figlet.textSync('BRUNELLA', { font: 'Standard' })));
+        writeLine(chalk.dim(`  v${version} — ${t('banner.subtitle')}`));
+        writeLine(chalk.dim(`  ${t('banner.subtitle2')}\n`));
+        writeLine(chalk.dim(`  ${t('banner.workspace')} ${process.cwd()}\n`));
 
         const { mainMenu } = await inquirer.prompt([{
             type: 'list',
@@ -1063,7 +1064,7 @@ export async function startInteractiveMenu(): Promise<void> {
         }]);
 
         if (mainMenu === 'exit') {
-            console.log(chalk.dim(t('common.exit_message')));
+            writeLine(chalk.dim(t('common.exit_message')));
             process.exit(0);
         }
 

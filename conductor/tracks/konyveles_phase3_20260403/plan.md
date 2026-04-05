@@ -4,6 +4,8 @@
 **Becsült idő:** Phase 0: 1 nap · Phase 3a: 4 nap · 3b: 3 nap · 3c: 3 nap · 3d: 2 nap
 **Utolsó audit:** 2026-04-03
 
+> A phase0 readiness lepes kulon follow-up trackben lezarva es archiválva: `konyveles_phase3_readiness_20260405`.
+
 ---
 
 ## ✅ MÁR MEGÉPÍTVE (n8n_konyveles_pipeline_20260328-ban)
@@ -63,10 +65,10 @@
 
 ### 0.4 Bank CSV éles path
 
-- [ ] `mkdir -p data/bank-imports/` mappa létrehozása
-- [ ] `.gitignore` bővítése: `data/bank-imports/*.csv`
-- [ ] `BankAgent.ts` 20. sor javítása: sample CSV path → `data/bank-imports/`
-- [ ] `data/bank-imports/OTP_export_sample.csv.example` minta fájl hozzáadása
+- [x] `mkdir -p data/bank-imports/` mappa létrehozása
+- [x] `.gitignore` bővítése: `data/bank-imports/*.csv` (már jelen volt a repo-ban)
+- [x] `BankAgent.ts` 20. sor javítása: sample CSV path → `data/bank-imports/OTP_export_sample.csv.example`
+- [x] `data/bank-imports/OTP_export_sample.csv.example` minta fájl hozzáadása
 
 ---
 
@@ -137,7 +139,7 @@
 
 - [ ] WF-2 file watch node: `data/bank-imports/*.csv`
 - [ ] Cron backup: 08:00 naponta (ha file watch nem trigger)
-- [ ] Minta CSV: `data/bank-imports/OTP_export_sample.csv` (gitignored valós, de .example van)
+- [x] Minta CSV: `data/bank-imports/OTP_export_sample.csv.example` (repo-side sample; valós CSV marad gitignored)
 - [ ] Végponttól végpontig teszt: CSV elhelyezés → MatchingAgent → Sheets szinkron
 
 ---

@@ -10,6 +10,7 @@
 import { Command } from "commander";
 import chalk from "chalk";
 import ora from "ora";
+import { writeLine } from '../utils/cliOutput.js';
 
 const API_BASE = process.env.API_BASE_URL || "http://localhost:3000";
 
@@ -56,15 +57,15 @@ export function registerMarketCommands(program: Command): void {
 
         if (data.data?.summary) {
           const s = data.data.summary;
-          console.log(chalk.blue("\n╔═══════════════════════════════════════╗"));
-          console.log(chalk.blue("║") + chalk.bold("     PIACI ELEMZÉS ÖSSZEFOGLALÓ      ") + chalk.blue("║"));
-          console.log(chalk.blue("╚═══════════════════════════════════════╝\n"));
-          console.log(`  Követett termékek:  ${chalk.cyan(s.productsTracked)}`);
-          console.log(`  Scraper versenytárs: ${chalk.cyan(s.competitorsScraped)}`);
-          console.log(`  Ár esések:          ${s.priceDropsDetected > 0 ? chalk.red(s.priceDropsDetected) : chalk.green("0")}`);
-          console.log();
+          writeLine(chalk.blue("\n╔═══════════════════════════════════════╗"));
+          writeLine(chalk.blue("║") + chalk.bold("     PIACI ELEMZÉS ÖSSZEFOGLALÓ      ") + chalk.blue("║"));
+          writeLine(chalk.blue("╚═══════════════════════════════════════╝\n"));
+          writeLine(`  Követett termékek:  ${chalk.cyan(s.productsTracked)}`);
+          writeLine(`  Scraper versenytárs: ${chalk.cyan(s.competitorsScraped)}`);
+          writeLine(`  Ár esések:          ${s.priceDropsDetected > 0 ? chalk.red(s.priceDropsDetected) : chalk.green("0")}`);
+          writeLine();
         } else if (data.message) {
-          console.log(chalk.dim(`  ${data.message}`));
+          writeLine(chalk.dim(`  ${data.message}`));
         }
 
       } catch (e: unknown) {
@@ -97,26 +98,26 @@ export function registerMarketCommands(program: Command): void {
           (a) => a.name === "MarketIntel" || a.name === "market_intel",
         );
 
-        console.log(chalk.blue("\n═══ MARKET WATCHER STÁTUSZ ═══\n"));
+        writeLine(chalk.blue("\n═══ MARKET WATCHER STÁTUSZ ═══\n"));
 
         if (marketAgent) {
           const statusColor =
             marketAgent.status === "working" ? chalk.yellow : chalk.green;
-          console.log(`  Ügynök:    ${chalk.cyan("MarketIntelAgent")}`);
-          console.log(`  Állapot:   ${statusColor(marketAgent.status)}`);
+          writeLine(`  Ügynök:    ${chalk.cyan("MarketIntelAgent")}`);
+          writeLine(`  Állapot:   ${statusColor(marketAgent.status)}`);
           if (marketAgent.currentTask) {
-            console.log(`  Feladat:   ${chalk.dim(marketAgent.currentTask)}`);
+            writeLine(`  Feladat:   ${chalk.dim(marketAgent.currentTask)}`);
           }
           if (marketAgent.lastActive) {
-            console.log(
+            writeLine(
               `  Utoljára:  ${chalk.dim(new Date(marketAgent.lastActive).toLocaleString("hu-HU"))}`,
             );
           }
         } else {
-          console.log(chalk.yellow("  MarketIntelAgent nem aktív."));
-          console.log(chalk.dim("  Futtatás: brunella market run"));
+          writeLine(chalk.yellow("  MarketIntelAgent nem aktív."));
+          writeLine(chalk.dim("  Futtatás: brunella market run"));
         }
-        console.log();
+        writeLine();
 
       } catch (e: unknown) {
         spinner.fail(chalk.red("Kapcsolódási hiba"));
@@ -159,11 +160,11 @@ export function registerMarketCommands(program: Command): void {
         const alerts = data.data?.alerts || [];
 
         if (alerts.length === 0) {
-          console.log(chalk.green("\n  Nincs aktív ár riasztás."));
+          writeLine(chalk.green("\n  Nincs aktív ár riasztás."));
           return;
         }
 
-        console.log(chalk.red(`\n═══ ÁR RIASZTÁSOK (${alerts.length}) ═══\n`));
+        writeLine(chalk.red(`\n═══ ÁR RIASZTÁSOK (${alerts.length}) ═══\n`));
 
         alerts.forEach((alert, idx) => {
           const severityColor =
@@ -177,12 +178,12 @@ export function registerMarketCommands(program: Command): void {
               ? chalk.red(`+${alert.priceChangePercent.toFixed(1)}%`)
               : chalk.green(`${alert.priceChangePercent.toFixed(1)}%`);
 
-          console.log(`${chalk.bold(`${idx + 1}.`)} ${severityColor(`[${alert.severity.toUpperCase()}]`)} ${chalk.cyan(alert.productName)}`);
-          console.log(`   Versenytárs: ${alert.competitor}`);
-          console.log(`   Ár változás: ${alert.oldPrice.toLocaleString("hu-HU")} → ${alert.newPrice.toLocaleString("hu-HU")} HUF (${changeStr})`);
-          console.log(chalk.dim(`   ${new Date(alert.timestamp).toLocaleString("hu-HU")}`));
+          writeLine(`${chalk.bold(`${idx + 1}.`)} ${severityColor(`[${alert.severity.toUpperCase()}]`)} ${chalk.cyan(alert.productName)}`);
+          writeLine(`   Versenytárs: ${alert.competitor}`);
+          writeLine(`   Ár változás: ${alert.oldPrice.toLocaleString("hu-HU")} → ${alert.newPrice.toLocaleString("hu-HU")} HUF (${changeStr})`);
+          writeLine(chalk.dim(`   ${new Date(alert.timestamp).toLocaleString("hu-HU")}`));
         });
-        console.log();
+        writeLine();
 
       } catch (e: unknown) {
         spinner.fail(chalk.red("Kapcsolódási hiba"));

@@ -10,6 +10,7 @@
  */
 
 import { z } from 'zod';
+import { writeLine } from '../utils/cliOutput.js';
 
 // ============================================================================
 // SCHEMA DEFINITION
@@ -109,9 +110,9 @@ export const config = parseConfig();
 
 // Log successful config load (development only)
 if (config.nodeEnv === 'development') {
-  console.log('✅ Config validated successfully');
-  console.log(`   - Port: ${config.port}`);
-  console.log(`   - Ollama: ${config.ollamaBaseUrl}`);
-  console.log(`   - Python: ${config.pythonBaseUrl}`);
-  console.log(`   - Node Env: ${config.nodeEnv}`);
+  writeLine('✅ Config validated successfully');
+  writeLine(`   - Port: ${config.port}`);
+  writeLine(`   - Ollama: ${config.ollamaBaseUrl}`);
+  writeLine(`   - Python: ${config.pythonBaseUrl}`);
+  writeLine(`   - Node Env: ${config.nodeEnv}`);
 }

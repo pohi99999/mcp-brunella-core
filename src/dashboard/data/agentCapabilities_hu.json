@@ -36,8 +36,18 @@
   },
   "sales": {
     "title": "Értékesítő",
-    "description": "Automata lead generálás és CRM integráció.",
-    "capabilities": ["Lead generálás", "CRM kezelés", "Email küldés"]
+    "description": "Automata lead generálás, CRM rögzítés és follow-up routing.",
+    "capabilities": ["Lead generálás", "CRM kezelés", "Follow-up routing", "Email küldés"]
+  },
+  "SalesAgent": {
+    "title": "Értékesítő",
+    "description": "Automata lead generálás, CRM rögzítés és follow-up routing.",
+    "capabilities": ["Lead generálás", "CRM kezelés", "Follow-up routing", "Email küldés"]
+  },
+  "SalesHunter": {
+    "title": "Lead Hunter",
+    "description": "Lead discovery, CRM szinkron és follow-up terv készítés.",
+    "capabilities": ["Lead generálás", "Keresés", "CRM szinkron", "Follow-up terv"]
   },
   "finance_guardian": {
     "title": "Pénzügyi Őrszem",

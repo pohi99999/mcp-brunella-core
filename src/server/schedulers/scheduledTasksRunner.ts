@@ -6,6 +6,7 @@ import { PythonShell } from 'python-shell';
 import { JulesAutomationService } from '../../core/julesAutomationService.js';
 import { executeLearningLoopCycle } from '../../core/learningLoopService.js';
 import { eventFabric, createSchedulerTaskOutcomeEnvelope } from '../../core/eventFabric.js';
+import { executeDueCrmFollowUpActions } from '../services/crmFollowUpExecutionService.js';
 
 interface ScheduledTask {
   id: string;
@@ -42,6 +43,11 @@ interface WeeklyResearchTaskMetadata extends Record<string, unknown> {
   maxExcerptLength?: number;
 }
 
+interface CrmFollowUpDispatchTaskMetadata extends Record<string, unknown> {
+  dispatchLimit?: number;
+  note?: string;
+}
+
 /**
  * ScheduledTasksRunner - Dynamically executes tasks from the database
  */
@@ -55,6 +61,7 @@ export class ScheduledTasksRunner {
     logInfo('ScheduledTasksRunner', 'Initializing dynamic task scheduler...');
     await this.seedDefaults();
     await this.ensureWeeklyResearchTask();
+    await this.ensureCrmFollowUpDispatchTask();
     await this.importJulesAutomations();
     await this.refreshSchedule();
   }
@@ -165,6 +172,56 @@ export class ScheduledTasksRunner {
       logInfo('ScheduledTasksRunner', 'Weekly AI research task ensured.');
     } catch (error) {
       logError('ScheduledTasksRunner', `Failed to ensure weekly AI research task: ${error}`);
+    }
+  }
+
+  /**
+   * Ensure CRM follow-up due actions are dispatched on a recurring schedule.
+   */
+  private async ensureCrmFollowUpDispatchTask() {
+    try {
+      const db = getGlobalDb();
+      const now = new Date().toISOString();
+      const metadata: CrmFollowUpDispatchTaskMetadata = {
+        dispatchLimit: 50,
+        note: 'scheduled CRM follow-up dispatch',
+      };
+
+      db.prepare(`
+        INSERT INTO scheduled_tasks (
+          id,
+          title,
+          prompt,
+          cron_expression,
+          handler,
+          enabled,
+          metadata,
+          created_at,
+          updated_at
+        )
+        VALUES (?, ?, ?, ?, ?, 1, ?, ?, ?)
+        ON CONFLICT(id) DO UPDATE SET
+          title = excluded.title,
+          prompt = excluded.prompt,
+          cron_expression = excluded.cron_expression,
+          handler = excluded.handler,
+          enabled = excluded.enabled,
+          metadata = excluded.metadata,
+          updated_at = excluded.updated_at
+      `).run(
+        'crm-follow-up-dispatch',
+        'CRM Follow-Up Due Dispatch',
+        'Dispatch due CRM follow-up actions for D+3/D+7/D+14 plan steps.',
+        '0 * * * *',
+        'crm_follow_up_dispatch',
+        JSON.stringify(metadata),
+        now,
+        now,
+      );
+
+      logInfo('ScheduledTasksRunner', 'CRM follow-up dispatch task ensured.');
+    } catch (error) {
+      logError('ScheduledTasksRunner', `Failed to ensure CRM follow-up dispatch task: ${error}`);
     }
   }
 
@@ -365,6 +422,14 @@ export class ScheduledTasksRunner {
             if (err) return reject(err);
             resolve({ output: scriptOutput, code, signal });
           });
+        });
+      } else if (task.handler === 'crm_follow_up_dispatch') {
+        const crmMeta = this.parseTaskMetadata(task) as CrmFollowUpDispatchTaskMetadata;
+        result = await executeDueCrmFollowUpActions({
+          limit: typeof crmMeta.dispatchLimit === 'number' ? crmMeta.dispatchLimit : undefined,
+          note: typeof crmMeta.note === 'string' && crmMeta.note.trim().length > 0
+            ? crmMeta.note.trim()
+            : 'scheduled CRM follow-up dispatch',
         });
       } else if (task.handler === 'jules_automation') {
         result = await this.executeJulesAutomation(task);

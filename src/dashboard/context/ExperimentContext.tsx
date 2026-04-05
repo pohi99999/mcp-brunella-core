@@ -27,7 +27,7 @@ export const ExperimentProvider: React.FC<{ children: React.ReactNode }> = ({ ch
       };
       setVariants(newVariants);
       localStorage.setItem("bas-experiments", JSON.stringify(newVariants));
-      console.log("BAS VCC Experiments Initialized:", newVariants);
+      console.info("BAS VCC Experiments Initialized:", newVariants);
     }
   }, []);
 

@@ -3,6 +3,7 @@ import chalk from 'chalk';
 import boxen from 'boxen';
 import ora from 'ora';
 import { agentManager } from '../../agents/AgentManager.js';
+import { writeLine } from '../../utils/cliOutput.js';
 
 type CashEntryType = 'KP_IN' | 'KP_OUT';
 type CashEntrySource = 'manual' | 'email' | 'import';
@@ -47,6 +48,27 @@ interface CashEntrySummaryResponse {
   success: boolean;
   summary: CashEntrySummary;
   timestamp: string;
+}
+
+interface BookkeepingReadinessCheck {
+  id: string;
+  label: string;
+  status: 'ready' | 'missing';
+  required: boolean;
+  details: string;
+}
+
+interface BookkeepingReadinessResponse {
+  success: boolean;
+  status: 'ready' | 'blocked';
+  timestamp: string;
+  summary: {
+    total: number;
+    ready: number;
+    blocked: number;
+  };
+  missing: string[];
+  checks: BookkeepingReadinessCheck[];
 }
 
 const API_BASE = process.env.BRUNELLA_API_BASE_URL || 'http://localhost:3000';
@@ -112,8 +134,8 @@ async function ingestSampleData(): Promise<void> {
     const bankResult = await agentManager.delegate('BankAgent', 'Process bank transactions from samples') as { data?: unknown[] };
 
     spinner.stop();
-    console.log(chalk.green(`✅ NAV számlák: ${navResult.data?.length || 0} db`));
-    console.log(chalk.green(`✅ Banki tételek: ${bankResult.data?.length || 0} db`));
+    writeLine(chalk.green(`✅ NAV számlák: ${navResult.data?.length || 0} db`));
+    writeLine(chalk.green(`✅ Banki tételek: ${bankResult.data?.length || 0} db`));
   } catch (error) {
     spinner.fail('Hiba az adatok beolvasása során.');
     console.error(chalk.red(error));
@@ -134,7 +156,7 @@ async function runMatching(): Promise<void> {
 
     if (result.status === 'success') {
       const { total, matched, manual } = result.data ?? { total: 0, matched: 0, manual: 0 };
-      console.log(
+      writeLine(
         boxen(
           chalk.white(`Összes tétel: ${chalk.bold(total)}\n`) +
           chalk.green(`Párosítva: ${chalk.bold(matched)}\n`) +
@@ -145,7 +167,7 @@ async function runMatching(): Promise<void> {
       return;
     }
 
-    console.log(chalk.red('Hiba a párosításban: ') + (result.error || 'Ismeretlen hiba'));
+    writeLine(chalk.red('Hiba a párosításban: ') + (result.error || 'Ismeretlen hiba'));
   } catch (error) {
     spinner.fail('Hiba a párosító ügynök futtatásakor.');
     console.error(chalk.red(error));
@@ -153,10 +175,10 @@ async function runMatching(): Promise<void> {
 }
 
 function showStatus(): void {
-  console.log(chalk.cyan('\n--- Könyvelési Állapot ---'));
-  console.log(chalk.gray('Használt adatbázis: ') + chalk.white('data/bookkeeping.db'));
-  console.log(chalk.gray('Aktív ügynökök: ') + chalk.white('BankAgent, NavAgent, MatchingAgent'));
-  console.log(chalk.yellow('\nTipp: A részletes elemzéshez használd a Web Dashboard-ot.'));
+  writeLine(chalk.cyan('\n--- Könyvelési Állapot ---'));
+  writeLine(chalk.gray('Használt adatbázis: ') + chalk.white('data/bookkeeping.db'));
+  writeLine(chalk.gray('Aktív ügynökök: ') + chalk.white('BankAgent, NavAgent, MatchingAgent'));
+  writeLine(chalk.yellow('\nTipp: A részletes elemzéshez használd a Web Dashboard-ot.'));
 }
 
 async function showCashSummary(): Promise<void> {
@@ -166,7 +188,7 @@ async function showCashSummary(): Promise<void> {
     const response = await requestJson<CashEntrySummaryResponse>('/api/v1/bookkeeping/cash-summary');
     spinner.stop();
 
-    console.log(
+    writeLine(
       boxen(
         chalk.white(`Összes tétel: ${chalk.bold(response.summary.total)}\n`) +
         chalk.green(`Bevétel: ${chalk.bold(formatCurrency(response.summary.income))}\n`) +
@@ -183,6 +205,36 @@ async function showCashSummary(): Promise<void> {
   }
 }
 
+async function showReadiness(): Promise<void> {
+  const spinner = ora('Phase 0 readiness ellenőrzése...').start();
+
+  try {
+    const response = await requestJson<BookkeepingReadinessResponse>('/api/v1/bookkeeping/readiness');
+    spinner.stop();
+
+    const borderColor = response.status === 'ready' ? 'green' : 'yellow';
+    const details = response.checks
+      .map((check) => {
+        const marker = check.status === 'ready' ? chalk.green('OK') : chalk.red('HIANYZIK');
+        return `${marker} ${check.label}\n${chalk.dim(check.details)}`;
+      })
+      .join('\n\n');
+
+    writeLine(
+      boxen(
+        chalk.white(`Állapot: ${chalk.bold(response.status.toUpperCase())}\n`) +
+        chalk.white(`Ready: ${chalk.bold(response.summary.ready)}/${response.summary.total}\n`) +
+        chalk.white(`Hiányzik: ${chalk.bold(response.summary.blocked)}`) +
+        (details ? `\n\n${details}` : ''),
+        { title: 'Phase 0 readiness', padding: 1, borderColor },
+      ),
+    );
+  } catch (error) {
+    spinner.fail('Nem sikerült lekérni a readiness riportot.');
+    console.error(chalk.red(error));
+  }
+}
+
 async function listCashEntries(): Promise<void> {
   const spinner = ora('KP tételek lekérése...').start();
 
@@ -191,11 +243,11 @@ async function listCashEntries(): Promise<void> {
     spinner.stop();
 
     if (response.entries.length === 0) {
-      console.log(chalk.gray('Még nincs rögzített KP tétel.'));
+      writeLine(chalk.gray('Még nincs rögzített KP tétel.'));
       return;
     }
 
-    console.log(
+    writeLine(
       boxen(
         response.entries
           .map((entry) => {
@@ -299,7 +351,7 @@ async function createCashEntryFlow(): Promise<void> {
 async function toggleCashEntrySyncFlow(): Promise<void> {
   const response = await requestJson<CashEntryListResponse>('/api/v1/bookkeeping/cash-entries?limit=20&offset=0');
   if (response.entries.length === 0) {
-    console.log(chalk.gray('Nincs módosítható KP tétel.'));
+    writeLine(chalk.gray('Nincs módosítható KP tétel.'));
     return;
   }
 
@@ -317,7 +369,7 @@ async function toggleCashEntrySyncFlow(): Promise<void> {
 
   const selected = response.entries.find((entry) => entry.id === entryId);
   if (!selected) {
-    console.log(chalk.red('A kiválasztott tétel nem található.'));
+    writeLine(chalk.red('A kiválasztott tétel nem található.'));
     return;
   }
 
@@ -388,7 +440,7 @@ async function cashMenu(): Promise<void> {
  * Lehetővé teszi a banki bizonylatok, NAV számlák és KP tételek kezelését.
  */
 export async function bookkeepingCommand() {
-  console.log(
+  writeLine(
     boxen(chalk.blue.bold('📊 Brunella Könyvelés Automatizálás'), {
       padding: 1,
       margin: 1,
@@ -407,6 +459,7 @@ export async function bookkeepingCommand() {
           { name: '📥 Adatok Ingesztálása (Bank + NAV)', value: 'ingest' },
           { name: '⚖️ Automatikus Párosítás Indítása', value: 'match' },
           { name: '💵 KP pénztár kezelése', value: 'cash' },
+          { name: '🩺 Phase 0 readiness ellenőrzés', value: 'readiness' },
           { name: '📋 Függő Tételek Megtekintése', value: 'status' },
           { name: '❌ Kilépés', value: 'exit' },
         ],
@@ -429,6 +482,11 @@ export async function bookkeepingCommand() {
 
     if (action === 'cash') {
       await cashMenu();
+      continue;
+    }
+
+    if (action === 'readiness') {
+      await showReadiness();
       continue;
     }
 

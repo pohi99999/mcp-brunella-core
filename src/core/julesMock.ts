@@ -16,7 +16,6 @@
 // import type { DeploymentAnalysis } from '../tools/deploymentAnalyzer.js';
 
 function logInfo(tag: string, message: string) {
-  // console.log(`[INFO] [${tag}] ${message}`);
 }
 
 function logWarn(tag: string, message: string) {

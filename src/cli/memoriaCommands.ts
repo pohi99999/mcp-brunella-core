@@ -13,6 +13,7 @@ import { Command } from "commander";
 import chalk from "chalk";
 import ora from "ora";
 import inquirer from "inquirer";
+import { writeLine } from '../utils/cliOutput.js';
 
 const API_BASE = process.env.BRUNELLA_API_URL || "http://localhost:3000";
 
@@ -130,13 +131,13 @@ export function registerMemoriaCommands(program: Command): void {
         spinner.stop();
 
         if (result.success && result.preferences) {
-          console.log(chalk.blue("\n╔════════════════════════════════════════╗"));
-          console.log(chalk.blue("║") + chalk.bold("  🧠 FELHASZNÁLÓI PREFERENCIÁK         ") + chalk.blue("║"));
-          console.log(chalk.blue("╚════════════════════════════════════════╝\n"));
-          console.log(chalk.dim(`  Felhasználó: ${options.user} | Összesen: ${result.count}\n`));
+          writeLine(chalk.blue("\n╔════════════════════════════════════════╗"));
+          writeLine(chalk.blue("║") + chalk.bold("  🧠 FELHASZNÁLÓI PREFERENCIÁK         ") + chalk.blue("║"));
+          writeLine(chalk.blue("╚════════════════════════════════════════╝\n"));
+          writeLine(chalk.dim(`  Felhasználó: ${options.user} | Összesen: ${result.count}\n`));
 
           if (result.preferences.length === 0) {
-            console.log(chalk.yellow("  Nincsenek preferenciák."));
+            writeLine(chalk.yellow("  Nincsenek preferenciák."));
             return;
           }
 
@@ -148,18 +149,18 @@ export function registerMemoriaCommands(program: Command): void {
 
           result.preferences.forEach((p, i) => {
             const emoji = typeEmoji[p.memory_type] || "📝";
-            console.log(
+            writeLine(
               `  ${chalk.bold(`#${i + 1}`)} ${emoji} ${chalk.cyan(p.key)} = ${chalk.white(p.value.substring(0, 60))}${p.value.length > 60 ? "..." : ""}`,
             );
-            console.log(
+            writeLine(
               chalk.dim(
                 `      Típus: ${p.memory_type} | Bizonyosság: ${(p.confidence * 100).toFixed(0)}% | Hozzáférés: ${p.access_count}x | ${new Date(p.updated_at).toLocaleString("hu-HU")}`,
               ),
             );
           });
-          console.log();
+          writeLine();
         } else {
-          console.log(chalk.red(`Hiba: ${result.error || "Ismeretlen hiba"}`));
+          writeLine(chalk.red(`Hiba: ${result.error || "Ismeretlen hiba"}`));
         }
       } catch (e: unknown) {
         spinner.fail(chalk.red("Kapcsolódási hiba"));
@@ -191,30 +192,30 @@ export function registerMemoriaCommands(program: Command): void {
         spinner.stop();
 
         if (result.success) {
-          console.log(chalk.blue("\n╔════════════════════════════════════════╗"));
-          console.log(chalk.blue("║") + chalk.bold("  🧠 LLM KONTEXTUS                    ") + chalk.blue("║"));
-          console.log(chalk.blue("╚════════════════════════════════════════╝\n"));
+          writeLine(chalk.blue("\n╔════════════════════════════════════════╗"));
+          writeLine(chalk.blue("║") + chalk.bold("  🧠 LLM KONTEXTUS                    ") + chalk.blue("║"));
+          writeLine(chalk.blue("╚════════════════════════════════════════╝\n"));
 
           if (result.stats) {
-            console.log(chalk.cyan("  📊 Statisztikák:"));
-            console.log(chalk.dim(`     Összes preferencia: ${result.stats.total}`));
+            writeLine(chalk.cyan("  📊 Statisztikák:"));
+            writeLine(chalk.dim(`     Összes preferencia: ${result.stats.total}`));
             if (result.stats.by_type) {
               Object.entries(result.stats.by_type).forEach(([type, count]) => {
-                console.log(chalk.dim(`     ${type}: ${count}`));
+                writeLine(chalk.dim(`     ${type}: ${count}`));
               });
             }
-            console.log();
+            writeLine();
           }
 
           if (result.context) {
-            console.log(chalk.cyan("  📝 Kontextus szöveg:"));
-            console.log(chalk.gray(`  ${result.context.replace(/\n/g, "\n  ")}`));
+            writeLine(chalk.cyan("  📝 Kontextus szöveg:"));
+            writeLine(chalk.gray(`  ${result.context.replace(/\n/g, "\n  ")}`));
           } else {
-            console.log(chalk.yellow("  Nincs kontextus (üres preferenciák)."));
+            writeLine(chalk.yellow("  Nincs kontextus (üres preferenciák)."));
           }
-          console.log();
+          writeLine();
         } else {
-          console.log(chalk.red(`Hiba: ${result.error}`));
+          writeLine(chalk.red(`Hiba: ${result.error}`));
         }
       } catch (e: unknown) {
         spinner.fail(chalk.red("Kapcsolódási hiba"));
@@ -246,7 +247,7 @@ export function registerMemoriaCommands(program: Command): void {
       ]);
 
       if (!answers.confirm) {
-        console.log(chalk.yellow("Törlés megszakítva."));
+        writeLine(chalk.yellow("Törlés megszakítva."));
         return;
       }
 

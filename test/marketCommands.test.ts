@@ -59,7 +59,7 @@ describe("Market CLI Commands", () => {
           },
         }),
     } as Response);
-    const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+    const consoleSpy = vi.spyOn(console, 'info').mockImplementation(() => {});
 
     await program.parseAsync([
       "node",
@@ -111,7 +111,7 @@ describe("Market CLI Commands", () => {
           ],
         }),
     } as Response);
-    const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+    const consoleSpy = vi.spyOn(console, 'info').mockImplementation(() => {});
 
     await program.parseAsync(["node", "test", "market", "status"]);
 
@@ -147,7 +147,7 @@ describe("Market CLI Commands", () => {
           },
         }),
     } as Response);
-    const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+    const consoleSpy = vi.spyOn(console, 'info').mockImplementation(() => {});
 
     await program.parseAsync(["node", "test", "market", "alerts", "--category", "valves"]);
 
@@ -172,7 +172,7 @@ describe("Market CLI Commands", () => {
           },
         }),
     } as Response);
-    const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+    const consoleSpy = vi.spyOn(console, 'info').mockImplementation(() => {});
 
     await program.parseAsync(["node", "test", "market", "alerts"]);
 

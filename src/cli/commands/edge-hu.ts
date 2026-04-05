@@ -3,12 +3,13 @@ import chalk from 'chalk';
 import boxen from 'boxen';
 import ora from 'ora';
 import { cloudflareClient } from '../../utils/cloudflareClient.js';
+import { writeLine } from '../../utils/cliOutput.js';
 
 /**
  * Cloudflare Edge Agents Network (CEAN) CLI Vezérlő - MAGYAR
  */
 export async function edgeCommand() {
-  console.log(boxen(chalk.cyan.bold('BRUNELLA EDGE ORCHESTRATOR v2'), {
+  writeLine(boxen(chalk.cyan.bold('BRUNELLA EDGE ORCHESTRATOR v2'), {
     padding: 1,
     margin: 1,
     borderStyle: 'double',
@@ -37,10 +38,10 @@ export async function edgeCommand() {
       const workers = await cloudflareClient.fetchWorkers();
       spinner.succeed('Flotta adatok betöltve.');
       
-      console.log('\n' + chalk.bold('AKTÍV EDGE ÁGENSEK:'));
+      writeLine('\n' + chalk.bold('AKTÍV EDGE ÁGENSEK:'));
       workers.forEach((w: any) => {
         const status = w.is_healthy ? chalk.green('HEALTHY') : chalk.red('DOWN');
-        console.log(`${chalk.cyan(w.agent_name.padEnd(25))} | ${status} | ${chalk.yellow(w.avg_latency_ms || 0)}ms | ${w.worker_url}`);
+        writeLine(`${chalk.cyan(w.agent_name.padEnd(25))} | ${status} | ${chalk.yellow(w.avg_latency_ms || 0)}ms | ${w.worker_url}`);
       });
     } catch (e) {
       spinner.fail('Hiba az Edge flotta lekérdezésekor: ' + e);
@@ -68,7 +69,7 @@ export async function edgeCommand() {
     try {
       const result = await cloudflareClient.dispatch(agent, task);
       spinner.succeed(`Sikeres válasz: ${agent}`);
-      console.log(boxen(JSON.stringify(result.result, null, 2), {
+      writeLine(boxen(JSON.stringify(result.result, null, 2), {
         title: 'AGENT VÁLASZ',
         padding: 1,
         borderColor: 'green'

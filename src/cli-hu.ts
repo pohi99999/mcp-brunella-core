@@ -14,8 +14,10 @@ import { join, resolve } from 'path';
 import { fileURLToPath } from 'url';
 import { runInvoiceSync } from './cli/invoiceSync.js';
 import { innovateCommand } from './cli/commands/innovate-hu.js';
+import { hrOnboardingCommand } from './cli/commands/hr-onboarding-hu.js';
 import { agentManager } from './agents/AgentManager.js';
 import { getSkill, listSkills } from './skills/index.js';
+import { writeLine } from './utils/cliOutput.js';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 marked.setOptions({ renderer: new TerminalRenderer() as any });
@@ -57,9 +59,9 @@ export async function runSkillCommand(args: string[]): Promise<boolean> {
     const [action, skillName, ...paramParts] = rest;
     if (action === 'lista') {
         const skills = listSkills();
-        console.log(chalk.bold('\nElérhető skill-ek:\n'));
+        writeLine(chalk.bold('\nElérhető skill-ek:\n'));
         for (const skill of skills) {
-            console.log(
+            writeLine(
                 chalk.green(`• ${skill.name}`) +
                 chalk.dim(` | ${skill.category} | ${skill.version}`) +
                 `\n  ${skill.description}`
@@ -79,9 +81,9 @@ export async function runSkillCommand(args: string[]): Promise<boolean> {
         }
 
         const params = parseSkillParams(paramParts.join(' '));
-        console.log(chalk.cyan(`Skill futtatása: ${skill.name}`));
+        writeLine(chalk.cyan(`Skill futtatása: ${skill.name}`));
         const result = await agentManager.executeSkill(skill.name, params);
-        console.log(JSON.stringify(result, null, 2));
+        writeLine(JSON.stringify(result, null, 2));
         return true;
     }
 
@@ -141,9 +143,9 @@ async function mainLoop() {
 
     while (true) {
         console.clear();
-        console.log(chalk.cyan(figlet.textSync('BRUNELLA', { font: 'Standard' })));
-        console.log(chalk.blue(boxen(`Magyar CLI v${version} | AI Vezérlőközpont`, { padding: 1, borderStyle: 'double' })));
-        console.log(chalk.dim(`Munkakönyvtár: ${process.cwd()}\n`));
+        writeLine(chalk.cyan(figlet.textSync('BRUNELLA', { font: 'Standard' })));
+        writeLine(chalk.blue(boxen(`Magyar CLI v${version} | AI Vezérlőközpont`, { padding: 1, borderStyle: 'double' })));
+        writeLine(chalk.dim(`Munkakönyvtár: ${process.cwd()}\n`));
 
         const { choice } = await inquirer.prompt([{
             type: 'list',
@@ -153,6 +155,7 @@ async function mainLoop() {
                 { name: '🤖  Ügynökök (Kezelés & Futtatás)', value: 'agents' },
                 { name: '📋  Track-ek (Projekt Ütemterv)', value: 'tracks' },
                 { name: '🌉  Innováció (Innovation Bridge)', value: 'innovation' },
+                { name: '🧑‍💼  HR Onboarding', value: 'hr-onboarding' },
                 { name: '📄  Számlák (Szinkron)', value: 'invoices' },
                 { name: '�  Chat & Kommunikáció', value: 'chat' },
                 { name: '🔧  Rendszer & Diagnosztika', value: 'system' },
@@ -163,7 +166,7 @@ async function mainLoop() {
         }]);
 
         if (choice === 'exit') {
-            console.log(chalk.yellow('\nViszlát! 👋\n'));
+            writeLine(chalk.yellow('\nViszlát! 👋\n'));
             process.exit(0);
         }
 
@@ -171,6 +174,7 @@ async function mainLoop() {
             if (choice === 'agents') await agentsMenu();
             else if (choice === 'tracks') await tracksMenu();
             else if (choice === 'innovation') await innovateCommand();
+            else if (choice === 'hr-onboarding') await hrOnboardingCommand();
             else if (choice === 'invoices') await invoiceMenu();
             else if (choice === 'chat') await chatMenu();
             else if (choice === 'system') await systemMenu();
@@ -202,7 +206,7 @@ async function agentsMenu() {
     if (action === 'list') {
         const result = await client.callTool("agent_list", {});
         // @ts-expect-error - Tool result content access
-        console.log('\n' + (result.content?.[0]?.text || 'Nincs válasz'));
+        writeLine('\n' + (result.content?.[0]?.text || 'Nincs válasz'));
         await pause();
     } else if (action === 'execute') {
         const listResult = await client.callTool("agent_list", {});
@@ -211,7 +215,7 @@ async function agentsMenu() {
         const agentNames = text.match(/• \*\*([^*]+)\*\*/g)?.map((m: string) => m.replace(/• \*\*|\*\*/g, '')) || [];
         
         if (agentNames.length === 0) {
-            console.log(chalk.yellow('Nem található aktív ügynök.'));
+            writeLine(chalk.yellow('Nem található aktív ügynök.'));
             await pause();
             return;
         }
@@ -231,10 +235,10 @@ async function agentsMenu() {
 
         if (!task) return;
 
-        console.log(chalk.cyan(`\nFuttatás: ${agent}...`));
+        writeLine(chalk.cyan(`\nFuttatás: ${agent}...`));
         const result = await client.callTool("agent_execute", { agentName: agent, task });
         // @ts-expect-error - Tool result content access
-        console.log('\n' + (result.content?.[0]?.text || 'Nincs válasz'));
+        writeLine('\n' + (result.content?.[0]?.text || 'Nincs válasz'));
         await pause();
     }
 }
@@ -262,11 +266,11 @@ async function tracksMenu() {
     if (action === 'status') {
         const result = await client.callTool("agent_delegate", { agent_name: "ProjectConductor", task: "status" });
         // @ts-expect-error - Tool result content access
-        console.log('\n' + marked(result.content?.[0]?.text || 'Nincs válasz'));
+        writeLine('\n' + marked(result.content?.[0]?.text || 'Nincs válasz'));
         await pause();
     } else if (action === 'view' || action === 'update') {
         if (trackNames.length === 0) {
-            console.log(chalk.yellow('Nincs elérhető track.'));
+            writeLine(chalk.yellow('Nincs elérhető track.'));
             await pause();
             return;
         }
@@ -278,21 +282,21 @@ async function tracksMenu() {
         }]);
 
         if (action === 'view') {
-            console.log(chalk.cyan(`\nMegtekintés: ${target}...`));
+            writeLine(chalk.cyan(`\nMegtekintés: ${target}...`));
             const result = await client.callTool("agent_delegate", { 
                 agent_name: "ProjectConductor", 
                 task: `track view ${target}` 
             });
             // @ts-expect-error - Tool result content access
-            console.log('\n' + marked(result.content?.[0]?.text || 'Nincs válasz'));
+            writeLine('\n' + marked(result.content?.[0]?.text || 'Nincs válasz'));
         } else {
-            console.log(chalk.cyan(`\nUpdate folyamat indítása: ${target}...`));
+            writeLine(chalk.cyan(`\nUpdate folyamat indítása: ${target}...`));
             const result = await client.callTool("agent_delegate", { 
                 agent_name: "ProjectConductor", 
                 task: `track update ${target}` 
             });
             // @ts-expect-error - Tool result content access
-            console.log('\n' + marked(result.content?.[0]?.text || 'Kész'));
+            writeLine('\n' + marked(result.content?.[0]?.text || 'Kész'));
         }
         await pause();
     } else if (action === 'generate') {
@@ -302,16 +306,16 @@ async function tracksMenu() {
             message: 'Mire vonatkozzon az új Track? (Ötlet):'
         }]);
         if (!idea) return;
-        console.log(chalk.cyan('\nTrack generálása...'));
+        writeLine(chalk.cyan('\nTrack generálása...'));
         const result = await client.callTool("agent_delegate", { agent_name: "ProjectConductor", task: `track generate ${idea}` });
         // @ts-expect-error - Tool result content access
-        console.log('\n' + (result.content?.[0]?.text || 'Kész'));
+        writeLine('\n' + (result.content?.[0]?.text || 'Kész'));
         await pause();
     } else if (action === 'sync') {
-        console.log(chalk.cyan('\nDokumentáció szinkronizálása...'));
+        writeLine(chalk.cyan('\nDokumentáció szinkronizálása...'));
         const result = await client.callTool("agent_delegate", { agent_name: "ProjectConductor", task: "sync" });
         // @ts-expect-error - Tool result content access
-        console.log('\n' + (result.content?.[0]?.text || 'Kész'));
+        writeLine('\n' + (result.content?.[0]?.text || 'Kész'));
         await pause();
     }
 }
@@ -422,7 +426,7 @@ async function invoiceMenu() {
 
     if (!confirmRun) return;
 
-    console.log(chalk.cyan('\nSzámlák lekérése & írás folyamatban...'));
+    writeLine(chalk.cyan('\nSzámlák lekérése & írás folyamatban...'));
 
     const result = await runInvoiceSync(client, {
         sinceDate,
@@ -438,18 +442,18 @@ async function invoiceMenu() {
     });
 
     if (!result.success) {
-        console.log(chalk.red(`\nHiba: ${result.message || 'Ismeretlen hiba'}`));
+        writeLine(chalk.red(`\nHiba: ${result.message || 'Ismeretlen hiba'}`));
         await pause();
         return;
     }
 
     if (dryRun) {
-        console.log(chalk.green(`\n✅ Dry-run kész: ${result.fetched} számla (forrás: ${result.source})`));
+        writeLine(chalk.green(`\n✅ Dry-run kész: ${result.fetched} számla (forrás: ${result.source})`));
         await pause();
         return;
     }
 
-    console.log(
+    writeLine(
         chalk.green(
             `\n✅ Szinkron kész: ${result.fetched} → ${result.written} sor (duplikátum: ${result.duplicatesSkipped})`
         )
@@ -492,7 +496,7 @@ async function chatMenu() {
     if (action === BACK) return;
 
     if (action === 'interactive') {
-        console.log(chalk.yellow('\nIndítom az interaktív chatet... (Használd az "exit" szót a kilépéshez.)'));
+        writeLine(chalk.yellow('\nIndítom az interaktív chatet... (Használd az "exit" szót a kilépéshez.)'));
         const { execSync } = await import('child_process');
         try {
             execSync(`npm run cli -- chat --provider ${mode}`, { stdio: 'inherit' });
@@ -503,10 +507,10 @@ async function chatMenu() {
         if (action === 'query_tasks') task = "Milyen elmaradt TODO vagy karbantartási feladatokat látsz a kódban?";
         if (action === 'query_ideas') task = "Adj 3 innovatív ötletet a Brunella továbbfejlesztéséhez!";
 
-        console.log(chalk.cyan(`\nKérdezés: "${task}"...`));
+        writeLine(chalk.cyan(`\nKérdezés: "${task}"...`));
         const result = await client.callTool("agent_execute", { agentName: "orchestrator", task });
         // @ts-expect-error - Tool result content access
-        console.log('\n' + marked(result.content?.[0]?.text || 'Nincs válasz'));
+        writeLine('\n' + marked(result.content?.[0]?.text || 'Nincs válasz'));
         await pause();
     }
 }
@@ -537,21 +541,21 @@ async function settingsMenu() {
         if (action === 'lang') {
             const next = currentLang === 'hu' ? 'en' : 'hu';
             configManager.set('general.language', next);
-            console.log(chalk.green(`Nyelv átállítva: ${next}`));
+            writeLine(chalk.green(`Nyelv átállítva: ${next}`));
         } else if (action === 'theme') {
             const next = currentTheme === 'dark' ? 'light' : 'dark';
             configManager.set('ui.theme', next);
-            console.log(chalk.green(`Theme átállítva: ${next}`));
+            writeLine(chalk.green(`Theme átállítva: ${next}`));
         } else if (action === 'telemetry') {
             const current = configManager.get('general.telemetry');
             configManager.set('general.telemetry', !current);
-            console.log(chalk.green(`Telemetria átállítva: ${!current ? 'BE' : 'KI'}`));
+            writeLine(chalk.green(`Telemetria átállítva: ${!current ? 'BE' : 'KI'}`));
         } else if (action === 'save') {
              // ConfigManager normally saves automatically, but we can force or just notify
-            console.log(chalk.green('Beállítások elmentve!'));
+            writeLine(chalk.green('Beállítások elmentve!'));
         } else if (action === 'view') {
-            console.log(chalk.blue('\nAktuális konfiguráció:'));
-            console.log(JSON.stringify(configManager.getAll(), null, 2));
+            writeLine(chalk.blue('\nAktuális konfiguráció:'));
+            writeLine(JSON.stringify(configManager.getAll(), null, 2));
             await pause();
         }
     }
@@ -576,7 +580,7 @@ async function systemMenu() {
     if (action === BACK) return;
 
     if (action === 'arch') {
-        console.log(chalk.bold('\n🏗️  System Architecture Status lekérdezése...\n'));
+        writeLine(chalk.bold('\n🏗️  System Architecture Status lekérdezése...\n'));
         try {
             const port = process.env.PORT ?? '3000';
             const resp = await fetch(`http://localhost:${port}/api/v1/system/architecture-status`);
@@ -587,39 +591,39 @@ async function systemMenu() {
                 const info = d[layer] as Record<string, unknown>;
                 const status = String(info?.status ?? '?');
                 const isOk = status === 'healthy' || status === 'hardened';
-                console.log(
+                writeLine(
                     chalk.bold((isOk ? chalk.green('[OK] ') : chalk.red('[!!] ')) + layer.toUpperCase()) +
                     ' — ' + (isOk ? chalk.green(status) : chalk.red(status))
                 );
                 for (const [k, v] of Object.entries(info)) {
                     if (k !== 'status') {
-                        console.log(`     ${chalk.dim(k)}: ${chalk.cyan(String(v))}`);
+                        writeLine(`     ${chalk.dim(k)}: ${chalk.cyan(String(v))}`);
                     }
                 }
             }
         } catch (e: unknown) {
-            console.log(chalk.red(`Hiba: ${e instanceof Error ? e.message : String(e)}`));
-            console.log(chalk.dim('(Ellenőrizd, hogy fut-e a szerver: npm run dev)'));
+            writeLine(chalk.red(`Hiba: ${e instanceof Error ? e.message : String(e)}`));
+            writeLine(chalk.dim('(Ellenőrizd, hogy fut-e a szerver: npm run dev)'));
         }
         await pause();
     } else if (action === 'health') {
-        console.log(chalk.bold("\n🏥 Rendszer Diagnosztika futtatása..."));
+        writeLine(chalk.bold("\n🏥 Rendszer Diagnosztika futtatása..."));
         const { execSync } = await import('child_process');
         try {
             execSync(`npm run health`, { stdio: 'inherit' });
         } catch { 
-            console.log(chalk.red("\nA diagnosztika hibát jelzett."));
+            writeLine(chalk.red("\nA diagnosztika hibát jelzett."));
         }
         await pause();
     } else if (action === 'tools') {
         const result = await client.listTools();
-        console.log(chalk.bold(`\n🛠️ Elérhető MCP eszközök (${result.tools.length}):`));
+        writeLine(chalk.bold(`\n🛠️ Elérhető MCP eszközök (${result.tools.length}):`));
         for (const tool of result.tools) {
-            console.log(chalk.green("• " + tool.name.padEnd(20)) + (tool.description ? " | " + chalk.dim(tool.description.slice(0, 60) + (tool.description.length > 60 ? '...' : '')) : ""));
+            writeLine(chalk.green("• " + tool.name.padEnd(20)) + (tool.description ? " | " + chalk.dim(tool.description.slice(0, 60) + (tool.description.length > 60 ? '...' : '')) : ""));
         }
         await pause();
     } else if (action === 'python') {
-        console.log(chalk.yellow('\nBelépés a Python környezetbe...'));
+        writeLine(chalk.yellow('\nBelépés a Python környezetbe...'));
         const { execSync } = await import('child_process');
         try {
             execSync(`npm run cli -- interpreter`, { stdio: 'inherit' });
@@ -628,9 +632,9 @@ async function systemMenu() {
         const logFile = join(process.cwd(), 'logs', 'brunella.log');
         if (existsSync(logFile)) {
             const logs = readFileSync(logFile, 'utf-8').split('\n').slice(-20).join('\n');
-            console.log(chalk.dim(logs));
+            writeLine(chalk.dim(logs));
         } else {
-            console.log(chalk.yellow('Log fájl nem található.'));
+            writeLine(chalk.yellow('Log fájl nem található.'));
         }
         await pause();
     }

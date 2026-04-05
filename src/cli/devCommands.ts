@@ -22,6 +22,7 @@ import { BrunellaClient } from '../utils/mcpClient.js';
 import { logInfo, logError } from '../utils/logger.js';
 import { ensureError } from '../utils/ensureError.js';
 import { logDebug } from '../utils/logger.js';
+import { writeLine } from '../utils/cliOutput.js';
 
 const API_BASE = process.env.BRUNELLA_API_URL || 'http://localhost:3000';
 
@@ -129,7 +130,7 @@ async function pollPipeline(taskId: string, spinner: ReturnType<typeof ora>): Pr
                     const icon = phase.status === 'done' ? '✅' :
                         phase.status === 'skipped' ? '⏭️' :
                             phase.status === 'error' ? '❌' : '⏳';
-                    console.log(`  ${icon} ${phase.label}: ${phase.status}`);
+                    writeLine(`  ${icon} ${phase.label}: ${phase.status}`);
                 }
                 return;
             }
@@ -139,7 +140,7 @@ async function pollPipeline(taskId: string, spinner: ReturnType<typeof ora>): Pr
                 for (const phase of pipeline.phases) {
                     const icon = phase.status === 'done' ? '✅' :
                         phase.status === 'error' ? '❌' : '⏳';
-                    console.log(`  ${icon} ${phase.label}: ${phase.status}`);
+                    writeLine(`  ${icon} ${phase.label}: ${phase.status}`);
                 }
                 return;
             }
@@ -288,9 +289,9 @@ export function registerDevCommands(program: Command): void {
         .description('AI-powered persistent Python interpreter (Comet-style)')
         .option('-m, --model <name>', 'Preferred model (gpt-4o, qwen2.5-coder)')
         .action(async (opts: { model?: string }) => {
-            console.log(chalk.cyan.bold('\n🧠 Brunella AI-Interpreter (Comet Mode)'));
-            console.log(chalk.dim('Utasításaidat Python kódra fordítom és azonnal futtatom.'));
-            console.log(chalk.dim('Kilépés: "exit" vagy "quit"\n'));
+            writeLine(chalk.cyan.bold('\n🧠 Brunella AI-Interpreter (Comet Mode)'));
+            writeLine(chalk.dim('Utasításaidat Python kódra fordítom és azonnal futtatom.'));
+            writeLine(chalk.dim('Kilépés: "exit" vagy "quit"\n'));
 
             const client = new BrunellaClient();
             try {
@@ -334,16 +335,16 @@ export function registerDevCommands(program: Command): void {
                             const output = pipeline.result.data.output;
                             const generatedCode = pipeline.result.data.code;
 
-                            console.log(chalk.white('\n--- Kimenet ---'));
-                            console.log(output || chalk.dim('(nincs szöveges kimenet)'));
-                            console.log(chalk.white('---------------\n'));
+                            writeLine(chalk.white('\n--- Kimenet ---'));
+                            writeLine(output || chalk.dim('(nincs szöveges kimenet)'));
+                            writeLine(chalk.white('---------------\n'));
 
                             // Add to history
                             history.push({ role: 'user', content: instruction });
                             history.push({ role: 'assistant', content: `Kód futtatva. Kimenet: ${output}` });
 
                         } else if (pipeline.error) {
-                            console.log(chalk.red(`\n❌ Hiba: ${pipeline.error}\n`));
+                            writeLine(chalk.red(`\n❌ Hiba: ${pipeline.error}\n`));
                         }
 
                     } catch (error: unknown) {
@@ -397,17 +398,17 @@ export function registerDevCommands(program: Command): void {
                 spinner.succeed(chalk.green(`Review complete: ${review.fileName}`));
 
                 if (opts.json) {
-                    console.log(JSON.stringify(review, null, 2));
+                    writeLine(JSON.stringify(review, null, 2));
                     return;
                 }
 
                 // Score badge
                 const scoreColor = review.score >= 80 ? chalk.green : review.score >= 60 ? chalk.yellow : chalk.red;
-                console.log(`\n${chalk.bold('Score:')} ${scoreColor(`${review.score}/100`)}`);
-                console.log(`${chalk.bold('Summary:')} ${review.summary}`);
+                writeLine(`\n${chalk.bold('Score:')} ${scoreColor(`${review.score}/100`)}`);
+                writeLine(`${chalk.bold('Summary:')} ${review.summary}`);
 
                 // Stats line
-                console.log(`\n${chalk.bold('Findings:')} ${review.stats.total} total — ` +
+                writeLine(`\n${chalk.bold('Findings:')} ${review.stats.total} total — ` +
                     `${chalk.red(`${review.stats.critical} critical`)} · ` +
                     `${chalk.yellow(`${review.stats.warning} warnings`)} · ` +
                     `${chalk.blue(`${review.stats.info} info`)} · ` +
@@ -415,20 +416,20 @@ export function registerDevCommands(program: Command): void {
 
                 // Individual findings
                 if (review.findings.length > 0) {
-                    console.log('');
+                    writeLine('');
                     for (const f of review.findings) {
                         const icon = f.severity === 'critical' ? chalk.red('✖') :
                             f.severity === 'warning' ? chalk.yellow('⚠') :
                                 f.severity === 'info' ? chalk.blue('ℹ') : chalk.dim('💡');
                         const lineRef = f.line ? chalk.dim(`:${f.line}`) : '';
                         const rule = f.rule ? chalk.dim(` [${f.rule}]`) : '';
-                        console.log(`  ${icon} ${f.message}${lineRef}${rule}`);
+                        writeLine(`  ${icon} ${f.message}${lineRef}${rule}`);
                         if (f.suggestion) {
-                            console.log(`    ${chalk.dim('→')} ${chalk.cyan(f.suggestion)}`);
+                            writeLine(`    ${chalk.dim('→')} ${chalk.cyan(f.suggestion)}`);
                         }
                     }
                 }
-                console.log('');
+                writeLine('');
             } catch (e: unknown) {
                 const msg = e instanceof Error ? e.message : String(e);
                 spinner.fail(chalk.red(`Review failed: ${msg}`));
@@ -467,21 +468,21 @@ export function registerDevCommands(program: Command): void {
                     spinner.succeed(chalk.green('Refactoring complete (dry run)'));
                 }
 
-                console.log(`\n${chalk.bold('Instruction:')} ${refactor.instruction}`);
-                console.log(`${chalk.bold('Changes:')}`);
+                writeLine(`\n${chalk.bold('Instruction:')} ${refactor.instruction}`);
+                writeLine(`${chalk.bold('Changes:')}`);
                 for (const change of refactor.changes) {
-                    console.log(`  • ${change}`);
+                    writeLine(`  • ${change}`);
                 }
 
                 if (!refactor.applied && refactor.refactoredCode) {
-                    console.log(`\n${chalk.dim('Preview (use --apply to write):')}`);
-                    console.log(chalk.dim('─'.repeat(60)));
-                    console.log(refactor.refactoredCode.slice(0, 2000));
+                    writeLine(`\n${chalk.dim('Preview (use --apply to write):')}`);
+                    writeLine(chalk.dim('─'.repeat(60)));
+                    writeLine(refactor.refactoredCode.slice(0, 2000));
                     if (refactor.refactoredCode.length > 2000) {
-                        console.log(chalk.dim(`\n... (${refactor.refactoredCode.length} chars total)`));
+                        writeLine(chalk.dim(`\n... (${refactor.refactoredCode.length} chars total)`));
                     }
                 }
-                console.log('');
+                writeLine('');
             } catch (e: unknown) {
                 const msg = e instanceof Error ? e.message : String(e);
                 spinner.fail(chalk.red(`Refactor failed: ${msg}`));
@@ -518,27 +519,27 @@ export function registerDevCommands(program: Command): void {
                 spinner.succeed(chalk.green(`Found ${context.files.length} context files`));
 
                 if (opts.json) {
-                    console.log(JSON.stringify(context, null, 2));
+                    writeLine(JSON.stringify(context, null, 2));
                     return;
                 }
 
-                console.log(`\n${chalk.bold('Target:')} ${file}`);
-                console.log(`${chalk.bold('Total size:')} ${(context.totalSize / 1024).toFixed(1)} KB`);
+                writeLine(`\n${chalk.bold('Target:')} ${file}`);
+                writeLine(`${chalk.bold('Total size:')} ${(context.totalSize / 1024).toFixed(1)} KB`);
                 if (context.truncated) {
-                    console.log(chalk.yellow('⚠ Context was truncated due to size limits'));
+                    writeLine(chalk.yellow('⚠ Context was truncated due to size limits'));
                 }
 
                 if (context.files.length > 0) {
-                    console.log(`\n${chalk.bold('Context files:')}`);
+                    writeLine(`\n${chalk.bold('Context files:')}`);
                     for (const f of context.files) {
                         const sizeStr = chalk.dim(`(${(f.size / 1024).toFixed(1)} KB)`);
-                        console.log(`  ${chalk.cyan(f.relativePath)} ${sizeStr}`);
-                        console.log(`    ${chalk.dim(f.reason)}`);
+                        writeLine(`  ${chalk.cyan(f.relativePath)} ${sizeStr}`);
+                        writeLine(`    ${chalk.dim(f.reason)}`);
                     }
                 } else {
-                    console.log(chalk.dim('\nNo context files found.'));
+                    writeLine(chalk.dim('\nNo context files found.'));
                 }
-                console.log('');
+                writeLine('');
             } catch (e: unknown) {
                 const msg = e instanceof Error ? e.message : String(e);
                 spinner.fail(chalk.red(`Context gathering failed: ${msg}`));
@@ -590,7 +591,7 @@ export function registerDevCommands(program: Command): void {
                 spinner.succeed(chalk.green('Coverage analysis complete'));
 
                 if (opts.json) {
-                    console.log(JSON.stringify(coverage, null, 2));
+                    writeLine(JSON.stringify(coverage, null, 2));
                     return;
                 }
 
@@ -601,40 +602,40 @@ export function registerDevCommands(program: Command): void {
                     pct >= 60 ? chalk.yellow(`${pct}%`) :
                     chalk.red(`${pct}%`);
 
-                console.log(`\n${chalk.bold('📊 Coverage Summary')}`);
-                console.log(`  Statements: ${colorize(agg.statements.pct)}  (${agg.statements.covered}/${agg.statements.total})`);
-                console.log(`  Branches:   ${colorize(agg.branches.pct)}  (${agg.branches.covered}/${agg.branches.total})`);
-                console.log(`  Functions:  ${colorize(agg.functions.pct)}  (${agg.functions.covered}/${agg.functions.total})`);
-                console.log(`  Lines:      ${colorize(agg.lines.pct)}  (${agg.lines.covered}/${agg.lines.total})`);
-                console.log(`\n  Files: ${coverage.filesWithTests} tested / ${coverage.filesWithoutTests} untested / ${coverage.totalFiles} total`);
+                writeLine(`\n${chalk.bold('📊 Coverage Summary')}`);
+                writeLine(`  Statements: ${colorize(agg.statements.pct)}  (${agg.statements.covered}/${agg.statements.total})`);
+                writeLine(`  Branches:   ${colorize(agg.branches.pct)}  (${agg.branches.covered}/${agg.branches.total})`);
+                writeLine(`  Functions:  ${colorize(agg.functions.pct)}  (${agg.functions.covered}/${agg.functions.total})`);
+                writeLine(`  Lines:      ${colorize(agg.lines.pct)}  (${agg.lines.covered}/${agg.lines.total})`);
+                writeLine(`\n  Files: ${coverage.filesWithTests} tested / ${coverage.filesWithoutTests} untested / ${coverage.totalFiles} total`);
 
                 // Worst files
                 const worstLimit = parseInt(opts.worst, 10) || 10;
                 const worst = coverage.worstFiles.slice(0, worstLimit);
                 if (worst.length > 0) {
-                    console.log(`\n${chalk.bold('⚠ Lowest Coverage Files:')}`);
+                    writeLine(`\n${chalk.bold('⚠ Lowest Coverage Files:')}`);
                     for (const f of worst) {
                         const linePct = colorize(f.lines.pct);
                         const fnPct = colorize(f.functions.pct);
-                        console.log(`  ${chalk.cyan(f.relativePath)}  lines: ${linePct}  fn: ${fnPct}`);
+                        writeLine(`  ${chalk.cyan(f.relativePath)}  lines: ${linePct}  fn: ${fnPct}`);
                         if (f.uncoveredLines.length > 0 && f.uncoveredLines.length <= 20) {
-                            console.log(`    ${chalk.dim(`uncovered: L${f.uncoveredLines.join(', L')}`)}`);
+                            writeLine(`    ${chalk.dim(`uncovered: L${f.uncoveredLines.join(', L')}`)}`);
                         }
                     }
                 }
 
                 // Untested files
                 if (coverage.untestedFiles.length > 0) {
-                    console.log(`\n${chalk.bold('❌ Files Without Tests:')}`);
+                    writeLine(`\n${chalk.bold('❌ Files Without Tests:')}`);
                     for (const f of coverage.untestedFiles.slice(0, 15)) {
-                        console.log(`  ${chalk.red(f)}`);
+                        writeLine(`  ${chalk.red(f)}`);
                     }
                     if (coverage.untestedFiles.length > 15) {
-                        console.log(chalk.dim(`  ... and ${coverage.untestedFiles.length - 15} more`));
+                        writeLine(chalk.dim(`  ... and ${coverage.untestedFiles.length - 15} more`));
                     }
                 }
 
-                console.log('');
+                writeLine('');
             } catch (e: unknown) {
                 const msg = e instanceof Error ? e.message : String(e);
                 spinner.fail(chalk.red(`Coverage analysis failed: ${msg}`));
@@ -656,14 +657,14 @@ export function registerDevCommands(program: Command): void {
                     activePipelines: Array<{ taskId: string; task: string; status: string; createdAt: number }>;
                 }>('/status');
 
-                console.log(chalk.bold('\n📊 Developer Agent Status'));
-                console.log(`  Active:    ${chalk.cyan(String(result.activeTasks))}`);
-                console.log(`  Completed: ${chalk.green(String(result.completedTasks))}`);
-                console.log(`  Failed:    ${chalk.red(String(result.failedTasks))}`);
-                console.log(`  Total:     ${result.totalTasks}\n`);
+                writeLine(chalk.bold('\n📊 Developer Agent Status'));
+                writeLine(`  Active:    ${chalk.cyan(String(result.activeTasks))}`);
+                writeLine(`  Completed: ${chalk.green(String(result.completedTasks))}`);
+                writeLine(`  Failed:    ${chalk.red(String(result.failedTasks))}`);
+                writeLine(`  Total:     ${result.totalTasks}\n`);
 
                 if (result.activePipelines.length > 0) {
-                    console.log(chalk.bold('Active Pipelines:'));
+                    writeLine(chalk.bold('Active Pipelines:'));
                     console.table(result.activePipelines.map(p => ({
                         TaskId: p.taskId.slice(0, 20),
                         Task: p.task.slice(0, 40),
@@ -674,7 +675,7 @@ export function registerDevCommands(program: Command): void {
             } catch (e: unknown) {
                 const msg = e instanceof Error ? e.message : String(e);
                 console.error(chalk.red(`Failed to get status: ${msg}`));
-                console.log(chalk.dim('Is the server running? Try: npm run dev'));
+                writeLine(chalk.dim('Is the server running? Try: npm run dev'));
                 process.exit(1);
             }
         });
@@ -698,11 +699,11 @@ export function registerDevCommands(program: Command): void {
                 }>(`/history?limit=${limit}`);
 
                 if (result.history.length === 0) {
-                    console.log(chalk.dim('No developer tasks yet.'));
+                    writeLine(chalk.dim('No developer tasks yet.'));
                     return;
                 }
 
-                console.log(chalk.bold(`\n📜 Developer Task History (last ${limit}):\n`));
+                writeLine(chalk.bold(`\n📜 Developer Task History (last ${limit}):\n`));
                 console.table(result.history.map(p => ({
                     TaskId: p.taskId.slice(0, 20),
                     Task: p.task.slice(0, 40),
@@ -740,45 +741,45 @@ export function registerDevCommands(program: Command): void {
                 const { metrics } = result;
 
                 if (opts.json) {
-                    console.log(JSON.stringify(metrics, null, 2));
+                    writeLine(JSON.stringify(metrics, null, 2));
                     return;
                 }
 
-                console.log(chalk.bold('\n📊 Developer Agent Metrics & Analytics\n'));
+                writeLine(chalk.bold('\n📊 Developer Agent Metrics & Analytics\n'));
 
                 // Tasks
-                console.log(chalk.cyan.bold('  TASKS'));
-                console.log(`    Total:      ${metrics.tasks.total}`);
-                console.log(`    Success:    ${chalk.green(String(metrics.tasks.success))}`);
-                console.log(`    Error:      ${chalk.red(String(metrics.tasks.error))}`);
-                console.log(`    Avg Duration: ${chalk.yellow(`${(metrics.tasks.avgDurationMs / 1000).toFixed(1)}s`)}`);
+                writeLine(chalk.cyan.bold('  TASKS'));
+                writeLine(`    Total:      ${metrics.tasks.total}`);
+                writeLine(`    Success:    ${chalk.green(String(metrics.tasks.success))}`);
+                writeLine(`    Error:      ${chalk.red(String(metrics.tasks.error))}`);
+                writeLine(`    Avg Duration: ${chalk.yellow(`${(metrics.tasks.avgDurationMs / 1000).toFixed(1)}s`)}`);
 
                 // Builds
-                console.log(chalk.cyan.bold('\n  BUILDS'));
-                console.log(`    Total:      ${metrics.builds.total}`);
-                console.log(`    Success:    ${chalk.green(String(metrics.builds.success))}`);
-                console.log(`    Fail:       ${chalk.red(String(metrics.builds.fail))}`);
+                writeLine(chalk.cyan.bold('\n  BUILDS'));
+                writeLine(`    Total:      ${metrics.builds.total}`);
+                writeLine(`    Success:    ${chalk.green(String(metrics.builds.success))}`);
+                writeLine(`    Fail:       ${chalk.red(String(metrics.builds.fail))}`);
                 const statusColor = metrics.builds.lastStatus === 'success' ? chalk.green : chalk.red;
-                console.log(`    Last Status: ${statusColor(metrics.builds.lastStatus)} (${(metrics.builds.lastDurationMs / 1000).toFixed(1)}s)`);
+                writeLine(`    Last Status: ${statusColor(metrics.builds.lastStatus)} (${(metrics.builds.lastDurationMs / 1000).toFixed(1)}s)`);
 
                 // Tests
-                console.log(chalk.cyan.bold('\n  TESTS'));
-                console.log(`    Total Runs: ${metrics.tests.totalRuns}`);
+                writeLine(chalk.cyan.bold('\n  TESTS'));
+                writeLine(`    Total Runs: ${metrics.tests.totalRuns}`);
                 const rateColor = metrics.tests.lastPassRate === 100 ? chalk.green : chalk.yellow;
-                console.log(`    Last Pass Rate: ${rateColor(`${metrics.tests.lastPassRate}%`)} (${(metrics.tests.lastDurationMs / 1000).toFixed(1)}s)`);
+                writeLine(`    Last Pass Rate: ${rateColor(`${metrics.tests.lastPassRate}%`)} (${(metrics.tests.lastDurationMs / 1000).toFixed(1)}s)`);
 
                 // History
                 if (metrics.history.length > 0) {
-                    console.log(chalk.cyan.bold('\n  RECENT ACTIVITY (last 5)'));
+                    writeLine(chalk.cyan.bold('\n  RECENT ACTIVITY (last 5)'));
                     for (const item of metrics.history.slice(0, 5)) {
                         const type = item.type.toUpperCase().padEnd(6);
                         const status = item.status === 'success' ? chalk.green('OK ') : chalk.red('ERR');
                         const time = new Date(item.timestamp).toLocaleTimeString();
-                        console.log(`    ${chalk.dim(time)} ${type} ${status} ${item.details}`);
+                        writeLine(`    ${chalk.dim(time)} ${type} ${status} ${item.details}`);
                     }
                 }
 
-                console.log('');
+                writeLine('');
             } catch (e: unknown) {
                 const msg = e instanceof Error ? e.message : String(e);
                 console.error(chalk.red(`Failed to get metrics: ${msg}`));
@@ -829,19 +830,19 @@ export function registerDevCommands(program: Command): void {
                 spinner.succeed(chalk.green(`Found ${tasks.length} tasks`));
 
                 if (opts.json) {
-                    console.log(JSON.stringify({ tasks, stats }, null, 2));
+                    writeLine(JSON.stringify({ tasks, stats }, null, 2));
                     return;
                 }
 
-                console.log(`\n${chalk.bold('📊 Queue Stats:')}`);
-                console.log(`  Total: ${stats.total} | Queued: ${stats.queued} | Running: ${chalk.yellow(stats.running)} | ✅ ${stats.completed} | ❌ ${stats.failed}`);
+                writeLine(`\n${chalk.bold('📊 Queue Stats:')}`);
+                writeLine(`  Total: ${stats.total} | Queued: ${stats.queued} | Running: ${chalk.yellow(stats.running)} | ✅ ${stats.completed} | ❌ ${stats.failed}`);
 
                 if (tasks.length === 0) {
-                    console.log(chalk.dim('\nNo tasks in queue.'));
+                    writeLine(chalk.dim('\nNo tasks in queue.'));
                     return;
                 }
 
-                console.log(`\n${chalk.bold('📋 Tasks:')}\n`);
+                writeLine(`\n${chalk.bold('📋 Tasks:')}\n`);
                 for (const task of tasks) {
                     const statusColor = task.status === 'completed' ? chalk.green :
                         task.status === 'failed' ? chalk.red :
@@ -851,12 +852,12 @@ export function registerDevCommands(program: Command): void {
                     const priority = task.priority === 'high' ? chalk.red('HIGH') :
                         task.priority === 'medium' ? chalk.yellow('MED') : chalk.gray('LOW');
 
-                    console.log(`  ${chalk.cyan(task.id)} ${priority} [${statusColor(task.status)}]`);
-                    console.log(`    ${chalk.dim(task.type)}: ${task.description.slice(0, 60)}`);
+                    writeLine(`  ${chalk.cyan(task.id)} ${priority} [${statusColor(task.status)}]`);
+                    writeLine(`    ${chalk.dim(task.type)}: ${task.description.slice(0, 60)}`);
                     if (task.error) {
-                        console.log(`    ${chalk.red('Error:')} ${task.error.slice(0, 80)}`);
+                        writeLine(`    ${chalk.red('Error:')} ${task.error.slice(0, 80)}`);
                     }
-                    console.log('');
+                    writeLine('');
                 }
             } catch (e: unknown) {
                 const msg = e instanceof Error ? e.message : String(e);
@@ -891,14 +892,14 @@ export function registerDevCommands(program: Command): void {
                 spinner.succeed(chalk.green(`Task added: ${task.id}`));
 
                 if (opts.json) {
-                    console.log(JSON.stringify(task, null, 2));
+                    writeLine(JSON.stringify(task, null, 2));
                     return;
                 }
 
-                console.log(`\n  ID: ${chalk.cyan(task.id)}`);
-                console.log(`  Type: ${task.type}`);
-                console.log(`  Priority: ${task.priority}`);
-                console.log(`  Status: ${task.status}\n`);
+                writeLine(`\n  ID: ${chalk.cyan(task.id)}`);
+                writeLine(`  Type: ${task.type}`);
+                writeLine(`  Priority: ${task.priority}`);
+                writeLine(`  Status: ${task.status}\n`);
             } catch (e: unknown) {
                 const msg = e instanceof Error ? e.message : String(e);
                 spinner.fail(chalk.red(`Failed to add task: ${msg}`));
@@ -922,7 +923,7 @@ export function registerDevCommands(program: Command): void {
                 });
 
                 spinner.succeed(chalk.green(result.message));
-                console.log(`  Status: ${result.task.status}`);
+                writeLine(`  Status: ${result.task.status}`);
             } catch (e: unknown) {
                 const msg = e instanceof Error ? e.message : String(e);
                 spinner.fail(chalk.red(`Failed to cancel task: ${msg}`));
@@ -945,7 +946,7 @@ export function registerDevCommands(program: Command): void {
                 });
 
                 spinner.succeed(chalk.green(result.message));
-                console.log(`  New Task ID: ${chalk.cyan(result.task.id)}`);
+                writeLine(`  New Task ID: ${chalk.cyan(result.task.id)}`);
             } catch (e: unknown) {
                 const msg = e instanceof Error ? e.message : String(e);
                 spinner.fail(chalk.red(`Failed to retry task: ${msg}`));
@@ -982,48 +983,48 @@ export function registerDevCommands(program: Command): void {
                 spinner.succeed(chalk.green(`Branch: ${status.branch}`));
 
                 if (opts.json) {
-                    console.log(JSON.stringify({ status }, null, 2));
+                    writeLine(JSON.stringify({ status }, null, 2));
                     return;
                 }
 
                 // Display branch info
-                console.log(`\n${chalk.bold('🌿 Branch:')} ${chalk.cyan(status.branch)}`);
+                writeLine(`\n${chalk.bold('🌿 Branch:')} ${chalk.cyan(status.branch)}`);
                 if (status.remote) {
-                    console.log(`  Tracking: ${status.remote}`);
+                    writeLine(`  Tracking: ${status.remote}`);
                 }
                 if (status.ahead > 0) {
-                    console.log(`  ${chalk.green(`↑ ${status.ahead} ahead`)}`);
+                    writeLine(`  ${chalk.green(`↑ ${status.ahead} ahead`)}`);
                 }
                 if (status.behind > 0) {
-                    console.log(`  ${chalk.yellow(`↓ ${status.behind} behind`)}`);
+                    writeLine(`  ${chalk.yellow(`↓ ${status.behind} behind`)}`);
                 }
 
                 // Display staged files
                 if (status.staged.length > 0) {
-                    console.log(`\n${chalk.bold('📦 Staged files:')}`);
+                    writeLine(`\n${chalk.bold('📦 Staged files:')}`);
                     for (const file of status.staged) {
-                        console.log(`  ${chalk.green(`+ ${file.path}`)} (${file.status})`);
+                        writeLine(`  ${chalk.green(`+ ${file.path}`)} (${file.status})`);
                     }
                 }
 
                 // Display unstaged files
                 if (status.unstaged.length > 0) {
-                    console.log(`\n${chalk.bold('📝 Unstaged changes:')}`);
+                    writeLine(`\n${chalk.bold('📝 Unstaged changes:')}`);
                     for (const file of status.unstaged) {
-                        console.log(`  ${chalk.yellow(`M ${file.path}`)} (${file.status})`);
+                        writeLine(`  ${chalk.yellow(`M ${file.path}`)} (${file.status})`);
                     }
                 }
 
                 // Display untracked files
                 if (status.untracked.length > 0) {
-                    console.log(`\n${chalk.bold('❓ Untracked files:')}`);
+                    writeLine(`\n${chalk.bold('❓ Untracked files:')}`);
                     for (const file of status.untracked) {
-                        console.log(`  ${chalk.dim(`? ${file}`)}`);
+                        writeLine(`  ${chalk.dim(`? ${file}`)}`);
                     }
                 }
 
                 if (!status.hasChanges) {
-                    console.log(chalk.dim('\n✨ Working directory clean'));
+                    writeLine(chalk.dim('\n✨ Working directory clean'));
                 }
             } catch (e: unknown) {
                 const msg = e instanceof Error ? e.message : String(e);
@@ -1057,15 +1058,15 @@ export function registerDevCommands(program: Command): void {
                 spinner.succeed(chalk.green(`Found ${diffs.length} file(s) with changes`));
 
                 if (diffs.length === 0) {
-                    console.log(chalk.dim('No changes'));
+                    writeLine(chalk.dim('No changes'));
                     return;
                 }
 
                 for (const diff of diffs) {
-                    console.log(`\n${chalk.bold(diff.file)}`);
-                    console.log(chalk.green(`+${diff.additions}`) + ' ' + chalk.red(`-${diff.deletions}`));
-                    console.log(chalk.dim('─'.repeat(60)));
-                    console.log(diff.diff);
+                    writeLine(`\n${chalk.bold(diff.file)}`);
+                    writeLine(chalk.green(`+${diff.additions}`) + ' ' + chalk.red(`-${diff.deletions}`));
+                    writeLine(chalk.dim('─'.repeat(60)));
+                    writeLine(diff.diff);
                 }
             } catch (e: unknown) {
                 const msg = e instanceof Error ? e.message : String(e);
@@ -1097,11 +1098,11 @@ export function registerDevCommands(program: Command): void {
                 const { commit } = result;
                 spinner.succeed(chalk.green(`Commit created: ${commit.hash}`));
 
-                console.log(`\n${chalk.bold('📝 Commit Details:')}`);
-                console.log(`  Hash:    ${chalk.cyan(commit.hash)}`);
-                console.log(`  Message: ${commit.message.substring(0, 60)}...`);
-                console.log(`  Files:   ${commit.filesChanged} changed`);
-                console.log(`  Lines:   ${chalk.green(`+${commit.insertions}`)} ${chalk.red(`-${commit.deletions}`)}`);
+                writeLine(`\n${chalk.bold('📝 Commit Details:')}`);
+                writeLine(`  Hash:    ${chalk.cyan(commit.hash)}`);
+                writeLine(`  Message: ${commit.message.substring(0, 60)}...`);
+                writeLine(`  Files:   ${commit.filesChanged} changed`);
+                writeLine(`  Lines:   ${chalk.green(`+${commit.insertions}`)} ${chalk.red(`-${commit.deletions}`)}`);
             } catch (e: unknown) {
                 const msg = e instanceof Error ? e.message : String(e);
                 spinner.fail(chalk.red(`Failed to commit: ${msg}`));
@@ -1173,17 +1174,17 @@ export function registerDevCommands(program: Command): void {
                 spinner.succeed(chalk.green(`Found ${branches.length} branches`));
 
                 if (opts.json) {
-                    console.log(JSON.stringify({ branches }, null, 2));
+                    writeLine(JSON.stringify({ branches }, null, 2));
                     return;
                 }
 
-                console.log(`\n${chalk.bold('🌿 Branches:')}\n`);
+                writeLine(`\n${chalk.bold('🌿 Branches:')}\n`);
                 for (const branch of branches) {
                     const prefix = branch.current ? chalk.green('* ') : '  ';
                     const name = branch.current ? chalk.green(branch.name) : branch.name;
                     const remote = branch.remote ? chalk.dim(` [${branch.remote}]`) : '';
                     const commit = branch.lastCommit ? chalk.dim(` ${branch.lastCommit}`) : '';
-                    console.log(`${prefix}${name}${remote}${commit}`);
+                    writeLine(`${prefix}${name}${remote}${commit}`);
                 }
             } catch (e: unknown) {
                 const msg = e instanceof Error ? e.message : String(e);
@@ -1237,15 +1238,15 @@ export function registerDevCommands(program: Command): void {
                 spinner.succeed(chalk.green(`Found ${log.length} commits`));
 
                 if (opts.json) {
-                    console.log(JSON.stringify({ log }, null, 2));
+                    writeLine(JSON.stringify({ log }, null, 2));
                     return;
                 }
 
-                console.log(`\n${chalk.bold('📜 Recent Commits:')}\n`);
+                writeLine(`\n${chalk.bold('📜 Recent Commits:')}\n`);
                 for (const commit of log) {
-                    console.log(`${chalk.cyan(commit.hash)} ${chalk.dim(commit.date)} ${chalk.yellow(commit.author)}`);
-                    console.log(`  ${commit.message}`);
-                    console.log('');
+                    writeLine(`${chalk.cyan(commit.hash)} ${chalk.dim(commit.date)} ${chalk.yellow(commit.author)}`);
+                    writeLine(`  ${commit.message}`);
+                    writeLine('');
                 }
             } catch (e: unknown) {
                 const msg = e instanceof Error ? e.message : String(e);
@@ -1273,11 +1274,11 @@ export function registerDevCommands(program: Command): void {
                 spinner.stop();
 
                 if (options.json) {
-                    console.log(JSON.stringify(templates, null, 2));
+                    writeLine(JSON.stringify(templates, null, 2));
                     return;
                 }
 
-                console.log(chalk.bold('📋 Available Templates:\n'));
+                writeLine(chalk.bold('📋 Available Templates:\n'));
                 
                 // Group by category
                 const groups: Record<string, any[]> = {};
@@ -1288,17 +1289,17 @@ export function registerDevCommands(program: Command): void {
                 }
 
                 for (const [category, items] of Object.entries(groups)) {
-                    console.log(chalk.cyan.bold(`  ${category.toUpperCase()}`));
+                    writeLine(chalk.cyan.bold(`  ${category.toUpperCase()}`));
                     for (const t of items) {
-                        console.log(`    ${chalk.green(t.name.padEnd(20))} ${chalk.dim(t.description)}`);
+                        writeLine(`    ${chalk.green(t.name.padEnd(20))} ${chalk.dim(t.description)}`);
                         // Show variables
                         if (t.variables && t.variables.length > 0) {
                             const vars = t.variables.map((v: any) => 
                                 v.required ? chalk.yellow(v.name) : chalk.dim(`${v.name}?`)
                             ).join(', ');
-                            console.log(`      ${chalk.dim('Variables:')} ${vars}`);
+                            writeLine(`      ${chalk.dim('Variables:')} ${vars}`);
                         }
-                        console.log('');
+                        writeLine('');
                     }
                 }
             } catch (e: unknown) {
@@ -1342,13 +1343,13 @@ export function registerDevCommands(program: Command): void {
                 spinner.succeed(chalk.green(result.message));
 
                 if (result.files && result.files.length > 0) {
-                    console.log(`\n${chalk.bold('Generated Files:')}`);
+                    writeLine(`\n${chalk.bold('Generated Files:')}`);
                     for (const file of result.files) {
-                        console.log(`  ${chalk.cyan(file.path)}`);
+                        writeLine(`  ${chalk.cyan(file.path)}`);
                         if (options.dryRun) {
-                            console.log(chalk.dim('\nPreview:'));
-                            console.log(chalk.gray(file.content.substring(0, 200) + '...'));
-                            console.log(chalk.dim('---'));
+                            writeLine(chalk.dim('\nPreview:'));
+                            writeLine(chalk.gray(file.content.substring(0, 200) + '...'));
+                            writeLine(chalk.dim('---'));
                         }
                     }
                 }
@@ -1359,8 +1360,8 @@ export function registerDevCommands(program: Command): void {
                 
                 // Hint for missing variables
                 if (msg.includes('Required variable missing')) {
-                    console.log(chalk.yellow('\nTip: Provide variables using -v flag:'));
-                    console.log(chalk.gray('  brunella dev scaffold generate react-component -v ComponentName=MyButton'));
+                    writeLine(chalk.yellow('\nTip: Provide variables using -v flag:'));
+                    writeLine(chalk.gray('  brunella dev scaffold generate react-component -v ComponentName=MyButton'));
                 }
                 
                 process.exit(1);
@@ -1382,17 +1383,17 @@ export function registerDevCommands(program: Command): void {
                 spinner.stop();
 
                 if (requests.length === 0) {
-                    console.log(chalk.dim('\nNo pending requests.'));
+                    writeLine(chalk.dim('\nNo pending requests.'));
                     return;
                 }
 
-                console.log(chalk.bold('\nPending Approvals:\n'));
+                writeLine(chalk.bold('\nPending Approvals:\n'));
                 for (const req of requests) {
-                    console.log(`${chalk.cyan(req.id)} [${req.type}]`);
-                    console.log(`  ${req.description}`);
+                    writeLine(`${chalk.cyan(req.id)} [${req.type}]`);
+                    writeLine(`  ${req.description}`);
                     const age = Math.round((Date.now() - req.createdAt) / 1000);
-                    console.log(`  ${chalk.dim(`Created ${age}s ago`)}`);
-                    console.log('');
+                    writeLine(`  ${chalk.dim(`Created ${age}s ago`)}`);
+                    writeLine('');
                 }
             } catch (e: unknown) {
                  const msg = e instanceof Error ? e.message : String(e);
@@ -1466,7 +1467,7 @@ export function registerDevCommands(program: Command): void {
                         .map((channel) => `${channel.enabled ? '✅' : '⚪'} ${channel.channel.toUpperCase()}${channel.target ? ` (${channel.target})` : ''}`)
                         .join('\n');
 
-                    console.log(boxen([
+                    writeLine(boxen([
                         chalk.bold.cyan('Zero-Prompt Notification Center'),
                         '',
                         `${chalk.yellow('Pending workflowk:')} ${summary.workflowCounts.pending}`,
@@ -1494,26 +1495,26 @@ export function registerDevCommands(program: Command): void {
                     spinner.stop();
 
                     if (deliveries.length === 0) {
-                        console.log(chalk.dim('\nMég nincs kézbesítési esemény.'));
+                        writeLine(chalk.dim('\nMég nincs kézbesítési esemény.'));
                         return;
                     }
 
-                    console.log(chalk.bold('\nLegutóbbi kézbesítések:\n'));
+                    writeLine(chalk.bold('\nLegutóbbi kézbesítések:\n'));
                     for (const delivery of deliveries) {
                         const statusColor = delivery.status === 'sent'
                             ? chalk.green
                             : delivery.status === 'failed'
                                 ? chalk.red
                                 : chalk.yellow;
-                        console.log(`${statusColor(delivery.status.toUpperCase())} ${chalk.cyan(delivery.channel.toUpperCase())} ${delivery.title}`);
-                        console.log(`  ${chalk.dim(delivery.createdAt)} ${chalk.dim(delivery.eventType)}`);
+                        writeLine(`${statusColor(delivery.status.toUpperCase())} ${chalk.cyan(delivery.channel.toUpperCase())} ${delivery.title}`);
+                        writeLine(`  ${chalk.dim(delivery.createdAt)} ${chalk.dim(delivery.eventType)}`);
                         if (delivery.workflowId) {
-                            console.log(`  Workflow: ${delivery.workflowId}`);
+                            writeLine(`  Workflow: ${delivery.workflowId}`);
                         }
                         if (delivery.error) {
-                            console.log(`  ${chalk.red(delivery.error)}`);
+                            writeLine(`  ${chalk.red(delivery.error)}`);
                         }
-                        console.log('');
+                        writeLine('');
                     }
                 } catch (e: unknown) {
                     const msg = e instanceof Error ? e.message : String(e);
@@ -1528,7 +1529,7 @@ export function registerDevCommands(program: Command): void {
                     spinner.stop();
 
                     if (workflows.length === 0) {
-                        console.log(chalk.dim('\nNincs elérhető approval workflow.'));
+                        writeLine(chalk.dim('\nNincs elérhető approval workflow.'));
                         return;
                     }
 
@@ -1563,7 +1564,7 @@ export function registerDevCommands(program: Command): void {
                     spinner.stop();
 
                     if (workflows.length === 0) {
-                        console.log(chalk.dim('\nNincs elérhető approval workflow.'));
+                        writeLine(chalk.dim('\nNincs elérhető approval workflow.'));
                         return;
                     }
 
@@ -1599,7 +1600,7 @@ export function registerDevCommands(program: Command): void {
 
                     const policies = result.policies ?? [];
                     if (policies.length === 0) {
-                        console.log(chalk.dim('\nNincs konfigurálható policy.'));
+                        writeLine(chalk.dim('\nNincs konfigurálható policy.'));
                         return;
                     }
 
@@ -1617,7 +1618,7 @@ export function registerDevCommands(program: Command): void {
 
                     const current = policies.find((policy) => policy.channel === channel);
                     if (!current) {
-                        console.log(chalk.red('A kiválasztott policy nem található.'));
+                        writeLine(chalk.red('A kiválasztott policy nem található.'));
                         return;
                     }
 
@@ -1733,12 +1734,12 @@ export function registerDevCommands(program: Command): void {
                         : result.activities;
 
                     if (opts.json) {
-                        console.log(JSON.stringify(newItems, null, 2));
+                        writeLine(JSON.stringify(newItems, null, 2));
                         return result.activities[0]?.id; // Return latest ID
                     }
                     
                     if (!lastId && !opts.watch) {
-                        console.log(chalk.bold('\n📡 Activity Feed:\n'));
+                        writeLine(chalk.bold('\n📡 Activity Feed:\n'));
                     }
 
                     // Reverse to show oldest first in log stream, but for snapshot usually newest first
@@ -1753,7 +1754,7 @@ export function registerDevCommands(program: Command): void {
                         if (item.type === 'approval') badge = chalk.magenta('ASK ');
 
                         const source = chalk.dim(`[${item.source}]`);
-                        console.log(`${chalk.dim(time)} ${badge} ${source} ${item.message}`);
+                        writeLine(`${chalk.dim(time)} ${badge} ${source} ${item.message}`);
                     }
                     
                     return result.activities[0]?.id || lastId; // Latest ID
@@ -1762,7 +1763,7 @@ export function registerDevCommands(program: Command): void {
                 const latestId = await fetchAndShow();
 
                 if (opts.watch) {
-                    console.log(chalk.dim('\nWatching for new activities... (Ctrl+C to stop)'));
+                    writeLine(chalk.dim('\nWatching for new activities... (Ctrl+C to stop)'));
                     // Use a simple Set to track seen IDs for deduplication in watch mode
                     const seenIds = new Set<string>();
                     // Prime with initial fetch
@@ -1794,7 +1795,7 @@ export function registerDevCommands(program: Command): void {
                              if (item.type === 'approval') badge = chalk.magenta('ASK ');
      
                              const source = chalk.dim(`[${item.source}]`);
-                             console.log(`${chalk.dim(time)} ${badge} ${source} ${item.message}`);
+                             writeLine(`${chalk.dim(time)} ${badge} ${source} ${item.message}`);
                         }
                     }, 2000);
                     
@@ -1840,11 +1841,11 @@ export function registerDevCommands(program: Command): void {
                 }
 
                 if (agents.length === 0) {
-                    console.log(chalk.yellow('Nincs ephemeral ágens.'));
+                    writeLine(chalk.yellow('Nincs ephemeral ágens.'));
                     return;
                 }
 
-                console.log(boxen(
+                writeLine(boxen(
                     chalk.bold.white(`Ephemeral Agents (${agents.length})`),
                     { padding: 1, borderStyle: 'round', borderColor: 'magentaBright' },
                 ));
@@ -1861,13 +1862,13 @@ export function registerDevCommands(program: Command): void {
                         `hosts:${(a.spec.allowedHosts ?? []).length} ` +
                         `renew:${a.lease?.renewalsUsed ?? 0}/${a.lease?.maxRenewals ?? 0}]`,
                     );
-                    console.log(
+                    writeLine(
                         `  ${chalk.cyan(a.id.slice(0, 8))} ${stateColor(a.state.toUpperCase().padEnd(12))} ` +
                         `${chalk.white(a.spec.purpose)} ${chalk.dim('← ' + a.spec.parentAgentName)} ${scopeSummary}`,
                     );
 
                     if (a.approval?.reason) {
-                        console.log(chalk.yellow(`     approval: ${a.approval.kind} — ${a.approval.reason}`));
+                        writeLine(chalk.yellow(`     approval: ${a.approval.kind} — ${a.approval.reason}`));
                     }
                 }
             } catch (e: unknown) {
@@ -1886,7 +1887,7 @@ export function registerDevCommands(program: Command): void {
             const { confirm } = await inquirer.prompt([
                 { type: 'confirm', name: 'confirm', message: `Leállítod az ágenst (${id.slice(0, 8)})? (ok: ${opts.reason})`, default: false },
             ]);
-            if (!confirm) { console.log(chalk.dim('Megszakítva.')); return; }
+            if (!confirm) { writeLine(chalk.dim('Megszakítva.')); return; }
 
             const spinner = ora(`Ágens leállítása: ${id}...`).start();
             try {
@@ -1921,17 +1922,17 @@ export function registerDevCommands(program: Command): void {
                 }
 
                 if (data.postmortems.length === 0) {
-                    console.log(chalk.yellow('Nincs postmortem adat.'));
+                    writeLine(chalk.yellow('Nincs postmortem adat.'));
                     return;
                 }
 
-                console.log(boxen(
+                writeLine(boxen(
                     chalk.bold.white(`Ephemeral Postmortems (${data.postmortems.length})`),
                     { padding: 1, borderStyle: 'round', borderColor: 'cyan' },
                 ));
 
                 for (const pm of data.postmortems as any[]) {
-                    console.log(`  ${chalk.cyan(pm.agentId.slice(0, 8))} ${chalk.dim(pm.state)} — ${pm.summary}`);
+                    writeLine(`  ${chalk.cyan(pm.agentId.slice(0, 8))} ${chalk.dim(pm.state)} — ${pm.summary}`);
                 }
             } catch (e: unknown) {
                 const msg = e instanceof Error ? e.message : String(e);

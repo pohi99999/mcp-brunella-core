@@ -7,6 +7,8 @@
 **Létrehozva:** 2026-04-03
 **Utolsó audit:** 2026-04-03
 
+> Phase 0 readiness kulon trackben lezarva es archiválva: `konyveles_phase3_readiness_20260405`.
+
 ---
 
 ## ⚠️ ELŐFELTÉTELEK — ezek nélkül nem indulhat el a munka
@@ -16,7 +18,7 @@
 | `SZAMLAZZ_HU_API_KEY` — szamlazz.hu agentkulcs | ❓ Ismeretlen | `.env`-ben beállítani, fel kell ellenőrizni hogy él-e |
 | NAV Online Számla API auth (`NAV_USERNAME`, `NAV_PASSWORD`, `NAV_SIGNING_KEY`, `NAV_EXCHANGE_KEY`) | ❓ Ismeretlen | NAV technikai felhasználó + tanúsítvány szükséges |
 | Gmail/IMAP credential (`GMAIL_IMAP_USER` + `GMAIL_APP_PASSWORD` vagy OAuth2) | ❓ Ismeretlen | n8n credential vault-ban konfigurálni |
-| Bank CSV éles path (`data/bank-imports/`) | ❌ Nincs | `BankAgent.ts` jelenleg hardcoded sample CSV-re mutat |
+| Bank CSV éles path (`data/bank-imports/`) | ⚠️ Repo scaffold kész | `BankAgent.ts` most `data/bank-imports/OTP_export_sample.csv.example`-re mutat; a live CSV drop zone még ops feladat |
 
 > **Ha bármelyik credential hiányzik, az adott workflow (WF) elkezdése blokkolva van. A Phase 0 mindig előbb fut.**
 
@@ -133,7 +135,7 @@ Jelenleg a WF-1 scaffold IMAP credentialt vár. Ez a fázis:
 - [ ] WF-7 IMAP scan lefut (teszt email küldve → feldolgozva)
 - [ ] WF-8 NAV validáció live eredménnyel tér vissza
 - [ ] WF-9 report email megérkezett
-- [ ] Bank CSV elhelyezve → WF-2 automatikusan feldolgozza
+- [ ] Bank CSV elhelyezve → WF-2 automatikusan feldolgozza (repo-side sample: `data/bank-imports/OTP_export_sample.csv.example`)
 - [ ] Összes E2E Playwright teszt zöld
 - [ ] `npm run build` 0 hibával fordul
 - [ ] `npm run test:fast` zöld

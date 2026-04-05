@@ -1,43 +1,31 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-04-05T13:00:01.090Z
+**Utolso frissites:** 2026-04-05T18:00:00.462Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 217 total | 17 active | 19 completed | 170 archived
+**Stats:** 220 total | 10 active | 24 completed | 177 archived
 
 ---
 
-## Tervezett Szalak (Proposed) (10)
+## Tervezett Szalak (Proposed) (8)
 
 - [ ] **Brunella Identity + Project Maintainer** [HIGH]
   - **ID:** `brunella_identity_project_maintainer_20260402`
   - **Progress:** 0%
   - Mappa: ./tracks/brunella_identity_project_maintainer_20260402/
 
-- [ ] **KKV CRM follow-up es routing** [HIGH]
+- [ ] **KKV CRM follow-up routing** [HIGH]
   - **ID:** `kkv_crm_followup_routing_20260405`
   - **Progress:** 0%
-  - **Assignee:** GitHub Copilot
+  - **Assignee:** bas-automation-architect
   - Mappa: ./tracks/kkv_crm_followup_routing_20260405/
-
-- [ ] **KKV CRM ingest alapok** [HIGH]
-  - **ID:** `kkv_crm_ingest_foundation_20260405`
-  - **Progress:** 0%
-  - **Assignee:** GitHub Copilot
-  - Mappa: ./tracks/kkv_crm_ingest_foundation_20260405/
 
 - [ ] **KKV HR leave approvals** [HIGH]
   - **ID:** `kkv_hr_leave_approvals_20260405`
   - **Progress:** 0%
   - **Assignee:** GitHub Copilot
   - Mappa: ./tracks/kkv_hr_leave_approvals_20260405/
-
-- [ ] **KKV HR onboarding es provisioning** [HIGH]
-  - **ID:** `kkv_hr_onboarding_provisioning_20260405`
-  - **Progress:** 0%
-  - **Assignee:** GitHub Copilot
-  - Mappa: ./tracks/kkv_hr_onboarding_provisioning_20260405/
 
 - [ ] **KKV HR timesheet es kultura automatizalas** [HIGH]
   - **ID:** `kkv_hr_timesheet_culture_20260405`
@@ -67,41 +55,14 @@
 
 ---
 
-## Aktiv Szalak (Active) (17)
-
-- [ ] **jules_pr_integration_20260222** [HIGH]
-  - **ID:** `jules_pr_integration_20260222`
-  - **Progress:** 18%
-  - **Assignee:** Claude + Pohánka Péter
-  - Mappa: ./tracks/jules_pr_integration_20260222/
+## Aktiv Szalak (Active) (10)
 
 - [ ] **KKV CRM es lead-utanakovetes automatizalas** [HIGH]
   - **ID:** `kkv_crm_automation_20260404`
-  - **Progress:** 0%
+  - **Progress:** 20%
   - **Assignee:** GitHub Copilot
   - **Updated:** 2026-04-04
   - Mappa: ./tracks/kkv_crm_automation_20260404/
-
-- [ ] **KKV ugyfelszolgalati AI es ticketkezeles** [HIGH]
-  - **ID:** `kkv_customer_service_ai_20260404`
-  - **Progress:** 0%
-  - **Assignee:** GitHub Copilot
-  - **Updated:** 2026-04-04
-  - Mappa: ./tracks/kkv_customer_service_ai_20260404/
-
-- [ ] **KKV penzugyi emlekezteto es jovahagyasi automatizalas** [HIGH]
-  - **ID:** `kkv_finance_automation_20260404`
-  - **Progress:** 0%
-  - **Assignee:** GitHub Copilot
-  - **Updated:** 2026-04-04
-  - Mappa: ./tracks/kkv_finance_automation_20260404/
-
-- [ ] **KKV HR es dolgozoi adminisztracio automatizalas** [HIGH]
-  - **ID:** `kkv_hr_automation_20260404`
-  - **Progress:** 0%
-  - **Assignee:** GitHub Copilot
-  - **Updated:** 2026-04-04
-  - Mappa: ./tracks/kkv_hr_automation_20260404/
 
 - [ ] **Kognitív Könyvelés és Multi-Ágens Egyeztetés — Bővítmény** [HIGH]
   - **ID:** `konyveles_kognitiv_bovites_20260330`
@@ -114,31 +75,11 @@
   - **Progress:** 0%
   - Mappa: ./tracks/konyveles_phase3_20260403/
 
-- [ ] **Logging Audit — console.log elimináció és Logger standardizálás** [HIGH]
-  - **ID:** `logging_refactor_20260404`
-  - **Progress:** 0%
-  - **Updated:** 2026-04-04
-  - Mappa: ./tracks/logging_refactor_20260404/
-
 - [ ] **Modular State Refactor — Globális változók Dependency Injection alapú refaktora** [MEDIUM]
   - **ID:** `modular_state_refactor_20260404`
   - **Progress:** 0%
   - **Updated:** 2026-04-04
   - Mappa: ./tracks/modular_state_refactor_20260404/
-
-- [ ] **Konyvelesi n8n Phase 3 finalizalas** [CRITICAL]
-  - **ID:** `n8n_bookkeeping_phase3_finalization_20260404`
-  - **Progress:** 0%
-  - **Assignee:** GitHub Copilot
-  - **Updated:** 2026-04-04
-  - Mappa: ./tracks/n8n_bookkeeping_phase3_finalization_20260404/
-
-- [ ] **P-Sales human-in-loop n8n pipeline** [HIGH]
-  - **ID:** `n8n_psales_human_loop_20260404`
-  - **Progress:** 0%
-  - **Assignee:** GitHub Copilot
-  - **Updated:** 2026-04-04
-  - Mappa: ./tracks/n8n_psales_human_loop_20260404/
 
 - [ ] **P-Search n8n Pipeline - palyazat- es hitelkereso workflow-k** [HIGH]
   - **ID:** `n8n_psearch_pipeline_20260404`
@@ -182,7 +123,7 @@
 
 ---
 
-## Befejezett (Completed - Not Archived) (19)
+## Befejezett (Completed - Not Archived) (24)
 
 - [x] **apify_deep_scraping_agent_20260223**
   - **ID:** `apify_deep_scraping_agent_20260223`
@@ -207,6 +148,27 @@
 - [x] **Cloudflare Workers Migration — 16 Agent Edge Orkesztrátor**
   - **ID:** `cloudflare_workers_migration_20260226`
   - Mappa: ./tracks/cloudflare_workers_migration_20260226/
+
+- [x] **jules_pr_integration_20260222**
+  - **ID:** `jules_pr_integration_20260222`
+  - Mappa: ./tracks/jules_pr_integration_20260222/
+
+- [x] **KKV CRM ingest alapok**
+  - **ID:** `kkv_crm_ingest_foundation_20260405`
+  - **Completed:** 2026-04-05
+  - Mappa: ./tracks/kkv_crm_ingest_foundation_20260405/
+
+- [x] **KKV ugyfelszolgalati AI es ticketkezeles**
+  - **ID:** `kkv_customer_service_ai_20260404`
+  - Mappa: ./tracks/kkv_customer_service_ai_20260404/
+
+- [x] **KKV penzugyi emlekezteto es jovahagyasi automatizalas**
+  - **ID:** `kkv_finance_automation_20260404`
+  - Mappa: ./tracks/kkv_finance_automation_20260404/
+
+- [x] **KKV HR es dolgozoi adminisztracio automatizalas**
+  - **ID:** `kkv_hr_automation_20260404`
+  - Mappa: ./tracks/kkv_hr_automation_20260404/
 
 - [x] **KKV keszlet es leltar automatizalas**
   - **ID:** `kkv_inventory_automation_20260404`
@@ -264,7 +226,7 @@
 
 ---
 
-## Archivalt (Archived) (170)
+## Archivalt (Archived) (177)
 
 > Archived tracks are hidden by default. View in `conductor/archive/`
 
@@ -279,7 +241,7 @@
 - [x] **AI Recommendation System Integration** (2026-02-17T22:45:00Z)
 - [x] **apify_deep_scraping_agent_20260223** (N/A)
 
-... and 160 more archived tracks
+... and 167 more archived tracks
 
 ---
 

@@ -8,6 +8,7 @@ API dokumentáció: https://szamlazz.hu/api
 import os
 import logging
 import asyncio
+import base64
 from datetime import datetime, date, timedelta
 from typing import List, Dict, Any, Optional
 from dataclasses import asdict
@@ -84,7 +85,6 @@ class SzamlazzHuClient:
         # Headers beállítása
         self.session.headers.update({
             "Authorization": f"Bearer {self.api_key}",
-            "Content-Type": "application/json",
             "User-Agent": "BrunellaInvoiceAutomation/1.0",
         })
 
@@ -265,6 +265,76 @@ class SzamlazzHuClient:
         except requests.RequestException as e:
             logger.error(f"[ERROR] Network hiba a szamlak lekeresekor: {e}")
             raise SzamlazzHuError(f"Network hiba: {e}")
+
+    def send_invoice(self, xml_payload: str) -> Dict[str, Any]:
+        """
+        Számla létrehozása XML payload alapján.
+
+        Args:
+            xml_payload: Számlázz.hu XML kérés tartalma
+
+        Returns:
+            A küldés eredménye metadata-val és válasz tartalommal
+
+        Raises:
+            SzamlazzHuError: Ha az API hiba történik
+        """
+        if not self.api_key:
+            logger.error("[ERROR] API key nincs beallitva")
+            raise SzamlazzHuError("API key nincs beallitva")
+
+        if not xml_payload or not xml_payload.strip():
+            raise SzamlazzHuError("XML payload is required")
+
+        endpoint = "https://www.szamlazz.hu/szamla/"
+        headers = {
+            key: value
+            for key, value in self.session.headers.items()
+            if key.lower() not in {"content-type", "authorization"}
+        }
+        files = {
+            "action-xmlagentxmlfile": ("invoice.xml", xml_payload.encode("utf-8"), "application/xml"),
+        }
+
+        try:
+            logger.info(f"[OK] Szamla kuldes inditasa: {endpoint}")
+            response = self.session.post(
+                endpoint,
+                files=files,
+                headers=headers,
+                timeout=self.timeout,
+            )
+
+            content_type = response.headers.get("Content-Type", "")
+            if response.status_code not in (200, 201):
+                self._handle_error(response, "send_invoice")
+
+            if "pdf" in content_type.lower() or response.content.startswith(b"%PDF"):
+                logger.info("[OK] Szamla PDF valasz erkezett")
+                return {
+                    "success": True,
+                    "status_code": response.status_code,
+                    "content_type": content_type,
+                    "document_type": "pdf",
+                    "response_base64": base64.b64encode(response.content).decode("ascii"),
+                }
+
+            logger.info("[OK] Szamla szoveges valasz erkezett")
+            return {
+                "success": True,
+                "status_code": response.status_code,
+                "content_type": content_type,
+                "document_type": "text",
+                "response_text": response.text,
+            }
+
+        except requests.RequestException as e:
+            logger.error(f"[ERROR] Network hiba a szamla kuldesekor: {e}")
+            raise SzamlazzHuError(f"Network hiba: {e}")
+
+    def create_invoice(self, xml_payload: str) -> Dict[str, Any]:
+        """Alias a számlaküldéshez."""
+        return self.send_invoice(xml_payload)
 
     def get_invoices_since(self, since_date: date) -> List[InvoiceData]:
         """

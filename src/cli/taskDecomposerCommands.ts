@@ -7,6 +7,7 @@ import ora from "ora";
 import { BrunellaClient } from "../utils/mcpClient.js";
 import { ensureError } from "../utils/ensureError.js";
 import { logDebug } from "../utils/logger.js";
+import { writeLine } from '../utils/cliOutput.js';
 
 type AgentResponse = {
   status: "success" | "error" | "delegated";
@@ -129,12 +130,12 @@ export function registerTaskDecomposerCommands(program: Command) {
             ? result.content?.[0]?.text
             : undefined;
           if (opts.json) {
-            console.log(text || JSON.stringify(result, null, 2));
+            writeLine(text || JSON.stringify(result, null, 2));
             return;
           }
 
           if (!text) {
-            console.log(chalk.yellow("Üres válasz"));
+            writeLine(chalk.yellow("Üres válasz"));
             return;
           }
 
@@ -142,28 +143,28 @@ export function registerTaskDecomposerCommands(program: Command) {
           const resp = parsed && typeof parsed === "object" ? (parsed as AgentResponse) : null;
 
           if (!resp || resp.status !== "success") {
-            console.log(chalk.red("Hiba:"), resp?.error || text);
+            writeLine(chalk.red("Hiba:"), resp?.error || text);
             process.exit(1);
           }
 
           if (!isDecompositionResult(resp.data)) {
-            console.log(chalk.red("Hiba:"), "Érvénytelen dekompozíció válasz");
+            writeLine(chalk.red("Hiba:"), "Érvénytelen dekompozíció válasz");
             process.exit(1);
           }
 
           const data = resp.data;
           const tasks = data.tasks;
 
-          console.log(chalk.bold(`\n🧩 Mikro-taskok (${tasks.length}):\n`));
+          writeLine(chalk.bold(`\n🧩 Mikro-taskok (${tasks.length}):\n`));
           for (const t of tasks) {
             const deps = (t.dependencies || []).length ? ` ← [${t.dependencies.join(", ")}]` : "";
             const mode = t.parallel ? chalk.cyan("parallel") : chalk.gray("seq");
-            console.log(
+            writeLine(
               `${chalk.green(t.id)} ${mode} ${chalk.dim(`(${t.agent})`)} ${t.task}${chalk.dim(deps)}`,
             );
           }
 
-          console.log("");
+          writeLine("");
         } catch (e: unknown) {
           spinner.fail("Sikertelen");
           const msg = e instanceof Error ? e.message : String(e);

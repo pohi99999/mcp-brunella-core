@@ -47,7 +47,7 @@ export async function getDb() {
         }
 
         const dbPath = path.join(config.systemLogDir, 'brunella.db');
-        // console.log('DEBUG: DB Path:', dbPath); // Optional logging
+        // Debug DB path logging omitted.
 
         const Database = (await import('better-sqlite3')).default;
         db = new Database(dbPath);
@@ -273,12 +273,12 @@ export async function getPipelineStats() {
     return stmt.all();
 }
 
-export async function saveBusinessJob(job: { id: string, type: string, query: string, metadata?: string }) {
+export async function saveBusinessJob(job: { id: string, type: string, query: string, metadata?: string, status?: string, resultsJson?: string }) {
     const database = await getDb();
     if (!database) return null;
 
-    const stmt = database.prepare('INSERT INTO business_jobs (id, type, query, metadata) VALUES (?, ?, ?, ?)');
-    stmt.run(job.id, job.type, job.query, job.metadata || null);
+    const stmt = database.prepare('INSERT INTO business_jobs (id, type, status, query, results_json, metadata) VALUES (?, ?, ?, ?, ?, ?)');
+    stmt.run(job.id, job.type, job.status || 'pending', job.query, job.resultsJson || null, job.metadata || null);
     return job.id;
 }
 
@@ -299,6 +299,14 @@ export async function getBusinessJobs(limit: number = 20, type?: string) {
 
     const stmt = database.prepare(query);
     return stmt.all(...params);
+}
+
+export async function getBusinessJobById(id: string) {
+    const database = await getDb();
+    if (!database) return null;
+
+    const stmt = database.prepare('SELECT * FROM business_jobs WHERE id = ?');
+    return stmt.get(id) ?? null;
 }
 
 export async function updateBusinessJobStatus(id: string, status: string, resultsJson?: string) {

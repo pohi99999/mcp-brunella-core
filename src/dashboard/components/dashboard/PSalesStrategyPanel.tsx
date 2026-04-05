@@ -2,16 +2,19 @@ import React, { useState } from 'react';
 import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
-import { Target, CheckCircle2, XCircle, Clock, Users } from 'lucide-react';
+import { Target, CheckCircle2, XCircle, Clock, Users, PauseCircle } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface Channel { name: string; priority: 'high' | 'medium' | 'low'; description: string; }
 interface StrategyPlan {
   planId: string; propertyType: string; location: string; estimatedValue: number;
-  approvalState: 'pending' | 'approved' | 'rejected';
+  approvalState: 'pending' | 'approved' | 'rejected' | 'paused';
   channels: Channel[]; targetSegments: string[]; approvalSteps: string[];
-  summary: string; generatedAt: string;
+  summary: string; generatedAt: string; resumeToken?: string | null;
 }
+
+/** Shape returned by all /psales/strategy/* endpoints */
+interface PlanApiResponse { ok: boolean; plan?: StrategyPlan; error?: string; }
 
 const PRIORITY_COLORS: Record<string, string> = {
   high: 'border-emerald-500/20 bg-emerald-500/10 text-emerald-300',
@@ -23,6 +26,7 @@ const APPROVAL_COLORS: Record<string, string> = {
   pending: 'border-yellow-500/20 bg-yellow-500/10 text-yellow-300',
   approved: 'border-emerald-500/20 bg-emerald-500/10 text-emerald-300',
   rejected: 'border-red-500/20 bg-red-500/10 text-red-300',
+  paused: 'border-blue-500/20 bg-blue-500/10 text-blue-300',
 };
 
 export function PSalesStrategyPanel() {
@@ -38,8 +42,9 @@ export function PSalesStrategyPanel() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form),
       });
-      const data = await res.json() as StrategyPlan;
-      setPlan(data);
+      const data = await res.json() as PlanApiResponse;
+      if (!data.ok || !data.plan) { toast.error(data.error ?? 'Terv generálás sikertelen.'); return; }
+      setPlan(data.plan);
       toast.success('Stratégiai terv elkészült — jóváhagyás szükséges');
     } catch {
       toast.error('Terv generálás sikertelen.');
@@ -56,12 +61,30 @@ export function PSalesStrategyPanel() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ planId: plan.planId, decision }),
       });
-      const data = await res.json() as StrategyPlan;
-      setPlan(data);
+      const data = await res.json() as PlanApiResponse;
+      if (!data.ok || !data.plan) { toast.error(data.error ?? 'Döntés rögzítése sikertelen.'); return; }
+      setPlan(data.plan);
       if (decision === 'approved') toast.success('Terv jóváhagyva — végrehajtás engedélyezett!');
       else toast.info('Terv elutasítva — újratervezés szükséges.');
     } catch {
       toast.error('Döntés rögzítése sikertelen.');
+    }
+  };
+
+  const handlePause = async () => {
+    if (!plan) return;
+    try {
+      const res = await fetch('/api/psales/strategy/pause', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ planId: plan.planId }),
+      });
+      const data = await res.json() as PlanApiResponse;
+      if (!data.ok || !data.plan) { toast.error(data.error ?? 'Szüneteltetés sikertelen.'); return; }
+      setPlan(data.plan);
+      toast.info('Terv szüneteltetésre kerüt — resume token generálva.');
+    } catch {
+      toast.error('Szüneteltetés sikertelen.');
     }
   };
 
@@ -126,6 +149,7 @@ export function PSalesStrategyPanel() {
                   {plan.approvalState === 'pending' && <Clock className="mr-1 h-3 w-3" />}
                   {plan.approvalState === 'approved' && <CheckCircle2 className="mr-1 h-3 w-3" />}
                   {plan.approvalState === 'rejected' && <XCircle className="mr-1 h-3 w-3" />}
+                  {plan.approvalState === 'paused' && <PauseCircle className="mr-1 h-3 w-3" />}
                   {plan.approvalState.toUpperCase()}
                 </Badge>
               </div>
@@ -165,6 +189,13 @@ export function PSalesStrategyPanel() {
               >
                 <CheckCircle2 className="mr-2 h-4 w-4" />
                 Jóváhagyás
+              </Button>
+              <Button
+                className="flex-1 border-blue-500/20 bg-blue-500/10 text-blue-300 hover:bg-blue-500/20"
+                onClick={handlePause}
+              >
+                <PauseCircle className="mr-2 h-4 w-4" />
+                Szüneteltetés
               </Button>
               <Button
                 variant="outline"
