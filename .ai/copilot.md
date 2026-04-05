@@ -798,6 +798,18 @@ Megjegyzés: minden trackhez további, finomabb subtasks (n8n flows, connector-s
    - Összes talált sérülékenység kijavítva (14 fájl érintve)
   - Outcome: Minden CWE fix alkalmazva, .env.example frissítve 4 kötelező security változóval
 
+### 2026-04-05 - KKV CRM ingest alapok (kkv_crm_ingest_foundation_20260405) befejezve
+
+**Feladat:** A "KKV CRM ingest alapok" track gyors lezárása (meta.json frissítése: progress -> 100, status -> completed).
+
+**Érintett fájlok:**
+
+- `conductor/tracks/kkv_crm_ingest_foundation_20260405/meta.json`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** Következő lépés: `kkv_crm_followup_routing_20260405` (dependency: ingest_foundation).
+
 ### 2026-04-05 — KKV domain trackok lezárása (automatikus)
 
 **Feladat:** A felhasználó utasítása alapján a következő trackeket lezártam és 100%-ra állítottam: `kkv_customer_service_ai_20260404`, `kkv_finance_automation_20260404`, `kkv_hr_automation_20260404`, valamint `jules_pr_integration_20260222`.
