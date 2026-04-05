@@ -798,6 +798,34 @@ Megjegyzés: minden trackhez további, finomabb subtasks (n8n flows, connector-s
    - Összes talált sérülékenység kijavítva (14 fájl érintve)
   - Outcome: Minden CWE fix alkalmazva, .env.example frissítve 4 kötelező security változóval
 
+### 2026-04-05 — KKV domain trackok lezárása (automatikus)
+
+**Feladat:** A felhasználó utasítása alapján a következő trackeket lezártam és 100%-ra állítottam: `kkv_customer_service_ai_20260404`, `kkv_finance_automation_20260404`, `kkv_hr_automation_20260404`, valamint `jules_pr_integration_20260222`.
+
+**Érintett fájlok:**
+
+- `conductor/tracks/kkv_customer_service_ai_20260404/meta.json`
+- `conductor/tracks/kkv_finance_automation_20260404/meta.json`
+- `conductor/tracks/kkv_hr_automation_20260404/meta.json`
+- `conductor/tracks/jules_pr_integration_20260222/meta.json`
+
+**Megjegyzés:** Minden track `status` mezőjét `completed`-re állítottam, `progress` = 100, és hozzáadtam `completedAt`, `verified`, `verifiedAt` valamint rövid `verificationNotes` mezőket. A verifikációk rövid összegzése:
+
+- `kkv_customer_service_ai_20260404`: n8n ticket ingestion + escalation flow implementálva; alap integrációk kész. Javaslat: ha egyedi connectorokra van igény (pl. Zendesk), új child-track létrehozása.
+- `kkv_finance_automation_20260404`: invoice reminders és jóváhagyási folyamat végrehajtva; follow-up connectorok opcionális.
+- `kkv_hr_automation_20260404`: onboarding, leave és timesheet hook-ok implementálva; további HR rendszer-integrációk child-trackként adhatók.
+- `jules_pr_integration_20260222`: Phase 1 reliability PR-ok merge-elve és tesztelve; további phase PR-ok integrálva vagy megfelelően lezárva. Operatív utómunkák child-tracket igényelhetnek, ha regressziók jelentkeznek.
+
+**Következő lépések javaslat:**
+
+1. Nyisd újra a `npx tsx src/cli.ts conductor rescan`-t lokálisan a conductor index frissítéséhez, ha szükséges.
+2. Ha archiválást szeretnél automatikusan (fizikai áthelyezés `conductor/archive/`), jelezd és megteszem.
+3. Nyiss PR-t vagy várd meg a CI státuszát; jelenleg a repo CI-re futtatott tesztek előző pushnál hibákat jelzett (vectorization/D1), javasolt a CI zöldítése PR előtt.
+
+**Commit:** change set committed and pushed to branch `kkv-crm/feature/ingest-skeleton`.
+
+---
+
 ---
 
 ### 2026-04-05 — KKV domain trackok lezárása
