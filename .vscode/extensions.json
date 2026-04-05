@@ -65,6 +65,7 @@
     "ms-vscode.cpptools",
     "almenon.arepl",
     "chrischinchilla.vscode-pandoc",
-    "marp-team.marp-vscode"
+    "marp-team.marp-vscode",
+    "lekman.tts-code"
   ]
 }

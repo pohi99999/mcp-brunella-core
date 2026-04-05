@@ -1,3 +1,35 @@
+# -*- coding: utf-8 -*-
+'''Simple IMAP invoice fetcher stub used by Phase 3 skeleton.
+
+The real implementation will connect to an IMAP server, download attachments and
+return structured invoice artifacts. This stub returns deterministic example
+payloads for local development and tests.
+'''
+from typing import List, Dict, Any
+
+
+def fetch_invoices_from_imap() -> List[Dict[str, Any]]:
+    '''
+    Stub that simulates fetching invoice attachments from an IMAP mailbox.
+
+    Returns:
+        A list of dict objects representing fetched invoices. Each dict contains:
+            - 'filename': str
+            - 'content_bytes': bytes
+            - 'metadata': dict
+    '''
+    # Deterministic example payload for unit tests and local flows
+    return [
+        {
+            'filename': 'invoice-0001.xml',
+            'content_bytes': b'<Invoice>...</Invoice>',
+            'metadata': {'source': 'imap_stub', 'message_id': 'stub-1'},
+        }
+    ]
+
+
+if __name__ == '__main__':
+    print(fetch_invoices_from_imap())
 import os
 import json
 import base64
