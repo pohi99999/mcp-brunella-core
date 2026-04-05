@@ -60,3 +60,13 @@
 - Ha szükséges: az optimalizálás legalább 30%-os javulást hoz
 - Ha nem szükséges: a track "not-needed" státusszal zárva
 - A döntési folyamat dokumentálva
+
+---
+
+## ✅ CLOSURE NOTE (2026-03-23)
+
+**TRACK ARCHIVED AS NOT-NEEDED**
+
+**Conclusion:** Cloudflare Hyperdrive is not applicable to D1. Hyperdrive is specifically designed for connection pooling and query caching for external PostgreSQL/MySQL databases over TCP/TLS connections. D1 is a native Cloudflare database that is already optimized for Workers environments and does not expose a TCP endpoint for Hyperdrive to pool connections to.
+
+**Decision:** No runtime code changes required. D1 performance can be optimized through standard database techniques (indexing, query batching, KV caching) if needed in the future.

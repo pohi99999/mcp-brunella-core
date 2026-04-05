@@ -9,7 +9,8 @@
  * @see conductor/tracks/gold_protocol/spec.md §3.1 (RULE-SF1..SF3)
  */
 
-import { logInfo, logWarn, logError } from '../utils/logger.js';
+import { logInfo, logWarn, logError, logDebug } from '../utils/logger.js';
+import { ensureError } from '../utils/ensureError.js';
 import fs from 'fs/promises';
 import path from 'path';
 
@@ -197,7 +198,9 @@ async function readMeta(trackId: string): Promise<SpecMeta | null> {
     try {
         const content = await fs.readFile(metaPath, 'utf-8');
         return JSON.parse(content) as SpecMeta;
-    } catch {
+    } catch (error: unknown) {
+        const err = ensureError(error);
+        logDebug('SpecStatus', `Could not read spec metadata for ${trackId}: ${err.message}`);
         return null;
     }
 }

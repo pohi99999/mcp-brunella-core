@@ -17,6 +17,7 @@ import { getIndexStatus, scheduleReindex } from "../core/codebaseIndexer.js";
 import { exportStructuredMemories, getMemoryStats, getRecentPatternReuses, purgeExpired, queryMemory } from "../core/structuredMemory.js";
 import { socketService } from "./SocketService.js";
 import { getMemoryCacheMetricsSnapshot } from "../utils/metrics.js";
+import { ensureError } from "../utils/ensureError.js";
 
 export function createMemoryRouter(): Router {
   const router = Router();
@@ -36,8 +37,9 @@ export function createMemoryRouter(): Router {
       const index = getIndexStatus(); // Already sync, returns status object
 
       res.json({ golden, curated, index });
-    } catch (e: any) {
-      res.status(500).json({ error: e.message });
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      res.status(500).json({ error: err.message });
     }
   });
 
@@ -176,8 +178,9 @@ export function createMemoryRouter(): Router {
         timestamp: new Date().toISOString(),
       });
       res.json({ success: true, data });
-    } catch (e: any) {
-      res.status(500).json({ error: e.message });
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      res.status(500).json({ error: err.message });
     }
   });
 
@@ -189,8 +192,9 @@ export function createMemoryRouter(): Router {
     try {
       const stats = getIndexStatus(); // Sync function
       res.json(stats);
-    } catch (e: any) {
-      res.status(500).json({ error: e.message });
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      res.status(500).json({ error: err.message });
     }
   });
 
@@ -205,8 +209,9 @@ export function createMemoryRouter(): Router {
         timestamp: new Date().toISOString(),
       });
       res.json({ success: true, message: "Reindex scheduled" });
-    } catch (e: any) {
-      res.status(500).json({ error: e.message });
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      res.status(500).json({ error: err.message });
     }
   });
 
@@ -221,8 +226,9 @@ export function createMemoryRouter(): Router {
         success: true,
         message: "Training scheduled (not implemented in API yet)",
       });
-    } catch (e: any) {
-      res.status(500).json({ error: e.message });
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      res.status(500).json({ error: err.message });
     }
   });
 

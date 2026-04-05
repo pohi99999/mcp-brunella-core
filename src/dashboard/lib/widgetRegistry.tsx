@@ -134,8 +134,8 @@ export const WIDGET_REGISTRY: Record<string, WidgetDefinition> = {
   },
   cloudflare_agents: {
     id: "cloudflare_agents",
-    label: "Cloudflare Workers Audit",
-    component: CloudflareAgentsCard,
+    label: "Cloudflare Edge Orchestrator",
+    component: CloudflareOrchestrator,
     defaultSize: { w: 6, h: 8 }
   },
   rag_memory: {

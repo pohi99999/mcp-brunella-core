@@ -2,6 +2,7 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { execCommand } from "../utils/exec.js";
 import { config } from "../config/index.js";
+import { mcpCatch, mcpText } from "../utils/mcpResponse.js";
 
 const WHITELISTED_COMMANDS = ['suggest', 'explain', 'test', 'fix'];
 
@@ -35,18 +36,10 @@ export function registerCopilotCliTool(server: McpServer) {
                     timeout: 60000 // Copilot might take a while
                 });
 
-                return {
-                    content: [{
-                        type: "text",
-                        text: `Exit Code: ${result.exitCode}\n\nSTDOUT:\n${result.stdout}\n\nSTDERR:\n${result.stderr}`
-                    }]
-                };
+                return mcpText(`Exit Code: ${result.exitCode}\n\nSTDOUT:\n${result.stdout}\n\nSTDERR:\n${result.stderr}`);
 
-            } catch (error: any) {
-                return {
-                    isError: true,
-                    content: [{ type: "text", text: `Execution error: ${error.message}` }]
-                };
+            } catch (error: unknown) {
+                return mcpCatch(error, "copilot_cli");
             }
         }
     );

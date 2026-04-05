@@ -1,5 +1,6 @@
 import { BaseAgent, AgentContext, AgentResult } from './BaseAgent.js';
 import { logInfo } from '../utils/logger.js';
+import { ensureError } from '../utils/ensureError.js';
 
 /**
  * ReconciliationIngestionAgent - Bejövő pénzügyi bizonylatok (Bank, NAV, Számlák) 
@@ -63,8 +64,9 @@ export class ReconciliationIngestionAgent extends BaseAgent {
           entries: normalizedEntries
         }
       };
-    } catch (e: any) {
-      return { success: false, message: `Ingestion failed: ${e.message}` };
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      return { success: false, message: `Ingestion failed: ${err.message}` };
     }
   }
 }

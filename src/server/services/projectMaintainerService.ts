@@ -14,7 +14,8 @@ import { existsSync, readdirSync, statSync } from 'fs';
 import path from 'path';
 import type Database from 'better-sqlite3';
 import { getGlobalDb } from '../../utils/globalDb.js';
-import { logError, logInfo, logWarn } from '../../utils/logger.js';
+import { logDebug, logError, logInfo, logWarn } from '../../utils/logger.js';
+import { ensureError } from '../../utils/ensureError.js';
 
 // ── Public types ──────────────────────────────────────────────────────────────
 
@@ -288,8 +289,9 @@ function scanRootNoise(root: string): { findings: ProjectMaintainerFinding[]; su
   let entries: string[];
   try {
     entries = readdirSync(root);
-  } catch (e) {
-    logWarn(MODULE, `Could not read root directory: ${e}`);
+  } catch (error: unknown) {
+    const err = ensureError(error);
+    logWarn(MODULE, `Could not read root directory: ${err.message}`);
     return { findings, suggestions };
   }
 
@@ -298,7 +300,9 @@ function scanRootNoise(root: string): { findings: ProjectMaintainerFinding[]; su
     let stat: ReturnType<typeof statSync>;
     try {
       stat = statSync(fullPath);
-    } catch {
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      logDebug(MODULE, `Skipping root entry ${fullPath}: ${err.message}`);
       continue;
     }
 
@@ -345,7 +349,9 @@ function scanStructureDrift(root: string): { findings: ProjectMaintainerFinding[
   let entries: string[];
   try {
     entries = readdirSync(root);
-  } catch {
+  } catch (error: unknown) {
+    const err = ensureError(error);
+    logWarn(MODULE, `Could not read root entries for structure scan: ${err.message}`);
     return { findings, suggestions };
   }
 
@@ -354,7 +360,9 @@ function scanStructureDrift(root: string): { findings: ProjectMaintainerFinding[
     let stat: ReturnType<typeof statSync>;
     try {
       stat = statSync(fullPath);
-    } catch {
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      logDebug(MODULE, `Skipping top-level entry ${fullPath}: ${err.message}`);
       continue;
     }
 
@@ -398,7 +406,9 @@ function scanConductorTracks(root: string): { findings: ProjectMaintainerFinding
   let tracks: string[];
   try {
     tracks = readdirSync(conductorPath);
-  } catch {
+  } catch (error: unknown) {
+    const err = ensureError(error);
+    logWarn(MODULE, `Could not read conductor tracks: ${err.message}`);
     return { findings, suggestions, trackSummary };
   }
 
@@ -407,7 +417,9 @@ function scanConductorTracks(root: string): { findings: ProjectMaintainerFinding
     let stat: ReturnType<typeof statSync>;
     try {
       stat = statSync(trackPath);
-    } catch {
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      logDebug(MODULE, `Skipping track entry ${trackPath}: ${err.message}`);
       continue;
     }
     if (!stat.isDirectory()) continue;
@@ -480,9 +492,10 @@ function persistReport(db: Database.Database, report: ProjectMaintainerReport): 
       report.triggeredBy,
     );
     logInfo(MODULE, `Report persisted: ${report.id} (${report.findings.length} findings)`);
-  } catch (e) {
-    logError(MODULE, `Failed to persist report: ${e}`);
-    throw e;
+  } catch (error: unknown) {
+    const err = ensureError(error);
+    logError(MODULE, `Failed to persist report: ${err.message}`);
+    throw err;
   }
 }
 

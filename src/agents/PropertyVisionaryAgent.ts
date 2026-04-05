@@ -5,6 +5,7 @@ import { updateBusinessJobStatus, saveBusinessLead } from '../utils/db.js';
 import { socketService } from '../server/SocketService.js';
 import { agentManager } from './AgentManager.js';
 import { v4 as uuidv4 } from 'uuid';
+import { ensureError } from '../utils/ensureError.js';
 
 export class PropertyVisionaryAgent extends BaseAgent {
   name = 'PropertyVisionary';
@@ -137,13 +138,14 @@ export class PropertyVisionaryAgent extends BaseAgent {
         data: finalResult
       };
 
-    } catch (error: any) {
-      logError(this.name, `Property Visionary hiba: ${error.message}`);
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      logError(this.name, `Property Visionary hiba: ${err.message}`);
       if (jobId) {
-          await updateBusinessJobStatus(jobId, 'failed', JSON.stringify({ error: error.message }));
+          await updateBusinessJobStatus(jobId, 'failed', JSON.stringify({ error: err.message }));
           socketService.emit('business_job:updated', { jobId, status: 'failed' });
       }
-      return { success: false, message: error.message };
+      return { success: false, message: err.message };
     }
   }
 }

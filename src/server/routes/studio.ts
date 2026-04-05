@@ -2,9 +2,20 @@ import { Router } from 'express';
 import { saveStudioProject, getStudioProjects, updateProjectStatus } from '../../utils/db.js';
 import { agentManager } from '../../agents/AgentManager.js';
 import { studioRunner } from '../../utils/StudioRunner.js';
+import { ensureError } from '../../utils/ensureError.js';
+import { logWarn, logError } from '../../utils/logger.js';
 import { v4 as uuidv4 } from 'uuid';
 import path from 'path';
 import fs from 'fs/promises';
+
+interface StudioProjectRecord {
+    id: string;
+    name: string;
+    description?: string | null;
+    tech_stack?: string | null;
+    root_dir: string;
+    status?: string | null;
+}
 
 // ============================================================================
 // Vite React scaffold — creates a minimal runnable app in rootDir
@@ -94,8 +105,10 @@ export function createStudioRoutes(): Router {
         try {
             const projects = await getStudioProjects();
             res.json({ success: true, projects });
-        } catch (e: any) {
-            res.status(500).json({ success: false, error: e.message });
+        } catch (error: unknown) {
+            const normalized = ensureError(error);
+            logError('StudioRoutes', 'Project listing failed', normalized);
+            res.status(500).json({ success: false, error: normalized.message });
         }
     });
 
@@ -120,7 +133,10 @@ export function createStudioRoutes(): Router {
 
             // 3. Start dev server via StudioRunner (npm install + npm run dev)
             //    Fire-and-forget: studio:log and studio:ready events will be emitted to Socket.IO
-            studioRunner.startProject(id, rootDir).catch(() => { /* logged in StudioRunner */ });
+            void studioRunner.startProject(id, rootDir).catch((error: unknown) => {
+                const normalized = ensureError(error);
+                logWarn('StudioRoutes', `Studio runner startup failed for project ${id}: ${normalized.message}`);
+            });
 
             // 4. Trigger LLM agent swarm to generate real code into rootDir
             agentManager.queueTask(
@@ -130,8 +146,10 @@ export function createStudioRoutes(): Router {
             );
 
             res.json({ success: true, project });
-        } catch (e: any) {
-            res.status(500).json({ success: false, error: e.message });
+        } catch (error: unknown) {
+            const normalized = ensureError(error);
+            logError('StudioRoutes', 'Project creation failed', normalized);
+            res.status(500).json({ success: false, error: normalized.message });
         }
     });
 
@@ -140,8 +158,8 @@ export function createStudioRoutes(): Router {
             const { instruction } = req.body;
             const projectId = req.params.id;
 
-            const projects = await getStudioProjects();
-            const project = projects.find((p: any) => p.id === projectId) as any;
+            const projects = await getStudioProjects() as StudioProjectRecord[];
+            const project = projects.find((entry) => entry.id === projectId);
 
             if (!project) {
                 return res.status(404).json({ success: false, error: 'Project not found' });
@@ -156,8 +174,10 @@ export function createStudioRoutes(): Router {
             );
 
             res.json({ success: true, message: 'Iteration started' });
-        } catch (e: any) {
-            res.status(500).json({ success: false, error: e.message });
+        } catch (error: unknown) {
+            const normalized = ensureError(error);
+            logError('StudioRoutes', 'Project iteration failed', normalized);
+            res.status(500).json({ success: false, error: normalized.message });
         }
     });
 

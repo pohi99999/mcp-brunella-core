@@ -30,3 +30,38 @@
    - Korlátozott hullámokban: 10 ügyfél → 50 ügyfél → teljes
 
 Összes becsült idő: ~18 nap (team size: 2 dev, 1 devops, 1 product)
+
+---
+Részletes feladatok (TASK-CRM-xxx):
+
+- TASK-CRM-001: CRM sandbox hozzáférés validálása (assignee: DevOps/Product)
+   - Leírás: HubSpot és egy másik CRM sandbox hitelesítés, OAuth kliens létrehozása
+   - Acceptance: OAuth token lekérése és egyszerű /me lekérés sikeresen
+   - Idő: 1d
+
+- TASK-CRM-002: n8n ingest flow skeleton (assignee: Developer)
+   - Leírás: Webhook listener → transform → temp store (JSON file vagy SQLite) → unit test payload
+   - Acceptance: Bejövő mintapéldány feldolgozva és persistálva
+   - Idő: 2d
+
+- TASK-CRM-003: Deduplikációs modul (assignee: Developer)
+   - Leírás: Dedup logika implementálása (email/phone/hash), konfigurálható küszöb
+   - Acceptance: Dedup >=99% a megadott tesztfájlokon
+   - Idő: 3d
+
+- TASK-CRM-004: HubSpot connector + OAuth refresh (assignee: Developer)
+   - Leírás: Token refresh, hibakezelés, egyszerű lead push endpoint
+   - Acceptance: End-to-end lead push teszt sikeres
+   - Idő: 3d
+
+- TASK-CRM-005: Lead scoring config & rule engine (assignee: Developer/Product)
+   - Leírás: YAML alapú szabályok + egyszerű pontozás; top-10% routolása
+   - Acceptance: Scoring pipeline lefut és routolás működik a mintákon
+   - Idő: 4d
+
+- TASK-CRM-006: Human-in-loop Slack approval (assignee: Developer)
+   - Leírás: Slack interaktív message + decision webhook; audit log
+   - Acceptance: Jóváhagyás vagy elutasítás rögzítve, döntés hat a lead státuszra
+   - Idő: 2d
+
+Következő lépések (ma): TASK-CRM-001 és TASK-CRM-002 elkezdése. Hozz létre n8n skeleton flow-t és egy README-t a deploy-hoz.

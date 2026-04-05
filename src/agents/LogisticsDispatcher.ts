@@ -1,5 +1,6 @@
 import { IAgent, AgentResponse } from './types.js';
-import { logInfo, logError, setAgentStatus } from '../utils/logger.js';
+import { logInfo, logError, logDebug, setAgentStatus } from '../utils/logger.js';
+import { ensureError } from '../utils/ensureError.js';
 import { spawn } from "child_process";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -116,8 +117,9 @@ export class LogisticsDispatcher implements IAgent {
         if (code !== 0) return reject(new Error(stderr || `Exit ${code}`));
         try {
           resolve(JSON.parse(stdout.trim()));
-        } catch {
-          reject(new Error("Match JSON hiba."));
+        } catch (error: unknown) {
+          const err = ensureError(error);
+          reject(new Error(`Match JSON hiba. ${err.message}`));
         }
       });
     });
@@ -158,10 +160,10 @@ export class LogisticsDispatcher implements IAgent {
           : `📊 Párosítás kész: ${matchResult.matches.length} párosítva.`,
         data: matchResult
       };
-        } catch (e: unknown) {
-          const error = e instanceof Error ? e.message : String(e);
-          logError(this.name, `Match hiba: ${error}`);
-          return { status: 'error', error };
+        } catch (error: unknown) {
+          const err = ensureError(error);
+          logError(this.name, `Match hiba: ${err.message}`);
+          return { status: 'error', error: err.message };
         }
       }
 
@@ -184,10 +186,10 @@ export class LogisticsDispatcher implements IAgent {
 
       // Default: track shipments
       return await this.trackShipments(task, context);
-    } catch (e: unknown) {
-      const error = e instanceof Error ? e.message : String(e);
-      logError(this.name, error);
-      return { status: 'error', error };
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      logError(this.name, err.message);
+      return { status: 'error', error: err.message };
     } finally {
       setAgentStatus(this.name, 'idle');
     }
@@ -307,8 +309,9 @@ export class LogisticsDispatcher implements IAgent {
         if (code !== 0) return reject(new Error(stderr || `Exit ${code}`));
         try {
           resolve(JSON.parse(stdout.trim()));
-        } catch {
-          reject(new Error("Route JSON hiba."));
+        } catch (error: unknown) {
+          const err = ensureError(error);
+          reject(new Error(`Route JSON hiba. ${err.message}`));
         }
       });
     });
@@ -353,10 +356,10 @@ export class LogisticsDispatcher implements IAgent {
           route_id: route.routeId
         }
       };
-    } catch (e: unknown) {
-      const error = e instanceof Error ? e.message : String(e);
-      logError(this.name, `Route optimization hiba: ${error}`);
-      return { status: 'error', error };
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      logError(this.name, `Route optimization hiba: ${err.message}`);
+      return { status: 'error', error: err.message };
     }
   }
 
@@ -551,10 +554,10 @@ Logistics Dispatch Team
           createdAt: draft.createdAt
         }
       };
-    } catch (e: unknown) {
-      const error = e instanceof Error ? e.message : String(e);
-      logError(this.name, `Draft creation hiba: ${error}`);
-      return { status: 'error', error };
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      logError(this.name, `Draft creation hiba: ${err.message}`);
+      return { status: 'error', error: err.message };
     }
   }
 
@@ -676,10 +679,10 @@ Logistics Dispatch Team
           messageId: (result.data as any)?.messageId
         }
       };
-    } catch (e: unknown) {
-      const error = e instanceof Error ? e.message : String(e);
-      logError(this.name, `Email sending hiba: ${error}`);
-      return { status: 'error', error };
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      logError(this.name, `Email sending hiba: ${err.message}`);
+      return { status: 'error', error: err.message };
     }
   }
 }

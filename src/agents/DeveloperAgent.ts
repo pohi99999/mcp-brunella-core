@@ -1,7 +1,3 @@
-// FILE: src/agents/DeveloperAgent.ts
-// PURPOSE: AI-powered development agent with self-healing capabilities
-// VERSION: 2.0
-
 import { IAgent, AgentResponse } from "./types.js";
 import { logInfo, logError, setAgentStatus } from "../utils/logger.js";
 import { globalPythonShell } from "../utils/pythonShell.js";
@@ -11,6 +7,7 @@ import { socketService } from "../server/SocketService.js";
 import { execSync } from "child_process";
 import fs from "fs/promises";
 import path from "path";
+import { ensureError } from "../utils/ensureError.js";
 
 const DEVELOPER_TOOLS = [
   {
@@ -353,9 +350,10 @@ Kontextus a projektről: ESM modulokat használunk (imports with .js extensions)
         data: { output: result, code },
         message: "AI code executed successfully",
       };
-    } catch (e: any) {
-      logError(this.name, `AI-Interpreter failed: ${e.message}`);
-      return { status: "error", error: e.message };
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      logError(this.name, `AI-Interpreter failed: ${err.message}`);
+      return { status: "error", error: err.message };
     }
   }
 
@@ -374,9 +372,10 @@ Kontextus a projektről: ESM modulokat használunk (imports with .js extensions)
         data: { output: result },
         message: "Python code executed successfully",
       };
-    } catch (e: any) {
-      logError(this.name, `Python execution failed: ${e.message}`);
-      return { status: "error", error: e.message };
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      logError(this.name, `Python execution failed: ${err.message}`);
+      return { status: "error", error: err.message };
     }
   }
 

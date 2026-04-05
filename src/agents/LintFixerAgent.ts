@@ -12,7 +12,8 @@
  */
 
 import { IAgent, AgentResponse } from "./types.js";
-import { logInfo, logError, setAgentStatus } from "../utils/logger.js";
+import { logInfo, logError, logDebug, setAgentStatus } from "../utils/logger.js";
+import { ensureError } from '../utils/ensureError.js';
 import { spawn } from "child_process";
 import { promises as fs } from "fs";
 import path from "path";
@@ -101,12 +102,12 @@ export class LintFixerAgent implements IAgent {
 
       // Default: teljes lint check
       return await this.runLintCheck(task);
-    } catch (error) {
-      const errorMsg = error instanceof Error ? error.message : String(error);
-      logError(this.name, errorMsg);
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      logError(this.name, err.message);
       return {
         status: "error",
-        error: errorMsg,
+        error: err.message,
       };
     } finally {
       setAgentStatus(this.name, "idle");
@@ -174,7 +175,9 @@ export class LintFixerAgent implements IAgent {
               },
             });
           }
-        } catch {
+        } catch (error: unknown) {
+          const err = ensureError(error);
+          logDebug(this.name, `ESLint JSON parse failed: ${err.message}`);
           // Ha nem JSON (pl. ESLint hiba a konfig betöltésekor), jelezzük de ne blokkoljuk
           resolve({
             status: "success",
@@ -261,7 +264,9 @@ export class LintFixerAgent implements IAgent {
     // Ellenőrizzük létezik-e
     try {
       await fs.access(fullPath);
-    } catch {
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      logDebug(this.name, `File access failed for ${fullPath}: ${err.message}`);
       return {
         status: "error",
         error: `Fájl nem található: ${filePath}`,
@@ -343,7 +348,9 @@ export class LintFixerAgent implements IAgent {
     let fileContent: string;
     try {
       fileContent = await fs.readFile(fullPath, "utf-8");
-    } catch {
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      logDebug(this.name, `File read failed for ${fullPath}: ${err.message}`);
       fileContent = "[Fájl nem olvasható]";
     }
 

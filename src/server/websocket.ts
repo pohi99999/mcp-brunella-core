@@ -1,5 +1,6 @@
 import { Server, Socket } from "socket.io";
 import { logInfo, logError } from "../utils/logger.js";
+import { ensureError } from "../utils/ensureError.js";
 import { cloudflareClient } from "../agents/cloudflare/CloudflareClient.js";
 import { agentManager } from "../agents/AgentManager.js";
 
@@ -72,12 +73,13 @@ export function registerEdgeWebSocketHandlers(io: Server) {
                 `Task ${taskId} completed: ${status.status}`,
               );
             }
-          } catch (error: any) {
+          } catch (error: unknown) {
             clearInterval(progressInterval);
-            logError("EdgeWebSocket", `Progress poll error: ${error.message}`);
+            const err = ensureError(error);
+            logError("EdgeWebSocket", `Progress poll error: ${err.message}`);
             socket.emit("edge:task:error", {
               taskId,
-              error: error.message,
+              error: err.message,
             });
           }
         }, 2000); // Poll every 2 seconds
@@ -86,10 +88,11 @@ export function registerEdgeWebSocketHandlers(io: Server) {
         socket.on("disconnect", () => {
           clearInterval(progressInterval);
         });
-      } catch (error: any) {
-        logError("EdgeWebSocket", `Task submit error: ${error.message}`);
+      } catch (error: unknown) {
+        const err = ensureError(error);
+        logError("EdgeWebSocket", `Task submit error: ${err.message}`);
         socket.emit("edge:task:error", {
-          error: error.message,
+          error: err.message,
         });
       }
     });
@@ -119,10 +122,11 @@ export function registerEdgeWebSocketHandlers(io: Server) {
             response,
             timestamp: Date.now(),
           });
-        } catch (error: any) {
-          logError("EdgeWebSocket", `Chat error: ${error.message}`);
+        } catch (error: unknown) {
+          const err = ensureError(error);
+          logError("EdgeWebSocket", `Chat error: ${err.message}`);
           socket.emit("edge:chat:error", {
-            error: error.message,
+            error: err.message,
           });
         }
       },
@@ -152,11 +156,12 @@ export function registerEdgeWebSocketHandlers(io: Server) {
           currentStep: status.currentStep,
           error: status.error,
         });
-      } catch (error: any) {
-        logError("EdgeWebSocket", `Status query error: ${error.message}`);
+      } catch (error: unknown) {
+        const err = ensureError(error);
+        logError("EdgeWebSocket", `Status query error: ${err.message}`);
         socket.emit("edge:status:error", {
           taskId: data.taskId,
-          error: error.message,
+          error: err.message,
         });
       }
     });
@@ -209,12 +214,11 @@ export function registerCEANWebSocketHandlers(io: Server) {
             timestamp: Date.now(),
           });
         } catch (error: unknown) {
-          const errorMsg =
-            error instanceof Error ? error.message : String(error);
-          logError("CEANChat", `Edge Error: ${errorMsg}`);
+          const err = ensureError(error);
+          logError("CEANChat", `Edge Error: ${err.message}`);
 
           socket.emit("cean:orchestrator:response", {
-            error: errorMsg,
+            error: err.message,
             timestamp: Date.now(),
           });
         }

@@ -11,6 +11,7 @@
 
 import { Router } from 'express';
 import { getAuditLog, getDeniedEntries, getAuditStats, cleanupOldEntries } from '../core/auditLog.js';
+import { ensureError } from '../utils/ensureError.js';
 
 export function createAuditRouter(): Router {
   const router = Router();
@@ -25,8 +26,9 @@ export function createAuditRouter(): Router {
       const offset = parseInt(req.query.offset as string) || 0;
       const entries = await getAuditLog(limit, offset);
       res.json({ entries, limit, offset });
-    } catch (e: any) {
-      res.status(500).json({ error: e.message });
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      res.status(500).json({ error: err.message });
     }
   });
 
@@ -39,8 +41,9 @@ export function createAuditRouter(): Router {
       const limit = Math.min(parseInt(req.query.limit as string) || 50, 500);
       const entries = await getDeniedEntries(limit);
       res.json({ entries });
-    } catch (e: any) {
-      res.status(500).json({ error: e.message });
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      res.status(500).json({ error: err.message });
     }
   });
 
@@ -52,8 +55,9 @@ export function createAuditRouter(): Router {
     try {
       const stats = await getAuditStats();
       res.json(stats);
-    } catch (e: any) {
-      res.status(500).json({ error: e.message });
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      res.status(500).json({ error: err.message });
     }
   });
 
@@ -66,8 +70,9 @@ export function createAuditRouter(): Router {
       const days = parseInt(req.body?.retentionDays as string) || 30;
       const removed = await cleanupOldEntries(days);
       res.json({ removed, retentionDays: days });
-    } catch (e: any) {
-      res.status(500).json({ error: e.message });
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      res.status(500).json({ error: err.message });
     }
   });
 

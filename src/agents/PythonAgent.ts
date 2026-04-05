@@ -13,7 +13,8 @@
  */
 
 import { IAgent, AgentResponse } from './types.js';
-import { logInfo, logError, setAgentStatus } from '../utils/logger.js';
+import { logInfo, logError, logDebug, setAgentStatus } from '../utils/logger.js';
+import { ensureError } from '../utils/ensureError.js';
 import { config } from '../config/index.js';
 import { PythonShell } from '../utils/pythonShell.js';
 import fs from 'fs/promises';
@@ -88,24 +89,27 @@ async function checkPythonEnvironment(): Promise<PythonEnvironment> {
         await fs.access(venvPython);
         pythonPath = venvPython;
         venvActive = true;
-    } catch {
-        // No venv, use system python
+    } catch (error: unknown) {
+        const err = ensureError(error);
+        logDebug(SOURCE, `No virtual environment found, using system python: ${err.message}`);
     }
 
     let pythonVersion = 'unknown';
     try {
         const { stdout } = await execAsync(`"${pythonPath}" --version`);
         pythonVersion = stdout.trim().replace('Python ', '');
-    } catch {
-        // Python not found
+    } catch (error: unknown) {
+        const err = ensureError(error);
+        logDebug(SOURCE, `Python not found: ${err.message}`);
     }
 
     let uvAvailable = false;
     try {
         await execAsync('uv --version');
         uvAvailable = true;
-    } catch {
-        // uv not installed
+    } catch (error: unknown) {
+        const err = ensureError(error);
+        logDebug(SOURCE, `uv not installed: ${err.message}`);
     }
 
     let pipVersion: string | undefined;
@@ -113,8 +117,9 @@ async function checkPythonEnvironment(): Promise<PythonEnvironment> {
         const { stdout } = await execAsync(`"${pythonPath}" -m pip --version`);
         const match = stdout.match(/pip (\d+\.\d+\.?\d*)/);
         pipVersion = match ? match[1] : undefined;
-    } catch {
-        // pip not available
+    } catch (error: unknown) {
+        const err = ensureError(error);
+        logDebug(SOURCE, `pip not available: ${err.message}`);
     }
 
     return {
@@ -150,10 +155,11 @@ async function checkPythonAPI(): Promise<{ status: 'healthy' | 'unhealthy' | 'un
         }
 
         return { status: 'unhealthy', latencyMs, error: `HTTP ${response.status}` };
-    } catch (e) {
+    } catch (error: unknown) {
+        const err = ensureError(error);
         return {
             status: 'unhealthy',
-            error: e instanceof Error ? e.message : 'Connection failed'
+            error: err.message || 'Connection failed'
         };
     }
 }
@@ -196,7 +202,9 @@ async function checkDependencies(env: PythonEnvironment): Promise<PythonDependen
                                 installedVersion = versionMatch[1].trim();
                             }
                         }
-                    } catch {
+                    } catch (error: unknown) {
+                        const err = ensureError(error);
+                        logDebug(SOURCE, `Unable to read installed version for ${name}: ${err.message}`);
                         installedVersion = null;
                     }
 
@@ -209,8 +217,9 @@ async function checkDependencies(env: PythonEnvironment): Promise<PythonDependen
                 }
             }
         }
-    } catch {
-        // pyproject.toml not found or unreadable
+    } catch (error: unknown) {
+        const err = ensureError(error);
+        logDebug(SOURCE, `pyproject.toml not found or unreadable: ${err.message}`);
     }
 
     return dependencies;
@@ -246,9 +255,9 @@ async function checkModules(env: PythonEnvironment): Promise<ModuleStatus[]> {
                     { timeout: 10000 }
                 );
                 importable = true;
-            } catch (e: unknown) {
-                const err = e instanceof Error ? e.message : String(e);
-                error = err.split('\n')[0]; // First line of error
+            } catch (error: unknown) {
+                const err = ensureError(error);
+                error = err.message.split('\n')[0]; // First line of error
             }
 
             return {
@@ -257,7 +266,9 @@ async function checkModules(env: PythonEnvironment): Promise<ModuleStatus[]> {
                 importable,
                 error
             };
-        } catch {
+        } catch (error: unknown) {
+            const err = ensureError(error);
+            logDebug(SOURCE, `Module file not found for ${moduleNameWithoutPy}: ${err.message}`);
             return {
                 module: moduleNameWithoutPy,
                 path: modulePath,
@@ -495,10 +506,10 @@ export class PythonAgent implements IAgent {
             // Default: run full health check
             return await this.runHealthCheck();
 
-        } catch (e: unknown) {
-            const error = e instanceof Error ? e.message : String(e);
-            logError(SOURCE, error);
-            return { status: 'error', error };
+        } catch (error: unknown) {
+            const err = ensureError(error);
+            logError(SOURCE, err.message);
+            return { status: 'error', error: err.message };
         } finally {
             setAgentStatus(this.name, 'idle');
         }
@@ -627,11 +638,11 @@ export class PythonAgent implements IAgent {
                     }
                 };
             }
-        } catch (e: unknown) {
-            const error = e instanceof Error ? e.message : String(e);
+        } catch (error: unknown) {
+            const err = ensureError(error);
             return {
                 status: 'error',
-                error: `Failed to sync dependencies: ${error}`
+                error: `Failed to sync dependencies: ${err.message}`
             };
         }
     }
@@ -655,11 +666,11 @@ export class PythonAgent implements IAgent {
                 status: 'success',
                 data: { output: result }
             };
-        } catch (e: unknown) {
-            const error = e instanceof Error ? e.message : String(e);
+        } catch (error: unknown) {
+            const err = ensureError(error);
             return {
                 status: 'error',
-                error: `Execution failed: ${error}`
+                error: `Execution failed: ${err.message}`
             };
         }
     }
@@ -683,21 +694,22 @@ export class PythonAgent implements IAgent {
                     passed: !stderr?.includes('FAILED')
                 }
             };
-        } catch (e: unknown) {
-            const error = e instanceof Error ? e.message : String(e);
+        } catch (error: unknown) {
+            const err = ensureError(error);
+            const message = err.message;
             // pytest exits with non-zero on failures, but still produces output
-            if (error.includes('FAILED')) {
+            if (message.includes('FAILED')) {
                 return {
                     status: 'success',
                     data: {
-                        output: error,
+                        output: message,
                         passed: false
                     }
                 };
             }
             return {
                 status: 'error',
-                error: `Test run failed: ${error}`
+                error: `Test run failed: ${message}`
             };
         }
     }

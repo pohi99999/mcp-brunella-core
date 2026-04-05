@@ -10,6 +10,7 @@ import { IAgent, ISwarmContext, AgentHandoff, AgentResponse } from './types.js';
 import { formatAgentResult } from '../utils/responseFormatter.js';
 import { searchRAG, addToIndex } from '../utils/rag.js';
 import { logInfo, logError, setAgentStatus } from '../utils/logger.js';
+import { ensureError } from '../utils/ensureError.js';
 import { validateAgentResult } from './middleware/validateOutput.js';
 import { calculateConfidence } from './scoring/confidenceCalculator.js';
 import { wrapWithSpan } from '../utils/otelTracing.js';
@@ -249,8 +250,9 @@ export abstract class BaseAgent implements IAgent {
       const results = await searchRAG(query, limit);
       const vectorResults = results.map(r => ({ text: r.text, score: r.score }));
       return [...structured, ...vectorResults].slice(0, limit);
-    } catch (e) {
-      logError(this.name, `Memória lekérdezés hiba: ${e}`);
+    } catch (error: unknown) {
+      const normalized = ensureError(error);
+      logError(this.name, 'Memória lekérdezés hiba', normalized);
       return [];
     }
   }
@@ -258,15 +260,16 @@ export abstract class BaseAgent implements IAgent {
   /**
    * Save an experience to the cognitive memory
    */
-  protected async saveToMemory(content: string, metadata: any = {}): Promise<void> {
+  protected async saveToMemory(content: string, metadata: Record<string, unknown> = {}): Promise<void> {
     const memoryContent = `[${this.name}] ${content}`;
-    const memoryId = metadata.id || `${this.name.toLowerCase()}_${Date.now()}`;
+    const memoryId = typeof metadata.id === 'string' ? metadata.id : `${this.name.toLowerCase()}_${Date.now()}`;
     
     logInfo(this.name, `Tapasztalat mentése a memóriába: ${memoryId}`);
     try {
       await addToIndex(memoryId, memoryContent);
-    } catch (e) {
-      logError(this.name, `Memória mentési hiba: ${e}`);
+    } catch (error: unknown) {
+      const normalized = ensureError(error);
+      logError(this.name, 'Memória mentési hiba', normalized);
     }
   }
 }

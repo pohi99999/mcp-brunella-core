@@ -7,6 +7,7 @@
 
 import { BaseAgent, AgentContext, AgentResult } from './BaseAgent.js';
 import { logInfo, logError } from '../utils/logger.js';
+import { ensureError } from '../utils/ensureError.js';
 import { v4 as uuidv4 } from 'uuid';
 
 export class RobotkezAgent extends BaseAgent {
@@ -60,11 +61,12 @@ export class RobotkezAgent extends BaseAgent {
                 thoughts: `A feladatot a Python browser_worker hajtotta végre. Állapot: ${result.status}`
             };
 
-        } catch (error: any) {
-            logError('RobotkezAgent', `Hiba: ${error.message}`);
+        } catch (error: unknown) {
+            const err = ensureError(error);
+            logError('RobotkezAgent', `Hiba: ${err.message}`);
             return {
                 success: false,
-                message: `Nem sikerült végrehajtani a böngésző műveletet: ${error.message}`
+                message: `Nem sikerült végrehajtani a böngésző műveletet: ${err.message}`
             };
         }
     }

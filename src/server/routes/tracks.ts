@@ -13,6 +13,8 @@ import {
   findTodoLineNumber,
   type TrackTodoView,
 } from '../../utils/trackTodoParser.js';
+import { ensureError } from '../../utils/ensureError.js';
+import { logDebug, logError } from '../../utils/logger.js';
 
 const TRACKS_DIR = path.join(process.cwd(), 'conductor', 'tracks');
 
@@ -47,8 +49,8 @@ export function createTracksRoutes(): Router {
             await fs.access(trackPath);
             const content = await fs.readFile(trackPath, 'utf-8');
             todoView = parseTrackTodos(content, dir);
-          } catch {
-            // track.md doesn't exist, skip
+          } catch (error: unknown) {
+            logDebug('TracksRoutes', `Skipping track ${dir} without track.md: ${ensureError(error).message}`);
             continue;
           }
 
@@ -62,16 +64,16 @@ export function createTracksRoutes(): Router {
               updatedAt: new Date().toISOString(),
             });
           }
-        } catch {
-          // Skip invalid tracks
+        } catch (error: unknown) {
+          logDebug('TracksRoutes', `Skipping invalid track ${dir}: ${ensureError(error).message}`);
         }
       }
 
       return res.json({ tracks: summaries });
     } catch (error: unknown) {
-      const message = error instanceof Error ? error.message : 'Unknown error';
-      console.error('[TracksRoutes] Error getting active TODO summaries:', message);
-      return res.status(500).json({ error: 'Failed to get active tracks', details: message });
+      const normalized = ensureError(error);
+      logError('TracksRoutes', `Error getting active TODO summaries: ${normalized.message}`, normalized);
+      return res.status(500).json({ error: 'Failed to get active tracks', details: normalized.message });
     }
   });
 
@@ -93,7 +95,8 @@ export function createTracksRoutes(): Router {
       // Check if track.md exists
       try {
         await fs.access(trackPath);
-      } catch {
+      } catch (error: unknown) {
+        logDebug('TracksRoutes', `Track not found ${id}: ${ensureError(error).message}`);
         return res.status(404).json({ error: 'Track not found' });
       }
 
@@ -114,9 +117,9 @@ export function createTracksRoutes(): Router {
         updatedAt: new Date().toISOString(),
       });
     } catch (error: unknown) {
-      const message = error instanceof Error ? error.message : 'Unknown error';
-      console.error('[TracksRoutes] Error getting TODOs:', message);
-      return res.status(500).json({ error: 'Failed to get TODOs', details: message });
+      const normalized = ensureError(error);
+      logError('TracksRoutes', `Error getting TODOs: ${normalized.message}`, normalized);
+      return res.status(500).json({ error: 'Failed to get TODOs', details: normalized.message });
     }
   });
 
@@ -138,7 +141,8 @@ export function createTracksRoutes(): Router {
       // Check if track.md exists
       try {
         await fs.access(trackPath);
-      } catch {
+      } catch (error: unknown) {
+        logDebug('TracksRoutes', `Track not found ${id}: ${ensureError(error).message}`);
         return res.status(404).json({ error: 'Track not found' });
       }
 
@@ -176,9 +180,9 @@ export function createTracksRoutes(): Router {
 
       return res.json(response);
     } catch (error: unknown) {
-      const message = error instanceof Error ? error.message : 'Unknown error';
-      console.error('[TracksRoutes] Error toggling TODO:', message);
-      return res.status(500).json({ error: 'Failed to toggle TODO', details: message });
+      const normalized = ensureError(error);
+      logError('TracksRoutes', `Error toggling TODO: ${normalized.message}`, normalized);
+      return res.status(500).json({ error: 'Failed to toggle TODO', details: normalized.message });
     }
   });
 
@@ -203,16 +207,16 @@ export function createTracksRoutes(): Router {
             priority: meta.priority || 'medium',
             progress: meta.progress || 0,
           });
-        } catch {
-          // Skip if meta.json doesn't exist or is invalid
+        } catch (error: unknown) {
+          logDebug('TracksRoutes', `Skipping invalid track metadata for ${dir}: ${ensureError(error).message}`);
         }
       }
 
       return res.json({ tracks });
     } catch (error: unknown) {
-      const message = error instanceof Error ? error.message : 'Unknown error';
-      console.error('[TracksRoutes] Error listing tracks:', message);
-      return res.status(500).json({ error: 'Failed to list tracks', details: message });
+      const normalized = ensureError(error);
+      logError('TracksRoutes', `Error listing tracks: ${normalized.message}`, normalized);
+      return res.status(500).json({ error: 'Failed to list tracks', details: normalized.message });
     }
   });
 

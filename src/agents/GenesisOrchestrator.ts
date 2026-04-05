@@ -1,12 +1,8 @@
-// FILE: src/agents/GenesisOrchestrator.ts
-// PURPOSE: Automated execution of the Software Genesis task queue (Phase 3)
-// VERSION: 1.0 (Phase 3 - Software Genesis Protocol)
-// UPDATED: 2026-02-18
-
 import { BaseAgent, type AgentContext, type AgentResult } from "./BaseAgent.js";
 import { logInfo, logError, setAgentStatus } from "../utils/logger.js";
 import type { SpecDocument, AgentTaskQueueItem } from "../types/blueprint.js";
 import { agentManager } from "../agents/AgentManager.js";
+import { ensureError } from "../utils/ensureError.js";
 
 /**
  * GenesisOrchestrator - Szoftver-Genesis Karmester
@@ -53,9 +49,10 @@ export class GenesisOrchestrator extends BaseAgent {
         success: false,
         message: "Ismeretlen feladat. Próbáld: 'futtasd a genesis protokolt a specifikáció alapján'.",
       };
-    } catch (e: any) {
-      logError(this.name, e.message);
-      return { success: false, message: `Hiba: ${e.message}` };
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      logError(this.name, err.message);
+      return { success: false, message: `Hiba: ${err.message}` };
     }
   }
 

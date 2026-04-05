@@ -209,7 +209,17 @@ export class TrackStateManager {
     this.syncInProgress = true;
     logInfo('TrackStateManager', 'Starting full sync (active + archived)...');
 
-    const newTracks: TrackMetadata[] = [];
+    const trackMap = new Map<string, TrackMetadata>();
+    const registerTrack = (track: TrackMetadata): void => {
+      const existing = trackMap.get(track.id);
+      if (existing) {
+        const existingScope = existing._isArchived ? 'archived' : 'active';
+        const incomingScope = track._isArchived ? 'archived' : 'active';
+        logWarn('TrackStateManager', `Duplicate track id ${track.id} found in ${existingScope} and ${incomingScope}; preferring ${incomingScope} entry`);
+      }
+
+      trackMap.set(track.id, track);
+    };
 
     try {
       // 1. Scan ACTIVE tracks
@@ -224,7 +234,7 @@ export class TrackStateManager {
           if (fs.existsSync(metaPath)) {
             const track = this.parseMetaJson(metaPath, path.join(TRACKS_DIR, dir), false);
             if (track) {
-              newTracks.push(track);
+              registerTrack(track);
             }
           } else {
             logWarn('TrackStateManager', `No meta.json in ${dir} (skipping)`);
@@ -247,13 +257,14 @@ export class TrackStateManager {
               // Force archived status
               track.status = 'archived';
               track._isArchived = true;
-              newTracks.push(track);
+              registerTrack(track);
             }
           }
         }
       }
 
       // 3. Update state
+      const newTracks = Array.from(trackMap.values());
       this.state.tracks = newTracks;
       this.saveState();
 

@@ -5,6 +5,7 @@ import { getBifrostGateway } from "../core/bifrost_gateway.js";
 import { socketService } from "../server/SocketService.js";
 import { execSync } from "child_process";
 import fs from "fs/promises";
+import { ensureError } from "../utils/ensureError.js";
 
 export interface HallucinationCheckResult {
   confident: boolean;
@@ -231,12 +232,13 @@ A feladatod a rendszerek auditálása, egészségügyi ellenőrzések és TESZTE
         data: { filePath, currentSize, previousSize: baselineData.size, hasGrown, timestamp: newBaseline.timestamp }
       };
 
-    } catch (error: any) {
-      this.logger.error(`Error in verifyDatasetGrowth for ${filePath}: ${error.message}`);
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      this.logger.error(`Error in verifyDatasetGrowth for ${filePath}: ${err.message}`);
       return {
         success: false,
-        message: `Failed to verify dataset growth for ${filePath}: ${error.message}`,
-        data: { filePath, error: error.message }
+        message: `Failed to verify dataset growth for ${filePath}: ${err.message}`,
+        data: { filePath, error: err.message }
       };
     }
   }

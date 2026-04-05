@@ -17,6 +17,8 @@ import { fileURLToPath } from "url";
 import { socketService } from "../SocketService.js";
 import { logInfo, logError } from "../../utils/logger.js";
 import { alertDispatcher } from "../../pipeline/alertDispatcher.js";
+import { ensureError } from "../../utils/ensureError.js";
+import { logDebug } from "../../utils/logger.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const WORKER_PATH = path.resolve(__dirname, "../../../myai/workers/machine_hunter.py");
@@ -90,7 +92,8 @@ function runMachineHunter(input: MachineHuntRequest): Promise<MachineHuntResult>
         const trimmed = stdout.trim();
         const parsed = JSON.parse(trimmed) as MachineHuntResult;
         resolve(parsed);
-      } catch {
+      } catch (error: unknown) {
+        logDebug("MachinesRoute", `machine_hunter output parse skipped: ${ensureError(error).message}`);
         reject(new Error(`JSON parse error. stdout: ${stdout.slice(0, 300)}`));
       }
     });
@@ -137,9 +140,9 @@ export function createMachinesRouter(): Router {
     try {
       huntResult = await runMachineHunter(huntReq);
     } catch (e: unknown) {
-      const errMsg = e instanceof Error ? e.message : String(e);
-      logError("MachinesRoute", `machine_hunter.py hiba: ${errMsg}`);
-      res.status(500).json({ success: false, error: errMsg });
+      const normalized = ensureError(e);
+      logError("MachinesRoute", `machine_hunter.py hiba: ${normalized.message}`, normalized);
+      res.status(500).json({ success: false, error: normalized.message });
       return;
     }
 

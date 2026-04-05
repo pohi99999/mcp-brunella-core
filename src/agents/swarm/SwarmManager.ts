@@ -11,6 +11,7 @@
 
 import { EventEmitter } from 'events';
 import { logInfo, logWarn } from '../../utils/logger.js';
+import { ensureError } from '../../utils/ensureError.js';
 import { SwarmAgent, type TaskBid, type SwarmTaskResult } from './SwarmAgent.js';
 import { eventBus } from '../../core/eventBus.js';
 import { saveCheckpoint, pruneCheckpoints } from '../../core/swarm/colonyPersistence.js';
@@ -200,8 +201,9 @@ export class SwarmManager extends EventEmitter {
       try {
         saveCheckpoint(colony);
         pruneCheckpoints(colony.swarmId, 5);
-      } catch {
-        logWarn('SwarmManager', `Auto-checkpoint failed for colony ${swarmId}`);
+      } catch (error: unknown) {
+        const err = ensureError(error);
+        logWarn('SwarmManager', `Auto-checkpoint failed for colony ${swarmId}: ${err.message}`);
       }
     }
 

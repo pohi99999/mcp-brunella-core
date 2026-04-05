@@ -1,6 +1,6 @@
 # FŐSZÁL - Egyesített Fejlesztési Napló
 
-**Generálva:** 2026-04-04 20:48
+**Generálva:** 2026-04-05 12:10
 **Script:** `scripts/sync_foszal.py`
 
 ---
@@ -28,7 +28,26 @@ start-full.bat
 
 ## Összesített Napló (Időrendben)
 
+### 2026-04-05
+
+#### 00:00 - [Copilot] Remote layer phase 1 archiválás + conductor rescan
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `conductor/archive/remote_layer_phase1_foundation_20260322/meta.json`, `conductor/archive/remote_layer_phase1_foundation_20260322/plan.md`, `conductor/archive/remote_layer_phase1_foundation_20260322/spec.md`, `src/services/trackStateManager.ts`, `conductor/project_state.json`, `conductor/tracks.md`
+
+---
+
 ### 2026-04-04
+
+#### 23:55 - [Gemini] 🌐 Cloudflare Workers & CEAN 16-Agent Orkesztráció Szállítás
+- **Agent:** Gemini
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** bas-cloudflare-orchestrator/src/index.ts (Orchestrator v2), bas-cloudflare-orchestrator/migrations/0003_worker_management.sql (D1 séma), bas-cloudflare-orchestrator/workers/agents/* (16 ágens worker váz), src/utils/cloudflareClient.ts (Dispatch & Workers API), src/agents/EdgeProxyAgent.ts (Multi-agent routing támogatás) (+2 további)
+
+#### 21:58 - [Copilot] Error handling implementation lezárás
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `src/agents/contextBuilder.ts`, `src/agents/OrchestratorAgent.ts`, `src/agents/EdgeProxyAgent.ts`, `src/agents/RobotkezV2Agent.ts`, `src/cli/edgeCommands.ts` (+3 további)
 
 #### 18:47 - [Copilot] Brunella core stabilization lezárás
 - **Agent:** Copilot
@@ -39,6 +58,11 @@ start-full.bat
 - **Agent:** Copilot
 - **Státusz:** ✅ Befejezve
 - **Érintett fájlok:** `test/apifyScrapingAgent.test.ts`, `docs/agents/ApifyScrapingAgent.md`, `conductor/tracks/apify_deep_scraping_agent_20260223/meta.json`, `conductor/tracks/apify_deep_scraping_agent_20260223/plan.md`, `conductor/tracks.md`, `conductor/project_state.json`
+
+#### 00:00 - [Copilot] Hyperdrive D1 not-needed archive closure
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `conductor/archive/cf_hyperdrive_d1_20260323/meta.json`, `conductor/archive/cf_hyperdrive_d1_20260323/plan.md`, `conductor/archive/cf_hyperdrive_d1_20260323/spec.md`, `conductor/project_state.json`, `conductor/tracks.md`
 
 ---
 
@@ -784,9 +808,9 @@ start-full.bat
 | Agent | Bejegyzések | Utolsó Aktivitás |
 |-------|-------------|------------------|
 | Claude | 85 | 2026-03-31 |
-| Gemini | 19 | 2026-04-02 |
+| Gemini | 20 | 2026-04-04 |
 | Cursor | 0 | N/A |
-| Copilot | 25 | 2026-03-28 |
+| Copilot | 28 | 2026-04-04 |
 
 ---
 

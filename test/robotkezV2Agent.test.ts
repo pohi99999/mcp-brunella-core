@@ -39,6 +39,7 @@ vi.mock('../src/utils/logger.js', () => ({
     logInfo: vi.fn(),
     logWarn: vi.fn(),
     logError: vi.fn(),
+    logDebug: vi.fn(),
     setAgentStatus: vi.fn()
 }));
 

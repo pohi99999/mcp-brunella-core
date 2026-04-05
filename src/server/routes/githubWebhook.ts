@@ -9,7 +9,8 @@
  */
 
 import { Router, type Request, type Response } from 'express';
-import { logInfo, logError, setAgentStatus } from '../../utils/logger.js';
+import { logInfo, logError, logDebug, setAgentStatus } from '../../utils/logger.js';
+import { ensureError } from '../../utils/ensureError.js';
 import type {
   GitHubWorkflowRunPayload,
   GitHubPullRequestPayload,
@@ -80,11 +81,11 @@ async function handleWorkflowRun(payload: unknown, res: Response): Promise<void>
       message: 'Workflow failure detected, remediation runtime queued',
     });
   } catch (e: unknown) {
-    const err = e instanceof Error ? e.message : String(e);
-    logError('GitHubWebhook', `Error processing workflow_run: ${err}`);
+    const normalized = ensureError(e);
+    logError('GitHubWebhook', `Error processing workflow_run: ${normalized.message}`, normalized);
     res.status(500).json({
       error: 'Failed to process workflow run',
-      details: err
+      details: normalized.message
     });
   } finally {
     setAgentStatus('GitHubWebhook', 'idle');
@@ -128,11 +129,11 @@ async function handlePullRequest(payload: unknown, res: Response): Promise<void>
       prNumber
     });
   } catch (e: unknown) {
-    const err = e instanceof Error ? e.message : String(e);
-    logError('GitHubWebhook', `Error processing pull_request: ${err}`);
+    const normalized = ensureError(e);
+    logError('GitHubWebhook', `Error processing pull_request: ${normalized.message}`, normalized);
     res.status(500).json({
       error: 'Failed to process pull request',
-      details: err
+      details: normalized.message
     });
   }
 }
@@ -160,11 +161,11 @@ async function handleCheckRun(payload: unknown, res: Response): Promise<void> {
       message: 'Check run failure detected'
     });
   } catch (e: unknown) {
-    const err = e instanceof Error ? e.message : String(e);
-    logError('GitHubWebhook', `Error processing check_run: ${err}`);
+    const normalized = ensureError(e);
+    logError('GitHubWebhook', `Error processing check_run: ${normalized.message}`, normalized);
     res.status(500).json({
       error: 'Failed to process check run',
-      details: err
+      details: normalized.message
     });
   }
 }
@@ -194,7 +195,8 @@ router.post(
       try {
         req.body = JSON.parse(rawBodyData);
         next();
-      } catch {
+      } catch (error: unknown) {
+        logDebug('GitHubWebhook', `Invalid JSON payload: ${ensureError(error).message}`);
         res.status(400).json({ error: 'Invalid JSON' });
       }
     });
@@ -254,11 +256,11 @@ router.post(
           });
       }
     } catch (e: unknown) {
-      const err = e instanceof Error ? e.message : String(e);
-      logError('GitHubWebhook', `Webhook processing error: ${err}`);
+      const normalized = ensureError(e);
+      logError('GitHubWebhook', `Webhook processing error: ${normalized.message}`, normalized);
       return res.status(500).json({
         error: 'Internal server error',
-        details: err
+        details: normalized.message
       });
     } finally {
       setAgentStatus('GitHubWebhook', 'idle');

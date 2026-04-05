@@ -1,6 +1,7 @@
 import { BaseAgent, AgentContext, AgentResult } from './BaseAgent.js';
 import { agentManager } from './AgentManager.js';
 import { logInfo, logError } from '../utils/logger.js';
+import { ensureError } from '../utils/ensureError.js';
 
 export class CampaignGeneratorAgent extends BaseAgent {
   name = 'CampaignGenerator';
@@ -54,9 +55,10 @@ ${webResult.message}
         }
       };
 
-    } catch (error: any) {
-      logError(this.name, `Kampány generálás hiba: ${error.message}`);
-      return { success: false, message: error.message };
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      logError(this.name, `Kampány generálás hiba: ${err.message}`);
+      return { success: false, message: err.message };
     }
   }
 }

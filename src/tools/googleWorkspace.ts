@@ -31,8 +31,9 @@ export function registerGoogleWorkspaceTools(server: McpServer) {
                 return {
                     content: [{ type: "text", text: JSON.stringify(details, null, 2) }]
                 };
-            } catch (e: any) {
-                return { isError: true, content: [{ type: "text", text: `Gmail Error: ${e.message}` }] };
+            } catch (error: unknown) {
+                const err = error instanceof Error ? error : new Error(String(error));
+                return { isError: true, content: [{ type: "text", text: `Gmail Error: ${err.message}` }] };
             }
         }
     );
@@ -66,8 +67,9 @@ export function registerGoogleWorkspaceTools(server: McpServer) {
                 return {
                     content: [{ type: "text", text: JSON.stringify(formatted, null, 2) }]
                 };
-            } catch (e: any) {
-                return { isError: true, content: [{ type: "text", text: `Calendar Error: ${e.message}` }] };
+            } catch (error: unknown) {
+                const err = error instanceof Error ? error : new Error(String(error));
+                return { isError: true, content: [{ type: "text", text: `Calendar Error: ${err.message}` }] };
             }
         }
     );
@@ -95,8 +97,9 @@ export function registerGoogleWorkspaceTools(server: McpServer) {
                 return {
                     content: [{ type: "text", text: `Success: Updated ${res.data.updates?.updatedCells} cells.` }]
                 };
-            } catch (e: any) {
-                return { isError: true, content: [{ type: "text", text: `Sheets Error: ${e.message}` }] };
+            } catch (error: unknown) {
+                const err = error instanceof Error ? error : new Error(String(error));
+                return { isError: true, content: [{ type: "text", text: `Sheets Error: ${err.message}` }] };
             }
         }
     );
@@ -124,8 +127,9 @@ export function registerGoogleWorkspaceTools(server: McpServer) {
                         spreadsheetUrl: res.data.spreadsheetUrl
                     }, null, 2) }]
                 };
-            } catch (e: any) {
-                return { isError: true, content: [{ type: "text", text: `Sheets Error: ${e.message}` }] };
+            } catch (error: unknown) {
+                const err = error instanceof Error ? error : new Error(String(error));
+                return { isError: true, content: [{ type: "text", text: `Sheets Error: ${err.message}` }] };
             }
         }
     );

@@ -1,7 +1,8 @@
 import { Router } from 'express';
 import { chatWithOllama, generateResponse } from '../../core/llm_client.js';
 import { getBifrostGateway } from '../../core/bifrost_gateway.js';
-import { logError } from '../../utils/logger.js';
+import { logDebug, logError } from '../../utils/logger.js';
+import { ensureError } from '../../utils/ensureError.js';
 
 interface CatalogModel {
     id: string;
@@ -48,8 +49,8 @@ async function buildModelCatalog(): Promise<CatalogProvider[]> {
                 .filter(Boolean)
                 .map((name) => ({ id: name, name, provider: 'ollama', source: 'runtime' as const }));
         }
-    } catch {
-        // runtime fetch best-effort only
+    } catch (error: unknown) {
+        logDebug('LLMRoutes', `Runtime Ollama catalog fetch skipped: ${ensureError(error).message}`);
     }
 
     if (ollamaModels.length === 0) {

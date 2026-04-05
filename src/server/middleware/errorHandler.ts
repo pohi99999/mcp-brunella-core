@@ -15,6 +15,7 @@
 
 import { Request, Response, NextFunction } from 'express';
 import { AppError } from '../../utils/AppError.js';
+import { ensureError } from '../../utils/ensureError.js';
 import { logError } from '../../utils/logger.js';
 
 /**
@@ -36,7 +37,7 @@ interface ErrorResponse {
  * - Development mode: includes stack trace
  */
 export function globalErrorHandler(
-  err: Error | AppError,
+  err: unknown,
   req: Request,
   res: Response,
   next: NextFunction
@@ -61,7 +62,7 @@ export function globalErrorHandler(
   }
 
   // Unknown error handling
-  const errorMsg = err instanceof Error ? err.message : String(err);
+  const normalized = ensureError(err);
   const response: ErrorResponse = {
     error: 'Internal Server Error',
     statusCode: 500,
@@ -70,11 +71,11 @@ export function globalErrorHandler(
 
   // Development mode: expose actual error
   if (process.env.NODE_ENV === 'development') {
-    response.error = errorMsg;
-    response.stack = err instanceof Error ? err.stack : undefined;
+    response.error = normalized.message;
+    response.stack = normalized.stack;
   }
 
-  logError('ErrorHandler', `Unhandled error: ${errorMsg}`);
+  logError('ErrorHandler', `Unhandled error: ${normalized.message}`, normalized);
   res.status(500).json(response);
 }
 

@@ -1,6 +1,9 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { config } from "../config/index.js";
+import { mcpError, mcpOk } from "../utils/mcpResponse.js";
+import { ensureError } from "../utils/ensureError.js";
+import { logDebug } from "../utils/logger.js";
 
 function getBaseUrl() {
   return config.anythingllmBaseUrl.trim().replace(/\/$/, "");
@@ -31,7 +34,8 @@ async function requestAnythingLLM(path: string, options: RequestInit = {}) {
   let data: any = text;
   try {
     data = text ? JSON.parse(text) : null;
-  } catch {
+  } catch (error: unknown) {
+    logDebug("AnythingLLM response parse fallback", ensureError(error));
     // keep raw text
   }
 
@@ -51,14 +55,10 @@ export function registerAnythingLLMTools(server: McpServer) {
     async () => {
       try {
         const data = await requestAnythingLLM("/api/v1/workspaces");
-        return {
-          content: [{ type: "text", text: JSON.stringify(data, null, 2) }]
-        };
-      } catch (error: any) {
-        return {
-          isError: true,
-          content: [{ type: "text", text: error.message }]
-        };
+        return mcpOk(data);
+      } catch (error: unknown) {
+        const normalized = ensureError(error);
+        return mcpError(normalized.message);
       }
     }
   );
@@ -85,14 +85,10 @@ export function registerAnythingLLMTools(server: McpServer) {
           body: JSON.stringify({ message })
         });
 
-        return {
-          content: [{ type: "text", text: JSON.stringify(data, null, 2) }]
-        };
-      } catch (error: any) {
-        return {
-          isError: true,
-          content: [{ type: "text", text: error.message }]
-        };
+        return mcpOk(data);
+      } catch (error: unknown) {
+        const normalized = ensureError(error);
+        return mcpError(normalized.message);
       }
     }
   );

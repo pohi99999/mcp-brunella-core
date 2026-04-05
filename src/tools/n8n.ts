@@ -1,6 +1,8 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { logInfo, logError } from "../utils/logger.js";
+import { mcpError, mcpOk } from "../utils/mcpResponse.js";
+import { ensureError } from "../utils/ensureError.js";
 
 /**
  * Super-Bridge Tool az n8n munkafolyamatok indításához
@@ -42,20 +44,11 @@ export function registerN8nTools(server: McpServer) {
                 }
 
                 const result = await response.json();
-                return {
-                    content: [
-                        {
-                            type: "text",
-                            text: `Sikeres n8n hívás! Eredmény: ${JSON.stringify(result, null, 2)}`
-                        }
-                    ]
-                };
-            } catch (error: any) {
-                logError('N8nBridge', `Hiba: ${error.message}`);
-                return {
-                    isError: true,
-                    content: [{ type: "text", text: `Nem sikerült indítani az n8n workflow-t: ${error.message}` }]
-                };
+                return mcpOk(result, `Sikeres n8n hívás! Eredmény: ${JSON.stringify(result, null, 2)}`);
+            } catch (error: unknown) {
+                const normalized = ensureError(error);
+                logError('N8nBridge', `Hiba: ${normalized.message}`);
+                return mcpError(`Nem sikerült indítani az n8n workflow-t: ${normalized.message}`);
             }
         }
     );

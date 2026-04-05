@@ -13,7 +13,8 @@
 
 import { Router } from "express";
 import { agentManager } from "../agents/AgentManager.js";
-import { logInfo, logError } from "../utils/logger.js";
+import { logInfo, logError, logDebug } from "../utils/logger.js";
+import { ensureError } from "../utils/ensureError.js";
 import { socketService } from "./SocketService.js";
 import chokidar, { type FSWatcher } from "chokidar";
 import fs from "fs/promises";
@@ -147,7 +148,9 @@ async function readTrackMeta(
   try {
     const raw = await fs.readFile(p, "utf-8");
     return JSON.parse(raw) as Record<string, unknown>;
-  } catch {
+  } catch (error: unknown) {
+    const err = ensureError(error);
+    logDebug("TracksRoutes", `Meta read failed for ${trackId}: ${err.message}`);
     return null;
   }
 }
@@ -178,8 +181,9 @@ async function listTrackTodoSummaries(
         completedCount: r.completedCount,
         totalCount: r.totalCount,
       });
-    } catch {
-      // ignore tracks without track.md
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      logDebug("TracksRoutes", `Skipping track without track.md: ${trackId} - ${err.message}`);
     }
   }
   return out;
@@ -244,19 +248,15 @@ function startTrackWatcher(tracksDir: string): void {
       .on("change", (p) => onFsEvent("change", p))
       .on("unlink", (p) => onFsEvent("unlink", p))
       .on("error", (err) => {
-        logError(
-          "TracksRoutes",
-          `Track watcher error: ${err instanceof Error ? err.message : String(err)}`,
-        );
+        const error = ensureError(err);
+        logError("TracksRoutes", `Track watcher error: ${error.message}`);
       });
 
     logInfo("TracksRoutes", `Track watcher started (chokidar): ${tracksDir}`);
-  } catch (e: unknown) {
+  } catch (error: unknown) {
     // If watcher cannot start, keep API functional (best-effort).
-    logError(
-      "TracksRoutes",
-      `Track watcher failed to start: ${e instanceof Error ? e.message : String(e)}`,
-    );
+    const err = ensureError(error);
+    logDebug("TracksRoutes", `Track watcher failed to start: ${err.message}`);
   }
 }
 
@@ -277,8 +277,9 @@ export function createTracksRouter(opts?: {
     try {
       const tracks = await listTrackTodoSummaries(tracksDir);
       res.json({ success: true, count: tracks.length, tracks });
-    } catch (e: any) {
-      res.status(500).json({ success: false, error: e?.message ?? String(e) });
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      res.status(500).json({ success: false, error: err.message });
     }
   });
 
@@ -293,8 +294,9 @@ export function createTracksRouter(opts?: {
         (s) => s === "active" || s === "in_progress" || s === "testing",
       );
       res.json({ success: true, count: active.length, tracks: active });
-    } catch (e: any) {
-      res.status(500).json({ success: false, error: e?.message ?? String(e) });
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      res.status(500).json({ success: false, error: err.message });
     }
   });
 
@@ -373,11 +375,12 @@ export function createTracksRouter(opts?: {
         trackFile: data.trackFile,
         preview: data.preview,
       });
-    } catch (e: any) {
-      logError("TracksRoutes", `Generate endpoint error: ${e.message}`);
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      logError("TracksRoutes", `Generate endpoint error: ${err.message}`);
       res.status(500).json({
         success: false,
-        error: e.message,
+        error: err.message,
       });
     }
   });
@@ -431,11 +434,12 @@ export function createTracksRouter(opts?: {
         count: tracks.length,
         tracks,
       });
-    } catch (e: any) {
-      logError("TracksRoutes", `List endpoint error: ${e.message}`);
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      logError("TracksRoutes", `List endpoint error: ${err.message}`);
       res.status(500).json({
         success: false,
-        error: e.message,
+        error: err.message,
       });
     }
   });
@@ -472,7 +476,8 @@ export function createTracksRouter(opts?: {
       let content = "";
       try {
         content = await fs.readFile(trackPath, "utf-8");
-      } catch (e: any) {
+      } catch (error: unknown) {
+        const err = ensureError(error);
         logError("TracksRoutes", `Track not found: ${trackId}`);
         return res.status(404).json({
           success: false,
@@ -507,11 +512,12 @@ export function createTracksRouter(opts?: {
           path: trackPath,
         },
       });
-    } catch (e: any) {
-      logError("TracksRoutes", `Get endpoint error: ${e.message}`);
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      logError("TracksRoutes", `Get endpoint error: ${err.message}`);
       res.status(500).json({
         success: false,
-        error: e.message,
+        error: err.message,
       });
     }
   });
@@ -531,8 +537,9 @@ export function createTracksRouter(opts?: {
 
       const data = await buildTodosResponse(tracksDir, trackId);
       res.json({ success: true, ...data });
-    } catch (e: any) {
-      const msg = e?.message ?? String(e);
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      const msg = err.message;
       const status = /not found/i.test(msg) ? 404 : 500;
       res.status(status).json({ success: false, error: msg });
     }
@@ -575,9 +582,9 @@ export function createTracksRouter(opts?: {
 
       const data = await buildTodosResponse(tracksDir, trackId);
       res.json({ success: true, ...data });
-    } catch (e: any) {
-      const msg = e?.message ?? String(e);
-      res.status(500).json({ success: false, error: msg });
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      res.status(500).json({ success: false, error: err.message });
     }
   });
 

@@ -3,6 +3,7 @@ import { exec } from 'child_process';
 import { promisify } from 'util';
 import { logInfo, logError } from '../utils/logger.js';
 import { config } from '../config/schema.js';
+import { ensureError } from '../utils/ensureError.js';
 
 const execAsync = promisify(exec);
 
@@ -24,8 +25,9 @@ export class GitAutomation {
     try {
       const { stdout } = await execAsync(`git ${command}`, { cwd: this.workspaceRoot });
       return stdout.trim();
-    } catch (error: any) {
-      const msg = `Git command failed: git ${command} -> ${error.message}`;
+    } catch (error: unknown) {
+      const normalized = ensureError(error);
+      const msg = `Git command failed: git ${command} -> ${normalized.message}`;
       logError('GitAutomation', msg);
       throw new Error(msg);
     }
