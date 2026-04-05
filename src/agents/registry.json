@@ -1404,6 +1404,35 @@
       "capabilities": [
         "accounting_preparation"
       ]
+    },
+    {
+      "name": "i18n_specialist",
+      "title": "i18n Specialist",
+      "description": "Nemzetköziesítési és lokalizációs szakértő. Szövegek kinyerése, többnyelvű támogatás és RTL illesztés.",
+      "class": "DynamicAgent",
+      "module": "./agents/DynamicAgent.js",
+      "config": {
+        "tomlPath": "myai/agents/i18n_specialist.toml"
+      },
+      "capabilities": [
+        "i18n_architecture",
+        "string_extraction",
+        "locale_management",
+        "rtl_support"
+      ],
+      "triggers": [
+        "i18n",
+        "lokalizáció",
+        "fordítás",
+        "többnyelvű"
+      ],
+      "category": "generated",
+      "status": "active",
+      "tags": [
+        "generated",
+        "i18n",
+        "localization"
+      ]
     }
   ]
 }

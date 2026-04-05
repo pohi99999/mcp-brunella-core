@@ -1,3 +1,13 @@
+### 2026-04-05 18:15 - 🌐 i18n_specialist Ágens Integráció
+
+**Feladat:** Az `i18n_specialist` (Nemzetköziesítési szakértő) ágens hivatalos regisztrálása a Brunella Agent System (BAS) ökoszisztémába.
+**Érintett fájlok:**
+- myai/agents/i18n_specialist.toml (Létrehozva - Rendszer prompt és képességek)
+- src/agents/registry.json (Módosítva - Ágens regisztráció)
+- .ai/gemini.md (Naplózva)
+**Státusz:** ✅ Befejezve
+**Megjegyzés:** Az ágens sikeresen átment az `npm run agent:health` validáción (77/77 OK). Mostantól elérhető a Maestro orkesztráció számára lokalizációs feladatokhoz.
+
 ### 2026-04-04 23:55 - 🌐 Cloudflare Workers & CEAN 16-Agent Orkesztráció Szállítás
 
 **Feladat:** A Brunella Agent System 16 legfontosabb ágensének migrációja Cloudflare Workers-be. Orkesztrátor v2 kialakítása, D1 alapú routing és task tracking, Dashboard integráció.
@@ -68,7 +78,7 @@
 - **Hálózati ellenőrzés:** Megerősítettem, hogy a Backend (3000) és a Python API (8000) portok aktívak. A Dashboard (5173) kódbázisa kész és integrált.
 - **PAIOS Chat Intelligencia:**
     - Verifikáltam a `UniversalOrchestratorService` és a `BifrostGateway` működését. A rendszer fel van készítve a **GPT-5 mini** (GitHub Models) és más prémium modellek (Gemini 2.5, Claude Sonnet 4) kezelésére.
-    - A **Copilot CLI Bridge** teljesen integrált: a Dashboard kérései a `copilot` provideren keresztül, fájl-alapú aszinkron hídon (`_br_temp/copilot_bridge`) jutnak el a helyi Copilot példányhoz, lehetővé téve a prémium modellek használatát az UI-ról.
+    - A **Copilot CLI Bridge** teljesen integrált: a Dashboard kérései a `copilot` provideren keresztül, fáj-alapú aszinkron hídon (`_br_temp/copilot_bridge`) jutnak el a helyi Copilot példányhoz, lehetővé téve a prémium modellek használatát az UI-ról.
 - **Dashboard Teljesség:**
     - A `NavigationRegistry` frissítésével az összes (65+) korábban rejtett vagy inaktív panel elérhetővé vált.
     - A navigációt logikai csoportokba (Core Systems, AI & Agents, Enterprise, Orchestration, stb.) rendeztem a jobb átláthatóság érdekében.
@@ -145,10 +155,10 @@
 
 **Főbb eredmények:**
 - **Központosított Státuszkezelés:** Frissítve a `BaseAgent.ts` osztály az `execute` metódusban egy `finally` blokkal, amely garantálja, hogy minden `BaseAgent`-et öröklő ágens (pl. Researcher, SpecWriter, ProjectConductor) státusza automatikusan visszaálljon `idle` állapotba a feladat befejeztével.
-- **Standalone Ágensek Javítása:** Manuálisan hozzáadva a `finally { setAgentStatus(..., 'idle') }` blokk a `DeveloperAgent` és `DataScientistAgent` osztályokhoz, mivel ezek nem a `BaseAgent`-ből származnak.
+- **Standalone Ágensek Javítása:** Manuálisan hozzáadva a `finally { setAgentStatus(..., 'idle') }` blokk a `DeveloperAgent` és `DataScientistAgent` osztályokhoz, mivel ezek nem a `BaseAgent`-et öröklik.
 - **Redundancia Törlése:** Eltávolítva a szükségtelen, manuális státusz-visszaállítások a `SpecWriterAgent`-ből, mivel a `BaseAgent` mostantól központilag kezeli ezt.
 - **Studio Template Standardizáció:** A `src/server/routes/studio.ts` fájlban a scaffold template frissítve, hogy az importok tartalmazzák a `.js` kiterjesztést, megfelelve az ESM szabályoknak.
-- **Logger Tisztítás:** A `src/utils/db.ts` fájlban a `console.log` és `console.error` hívások lecserélve a struktúrált `logInfo` és `logError` függvényekre a "Golden Sample" mentési folyamatnál.
+- **Logger Tisztítás:** A `src/utils/db.ts` fájlban a `console.log` és `console.error` hívások lecserélve a strukturált `logInfo` és `logError` függvényekre a "Golden Sample" mentési folyamatnál.
 - **Rendszer Validáció:** Sikeres build (`npm run build`) és 1891/1933 teszt PASS. (A `rag.test.ts` hiba környezeti/Ollama függőség miatt jelentkezett, a módosításoktól független).
 
 **Érintett fájlok:**
