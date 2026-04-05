@@ -796,7 +796,28 @@ Megjegyzés: minden trackhez további, finomabb subtasks (n8n flows, connector-s
 5) Teljes biztonsági felmérés és javítás (59 CWE szabály + CVE függőségek)
    - Felmérés: 59 CWE szabályból 24 FOUND (6 kategória), 13 CVE Java függőségben
    - Összes talált sérülékenység kijavítva (14 fájl érintve)
-   - Outcome: Minden CWE fix alkalmazva, .env.example frissítve 4 kötelező security változóval
+  - Outcome: Minden CWE fix alkalmazva, .env.example frissítve 4 kötelező security változóval
+
+---
+
+### 2026-04-05 — KKV domain trackok lezárása
+
+**Feladat:** A felhasználó kérésére a következő KKV domain trackek lezárása és dokumentálása: project/task, marketing, inventory.
+
+**Elvégzett lépések:**
+
+- `conductor/tracks/kkv_project_task_automation_20260404/meta.json` — állapot: `completed`, `progress: 100` (korábban frissítve)
+- `conductor/tracks/kkv_marketing_automation_20260404/meta.json` — állapot frissítve: `completed`, `progress: 100`, `completedAt: 2026-04-05`
+- `conductor/tracks/kkv_inventory_automation_20260404/meta.json` — állapot frissítve: `completed`, `progress: 100`, `completedAt: 2026-04-05`
+
+**Megjegyzés:** A `spec.md` és `plan.md` fájlok mindhárom tracknél már jelen voltak; csak a `meta.json`-ok frissítése volt szükséges, valamint ez a Copilot-napló-bejegyzés. A fizikai archiválás (átmozgatás a `conductor/archive/` alá) kérésre külön végrehajtható.
+
+**Következő lépések (opcionális, kérdés a felhasználónak):**
+
+1. Commitoljam és pusholjam ezeket a módosításokat a távoli repository-ba, és nyissak PR-t? (igen/nem)
+2. Szeretnéd, hogy a track mappákat fizikailag áthelyezzem `conductor/archive/` alá, vagy csak a `meta.json`-ok maradjanak `completed` státuszban?
+
+**Státusz:** ✅ Meta fájlok frissítve lokálisan — vár commit/push/archiválási döntésre.
 
 6) CWE-77/78/88 Command/OS/Argument Injection — src/utils/wranglerHelper.ts
    - execSync → execFileSync (shell=false, args tömb)
@@ -1405,3 +1426,10 @@ pm run test:dashboard → 200 passed | 0 failed | 20 test file ✅**
 **Érintett fájlok:** `scripts/health_check.ts`, `scripts/health_check.js`, `test/health_check.test.ts`, `conductor/tracks/brunella_core_stabilization_20260402/meta.json`, `conductor/tracks/brunella_core_stabilization_20260402/plan.md`, `conductor/tracks/brunella_core_stabilization_20260402/spec.md`, `conductor/archive/brunella_core_stabilization_20260402/`
 **Státusz:** ✅ Befejezve
 **Megjegyzés:** A core runtime, supervision és health contract kész, a fennmaradó Windows smoke / `langflow` / `wab` megfigyelések külön operational follow-upként kezelhetők, új code track nélkül.
+
+### 2026-04-05 - Remote layer phase 1 archiválás + conductor rescan
+
+**Feladat:** A `remote_layer_phase1_foundation_20260322` track lezárása, archívumba mozgatása, majd a conductor állapot újraszinkronizálása a duplikált aktív/archív track-idk preferált archivált bejegyzésével.
+**Érintett fájlok:** `conductor/archive/remote_layer_phase1_foundation_20260322/meta.json`, `conductor/archive/remote_layer_phase1_foundation_20260322/plan.md`, `conductor/archive/remote_layer_phase1_foundation_20260322/spec.md`, `src/services/trackStateManager.ts`, `conductor/project_state.json`, `conductor/tracks.md`
+**Státusz:** ✅ Befejezve
+**Megjegyzés:** A rescan során a duplikált track-idk archivált példányait preferálta a sync, a remote layer pedig már nem aktív trackként szerepel.
