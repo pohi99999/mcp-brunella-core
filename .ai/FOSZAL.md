@@ -1,6 +1,6 @@
 # FŐSZÁL - Egyesített Fejlesztési Napló
 
-**Generálva:** 2026-04-05 00:02
+**Generálva:** 2026-04-05 12:10
 **Script:** `scripts/sync_foszal.py`
 
 ---
@@ -27,6 +27,15 @@ start-full.bat
 ---
 
 ## Összesített Napló (Időrendben)
+
+### 2026-04-05
+
+#### 00:00 - [Copilot] Remote layer phase 1 archiválás + conductor rescan
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `conductor/archive/remote_layer_phase1_foundation_20260322/meta.json`, `conductor/archive/remote_layer_phase1_foundation_20260322/plan.md`, `conductor/archive/remote_layer_phase1_foundation_20260322/spec.md`, `src/services/trackStateManager.ts`, `conductor/project_state.json`, `conductor/tracks.md`
+
+---
 
 ### 2026-04-04
 
@@ -801,7 +810,7 @@ start-full.bat
 | Claude | 85 | 2026-03-31 |
 | Gemini | 20 | 2026-04-04 |
 | Cursor | 0 | N/A |
-| Copilot | 27 | 2026-04-04 |
+| Copilot | 28 | 2026-04-04 |
 
 ---
 

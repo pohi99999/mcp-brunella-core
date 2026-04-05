@@ -1,0 +1,16 @@
+{
+  "id": "kkv_crm_followup_routing_20260405",
+  "name": "KKV CRM follow-up es routing",
+  "title": "KKV CRM follow-up es routing",
+  "status": "proposed",
+  "priority": "HIGH",
+  "created": "2026-04-05",
+  "updated": "2026-04-05",
+  "owner": "GitHub Copilot",
+  "assignee": "GitHub Copilot",
+  "progress": 0,
+  "tags": ["kkv", "crm", "follow-up", "routing", "scoring", "slack", "n8n"],
+  "dependencies": ["kkv_crm_ingest_foundation_20260405"],
+  "sourceDocument": "Derived from kkv_crm_automation_20260404",
+  "phase": 2
+}
