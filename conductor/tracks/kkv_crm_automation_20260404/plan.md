@@ -1,3 +1,31 @@
+# KKV CRM Automation (Track: kkv_crm_automation_20260404)
+
+## Goal
+Bootstrap the KKV CRM automation feature by adding skeletons for route, service, tool, agent and unit tests so further implementation and integration can proceed safely.
+
+## Steps
+1. Create a feature branch:
+   ```bash
+   git checkout -b feature/kkv-crm-skeleton-20260404
+   ```
+2. Add the skeleton files (routes, service, tool, agent) and unit test.
+3. Build & run unit tests locally:
+   ```bash
+   npm run build
+   npm run test:fast
+   ```
+4. Push branch and open PR for review.
+
+## PR checklist (short)
+- [ ] Branch created and pushed
+- [ ] `npm run build` passes locally
+- [ ] Unit tests pass (`npm run test:fast`)
+- [ ] PR description includes next steps and reviewers
+
+## Next steps after merge
+- Implement persistence (DB) + input validation
+- Wire real CRM provider integration (API client, credentials)
+- Add integration/e2e tests and dashboard/CLI surfaces
 # Implementacios Terv: KKV CRM Automatizalas
 
 ## Fazisok
