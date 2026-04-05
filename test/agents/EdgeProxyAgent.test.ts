@@ -1,26 +1,29 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { EdgeProxyAgent } from '../../src/agents/EdgeProxyAgent.js';
 
-// Mock DB instance structure
-const mockRun = vi.fn();
-const mockGet = vi.fn();
-const mockAll = vi.fn();
-const mockPrepare = vi.fn(() => ({
-  run: mockRun,
-  get: mockGet,
-  all: mockAll,
-}));
-const mockExec = vi.fn();
-// Transaction mock: returns a function that executes the callback immediately
-const mockTransaction = vi.fn((fn) => (...args: any[]) => fn(...args));
+// Mock DB instance structure using vi.hoisted to ensure availability in vi.mock
+const { mockDb, mockExec, mockTransaction, mockAll, mockRun, mockPrepare } = vi.hoisted(() => {
+  const mockRun = vi.fn();
+  const mockGet = vi.fn();
+  const mockAll = vi.fn();
+  const mockPrepare = vi.fn(() => ({
+    run: mockRun,
+    get: mockGet,
+    all: mockAll,
+  }));
+  const mockExec = vi.fn();
+  // Transaction mock: returns a function that executes the callback immediately
+  const mockTransaction = vi.fn((fn) => (...args: any[]) => fn(...args));
 
-const mockDb = {
-  prepare: mockPrepare,
-  exec: mockExec,
-  transaction: mockTransaction,
-  pragma: vi.fn(),
-  close: vi.fn(),
-};
+  const mockDb = {
+    prepare: mockPrepare,
+    exec: mockExec,
+    transaction: mockTransaction,
+    pragma: vi.fn(),
+    close: vi.fn(),
+  };
+  return { mockDb, mockExec, mockTransaction, mockAll, mockRun, mockPrepare };
+});
 
 // Mock globalDb to return our mockDb
 vi.mock('../../src/utils/globalDb.js', () => ({
