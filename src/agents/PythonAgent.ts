@@ -255,8 +255,8 @@ async function checkModules(env: PythonEnvironment): Promise<ModuleStatus[]> {
                     { timeout: 10000 }
                 );
                 importable = true;
-            } catch (error: unknown) {
-                const err = ensureError(error);
+            } catch (caughtErr: unknown) {
+                const err = ensureError(caughtErr);
                 error = err.message.split('\n')[0]; // First line of error
             }
 
