@@ -236,5 +236,26 @@
       "episodic": "Episodic",
       "procedural": "Procedural"
     }
+  },
+  "services": {
+    "title": "System Control",
+    "start_stack": "Start Stack",
+    "refresh": "Refresh status",
+    "starting": "Starting...",
+    "stopping": "Stopping...",
+    "loading": "Loading services...",
+    "fetch_error": "Failed to fetch status",
+    "automation_start": "Starting Automation Stack...",
+    "automation_sent": "n8n and Langflow start command sent",
+    "automation_error": "Error starting stack",
+    "manual_close": "AnythingLLM Desktop app – please close manually",
+    "op_failed": "Operation failed",
+    "labels": {
+      "ollama": "Ollama",
+      "anythingllm": "AnythingLLM",
+      "python": "Python Subsystem",
+      "n8n": "n8n Automation",
+      "langflow": "Langflow (Docker)"
+    }
   }
 }

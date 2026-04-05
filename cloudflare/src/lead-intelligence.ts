@@ -333,11 +333,11 @@ async function handleGetLeads(url: URL, env: Env): Promise<Response> {
 
   const result = await env.DB.prepare(query).bind(...params).all<Lead>();
 
-  return new Response(JSON.stringify({
+    return new Response(JSON.stringify({
     total: result.results.length,
     leads: result.results.map(l => ({
       ...l,
-      pain_reasons: JSON.parse(l.pain_reasons as unknown as string || '[]'),
+      pain_reasons: safeJsonParse<string[]>(l.pain_reasons as unknown as string || '[]', []),
     })),
   }), { headers: { 'Content-Type': 'application/json' } });
 }

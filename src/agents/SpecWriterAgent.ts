@@ -8,6 +8,7 @@ import { BaseAgent, type AgentContext, type AgentResult } from "./BaseAgent.js";
 import { generateResponse } from "../core/llm_client.js";
 import { logInfo, logError, logDebug, setAgentStatus } from "../utils/logger.js";
 import { ensureError } from "../utils/ensureError.js";
+import { safeJsonParse } from '../utils/aiHelpers.js';
 import fs from "fs/promises";
 import path from "path";
 import type {
@@ -574,10 +575,10 @@ export class SpecWriterAgent extends BaseAgent {
           );
         }
       }
-      const parsed = JSON.parse(jsonString) as RequirementsJson;
+      const parsed = safeJsonParse<RequirementsJson>(jsonString, null as unknown as RequirementsJson);
 
       // Validation
-      if (!parsed.title || !parsed.phases || !parsed.integrations) {
+      if (!parsed || !parsed.title || !parsed.phases || !parsed.integrations) {
         throw new Error("Missing required fields in extracted requirements");
       }
 

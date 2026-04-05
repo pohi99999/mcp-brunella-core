@@ -1,4 +1,5 @@
 import { Env } from "./types.js";
+import { safeJsonParse } from "./lib/aiHelpers.js";
 
 /**
  * EdgeCoordinator - Durable Object for real-time WebSocket communication
@@ -62,11 +63,12 @@ export class EdgeCoordinator implements DurableObject {
     // Set up event listeners
     webSocket.addEventListener("message", async (msg) => {
       try {
-        const data = JSON.parse(msg.data as string);
+        const data = safeJsonParse<Record<string, unknown> | null>(msg.data as string, null);
+        if (!data) throw new Error('invalid-json');
         await this.handleMessage(sessionId, data);
       } catch (err) {
         // Handle parse error or invalid message
-        webSocket.send(JSON.stringify({ error: "Invalid message format" }));
+        try { webSocket.send(JSON.stringify({ error: "Invalid message format" })); } catch {}
       }
     });
 

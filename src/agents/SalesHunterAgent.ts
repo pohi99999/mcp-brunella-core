@@ -20,6 +20,7 @@ import { BaseAgent, AgentContext, AgentResult } from './BaseAgent.js';
 import { AgentResponse } from './types.js';
 import { logInfo, logError, logWarn, logDebug, setAgentStatus } from '../utils/logger.js';
 import { ensureError } from '../utils/ensureError.js';
+import { parseAiResponse, safeJsonParse } from '../utils/aiHelpers.js';
 import { getWorkspaceClient } from '../tools/unifiedWorkspace.js';
 import { agentManager } from './AgentManager.js';
 import type { LeadGenerationData, LeadRecord } from '../types/enterprise.js';
@@ -232,13 +233,9 @@ export class SalesHunterAgent extends BaseAgent {
         // Extract JSON from response data (might be in a message or nested in data)
         let leads: LeadProfile[] = [];
         try {
-          const content = response.message || response.data.message || '';
-          const jsonMatch = content.match(/\[[\s\S]*\]/);
-          if (jsonMatch) {
-            leads = JSON.parse(jsonMatch[0]);
-          } else if (Array.isArray(response.data)) {
-            leads = response.data;
-          }
+          const { text: respText } = parseAiResponse(response.message ?? response.data ?? response);
+          const jsonMatch = respText.match(/\[[\s\S]*\]/);
+          leads = safeJsonParse<LeadProfile[]>(jsonMatch?.[0] ?? respText, Array.isArray(response.data) ? response.data : [] as any);
         } catch (error: unknown) {
           const err = ensureError(error);
           logDebug(this.name, `Failed to parse RobotkezV2 JSON response: ${err.message}`);
@@ -457,16 +454,10 @@ Relevancia pontszám: ${lead.score}/100`;
    * Parse lead generation request from natural language or JSON
    */
   private parseLeadRequest(task: string): LeadGenerationData {
-    try {
-      // Try parsing as JSON first
-      const parsed = JSON.parse(task);
-      if (parsed.industry) {
-        return parsed as LeadGenerationData;
-      }
-    } catch (error: unknown) {
-      const err = ensureError(error);
-      logDebug(this.name, `Ignoring lead request JSON parse error: ${err.message}`);
-      // Not JSON, extract from natural language
+    // Try parsing as JSON first (non-throwing)
+    const parsed = safeJsonParse<any>(task, null);
+    if (parsed && parsed.industry) {
+      return parsed as LeadGenerationData;
     }
 
     // Simple keyword extraction (in production, would use LLM)

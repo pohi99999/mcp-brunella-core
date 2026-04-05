@@ -236,5 +236,26 @@
       "episodic": "Epizodikus",
       "procedural": "Procedurális"
     }
+  },
+  "services": {
+    "title": "Rendszervezérlő",
+    "start_stack": "Stack Indítása",
+    "refresh": "Státusz frissítése",
+    "starting": "Indul...",
+    "stopping": "Leáll...",
+    "loading": "Szolgáltatások betöltése...",
+    "fetch_error": "Státusz lekérés sikertelen",
+    "automation_start": "Automation Stack indítása...",
+    "automation_sent": "n8n és Langflow indítási parancs kiküldve",
+    "automation_error": "Hiba a stack indításakor",
+    "manual_close": "AnythingLLM Desktop app – manuálisan zárd be",
+    "op_failed": "Művelet sikertelen",
+    "labels": {
+      "ollama": "Ollama",
+      "anythingllm": "AnythingLLM",
+      "python": "Python Alrendszer",
+      "n8n": "n8n Automatizálás",
+      "langflow": "Langflow (Docker)"
+    }
   }
 }
