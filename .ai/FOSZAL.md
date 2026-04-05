@@ -1,6 +1,6 @@
 # FŐSZÁL - Egyesített Fejlesztési Napló
 
-**Generálva:** 2026-04-05 19:51
+**Generálva:** 2026-04-05 20:13
 **Script:** `scripts/sync_foszal.py`
 
 ---
@@ -34,6 +34,11 @@ start-full.bat
 - **Agent:** Copilot
 - **Státusz:** ✅ Befejezve
 - **Érintett fájlok:** `conductor/archive/konyveles_phase3_readiness_20260405/meta.json`, `conductor/archive/konyveles_phase3_readiness_20260405/plan.md`, `conductor/archive/konyveles_phase3_readiness_20260405/spec.md`, `conductor/tracks/konyveles_phase3_20260403/meta.json`, `conductor/tracks/konyveles_phase3_20260403/plan.md` (+8 további)
+
+#### 18:15 - [Gemini] 🌐 i18n_specialist Ágens Integráció
+- **Agent:** Gemini
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** myai/agents/i18n_specialist.toml (Létrehozva - Rendszer prompt és képességek), src/agents/registry.json (Módosítva - Ágens regisztráció), .ai/gemini.md (Naplózva)
 
 #### 17:50 - [Copilot] Konyvelesi phase 3 lezárás
 - **Agent:** Copilot
@@ -843,7 +848,7 @@ start-full.bat
 | Agent | Bejegyzések | Utolsó Aktivitás |
 |-------|-------------|------------------|
 | Claude | 85 | 2026-03-31 |
-| Gemini | 20 | 2026-04-04 |
+| Gemini | 21 | 2026-04-05 |
 | Cursor | 0 | N/A |
 | Copilot | 35 | 2026-04-05 |
 
