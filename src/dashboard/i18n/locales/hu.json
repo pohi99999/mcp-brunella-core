@@ -104,5 +104,22 @@
     "connecting_services": "Szolgáltatások csatlakoztatása",
     "synchronizing": "Vezérlőpult szinkronizálása",
     "ready": "Kész"
+  },
+  "dashboard": {
+    "mission_control": "Vezérlőközpont",
+    "cockpit_description": "Vállalati irányítófelület a rendszer állapotának, a feladatsornak és az ágensek koordinációjának valós idejű követéséhez.",
+    "reset_view": "Nézet alaphelyzetbe",
+    "stats": {
+      "health": "Állapot",
+      "agents": "Ágensek",
+      "queue": "Sorban",
+      "success": "Siker",
+      "no_signal": "NINCS_JEL",
+      "active": "AKTÍV",
+      "standby": "KÉSZENLÉT",
+      "total": "ÖSSZESEN",
+      "pending": "FOLYAMATBAN",
+      "stable": "STABIL"
+    }
   }
 }
