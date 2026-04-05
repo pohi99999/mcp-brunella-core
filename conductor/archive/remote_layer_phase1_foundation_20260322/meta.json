@@ -1,13 +1,16 @@
 {
   "id": "remote_layer_phase1_foundation_20260322",
   "title": "Brunella Remote Layer — Fázis 1: Remote Foundation",
-  "status": "active",
+  "status": "archived",
   "priority": "high",
   "createdAt": "2026-03-22",
   "owner": "GitHub Copilot",
-  "progress": 0,
+  "progress": 100,
   "tags": ["remote-layer", "api", "websocket", "mcp-router", "dashboard", "paios"],
   "sourceDocument": ".worktrees/Brunella_superinnteligencia.md",
   "phase": 1,
-  "dependencies": []
+  "dependencies": [],
+  "completedAt": "2026-04-05T00:00:00Z",
+  "archivedAt": "2026-04-05T00:00:00Z",
+  "archiveReason": "Remote session, target, and command contract is aligned with the backend and dashboard, with validation passing."
 }

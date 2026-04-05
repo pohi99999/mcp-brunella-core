@@ -1,19 +1,49 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-04-04T21:58:34.548Z
+**Utolso frissites:** 2026-04-05T13:00:01.090Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 211 total | 21 active | 15 completed | 169 archived
+**Stats:** 217 total | 17 active | 19 completed | 170 archived
 
 ---
 
-## Tervezett Szalak (Proposed) (5)
+## Tervezett Szalak (Proposed) (10)
 
 - [ ] **Brunella Identity + Project Maintainer** [HIGH]
   - **ID:** `brunella_identity_project_maintainer_20260402`
   - **Progress:** 0%
   - Mappa: ./tracks/brunella_identity_project_maintainer_20260402/
+
+- [ ] **KKV CRM follow-up es routing** [HIGH]
+  - **ID:** `kkv_crm_followup_routing_20260405`
+  - **Progress:** 0%
+  - **Assignee:** GitHub Copilot
+  - Mappa: ./tracks/kkv_crm_followup_routing_20260405/
+
+- [ ] **KKV CRM ingest alapok** [HIGH]
+  - **ID:** `kkv_crm_ingest_foundation_20260405`
+  - **Progress:** 0%
+  - **Assignee:** GitHub Copilot
+  - Mappa: ./tracks/kkv_crm_ingest_foundation_20260405/
+
+- [ ] **KKV HR leave approvals** [HIGH]
+  - **ID:** `kkv_hr_leave_approvals_20260405`
+  - **Progress:** 0%
+  - **Assignee:** GitHub Copilot
+  - Mappa: ./tracks/kkv_hr_leave_approvals_20260405/
+
+- [ ] **KKV HR onboarding es provisioning** [HIGH]
+  - **ID:** `kkv_hr_onboarding_provisioning_20260405`
+  - **Progress:** 0%
+  - **Assignee:** GitHub Copilot
+  - Mappa: ./tracks/kkv_hr_onboarding_provisioning_20260405/
+
+- [ ] **KKV HR timesheet es kultura automatizalas** [HIGH]
+  - **ID:** `kkv_hr_timesheet_culture_20260405`
+  - **Progress:** 0%
+  - **Assignee:** GitHub Copilot
+  - Mappa: ./tracks/kkv_hr_timesheet_culture_20260405/
 
 - [ ] **PohiAIPro Logistics Vertical — Brunella integráció** [HIGH]
   - **ID:** `logistics_vertical_20260222`
@@ -37,7 +67,7 @@
 
 ---
 
-## Aktiv Szalak (Active) (21)
+## Aktiv Szalak (Active) (17)
 
 - [ ] **jules_pr_integration_20260222** [HIGH]
   - **ID:** `jules_pr_integration_20260222`
@@ -72,27 +102,6 @@
   - **Assignee:** GitHub Copilot
   - **Updated:** 2026-04-04
   - Mappa: ./tracks/kkv_hr_automation_20260404/
-
-- [ ] **KKV keszlet es leltar automatizalas** [HIGH]
-  - **ID:** `kkv_inventory_automation_20260404`
-  - **Progress:** 0%
-  - **Assignee:** GitHub Copilot
-  - **Updated:** 2026-04-04
-  - Mappa: ./tracks/kkv_inventory_automation_20260404/
-
-- [ ] **KKV marketing es kommunikacios automatizalas** [MEDIUM]
-  - **ID:** `kkv_marketing_automation_20260404`
-  - **Progress:** 0%
-  - **Assignee:** GitHub Copilot
-  - **Updated:** 2026-04-04
-  - Mappa: ./tracks/kkv_marketing_automation_20260404/
-
-- [ ] **KKV projekt es feladat automatizalas** [MEDIUM]
-  - **ID:** `kkv_project_task_automation_20260404`
-  - **Progress:** 0%
-  - **Assignee:** GitHub Copilot
-  - **Updated:** 2026-04-04
-  - Mappa: ./tracks/kkv_project_task_automation_20260404/
 
 - [ ] **Kognitív Könyvelés és Multi-Ágens Egyeztetés — Bővítmény** [HIGH]
   - **ID:** `konyveles_kognitiv_bovites_20260330`
@@ -159,11 +168,6 @@
   - **Updated:** 2026-04-04
   - Mappa: ./tracks/nova_multiagent_gatekeeper_20260404/
 
-- [ ] **Brunella Remote Layer — Fázis 1: Remote Foundation** [HIGH]
-  - **ID:** `remote_layer_phase1_foundation_20260322`
-  - **Progress:** 0%
-  - Mappa: ./tracks/remote_layer_phase1_foundation_20260322/
-
 - [ ] **Technical Debt Cleanup — TODO konverzió és elavult kód elimináció** [MEDIUM]
   - **ID:** `technical_debt_cleanup_20260404`
   - **Progress:** 0%
@@ -178,12 +182,7 @@
 
 ---
 
-## Befejezett (Completed - Not Archived) (16)
-
-- [x] **Cloudflare Workers Migration — 16 Agent Edge Orkesztrátor**
-  - **ID:** `cloudflare_workers_migration_20260226`
-  - **Completed:** 2026-04-04
-  - Mappa: ./tracks/cloudflare_workers_migration_20260226/
+## Befejezett (Completed - Not Archived) (19)
 
 - [x] **apify_deep_scraping_agent_20260223**
   - **ID:** `apify_deep_scraping_agent_20260223`
@@ -204,6 +203,22 @@
 - [x] **Brunella Zero-Prompt → Ephemeral Agent Bridge**
   - **ID:** `brunella_zero_prompt_ephemeral_bridge_20260402`
   - Mappa: ./tracks/brunella_zero_prompt_ephemeral_bridge_20260402/
+
+- [x] **Cloudflare Workers Migration — 16 Agent Edge Orkesztrátor**
+  - **ID:** `cloudflare_workers_migration_20260226`
+  - Mappa: ./tracks/cloudflare_workers_migration_20260226/
+
+- [x] **KKV keszlet es leltar automatizalas**
+  - **ID:** `kkv_inventory_automation_20260404`
+  - Mappa: ./tracks/kkv_inventory_automation_20260404/
+
+- [x] **KKV marketing es kommunikacios automatizalas**
+  - **ID:** `kkv_marketing_automation_20260404`
+  - Mappa: ./tracks/kkv_marketing_automation_20260404/
+
+- [x] **KKV projekt es feladat automatizalas**
+  - **ID:** `kkv_project_task_automation_20260404`
+  - Mappa: ./tracks/kkv_project_task_automation_20260404/
 
 - [x] **MCP Config Sync: mcp_servers.json ↔ .vscode/mcp.json**
   - **ID:** `mcp_sync_config_20260403`
@@ -249,7 +264,7 @@
 
 ---
 
-## Archivalt (Archived) (169)
+## Archivalt (Archived) (170)
 
 > Archived tracks are hidden by default. View in `conductor/archive/`
 
@@ -264,7 +279,7 @@
 - [x] **AI Recommendation System Integration** (2026-02-17T22:45:00Z)
 - [x] **apify_deep_scraping_agent_20260223** (N/A)
 
-... and 159 more archived tracks
+... and 160 more archived tracks
 
 ---
 

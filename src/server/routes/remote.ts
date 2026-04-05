@@ -14,6 +14,7 @@ import {
 } from '../../core/remoteSessionStore.js';
 import { discoverMcpServers, getDiscoveredTargets } from '../../core/mcpDiscovery.js';
 import { mcpRouter } from '../../core/MCPRouter.js';
+import { mcpClientManager } from '../../utils/mcpClientManager.js';
 import { remoteReadFile, remoteWriteFile, remoteListFiles } from '../../core/remoteFileAccess.js';
 import { mapVoiceToCommand, listVoiceIntents } from '../../core/voicePipeline.js';
 import { buildMobileSessionSummary, processMobileHeartbeat } from '../../core/mobileClientBootstrap.js';
@@ -428,12 +429,29 @@ async function _dispatchCommand(cmd: RemoteCommand): Promise<void> {
     const cap = mcpRouter.getCapability(cmd.targetId);
     if (!cap) throw new Error(`No capability registered for target '${cmd.targetId}'`);
 
-    const result = await mcpRouter.execute(cmd.targetId, cmd.toolName, cmd.input) as Record<string, unknown>;
-    updateCommandStatus(cmd.id, 'completed', result);
+    const result = await executeRemoteCommand(cmd);
+    updateCommandStatus(cmd.id, 'completed', normalizeRemoteResult(result));
     logInfo('RemoteRouter', `Command completed id=${cmd.id}`);
   } catch (e: unknown) {
     const msg = e instanceof Error ? e.message : String(e);
     updateCommandStatus(cmd.id, 'failed', undefined, msg);
     logError('RemoteRouter', `Command failed id=${cmd.id}: ${msg}`);
   }
+}
+
+async function executeRemoteCommand(cmd: RemoteCommand): Promise<unknown> {
+  if (cmd.targetId.startsWith('mcp:')) {
+    const clientName = cmd.targetId.slice(4);
+    return mcpClientManager.callTool(clientName, cmd.toolName, cmd.input);
+  }
+
+  return mcpRouter.execute(cmd.targetId, cmd.toolName, cmd.input);
+}
+
+function normalizeRemoteResult(result: unknown): Record<string, unknown> {
+  if (typeof result === 'object' && result !== null && !Array.isArray(result)) {
+    return result as Record<string, unknown>;
+  }
+
+  return { value: result };
 }

@@ -1,0 +1,16 @@
+{
+  "id": "kkv_hr_onboarding_provisioning_20260405",
+  "name": "KKV HR onboarding es provisioning",
+  "title": "KKV HR onboarding es provisioning",
+  "status": "proposed",
+  "priority": "HIGH",
+  "created": "2026-04-05",
+  "updated": "2026-04-05",
+  "owner": "GitHub Copilot",
+  "assignee": "GitHub Copilot",
+  "progress": 0,
+  "tags": ["kkv", "hr", "onboarding", "provisioning", "google-workspace", "slack", "n8n"],
+  "dependencies": [],
+  "sourceDocument": "Derived from kkv_hr_automation_20260404",
+  "phase": 1
+}
