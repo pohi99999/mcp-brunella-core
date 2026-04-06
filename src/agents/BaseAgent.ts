@@ -13,7 +13,7 @@ import { logInfo, logError, logWarn, setAgentStatus } from '../utils/logger.js';
 import { ensureError } from '../utils/ensureError.js';
 import { calculateConfidence } from './scoring/confidenceCalculator.js';
 import { wrapWithSpan } from '../utils/otelTracing.js';
-import { checkPattern } from '../core/patternReuse.js';
+import { checkPattern, getPatternReuseThreshold } from '../core/patternReuse.js';
 import { queryMemory as queryStructuredMemory, saveMemory as saveStructuredMemory, type StoredAgentMemory } from '../core/structuredMemory.js';
 import { guardAgentResponseOutput, guardAgentResultOutput } from '../core/outputGuard.js';
 import {
@@ -126,6 +126,7 @@ export abstract class BaseAgent implements IAgent {
     const testMode = this.isTestMode();
 
     if (!testMode) {
+      const patternReuseThreshold = getPatternReuseThreshold();
       const cachedPattern = await (async () => {
         try {
           return await wrapWithSpan(
@@ -135,8 +136,11 @@ export abstract class BaseAgent implements IAgent {
           );
         } catch (error: unknown) {
           const normalized = ensureError(error);
-          logWarn(`${this.name} pattern reuse fallback: ${normalized.message}`);
-          return { matched: false, threshold: 0.7 };
+          logWarn(`${this.name} pattern reuse fallback`, {
+            error: normalized,
+            threshold: patternReuseThreshold,
+          });
+          return { matched: false, threshold: patternReuseThreshold };
         }
       })();
 
@@ -220,9 +224,17 @@ export abstract class BaseAgent implements IAgent {
             confidence: confidence.score,
             status: result.success ? 'success' : 'error',
           });
+        } catch (error: unknown) {
+          const normalized = ensureError(error);
+          logWarn(`${this.name} structured memory snapshot fallback`, {
+            error: normalized,
+            task,
+          });
+        }
 
-          const outcome = result.success ? 'SIKER' : 'HIBA';
-          const experienceContent = `Feladat: "${task}" | Eredmény: ${outcome} | Üzenet: ${result.message}`;
+        const outcome = result.success ? 'SIKER' : 'HIBA';
+        const experienceContent = `Feladat: "${task}" | Eredmény: ${outcome} | Üzenet: ${result.message}`;
+        try {
           await wrapWithSpan(
             'bas-base-agent', `${this.name}::memory-save`,
             { 'bas.agent.name': this.name, 'bas.operation': 'memory_save', 'bas.confidence': confidence.score },
@@ -233,7 +245,10 @@ export abstract class BaseAgent implements IAgent {
           );
         } catch (error: unknown) {
           const normalized = ensureError(error);
-          logWarn(`${this.name} structured memory fallback: ${normalized.message}`);
+          logWarn(`${this.name} structured memory save fallback`, {
+            error: normalized,
+            task,
+          });
         }
       }
 
@@ -251,6 +266,15 @@ export abstract class BaseAgent implements IAgent {
       };
 
       return guardAgentResponseOutput(response, this.name);
+    } catch (error: unknown) {
+      const normalized = ensureError(error);
+      logError(`${this.name} executeTask hiba: ${normalized.message}`, normalized);
+      return guardAgentResponseOutput({
+        success: false,
+        status: 'error',
+        error: normalized.message,
+        message: normalized.message,
+      }, this.name);
     } finally {
       setAgentStatus(this.name, 'idle');
     }
