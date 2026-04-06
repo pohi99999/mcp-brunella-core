@@ -321,8 +321,15 @@ export class UniversalOrchestratorService {
     }
 
     const bifrost = getBifrostGateway();
-    const registry = await getToolRegistry();
-    const tools = registry.getToolDefinitions();
+    const tools = await (async () => {
+      try {
+        const registry = await getToolRegistry();
+        return registry.getToolDefinitions();
+      } catch (error: unknown) {
+        logWarn('UniversalOrchestratorService', `Tool registry fallback: ${error instanceof Error ? error.message : String(error)}`);
+        return [];
+      }
+    })();
 
     const providerType: ProviderType = PROVIDER_MAP[request.provider] ?? 'github';
 
