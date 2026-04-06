@@ -1,10 +1,10 @@
 import { IAgent, AgentResponse } from './types.js';
-import { logInfo, logError, logDebug, setAgentStatus } from '../utils/logger.js';
+import { logInfo, logError, setAgentStatus } from '../utils/logger.js';
 import { ensureError } from '../utils/ensureError.js';
 import { spawn } from "child_process";
 import path from "path";
 import { fileURLToPath } from "url";
-import { googleWorkspaceHandler } from '../tools/unifiedGoogleWorkspaceTool.js';
+import { googleWorkspaceHandler, type GoogleWorkspaceResult } from '../tools/unifiedGoogleWorkspaceTool.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const SUPPLY_MATCHER = path.resolve(__dirname, "../../myai/workers/supply_matcher.py");
@@ -72,6 +72,125 @@ interface OutreachDraft {
   matchData?: unknown;
 }
 
+interface LogisticsPartner {
+  name?: string;
+  email: string;
+}
+
+interface MatchSummary {
+  matches: number;
+  avg_score: number;
+}
+
+interface SupplyMatchResult {
+  summary?: MatchSummary;
+  alerts: string[];
+  matches: unknown[];
+}
+
+interface RouteOptimizationResult {
+  total_distance: number;
+  route: unknown[];
+  optimization_score: number;
+}
+
+interface LogisticsContext {
+  region?: string;
+  mock?: boolean;
+  locations?: unknown[];
+  matchData?: SupplyMatchResult;
+  partners?: LogisticsPartner[];
+  draftId?: string;
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null;
+}
+
+function isLogisticsPartner(value: unknown): value is LogisticsPartner {
+  return isRecord(value) && typeof value.email === 'string' && (value.name === undefined || typeof value.name === 'string');
+}
+
+function isLogisticsPartnerArray(value: unknown): value is LogisticsPartner[] {
+  return Array.isArray(value) && value.every(isLogisticsPartner);
+}
+
+function normalizeMatchSummary(value: unknown): MatchSummary | undefined {
+  if (!isRecord(value)) {
+    return undefined;
+  }
+
+  const matches = typeof value.matches === 'number' ? value.matches : undefined;
+  const avgScore = typeof value.avg_score === 'number' ? value.avg_score : undefined;
+
+  if (matches === undefined || avgScore === undefined) {
+    return undefined;
+  }
+
+  return { matches, avg_score: avgScore };
+}
+
+function normalizeSupplyMatchResult(value: unknown): SupplyMatchResult {
+  if (!isRecord(value)) {
+    return { alerts: [], matches: [] };
+  }
+
+  const alerts = Array.isArray(value.alerts) ? value.alerts.filter((alert): alert is string => typeof alert === 'string') : [];
+  const matches = Array.isArray(value.matches) ? value.matches : [];
+
+  return {
+    summary: normalizeMatchSummary(value.summary),
+    alerts,
+    matches
+  };
+}
+
+function normalizeRouteOptimizationResult(value: unknown): RouteOptimizationResult {
+  if (!isRecord(value)) {
+    return { total_distance: 0, route: [], optimization_score: 90 };
+  }
+
+  return {
+    total_distance: typeof value.total_distance === 'number' ? value.total_distance : 0,
+    route: Array.isArray(value.route) ? value.route : [],
+    optimization_score: typeof value.optimization_score === 'number' ? value.optimization_score : 90
+  };
+}
+
+function normalizeLogisticsContext(context: unknown): LogisticsContext {
+  if (!isRecord(context)) {
+    return {};
+  }
+
+  const normalized: LogisticsContext = {};
+
+  if (typeof context.region === 'string') {
+    normalized.region = context.region;
+  }
+
+  if (typeof context.mock === 'boolean') {
+    normalized.mock = context.mock;
+  }
+
+  if (Array.isArray(context.locations)) {
+    normalized.locations = context.locations;
+  }
+
+  if (isRecord(context.matchData)) {
+    normalized.matchData = normalizeSupplyMatchResult(context.matchData);
+  }
+
+  if (isLogisticsPartnerArray(context.partners)) {
+    normalized.partners = context.partners;
+  }
+
+  if (typeof context.draftId === 'string') {
+    normalized.draftId = context.draftId;
+  }
+
+  return normalized;
+}
+
 /**
  * LogisticsDispatcher - Logisztikai Diszpécser
  * Manages shipment tracking, route optimization, and proactive notifications
@@ -96,7 +215,7 @@ export class LogisticsDispatcher implements IAgent {
   /**
    * callSupplyMatcher - Python supply_matcher.py hívás (Phase 2)
    */
-  private callSupplyMatcher(region: string, mock = false): Promise<any> {
+  private callSupplyMatcher(region: string, mock = false): Promise<SupplyMatchResult> {
     return new Promise((resolve, reject) => {
       const args = mock ? ["--mock"] : [];
       const proc = spawn("python", [SUPPLY_MATCHER, ...args], { stdio: ["pipe", "pipe", "pipe"] });
@@ -116,7 +235,8 @@ export class LogisticsDispatcher implements IAgent {
       proc.on("close", (code) => {
         if (code !== 0) return reject(new Error(stderr || `Exit ${code}`));
         try {
-          resolve(JSON.parse(stdout.trim()));
+          const parsed: unknown = JSON.parse(stdout.trim());
+          resolve(normalizeSupplyMatchResult(parsed));
         } catch (error: unknown) {
           const err = ensureError(error);
           reject(new Error(`Match JSON hiba. ${err.message}`));
@@ -132,6 +252,7 @@ export class LogisticsDispatcher implements IAgent {
     setAgentStatus(this.name, 'working', task.slice(0, 50));
     try {
       logInfo(this.name, `Feladat indítása: ${task.slice(0, 40)}...`);
+      const logisticsContext = normalizeLogisticsContext(context);
 
       if (task.toLowerCase().includes('track') || task.toLowerCase().includes('követ')) {
         return await this.trackShipments(task, context);
@@ -142,24 +263,21 @@ export class LogisticsDispatcher implements IAgent {
       }
 
       if (task.toLowerCase().includes('match') || task.toLowerCase().includes('párosít')) {
-        const region = (context as any)?.region || "Budapest";
-        const mock = (context as any)?.mock ?? task.includes("mock");
+        const region = logisticsContext.region || "Budapest";
+        const mock = logisticsContext.mock ?? task.includes("mock");
         logInfo(this.name, `Példány párosítás indítása: ${region}`);
 
         try {
           const matchResult = await this.callSupplyMatcher(region, mock);
-          const report = matchResult.summary 
-            ? `📊 Párosítás kész: ${matchResult.summary.matches} párosítva, ${matchResult.summary.avg_score}/10 átlag score.\n${matchResult.alerts.join("\n")}`
-            : `📊 Párosítás kész: ${matchResult.matches.length} párosítva.`;
 
           return {
-        success: true,
-        status: 'success',
-        message: matchResult.summary 
-          ? `📊 Párosítás kész: ${matchResult.summary.matches} párosítva.`
-          : `📊 Párosítás kész: ${matchResult.matches.length} párosítva.`,
-        data: matchResult
-      };
+            success: true,
+            status: 'success',
+            message: matchResult.summary
+              ? `📊 Párosítás kész: ${matchResult.summary.matches} párosítva.`
+              : `📊 Párosítás kész: ${matchResult.matches.length} párosítva.`,
+            data: matchResult
+          };
         } catch (error: unknown) {
           const err = ensureError(error);
           logError(this.name, `Match hiba: ${err.message}`);
@@ -289,7 +407,7 @@ export class LogisticsDispatcher implements IAgent {
   /**
    * callRouteOptimizer - Python route_optimizer.py hívás (Phase 3)
    */
-  private callRouteOptimizer(locations: any[], mock = false): Promise<any> {
+  private callRouteOptimizer(locations: unknown[], mock = false): Promise<RouteOptimizationResult> {
     return new Promise((resolve, reject) => {
       const args = mock ? ["--mock"] : [];
       const proc = spawn("python", [ROUTE_OPTIMIZER, ...args], { stdio: ["pipe", "pipe", "pipe"] });
@@ -308,7 +426,8 @@ export class LogisticsDispatcher implements IAgent {
       proc.on("close", (code) => {
         if (code !== 0) return reject(new Error(stderr || `Exit ${code}`));
         try {
-          resolve(JSON.parse(stdout.trim()));
+          const parsed: unknown = JSON.parse(stdout.trim());
+          resolve(normalizeRouteOptimizationResult(parsed));
         } catch (error: unknown) {
           const err = ensureError(error);
           reject(new Error(`Route JSON hiba. ${err.message}`));
@@ -323,8 +442,9 @@ export class LogisticsDispatcher implements IAgent {
   private async optimizeRoutes(_task: string, context?: unknown): Promise<AgentResponse> {
     logInfo(this.name, 'Útvonalak optimizálása...');
 
-    const mock = (context as any)?.mock ?? _task.includes("mock");
-    const locations = (context as any)?.locations || [];
+    const logisticsContext = normalizeLogisticsContext(context);
+    const mock = logisticsContext.mock ?? _task.includes("mock");
+    const locations = logisticsContext.locations || [];
 
     try {
       const routeResult = await this.callRouteOptimizer(locations, mock);
@@ -482,13 +602,14 @@ export class LogisticsDispatcher implements IAgent {
   private async createOutreachDraft(_task: string, context?: unknown): Promise<AgentResponse> {
     logInfo(this.name, '📝 Draft email létrehozása freight partnereknek...');
 
-    const matchData = (context as any)?.matchData || {};
-    const partners = (context as any)?.partners || [
+    const logisticsContext = normalizeLogisticsContext(context);
+    const matchData: SupplyMatchResult = logisticsContext.matchData || { alerts: [], matches: [] };
+    const partners = logisticsContext.partners || [
       { name: 'TIMOCOM Transport', email: 'contact@timocom.example.com' },
       { name: 'Trans.eu Freight', email: 'freight@trans.eu.example.com' }
     ];
 
-    const to = partners.map((p: any) => p.email);
+    const to = partners.map((partner) => partner.email);
     const subject = 'Freight Capacity Partnership Opportunity - Budapest Region';
     const body = `
 Dear Partner,
@@ -518,13 +639,15 @@ Logistics Dispatch Team
       const result = await googleWorkspaceHandler({
         operation: 'email_draft',
         params: { to, subject, body }
-      });
+      }) as GoogleWorkspaceResult;
 
       if (!result.success) {
         throw new Error(result.error || 'Draft creation failed');
       }
 
-      const draftId = (result.data as any)?.draftId || `draft_${Date.now()}`;
+      const draftId = isRecord(result.data) && typeof result.data.draftId === 'string'
+        ? result.data.draftId
+        : `draft_${Date.now()}`;
 
       // Store draft for approval tracking
       const draft: OutreachDraft = {
@@ -565,7 +688,8 @@ Logistics Dispatch Team
    * Approve draft email (Human-in-the-loop)
    */
   private async approveDraft(_task: string, context?: unknown): Promise<AgentResponse> {
-    const draftId = (context as any)?.draftId || Array.from(this.drafts.keys())[0];
+    const logisticsContext = normalizeLogisticsContext(context);
+    const draftId = logisticsContext.draftId || Array.from(this.drafts.keys())[0];
 
     if (!draftId) {
       return {
@@ -615,7 +739,8 @@ Logistics Dispatch Team
    * Only sends if draft is approved (Human-in-the-loop safety)
    */
   private async sendApprovedDraft(_task: string, context?: unknown): Promise<AgentResponse> {
-    const draftId = (context as any)?.draftId || Array.from(this.drafts.keys()).find(
+    const logisticsContext = normalizeLogisticsContext(context);
+    const draftId = logisticsContext.draftId || Array.from(this.drafts.keys()).find(
       id => this.drafts.get(id)?.approved && !this.drafts.get(id)?.sentAt
     );
 
@@ -657,7 +782,7 @@ Logistics Dispatch Team
           subject: draft.subject,
           body: draft.body
         }
-      });
+      }) as GoogleWorkspaceResult;
 
       if (!result.success) {
         throw new Error(result.error || 'Email sending failed');
@@ -676,7 +801,9 @@ Logistics Dispatch Team
           draftId,
           recipients: draft.to,
           sentAt: draft.sentAt,
-          messageId: (result.data as any)?.messageId
+          messageId: isRecord(result.data) && typeof result.data.messageId === 'string'
+            ? result.data.messageId
+            : undefined
         }
       };
     } catch (error: unknown) {

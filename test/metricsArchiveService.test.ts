@@ -50,16 +50,14 @@ describe('MetricsArchiveService', () => {
     if (db) {
       try {
         db.close();
-      } catch {}
-      // clear reference
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      db = undefined as any;
+      } catch { /* intentional: close may fail on already-closed/invalid db */ }
+      db = undefined;
     }
 
     if (fs.existsSync(currentTestDbPath)) {
       try {
         fs.unlinkSync(currentTestDbPath);
-      } catch {}
+      } catch { /* intentional: file may already be deleted */ }
     }
   });
 

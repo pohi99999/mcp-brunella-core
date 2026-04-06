@@ -83,6 +83,22 @@ describe('GrantWatcherAgent', () => {
     });
   });
 
+  describe('Execution Bridge', () => {
+    it('should map AgentContext task input through executeTask', async () => {
+      const result = await agent.executeTask({
+        task: JSON.stringify({
+          grantId: 'EU-INNOVATION-2026',
+          companyName: 'TechStartup Kft.',
+          projectDescription: 'AI-powered business automation',
+        }),
+      });
+
+      expect(result.success).toBe(true);
+      expect(result.message).toContain('eligible grants');
+      expect(result.data).toBeDefined();
+    });
+  });
+
   describe('Eligibility Check', () => {
     it('should check grant eligibility', async () => {
       const task = JSON.stringify({

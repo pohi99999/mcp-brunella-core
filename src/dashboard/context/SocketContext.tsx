@@ -9,11 +9,13 @@ import { io, type Socket } from "socket.io-client";
 import { useSystemSignalStore } from "../store/systemSignalStore";
 import { getSocketOrigin } from "../lib/backendOrigin";
 import {
+  type QueuedTask,
   getTasks,
   getTaskStats,
   checkHealth,
   getDeveloperMetrics,
 } from "../lib/apiService";
+import type { MachineAlert } from "../types/dashboard";
 
 export type LogType = "info" | "error" | "success";
 
@@ -55,7 +57,7 @@ export interface ChatterEntry {
   sender: string;
   receiver?: string;
   message: string;
-  context?: any;
+  context?: unknown;
   timestamp: number;
 }
 
@@ -66,6 +68,18 @@ interface SocketContextValue {
 const SocketContext = createContext<SocketContextValue | null>(null);
 
 const SOCKET_URL = getSocketOrigin();
+
+type SocketWindow = Window & typeof globalThis & { __BRUNELLA_SOCKET__?: Socket };
+
+function getErrorMessage(error: unknown): string {
+  if (error instanceof Error) return error.message;
+  if (typeof error === "string") return error;
+  if (typeof error === "object" && error !== null) {
+    const maybe = (error as { message?: unknown }).message;
+    if (typeof maybe === "string") return maybe;
+  }
+  return "ismeretlen hiba";
+}
 
 export function SocketProvider({ children }: { children: ReactNode }) {
   const [socketInstance, setSocketInstance] = useState<Socket | null>(null);
@@ -104,21 +118,27 @@ export function SocketProvider({ children }: { children: ReactNode }) {
         if (!isMounted) return;
 
         if (tasksRes.status === "fulfilled") setTasks(tasksRes.value.tasks);
-        else setError(tasksRes.reason.message);
+        else setError(getErrorMessage(tasksRes.reason));
 
         if (taskStatsRes.status === "fulfilled") setTaskStats(taskStatsRes.value);
-        else setError(taskStatsRes.reason.message);
+        else setError(getErrorMessage(taskStatsRes.reason));
 
         if (healthRes.status === "fulfilled") setHealthStatus(healthRes.value);
-        else setError(healthRes.reason.message);
+        else setError(getErrorMessage(healthRes.reason));
 
         if (devMetricsRes.status === "fulfilled") setDeveloperMetrics(devMetricsRes.value);
-        else setError(devMetricsRes.reason.message);
+        else setError(getErrorMessage(devMetricsRes.reason));
 
-      } catch (err: any) {
+      } catch (err: unknown) {
         if (!isMounted) return;
-        setError(err.message || "Adatlekérdezési hiba");
-        addLog({ message: `REST adatlekérdezési hiba: ${err.message}`, type: "error", source: "SystemSignal" });
+        const message = getErrorMessage(err);
+        setError(message || "Adatlekérdezési hiba");
+        addLog({
+          message: `REST adatlekérdezési hiba: ${message}`,
+          type: "error",
+          timestamp: Date.now(),
+          source: "SystemSignal",
+        });
       } finally {
         if (isMounted) setLoading(false);
       }
@@ -145,18 +165,8 @@ export function SocketProvider({ children }: { children: ReactNode }) {
 
     // Expose socket to window for E2E testing
     if (typeof window !== 'undefined') {
-      (window as any).__BRUNELLA_SOCKET__ = socket;
+      (window as SocketWindow).__BRUNELLA_SOCKET__ = socket;
     }
-
-    const getErrorMessage = (error: unknown): string => {
-      if (error instanceof Error) return error.message;
-      if (typeof error === "string") return error;
-      if (typeof error === "object" && error !== null) {
-        const maybe = (error as { message?: unknown }).message;
-        if (typeof maybe === "string") return maybe;
-      }
-      return "ismeretlen hiba";
-    };
 
     const log = (message: string, type: LogType = "info") => {
       addLog({
@@ -237,7 +247,7 @@ export function SocketProvider({ children }: { children: ReactNode }) {
         sender: string;
         receiver?: string;
         message: string;
-        context?: any;
+        context?: unknown;
         timestamp?: number;
       }) => {
         addChatter({
@@ -281,7 +291,7 @@ export function SocketProvider({ children }: { children: ReactNode }) {
       }
     });
 
-    socket.on("machine:alert", (data: any) => {
+    socket.on("machine:alert", (data: MachineAlert) => {
       addMachineAlert(data);
     });
 
@@ -297,6 +307,7 @@ export function SocketProvider({ children }: { children: ReactNode }) {
         addLog({
           message: `[Pipeline] ${data.message}`,
           type: data.status === 'error' ? 'error' : 'info',
+          timestamp: Date.now(),
           source: 'DeveloperPipeline',
         });
         addChatter({
@@ -308,7 +319,7 @@ export function SocketProvider({ children }: { children: ReactNode }) {
     });
 
     // Task lista valós idejű frissítése (szerver 5mp-enként küldi)
-    socket.on("tasks_update", (data: any[]) => {
+    socket.on("tasks_update", (data: QueuedTask[]) => {
       if (Array.isArray(data)) {
         setTasks(data);
       }

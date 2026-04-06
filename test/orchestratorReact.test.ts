@@ -66,13 +66,40 @@ describe('OrchestratorAgent ReAct Loop', () => {
 
         // Verify agentManager was called
         expect(agentManager.queueTask).toHaveBeenCalledWith("do something", "testAgent", {});
-        
+
         // Verify final result
         const response = result as AgentResponse & { taskIds?: number[] };
         expect(response.status).toBe("success");
         expect(response.message).toBe("A feladatot sikeresen kiosztottam a testAgent-nek.");
         expect(response.taskIds).toContain(123);
     });
+
+        it('should keep tool side-effect runs successful even without a final assistant message', async () => {
+            mockGenerate.mockResolvedValueOnce({
+                success: true,
+                content: "",
+                toolCalls: [{
+                    id: "call_side_effect",
+                    function: {
+                        name: "delegate_task",
+                        arguments: JSON.stringify({ agent_name: "testAgent", instruction: "fire and forget" })
+                    }
+                }]
+            });
+
+            mockGenerate.mockResolvedValueOnce({
+                success: true,
+                content: "",
+                toolCalls: undefined
+            });
+
+            const result = await orchestrator.execute("Kiosztás extra szöveg nélkül", {});
+
+            const response = result as AgentResponse & { taskIds?: number[] };
+            expect(response.status).toBe("success");
+            expect(response.message).toBe("A feladatot feldolgoztam.");
+            expect(response.taskIds).toContain(123);
+        });
 
     it('should handle send_message_to_user tool call', async () => {
         // First iteration: LLM decides to send a message

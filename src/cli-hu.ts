@@ -19,8 +19,7 @@ import { agentManager } from './agents/AgentManager.js';
 import { getSkill, listSkills } from './skills/index.js';
 import { writeLine } from './utils/cliOutput.js';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-marked.setOptions({ renderer: new TerminalRenderer() as any });
+marked.setOptions({ renderer: new TerminalRenderer() });
 
 /**
  * BRUNELLA MAGYAR CLI (MAG-1.0)

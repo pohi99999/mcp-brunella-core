@@ -693,9 +693,12 @@ ${agents}
         return guardAgentResponseOutput({
           status: 'error',
           error: reactResult.finalMessage ?? 'A ReAct végrehajtás nem tudta sikeresen lezárni a feladatot.',
+          taskIds,
+          steps: taskIds,
           data: {
             reactScratchpad: reactResult.scratchpad,
             terminatedReason: reactResult.terminatedReason,
+            taskIds,
           },
         } as AgentResponse, this.name);
       }

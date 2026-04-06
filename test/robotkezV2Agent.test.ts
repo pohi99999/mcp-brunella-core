@@ -21,17 +21,18 @@ vi.mock('../src/utils/rag.js', () => ({
 }));
 
 // Mock persistentBrowser
-const mockSendCommand = vi.fn();
+const mockSendCommand = vi.hoisted(() => vi.fn());
+const mockGenerateExecutionPlan = vi.hoisted(() => vi.fn());
 vi.mock('../src/utils/persistentBrowser.js', () => ({
     persistentBrowser: {
-        sendCommand: (...args: any[]) => mockSendCommand(...args)
+        sendCommand: mockSendCommand
     }
 }));
 
 // Mock llmPlanner to force fallback to Phase 2 simple parsing
 // (Phase 3 LLM planning has separate tests)
 vi.mock('../src/utils/llmPlanner.js', () => ({
-    generateExecutionPlan: vi.fn().mockRejectedValue(new Error('LLM mocked - using fallback'))
+    generateExecutionPlan: mockGenerateExecutionPlan
 }));
 
 // Mock logger
@@ -59,6 +60,8 @@ describe('RobotkezV2Agent (Phase 2 - MVP)', () => {
     beforeEach(() => {
         agent = new RobotkezV2Agent();
         mockSendCommand.mockClear();
+        mockGenerateExecutionPlan.mockReset();
+        mockGenerateExecutionPlan.mockRejectedValue(new Error('LLM mocked - using fallback'));
     });
 
     afterEach(() => {
@@ -318,8 +321,7 @@ describe('RobotkezV2Agent (Phase 2 - MVP)', () => {
                 requiresUserInput: []
             };
 
-            const llmPlanner = await import('../src/utils/llmPlanner.js');
-            (llmPlanner.generateExecutionPlan as any).mockResolvedValueOnce(longPlan);
+            mockGenerateExecutionPlan.mockResolvedValueOnce(longPlan);
 
             mockSendCommand.mockResolvedValue({ status: 'success' });
 
@@ -346,8 +348,7 @@ describe('RobotkezV2Agent (Phase 2 - MVP)', () => {
                 requiresUserInput: []
             };
 
-            const llmPlanner = await import('../src/utils/llmPlanner.js');
-            (llmPlanner.generateExecutionPlan as any).mockResolvedValueOnce(backgroundPlan);
+            mockGenerateExecutionPlan.mockResolvedValueOnce(backgroundPlan);
 
             mockSendCommand.mockResolvedValue({ status: 'success' });
 
@@ -372,8 +373,7 @@ describe('RobotkezV2Agent (Phase 2 - MVP)', () => {
                 requiresUserInput: []
             };
 
-            const llmPlanner = await import('../src/utils/llmPlanner.js');
-            (llmPlanner.generateExecutionPlan as any).mockResolvedValueOnce(shortPlan);
+            mockGenerateExecutionPlan.mockResolvedValueOnce(shortPlan);
 
             mockSendCommand.mockResolvedValue({ status: 'success' });
 
@@ -399,8 +399,7 @@ describe('RobotkezV2Agent (Phase 2 - MVP)', () => {
                 requiresUserInput: []
             };
 
-            const llmPlanner = await import('../src/utils/llmPlanner.js');
-            (llmPlanner.generateExecutionPlan as any).mockResolvedValueOnce(plan);
+            mockGenerateExecutionPlan.mockResolvedValueOnce(plan);
 
             mockSendCommand.mockResolvedValue({ status: 'success' });
 

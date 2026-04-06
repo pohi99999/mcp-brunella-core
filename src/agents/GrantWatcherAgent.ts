@@ -15,7 +15,7 @@
  * @version 1.0.0
  */
 
-import { BaseAgent } from './BaseAgent.js';
+import { BaseAgent, type AgentContext, type AgentResult } from './BaseAgent.js';
 import { AgentResponse } from './types.js';
 import { logInfo, logError, logDebug, setAgentStatus } from '../utils/logger.js';
 import { ensureError } from '../utils/ensureError.js';
@@ -62,6 +62,26 @@ interface GrantWatcherResult {
   summaryDocUrl?: string;
 }
 
+interface GrantTaskData extends Record<string, unknown> {
+  grantId?: string;
+  projectDescription?: string;
+  companyName?: string;
+}
+
+function parseGrantTaskData(task: string, agentName: string): GrantTaskData {
+  try {
+    const parsed = JSON.parse(task);
+    if (typeof parsed === 'object' && parsed !== null && !Array.isArray(parsed)) {
+      return parsed as GrantTaskData;
+    }
+  } catch (error: unknown) {
+    const err = ensureError(error);
+    logDebug(agentName, `Ignoring grant task JSON parse error: ${err.message}`);
+  }
+
+  return {};
+}
+
 // ============================================================================
 // Grant Watcher Agent Implementation
 // ============================================================================
@@ -86,9 +106,17 @@ export class GrantWatcherAgent extends BaseAgent {
   /**
    * Execute task (BaseAgent interface)
    */
-  async executeTask(context: any): Promise<any> {
-    const task = context.task || context;
-    return this.execute(task, context);
+  async executeTask(context: AgentContext): Promise<AgentResult> {
+    const task = typeof context.task === 'string' ? context.task : '';
+    const result = await this.execute(task, context);
+
+    return {
+      success: result.success ?? result.status === 'success',
+      message: result.message ?? 'Grant monitoring completed.',
+      status: result.status,
+      data: result.data,
+      metadata: result.metadata,
+    };
   }
 
   /**
@@ -113,13 +141,7 @@ export class GrantWatcherAgent extends BaseAgent {
       logInfo(this.name, `✅ Grant scan complete: ${result.eligibleGrants.length}/${result.opportunities.length} eligible`);
 
       // Parse task params to determine response type
-      let taskData: any = {};
-      try {
-        taskData = JSON.parse(task);
-      } catch (error: unknown) {
-        const err = ensureError(error);
-        logDebug(this.name, `Ignoring grant task JSON parse error: ${err.message}`);
-      }
+      const taskData = parseGrantTaskData(task, this.name);
 
       // Transform result to match test expectations
       const transformedResult = {

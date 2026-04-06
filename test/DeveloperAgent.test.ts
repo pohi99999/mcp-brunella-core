@@ -1,19 +1,16 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { DeveloperAgent } from '../src/agents/DeveloperAgent.js';
-import * as bifrostGateway from '../src/core/bifrost_gateway.js';
 import * as pythonShell from '../src/utils/pythonShell.js';
 import fs from 'fs/promises';
 import { execSync } from 'child_process';
 
 // Mock dependencies
-vi.mock('../src/core/bifrost_gateway.js', () => {
-    const mockGenerate = vi.fn();
-    return {
-        getBifrostGateway: () => ({
-            generate: mockGenerate
-        })
-    };
-});
+const mockGenerate = vi.fn();
+vi.mock('../src/core/bifrost_gateway.js', () => ({
+    getBifrostGateway: () => ({
+        generate: mockGenerate
+    })
+}));
 vi.mock('../src/utils/pythonShell.js');
 vi.mock('fs/promises');
 vi.mock('child_process');
@@ -34,16 +31,15 @@ vi.mock('../src/agents/specStatus.js', () => ({
 
 describe('DeveloperAgent', () => {
     let agent: DeveloperAgent;
-    let mockGenerate: any;
 
     beforeEach(() => {
         vi.clearAllMocks();
         agent = new DeveloperAgent();
-        mockGenerate = bifrostGateway.getBifrostGateway().generate;
-        (pythonShell.globalPythonShell.run as any).mockResolvedValue('Python Output');
-        (fs.mkdir as any).mockResolvedValue(undefined);
-        (fs.writeFile as any).mockResolvedValue(undefined);
-        (execSync as any).mockReturnValue('Command Output');
+        mockGenerate.mockReset();
+        vi.mocked(pythonShell.globalPythonShell.run).mockResolvedValue('Python Output');
+        vi.mocked(fs.mkdir).mockResolvedValue(undefined);
+        vi.mocked(fs.writeFile).mockResolvedValue(undefined);
+        vi.mocked(execSync).mockReturnValue('Command Output');
     });
 
     it('should route to ReAct loop for generic tasks', async () => {
@@ -57,7 +53,7 @@ describe('DeveloperAgent', () => {
 
         expect(mockGenerate).toHaveBeenCalled();
         expect(result.status).toBe('success');
-        expect((result as any).message).toBe('Kész a feladat');
+        expect(result.message).toBe('Kész a feladat');
     });
 
     it('should use tool calling for write_file', async () => {
@@ -83,7 +79,7 @@ describe('DeveloperAgent', () => {
 
         expect(fs.writeFile).toHaveBeenCalledWith('src/test.ts', '// Code', 'utf-8');
         expect(result.status).toBe('success');
-        expect((result as any).message).toBe('Fájl sikeresen létrehozva.');
+        expect(result.message).toBe('Fájl sikeresen létrehozva.');
     });
 
     it('should use tool calling for run_shell_command', async () => {
@@ -117,7 +113,7 @@ describe('DeveloperAgent', () => {
 
         expect(pythonShell.globalPythonShell.run).toHaveBeenCalledWith('import math; print(math.factorial(50))');
         expect(result.status).toBe('success');
-        expect((result as any).data.output).toBe('Python Output');
+        expect(result.data).toEqual(expect.objectContaining({ output: 'Python Output' }));
     });
 
     it('should execute git branch operations', async () => {

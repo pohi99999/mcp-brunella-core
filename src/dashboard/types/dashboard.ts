@@ -12,6 +12,20 @@ export interface LogEntry {
   source?: string;
 }
 
+export interface MachineAlert {
+  id: string;
+  title: string;
+  priceEur: number;
+  estimatedValueEur: number;
+  discountPct: number;
+  score: number;
+  source: string;
+  url: string;
+  timestamp: string;
+  category: string;
+  severity: 'critical' | 'warning';
+}
+
 export interface AgentRuntimeInfo {
   name: string;
   role?: string;

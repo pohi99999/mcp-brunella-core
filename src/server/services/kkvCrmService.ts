@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * Minimal KKV CRM service (skeleton)
  *
@@ -6,7 +5,12 @@
  */
 
 export const kkvCrmService = {
-  async createLead(payload = {}) {
+  async createLead(payload: Record<string, unknown> = {}): Promise<{
+    success: boolean;
+    leadId: string;
+    createdAt: string;
+    payload: Record<string, unknown>;
+  }> {
     // In a real implementation: validation, persistence, external CRM API calls, retries, logging.
     return {
       success: true,

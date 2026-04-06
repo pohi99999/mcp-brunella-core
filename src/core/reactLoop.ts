@@ -74,9 +74,11 @@ export class ReActExecutor {
       }
 
       if (decision.done || (decision.actions?.length ?? 0) === 0) {
+        const terminalMessage = decision.finalMessage?.trim() ? decision.finalMessage.trim() : undefined;
+        const completedAfterSuccessfulAction = scratchpad.at(-1)?.success === true;
         return {
-          success: Boolean(decision.finalMessage),
-          finalMessage: decision.finalMessage,
+          success: Boolean(terminalMessage) || completedAfterSuccessfulAction,
+          finalMessage: terminalMessage,
           scratchpad,
           terminatedReason: decision.done ? 'done' : 'no_actions',
         };

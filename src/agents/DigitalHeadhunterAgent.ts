@@ -15,11 +15,10 @@
  * @version 1.0.0
  */
 
-import { BaseAgent } from './BaseAgent.js';
+import { BaseAgent, type AgentContext, type AgentResult } from './BaseAgent.js';
 import { AgentResponse } from './types.js';
 import { logInfo, logError, logDebug, setAgentStatus } from '../utils/logger.js';
 import { ensureError } from '../utils/ensureError.js';
-import { getWorkspaceClient } from '../tools/unifiedWorkspace.js';
 import type { RecruitmentData } from '../types/enterprise.js';
 
 // ============================================================================
@@ -70,6 +69,34 @@ interface ScreeningResult {
     interviewed: number;
     avgScore: number;
   };
+}
+
+type LeaveApprovalInput = Partial<LeaveRequest> & { jobId?: string };
+
+interface TimesheetManagementInput {
+  employeeId?: string;
+  employeeName?: string;
+  projectName?: string;
+  durationMinutes?: number;
+  date?: string;
+  description?: string;
+  isBillable?: boolean;
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null;
+}
+
+function isStringArray(value: unknown): value is string[] {
+  return Array.isArray(value) && value.every(item => typeof item === 'string');
+}
+
+function isLeaveType(value: unknown): value is LeaveRequest['leaveType'] {
+  return value === 'vacation' || value === 'sick' || value === 'personal' || value === 'other';
+}
+
+function isLeaveStatus(value: unknown): value is LeaveRequest['status'] {
+  return value === 'pending_manager_approval' || value === 'approved' || value === 'rejected' || value === 'cancelled';
 }
 
 // ── Leave Approval Interfaces ──────────────────────────────────────
@@ -129,9 +156,16 @@ export class DigitalHeadhunterAgent extends BaseAgent {
   /**
    * Execute task (BaseAgent interface)
    */
-  async executeTask(context: any): Promise<any> {
-    const task = context.task || context;
-    return this.execute(task, context);
+  async executeTask(context: AgentContext): Promise<AgentResult> {
+    const task = typeof context.task === 'string' ? context.task : '';
+    const response = await this.execute(task, context);
+    return {
+      success: response.status === 'success',
+      status: response.status,
+      data: response.data,
+      message: response.message ?? response.error ?? (response.status === 'success' ? 'Success' : 'Error'),
+      metadata: response.metadata,
+    };
   }
 
   /**
@@ -140,24 +174,33 @@ export class DigitalHeadhunterAgent extends BaseAgent {
    * @param task - JSON or text description of the task
    * @param context - Task context/data
    */
-  async execute(task: string, context?: any): Promise<AgentResponse> {
+  async execute(task: string, context?: AgentContext): Promise<AgentResponse> {
     setAgentStatus(this.name, 'working', `HR operation: ${task.substring(0, 50)}...`);
 
-    const ctx = context || { type: 'recruitment', data: {} };
+    const runtimeContext = isRecord(context) ? context : {};
+    const contextType = typeof runtimeContext.type === 'string' ? runtimeContext.type : 'recruitment';
+    const contextData = runtimeContext.data;
     
     try {
       // ── Workflow Routing ──────────────────────────────────────────
 
       // Case 1: Leave Approval Task (Metadata driven)
-      if (ctx.type === 'leave_approval' || (ctx.data?.leaveType && ctx.data?.startDate)) {
+      if (
+        contextType === 'leave_approval' ||
+        (isRecord(contextData) && typeof contextData.leaveType === 'string' && typeof contextData.startDate === 'string')
+      ) {
         logInfo(this.name, `Routing to Leave Approval flow: ${task}`);
-        return await this.processLeaveApproval(ctx.data || {});
+        return await this.processLeaveApproval(contextData);
       }
 
       // Case 2: Timesheet Management
-      if (ctx.type === 'timesheet_management' || task.toLowerCase().includes('timesheet') || task.toLowerCase().includes('munkaidő')) {
+      if (
+        contextType === 'timesheet_management' ||
+        task.toLowerCase().includes('timesheet') ||
+        task.toLowerCase().includes('munkaidő')
+      ) {
         logInfo(this.name, `Routing to Timesheet Management flow: ${task}`);
-        return await this.processTimesheetManagement(ctx.data || {});
+        return await this.processTimesheetManagement(contextData);
       }
 
       // Default: Recruitment / Screening flow
@@ -230,21 +273,39 @@ export class DigitalHeadhunterAgent extends BaseAgent {
    * 
    * @param details - LeaveRequest data
    */
-  async processLeaveApproval(details: any): Promise<AgentResponse> {
-    setAgentStatus(this.name, 'working', `Processing leave approval for ${details.employeeName}`);
+  async processLeaveApproval(details: unknown): Promise<AgentResponse> {
+    const leaveRequest = this.normalizeLeaveApprovalInput(details);
+    const employeeName = leaveRequest.employeeName ?? 'Unknown employee';
+    const startDate = leaveRequest.startDate ?? 'unknown start date';
+    const endDate = leaveRequest.endDate ?? 'unknown end date';
+    const today = new Date().toISOString();
+    const todayDate = today.split('T')[0];
+
+    setAgentStatus(this.name, 'working', `Processing leave approval for ${employeeName}`);
     
     try {
-      logInfo(this.name, `Analyzing leave request for ${details.employeeName} (${details.startDate} to ${details.endDate})`);
+      logInfo(this.name, `Analyzing leave request for ${employeeName} (${startDate} to ${endDate})`);
       
       // Policy Check (Simulated for SME context)
       // In a real implementation, this would query a database/ERP
       const hasBalance = true; 
       const remainingBalance = 15;
       const conflicts: string[] = []; // No overlapping team leave
+
+      const request: LeaveRequest = {
+        employeeId: leaveRequest.employeeId ?? 'unknown',
+        employeeName,
+        startDate: leaveRequest.startDate ?? todayDate,
+        endDate: leaveRequest.endDate ?? leaveRequest.startDate ?? todayDate,
+        leaveType: leaveRequest.leaveType ?? 'other',
+        reason: leaveRequest.reason,
+        status: leaveRequest.status ?? 'pending_manager_approval',
+        submittedAt: leaveRequest.submittedAt ?? today,
+      };
       
       const result: LeaveApprovalResult = {
-        jobId: details.jobId || 'direct-request',
-        request: details,
+        jobId: leaveRequest.jobId || 'direct-request',
+        request,
         decision: 'approved', // Auto-approval for low-risk requests in SME suite
         approver: 'Brunella (Automated)',
         calendarSyncStatus: 'synced',
@@ -256,7 +317,7 @@ export class DigitalHeadhunterAgent extends BaseAgent {
         }
       };
 
-      logInfo(this.name, `✅ Leave approved for ${details.employeeName}. Calendar synced.`);
+      logInfo(this.name, `✅ Leave approved for ${employeeName}. Calendar synced.`);
       
       return {
         status: 'success',
@@ -276,14 +337,19 @@ export class DigitalHeadhunterAgent extends BaseAgent {
    * 
    * @param details - Timesheet data
    */
-  async processTimesheetManagement(details: any): Promise<AgentResponse> {
-    setAgentStatus(this.name, 'working', `Recording timesheet for ${details.employeeName}`);
+  async processTimesheetManagement(details: unknown): Promise<AgentResponse> {
+    const timesheet = this.normalizeTimesheetManagementInput(details);
+    const employeeName = timesheet.employeeName ?? 'Anonymous';
+    const projectName = timesheet.projectName ?? 'General Work';
+    const durationMinutes = timesheet.durationMinutes ?? 0;
+
+    setAgentStatus(this.name, 'working', `Recording timesheet for ${employeeName}`);
     
     try {
-      logInfo(this.name, `Recording work session: ${details.projectName} - ${details.durationMinutes} min`);
+      logInfo(this.name, `Recording work session: ${projectName} - ${durationMinutes} min`);
       
       // Validation (Simulated)
-      if (!details.durationMinutes || details.durationMinutes <= 0) {
+      if (!durationMinutes || durationMinutes <= 0) {
         throw new Error('Invalid duration specified for timesheet entry.');
       }
 
@@ -293,14 +359,14 @@ export class DigitalHeadhunterAgent extends BaseAgent {
       
       const result = {
         entryId,
-        employeeId: details.employeeId || 'unknown',
-        employeeName: details.employeeName || 'Anonymous',
-        projectName: details.projectName || 'General Work',
-        date: details.date || new Date().toISOString().split('T')[0],
-        duration: details.durationMinutes,
-        description: details.description || '',
+        employeeId: timesheet.employeeId || 'unknown',
+        employeeName,
+        projectName,
+        date: timesheet.date || new Date().toISOString().split('T')[0],
+        duration: durationMinutes,
+        description: timesheet.description || '',
         status: 'recorded',
-        calculatedBillable: details.isBillable !== false ? details.durationMinutes / 60 : 0
+        calculatedBillable: timesheet.isBillable !== false ? durationMinutes / 60 : 0
       };
 
       logInfo(this.name, `✅ Timesheet ${entryId} recorded successfully.`);
@@ -549,6 +615,40 @@ export class DigitalHeadhunterAgent extends BaseAgent {
     return 5; // Other education
   }
 
+  private normalizeLeaveApprovalInput(details: unknown): LeaveApprovalInput {
+    if (!isRecord(details)) {
+      return {};
+    }
+
+    return {
+      jobId: typeof details.jobId === 'string' ? details.jobId : undefined,
+      employeeId: typeof details.employeeId === 'string' ? details.employeeId : undefined,
+      employeeName: typeof details.employeeName === 'string' ? details.employeeName : undefined,
+      startDate: typeof details.startDate === 'string' ? details.startDate : undefined,
+      endDate: typeof details.endDate === 'string' ? details.endDate : undefined,
+      leaveType: isLeaveType(details.leaveType) ? details.leaveType : undefined,
+      reason: typeof details.reason === 'string' ? details.reason : undefined,
+      status: isLeaveStatus(details.status) ? details.status : undefined,
+      submittedAt: typeof details.submittedAt === 'string' ? details.submittedAt : undefined,
+    };
+  }
+
+  private normalizeTimesheetManagementInput(details: unknown): TimesheetManagementInput {
+    if (!isRecord(details)) {
+      return {};
+    }
+
+    return {
+      employeeId: typeof details.employeeId === 'string' ? details.employeeId : undefined,
+      employeeName: typeof details.employeeName === 'string' ? details.employeeName : undefined,
+      projectName: typeof details.projectName === 'string' ? details.projectName : undefined,
+      durationMinutes: typeof details.durationMinutes === 'number' ? details.durationMinutes : undefined,
+      date: typeof details.date === 'string' ? details.date : undefined,
+      description: typeof details.description === 'string' ? details.description : undefined,
+      isBillable: typeof details.isBillable === 'boolean' ? details.isBillable : undefined,
+    };
+  }
+
   // ==========================================================================
   // Helper Methods
   // ==========================================================================
@@ -558,9 +658,19 @@ export class DigitalHeadhunterAgent extends BaseAgent {
    */
   private parseJobRequirements(task: string): RecruitmentData {
     try {
-      const parsed = JSON.parse(task);
-      if (parsed.jobDescription || parsed.requiredSkills) {
-        return parsed as RecruitmentData;
+      const parsed: unknown = JSON.parse(task);
+      if (isRecord(parsed)) {
+        const jobDescription = typeof parsed.jobDescription === 'string' ? parsed.jobDescription : undefined;
+        const requiredSkills = isStringArray(parsed.requiredSkills) ? parsed.requiredSkills : undefined;
+        const experienceYears = typeof parsed.experienceYears === 'number' ? parsed.experienceYears : undefined;
+
+        if (jobDescription || requiredSkills) {
+          return {
+            jobDescription: jobDescription ?? 'Senior Full-Stack Developer (TypeScript, React, Node.js)',
+            requiredSkills: requiredSkills ?? ['TypeScript', 'React', 'Node.js'],
+            experienceYears,
+          };
+        }
       }
     } catch (error: unknown) {
       const err = ensureError(error);

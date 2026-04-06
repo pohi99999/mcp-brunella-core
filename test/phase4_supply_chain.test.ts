@@ -31,6 +31,30 @@ describe('Phase 4: Supply Chain - Draft & Approval Workflow', () => {
     expect((result.data as any).requiresApproval).toBe(true);
   });
 
+  it('should normalize matching context and return supply results', async () => {
+    const result = await agent.execute('match capacity mock', {
+      region: 'Debrecen',
+      mock: true
+    });
+
+    expect(result.status).toBe('success');
+    expect(result.data).toHaveProperty('alerts');
+    expect(result.data).toHaveProperty('matches');
+    expect(Array.isArray(result.data.matches)).toBe(true);
+  });
+
+  it('should normalize route context and return optimized routes', async () => {
+    const result = await agent.execute('optimize route mock', {
+      mock: true,
+      locations: []
+    });
+
+    expect(result.status).toBe('success');
+    expect(result.data).toHaveProperty('route_id');
+    expect(result.data).toHaveProperty('total_distance');
+    expect(result.data.total_distance).toBeGreaterThanOrEqual(0);
+  });
+
   it('should require approval before sending draft', async () => {
     // Step 1: Create draft
     const draftResult = await agent.execute('create draft', {

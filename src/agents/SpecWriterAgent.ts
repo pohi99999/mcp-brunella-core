@@ -45,6 +45,19 @@ interface RequirementsJson {
   };
 }
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null;
+}
+
+function isSystemBlueprint(value: unknown): value is SystemBlueprint {
+  return (
+    isRecord(value) &&
+    typeof value.id === "string" &&
+    typeof value.app_name === "string" &&
+    Array.isArray(value.modules)
+  );
+}
+
 // ════════════════════════════════════════════════════════════════
 // AGENT IMPLEMENTATION
 // ════════════════════════════════════════════════════════════════
@@ -89,11 +102,11 @@ export class SpecWriterAgent extends BaseAgent {
     const task = (context.task || "").toLowerCase();
 
     try {
-      const meta = (context.metadata || {}) as Record<string, unknown>;
+      const meta = isRecord(context.metadata) ? context.metadata : {};
 
       // Blueprint Spec generálás (Software Genesis Phase 2)
-      if (this.isBlueprintSpecTask(task, meta)) {
-        const blueprint = meta.blueprint as SystemBlueprint;
+      if (this.isBlueprintSpecTask(task, meta) && isSystemBlueprint(meta.blueprint)) {
+        const blueprint = meta.blueprint;
         return await this.generateBlueprintSpec(blueprint);
       }
 

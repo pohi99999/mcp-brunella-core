@@ -52,6 +52,16 @@ describe('ConflictMediatorAgent', () => {
       expect(result.status).toBe('success');
       expect(result.data.conflictDetected).toBe(false);
     });
+
+    it('should treat malformed JSON task strings as raw message input', async () => {
+      const task = 'This is completely unacceptable and frustrating';
+
+      const result = await agent.execute(task);
+
+      expect(result.status).toBe('success');
+      expect(result.data.conflictDetected).toBe(true);
+      expect(result.data.message).toBe(task);
+    });
   });
 
   describe('Sentiment Analysis', () => {
