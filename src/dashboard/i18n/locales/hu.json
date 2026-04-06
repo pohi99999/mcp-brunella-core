@@ -368,5 +368,55 @@
       "description": "Leírás",
       "action": "Akció"
     }
+  },
+  "innovation": {
+    "title": "Innovációs Híd (TRIZ)",
+    "description": "Szisztematikus innováció és problémamegoldás MI ágens rajok segítségével.",
+    "analyze": "Elemzés Indítása",
+    "analyzing": "Elemzés folyamatban...",
+    "principles": "TRIZ Alapelvek",
+    "contradictions": "Azonosított Ellentmondások",
+    "analogies": "Iparági Analógiák",
+    "no_results": "Adj meg egy technikai problémát az elemzéshez.",
+    "success_message": "Innovációs kutatás sikeresen befejeződött!",
+    "error_message": "Innovációs kutatás sikertelen.",
+    "required_error": "Kérlek írd le a technikai problémát!",
+    "starting_message": "TRIZ elemzés és kutatás elindítva...",
+    "history": "Korábbi lekérdezések",
+    "no_history": "Nincsenek korábbi futások.",
+    "analysis_prefix": "Elemzés",
+    "analyzing_desc": "A TRIZ motor elemzi az ellentmondásokat és kutatja a távoli iparágak analógiáit...",
+    "no_data": "Nincsenek megjeleníthető adatok.",
+    "contradictions_title": "Technikai Ellentmondás",
+    "prompt_selection": "Válassz ki egy korábbi elemzést vagy írj be egy technikai problémát!",
+    "placeholder": "Pl: Hogyan hűtsünk szoftveresen egy túlmelegedő szervert?"
+  },
+  "swarm": {
+    "title": "Raj Intelligencia Monitor",
+    "status": "Raj állapota",
+    "active_colonies": "Aktív kolóniák",
+    "total_bees": "Összes dolgozó",
+    "efficiency": "Hatékonyság",
+    "communications": "Belső kommunikáció",
+    "log": "Raj Napló",
+    "pause_all": "Összes Szüneteltetése",
+    "resume_all": "Összes Indítása"
+  },
+  "admin": {
+    "self_check": "Rendszer Önellenőrzés",
+    "run_check": "Tesztelés Futattása",
+    "checking": "Ellenőrzés...",
+    "pass": "ÁTMENT",
+    "fail": "SIKERTELEN",
+    "env_vars": "Környezeti Változók",
+    "disk_space": "Tárhely",
+    "memory_usage": "Memória használat"
+  },
+  "command": {
+    "placeholder": "Írd be a parancsot vagy keress...",
+    "no_results": "Nincs találat.",
+    "suggestions": "Javasolt műveletek",
+    "go_to": "Ugrás ide:",
+    "actions": "Műveletek"
   }
 }
