@@ -7,6 +7,13 @@ const { getToolRegistryMock, generateMock } = vi.hoisted(() => ({
 
 vi.mock('../src/core/toolRegistry.js', () => ({
   getToolRegistry: getToolRegistryMock,
+  getFallbackToolDefinitions: vi.fn().mockReturnValue([
+    {
+      name: 'get_system_status',
+      description: 'Rendszer állapot lekérdezése.',
+      parameters: { type: 'object', properties: {}, required: [] },
+    },
+  ]),
 }));
 
 vi.mock('../src/core/bifrost_gateway.js', () => ({
@@ -73,6 +80,9 @@ describe('UniversalOrchestratorService fail-open bootstrap', () => {
 
     expect(getToolRegistryMock).toHaveBeenCalledTimes(1);
     expect(generateMock).toHaveBeenCalledTimes(1);
+    const generateOptions = generateMock.mock.calls[0][0] as { tools: Array<{ name: string }> };
+    expect(generateOptions.tools.length).toBeGreaterThan(0);
+    expect(generateOptions.tools.some(tool => tool.name === 'get_system_status')).toBe(true);
     expect(response.reply).toContain('fallback tool-listával');
     expect(response.actionsTriggered).toEqual([]);
   });

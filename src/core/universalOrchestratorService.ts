@@ -1,5 +1,5 @@
 import { getBifrostGateway, type ProviderType } from './bifrost_gateway.js';
-import { getToolRegistry } from './toolRegistry.js';
+import { getFallbackToolDefinitions, getToolRegistry } from './toolRegistry.js';
 import { agentManager } from '../agents/AgentManager.js';
 import { logInfo, logError, logWarn } from '../utils/logger.js';
 import { GraphRagEngine } from './graphRagEngine.js';
@@ -326,8 +326,13 @@ export class UniversalOrchestratorService {
         const registry = await getToolRegistry();
         return registry.getToolDefinitions();
       } catch (error: unknown) {
-        logWarn('UniversalOrchestratorService', `Tool registry fallback: ${error instanceof Error ? error.message : String(error)}`);
-        return [];
+        const fallbackTools = getFallbackToolDefinitions();
+        const normalizedError = error instanceof Error ? error : new Error(String(error));
+        logWarn('UniversalOrchestratorService', 'Tool registry degraded mode', {
+          error: normalizedError,
+          fallbackToolCount: fallbackTools.length,
+        });
+        return fallbackTools;
       }
     })();
 

@@ -73,6 +73,10 @@ const CF_WORKER_TOOLS: UniversalToolDefinition[] = [
   }
 }));
 
+export function getFallbackToolDefinitions(): UniversalToolDefinition[] {
+  return [...SYSTEM_TOOLS, ...CF_WORKER_TOOLS];
+}
+
 export class ToolRegistry {
   private tools: UniversalToolDefinition[] = [];
   private registryPath: string;
@@ -121,7 +125,7 @@ export class ToolRegistry {
       logInfo('ToolRegistry', `${this.tools.length} tool betöltve (${agentTools.length} agent + ${SYSTEM_TOOLS.length} rendszer + ${CF_WORKER_TOOLS.length} CF worker)`);
     } catch (e: unknown) {
       logWarn('ToolRegistry', `registry.json betöltési hiba: ${e instanceof Error ? e.message : String(e)}`);
-      this.tools = [...SYSTEM_TOOLS, ...CF_WORKER_TOOLS];
+      this.tools = getFallbackToolDefinitions();
     }
   }
 

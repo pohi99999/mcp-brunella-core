@@ -1,12 +1,14 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-const { checkPatternMock, saveMemoryMock } = vi.hoisted(() => ({
+const { checkPatternMock, saveMemoryMock, addToIndexMock } = vi.hoisted(() => ({
   checkPatternMock: vi.fn(),
   saveMemoryMock: vi.fn(),
+  addToIndexMock: vi.fn(),
 }));
 
 vi.mock('../src/core/patternReuse.js', () => ({
   checkPattern: checkPatternMock,
+  getPatternReuseThreshold: vi.fn().mockReturnValue(0.7),
 }));
 
 vi.mock('../src/core/structuredMemory.js', () => ({
@@ -16,7 +18,7 @@ vi.mock('../src/core/structuredMemory.js', () => ({
 
 vi.mock('../src/utils/rag.js', () => ({
   searchRAG: vi.fn().mockResolvedValue([]),
-  addToIndex: vi.fn().mockResolvedValue(undefined),
+  addToIndex: addToIndexMock,
 }));
 
 vi.mock('../src/utils/responseFormatter.js', () => ({
@@ -45,6 +47,12 @@ class FailOpenTestAgent extends BaseAgent {
       data: { ok: true },
       metadata: {},
     };
+  }
+}
+
+class ThrowingTestAgent extends FailOpenTestAgent {
+  override async executeTask(_context: AgentContext): Promise<AgentResult> {
+    throw new Error('agent core exploded');
   }
 }
 
@@ -77,5 +85,14 @@ describe('BaseAgent fail-open guards', () => {
 
     expect(response.status).toBe('success');
     expect(response.message).toContain('Művelet kész.');
+    expect(addToIndexMock).toHaveBeenCalledTimes(1);
+  });
+
+  it('normalizes executeTask exceptions into an error response', async () => {
+    const agent = new ThrowingTestAgent();
+    const response = await agent.execute('Dobd el a hibát');
+
+    expect(response.status).toBe('error');
+    expect(response.error).toContain('agent core exploded');
   });
 });
