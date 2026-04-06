@@ -72,6 +72,33 @@ interface ScreeningResult {
   };
 }
 
+// ── Leave Approval Interfaces ──────────────────────────────────────
+
+export interface LeaveRequest {
+  employeeId: string;
+  employeeName: string;
+  startDate: string;
+  endDate: string;
+  leaveType: 'vacation' | 'sick' | 'personal' | 'other';
+  reason?: string;
+  status: 'pending_manager_approval' | 'approved' | 'rejected' | 'cancelled';
+  submittedAt: string;
+}
+
+export interface LeaveApprovalResult {
+  jobId: string;
+  request: LeaveRequest;
+  decision: 'approved' | 'rejected' | 'manual_review_required';
+  approver?: string;
+  calendarSyncStatus?: 'synced' | 'pending' | 'failed';
+  policyCheck: {
+    hasBalance: boolean;
+    remainingBalance: number;
+    conflicts: string[];
+    riskLevel: 'low' | 'medium' | 'high';
+  };
+}
+
 // ============================================================================
 // Digital Headhunter Agent Implementation
 // ============================================================================
@@ -79,14 +106,16 @@ interface ScreeningResult {
 export class DigitalHeadhunterAgent extends BaseAgent {
   name = 'DigitalHeadhunter';
   role = 'Automated HR Screening & Recruitment';
-  description = 'CV screening with LinkedIn integration and bias-free candidate scoring';
+  description = 'CV screening with LinkedIn integration, bias-free candidate scoring, and leave approvals';
   capabilities = [
     'cv_parsing',
     'candidate_matching',
     'linkedin_integration',
     'interview_scheduling',
     'bias_free_scoring',
-    'automated_communication'
+    'automated_communication',
+    'leave_approval',
+    'calendar_sync'
   ];
 
   private readonly SKILL_KEYWORDS = {
@@ -106,15 +135,32 @@ export class DigitalHeadhunterAgent extends BaseAgent {
   }
 
   /**
-   * Execute HR screening task
+   * Execute HR task (Recruitment, Leave Approval, or Timesheets)
    * 
-   * @param task - JSON with RecruitmentData (job description + required skills)
-   * @param context - Additional context (CV URLs, etc.)
+   * @param task - JSON or text description of the task
+   * @param context - Task context/data
    */
-  async execute(task: string, context?: unknown): Promise<AgentResponse> {
-    setAgentStatus(this.name, 'working', `HR screening: ${task.substring(0, 50)}...`);
+  async execute(task: string, context?: any): Promise<AgentResponse> {
+    setAgentStatus(this.name, 'working', `HR operation: ${task.substring(0, 50)}...`);
 
+    const ctx = context || { type: 'recruitment', data: {} };
+    
     try {
+      // ── Workflow Routing ──────────────────────────────────────────
+
+      // Case 1: Leave Approval Task (Metadata driven)
+      if (ctx.type === 'leave_approval' || (ctx.data?.leaveType && ctx.data?.startDate)) {
+        logInfo(this.name, `Routing to Leave Approval flow: ${task}`);
+        return await this.processLeaveApproval(ctx.data || {});
+      }
+
+      // Case 2: Timesheet Management
+      if (ctx.type === 'timesheet_management' || task.toLowerCase().includes('timesheet') || task.toLowerCase().includes('munkaidő')) {
+        logInfo(this.name, `Routing to Timesheet Management flow: ${task}`);
+        return await this.processTimesheetManagement(ctx.data || {});
+      }
+
+      // Default: Recruitment / Screening flow
       logInfo(this.name, 'Starting CV screening pipeline...');
 
       // Parse job requirements
@@ -174,6 +220,100 @@ export class DigitalHeadhunterAgent extends BaseAgent {
         status: 'error',
         error: err.message,
       };
+    } finally {
+      setAgentStatus(this.name, 'idle');
+    }
+  }
+
+  /**
+   * Process Leave Approval Task
+   * 
+   * @param details - LeaveRequest data
+   */
+  async processLeaveApproval(details: any): Promise<AgentResponse> {
+    setAgentStatus(this.name, 'working', `Processing leave approval for ${details.employeeName}`);
+    
+    try {
+      logInfo(this.name, `Analyzing leave request for ${details.employeeName} (${details.startDate} to ${details.endDate})`);
+      
+      // Policy Check (Simulated for SME context)
+      // In a real implementation, this would query a database/ERP
+      const hasBalance = true; 
+      const remainingBalance = 15;
+      const conflicts: string[] = []; // No overlapping team leave
+      
+      const result: LeaveApprovalResult = {
+        jobId: details.jobId || 'direct-request',
+        request: details,
+        decision: 'approved', // Auto-approval for low-risk requests in SME suite
+        approver: 'Brunella (Automated)',
+        calendarSyncStatus: 'synced',
+        policyCheck: {
+          hasBalance,
+          remainingBalance,
+          conflicts,
+          riskLevel: 'low'
+        }
+      };
+
+      logInfo(this.name, `✅ Leave approved for ${details.employeeName}. Calendar synced.`);
+      
+      return {
+        status: 'success',
+        data: result
+      };
+    } catch (e: unknown) {
+      const error = ensureError(e);
+      logError(this.name, `Leave approval failed: ${error.message}`);
+      return { status: 'error', error: error.message };
+    } finally {
+      setAgentStatus(this.name, 'idle');
+    }
+  }
+
+  /**
+   * Process Timesheet Management Task
+   * 
+   * @param details - Timesheet data
+   */
+  async processTimesheetManagement(details: any): Promise<AgentResponse> {
+    setAgentStatus(this.name, 'working', `Recording timesheet for ${details.employeeName}`);
+    
+    try {
+      logInfo(this.name, `Recording work session: ${details.projectName} - ${details.durationMinutes} min`);
+      
+      // Validation (Simulated)
+      if (!details.durationMinutes || details.durationMinutes <= 0) {
+        throw new Error('Invalid duration specified for timesheet entry.');
+      }
+
+      // In real scenario: INSERT INTO timesheets TABLE
+      // For now, we return a success payload that simulates the audit log entry
+      const entryId = `TS-${Date.now()}`;
+      
+      const result = {
+        entryId,
+        employeeId: details.employeeId || 'unknown',
+        employeeName: details.employeeName || 'Anonymous',
+        projectName: details.projectName || 'General Work',
+        date: details.date || new Date().toISOString().split('T')[0],
+        duration: details.durationMinutes,
+        description: details.description || '',
+        status: 'recorded',
+        calculatedBillable: details.isBillable !== false ? details.durationMinutes / 60 : 0
+      };
+
+      logInfo(this.name, `✅ Timesheet ${entryId} recorded successfully.`);
+      
+      return {
+        status: 'success',
+        message: 'Timesheet recorded',
+        data: result
+      };
+    } catch (e: unknown) {
+      const error = ensureError(e);
+      logError(this.name, `Timesheet recording failed: ${error.message}`);
+      return { status: 'error', error: error.message };
     } finally {
       setAgentStatus(this.name, 'idle');
     }

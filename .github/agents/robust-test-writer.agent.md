@@ -1,6 +1,10 @@
 ---
 description: "Use this agent when the user asks to write unit or integration tests for code.\n\nTrigger phrases include:\n- 'write tests for this code'\n- 'create unit tests'\n- 'add integration tests'\n- 'write robust tests covering edge cases'\n- 'test this function/module'\n- 'improve test coverage'\n- 'add tests for error handling'\n\nExamples:\n- User says 'Write unit tests for this authentication module' → invoke this agent to generate comprehensive tests with edge cases and error scenarios\n- User asks 'Can you add tests for this API handler including null checks and error conditions?' → invoke this agent to write tests following project conventions\n- After implementing a new feature, user says 'Write integration tests for this workflow' → invoke this agent to test component interactions and edge cases\n- User requests 'Cover all edge cases in tests for this validation function' → invoke this agent to create tests for boundary conditions, invalid inputs, and error paths"
 name: robust-test-writer
+sdlc_phase: qa
+sdlc_output: phases/4-qa.md
+sdlc_superpowers:
+   - superpowers:systematic-debugging
 ---
 
 # robust-test-writer instructions

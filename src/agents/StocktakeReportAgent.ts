@@ -10,6 +10,7 @@
 import { IAgent, AgentResponse } from './types.js';
 import { logInfo, logError, setAgentStatus } from '../utils/logger.js';
 import { generateResponse } from '../core/llm_client.js';
+import { safeJsonParse } from '../utils/aiHelpers.js';
 
 export interface ReportTask {
   date: string;
@@ -33,7 +34,10 @@ export class StocktakeReportAgent implements IAgent {
   async execute(task: string, context?: unknown): Promise<AgentResponse> {
     setAgentStatus(this.name, 'working', task.slice(0, 50));
     try {
-      const payload: ReportTask = JSON.parse(task);
+      const payload = safeJsonParse<ReportTask | null>(task, null);
+      if (!payload) {
+        return { status: 'error', error: 'Érvénytelen stocktake report payload.' };
+      }
 
       if (!payload.discrepancies || payload.discrepancies.length === 0) {
         return { status: 'success', data: { markdown: `## Leltárjelentés - ${payload.date}\nNincs regisztrált eltérés! A leltár hiánytalan.` } };

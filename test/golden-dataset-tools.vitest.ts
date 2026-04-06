@@ -114,6 +114,19 @@ describe('toolRunCapture', () => {
       expect(recorded.tool_name).toBe('bad_tool');
       expect(recorded.success).toBe(0);
       expect(recorded.quality_score).toBe(0);
+      expect(String(recorded.output_data)).toContain('errorType');
+    });
+
+    it('fails open when tool-run persistence throws', async () => {
+      vi.mocked(recordToolRun).mockImplementationOnce(() => {
+        throw new Error('db unavailable');
+      });
+
+      const handler = vi.fn().mockResolvedValue({ success: true, data: 'hello' });
+      const wrapped = wrapToolHandler('resilient_tool', handler);
+
+      await expect(wrapped({ foo: 'bar' })).resolves.toEqual({ success: true, data: 'hello' });
+      expect(handler).toHaveBeenCalledTimes(1);
     });
   });
 

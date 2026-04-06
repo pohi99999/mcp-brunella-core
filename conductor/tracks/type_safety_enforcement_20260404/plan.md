@@ -23,3 +23,10 @@
 
 ## 🖥️ CLI Integráció
 - [ ] CLI parancs paraméterek típusozásának ellenőrzése.
+
+## Jegyzetek
+- 2026-04-06: A `src/server/routes/testScheduler.ts` route-slice is lezárható lesz ebben a trackben; a cél a query/body parsing és a response payloadok szigorítása a public contract megtartásával.
+- 2026-04-06: Az `src/agents/ApifyScrapingAgent.ts` slice is kész; a következő biztonságos agent/tool hotspottok ugyanebben a trackben folytathatók.
+- 2026-04-06: A `src/utils/cloudflareClient.ts` CloudflareClient slice is kész; a task/status/history/workers/routing válaszok most `unknown`-safe helperrel normalizáltak, a singleton és a public API megmaradt.
+- 2026-04-06: A `src/agents/cloudflare/CloudflareClient.ts` wrapper slice is kész; a nested taskId/chat result/status kezelés most külön `unknown`-safe helperben fut, a singleton API és a visszafelé kompatibilis válaszformák megmaradtak. Validáció: `npm run build` + `npx vitest run test/cloudflareClient.test.ts test/cloudflare_integration.test.ts test/cloudflare_routes.test.ts`.
+- 2026-04-06: A `src/agents/GenesisOrchestrator.ts` guard-slice is kész; a `metadata.spec` olvasás most lokális `unknown`-safe helperen megy át, a missing-spec üzenet és az orchestration flow változatlan. Validáció: `npm run build` + `npx vitest run test/GenesisOrchestrator.test.ts`.

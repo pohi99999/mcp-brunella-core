@@ -1,6 +1,0 @@
-
-> mcp-brunella-core@2.4.0 build
-> tsc && node -e "const fs=require('fs');fs.mkdirSync('build/agents',{recursive:true});fs.copyFileSync('src/agents/registry.json','build/agents/registry.json');console.log('registry.json copied to build/agents/');fs.mkdirSync('build/data',{recursive:true});fs.copyFileSync('src/data/triz_matrix.json','build/data/triz_matrix.json');fs.copyFileSync('src/data/triz_principles.json','build/data/triz_principles.json');console.log('TRIZ data copied');"
-
-registry.json copied to build/agents/
-TRIZ data copied

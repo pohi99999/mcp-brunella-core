@@ -14,6 +14,35 @@ export interface GitHubModelsConfig {
   systemPrompt?: string;
 }
 
+type GitHubModelsMessage =
+  | { role: 'system' | 'user'; content: string }
+  | { role: 'assistant'; content: string | null; tool_calls?: GitHubModelsToolCall[] }
+  | { role: 'tool'; content: string; tool_call_id: string; name: string };
+
+interface GitHubModelsToolCall {
+  id: string;
+  type: 'function';
+  function: {
+    name: string;
+    arguments: string;
+  };
+}
+
+interface GitHubModelsResponse {
+  choices: Array<{
+    message: GitHubModelsAssistantMessage;
+  }>;
+}
+
+type GitHubModelsAssistantMessage = Extract<GitHubModelsMessage, { role: 'assistant' }>;
+
+interface GitHubModelsToolResult {
+  content: Array<{
+    type?: string;
+    text?: string;
+  }>;
+}
+
 /**
  * GitHubModelsAgent - Premium AI orchestrator using GitHub Models API (GPT-4o)
  *
@@ -127,7 +156,7 @@ export class GitHubModelsAgent implements IAgent {
    *
    * Supports function calling (MCP tools átadása)
    */
-  private async callGitHubModels(messages: Array<{ role: string; content: string | null; tool_calls?: any[] }>): Promise<string> {
+  private async callGitHubModels(messages: GitHubModelsMessage[]): Promise<string> {
     const apiKey = process.env.GH_TOKEN || process.env.GITHUB_TOKEN || process.env.GITHUB_PAT;
     const currentMessages = [...messages];
     let iteration = 0;
@@ -167,7 +196,7 @@ export class GitHubModelsAgent implements IAgent {
         throw new Error(`GitHub Models API error: ${response.status} ${response.statusText} - ${errorText}`);
       }
 
-      const data = await response.json();
+      const data = (await response.json()) as GitHubModelsResponse;
       const choice = data.choices[0];
       const message = choice.message;
 
@@ -179,47 +208,31 @@ export class GitHubModelsAgent implements IAgent {
         logInfo(this.name, `GPT requested tool calls: ${message.tool_calls.length}`);
 
         for (const toolCall of message.tool_calls) {
-            const functionName = toolCall.function.name;
-            const argumentsStr = toolCall.function.arguments;
+          const functionName = toolCall.function.name;
+          const argumentsStr = toolCall.function.arguments;
 
-            logInfo(this.name, `Executing tool: ${functionName}`);
+          logInfo(this.name, `Executing tool: ${functionName}`);
 
-            let resultContent: string;
+          let resultContent: string;
 
-            const permCheck = checkToolPermission(functionName, { agentName: this.name });
-            if (!permCheck.allowed) {
-                logWarn(this.name, `Permission denied for tool '${functionName}': ${permCheck.reason}`);
-                resultContent = `Permission denied: agent '${this.name}' is not allowed to call tool '${functionName}'. Reason: ${permCheck.reason}`;
-            } else {
-                try {
-                  const args = JSON.parse(argumentsStr);
-                  const result = await executeLocalTool(functionName, args, {
-                    agentName: this.name,
-                    metadata: { source: 'github-models' },
-                  });
-                  const resultObj = result as Record<string, unknown>;
+          const permCheck = checkToolPermission(functionName, { agentName: this.name });
+          if (!permCheck.allowed) {
+            logWarn(this.name, `Permission denied for tool '${functionName}': ${permCheck.reason}`);
+            resultContent = `Permission denied: agent '${this.name}' is not allowed to call tool '${functionName}'. Reason: ${permCheck.reason}`;
+          } else {
+            try {
+              const args = JSON.parse(argumentsStr);
+              const result = await executeLocalTool(functionName, args, {
+                agentName: this.name,
+                metadata: { source: 'github-models' },
+              });
 
-                  // Format result for OpenAI
-                  // MCP tools usually return { content: [{ type: 'text', text: '...' }] }
-                  if (resultObj && resultObj.content && Array.isArray(resultObj.content)) {
-                     // Join all text parts
-                     resultContent = (resultObj.content as Array<Record<string, unknown>>)
-                        .filter((c) => c.type === 'text')
-                        .map((c) => String(c.text || ''))
-                        .join('\n');
-
-                     // If no text, check for other types or dump JSON
-                     if (!resultContent && (resultObj.content as unknown[]).length > 0) {
-                         resultContent = JSON.stringify(resultObj.content);
-                     }
-                  } else {
-                     resultContent = typeof result === 'string' ? result : JSON.stringify(result);
-                  }
-                } catch (error: unknown) {
-                  const err = ensureError(error);
-                  logError(this.name, `Tool execution failed (${functionName}): ${err.message}`);
-                  resultContent = `Error executing tool ${functionName}: ${err.message}`;
-                }
+              resultContent = this.formatToolResult(result);
+            } catch (error: unknown) {
+              const err = ensureError(error);
+              logError(this.name, `Tool execution failed (${functionName}): ${err.message}`);
+              resultContent = `Error executing tool ${functionName}: ${err.message}`;
+            }
             }
 
             // Add tool result to messages
@@ -228,7 +241,7 @@ export class GitHubModelsAgent implements IAgent {
               tool_call_id: toolCall.id,
               name: functionName,
               content: resultContent
-            } as any);
+            });
         }
 
         // Loop continues...
@@ -244,8 +257,8 @@ export class GitHubModelsAgent implements IAgent {
   /**
    * Build chat messages from task + context
    */
-  private buildMessages(task: string, context?: unknown): Array<{ role: string; content: string }> {
-    const messages: Array<{ role: string; content: string }> = [
+  private buildMessages(task: string, context?: unknown): GitHubModelsMessage[] {
+    const messages: GitHubModelsMessage[] = [
       { role: 'system', content: this.config.systemPrompt }
     ];
 
@@ -280,6 +293,39 @@ export class GitHubModelsAgent implements IAgent {
         }
       }
     }));
+  }
+
+  private formatToolResult(result: unknown): string {
+    if (typeof result === 'string') {
+      return result;
+    }
+
+    if (this.hasTextToolContent(result)) {
+      const toolContent = result.content ?? [];
+      const textParts = toolContent
+        .filter((content) => content.type === 'text')
+        .map((content) => String(content.text || ''))
+        .join('\n');
+
+      if (textParts) {
+        return textParts;
+      }
+
+      if (toolContent.length > 0) {
+        return JSON.stringify(toolContent);
+      }
+    }
+
+    return JSON.stringify(result) ?? 'undefined';
+  }
+
+  private hasTextToolContent(result: unknown): result is GitHubModelsToolResult {
+    return (
+      typeof result === 'object' &&
+      result !== null &&
+      'content' in result &&
+      Array.isArray((result as GitHubModelsToolResult).content)
+    );
   }
 
   /**

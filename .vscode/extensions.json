@@ -66,6 +66,7 @@
     "almenon.arepl",
     "chrischinchilla.vscode-pandoc",
     "marp-team.marp-vscode",
-    "lekman.tts-code"
+    "lekman.tts-code",
+    "ms-pyright.pyright"
   ]
 }

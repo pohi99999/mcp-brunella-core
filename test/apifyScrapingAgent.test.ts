@@ -84,6 +84,30 @@ describe('ApifyScrapingAgent', () => {
     ]);
   });
 
+  it('ignores non-record Apify items during result normalization', async () => {
+    configureMockClient([
+      null,
+      'skip-me',
+      {
+        title: 'AI Ops Guide',
+        url: 'https://example.com/ai-ops',
+        description: 'Operational AI coverage',
+      },
+    ]);
+
+    const agent = await createAgent();
+    const result = await agent.googleSearch('AI ops', 3);
+
+    expect(result).toEqual([
+      {
+        title: 'AI Ops Guide',
+        url: 'https://example.com/ai-ops',
+        snippet: 'Operational AI coverage',
+        position: 1,
+      },
+    ]);
+  });
+
   it('maps LinkedIn lead results from Apify output', async () => {
     configureMockClient([
       {
@@ -193,7 +217,7 @@ describe('ApifyScrapingAgent', () => {
     const result = await agent.execute('Bármi', {
       capability: 'google',
       query: 'logistics startups 2026',
-      limit: 5,
+      limit: '5',
     });
 
     expect(result.status).toBe('success');

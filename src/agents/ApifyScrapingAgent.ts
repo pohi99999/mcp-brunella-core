@@ -55,6 +55,97 @@ export interface TrendResult {
  * Apify platformon futó "actor"-okat használ (Google, LinkedIn, Amazon, Twitter).
  * Ha nincs APIFY_API_TOKEN → graceful fallback warning.
  */
+type ApifyContext = Record<string, unknown>;
+
+type ApifyResultItem = Record<string, unknown>;
+
+type ApifyGoogleItem = ApifyResultItem & {
+  title?: unknown;
+  url?: unknown;
+  description?: unknown;
+  snippet?: unknown;
+};
+
+type ApifyLinkedInItem = ApifyResultItem & {
+  fullName?: unknown;
+  name?: unknown;
+  headline?: unknown;
+  title?: unknown;
+  company?: unknown;
+  url?: unknown;
+  location?: unknown;
+  email?: unknown;
+};
+
+type ApifyEcommerceItem = ApifyResultItem & {
+  title?: unknown;
+  name?: unknown;
+  price?: unknown;
+  url?: unknown;
+  thumbnailImage?: unknown;
+  image?: unknown;
+  stars?: unknown;
+  rating?: unknown;
+  reviews?: unknown;
+  reviewsCount?: unknown;
+};
+
+type ApifyTrendItem = ApifyResultItem & {
+  retweetCount?: unknown;
+  likeCount?: unknown;
+  sentiment?: unknown;
+  url?: unknown;
+  createdAt?: unknown;
+};
+
+type ApifyDatasetListResponse = {
+  items?: unknown;
+};
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null;
+}
+
+function readText(value: unknown): string | undefined {
+  return typeof value === 'string' && value.trim().length > 0 ? value.trim() : undefined;
+}
+
+function readNumber(value: unknown): number | undefined {
+  if (typeof value === 'number' && Number.isFinite(value)) {
+    return value;
+  }
+
+  if (typeof value === 'string') {
+    const parsed = Number(value);
+    return Number.isFinite(parsed) ? parsed : undefined;
+  }
+
+  return undefined;
+}
+
+function readResultItems(items: unknown): ApifyResultItem[] {
+  return Array.isArray(items) ? items.filter(isRecord) : [];
+}
+
+function normalizeContext(context?: Record<string, unknown>): ApifyContext {
+  return isRecord(context)
+    ? {
+        capability: context.capability,
+        query: context.query,
+        url: context.url,
+        limit: context.limit,
+      }
+    : {};
+}
+
+function normalizeArrayResult(result: unknown): unknown[] {
+  return Array.isArray(result) ? result : [];
+}
+
+function extractFirstUrl(text: string): string | undefined {
+  return text.match(/https?:\/\/[^\s]+/)?.[0];
+}
+
 export class ApifyScrapingAgent implements IAgent {
   name = 'ApifyScraping';
   role = 'Research & Intelligence — Deep Web Scraper';
@@ -87,7 +178,11 @@ export class ApifyScrapingAgent implements IAgent {
   /**
    * runActor - Apify actor futtatás polling-gal
    */
-  private async runActor(actorId: string, input: Record<string, unknown>, _timeoutMs = 60000): Promise<unknown[]> {
+  private async runActor<T extends ApifyResultItem = ApifyResultItem>(
+    actorId: string,
+    input: Record<string, unknown>,
+    _timeoutMs = 60000,
+  ): Promise<T[]> {
     if (!this.client || !this.isAvailable) {
       throw new Error('Apify kliens nem inicializált - APIFY_API_TOKEN hiányzik');
     }
@@ -97,10 +192,11 @@ export class ApifyScrapingAgent implements IAgent {
     const run = await this.client.actor(actorId).call(input);
     
     // Dataset items lekérése
-    const { items } = await this.client.dataset(run.defaultDatasetId).listItems();
-    
-    logInfo(this.name, `Actor befejezve: ${items.length} eredmény`);
-    return items;
+    const datasetResult: ApifyDatasetListResponse = await this.client.dataset(run.defaultDatasetId).listItems();
+    const safeItems = readResultItems(datasetResult.items);
+
+    logInfo(this.name, `Actor befejezve: ${safeItems.length} eredmény`);
+    return safeItems as T[];
   }
 
   /**
@@ -108,16 +204,16 @@ export class ApifyScrapingAgent implements IAgent {
    */
   async googleSearch(query: string, limit = 10): Promise<SearchResult[]> {
     try {
-      const items = await this.runActor('apify/google-search-scraper', {
+      const items = await this.runActor<ApifyGoogleItem>('apify/google-search-scraper', {
         queries: query,
         maxResultsPerPage: limit,
         languageCode: 'hu', // Magyar eredmények preferálása
       });
 
-      return items.map((item: any, index: number) => ({
-        title: item.title || '',
-        url: item.url || '',
-        snippet: item.description || item.snippet || '',
+      return items.map((item, index) => ({
+        title: readText(item.title) ?? '',
+        url: readText(item.url) ?? '',
+        snippet: readText(item.description) ?? readText(item.snippet) ?? '',
         position: index + 1,
       }));
     } catch (error) {
@@ -133,18 +229,18 @@ export class ApifyScrapingAgent implements IAgent {
     try {
       logWarn(this.name, 'LinkedIn scraping cookie-t igényel - lásd Apify dokumentáció');
       
-      const items = await this.runActor('apify/linkedin-profile-scraper', {
+      const items = await this.runActor<ApifyLinkedInItem>('apify/linkedin-profile-scraper', {
         startUrls: [{ url: searchUrl }],
         maxItems: limit,
       });
 
-      return items.map((item: any) => ({
-        name: item.fullName || item.name || 'Névtelen',
-        title: item.headline || item.title,
-        company: item.company,
-        url: item.url || searchUrl,
-        location: item.location,
-        email: item.email,
+      return items.map((item) => ({
+        name: readText(item.fullName) ?? readText(item.name) ?? 'Névtelen',
+        title: readText(item.headline) ?? readText(item.title),
+        company: readText(item.company),
+        url: readText(item.url) ?? searchUrl,
+        location: readText(item.location),
+        email: readText(item.email),
       }));
     } catch (error) {
       logError(this.name, `LinkedIn leads hiba: ${error instanceof Error ? error.message : String(error)}`);
@@ -157,19 +253,19 @@ export class ApifyScrapingAgent implements IAgent {
    */
   async ecommerceProducts(startUrl: string, limit = 20): Promise<ProductResult[]> {
     try {
-      const items = await this.runActor('apify/amazon-crawler', {
+      const items = await this.runActor<ApifyEcommerceItem>('apify/amazon-crawler', {
         startUrls: [{ url: startUrl }],
         maxItems: limit,
       });
 
-      return items.map((item: any) => ({
-        name: item.title || item.name || 'Névtelen termék',
-        price: item.price?.value?.toString() || item.price,
-        currency: item.price?.currency || 'USD',
-        url: item.url || startUrl,
-        imageUrl: item.thumbnailImage || item.image,
-        rating: item.stars || item.rating,
-        reviews: item.reviews || item.reviewsCount,
+      return items.map((item) => ({
+        name: readText(item.title) ?? readText(item.name) ?? 'Névtelen termék',
+        price: isRecord(item.price) ? readText(item.price.value) ?? String(item.price.value ?? '') : readText(item.price),
+        currency: isRecord(item.price) ? readText(item.price.currency) ?? 'USD' : 'USD',
+        url: readText(item.url) ?? startUrl,
+        imageUrl: readText(item.thumbnailImage) ?? readText(item.image),
+        rating: readNumber(item.stars) ?? readNumber(item.rating),
+        reviews: readNumber(item.reviews) ?? readNumber(item.reviewsCount),
       }));
     } catch (error) {
       logError(this.name, `E-commerce scrape hiba: ${error instanceof Error ? error.message : String(error)}`);
@@ -182,18 +278,18 @@ export class ApifyScrapingAgent implements IAgent {
    */
   async trendData(topic: string, source = 'twitter', limit = 50): Promise<TrendResult[]> {
     try {
-      const items = await this.runActor('apify/twitter-scraper', {
+      const items = await this.runActor<ApifyTrendItem>('apify/twitter-scraper', {
         searchTerms: [topic],
         maxItems: limit,
       });
 
-      return items.map((item: any) => ({
+      return items.map((item) => ({
         topic: topic,
         source: source,
-        volume: item.retweetCount || item.likeCount,
-        sentiment: item.sentiment,
-        url: item.url,
-        timestamp: item.createdAt,
+        volume: readNumber(item.retweetCount) ?? readNumber(item.likeCount),
+        sentiment: readText(item.sentiment),
+        url: readText(item.url),
+        timestamp: readText(item.createdAt),
       }));
     } catch (error) {
       logError(this.name, `Trend data hiba: ${error instanceof Error ? error.message : String(error)}`);
@@ -235,7 +331,8 @@ export class ApifyScrapingAgent implements IAgent {
       }
 
       // Capability auto-detect vagy explicit context
-      const capability = context?.capability as string | undefined;
+      const ctx = normalizeContext(context);
+      const capability = readText(ctx.capability);
       const taskLower = task.toLowerCase();
 
       let result: unknown;
@@ -243,48 +340,49 @@ export class ApifyScrapingAgent implements IAgent {
 
       // Google Search
       if (capability === 'google' || taskLower.includes('google') || taskLower.includes('keress')) {
-        const query = (context?.query as string) || task.replace(/google:?/i, '').trim();
-        const limit = (context?.limit as number) || 10;
+        const query = readText(ctx.query) ?? task.replace(/google:?/i, '').trim();
+        const limit = readNumber(ctx.limit) ?? 10;
         result = await this.googleSearch(query, limit);
         resultType = 'google_search';
       }
       // LinkedIn Leads
       else if (capability === 'linkedin' || taskLower.includes('linkedin') || taskLower.includes('lead')) {
-        const url = (context?.url as string) || task.match(/https?:\/\/[^\s]+/)?.[0] || '';
-        const limit = (context?.limit as number) || 10;
+        const url = readText(ctx.url) ?? extractFirstUrl(task) ?? '';
+        const limit = readNumber(ctx.limit) ?? 10;
         result = await this.linkedinLeads(url, limit);
         resultType = 'linkedin_leads';
       }
       // E-commerce
       else if (capability === 'ecommerce' || taskLower.includes('amazon') || taskLower.includes('termék')) {
-        const url = (context?.url as string) || task.match(/https?:\/\/[^\s]+/)?.[0] || '';
-        const limit = (context?.limit as number) || 20;
+        const url = readText(ctx.url) ?? extractFirstUrl(task) ?? '';
+        const limit = readNumber(ctx.limit) ?? 20;
         result = await this.ecommerceProducts(url, limit);
         resultType = 'ecommerce_products';
       }
       // Twitter Trends
       else if (capability === 'twitter' || taskLower.includes('twitter') || taskLower.includes('trend')) {
-        const topic = (context?.query as string) || task.replace(/twitter:?/i, '').trim();
-        const limit = (context?.limit as number) || 50;
+        const topic = readText(ctx.query) ?? task.replace(/twitter:?/i, '').trim();
+        const limit = readNumber(ctx.limit) ?? 50;
         result = await this.trendData(topic, 'twitter', limit);
         resultType = 'trend_data';
       }
       // Alapértelmezett: Google search
       else {
-        const query = (context?.query as string) || task;
-        const limit = (context?.limit as number) || 10;
+        const query = readText(ctx.query) ?? task;
+        const limit = readNumber(ctx.limit) ?? 10;
         result = await this.googleSearch(query, limit);
         resultType = 'google_search';
       }
 
-      logInfo(this.name, `Sikeres scraping: ${resultType}, ${(result as unknown[]).length} eredmény`);
+      const resultItems = normalizeArrayResult(result);
+      logInfo(this.name, `Sikeres scraping: ${resultType}, ${resultItems.length} eredmény`);
 
       return {
         status: 'success',
         data: result,
         metadata: {
           type: resultType,
-          count: (result as unknown[]).length,
+          count: resultItems.length,
         },
       };
 

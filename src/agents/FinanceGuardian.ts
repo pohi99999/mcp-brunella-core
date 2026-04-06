@@ -252,7 +252,24 @@ export class FinanceGuardian extends BaseAgent {
    * Handle exporting invoice to Google Sheets
    */
   private async handleSheetsExport(context: AgentContext): Promise<AgentResult> {
-    const invoiceData = (context.invoiceData || context.context) as any;
+    type SheetsExportInvoiceData = {
+      invoice_number: string;
+      vendor_name?: string;
+      amount?: number;
+      currency?: string;
+      invoice_date?: string;
+      date?: string;
+      due_date?: string;
+    };
+
+    const rawInvoiceData: unknown = context.invoiceData ?? context.context;
+    const invoiceData = (
+      rawInvoiceData &&
+      typeof rawInvoiceData === 'object' &&
+      'invoice_number' in rawInvoiceData
+        ? rawInvoiceData
+        : null
+    ) as SheetsExportInvoiceData | null;
     const spreadsheetId = (context.spreadsheetId as string) || process.env.INVOICE_SPREADSHEET_ID;
 
     if (!invoiceData || !invoiceData.invoice_number) {

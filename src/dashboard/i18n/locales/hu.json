@@ -40,8 +40,8 @@
     "management": "Ágens Jegyzék",
     "agent-diagnostics": "Ágens Diagnosztika",
     "decomposer": "Felbontás",
-    "tracks": "Fejlesztési Szálak",
-    "conductor-monitor": "Conductor Monitor",
+    "tracks": "Track generátor",
+    "conductor-monitor": "Trackek állapota",
     "incubator": "Inkubátor",
     "knowledge": "Neurális Tudás",
     "memory": "Ágens Memória",
@@ -93,7 +93,7 @@
       "enterprise": "Vállalati",
       "sales": "Értékesítési Központ",
       "orchestration": "Orkesztráció",
-      "project_mgmt": "Projekt Menedzsment",
+      "project_mgmt": "Projektmenedzsment",
       "system": "Rendszer"
     }
   },

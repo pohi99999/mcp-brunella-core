@@ -102,6 +102,7 @@ export class ScheduledTasksRunner {
     try {
       const db = getGlobalDb();
       const now = new Date().toISOString();
+      await this.ensureProjectMaintenanceTask(db, now);
       const metadata: WeeklyResearchTaskMetadata = {
         agentName: 'AIResearchWeekly',
         reportTitle: 'Heti AI Ökoszisztéma Figyelő',
@@ -172,6 +173,49 @@ export class ScheduledTasksRunner {
       logInfo('ScheduledTasksRunner', 'Weekly AI research task ensured.');
     } catch (error) {
       logError('ScheduledTasksRunner', `Failed to ensure weekly AI research task: ${error}`);
+    }
+  }
+
+  /**
+   * Ensure the project maintenance task exists.
+   */
+  private async ensureProjectMaintenanceTask(db: any, now: string) {
+    try {
+      db.prepare(`
+        INSERT INTO scheduled_tasks (
+          id,
+          title,
+          prompt,
+          cron_expression,
+          handler,
+          enabled,
+          metadata,
+          created_at,
+          updated_at
+        )
+        VALUES (?, ?, ?, ?, ?, 1, ?, ?, ?)
+        ON CONFLICT(id) DO UPDATE SET
+          title = excluded.title,
+          prompt = excluded.prompt,
+          cron_expression = excluded.cron_expression,
+          handler = excluded.handler,
+          enabled = excluded.enabled,
+          metadata = excluded.metadata,
+          updated_at = excluded.updated_at
+      `).run(
+        'daily-project-maintenance',
+        'Daily Project Maintenance & Hygiene',
+        'Run ProjectMaintainerAgent to audit tracks, clean root files, rotate logs, and check agent registry health.',
+        '0 22 * * *',
+        'agent',
+        JSON.stringify({ agentName: 'ProjectMaintainer' }),
+        now,
+        now,
+      );
+
+      logInfo('ScheduledTasksRunner', 'Project maintenance task ensured.');
+    } catch (error) {
+      logError('ScheduledTasksRunner', `Failed to ensure maintenance task: ${error}`);
     }
   }
 
@@ -285,6 +329,13 @@ export class ScheduledTasksRunner {
             title: 'Nightly Reflection & Continual Learning Cycle',
             prompt: 'Run ReflectionEngine.runNightlyCycle(): consolidate lessons from the past day, detect pain points, update SelfModel, and persist meta-insights to GraphRAG.',
             cron_expression: '0 2 * * *',
+            handler: 'agent'
+          },
+          {
+            id: 'daily-project-maintenance',
+            title: 'Daily Project Maintenance & Hygiene',
+            prompt: 'Run ProjectMaintainerAgent to audit tracks, clean root files, rotate logs, and check agent registry health.',
+            cron_expression: '0 22 * * *',
             handler: 'agent'
           }
         ];

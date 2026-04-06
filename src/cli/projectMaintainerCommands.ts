@@ -22,12 +22,14 @@ function writeLine(message = ''): void {
  * Calls the local Brunella API and returns JSON.
  * @param path - Full API path (e.g. '/api/v1/project-maintainer/reports/latest')
  * @param method - HTTP method
+ * @param body - Optional JSON body
  */
-async function apiFetch<T>(path: string, method: 'GET' | 'POST' = 'GET'): Promise<T> {
+async function apiFetch<T>(path: string, method: 'GET' | 'POST' = 'GET', body?: unknown): Promise<T> {
   const url = `${API_BASE}${path}`;
   const res = await fetch(url, {
     method,
     headers: { 'Content-Type': 'application/json' },
+    body: body ? JSON.stringify(body) : undefined,
   });
 
   if (!res.ok) {
@@ -180,19 +182,30 @@ export function registerProjectMaintainerCommands(program: Command): void {
    */
   maintainer
     .command('futtat')
-    .description('On-demand karbantartási scan futtatása (dry-run)')
-    .action(async () => {
-      const spinner = ora('Project Maintainer scan futtatása...').start();
+    .description('On-demand karbantartási scan futtatása')
+    .option('--live', 'Aktív karbantartás (fájlok archiválása)', false)
+    .action(async (options: { live: boolean }) => {
+      const spinner = ora(
+        options.live
+          ? chalk.yellow('Project Maintainer AKTÍV karbantartás futtatása...')
+          : 'Project Maintainer scan futtatása...',
+      ).start();
       try {
         const data = await apiFetch<RunResponse>(
           '/api/v1/project-maintainer/run',
           'POST',
+          { dryRun: !options.live },
         );
         spinner.stop();
         if (!data.success) {
           writeLine(chalk.red(`❌ A scan nem sikerült: ${data.message}`));
           process.exit(1);
         }
+
+        if (options.live) {
+          writeLine(chalk.green('✨ Karbantartás befejezve. Rizikós fájlok archiválva.'));
+        }
+
         printReport(data.report);
       } catch (e) {
         spinner.fail('A scan sikertelen');

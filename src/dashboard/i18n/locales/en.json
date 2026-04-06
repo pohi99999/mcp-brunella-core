@@ -40,8 +40,8 @@
     "management": "Agent Roster",
     "agent-diagnostics": "Agent Diagnostics",
     "decomposer": "Decompose",
-    "tracks": "Tracks",
-    "conductor-monitor": "Conductor Monitor",
+    "tracks": "Track Generator",
+    "conductor-monitor": "Track Monitor",
     "incubator": "Incubator",
     "knowledge": "Neural Knowledge",
     "memory": "Agent Memory",
@@ -93,7 +93,7 @@
       "enterprise": "Enterprise",
       "sales": "Revenue Center",
       "orchestration": "Orchestration",
-      "project_mgmt": "Project Mgmt",
+      "project_mgmt": "Project Management",
       "system": "System"
     }
   },

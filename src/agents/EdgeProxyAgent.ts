@@ -36,19 +36,67 @@ interface EdgeConfig {
 
 interface EdgeHealth {
   edge: 'healthy' | 'degraded' | 'offline';
-  tunnel: 'connected' | 'disconnected';
+  tunnel: 'connected' | 'disconnected' | 'unknown';
   latency: number;
   lastCheck: string;
 }
 
+type JsonRecord = Record<string, unknown>;
+
 interface EdgeTask {
   taskId: string;
   type: string;
-  status: 'pending' | 'dispatched' | 'completed' | 'failed';
-  payload: any;
-  result?: any;
+  status: string;
+  payload: JsonRecord;
+  result?: unknown;
   createdAt: string;
   completedAt?: string;
+}
+
+function isRecord(value: unknown): value is JsonRecord {
+  return typeof value === 'object' && value !== null;
+}
+
+function asString(value: unknown, fallback: string): string {
+  return typeof value === 'string' && value.length > 0 ? value : fallback;
+}
+
+function normalizeTunnelStatus(value: unknown): EdgeHealth['tunnel'] {
+  return value === 'connected' || value === 'disconnected' ? value : 'unknown';
+}
+
+function normalizeEdgeTask(value: unknown): EdgeTask | null {
+  if (!isRecord(value)) {
+    return null;
+  }
+
+  const taskId = asString(value.taskId ?? value.id, '');
+  if (!taskId) {
+    return null;
+  }
+
+  const status = asString(value.status, 'unknown');
+  const createdAt = asString(value.createdAt, new Date().toISOString());
+
+  return {
+    taskId,
+    type: asString(value.type, 'unknown'),
+    status,
+    payload: isRecord(value.payload) ? value.payload : {},
+    result: value.result,
+    createdAt,
+    completedAt: typeof value.completedAt === 'string' ? value.completedAt : undefined,
+  };
+}
+
+function normalizeEdgeTaskList(value: unknown): EdgeTask[] {
+  if (!isRecord(value) || !Array.isArray(value.tasks)) {
+    return [];
+  }
+
+  return value.tasks
+    .map((task) => normalizeEdgeTask(task))
+    .filter((task): task is EdgeTask => task !== null);
 }
 
 // ============================================================================
@@ -239,13 +287,13 @@ export class EdgeProxyAgent extends BaseAgent {
       const latency = Date.now() - startTime;
 
       if (response.ok) {
-        const data = await response.json() as any;
+        const data = await response.json() as unknown;
         this.health = {
           edge: 'healthy',
-          tunnel: data.tunnel || 'unknown',
+          tunnel: isRecord(data) ? normalizeTunnelStatus(data.tunnel) : 'unknown',
           latency,
           lastCheck: new Date().toISOString()
-       };
+        };
       } else {
         this.health.edge = 'degraded';
         this.health.latency = latency;
@@ -318,9 +366,10 @@ export class EdgeProxyAgent extends BaseAgent {
     }
 
     try {
-      const payload: any = {
+      const edgeContext = isRecord(context.context) ? { ...context.context } : {};
+      const payload: JsonRecord = {
         instruction: context.task,
-        context: context.context || {},
+        context: edgeContext,
         source: 'brunella-core',
         timestamp: new Date().toISOString()
       };
@@ -347,7 +396,10 @@ export class EdgeProxyAgent extends BaseAgent {
         throw new Error(`Edge error: ${response.status}`);
       }
 
-      const result = await response.json() as EdgeTask;
+      const result = normalizeEdgeTask(await response.json());
+      if (!result) {
+        throw new Error('Invalid edge task response');
+      }
 
       logInfo(this.name, `Task beküldve: ${result.taskId}`);
 
@@ -385,7 +437,7 @@ export class EdgeProxyAgent extends BaseAgent {
       });
 
       if (response.ok) {
-        return await response.json() as EdgeTask;
+        return normalizeEdgeTask(await response.json());
       }
 
       return null;
@@ -429,8 +481,7 @@ export class EdgeProxyAgent extends BaseAgent {
       });
 
       if (response.ok) {
-        const data = await response.json() as { tasks: any[] };
-        const tasks = data.tasks || [];
+        const tasks = normalizeEdgeTaskList(await response.json());
 
         const stmt = db.prepare(`
           INSERT INTO edge_tasks (task_id, type, status, payload, result, created_at, completed_at, synced_at)
@@ -442,10 +493,10 @@ export class EdgeProxyAgent extends BaseAgent {
             synced_at = datetime('now')
         `);
 
-        const insertMany = db.transaction((tasks: any[]) => {
+        const insertMany = db.transaction((tasks: EdgeTask[]) => {
           for (const task of tasks) {
             stmt.run(
-              task.taskId || task.id,
+              task.taskId,
               task.type || 'unknown',
               task.status,
               JSON.stringify(task.payload || {}),

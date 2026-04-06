@@ -6,6 +6,46 @@ User requested that the Copilot CLI automatically connect to a local Brunella MC
 
 ## History
 
+### 2026-04-06 - ReconciliationCommunicationAgent / ReconciliationExceptionAgent slice
+
+**Feladat:** A `src/agents/ReconciliationCommunicationAgent.ts` és `src/agents/ReconciliationExceptionAgent.ts` maradék `any` eltávolítása, a payload/entry guardolása és az eddigi fallbackek megtartása.
+
+**Érintett fájlok:** `src/agents/ReconciliationCommunicationAgent.ts`, `src/agents/ReconciliationExceptionAgent.ts`, `test/ReconciliationCommunicationAgent.test.ts`, `test/ReconciliationExceptionAgent.test.ts`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A communication agent most lokális record guardokkal és a régi fallback logikát megtartó read path-pal dolgozik; az exception agent az entry object ellenőrzésével adja vissza a korábbi failure/success válaszokat. A fókusz tesztek zöldek: `npx vitest run test/ReconciliationCommunicationAgent.test.ts test/ReconciliationExceptionAgent.test.ts`.
+
+### 2026-04-06 - Response formatter guard slice
+
+**Feladat:** A `src/utils/responseFormatter.ts` és `src/dashboard/lib/agentResponseFormatter.ts` maradék `any` eltávolítása, a formatterek lokális type guardokkal való megerősítése.
+
+**Érintett fájlok:** `src/utils/responseFormatter.ts`, `src/dashboard/lib/agentResponseFormatter.ts`, `test/responseFormatter.test.ts`, `test/dashboard/lib/agentResponseFormatter.test.ts`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A response formatter most `unknown`-safe helper-eket használ a Robotkéz, Developer és Researcher ágakhoz, a dashboard formatter pedig a health/success/delegated fallbackeket kezeli record guardokkal. Fókusz tesztek zöldek: `npx vitest run test/responseFormatter.test.ts` és `npx vitest run --config vitest.dashboard.config.ts test/dashboard/lib/agentResponseFormatter.test.ts`.
+
+### 2026-04-06 - ReconciliationIngestionAgent payload-guard slice
+
+**Feladat:** A `src/agents/ReconciliationIngestionAgent.ts` maradék `any` eltávolítása, a payload/data/format olvasás lokális guardolása, és a NAV XML / bank CSV normalizálás megtartása.
+
+**Érintett fájlok:** `src/agents/ReconciliationIngestionAgent.ts`, `test/ReconciliationIngestionAgent.test.ts`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A reconciliation-ingestion útvonal most explicit payload/result típusokra, lokális `isRecord`/payload guardra és safe string narrowingra támaszkodik; az 5-fókuszú Vitest zöld (`npx vitest run test/ReconciliationIngestionAgent.test.ts`). A repo build továbbra is különálló, meglévő core duplicate export hibák miatt áll el, nem ez a slice okozza.
+
+### 2026-04-06 - EvaluatorAgent type-safe ReAct slice
+
+**Feladat:** A `src/agents/EvaluatorAgent.ts` maradék `any` és unsafe catch kezeléseinek lezárása a dataset-growth, ReAct tool loop és hallucination checker útvonalakon, a viselkedés megtartásával.
+
+**Érintett fájlok:** `src/agents/EvaluatorAgent.ts`, `test/EvaluatorAgent.test.ts`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A ReAct loop most lokális typed message/tool aliaseson, `unknown`-safe JSON parsingon és normalizált shell/fs hibakezelésen megy át; a testfájl 5 fókuszált regressziós esetet fed le. A repo build jelenleg nem erre a slice-ra bukik, hanem már meglévő, különálló duplicate export / redeclare hibákra a core modulokban, de a célzott EvaluatorAgent Vitest zöld: `npx vitest run test/EvaluatorAgent.test.ts`.
+
 ### 2026-04-06 - Dashboard conductor monitor láthatósági javítás
 
 **Feladat:** Megvizsgáltam, miért nem érhető el a conductor track monitor a dashboard külön menüpontjaként, majd helyreállítottam a láthatóságát külön magyar menüponttal és regressziós teszttel.

@@ -1,6 +1,10 @@
 ---
 description: "Use this agent when you need end-to-end full-stack development following Brunella's highest standards.\n\nTrigger phrases include:\n- 'implement this feature end-to-end'\n- 'build this component from spec to tests'\n- 'develop a production-ready solution'\n- 'code this according to our standards'\n- 'create this following SOLID and TDD principles'\n- 'I need this feature done right, with full docs'\n\nExamples:\n- User says 'I need a new bookkeeping API endpoint with full test coverage and docs' → invoke this agent to design, code, test, and document end-to-end\n- User asks 'Build a React dashboard component that's accessible and fully tested' → invoke this agent to handle the complete SDLC from spec review to component documentation\n- After sketching requirements, user says 'Can you build this properly following our conventions?' → invoke this agent to implement with plan-first approach, type safety, error handling, and comprehensive testing\n- During sprint planning, user says 'I need this story completed end-to-end with zero shortcuts' → invoke this agent to deliver production-quality code with TDD, documentation, and status updates"
 name: bas-lead-developer
+sdlc_phase: coder
+sdlc_output: phases/3-coder.md
+sdlc_superpowers:
+   - superpowers:test-driven-development
 ---
 
 # bas-lead-developer instructions

@@ -1,1 +1,0 @@
-warning: in the working copy of 'data/event_fabric_history.jsonl', LF will be replaced by CRLF the next time Git touches it
