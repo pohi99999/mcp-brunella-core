@@ -148,6 +148,32 @@ describe('Response Formatter - Magyar nyelvű válaszok', () => {
       expect(formatted).toContain('3/3 lépés sikeres');
     });
 
+    it('should safely format Robotkéz responses with malformed step data', () => {
+      const result: AgentResult = {
+        success: true,
+        message: 'Google keresés végrehajtva',
+        data: {
+          plan: [
+            { description: 'Navigálás: google.com', status: 'completed' },
+            null,
+            { description: 42, status: 'error' }
+          ],
+          completedSteps: [
+            { status: 'completed' },
+            {},
+            'oops'
+          ]
+        }
+      };
+
+      const formatted = specialFormatters.robotkez(result, { useEmojis: true });
+
+      expect(formatted).toContain('1. ✅ Navigálás: google.com');
+      expect(formatted).toContain('2. ⏳ -');
+      expect(formatted).toContain('3. ❌ 42');
+      expect(formatted).toContain('1/3 lépés sikeres');
+    });
+
     it('should format Developer responses with file changes', () => {
       const result: AgentResult = {
         success: true,
@@ -165,6 +191,21 @@ describe('Response Formatter - Magyar nyelvű válaszok', () => {
       expect(formatted).toContain('Új feature implementálva');
       expect(formatted).toContain('**Módosított fájlok:** 5');
       expect(formatted).toContain('**Változtatások:** +250 / -80 sor');
+    });
+
+    it('should safely format Developer responses when data is not an object', () => {
+      const result: AgentResult = {
+        success: true,
+        message: 'Új feature implementálva',
+        data: 'unexpected payload'
+      };
+
+      const formatted = specialFormatters.developer(result, { useEmojis: true });
+
+      expect(formatted).toContain('👨‍💻 **Developer Agent - Kód írva**');
+      expect(formatted).toContain('Új feature implementálva');
+      expect(formatted).not.toContain('Módosított fájlok');
+      expect(formatted).not.toContain('Változtatások');
     });
 
     it('should format Researcher responses with sources', () => {
@@ -187,6 +228,29 @@ describe('Response Formatter - Magyar nyelvű válaszok', () => {
       expect(formatted).toContain('Források (3)');
       expect(formatted).toContain('1. GitHub Trending: AI Projects');
       expect(formatted).toContain('2. Hugging Face Models');
+    });
+
+    it('should safely format Researcher responses with mixed source shapes', () => {
+      const result: AgentResult = {
+        success: true,
+        message: 'Kutatás kész: AI trendek 2026',
+        data: {
+          sources: [
+            { title: 'GitHub Trending: AI Projects', url: 'https://github.com/trending' },
+            'https://huggingface.co',
+            { url: 'https://arxiv.org' },
+            42
+          ]
+        }
+      };
+
+      const formatted = specialFormatters.researcher(result, { useEmojis: true });
+
+      expect(formatted).toContain('Források (4)');
+      expect(formatted).toContain('1. GitHub Trending: AI Projects');
+      expect(formatted).toContain('2. https://huggingface.co');
+      expect(formatted).toContain('3. https://arxiv.org');
+      expect(formatted).toContain('4. 42');
     });
   });
 

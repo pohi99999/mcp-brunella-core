@@ -1,0 +1,386 @@
+- generic [ref=e4]:
+  - generic [ref=e6]:
+    - generic [ref=e7]:
+      - menu [ref=e14]:
+        - generic [ref=e15]:
+          - menuitem "Media" [ref=e16] [cursor=pointer]:
+            - generic [ref=e21]: Media
+          - menuitem "Templates" [ref=e23] [cursor=pointer]:
+            - generic [ref=e27]: Templates
+          - menuitem "Elements" [ref=e29] [cursor=pointer]:
+            - generic [ref=e34]: Elements
+          - menuitem "Audio" [active] [ref=e36] [cursor=pointer]:
+            - generic [ref=e40]: Audio
+          - menuitem "Text" [ref=e42] [cursor=pointer]:
+            - generic [ref=e46]: Text
+          - menuitem "Captions" [ref=e48] [cursor=pointer]:
+            - generic [ref=e53]: Captions
+          - menuitem "Transcript" [ref=e55] [cursor=pointer]:
+            - generic [ref=e59]: Transcript
+          - menuitem "Effects" [ref=e61] [cursor=pointer]:
+            - generic [ref=e65]: Effects
+          - menuitem "Transitions" [ref=e67] [cursor=pointer]:
+            - generic [ref=e71]: Transitions
+          - menuitem "Filters" [ref=e73] [cursor=pointer]:
+            - generic [ref=e77]: Filters
+          - menuitem "Brand kit" [ref=e79] [cursor=pointer]:
+            - generic [ref=e80]:
+              - generic [ref=e86]: Brand
+              - generic [ref=e87]: kit
+          - menuitem "Plugins" [ref=e90] [cursor=pointer]:
+            - generic [ref=e94]: Plugins
+      - button [ref=e101] [cursor=pointer]
+    - generic [ref=e105]:
+      - generic:
+        - generic:
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - generic: J
+                  - generic: József Péter Pohánka tára
+            - generic:
+              - generic:
+                - button "Upload":
+                  - generic: Upload
+          - alert:
+            - generic:
+              - generic:
+                - generic:
+                  - generic:
+                    - generic:
+                      - img
+                    - generic:
+                      - paragraph: Text to speech
+                      - paragraph: Turn any text into lifelike speech in seconds.
+                  - generic:
+                    - button "Try it":
+                      - generic: Try it
+          - generic:
+            - generic:
+              - generic:
+                - grid "grid":
+                  - generic:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic:
+                                  - generic:
+                                    - generic: "0"
+                                    - generic: "0"
+                                    - generic: ":"
+                                    - generic: "2"
+                                    - generic: "9"
+                          - generic: narration.mp3
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic: Added
+                              - generic:
+                                - generic:
+                                  - generic:
+                                    - generic: "0"
+                                    - generic: "0"
+                                    - generic: ":"
+                                    - generic: "1"
+                                    - generic: "0"
+                          - generic: Scene_08_Free_Designer.mp4
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic:
+                                  - generic:
+                                    - generic: "0"
+                                    - generic: "0"
+                                    - generic: ":"
+                                    - generic: "2"
+                                    - generic: "9"
+                          - generic: narration.mp3
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic: Added
+                              - generic:
+                                - generic:
+                                  - generic:
+                                    - generic: "0"
+                                    - generic: "0"
+                                    - generic: ":"
+                                    - generic: "1"
+                                    - generic: "0"
+                          - generic: Scene_05_Photo_Motion.mp4
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic: Added
+                              - generic:
+                                - generic:
+                                  - generic:
+                                    - generic: "0"
+                                    - generic: "0"
+                                    - generic: ":"
+                                    - generic: "1"
+                                    - generic: "0"
+                          - generic: Scene_07_Omnichannel.mp4
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic: Added
+                              - generic:
+                                - generic:
+                                  - generic:
+                                    - generic: "0"
+                                    - generic: "0"
+                                    - generic: ":"
+                                    - generic: "0"
+                                    - generic: "5"
+                          - generic: Scene_09_Closing.mp4
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic: Added
+                              - generic:
+                                - generic:
+                                  - generic:
+                                    - generic: "0"
+                                    - generic: "0"
+                                    - generic: ":"
+                                    - generic: "0"
+                                    - generic: "5"
+                          - generic: Scene_06_Customer_AI.mp4
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic: Added
+                              - generic:
+                                - generic:
+                                  - generic:
+                                    - generic: "0"
+                                    - generic: "0"
+                                    - generic: ":"
+                                    - generic: "1"
+                                    - generic: "0"
+                          - generic: Scene_04_Phygital.mp4
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic: Added
+                              - generic:
+                                - generic:
+                                  - generic:
+                                    - generic: "0"
+                                    - generic: "0"
+                                    - generic: ":"
+                                    - generic: "0"
+                                    - generic: "5"
+                          - generic: Scene_01_Opening.mp4
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic: Added
+                              - generic:
+                                - generic:
+                                  - generic:
+                                    - generic: "0"
+                                    - generic: "0"
+                                    - generic: ":"
+                                    - generic: "0"
+                                    - generic: "5"
+                          - generic: Scene_02_Designer.mp4
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic: Added
+                              - generic:
+                                - generic:
+                                  - generic:
+                                    - generic: "0"
+                                    - generic: "0"
+                                    - generic: ":"
+                                    - generic: "1"
+                                    - generic: "0"
+                          - generic: Scene_03_Social_AI.mp4
+      - generic [ref=e1778]:
+        - generic [ref=e1782]:
+          - tab "Music" [selected] [ref=e1783] [cursor=pointer]:
+            - generic [ref=e1784]: Music
+          - tab "Sound effects" [ref=e1785] [cursor=pointer]:
+            - generic [ref=e1786]: Sound effects
+        - tabpanel "Music" [ref=e1789]:
+          - generic [ref=e1792]:
+            - generic [ref=e1794]:
+              - textbox "Search music" [ref=e1803]
+              - generic [ref=e1813]:
+                - generic [ref=e1816] [cursor=pointer]: background music
+                - generic [ref=e1819] [cursor=pointer]: phonk
+                - generic [ref=e1821] [cursor=pointer]:
+                  - generic [ref=e1822]: Happy New Year
+                  - img [ref=e1823]
+                - generic [ref=e1828] [cursor=pointer]: tiktok
+                - generic [ref=e1831] [cursor=pointer]: happy
+                - generic [ref=e1834] [cursor=pointer]: hip hop
+                - generic [ref=e1837] [cursor=pointer]: love
+                - generic [ref=e1840] [cursor=pointer]: sad
+                - generic [ref=e1843] [cursor=pointer]: funny
+                - generic [ref=e1846] [cursor=pointer]: rap
+            - generic [ref=e1851]:
+              - generic [ref=e1853]:
+                - generic [ref=e1854]: Categories
+                - generic [ref=e1855] [cursor=pointer]: View all
+              - generic [ref=e1895]:
+                - generic [ref=e1896]: Recommended
+                - grid "grid" [ref=e1898]:
+                  - generic [ref=e1899]:
+                    - generic [ref=e1909]:
+                      - generic [ref=e1910]: Hope. City pop.(1145157)
+                      - generic [ref=e1911]: 02:11 · table_1
+                    - generic [ref=e1929]:
+                      - generic [ref=e1930]: PHONK!
+                      - generic [ref=e1931]: 01:00 · D254
+                    - generic [ref=e1949]:
+                      - generic [ref=e1950]: Hip Hop Background(814204)
+                      - generic [ref=e1951]: 01:25 · Pavel
+                    - generic [ref=e1969]:
+                      - generic [ref=e1970]: Lofi hiphop perfect for travel background music(996331)
+                      - generic [ref=e1971]: 03:22 · IWAI Noriko
+                    - generic [ref=e1989]:
+                      - generic [ref=e1990]: Best background music for corporate CM, company description videos, etc.
+                      - generic [ref=e1991]: 03:11 · harryfaoki
+                    - generic [ref=e2009]:
+                      - generic [ref=e2010]: Lofi / Chillout / Hiphop(930239)
+                      - generic [ref=e2011]: 02:34 · musabeats
+                    - generic [ref=e2029]:
+                      - generic [ref=e2030]: Calm background music with acoustic guitar and saxophone(1288148)
+                      - generic [ref=e2031]: 03:20 · ame
+                    - generic [ref=e2049]:
+                      - generic [ref=e2050]: chill beat
+                      - generic [ref=e2051]: 00:17 · Unknown
+                    - generic [ref=e2069]:
+                      - generic [ref=e2070]: Epic Music(863502)
+                      - generic [ref=e2071]: 02:13 · Draganov89
+                    - generic [ref=e2089]:
+                      - generic [ref=e2090]: Positive background music such as play and games(1251730)
+                      - generic [ref=e2091]: 03:04 · earbrojp
+                    - generic [ref=e2109]:
+                      - generic [ref=e2110]: A sad piano solo played at high notes - drama music(1509124)
+                      - generic [ref=e2111]: 00:42 · Tsukasa
+                    - generic [ref=e2129]:
+                      - generic [ref=e2130]: vlog, chill out, calm daily life(1370843)
+                      - generic [ref=e2131]: 03:35 · SUNNY HOOD STUDIO
+                    - generic [ref=e2149]:
+                      - generic [ref=e2150]: Countless
+                      - generic [ref=e2151]: 01:15 · BCD Studio
+                    - generic [ref=e2169]:
+                      - generic [ref=e2170]: Funny video "Carmen Prelude" Arranging weakness(836530)
+                      - generic [ref=e2171]: 02:26 · yo suzuki(akisai)
+                    - generic [ref=e2189]:
+                      - generic [ref=e2190]: TikTok All-Star (V2)
+                      - generic [ref=e2191]: 01:00 · BCD Studio
+                    - generic [ref=e2209]:
+                      - generic [ref=e2210]: soft background music with piano string bells(1283463)
+                      - generic [ref=e2211]: 01:24 · earbrojp
+  - generic [ref=e386]:
+    - generic [ref=e387]:
+      - generic [ref=e398]:
+        - generic [ref=e399]: "202604060223"
+        - textbox [ref=e401]: "202604060223"
+        - generic [ref=e403]: "202604060223"
+      - generic [ref=e427] [cursor=pointer]: 100%
+      - button "Export" [ref=e683] [cursor=pointer]: Export
+      - generic:
+        - generic:
+          - generic:
+            - generic:
+              - generic:
+                - generic: "202604060223"
+                - generic:
+                  - textbox: "202604060223"
+                - generic:
+                  - generic: "202604060223"
+        - generic:
+          - generic:
+            - generic:
+              - generic:
+                - generic: 100%
+        - generic:
+          - generic:
+            - generic:
+              - button "Export": Export
+    - generic [ref=e490]:
+      - generic [ref=e491]:
+        - generic [ref=e494]:
+          - main [ref=e513]:
+            - generic [ref=e688]:
+              - img
+              - generic [ref=e1675]:
+                - button "Choose File" [ref=e1680] [cursor=pointer]
+                - separator [ref=e1695]
+          - generic [ref=e1719] [cursor=pointer]: Ratio
+        - generic [ref=e526]:
+          - generic [ref=e529]:
+            - generic [ref=e530]:
+              - generic [ref=e1720]:
+                - button [disabled]
+              - button [ref=e1721] [cursor=pointer]
+              - button [ref=e1724] [cursor=pointer]
+              - button [ref=e1727] [cursor=pointer]
+              - button [ref=e1731] [cursor=pointer]
+              - generic [ref=e1734]:
+                - button [disabled]
+              - button [ref=e1735] [cursor=pointer]
+              - button [ref=e1738] [cursor=pointer]
+              - button [ref=e1741] [cursor=pointer]
+            - generic [ref=e538]:
+              - generic [ref=e539]: 00:00:00
+              - generic [ref=e541]: 01:10:17
+            - generic [ref=e542]:
+              - button [ref=e1747] [cursor=pointer]
+              - button [ref=e1750] [cursor=pointer]
+              - button [ref=e1754] [cursor=pointer]
+              - button [ref=e554] [cursor=pointer]
+              - button [ref=e560] [cursor=pointer]
+              - separator [ref=e563]
+              - button [ref=e1758] [cursor=pointer]
+              - button [ref=e1761] [cursor=pointer]
+          - generic [ref=e572]:
+            - button [ref=e780] [cursor=pointer]
+            - img [ref=e786]
+      - generic [ref=e587]:
+        - paragraph [ref=e797] [cursor=pointer]: Basic
+        - paragraph [ref=e803] [cursor=pointer]: Background
+        - paragraph [ref=e809] [cursor=pointer]: Smart tools
+        - paragraph [ref=e816] [cursor=pointer]: Animation
+        - paragraph [ref=e822] [cursor=pointer]: Speed

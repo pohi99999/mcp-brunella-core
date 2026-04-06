@@ -1,0 +1,93 @@
+- generic [ref=e2]:
+  - generic [ref=e4]:
+    - generic [ref=e7]:
+      - menu [ref=e14]:
+        - generic [ref=e15]:
+          - menuitem "Media" [ref=e16] [cursor=pointer]:
+            - generic [ref=e21]: Media
+          - menuitem "Templates" [ref=e23] [cursor=pointer]:
+            - generic [ref=e27]: Templates
+          - menuitem "Elements" [ref=e29] [cursor=pointer]:
+            - generic [ref=e34]: Elements
+          - menuitem "Audio" [ref=e36] [cursor=pointer]:
+            - generic [ref=e40]: Audio
+          - menuitem "Text" [ref=e42] [cursor=pointer]:
+            - generic [ref=e46]: Text
+          - menuitem "Captions" [ref=e48] [cursor=pointer]:
+            - generic [ref=e53]: Captions
+          - menuitem "Transcript" [ref=e55] [cursor=pointer]:
+            - generic [ref=e59]: Transcript
+          - menuitem "Effects" [ref=e61] [cursor=pointer]:
+            - generic [ref=e65]: Effects
+          - menuitem "Transitions" [ref=e67] [cursor=pointer]:
+            - generic [ref=e71]: Transitions
+          - menuitem "Filters" [ref=e73] [cursor=pointer]:
+            - generic [ref=e77]: Filters
+          - menuitem "Brand Kit" [ref=e79] [cursor=pointer]:
+            - generic [ref=e86]: Brand Kit
+      - button [ref=e90] [cursor=pointer]
+    - generic [ref=e169]:
+      - main [ref=e173]:
+        - img [ref=e177]
+      - generic [ref=e184]:
+        - img "loading" [ref=e187]
+        - generic [ref=e188]: Loading...
+  - generic [ref=e193]:
+    - generic [ref=e196]:
+      - menu [ref=e203]:
+        - generic [ref=e204]:
+          - menuitem "Media" [ref=e205] [cursor=pointer]:
+            - generic [ref=e210]: Media
+          - menuitem "Templates" [ref=e212] [cursor=pointer]:
+            - generic [ref=e216]: Templates
+          - menuitem "Elements" [ref=e218] [cursor=pointer]:
+            - generic [ref=e223]: Elements
+          - menuitem "Audio" [ref=e225] [cursor=pointer]:
+            - generic [ref=e229]: Audio
+          - menuitem "Text" [ref=e231] [cursor=pointer]:
+            - generic [ref=e235]: Text
+          - menuitem "Captions" [ref=e237] [cursor=pointer]:
+            - generic [ref=e242]: Captions
+          - menuitem "Transcript" [ref=e244] [cursor=pointer]:
+            - generic [ref=e248]: Transcript
+          - menuitem "Effects" [ref=e250] [cursor=pointer]:
+            - generic [ref=e254]: Effects
+          - menuitem "Transitions" [ref=e256] [cursor=pointer]:
+            - generic [ref=e260]: Transitions
+          - menuitem "Filters" [ref=e262] [cursor=pointer]:
+            - generic [ref=e266]: Filters
+          - menuitem "Brand Kit" [ref=e268] [cursor=pointer]:
+            - generic [ref=e275]: Brand Kit
+      - button [ref=e279] [cursor=pointer]
+    - generic [ref=e355]:
+      - generic [ref=e356]:
+        - generic [ref=e381]: 100%
+        - button "Export" [ref=e401]: Export
+        - generic:
+          - generic:
+            - generic:
+              - generic:
+                - generic: 100%
+          - generic:
+            - generic:
+              - button "Export": Export
+      - generic [ref=e430]:
+        - generic [ref=e432]:
+          - generic [ref=e433]:
+            - main [ref=e434]:
+              - generic [ref=e438]:
+                - img
+            - generic [ref=e447]: Ratio
+          - img "loading" [ref=e451]
+        - generic [ref=e454]:
+          - generic [ref=e464]:
+            - generic [ref=e465]: 00:00:00
+            - generic [ref=e467]: 03:46:00
+          - generic [ref=e472]:
+            - generic [ref=e474]:
+              - button [ref=e476] [cursor=pointer]
+              - button [ref=e480] [cursor=pointer]
+              - button [ref=e484] [cursor=pointer]
+              - button [ref=e488] [cursor=pointer]
+              - button [ref=e492] [cursor=pointer]
+            - img [ref=e504]

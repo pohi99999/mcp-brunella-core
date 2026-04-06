@@ -7,6 +7,9 @@ import { phoenixEventBus } from "../core/phoenixEventBus.js";
 import { socketService } from "../server/SocketService.js";
 import { AgentStateMachine, type StateNode, type Transition } from '../core/agentStateMachine.js';
 import { clearCheckpoints } from '../core/checkpoint.js';
+import { guardAgentResponseOutput } from '../core/outputGuard.js';
+import { ReActExecutor, type ReActAction, type ReActObservation } from '../core/reactLoop.js';
+import { classifyToolError, formatToolObservation } from '../core/toolErrorClassifier.js';
 
 // Magyar gyors-válasz táblázat a keyword routing ághoz
 const QUICK_REPLIES: Record<string, string> = {
@@ -241,6 +244,8 @@ type OrchestratorMessage =
   | OrchestratorAssistantMessage
   | { role: 'tool'; content: string; tool_call_id: string; name: string };
 
+type OrchestratorRuntimeAction = ReActAction & { toolCallId: string };
+
 export class OrchestratorAgent implements IAgent {
   name = "Orchestrator";
   role = "Planner & Dispatcher";
@@ -442,7 +447,7 @@ export class OrchestratorAgent implements IAgent {
         await machine.transition('agentSelected');    // ROUTING → EXECUTING
         const studioTaskId = await agentManager.queueTask(task, 'developer', context);
         await machine.transition('executionComplete'); // EXECUTING → DONE
-        return { status: 'success', message: 'Studio feladat kiosztva a Fejlesztő ügynöknek.', taskId: studioTaskId };
+        return guardAgentResponseOutput({ status: 'success', message: 'Studio feladat kiosztva a Fejlesztő ügynöknek.', taskId: studioTaskId } as AgentResponse, this.name);
       }
 
       // === FAST PATH: keyword pre-routing (no LLM needed) ===
@@ -460,13 +465,13 @@ export class OrchestratorAgent implements IAgent {
         const quickReply = QUICK_REPLIES[kwMatch.agent] || `Delegálom a feladatot a(z) ${kwMatch.agent} ügynöknek.`;
         socketService.broadcastChatter('Brunella', quickReply, 'user');
         await machine.transition('executionComplete'); // EXECUTING → DONE
-        return {
+        return guardAgentResponseOutput({
           success: true,
           status: 'success',
           message: quickReply,
           taskIds: [id],
           routing: 'keyword',
-        };
+        } as AgentResponse, this.name);
       }
 
       // === REACT PATH: LLM-based Tool Calling Loop ===
@@ -521,93 +526,197 @@ ${agents}
       let finalMessage = 'A feladatot feldolgoztam.';
       const taskIds: number[] = [];
 
-      for (let i = 0; i < MAX_ITERATIONS; i++) {
-        this.logger.info(`ReAct iteráció ${i + 1}/${MAX_ITERATIONS}`);
+      const reactExecutor = new ReActExecutor(MAX_ITERATIONS);
+      const reactResult = await reactExecutor.execute({
+        reason: async (_scratchpad, cycle) => {
+          this.logger.info(`ReAct iteráció ${cycle}/${MAX_ITERATIONS}`);
 
-        const response = await gateway.generate({
-          prompt: task,
-          taskType: 'general',
-          model: 'gpt-4.1',
-          tools: ORCHESTRATOR_TOOLS,
-          messages,
-          userId: context?.userId as string | undefined,
-        });
+          const response = await gateway.generate({
+            prompt: task,
+            taskType: 'general',
+            model: 'gpt-4.1',
+            tools: ORCHESTRATOR_TOOLS,
+            messages,
+            userId: context?.userId as string | undefined,
+          });
 
-        if (!response.success) {
-          this.logger.error(`LLM Gateway hiba: ${response.error}`);
-          try {
-            await machine.transition('errorOccurred');
-          } catch (error: unknown) {
-            const err = ensureError(error);
-            logDebug('OrchestratorAgent', `Ignoring invalid transition after LLM failure: ${err.message}`);
+          if (!response.success) {
+            throw new Error(response.error ?? 'Hiba az LLM kommunikációban.');
           }
-          return { status: 'error', error: 'Hiba az LLM kommunikációban.' };
-        }
 
-        const replyContent = response.content || '';
-        const toolCalls = response.toolCalls;
+          const { content = '', toolCalls } = response;
+          const assistantMessage: OrchestratorAssistantMessage = { role: 'assistant', content };
+          if (toolCalls && toolCalls.length > 0) {
+            assistantMessage.tool_calls = toolCalls;
+          }
+          messages.push(assistantMessage);
 
-        const assistantMessage: OrchestratorAssistantMessage = { role: 'assistant', content: replyContent };
-        if (toolCalls && toolCalls.length > 0) {
-          assistantMessage.tool_calls = toolCalls;
-        }
-        messages.push(assistantMessage);
+          if (!toolCalls || toolCalls.length === 0) {
+            return {
+              thought: content || 'Közvetlen válasz elkészült.',
+              done: true,
+              finalMessage: content,
+            };
+          }
 
-        if (replyContent && !toolCalls) {
-          finalMessage = replyContent;
-          socketService.broadcastChatter('Brunella', finalMessage, 'user');
-          break;
-        }
+          const actions: OrchestratorRuntimeAction[] = toolCalls.map((toolCall) => {
+            let parsedArguments: Record<string, unknown> = {};
+            try {
+              const rawParsed: unknown = JSON.parse(toolCall.function.arguments);
+              if (typeof rawParsed === 'object' && rawParsed !== null) {
+                parsedArguments = rawParsed as Record<string, unknown>;
+              }
+            } catch (error: unknown) {
+              const descriptor = classifyToolError({ status: 400, message: `Invalid tool arguments for ${toolCall.function.name}: ${error instanceof Error ? error.message : String(error)}` });
+              return {
+                name: toolCall.function.name,
+                params: {
+                  __parseError: descriptor.message,
+                },
+                toolCallId: toolCall.id,
+              };
+            }
 
-        if (toolCalls && toolCalls.length > 0) {
-          for (const toolCall of toolCalls) {
-            const name = toolCall.function.name;
-            const args = JSON.parse(toolCall.function.arguments);
+            return {
+              name: toolCall.function.name,
+              params: parsedArguments,
+              toolCallId: toolCall.id,
+            };
+          });
+
+          return {
+            thought: content || `Tool-hívások szükségesek (${actions.length})`,
+            actions,
+          };
+        },
+        act: async (action): Promise<ReActObservation> => {
+          const runtimeAction = action as OrchestratorRuntimeAction;
+          const params = runtimeAction.params ?? {};
+          const name = runtimeAction.name;
+
+          if (typeof params.__parseError === 'string') {
+            const descriptor = classifyToolError({ status: 400, message: params.__parseError });
+            const observation = formatToolObservation(descriptor);
+            messages.push({
+              role: 'tool',
+              tool_call_id: runtimeAction.toolCallId,
+              name,
+              content: observation,
+            });
+            return {
+              success: false,
+              summary: observation,
+              error: descriptor,
+              planRevision: descriptor.planRevision,
+            };
+          }
+
+          this.logger.info(`Tool meghívva: ${name} paraméterekkel: ${JSON.stringify(params)}`);
+
+          try {
             let toolResult = '';
 
-            this.logger.info(`Tool meghívva: ${name} paraméterekkel: ${JSON.stringify(args)}`);
-
-            try {
-              if (name === 'delegate_task') {
-                const id = await agentManager.queueTask(args.instruction, args.agent_name, context ?? undefined);
-                taskIds.push(id);
-                toolResult = `Feladat sikeresen delegálva. Task ID: ${id}`;
-              } else if (name === 'get_agent_status') {
-                const statuses = agentManager.listAgentStatuses();
-                const status = statuses.find(s => s.name.toLowerCase() === args.agent_name.toLowerCase());
-                toolResult = status ? JSON.stringify(status) : `Ügynök nem található: ${args.agent_name}`;
-              } else if (name === 'send_message_to_user') {
-                socketService.broadcastChatter('Brunella', args.message, 'user');
-                toolResult = 'Üzenet sikeresen elküldve.';
-              } else {
-                toolResult = `Ismeretlen eszköz: ${name}`;
-              }
-            } catch (toolErr: unknown) {
-              const errMsg = toolErr instanceof Error ? toolErr.message : String(toolErr);
-              this.logger.error(`Tool error (${name}): ${errMsg}`);
-              toolResult = `Hiba az eszköz futtatása közben: ${errMsg}`;
+            if (name === 'delegate_task') {
+              const id = await agentManager.queueTask(
+                String(params.instruction ?? ''),
+                String(params.agent_name ?? ''),
+                context ?? undefined,
+              );
+              taskIds.push(id);
+              toolResult = `Feladat sikeresen delegálva. Task ID: ${id}`;
+            } else if (name === 'get_agent_status') {
+              const statuses = agentManager.listAgentStatuses();
+              const agentName = String(params.agent_name ?? '').toLowerCase();
+              const status = statuses.find((item) => item.name.toLowerCase() === agentName);
+              toolResult = status ? JSON.stringify(status) : `Ügynök nem található: ${params.agent_name}`;
+            } else if (name === 'send_message_to_user') {
+              socketService.broadcastChatter('Brunella', String(params.message ?? ''), 'user');
+              toolResult = 'Üzenet sikeresen elküldve.';
+            } else {
+              const descriptor = classifyToolError({ status: 404, message: `Ismeretlen eszköz: ${name}` });
+              const observation = formatToolObservation(descriptor);
+              messages.push({
+                role: 'tool',
+                tool_call_id: runtimeAction.toolCallId,
+                name,
+                content: observation,
+              });
+              return {
+                success: false,
+                summary: observation,
+                error: descriptor,
+                planRevision: descriptor.planRevision,
+              };
             }
 
             messages.push({
               role: 'tool',
-              tool_call_id: toolCall.id,
-              name: name,
-              content: toolResult
+              tool_call_id: runtimeAction.toolCallId,
+              name,
+              content: toolResult,
             });
+
+            return {
+              success: true,
+              summary: toolResult,
+              payload: { tool: name, params },
+            };
+          } catch (toolErr: unknown) {
+            const descriptor = classifyToolError(toolErr);
+            const observation = formatToolObservation(descriptor);
+            this.logger.error(`Tool error (${name}): ${observation}`);
+
+            messages.push({
+              role: 'tool',
+              tool_call_id: runtimeAction.toolCallId,
+              name,
+              content: observation,
+            });
+
+            return {
+              success: false,
+              summary: observation,
+              error: descriptor,
+              planRevision: descriptor.planRevision,
+            };
           }
-        } else {
-          break;
+        },
+      });
+
+      if (!reactResult.success) {
+        try {
+          await machine.transition('errorOccurred');
+        } catch (error: unknown) {
+          const err = ensureError(error);
+          logDebug('OrchestratorAgent', `Ignoring invalid transition after ReAct failure: ${err.message}`);
         }
+        return guardAgentResponseOutput({
+          status: 'error',
+          error: reactResult.finalMessage ?? 'A ReAct végrehajtás nem tudta sikeresen lezárni a feladatot.',
+          data: {
+            reactScratchpad: reactResult.scratchpad,
+            terminatedReason: reactResult.terminatedReason,
+          },
+        } as AgentResponse, this.name);
+      }
+
+      if (reactResult.finalMessage) {
+        finalMessage = reactResult.finalMessage;
+        socketService.broadcastChatter('Brunella', finalMessage, 'user');
       }
 
       await machine.transition('executionComplete'); // EXECUTING → DONE
-      return {
+      return guardAgentResponseOutput({
         success: true,
         status: 'success',
         message: finalMessage,
         taskIds,
         steps: taskIds,
-      };
+        data: {
+          reactScratchpad: reactResult.scratchpad,
+          terminatedReason: reactResult.terminatedReason,
+        },
+      } as AgentResponse, this.name);
 
     } catch (e: unknown) {
       const msg = e instanceof Error ? e.message : String(e);
@@ -619,7 +728,7 @@ ${agents}
         const err = ensureError(error);
         logDebug('OrchestratorAgent', `Ignoring invalid error transition: ${err.message}`);
       }
-      return { status: 'error', error: msg };
+      return guardAgentResponseOutput({ status: 'error', error: msg } as AgentResponse, this.name);
     } finally {
       setAgentStatus('OrchestratorAgent', 'idle');
       this.currentMachine = null;

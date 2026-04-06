@@ -1,19 +1,14 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-04-05T22:00:00.323Z
+**Utolso frissites:** 2026-04-06T20:39:50.169Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 207 total | 10 active | 15 completed | 176 archived
+**Stats:** 210 total | 11 active | 17 completed | 176 archived
 
 ---
 
 ## Tervezett Szalak (Proposed) (6)
-
-- [ ] **Brunella Identity + Project Maintainer** [HIGH]
-  - **ID:** `brunella_identity_project_maintainer_20260402`
-  - **Progress:** 0%
-  - Mappa: ./tracks/brunella_identity_project_maintainer_20260402/
 
 - [ ] **KKV HR leave approvals** [HIGH]
   - **ID:** `kkv_hr_leave_approvals_20260405`
@@ -42,9 +37,19 @@
   - **Progress:** 0%
   - Mappa: ./tracks/remote_layer_phase9_emergent_superintelligence_20260322/
 
+- [ ] **Type Safety Follow-up — Browser and Wrangler helpers** [MEDIUM]
+  - **ID:** `type_safety_followup_browser_wrangler_20260406`
+  - **Progress:** 0%
+  - Mappa: ./tracks/type_safety_followup_browser_wrangler_20260406/
+
 ---
 
-## Aktiv Szalak (Active) (10)
+## Aktiv Szalak (Active) (11)
+
+- [ ] **Copilot CLI Self-Improvement Loop — Gödel-Agent Integration** [HIGH]
+  - **ID:** `copilot_self_improvement_loop_20260406`
+  - **Progress:** 0%
+  - Mappa: ./tracks/copilot_self_improvement_loop_20260406/
 
 - [ ] **KKV CRM es lead-utanakovetes automatizalas** [HIGH]
   - **ID:** `kkv_crm_automation_20260404`
@@ -112,7 +117,7 @@
 
 ---
 
-## Befejezett (Completed - Not Archived) (15)
+## Befejezett (Completed - Not Archived) (17)
 
 - [x] **AutoGen GitHub Models pilot a Python MCP alrendszerben**
   - **ID:** `autogen_github_models_pilot_20260401`
@@ -121,6 +126,14 @@
 - [x] **Brunella Federation — Phase 5 Execute Hardening**
   - **ID:** `brunella_federation_phase5_20260402`
   - Mappa: ./tracks/brunella_federation_phase5_20260402/
+
+- [x] **Brunella Identity + Project Maintainer**
+  - **ID:** `brunella_identity_project_maintainer_20260402`
+  - Mappa: ./tracks/brunella_identity_project_maintainer_20260402/
+
+- [x] **Dashboard conductor monitor láthatósági javítás**
+  - **ID:** `dashboard_conductor_monitor_visibility_20260406`
+  - Mappa: ./tracks/dashboard_conductor_monitor_visibility_20260406/
 
 - [x] **KKV CRM ingest alapok**
   - **ID:** `kkv_crm_ingest_foundation_20260405`

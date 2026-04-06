@@ -1,0 +1,1166 @@
+- generic [ref=e1]:
+  - alert [ref=e586]:
+    - generic [ref=e588]:
+      - text: Projects will not be saved permanently when you aren’t signed in. To avoid losing your projects, sign into your account.
+      - generic [ref=e589] [cursor=pointer]: Sign in
+    - button [ref=e590] [cursor=pointer]:
+      - img [ref=e591]
+  - generic [ref=e206]:
+    - generic [ref=e208]:
+      - generic [ref=e593]:
+        - menu [ref=e600]:
+          - generic [ref=e601]:
+            - menuitem "Media" [ref=e602] [cursor=pointer]:
+              - generic [ref=e607]: Media
+            - menuitem "Templates" [ref=e609] [cursor=pointer]:
+              - generic [ref=e613]: Templates
+            - menuitem "Elements" [ref=e615] [cursor=pointer]:
+              - generic [ref=e621]: Elements
+            - menuitem "Audio" [ref=e623] [cursor=pointer]:
+              - generic [ref=e627]: Audio
+            - menuitem "Text" [ref=e629] [cursor=pointer]:
+              - generic [ref=e633]: Text
+            - menuitem "Captions" [ref=e635] [cursor=pointer]:
+              - generic [ref=e640]: Captions
+            - menuitem "Transcript" [ref=e642] [cursor=pointer]:
+              - generic [ref=e646]: Transcript
+            - menuitem "Effects" [ref=e648] [cursor=pointer]:
+              - generic [ref=e652]: Effects
+            - menuitem "Transitions" [ref=e654] [cursor=pointer]:
+              - generic [ref=e658]: Transitions
+            - menuitem "Filters" [ref=e660] [cursor=pointer]:
+              - generic [ref=e664]: Filters
+            - menuitem "Brand kit" [ref=e666] [cursor=pointer]:
+              - generic [ref=e667]:
+                - generic [ref=e673]: Brand
+                - generic [ref=e674]: kit
+            - menuitem "Plugins" [ref=e677] [cursor=pointer]:
+              - generic [ref=e681]: Plugins
+        - button [ref=e688] [cursor=pointer]
+      - generic [ref=e692]:
+        - generic:
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - generic:
+                    - generic: Sign in to upload items
+              - generic:
+                - generic:
+                  - button "Upload":
+                    - generic: Upload
+            - alert:
+              - generic:
+                - generic:
+                  - generic:
+                    - generic:
+                      - generic:
+                        - img
+                      - generic:
+                        - paragraph: Pippit AI
+                        - paragraph: Create stunning marketing content in a few clicks
+                    - generic:
+                      - button "Try it":
+                        - generic: Try it
+            - generic:
+              - generic:
+                - generic:
+                  - grid "grid":
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic:
+                                  - generic: Added
+                                - generic:
+                                  - generic:
+                                    - generic:
+                                      - generic: "0"
+                                      - generic: "0"
+                                      - generic: ":"
+                                      - generic: "2"
+                                      - generic: "9"
+                            - generic: narration.mp3
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic:
+                                  - generic: Added
+                                - generic:
+                                  - generic:
+                                    - generic:
+                                      - generic: "0"
+                                      - generic: "0"
+                                      - generic: ":"
+                                      - generic: "0"
+                                      - generic: "5"
+                            - generic: Scene_09_Closing.mp4
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic:
+                                  - generic: Added
+                                - generic:
+                                  - generic:
+                                    - generic:
+                                      - generic: "0"
+                                      - generic: "0"
+                                      - generic: ":"
+                                      - generic: "1"
+                                      - generic: "0"
+                            - generic: Scene_08_Free_Designer.mp4
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic:
+                                  - generic: Added
+                                - generic:
+                                  - generic:
+                                    - generic:
+                                      - generic: "0"
+                                      - generic: "0"
+                                      - generic: ":"
+                                      - generic: "1"
+                                      - generic: "0"
+                            - generic: Scene_07_Omnichannel.mp4
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic:
+                                  - generic: Added
+                                - generic:
+                                  - generic:
+                                    - generic:
+                                      - generic: "0"
+                                      - generic: "0"
+                                      - generic: ":"
+                                      - generic: "0"
+                                      - generic: "5"
+                            - generic: Scene_06_Customer_AI.mp4
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic:
+                                  - generic: Added
+                                - generic:
+                                  - generic:
+                                    - generic:
+                                      - generic: "0"
+                                      - generic: "0"
+                                      - generic: ":"
+                                      - generic: "1"
+                                      - generic: "0"
+                            - generic: Scene_05_Photo_Motion.mp4
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic:
+                                  - generic: Added
+                                - generic:
+                                  - generic:
+                                    - generic:
+                                      - generic: "0"
+                                      - generic: "0"
+                                      - generic: ":"
+                                      - generic: "1"
+                                      - generic: "0"
+                            - generic: Scene_04_Phygital.mp4
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic:
+                                  - generic: Added
+                                - generic:
+                                  - generic:
+                                    - generic:
+                                      - generic: "0"
+                                      - generic: "0"
+                                      - generic: ":"
+                                      - generic: "1"
+                                      - generic: "0"
+                            - generic: Scene_03_Social_AI.mp4
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic:
+                                  - generic: Added
+                                - generic:
+                                  - generic:
+                                    - generic:
+                                      - generic: "0"
+                                      - generic: "0"
+                                      - generic: ":"
+                                      - generic: "0"
+                                      - generic: "5"
+                            - generic: Scene_02_Designer.mp4
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic:
+                                  - generic: Added
+                                - generic:
+                                  - generic:
+                                    - generic:
+                                      - generic: "0"
+                                      - generic: "0"
+                                      - generic: ":"
+                                      - generic: "0"
+                                      - generic: "5"
+                            - generic: Scene_01_Opening.mp4
+        - generic [ref=e1810]:
+          - generic [ref=e1814]:
+            - tab "Text templates" [selected] [ref=e1815] [cursor=pointer]:
+              - generic [ref=e1816]: Text templates
+            - tab "Text effects" [ref=e1817] [cursor=pointer]:
+              - generic [ref=e1818]: Text effects
+          - tabpanel "Text templates" [ref=e1821]:
+            - generic [ref=e1823]:
+              - generic [ref=e1825]:
+                - generic [ref=e1826] [cursor=pointer]: All
+                - generic [ref=e1827] [cursor=pointer]: Commercial
+              - generic [ref=e1831]:
+                - generic [ref=e1832]: Basic
+                - paragraph [ref=e1838]: Add heading
+                - paragraph [ref=e1844]: Add body text
+              - generic [ref=e1847]:
+                - generic [ref=e1850]:
+                  - generic [ref=e1851]: Trending
+                  - generic [ref=e1852] [cursor=pointer]: View all
+                - generic [ref=e1872]:
+                  - generic [ref=e1873]: Classic
+                  - generic [ref=e1874] [cursor=pointer]: View all
+                - generic [ref=e1910]:
+                  - generic [ref=e1911]:
+                    - generic [ref=e1912]: Hits
+                    - generic [ref=e1913] [cursor=pointer]: View all
+                  - generic [ref=e1991] [cursor=pointer]: View all
+                - generic [ref=e1996]:
+                  - generic [ref=e1997]:
+                    - generic [ref=e1998]: Icons
+                    - generic [ref=e1999] [cursor=pointer]: View all
+                  - generic [ref=e2077] [cursor=pointer]: View all
+                - generic [ref=e2082]:
+                  - generic [ref=e2083]:
+                    - generic [ref=e2084]: Title
+                    - generic [ref=e2085] [cursor=pointer]: View all
+                  - generic [ref=e2163] [cursor=pointer]: View all
+                - generic [ref=e2168]:
+                  - generic [ref=e2169]:
+                    - generic [ref=e2170]: Retro
+                    - generic [ref=e2171] [cursor=pointer]: View all
+                  - generic [ref=e2249] [cursor=pointer]: View all
+                - generic [ref=e2254]:
+                  - generic [ref=e2255]:
+                    - generic [ref=e2256]: Advertisement
+                    - generic [ref=e2257] [cursor=pointer]: View all
+                  - generic [ref=e2335] [cursor=pointer]: View all
+                - generic [ref=e2340]:
+                  - generic [ref=e2341]:
+                    - generic [ref=e2342]: Social media
+                    - generic [ref=e2343] [cursor=pointer]: View all
+                  - generic [ref=e2421] [cursor=pointer]: View all
+                - generic [ref=e2426]:
+                  - generic [ref=e2427]:
+                    - generic [ref=e2428]: Vlog
+                    - generic [ref=e2429] [cursor=pointer]: View all
+                  - generic [ref=e2507] [cursor=pointer]: View all
+    - generic [ref=e368]:
+      - generic [ref=e369]:
+        - generic [ref=e757]:
+          - generic [ref=e758]: "202604060116"
+          - textbox [ref=e760]: "202604060116"
+          - generic [ref=e762]: "202604060116"
+        - generic [ref=e765] [cursor=pointer]: 100%
+        - generic [ref=e411]:
+          - separator [ref=e781]
+          - button "Export" [ref=e786] [cursor=pointer]: Export
+        - generic:
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - generic: "202604060116"
+                  - generic:
+                    - textbox: "202604060116"
+                  - generic:
+                    - generic: "202604060116"
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - generic: 100%
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - separator
+          - generic:
+            - generic:
+              - generic:
+                - button "Export": Export
+      - generic [ref=e442]:
+        - generic [ref=e443]:
+          - generic [ref=e811]:
+            - main [ref=e830]:
+              - generic [ref=e1316]:
+                - img
+                - separator [ref=e2515]
+                - generic:
+                  - textbox [active]
+            - generic [ref=e2542] [cursor=pointer]: Ratio
+          - generic [ref=e447]:
+            - generic [ref=e450]:
+              - generic [ref=e451]:
+                - generic [ref=e2543]:
+                  - button [disabled]
+                - button [ref=e2544] [cursor=pointer]
+                - button [ref=e2547] [cursor=pointer]
+              - generic [ref=e457]:
+                - generic [ref=e458]: 00:00:00
+                - generic [ref=e460]: 01:10:17
+              - generic [ref=e461]:
+                - button [ref=e2553] [cursor=pointer]
+                - button [ref=e2556] [cursor=pointer]
+                - button [ref=e2560] [cursor=pointer]
+                - button [ref=e854] [cursor=pointer]
+                - button [ref=e860] [cursor=pointer]
+                - separator [ref=e863]
+                - button [ref=e2564] [cursor=pointer]
+                - button [ref=e2567] [cursor=pointer]
+            - generic [ref=e465]:
+              - generic [ref=e467]:
+                - button [ref=e1764] [cursor=pointer]
+                - button [ref=e1408] [cursor=pointer]
+              - img [ref=e1414]
+        - generic [ref=e480]:
+          - paragraph [ref=e2580] [cursor=pointer]: Presets
+          - paragraph [ref=e2585] [cursor=pointer]: Basic
+          - paragraph [ref=e2592] [cursor=pointer]: Text to speech
+          - paragraph [ref=e2599] [cursor=pointer]: AI avatars
+          - paragraph [ref=e2606] [cursor=pointer]: Animation
+          - paragraph [ref=e2612] [cursor=pointer]: Motion tracking
+  - generic [ref=e2614]:
+    - generic [ref=e2616]: Basic
+    - generic [ref=e2620]:
+      - generic [ref=e2621]:
+        - generic [ref=e2623]:
+          - textbox [ref=e2624]: Enjoy life in colours.
+          - generic: Enjoy life in colours.
+        - generic [ref=e2626]:
+          - generic [ref=e2627]:
+            - combobox [expanded] [ref=e2629] [cursor=pointer]:
+              - generic "Default" [ref=e2630]:
+                - generic [ref=e2632]: Default
+                - img [ref=e2635]
+            - combobox [ref=e2638]:
+              - generic "8" [ref=e2639]:
+                - generic [ref=e2641]: "8"
+          - separator [ref=e2660]
+        - separator [ref=e2677]
+        - generic [ref=e2678]:
+          - generic [ref=e2681]: Style
+          - generic [ref=e2687]: Fill
+          - generic [ref=e2694]: Stroke
+          - generic [ref=e2704]: Background
+          - generic [ref=e2713]: Shadow
+        - separator [ref=e2722]
+        - generic [ref=e2725]:
+          - generic [ref=e2726]: Glow
+          - switch [ref=e2728] [cursor=pointer]
+        - separator [ref=e2730]
+        - generic [ref=e2731]:
+          - generic [ref=e2734]: Opacity
+          - generic [ref=e2743]:
+            - slider [ref=e2746] [cursor=pointer]
+            - generic [ref=e2750]:
+              - spinbutton [ref=e2751]: "100"
+              - generic [ref=e2752]:
+                - generic [ref=e2753]:
+                  - img [ref=e2755]
+                  - img [ref=e2758] [cursor=pointer]
+                - generic [ref=e2760]: "%"
+        - separator [ref=e2772]
+        - generic [ref=e2773]:
+          - generic [ref=e2776]: Transform
+          - generic [ref=e2781]:
+            - generic [ref=e2782]: Scale
+            - generic [ref=e2790]:
+              - slider [ref=e2793] [cursor=pointer]
+              - generic [ref=e2797]:
+                - spinbutton [ref=e2798]: "100"
+                - generic [ref=e2799]:
+                  - generic [ref=e2800]:
+                    - img [ref=e2802] [cursor=pointer]
+                    - img [ref=e2805] [cursor=pointer]
+                  - generic [ref=e2807]: "%"
+          - generic [ref=e2819]:
+            - generic [ref=e2820]: Position
+            - generic [ref=e2826]:
+              - generic [ref=e2830]:
+                - spinbutton [ref=e2831]: "0"
+                - generic [ref=e2832]:
+                  - generic [ref=e2833]:
+                    - img [ref=e2835] [cursor=pointer]
+                    - img [ref=e2838] [cursor=pointer]
+                  - generic [ref=e2840]: X
+              - generic [ref=e2844]:
+                - spinbutton [ref=e2845]: "0"
+                - generic [ref=e2846]:
+                  - generic [ref=e2847]:
+                    - img [ref=e2849] [cursor=pointer]
+                    - img [ref=e2852] [cursor=pointer]
+                  - generic [ref=e2854]: "Y"
+          - generic [ref=e2866]:
+            - generic [ref=e2867]: Rotate
+            - generic [ref=e2877]:
+              - spinbutton [ref=e2878]: "0"
+              - generic [ref=e2879]:
+                - generic [ref=e2880]:
+                  - img [ref=e2882] [cursor=pointer]
+                  - img [ref=e2885] [cursor=pointer]
+                - generic [ref=e2887]: °
+      - generic [ref=e2907] [cursor=pointer]:
+        - checkbox "Apply to all"
+        - text: Apply to all
+  - generic [ref=e2912]:
+    - listbox [ref=e2913]:
+      - generic [ref=e2915]:
+        - listitem [ref=e2916]: CapCut preset
+        - option "Default" [selected] [ref=e2917] [cursor=pointer]:
+          - text: Default
+          - img [ref=e2919]
+        - option "القاهرة-Blk" [ref=e2921] [cursor=pointer]:
+          - generic [ref=e2925]: القاهرة-Blk
+        - option "الفسطاط-Rg" [ref=e2928] [cursor=pointer]:
+          - generic [ref=e2932]: الفسطاط-Rg
+        - option "المسيري-Bd" [ref=e2935] [cursor=pointer]:
+          - generic [ref=e2939]: المسيري-Bd
+        - option "القاهرة-SB" [ref=e2942] [cursor=pointer]:
+          - generic [ref=e2946]: القاهرة-SB
+        - option "الفسطاط-ExLt" [ref=e2948] [cursor=pointer]:
+          - generic [ref=e2952]: الفسطاط-ExLt
+        - option "الإسكندرية-Th" [ref=e2954] [cursor=pointer]:
+          - generic [ref=e2958]: الإسكندرية-Th
+        - option "الإسكندرية-Rg" [ref=e2960] [cursor=pointer]:
+          - generic [ref=e2964]: الإسكندرية-Rg
+        - option "هرمتان-Rg" [ref=e2966] [cursor=pointer]:
+          - generic [ref=e2970]: هرمتان-Rg
+        - option "نص مركزي-Rg" [ref=e2972] [cursor=pointer]:
+          - generic [ref=e2976]: نص مركزي-Rg
+        - option "هرمتان-Bd" [ref=e2978] [cursor=pointer]:
+          - generic [ref=e2982]: هرمتان-Bd
+        - option "كوفام-Rg" [ref=e2984] [cursor=pointer]:
+          - generic [ref=e2988]: كوفام-Rg
+        - option "مارهي-Lt" [ref=e2990] [cursor=pointer]:
+          - generic [ref=e2994]: مارهي-Lt
+        - option "كاسكاديا-Rg" [ref=e2996] [cursor=pointer]:
+          - generic [ref=e3000]: كاسكاديا-Rg
+        - option "كاسكاديا-Bd" [ref=e3002] [cursor=pointer]:
+          - generic [ref=e3006]: كاسكاديا-Bd
+        - option "كاسكاديا-ExLt" [ref=e3008] [cursor=pointer]:
+          - generic [ref=e3012]: كاسكاديا-ExLt
+        - option "تجول-Md" [ref=e3014] [cursor=pointer]:
+          - generic [ref=e3018]: تجول-Md
+        - option "تجول-ExLt" [ref=e3020] [cursor=pointer]:
+          - generic [ref=e3024]: تجول-ExLt
+        - option "Lt-لطيف" [ref=e3026] [cursor=pointer]:
+          - generic [ref=e3030]: Lt-لطيف
+        - option "Copperplate CC-Bd" [ref=e3032] [cursor=pointer]:
+          - generic [ref=e3036]: Copperplate CC-Bd
+        - option "Spline Sans-Bd" [ref=e3038] [cursor=pointer]:
+          - generic [ref=e3042]: Spline Sans-Bd
+        - option "Staatliches-Rg" [ref=e3044] [cursor=pointer]:
+          - generic [ref=e3048]: Staatliches-Rg
+        - option "SecularOne-Rg" [ref=e3050] [cursor=pointer]:
+          - generic [ref=e3054]: SecularOne-Rg
+        - option "Poppins-Bd" [ref=e3056] [cursor=pointer]:
+          - generic [ref=e3060]: Poppins-Bd
+        - option "Oranienbaum-Rg" [ref=e3062] [cursor=pointer]:
+          - generic [ref=e3066]: Oranienbaum-Rg
+        - option "OldStandardTT-Rg" [ref=e3068] [cursor=pointer]:
+          - generic [ref=e3072]: OldStandardTT-Rg
+        - option "HeptaSlab-Lt" [ref=e3074] [cursor=pointer]:
+          - generic [ref=e3078]: HeptaSlab-Lt
+        - option "Grandstander-Rg" [ref=e3080] [cursor=pointer]:
+          - generic [ref=e3084]: Grandstander-Rg
+        - option "Georama-Rg" [ref=e3086] [cursor=pointer]:
+          - generic [ref=e3090]: Georama-Rg
+        - option "Georama-Rg" [ref=e3092] [cursor=pointer]:
+          - generic [ref=e3096]: Georama-Rg
+        - option "WixMadeforDisplay-Bd" [ref=e3098] [cursor=pointer]:
+          - generic [ref=e3102]: WixMadeforDisplay-Bd
+        - option "Cabin-Rg" [ref=e3104] [cursor=pointer]:
+          - generic [ref=e3108]: Cabin-Rg
+        - option "PlayfairDisplay-Bd" [ref=e3110] [cursor=pointer]:
+          - generic [ref=e3114]: PlayfairDisplay-Bd
+        - option "Inter-SB" [ref=e3116] [cursor=pointer]:
+          - generic [ref=e3120]: Inter-SB
+        - option "Newsreader16pt-Rg" [ref=e3122] [cursor=pointer]:
+          - generic [ref=e3126]: Newsreader16pt-Rg
+        - option "てごみん" [ref=e3128] [cursor=pointer]:
+          - generic [ref=e3132]: てごみん
+        - option "瀬戸フォント" [ref=e3134] [cursor=pointer]:
+          - generic [ref=e3138]: 瀬戸フォント
+        - option "روبيك" [ref=e3140] [cursor=pointer]:
+          - generic [ref=e3144]: روبيك
+        - option "هاندجيت" [ref=e3146] [cursor=pointer]:
+          - generic [ref=e3150]: هاندجيت
+        - option "Lt-إستداد" [ref=e3152] [cursor=pointer]:
+          - generic [ref=e3156]: Lt-إستداد
+        - option "Bd-إستداد" [ref=e3158] [cursor=pointer]:
+          - generic [ref=e3162]: Bd-إستداد
+        - option "KoHo-Md" [ref=e3164] [cursor=pointer]:
+          - generic [ref=e3168]: KoHo-Md
+        - option "ใบจามจุรี-Bd" [ref=e3170] [cursor=pointer]:
+          - generic [ref=e3174]: ใบจามจุรี-Bd
+        - option "나다스탈리크" [ref=e3176] [cursor=pointer]:
+          - generic [ref=e3180]: 나다스탈리크
+        - option "Özgür Gündem" [ref=e3182] [cursor=pointer]:
+          - generic [ref=e3186]: Özgür Gündem
+        - option "Kalnia" [ref=e3188] [cursor=pointer]:
+          - generic [ref=e3192]: Kalnia
+        - option "XanhMono" [ref=e3194] [cursor=pointer]:
+          - generic [ref=e3198]: XanhMono
+        - option "瞬きの明朝" [ref=e3200] [cursor=pointer]:
+          - generic [ref=e3204]: 瞬きの明朝
+        - option "企業" [ref=e3206] [cursor=pointer]:
+          - generic [ref=e3210]: 企業
+        - option "ハチマル" [ref=e3212] [cursor=pointer]:
+          - generic [ref=e3216]: ハチマル
+        - option "بيروتي-Lt" [ref=e3218] [cursor=pointer]:
+          - generic [ref=e3222]: بيروتي-Lt
+        - option "بيروتي-ExBd" [ref=e3224] [cursor=pointer]:
+          - generic [ref=e3228]: بيروتي-ExBd
+        - option "مركزي" [ref=e3230] [cursor=pointer]:
+          - generic [ref=e3234]: مركزي
+        - option "أميري" [ref=e3236] [cursor=pointer]:
+          - generic [ref=e3240]: أميري
+        - option "نوتو كوفي-Th" [ref=e3242] [cursor=pointer]:
+          - generic [ref=e3246]: نوتو كوفي-Th
+        - option "نوتو كوفي-Md" [ref=e3248] [cursor=pointer]:
+          - generic [ref=e3252]: نوتو كوفي-Md
+        - option "الْمَرادي-Rg" [ref=e3254] [cursor=pointer]:
+          - generic [ref=e3258]: الْمَرادي-Rg
+        - option "الْمَرادي-ExBd" [ref=e3260] [cursor=pointer]:
+          - generic [ref=e3264]: الْمَرادي-ExBd
+        - option "تجول-Lt" [ref=e3266] [cursor=pointer]:
+          - generic [ref=e3270]: تجول-Lt
+        - option "レゲエ" [ref=e3272] [cursor=pointer]:
+          - generic [ref=e3276]: レゲエ
+        - option "ロックンロール" [ref=e3278] [cursor=pointer]:
+          - generic [ref=e3282]: ロックンロール
+        - option "นิรมิต" [ref=e3284] [cursor=pointer]:
+          - generic [ref=e3288]: นิรมิต
+        - option "สระบุญ—ExLtIt" [ref=e3290] [cursor=pointer]:
+          - generic [ref=e3294]: สระบุญ—ExLtIt
+        - option "ฟ้าหวัง-Rg" [ref=e3296] [cursor=pointer]:
+          - generic [ref=e3300]: ฟ้าหวัง-Rg
+        - option "สระบุญ-Rg" [ref=e3302] [cursor=pointer]:
+          - generic [ref=e3306]: สระบุญ-Rg
+        - option "ฟ้าหวัง-Bd" [ref=e3308] [cursor=pointer]:
+          - generic [ref=e3312]: ฟ้าหวัง-Bd
+        - option "해바라기" [ref=e3314] [cursor=pointer]:
+          - generic [ref=e3318]: 해바라기
+        - option "그랜디플로라" [ref=e3320] [cursor=pointer]:
+          - generic [ref=e3324]: 그랜디플로라
+        - option "클래식 타입" [ref=e3326] [cursor=pointer]:
+          - generic [ref=e3330]: 클래식 타입
+        - option "디프블레아" [ref=e3332] [cursor=pointer]:
+          - generic [ref=e3336]: 디프블레아
+        - option "동글-Rg" [ref=e3338] [cursor=pointer]:
+          - generic [ref=e3342]: 동글-Rg
+        - option "카페24 단정해" [ref=e3344] [cursor=pointer]:
+          - generic [ref=e3348]: 카페24 단정해
+        - option "동글-Bd" [ref=e3350] [cursor=pointer]:
+          - generic [ref=e3354]: 동글-Bd
+        - option "여카페24 단정해" [ref=e3356] [cursor=pointer]:
+          - generic [ref=e3360]: 여카페24 단정해
+        - option "زين" [ref=e3362] [cursor=pointer]:
+          - generic [ref=e3366]: زين
+        - option "الْمَرادي" [ref=e3368] [cursor=pointer]:
+          - generic [ref=e3372]: الْمَرادي
+        - option "نوتو كوفي" [ref=e3374] [cursor=pointer]:
+          - generic [ref=e3378]: نوتو كوفي
+        - option "أميري" [ref=e3380] [cursor=pointer]:
+          - generic [ref=e3384]: أميري
+        - option "نوتو نسخ" [ref=e3386] [cursor=pointer]:
+          - generic [ref=e3390]: نوتو نسخ
+        - option "المصيري" [ref=e3392] [cursor=pointer]:
+          - generic [ref=e3396]: المصيري
+        - option "الإسكندرية" [ref=e3398] [cursor=pointer]:
+          - generic [ref=e3402]: الإسكندرية
+        - option "بالو بهايجان 2" [ref=e3404] [cursor=pointer]:
+          - generic [ref=e3408]: بالو بهايجان 2
+        - option "لطيف" [ref=e3410] [cursor=pointer]:
+          - generic [ref=e3414]: لطيف
+        - option "القاهرة" [ref=e3416] [cursor=pointer]:
+          - generic [ref=e3420]: القاهرة
+        - option "IBM Plex Sans" [ref=e3422] [cursor=pointer]:
+          - generic [ref=e3426]: IBM Plex Sans
+        - option "Readex Pro" [ref=e3428] [cursor=pointer]:
+          - generic [ref=e3432]: Readex Pro
+        - option "Lalezar" [ref=e3434] [cursor=pointer]:
+          - generic [ref=e3438]: Lalezar
+        - option "Noto Sans" [ref=e3440] [cursor=pointer]:
+          - generic [ref=e3444]: Noto Sans
+        - option "코트라 볼드체" [ref=e3446] [cursor=pointer]:
+          - generic [ref=e3450]: 코트라 볼드체
+        - option "경기천년제목B" [ref=e3452] [cursor=pointer]:
+          - generic [ref=e3456]: 경기천년제목B
+        - option "클래식체B" [ref=e3458] [cursor=pointer]:
+          - generic [ref=e3462]: 클래식체B
+        - option "클래식체L" [ref=e3464] [cursor=pointer]:
+          - generic [ref=e3468]: 클래식체L
+        - option "서울한강체 B" [ref=e3470] [cursor=pointer]:
+          - generic [ref=e3474]: 서울한강체 B
+        - option "서울한강체L" [ref=e3476] [cursor=pointer]:
+          - generic [ref=e3480]: 서울한강체L
+        - option "제주명조체" [ref=e3482] [cursor=pointer]:
+          - generic [ref=e3486]: 제주명조체
+        - option "Noto Sans" [ref=e3488] [cursor=pointer]:
+          - generic [ref=e3492]: Noto Sans
+        - option "Noto Serif" [ref=e3494] [cursor=pointer]:
+          - generic [ref=e3498]: Noto Serif
+        - option "さわらび" [ref=e3500] [cursor=pointer]:
+          - generic [ref=e3504]: さわらび
+        - option "ゴシックニュー" [ref=e3506] [cursor=pointer]:
+          - generic [ref=e3510]: ゴシックニュー
+        - option "ゴシック" [ref=e3512] [cursor=pointer]:
+          - generic [ref=e3516]: ゴシック
+        - option "BIZ UDゴシック" [ref=e3518] [cursor=pointer]:
+          - generic [ref=e3522]: BIZ UDゴシック
+        - option "オールド明朝" [ref=e3524] [cursor=pointer]:
+          - generic [ref=e3528]: オールド明朝
+        - option "Aoboshi" [ref=e3530] [cursor=pointer]:
+          - generic [ref=e3534]: Aoboshi
+        - option "ナヌム" [ref=e3536] [cursor=pointer]:
+          - generic [ref=e3540]: ナヌム
+        - option "ガムジャ" [ref=e3542] [cursor=pointer]:
+          - generic [ref=e3546]: ガムジャ
+        - option "しっぽり" [ref=e3548] [cursor=pointer]:
+          - generic [ref=e3552]: しっぽり
+        - option "Noto Sans" [ref=e3554] [cursor=pointer]:
+          - generic [ref=e3558]: Noto Sans
+        - option "IBM Plex Sans" [ref=e3560] [cursor=pointer]:
+          - generic [ref=e3564]: IBM Plex Sans
+        - option "อนุพันธ์" [ref=e3566] [cursor=pointer]:
+          - generic [ref=e3570]: อนุพันธ์
+        - option "Noto Sans Tai" [ref=e3572] [cursor=pointer]:
+          - generic [ref=e3576]: Noto Sans Tai
+        - option "ครุบ" [ref=e3578] [cursor=pointer]:
+          - generic [ref=e3582]: ครุบ
+        - option "ใบจามจุรี" [ref=e3584] [cursor=pointer]:
+          - generic [ref=e3588]: ใบจามจุรี
+        - option "Noto Serif" [ref=e3590] [cursor=pointer]:
+          - generic [ref=e3594]: Noto Serif
+        - option "Poppins-Regular" [ref=e3596] [cursor=pointer]:
+          - generic [ref=e3600]: Poppins-Regular
+        - option "Noto Sans-Regular" [ref=e3602] [cursor=pointer]:
+          - generic [ref=e3606]: Noto Sans-Regular
+        - option "Martel Sans-Black" [ref=e3608] [cursor=pointer]:
+          - generic [ref=e3612]: Martel Sans-Black
+        - option "Martel Sans-Bold" [ref=e3614] [cursor=pointer]:
+          - generic [ref=e3618]: Martel Sans-Bold
+        - option "Martel Sans-ExtraBold" [ref=e3620] [cursor=pointer]:
+          - generic [ref=e3624]: Martel Sans-ExtraBold
+        - option "Martel Sans-Regular" [ref=e3626] [cursor=pointer]:
+          - generic [ref=e3630]: Martel Sans-Regular
+        - option "Martel Sans-Light" [ref=e3632] [cursor=pointer]:
+          - generic [ref=e3636]: Martel Sans-Light
+        - option "Martel Sans-SemiBold" [ref=e3638] [cursor=pointer]:
+          - generic [ref=e3642]: Martel Sans-SemiBold
+        - option "AnticDidone-Regular" [ref=e3644] [cursor=pointer]:
+          - generic [ref=e3648]: AnticDidone-Regular
+        - option "Faster One-Regular" [ref=e3650] [cursor=pointer]:
+          - generic [ref=e3654]: Faster One-Regular
+        - option "Bodoni* 11pt-lt" [ref=e3656] [cursor=pointer]:
+          - generic [ref=e3660]: Bodoni* 11pt-lt
+        - option "Bodoni* 11pt-Mdlt" [ref=e3662] [cursor=pointer]:
+          - generic [ref=e3666]: Bodoni* 11pt-Mdlt
+        - option "Bodoni* 11pt-Medium" [ref=e3668] [cursor=pointer]:
+          - generic [ref=e3672]: Bodoni* 11pt-Medium
+        - option "Bodoni* 11pt-Bold" [ref=e3674] [cursor=pointer]:
+          - generic [ref=e3678]: Bodoni* 11pt-Bold
+        - option "Bodoni* 11pt-Bold-Italic" [ref=e3680] [cursor=pointer]:
+          - generic [ref=e3684]: Bodoni* 11pt-Bold-Italic
+        - option "Fira Sans Compressed-Re" [ref=e3686] [cursor=pointer]:
+          - generic [ref=e3690]: Fira Sans Compressed-Re
+        - option "Jellee-Bold" [ref=e3692] [cursor=pointer]:
+          - generic [ref=e3696]: Jellee-Bold
+        - option "Comme-Bold" [ref=e3698] [cursor=pointer]:
+          - generic [ref=e3702]: Comme-Bold
+        - option "Comprehension-SemiBold" [ref=e3704] [cursor=pointer]:
+          - generic [ref=e3708]: Comprehension-SemiBold
+        - option "Lexend Tera-Regular" [ref=e3710] [cursor=pointer]:
+          - generic [ref=e3714]: Lexend Tera-Regular
+        - option "Oswald-Regular" [ref=e3716] [cursor=pointer]:
+          - generic [ref=e3720]: Oswald-Regular
+        - option "Fraunces-Thin" [ref=e3722] [cursor=pointer]:
+          - generic [ref=e3726]: Fraunces-Thin
+        - option "Harmattan-Regular" [ref=e3728] [cursor=pointer]:
+          - generic [ref=e3732]: Harmattan-Regular
+        - option "HammersmithOne-Regular" [ref=e3734] [cursor=pointer]:
+          - generic [ref=e3738]: HammersmithOne-Regular
+        - option "HarmonyOSCn-lt" [ref=e3740] [cursor=pointer]:
+          - generic [ref=e3744]: HarmonyOSCn-lt
+        - option "HarmonyOS_Sans_Regular" [ref=e3746] [cursor=pointer]:
+          - generic [ref=e3750]: HarmonyOS_Sans_Regular
+        - option "HarmonyOS_Sans_Light" [ref=e3752] [cursor=pointer]:
+          - generic [ref=e3756]: HarmonyOS_Sans_Light
+        - option "HarmonyOS_Sans_MdIt" [ref=e3758] [cursor=pointer]:
+          - generic [ref=e3762]: HarmonyOS_Sans_MdIt
+        - option "GenJyuuGothic-Medium-2" [ref=e3764] [cursor=pointer]:
+          - generic [ref=e3768]: GenJyuuGothic-Medium-2
+        - option "OldStandardTT-Regular" [ref=e3770] [cursor=pointer]:
+          - generic [ref=e3774]: OldStandardTT-Regular
+        - option "HeptaSlab-Light" [ref=e3776] [cursor=pointer]:
+          - generic [ref=e3780]: HeptaSlab-Light
+        - option "Newsreader 16pt-Rg" [ref=e3782] [cursor=pointer]:
+          - generic [ref=e3786]: Newsreader 16pt-Rg
+        - option "Spline Sans-Bold" [ref=e3788] [cursor=pointer]:
+          - generic [ref=e3792]: Spline Sans-Bold
+        - option "NT Somic-Medium" [ref=e3794] [cursor=pointer]:
+          - generic [ref=e3798]: NT Somic-Medium
+        - option "Copperplate CC-Bold" [ref=e3800] [cursor=pointer]:
+          - generic [ref=e3804]: Copperplate CC-Bold
+        - option "Georama Expanded-Rg" [ref=e3806] [cursor=pointer]:
+          - generic [ref=e3810]: Georama Expanded-Rg
+        - option "Oranienbaum-Regular" [ref=e3812] [cursor=pointer]:
+          - generic [ref=e3816]: Oranienbaum-Regular
+        - option "Vega-Regular" [ref=e3818] [cursor=pointer]:
+          - generic [ref=e3822]: Vega-Regular
+        - option "Sunday Masthead-Rg" [ref=e3824] [cursor=pointer]:
+          - generic [ref=e3828]: Sunday Masthead-Rg
+        - option "Typewriter" [ref=e3830] [cursor=pointer]:
+          - generic [ref=e3834]: Typewriter
+        - option "serif" [ref=e3836] [cursor=pointer]:
+          - generic [ref=e3840]: serif
+        - option "DouyinSans" [ref=e3842] [cursor=pointer]:
+          - generic [ref=e3846]: DouyinSans
+        - option "OpenSans1" [ref=e3848] [cursor=pointer]:
+          - generic [ref=e3852]: OpenSans1
+        - option "Red Hat" [ref=e3854] [cursor=pointer]:
+          - generic [ref=e3858]: Red Hat
+        - option "PublicSans" [ref=e3860] [cursor=pointer]:
+          - generic [ref=e3864]: PublicSans
+        - option "PTSans" [ref=e3866] [cursor=pointer]:
+          - generic [ref=e3870]: PTSans
+        - option "JetBrainsMonoNL Bold II" [ref=e3872] [cursor=pointer]:
+          - generic [ref=e3876]: JetBrainsMonoNL Bold II
+        - option "JetBrainsMonoNL I" [ref=e3878] [cursor=pointer]:
+          - generic [ref=e3882]: JetBrainsMonoNL I
+        - option "IBMPlexSans" [ref=e3884] [cursor=pointer]:
+          - generic [ref=e3888]: IBMPlexSans
+        - option "Cantarell-Bold" [ref=e3890] [cursor=pointer]:
+          - generic [ref=e3894]: Cantarell-Bold
+        - option "SinkinSans" [ref=e3896] [cursor=pointer]:
+          - generic [ref=e3900]: SinkinSans
+        - option "PontanoSans" [ref=e3902] [cursor=pointer]:
+          - generic [ref=e3906]: PontanoSans
+        - option "Metropolis-Bd" [ref=e3908] [cursor=pointer]:
+          - generic [ref=e3912]: Metropolis-Bd
+        - option "Metropolis-Md" [ref=e3914] [cursor=pointer]:
+          - generic [ref=e3918]: Metropolis-Md
+        - option "BebasNeue" [ref=e3920] [cursor=pointer]:
+          - generic [ref=e3924]: BebasNeue
+        - option "Arvo" [ref=e3926] [cursor=pointer]:
+          - generic [ref=e3930]: Arvo
+        - option "Asul" [ref=e3932] [cursor=pointer]:
+          - generic [ref=e3936]: Asul
+        - option "Anton" [ref=e3938] [cursor=pointer]:
+          - generic [ref=e3942]: Anton
+        - option "Rubik-Bold" [ref=e3944] [cursor=pointer]:
+          - generic [ref=e3948]: Rubik-Bold
+        - option "Modern" [ref=e3950] [cursor=pointer]:
+          - generic [ref=e3954]: Modern
+        - option "Nunito" [ref=e3956] [cursor=pointer]:
+          - generic [ref=e3960]: Nunito
+        - option "OpenSans2" [ref=e3962] [cursor=pointer]:
+          - generic [ref=e3966]: OpenSans2
+        - option "FiraSans" [ref=e3968] [cursor=pointer]:
+          - generic [ref=e3972]: FiraSans
+        - option "Amble" [ref=e3974] [cursor=pointer]:
+          - generic [ref=e3978]: Amble
+        - option "Nobile-Regular" [ref=e3980] [cursor=pointer]:
+          - generic [ref=e3984]: Nobile-Regular
+        - option "PathwayGothicOne" [ref=e3986] [cursor=pointer]:
+          - generic [ref=e3990]: PathwayGothicOne
+        - option "Oswald-Bold" [ref=e3992] [cursor=pointer]:
+          - generic [ref=e3996]: Oswald-Bold
+        - option "Lucette-Regularitalic" [ref=e3998] [cursor=pointer]:
+          - generic [ref=e4002]: Lucette-Regularitalic
+        - option "Lucette-Regular" [ref=e4004] [cursor=pointer]:
+          - generic [ref=e4008]: Lucette-Regular
+        - option "GaramondLibre" [ref=e4010] [cursor=pointer]:
+          - generic [ref=e4014]: GaramondLibre
+        - option "Calistoga" [ref=e4016] [cursor=pointer]:
+          - generic [ref=e4020]: Calistoga
+        - option "Quicksand" [ref=e4022] [cursor=pointer]:
+          - generic [ref=e4026]: Quicksand
+        - option "Oswald-ExtraLight" [ref=e4028] [cursor=pointer]:
+          - generic [ref=e4032]: Oswald-ExtraLight
+        - option "SpaceGrotesk-Medium" [ref=e4034] [cursor=pointer]:
+          - generic [ref=e4038]: SpaceGrotesk-Medium
+        - option "WorkSans-Medium" [ref=e4040] [cursor=pointer]:
+          - generic [ref=e4044]: WorkSans-Medium
+        - option "Sansita Rg" [ref=e4046] [cursor=pointer]:
+          - generic [ref=e4050]: Sansita Rg
+        - option "Jomhuria-Rg" [ref=e4052] [cursor=pointer]:
+          - generic [ref=e4056]: Jomhuria-Rg
+        - option "CroissantOne-Rg" [ref=e4058] [cursor=pointer]:
+          - generic [ref=e4062]: CroissantOne-Rg
+        - option "Arapey" [ref=e4064] [cursor=pointer]:
+          - generic [ref=e4068]: Arapey
+        - option "Chivo" [ref=e4070] [cursor=pointer]:
+          - generic [ref=e4074]: Chivo
+        - option "Abeezee" [ref=e4076] [cursor=pointer]:
+          - generic [ref=e4080]: Abeezee
+        - option "Anonymous-Pro" [ref=e4082] [cursor=pointer]:
+          - generic [ref=e4086]: Anonymous-Pro
+        - option "Antonio" [ref=e4088] [cursor=pointer]:
+          - generic [ref=e4092]: Antonio
+        - option "Arbutus-Slab" [ref=e4094] [cursor=pointer]:
+          - generic [ref=e4098]: Arbutus-Slab
+        - option "HarmonyOSCn-Bdlt" [ref=e4100] [cursor=pointer]:
+          - generic [ref=e4104]: HarmonyOSCn-Bdlt
+        - option "HarmonyOS_Sans_BdIt" [ref=e4106] [cursor=pointer]:
+          - generic [ref=e4110]: HarmonyOS_Sans_BdIt
+        - option "HarmonyOS_Sans_Bold" [ref=e4112] [cursor=pointer]:
+          - generic [ref=e4116]: HarmonyOS_Sans_Bold
+        - option "GenJyuuGothic-Heavy-2" [ref=e4118] [cursor=pointer]:
+          - generic [ref=e4122]: GenJyuuGothic-Heavy-2
+        - option "Poly-Rg" [ref=e4124] [cursor=pointer]:
+          - generic [ref=e4128]: Poly-Rg
+        - option "Cabin-Bd" [ref=e4130] [cursor=pointer]:
+          - generic [ref=e4134]: Cabin-Bd
+        - option "AndikaNewBasic" [ref=e4136] [cursor=pointer]:
+          - generic [ref=e4140]: AndikaNewBasic
+        - option "Cabin-Rg" [ref=e4142] [cursor=pointer]:
+          - generic [ref=e4146]: Cabin-Rg
+        - option "Vollkorn-Md" [ref=e4148] [cursor=pointer]:
+          - generic [ref=e4152]: Vollkorn-Md
+        - option "Vollkorn-Rg" [ref=e4154] [cursor=pointer]:
+          - generic [ref=e4158]: Vollkorn-Rg
+        - option "NotoSans-Rg" [ref=e4160] [cursor=pointer]:
+          - generic [ref=e4164]: NotoSans-Rg
+        - option "Merriweather-Rg" [ref=e4166] [cursor=pointer]:
+          - generic [ref=e4170]: Merriweather-Rg
+        - option "UbuntuMono" [ref=e4172] [cursor=pointer]:
+          - generic [ref=e4176]: UbuntuMono
+        - option "JetBrainsMono-Rg" [ref=e4178] [cursor=pointer]:
+          - generic [ref=e4182]: JetBrainsMono-Rg
+        - option "Montserrat" [ref=e4184] [cursor=pointer]:
+          - generic [ref=e4188]: Montserrat
+        - option "JetBrainsMono-Bd" [ref=e4190] [cursor=pointer]:
+          - generic [ref=e4194]: JetBrainsMono-Bd
+        - option "JetBrainsMono-EB" [ref=e4196] [cursor=pointer]:
+          - generic [ref=e4200]: JetBrainsMono-EB
+        - option "JetBrainsMono-Md" [ref=e4202] [cursor=pointer]:
+          - generic [ref=e4206]: JetBrainsMono-Md
+        - option "PublicSans" [ref=e4208] [cursor=pointer]:
+          - generic [ref=e4212]: PublicSans
+        - option "เปลือก" [ref=e4214] [cursor=pointer]:
+          - generic [ref=e4218]: เปลือก
+        - option "ฟ้ากวาง" [ref=e4220] [cursor=pointer]:
+          - generic [ref=e4224]: ฟ้ากวาง
+        - option "เครูบ" [ref=e4226] [cursor=pointer]:
+          - generic [ref=e4230]: เครูบ
+        - option "ASนิรมิต" [ref=e4232] [cursor=pointer]:
+          - generic [ref=e4236]: ASนิรมิต
+        - option "THKoHo" [ref=e4238] [cursor=pointer]:
+          - generic [ref=e4242]: THKoHo
+        - option "THBaiJamjureeCP" [ref=e4244] [cursor=pointer]:
+          - generic [ref=e4248]: THBaiJamjureeCP
+        - option "K2D8กรกฎาคม" [ref=e4250] [cursor=pointer]:
+          - generic [ref=e4254]: K2D8กรกฎาคม
+        - option "จักระแพทช์" [ref=e4256] [cursor=pointer]:
+          - generic [ref=e4260]: จักระแพทช์
+        - option "สารบุญนิว" [ref=e4262] [cursor=pointer]:
+          - generic [ref=e4266]: สารบุญนิว
+        - option "南廱明體" [ref=e4268] [cursor=pointer]:
+          - generic [ref=e4272]: 南廱明體
+        - option "香港民間字集 傳承字形版" [ref=e4274] [cursor=pointer]:
+          - generic [ref=e4278]: 香港民間字集 傳承字形版
+        - option "Abhaya-Libre" [ref=e4280] [cursor=pointer]:
+          - generic [ref=e4284]: Abhaya-Libre
+        - option "Gidole" [ref=e4286] [cursor=pointer]:
+          - generic [ref=e4290]: Gidole
+        - option "Clear-Sans" [ref=e4292] [cursor=pointer]:
+          - generic [ref=e4296]: Clear-Sans
+        - option "Thỏ" [ref=e4298] [cursor=pointer]:
+          - generic [ref=e4302]: Thỏ
+        - option "Półtawski Nowy" [ref=e4304] [cursor=pointer]:
+          - generic [ref=e4308]: Półtawski Nowy
+        - option "Phudu" [ref=e4310] [cursor=pointer]:
+          - generic [ref=e4314]: Phudu
+        - option "ChivoMono" [ref=e4316] [cursor=pointer]:
+          - generic [ref=e4320]: ChivoMono
+        - option "PlaypenSans" [ref=e4322] [cursor=pointer]:
+          - generic [ref=e4326]: PlaypenSans
+        - option "Oswald" [ref=e4328] [cursor=pointer]:
+          - generic [ref=e4332]: Oswald
+        - option "SpaceGrotesk" [ref=e4334] [cursor=pointer]:
+          - generic [ref=e4338]: SpaceGrotesk
+        - option "PlayfairDisplay" [ref=e4340] [cursor=pointer]:
+          - generic [ref=e4344]: PlayfairDisplay
+        - option "特黑体" [ref=e4346] [cursor=pointer]:
+          - generic [ref=e4350]: 特黑体
+        - option "细体" [ref=e4352] [cursor=pointer]:
+          - generic [ref=e4356]: 细体
+        - option "思源粗宋" [ref=e4358] [cursor=pointer]:
+          - generic [ref=e4362]: 思源粗宋
+        - option "思源中宋" [ref=e4364] [cursor=pointer]:
+          - generic [ref=e4368]: 思源中宋
+        - option "SourceSerifPro-ExtraLight" [ref=e4370] [cursor=pointer]:
+          - generic [ref=e4374]: SourceSerifPro-ExtraLight
+        - option "SourceSansPro-Regular" [ref=e4376] [cursor=pointer]:
+          - generic [ref=e4380]: SourceSansPro-Regular
+        - option "SourceSansPro-ExtraLight" [ref=e4382] [cursor=pointer]:
+          - generic [ref=e4386]: SourceSansPro-ExtraLight
+        - option "Cabin-Md" [ref=e4388] [cursor=pointer]:
+          - generic [ref=e4392]: Cabin-Md
+        - option "NT Somic-Bold" [ref=e4394] [cursor=pointer]:
+          - generic [ref=e4398]: NT Somic-Bold
+        - option "WixMadeforText-Rg" [ref=e4400] [cursor=pointer]:
+          - generic [ref=e4404]: WixMadeforText-Rg
+        - option "NT Somic-Regular" [ref=e4406] [cursor=pointer]:
+          - generic [ref=e4410]: NT Somic-Regular
+        - option "WixMadeforDisplay-SB" [ref=e4412] [cursor=pointer]:
+          - generic [ref=e4416]: WixMadeforDisplay-SB
+        - option "WixMadeforDisplay-Bd" [ref=e4418] [cursor=pointer]:
+          - generic [ref=e4422]: WixMadeforDisplay-Bd
+        - option "Poppins-Bold" [ref=e4424] [cursor=pointer]:
+          - generic [ref=e4428]: Poppins-Bold
+        - option "PlayfairDisplay-Bold" [ref=e4430] [cursor=pointer]:
+          - generic [ref=e4434]: PlayfairDisplay-Bold
+        - option "حاجز لعب-Rg" [ref=e4436] [cursor=pointer]:
+          - generic [ref=e4440]: حاجز لعب-Rg
+        - option "حاجز لعب-Th" [ref=e4442] [cursor=pointer]:
+          - generic [ref=e4446]: حاجز لعب-Th
+        - option "القاهرة-Lt" [ref=e4448] [cursor=pointer]:
+          - generic [ref=e4452]: القاهرة-Lt
+        - option "귀염" [ref=e4454] [cursor=pointer]:
+          - generic [ref=e4458]: 귀염
+        - option "커피" [ref=e4460] [cursor=pointer]:
+          - generic [ref=e4464]: 커피
+        - option "낭만" [ref=e4466] [cursor=pointer]:
+          - generic [ref=e4470]: 낭만
+        - option "로봇" [ref=e4472] [cursor=pointer]:
+          - generic [ref=e4476]: 로봇
+        - option "고딕" [ref=e4478] [cursor=pointer]:
+          - generic [ref=e4482]: 고딕
+        - option "단정해" [ref=e4484] [cursor=pointer]:
+          - generic [ref=e4488]: 단정해
+        - option "스포카 산스" [ref=e4490] [cursor=pointer]:
+          - generic [ref=e4494]: 스포카 산스
+        - option "나눔바른펜" [ref=e4496] [cursor=pointer]:
+          - generic [ref=e4500]: 나눔바른펜
+        - option "클래식타입" [ref=e4502] [cursor=pointer]:
+          - generic [ref=e4506]: 클래식타입
+        - option "야놀자 야체" [ref=e4508] [cursor=pointer]:
+          - generic [ref=e4512]: 야놀자 야체
+        - option "느릿느릿체" [ref=e4514] [cursor=pointer]:
+          - generic [ref=e4518]: 느릿느릿체
+        - option "써라운드에어" [ref=e4520] [cursor=pointer]:
+          - generic [ref=e4524]: 써라운드에어
+        - option "유앤피플 고딕" [ref=e4526] [cursor=pointer]:
+          - generic [ref=e4530]: 유앤피플 고딕
+        - option "동글한글" [ref=e4532] [cursor=pointer]:
+          - generic [ref=e4536]: 동글한글
+        - option "금은보화" [ref=e4538] [cursor=pointer]:
+          - generic [ref=e4542]: 금은보화
+        - option "의미있는 한글" [ref=e4544] [cursor=pointer]:
+          - generic [ref=e4548]: 의미있는 한글
+        - option "중나좋체" [ref=e4550] [cursor=pointer]:
+          - generic [ref=e4554]: 중나좋체
+        - option "도현체" [ref=e4556] [cursor=pointer]:
+          - generic [ref=e4560]: 도현체
+        - option "함렛" [ref=e4562] [cursor=pointer]:
+          - generic [ref=e4566]: 함렛
+        - option "한글재민체" [ref=e4568] [cursor=pointer]:
+          - generic [ref=e4572]: 한글재민체
+        - option "해바라기" [ref=e4574] [cursor=pointer]:
+          - generic [ref=e4578]: 해바라기
+        - option "한나" [ref=e4580] [cursor=pointer]:
+          - generic [ref=e4584]: 한나
+        - option "푸어스토리" [ref=e4586] [cursor=pointer]:
+          - generic [ref=e4590]: 푸어스토리
+        - option "네오" [ref=e4592] [cursor=pointer]:
+          - generic [ref=e4596]: 네오
+        - option "바른히피" [ref=e4598] [cursor=pointer]:
+          - generic [ref=e4602]: 바른히피
+        - option "고운한글바탕" [ref=e4604] [cursor=pointer]:
+          - generic [ref=e4608]: 고운한글바탕
+        - option "나눔고딕" [ref=e4610] [cursor=pointer]:
+          - generic [ref=e4614]: 나눔고딕
+        - option "고운한글돋움" [ref=e4616] [cursor=pointer]:
+          - generic [ref=e4620]: 고운한글돋움
+        - option "스타일리시" [ref=e4622] [cursor=pointer]:
+          - generic [ref=e4626]: 스타일리시
+        - option "본명조" [ref=e4628] [cursor=pointer]:
+          - generic [ref=e4632]: 본명조
+        - option "小杉ｺﾞｼｯｸ" [ref=e4634] [cursor=pointer]:
+          - generic [ref=e4638]: 小杉ｺﾞｼｯｸ
+        - option "ｱﾄﾞｺﾞｯｼｸ" [ref=e4640] [cursor=pointer]:
+          - generic [ref=e4644]: ｱﾄﾞｺﾞｯｼｸ
+        - option "ｾﾘﾌ太字" [ref=e4646] [cursor=pointer]:
+          - generic [ref=e4650]: ｾﾘﾌ太字
+        - option "ｾﾘﾌﾗｲﾄ" [ref=e4652] [cursor=pointer]:
+          - generic [ref=e4656]: ｾﾘﾌﾗｲﾄ
+        - option "ﾓｰﾀﾞ太字" [ref=e4658] [cursor=pointer]:
+          - generic [ref=e4662]: ﾓｰﾀﾞ太字
+        - option "ﾓｰﾀﾞﾗｲﾄ" [ref=e4664] [cursor=pointer]:
+          - generic [ref=e4668]: ﾓｰﾀﾞﾗｲﾄ
+        - option "源真ゴクP" [ref=e4670] [cursor=pointer]:
+          - generic [ref=e4674]: 源真ゴクP
+        - option "新一细明體異體" [ref=e4676] [cursor=pointer]:
+          - generic [ref=e4680]: 新一细明體異體
+        - option "源真ゴシック" [ref=e4682] [cursor=pointer]:
+          - generic [ref=e4686]: 源真ゴシック
+        - option "源真ゴシック等幅" [ref=e4688] [cursor=pointer]:
+          - generic [ref=e4692]: 源真ゴシック等幅
+        - option "キウイ 丸 - Md" [ref=e4694] [cursor=pointer]:
+          - generic [ref=e4698]: キウイ 丸 - Md
+        - option "キウイ 丸 - Lt" [ref=e4700] [cursor=pointer]:
+          - generic [ref=e4704]: キウイ 丸 - Lt
+        - option "モノマニアック-Rg" [ref=e4706] [cursor=pointer]:
+          - generic [ref=e4710]: モノマニアック-Rg
+        - option "モッチーポップPOne-Rg" [ref=e4712] [cursor=pointer]:
+          - generic [ref=e4716]: モッチーポップPOne-Rg
+        - option "Stilu-SemiBold" [ref=e4718] [cursor=pointer]:
+          - generic [ref=e4722]: Stilu-SemiBold
+        - option "Stilu-Regular" [ref=e4724] [cursor=pointer]:
+          - generic [ref=e4728]: Stilu-Regular
+        - option "Antic-Regular" [ref=e4730] [cursor=pointer]:
+          - generic [ref=e4734]: Antic-Regular
+        - option "Alef-Regular" [ref=e4736] [cursor=pointer]:
+          - generic [ref=e4740]: Alef-Regular
+        - option "Alegreya Sans-Thin" [ref=e4742] [cursor=pointer]:
+          - generic [ref=e4746]: Alegreya Sans-Thin
+        - option "Arapey-Regular" [ref=e4748] [cursor=pointer]:
+          - generic [ref=e4752]: Arapey-Regular
+        - option "Bebas Neue-Regular" [ref=e4754] [cursor=pointer]:
+          - generic [ref=e4758]: Bebas Neue-Regular
+        - option "AnonymousPro-Regular" [ref=e4760] [cursor=pointer]:
+          - generic [ref=e4764]: AnonymousPro-Regular
+        - option "ArchivoNarrow-Regular" [ref=e4766] [cursor=pointer]:
+          - generic [ref=e4770]: ArchivoNarrow-Regular
+        - option "Lato-Thin" [ref=e4772] [cursor=pointer]:
+          - generic [ref=e4776]: Lato-Thin
+        - option "Lekton-Regular" [ref=e4778] [cursor=pointer]:
+          - generic [ref=e4782]: Lekton-Regular
+        - option "LibreBaskerville-Regular" [ref=e4784] [cursor=pointer]:
+          - generic [ref=e4788]: LibreBaskerville-Regular
+        - option "Lora-Regular" [ref=e4790] [cursor=pointer]:
+          - generic [ref=e4794]: Lora-Regular
+        - option "Lustria-Regular" [ref=e4796] [cursor=pointer]:
+          - generic [ref=e4800]: Lustria-Regular
+        - option "Playfair Display-Regular" [ref=e4802] [cursor=pointer]:
+          - generic [ref=e4806]: Playfair Display-Regular
+        - option "Merriweather-Light" [ref=e4808] [cursor=pointer]:
+          - generic [ref=e4812]: Merriweather-Light
+        - option "PT Sans-Regular" [ref=e4814] [cursor=pointer]:
+          - generic [ref=e4818]: PT Sans-Regular
+        - option "NixieOne-Regular" [ref=e4820] [cursor=pointer]:
+          - generic [ref=e4824]: NixieOne-Regular
+        - option "Blinker-Thin" [ref=e4826] [cursor=pointer]:
+          - generic [ref=e4830]: Blinker-Thin
+        - option "Caladea-Regular" [ref=e4832] [cursor=pointer]:
+          - generic [ref=e4836]: Caladea-Regular
+        - option "Quattrocento-Regular" [ref=e4838] [cursor=pointer]:
+          - generic [ref=e4842]: Quattrocento-Regular
+        - option "NotoSerif-Regular" [ref=e4844] [cursor=pointer]:
+          - generic [ref=e4848]: NotoSerif-Regular
+        - option "Quicksand-Light" [ref=e4850] [cursor=pointer]:
+          - generic [ref=e4854]: Quicksand-Light
+        - option "Radley-Regular" [ref=e4856] [cursor=pointer]:
+          - generic [ref=e4860]: Radley-Regular
+        - option "TextMeOne-Regular" [ref=e4862] [cursor=pointer]:
+          - generic [ref=e4866]: TextMeOne-Regular
+        - option "EBGaramond-Regular" [ref=e4868] [cursor=pointer]:
+          - generic [ref=e4872]: EBGaramond-Regular
+        - option "Roboto Condensed-Light" [ref=e4874] [cursor=pointer]:
+          - generic [ref=e4878]: Roboto Condensed-Light
+        - option "Rosario-Light" [ref=e4880] [cursor=pointer]:
+          - generic [ref=e4884]: Rosario-Light
+        - option "Rubik-Light" [ref=e4886] [cursor=pointer]:
+          - generic [ref=e4890]: Rubik-Light
+        - option "VarelaRound-Regular" [ref=e4892] [cursor=pointer]:
+          - generic [ref=e4896]: VarelaRound-Regular
+        - option "Vidaloka-Regular" [ref=e4898] [cursor=pointer]:
+          - generic [ref=e4902]: Vidaloka-Regular
+        - option "Sanchez-Regular" [ref=e4904] [cursor=pointer]:
+          - generic [ref=e4908]: Sanchez-Regular
+        - option "WireOne-Regular" [ref=e4910] [cursor=pointer]:
+          - generic [ref=e4914]: WireOne-Regular
+        - option "AlegreyaSans-Bold" [ref=e4916] [cursor=pointer]:
+          - generic [ref=e4920]: AlegreyaSans-Bold
+        - option "AlegreyaSans-Thin" [ref=e4922] [cursor=pointer]:
+          - generic [ref=e4926]: AlegreyaSans-Thin
+        - option "Aleo-Light" [ref=e4928] [cursor=pointer]:
+          - generic [ref=e4932]: Aleo-Light
+        - option "AsapCondensed-ExtraLight" [ref=e4934] [cursor=pointer]:
+          - generic [ref=e4938]: AsapCondensed-ExtraLight
+        - option "Dosis-ExtraLight" [ref=e4940] [cursor=pointer]:
+          - generic [ref=e4944]: Dosis-ExtraLight
+        - option "Dosis-Regular" [ref=e4946] [cursor=pointer]:
+          - generic [ref=e4950]: Dosis-Regular
+        - option "Dosis-SemiBold" [ref=e4952] [cursor=pointer]:
+          - generic [ref=e4956]: Dosis-SemiBold
+        - option "Cormorant Garamond-Medium" [ref=e4958] [cursor=pointer]:
+          - generic [ref=e4962]: Cormorant Garamond-Medium
+        - option "Inter-Thin" [ref=e4964] [cursor=pointer]:
+          - generic [ref=e4968]: Inter-Thin
+        - option "Lexend Deca-Thin" [ref=e4970] [cursor=pointer]:
+          - generic [ref=e4974]: Lexend Deca-Thin
+        - option "Lexend Mega-Regular" [ref=e4976] [cursor=pointer]:
+          - generic [ref=e4980]: Lexend Mega-Regular
+        - option "BarlowCondensed-Regular" [ref=e4982] [cursor=pointer]:
+          - generic [ref=e4986]: BarlowCondensed-Regular
+        - option "Alike-Regular" [ref=e4988] [cursor=pointer]:
+          - generic [ref=e4992]: Alike-Regular
+        - option "Alatsi-Regular" [ref=e4994] [cursor=pointer]:
+          - generic [ref=e4998]: Alatsi-Regular
+        - option "BarlowCondensed-Thin" [ref=e5000] [cursor=pointer]:
+          - generic [ref=e5004]: BarlowCondensed-Thin
+        - option "BarlowSemiCondensed-Thin" [ref=e5006] [cursor=pointer]:
+          - generic [ref=e5010]: BarlowSemiCondensed-Thin
+        - option "Montserrat-ExtraLight" [ref=e5012] [cursor=pointer]:
+          - generic [ref=e5016]: Montserrat-ExtraLight
+        - option "Montserrat-Light" [ref=e5018] [cursor=pointer]:
+          - generic [ref=e5022]: Montserrat-Light
+        - option "SinkinSans-400Regular" [ref=e5024] [cursor=pointer]:
+          - generic [ref=e5028]: SinkinSans-400Regular
+        - option "SinkinSans-200XLightItali" [ref=e5030] [cursor=pointer]:
+          - generic [ref=e5034]: SinkinSans-200XLightItali
+        - option "Genome-Thin" [ref=e5036] [cursor=pointer]:
+          - generic [ref=e5040]: Genome-Thin
+        - option "Gidole-Regular" [ref=e5042] [cursor=pointer]:
+          - generic [ref=e5046]: Gidole-Regular
+        - option "EncodeSans-Regular" [ref=e5048] [cursor=pointer]:
+          - generic [ref=e5052]: EncodeSans-Regular
+    - generic [ref=e5054]:
+      - generic [ref=e5055]:
+        - generic [ref=e5059]: Commercial use
+        - img [ref=e5060]
+      - switch [ref=e5063] [cursor=pointer]

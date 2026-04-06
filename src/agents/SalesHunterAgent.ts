@@ -17,7 +17,7 @@
  */
 
 import { BaseAgent, AgentContext, AgentResult } from './BaseAgent.js';
-import { AgentResponse } from './types.js';
+import type { AgentResponse } from './types.js';
 import { logInfo, logError, logWarn, logDebug, setAgentStatus } from '../utils/logger.js';
 import { ensureError } from '../utils/ensureError.js';
 import { parseAiResponse, safeJsonParse } from '../utils/aiHelpers.js';
@@ -66,6 +66,127 @@ interface SalesHunterResult {
   };
 }
 
+type PastExperienceLike = {
+  text?: unknown;
+};
+
+type LeadGenerationResult = {
+  leads: LeadProfile[];
+  emailDrafts: EmailDraftResult[];
+  crmExportUrl: string;
+  crmSync: {
+    syncedLeads: number;
+    followUpPlansCreated: number;
+  };
+  stats: {
+    totalLeads: number;
+    highQuality: number;
+    avgScore: number;
+    followUpPlansCreated: number;
+  };
+};
+
+type RobotkezDelegateResponse = Pick<AgentResponse, 'success' | 'data' | 'message'>;
+
+type LeadGenerationRequestLike = {
+  industry?: unknown;
+  location?: unknown;
+  companySize?: unknown;
+  keywords?: unknown;
+  targetCount?: unknown;
+};
+
+type LeadProfileLike = {
+  companyName: string;
+  decisionMaker: string;
+  contactInfo: string;
+  linkedinUrl: string;
+  industry: string;
+  companySize: string;
+  location: string;
+  score?: unknown;
+  notes?: unknown;
+};
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null;
+}
+
+function isStringArray(value: unknown): value is string[] {
+  return Array.isArray(value) && value.every(item => typeof item === 'string');
+}
+
+function isLeadGenerationRequestLike(value: unknown): value is LeadGenerationRequestLike {
+  return isRecord(value);
+}
+
+function isLeadGenerationData(value: unknown): value is LeadGenerationData {
+  if (!isLeadGenerationRequestLike(value)) {
+    return false;
+  }
+
+  return (
+    typeof value.industry === 'string' &&
+    typeof value.location === 'string' &&
+    (value.companySize === 'startup' || value.companySize === 'sme' || value.companySize === 'enterprise') &&
+    isStringArray(value.keywords) &&
+    (value.targetCount === undefined || typeof value.targetCount === 'number')
+  );
+}
+
+function isLeadProfileLike(value: unknown): value is LeadProfileLike {
+  return (
+    isRecord(value) &&
+    typeof value.companyName === 'string' &&
+    typeof value.decisionMaker === 'string' &&
+    typeof value.contactInfo === 'string' &&
+    typeof value.linkedinUrl === 'string' &&
+    typeof value.industry === 'string' &&
+    typeof value.companySize === 'string' &&
+    typeof value.location === 'string'
+  );
+}
+
+function isRobotkezDelegateResponse(value: unknown): value is RobotkezDelegateResponse {
+  if (!isRecord(value)) {
+    return false;
+  }
+
+  const { success, message } = value;
+  return (
+    (success === undefined || typeof success === 'boolean') &&
+    (message === undefined || typeof message === 'string')
+  );
+}
+
+function normalizeLeadProfile(value: LeadProfileLike): LeadProfile {
+  return {
+    companyName: value.companyName,
+    decisionMaker: value.decisionMaker,
+    contactInfo: value.contactInfo,
+    linkedinUrl: value.linkedinUrl,
+    industry: value.industry,
+    companySize: value.companySize,
+    location: value.location,
+    score: typeof value.score === 'number' ? value.score : 0,
+    notes: typeof value.notes === 'string' ? value.notes : undefined,
+  };
+}
+
+function normalizeLeadProfiles(value: unknown): LeadProfile[] {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+
+  return value
+    .filter(isLeadProfileLike)
+    .map(normalizeLeadProfile);
+}
+
+function hasHibaText(value: unknown): value is PastExperienceLike {
+  return isRecord(value) && typeof value.text === 'string' && value.text.includes('HIBA');
+}
+
 // ============================================================================
 // Sales Hunter Agent Implementation
 // ============================================================================
@@ -104,7 +225,9 @@ export class SalesHunterAgent extends BaseAgent {
     if (!task) return { success: false, message: 'Üres feladat leírás' };
 
     // Memory awareness: Check for past failures
-    const failures = (context.pastExperiences as any[])?.filter(e => e.text.includes('HIBA')) || [];
+    const failures = Array.isArray(context.pastExperiences)
+      ? context.pastExperiences.filter(hasHibaText)
+      : [];
     if (failures.length > 0) {
       logWarn(this.name, `Figyelem: ${failures.length} korábbi hiba észlelve hasonló feladatnál. Óvatos végrehajtás...`);
     }
@@ -162,7 +285,7 @@ export class SalesHunterAgent extends BaseAgent {
   /**
    * Main lead generation pipeline
    */
-  private async generateLeads(params: LeadGenerationData): Promise<any> {
+  private async generateLeads(params: LeadGenerationData): Promise<LeadGenerationResult> {
     // Step 1: Discover companies (simulated - in production would use LinkedIn scraper)
     const companies = await this.discoverCompanies(params);
     
@@ -225,9 +348,9 @@ export class SalesHunterAgent extends BaseAgent {
     `;
 
     try {
-      const response = await agentManager.delegate('RobotkezV2', instruction) as any;
-      
-      if (response && response.success && response.data) {
+      const response = await agentManager.delegate('RobotkezV2', instruction);
+
+      if (isRobotkezDelegateResponse(response) && response.success && response.data) {
         logInfo(this.name, `✅ Real discovery successful via RobotkezV2`);
         
         // Extract JSON from response data (might be in a message or nested in data)
@@ -235,7 +358,9 @@ export class SalesHunterAgent extends BaseAgent {
         try {
           const { text: respText } = parseAiResponse(response.message ?? response.data ?? response);
           const jsonMatch = respText.match(/\[[\s\S]*\]/);
-          leads = safeJsonParse<LeadProfile[]>(jsonMatch?.[0] ?? respText, Array.isArray(response.data) ? response.data : [] as any);
+          const fallbackLeads = normalizeLeadProfiles(response.data);
+          const parsedLeads = safeJsonParse<unknown>(jsonMatch?.[0] ?? respText, fallbackLeads);
+          leads = normalizeLeadProfiles(parsedLeads);
         } catch (error: unknown) {
           const err = ensureError(error);
           logDebug(this.name, `Failed to parse RobotkezV2 JSON response: ${err.message}`);
@@ -455,9 +580,9 @@ Relevancia pontszám: ${lead.score}/100`;
    */
   private parseLeadRequest(task: string): LeadGenerationData {
     // Try parsing as JSON first (non-throwing)
-    const parsed = safeJsonParse<any>(task, null);
-    if (parsed && parsed.industry) {
-      return parsed as LeadGenerationData;
+    const parsed = safeJsonParse<unknown>(task, null);
+    if (isLeadGenerationData(parsed)) {
+      return parsed;
     }
 
     // Simple keyword extraction (in production, would use LLM)

@@ -1,6 +1,7 @@
 import type { ChildProcess } from 'child_process';
 import { logInfo, logError } from './logger.js';
 import { exec } from 'child_process';
+import { safeJsonParse } from './aiHelpers.js';
 
 export interface BrowserCommand {
     action: 'launch' | 'navigate' | 'click' | 'type' | 'screenshot' | 'content' | 'scroll' | 'wait' | 'extract' | 'close' | 'press' | 'state' | 'query';
@@ -77,12 +78,12 @@ export class PersistentBrowser {
 
             for (const line of lines) {
                 if (!line.trim()) continue;
-                try {
-                    const response = JSON.parse(line);
-                    this.handleResponse(response);
-                } catch {
+                const response = safeJsonParse<any>(line, null);
+                if (!response) {
                     logError('PersistentBrowser', `Failed to parse response: ${line}`);
+                    continue;
                 }
+                this.handleResponse(response);
             }
         });
 

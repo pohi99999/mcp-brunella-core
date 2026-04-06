@@ -8,6 +8,7 @@
  */
 
 import { logInfo, logWarn } from '../utils/logger.js';
+import { classifyToolError, type ToolErrorDescriptor } from './toolErrorClassifier.js';
 
 // ---------------------------------------------------------------------------
 // TYPES
@@ -24,6 +25,8 @@ export interface RetryConfig {
   backoffMultiplier: number;
   /** Optional callback on each retry attempt */
   onRetry?: (attempt: number, delay: number, error: Error) => void;
+  /** Optional error classifier; when supplied, non-retryable errors stop the retry loop immediately. */
+  classifyError?: (error: unknown) => ToolErrorDescriptor;
 }
 
 export const DEFAULT_RETRY_CONFIG: RetryConfig = {
@@ -78,10 +81,27 @@ export async function withRetry<T>(
     } catch (error: unknown) {
       lastError = error instanceof Error ? error : new Error(String(error));
       logWarn('RetryStrategy', `Attempt ${attempt + 1} failed [${label}]: ${lastError.message}`);
+
+      const descriptor = cfg.classifyError?.(error);
+      if (descriptor && !descriptor.retryable) {
+        logWarn('RetryStrategy', `Stopping retries for [${label}] because error is non-retryable (${descriptor.type})`);
+        throw lastError;
+      }
     }
   }
 
   throw lastError!;
+}
+
+export function withClassifiedRetry<T>(
+  fn: () => Promise<T>,
+  label: string,
+  config: Partial<RetryConfig> = {},
+): Promise<T> {
+  return withRetry(fn, label, {
+    ...config,
+    classifyError: config.classifyError ?? classifyToolError,
+  });
 }
 
 // ---------------------------------------------------------------------------

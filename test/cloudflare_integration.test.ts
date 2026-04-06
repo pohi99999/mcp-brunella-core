@@ -77,6 +77,47 @@ describe("Cloudflare Edge Integration", () => {
     expect(history.tasks[0].id).toBe("1");
   });
 
+  it("should fetch workers and routing tables", async () => {
+    mockedAxios.get.mockResolvedValueOnce({
+      data: [
+        {
+          id: "worker-1",
+          agent_name: "Agent One",
+          is_healthy: true,
+          avg_latency_ms: 12.5,
+          worker_url: "https://worker-one.example",
+        },
+      ],
+    });
+
+    const workers = await client.fetchWorkers();
+
+    expect(mockedAxios.get).toHaveBeenCalledWith(`${baseUrl}/workers`, {
+      headers: expect.any(Object),
+    });
+    expect(workers).toHaveLength(1);
+    expect(workers[0].agent_name).toBe("Agent One");
+    expect(workers[0].worker_url).toBe("https://worker-one.example");
+
+    mockedAxios.get.mockResolvedValueOnce({
+      data: [
+        {
+          agent_name: "Agent One",
+          worker_url: "https://worker-one.example",
+        },
+      ],
+    });
+
+    const routing = await client.fetchRouting();
+
+    expect(mockedAxios.get).toHaveBeenCalledWith(`${baseUrl}/routing`, {
+      headers: expect.any(Object),
+    });
+    expect(routing).toHaveLength(1);
+    expect(routing[0].agent_name).toBe("Agent One");
+    expect(routing[0].worker_url).toBe("https://worker-one.example");
+  });
+
   it("should check status", async () => {
     const mockResponse = {
       data: {

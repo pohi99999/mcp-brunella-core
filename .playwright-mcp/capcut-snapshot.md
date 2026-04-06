@@ -1,0 +1,36 @@
+- generic [ref=e193]:
+  - generic [ref=e195]:
+    - generic [ref=e490]:
+      - menu [ref=e497]:
+        - generic [ref=e498]
+      - button [ref=e584] [cursor=pointer]
+    - generic [ref=e590]:
+      - generic [ref=e591]:
+        - generic [ref=e594] [cursor=pointer]
+        - button "Upload" [ref=e610] [cursor=pointer]
+      - alert [ref=e623]:
+        - generic [ref=e626] [cursor=pointer]
+      - grid "grid" [ref=e641]:
+        - generic [ref=e642]
+  - generic [ref=e355]:
+    - generic [ref=e356]:
+      - generic [ref=e898]:
+        - generic [ref=e899]: "202604060223"
+        - textbox [ref=e901]: "202604060223"
+        - generic [ref=e903]: "202604060223"
+      - generic [ref=e911] [cursor=pointer]: 100%
+      - button "Export" [ref=e915] [cursor=pointer]: Export
+      - generic:
+        - generic
+        - generic
+        - generic
+    - generic [ref=e429]:
+      - generic [ref=e430]:
+        - generic [ref=e433]
+        - generic [ref=e453]
+      - generic [ref=e489]:
+        - paragraph [ref=e3028] [cursor=pointer]: Basic
+        - paragraph [ref=e3034] [cursor=pointer]: Background
+        - paragraph [ref=e3040] [cursor=pointer]: Smart tools
+        - paragraph [ref=e3047] [cursor=pointer]: Animation
+        - paragraph [ref=e3053] [cursor=pointer]: Speed

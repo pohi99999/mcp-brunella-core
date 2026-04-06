@@ -11,16 +11,22 @@ import { formatAgentResult } from '../utils/responseFormatter.js';
 import { searchRAG, addToIndex } from '../utils/rag.js';
 import { logInfo, logError, setAgentStatus } from '../utils/logger.js';
 import { ensureError } from '../utils/ensureError.js';
-import { validateAgentResult } from './middleware/validateOutput.js';
 import { calculateConfidence } from './scoring/confidenceCalculator.js';
 import { wrapWithSpan } from '../utils/otelTracing.js';
-import { safeRedactAgentOutput } from '../security/redactor.js';
 import { checkPattern } from '../core/patternReuse.js';
 import { queryMemory as queryStructuredMemory, saveMemory as saveStructuredMemory, type StoredAgentMemory } from '../core/structuredMemory.js';
+import { guardAgentResponseOutput, guardAgentResultOutput } from '../core/outputGuard.js';
+import {
+  attachWorkingMemoryObservation,
+  appendWorkingMemoryMessage,
+  createWorkingMemoryState,
+  type WorkingMemoryState,
+} from '../core/workingMemory.js';
 
 export interface AgentContext {
   task?: string;
   swarm?: ISwarmContext;
+  workingMemory?: WorkingMemoryState;
   payload?: {
       bankCsvPath?: string;
       [key: string]: unknown;
@@ -136,10 +142,8 @@ export abstract class BaseAgent implements IAgent {
         cachedResult.metadata.cachedAt = cachedPattern.memory.updatedAt;
         cachedResult.metadata.reuseCount = cachedPattern.memory.reuseCount;
 
-        validateAgentResult(cachedResult, this.name);
-
         const formattedMessage = formatAgentResult(cachedResult, this.name, { useEmojis: true });
-        return safeRedactAgentOutput({
+        return guardAgentResponseOutput({
           success: cachedResult.success,
           status: cachedResult.success ? 'success' : 'error',
           message: formattedMessage,
@@ -157,25 +161,37 @@ export abstract class BaseAgent implements IAgent {
       () => this.queryMemory(task, 3),
     );
     
+    let workingMemory = createWorkingMemoryState();
+    workingMemory = appendWorkingMemoryMessage(workingMemory, { role: 'user', content: task });
+    for (const experience of pastExperiences) {
+      workingMemory = appendWorkingMemoryMessage(workingMemory, {
+        role: 'system',
+        content: experience.text.slice(0, 500),
+      });
+    }
+
     const agentContext: AgentContext = {
       task,
       pastExperiences, // Átadjuk az ügynöknek a múltbeli tapasztalatokat
+      workingMemory,
       ...(context || {})
     };
 
     setAgentStatus(this.name, 'working', task.slice(0, 50));
 
     try {
-      const result = await this.executeTask(agentContext);
+      const rawResult = await this.executeTask(agentContext);
 
-      // 2. Guardrails: AgentResult validáció
-      validateAgentResult(result, this.name);
+      // 2. Confidence scoring
+      const confidence = calculateConfidence(rawResult);
+      if (!rawResult.metadata) rawResult.metadata = {};
+      rawResult.metadata.confidence = confidence.score;
+      rawResult.metadata.confidenceFactors = confidence.factors;
 
-      // 3. Confidence scoring
-      const confidence = calculateConfidence(result);
-      if (!result.metadata) result.metadata = {};
-      result.metadata.confidence = confidence.score;
-      result.metadata.confidenceFactors = confidence.factors;
+      const result = guardAgentResultOutput(
+        attachWorkingMemoryObservation(rawResult, rawResult.message),
+        this.name,
+      );
 
       // 4. Tapasztalat mentése a memóriába (OTel sub-span)
       // Teszt módban kihagyjuk a perzisztens RAG IO-t a stabilitás/gyorsaság miatt.
@@ -213,7 +229,7 @@ export abstract class BaseAgent implements IAgent {
         handoff: result.handoff,
       };
 
-      return safeRedactAgentOutput(response, this.name);
+      return guardAgentResponseOutput(response, this.name);
     } finally {
       setAgentStatus(this.name, 'idle');
     }

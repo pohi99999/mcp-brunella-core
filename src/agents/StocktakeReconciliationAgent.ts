@@ -12,6 +12,7 @@ import { IAgent, AgentResponse } from './types.js';
 import { logInfo, logError, setAgentStatus } from '../utils/logger.js';
 import { generateResponse } from '../core/llm_client.js';
 import { getItemBySku, getMovementsByItem } from '../utils/inventoryDb.js';
+import { safeJsonParse } from '../utils/aiHelpers.js';
 
 export interface StocktakeReconTask {
   sku: string;
@@ -38,7 +39,10 @@ export class StocktakeReconciliationAgent implements IAgent {
   async execute(task: string, context?: unknown): Promise<AgentResponse> {
     setAgentStatus(this.name, 'working', task.slice(0, 50));
     try {
-      const payload: StocktakeReconTask = JSON.parse(task);
+      const payload = safeJsonParse<StocktakeReconTask | null>(task, null);
+      if (!payload) {
+        return { status: 'error', error: 'Érvénytelen stocktake reconciliation payload.' };
+      }
       const item = await getItemBySku(payload.sku);
 
       if (!item) {

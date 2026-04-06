@@ -1,0 +1,132 @@
+- generic [ref=e1]:
+  - generic [ref=e12]:
+    - generic [ref=e14]:
+      - generic [ref=e15]:
+        - menu [ref=e22]:
+          - generic [ref=e23]:
+            - menuitem "Media" [ref=e24] [cursor=pointer]:
+              - generic [ref=e29]: Media
+            - menuitem "Templates" [ref=e31] [cursor=pointer]:
+              - generic [ref=e35]: Templates
+            - menuitem "Elements" [ref=e37] [cursor=pointer]:
+              - generic [ref=e42]: Elements
+            - menuitem "Audio" [ref=e44] [cursor=pointer]:
+              - generic [ref=e48]: Audio
+            - menuitem "Text" [ref=e50] [cursor=pointer]:
+              - generic [ref=e54]: Text
+            - menuitem "Captions" [ref=e56] [cursor=pointer]:
+              - generic [ref=e61]: Captions
+            - menuitem "Transcript" [ref=e63] [cursor=pointer]:
+              - generic [ref=e67]: Transcript
+            - menuitem "Effects" [ref=e69] [cursor=pointer]:
+              - generic [ref=e73]: Effects
+            - menuitem "Transitions" [ref=e75] [cursor=pointer]:
+              - generic [ref=e79]: Transitions
+            - menuitem "Filters" [ref=e81] [cursor=pointer]:
+              - generic [ref=e85]: Filters
+            - menuitem "Brand kit" [ref=e87] [cursor=pointer]:
+              - generic [ref=e88]:
+                - generic [ref=e94]: Brand
+                - generic [ref=e95]: kit
+            - menuitem "Plugins" [ref=e98] [cursor=pointer]:
+              - generic [ref=e102]: Plugins
+        - button [ref=e109] [cursor=pointer]
+      - generic [ref=e115]:
+        - generic [ref=e116]:
+          - generic [ref=e532] [cursor=pointer]:
+            - generic [ref=e533]: J
+            - generic [ref=e534]: József Péter Pohánka tára
+          - button "Upload" [active] [ref=e127] [cursor=pointer]:
+            - generic [ref=e131]: Upload
+        - alert [ref=e137]:
+          - generic [ref=e140] [cursor=pointer]:
+            - generic [ref=e141]:
+              - img [ref=e587]
+              - generic [ref=e144]:
+                - paragraph [ref=e145]: Text to speech
+                - paragraph [ref=e146]: Turn any text into lifelike speech in seconds.
+            - button "Try it" [ref=e148]:
+              - generic [ref=e149]: Try it
+        - paragraph [ref=e552]:
+          - text: There’s nothing yet
+          - text: Drag and drop your files here
+    - generic [ref=e172]:
+      - generic [ref=e173]:
+        - generic [ref=e183]:
+          - generic [ref=e184]: "202604060223"
+          - textbox [ref=e186]: "202604060223"
+          - generic [ref=e188]: "202604060223"
+        - generic [ref=e207]: 100%
+        - generic [ref=e224]:
+          - generic [ref=e228]:
+            - img "József Péter Pohánka" [ref=e572] [cursor=pointer]
+            - separator [ref=e238]
+          - button "Export" [ref=e245] [cursor=pointer]: Export
+        - generic:
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - generic: "202604060223"
+                  - generic:
+                    - textbox: "202604060223"
+                  - generic:
+                    - generic: "202604060223"
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - generic: 100%
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - generic:
+                    - generic:
+                      - generic:
+                        - img "József Péter Pohánka"
+                  - separator
+          - generic:
+            - generic:
+              - generic:
+                - button "Export": Export
+      - generic [ref=e276]:
+        - generic [ref=e279]:
+          - generic [ref=e284]:
+            - paragraph [ref=e288]: Click to upload
+            - paragraph [ref=e289]: Or drag and drop file here
+          - main [ref=e298]
+          - generic [ref=e308] [cursor=pointer]: Ratio
+        - generic [ref=e314]:
+          - generic [ref=e315]:
+            - generic [ref=e316]:
+              - button [disabled]
+            - generic [ref=e317]:
+              - button [disabled]
+          - generic [ref=e323]:
+            - generic [ref=e324]: 00:00:00
+            - generic [ref=e326]: 00:00:00
+          - generic [ref=e327]:
+            - button [ref=e328] [cursor=pointer]
+            - button [ref=e331] [cursor=pointer]
+            - button [ref=e335] [cursor=pointer]
+            - button [ref=e339]
+            - button [ref=e345]
+            - separator [ref=e348]
+            - generic [ref=e349]:
+              - button [disabled]
+            - button [ref=e350] [cursor=pointer]
+  - menu [ref=e589]:
+    - generic [ref=e590]:
+      - menuitem "Upload file" [ref=e591] [cursor=pointer]:
+        - generic [ref=e596]: Upload file
+      - menuitem "Upload folder" [ref=e597] [cursor=pointer]:
+        - generic [ref=e602]: Upload folder
+      - menuitem [ref=e603]:
+        - separator [ref=e604]
+      - menuitem "Google Drive" [ref=e605] [cursor=pointer]:
+        - generic [ref=e609]: Google Drive
+      - menuitem "Dropbox" [ref=e610] [cursor=pointer]:
+        - generic [ref=e614]: Dropbox
+      - menuitem "Share upload link" [ref=e615] [cursor=pointer]:
+        - generic [ref=e616]: Share upload link

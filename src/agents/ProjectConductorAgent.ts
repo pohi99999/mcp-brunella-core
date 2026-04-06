@@ -5,6 +5,7 @@ import * as fs from "fs";
 import * as path from "path";
 import { execSync } from "child_process";
 import { ensureError } from "../utils/ensureError.js";
+import * as sdlcPipeline from "../core/sdlcPipeline.js";
 
 // ============================================================================
 // INTERFACES
@@ -370,7 +371,8 @@ ${(this.projectState.components || []).map((c) => `- **${c.name}:** ${c.status =
     name: string,
     context: AgentContext,
   ): Promise<AgentResult> {
-    const trackId = `${name.toLowerCase().replace(/\s+/g, "_")}_${new Date().toISOString().slice(0, 10).replace(/-/g, "")}`;
+    const createdAt = new Date().toISOString();
+    const trackId = `${name.toLowerCase().replace(/\s+/g, "_")}_${createdAt.slice(0, 10).replace(/-/g, "")}`;
     const trackDir = path.join(CONDUCTOR_PATH, "tracks", trackId);
 
     logInfo(this.name, `Új track létrehozása: ${trackId}`);
@@ -386,7 +388,7 @@ ${(this.projectState.components || []).map((c) => `- **${c.name}:** ${c.status =
 **ID:** \`${trackId}\`
 **Státusz:** 🟡 Active
 **Prioritás:** MEDIUM
-**Létrehozva:** ${new Date().toISOString()}
+**Létrehozva:** ${createdAt}
 
 ---
 
@@ -413,11 +415,28 @@ ${(this.projectState.components || []).map((c) => `- **${c.name}:** ${c.status =
 
 ## 📝 Napló
 
-### ${new Date().toISOString().slice(0, 10)}
+### ${createdAt.slice(0, 10)}
 - Track létrehozva
 `;
 
     fs.writeFileSync(path.join(trackDir, "plan.md"), planContent);
+
+    const meta = {
+      id: trackId,
+      name,
+      title: name,
+      status: "active",
+      priority: "medium",
+      progress: 0,
+      created_at: createdAt,
+      updated_at: createdAt,
+    };
+
+    fs.writeFileSync(
+      path.join(trackDir, "meta.json"),
+      JSON.stringify(meta, null, 2),
+      "utf-8",
+    );
 
     // Track hozzáadása az állapothoz
     const newTrack: TrackState = {
@@ -426,16 +445,22 @@ ${(this.projectState.components || []).map((c) => `- **${c.name}:** ${c.status =
       status: "active",
       priority: "medium",
       progress: 0,
-      lastActivity: new Date().toISOString(),
+      lastActivity: createdAt,
       blockers: [],
     };
 
     this.projectState.tracks.push(newTrack);
     this.addChangeEntry("track", "created", trackDir, `Új track: ${name}`);
     this.saveState();
+    sdlcPipeline.init(trackId, trackDir);
 
     // tracks.md frissítése
     await this.updateTracksFile();
+
+    void sdlcPipeline.advance(trackId, trackDir).catch((error: unknown) => {
+      const err = ensureError(error);
+      logError(this.name, `Automatikus SDLC pipeline hiba (${trackId}): ${err.message}`);
+    });
 
     return {
       success: true,
@@ -478,7 +503,7 @@ ${(this.projectState.components || []).map((c) => `- **${c.name}:** ${c.status =
       if (fs.existsSync(metaPath)) {
         try {
           const raw = fs.readFileSync(metaPath, "utf-8");
-          const meta = JSON.parse(raw) as any;
+          const meta = JSON.parse(raw) as Record<string, unknown>;
 
           const id = String(meta.track_id ?? meta.id ?? dir);
           const name = String(meta.title ?? meta.name ?? dir);
@@ -1237,7 +1262,7 @@ ${capabilities.length > 0 ? capabilities.map((c) => `- \`${c}\``).join("\n") : "
       components: [],
       recentChanges: [],
       healthStatus: {
-        overall: "unknown" as any,
+        overall: "unknown" as unknown as HealthStatus["overall"],
         buildStatus: false,
         testStatus: false,
         documentationSync: false,

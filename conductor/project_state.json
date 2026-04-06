@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-04-05T22:00:00.323Z",
+  "lastUpdated": "2026-04-06T20:39:50.169Z",
   "tracks": [
     {
       "id": "apify_deep_scraping_agent_20260223",
@@ -60,9 +60,9 @@
     {
       "id": "brunella_identity_project_maintainer_20260402",
       "name": "Brunella Identity + Project Maintainer",
-      "status": "proposed",
+      "status": "completed",
       "priority": "high",
-      "progress": 0,
+      "progress": 100,
       "tags": [
         "brunella",
         "identity",
@@ -159,6 +159,45 @@
       ],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\cloudflare_workers_migration_20260226",
       "_isArchived": true
+    },
+    {
+      "id": "copilot_self_improvement_loop_20260406",
+      "name": "Copilot CLI Self-Improvement Loop — Gödel-Agent Integration",
+      "status": "active",
+      "priority": "high",
+      "progress": 0,
+      "tags": [
+        "self-improvement",
+        "copilot-cli",
+        "agent-skills",
+        "metacognition",
+        "godel-agent"
+      ],
+      "dependencies": [
+        "brunella_reflection_continual_learning_20260402"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\copilot_self_improvement_loop_20260406",
+      "_isArchived": false
+    },
+    {
+      "id": "dashboard_conductor_monitor_visibility_20260406",
+      "name": "Dashboard conductor monitor láthatósági javítás",
+      "status": "completed",
+      "priority": "high",
+      "progress": 100,
+      "created": "2026-04-06",
+      "updated": "2026-04-06",
+      "assignee": "GitHub Copilot",
+      "tags": [
+        "dashboard",
+        "conductor",
+        "tracks",
+        "navigation",
+        "i18n"
+      ],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\dashboard_conductor_monitor_visibility_20260406",
+      "_isArchived": false
     },
     {
       "id": "jules_pr_integration_20260222",
@@ -826,6 +865,25 @@
       ],
       "dependencies": [],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\type_safety_enforcement_20260404",
+      "_isArchived": false
+    },
+    {
+      "id": "type_safety_followup_browser_wrangler_20260406",
+      "name": "Type Safety Follow-up — Browser and Wrangler helpers",
+      "status": "proposed",
+      "priority": "medium",
+      "progress": 0,
+      "updated": "2026-04-06",
+      "tags": [
+        "typescript",
+        "types",
+        "safety",
+        "helpers"
+      ],
+      "dependencies": [
+        "type_safety_enforcement_20260404"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\type_safety_followup_browser_wrangler_20260406",
       "_isArchived": false
     },
     {
@@ -3790,9 +3848,9 @@
     }
   ],
   "stats": {
-    "total": 207,
-    "active": 10,
-    "completed": 15,
+    "total": 210,
+    "active": 11,
+    "completed": 17,
     "archived": 176,
     "proposed": 6
   }

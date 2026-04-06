@@ -83,6 +83,9 @@ export function createV1Router(): Router {
   router.use("/szamlazz", lazy(() => import("./szamlazz.js"), "createSzamlazzRoutes"));
   router.use("/inventory", lazy(() => import("./inventory.js"), "createInventoryRoutes"));
   router.use("/hr-onboarding", lazy(() => import("./hrOnboarding.js"), "createHROnboardingRoutes"));
+  router.use("/hr/leave", lazy(() => import("./hrLeave.js"), "createHRLeaveRoutes"));
+  router.use("/hr/timesheet", lazy(() => import("./hrTimesheet.js"), "createHRTimesheetRoutes"));
+  router.use("/hr/timesheet", lazy(() => import("./hrTimesheet.js"), "createHRTimesheetRoutes"));
   router.use("/machines", lazy(() => import("./machines.js"), "createMachinesRouter"));
   router.use("/enterprise", lazy(() => import("./enterprise.js"), "createEnterpriseRouter"));
   router.use("/enterprise/analytics", lazy(() => import("./enterprise.js"), "createEnterpriseAnalyticsRouter"));
@@ -167,6 +170,7 @@ export function createV1Router(): Router {
   router.use("/psales/research", lazy(() => import("./psales-research.js"), "createPSalesResearchRoutes"));
   router.use("/psales/strategy", lazy(() => import("./psales-strategy.js"), "createPSalesStrategyRoutes"));
   router.use("/voice", lazy(() => import("./voice.js"), "default"));
+  router.use("/project-maintainer", lazy(() => import("./projectMaintainer.js"), "createProjectMaintainerRoutes", db));
 
   return router;
 }

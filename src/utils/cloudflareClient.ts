@@ -5,17 +5,295 @@ import {
 } from "../core/zeroPromptEdgeMirrorSummary.js";
 import { getBasCloudflareApiToken } from "./cloudflareConfig.js";
 
-export interface CloudflareTaskResponse {
+type JsonRecord = Record<string, unknown>;
+
+export interface CloudflareTaskResponse extends JsonRecord {
   success: boolean;
   taskId: string;
   type: string;
   result?: unknown;
   message: string;
+  error?: string;
 }
 
-type CloudflareHistoryResponse = {
-  tasks?: unknown[];
-};
+export interface CloudflareTaskStatusResponse extends JsonRecord {
+  taskId?: string;
+  id?: string;
+  status: string;
+  progress?: number;
+  currentStep?: string;
+  result?: unknown;
+  error?: string;
+}
+
+export interface CloudflareHistoryTask extends JsonRecord {
+  id: string;
+  instruction: string;
+  status: string;
+  created_at?: string;
+  createdAt?: string;
+  taskId?: string;
+  type?: string;
+  result?: unknown;
+}
+
+export interface CloudflareHistoryResponse extends JsonRecord {
+  tasks?: CloudflareHistoryTask[];
+}
+
+export interface CloudflareWorkerRecord extends JsonRecord {
+  id?: string;
+  agent_name?: string;
+  is_healthy?: boolean;
+  avg_latency_ms?: number;
+  worker_url?: string;
+}
+
+export interface CloudflareRoutingRecord extends JsonRecord {
+  agent_name: string;
+  worker_url: string;
+}
+
+export interface CloudflareDispatchResponse extends JsonRecord {
+  requestId?: string;
+  status?: string;
+  workerUrl?: string;
+  result?: unknown;
+  error?: string;
+  success?: boolean;
+}
+
+function isRecord(value: unknown): value is JsonRecord {
+  return typeof value === "object" && value !== null;
+}
+
+function pickString(...values: unknown[]): string | undefined {
+  for (const value of values) {
+    if (typeof value === "string" && value.trim().length > 0) {
+      return value;
+    }
+  }
+
+  return undefined;
+}
+
+function pickNumber(value: unknown): number | undefined {
+  return typeof value === "number" && Number.isFinite(value) ? value : undefined;
+}
+
+function normalizeTaskResponse(data: unknown): CloudflareTaskResponse {
+  if (!isRecord(data)) {
+    return {
+      success: false,
+      taskId: "",
+      type: "",
+      message: String(data),
+    };
+  }
+
+  const taskId = pickString(data.taskId, data.id) ?? "";
+  const type = pickString(data.type) ?? "";
+  const message = pickString(data.message) ?? "";
+
+  return {
+    ...data,
+    success: typeof data.success === "boolean" ? data.success : Boolean(data.success),
+    taskId,
+    type,
+    message,
+  };
+}
+
+function normalizeTaskStatusResponse(data: unknown): CloudflareTaskStatusResponse {
+  if (!isRecord(data)) {
+    return {
+      status: pickString(data) ?? "unknown",
+    };
+  }
+
+  const taskId = pickString(data.taskId, data.id);
+  const status = pickString(data.status) ?? "unknown";
+  const progress = pickNumber(data.progress);
+  const currentStep = pickString(data.currentStep);
+  const error = pickString(data.error);
+
+  const normalized: CloudflareTaskStatusResponse = {
+    ...data,
+    status,
+  };
+
+  if (taskId) {
+    normalized.taskId = taskId;
+  }
+
+  if (pickString(data.id)) {
+    normalized.id = pickString(data.id);
+  }
+
+  if (typeof progress === "number") {
+    normalized.progress = progress;
+  }
+
+  if (currentStep) {
+    normalized.currentStep = currentStep;
+  }
+
+  if (error) {
+    normalized.error = error;
+  }
+
+  return normalized;
+}
+
+function normalizeHistoryTask(data: unknown): CloudflareHistoryTask | null {
+  if (!isRecord(data)) {
+    return null;
+  }
+
+  const id = pickString(data.id, data.taskId);
+  const instruction = pickString(data.instruction, data.prompt, data.message);
+  const status = pickString(data.status) ?? "unknown";
+  const createdAt = pickString(data.created_at, data.createdAt);
+
+  if (!id || !instruction) {
+    return null;
+  }
+
+  const task: CloudflareHistoryTask = {
+    ...data,
+    id,
+    instruction,
+    status,
+  };
+
+  if (pickString(data.taskId)) {
+    task.taskId = pickString(data.taskId);
+  }
+
+  if (pickString(data.type)) {
+    task.type = pickString(data.type);
+  }
+
+  if (createdAt) {
+    task.created_at = createdAt;
+    task.createdAt = createdAt;
+  }
+
+  return task;
+}
+
+function normalizeHistoryResponse(data: unknown): CloudflareHistoryResponse {
+  if (!isRecord(data)) {
+    return { tasks: [] };
+  }
+
+  const rawTasks = Array.isArray(data.tasks)
+    ? data.tasks
+    : Array.isArray(data.results)
+      ? data.results
+      : [];
+
+  return {
+    ...data,
+    tasks: rawTasks
+      .map((task) => normalizeHistoryTask(task))
+      .filter((task): task is CloudflareHistoryTask => task !== null),
+  };
+}
+
+function normalizeWorkerRecord(data: unknown): CloudflareWorkerRecord | null {
+  if (!isRecord(data)) {
+    return null;
+  }
+
+  const record: CloudflareWorkerRecord = {
+    ...data,
+  };
+
+  const id = pickString(data.id);
+  const agentName = pickString(data.agent_name);
+  const workerUrl = pickString(data.worker_url);
+
+  if (id) {
+    record.id = id;
+  }
+
+  if (agentName) {
+    record.agent_name = agentName;
+  }
+
+  if (typeof data.is_healthy === "boolean") {
+    record.is_healthy = data.is_healthy;
+  }
+
+  const avgLatencyMs = pickNumber(data.avg_latency_ms);
+  if (typeof avgLatencyMs === "number") {
+    record.avg_latency_ms = avgLatencyMs;
+  }
+
+  if (workerUrl) {
+    record.worker_url = workerUrl;
+  }
+
+  return record;
+}
+
+function normalizeWorkerListResponse(data: unknown): CloudflareWorkerRecord[] {
+  const rawItems =
+    Array.isArray(data) ? data : isRecord(data) && Array.isArray(data.results) ? data.results : [];
+
+  return rawItems
+    .map((item) => normalizeWorkerRecord(item))
+    .filter((item): item is CloudflareWorkerRecord => item !== null);
+}
+
+function normalizeRoutingRecord(data: unknown): CloudflareRoutingRecord | null {
+  if (!isRecord(data)) {
+    return null;
+  }
+
+  const agent_name = pickString(data.agent_name);
+  const worker_url = pickString(data.worker_url);
+
+  if (!agent_name || !worker_url) {
+    return null;
+  }
+
+  return {
+    ...data,
+    agent_name,
+    worker_url,
+  };
+}
+
+function normalizeRoutingListResponse(data: unknown): CloudflareRoutingRecord[] {
+  const rawItems =
+    Array.isArray(data) ? data : isRecord(data) && Array.isArray(data.results) ? data.results : [];
+
+  return rawItems
+    .map((item) => normalizeRoutingRecord(item))
+    .filter((item): item is CloudflareRoutingRecord => item !== null);
+}
+
+function normalizeDispatchResponse(data: unknown): CloudflareDispatchResponse {
+  if (!isRecord(data)) {
+    return {
+      success: false,
+    };
+  }
+
+  const requestId = pickString(data.requestId);
+  const status = pickString(data.status);
+  const workerUrl = pickString(data.workerUrl);
+
+  return {
+    ...data,
+    success: typeof data.success === "boolean" ? data.success : Boolean(data.success),
+    ...(requestId ? { requestId } : {}),
+    ...(status ? { status } : {}),
+    ...(workerUrl ? { workerUrl } : {}),
+  };
+}
 
 export class CloudflareClient {
   private baseUrl: string;
@@ -75,7 +353,7 @@ export class CloudflareClient {
     context: Record<string, unknown> = {},
   ): Promise<CloudflareTaskResponse> {
     try {
-      const response = await axios.post<CloudflareTaskResponse>(
+      const response = await axios.post<unknown>(
         `${this.baseUrl}/task`,
         {
           instruction,
@@ -87,7 +365,7 @@ export class CloudflareClient {
         },
       );
 
-      return response.data;
+      return normalizeTaskResponse(response.data);
     } catch (error: unknown) {
       const message = this.getAxiosErrorMessage(error);
       throw new Error(`Cloudflare submission failed: ${message}`);
@@ -98,52 +376,55 @@ export class CloudflareClient {
     agent: string,
     task: string,
     context: Record<string, unknown> = {},
-    requestId?: string
-  ): Promise<any> {
+    requestId?: string,
+  ): Promise<CloudflareDispatchResponse> {
     try {
-      const response = await axios.post(
+      const response = await axios.post<unknown>(
         `${this.baseUrl}/dispatch`,
         { agent, task, context, requestId },
         {
           headers: this.getAuthHeaders(),
           timeout: 90000,
-        }
+        },
       );
-      return response.data;
+
+      return normalizeDispatchResponse(response.data);
     } catch (error: unknown) {
       const message = this.getAxiosErrorMessage(error);
       throw new Error(`Cloudflare dispatch failed: ${message}`);
     }
   }
 
-  async fetchWorkers(): Promise<any[]> {
+  async fetchWorkers(): Promise<CloudflareWorkerRecord[]> {
     try {
-      const response = await axios.get(`${this.baseUrl}/workers`, {
-        headers: this.getAuthHeaders()
+      const response = await axios.get<unknown>(`${this.baseUrl}/workers`, {
+        headers: this.getAuthHeaders(),
       });
-      return response.data;
+
+      return normalizeWorkerListResponse(response.data);
     } catch (error: unknown) {
       const message = this.getAxiosErrorMessage(error);
       throw new Error(`Workers fetch failed: ${message}`);
     }
   }
 
-  async fetchRouting(): Promise<any[]> {
+  async fetchRouting(): Promise<CloudflareRoutingRecord[]> {
     try {
-      const response = await axios.get(`${this.baseUrl}/routing`, {
-        headers: this.getAuthHeaders()
+      const response = await axios.get<unknown>(`${this.baseUrl}/routing`, {
+        headers: this.getAuthHeaders(),
       });
-      return response.data;
+
+      return normalizeRoutingListResponse(response.data);
     } catch (error: unknown) {
       const message = this.getAxiosErrorMessage(error);
       throw new Error(`Routing fetch failed: ${message}`);
     }
   }
 
-  async checkStatus(taskId: string): Promise<unknown> {
+  async checkStatus(taskId: string): Promise<CloudflareTaskStatusResponse> {
     try {
-      const response = await axios.get(`${this.baseUrl}/status/${taskId}`);
-      return response.data;
+      const response = await axios.get<unknown>(`${this.baseUrl}/status/${taskId}`);
+      return normalizeTaskStatusResponse(response.data);
     } catch (error: unknown) {
       const message = this.getAxiosErrorMessage(error);
       throw new Error(`Status check failed: ${message}`);
@@ -152,8 +433,10 @@ export class CloudflareClient {
 
   async fetchHistory(limit: number = 20): Promise<CloudflareHistoryResponse> {
     try {
-      const response = await axios.get<CloudflareHistoryResponse>(`${this.baseUrl}/history?limit=${limit}`);
-      return response.data;
+      const response = await axios.get<unknown>(
+        `${this.baseUrl}/history?limit=${limit}`,
+      );
+      return normalizeHistoryResponse(response.data);
     } catch (error: unknown) {
       const message = this.getAxiosErrorMessage(error);
       throw new Error(`History fetch failed: ${message}`);

@@ -4,12 +4,16 @@ import { BaseAgent, AgentContext, AgentResult } from './BaseAgent.js';
 import { BookkeepingTransaction, TransactionStatus, NavInvoiceData, BankTransactionData } from '../types/bookkeeping.d.js';
 import { logError } from '../utils/logger.js';
 
-function isNavInvoiceData(data: any): data is NavInvoiceData {
-    return data && typeof data.invoiceNumber === 'string';
+function isRecord(data: unknown): data is Record<string, unknown> {
+    return typeof data === 'object' && data !== null;
 }
 
-function isBankTransactionData(data: any): data is BankTransactionData {
-    return data && typeof data.date === 'string';
+function isNavInvoiceData(data: unknown): data is NavInvoiceData {
+    return isRecord(data) && typeof data.invoiceNumber === 'string';
+}
+
+function isBankTransactionData(data: unknown): data is BankTransactionData {
+    return isRecord(data) && typeof data.date === 'string';
 }
 
 

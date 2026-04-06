@@ -15,7 +15,7 @@
  * @version 1.0.0
  */
 
-import { BaseAgent } from './BaseAgent.js';
+import { BaseAgent, type AgentContext, type AgentResult } from './BaseAgent.js';
 import { AgentResponse } from './types.js';
 import { logInfo, logError, logDebug, setAgentStatus } from '../utils/logger.js';
 import { ensureError } from '../utils/ensureError.js';
@@ -74,6 +74,15 @@ interface CSRReport {
   complianceGaps: string[];
 }
 
+interface CSRTaskParams extends CSRImpactData {
+  eventType?: string;
+  budget?: number;
+  activityType?: string;
+  participants?: string | number;
+  location?: string;
+  activities?: unknown[];
+}
+
 // ============================================================================
 // Local CSR Agent Implementation
 // ============================================================================
@@ -100,9 +109,17 @@ export class LocalCSRAgent extends BaseAgent {
   /**
    * Execute task (BaseAgent interface)
    */
-  async executeTask(context: any): Promise<any> {
-    const task = context.task || context;
-    return this.execute(task, context);
+  async executeTask(context: AgentContext): Promise<AgentResult> {
+    const task = typeof context.task === 'string' ? context.task : '';
+    const response = await this.execute(task, context);
+
+    return {
+      success: response.success ?? response.status === 'success',
+      status: response.status,
+      message: response.message ?? 'CSR report generated.',
+      data: response.data,
+      metadata: response.metadata,
+    };
   }
 
   /**
@@ -127,26 +144,32 @@ export class LocalCSRAgent extends BaseAgent {
       logInfo(this.name, `✅ CSR tracking complete: ${result.totalCO2.toFixed(1)} kg CO2, ${result.impactProjects.length} charity projects`);
 
       // Transform result to match test expectations
+      const eventType = typeof params.eventType === 'string' ? params.eventType : undefined;
+      const budget = typeof params.budget === 'number' ? params.budget : undefined;
+      const activityType = typeof params.activityType === 'string' ? params.activityType : undefined;
+      const location = typeof params.location === 'string' ? params.location : undefined;
+      const participants = params.participants;
+
       const transformedResult = {
-        events: (params as any).eventType ? [
-          { id: 1, title: 'Spay & Neuter Drive', type: (params as any).eventType, location: (params as any).location, date: '2026-03-15' },
-          { id: 2, title: 'Community Garden', type: (params as any).eventType, location: (params as any).location, date: '2026-04-10' },
-          { id: 3, title: 'Educational Workshop', type: (params as any).eventType, location: (params as any).location, date: '2026-05-05' }
+        events: eventType ? [
+          { id: 1, title: 'Spay & Neuter Drive', type: eventType, location, date: '2026-03-15' },
+          { id: 2, title: 'Community Garden', type: eventType, location, date: '2026-04-10' },
+          { id: 3, title: 'Educational Workshop', type: eventType, location, date: '2026-05-05' }
         ] : [],
-        sponsorshipOpportunities: (params as any).budget ? [
-          { name: 'Festival Sponsorship', cost: (params as any).budget * 0.5, target: (params as any).location, impact: 'High visibility' },
-          { name: 'Local School Support', cost: (params as any).budget * 0.3, target: (params as any).location, impact: 'Educational impact' },
-          { name: 'Community Event', cost: (params as any).budget * 0.2, target: (params as any).location, impact: 'Social impact' }
+        sponsorshipOpportunities: budget ? [
+          { name: 'Festival Sponsorship', cost: budget * 0.5, target: location, impact: 'High visibility' },
+          { name: 'Local School Support', cost: budget * 0.3, target: location, impact: 'Educational impact' },
+          { name: 'Community Event', cost: budget * 0.2, target: location, impact: 'Social impact' }
         ] : [],
-        pressRelease: (params as any).activityType ? {
-          title: `[SAJTÓKÖZLEMÉNY] ${(params as any).participants || 'Segítők'} a ${(params as any).location || 'közösségért'}`,
-          body: `Közösségi akció: ${(params as any).activityType}. Résztvevők: ${(params as any).participants || 'számos'}. Siker és hatás!`,
+        pressRelease: activityType ? {
+          title: `[SAJTÓKÖZLEMÉNY] ${participants || 'Segítők'} a ${location || 'közösségért'}`,
+          body: `Közösségi akció: ${activityType}. Résztvevők: ${participants || 'számos'}. Siker és hatás!`,
           date: new Date().toISOString().split('T')[0],
           tags: ['CSR', 'community', 'impact']
         } : undefined,
-        socialMediaPosts: (params as any).activityType ? [
-          { platform: 'Facebook', text: `Csodálatos nap volt! ${(params as any).participants || 'Csapat'} dolgozik a jövőért 🌱 #CSR #Közösség` },
-          { platform: 'LinkedIn', text: `Corporate Social Responsibility in Action: ${(params as any).activityType}. Proud of our commitment! 💚` }
+        socialMediaPosts: activityType ? [
+          { platform: 'Facebook', text: `Csodálatos nap volt! ${participants || 'Csapat'} dolgozik a jövőért 🌱 #CSR #Közösség` },
+          { platform: 'LinkedIn', text: `Corporate Social Responsibility in Action: ${activityType}. Proud of our commitment! 💚` }
         ] : [],
         impactReport: {
           totalImpact: result.totalCO2.toFixed(1),
@@ -442,11 +465,11 @@ export class LocalCSRAgent extends BaseAgent {
   /**
    * Parse CSR parameters from task input
    */
-  private parseCSRParams(task: string): CSRImpactData {
+  private parseCSRParams(task: string): CSRTaskParams {
     try {
-      const parsed = JSON.parse(task);
-      if (parsed.trackingPeriod || parsed.officeEnergyKwh || parsed.eventType || parsed.budget || parsed.activityType || parsed.activities) {
-        return parsed as CSRImpactData;
+      const parsed: unknown = JSON.parse(task);
+      if (this.isCSRTaskParams(parsed)) {
+        return parsed;
       }
     } catch (error: unknown) {
       const err = ensureError(error);
@@ -458,6 +481,28 @@ export class LocalCSRAgent extends BaseAgent {
     return {
       trackingPeriod: 'Q1 2026',
     };
+  }
+
+  private isCSRTaskParams(value: unknown): value is CSRTaskParams {
+    if (!this.isRecord(value)) {
+      return false;
+    }
+
+    return Boolean(
+      value.trackingPeriod ||
+      value.officeEnergyKwh ||
+      value.businessTravelKm ||
+      value.eventType ||
+      value.budget ||
+      value.activityType ||
+      value.activities ||
+      value.participants ||
+      value.location
+    );
+  }
+
+  private isRecord(value: unknown): value is Record<string, unknown> {
+    return typeof value === 'object' && value !== null;
   }
 }
 

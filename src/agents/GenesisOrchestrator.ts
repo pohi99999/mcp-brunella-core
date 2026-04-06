@@ -4,6 +4,19 @@ import type { SpecDocument, AgentTaskQueueItem } from "../types/blueprint.js";
 import { agentManager } from "../agents/AgentManager.js";
 import { ensureError } from "../utils/ensureError.js";
 
+type SpecMetadataCarrier = {
+  spec?: SpecDocument;
+};
+
+function readSpecDocument(context: AgentContext): SpecDocument | undefined {
+  const metadata = context.metadata;
+  if ((typeof metadata !== "object" || metadata === null) && typeof metadata !== "function") {
+    return undefined;
+  }
+
+  return (metadata as SpecMetadataCarrier).spec;
+}
+
 /**
  * GenesisOrchestrator - Szoftver-Genesis Karmester
  * 
@@ -26,7 +39,7 @@ export class GenesisOrchestrator extends BaseAgent {
 
     try {
       if (task.includes("genesis") || task.includes("futtasd") || task.includes("run")) {
-        const spec = (context as any)?.metadata?.spec as SpecDocument;
+        const spec = readSpecDocument(context);
         if (!spec) {
           return { success: false, message: "Hiányzó SpecDocument (metadata.spec). Először generálj egyet a SpecWriterAgent-tel." };
         }

@@ -1,0 +1,48 @@
+{
+  "id": "agent_runtime_hardening_20260406",
+  "title": "Agent Runtime Hardening — ReAct, Working Memory, Tool Errors, Guardrails",
+  "status": "active",
+  "priority": "critical",
+  "createdAt": "2026-04-06T22:55:00.000Z",
+  "owner": "GitHub Copilot",
+  "progress": 75,
+  "phase": "coder",
+  "dependencies": [
+    "brunella_reflection_continual_learning_20260402"
+  ],
+  "tags": [
+    "runtime",
+    "react-loop",
+    "working-memory",
+    "guardrails",
+    "tool-errors",
+    "orchestrator"
+  ],
+  "description": "A Brunella agent runtime megerősítése explicit ReAct scratchpad-del, strukturált working memory-val, osztályozott tool error kezeléssel és tartalom-szintű output guardrailssel.",
+  "sdlc": {
+    "enabled": true,
+    "phases": {
+      "architect": { "status": "completed", "completedAt": "2026-04-06" },
+      "devops": { "status": "completed", "completedAt": "2026-04-06" },
+      "coder": { "status": "in_progress" },
+      "qa": { "status": "pending" },
+      "reviewer": { "status": "pending" }
+    }
+  },
+  "deliverables": [
+    "src/core/reactLoop.ts",
+    "src/core/workingMemory.ts",
+    "src/core/toolErrorClassifier.ts",
+    "src/core/outputGuard.ts",
+    "src/core/toolRunCapture.ts",
+    "src/agents/BaseAgent.ts",
+    "src/agents/OrchestratorAgent.ts",
+    "src/core/universalOrchestratorService.ts",
+    "test/toolErrorClassifier.test.ts",
+    "test/reactLoop.test.ts",
+    "test/workingMemory.test.ts",
+    "test/guardrails/outputGuard.test.ts",
+    "test/orchestratorReact.test.ts",
+    "test/golden-dataset-tools.vitest.ts"
+  ]
+}

@@ -1,8 +1,9 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, type Mock } from 'vitest';
 import { OrchestratorAgent } from '../src/agents/OrchestratorAgent.js';
 import * as bifrostGateway from '../src/core/bifrost_gateway.js';
 import { agentManager } from '../src/agents/AgentManager.js';
 import { socketService } from '../src/server/SocketService.js';
+import type { AgentResponse } from '../src/agents/types.js';
 
 // Mock the gateway
 vi.mock('../src/core/bifrost_gateway.js', () => {
@@ -32,7 +33,7 @@ vi.mock('../src/server/SocketService.js', () => ({
 
 describe('OrchestratorAgent ReAct Loop', () => {
     let orchestrator: OrchestratorAgent;
-    let mockGenerate: any;
+    let mockGenerate: Mock;
 
     beforeEach(() => {
         vi.clearAllMocks();
@@ -67,9 +68,10 @@ describe('OrchestratorAgent ReAct Loop', () => {
         expect(agentManager.queueTask).toHaveBeenCalledWith("do something", "testAgent", {});
         
         // Verify final result
-        expect((result as any).status).toBe("success");
-        expect((result as any).message).toBe("A feladatot sikeresen kiosztottam a testAgent-nek.");
-        expect((result as any).taskIds).toContain(123);
+        const response = result as AgentResponse & { taskIds?: number[] };
+        expect(response.status).toBe("success");
+        expect(response.message).toBe("A feladatot sikeresen kiosztottam a testAgent-nek.");
+        expect(response.taskIds).toContain(123);
     });
 
     it('should handle send_message_to_user tool call', async () => {
@@ -117,8 +119,8 @@ describe('OrchestratorAgent ReAct Loop', () => {
 
         // Should hit max iterations (5)
         expect(mockGenerate).toHaveBeenCalledTimes(5);
-        expect((result as any).status).toBe("success");
-        // Should default to the final message variable
-        expect((result as any).message).toBe("A feladatot feldolgoztam.");
+        const response = result as AgentResponse;
+        expect(response.status).toBe("error");
+        expect(response.error).toContain("maximális iterációszámot");
     });
 });

@@ -5,36 +5,48 @@
 
 interface AgentResponse {
   status?: string;
-  data?: any;
+  data?: unknown;
   error?: string;
   success?: boolean;
-  [key: string]: any;
+  delegatedTo?: string;
+  reason?: string;
+  [key: string]: unknown;
 }
 
-export function formatAgentResponse(response: any, agentName?: string): string {
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null;
+}
+
+export function formatAgentResponse(response: unknown, agentName?: string): string {
   if (typeof response === 'string') return response;
+  if (!isRecord(response)) return JSON.stringify(response, null, 2);
 
   try {
-    const data = response as AgentResponse;
+    const data = response;
+    const status = typeof data.status === 'string' ? data.status : undefined;
+    const error = typeof data.error === 'string' ? data.error : undefined;
+    const payload = data.data;
 
     // Hiba formázás
-    if (data.status === 'error' || data.error) {
-      return `❌ Hiba: ${data.error || 'Ismeretlen hiba történt'}`;
+    if (status === 'error' || error) {
+      return `❌ Hiba: ${error || 'Ismeretlen hiba történt'}`;
     }
 
     // Health check formázás (Evaluator)
-    if (data.data?.status && data.data?.components) {
-      return formatHealthCheck(data.data);
+    if (isRecord(payload) && 'status' in payload && 'components' in payload) {
+      return formatHealthCheck(payload);
     }
 
     // Általános success válasz
-    if (data.status === 'success' && data.data) {
-      return formatSuccessData(data.data, agentName);
+    if (status === 'success' && payload) {
+      return formatSuccessData(payload, agentName);
     }
 
     // Delegated válasz (Orchestrator)
-    if (data.status === 'delegated') {
-      return `🔄 Feladat delegálva → ${data.delegatedTo}${data.reason ? `\n   Indok: ${data.reason}` : ''}`;
+    if (status === 'delegated') {
+      const delegatedTo = typeof data.delegatedTo === 'string' ? data.delegatedTo : 'ismeretlen ügynök';
+      const reason = typeof data.reason === 'string' ? data.reason : '';
+      return `🔄 Feladat delegálva → ${delegatedTo}${reason ? `\n   Indok: ${reason}` : ''}`;
     }
 
     // Ha nincs speciális formázás, próbáljuk emberi nyelvre fordítani
@@ -45,27 +57,32 @@ export function formatAgentResponse(response: any, agentName?: string): string {
   }
 }
 
-function formatHealthCheck(healthData: any): string {
-  const statusIcon = healthData.status === 'HEALTHY' ? '✅' : '⚠️';
-  let result = `${statusIcon} Rendszer állapot: ${translateStatus(healthData.status)}\n\n`;
+function formatHealthCheck(healthData: Record<string, unknown>): string {
+  const status = typeof healthData.status === 'string' ? healthData.status : '';
+  const statusIcon = status === 'HEALTHY' ? '✅' : '⚠️';
+  let result = `${statusIcon} Rendszer állapot: ${translateStatus(status)}\n\n`;
 
-  if (healthData.components) {
+  if (isRecord(healthData.components)) {
     result += '📊 Komponensek:\n';
-    for (const [name, info] of Object.entries(healthData.components as Record<string, any>)) {
-      const componentStatus = info.status === 'healthy' ? '🟢' : '🔴';
-      const latency = info.latencyMs ? ` (${info.latencyMs}ms)` : '';
-      result += `   ${componentStatus} ${name}: ${translateStatus(info.status)}${latency}\n`;
+    for (const [name, info] of Object.entries(healthData.components)) {
+      const component = isRecord(info) ? info : {};
+      const componentStatus = typeof component.status === 'string' && component.status === 'healthy' ? '🟢' : '🔴';
+      const latency = component.latencyMs !== undefined && component.latencyMs !== null
+        ? ` (${formatValue(component.latencyMs)}ms)`
+        : '';
+      const componentState = typeof component.status === 'string' ? component.status : '';
+      result += `   ${componentStatus} ${name}: ${translateStatus(componentState)}${latency}\n`;
     }
   }
 
-  if (healthData.recommendation) {
+  if (typeof healthData.recommendation === 'string' && healthData.recommendation) {
     result += `\n💡 Javaslat: ${translateRecommendation(healthData.recommendation)}`;
   }
 
   return result;
 }
 
-function formatSuccessData(data: any, agentName?: string): string {
+function formatSuccessData(data: unknown, agentName?: string): string {
   if (typeof data === 'string') {
     return `✅ ${data}`;
   }
@@ -74,7 +91,7 @@ function formatSuccessData(data: any, agentName?: string): string {
     return `✅ Sikeresen lekérve (${data.length} elem)\n${data.map((item, i) => `   ${i + 1}. ${JSON.stringify(item)}`).join('\n')}`;
   }
 
-  if (typeof data === 'object' && data !== null) {
+  if (isRecord(data)) {
     let result = '✅ Művelet sikeres:\n';
     for (const [key, value] of Object.entries(data)) {
       result += `   • ${translateKey(key)}: ${formatValue(value)}\n`;
@@ -85,7 +102,7 @@ function formatSuccessData(data: any, agentName?: string): string {
   return `✅ ${data}`;
 }
 
-function formatGenericResponse(data: AgentResponse): string {
+function formatGenericResponse(data: Record<string, unknown>): string {
   let result = '';
 
   if (data.success === true) {
@@ -151,7 +168,7 @@ function translateKey(key: string): string {
   return keyMap[key] || key;
 }
 
-function formatValue(value: any): string {
+function formatValue(value: unknown): string {
   if (value === null || value === undefined) return '—';
   if (typeof value === 'boolean') return value ? '✓ Igen' : '✗ Nem';
   if (typeof value === 'number') return value.toString();

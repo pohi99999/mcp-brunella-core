@@ -1,0 +1,354 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e17]:
+    - generic [ref=e19]:
+      - banner [ref=e20]:
+        - button "Sessions" [ref=e21] [cursor=pointer]:
+          - img [ref=e23]
+      - generic [ref=e27]:
+        - button "Tool" [ref=e28] [cursor=pointer]:
+          - img [ref=e31]
+          - text: Tool
+        - button "App" [ref=e32] [cursor=pointer]:
+          - img [ref=e35]
+          - text: App
+        - button "Chat" [ref=e40] [cursor=pointer]:
+          - img [ref=e44]
+          - text: Chat
+        - button "Recents" [ref=e49] [cursor=pointer]:
+          - img [ref=e52]
+          - text: Recents
+        - button "Workflow" [ref=e58] [cursor=pointer]:
+          - img [ref=e61]
+          - text: Workflow
+        - button "Live" [ref=e65] [cursor=pointer]:
+          - img [ref=e68]
+          - text: Live
+      - generic [ref=e74]:
+        - link "Dashboard" [ref=e75] [cursor=pointer]:
+          - /url: /video-tools/teams/peterpohankapersonal/dashboard
+          - img
+        - button "JÓ" [ref=e77] [cursor=pointer]:
+          - paragraph [ref=e79]: JÓ
+    - generic [ref=e82]:
+      - generic:
+        - region "Notifications (F8)":
+          - list
+      - generic [ref=e85]:
+        - generic [ref=e87]:
+          - generic [ref=e88]:
+            - generic [ref=e90]:
+              - banner [ref=e91]:
+                - radiogroup "Output mode" [ref=e92]:
+                  - generic [ref=e93] [cursor=pointer]:
+                    - radio "Image" [checked] [ref=e95]
+                    - img [ref=e96]
+                    - text: Image
+                  - generic [ref=e100] [cursor=pointer]:
+                    - radio "Video" [ref=e102]
+                    - img [ref=e103]
+                    - text: Video
+                  - generic [ref=e106] [cursor=pointer]:
+                    - radio "Audio" [ref=e108]
+                    - img [ref=e109]
+                    - text: Audio
+                - button "Reset settings" [ref=e110] [cursor=pointer]:
+                  - img
+              - generic [ref=e113]:
+                - generic [ref=e114]:
+                  - generic [ref=e115]:
+                    - generic [ref=e117]:
+                      - button [ref=e120] [cursor=pointer]:
+                        - img [ref=e121]
+                      - generic [ref=e123]:
+                        - textbox "Text Prompt Input" [ref=e124]:
+                          - paragraph [ref=e125]
+                        - generic:
+                          - text: Describe your shot,
+                          - button "add image references" [ref=e126] [cursor=pointer]
+                          - text: ", or"
+                          - button "sketch a scene" [ref=e127] [cursor=pointer]
+                          - text: .
+                    - separator [ref=e131]
+                    - generic [ref=e133]:
+                      - generic [ref=e134]:
+                        - generic [ref=e135]:
+                          - img [ref=e136]
+                          - generic [ref=e140]: Images
+                        - button "Close Panel" [ref=e141] [cursor=pointer]:
+                          - img
+                      - generic [ref=e143]:
+                        - generic [ref=e144]:
+                          - tablist [ref=e146]:
+                            - tab "Recent" [selected] [ref=e147] [cursor=pointer]
+                            - tab "Saved" [ref=e148] [cursor=pointer]
+                          - button [ref=e149] [cursor=pointer]:
+                            - img
+                        - grid "Reference images" [ref=e151]:
+                          - row "Add Reference" [ref=e152]:
+                            - gridcell "Add Reference" [ref=e153]:
+                              - button "Add Reference" [ref=e154] [cursor=pointer]:
+                                - img [ref=e155]
+                          - row "Nano Banana 2 - Abstract luxury visualization still frame A single elegant voice waveform in the ce.png" [ref=e156]:
+                            - gridcell "tag to save" [ref=e157]:
+                              - button "tag to save" [ref=e161]
+                          - row "Nano Banana 2 - Luxury e-commerce website displayed on a glowing screen still frame An elegant chat.png" [ref=e162]:
+                            - gridcell "tag to save" [ref=e163]:
+                              - button "tag to save" [ref=e167]
+                          - row "Nano Banana 2 - Luxury fashion photograph still frame Silk fabric with hand-painted motifs in vibra.png" [ref=e168]:
+                            - gridcell "tag to save" [ref=e169]:
+                              - button "tag to save" [ref=e173]
+                          - row "Nano Banana 2 - Cinematic AI fashion photography still frame A vibrant cobalt blue dress displayed.png" [ref=e174]:
+                            - gridcell "tag to save" [ref=e175]:
+                              - button "tag to save" [ref=e179]
+                          - row "Nano Banana 2 - Abstract futuristic fashion still frame Elegant typography rendered as liquid light.png" [ref=e180]:
+                            - gridcell "tag to save" [ref=e181]:
+                              - button "tag to save" [ref=e185]
+                          - row "Nano Banana 2 - Cinematic fashion documentary still frame A stylish woman fashion designer in her 4.png" [ref=e186]:
+                            - gridcell "tag to save" [ref=e187]:
+                              - button "tag to save" [ref=e191]
+                          - row "Nano Banana 2 - Cinematic fashion film still frame Extreme close-up of hand-painted silk fabric in.png" [ref=e192]:
+                            - gridcell "tag to save" [ref=e193]:
+                              - button "tag to save" [ref=e197]
+                          - row "Person" [ref=e198]:
+                            - gridcell "Person" [ref=e199]:
+                              - button "Person" [ref=e203]
+                          - row "Buildings" [ref=e204]:
+                            - gridcell "Buildings" [ref=e205]:
+                              - button "Buildings" [ref=e209]
+                          - row "Street" [ref=e210]:
+                            - gridcell "Street" [ref=e211]:
+                              - button "Street" [ref=e215]
+                          - row "Water" [ref=e216]:
+                            - gridcell "Water" [ref=e217]:
+                              - button "Water" [ref=e221]
+                          - row "Candle" [ref=e222]:
+                            - gridcell "Candle" [ref=e223]:
+                              - button "Candle" [ref=e227]
+                          - row "Crosswalk" [ref=e228]:
+                            - gridcell "Crosswalk" [ref=e229]:
+                              - button "Crosswalk" [ref=e233]
+                          - row "Jacket Yellow" [ref=e234]:
+                            - gridcell "Jacket Yellow" [ref=e235]:
+                              - button "Jacket Yellow" [ref=e239]
+                          - row "Jacket Red" [ref=e240]:
+                            - gridcell "Jacket Red" [ref=e241]:
+                              - button "Jacket Red" [ref=e245]
+                  - generic [ref=e246]:
+                    - generic [ref=e247]:
+                      - button [pressed] [ref=e248] [cursor=pointer]:
+                        - img
+                      - button "Generate prompt from image" [ref=e249] [cursor=pointer]:
+                        - img
+                      - button "Help Guide" [ref=e250] [cursor=pointer]:
+                        - img
+                    - toolbar "Settings Toolbar" [ref=e251]:
+                      - generic [ref=e252]:
+                        - button "Number of images" [ref=e253] [cursor=pointer]:
+                          - img [ref=e254]
+                          - generic [ref=e258]: "1"
+                        - combobox [ref=e261]
+                      - generic [ref=e262]:
+                        - button "Aspect ratio" [ref=e263] [cursor=pointer]:
+                          - img [ref=e264]
+                          - generic [ref=e267]: 16:9
+                        - combobox [ref=e270]
+                      - generic [ref=e271]:
+                        - button "Image size" [ref=e272] [cursor=pointer]:
+                          - generic [ref=e273]: 1K
+                        - combobox [ref=e276]
+                - generic [ref=e277]:
+                  - button "View generation cost" [ref=e279] [cursor=pointer]:
+                    - img
+                  - button "Image models" [ref=e281] [cursor=pointer]:
+                    - text: Nano Banana 2
+                    - img
+                  - button "Generate" [ref=e282]:
+                    - img
+                    - text: Generate
+            - separator [ref=e284]
+          - generic [ref=e286]:
+            - generic [ref=e288]:
+              - generic [ref=e290]:
+                - button "Luxury Silk Fashion Film" [ref=e292] [cursor=pointer]:
+                  - generic [ref=e293]: Luxury Silk Fashion Film
+                - button "Open session switcher" [ref=e294] [cursor=pointer]:
+                  - img [ref=e295]
+              - generic [ref=e298]:
+                - button "176 credits" [ref=e299] [cursor=pointer]
+                - button "0/1 Quests" [ref=e300] [cursor=pointer]:
+                  - generic [ref=e301]:
+                    - img
+                  - generic [ref=e302]: 0/1
+                  - text: Quests
+                - button "Upgrade" [ref=e303] [cursor=pointer]
+                - button "Share session" [ref=e304] [cursor=pointer]:
+                  - img
+                - button [ref=e305] [cursor=pointer]:
+                  - img
+                - button "Help" [ref=e306] [cursor=pointer]:
+                  - img
+            - generic:
+              - generic [ref=e307]:
+                - img [ref=e308]
+                - paragraph [ref=e311]: Get notifications when your generations are complete.
+              - generic [ref=e312]:
+                - button "Don't show again" [ref=e313] [cursor=pointer]
+                - button "Later" [ref=e314] [cursor=pointer]
+                - button "Enable" [ref=e315] [cursor=pointer]
+            - generic [ref=e316]:
+              - generic [ref=e317]:
+                - radiogroup "Content filter" [ref=e318]:
+                  - generic [ref=e319] [cursor=pointer]:
+                    - generic [ref=e320]:
+                      - radio "All" [checked]
+                    - text: All
+                  - generic [ref=e321] [cursor=pointer]:
+                    - generic [ref=e322]:
+                      - radio "Favorited"
+                    - text: Favorited
+                  - generic [ref=e323] [cursor=pointer]:
+                    - generic [ref=e324]:
+                      - radio "Downloaded"
+                    - text: Downloaded
+                  - generic [ref=e325] [cursor=pointer]:
+                    - generic [ref=e326]:
+                      - radio "4K"
+                    - text: 4K
+                - generic [ref=e327]:
+                  - 'button "Filter by media type: All media" [ref=e328] [cursor=pointer]':
+                    - img [ref=e329]
+                  - button "Download all" [ref=e330] [cursor=pointer]:
+                    - img
+                  - group "View mode" [ref=e331]:
+                    - button "Feed view" [pressed] [ref=e332] [cursor=pointer]:
+                      - img [ref=e333]
+                    - button "Grid view" [ref=e334] [cursor=pointer]:
+                      - img [ref=e335]
+              - generic [ref=e337]:
+                - generic [ref=e343]:
+                  - generic [ref=e345]:
+                    - toolbar [ref=e346]:
+                      - 'button "Abstract luxury visualization still frame. A single elegant voice waveform in the center radiates outward toward six distinct screens: Instagram grid, TikTok vertical, Pinterest moodboard, X post, YouTube thumbnail, email newsletter. Each screen beautifully designed with vibrant turquoise and coral accents. Premium tech-meets-fashion aesthetic." [ref=e349]':
+                        - paragraph [ref=e350]: "Abstract luxury visualization still frame. A single elegant voice waveform in the center radiates outward toward six distinct screens: Instagram grid, TikTok vertical, Pinterest moodboard, X post, YouTube thumbnail, email newsletter. Each screen beautifully designed with vibrant turquoise and coral accents. Premium tech-meets-fashion aesthetic."
+                      - button [ref=e351] [cursor=pointer]:
+                        - img
+                      - button "See full prompt" [ref=e352] [cursor=pointer]:
+                        - img
+                      - button "Hide output" [ref=e353] [cursor=pointer]:
+                        - img
+                    - generic [ref=e356]:
+                      - button "Nano Banana 2 - Abstract luxury visualization still frame A single elegant voice waveform in the ce.png" [ref=e357] [cursor=pointer]
+                      - group [ref=e358]:
+                        - button "feedback" [ref=e359] [cursor=pointer]:
+                          - img
+                      - toolbar:
+                        - generic [ref=e361]:
+                          - button "Actions" [ref=e362] [cursor=pointer]:
+                            - img
+                          - combobox [ref=e365]
+                        - group [ref=e366]:
+                          - button [ref=e367] [cursor=pointer]:
+                            - img
+                          - button "Favorite" [ref=e368] [cursor=pointer]:
+                            - img
+                          - button [ref=e369] [cursor=pointer]:
+                            - img
+                  - generic [ref=e371]:
+                    - generic [ref=e372]:
+                      - generic [ref=e375]: Video
+                      - button "Reuse settings" [ref=e376] [cursor=pointer]:
+                        - img
+                      - button "See full prompt" [ref=e377] [cursor=pointer]:
+                        - img
+                      - button "feedback" [ref=e378] [cursor=pointer]:
+                        - img
+                      - button "Hide output" [ref=e379] [cursor=pointer]:
+                        - img
+                    - region "video player" [ref=e382] [cursor=pointer]:
+                      - button [ref=e383]
+                      - generic:
+                        - generic:
+                          - generic [ref=e388]:
+                            - generic:
+                              - button "play" [ref=e389]:
+                                - img [ref=e392]
+                              - generic [ref=e394]:
+                                - button "mute" [ref=e395]:
+                                  - img [ref=e398]
+                                - generic "Volume" [ref=e400]:
+                                  - generic [ref=e401]:
+                                    - img [ref=e407]
+                                    - slider "volume" [ref=e408]: "1"
+                              - button "playback time" [ref=e410]: 0:00 / 0:10
+                              - button "Playback rate 1" [ref=e411]: 1x
+                              - button "enter fullscreen mode" [ref=e412]:
+                                - img [ref=e415]
+                          - img [ref=e417]
+                    - toolbar [ref=e419]:
+                      - generic [ref=e420]:
+                        - generic [ref=e421]:
+                          - button "Actions" [ref=e422] [cursor=pointer]:
+                            - img
+                            - text: Apps
+                          - combobox [ref=e425]
+                        - button "Use frame" [ref=e426] [cursor=pointer]:
+                          - img
+                          - generic [ref=e427]: Use frame
+                          - img
+                      - button "Share" [ref=e429] [cursor=pointer]:
+                        - img
+                      - button "Favorite" [ref=e430] [cursor=pointer]:
+                        - img
+                      - button "4K" [ref=e431] [cursor=pointer]:
+                        - img
+                        - generic [ref=e432]: 4K
+                      - generic [ref=e433] [cursor=pointer]:
+                        - button [ref=e434]:
+                          - img [ref=e435]
+                        - button [ref=e439]:
+                          - img [ref=e440]
+                - generic [ref=e449]:
+                  - generic [ref=e451]:
+                    - generic [ref=e452]: "1"
+                    - button [ref=e454] [cursor=pointer]:
+                      - img [ref=e456]
+                  - button [ref=e462] [cursor=pointer]:
+                    - img [ref=e463]
+                  - generic [ref=e465]:
+                    - generic [ref=e466]: "3"
+                    - button [ref=e468] [cursor=pointer]:
+                      - img [ref=e470]
+                  - button [ref=e476] [cursor=pointer]:
+                    - img [ref=e477]
+                  - generic [ref=e479]:
+                    - generic [ref=e480]: "5"
+                    - button [ref=e482] [cursor=pointer]:
+                      - img [ref=e484]
+                  - button [ref=e490] [cursor=pointer]:
+                    - img [ref=e491]
+                  - generic [ref=e493]:
+                    - generic [ref=e494]: "7"
+                    - button [ref=e496] [cursor=pointer]:
+                      - img [ref=e498]
+                  - button [ref=e504] [cursor=pointer]:
+                    - img [ref=e505]
+                  - generic [ref=e507]:
+                    - generic [ref=e508]: "9"
+                    - button [ref=e510] [cursor=pointer]:
+                      - img [ref=e512]
+                  - button [ref=e518] [cursor=pointer]:
+                    - img [ref=e519]
+                  - generic [ref=e521]:
+                    - generic [ref=e522]: "11"
+                    - button [ref=e524] [cursor=pointer]:
+                      - img [ref=e526]
+                  - button [ref=e532] [cursor=pointer]:
+                    - img [ref=e533]
+                  - generic [ref=e535]:
+                    - generic [ref=e536]: "13"
+                    - button [ref=e538] [cursor=pointer]:
+                      - img [ref=e540]
+                  - button [ref=e546] [cursor=pointer]:
+                    - img [ref=e547]
+        - status [ref=e550]
+  - iframe

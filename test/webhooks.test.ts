@@ -6,6 +6,7 @@ import Database from 'better-sqlite3';
 import crypto from 'crypto';
 import { createWebhookRoutes } from '../src/server/routes/webhooks.js';
 import { config } from '../src/config/schema.js';
+import { eventFabric } from '../src/core/eventFabric.js';
 
 // Mock config
 vi.mock('../src/config/schema.js', () => ({
@@ -29,6 +30,9 @@ describe('Webhook Routes Integration', () => {
   let db: Database.Database;
 
   beforeEach(() => {
+    // Clear event fabric history to avoid duplicate dedupKey errors
+    eventFabric.clearHistory();
+
     // Setup in-memory DB
     db = new Database(':memory:');
     

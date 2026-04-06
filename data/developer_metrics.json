@@ -1,0 +1,54 @@
+{
+  "builds": {
+    "total": 0,
+    "success": 0,
+    "fail": 0,
+    "lastStatus": "unknown",
+    "lastDurationMs": 0
+  },
+  "tests": {
+    "totalRuns": 0,
+    "lastPassRate": 0,
+    "lastDurationMs": 0
+  },
+  "tasks": {
+    "total": 4,
+    "success": 3,
+    "error": 1,
+    "avgDurationMs": 0
+  },
+  "ai": {
+    "totalTokenUsage": 0,
+    "estimatedCost": 0
+  },
+  "history": [
+    {
+      "type": "task",
+      "status": "success",
+      "details": "dev-1775509518908-1",
+      "durationMs": 0,
+      "timestamp": 1775509518911
+    },
+    {
+      "type": "task",
+      "status": "success",
+      "details": "dev-1775508667080-1",
+      "durationMs": 0,
+      "timestamp": 1775508667085
+    },
+    {
+      "type": "task",
+      "status": "success",
+      "details": "dev-1775508667081-1",
+      "durationMs": 0,
+      "timestamp": 1775508667085
+    },
+    {
+      "type": "task",
+      "status": "error",
+      "details": "dev-1775508667079-1",
+      "durationMs": 0,
+      "timestamp": 1775508667085
+    }
+  ]
+}

@@ -17,6 +17,7 @@
  */
 
 import { BaseAgent } from './BaseAgent.js';
+import type { AgentContext, AgentResult } from './BaseAgent.js';
 import { AgentResponse } from './types.js';
 import { logInfo, logError, logDebug, setAgentStatus } from '../utils/logger.js';
 import { ensureError } from '../utils/ensureError.js';
@@ -35,15 +36,49 @@ async function generateEmbedding(text: string): Promise<number[] | null> {
   }
 }
 
-const lancedb = {
-  insert: async (data: any) => {
-    await lanceDBClient.addData('faq_embeddings', data);
-  }
-};
-
 // ============================================================================
 // Types
 // ============================================================================
+
+type KnowledgeBaseCategory = FAQItem['category'];
+type KnowledgeBaseEmbeddingRecord = Record<string, unknown>;
+type KnowledgeBaseSearchResult = { score: number; content: string };
+type KnowledgeBaseBatchResult = { docId: string; status: 'stored'; vectorId: string };
+
+interface KnowledgeBaseDocument {
+  title: string;
+  content: string;
+  format: string;
+  category: string;
+  tags: string[];
+}
+
+interface KnowledgeBaseResponseData {
+  faqItems: FAQItem[];
+  wikiPages: WikiPage[];
+  stats: KnowledgeBaseResult['stats'];
+  searchResults: KnowledgeBaseSearchResult[];
+  batchResults: KnowledgeBaseBatchResult[];
+  vectorDbId: string;
+  document?: KnowledgeBaseDocument;
+}
+
+interface KnowledgeBaseTaskInput {
+  topic?: string;
+  sections?: string[];
+  format?: string;
+  query?: string;
+  topK?: number;
+  documents?: unknown[];
+  content?: string;
+}
+
+interface LanceDbEmbeddingRecord extends KnowledgeBaseEmbeddingRecord {
+  question: string;
+  answer: string;
+  category: KnowledgeBaseCategory;
+  embedding: number[];
+}
 
 interface Message {
   id: string;
@@ -83,6 +118,57 @@ interface KnowledgeBaseResult {
   };
 }
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null;
+}
+
+function asString(value: unknown): string | undefined {
+  return typeof value === 'string' ? value : undefined;
+}
+
+function asNumber(value: unknown): number | undefined {
+  return typeof value === 'number' && Number.isFinite(value) ? value : undefined;
+}
+
+function asStringArray(value: unknown): string[] | undefined {
+  return Array.isArray(value) && value.every((item): item is string => typeof item === 'string')
+    ? value
+    : undefined;
+}
+
+function asUnknownArray(value: unknown): unknown[] | undefined {
+  return Array.isArray(value) ? value : undefined;
+}
+
+function parseKnowledgeBaseTask(task: string): KnowledgeBaseTaskInput {
+  try {
+    const parsed: unknown = JSON.parse(task);
+    if (!isRecord(parsed)) {
+      return {};
+    }
+
+    return {
+      topic: asString(parsed.topic),
+      sections: asStringArray(parsed.sections),
+      format: asString(parsed.format),
+      query: asString(parsed.query),
+      topK: asNumber(parsed.topK),
+      documents: asUnknownArray(parsed.documents),
+      content: asString(parsed.content),
+    };
+  } catch (error: unknown) {
+    const err = ensureError(error);
+    logDebug('KnowledgeBaseBuilder', `Ignoring knowledge base task JSON parse error: ${err.message}`);
+    return {};
+  }
+}
+
+const lancedb = {
+  insert: async (data: LanceDbEmbeddingRecord | LanceDbEmbeddingRecord[]) => {
+    await lanceDBClient.addData('faq_embeddings', data);
+  },
+};
+
 // ============================================================================
 // Knowledge Base Builder Agent Implementation
 // ============================================================================
@@ -104,9 +190,16 @@ export class KnowledgeBaseBuilderAgent extends BaseAgent {
   /**
    * Execute task (BaseAgent interface)
    */
-  async executeTask(context: any): Promise<any> {
-    const task = context.task || context;
-    return this.execute(task, context);
+  async executeTask(context: AgentContext): Promise<AgentResult> {
+    const task = typeof context.task === 'string' ? context.task : '';
+    const response = await this.execute(task, context);
+
+    return {
+      success: response.success ?? response.status === 'success',
+      message: response.message ?? '',
+      status: response.status,
+      data: response.data,
+    };
   }
 
   /**
@@ -127,19 +220,16 @@ export class KnowledgeBaseBuilderAgent extends BaseAgent {
       logInfo(this.name, `✅ Knowledge base complete: ${result.faqItems.length} FAQs, ${result.wikiPages.length} wiki pages`);
 
       // Parse task to determine response type
-      let taskData: any = {};
-      try {
-        taskData = JSON.parse(task);
-      } catch (error: unknown) {
-        const err = ensureError(error);
-        logDebug(this.name, `Ignoring knowledge base task JSON parse error: ${err.message}`);
-      }
+      const taskData = parseKnowledgeBaseTask(task);
 
       // Transform based on task type
-      const responseData: any = {
+      const responseData: KnowledgeBaseResponseData = {
         faqItems: result.faqItems,
         wikiPages: result.wikiPages,
-        stats: result.stats
+        stats: result.stats,
+        searchResults: [],
+        batchResults: [],
+        vectorDbId: `kb-${Date.now()}`,
       };
 
       // Add task-specific fields
@@ -156,36 +246,29 @@ export class KnowledgeBaseBuilderAgent extends BaseAgent {
 
       if (taskData.query) {
         // Search response
+        const query = taskData.query.toLowerCase();
         responseData.searchResults = (
           result.faqItems
-            .filter(faq => faq.question.toLowerCase().includes(taskData.query.toLowerCase()))
+            .filter(faq => faq.question.toLowerCase().includes(query))
             .map((faq, idx) => ({
               score: 100 - (idx * 10),
               content: faq.question + ': ' + faq.answer
             }))
             .slice(0, taskData.topK || 5)
-        ) || [];
+        );
       }
 
       if (taskData.documents) {
         // Batch response
-        responseData.batchResults = taskData.documents.map((doc: any, idx: number) => ({
+        responseData.batchResults = taskData.documents.map((_doc, idx) => ({
           docId: `doc-${idx}`,
           status: 'stored',
           vectorId: `vec-${idx}`
         }));
       }
 
-      // Always add vectorDbId
-      responseData.vectorDbId = `kb-${Date.now()}`;
-      if (!responseData.searchResults) {
-        responseData.searchResults = [];
-      }
-      if (!responseData.batchResults) {
-        responseData.batchResults = [];
-      }
-
       return {
+        success: true,
         status: 'success',
         message: `Built ${result.faqItems.length} FAQs and ${result.wikiPages.length} wiki pages`,
         data: responseData,
@@ -196,7 +279,9 @@ export class KnowledgeBaseBuilderAgent extends BaseAgent {
       logError(this.name, `Knowledge base building failed: ${err.message}`);
       
       return {
+        success: false,
         status: 'error',
+        message: err.message,
         error: err.message,
       };
     } finally {
@@ -311,7 +396,7 @@ export class KnowledgeBaseBuilderAgent extends BaseAgent {
     const threads = this.groupMessagesByThread(messages);
 
     // Extract question-answer pairs
-    const qaMap = new Map<string, { answer: string; sources: string[]; count: number; category: string }>();
+      const qaMap = new Map<string, { answer: string; sources: string[]; count: number; category: KnowledgeBaseCategory }>();
 
     for (const thread of threads) {
       if (thread.length < 2) continue; // Need Q+A
@@ -344,14 +429,14 @@ export class KnowledgeBaseBuilderAgent extends BaseAgent {
     const faqItems: FAQItem[] = [];
     for (const [question, data] of qaMap.entries()) {
       if (data.count >= this.FAQ_THRESHOLD) {
-        faqItems.push({
-          question,
-          answer: data.answer,
-          category: data.category as any,
-          confidence: Math.min(100, data.count * 30), // Confidence based on frequency
-          sources: data.sources,
-          frequency: data.count,
-        });
+          faqItems.push({
+            question,
+            answer: data.answer,
+            category: data.category,
+            confidence: Math.min(100, data.count * 30), // Confidence based on frequency
+            sources: data.sources,
+            frequency: data.count,
+          });
       }
     }
 
@@ -366,7 +451,7 @@ export class KnowledgeBaseBuilderAgent extends BaseAgent {
     logInfo(this.name, 'Generating wiki pages...');
 
     // Group FAQs by category
-    const categorizedFAQs = new Map<string, FAQItem[]>();
+    const categorizedFAQs = new Map<KnowledgeBaseCategory, FAQItem[]>();
     for (const faq of faqItems) {
       const items = categorizedFAQs.get(faq.category) || [];
       items.push(faq);
@@ -401,7 +486,7 @@ export class KnowledgeBaseBuilderAgent extends BaseAgent {
   /**
    * Generate wiki content from FAQs
    */
-  private generateWikiContent(category: string, faqs: FAQItem[]): string {
+  private generateWikiContent(category: KnowledgeBaseCategory, faqs: FAQItem[]): string {
     let content = `# ${category.toUpperCase()} - Frequently Asked Questions\n\n`;
     content += `**Last Updated:** ${new Date().toISOString().split('T')[0]}\n\n`;
     content += `---\n\n`;
@@ -433,7 +518,13 @@ export class KnowledgeBaseBuilderAgent extends BaseAgent {
     for (const faq of faqItems) {
       const embedding = await generateEmbedding(faq.question);
       if (embedding) {
-        await lancedb.insert({ question: faq.question, answer: faq.answer, category: faq.category, embedding });
+        const record: LanceDbEmbeddingRecord = {
+          question: faq.question,
+          answer: faq.answer,
+          category: faq.category,
+          embedding,
+        };
+        await lancedb.insert(record);
       }
     }
 
@@ -494,7 +585,7 @@ export class KnowledgeBaseBuilderAgent extends BaseAgent {
   /**
    * Categorize message based on channel or keywords
    */
-  private categorizeMessage(msg: Message): string {
+  private categorizeMessage(msg: Message): KnowledgeBaseCategory {
     const channel = msg.channel?.toLowerCase() || '';
     const content = msg.content.toLowerCase();
 

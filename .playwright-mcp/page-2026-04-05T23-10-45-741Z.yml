@@ -1,0 +1,168 @@
+- generic [ref=e8]:
+  - generic [ref=e10]:
+    - banner [ref=e11]:
+      - button "Sessions" [ref=e12] [cursor=pointer]:
+        - img [ref=e14]
+    - generic [ref=e18]:
+      - button "Tool" [ref=e19] [cursor=pointer]:
+        - img [ref=e22]
+        - text: Tool
+      - button "App" [ref=e23] [cursor=pointer]:
+        - img [ref=e26]
+        - text: App
+      - button "Chat" [ref=e31] [cursor=pointer]:
+        - img [ref=e35]
+        - text: Chat
+      - button "Recents" [ref=e40] [cursor=pointer]:
+        - img [ref=e43]
+        - text: Recents
+      - button "Workflow" [ref=e49] [cursor=pointer]:
+        - img [ref=e52]
+        - text: Workflow
+      - button "Live" [ref=e56] [cursor=pointer]:
+        - img [ref=e59]
+        - text: Live
+    - generic [ref=e65]:
+      - link "Dashboard" [ref=e66] [cursor=pointer]:
+        - /url: /video-tools/teams/peterpohankapersonal/dashboard
+        - img
+      - button "JÓ" [ref=e68] [cursor=pointer]:
+        - paragraph [ref=e70]: JÓ
+  - generic [ref=e73]:
+    - generic:
+      - region "Notifications (F8)":
+        - list
+    - generic [ref=e76]:
+      - generic [ref=e78]:
+        - generic [ref=e79]:
+          - generic [ref=e81]:
+            - banner [ref=e82]:
+              - radiogroup "Output mode" [ref=e83]:
+                - generic [ref=e84] [cursor=pointer]:
+                  - radio "Image" [ref=e86]
+                  - img [ref=e87]
+                  - text: Image
+                - generic [ref=e91] [cursor=pointer]:
+                  - radio "Video" [checked] [ref=e93]
+                  - img [ref=e94]
+                  - text: Video
+                - generic [ref=e97] [cursor=pointer]:
+                  - radio "Audio" [ref=e99]
+                  - img [ref=e100]
+                  - text: Audio
+            - generic [ref=e103]:
+              - generic [ref=e105]:
+                - button "Open file picker" [ref=e111]:
+                  - generic "Open file picker" [ref=e112] [cursor=pointer]:
+                    - generic [ref=e113]:
+                      - img [ref=e115]
+                      - paragraph [ref=e119]: First Video Frame (required)
+                    - generic [ref=e120]:
+                      - button "Upload" [ref=e121]:
+                        - img
+                        - generic [ref=e122]: Upload
+                      - button "Generate" [ref=e123]:
+                        - generic [ref=e124]: Generate
+                      - button "Select" [ref=e125]:
+                        - img
+                - separator [ref=e128]
+                - generic [ref=e132]:
+                  - textbox "Prompt" [ref=e133]:
+                    - paragraph [ref=e134]
+                  - generic: Add a first video frame
+                - separator [ref=e138]
+                - generic [ref=e140]:
+                  - generic [ref=e141]:
+                    - generic [ref=e142]:
+                      - img [ref=e143]
+                      - generic [ref=e147]: Images
+                    - button "Close Panel" [ref=e148] [cursor=pointer]:
+                      - img
+                  - img "loading animation" [ref=e151]
+              - toolbar "Settings Toolbar" [ref=e156]:
+                - button [pressed] [ref=e157] [cursor=pointer]:
+                  - img
+                - button "Presets" [ref=e158] [cursor=pointer]:
+                  - img [ref=e159]
+                  - generic [ref=e165]: Presets
+                - generic [ref=e166]:
+                  - button "Aspect ratio" [ref=e167] [cursor=pointer]:
+                    - img [ref=e168]
+                    - generic [ref=e171]: 16:9
+                  - combobox [ref=e174]
+                - generic [ref=e175]:
+                  - button "Duration" [ref=e176] [cursor=pointer]:
+                    - img [ref=e177]
+                    - generic [ref=e180]: 5s
+                  - combobox [ref=e183]
+                - button "Advanced Settings" [ref=e184] [cursor=pointer]:
+                  - img [ref=e185]
+              - generic [ref=e188]:
+                - button "Related Apps for Generate Video" [ref=e189] [cursor=pointer]:
+                  - img
+                  - img
+                - button "Video models" [ref=e190] [cursor=pointer]:
+                  - text: Gen-4 Turbo
+                  - img
+                - button "Generate" [ref=e191]:
+                  - img
+                  - text: Generate
+          - separator [ref=e193]
+        - generic [ref=e195]:
+          - generic [ref=e197]:
+            - generic [ref=e199]:
+              - button "Luxury Silk Fashion Film" [ref=e201] [cursor=pointer]:
+                - generic [ref=e202]: Luxury Silk Fashion Film
+              - button "Open session switcher" [ref=e203] [cursor=pointer]:
+                - img [ref=e204]
+            - generic [ref=e207]:
+              - button "112 credits" [ref=e208] [cursor=pointer]
+              - button "0/1 Quests" [ref=e209] [cursor=pointer]:
+                - generic [ref=e210]:
+                  - img
+                - generic [ref=e211]: 0/1
+                - text: Quests
+              - button "Upgrade" [ref=e212] [cursor=pointer]
+              - button "Share session" [ref=e213] [cursor=pointer]:
+                - img
+              - button [disabled] [ref=e214]:
+                - img
+              - button "Help" [ref=e215] [cursor=pointer]:
+                - img
+          - generic:
+            - generic [ref=e216]:
+              - img [ref=e217]
+              - paragraph [ref=e220]: Get notifications when your generations are complete.
+            - generic [ref=e221]:
+              - button "Don't show again" [ref=e222] [cursor=pointer]
+              - button "Later" [ref=e223] [cursor=pointer]
+              - button "Enable" [ref=e224] [cursor=pointer]
+          - generic [ref=e226]:
+            - radiogroup "Content filter" [ref=e227]:
+              - generic [ref=e228] [cursor=pointer]:
+                - generic [ref=e229]:
+                  - radio "All" [checked]
+                - text: All
+              - generic [ref=e230] [cursor=pointer]:
+                - generic [ref=e231]:
+                  - radio "Favorited"
+                - text: Favorited
+              - generic [ref=e232] [cursor=pointer]:
+                - generic [ref=e233]:
+                  - radio "Downloaded"
+                - text: Downloaded
+              - generic [ref=e234] [cursor=pointer]:
+                - generic [ref=e235]:
+                  - radio "4K"
+                - text: 4K
+            - generic [ref=e236]:
+              - 'button "Filter by media type: All media" [ref=e237] [cursor=pointer]':
+                - img [ref=e238]
+              - button "Download all" [ref=e239] [cursor=pointer]:
+                - img
+              - group "View mode" [ref=e240]:
+                - button "Feed view" [pressed] [ref=e241] [cursor=pointer]:
+                  - img [ref=e242]
+                - button "Grid view" [ref=e243] [cursor=pointer]:
+                  - img [ref=e244]
+      - status [ref=e261]
