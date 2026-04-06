@@ -24,3 +24,12 @@
 
 **Feladat:** A Dashboard nemzetköziesítési (i18n) keretrendszerének kiépítése és az alapvető UI elemek magyarítása.
 **Státusz:** ✅ Befejezve
+
+### 2026-04-06 06:25 - Project Maintainer Élesítés & Janitor Fix
+**Feladat:** Project Maintainer (Janitor) élesítése, hibajavítás és gyökérkönyvtár takarítás.
+**Érintett fájlok:** 
+- src/server/routes/projectMaintainer.ts (boolean parsing fix)
+- build/server/routes/projectMaintainer.js (manuális szinkronizáció)
+- logs/archive/ (archivált fájlok célhelye)
+**Státusz:** ✅ Befejezve
+**Megjegyzés:** A dryRun: false kapcsoló már megfelelően működik. Több mint 80 zajfájl archiválva lett a logs/archive könyvtárba. A build hibák miatt manuális tsc fordítás volt szükséges.
