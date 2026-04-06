@@ -1,6 +1,6 @@
 # FŐSZÁL - Egyesített Fejlesztési Napló
 
-**Generálva:** 2026-04-06 05:30
+**Generálva:** 2026-04-06 23:16
 **Script:** `scripts/sync_foszal.py`
 
 ---
@@ -30,6 +30,11 @@ start-full.bat
 
 ### 2026-04-06
 
+#### 06:25 - [Gemini] Project Maintainer Élesítés & Janitor Fix
+- **Agent:** Gemini
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** src/server/routes/projectMaintainer.ts (boolean parsing fix), build/server/routes/projectMaintainer.js (manuális szinkronizáció), logs/archive/ (archivált fájlok célhelye)
+
 #### 03:28 - [Copilot] Dashboard runtime + magyarítás helyreállítás
 - **Agent:** Copilot
 - **Státusz:** ✅ Befejezve
@@ -44,10 +49,124 @@ start-full.bat
 - **Agent:** Gemini
 - **Státusz:** ✅ Befejezve
 
+#### 00:00 - [Copilot] Dashboard conductor monitor láthatósági javítás
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `src/dashboard/lib/navigation.tsx`, `src/dashboard/components/dashboard/ConductorTracksMonitor.tsx`, `src/dashboard/i18n/locales/hu.json`, `src/dashboard/i18n/locales/en.json`, `src/dashboard/lib/navigation.contract.test.ts`, `conductor/tracks/dashboard_conductor_monitor_visibility_20260406/*`, `conductor/project_state.json`, `conductor/tracks.md`
+
+#### 00:00 - [Copilot] KnowledgeBaseBuilderAgent type-safe pipeline slice
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `src/agents/KnowledgeBaseBuilderAgent.ts`, `test/knowledgeBaseBuilderAgent.test.ts`
+
+#### 00:00 - [Copilot] FinanceGuardian Sheets export slice
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `src/agents/FinanceGuardian.ts`, `test/FinanceGuardian_Sheets.test.ts`
+
+#### 00:00 - [Copilot] LocalCSRAgent CSR path slice
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `src/agents/LocalCSRAgent.ts`, `test/localCSRAgent.test.ts`
+
+#### 00:00 - [Copilot] EmailTriageAgent classification slice
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `src/agents/EmailTriageAgent.ts`, `test/emailTriageAgent.test.ts`
+
+#### 00:00 - [Copilot] SalesHunterAgent lead pipeline slice
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `src/agents/SalesHunterAgent.ts`, `test/salesHunterAgent.test.ts`
+
+#### 00:00 - [Copilot] LogisticsDispatcherAgent dispatch slice
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `src/agents/LogisticsDispatcherAgent.ts`, `test/logisticsDispatcherAgent.test.ts`
+
+#### 00:00 - [Copilot] SheetsSyncAgent type guard slice
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `src/agents/SheetsSyncAgent.ts`, `test/SheetsSyncAgent.test.ts`
+
+#### 00:00 - [Copilot] GitHubModelsAgent type-safe tool loop slice
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `src/agents/GitHubModelsAgent.ts`, `test/GitHubModelsAgent.test.ts`
+
+#### 00:00 - [Copilot] CashFlowPredictionAgent spec guard slice
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `src/agents/CashFlowPredictionAgent.ts`
+
+#### 00:00 - [Copilot] MarketingDirectorAgent spec guard slice
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `src/agents/MarketingDirectorAgent.ts`, `test/MarketingDirectorAgent.test.ts`
+
+#### 00:00 - [Copilot] GenesisOrchestrator spec guard slice
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `src/agents/GenesisOrchestrator.ts`, `test/GenesisOrchestrator.test.ts`, `conductor/tracks/type_safety_enforcement_20260404/plan.md`
+
+#### 00:00 - [Copilot] ProjectConductorAgent minimal type-safety slice
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `src/agents/ProjectConductorAgent.ts`, `test/project_conductor_living_docs.test.ts`
+
+#### 00:00 - [Copilot] CloudflareClient wrapper typing slice
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `src/agents/cloudflare/CloudflareClient.ts`, `test/cloudflareClient.test.ts`, `.ai/copilot.md`, `conductor/tracks/type_safety_enforcement_20260404/plan.md`
+
+#### 00:00 - [Copilot] CloudflareClient typing slice
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `src/utils/cloudflareClient.ts`, `test/cloudflare_integration.test.ts`, `.ai/copilot.md`, `conductor/tracks/type_safety_enforcement_20260404/plan.md`
+
+#### 00:00 - [Copilot] ApifyScrapingAgent typing slice
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `src/agents/ApifyScrapingAgent.ts`, `test/apifyScrapingAgent.test.ts`
+
+#### 00:00 - [Copilot] TestScheduler route typing slice
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `src/server/routes/testScheduler.ts`, `test/testSchedulerRoutes.test.ts`, `.ai/copilot.md`, `conductor/tracks/type_safety_enforcement_20260404/plan.md`
+
+#### 00:00 - [Copilot] TestSchedulerTool typing slice
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `src/tools/testSchedulerTool.ts`, `test/tools/testSchedulerTool.test.ts`, `.ai/copilot.md`
+
+#### 00:00 - [Copilot] EdgeProxyAgent typing slice
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `src/agents/EdgeProxyAgent.ts`, `.ai/copilot.md`
+
+#### 00:00 - [Copilot] UnifiedWorkspace typing slice
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `src/tools/unifiedWorkspace.ts`, `.ai/copilot.md`
+
+#### 00:00 - [Copilot] AgentManager typing slice
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `src/agents/AgentManager.ts`, `.ai/copilot.md`
+
+#### 00:00 - [Copilot] LanceDB typing slice
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `src/utils/rag.ts`, `src/utils/lancedb_client.ts`, `.ai/copilot.md`
+
 #### 00:00 - [Copilot] aiHelpers rollout és tesztlezárás
 - **Agent:** Copilot
 - **Státusz:** ✅ Befejezve
 - **Érintett fájlok:** `src/utils/tasksDb.ts`, `src/utils/wranglerHelper.ts`, `src/utils/persistentBrowser.ts`, `src/agents/SalesAgent.ts`, `src/agents/StocktakeReportAgent.ts` (+6 további)
+
+#### 00:00 - [Copilot] Gödel-Agent önfejlesztő loop megvalósítás
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
 
 ---
 
@@ -768,9 +887,9 @@ start-full.bat
 | Agent | Bejegyzések | Utolsó Aktivitás |
 |-------|-------------|------------------|
 | Claude | 85 | 2026-03-31 |
-| Gemini | 4 | 2026-04-06 |
+| Gemini | 5 | 2026-04-06 |
 | Cursor | 0 | N/A |
-| Copilot | 37 | 2026-04-06 |
+| Copilot | 60 | 2026-04-06 |
 
 ---
 

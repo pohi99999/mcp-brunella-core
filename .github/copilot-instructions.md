@@ -92,6 +92,7 @@ Local hooks are part of the workflow:
 - **Dashboard and CLI are parallel product surfaces.** The dashboard is a separate React/Vite app under `src/dashboard/`; `src/dashboard/lib/navigation.tsx` is the registration point for Mission Control panels. The CLI entrypoint is `src/cli.ts`, with many subcommand modules under `src/cli/`.
 - **Model routing is split in two layers.** `src/core/modelRouter.ts` chooses between local vs cloud execution ("brain vs muscle"), while `src/core/bifrost_gateway.ts` handles provider fallback across GitHub Models, Ollama, Gemini, Anthropic, and related bridges.
 - **Python exposes both HTTP and MCP interfaces.** `myai/server.py` runs the FastAPI subsystem on `:8000` and includes OpenAI-compatible model listing endpoints (`/models` and `/v1/models`). `myai/mcp_server.py` exposes Python tools over stdio/SSE via FastMCP.
+- **Copilot CLI is wired as a proactive self-improvement layer (Data Flywheel).** `src/core/copilotFeedbackChannel.ts` translates Copilot CLI code-review JSON into `SelfModelSignal`s and feeds them to the `autonomousInfraRuntime.selfModel` instance (the one visible to HyperKernel). One aggregate reflection per review batch also calls `copilotCognitiveBridge.reflect()` to update GoldenDataset, MetaReasoner, and GraphRAG. **Always use the exported `copilotFeedbackChannel` singleton from `autonomousInfraRuntime.ts`** — do not create a second `CopilotFeedbackChannel` instance. The daily `.github/workflows/self-improve.yml` (cron `30 8 * * *`) drives the outer loop, and three Agent Skills (`.github/agents/bas-self-reflect.agent.md`, `bas-golden-dataset-enricher.agent.md`, `bas-pattern-scout.agent.md`) provide activation hooks.
 
 ## Key repository conventions
 
@@ -112,6 +113,7 @@ Local hooks are part of the workflow:
 - **Federation manifest signing is fail-closed.** `src/core/federation/capabilityManifest.ts` requires `MANIFEST_SIGNING_SECRET` with at least 32 characters; there is no default shared-secret fallback anymore.
 - **Python work assumes Python 3.12+ and `uv`.** `pyproject.toml` is the source of truth for Python dependencies; the optional `autogen` extra enables the isolated AutoGen pilot used by `myai/mcp_server.py`.
 - **SDLC pipeline is automatic for new tracks.** When `ProjectConductorAgent.createTrack()` creates a new track, it writes `meta.json`, then `sdlcPipeline.init()` adds an `sdlc` block with `enabled: true`, and the pipeline auto-starts. Use `@sdlc-pipeline` in Copilot Chat or `brunella sdlc` on the CLI to drive or inspect phases. Existing tracks without an `sdlc` block remain unaffected until explicitly initialized.
+- **CopilotFeedbackChannel is a singleton — do not instantiate separately.** The exported `copilotFeedbackChannel` from `src/core/autonomousInfraRuntime.ts` is the single bridge between Copilot CLI review output and `selfModel`. Calling `new CopilotFeedbackChannel(...)` elsewhere would create an orphan instance with a disconnected `SelfModel`. Route per-finding signals through `copilotFeedbackChannel.ingest()` only; aggregate batch outcomes are forwarded automatically to `copilotCognitiveBridge.reflect()`.
 
 ## Known pitfalls
 
@@ -164,8 +166,8 @@ Az alábbi 7 szabály — analóg az EPP v2 fejlesztési szabályokkal — **kö
 
 # Brunella Agent System — Projekt Diagram v2
 
-**Utolsó frissítés:** 2026-04-04
-**Verzió:** 3.5.0
+**Utolsó frissítés:** 2026-04-06
+**Verzió:** 3.6.0
 **Korábbi verzió:** PROJEKT_DIAGRAM.md (v2.4.0, 2026-03-25)
 
 ---
