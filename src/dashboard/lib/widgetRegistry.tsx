@@ -136,7 +136,7 @@ export const WIDGET_REGISTRY: Record<string, WidgetDefinition> = {
   cloudflare_agents: {
     id: "cloudflare_agents",
     label: "Cloudflare Edge Orchestrator",
-    component: CloudflareOrchestrator,
+    component: CloudflareAgentsCard,
     defaultSize: { w: 6, h: 8 }
   },
   rag_memory: {

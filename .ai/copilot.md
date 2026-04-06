@@ -6,6 +6,47 @@ User requested that the Copilot CLI automatically connect to a local Brunella MC
 
 ## History
 
+### 2026-04-06 03:28 - Dashboard runtime + magyarítás helyreállítás
+
+**Feladat:** A dashboard blank/beragadó indulásának javítása, a `Cloudflare` widget runtime hibájának megszüntetése, a hiányzó `id`/`name` attribútumok pótlása és a félkész magyarítás bekötésének helyreállítása.
+
+**Érintett fájlok:**
+
+- `src/dashboard/lib/widgetRegistry.tsx`
+- `src/dashboard/i18n/config.ts`
+- `src/dashboard/components/ui/command.tsx`
+- `src/dashboard/components/dashboard/CloudflareAgentsCard.tsx`
+- `src/dashboard/components/dashboard/JulesPanel.tsx`
+- `src/dashboard/i18n/locales/hu.json`
+- `src/dashboard/i18n/locales/en.json`
+- `.ai/copilot.md`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A fő crash oka az volt, hogy a widget registry egy elavult `CloudflareOrchestrator` komponensre mutatott, ami `ReferenceError`-rel elszállt; ezt a működő `CloudflareAgentsCard`-ra kötöttem át. Emellett a dashboard i18n config korábban a böngésző `en-US` nyelvét vette át, ezért a shell vegyesen angol maradt; most dedikált localStorage kulccsal alapból `hu` indul, a Command Palette / Jules / Cloudflare felületek magyarítva lettek, a két problémás mező pedig kapott `id` és `name` attribútumot. A `npm run build:ui` zöld, és a böngésző konzol tiszta a `5173` és `3000` porton is.
+
+### 2026-04-06 - aiHelpers rollout és tesztlezárás
+
+**Feladat:** A runtime-biztonságos `safeJsonParse` alapú parsing rollout folytatása az Edge / Queues / Workflows / Agents batch-ekben, majd a build és a fast-suite lefuttatása, a PR frissítése és a változások naplózása.
+
+**Érintett fájlok:**
+
+- `src/utils/tasksDb.ts`
+- `src/utils/wranglerHelper.ts`
+- `src/utils/persistentBrowser.ts`
+- `src/agents/SalesAgent.ts`
+- `src/agents/StocktakeReportAgent.ts`
+- `src/agents/StocktakeReconciliationAgent.ts`
+- `src/utils/fixQueue.ts`
+- `test/metricsArchiveService.test.ts`
+- `conductor/project_state.json`
+- `conductor/tracks.md`
+- `github.com/pohi99999/mcp-brunella-core/pull/141`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A `npm run build` és a `npm run test:fast` zölden lefutott; a PR leírását frissítettem a végső validációs eredményekkel.
+
 ### 2026-04-05 18:21 - Bookkeeping phase0 readiness archive
 
 **Feladat:** A `konyveles_phase3_readiness_20260405` slice lezárása, archíválása, a parent bookkeeping phase3 track blokkjának feloldása, majd a readiness helper/API/CLI/dashboard/test surface-ok rögzítése.

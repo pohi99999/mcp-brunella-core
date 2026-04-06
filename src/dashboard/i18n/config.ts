@@ -13,13 +13,17 @@ i18n
       en: { translation: en },
       hu: { translation: hu }
     },
-    fallbackLng: 'hu', // Alapértelmezett legyen a magyar, ha már magyarítunk
+    lng: 'hu',
+    fallbackLng: 'hu',
+    supportedLngs: ['hu', 'en'],
+    nonExplicitSupportedLngs: true,
     debug: process.env.NODE_ENV === 'development',
     interpolation: {
       escapeValue: false, // React már biztonságos
     },
     detection: {
-      order: ['localStorage', 'navigator'],
+      order: ['localStorage'],
+      lookupLocalStorage: 'brunella.dashboard.language',
       caches: ['localStorage']
     }
   });
