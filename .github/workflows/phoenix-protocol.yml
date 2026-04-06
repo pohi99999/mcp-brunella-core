@@ -19,7 +19,7 @@ jobs:
           node-version: '20'
 
       - name: Install Node Dependencies
-        run: npm ci
+        run: npm install -g pnpm@9 && pnpm install --frozen-lockfile
 
       # 2. Python Környezet (Robotkéz/MyAI)
       - name: Setup Python

@@ -44,7 +44,7 @@ jobs:
           cache: "npm"
 
       - name: Install
-        run: npm ci
+        run: npm install -g pnpm@9 && pnpm install --frozen-lockfile
 
       - name: Run selected suite
         shell: bash
@@ -77,19 +77,19 @@ jobs:
               npm test -- --run test/github*.test.ts
               ;;
             dashboard)
-              npm run build:ui
+              pnpm run build:ui
               ;;
             e2e_full)
-              npm run test:e2e || echo "E2E suite not yet implemented"
+              pnpm run test:e2e || echo "E2E suite not yet implemented"
               ;;
             e2e_critical)
-              npm run test:e2e:critical || echo "E2E critical suite not yet implemented"
+              pnpm run test:e2e:critical || echo "E2E critical suite not yet implemented"
               ;;
             performance_stress)
-              npm run test:perf || echo "Performance suite not yet implemented"
+              pnpm run test:perf || echo "Performance suite not yet implemented"
               ;;
             performance_memory)
-              npm run test:perf:memory || echo "Memory suite not yet implemented"
+              pnpm run test:perf:memory || echo "Memory suite not yet implemented"
               ;;
             security_scan)
               npm audit --audit-level=moderate || true
@@ -98,10 +98,10 @@ jobs:
               npm test -- --run test/*_routes.test.ts
               ;;
             accessibility)
-              npm run test:a11y || echo "Accessibility suite not yet implemented"
+              pnpm run test:a11y || echo "Accessibility suite not yet implemented"
               ;;
             browser_compat)
-              npm run test:browsers || echo "Browser compat suite not yet implemented"
+              pnpm run test:browsers || echo "Browser compat suite not yet implemented"
               ;;
             regression)
               npm test -- --run --reporter=verbose --changed

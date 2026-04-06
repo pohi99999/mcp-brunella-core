@@ -33,6 +33,10 @@ jobs:
     if: github.event_name == 'pull_request'
     
     steps:
+      - name: Install pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9
       - name: 📥 Checkout code
         uses: actions/checkout@v4
         with:
@@ -45,10 +49,10 @@ jobs:
           cache: 'npm'
 
       - name: 🔧 Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: 🏗️ Build main project
-        run: npm run build
+        run: pnpm run build
 
       - name: 🧪 Run tests
         run: npm test
@@ -59,8 +63,8 @@ jobs:
       - name: ✨ Validate test-worker build
         run: |
           cd myai/agents/workers/cean-test
-          npm ci
-          npm run build
+          pnpm install --frozen-lockfile
+          pnpm run build
 
       - name: 🎯 Dry-run deploy (validation only)
         run: |
@@ -94,10 +98,10 @@ jobs:
           cache: 'npm'
 
       - name: 🔧 Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: 🏗️ Build main project
-        run: npm run build
+        run: pnpm run build
 
       - name: 🔍 Setup Wrangler
         run: npm install -g wrangler@latest
@@ -111,8 +115,8 @@ jobs:
       - name: 📤 Deploy test-worker to Cloudflare
         run: |
           cd myai/agents/workers/cean-test
-          npm ci
-          npm run build
+          pnpm install --frozen-lockfile
+          pnpm run build
           wrangler deploy --env production
         env:
           CF_BAS_API_TOKEN: ${{ secrets['CF_BAS_API_TOKEN'] }}
