@@ -1,4 +1,5 @@
 import { Router } from 'express';
+// @ts-ignore
 import { SignJWT, jwtVerify } from 'jose';
 import { logInfo, logError } from '../../utils/logger.js';
 

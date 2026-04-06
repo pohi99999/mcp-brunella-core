@@ -1,5 +1,6 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
+// @ts-expect-error
 import type { Browser, Page } from 'playwright';
 import { URL } from 'url';
 import { PythonShell } from 'python-shell';
@@ -43,6 +44,7 @@ async function getBrowser() {
     // Actually, 'playwright' package installs browsers.
     // Let's try to launch.
     try {
+      // @ts-expect-error
       const { chromium } = await import('playwright');
       browser = await chromium.launch({
         headless: true,

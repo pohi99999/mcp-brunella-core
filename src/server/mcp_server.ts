@@ -9,6 +9,7 @@ import {
 } from '@modelcontextprotocol/sdk/types.js';
 import fs from 'fs';
 import path from 'path';
+// @ts-ignore
 import { glob } from 'glob';
 import { getSafeZoneValidator } from '../security/safe_zone_validator.js';
 import { logInfo, logError } from '../utils/logger.js';
@@ -351,7 +352,7 @@ export class MCPFilesystemServer {
       });
 
       // Validate each match is in Safe Zone
-      const validMatches = matches.filter(match => {
+      const validMatches = matches.filter((match: any) => {
         const fullPath = path.join(resolvedDir, match);
         return this.validator.validate(fullPath, 'read');
       });

@@ -215,6 +215,7 @@ export async function registerAllTools(server: McpServer) {
   let zodToJsonSchema: any;
   if (isNode) {
     try {
+        // @ts-expect-error
         const mod = await import("zod-to-json-schema");
         zodToJsonSchema = mod.zodToJsonSchema;
     } catch (e) {

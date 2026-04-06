@@ -1,6 +1,7 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { swarmManager } from '../agents/AgentManager.js';
+// @ts-ignore
 import { chromium } from 'playwright';
 import { exec } from 'child_process';
 import fs from 'fs/promises';

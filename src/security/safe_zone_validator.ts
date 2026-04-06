@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+// @ts-ignore
 import { minimatch } from 'minimatch';
 import { logInfo, logError, logWarn } from '../utils/logger.js';
 

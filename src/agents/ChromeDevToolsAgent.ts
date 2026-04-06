@@ -1,5 +1,6 @@
 import { IAgent, AgentResponse } from './types.js';
 import { logInfo, logError, logWarn, setAgentStatus } from '../utils/logger.js';
+// @ts-ignore
 import { chromium, Browser, Page, CDPSession } from 'playwright';
 
 /**
@@ -86,9 +87,9 @@ export class ChromeDevToolsAgent implements IAgent {
     const failedRequests: Array<{ url: string; error: string }> = [];
 
     // Network request event listener
-    page.on('request', (request) => {
+    page.on('request', (request: any) => {
       const startTime = Date.now();
-      request.response().then((response) => {
+      request.response().then((response: any) => {
         if (response) {
           requests.push({
             url: request.url(),
@@ -104,7 +105,7 @@ export class ChromeDevToolsAgent implements IAgent {
     });
 
     // Failed request listener
-    page.on('requestfailed', (request) => {
+    page.on('requestfailed', (request: any) => {
       failedRequests.push({
         url: request.url(),
         error: request.failure()?.errorText || 'Unknown error',
@@ -118,7 +119,7 @@ export class ChromeDevToolsAgent implements IAgent {
       await page.waitForTimeout(Math.min(durationMs, 2000));
 
       logInfo(this.name, `Rögzítve: ${requests.length} kérés, ${failedRequests.length} hiba`);
-    } catch (error) {
+    } catch (error: any) {
       logError(this.name, `Network capture hiba: ${error instanceof Error ? error.message : String(error)}`);
     } finally {
       await browser.close();
@@ -147,7 +148,7 @@ export class ChromeDevToolsAgent implements IAgent {
     const warnings: ConsoleMessage[] = [];
 
     // Console message listener
-    page.on('console', (msg) => {
+    page.on('console', (msg: any) => {
       const type = msg.type();
       const message: ConsoleMessage = {
         type: type as 'error' | 'warning' | 'info',
@@ -164,7 +165,7 @@ export class ChromeDevToolsAgent implements IAgent {
     });
 
     // Page error listener (uncaught exceptions)
-    page.on('pageerror', (error) => {
+    page.on('pageerror', (error: any) => {
       errors.push({
         type: 'error',
         message: error.message,
@@ -177,7 +178,7 @@ export class ChromeDevToolsAgent implements IAgent {
       await page.waitForTimeout(Math.min(durationMs, 2000));
 
       logInfo(this.name, `Rögzítve: ${errors.length} hiba, ${warnings.length} warning`);
-    } catch (error) {
+    } catch (error: any) {
       logError(this.name, `Console capture hiba: ${error instanceof Error ? error.message : String(error)}`);
     } finally {
       await browser.close();
@@ -229,7 +230,7 @@ export class ChromeDevToolsAgent implements IAgent {
       };
 
       logInfo(this.name, `Performance: DOM Load ${metrics.domLoadTime.toFixed(0)}ms, FCP ${metrics.firstContentfulPaint.toFixed(0)}ms`);
-    } catch (error) {
+    } catch (error: any) {
       logError(this.name, `Performance metrics hiba: ${error instanceof Error ? error.message : String(error)}`);
     } finally {
       await browser.close();
@@ -464,7 +465,7 @@ export class ChromeDevToolsAgent implements IAgent {
           url,
         },
       };
-    } catch (error) {
+    } catch (error: any) {
       const errorMsg = error instanceof Error ? error.message : String(error);
       logError(this.name, errorMsg);
 

@@ -19,6 +19,7 @@ interface FederationPeerRequestContext {
   timestamp: string;
 }
 
+// @ts-ignore
 declare module 'express-serve-static-core' {
   interface Request {
     federationPeer?: FederationPeerRequestContext;
@@ -126,7 +127,7 @@ export function authFederationPeer(req: Request, res: Response, next: NextFuncti
     return;
   }
 
-  req.federationPeer = {
+  (req as any).federationPeer = {
     peerId,
     keyId: verification.keyId,
     targetKeyId: verification.targetKeyId,

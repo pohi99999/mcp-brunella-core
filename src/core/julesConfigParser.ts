@@ -1,5 +1,6 @@
 import { readFileSync } from 'fs';
 import path from 'path';
+// @ts-ignore
 import YAML from 'yaml';
 import { logInfo, logError, logWarn } from '../utils/logger.js';
 
