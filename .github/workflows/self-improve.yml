@@ -1,0 +1,151 @@
+name: Brunella Daily Self-Improve
+
+on:
+  schedule:
+    - cron: '30 8 * * *'  # 08:30 UTC — after daily-full-tests (02:00) and nightly-e2e (02:00)
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Dry run — log analysis without writing backlog entries'
+        required: false
+        default: 'false'
+        type: boolean
+
+permissions:
+  contents: write
+
+jobs:
+  self-reflect:
+    name: Track status + FOSZAL pattern analysis
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --prefer-offline
+
+      - name: Build TypeScript
+        run: npm run build
+        env:
+          WEB_UI_ENABLED: '0'
+
+      - name: Run fast test suite
+        run: npm run test:fast
+        env:
+          WEB_UI_ENABLED: '0'
+          BRUNELLA_SKIP_SECRETS_CHECK: '1'
+
+      - name: Capture conductor track status
+        run: |
+          echo "## 📋 BAS Track Status" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          if [ -f "conductor/tracks.md" ]; then
+            head -60 conductor/tracks.md >> "$GITHUB_STEP_SUMMARY"
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            echo "_([full file](conductor/tracks.md))_" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "> `conductor/tracks.md` not found" >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Analyse FOSZAL pattern (last 50 lines)
+        id: foszal
+        run: |
+          if [ -f ".ai/FOSZAL.md" ]; then
+            LINES=$(wc -l < .ai/FOSZAL.md)
+            tail -50 .ai/FOSZAL.md > /tmp/foszal-recent.txt
+            echo "foszal_lines=$LINES" >> "$GITHUB_OUTPUT"
+            echo "## 🔍 FOSZAL Recent Entries (last 50 lines)" >> "$GITHUB_STEP_SUMMARY"
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            echo '```' >> "$GITHUB_STEP_SUMMARY"
+            cat /tmp/foszal-recent.txt >> "$GITHUB_STEP_SUMMARY"
+            echo '```' >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "foszal_lines=0" >> "$GITHUB_OUTPUT"
+            echo "> `.ai/FOSZAL.md` not found — skipping pattern analysis" >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Write self-improve run summary
+        if: always()
+        run: |
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "---" >> "$GITHUB_STEP_SUMMARY"
+          echo "## 🤖 Self-Improve Run Metadata" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Field | Value |" >> "$GITHUB_STEP_SUMMARY"
+          echo "|-------|-------|" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Trigger | \`${{ github.event_name }}\` |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Branch | \`${{ github.ref_name }}\` |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| FOSZAL lines | ${{ steps.foszal.outputs.foszal_lines || '0' }} |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Dry run | \`${{ inputs.dry_run || 'false' }}\` |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Time | $(date -u '+%Y-%m-%d %H:%M UTC') |" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "> **Next step (manual):** Review the track status and FOSZAL patterns above," >> "$GITHUB_STEP_SUMMARY"
+          echo "> then invoke \`@bas-self-reflect\` in Copilot Chat or run:" >> "$GITHUB_STEP_SUMMARY"
+          echo "> \`npx brunella conductor health --json | gh copilot 'Analyze and create improvement tasks'\`" >> "$GITHUB_STEP_SUMMARY"
+
+  pattern-scout:
+    name: Agent registry pattern scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: self-reflect
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --prefer-offline
+
+      - name: Scan agent registry for consolidation opportunities
+        run: |
+          echo "## 🔭 Pattern Scout — Agent Registry Scan" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          node --input-type=module << 'EOF' >> "$GITHUB_STEP_SUMMARY"
+            import { readFileSync, existsSync } from 'fs';
+
+            const regPath = 'src/agents/registry.json';
+            if (!existsSync(regPath)) {
+              console.log('> `registry.json` not found — skipping.');
+              process.exit(0);
+            }
+
+            const registry = JSON.parse(readFileSync(regPath, 'utf8'));
+            const agents = Object.keys(registry);
+
+            console.log(`**Total agents:** ${agents.length}`);
+            console.log('');
+
+            // Group by name prefix (word before first capital after initial)
+            const groups = {};
+            for (const name of agents) {
+              const prefix = name.replace(/Agent$/, '').replace(/([A-Z][a-z]+)/g, ' $1').trim().split(' ')[0];
+              groups[prefix] = groups[prefix] || [];
+              groups[prefix].push(name);
+            }
+
+            const candidates = Object.entries(groups).filter(([, v]) => v.length > 1);
+            if (candidates.length === 0) {
+              console.log('✅ No obvious consolidation candidates found.');
+            } else {
+              console.log('### Consolidation candidates');
+              console.log('');
+              console.log('| Prefix | Agents |');
+              console.log('|--------|--------|');
+              for (const [prefix, names] of candidates) {
+                console.log(`| \`${prefix}\` | ${names.map(n => `\`${n}\``).join(', ')} |`);
+              }
+            }
+          EOF

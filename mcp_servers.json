@@ -203,5 +203,21 @@
     "requiredEnv": [],
     "connectRetries": 0,
     "retryDelayMs": 1000
+  },
+  {
+    "name": "brunella-self-improve",
+    "transport": "stdio",
+    "command": "node",
+    "args": [
+      "-e",
+      "const { execSync } = require('child_process'); try { const r = execSync('npx brunella conductor health --json', { encoding: 'utf8' }); console.log(JSON.stringify({ type: 'health-report', data: JSON.parse(r) })); } catch(e) { console.log(JSON.stringify({ type: 'error', message: e.message })); }"
+    ],
+    "description": "Brunella önfejlesztő MCP belépési pont — conductor health elemzés, Copilot CLI Plan ágensnek adja át az eredményt. Ütemezés: .github/workflows/self-improve.yml (napi 09:00 UTC). On-demand: npx brunella conductor health --json | gh copilot 'Analyze and create improvement tasks'",
+    "autoStart": false,
+    "required": false,
+    "disabled": true,
+    "requiredEnv": [],
+    "connectRetries": 0,
+    "retryDelayMs": 1000
   }
 ]
