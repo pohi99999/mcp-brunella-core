@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { toast } from 'sonner'
 import { Skeleton } from '@/components/ui/skeleton'
+import { useTranslation } from 'react-i18next'
 import { getCloudflareConfig, submitCloudflareWorkerTask, type CloudflareRuntimeConfig } from '@/lib/apiService'
 
 interface EdgeAgent
@@ -34,11 +35,38 @@ interface CloudflareStatus
 
 export function CloudflareAgentsCard ()
 {
+    const { t } = useTranslation()
     const [data, setData] = useState<CloudflareStatus | null>( null )
     const [config, setConfig] = useState<CloudflareRuntimeConfig | null>( null )
     const [loading, setLoading] = useState( true )
-    const [instruction, setInstruction] = useState( 'health check' )
+    const [instruction, setInstruction] = useState( () => t( 'cloudflare_widget.default_instruction', 'állapotellenőrzés' ) )
     const [runningWorkerId, setRunningWorkerId] = useState<string | null>( null )
+
+    const getStatusLabel = ( status: CloudflareStatus['status'] ) =>
+    {
+        switch ( status )
+        {
+            case 'connected':
+                return t( 'cloudflare_widget.status_connected', 'kapcsolódva' )
+            case 'degraded':
+                return t( 'cloudflare_widget.status_degraded', 'korlátozott' )
+            default:
+                return t( 'cloudflare_widget.status_error', 'hiba' )
+        }
+    }
+
+    const getWorkerStatusLabel = ( status: EdgeAgent['status'] ) =>
+    {
+        switch ( status )
+        {
+            case 'online':
+                return t( 'common.healthy', 'Egészséges' )
+            case 'offline':
+                return t( 'common.offline', 'Offline' )
+            default:
+                return t( 'cloudflare_widget.unknown', 'ismeretlen' )
+        }
+    }
 
     const fetchData = async () =>
     {
@@ -59,7 +87,7 @@ export function CloudflareAgentsCard ()
             setConfig( configRes )
         } catch ( e: unknown )
         {
-            toast.error( 'Failed to fetch Cloudflare status' )
+            toast.error( t( 'cloudflare_widget.fetch_error', 'Nem sikerült lekérni a Cloudflare állapotot' ) )
         } finally
         {
             setLoading( false )
@@ -77,7 +105,7 @@ export function CloudflareAgentsCard ()
     {
         if ( !instruction.trim() )
         {
-            toast.error( 'Adj meg egy feladatot a workerhez' )
+            toast.error( t( 'cloudflare_widget.dispatch_required', 'Adj meg egy feladatot a workerhez' ) )
             return
         }
 
@@ -85,13 +113,15 @@ export function CloudflareAgentsCard ()
         try
         {
             const result = await submitCloudflareWorkerTask( workerId, instruction.trim(), {} )
-            toast.success( `Feladat elküldve: ${ workerName }`, {
-                description: result.endpoint ? `endpoint: ${ result.endpoint }` : 'worker task accepted',
+            toast.success( t( 'cloudflare_widget.dispatch_success', 'Feladat elküldve: {{workerName}}', { workerName } ), {
+                description: result.endpoint
+                    ? t( 'cloudflare_widget.dispatch_success_desc', 'Végpont: {{endpoint}}', { endpoint: result.endpoint } )
+                    : t( 'cloudflare_widget.dispatch_success_desc_fallback', 'A worker feladatot elfogadta' ),
             } )
         } catch ( e: unknown )
         {
             const msg = e instanceof Error ? e.message : String( e )
-            toast.error( `Worker dispatch hiba: ${ workerName }`, {
+            toast.error( t( 'cloudflare_widget.dispatch_error', 'Worker dispatch hiba: {{workerName}}', { workerName } ), {
                 description: msg,
             } )
         } finally
@@ -141,53 +171,56 @@ export function CloudflareAgentsCard ()
     if ( !data ) return null
 
     return (
-        <Card className="glass-card border-white/[0.04] overflow-hidden mt-4">
-            <CardHeader className="pb-3 border-b border-white/[0.04] bg-white/[0.04] flex flex-row items-center justify-between">
-                <CardTitle className="flex items-center gap-2 text-sm font-bold tracking-wider uppercase text-zinc-500">
-                    <Cloud size={ 16 } className="text-orange-400" />
-                    Cloudflare Edge Agents
-                </CardTitle>
-                <div className="flex items-center gap-2">
-                    <Badge variant={ data.status === 'connected' ? 'default' : data.status === 'degraded' ? 'secondary' : 'destructive' } className="text-[10px]">
-                        { data.status }
-                    </Badge>
-                    <Button variant="ghost" size="icon" className="h-6 w-6" onClick={ fetchData } disabled={ loading }>
-                        <RefreshCcw size={ 12 } className={ loading ? "animate-spin" : "" } />
+            <Card className="glass-card border-white/[0.04] overflow-hidden mt-4">
+                <CardHeader className="pb-3 border-b border-white/[0.04] bg-white/[0.04] flex flex-row items-center justify-between">
+                    <CardTitle className="flex items-center gap-2 text-sm font-bold tracking-wider uppercase text-zinc-500">
+                        <Cloud size={ 16 } className="text-orange-400" />
+                        { t( 'cloudflare_widget.title', 'Cloudflare Edge ágensek' ) }
+                    </CardTitle>
+                    <div className="flex items-center gap-2">
+                        <Badge variant={ data.status === 'connected' ? 'default' : data.status === 'degraded' ? 'secondary' : 'destructive' } className="text-[10px]">
+                            { getStatusLabel( data.status ) }
+                        </Badge>
+                        <Button variant="ghost" size="icon" className="h-6 w-6" onClick={ fetchData } disabled={ loading }>
+                            <RefreshCcw size={ 12 } className={ loading ? "animate-spin" : "" } />
                     </Button>
                 </div>
             </CardHeader>
             <CardContent className="p-0">
                 <div className="px-4 py-3 border-b border-white/[0.04] bg-white/[0.02] flex flex-col gap-2">
-                    <span className="text-xs text-zinc-400">Direkt worker task</span>
+                    <span className="text-xs text-zinc-400">{ t( 'cloudflare_widget.direct_task', 'Közvetlen worker feladat' ) }</span>
                     <div className="flex gap-2">
                         <Input
+                            id="cloudflare-worker-task"
+                            name="cloudflare-worker-task"
+                            aria-label={ t( 'cloudflare_widget.direct_task', 'Közvetlen worker feladat' ) }
                             value={ instruction }
                             onChange={ ( e ) => setInstruction( e.target.value ) }
-                            placeholder="Pl.: health check vagy status report"
+                            placeholder={ t( 'cloudflare_widget.placeholder', 'Pl.: állapotellenőrzés vagy státuszriport' ) }
                             className="h-8 text-xs"
                         />
                     </div>
                 </div>
                 <div className="px-4 py-2 text-xs text-zinc-400 border-b border-white/[0.04] bg-white/[0.02]">
-                    total: { data.summary.total } • online: { data.summary.online } • offline: { data.summary.offline } • unknown: { data.summary.unknown }
+                    { t( 'cloudflare_widget.summary', 'összes: {{total}} • online: {{online}} • offline: {{offline}} • ismeretlen: {{unknown}}', data.summary ) }
                 </div>
                 { config && (
                     <div className="px-4 py-2 text-[11px] text-zinc-400 border-b border-white/[0.04] bg-white/[0.02] space-y-1">
                         <div>
-                            edge: <span className="font-mono text-zinc-300">{ config.edge.workerUrl }</span>
+                            { t( 'cloudflare_widget.edge', 'edge' ) }: <span className="font-mono text-zinc-300">{ config.edge.workerUrl }</span>
                         </div>
                         <div>
-                            chat: <span className="font-mono text-zinc-300">{ config.chat.url }</span>
+                            { t( 'cloudflare_widget.chat', 'chat' ) }: <span className="font-mono text-zinc-300">{ config.chat.url }</span>
                         </div>
                         <div className="flex flex-wrap gap-3">
                             <span>
-                                tunnel: { config.tunnel.enabled ? 'enabled' : 'disabled' }
+                                { t( 'cloudflare_widget.tunnel', 'tunnel' ) }: { config.tunnel.enabled ? t( 'cloudflare_widget.enabled', 'engedélyezve' ) : t( 'cloudflare_widget.disabled', 'letiltva' ) }
                             </span>
                             <span>
-                                api-token: { config.auth.hasCloudflareApiToken ? 'ok' : 'missing' }
+                                { t( 'cloudflare_widget.api_token', 'api-token' ) }: { config.auth.hasCloudflareApiToken ? t( 'cloudflare_widget.ok', 'ok' ) : t( 'cloudflare_widget.missing', 'hiányzik' ) }
                             </span>
                             <span>
-                                cean-key: { config.auth.hasCeanApiKey ? 'ok' : 'missing' }
+                                { t( 'cloudflare_widget.cean_key', 'cean-kulcs' ) }: { config.auth.hasCeanApiKey ? t( 'cloudflare_widget.ok', 'ok' ) : t( 'cloudflare_widget.missing', 'hiányzik' ) }
                             </span>
                         </div>
                         { config.tunnel.dashboardUrl && (
@@ -198,7 +231,7 @@ export function CloudflareAgentsCard ()
                                     rel="noreferrer"
                                     className="text-cyan-400 hover:text-cyan-300 underline"
                                 >
-                                    Mobil Dashboard megnyitása (Tunnel)
+                                    { t( 'cloudflare_widget.mobile_dashboard', 'Mobil dashboard megnyitása (Tunnel)' ) }
                                 </a>
                             </div>
                         ) }
@@ -212,14 +245,14 @@ export function CloudflareAgentsCard ()
                                 <div className="flex flex-col">
                                     <span className="text-sm font-mono text-zinc-200">{ agent.name }</span>
                                     <span className="text-[10px] text-zinc-500">
-                                        { agent.kind } • { agent.url || 'not configured' }
+                                        { agent.kind } • { agent.url || t( 'cloudflare_widget.kind_not_configured', 'nincs konfigurálva' ) }
                                     </span>
                                 </div>
                             </div>
                             <div className="flex items-center gap-2">
                                 <span className={ `h-2 w-2 rounded-full ${ agent.status === 'online' ? 'bg-green-500 animate-pulse' : agent.status === 'offline' ? 'bg-red-500' : 'bg-yellow-500' }` } />
                                 <span className="text-xs text-zinc-400 capitalize">
-                                    { agent.status }
+                                    { getWorkerStatusLabel( agent.status ) }
                                     { typeof agent.latencyMs === 'number' ? ` (${ agent.latencyMs }ms)` : '' }
                                 </span>
                                 <Button
@@ -229,14 +262,14 @@ export function CloudflareAgentsCard ()
                                     disabled={ !agent.url || runningWorkerId === agent.id }
                                     onClick={ () => handleWorkerTask( agent.id, agent.name ) }
                                 >
-                                    { runningWorkerId === agent.id ? 'Küldés...' : 'Task küldés' }
+                                    { runningWorkerId === agent.id ? t( 'cloudflare_widget.sending', 'Küldés...' ) : t( 'cloudflare_widget.send_task', 'Task küldés' ) }
                                 </Button>
                             </div>
                         </div>
                     ) ) }
                     { data.workers.length === 0 && (
                         <div className="p-4 text-center text-xs text-zinc-500">
-                            No active agents on the edge.
+                            { t( 'cloudflare_widget.no_workers', 'Nincs aktív edge ágens.' ) }
                         </div>
                     ) }
                 </div>
