@@ -102,14 +102,25 @@ export function createProjectMaintainerRoutes(db: Database.Database): Router {
   /**
    * POST /api/v1/project-maintainer/run
    * Triggers an on-demand report scan and returns the result immediately.
+   * supports { "dryRun": false } for active maintenance.
    */
-  router.post('/run', async (_req: Request, res: Response) => {
+  router.post('/run', async (req: Request, res: Response) => {
     try {
-      logInfo('ProjectMaintainerRoute', 'On-demand scan triggered via API');
+      const bodyStr = JSON.stringify(req.body);
+      logInfo('ProjectMaintainerRoute', `On-demand scan triggered via API. Body: ${bodyStr}`);
+
+      // Check if body is empty object (often happens if json parser is skipped or fails)
+      if (Object.keys(req.body).length === 0 && req.headers['content-type']?.includes('application/json')) {
+        logError('ProjectMaintainerRoute', 'WARNING: Received empty body but content-type was JSON. Possible middleware skip?');
+      }
+
+      // Robust boolean check: must be explicitly false (boolean) or "false" (string) to disable dryRun
+      const dryRun = req.body.dryRun !== false && String(req.body.dryRun).toLowerCase() !== 'false';
+      logInfo('ProjectMaintainerRoute', `DryRun decided: ${dryRun} (from raw: ${JSON.stringify(req.body)})`);
 
       const report = await runProjectMaintainerReport({
         triggeredBy: 'manual',
-        dryRun: true,
+        dryRun,
         db,
       });
       ReflectionEngine.getInstance().ingestProjectMaintainerReport(report);
