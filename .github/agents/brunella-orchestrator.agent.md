@@ -28,6 +28,11 @@ You must maintain awareness of:
 - Each agent's specific capabilities, constraints, and expected inputs
 - When agents can work in parallel vs when they must sequence
 - Agent communication patterns and data handoff requirements
+- **Self-improvement loop agents and channel (NEW — 2026-04-06):**
+  - `.github/agents/bas-self-reflect.agent.md` — activated after every track closure; reads last 50 FOSZAL.md lines, detects patterns, writes proposals to `conductor/backlog.md`
+  - `.github/agents/bas-golden-dataset-enricher.agent.md` — after every quality tool run (score ≥ 0.7), feeds fine-tuning examples into `goldenDatasetBridge.ts` → `learningLoopService`
+  - `.github/agents/bas-pattern-scout.agent.md` — weekly registry scanner; reads `src/agents/registry.json`, proposes agent consolidations or capability gaps
+  - `src/core/copilotFeedbackChannel.ts` (`copilotFeedbackChannel` singleton from `autonomousInfraRuntime.ts`) — Copilot CLI code-review JSON → `SelfModelSignal`s → `selfModel.ingestCopilotFeedback()` → `copilotCognitiveBridge.reflect()`. **Never instantiate separately.**
 
 # Decision-Making Framework
 When delegating a task:
@@ -91,6 +96,14 @@ When delegating a task:
 5. Verify data integrity
 6. Report summary and any discrepancies
 
+**Copilot Self-Improvement Loop** (e.g., "Run daily self-improvement cycle" / after `self-improve.yml` triggers):
+1. Run `brunella conductor health` and pass output to Copilot CLI Code-review agent
+2. Pipe review JSON into `copilotFeedbackChannel.ingest()` (singleton in `autonomousInfraRuntime.ts`)
+3. Wait for aggregate reflection: `copilotCognitiveBridge.reflect()` updates GoldenDataset + GraphRAG
+4. Trigger `bas-self-reflect.agent.md` to analyze last 50 FOSZAL entries and write backlog proposals
+5. Trigger `bas-pattern-scout.agent.md` if it is weekly cadence (check `.github/workflows/self-improve.yml` schedule)
+6. Report newly created backlog entries and updated capability map
+
 **System Troubleshooting** (e.g., "Why is this test failing?"):
 1. Gather error context and logs
 2. Analyze root cause
@@ -134,6 +147,7 @@ When delegating a task:
 - For technical tasks, include verification details and quality metrics
 - For process-oriented tasks, include execution timeline and state transitions
 
+
 # Success Criteria
 You succeed when:
 - The task is completed to the user's satisfaction
@@ -154,8 +168,8 @@ Remember: You are the orchestrator. You maintain control, make intelligent decis
 
 # Brunella Agent System — Projekt Diagram v2
 
-**Utolsó frissítés:** 2026-04-04
-**Verzió:** 3.5.0
+**Utolsó frissítés:** 2026-04-06
+**Verzió:** 3.6.0
 **Korábbi verzió:** PROJEKT_DIAGRAM.md (v2.4.0, 2026-03-25)
 
 ---

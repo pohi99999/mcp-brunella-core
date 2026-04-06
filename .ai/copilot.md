@@ -6,6 +6,226 @@ User requested that the Copilot CLI automatically connect to a local Brunella MC
 
 ## History
 
+### 2026-04-06 - Dashboard conductor monitor láthatósági javítás
+
+**Feladat:** Megvizsgáltam, miért nem érhető el a conductor track monitor a dashboard külön menüpontjaként, majd helyreállítottam a láthatóságát külön magyar menüponttal és regressziós teszttel.
+
+**Érintett fájlok:** `src/dashboard/lib/navigation.tsx`, `src/dashboard/components/dashboard/ConductorTracksMonitor.tsx`, `src/dashboard/i18n/locales/hu.json`, `src/dashboard/i18n/locales/en.json`, `src/dashboard/lib/navigation.contract.test.ts`, `conductor/tracks/dashboard_conductor_monitor_visibility_20260406/*`, `conductor/project_state.json`, `conductor/tracks.md`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A funkció nem hiányzott, csak a `conductor-monitor` nav item kimaradt a sidebar `Project Mgmt` csoportjából. Validáció: `npm run build`, `npm run build:ui`, célzott dashboard contract teszt zöld, majd `node build/cli.js conductor rescan` lefuttatva.
+
+### 2026-04-06 - KnowledgeBaseBuilderAgent type-safe pipeline slice
+
+**Feladat:** A `src/agents/KnowledgeBaseBuilderAgent.ts` maradék `any` eltávolítása a tudásbázis-pipeline teljes útvonaláról, a public válaszshape megtartásával.
+
+**Érintett fájlok:** `src/agents/KnowledgeBaseBuilderAgent.ts`, `test/knowledgeBaseBuilderAgent.test.ts`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A pipeline most lokális typed helpereken és szűk `unknown` aliasokon megy át; az execute task/response path, a batch doc mapping és a LanceDB insert shim is típusosodott. A 5/fókusz teszt zöld: `npm run build` és `npx vitest run test/knowledgeBaseBuilderAgent.test.ts`.
+
+### 2026-04-06 - FinanceGuardian Sheets export slice
+
+**Feladat:** A `src/agents/FinanceGuardian.ts` Google Sheets export ágának maradék `any` eltávolítása, a viselkedés megtartásával.
+
+**Érintett fájlok:** `src/agents/FinanceGuardian.ts`, `test/FinanceGuardian_Sheets.test.ts`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A Sheets-export most `unknown` alapú guardon és lokális typed aliason megy át; a public API és a válaszshape változatlan maradt. A build és a fókusz teszt zöld: `npm run build` és `npx vitest run test/FinanceGuardian_Sheets.test.ts`.
+
+### 2026-04-06 - LocalCSRAgent CSR path slice
+
+**Feladat:** A `src/agents/LocalCSRAgent.ts` maradék `any` és unsafe cast eltávolítása a CSR impact útvonalon, a viselkedés megtartásával.
+
+**Érintett fájlok:** `src/agents/LocalCSRAgent.ts`, `test/localCSRAgent.test.ts`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A CSR params most `unknown` alapú guardon és lokális typed aliasokon megy át; az executeTask signature és a transformed result path is tisztult. A build és a 10/10 fókusz teszt zöld: `npm run build` és `npx vitest run test/localCSRAgent.test.ts`.
+
+### 2026-04-06 - EmailTriageAgent classification slice
+
+**Feladat:** A `src/agents/EmailTriageAgent.ts` maradék `any` és unsafe cast eltávolítása az email osztályozási és template-loading útvonalon, a BaseAgent szerződéshez igazítva.
+
+**Érintett fájlok:** `src/agents/EmailTriageAgent.ts`, `test/emailTriageAgent.test.ts`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** Az email triage most `unknown` alapú parsingot, typed email/templating aliasokat és a BaseAgent-nek megfelelő `executeTask` szerződést használ. A build és a fókusz teszt zöld: `npm run build` és `npx vitest run test/emailTriageAgent.test.ts`.
+
+### 2026-04-06 - SalesHunterAgent lead pipeline slice
+
+**Feladat:** A `src/agents/SalesHunterAgent.ts` maradék `any` és unsafe cast eltávolítása a lead-generálási és delegálási útvonalon, a viselkedés megtartásával.
+
+**Érintett fájlok:** `src/agents/SalesHunterAgent.ts`, `test/salesHunterAgent.test.ts`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A lead pipeline most `unknown` alapú narrowingot, typed delegate response kezelést és safe JSON fallbacket használ. A build és a fókusz teszt zöld: `npm run build` és `npx vitest run test/salesHunterAgent.test.ts`.
+
+### 2026-04-06 - LogisticsDispatcherAgent dispatch slice
+
+**Feladat:** A `src/agents/LogisticsDispatcherAgent.ts` maradék `any` és unsafe cast eltávolítása a dispatch és parsing útvonalon, a viselkedés megtartásával.
+
+**Érintett fájlok:** `src/agents/LogisticsDispatcherAgent.ts`, `test/logisticsDispatcherAgent.test.ts`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A logistics dispatcher most `unknown` alapú parsingot és typed pipeline segédleteket használ; a build és a fókusz teszt zöld: `npm run build` és `npx vitest run test/logisticsDispatcherAgent.test.ts`.
+
+### 2026-04-06 - SheetsSyncAgent type guard slice
+
+**Feladat:** A `src/agents/SheetsSyncAgent.ts` maradék `any` típusú type-predicate paraméterek eltávolítása, a viselkedés megtartásával.
+
+**Érintett fájlok:** `src/agents/SheetsSyncAgent.ts`, `test/SheetsSyncAgent.test.ts`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A két type guard most `unknown` alapú ellenőrzést és egy tiny `isRecord` helperen megy át. A build és a fókusz teszt zöld: `npm run build` és `npx vitest run test/SheetsSyncAgent.test.ts`.
+
+### 2026-04-06 - GitHubModelsAgent type-safe tool loop slice
+
+**Feladat:** A `src/agents/GitHubModelsAgent.ts` maradék `any` eltávolítása a tool-call / message handling körből, a GitHub Models API viselkedésének megtartásával.
+
+**Érintett fájlok:** `src/agents/GitHubModelsAgent.ts`, `test/GitHubModelsAgent.test.ts`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A tool_calls most helyi typed aliasokra épül, a tool-result formázás külön helperen megy, és a 4 fókuszált GitHubModels teszt zöld maradt. A build is zöld: `npm run build`.
+
+### 2026-04-06 - CashFlowPredictionAgent spec guard slice
+
+**Feladat:** A `src/agents/CashFlowPredictionAgent.ts` maradék `any` eltávolítása a context desztringből, a változatlan predikciós válasz és log megtartásával.
+
+**Érintett fájlok:** `src/agents/CashFlowPredictionAgent.ts`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A kicsi slice egy lokális `unknown` guarddal oldja meg a context olvasást; a return payload változatlan maradt, és a build zöld lett. Ehhez a szelethez külön teszt nem kellett.
+
+### 2026-04-06 - MarketingDirectorAgent spec guard slice
+
+**Feladat:** A `src/agents/MarketingDirectorAgent.ts` maradék `any` eltávolítása a `jobId` kiolvasásából, a meglévő marketing-job viselkedés megtartásával.
+
+**Érintett fájlok:** `src/agents/MarketingDirectorAgent.ts`, `test/MarketingDirectorAgent.test.ts`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A guard most egy tiny `readJobId(unknown)` helperen megy át; a valid `jobId` útvonal és a completed-flow shape változatlan maradt. A validáció zöld: `npm run build` és `npx vitest run test/MarketingDirectorAgent.test.ts`.
+
+### 2026-04-06 - GenesisOrchestrator spec guard slice
+
+**Feladat:** A `src/agents/GenesisOrchestrator.ts` maradék `any` eltávolítása a `metadata.spec` olvasásból, a missing-spec viselkedés megőrzésével és a lehető legkisebb `unknown`-safe helperrel.
+
+**Érintett fájlok:** `src/agents/GenesisOrchestrator.ts`, `test/GenesisOrchestrator.test.ts`, `conductor/tracks/type_safety_enforcement_20260404/plan.md`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A spec-olvasás most egy lokális helperen megy át, ami csak a metadata-carriert ellenőrzi; a missing-spec üzenet és az orchestration flow változatlan maradt. A validáció zöld: `npm run build` és `npx vitest run test/GenesisOrchestrator.test.ts`.
+
+### 2026-04-06 - ProjectConductorAgent minimal type-safety slice
+
+**Feladat:** A `src/agents/ProjectConductorAgent.ts` maradék unsafe parse/cast pontjainak minimális, biztonságos lezárása a public viselkedés megtartásával.
+
+**Érintett fájlok:** `src/agents/ProjectConductorAgent.ts`, `test/project_conductor_living_docs.test.ts`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A végső szelet a lehető legkisebb maradt: `JSON.parse(raw) as any` helyett `Record<string, unknown>`, valamint az `overall` értékhez egy explicit `unknown`-safe cast került. A repo build és a living-docs regressziós teszt zöld.
+
+### 2026-04-06 - CloudflareClient wrapper typing slice
+
+**Feladat:** A type-safety track `src/agents/cloudflare/CloudflareClient.ts` biztonságos szeletének lezárása, a maradék `any` eltávolítása, és a wrapper task/status/chat válaszok szigorítása a public API, singleton viselkedés és magyar logok megtartásával.
+
+**Érintett fájlok:** `src/agents/cloudflare/CloudflareClient.ts`, `test/cloudflareClient.test.ts`, `.ai/copilot.md`, `conductor/tracks/type_safety_enforcement_20260404/plan.md`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A wrapper most helyi `unknown`-safe helperrel olvassa ki a nested taskId/chat result/status mezőket, a progress/currentStep számítás külön normalizáló helperre került, és a singleton API változatlan maradt. A validáció zöld: `npm run build` és `npx vitest run test/cloudflareClient.test.ts test/cloudflare_integration.test.ts test/cloudflare_routes.test.ts`.
+
+### 2026-04-06 - CloudflareClient typing slice
+
+**Feladat:** A type-safety track `src/utils/cloudflareClient.ts` biztonságos szeletének lezárása, a maradék `any` eltávolítása, és a task/result/history válaszok szigorítása a public API és a magyar logok megtartásával.
+
+**Érintett fájlok:** `src/utils/cloudflareClient.ts`, `test/cloudflare_integration.test.ts`, `.ai/copilot.md`, `conductor/tracks/type_safety_enforcement_20260404/plan.md`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A client most lokális `unknown`-safe normalizáló helperrel kezeli a task/status/history/dispatch/workers/routing válaszokat, a singleton export és a külső viselkedés változatlan maradt. A validáció zöld: `npm run build` és a focused Cloudflare suite (`test/cloudflare_integration.test.ts` plus a related Cloudflare route/browser coverage) sikeresen lefutott.
+
+### 2026-04-06 - ApifyScrapingAgent typing slice
+
+**Feladat:** A type-safety track `src/agents/ApifyScrapingAgent.ts` biztonságos szeletének lezárása, a maradék item-mapping `any` jellegű kezelések eltávolítása, és a context/result normalizálás szigorítása a public contract megőrzésével.
+
+**Érintett fájlok:** `src/agents/ApifyScrapingAgent.ts`, `test/apifyScrapingAgent.test.ts`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** Az Apify actor itemek most kis helyi typed aliasokon és `unknown`-safe normalizáló helperen mennek át; a `execute()` ágak `normalizeContext()`/`extractFirstUrl()` segítségével kezelik a query/url/limit értékeket, a fallback és a magyar logüzenetek változatlanok maradtak. A validáció zöld: `npm run build` és `npx vitest run test/apifyScrapingAgent.test.ts`.
+
+### 2026-04-06 - TestScheduler route typing slice
+
+**Feladat:** A type-safety track `src/server/routes/testScheduler.ts` biztonságos szeletének lezárása, a maradék fragile request-body/query parsing eltávolítása, és a response payloadok típusosítása a viselkedés megőrzésével.
+
+**Érintett fájlok:** `src/server/routes/testScheduler.ts`, `test/testSchedulerRoutes.test.ts`, `.ai/copilot.md`, `conductor/tracks/type_safety_enforcement_20260404/plan.md`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A route most lokális `unknown`-safe helperrel kezeli a schedule body-t és a pagination query-t, a legacy compat stats payloadot explicit typed assemblyvel adja vissza, és az új route-specifikus Vitest fedés védi a schedule/results/run/stats/date-range végpontokat. A validáció zöld: `npm run build` és `npx vitest run test/testSchedulerRoutes.test.ts`.
+
+### 2026-04-06 - TestSchedulerTool typing slice
+
+**Feladat:** A type-safety track `src/tools/testSchedulerTool.ts` biztonságos szeletének lezárása, a maradék `any` eltávolítása a scheduler tool válaszokból, és a stats/run summary payloadok típusosítása a viselkedés megőrzésével.
+
+**Érintett fájlok:** `src/tools/testSchedulerTool.ts`, `test/tools/testSchedulerTool.test.ts`, `.ai/copilot.md`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A tool most explicit response típusokkal, lokális formatting helperrel és recent-run summary builderrel dolgozik; a regresszióvédelmet egy új unit test fedezi. A validáció zöld: `npm run build` és `npx vitest run test/tools/testSchedulerTool.test.ts`.
+
+### 2026-04-06 - EdgeProxyAgent typing slice
+
+**Feladat:** A type-safety track `src/agents/EdgeProxyAgent.ts` szeletének lezárása, a megmaradt `any` eltávolítása az edge task payload/result kezelésből, és a worker válaszok `unknown`-safe normalizálása a viselkedés megőrzésével.
+
+**Érintett fájlok:** `src/agents/EdgeProxyAgent.ts`, `.ai/copilot.md`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** Az edge health most explicit `unknown` tunnel állapotot is kezel, a worker task válaszok lokális guardokon és normalizáló helperen mennek át, a history sync pedig typed task listát használ. A validáció zöld: `npm run build` és `npx vitest run test/EdgeProxyAgent.test.ts test/agents/EdgeProxyAgent.test.ts`.
+
+### 2026-04-06 - UnifiedWorkspace typing slice
+
+**Feladat:** A type-safety track `src/tools/unifiedWorkspace.ts` szeletének lezárása, a megmaradt `any` használat eltávolítása a Google Workspace kliens rétegben és a viselkedés megőrzése.
+
+**Érintett fájlok:** `src/tools/unifiedWorkspace.ts`, `.ai/copilot.md`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A Gmail/Sheets/Drive/Calendar kliensek most saját typed accessorokon keresztül mennek, a sheet műveletek overloadokkal és típusos eredményekkel térnek vissza. A validáció zöld: `npm run build` és `npx vitest run test/unifiedWorkspace.test.ts`.
+
+### 2026-04-06 - AgentManager typing slice
+
+**Feladat:** A type-safety track `src/agents/AgentManager.ts` szeletének lezárása, a megmaradt `as any` jellegű castok eltávolítása, a task/result/context kezelés típusbiztosabbá tétele és a Phoenix/trace viselkedés megtartása.
+
+**Érintett fájlok:** `src/agents/AgentManager.ts`, `.ai/copilot.md`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A default socket service most konkrét `SocketServiceClass` példány, a task context `Record<string, unknown>`, a result/metadata kezelés pedig lokális guardokkal történik. A validáció zöld: `npm run build` és `npx vitest run test/agentManagerInitialization.test.ts`.
+
+### 2026-04-06 - LanceDB typing slice
+
+**Feladat:** A type-safety track következő biztonságos szeletének lezárása az `src/utils/rag.ts` és `src/utils/lancedb_client.ts` LanceDB rétegének típusosításával, úgy hogy a fallback viselkedés változatlan maradjon.
+
+**Érintett fájlok:** `src/utils/rag.ts`, `src/utils/lancedb_client.ts`, `.ai/copilot.md`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A LanceDB module/db/table/query rétegek most lokális interfészekkel és `unknown`-safe guardokkal működnek; a build zöld, a `test/contextFusion.test.ts` és `test/rag.test.ts` is sikeresen lefutott. A main type-safety track marad ugyanebben a trackben, a `persistentBrowser.ts` és `wranglerHelper.ts` külön follow-up trackben marad.
+
 ### 2026-04-06 03:28 - Dashboard runtime + magyarítás helyreállítás
 
 **Feladat:** A dashboard blank/beragadó indulásának javítása, a `Cloudflare` widget runtime hibájának megszüntetése, a hiányzó `id`/`name` attribútumok pótlása és a félkész magyarítás bekötésének helyreállítása.
@@ -1590,3 +1810,34 @@ pm run test:dashboard → 200 passed | 0 failed | 20 test file ✅**
 **Érintett fájlok:** `src/data/psales_db.ts`, `src/agents/StrategyPlannerAgent.ts`, `src/server/routes/psales-strategy.ts`, `src/dashboard/components/dashboard/PSalesStrategyPanel.tsx`, `test/integration/psales.strategy.integration.test.ts`, `conductor/archive/n8n_psales_human_loop_20260404/`, `conductor/project_state.json`, `conductor/tracks.md`
 **Státusz:** ✅ Befejezve
 **Megjegyzés:** A P-Sales slice 6 endpointtal, audit trail-lel és weekly status-szal zárult; a track 100%-os és archív állapotú, follow-up track nem kellett.
+
+### 2026-04-06 - Gödel-Agent önfejlesztő loop megvalósítás
+
+**Feladat:** A Brunella rendszer proaktív, Copilot CLI-alapú önfejlesztő hurkának (Data Flywheel) teljes megvalósítása — CopilotFeedbackChannel bridge, 3 új Agent Skills fájl, selfModel bővítés, autonomousInfraRuntime singleton export, GitHub Actions napi ciklus, copilot-instructions.md frissítés, és 9 Vitest teszt.
+
+**Érintett fájlok (ÚJ):**
+- src/core/copilotFeedbackChannel.ts (~290 sor; Copilot CLI review JSON → SelfModelSignals)
+- .github/agents/bas-self-reflect.agent.md (track-lezárás utáni FOSZAL-elemzés)
+- .github/agents/bas-golden-dataset-enricher.agent.md (quality ≥ 0.7 → goldenDatasetBridge)
+- .github/agents/bas-pattern-scout.agent.md (heti registry scanner)
+- .github/workflows/self-improve.yml (napi cron 08:30 UTC)
+- 	est/copilotFeedbackChannel.test.ts (9/9 zöld)
+- conductor/tracks/copilot_self_improvement_loop_20260406/meta.json (completed/100)
+- conductor/tracks/copilot_self_improvement_loop_20260406/plan.md
+
+**Érintett fájlok (MÓDOSÍTVA):**
+- src/core/selfModel.ts (CopilotReviewFeedback interface + ingestCopilotFeedback())
+- src/core/autonomousInfraRuntime.ts (copilotFeedbackChannel singleton export)
+- mcp_servers.json (brunella-self-improve entry, disabled)
+- .github/copilot-instructions.md (3 új ágens táblában, Önellenőrzési protokoll, Data Flywheel architektúra megjegyzés, v3.6.0)
+
+**Státusz:** ✅ Befejezve
+
+**Kritikus technikai döntések:**
+- Severity mapping: CRITICAL/HIGH → 'high', MEDIUM → 'medium', LOW/INFO → 'low'; eredeti Copilot string megőrzése payload.copilotSeverity-ként
+- Per-finding signal → közvetlenül utonomousInfraRuntime.selfModel.ingestCopilotFeedback() (nem a copilotCognitiveBridge orphan instanceja!)
+- Aggregate outcome → copilotCognitiveBridge.reflect() EGYSZER per batch (GraphRAG kettős írás elkerülése)
+- saveMemory threshold: confidence ≥ 0.7 — INFO severity szignálok kiszűrve
+- mcp_servers.json schedule/onSuccess mezők: schema-on kívüli mezők, valódi ütemezés a GitHub Actions cron-ban
+
+**Megjegyzés:** A copilotFeedbackChannel singleton az utonomousInfraRuntime.ts-ből importálandó — soha ne hozz létre második példányt. A pre-existing teszt-hibák (projectMaintainerRoutes, hrTimesheetRoutes) git stash-sel megerősítve, hogy nem ebben a munkában keletkeztek.
