@@ -10,6 +10,7 @@ import { GlobalOptimizer } from './globalOptimizer.js';
 import { EvoEcosystem } from '../agents/evolution/EvoEcosystem.js';
 import { SelfModel } from './selfModel.js';
 import { GoalEngine } from './goalEngine.js';
+import { CopilotFeedbackChannel } from './copilotFeedbackChannel.js';
 
 export const autonomousKernel = new BrunellaKernel({ autoOptimize: false, snapshotIntervalMs: 60_000 });
 export const selfReplication = new SelfReplication({ requireApproval: false, maxReplicasPerSource: 4 });
@@ -18,6 +19,7 @@ export const globalOptimizer = new GlobalOptimizer();
 export const evoEcosystem = new EvoEcosystem();
 export const selfModel = new SelfModel('Brunella Autonomous Infrastructure');
 export const goalEngine = new GoalEngine();
+export const copilotFeedbackChannel = new CopilotFeedbackChannel(selfModel);
 export const hyperKernel = new HyperKernel({
   kernel: autonomousKernel,
   selfReplication,
