@@ -67,6 +67,7 @@
     "chrischinchilla.vscode-pandoc",
     "marp-team.marp-vscode",
     "lekman.tts-code",
-    "ms-pyright.pyright"
+    "ms-pyright.pyright",
+    "tcchan.gemini-code"
   ]
 }

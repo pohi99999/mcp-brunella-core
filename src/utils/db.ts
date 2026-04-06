@@ -1,11 +1,9 @@
 import type Database from 'better-sqlite3';
-import { config } from '../config/index.js';
+import { defaultDatabaseManager } from './databaseManager.js';
 import { ensureError } from './ensureError.js';
-import { logError, logInfo, logWarn } from './logger.js';
+import { logError, logInfo } from './logger.js';
 
-let db: Database.Database | null = null;
-let pathModule: typeof import('path') | null = null;
-let fsModule: typeof import('fs') | null = null;
+export { defaultDatabaseManager, DatabaseManager } from './databaseManager.js';
 
 export interface DbMessage {
   role: string;
@@ -30,10 +28,6 @@ export interface DbPullRequest {
 
 interface CountRow {
   count: number;
-}
-
-interface TableInfoRow {
-  name: string;
 }
 
 interface BusinessJobSummaryRow {
@@ -82,7 +76,7 @@ interface StudioProjectRow {
   updated_at: string;
 }
 
-interface PullRequestRow extends DbPullRequest {}
+type PullRequestRow = DbPullRequest;
 
 interface DbTaskRow {
   id: number;
@@ -96,159 +90,18 @@ interface DbTaskRow {
   updated_at: string;
 }
 
-async function ensureDeps(): Promise<void> {
-  if (typeof process !== 'undefined' && process.versions?.node) {
-    if (!pathModule) pathModule = await import('path');
-    if (!fsModule) fsModule = await import('fs');
-  }
-}
-
 export async function getDb(): Promise<Database.Database | null> {
-  if (db) return db;
-
-  await ensureDeps();
-  if (!pathModule || !fsModule) return null;
-
-  try {
-    if (!fsModule.existsSync(config.systemLogDir)) {
-      fsModule.mkdirSync(config.systemLogDir, { recursive: true });
-    }
-
-    const dbPath = pathModule.join(config.systemLogDir, 'brunella.db');
-
-    const { default: DatabaseConstructor } = await import('better-sqlite3');
-    db = new DatabaseConstructor(dbPath);
-
-    initTables(db);
-    return db;
-  } catch (error: unknown) {
-    logWarn('System', `Failed to initialize SQLite database: ${ensureError(error).message}`);
-    return null;
-  }
-}
-
-function initTables(database: Database.Database): void {
-  database.exec(`
-    CREATE TABLE IF NOT EXISTS chats (
-      id TEXT PRIMARY KEY,
-      title TEXT,
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-    )
-  `);
-
-  database.exec(`
-    CREATE TABLE IF NOT EXISTS messages (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      chat_id TEXT,
-      role TEXT,
-      content TEXT,
-      is_log INTEGER DEFAULT 0,
-      timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
-      FOREIGN KEY(chat_id) REFERENCES chats(id)
-    )
-  `);
-
-  database.exec(`
-    CREATE TABLE IF NOT EXISTS tasks (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      parent_id INTEGER,
-      agent_name TEXT,
-      description TEXT,
-      context TEXT,
-      status TEXT DEFAULT 'pending',
-      result TEXT,
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-      FOREIGN KEY(parent_id) REFERENCES tasks(id)
-    )
-  `);
-
-  database.exec(`
-    CREATE TABLE IF NOT EXISTS business_jobs (
-      id TEXT PRIMARY KEY,
-      type TEXT,
-      status TEXT DEFAULT 'pending',
-      query TEXT,
-      results_json TEXT,
-      metadata TEXT,
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
-    )
-  `);
-
-  database.exec(`
-    CREATE TABLE IF NOT EXISTS business_leads (
-      id TEXT PRIMARY KEY,
-      job_id TEXT,
-      company_name TEXT,
-      contact_person TEXT,
-      contact_email TEXT,
-      status TEXT DEFAULT 'new',
-      notes TEXT,
-      metadata TEXT,
-      last_interaction_at DATETIME,
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-      email_status TEXT DEFAULT 'unknown',
-      demo_url TEXT,
-      outreach_status TEXT DEFAULT 'pending',
-      icebreaker_text TEXT,
-      FOREIGN KEY(job_id) REFERENCES business_jobs(id)
-    )
-  `);
-
-  database.exec(`
-    CREATE TABLE IF NOT EXISTS pull_requests (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      pr_number INTEGER,
-      github_id INTEGER,
-      title TEXT,
-      owner TEXT,
-      repo TEXT,
-      branch TEXT,
-      state TEXT,
-      action TEXT,
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
-    )
-  `);
-
-  const tableInfoResult = database.prepare<[], TableInfoRow>('PRAGMA table_info(business_leads)').all();
-  const tableInfo = Array.isArray(tableInfoResult) ? tableInfoResult : [];
-  const columnNames = tableInfo.map((column) => column.name);
-
-  if (!columnNames.includes('email_status')) {
-    database.exec("ALTER TABLE business_leads ADD COLUMN email_status TEXT DEFAULT 'unknown'");
-  }
-  if (!columnNames.includes('demo_url')) {
-    database.exec('ALTER TABLE business_leads ADD COLUMN demo_url TEXT');
-  }
-  if (!columnNames.includes('outreach_status')) {
-    database.exec("ALTER TABLE business_leads ADD COLUMN outreach_status TEXT DEFAULT 'pending'");
-  }
-  if (!columnNames.includes('icebreaker_text')) {
-    database.exec('ALTER TABLE business_leads ADD COLUMN icebreaker_text TEXT');
-  }
-
-  database.exec(`
-    CREATE TABLE IF NOT EXISTS studio_projects (
-      id TEXT PRIMARY KEY,
-      name TEXT,
-      description TEXT,
-      tech_stack TEXT,
-      status TEXT DEFAULT 'ideation',
-      root_dir TEXT,
-      preview_url TEXT,
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
-    )
-  `);
+  return defaultDatabaseManager.getDb();
 }
 
 // Public API - Async wrappers
 
 export async function initDb(): Promise<void> {
-  await getDb();
+  await defaultDatabaseManager.open();
+}
+
+export async function closeDb(): Promise<void> {
+  defaultDatabaseManager.close();
 }
 
 export async function saveStudioProject(project: {

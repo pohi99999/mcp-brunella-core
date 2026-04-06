@@ -4,7 +4,116 @@
  * Tests state mutations via actions without any React rendering.
  */
 import { beforeEach, describe, expect, it } from "vitest";
+import type {
+  AgentStatusEntry,
+  RobotkezPlan,
+} from "../context/SocketContext";
+import type {
+  DeveloperMetricsData,
+  HealthStatus,
+  QueuedTask,
+  TaskStats,
+} from "../lib/apiService";
+import type { MachineAlert } from "../types/dashboard";
 import { useSystemSignalStore } from "./systemSignalStore";
+
+const createAgentStatus = (
+  overrides: Partial<AgentStatusEntry> = {},
+): AgentStatusEntry => ({
+  name: "Developer",
+  status: "idle",
+  lastUpdated: 0,
+  ...overrides,
+});
+
+const createQueuedTask = (
+  overrides: Partial<QueuedTask> = {},
+): QueuedTask => ({
+  id: 1,
+  agent: "Developer",
+  task: "build feature",
+  status: "running",
+  created_at: "2026-04-06T00:00:00.000Z",
+  completed_at: null,
+  ...overrides,
+});
+
+const createTaskStats = (
+  overrides: Partial<TaskStats> = {},
+): TaskStats => ({
+  total: 5,
+  successCount: 3,
+  errorCount: 1,
+  pendingCount: 1,
+  runningCount: 0,
+  cancelledCount: 0,
+  successRate: 0.6,
+  avgDurationMs: 250,
+  failedByAgent: [],
+  ...overrides,
+});
+
+const createHealthStatus = (
+  overrides: Partial<HealthStatus> = {},
+): HealthStatus => ({
+  status: "healthy",
+  timestamp: "2026-04-06T00:00:00.000Z",
+  services: {
+    ollama: {},
+    anythingllm: {},
+    agents: {},
+    mcp: {},
+    python: {},
+    cloudflare: {},
+  },
+  ...overrides,
+});
+
+const createDeveloperMetrics = (
+  overrides: Partial<DeveloperMetricsData> = {},
+): DeveloperMetricsData => ({
+  builds: {
+    total: 10,
+    success: 8,
+    fail: 2,
+    lastStatus: "success",
+    lastDurationMs: 500,
+  },
+  tests: {
+    totalRuns: 4,
+    lastPassRate: 0.75,
+    lastDurationMs: 300,
+  },
+  tasks: {
+    total: 6,
+    success: 4,
+    error: 2,
+    avgDurationMs: 120,
+  },
+  ai: {
+    totalTokenUsage: 1200,
+    estimatedCost: 1.25,
+  },
+  history: [],
+  ...overrides,
+});
+
+const createMachineAlert = (
+  overrides: Partial<MachineAlert> = {},
+): MachineAlert => ({
+  id: "alert-1",
+  title: "CNC Machine",
+  priceEur: 12000,
+  estimatedValueEur: 18000,
+  discountPct: 33,
+  score: 0.91,
+  source: "surplex",
+  url: "https://example.com/machine/1",
+  timestamp: "2026-04-06T00:00:00.000Z",
+  category: "cnc",
+  severity: "critical",
+  ...overrides,
+});
 
 // Reset the store to initial state before every test
 beforeEach(() => {
@@ -38,7 +147,7 @@ describe("log management", () => {
   it("should_prepend_new_log_with_generated_id_when_addLog_called", () => {
     useSystemSignalStore.getState().addLog({ message: "hello", type: "info", timestamp: 1000 });
 
-    const logs = useSystemSignalStore.getState().logs;
+    const { logs } = useSystemSignalStore.getState();
     expect(logs).toHaveLength(1);
     expect(logs[0].message).toBe("hello");
     expect(logs[0].type).toBe("info");
@@ -49,7 +158,7 @@ describe("log management", () => {
     useSystemSignalStore.getState().addLog({ message: "first", type: "info", timestamp: 1000 });
     useSystemSignalStore.getState().addLog({ message: "second", type: "info", timestamp: 2000 });
 
-    const logs = useSystemSignalStore.getState().logs;
+    const { logs } = useSystemSignalStore.getState();
     expect(logs[0].message).toBe("second");
     expect(logs[1].message).toBe("first");
   });
@@ -67,7 +176,7 @@ describe("log management", () => {
       useSystemSignalStore.getState().addLog({ message: `msg-${i}`, type: "info", timestamp: i });
     }
 
-    const logs = useSystemSignalStore.getState().logs;
+    const { logs } = useSystemSignalStore.getState();
     // Newest is msg-204, oldest retained is msg-5 (index 200 from the end = first element after slice)
     expect(logs[0].message).toBe("msg-204");
     expect(logs).toHaveLength(200);
@@ -94,7 +203,7 @@ describe("agent status", () => {
     useSystemSignalStore.getState().updateAgentStatus("Developer", "working");
     useSystemSignalStore.getState().updateAgentStatus("Developer", "idle");
 
-    const agents = useSystemSignalStore.getState().agents;
+    const { agents } = useSystemSignalStore.getState();
     expect(agents.get("Developer")!.status).toBe("idle");
     expect(agents.size).toBe(1);
   });
@@ -102,11 +211,11 @@ describe("agent status", () => {
   it("should_replace_all_agents_when_setAllAgentStatuses_called", () => {
     useSystemSignalStore.getState().updateAgentStatus("OldAgent", "idle");
     useSystemSignalStore.getState().setAllAgentStatuses([
-      { name: "Developer", status: "working", lastUpdated: 0 },
-      { name: "Evaluator", status: "idle", lastUpdated: 0 },
-    ] as Parameters<typeof useSystemSignalStore.getState.prototype.setAllAgentStatuses>[0]);
+      createAgentStatus({ name: "Developer", status: "working" }),
+      createAgentStatus({ name: "Evaluator", status: "idle" }),
+    ]);
 
-    const agents = useSystemSignalStore.getState().agents;
+    const { agents } = useSystemSignalStore.getState();
     expect(agents.size).toBe(2);
     expect(agents.has("Developer")).toBe(true);
     expect(agents.has("Evaluator")).toBe(true);
@@ -115,8 +224,7 @@ describe("agent status", () => {
 
   it("should_clear_all_agents_when_setAllAgentStatuses_called_with_empty_array", () => {
     useSystemSignalStore.getState().updateAgentStatus("Developer", "idle");
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    useSystemSignalStore.getState().setAllAgentStatuses([] as any);
+    useSystemSignalStore.getState().setAllAgentStatuses([]);
 
     expect(useSystemSignalStore.getState().agents.size).toBe(0);
   });
@@ -138,43 +246,37 @@ describe("agent status", () => {
 
 describe("task data", () => {
   it("should_set_tasks_array_when_setTasks_called", () => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    useSystemSignalStore.getState().setTasks([{ id: 1, status: "running" }] as any);
+    useSystemSignalStore.getState().setTasks([createQueuedTask()]);
 
     expect(useSystemSignalStore.getState().tasks).toHaveLength(1);
   });
 
   it("should_replace_tasks_when_setTasks_called_twice", () => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    useSystemSignalStore.getState().setTasks([{ id: 1 }] as any);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    useSystemSignalStore.getState().setTasks([{ id: 2 }, { id: 3 }] as any);
+    useSystemSignalStore.getState().setTasks([createQueuedTask({ id: 1 })]);
+    useSystemSignalStore.getState().setTasks([
+      createQueuedTask({ id: 2 }),
+      createQueuedTask({ id: 3 }),
+    ]);
 
     expect(useSystemSignalStore.getState().tasks).toHaveLength(2);
   });
 
   it("should_set_taskStats_when_setTaskStats_called", () => {
-    const stats = { total: 5, runningCount: 2, pendingCount: 1 } as Parameters<
-      typeof useSystemSignalStore.getState.prototype.setTaskStats
-    >[0];
+    const stats = createTaskStats({ total: 5, runningCount: 2, pendingCount: 1 });
     useSystemSignalStore.getState().setTaskStats(stats);
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    expect((useSystemSignalStore.getState().taskStats as any).total).toBe(5);
+    expect(useSystemSignalStore.getState().taskStats?.total).toBe(5);
   });
 
   it("should_set_healthStatus_when_setHealthStatus_called", () => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    useSystemSignalStore.getState().setHealthStatus({ status: "healthy", services: {} } as any);
+    useSystemSignalStore.getState().setHealthStatus(createHealthStatus());
 
     expect(useSystemSignalStore.getState().healthStatus).not.toBeNull();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    expect((useSystemSignalStore.getState().healthStatus as any).status).toBe("healthy");
+    expect(useSystemSignalStore.getState().healthStatus?.status).toBe("healthy");
   });
 
   it("should_set_developerMetrics_when_setDeveloperMetrics_called", () => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    useSystemSignalStore.getState().setDeveloperMetrics({ builds: { total: 10 } } as any);
+    useSystemSignalStore.getState().setDeveloperMetrics(createDeveloperMetrics());
 
     expect(useSystemSignalStore.getState().developerMetrics).not.toBeNull();
   });
@@ -185,7 +287,7 @@ describe("task data", () => {
 // ─────────────────────────────────────────────────────────────────────────────
 
 describe("robotkez plan", () => {
-  const samplePlan = {
+  const samplePlan: RobotkezPlan = {
     taskId: "task-1",
     plan: {
       estimatedDuration: 5000,
@@ -277,10 +379,9 @@ describe("clearAllData", () => {
     useSystemSignalStore.getState().updateAgentStatus("Developer", "working");
     useSystemSignalStore.getState().setError("err");
     useSystemSignalStore.getState().setLoading(true);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    useSystemSignalStore.getState().setHealthStatus({ status: "healthy" } as any);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    useSystemSignalStore.getState().setTasks([{ id: 1 }] as any);
+    useSystemSignalStore.getState().setHealthStatus(createHealthStatus());
+    useSystemSignalStore.getState().setTasks([createQueuedTask({ id: 1 })]);
+    useSystemSignalStore.getState().addMachineAlert(createMachineAlert());
 
     useSystemSignalStore.getState().clearAllData();
 
@@ -289,6 +390,7 @@ describe("clearAllData", () => {
     expect(s.logs).toHaveLength(0);
     expect(s.agents.size).toBe(0);
     expect(s.chatter).toHaveLength(0);
+    expect(s.machineAlerts).toHaveLength(0);
     expect(s.tasks).toHaveLength(0);
     expect(s.taskStats).toBeNull();
     expect(s.healthStatus).toBeNull();
@@ -304,18 +406,28 @@ describe("clearAllData", () => {
 
 describe("machine alerts", () => {
   it("should_add_alert_to_machineAlerts_when_addMachineAlert_called", () => {
-    useSystemSignalStore.getState().addMachineAlert({ type: "cpu_spike", value: 95 });
+    useSystemSignalStore.getState().addMachineAlert(createMachineAlert());
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    expect((useSystemSignalStore.getState() as any).machineAlerts).toHaveLength(1);
+    expect(useSystemSignalStore.getState().machineAlerts).toHaveLength(1);
   });
 
   it("should_clear_all_machine_alerts_when_clearMachineAlerts_called", () => {
-    useSystemSignalStore.getState().addMachineAlert({ type: "cpu_spike" });
-    useSystemSignalStore.getState().addMachineAlert({ type: "memory_high" });
+    useSystemSignalStore.getState().addMachineAlert(createMachineAlert({ id: "alert-1" }));
+    useSystemSignalStore.getState().addMachineAlert(createMachineAlert({ id: "alert-2" }));
     useSystemSignalStore.getState().clearMachineAlerts();
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    expect((useSystemSignalStore.getState() as any).machineAlerts).toHaveLength(0);
+    expect(useSystemSignalStore.getState().machineAlerts).toHaveLength(0);
+  });
+
+  it("should_keep_only_the_50_most_recent_machine_alerts_when_limit_exceeded", () => {
+    for (let index = 0; index < 55; index += 1) {
+      useSystemSignalStore.getState().addMachineAlert(
+        createMachineAlert({ id: `alert-${index}` }),
+      );
+    }
+
+    const { machineAlerts } = useSystemSignalStore.getState();
+    expect(machineAlerts).toHaveLength(50);
+    expect(machineAlerts[0]?.id).toBe("alert-54");
   });
 });

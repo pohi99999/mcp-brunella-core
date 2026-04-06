@@ -3,8 +3,9 @@
 ## 📋 Fázisok
 
 ### 1. Fázis: Database Wrapper Refaktor
-- [ ] `DatabaseManager` osztály létrehozása a `utils/db.ts` alapján.
-- [ ] `TasksDatabase` osztály létrehozása a `utils/tasksDb.ts` alapján.
+- [x] `DatabaseManager` osztály létrehozása a `utils/db.ts` alapján.
+- [x] `TasksDatabase` osztály létrehozása a `utils/tasksDb.ts` alapján.
+- Megjegyzés: A `businessJobs` route DI injekciója, a `TasksDatabaseManager` wrapper és a fókusz tesztek is elkészültek; az 1. fázis lezárult, a következő fókusz a RAG refaktor.
 
 ### 2. Fázis: RAG és AI Client Refaktor
 - [ ] `RagEngine` osztály létrehozása, ami injektált DB és Embedding klienssel működik.

@@ -30,15 +30,15 @@ export class CampaignGeneratorAgent extends BaseAgent {
       // 2. Tartalom generálás (mock)
       const copyResultRaw = await agentManager.delegate('CopywriterAgent', `Írj 3 social media posztot a következő témában: ${task}`);
       const copyResult = typeof copyResultRaw === 'object' && copyResultRaw !== null ? copyResultRaw as Record<string, unknown> : {};
-      if (!Boolean(copyResult['success'])) throw new Error('Tartalom generálás sikertelen.');
+      if (!copyResult['success']) throw new Error('Tartalom generálás sikertelen.');
       logInfo(this.name, 'Social media posztok elkészültek.');
 
       // 3. Weboldal terv generálás (mock)
       const webResultRaw = await agentManager.delegate('UXDesignerAgent', `Tervezz egy egyoldalas landing oldalt a következőnek: ${task}`);
       const webResult = typeof webResultRaw === 'object' && webResultRaw !== null ? webResultRaw as Record<string, unknown> : {};
-      if (!Boolean(webResult['success'])) throw new Error('Weboldal tervezés sikertelen.');
+      if (!webResult['success']) throw new Error('Weboldal tervezés sikertelen.');
       logInfo(this.name, 'Landing oldal terv elkészült.');
-      
+
       // Build final report
       const finalReport = `
 # Kampány Generálva: "${task}"

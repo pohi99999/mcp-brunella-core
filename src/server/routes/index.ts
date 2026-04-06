@@ -2,6 +2,7 @@ import { Router } from "express";
 import type { Request, Response, NextFunction } from "express";
 import { createHealthRoutes } from "./health.js";
 import { getGlobalDb } from "../../utils/globalDb.js";
+import { defaultDatabaseManager } from "../../utils/db.js";
 import { ensureError } from "../../utils/ensureError.js";
 import { logDebug } from "../../utils/logger.js";
 
@@ -24,16 +25,16 @@ function lazy(
     importFn()
       .then((mod) => {
         const exported = mod[exportName];
-        
+
         // Express Routers are functions themselves, but they have a .stack property.
         // Factory functions will not have a .stack property.
         const isRouterInstance = typeof exported === "function" && "stack" in exported;
-        
+
         loaded =
           typeof exported === "function" && !isRouterInstance
             ? (exported as (...a: unknown[]) => Router)(...factoryArgs)
             : (exported as Router);
-            
+
         loaded(req, res, next);
       })
       .catch(next);
@@ -93,10 +94,12 @@ export function createV1Router(): Router {
   router.use("/system", lazy(() => import("./system.js"), "createSystemControlRouter"));
   router.use("/llm", lazy(() => import("./llm.js"), "createLLMRoutes"));
   router.use("/anthropic", lazy(() => import("./anthropic.js"), "createAnthropicRoutes"));
-  router.use("/business-jobs", lazy(() => import("./businessJobs.js"), "createBusinessJobsRoutes"));
+  router.use("/business-jobs", lazy(() => import("./businessJobs.js"), "createBusinessJobsRoutes", defaultDatabaseManager));
   router.use("/security", lazy(() => import("./security.js"), "securityRouter"));
   router.use("/assistant", lazy(() => import("./assistant.js"), "createAssistantRoutes"));
   router.use("/copilot-bridge", lazy(() => import("./copilotBridge.js"), "createCopilotBridgeRoutes"));
+  router.use("/copilot-orchestrator", lazy(() => import("./copilotOrchestratorRoute.js"), "createCopilotOrchestratorRoutes"));
+  router.use("/kernel", lazy(() => import("./kernelRoute.js"), "createKernelRoutes"));
   router.use("/cognitive", lazy(() => import("./cognitiveBridge.js"), "createCognitiveBridgeRoutes"));
   router.use("/workflow", lazy(() => import("./workflow.js"), "createWorkflowRoutes"));
   router.use("/remote", lazy(() => import("./remote.js"), "createRemoteRoutes"));

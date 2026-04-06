@@ -46,6 +46,34 @@ describe('ReActExecutor', () => {
     expect(result.scratchpad[0]?.errorType).toBe('AUTH_FAILED');
   });
 
+  it('treats done without final text as success when the latest action succeeded', async () => {
+    const reason = vi
+      .fn()
+      .mockResolvedValueOnce({
+        thought: 'Delegáljuk a feladatot.',
+        actions: [{ name: 'delegate_task', params: { agent_name: 'DeveloperAgent' }, toolCallId: 'call-2' }],
+      })
+      .mockResolvedValueOnce({
+        thought: 'A szükséges side effect megtörtént.',
+        done: true,
+      });
+
+    const act = vi.fn().mockResolvedValue({
+      success: true,
+      summary: 'A feladat kiosztva.',
+    });
+
+    const result = await new ReActExecutor(3).execute({ reason, act });
+
+    expect(result.success).toBe(true);
+    expect(result.terminatedReason).toBe('done');
+    expect(result.finalMessage).toBeUndefined();
+    expect(result.scratchpad[0]).toMatchObject({
+      action: 'delegate_task',
+      success: true,
+    });
+  });
+
   it('classifies thrown act errors instead of crashing the loop', async () => {
     const result = await new ReActExecutor(1).execute({
       reason: async () => ({

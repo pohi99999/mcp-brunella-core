@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * Minimal IAgent-like implementation for KKV CRM integration (skeleton).
  * Kept intentionally small: no logger imports or side effects.
@@ -9,7 +8,9 @@ export class KKVCrmAgent {
   role = 'Integrate and orchestrate CRM lead creation for KKV customers';
   description = 'Skeleton agent - delegates lead creation to service/tool in production';
 
-  constructor(options = {}) {
+  private options: Record<string, unknown>;
+
+  constructor(options: Record<string, unknown> = {}) {
     this.options = options;
   }
 
@@ -18,7 +19,12 @@ export class KKVCrmAgent {
    * @param task - Task instruction or payload
    * @param context - Optional execution context
    */
-  async execute(task, context) {
+  async execute(task: string, context?: unknown): Promise<{
+    status: string;
+    note: string;
+    task: string;
+    context: unknown;
+  }> {
     // In real agent: setAgentStatus(this.name, 'working', taskSummary)
     // This skeleton returns a stubbed delegation response.
     const result = {

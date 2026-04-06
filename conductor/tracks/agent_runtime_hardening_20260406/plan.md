@@ -23,9 +23,9 @@
 ## 4. Tesztek és validáció
 
 - [x] Unit tesztek az új modulokra.
-- [ ] `npm run build`
-- [ ] célzott Vitest futtatás
-- [ ] `node build/cli.js conductor rescan`
+- [x] `npm run build`
+- [x] célzott Vitest futtatás
+- [x] `node build/cli.js conductor rescan`
 
 ## Megjegyzés
 

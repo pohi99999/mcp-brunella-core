@@ -10,6 +10,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Added
 
+- **Copilot Orchestrator + kernel pipeline observability surface** (`.github/agents/copilot-cli-orchestrator.agent.md`, `.github/agents/brunella-orchestrator.agent.md`, `src/core/{kernelTypes,conductor,intentRouter,planner,toolExecutor,guardrail,copilotOrchestratorBridge}.ts`, `src/server/routes/{copilotOrchestratorRoute,kernelRoute}.ts`, `src/dashboard/components/dashboard/{CopilotOrchestratorPanel,KernelPipelinePanel}.tsx`, `src/dashboard/lib/navigation.tsx`, `src/server/routes/index.ts`): Added a model-agnostic Copilot orchestration contract and a supervisor-style kernel pipeline surface. The backend now exposes in-memory orchestration session/step logs plus kernel run/status endpoints, and the dashboard gained dedicated panels for real-time Copilot delegation traces and the multi-stage kernel pipeline ledger.
+
 - **P-Sales human-in-loop slice — persistent SQLite storage, pause/resume/audit/weekly-status endpoints** (`src/data/psales_db.ts`, `src/agents/StrategyPlannerAgent.ts`, `src/server/routes/psales-strategy.ts`, `src/dashboard/components/dashboard/PSalesStrategyPanel.tsx`, `test/integration/psales.strategy.integration.test.ts`): Replaced the in-memory strategy plan store with a persistent SQLite database (`better-sqlite3`) and extended the P-Sales strategy API with human-in-loop controls:
   - **`src/data/psales_db.ts`** (new): Complete persistence layer with two tables — `psales_strategy_plans` (planId, approvalState `pending|approved|rejected|paused`, JSON-serialised channels/segments/steps, resumeToken for stateless webhook callbacks) and `psales_audit_events` (full event log). Key exports: `initPSalesDb`, `closePSalesDb`, `insertStrategyPlan`, `getStrategyPlan`, `listStrategyPlans`, `updatePlanApprovalState`, `pauseStrategyPlan`, `resumeStrategyPlan`, `insertPSalesAuditEvent`, `listPSalesAuditEvents`, `getPSalesStatusSummary`. Automatically uses `:memory:` in test/CI environments.
   - **`src/agents/StrategyPlannerAgent.ts`** (modified): Removed in-memory `planStore = new Map()`. `createPlan` and `approvePlan` now persist via `psales_db` and write audit events on every state transition.
@@ -116,6 +118,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Changed
 
+- **Runtime hardening follow-up + orchestration guardrail alignment** (`src/core/reactLoop.ts`, `src/agents/OrchestratorAgent.ts`, `test/reactLoop.test.ts`, `test/orchestratorReact.test.ts`, `test/guardrails/outputGuard.test.ts`, `test/universalOrchestratorService.test.ts`, `conductor/tracks/agent_runtime_hardening_20260406/{meta.json,plan.md,spec.md}`): Synced the completed runtime-hardening slice with the current orchestration flow, keeping the ReAct loop, guardrail/output-path checks, and conductor metadata aligned with the stabilized runtime contract.
+
+- **Current type-safety + technical-debt cleanup batch** (`src/agents/{CampaignGeneratorAgent,ConflictMediatorAgent,DeveloperAgent,DigitalHeadhunterAgent,GrantWatcherAgent,KKVCrmAgent,LogisticsDispatcher,RobotkezV2Agent,SpecWriterAgent}.ts`, `src/utils/{db,inventoryDb}.ts`, `src/server/routes/kkvCrm.ts`, `src/server/services/kkvCrmService.ts`, `src/tools/crm_create_lead.ts`, `src/dashboard/{context/SocketContext.tsx,components/dashboard/MachineHunterWidget.tsx,store/systemSignalStore.ts,types/dashboard.ts}`, `src/{cli-hu.ts,cli.ts,cli/tracksCommands.ts,vendor.d.ts}`, `conductor/tracks/{type_safety_enforcement_20260404,technical_debt_cleanup_20260404}/*`): Removed additional unsafe casts and legacy typing shortcuts across the active cleanup batch, tightened KKV CRM and dashboard signal handling, and kept the relevant conductor tracks in sync with the verified progress markers.
+
 - **BookkeepingWidget live status** (`src/dashboard/components/dashboard/BookkeepingWidget.tsx`):
   Widget now calls `getBookkeepingStatus` on mount and sets up a 30-second polling interval
   (`setInterval`) with proper `clearInterval` cleanup on unmount. Displays live total transaction
@@ -123,6 +129,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   also refreshed after a successful reconciliation run.
 
 ### Tests
+
+- Added or refreshed focused regression coverage for the runtime hardening, kernel/orchestrator, and type-safety cleanup slices (`test/{reactLoop,orchestratorReact,universalOrchestratorService}.test.ts`, `test/guardrails/outputGuard.test.ts`, `test/{DeveloperAgent,conflictMediatorAgent,digitalHeadhunterAgent,grantWatcherAgent,phase4_supply_chain,robotkezV2Agent}.test.ts`, `test/dashboard/components/{InventoryCatalog,InventoryRadarWidget}.test.tsx`, `src/dashboard/store/systemSignalStore.test.ts`).
 
 - Added targeted regression coverage for the runtime fixes: `test/goldenDatasetBridge.test.ts` now verifies Python fallback during mirror sync, `test/paiosConfig.test.ts` now validates Nova voice defaults and invalid voice speed rejection, and `myai/tests/test_tech_harvester.py` covers Apify target execution without a `url` or browser bootstrap.
 

@@ -1,20 +1,30 @@
 import { create } from 'zustand';
-import { RobotkezPlan, RobotkezStep } from '@/context/SocketContext';
-import { QueuedTask, TaskStats, HealthStatus, DeveloperMetricsData } from '@/lib/apiService';
-import { LogEntry, AgentRuntimeInfo, TaskItem } from '../types/dashboard';
+import type {
+  AgentStatusEntry,
+  ChatterEntry,
+  RobotkezPlan,
+  RobotkezStep,
+} from '@/context/SocketContext';
+import type {
+  DeveloperMetricsData,
+  HealthStatus,
+  QueuedTask,
+  TaskStats,
+} from '@/lib/apiService';
+import type { LogEntry, MachineAlert } from '../types/dashboard';
 
 interface SystemSignalState {
   // WebSocket-től származó adatok
   isConnected: boolean;
   logs: LogEntry[];
-  agents: Map<string, AgentRuntimeInfo>;
-  chatter: any[]; 
+  agents: Map<string, AgentStatusEntry>;
+  chatter: ChatterEntry[];
   robotkezPlan: RobotkezPlan | null;
   robotkezSteps: RobotkezStep[];
-  machineAlerts: any[];
+  machineAlerts: MachineAlert[];
 
   // REST API-ból származó adatok
-  tasks: TaskItem[];
+  tasks: QueuedTask[];
   taskStats: TaskStats | null;
   healthStatus: HealthStatus | null;
   developerMetrics: DeveloperMetricsData | null;
@@ -34,7 +44,7 @@ interface SystemSignalActions {
   updateRobotkezStep: (step: Partial<RobotkezStep> & { index: number }) => void;
   clearRobotkez: () => void;
   setAllAgentStatuses: (statuses: AgentStatusEntry[]) => void;
-  addMachineAlert: (alert: any) => void;
+  addMachineAlert: (alert: MachineAlert) => void;
   clearMachineAlerts: () => void;
 
   // REST API actionök
@@ -46,7 +56,7 @@ interface SystemSignalActions {
   // Általános actionök
   setError: (error: string | null) => void;
   setLoading: (isLoading: boolean) => void;
-  
+
   // Clear all data (e.g., on logout or system reset)
   clearAllData: () => void;
 }
@@ -56,7 +66,7 @@ const MAX_CHATTER = 100;
 let logIdCounter = 0;
 let chatterIdCounter = 0;
 
-export const useSystemSignalStore = create<SystemSignalState & SystemSignalActions>()((set, get) => ({
+export const useSystemSignalStore = create<SystemSignalState & SystemSignalActions>()((set) => ({
   // Initial state
   isConnected: false,
   logs: [],
@@ -85,7 +95,7 @@ export const useSystemSignalStore = create<SystemSignalState & SystemSignalActio
     agents.set(agentName, { name: agentName, status, taskDescription, lastUpdated: Date.now() });
     return { agents };
   }),
-  setRobotkezPlan: (plan) => set((state) => ({
+  setRobotkezPlan: (plan) => set(() => ({
     robotkezPlan: plan,
     robotkezSteps: plan.plan.plan.map((s, i) => ({ ...s, index: i, status: 'pending' }))
   })),
@@ -125,6 +135,7 @@ export const useSystemSignalStore = create<SystemSignalState & SystemSignalActio
     chatter: [],
     robotkezPlan: null,
     robotkezSteps: [],
+    machineAlerts: [],
     tasks: [],
     taskStats: null,
     healthStatus: null,

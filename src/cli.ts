@@ -66,7 +66,7 @@ import { getAssistantBlueprint, type AssistantBlueprint, type AssistantReadiness
 import { getPrebuiltToolCatalog, mergeToolLists, type ToolLike } from "./utils/prebuiltTools.js";
 import { writeLine } from './utils/cliOutput.js';
 
-marked.setOptions({ renderer: new TerminalRenderer() as any });
+marked.setOptions({ renderer: new TerminalRenderer() });
 
 const program = new Command();
 const __filename = fileURLToPath(import.meta.url);

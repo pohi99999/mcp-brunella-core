@@ -5,7 +5,7 @@ import { InventoryCatalog } from '@/components/dashboard/InventoryCatalog';
 import * as api from '@/lib/apiService';
 
 vi.mock( '@/components/ui/scroll-area', () => ({
-    ScrollArea: ({ children }: any) => <div>{children}</div>,
+    ScrollArea: ({ children }: { children?: React.ReactNode }) => <div>{children}</div>,
     ScrollBar: () => null,
 }));
 
@@ -14,7 +14,7 @@ vi.mock( '@/lib/apiService', () => ( {
     fetchOpenStocktakes: vi.fn(),
 } ) );
 
-const mockedApi = api as any;
+const mockedApi = vi.mocked(api);
 
 const valuationResponse = [
     {

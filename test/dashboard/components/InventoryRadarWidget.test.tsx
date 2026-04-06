@@ -9,7 +9,7 @@ vi.mock( "@/lib/apiService", () => ( {
     fetchOpenStocktakes: vi.fn(),
 } ) );
 
-const mockedApi = api as any;
+const mockedApi = vi.mocked(api);
 
 const valuationResponse = {
     success: true,

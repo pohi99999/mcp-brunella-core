@@ -1,4 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import * as validateOutputModule from '../../src/agents/middleware/validateOutput.js';
+import * as criticQuickReviewModule from '../../src/core/criticQuickReview.js';
+import * as redactorModule from '../../src/security/redactor.js';
 
 const { recordValidation, recordRedaction } = vi.hoisted(() => ({
   recordValidation: vi.fn(),
@@ -54,5 +57,76 @@ describe('outputGuard', () => {
       },
       'TestAgent',
     )).not.toThrow();
+  });
+
+  it('fails open when result validation and validation telemetry throw', () => {
+    vi.spyOn(validateOutputModule, 'validateAgentResult').mockImplementationOnce(() => {
+      throw new Error('validator offline');
+    });
+    recordValidation.mockImplementationOnce(() => {
+      throw new Error('validation telemetry offline');
+    });
+
+    const result = guardAgentResultOutput(
+      { success: true, message: 'Maradjon sikeres.' },
+      'TestAgent',
+    );
+
+    expect(result.success).toBe(true);
+    expect(result.metadata?.guardrails).toMatchObject({
+      validationPassed: true,
+      criticApproved: true,
+    });
+    expect(recordValidation).toHaveBeenCalledTimes(1);
+  });
+
+  it('fails open when result critic and redactor throw', () => {
+    vi.spyOn(criticQuickReviewModule, 'quickReviewOutput').mockImplementationOnce(() => {
+      throw new Error('critic unavailable');
+    });
+    vi.spyOn(redactorModule, 'redactObject').mockImplementationOnce(() => {
+      throw new Error('redactor unavailable');
+    });
+
+    const result = guardAgentResultOutput(
+      { success: true, message: 'Fallback eredmény.' },
+      'TestAgent',
+    );
+
+    expect(result.success).toBe(true);
+    expect(result.metadata?.guardrails).toMatchObject({
+      criticApproved: true,
+      criticReason: expect.stringContaining('critic_failed_open'),
+      redactionsTriggered: 0,
+    });
+  });
+
+  it('fails open when response guardrails and redaction telemetry throw', () => {
+    vi.spyOn(validateOutputModule, 'validateAgentResponse').mockImplementationOnce(() => {
+      throw new Error('response validator offline');
+    });
+    vi.spyOn(criticQuickReviewModule, 'quickReviewOutput').mockImplementationOnce(() => {
+      throw new Error('response critic offline');
+    });
+    recordRedaction.mockImplementationOnce(() => {
+      throw new Error('redaction telemetry offline');
+    });
+
+    const response = guardAgentResponseOutput(
+      {
+        status: 'success',
+        message: 'Titok: ghp_abcdefghijklmnopqrstuvwxyz1234567890AB',
+      },
+      'TestAgent',
+    );
+
+    expect(response.status).toBe('success');
+    expect(response.message).toContain('[GITHUB_TOKEN_REDACTED]');
+    expect(response.metadata?.guardrails).toMatchObject({
+      validationPassed: true,
+      criticApproved: true,
+      criticReason: expect.stringContaining('critic_failed_open'),
+    });
+    expect(recordRedaction).toHaveBeenCalledTimes(1);
   });
 });

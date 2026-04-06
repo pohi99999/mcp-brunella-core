@@ -1,8 +1,14 @@
-// @ts-nocheck
 /**
  * MCP-style tool definition (skeleton) for creating a CRM lead.
  * This module exports a lightweight tool descriptor and a handler that returns a stub response.
  */
+
+export interface CrmLeadParams {
+  name: string;
+  email?: string;
+  note?: string;
+  [key: string]: unknown;
+}
 
 export const crmCreateLeadTool = {
   name: 'crm_create_lead',
@@ -18,7 +24,12 @@ export const crmCreateLeadTool = {
   },
 };
 
-export async function crmCreateLeadHandler(params = {}) {
+export async function crmCreateLeadHandler(params: Partial<CrmLeadParams> = {}): Promise<{
+  success: boolean;
+  leadId: string;
+  received: Partial<CrmLeadParams>;
+  message: string;
+}> {
   // Stubbed handler - in a real implementation this would call kkvCrmService or an external CRM API.
   return {
     success: true,

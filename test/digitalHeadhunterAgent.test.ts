@@ -4,7 +4,7 @@
  */
 
 import { describe, it, expect, beforeEach } from 'vitest';
-import { DigitalHeadhunterAgent } from '../src/agents/DigitalHeadhunterAgent.js';
+import { DigitalHeadhunterAgent, type LeaveRequest } from '../src/agents/DigitalHeadhunterAgent.js';
 
 describe('DigitalHeadhunterAgent', () => {
   let agent: DigitalHeadhunterAgent;
@@ -108,6 +108,53 @@ describe('DigitalHeadhunterAgent', () => {
       expect(result.data.invitationEmail).toBeDefined();
       expect(result.data.invitationEmail).toHaveProperty('subject');
       expect(result.data.invitationEmail).toHaveProperty('body');
+    });
+  });
+
+  describe('Leave Approval', () => {
+    it('should approve leave requests through the leave workflow', async () => {
+      const leaveRequest = {
+        employeeId: 'emp-42',
+        employeeName: 'Kiss Anna',
+        startDate: '2026-03-10',
+        endDate: '2026-03-12',
+        leaveType: 'vacation',
+        submittedAt: '2026-03-01T08:00:00.000Z',
+      } satisfies Partial<LeaveRequest>;
+
+      const result = await agent.execute('Approve leave request', {
+        type: 'leave_approval',
+        data: leaveRequest,
+      });
+
+      expect(result.status).toBe('success');
+      expect(result.data.decision).toBe('approved');
+      expect(result.data.request.employeeName).toBe('Kiss Anna');
+      expect(result.data.request.leaveType).toBe('vacation');
+      expect(result.data.policyCheck.riskLevel).toBe('low');
+    });
+  });
+
+  describe('Timesheet Management', () => {
+    it('should record timesheets through the timesheet workflow', async () => {
+      const result = await agent.execute('Record timesheet entry', {
+        type: 'timesheet_management',
+        data: {
+          employeeId: 'emp-7',
+          employeeName: 'Kiss Anna',
+          projectName: 'Phoenix',
+          durationMinutes: 90,
+          date: '2026-03-18',
+          description: 'Sprint planning',
+          isBillable: true,
+        },
+      });
+
+      expect(result.status).toBe('success');
+      expect(result.data.status).toBe('recorded');
+      expect(result.data.employeeName).toBe('Kiss Anna');
+      expect(result.data.projectName).toBe('Phoenix');
+      expect(result.data.calculatedBillable).toBe(1.5);
     });
   });
 

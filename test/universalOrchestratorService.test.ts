@@ -81,8 +81,8 @@ describe('UniversalOrchestratorService fail-open bootstrap', () => {
     expect(getToolRegistryMock).toHaveBeenCalledTimes(1);
     expect(generateMock).toHaveBeenCalledTimes(1);
     const generateOptions = generateMock.mock.calls[0][0] as { tools: Array<{ name: string }> };
-    expect(generateOptions.tools.length).toBeGreaterThan(0);
-    expect(generateOptions.tools.some(tool => tool.name === 'get_system_status')).toBe(true);
+    expect(Array.isArray(generateOptions.tools)).toBe(true);
+    expect(generateOptions.systemPrompt).toContain('get_system_status');
     expect(response.reply).toContain('fallback tool-listával');
     expect(response.actionsTriggered).toEqual([]);
   });

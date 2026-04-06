@@ -6,6 +6,132 @@ User requested that the Copilot CLI automatically connect to a local Brunella MC
 
 ## History
 
+### 2026-04-07 - 8-Module Kernel Pipeline Architecture
+**Feladat:** A supervisor-driven event-driven 8-modul Kernel Pipeline (Conductor → Intent Router → Planner → Context Builder → Tool Executor → Critic → Guardrail → Learning Loop) audiálása, majd teljes implementálása és BAS-ba integrálása. Copilot Orchestrator bridge-el összekötve.
+**Érintett fájlok:** `src/core/kernelTypes.ts`, `src/core/kernelEventBus.ts`, `src/core/intentRouter.ts`, `src/core/planner.ts`, `src/core/toolExecutor.ts`, `src/core/guardrail.ts`, `src/core/conductor.ts`, `src/server/routes/kernelRoute.ts`, `src/dashboard/components/dashboard/KernelPipelinePanel.tsx`, `src/dashboard/lib/navigation.tsx`, `src/server/routes/index.ts`
+**Státusz:** ✅ Befejezve — 9 új fájl, 0 TypeScript hiba, route mountolva, dashboard panel regisztrálva
+**Megjegyzés:** A pipeline közös `RunEnvelope` + `ModuleResponse<T>` típusszerződést használ (`kernelTypes.ts`); a `Conductor` lazy importon át hívja az összes modult, MAX_RETRIES=2-vel és `RunLedger` (utolsó 50 futás) nyilvántartással. Typed 10-esemény bus (`kernelEventBus.ts`). Policy enforcement: `guardrail.ts` → policyEngine lazy facade, PII redaction patch. `toolExecutor.ts` → ephemeralSandbox + toolRegistry facade. Copilot Orchestrator `startSession/addStep/completeSession/failSession` bridge integrálva.
+**REST API:** `POST /api/v1/kernel/run`, `GET /api/v1/kernel/runs`, `GET /api/v1/kernel/runs/:runId`, `GET /api/v1/kernel/status`
+**Dashboard:** „Kernel Pipeline" panel az AI & Agents csoportban, Layers ikon, 5 s polling, run launcher form, modul trace nézet
+**Track:** `kernel_pipeline_20260407` (új) → 100%
+
+### 2026-04-07 - Lint cleanup + KKV typing + technical debt Phase 1
+**Feladat:** Lint 0 errors elérése: 14 ESLint issue javítása 10 fájlban; @ts-nocheck eltávolítása KKV skeleton fájlokból; technical_debt_cleanup Phase 1 lezárása.
+**Érintett fájlok:** `src/agents/CampaignGeneratorAgent.ts`, `src/utils/db.ts`, `src/utils/inventoryDb.ts`, `src/agents/KKVCrmAgent.ts`, `src/server/routes/kkvCrm.ts`, `src/server/services/kkvCrmService.ts`, `src/tools/crm_create_lead.ts`, `test/metricsArchiveService.test.ts`, `test/dashboard/components/InventoryCatalog.test.tsx`, `test/dashboard/components/InventoryRadarWidget.test.tsx`
+**Státusz:** ✅ Befejezve — lint:0, tsc:0, metrics+inventory tesztek: pass
+**Validáció:** `npm run lint` (exit 0), `npx tsc --noEmit` (exit 0), `npx vitest run test/metricsArchiveService.test.ts` (7/7), `npx vitest run test/dashboard/components/Inventory*.test.tsx` (6/6)
+**Track:** `type_safety_enforcement_20260404` → 80% (phase 4), `technical_debt_cleanup_20260404` → 70% (phase 2)
+
+### 2026-04-06 - Modular state DB wrapper slice
+
+**Feladat:** A main SQLite helper kiszervezése `DatabaseManager` wrapperbe, a `businessJobs` `/leads/all` útvonal DI-s injektálása, a publikus `db.ts` API megtartásával.
+
+**Érintett fájlok:** `src/utils/databaseManager.ts`, `src/utils/db.ts`, `src/server/routes/businessJobs.ts`, `src/server/routes/index.ts`, `test/databaseManager.test.ts`, `test/businessJobsRoutes.test.ts`, `conductor/tracks/modular_state_refactor_20260404/plan.md`, `conductor/tracks/modular_state_refactor_20260404/meta.json`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A wrapper most a fő SQLite DB lifecycle-jét kezeli, a route pedig injektált managerből olvassa a leadeket. A fókusz Vitest zöld: `npx vitest run test/databaseManager.test.ts test/businessJobsRoutes.test.ts`.
+
+### 2026-04-06 - TasksDatabaseManager slice
+
+**Feladat:** A `src/utils/tasksDb.ts` háttér task helper kiszervezése `TasksDatabaseManager` wrapperbe, a publikus tasks API megőrzésével.
+
+**Érintett fájlok:** `src/utils/tasksDatabaseManager.ts`, `src/utils/tasksDb.ts`, `test/tasksDatabaseManager.test.ts`, `conductor/tracks/modular_state_refactor_20260404/plan.md`, `conductor/tracks/modular_state_refactor_20260404/meta.json`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A tasks DB most explicit lifecycle-t kezel, a régi async helper exportok pedig a default managerre delegálnak. A fő regressziós tesztek zöldek: `npx vitest run test/tasksDatabaseManager.test.ts test/agentManagerInitialization.test.ts`; az új managerfájlokra külön ESLint futott.
+
+### 2026-04-06 - DigitalHeadhunterAgent typing slice
+
+**Feladat:** A `src/agents/DigitalHeadhunterAgent.ts` maradék `any` eltávolítása az executeTask/leave approval/timesheet útvonalakon, a recruitment fallback megtartásával.
+
+**Érintett fájlok:** `src/agents/DigitalHeadhunterAgent.ts`, `test/digitalHeadhunterAgent.test.ts`, `conductor/tracks/type_safety_enforcement_20260404/plan.md`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** Az agent most `AgentContext` + lokális record/leave/timesheet normalizálásra támaszkodik, az `executeTask()` visszatér `AgentResult`-ot a BaseAgent szerződéshez igazodva, és új regressziós tesztek fedik a leave approval + timesheet workflow-kat. A validáció zöld: `npm run build` és `npx vitest run test/digitalHeadhunterAgent.test.ts`.
+
+### 2026-04-06 - SpecWriterAgent metadata guard slice
+
+**Feladat:** A `src/agents/SpecWriterAgent.ts` maradék `any` eltávolítása a metadata/blueprint normalizálásból, a track-generálás és blueprint-spec útvonal megtartásával.
+
+**Érintett fájlok:** `src/agents/SpecWriterAgent.ts`, `test/specWriterAgent.test.ts`, `conductor/tracks/type_safety_enforcement_20260404/plan.md`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A SpecWriter most lokális `isRecord`/`isSystemBlueprint` guardokkal olvassa a metadata.blueprint payloadot, így a `Record<string, any>` cast eltűnt. A validáció zöld: `npx vitest run test/digitalHeadhunterAgent.test.ts test/specWriterAgent.test.ts`; a repo build továbbra is különálló core hibákon áll meg.
+
+### 2026-04-06 - RobotkezV2Agent response typing slice
+
+**Feladat:** A `src/agents/RobotkezV2Agent.ts` maradék `as any` eltávolítása a vision/browser response koordináta-kezelésből, valamint a test mockok típusosítása.
+
+**Érintett fájlok:** `src/agents/RobotkezV2Agent.ts`, `test/robotkezV2Agent.test.ts`, `conductor/tracks/type_safety_enforcement_20260404/plan.md`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A RobotkezV2 agent most lokális `Coordinates`/`VisionResponse` guardokra támaszkodik, a browser query ág `BrowserCommand`-ként épül fel, és a test mockok `vi.hoisted` + `vi.fn` alapon futnak. A validáció zöld: `npm run build` és `npx vitest run test/robotkezV2Agent.test.ts`.
+
+### 2026-04-06 - DeveloperAgent ReAct/context typing slice
+
+**Feladat:** A `src/agents/DeveloperAgent.ts` maradék explicit `any` eltávolítása a ReAct/context útvonalon és a test mock typing javítása.
+
+**Érintett fájlok:** `src/agents/DeveloperAgent.ts`, `test/DeveloperAgent.test.ts`, `conductor/tracks/type_safety_enforcement_20260404/plan.md`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A DeveloperAgent most lokális context/message/tool-arg típusokat és guardokat használ, a mockok pedig `vi.mocked(...)`-re álltak át. A `npm run build` és a `npx vitest run test/DeveloperAgent.test.ts` zöld.
+
+### 2026-04-06 - CLI marked-terminal typing slice
+
+**Feladat:** A `marked-terminal` renderer cast eltávolítása a CLI belépési pontokból és egy közös ambient declaration bevezetése.
+
+**Érintett fájlok:** `src/vendor.d.ts`, `src/cli-hu.ts`, `src/cli.ts`, `src/cli/tracksCommands.ts`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A `marked-terminal` most saját `TerminalRenderer` declarationt kapott, így a három CLI fájl már `new TerminalRenderer()`-rel dolgozik `as any` nélkül. A build újra zöld, és a `test/cli-hu.skills.test.ts` regresszió is lefutott a változás után.
+
+### 2026-04-06 - GrantWatcherAgent typing slice
+
+**Feladat:** A `src/agents/GrantWatcherAgent.ts` maradék `any` eltávolítása az `executeTask()` bridge-ből és a task JSON normalizálásából.
+
+**Érintett fájlok:** `src/agents/GrantWatcherAgent.ts`, `test/grantWatcherAgent.test.ts`, `conductor/tracks/type_safety_enforcement_20260404/plan.md`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** Az agent most `AgentContext`/`AgentResult` típusokkal dolgozik az `executeTask()` hídnál, a task JSON-t pedig egy lokális `parseGrantTaskData()` segédfüggvény normalizálja. A test kapott egy direkt `executeTask()` regressziót, és a validáció zöld: `npm run build` + `npx vitest run test/grantWatcherAgent.test.ts`.
+
+### 2026-04-06 - Dashboard system signal typing slice
+
+**Feladat:** A `type_safety_enforcement_20260404` következő kis, biztonságos batchjeként a dashboard system signal store, a socket payloadok és a kapcsolódó tesztek `any` használatának szűkítése, a komponensviselkedés megtartásával.
+
+**Érintett fájlok:** `src/dashboard/store/systemSignalStore.ts`, `src/dashboard/store/systemSignalStore.test.ts`, `src/dashboard/context/SocketContext.tsx`, `src/dashboard/components/dashboard/MachineHunterWidget.tsx`, `src/dashboard/types/dashboard.ts`, `conductor/tracks/type_safety_enforcement_20260404/meta.json`, `conductor/tracks/type_safety_enforcement_20260404/plan.md`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A system signal store most `AgentStatusEntry` / `ChatterEntry` / `MachineAlert` típusokat használ, a socket layer `unknown`-safe hibakiolvasást kapott, a fölös `eslint-disable` direktívák kikerültek, és a `clearAllData()` már a machine alert állapotot is nullázza. Validáció: `npm run test:dashboard -- src/dashboard/store/systemSignalStore.test.ts src/dashboard/hooks/useSystemSignal.test.ts` és `npm run build:ui`.
+
+### 2026-04-06 - LogisticsDispatcher typing slice
+
+**Feladat:** A `src/agents/LogisticsDispatcher.ts` maradék `any` eltávolítása a context- és Python-result normalizálásból, a draft/match/route viselkedés megtartásával.
+
+**Érintett fájlok:** `src/agents/LogisticsDispatcher.ts`, `test/phase4_supply_chain.test.ts`, `conductor/tracks/type_safety_enforcement_20260404/plan.md`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A legacy dispatcher most lokális `LogisticsContext`/`SupplyMatchResult`/`RouteOptimizationResult` helpereken keresztül dolgozik, a Gmail draft ág pedig a `GoogleWorkspaceResult` típusra támaszkodik. A supply-chain integrációs teszt kapott két új regressziós esetet, és a validáció zöld: `npm run build` és `npx vitest run test/phase4_supply_chain.test.ts`.
+
+### 2026-04-06 - ConflictMediatorAgent parsing slice
+
+**Feladat:** A `src/agents/ConflictMediatorAgent.ts` maradék `any` eltávolítása az `execute()` payload parszolásából, a malformed JSON fallback megtartásával és a branch sorrend változatlanul hagyásával.
+
+**Érintett fájlok:** `src/agents/ConflictMediatorAgent.ts`, `test/conflictMediatorAgent.test.ts`, `conductor/tracks/type_safety_enforcement_20260404/plan.md`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A task payload most lokális `ConflictTaskData`/`isRecord`/`isStringArray` guardokon megy át, a malformed JSON raw-text fallback megmaradt, és egy regressziós teszt lefedi a parse-fallback útvonalat. A validáció zöld: `npm run build` és `npx vitest run test/conflictMediatorAgent.test.ts`.
+
 ### 2026-04-06 - ReconciliationCommunicationAgent / ReconciliationExceptionAgent slice
 
 **Feladat:** A `src/agents/ReconciliationCommunicationAgent.ts` és `src/agents/ReconciliationExceptionAgent.ts` maradék `any` eltávolítása, a payload/entry guardolása és az eddigi fallbackek megtartása.
@@ -590,7 +716,6 @@ Kérdés: Megnyissam helyetted a PR-t most (meghívhatom a `gh` parancsot a hely
 - A `npx tsx src/cli.ts conductor rescan` futtatasa frissitette a `conductor/project_state.json` es `conductor/tracks.md` allapotot.
 
 **Statusz:** ✅ Befejezve
->>>>>>> 9c900db95 (fix(cloudflare): separate BAS and personal tokens)
 
 ---
 
@@ -1414,7 +1539,7 @@ Ezeket a módosításokat a conductor/tracks.md és a conductor/archive/ helyre 
 - Fontos guardrail: az autonóm remediation csak a jelenlegi workspace GitHub repójára engedélyezett, így idegen webhook repository nem indíthat helyi javító futást.
 - Következő lépés: a mostani remediation wiring build/test stabilizálása, route/import hibák kisimítása, majd célzott Vitest + build futtatás.
 
-### 2026-03-27  
+### 2026-03-27
 **Feladat:** Cloudflare DNS zóna delegációs állapot, whois/NS ellenőrzés, Copilot wrapper és MCP auto-start fejlesztések dokumentálása
 **Érintett fájlok:** .vscode/tasks.json, scripts/copilot-with-brunella.ps1, scripts/copilot-with-brunella.bat, scripts/copilot-mcp-config.json
 **Státusz:** ✅ Befejezve
@@ -1803,7 +1928,7 @@ Ezeket a módosításokat a conductor/tracks.md és a conductor/archive/ helyre 
 - 	est/dashboard/components/BookkeepingWidget.test.tsx BŐVÍTVE (+4 teszt, összesen 6)
   - describe("error handling"): silent fail (nincs toast), NavAgent throw→ERROR badge+toast.error, MatchingAgent success:false→ERROR, button disabled futás alatt
   - 	oast import + mockedToast type helper hozzáadva
-**Végeredmény: 
+**Végeredmény:
 pm run test:dashboard → 200 passed | 0 failed | 20 test file ✅**
 (Volt: 183 passed → most: 200 passed, +17 új teszt)
 **Érintett fájlok:**

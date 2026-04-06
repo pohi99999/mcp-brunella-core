@@ -1,10 +1,10 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-04-06T20:39:50.169Z
+**Utolso frissites:** 2026-04-06T22:34:57.558Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 210 total | 11 active | 17 completed | 176 archived
+**Stats:** 211 total | 10 active | 19 completed | 176 archived
 
 ---
 
@@ -44,12 +44,7 @@
 
 ---
 
-## Aktiv Szalak (Active) (11)
-
-- [ ] **Copilot CLI Self-Improvement Loop — Gödel-Agent Integration** [HIGH]
-  - **ID:** `copilot_self_improvement_loop_20260406`
-  - **Progress:** 0%
-  - Mappa: ./tracks/copilot_self_improvement_loop_20260406/
+## Aktiv Szalak (Active) (10)
 
 - [ ] **KKV CRM es lead-utanakovetes automatizalas** [HIGH]
   - **ID:** `kkv_crm_automation_20260404`
@@ -71,8 +66,8 @@
 
 - [ ] **Modular State Refactor — Globális változók Dependency Injection alapú refaktora** [MEDIUM]
   - **ID:** `modular_state_refactor_20260404`
-  - **Progress:** 0%
-  - **Updated:** 2026-04-04
+  - **Progress:** 30%
+  - **Updated:** 2026-04-06
   - Mappa: ./tracks/modular_state_refactor_20260404/
 
 - [ ] **P-Search n8n Pipeline - palyazat- es hitelkereso workflow-k** [HIGH]
@@ -117,7 +112,11 @@
 
 ---
 
-## Befejezett (Completed - Not Archived) (17)
+## Befejezett (Completed - Not Archived) (19)
+
+- [x] **Agent Runtime Hardening — ReAct, Working Memory, Tool Errors, Guardrails**
+  - **ID:** `agent_runtime_hardening_20260406`
+  - Mappa: ./tracks/agent_runtime_hardening_20260406/
 
 - [x] **AutoGen GitHub Models pilot a Python MCP alrendszerben**
   - **ID:** `autogen_github_models_pilot_20260401`
@@ -130,6 +129,10 @@
 - [x] **Brunella Identity + Project Maintainer**
   - **ID:** `brunella_identity_project_maintainer_20260402`
   - Mappa: ./tracks/brunella_identity_project_maintainer_20260402/
+
+- [x] **Copilot CLI Self-Improvement Loop — Gödel-Agent Integration**
+  - **ID:** `copilot_self_improvement_loop_20260406`
+  - Mappa: ./tracks/copilot_self_improvement_loop_20260406/
 
 - [x] **Dashboard conductor monitor láthatósági javítás**
   - **ID:** `dashboard_conductor_monitor_visibility_20260406`

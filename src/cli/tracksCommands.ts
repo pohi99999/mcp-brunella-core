@@ -19,7 +19,7 @@ import TerminalRenderer from 'marked-terminal';
 import { ensureError } from '../utils/ensureError.js';
 import { writeLine } from '../utils/cliOutput.js';
 
-marked.setOptions({ renderer: new TerminalRenderer() as any });
+marked.setOptions({ renderer: new TerminalRenderer() });
 
 const API_BASE = process.env.BRUNELLA_API_URL || 'http://localhost:3000';
 
