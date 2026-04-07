@@ -4,6 +4,7 @@
  */
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import Database from 'better-sqlite3';
 
 // Mock fetch globally
 const mockFetch = vi.fn();
@@ -571,7 +572,10 @@ function createCuratedAwareFakeDb(opts: {
           const offset = Number(params.pop()) || 0;
           const limit = Number(params.pop()) || 100;
           let idx = 0;
-          if (sql.includes('approval_state = ?')) {
+          if (sql.includes('approval_state IN (?, ?)')) {
+            const allowed = new Set([String(params[idx++]), String(params[idx++])]);
+            rows = rows.filter((r) => allowed.has(r.approval_state));
+          } else if (sql.includes('approval_state = ?')) {
             rows = rows.filter((r) => r.approval_state === String(params[idx++]));
           }
           if (sql.includes('source = ?')) {
@@ -1041,6 +1045,44 @@ describe('captureCuratedGoldenCandidate', () => {
     expect(result.id).toBeDefined();
     expect(typeof result.id).toBe('string');
     expect(result.id!.length).toBeGreaterThan(0);
+  });
+
+  it('should_write_pending_as_candidate_on_legacy_schema_and_normalize_reads', async () => {
+    const db = new Database(':memory:');
+    vi.mocked(getGlobalDb).mockReturnValue(db as ReturnType<typeof getGlobalDb>);
+    db.exec(`
+      CREATE TABLE curated_golden_samples (
+        id TEXT PRIMARY KEY,
+        prompt TEXT NOT NULL,
+        completion TEXT NOT NULL,
+        source TEXT NOT NULL,
+        quality REAL NOT NULL,
+        approval_state TEXT NOT NULL CHECK (approval_state IN ('candidate', 'approved', 'rejected')),
+        provenance TEXT,
+        pii_redacted_count INTEGER DEFAULT 0,
+        created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        approved_at TEXT,
+        reviewed_by TEXT,
+        review_notes TEXT
+      );
+    `);
+
+    const { captureCuratedGoldenCandidate, getCuratedGoldenSample, listCuratedGoldenSamples } = await import('../src/core/goldenDatasetBridge.js');
+
+    const result = captureCuratedGoldenCandidate({
+      id: 'legacy-curated-1',
+      prompt: 'Legacy approval state handling prompt with enough content.',
+      completion: 'Legacy schema should accept candidate while the public API still reads pending.',
+      source: 'legacy-agent',
+    });
+
+    expect(result.success).toBe(true);
+
+    const rawRow = db.prepare('SELECT approval_state FROM curated_golden_samples WHERE id = ?').get('legacy-curated-1') as { approval_state: string } | undefined;
+    expect(rawRow?.approval_state).toBe('candidate');
+    expect(getCuratedGoldenSample('legacy-curated-1')?.approvalState).toBe('pending');
+    expect(listCuratedGoldenSamples({ state: 'pending' }).map((sample) => sample.id)).toContain('legacy-curated-1');
+    db.close();
   });
 });
 
