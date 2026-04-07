@@ -12,8 +12,13 @@ export { SwarmCoordinator } from "./swarmCoordinator.js";
 import { handleQueueBatch, enqueueTask, type TaskMessage } from "./queueHandler.js";
 import { R2ArtifactManager } from "./r2Artifacts.js";
 import { BASAnalytics } from "./analyticsEngine.js";
+import {
+  authenticateWorkerRequest,
+  buildCorsHeaders,
+  type WorkerSecurityEnv,
+} from "./security.js";
 
-interface Env {
+interface Env extends WorkerSecurityEnv {
   AI: any;
   D1_METADATA: D1Database;
   BAS_TASKS: KVNamespace;
@@ -39,9 +44,6 @@ interface Env {
   REASONING_MODEL: string;
   FAST_MODEL: string;
   R2_PREFIX: string;
-
-  CLOUDFLARE_API_TOKEN: string;
-  BAS_API_KEY: string;
 }
 
 export default {
@@ -49,35 +51,18 @@ export default {
     const url = new URL(request.url);
     const path = url.pathname;
 
-    const corsHeaders = {
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-      "Access-Control-Allow-Headers": "Content-Type, Authorization, X-BAS-API-Key",
-    };
+    const corsHeaders = buildCorsHeaders(request, env);
 
     if (request.method === "OPTIONS") {
       return new Response(null, { headers: corsHeaders });
     }
 
-    // --- SECURITY CHECK ---
-    const authHeader = request.headers.get("Authorization");
-    const basKeyHeader = request.headers.get("X-BAS-API-Key");
-    
-    // Legacy token check
-    if (path.startsWith("/chat/") || path.startsWith("/swarm/")) {
-       const expectedToken = (env.CLOUDFLARE_API_TOKEN || "").trim();
-       const receivedToken = (authHeader || "").replace("Bearer ", "").trim();
-       if (expectedToken && receivedToken !== expectedToken) {
-         return Response.json({ error: "Unauthorized (Legacy)" }, { status: 401, headers: corsHeaders });
-       }
-    }
-
-    // Modern BAS API Key check
-    if (path.startsWith("/dispatch") || path.startsWith("/workers") || path.startsWith("/routing")) {
-      const expectedKey = (env.BAS_API_KEY || "").trim();
-      if (expectedKey && basKeyHeader !== expectedKey) {
-        return Response.json({ error: "Unauthorized (BAS Key)" }, { status: 401, headers: corsHeaders });
-      }
+    const authResult = authenticateWorkerRequest(request, env);
+    if (!authResult.ok) {
+      return Response.json(
+        { error: authResult.error },
+        { status: authResult.status, headers: corsHeaders },
+      );
     }
 
     // --- DISPATCH: Route task to specific agent worker ---
@@ -108,12 +93,17 @@ export default {
       // 3. Proxy to Agent Worker (Async/Fire-and-forget or Sync depending on needs)
       // For now, we attempt a sync call to the worker
       try {
+        const workerAuthToken = env.BAS_API_KEY || env.CEAN_API_KEY || env.CLOUDFLARE_API_TOKEN;
+        const workerHeaders: Record<string, string> = {
+          "Content-Type": "application/json",
+        };
+        if (workerAuthToken) {
+          workerHeaders["X-BAS-API-Key"] = workerAuthToken;
+        }
+
         const workerResponse = await fetch(`${routing.worker_url}/execute`, {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "X-BAS-API-Key": env.BAS_API_KEY
-          },
+          headers: workerHeaders,
           body: JSON.stringify({ agent, task, context, requestId: reqId })
         });
 

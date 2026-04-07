@@ -45,6 +45,9 @@ class FakeD1Database {
           },
         };
       },
+      async all() {
+        return { results: [] };
+      },
       async run() {
         return {};
       },
@@ -77,6 +80,7 @@ function createEnv() {
     FAST_MODEL: "model-d",
     R2_PREFIX: "Brunella-core",
     CLOUDFLARE_API_TOKEN: "top-secret",
+    BAS_API_KEY: "bas-secret",
     CEAN_API_KEY: "cean-secret",
     EDGE_ALLOWED_ORIGINS: "",
     CORS_ORIGINS: "",
@@ -90,6 +94,31 @@ describe("Cloudflare worker Zero-Prompt mirror route", () => {
     env = createEnv();
   });
 
+  it("protects inventory and task-status endpoints and accepts BAS API key headers", async () => {
+    const unauthorizedWorkersResponse = await worker.fetch(
+      new Request("https://worker.example.com/workers"),
+      env as any,
+    );
+    expect(unauthorizedWorkersResponse.status).toBe(401);
+
+    const unauthorizedTaskStatusResponse = await worker.fetch(
+      new Request("https://worker.example.com/task-status/task-1"),
+      env as any,
+    );
+    expect(unauthorizedTaskStatusResponse.status).toBe(401);
+
+    const authorizedResponse = await worker.fetch(
+      new Request("https://worker.example.com/workers", {
+        headers: {
+          "X-BAS-API-Key": "bas-secret",
+        },
+      }),
+      env as any,
+    );
+    expect(authorizedResponse.status).toBe(200);
+    expect(await authorizedResponse.json()).toEqual([]);
+  });
+
   it("stores and returns Zero-Prompt mirrored summary", async () => {
     const postRequest = new Request("https://worker.example.com/zero-prompt/summary", {
       method: "POST",
@@ -99,9 +128,9 @@ describe("Cloudflare worker Zero-Prompt mirror route", () => {
       },
       body: JSON.stringify({
         mirroredAt: "2026-04-01T11:00:00.000Z",
-          summary: {
-            approvals: { total: 1, pending: 1, approved: 0, rejected: 0, expired: 0, counts: { pending: 1, approved: 0, rejected: 0, expired: 0 } },
-            remediation: {
+        summary: {
+          approvals: { total: 1, pending: 1, approved: 0, rejected: 0, expired: 0, counts: { pending: 1, approved: 0, rejected: 0, expired: 0 } },
+          remediation: {
             total: 1,
             counts: { awaiting_final_approval: 1 },
             active: true,
@@ -109,43 +138,43 @@ describe("Cloudflare worker Zero-Prompt mirror route", () => {
             pendingFinalApproval: 1,
             inFlight: 1,
             latestRunId: "run-1",
-              latestRunStatus: "awaiting_final_approval",
-              latestRepositoryName: "pohi99999/mcp-brunella-core",
-            },
-            learningLoop: {
-              remediationDerived: {
-                totalCandidates: 1,
-                approvedCount: 1,
-                rejectedCount: 0,
-                pendingReview: 0,
-                avgQuality: 0.95,
-              },
-              latestSnapshot: {
-                snapshotId: "snapshot-1",
-                sampleCount: 1,
-                avgQuality: 0.95,
-                sourceFilter: "github_remediation_runtime",
-                minQuality: 0.85,
-                createdAt: "2026-04-01T10:50:00.000Z",
-              },
-              latestTraining: {
-                runId: "training-1",
-                snapshotId: "snapshot-1",
-                status: "completed",
-                modelName: "gpt-5-mini",
-                dryRun: false,
-                sampleCount: 1,
-                avgQuality: 0.95,
-                startedAt: "2026-04-01T10:55:00.000Z",
-                completedAt: "2026-04-01T10:59:00.000Z",
-                snapshotSource: "github_remediation_runtime",
-                minQuality: 0.85,
-                routineCategories: ["code_gen", "debug"],
-              },
-            },
-            timestamp: "2026-04-01T11:00:00.000Z",
-            source: "local-runtime",
+            latestRunStatus: "awaiting_final_approval",
+            latestRepositoryName: "pohi99999/mcp-brunella-core",
           },
+          learningLoop: {
+            remediationDerived: {
+              totalCandidates: 1,
+              approvedCount: 1,
+              rejectedCount: 0,
+              pendingReview: 0,
+              avgQuality: 0.95,
+            },
+            latestSnapshot: {
+              snapshotId: "snapshot-1",
+              sampleCount: 1,
+              avgQuality: 0.95,
+              sourceFilter: "github_remediation_runtime",
+              minQuality: 0.85,
+              createdAt: "2026-04-01T10:50:00.000Z",
+            },
+            latestTraining: {
+              runId: "training-1",
+              snapshotId: "snapshot-1",
+              status: "completed",
+              modelName: "gpt-5-mini",
+              dryRun: false,
+              sampleCount: 1,
+              avgQuality: 0.95,
+              startedAt: "2026-04-01T10:55:00.000Z",
+              completedAt: "2026-04-01T10:59:00.000Z",
+              snapshotSource: "github_remediation_runtime",
+              minQuality: 0.85,
+              routineCategories: ["code_gen", "debug"],
+            },
+          },
+          timestamp: "2026-04-01T11:00:00.000Z",
+          source: "local-runtime",
+        },
       }),
     });
 
