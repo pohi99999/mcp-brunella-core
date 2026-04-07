@@ -1,0 +1,124 @@
+{
+  "name": "Pohánka AI — KKV Onboarding Intake",
+  "nodes": [
+    {
+      "name": "🎯 Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "parameters": {
+        "path": "kkv-onboarding",
+        "method": "POST",
+        "responseMode": "responseNode"
+      },
+      "position": [100, 300]
+    },
+    {
+      "name": "🔍 Iparág Router",
+      "type": "n8n-nodes-base.switch",
+      "parameters": {
+        "rules": [
+          { "value": "Könyvelés / pénzügy",  "output": 0 },
+          { "value": "CRM / ügyfélkezelés",   "output": 1 },
+          { "value": "Marketing",              "output": 2 },
+          { "value": "Weboldal / webshop",     "output": 3 },
+          { "value": "HR",                     "output": 4 },
+          { "value": "Készlet / logisztika",   "output": 5 }
+        ],
+        "field": "={{$json.body.legnagyobb_kihivas}}"
+      },
+      "position": [350, 300]
+    },
+    {
+      "name": "🤖 Brunella API — Agent Trigger",
+      "type": "n8n-nodes-base.httpRequest",
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:3000/api/v1/webhook/onboarding-intake",
+        "headers": {
+          "Content-Type": "application/json",
+          "X-Brunella-Token": "={{$env.BRUNELLA_WEBHOOK_SECRET}}"
+        },
+        "body": {
+          "trigger": "={{$json.routing.agent_trigger}}",
+          "client_name": "={{$json.body.cegnev}}",
+          "contact_email": "={{$json.body.email}}",
+          "industry": "={{$json.body.iparagban}}",
+          "pain_point": "={{$json.body.legnagyobb_kihivas}}",
+          "manual_hours": "={{$json.body.manualis_orak}}",
+          "current_tools": "={{$json.body.rendszerek}}",
+          "wow_result": "={{$json.body.wow_eredmeny}}",
+          "form_type": "kkv_general"
+        }
+      },
+      "position": [650, 300]
+    },
+    {
+      "name": "📧 Értesítő Email — Péternek",
+      "type": "n8n-nodes-base.gmail",
+      "parameters": {
+        "to": "pohanka@pohankaestarsa.com",
+        "subject": "🆕 Új KKV érdeklődő: {{$json.body.cegnev}}",
+        "html": true,
+        "message": "<h2>Új onboarding kérdőív érkezett!</h2><p>Iparág: {{$json.body.iparagban}}</p><p>Probléma: {{$json.body.legnagyobb_kihivas}}</p><p><b>⏳ Jóváhagyás szükséges a Brunella Dashboardon mielőtt bármit küldünk!</b></p><p><a href='http://localhost:5173'>👉 Dashboard megnyitása</a></p>"
+      },
+      "position": [950, 200]
+    },
+    {
+      "name": "📩 Auto-válasz Email — Ügyfélnek",
+      "type": "n8n-nodes-base.gmail",
+      "parameters": {
+        "to": "={{$json.body.email}}",
+        "subject": "Megkaptuk a kérdőívedet — Pohánka AI",
+        "html": true,
+        "message": "<p>Szia {{$json.body.kapcsolattarto_nev}}!</p><p>Köszönjük a kérdőív kitöltését. 24 órán belül személyesen megkeresünk egy rövid kickoff javaslattal.</p><p>Pohánka Péter</p>"
+      },
+      "position": [950, 400]
+    },
+    {
+      "name": "📊 Google Sheets — Lead Rögzítés",
+      "type": "n8n-nodes-base.googleSheets",
+      "parameters": {
+        "operation": "append",
+        "spreadsheetId": "={{$env.LEADS_SHEET_ID}}",
+        "range": "KKV_Leads!A:Z",
+        "values": [
+          "={{new Date().toISOString()}}",
+          "={{$json.body.cegnev}}",
+          "={{$json.body.email}}",
+          "={{$json.body.iparagban}}",
+          "={{$json.body.legnagyobb_kihivas}}",
+          "={{$json.body.manualis_orak}}",
+          "={{$json.routing.recommended_package}}",
+          "PENDING_CALL"
+        ]
+      },
+      "position": [950, 600]
+    },
+    {
+      "name": "✅ Webhook Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "parameters": {
+        "responseCode": 200,
+        "responseBody": "{\"status\": \"ok\", \"message\": \"Köszönjük, hamarosan jelentkezünk!\"}"
+      },
+      "position": [1200, 300]
+    }
+  ],
+  "connections": {
+    "🎯 Webhook Trigger": { "main": [["🔍 Iparág Router"]] },
+    "🔍 Iparág Router": { "main": [["🤖 Brunella API — Agent Trigger"]] },
+    "🤖 Brunella API — Agent Trigger": {
+      "main": [[
+        "📧 Értesítő Email — Péternek",
+        "📩 Auto-válasz Email — Ügyfélnek",
+        "📊 Google Sheets — Lead Rögzítés",
+        "✅ Webhook Response"
+      ]]
+    }
+  },
+  "_meta": {
+    "brunella_endpoint": "POST /api/v1/webhook/onboarding-intake",
+    "required_env_n8n": ["BRUNELLA_WEBHOOK_SECRET", "LEADS_SHEET_ID"],
+    "import_instructions": "n8n UI → Workflows → Import from JSON → paste this file",
+    "source": ".worktrees/sel.md lines 1476-1600"
+  }
+}
