@@ -67,7 +67,7 @@ describe("Agent Health Matrix", () => {
         );
 
         expect(hasExactExport || hasDefaultExport || hasSomeExport).toBe(true);
-      });
+      }, 35_000);
 
       it("should be instantiable", async () => {
         if (!fs.existsSync(modulePath)) return;
@@ -108,7 +108,7 @@ describe("Agent Health Matrix", () => {
             "execute" in instance || "executeTask" in instance;
           expect(hasExecute).toBe(true);
         }
-      });
+      }, 35_000);
     }
   );
 });

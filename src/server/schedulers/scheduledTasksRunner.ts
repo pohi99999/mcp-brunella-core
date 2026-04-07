@@ -7,6 +7,11 @@ import { JulesAutomationService } from '../../core/julesAutomationService.js';
 import { executeLearningLoopCycle } from '../../core/learningLoopService.js';
 import { eventFabric, createSchedulerTaskOutcomeEnvelope } from '../../core/eventFabric.js';
 import { executeDueCrmFollowUpActions } from '../services/crmFollowUpExecutionService.js';
+import {
+  resolveSchedulerExportMonth,
+  runDailyCultureAlerts,
+  runMonthlyPayrollExport,
+} from '../services/hrTimesheetService.js';
 
 interface ScheduledTask {
   id: string;
@@ -62,6 +67,7 @@ export class ScheduledTasksRunner {
     await this.seedDefaults();
     await this.ensureWeeklyResearchTask();
     await this.ensureCrmFollowUpDispatchTask();
+    await this.ensureHRTimesheetFollowUpTasks();
     await this.importJulesAutomations();
     await this.refreshSchedule();
   }
@@ -266,6 +272,95 @@ export class ScheduledTasksRunner {
       logInfo('ScheduledTasksRunner', 'CRM follow-up dispatch task ensured.');
     } catch (error) {
       logError('ScheduledTasksRunner', `Failed to ensure CRM follow-up dispatch task: ${error}`);
+    }
+  }
+
+  /**
+   * Ensure the HR timesheet export and daily alert tasks exist.
+   */
+  private async ensureHRTimesheetFollowUpTasks() {
+    try {
+      const db = getGlobalDb();
+      const now = new Date().toISOString();
+
+      const exportMetadata = {
+        exportFormat: 'csv',
+        scheduleScope: 'previous_month',
+        triggeredBy: 'scheduler',
+      };
+
+      const alertMetadata = {
+        alertType: 'birthday_and_anniversary',
+        triggeredBy: 'scheduler',
+      };
+
+      db.prepare(`
+        INSERT INTO scheduled_tasks (
+          id,
+          title,
+          prompt,
+          cron_expression,
+          handler,
+          enabled,
+          metadata,
+          created_at,
+          updated_at
+        )
+        VALUES (?, ?, ?, ?, ?, 1, ?, ?, ?)
+        ON CONFLICT(id) DO UPDATE SET
+          title = excluded.title,
+          prompt = excluded.prompt,
+          cron_expression = excluded.cron_expression,
+          handler = excluded.handler,
+          enabled = excluded.enabled,
+          metadata = excluded.metadata,
+          updated_at = excluded.updated_at
+      `).run(
+        'hr-timesheet-monthly-export',
+        'HR Timesheet Monthly Payroll Export',
+        'Generate a payroll-ready CSV export for the prior month.',
+        '0 5 1 * *',
+        'hr_timesheet_monthly_export',
+        JSON.stringify(exportMetadata),
+        now,
+        now,
+      );
+
+      db.prepare(`
+        INSERT INTO scheduled_tasks (
+          id,
+          title,
+          prompt,
+          cron_expression,
+          handler,
+          enabled,
+          metadata,
+          created_at,
+          updated_at
+        )
+        VALUES (?, ?, ?, ?, ?, 1, ?, ?, ?)
+        ON CONFLICT(id) DO UPDATE SET
+          title = excluded.title,
+          prompt = excluded.prompt,
+          cron_expression = excluded.cron_expression,
+          handler = excluded.handler,
+          enabled = excluded.enabled,
+          metadata = excluded.metadata,
+          updated_at = excluded.updated_at
+      `).run(
+        'hr-timesheet-daily-alerts',
+        'HR Culture Alerts',
+        'Generate birthday and work-anniversary reminders from HR profiles.',
+        '0 7 * * *',
+        'hr_timesheet_daily_alerts',
+        JSON.stringify(alertMetadata),
+        now,
+        now,
+      );
+
+      logInfo('ScheduledTasksRunner', 'HR timesheet follow-up tasks ensured.');
+    } catch (error) {
+      logError('ScheduledTasksRunner', `Failed to ensure HR timesheet tasks: ${error}`);
     }
   }
 
@@ -481,6 +576,24 @@ export class ScheduledTasksRunner {
           note: typeof crmMeta.note === 'string' && crmMeta.note.trim().length > 0
             ? crmMeta.note.trim()
             : 'scheduled CRM follow-up dispatch',
+        });
+      } else if (task.handler === 'hr_timesheet_monthly_export') {
+        const hrMeta = this.parseTaskMetadata(task);
+        const month = typeof hrMeta.month === 'string' && /^\d{4}-\d{2}$/.test(hrMeta.month)
+          ? hrMeta.month
+          : resolveSchedulerExportMonth(new Date());
+        result = await runMonthlyPayrollExport({
+          month,
+          triggeredBy: 'scheduler',
+        });
+      } else if (task.handler === 'hr_timesheet_daily_alerts') {
+        const hrMeta = this.parseTaskMetadata(task);
+        const date = typeof hrMeta.date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(hrMeta.date)
+          ? hrMeta.date
+          : undefined;
+        result = await runDailyCultureAlerts({
+          date,
+          triggeredBy: 'scheduler',
         });
       } else if (task.handler === 'jules_automation') {
         result = await this.executeJulesAutomation(task);

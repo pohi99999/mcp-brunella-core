@@ -110,7 +110,7 @@ export function getCloudflareChatSyncUrl(): string {
     process.env.CLOUDFLARE_CHAT_SYNC_URL ||
       process.env.CLOUDFLARE_CHAT_URL ||
       process.env.CLOUDFLARE_WORKER_URL ||
-      'https://bas-orchestrator.peterpohankapersonal.workers.dev',
+      'https://cean-orchestrator.iam-dd1.workers.dev',
   );
 }
 

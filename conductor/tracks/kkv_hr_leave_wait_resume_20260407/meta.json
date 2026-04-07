@@ -2,15 +2,16 @@
   "id": "kkv_hr_leave_wait_resume_20260407",
   "name": "KKV HR leave wait/resume orchestration",
   "title": "KKV HR leave wait/resume orchestration",
-  "status": "proposed",
+  "status": "completed",
   "priority": "HIGH",
   "created": "2026-04-07",
   "updated": "2026-04-07",
+  "completedAt": "2026-04-07",
   "owner": "GitHub Copilot",
   "assignee": "GitHub Copilot",
-  "progress": 0,
+  "progress": 100,
   "tags": ["kkv", "hr", "leave", "approval", "wait-resume", "calendar", "audit"],
   "dependencies": ["kkv_hr_leave_approvals_20260405"],
   "sourceDocument": "Gap analysis from kkv_hr_leave_approvals_20260405",
-  "phase": 3
+  "phase": 4
 }

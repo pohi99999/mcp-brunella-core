@@ -1,6 +1,6 @@
 # FŐSZÁL - Egyesített Fejlesztési Napló
 
-**Generálva:** 2026-04-07 03:12
+**Generálva:** 2026-04-07 04:00
 **Script:** `scripts/sync_foszal.py`
 
 ---
@@ -30,6 +30,16 @@ start-full.bat
 
 ### 2026-04-07
 
+#### 03:59 - [Copilot] HR timesheet export/alerts lezárás
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `src/server/services/hrTimesheetService.ts`, `src/server/routes/hrTimesheet.ts`, `src/server/schedulers/scheduledTasksRunner.ts`, `test/hrTimesheetRoutes.test.ts`, `conductor/tracks/kkv_hr_timesheet_export_and_alerts_20260407/{meta.json,plan.md,spec.md}`
+
+#### 03:40 - [Copilot] HR leave wait/resume lezárás
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `src/server/routes/hrLeave.ts`, `test/hrLeaveRoutes.test.ts`, `conductor/tracks/kkv_hr_leave_wait_resume_20260407/{meta.json,plan.md}`, `CHANGELOG.md`
+
 #### 03:20 - [Copilot] HR leave audit + logistics boundary split
 - **Agent:** Copilot
 - **Státusz:** ✅ Befejezve
@@ -49,6 +59,20 @@ start-full.bat
 - **Agent:** Copilot
 - **Státusz:** ✅ Befejezve
 - **Érintett fájlok:** `src/server/routes/files.ts`, `src/utils/lancedb_client.ts`, `test/lancedb_client.test.ts`, `test/ragRoutes.test.ts`, `test/hrTimesheetRoutes.test.ts`, `test/projectMaintainerRoutes.test.ts`, `pyproject.toml`, `uv.lock`, `conductor/project_state.json`, `conductor/tracks.md`, `conductor/tracks/modular_state_refactor_20260404/{meta.json,plan.md}`
+
+#### 01:50 - [Gemini] 🔐 Sikeres Cloudflare Secret Rotáció & Verifikáció
+- **Agent:** Gemini
+- **Státusz:** ✅ Befejezve
+
+#### 01:35 - [Gemini] 🔐 Cloudflare Secret Rotációs Automatizmus
+- **Agent:** Gemini
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** scripts/rotate-cloudflare-secrets.ts (Új TypeScript automatizációs script), package.json (Új `cf:rotate-secrets` parancs hozzáadva)
+
+#### 01:10 - [Gemini] ☁️ Cloudflare Integráció Modernizáció & Gemma 4 Migráció
+- **Agent:** Gemini
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** bas-cloudflare-orchestrator/wrangler.jsonc (Gemma 4 modell + biztonságos API kulcs), cloudflare/wrangler.jsonc (Gemma 4 modell beállítása), .env (URL-ek konszolidálása a cean-orchestrator felé, API kulcs frissítése), src/utils/cloudflareConfig.ts (Hardcoded fallback URL-ek frissítése)
 
 #### 00:00 - [Copilot] 8-Module Kernel Pipeline Architecture
 - **Agent:** Copilot
@@ -996,9 +1020,9 @@ start-full.bat
 | Agent | Bejegyzések | Utolsó Aktivitás |
 |-------|-------------|------------------|
 | Claude | 85 | 2026-03-31 |
-| Gemini | 5 | 2026-04-06 |
+| Gemini | 8 | 2026-04-07 |
 | Cursor | 0 | N/A |
-| Copilot | 81 | 2026-04-07 |
+| Copilot | 83 | 2026-04-07 |
 
 ---
 

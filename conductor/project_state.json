@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-04-06T22:34:57.558Z",
+  "lastUpdated": "2026-04-07T02:06:54.706Z",
   "tracks": [
     {
       "id": "agent_runtime_hardening_20260406",
@@ -365,11 +365,11 @@
     {
       "id": "kkv_hr_leave_approvals_20260405",
       "name": "KKV HR leave approvals",
-      "status": "proposed",
+      "status": "active",
       "priority": "high",
-      "progress": 0,
+      "progress": 70,
       "created": "2026-04-05",
-      "updated": "2026-04-05",
+      "updated": "2026-04-07",
       "assignee": "GitHub Copilot",
       "tags": [
         "kkv",
@@ -386,13 +386,37 @@
       "_isArchived": false
     },
     {
+      "id": "kkv_hr_leave_wait_resume_20260407",
+      "name": "KKV HR leave wait/resume orchestration",
+      "status": "completed",
+      "priority": "high",
+      "progress": 100,
+      "created": "2026-04-07",
+      "updated": "2026-04-07",
+      "assignee": "GitHub Copilot",
+      "tags": [
+        "kkv",
+        "hr",
+        "leave",
+        "approval",
+        "wait-resume",
+        "calendar",
+        "audit"
+      ],
+      "dependencies": [
+        "kkv_hr_leave_approvals_20260405"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\kkv_hr_leave_wait_resume_20260407",
+      "_isArchived": false
+    },
+    {
       "id": "kkv_hr_timesheet_culture_20260405",
       "name": "KKV HR timesheet es kultura automatizalas",
-      "status": "proposed",
+      "status": "active",
       "priority": "high",
-      "progress": 0,
+      "progress": 35,
       "created": "2026-04-05",
-      "updated": "2026-04-05",
+      "updated": "2026-04-07",
       "assignee": "GitHub Copilot",
       "tags": [
         "kkv",
@@ -527,21 +551,25 @@
       "_isArchived": false
     },
     {
-      "id": "logistics_vertical_20260222",
-      "name": "PohiAIPro Logistics Vertical — Brunella integráció",
-      "status": "proposed",
+      "id": "logistics_vertical_repo_local_20260407",
+      "name": "Logistics Vertical — repository-local Brunella boundary",
+      "status": "active",
       "priority": "high",
-      "progress": 5,
-      "created": "2026-02-22",
-      "tags": [],
-      "dependencies": [
-        "TimberMatchAgent (src/agents/TimberMatchAgent.ts) — ÚJ, létrehozandó (a meglévő LogisticsDispatcherAgent parcel tracking, más domain!)",
-        "globalDb.ts — tasks tábla (most hozzáadva)",
-        "d1Adapter.ts — enterprise_events tábla (kész)",
-        "goldenDatasetBridge.ts — sikeres logistics match-ek mentése (kész)",
-        "Socket.IO — real-time shipment tracking (kész)"
+      "progress": 80,
+      "created": "2026-04-07",
+      "updated": "2026-04-07",
+      "assignee": "GitHub Copilot",
+      "tags": [
+        "logistics",
+        "enterprise",
+        "api",
+        "dashboard",
+        "track-split"
       ],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\logistics_vertical_20260222",
+      "dependencies": [
+        "logistics_vertical_20260222"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\logistics_vertical_repo_local_20260407",
       "_isArchived": false
     },
     {
@@ -567,8 +595,8 @@
       "name": "Modular State Refactor — Globális változók Dependency Injection alapú refaktora",
       "status": "active",
       "priority": "medium",
-      "progress": 0,
-      "updated": "2026-04-04",
+      "progress": 30,
+      "updated": "2026-04-06",
       "tags": [
         "architecture",
         "solid",
@@ -839,8 +867,8 @@
       "name": "Technical Debt Cleanup — TODO konverzió és elavult kód elimináció",
       "status": "active",
       "priority": "medium",
-      "progress": 0,
-      "updated": "2026-04-04",
+      "progress": 70,
+      "updated": "2026-04-07",
       "tags": [
         "tech-debt",
         "todo",
@@ -875,8 +903,8 @@
       "name": "Type Safety Enforcement — any elimináció és Type Guard implementáció",
       "status": "active",
       "priority": "high",
-      "progress": 0,
-      "updated": "2026-04-04",
+      "progress": 80,
+      "updated": "2026-04-07",
       "tags": [
         "typescript",
         "types",
@@ -885,25 +913,6 @@
       ],
       "dependencies": [],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\type_safety_enforcement_20260404",
-      "_isArchived": false
-    },
-    {
-      "id": "type_safety_followup_browser_wrangler_20260406",
-      "name": "Type Safety Follow-up — Browser and Wrangler helpers",
-      "status": "proposed",
-      "priority": "medium",
-      "progress": 0,
-      "updated": "2026-04-06",
-      "tags": [
-        "typescript",
-        "types",
-        "safety",
-        "helpers"
-      ],
-      "dependencies": [
-        "type_safety_enforcement_20260404"
-      ],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\type_safety_followup_browser_wrangler_20260406",
       "_isArchived": false
     },
     {
@@ -2616,6 +2625,31 @@
       "_isArchived": true
     },
     {
+      "id": "kkv_hr_timesheet_export_and_alerts_20260407",
+      "name": "KKV HR timesheet export and culture alerts",
+      "status": "archived",
+      "priority": "high",
+      "progress": 100,
+      "created": "2026-04-07",
+      "updated": "2026-04-07",
+      "assignee": "GitHub Copilot",
+      "tags": [
+        "kkv",
+        "hr",
+        "timesheet",
+        "export",
+        "payroll",
+        "birthday",
+        "anniversary",
+        "scheduler"
+      ],
+      "dependencies": [
+        "kkv_hr_timesheet_culture_20260405"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\kkv_hr_timesheet_export_and_alerts_20260407",
+      "_isArchived": true
+    },
+    {
       "id": "konyveles_automatizalas",
       "name": "Könyvelés automatizálása",
       "status": "archived",
@@ -2801,6 +2835,24 @@
       ],
       "dependencies": [],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\logging_refactor_20260404",
+      "_isArchived": true
+    },
+    {
+      "id": "logistics_vertical_20260222",
+      "name": "PohiAIPro Logistics Vertical — Brunella integráció",
+      "status": "archived",
+      "priority": "high",
+      "progress": 5,
+      "created": "2026-02-22",
+      "tags": [],
+      "dependencies": [
+        "TimberMatchAgent (src/agents/TimberMatchAgent.ts) — ÚJ, létrehozandó (a meglévő LogisticsDispatcherAgent parcel tracking, más domain!)",
+        "globalDb.ts — tasks tábla (most hozzáadva)",
+        "d1Adapter.ts — enterprise_events tábla (kész)",
+        "goldenDatasetBridge.ts — sikeres logistics match-ek mentése (kész)",
+        "Socket.IO — real-time shipment tracking (kész)"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\logistics_vertical_20260222",
       "_isArchived": true
     },
     {
@@ -3759,6 +3811,25 @@
       "_isArchived": true
     },
     {
+      "id": "type_safety_followup_browser_wrangler_20260406",
+      "name": "Type Safety Follow-up — Browser and Wrangler helpers",
+      "status": "archived",
+      "priority": "medium",
+      "progress": 100,
+      "updated": "2026-04-07",
+      "tags": [
+        "typescript",
+        "types",
+        "safety",
+        "helpers"
+      ],
+      "dependencies": [
+        "type_safety_enforcement_20260404"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\type_safety_followup_browser_wrangler_20260406",
+      "_isArchived": true
+    },
+    {
       "id": "zero_prompt_approval_router_20260329",
       "name": "Zero-Prompt Core — Approval Router",
       "status": "archived",
@@ -3868,10 +3939,10 @@
     }
   ],
   "stats": {
-    "total": 211,
-    "active": 10,
-    "completed": 19,
-    "archived": 176,
-    "proposed": 6
+    "total": 214,
+    "active": 13,
+    "completed": 20,
+    "archived": 179,
+    "proposed": 2
   }
 }

@@ -240,7 +240,7 @@ export function createScheduledTasksRoutes(db: Database.Database): Router {
       }
 
       // Execute based on handler type
-      let result = {};
+      let result: unknown = {};
       if (task.handler === 'scan-todos') {
         // Trigger suggested tasks scan
         const scanResult = await fetch('http://localhost:3000/api/v1/suggested-tasks/scan', {
@@ -250,6 +250,17 @@ export function createScheduledTasksRoutes(db: Database.Database): Router {
         });
 
         result = await scanResult.json();
+      } else if (task.handler === 'hr_timesheet_monthly_export' || task.handler === 'hr_timesheet_daily_alerts') {
+        const { scheduledTasksRunner } = await import('../schedulers/scheduledTasksRunner.js');
+        result = await scheduledTasksRunner.executeTask({
+          id: task.id,
+          title: task.title,
+          prompt: task.prompt,
+          cron_expression: task.cron_expression,
+          handler: task.handler,
+          enabled: task.enabled,
+          metadata: task.metadata ?? null,
+        });
       } else {
         result = { message: 'Unknown handler type' };
       }

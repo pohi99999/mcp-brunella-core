@@ -71,7 +71,6 @@
     "chat.unifiedAgentsBar.enabled": true,
     "chat.includeReferencedInstructions": true,
     "chat.useNestedAgentsMdFiles": true,
-    "chat.agent.sandbox": true,
     "chat.mcp.discovery.enabled": {
       "claude-desktop": true,
       "windsurf": true,
@@ -92,7 +91,9 @@
     "search.useGlobalIgnoreFiles": true,
     "search.useParentIgnoreFiles": true,
     "yaml.disableAdditionalProperties": true,
-    "yaml.disableDefaultProperties": true
+    "yaml.disableDefaultProperties": true,
+    "chat.agent.sandbox.enabled": "on",
+    "cSpell.blockCheckingWhenLineLengthGreaterThan": 40000
   },
   "extensions": {
     "recommendations": [

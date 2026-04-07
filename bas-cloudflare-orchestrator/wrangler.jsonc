@@ -99,8 +99,9 @@
     "FALLBACK_CODE_MODEL": "@cf/meta/llama-3.1-8b-instruct",
     "REASONING_MODEL": "@cf/deepseek/deepseek-r1-distill-qwen-32b",
     "FAST_MODEL": "@cf/microsoft/phi-4",
+    "STABLE_GEMMA_MODEL": "@cf/google/gemma-4-26b-a4b-it",
     "R2_PREFIX": "Brunella-core",
-    "BAS_API_KEY": "brunella-secret-key-change-me"
+    "BAS_API_KEY": "a6d45872c4834a1b88bb0c72cc7bedbc4783c2fa0ee54e6da34e4abbf145366a"
   },
 
   // --- Durable Objects ---

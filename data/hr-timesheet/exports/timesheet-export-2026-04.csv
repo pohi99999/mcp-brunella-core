@@ -1,0 +1,3 @@
+employeeId,employeeName,month,totalHours,entriesCount,firstDate,lastDate,projectCodes,taskDescriptions
+EMP-001,John Doe,2026-04,12.00,2,2026-04-05,2026-04-06,KKV,Coding | Review
+EMP-002,Jane Roe,2026-04,6.00,1,2026-04-06,2026-04-06,HR,Reporting

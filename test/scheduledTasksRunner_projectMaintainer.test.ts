@@ -9,6 +9,10 @@ const ingestProjectMaintainerReportMock = vi.fn();
 const crmHarness = vi.hoisted(() => ({
   dispatchDueCrmFollowUpActions: vi.fn(),
 }));
+const hrTimesheetHarness = vi.hoisted(() => ({
+  runMonthlyPayrollExport: vi.fn(),
+  runDailyCultureAlerts: vi.fn(),
+}));
 
 vi.mock('../src/utils/globalDb.js', () => ({
   getGlobalDb: vi.fn(() => mockDb),
@@ -40,10 +44,18 @@ vi.mock('../src/server/services/crmFollowUpExecutionService.js', () => ({
   executeDueCrmFollowUpActions: crmHarness.dispatchDueCrmFollowUpActions,
 }));
 
+vi.mock('../src/server/services/hrTimesheetService.js', () => ({
+  runMonthlyPayrollExport: hrTimesheetHarness.runMonthlyPayrollExport,
+  runDailyCultureAlerts: hrTimesheetHarness.runDailyCultureAlerts,
+  resolveSchedulerExportMonth: vi.fn(() => '2026-03'),
+}));
+
 describe('ScheduledTasksRunner project maintainer handler', () => {
   beforeEach(() => {
     ingestProjectMaintainerReportMock.mockReset();
     crmHarness.dispatchDueCrmFollowUpActions.mockReset();
+    hrTimesheetHarness.runMonthlyPayrollExport.mockReset();
+    hrTimesheetHarness.runDailyCultureAlerts.mockReset();
     mockDb.prepare.mockReturnValue({
       run: vi.fn(),
       get: vi.fn(),
@@ -90,5 +102,63 @@ describe('ScheduledTasksRunner project maintainer handler', () => {
       note: 'scheduler run',
     });
     expect(result).toEqual(expect.objectContaining({ scanned: 2 }));
+  });
+
+  it('executes hr_timesheet_monthly_export handler through the timesheet helper', async () => {
+    hrTimesheetHarness.runMonthlyPayrollExport.mockResolvedValue({
+      success: true,
+      runKey: 'hr-timesheet:monthly_export:2026-04',
+      month: '2026-04',
+      outputFormat: 'csv',
+      outputPath: 'data/hr-timesheet/exports/timesheet-export-2026-04.csv',
+      csv: 'employeeId,employeeName,month,totalHours\n',
+      rows: [],
+      totalHours: 0,
+      totalEntries: 0,
+      employeeCount: 0,
+    });
+
+    const result = await scheduledTasksRunner.executeTask({
+      id: 'hr-timesheet-monthly-export',
+      title: 'HR Timesheet Monthly Payroll Export',
+      prompt: 'Generate a payroll-ready CSV export for the prior month.',
+      cron_expression: '0 5 1 * *',
+      handler: 'hr_timesheet_monthly_export',
+      enabled: true,
+      metadata: JSON.stringify({ month: '2026-04' }),
+    });
+
+    expect(hrTimesheetHarness.runMonthlyPayrollExport).toHaveBeenCalledWith({
+      month: '2026-04',
+      triggeredBy: 'scheduler',
+    });
+    expect(result).toEqual(expect.objectContaining({ month: '2026-04' }));
+  });
+
+  it('executes hr_timesheet_daily_alerts handler through the timesheet helper', async () => {
+    hrTimesheetHarness.runDailyCultureAlerts.mockResolvedValue({
+      success: true,
+      runKey: 'hr-timesheet:daily_alerts:2026-04-07',
+      date: '2026-04-07',
+      alerts: [],
+      generatedCount: 0,
+      suppressedCount: 0,
+    });
+
+    const result = await scheduledTasksRunner.executeTask({
+      id: 'hr-timesheet-daily-alerts',
+      title: 'HR Culture Alerts',
+      prompt: 'Generate birthday and work-anniversary reminders from HR profiles.',
+      cron_expression: '0 7 * * *',
+      handler: 'hr_timesheet_daily_alerts',
+      enabled: true,
+      metadata: JSON.stringify({ date: '2026-04-07' }),
+    });
+
+    expect(hrTimesheetHarness.runDailyCultureAlerts).toHaveBeenCalledWith({
+      date: '2026-04-07',
+      triggeredBy: 'scheduler',
+    });
+    expect(result).toEqual(expect.objectContaining({ date: '2026-04-07' }));
   });
 });

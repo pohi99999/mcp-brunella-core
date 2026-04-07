@@ -6,6 +6,26 @@ User requested that the Copilot CLI automatically connect to a local Brunella MC
 
 ## History
 
+### 2026-04-07 03:59 - HR timesheet export/alerts lezárás
+
+**Feladat:** A timesheet export és culture alerts follow-up track véglegesítése a már meglévő service, route és scheduler bekötés után.
+
+**Érintett fájlok:** `src/server/services/hrTimesheetService.ts`, `src/server/routes/hrTimesheet.ts`, `src/server/schedulers/scheduledTasksRunner.ts`, `test/hrTimesheetRoutes.test.ts`, `conductor/tracks/kkv_hr_timesheet_export_and_alerts_20260407/{meta.json,plan.md,spec.md}`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A payroll-ready havi CSV export, a napi birthday/anniversary alert futás és az idempotens run state már a `hr_timesheet_automation_runs` / `hr_timesheet_alert_events` táblákba kerül, a scheduler pedig a prior-month exportot és a daily alerts taskot is biztosítja. Validáció: `npm run test:fast`.
+
+### 2026-04-07 03:40 - HR leave wait/resume lezárás
+
+**Feladat:** A HR leave approval wait/resume track véglegesítése manager decision endpointtal, approval correlation tárolással és calendar retry/rollback kezeléssel.
+
+**Érintett fájlok:** `src/server/routes/hrLeave.ts`, `test/hrLeaveRoutes.test.ts`, `conductor/tracks/kkv_hr_leave_wait_resume_20260407/{meta.json,plan.md}`, `CHANGELOG.md`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A leave request most pending manager approval-ban marad, a döntés a `business_jobs` rekordba íródik vissza, és approve esetén naptársync retry után véglegesül. Validáció: `npm run build`, `npx vitest run test/hrLeaveRoutes.test.ts`.
+
 ### 2026-04-07 03:20 - HR leave audit + logistics boundary split
 
 **Feladat:** A HR leave/timesheet route-ok audit- és orchestration-hardeningje, valamint a logistics vertical repo-local boundary szétválasztása külön follow-up trackre.

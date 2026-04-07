@@ -67,7 +67,8 @@
     "migrate:backup": "npx tsx scripts/migrate-embeddings.ts --backup",
     "migrate": "npx tsx scripts/migrate-embeddings.ts",
     "prepare": "husky",
-    "sync:tracks": "node ./scripts/export_tracks_to_sheet.js"
+    "sync:tracks": "node ./scripts/export_tracks_to_sheet.js",
+    "cf:rotate-secrets": "tsx scripts/rotate-cloudflare-secrets.ts"
   },
   "keywords": [
     "mcp",
