@@ -6,7 +6,7 @@ import { createHRTimesheetRoutes } from '../src/server/routes/hrTimesheet.js';
 vi.mock('../src/agents/AgentManager.js', () => ({
   agentManager: {
     delegateTask: vi.fn(() => Promise.resolve({
-      status: 'success',
+      success: true,
       data: { entryId: 'TS-123' }
     }))
   }
