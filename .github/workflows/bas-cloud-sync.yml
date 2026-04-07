@@ -21,18 +21,27 @@ on:
   schedule:
     - cron: "0 2 * * *"
 
-  # Push a main-re (csak tracks.md változásnál)
+  # Push a main-re (tracks vagy worker source változásnál)
   push:
     branches: [main]
     paths:
       - "conductor/tracks.md"
       - "conductor/tracks/**"
+      - "bas-cloudflare-orchestrator/**"
 
 # Self-hosted runner szükséges a lokális fájlok eléréséhez
 jobs:
   sync:
     name: Cloud Sync
     runs-on: self-hosted # Lokális runner: G:\Brunella\actions-runner
+    if: |
+      github.event_name != 'push' ||
+      contains(toJSON(github.event.commits.*.modified), 'conductor/tracks.md') ||
+      contains(toJSON(github.event.commits.*.modified), 'conductor/tracks/') ||
+      contains(toJSON(github.event.commits.*.added), 'conductor/tracks.md') ||
+      contains(toJSON(github.event.commits.*.added), 'conductor/tracks/') ||
+      contains(toJSON(github.event.commits.*.removed), 'conductor/tracks.md') ||
+      contains(toJSON(github.event.commits.*.removed), 'conductor/tracks/')
 
     steps:
       - name: Validate Secrets
@@ -109,17 +118,18 @@ jobs:
           echo "::error::BAS Cloud Sync failed!"
           # Itt lehetne Slack/Discord webhook értesítés
 
-  # Worker deploy (opcionális, csak ha src változott)
+  # Worker deploy (main push esetén, ha a worker forrása változott)
   deploy-worker:
     name: Deploy Worker
     runs-on: ubuntu-latest
-    needs: sync
-    # Check if push event and files modified in orchestrator directory
-    # Note: head_commit.modified may be null, so we use always() with explicit checks
+    # Fusson akkor is, ha a track sync job tudatosan kimarad worker-only push esetén.
     if: |
       github.event_name == 'push' &&
-      github.event.head_commit != null &&
-      contains(toJSON(github.event.commits.*.modified), 'bas-cloudflare-orchestrator/')
+      (
+        contains(toJSON(github.event.commits.*.modified), 'bas-cloudflare-orchestrator/') ||
+        contains(toJSON(github.event.commits.*.added), 'bas-cloudflare-orchestrator/') ||
+        contains(toJSON(github.event.commits.*.removed), 'bas-cloudflare-orchestrator/')
+      )
 
     steps:
       - name: Checkout

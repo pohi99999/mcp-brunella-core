@@ -48,7 +48,6 @@ export function getCloudflareApiToken(scope: CloudflareScope = 'bas'): string | 
       process.env.CLOUDFLARE_API_TOKEN,
       process.env.CF_API_TOKEN,
       process.env.CF_TOKEN,
-      process.env.CF_AI_API_TOKEN,
     );
 }
 

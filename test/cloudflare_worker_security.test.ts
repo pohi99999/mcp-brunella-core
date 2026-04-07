@@ -19,8 +19,12 @@ describe("Cloudflare worker security helpers", () => {
 
   it("should expose explicit route access policy for worker paths", () => {
     expect(getWorkerRouteAccess("/health", "GET")).toBe("public");
+    expect(getWorkerRouteAccess("/dispatch", "POST")).toBe("protected");
+    expect(getWorkerRouteAccess("/workers", "GET")).toBe("protected");
+    expect(getWorkerRouteAccess("/routing", "GET")).toBe("protected");
     expect(getWorkerRouteAccess("/zero-prompt/summary", "GET")).toBe("protected");
     expect(getWorkerRouteAccess("/task", "POST")).toBe("protected");
+    expect(getWorkerRouteAccess("/task-status/task-1", "GET")).toBe("protected");
     expect(getWorkerRouteAccess("/status/task-1", "GET")).toBe("protected");
     expect(getWorkerRouteAccess("/history", "GET")).toBe("protected");
     expect(getWorkerRouteAccess("/queue/submit", "POST")).toBe("protected");
