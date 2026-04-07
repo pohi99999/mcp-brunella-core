@@ -23,7 +23,7 @@ echo  ║    🤖 BRUNELLA AGENT SYSTEM - Dashboard Ready Start      ║
 echo  ╚══════════════════════════════════════════════════════════╝
 echo.
 
-echo [0/6] Elofeltetelek ellenorzese...
+echo [0/7] Elofeltetelek ellenorzese...
 call :require_command curl "A Windows curl nem erheto el."
 if errorlevel 1 goto :fail
 call :require_command node "Node.js nincs telepitve vagy nincs a PATH-ban."
@@ -42,7 +42,7 @@ if not exist "%PROJECT_ROOT%\myai" (
 echo       ✓ Az alap tooling elerheto
 
 echo.
-echo [1/6] Ollama ellenorzes (:11434)...
+echo [1/7] Ollama ellenorzes (:11434)...
 call :check_url "%OLLAMA_URL%"
 if errorlevel 1 (
     echo       → Ollama nem fut. Inditom...
@@ -59,7 +59,7 @@ if errorlevel 1 (
 )
 
 echo.
-echo [2/6] Python FastAPI ellenorzes (:8000)...
+echo [2/7] Python FastAPI ellenorzes (:8000)...
 call :check_url "%PYTHON_URL%"
 if errorlevel 1 (
     echo       → FastAPI nem fut. Inditom...
@@ -78,7 +78,17 @@ if errorlevel 1 (
 )
 
 echo.
-echo [3/6] Node.js backend + core readiness ellenorzes (:3000)...
+echo [3/7] C# MCP server warmup...
+call powershell.exe -NoLogo -NoProfile -ExecutionPolicy Bypass -File "%PROJECT_ROOT%\csharp-mcp-server\launch.ps1" -WarmupOnly > "%PROJECT_ROOT%\logs\csharp-mcp-warmup.log" 2>&1
+if errorlevel 1 (
+    echo       ✗ A C# MCP server warmup nem sikerult.
+    echo       Log: %PROJECT_ROOT%\logs\csharp-mcp-warmup.log
+    goto :fail
+)
+echo       ✓ C# MCP server elokeszitve
+
+echo.
+echo [4/7] Node.js backend + core readiness ellenorzes (:3000)...
 call :check_url "%BACKEND_READY_URL%"
 if errorlevel 1 (
     call :check_url "%BACKEND_PING_URL%"
@@ -102,7 +112,7 @@ if errorlevel 1 (
 )
 
 echo.
-echo [4/6] API route-ok, tool registry es MCP auto-start stabilizalasa...
+echo [5/7] API route-ok, tool registry es MCP auto-start stabilizalasa...
 echo       → Varok legfeljebb 30 mp-et az API health ready endpointre...
 call :wait_for_url "%API_READY_URL%" 30
 if errorlevel 1 (
@@ -122,7 +132,7 @@ timeout /t 5 /nobreak >nul
 echo       ✓ API es tool registry kesz
 
 echo.
-echo [5/6] Dashboard UI ellenorzes (:5173)...
+echo [6/7] Dashboard UI ellenorzes (:5173)...
 call :check_url "%UI_URL%"
 if errorlevel 1 (
     echo       → Vite UI nem fut. Inditom...
@@ -140,7 +150,7 @@ if errorlevel 1 (
 )
 
 echo.
-echo [6/6] Vegso ellenorzes es dashboard megnyitasa...
+echo [7/7] Vegso ellenorzes es dashboard megnyitasa...
 echo.
 echo  ┌─────────────────────────────────────────────────┐
 echo  │             CRITICAL SERVICES STATUS            │

@@ -43,6 +43,49 @@
     "retryDelayMs": 1000
   },
   {
+    "name": "csharp-mcp-server",
+    "transport": "stdio",
+    "command": "powershell.exe",
+    "args": [
+      "-NoLogo",
+      "-NoProfile",
+      "-ExecutionPolicy",
+      "Bypass",
+      "-File",
+      "csharp-mcp-server\\launch.ps1"
+    ],
+    "description": "Standalone C# MCP server with workspace file tools and review prompt",
+    "autoStart": true,
+    "required": false,
+    "disabled": false,
+    "requiredEnv": [],
+    "platforms": [
+      "win32"
+    ],
+    "connectRetries": 1,
+    "retryDelayMs": 1500
+  },
+  {
+    "name": "workspace-mcp-server",
+    "transport": "stdio",
+    "command": "uv",
+    "args": [
+      "run",
+      "--project",
+      "workspace-mcp-server",
+      "workspace-mcp-server",
+      "--workspace-root",
+      "${WORKSPACE_ROOT}"
+    ],
+    "description": "Workspace MCP server - Brunella workspace introspection, keresés és review prompt",
+    "autoStart": true,
+    "required": false,
+    "disabled": false,
+    "requiredEnv": [],
+    "connectRetries": 1,
+    "retryDelayMs": 1500
+  },
+  {
     "name": "memory",
     "transport": "stdio",
     "command": "npx",

@@ -133,7 +133,7 @@ export function loadDeveloperMcpProfile(): DeveloperMcpProfile {
     ...readMcpConfig(secondaryConfigPath, 'secondary-config'),
   ];
 
-  const preferredMcpServers = ['brunella-core', 'brunella-remote', 'filesystem', 'git', 'github', 'desktop-commander', 'chrome-devtools']
+  const preferredMcpServers = ['brunella-core', 'brunella-remote', 'filesystem', 'csharp-mcp-server', 'git', 'github', 'desktop-commander', 'chrome-devtools']
     .filter((name, index, values) => values.indexOf(name) === index);
 
   return {

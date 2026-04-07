@@ -6,6 +6,16 @@ User requested that the Copilot CLI automatically connect to a local Brunella MC
 
 ## History
 
+### 2026-04-07 21:07 - Dashboard C# MCP warmup
+
+**Feladat:** A C# MCP szerver bekötése a dashboard launcherbe úgy, hogy a build/warmup lépés megjelenjen a `dashboard.bat`-ban, de a tényleges futó processzt továbbra is Brunella auto-startja kezelje.
+
+**Érintett fájlok:** `dashboard.bat`, `csharp-mcp-server/launch.ps1`, `csharp-mcp-server/README.md`, `.github/copilot-instructions.md`, `C:\Users\pohi9\.copilot\session-state\39276f1b-8241-4d44-a131-7deef2a179c2\plan.md`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A launcher most egy `-WarmupOnly` build-előkészítési lépést futtat a C# MCP serverhez, majd a backend auto-start folytatja az élő indítást, így nincs dupla processz.
+
 ### 2026-04-07 03:45 - Learning Loop dashboard hookup
 
 **Feladat:** A Learning Loop kurált minták dashboard hookupjának lezárása, a backend approval_state kompatibilitási fixekkel együtt.
@@ -2125,3 +2135,13 @@ pm run test:dashboard → 200 passed | 0 failed | 20 test file ✅**
 **Státusz:** ⏳ Folyamatban / ✅ részben kész
 
 **Megjegyzés:** A Brunella onboarding endpoint és mindkét n8n workflow lokálisan kész, a sandbox tiszta állapotban fut, a következő kézi lépés a Google Places secret és a végleges form provider kiválasztása.
+
+### 2026-04-07 21:07 - workspace-mcp-server Brunella integráció
+
+**Feladat:** A standalone Python `workspace-mcp-server` MCP projekt bekötése a Brunella runtime/editor registry-be, célzott integrációs teszt hozzáadása, és a `dashboard.bat` startup viselkedésének rögzítése.
+
+**Érintett fájlok:** `workspace-mcp-server/**`, `mcp_servers.json`, `.vscode/mcp.json`, `test/workspace_mcp_server.test.ts`, `.github/copilot-instructions.md`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A szerver `uv run --project workspace-mcp-server workspace-mcp-server --workspace-root ${WORKSPACE_ROOT}` paranccsal fut és `autoStart: true`, ezért a backend indulásakor — így a `dashboard.bat` útvonalon is — automatikusan indul, ha a `uv` elérhető a gépen.

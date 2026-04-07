@@ -57,7 +57,7 @@ Phase order: **architect → devops → coder → qa → reviewer**. The `@sdlc-
 npm run build                     # TypeScript build to build/ + copy registry/TRIZ data
 npm run dev                       # Node entrypoint (Express + MCP)
 npm run dev:ui                    # Vite dashboard on :5173
-dashboard.bat                     # ✅ Browser-ready launcher: starts Ollama+FastAPI+Backend+UI, opens :5173
+dashboard.bat                     # ✅ Browser-ready launcher: warms up csharp-mcp-server, then starts Ollama+FastAPI+Backend+UI, opens :5173
 start-full.bat                    # Full Windows startup (backend + FastAPI + dashboard)
 npm run smoke                     # Startup/health check
 
@@ -107,6 +107,7 @@ Local hooks are part of the workflow:
 - **If you implement `IAgent` directly, reset status in `finally`.** `BaseAgent` handles `setAgentStatus(..., "idle")` automatically, but bare `IAgent` implementations must do it themselves.
 - **`FOSZAL.md` is generated.** Update `.ai/copilot.md`, then run `python scripts/sync_foszal.py`; do not hand-edit `FOSZAL.md`.
 - **MCP auto-start is now driven by `mcp_servers.json`.** `src/server/McpProcessManager.ts` resolves `autoStart`, `requiredEnv`, `envFromHost`, `platforms`, and retry metadata from that file; keep the config declarative instead of hardcoding startup lists in `index.ts` or `web.ts`.
+- **`workspace-mcp-server` is a standalone uv-managed MCP child project.** Its source lives under `workspace-mcp-server/`, while the Brunella/runtime/editor integration is declared in `mcp_servers.json` and `.vscode/mcp.json`; do not add bespoke dashboard or CLI wiring when the registry entries are enough. Because backend startup calls `startAutoStartServers()`, `dashboard.bat` also triggers it when `uv` is available.
 - **`brunella-core` is a `self` MCP entry, not a child process.** The core marks itself running during startup and only external stdio servers are auto-connected; do not reintroduce recursive `node ./build/index.js` spawning from inside the core process.
 - **Treat core wiring files as deliberate-change areas.** `src/index.ts`, `src/server/web.ts`, `src/server/registry.ts`, `src/agents/registry.json`, `package.json`, `.env`, and `conductor/tracks.md` have broad blast radius.
 - **GitHub Models prefer `GITHUB_PAT`.** Repo docs and recent fixes treat `GITHUB_PAT` as the preferred GitHub Models credential ahead of `GITHUB_TOKEN`.
