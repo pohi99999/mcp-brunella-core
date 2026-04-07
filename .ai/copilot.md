@@ -6,15 +6,45 @@ User requested that the Copilot CLI automatically connect to a local Brunella MC
 
 ## History
 
+### 2026-04-07 03:20 - HR leave audit + logistics boundary split
+
+**Feladat:** A HR leave/timesheet route-ok audit- és orchestration-hardeningje, valamint a logistics vertical repo-local boundary szétválasztása külön follow-up trackre.
+
+**Érintett fájlok:** `src/server/routes/{hrLeave,hrTimesheet,index,logistics}.ts`, `test/{hrLeaveRoutes,hrTimesheetRoutes,logisticsRoutes}.test.ts`, `conductor/tracks/logistics_vertical_20260222/{meta.json,plan.md}`, `conductor/tracks/logistics_vertical_repo_local_20260407/{meta.json,plan.md,spec.md}`, `conductor/tracks/{kkv_hr_leave_approvals_20260405,kkv_hr_timesheet_culture_20260405}/meta.json`, `conductor/tracks/kkv_hr_leave_wait_resume_20260407/{meta.json,plan.md,spec.md}`, `conductor/tracks/kkv_hr_timesheet_export_and_alerts_20260407/{meta.json,plan.md,spec.md}`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A leave route most normalizálja a `leaveType` mezőt, business jobot ment/frissít, `DigitalHeadhunter` delegálást indít, audit eseményeket rögzít, és ha az agent `calendarSyncStatus: synced` eredményt ad, naptárbejegyzést is létrehoz. A timesheet route sikeres és hibás futásnál is auditál. A kapcsolódó KKV HR parent trackek aktív státuszra és részleges előrehaladásra frissültek, melléjük két új follow-up track is született a wait/resume, illetve export/alerts hiányokra. A logistics vertical eredeti trackje archiválva lett a workspace-ből hiányzó külső frontend repo miatt, helyette repo-local follow-up track és read-only `/api/v1/logistics/*` státusz/capability route készült. Validáció: `npm run build`; `npx vitest run test/hrLeaveRoutes.test.ts test/hrTimesheetRoutes.test.ts test/logisticsRoutes.test.ts test/lancedb_client.test.ts test/ragRoutes.test.ts test/projectMaintainerRoutes.test.ts` → 22 passed.
+
+### 2026-04-07 03:10 - Archive browser/wrangler type-safety follow-up track
+
+**Feladat:** A befejezett `type_safety_followup_browser_wrangler_20260406` helper-only track archiválása a conductor rendszerben a build-verifikáció után.
+
+**Érintett fájlok:** `conductor/archive/type_safety_followup_browser_wrangler_20260406/{meta.json,plan.md,spec.md}`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A helper cleanup külön maradt a fő DB/RAG type-safety slice-októl; a lezárás feltétele a zöld `npm run build` volt, külön célzott teszt nem kellett.
+
+### 2026-04-07 03:05 - PersistentBrowser + WranglerHelper parse guard follow-up
+
+**Feladat:** A `src/utils/persistentBrowser.ts` és `src/utils/wranglerHelper.ts` maradék `safeJsonParse<any>` útvonalainak lezárása lokális guardokkal és `unknown`-safe narrowinggal.
+
+**Érintett fájlok:** `src/utils/persistentBrowser.ts`, `src/utils/wranglerHelper.ts`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A browser stdout válaszok most `isBrowserResponse()` guardon mennek át, a Wrangler helper JSON kimenete pedig `isPresent()` szűrés után tér vissza `unknown | null` alakban. Validáció: `npm run build`.
+
 ### 2026-04-07 02:40 - Modular state RAG route DI + fast route stabilization
 
 **Feladat:** A `modular_state_refactor_20260404` Phase 3 folytatása a LanceDB kliens életciklusának tisztításával, a `/api/v1/rag/*` route-ok explicit DI factory mintára állításával, valamint a pre-push fast route-tesztek stabilizálásával.
 
-**Érintett fájlok:** `src/server/routes/files.ts`, `src/utils/lancedb_client.ts`, `test/hrTimesheetRoutes.test.ts`, `test/projectMaintainerRoutes.test.ts`, `pyproject.toml`, `uv.lock`, `conductor/project_state.json`, `conductor/tracks.md`, `conductor/tracks/modular_state_refactor_20260404/{meta.json,plan.md}`
+**Érintett fájlok:** `src/server/routes/files.ts`, `src/utils/lancedb_client.ts`, `test/lancedb_client.test.ts`, `test/ragRoutes.test.ts`, `test/hrTimesheetRoutes.test.ts`, `test/projectMaintainerRoutes.test.ts`, `pyproject.toml`, `uv.lock`, `conductor/project_state.json`, `conductor/tracks.md`, `conductor/tracks/modular_state_refactor_20260404/{meta.json,plan.md}`
 
 **Státusz:** ✅ Befejezve
 
-**Megjegyzés:** A `createRagRoutes(deps)` már `RagServiceDeps` + `DEFAULT_RAG_DEPS` szerződéssel dolgozik, így a route-ok nem kérés közben importálják a RAG segédeket. A `LanceDBClient` példány-szintű module/connection cache-t és `dispose()` lifecycle-t kapott, miközben a `lanceDBClient` és `invoiceStore` kompatibilis exportok megmaradtak. A fast-suite route regressziókhoz a HR timesheet teszt explicit hoisted `delegateTask` mockot kapott, a Project Maintainer POST teszt pedig ugyanazt a `express.json()` middleware-t használja, mint a valódi app. A Python környezethez rögzítve lett a `github-copilot-sdk>=0.2.1` dependency (`pyproject.toml`, `uv.lock`). A conductor állapot 50%-ra / phase 3-ra szinkronizálva. Validáció: `npm run build`, `npx vitest run test/hrTimesheetRoutes.test.ts test/projectMaintainerRoutes.test.ts`.
+**Megjegyzés:** A `createRagRoutes(deps)` már `RagServiceDeps` + `DEFAULT_RAG_DEPS` szerződéssel dolgozik, így a route-ok nem kérés közben importálják a RAG segédeket. A `LanceDBClient` példány-szintű module/connection cache-t és `dispose()` lifecycle-t kapott, miközben a `lanceDBClient` és `invoiceStore` kompatibilis exportok megmaradtak. A slice kapott két új fókusztesztet is: `test/lancedb_client.test.ts` a cache/dispose szerződést, `test/ragRoutes.test.ts` pedig a DI-alapú RAG route surface-t ellenőrzi. A fast-suite route regressziókhoz a HR timesheet teszt explicit hoisted `delegateTask` mockot kapott, a Project Maintainer POST teszt pedig ugyanazt a `express.json()` middleware-t használja, mint a valódi app. A Python környezethez rögzítve lett a `github-copilot-sdk>=0.2.1` dependency (`pyproject.toml`, `uv.lock`). A conductor állapot 50%-ra / phase 3-ra szinkronizálva. Validáció: `npm run build`, `npx vitest run test/lancedb_client.test.ts test/ragRoutes.test.ts test/hrTimesheetRoutes.test.ts test/projectMaintainerRoutes.test.ts` → 18 passed.
 
 ### 2026-04-07 - 8-Module Kernel Pipeline Architecture
 

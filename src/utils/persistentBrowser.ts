@@ -33,6 +33,27 @@ export interface BrowserResponse {
     count?: number; // NEW: number of extracted elements
 }
 
+type UnknownRecord = Record<string, unknown>;
+
+function isRecord(value: unknown): value is UnknownRecord {
+    return typeof value === 'object' && value !== null;
+}
+
+function isBrowserResponse(value: unknown): value is BrowserResponse {
+    if (!isRecord(value)) return false;
+
+    if (value.status !== 'success' && value.status !== 'error') return false;
+    if ('message' in value && value.message !== undefined && typeof value.message !== 'string') return false;
+    if ('url' in value && value.url !== undefined && typeof value.url !== 'string') return false;
+    if ('title' in value && value.title !== undefined && typeof value.title !== 'string') return false;
+    if ('screenshot' in value && value.screenshot !== undefined && typeof value.screenshot !== 'string') return false;
+    if ('selector' in value && value.selector !== undefined && typeof value.selector !== 'string') return false;
+    if ('content' in value && value.content !== undefined && typeof value.content !== 'string') return false;
+    if ('count' in value && value.count !== undefined && typeof value.count !== 'number') return false;
+
+    return true;
+}
+
 export class PersistentBrowser {
     private process: ChildProcess | null = null; 
     private lastScreenshot: Uint8Array | null = null;
@@ -78,8 +99,8 @@ export class PersistentBrowser {
 
             for (const line of lines) {
                 if (!line.trim()) continue;
-                const response = safeJsonParse<any>(line, null);
-                if (!response) {
+                const response = safeJsonParse<unknown>(line, null);
+                if (!isBrowserResponse(response)) {
                     logError('PersistentBrowser', `Failed to parse response: ${line}`);
                     continue;
                 }

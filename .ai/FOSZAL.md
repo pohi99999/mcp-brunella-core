@@ -1,6 +1,6 @@
 # FŐSZÁL - Egyesített Fejlesztési Napló
 
-**Generálva:** 2026-04-07 02:53
+**Generálva:** 2026-04-07 03:12
 **Script:** `scripts/sync_foszal.py`
 
 ---
@@ -30,10 +30,25 @@ start-full.bat
 
 ### 2026-04-07
 
+#### 03:20 - [Copilot] HR leave audit + logistics boundary split
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `src/server/routes/{hrLeave,hrTimesheet,index,logistics}.ts`, `test/{hrLeaveRoutes,hrTimesheetRoutes,logisticsRoutes}.test.ts`, `conductor/tracks/logistics_vertical_20260222/{meta.json,plan.md}`, `conductor/tracks/logistics_vertical_repo_local_20260407/{meta.json,plan.md,spec.md}`, `conductor/tracks/{kkv_hr_leave_approvals_20260405,kkv_hr_timesheet_culture_20260405}/meta.json`, `conductor/tracks/kkv_hr_leave_wait_resume_20260407/{meta.json,plan.md,spec.md}`, `conductor/tracks/kkv_hr_timesheet_export_and_alerts_20260407/{meta.json,plan.md,spec.md}`
+
+#### 03:10 - [Copilot] Archive browser/wrangler type-safety follow-up track
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `conductor/archive/type_safety_followup_browser_wrangler_20260406/{meta.json,plan.md,spec.md}`
+
+#### 03:05 - [Copilot] PersistentBrowser + WranglerHelper parse guard follow-up
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `src/utils/persistentBrowser.ts`, `src/utils/wranglerHelper.ts`
+
 #### 02:40 - [Copilot] Modular state RAG route DI + fast route stabilization
 - **Agent:** Copilot
 - **Státusz:** ✅ Befejezve
-- **Érintett fájlok:** `src/server/routes/files.ts`, `src/utils/lancedb_client.ts`, `test/hrTimesheetRoutes.test.ts`, `test/projectMaintainerRoutes.test.ts`, `pyproject.toml`, `uv.lock`, `conductor/project_state.json`, `conductor/tracks.md`, `conductor/tracks/modular_state_refactor_20260404/{meta.json,plan.md}`
+- **Érintett fájlok:** `src/server/routes/files.ts`, `src/utils/lancedb_client.ts`, `test/lancedb_client.test.ts`, `test/ragRoutes.test.ts`, `test/hrTimesheetRoutes.test.ts`, `test/projectMaintainerRoutes.test.ts`, `pyproject.toml`, `uv.lock`, `conductor/project_state.json`, `conductor/tracks.md`, `conductor/tracks/modular_state_refactor_20260404/{meta.json,plan.md}`
 
 #### 00:00 - [Copilot] 8-Module Kernel Pipeline Architecture
 - **Agent:** Copilot
@@ -983,7 +998,7 @@ start-full.bat
 | Claude | 85 | 2026-03-31 |
 | Gemini | 5 | 2026-04-06 |
 | Cursor | 0 | N/A |
-| Copilot | 78 | 2026-04-07 |
+| Copilot | 81 | 2026-04-07 |
 
 ---
 

@@ -9,6 +9,22 @@ vi.mock('../src/agents/AgentManager.js', () => ({
   }
 }));
 
+vi.mock('../src/utils/db.js', () => ({
+  getBusinessJobs: vi.fn(async () => []),
+  saveBusinessJob: vi.fn(async () => 'JOB-123'),
+  updateBusinessJobStatus: vi.fn(async () => undefined),
+}));
+
+vi.mock('../src/core/auditLog.js', () => ({
+  record: vi.fn(async () => undefined),
+}));
+
+vi.mock('../src/tools/unifiedWorkspace.js', () => ({
+  getWorkspaceClient: vi.fn(async () => ({
+    createCalendarEvent: vi.fn(async () => ({ eventId: 'EVT-1', htmlLink: 'https://calendar.test/event/1' })),
+  })),
+}));
+
 describe('HR Leave Routes', () => {
   const app = express();
   app.use(express.json());

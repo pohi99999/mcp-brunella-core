@@ -2,6 +2,8 @@
 
 **Track:** `logistics_vertical_20260222`
 **Cél:** PohiAIProt2 frontend + Brunella LogisticsDispatcherAgent összekapcsolása
+
+> Állapot: archív / külső frontend repo-függő. A repo-local rész külön follow-up trackbe került: `logistics_vertical_repo_local_20260407`.
 **Becsült:** 3-4 nap (fázisokban)
 
 ---

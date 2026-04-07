@@ -12,6 +12,10 @@ vi.mock('../src/agents/AgentManager.js', () => ({
   }
 }));
 
+vi.mock('../src/core/auditLog.js', () => ({
+  record: vi.fn(async () => undefined),
+}));
+
 describe('HR Timesheet Routes', () => {
   const app = express();
   app.use(express.json());

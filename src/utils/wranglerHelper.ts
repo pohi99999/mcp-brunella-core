@@ -41,6 +41,10 @@ function validateSchemaPath(schemaPath: string): string {
   return resolved;
 }
 
+function isPresent<T>(value: T | null): value is T {
+  return value !== null;
+}
+
 export interface WranglerConfig {
   projectName: string;
   accountId: string;
@@ -176,7 +180,8 @@ export class WranglerHelper {
           },
         },
       );
-      return safeJsonParse<any>(output, null);
+      const parsed = safeJsonParse<unknown>(output, null);
+      return isPresent(parsed) ? parsed : null;
     } catch (e: unknown) {
       const error = e instanceof Error ? e.message : String(e);
       logError('WranglerHelper', `D1 query failed: ${error}`);
@@ -221,7 +226,8 @@ export class WranglerHelper {
         encoding: 'utf-8',
         env: { ...process.env, CLOUDFLARE_API_TOKEN: this.config.apiToken },
       });
-      return safeJsonParse<any>(output, null);
+      const parsed = safeJsonParse<unknown>(output, null);
+      return isPresent(parsed) ? parsed : null;
     } catch (e: unknown) {
       const error = e instanceof Error ? e.message : String(e);
       logError('WranglerHelper', `Listing D1 databases failed: ${error}`);
