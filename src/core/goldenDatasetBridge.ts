@@ -647,45 +647,95 @@ export function captureCuratedGoldenCandidate(opts: {
     reviewedBy?: string | null;
     reviewNotes?: string | null;
   } | undefined;
-  db.prepare(
-    `INSERT INTO curated_golden_samples (
-      id, prompt, completion, source, quality, approval_state, provenance, created_at, approved_at, reviewed_by, review_notes
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    ON CONFLICT(id) DO UPDATE SET
-      prompt = excluded.prompt,
-      completion = excluded.completion,
-      source = excluded.source,
-      quality = excluded.quality,
-      provenance = COALESCE(excluded.provenance, curated_golden_samples.provenance),
-      approval_state = CASE
-        WHEN curated_golden_samples.approval_state IN ('approved', 'rejected') THEN curated_golden_samples.approval_state
-        ELSE excluded.approval_state
-      END,
-      approved_at = CASE
-        WHEN curated_golden_samples.approval_state = 'approved' THEN curated_golden_samples.approved_at
-        ELSE excluded.approved_at
-      END,
-      reviewed_by = CASE
-        WHEN curated_golden_samples.approval_state IN ('approved', 'rejected') THEN curated_golden_samples.reviewed_by
-        ELSE excluded.reviewed_by
-      END,
-      review_notes = CASE
-        WHEN curated_golden_samples.approval_state IN ('approved', 'rejected') THEN curated_golden_samples.review_notes
-        ELSE excluded.review_notes
-      END`
-  ).run(
-    id,
-    opts.prompt,
-    opts.completion,
-    opts.source,
-    quality,
-    approvalState,
-    opts.provenance ? JSON.stringify(opts.provenance) : null,
-    now,
-    approvalState === 'approved' ? (opts.approvedAt ?? now) : existing?.approvedAt ?? null,
-    opts.reviewedBy ?? existing?.reviewedBy ?? null,
-    opts.reviewNotes ?? existing?.reviewNotes ?? null,
-  );
+  try {
+    db.prepare(
+      `INSERT INTO curated_golden_samples (
+        id, prompt, completion, source, quality, approval_state, provenance, created_at, approved_at, reviewed_by, review_notes
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      ON CONFLICT(id) DO UPDATE SET
+        prompt = excluded.prompt,
+        completion = excluded.completion,
+        source = excluded.source,
+        quality = excluded.quality,
+        provenance = COALESCE(excluded.provenance, curated_golden_samples.provenance),
+        approval_state = CASE
+          WHEN curated_golden_samples.approval_state IN ('approved', 'rejected') THEN curated_golden_samples.approval_state
+          ELSE excluded.approval_state
+        END,
+        approved_at = CASE
+          WHEN curated_golden_samples.approval_state = 'approved' THEN curated_golden_samples.approved_at
+          ELSE excluded.approved_at
+        END,
+        reviewed_by = CASE
+          WHEN curated_golden_samples.approval_state IN ('approved', 'rejected') THEN curated_golden_samples.reviewed_by
+          ELSE excluded.reviewed_by
+        END,
+        review_notes = CASE
+          WHEN curated_golden_samples.approval_state IN ('approved', 'rejected') THEN curated_golden_samples.review_notes
+          ELSE excluded.review_notes
+        END`
+    ).run(
+      id,
+      opts.prompt,
+      opts.completion,
+      opts.source,
+      quality,
+      approvalState,
+      opts.provenance ? JSON.stringify(opts.provenance) : null,
+      now,
+      approvalState === 'approved' ? (opts.approvedAt ?? now) : existing?.approvedAt ?? null,
+      opts.reviewedBy ?? existing?.reviewedBy ?? null,
+      opts.reviewNotes ?? existing?.reviewNotes ?? null,
+    );
+  } catch (err) {
+    const errMsg = (err && (err as Error).message) ? String((err as Error).message) : String(err);
+    if (errMsg.includes('CHECK constraint failed') && errMsg.includes('approval_state')) {
+      // Fallback: some DB schemas still expect 'candidate' instead of 'pending'
+      const approvalStateForDb = approvalState === 'pending' ? 'candidate' : approvalState;
+      db.prepare(
+        `INSERT INTO curated_golden_samples (
+          id, prompt, completion, source, quality, approval_state, provenance, created_at, approved_at, reviewed_by, review_notes
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ON CONFLICT(id) DO UPDATE SET
+          prompt = excluded.prompt,
+          completion = excluded.completion,
+          source = excluded.source,
+          quality = excluded.quality,
+          provenance = COALESCE(excluded.provenance, curated_golden_samples.provenance),
+          approval_state = CASE
+            WHEN curated_golden_samples.approval_state IN ('approved', 'rejected') THEN curated_golden_samples.approval_state
+            ELSE excluded.approval_state
+          END,
+          approved_at = CASE
+            WHEN curated_golden_samples.approval_state = 'approved' THEN curated_golden_samples.approved_at
+            ELSE excluded.approved_at
+          END,
+          reviewed_by = CASE
+            WHEN curated_golden_samples.approval_state IN ('approved', 'rejected') THEN curated_golden_samples.reviewed_by
+            ELSE excluded.reviewed_by
+          END,
+          review_notes = CASE
+            WHEN curated_golden_samples.approval_state IN ('approved', 'rejected') THEN curated_golden_samples.review_notes
+            ELSE excluded.review_notes
+          END`
+      ).run(
+        id,
+        opts.prompt,
+        opts.completion,
+        opts.source,
+        quality,
+        approvalStateForDb,
+        opts.provenance ? JSON.stringify(opts.provenance) : null,
+        now,
+        approvalStateForDb === 'approved' ? (opts.approvedAt ?? now) : existing?.approvedAt ?? null,
+        opts.reviewedBy ?? existing?.reviewedBy ?? null,
+        opts.reviewNotes ?? existing?.reviewNotes ?? null,
+      );
+      // If fallback used, DB stores 'candidate' for now; normalize via migration when possible.
+    } else {
+      throw err;
+    }
+  }
   return { success: true, id };
 }
 

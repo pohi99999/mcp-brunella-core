@@ -1,31 +1,14 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-04-06T22:34:57.558Z
+**Utolso frissites:** 2026-04-07T02:06:54.706Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 211 total | 10 active | 19 completed | 176 archived
+**Stats:** 214 total | 13 active | 20 completed | 179 archived
 
 ---
 
-## Tervezett Szalak (Proposed) (6)
-
-- [ ] **KKV HR leave approvals** [HIGH]
-  - **ID:** `kkv_hr_leave_approvals_20260405`
-  - **Progress:** 0%
-  - **Assignee:** GitHub Copilot
-  - Mappa: ./tracks/kkv_hr_leave_approvals_20260405/
-
-- [ ] **KKV HR timesheet es kultura automatizalas** [HIGH]
-  - **ID:** `kkv_hr_timesheet_culture_20260405`
-  - **Progress:** 0%
-  - **Assignee:** GitHub Copilot
-  - Mappa: ./tracks/kkv_hr_timesheet_culture_20260405/
-
-- [ ] **PohiAIPro Logistics Vertical — Brunella integráció** [HIGH]
-  - **ID:** `logistics_vertical_20260222`
-  - **Progress:** 5%
-  - Mappa: ./tracks/logistics_vertical_20260222/
+## Tervezett Szalak (Proposed) (2)
 
 - [ ] **Brunella Remote Layer — Fázis 8: Planet-Scale Supersystem** [CRITICAL]
   - **ID:** `remote_layer_phase8_planetary_supersystem_20260322`
@@ -37,14 +20,9 @@
   - **Progress:** 0%
   - Mappa: ./tracks/remote_layer_phase9_emergent_superintelligence_20260322/
 
-- [ ] **Type Safety Follow-up — Browser and Wrangler helpers** [MEDIUM]
-  - **ID:** `type_safety_followup_browser_wrangler_20260406`
-  - **Progress:** 0%
-  - Mappa: ./tracks/type_safety_followup_browser_wrangler_20260406/
-
 ---
 
-## Aktiv Szalak (Active) (10)
+## Aktiv Szalak (Active) (13)
 
 - [ ] **KKV CRM es lead-utanakovetes automatizalas** [HIGH]
   - **ID:** `kkv_crm_automation_20260404`
@@ -52,6 +30,20 @@
   - **Assignee:** GitHub Copilot
   - **Updated:** 2026-04-04
   - Mappa: ./tracks/kkv_crm_automation_20260404/
+
+- [ ] **KKV HR leave approvals** [HIGH]
+  - **ID:** `kkv_hr_leave_approvals_20260405`
+  - **Progress:** 70%
+  - **Assignee:** GitHub Copilot
+  - **Updated:** 2026-04-07
+  - Mappa: ./tracks/kkv_hr_leave_approvals_20260405/
+
+- [ ] **KKV HR timesheet es kultura automatizalas** [HIGH]
+  - **ID:** `kkv_hr_timesheet_culture_20260405`
+  - **Progress:** 35%
+  - **Assignee:** GitHub Copilot
+  - **Updated:** 2026-04-07
+  - Mappa: ./tracks/kkv_hr_timesheet_culture_20260405/
 
 - [ ] **Kognitív Könyvelés és Multi-Ágens Egyeztetés — Bővítmény** [HIGH]
   - **ID:** `konyveles_kognitiv_bovites_20260330`
@@ -63,6 +55,13 @@
   - **ID:** `konyveles_phase3_20260403`
   - **Progress:** 0%
   - Mappa: ./tracks/konyveles_phase3_20260403/
+
+- [ ] **Logistics Vertical — repository-local Brunella boundary** [HIGH]
+  - **ID:** `logistics_vertical_repo_local_20260407`
+  - **Progress:** 80%
+  - **Assignee:** GitHub Copilot
+  - **Updated:** 2026-04-07
+  - Mappa: ./tracks/logistics_vertical_repo_local_20260407/
 
 - [ ] **Modular State Refactor — Globális változók Dependency Injection alapú refaktora** [MEDIUM]
   - **ID:** `modular_state_refactor_20260404`
@@ -100,19 +99,19 @@
 
 - [ ] **Technical Debt Cleanup — TODO konverzió és elavult kód elimináció** [MEDIUM]
   - **ID:** `technical_debt_cleanup_20260404`
-  - **Progress:** 0%
-  - **Updated:** 2026-04-04
+  - **Progress:** 70%
+  - **Updated:** 2026-04-07
   - Mappa: ./tracks/technical_debt_cleanup_20260404/
 
 - [ ] **Type Safety Enforcement — any elimináció és Type Guard implementáció** [HIGH]
   - **ID:** `type_safety_enforcement_20260404`
-  - **Progress:** 0%
-  - **Updated:** 2026-04-04
+  - **Progress:** 80%
+  - **Updated:** 2026-04-07
   - Mappa: ./tracks/type_safety_enforcement_20260404/
 
 ---
 
-## Befejezett (Completed - Not Archived) (19)
+## Befejezett (Completed - Not Archived) (20)
 
 - [x] **Agent Runtime Hardening — ReAct, Working Memory, Tool Errors, Guardrails**
   - **ID:** `agent_runtime_hardening_20260406`
@@ -155,6 +154,10 @@
   - **ID:** `kkv_hr_automation_20260404`
   - Mappa: ./tracks/kkv_hr_automation_20260404/
 
+- [x] **KKV HR leave wait/resume orchestration**
+  - **ID:** `kkv_hr_leave_wait_resume_20260407`
+  - Mappa: ./tracks/kkv_hr_leave_wait_resume_20260407/
+
 - [x] **KKV keszlet es leltar automatizalas**
   - **ID:** `kkv_inventory_automation_20260404`
   - Mappa: ./tracks/kkv_inventory_automation_20260404/
@@ -194,7 +197,7 @@
 
 ---
 
-## Archivalt (Archived) (176)
+## Archivalt (Archived) (179)
 
 > Archived tracks are hidden by default. View in `conductor/archive/`
 
@@ -209,7 +212,7 @@
 - [x] **Brunella Personal Assistant — Windows MVP Foundation** (N/A)
 - [x] **README Bootstrap & Health Fixek** (N/A)
 
-... and 166 more archived tracks
+... and 169 more archived tracks
 
 ---
 

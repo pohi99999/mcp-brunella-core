@@ -1,9 +1,9 @@
 # KKV HR leave wait/resume orchestration
 
-1. Manager approval wait/resume webhook vagy callback flow.
-2. Approval döntés visszaírása a business_jobs rekordba.
-3. Naptár esemény megerősítés és retry/rollback logika.
-4. Reject / approve edge case tesztek.
-5. Rövid runbook a support és HR csapatnak.
+- [x] Manager approval wait/resume decision endpoint a leave jobhoz.
+- [x] Approval döntés visszaírása a `business_jobs` rekordba.
+- [x] Naptár esemény létrehozás retry-val és audit nyommal approve esetén.
+- [x] Reject / approve / calendar-failure regression tesztek.
+- [x] Rövid, explicit API dokumentáció a route kommentekben.
 
-Kimenet: a leave request valóban megáll manager approvalnál, majd resume után auditálva és visszakereshetően folytatódik.
+Kimenet: a leave request pending marad manager approvalig, majd resume után auditálva és visszakereshetően folytatódik.

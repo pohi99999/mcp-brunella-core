@@ -218,6 +218,65 @@ function initSchema(): void {
       CREATE INDEX IF NOT EXISTS idx_tool_runs_timestamp ON tool_runs(timestamp);
       CREATE INDEX IF NOT EXISTS idx_tool_runs_tool_name ON tool_runs(tool_name);
       CREATE INDEX IF NOT EXISTS idx_tool_runs_success ON tool_runs(success);
+
+      CREATE TABLE IF NOT EXISTS hr_timesheet_entries (
+        id TEXT PRIMARY KEY,
+        dedup_key TEXT NOT NULL UNIQUE,
+        employee_id TEXT NOT NULL,
+        employee_name TEXT NOT NULL,
+        entry_date TEXT NOT NULL,
+        hours REAL NOT NULL,
+        task_description TEXT NOT NULL,
+        project_code TEXT,
+        birth_date TEXT,
+        hire_date TEXT,
+        agent_result_json TEXT,
+        created_at TEXT NOT NULL,
+        updated_at TEXT NOT NULL
+      );
+
+      CREATE INDEX IF NOT EXISTS idx_hr_timesheet_entries_employee_date
+        ON hr_timesheet_entries(employee_id, entry_date);
+
+      CREATE TABLE IF NOT EXISTS hr_employee_profiles (
+        employee_id TEXT PRIMARY KEY,
+        employee_name TEXT NOT NULL,
+        birth_date TEXT,
+        hire_date TEXT,
+        created_at TEXT NOT NULL,
+        updated_at TEXT NOT NULL
+      );
+
+      CREATE TABLE IF NOT EXISTS hr_timesheet_automation_runs (
+        run_key TEXT PRIMARY KEY,
+        run_type TEXT NOT NULL CHECK (run_type IN ('monthly_export', 'daily_alerts')),
+        period_key TEXT NOT NULL,
+        status TEXT NOT NULL CHECK (status IN ('in_progress', 'completed', 'failed')),
+        output_format TEXT,
+        output_path TEXT,
+        payload_json TEXT,
+        result_json TEXT,
+        created_at TEXT NOT NULL,
+        updated_at TEXT NOT NULL
+      );
+
+      CREATE INDEX IF NOT EXISTS idx_hr_timesheet_runs_type_period
+        ON hr_timesheet_automation_runs(run_type, period_key);
+
+      CREATE TABLE IF NOT EXISTS hr_timesheet_alert_events (
+        alert_key TEXT PRIMARY KEY,
+        run_key TEXT NOT NULL,
+        employee_id TEXT NOT NULL,
+        employee_name TEXT NOT NULL,
+        alert_type TEXT NOT NULL CHECK (alert_type IN ('birthday', 'anniversary')),
+        alert_date TEXT NOT NULL,
+        message TEXT NOT NULL,
+        years_of_service INTEGER,
+        created_at TEXT NOT NULL
+      );
+
+      CREATE INDEX IF NOT EXISTS idx_hr_timesheet_alert_events_date
+        ON hr_timesheet_alert_events(alert_date);
     `);
 
     logInfo('GlobalDb', 'Schema initialized');
