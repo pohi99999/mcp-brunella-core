@@ -1,0 +1,51 @@
+{
+  "webhook": {
+    "target_url": "http://localhost:3000/api/v1/webhook/onboarding-intake",
+    "header_name": "X-Brunella-Token",
+    "header_value_env": "BRUNELLA_WEBHOOK_SECRET"
+  },
+  "forms": [
+    {
+      "form_type": "kkv_general",
+      "recommended_provider": "cloudflare_worker",
+      "title": "KKV Onboarding Intake",
+      "description": "KKV lead capture form with human-in-loop approval gate.",
+      "fields": [
+        { "name": "cegnev", "label": "Cégnév", "type": "text", "required": true },
+        { "name": "kapcsolattarto_nev", "label": "Kapcsolattartó neve", "type": "text", "required": true },
+        { "name": "email", "label": "E-mail", "type": "email", "required": true },
+        { "name": "iparagban", "label": "Iparág", "type": "text", "required": true },
+        { "name": "legnagyobb_kihivas", "label": "Legnagyobb kihívás", "type": "textarea", "required": true },
+        { "name": "manualis_orak", "label": "Heti manuális órák", "type": "number", "required": true },
+        { "name": "rendszerek", "label": "Használt rendszerek", "type": "textarea", "required": false },
+        { "name": "wow_eredmeny", "label": "Milyen eredmény lenne wow?", "type": "textarea", "required": false }
+      ]
+    },
+    {
+      "form_type": "premium_brand",
+      "recommended_provider": "tally",
+      "title": "Premium Brand Onboarding Intake",
+      "description": "Brand intake for tone-of-voice and content automation requests.",
+      "fields": [
+        { "name": "marka_nev", "label": "Márka neve", "type": "text", "required": true },
+        { "name": "kapcsolattarto_nev", "label": "Kapcsolattartó neve", "type": "text", "required": true },
+        { "name": "email", "label": "E-mail", "type": "email", "required": true },
+        { "name": "instagram", "label": "Instagram", "type": "text", "required": false },
+        { "name": "marka_mondat", "label": "Egy mondatban mivel foglalkoztok?", "type": "textarea", "required": true },
+        { "name": "tipikus_vasarlo", "label": "Tipikus vásárló", "type": "text", "required": true },
+        { "name": "tiltott_szavak", "label": "Tiltott szavak", "type": "textarea", "required": false },
+        { "name": "csodalt_markak", "label": "Csodált márkák", "type": "textarea", "required": false },
+        { "name": "jelzok", "label": "Milyen jelzőkkel írjanak le?", "type": "textarea", "required": false },
+        { "name": "pilot_termek", "label": "Pilot termék", "type": "text", "required": true },
+        { "name": "meroszam", "label": "Fő mérőszám", "type": "text", "required": false },
+        { "name": "heti_orak", "label": "Heti tartalom idő (óra)", "type": "number", "required": false },
+        { "name": "launch_datum", "label": "Launch határidő", "type": "date", "required": false }
+      ]
+    }
+  ],
+  "notes": [
+    "Both forms post to the same Brunella webhook endpoint.",
+    "The KKV form is best implemented as a Cloudflare Worker form for GDPR-safe lead capture.",
+    "The brand form is compatible with Tally.so if a Tally account is available."
+  ]
+}

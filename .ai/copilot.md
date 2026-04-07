@@ -2115,3 +2115,13 @@ pm run test:dashboard → 200 passed | 0 failed | 20 test file ✅**
 - mcp_servers.json schedule/onSuccess mezők: schema-on kívüli mezők, valódi ütemezés a GitHub Actions cron-ban
 
 **Megjegyzés:** A copilotFeedbackChannel singleton az utonomousInfraRuntime.ts-ből importálandó — soha ne hozz létre második példányt. A pre-existing teszt-hibák (projectMaintainerRoutes, hrTimesheetRoutes) git stash-sel megerősítve, hogy nem ebben a munkában keletkeztek.
+
+### 2026-04-07 04:33 - P-Sales intake folytatás + track note sync
+
+**Feladat:** A P-Sales human-in-loop track folytatása, a releváns track fájlok és a Copilot napló frissítése, majd a lokális n8n sandbox importjainak és a form-specnek az állapotrögzítése.
+
+**Érintett fájlok:** `conductor/tracks/psales_human_loop_revenue_20260407/{meta.json,plan.md,spec.md,n8n_kkv_workflow.json,n8n_brand_workflow.json,onboarding_forms_spec.json}`, `docker-compose.yml`, `C:\Users\pohi9\.copilot\session-state\cbb0fe13-7ff6-4c25-b19a-96db5cd63443\plan.md`
+
+**Státusz:** ⏳ Folyamatban / ✅ részben kész
+
+**Megjegyzés:** A Brunella onboarding endpoint és mindkét n8n workflow lokálisan kész, a sandbox tiszta állapotban fut, a következő kézi lépés a Google Places secret és a végleges form provider kiválasztása.

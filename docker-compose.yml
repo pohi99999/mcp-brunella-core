@@ -50,6 +50,7 @@ services:
       - N8N_BASIC_AUTH_ACTIVE=true
       - N8N_BASIC_AUTH_USER=${N8N_TEST_USER}
       - N8N_BASIC_AUTH_PASSWORD=${N8N_TEST_PASSWORD}
+      - LEADS_SHEET_ID=${GOOGLE_SHEETS_ID}
     volumes:
       - n8n_data:/home/node/.n8n
 

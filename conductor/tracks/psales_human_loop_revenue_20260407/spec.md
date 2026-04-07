@@ -83,3 +83,12 @@ A `sel.md` és `sel2.md` dokumentumok elemzése alapján Pohánka Péter Brunell
 | Apify konfiguráció | `ApifyScraping` agent | Saját doménje |
 | Lead scoring | `LeadMiningAgent` | Saját doménje |
 | Outreach jóváhagyás | `SalesHunterAgent` + human gate | Kötelező |
+
+---
+
+## Handoff / aktuális állapot
+
+- A human-in-loop kapu és mindkét onboarding workflow lokálisan kész.
+- Az n8n sandbox tiszta állapotban fut, az importok már bent vannak.
+- A track továbbra is külső kulcsokra és a végleges form builderre vár.
+- A következő implementációs slice a lead scraping és a piaci megjelenés.

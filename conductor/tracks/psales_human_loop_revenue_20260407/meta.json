@@ -4,11 +4,11 @@
   "type": "Business / Revenue Development",
   "priority": "HIGH",
   "status": "active",
-  "progress": 45,
+  "progress": 70,
   "owner": "copilot",
   "assignee": "GitHub Copilot",
   "createdAt": "2026-04-07T03:43:48Z",
-  "updatedAt": "2026-04-09T00:00:00Z",
+  "updatedAt": "2026-04-07T04:33:10Z",
   "coverageAnalysis": "conductor/tracks/psales_human_loop_revenue_20260407/coverage.md",
   "gapAnalysis": "conductor/tracks/psales_human_loop_revenue_20260407/gaps.md",
   "bugsFixed": [
@@ -42,7 +42,7 @@
   "criticalDependency": "P-Sales Human-in-Loop approval gate — semmi nem mehet ki jóváhagyás nélkül",
   "sdlc": {
     "enabled": true,
-    "currentPhase": "discovery",
+    "currentPhase": "implementation",
     "phases": [
       "discovery",
       "design",
@@ -55,7 +55,7 @@
     {
       "id": 1,
       "name": "Human-in-Loop safety gate + Brunella webhook endpoint",
-      "status": "pending",
+      "status": "done",
       "priority": "CRITICAL — ez nélkül semmi automatizált outreach nem indulhat"
     },
     {
@@ -66,7 +66,7 @@
     {
       "id": 3,
       "name": "n8n KKV + Brand onboarding intake workflow",
-      "status": "pending"
+      "status": "done"
     },
     {
       "id": 4,
@@ -76,7 +76,7 @@
     {
       "id": 5,
       "name": "Onboarding kérdőívek (Typeform) + Google Sheets CRM tracker",
-      "status": "pending"
+      "status": "blocked"
     },
     {
       "id": 6,
