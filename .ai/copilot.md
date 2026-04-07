@@ -1,4 +1,4 @@
-﻿ # Copilot Session Notes
+﻿# Copilot Session Notes
 
 ## Overview
 
@@ -6,7 +6,18 @@ User requested that the Copilot CLI automatically connect to a local Brunella MC
 
 ## History
 
+### 2026-04-07 02:40 - Modular state RAG route DI + fast route stabilization
+
+**Feladat:** A `modular_state_refactor_20260404` Phase 3 folytatása a LanceDB kliens életciklusának tisztításával, a `/api/v1/rag/*` route-ok explicit DI factory mintára állításával, valamint a pre-push fast route-tesztek stabilizálásával.
+
+**Érintett fájlok:** `src/server/routes/files.ts`, `src/utils/lancedb_client.ts`, `test/hrTimesheetRoutes.test.ts`, `test/projectMaintainerRoutes.test.ts`, `pyproject.toml`, `uv.lock`, `conductor/project_state.json`, `conductor/tracks.md`, `conductor/tracks/modular_state_refactor_20260404/{meta.json,plan.md}`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A `createRagRoutes(deps)` már `RagServiceDeps` + `DEFAULT_RAG_DEPS` szerződéssel dolgozik, így a route-ok nem kérés közben importálják a RAG segédeket. A `LanceDBClient` példány-szintű module/connection cache-t és `dispose()` lifecycle-t kapott, miközben a `lanceDBClient` és `invoiceStore` kompatibilis exportok megmaradtak. A fast-suite route regressziókhoz a HR timesheet teszt explicit hoisted `delegateTask` mockot kapott, a Project Maintainer POST teszt pedig ugyanazt a `express.json()` middleware-t használja, mint a valódi app. A Python környezethez rögzítve lett a `github-copilot-sdk>=0.2.1` dependency (`pyproject.toml`, `uv.lock`). A conductor állapot 50%-ra / phase 3-ra szinkronizálva. Validáció: `npm run build`, `npx vitest run test/hrTimesheetRoutes.test.ts test/projectMaintainerRoutes.test.ts`.
+
 ### 2026-04-07 - 8-Module Kernel Pipeline Architecture
+
 **Feladat:** A supervisor-driven event-driven 8-modul Kernel Pipeline (Conductor → Intent Router → Planner → Context Builder → Tool Executor → Critic → Guardrail → Learning Loop) audiálása, majd teljes implementálása és BAS-ba integrálása. Copilot Orchestrator bridge-el összekötve.
 **Érintett fájlok:** `src/core/kernelTypes.ts`, `src/core/kernelEventBus.ts`, `src/core/intentRouter.ts`, `src/core/planner.ts`, `src/core/toolExecutor.ts`, `src/core/guardrail.ts`, `src/core/conductor.ts`, `src/server/routes/kernelRoute.ts`, `src/dashboard/components/dashboard/KernelPipelinePanel.tsx`, `src/dashboard/lib/navigation.tsx`, `src/server/routes/index.ts`
 **Státusz:** ✅ Befejezve — 9 új fájl, 0 TypeScript hiba, route mountolva, dashboard panel regisztrálva
@@ -16,6 +27,7 @@ User requested that the Copilot CLI automatically connect to a local Brunella MC
 **Track:** `kernel_pipeline_20260407` (új) → 100%
 
 ### 2026-04-07 - Lint cleanup + KKV typing + technical debt Phase 1
+
 **Feladat:** Lint 0 errors elérése: 14 ESLint issue javítása 10 fájlban; @ts-nocheck eltávolítása KKV skeleton fájlokból; technical_debt_cleanup Phase 1 lezárása.
 **Érintett fájlok:** `src/agents/CampaignGeneratorAgent.ts`, `src/utils/db.ts`, `src/utils/inventoryDb.ts`, `src/agents/KKVCrmAgent.ts`, `src/server/routes/kkvCrm.ts`, `src/server/services/kkvCrmService.ts`, `src/tools/crm_create_lead.ts`, `test/metricsArchiveService.test.ts`, `test/dashboard/components/InventoryCatalog.test.tsx`, `test/dashboard/components/InventoryRadarWidget.test.tsx`
 **Státusz:** ✅ Befejezve — lint:0, tsc:0, metrics+inventory tesztek: pass
