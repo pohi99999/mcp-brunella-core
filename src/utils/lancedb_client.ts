@@ -30,7 +30,10 @@ interface LanceDBModule {
   };
 }
 
-let lancedbModule: LanceDBModule | null = null;
+interface LanceDBClientOptions {
+  dbPath?: string;
+  loadLanceDBModule?: () => Promise<LanceDBModule | null>;
+}
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null;
@@ -40,30 +43,55 @@ function toRecordArray(value: unknown): Record<string, unknown>[] {
   return Array.isArray(value) ? value.filter(isRecord) : [];
 }
 
+async function loadDefaultLanceDBModule(): Promise<LanceDBModule | null> {
+  try {
+    const module = await import('@lancedb/lancedb');
+    return module as LanceDBModule;
+  } catch (error: unknown) {
+    const msg = error instanceof Error ? error.message : String(error);
+    logError('LanceDB', `Failed to load @lancedb/lancedb: ${msg}. LanceDB features will be disabled.`);
+    return null;
+  }
+}
+
 export class LanceDBClient {
   private db: LanceDbConnection | undefined;
+  private lancedbModule: LanceDBModule | null = null;
+  private readonly dbPath: string;
+  private readonly loadLanceDBModuleFn: () => Promise<LanceDBModule | null>;
+
+  constructor(options: LanceDBClientOptions = {}) {
+    this.dbPath = options.dbPath ?? DB_PATH;
+    this.loadLanceDBModuleFn = options.loadLanceDBModule ?? loadDefaultLanceDBModule;
+  }
+
+  async dispose(): Promise<void> {
+    this.db = undefined;
+    this.lancedbModule = null;
+  }
+
+  private async loadLanceDBModule(): Promise<LanceDBModule | null> {
+    if (this.lancedbModule) return this.lancedbModule;
+    const module = await this.loadLanceDBModuleFn();
+    if (module) {
+      this.lancedbModule = module;
+    }
+    return module;
+  }
 
   async connect(): Promise<void> {
     if (this.db) return;
 
-    if (!lancedbModule) {
-      try {
-        const module = await import('@lancedb/lancedb');
-        lancedbModule = module as LanceDBModule;
-      } catch (error: unknown) {
-        const msg = error instanceof Error ? error.message : String(error);
-        logError('LanceDB', `Failed to load @lancedb/lancedb: ${msg}. LanceDB features will be disabled.`);
-        return;
-      }
-    }
+    const module = await this.loadLanceDBModule();
+    if (!module) return;
 
     try {
-      const connector = lancedbModule.connect ?? lancedbModule.default?.connect;
+      const connector = module.connect ?? module.default?.connect;
       if (!connector) {
         logError('LanceDB', 'No connect() function found on @lancedb/lancedb module. LanceDB disabled.');
         return;
       }
-      this.db = await connector(DB_PATH);
+      this.db = await connector(this.dbPath);
     } catch (error: unknown) {
       const msg = error instanceof Error ? error.message : String(error);
       logError('LanceDB', `Failed to initialize LanceDB: ${msg}. LanceDB features will be disabled.`);

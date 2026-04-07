@@ -1,12 +1,13 @@
 {
   "id": "logistics_vertical_20260222",
   "name": "PohiAIPro Logistics Vertical — Brunella integráció",
-  "status": "proposed",
+  "title": "PohiAIPro Logistics Vertical — Brunella integráció",
+  "status": "archived",
   "priority": "HIGH",
   "created": "2026-02-22",
   "owner": "Pohánka Péter",
   "progress": 5,
-  "description": "A PohiAIProt2 (timber/nehézanyag logisztika platform) frontendének beolvasztása a Brunella Agent System-be. A frontend kész (mock adatokkal), a Brunella LogisticsDispatcherAgent létezik — az integráció a kettő összekapcsolása.",
+  "description": "A PohiAIProt2 frontend + Brunella integráció trackje. A full end-to-end frontend wiring külső repo függő, ezért a repo-local rész külön follow-up trackbe lett bontva.",
   "repos": {
     "frontend": "https://github.com/pohi99999/PohiAIProt2.git",
     "api_contract": "https://github.com/pohi99999/PohiAIPro.git",
@@ -112,5 +113,8 @@
     "npm test PASS (logistics tesztek)",
     "Dashboard: logistics panel látható",
     "Demo: admin bejelentkezik → demand + stock felvesz → AI matche-el → shipment készül"
-  ]
+  ],
+  "archivedAt": "2026-04-07T00:00:00.000Z",
+  "archivedReason": "External frontend repo unavailable in this workspace; repo-local boundary split into logistics_vertical_repo_local_20260407",
+  "followUpTrackId": "logistics_vertical_repo_local_20260407"
 }

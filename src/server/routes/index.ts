@@ -86,10 +86,10 @@ export function createV1Router(): Router {
   router.use("/hr-onboarding", lazy(() => import("./hrOnboarding.js"), "createHROnboardingRoutes"));
   router.use("/hr/leave", lazy(() => import("./hrLeave.js"), "createHRLeaveRoutes"));
   router.use("/hr/timesheet", lazy(() => import("./hrTimesheet.js"), "createHRTimesheetRoutes"));
-  router.use("/hr/timesheet", lazy(() => import("./hrTimesheet.js"), "createHRTimesheetRoutes"));
   router.use("/machines", lazy(() => import("./machines.js"), "createMachinesRouter"));
   router.use("/enterprise", lazy(() => import("./enterprise.js"), "createEnterpriseRouter"));
   router.use("/enterprise/analytics", lazy(() => import("./enterprise.js"), "createEnterpriseAnalyticsRouter"));
+  router.use("/logistics", lazy(() => import("./logistics.js"), "createLogisticsRoutes"));
   router.use("/system", lazy(() => import("./system.js"), "createSystemArchitectureRouter"));
   router.use("/system", lazy(() => import("./system.js"), "createSystemControlRouter"));
   router.use("/llm", lazy(() => import("./llm.js"), "createLLMRoutes"));

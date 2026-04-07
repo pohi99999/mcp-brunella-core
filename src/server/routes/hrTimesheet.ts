@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express';
 import { z } from 'zod';
 import { agentManager } from '../../agents/AgentManager.js';
+import { record as auditRecord } from '../../core/auditLog.js';
 import { logInfo, logError } from '../../utils/logger.js';
 import { ensureError } from '../../utils/ensureError.js';
 
@@ -40,6 +41,14 @@ export function createHRTimesheetRoutes(): Router {
         createdAt: new Date().toISOString()
       });
 
+      await auditRecord(
+        result.success ? 'ALLOWED' : 'DENIED',
+        'DigitalHeadhunter',
+        'timesheet_management',
+        `${data.employeeId}:${data.date}`,
+        result.message,
+      );
+
       res.status(result.success ? 200 : 400).json({
         success: result.success,
         message: result.message || 'Timesheet processed',
@@ -54,6 +63,7 @@ export function createHRTimesheetRoutes(): Router {
       
       const err = ensureError(error);
       logError('HRTimesheetRoute', `POST /submit failed: ${err.message}`);
+      await auditRecord('DENIED', 'HRTimesheetRoute', 'timesheet_management', 'validation-or-runtime-error', err.message);
       res.status(500).json({ success: false, error: 'Internal server error', message: err.message });
     }
   });
