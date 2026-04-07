@@ -48,8 +48,10 @@ interface LanceDBModule {
   };
 }
 
-let _lancedbModule: LanceDBModule | null = null;
-let _lancedbConnected: LanceDbConnection | null = null;
+interface RagEngineOptions {
+  dbPath?: string;
+  loadLanceDBModule?: () => Promise<LanceDBModule | null>;
+}
 
 function isRecord(value: unknown): value is LanceRecord {
   return typeof value === "object" && value !== null;
@@ -59,39 +61,13 @@ function toRecordArray(value: unknown): LanceRecord[] {
   return Array.isArray(value) ? value.filter(isRecord) : [];
 }
 
-async function loadLanceDBModule(): Promise<LanceDBModule | null> {
-  if (_lancedbModule) return _lancedbModule;
+async function loadDefaultLanceDBModule(): Promise<LanceDBModule | null> {
   try {
     const module = await import("@lancedb/lancedb");
-    _lancedbModule = module as LanceDBModule;
     logInfo("RAG", "LanceDB module loaded dynamically.");
-    return _lancedbModule;
+    return module as LanceDBModule;
   } catch (error: unknown) {
     logWarn("RAG", `LanceDB module not available: ${error instanceof Error ? error.message : String(error)}`);
-    _lancedbModule = null;
-    return null;
-  }
-}
-
-async function connectToLanceDB(): Promise<LanceDbConnection | null> {
-  if (_lancedbConnected) return _lancedbConnected;
-  const mod = await loadLanceDBModule();
-  if (!mod) return null;
-
-  try {
-    const connector = mod.connect ?? mod.default?.connect;
-    if (typeof connector !== "function") {
-      logError("RAG", "@lancedb/lancedb module does not expose a connect() function. LanceDB disabled.");
-      _lancedbConnected = null;
-      return null;
-    }
-
-    _lancedbConnected = await connector(DB_PATH);
-    logInfo("RAG", "Connected to LanceDB.");
-    return _lancedbConnected;
-  } catch (error: unknown) {
-    logError("RAG", `Failed to connect to LanceDB: ${error instanceof Error ? error.message : String(error)}`);
-    _lancedbConnected = null;
     return null;
   }
 }
@@ -205,11 +181,53 @@ async function getEmbedding(
   }
 }
 
-export class HybridMemory {
-  private dbPath: string;
+export class RagEngine {
+  private readonly dbPath: string;
+  private readonly loadLanceDBModuleFn: () => Promise<LanceDBModule | null>;
+  private lancedbModule: LanceDBModule | null = null;
+  private lancedbConnected: LanceDbConnection | null = null;
 
-  constructor(dbPath: string = DB_PATH) {
-    this.dbPath = dbPath;
+  constructor(options: RagEngineOptions = {}) {
+    this.dbPath = options.dbPath ?? DB_PATH;
+    this.loadLanceDBModuleFn = options.loadLanceDBModule ?? loadDefaultLanceDBModule;
+  }
+
+  async dispose(): Promise<void> {
+    this.lancedbModule = null;
+    this.lancedbConnected = null;
+  }
+
+  private async loadLanceDBModule(): Promise<LanceDBModule | null> {
+    if (this.lancedbModule) return this.lancedbModule;
+    const module = await this.loadLanceDBModuleFn();
+    if (module) {
+      this.lancedbModule = module;
+    }
+    return module;
+  }
+
+  private async connectToLanceDB(): Promise<LanceDbConnection | null> {
+    if (this.lancedbConnected) return this.lancedbConnected;
+
+    const mod = await this.loadLanceDBModule();
+    if (!mod) return null;
+
+    try {
+      const connector = mod.connect ?? mod.default?.connect;
+      if (typeof connector !== "function") {
+        logError("RAG", "@lancedb/lancedb module does not expose a connect() function. LanceDB disabled.");
+        this.lancedbConnected = null;
+        return null;
+      }
+
+      this.lancedbConnected = await connector(this.dbPath);
+      logInfo("RAG", "Connected to LanceDB.");
+      return this.lancedbConnected;
+    } catch (error: unknown) {
+      logError("RAG", `Failed to connect to LanceDB: ${error instanceof Error ? error.message : String(error)}`);
+      this.lancedbConnected = null;
+      return null;
+    }
   }
 
   private async addDocumentToTable(
@@ -348,7 +366,7 @@ export class HybridMemory {
   }
 
   async addDocument(content: string, metadata: object) {
-    const db = await connectToLanceDB();
+    const db = await this.connectToLanceDB();
     if (!db) {
       logWarn('RAG', 'LanceDB not available; skipping local index write.');
       return;
@@ -404,7 +422,7 @@ export class HybridMemory {
 
   async getTableCount(): Promise<number> {
     try {
-      const db = await connectToLanceDB();
+      const db = await this.connectToLanceDB();
       if (!db) {
         logWarn('RAG', 'LanceDB not available; getTableCount() returning 0.');
         return 0;
@@ -431,7 +449,7 @@ export class HybridMemory {
     limit = 20,
   ): Promise<Array<{ text: string; path?: string; score?: number }>> {
     try {
-      const db = await connectToLanceDB();
+      const db = await this.connectToLanceDB();
       if (!db) {
         logWarn('RAG', 'LanceDB not available; search() returning empty results.');
         return [];
@@ -475,6 +493,12 @@ export class HybridMemory {
       logError("RAG", `Search error: ${error instanceof Error ? error.message : String(error)}`);
       return [];
     }
+  }
+}
+
+export class HybridMemory extends RagEngine {
+  constructor(dbPath: string = DB_PATH) {
+    super({ dbPath });
   }
 }
 
