@@ -1,0 +1,92 @@
+{
+  "id": "psales_human_loop_revenue_20260407",
+  "title": "P-Sales Human-in-Loop Revenue Pipeline — Lead gen, onboarding, KKV + Brand csatornák",
+  "type": "Business / Revenue Development",
+  "priority": "HIGH",
+  "status": "active",
+  "progress": 45,
+  "owner": "copilot",
+  "assignee": "GitHub Copilot",
+  "createdAt": "2026-04-07T03:43:48Z",
+  "updatedAt": "2026-04-09T00:00:00Z",
+  "coverageAnalysis": "conductor/tracks/psales_human_loop_revenue_20260407/coverage.md",
+  "gapAnalysis": "conductor/tracks/psales_human_loop_revenue_20260407/gaps.md",
+  "bugsFixed": [
+    "ApifyScrapingAgent APIFY_TOKEN/APIFY_API_TOKEN névütközés — javítva 2026-04-07",
+    "BRUNELLA_WEBHOOK_SECRET hozzáadva .env-hez — 2026-04-07"
+  ],
+  "cloudflareAssets": {
+    "leadIntelligenceWorker": "brunella-lead-intelligence",
+    "d1Database": "bas-leads",
+    "mainOrchestrator": "cean-orchestrator"
+  },
+  "sourceDocuments": [
+    ".worktrees/sel.md",
+    ".worktrees/sel2.md"
+  ],
+  "goal": "Pohánka Péter Brunella-alapú üzletének bevételtermelő csatornáit kiépíteni: P-Sales Human-in-Loop safety pipeline, automatizált lead-gen (KKV + prémium brand szegmens), Apify integráció, n8n onboarding intake, LinkedIn/Upwork piaci megjelenés.",
+  "targetSegments": ["Magyar KKV (10-100 fő)", "Prémium/lifestyle divatmárkák"],
+  "revenueTargets": {
+    "kkv": { "start": "149000 Ft egyszeri", "grow": "289000 + 89000/hó", "scale": "590000 + 189000/hó" },
+    "brand": { "starter": "150000 Ft pilot", "alap": "280000/hó", "premium": "480000/hó", "full": "680000/hó" }
+  },
+  "keyAgents": [
+    "SalesHunterAgent",
+    "LeadMiningAgent",
+    "CampaignGeneratorAgent",
+    "ApifyScraping",
+    "copywriter",
+    "EnterpriseOrchestratorAgent",
+    "bas-web-architect"
+  ],
+  "criticalDependency": "P-Sales Human-in-Loop approval gate — semmi nem mehet ki jóváhagyás nélkül",
+  "sdlc": {
+    "enabled": true,
+    "currentPhase": "discovery",
+    "phases": [
+      "discovery",
+      "design",
+      "implementation",
+      "validation",
+      "closure"
+    ]
+  },
+  "phases": [
+    {
+      "id": 1,
+      "name": "Human-in-Loop safety gate + Brunella webhook endpoint",
+      "status": "pending",
+      "priority": "CRITICAL — ez nélkül semmi automatizált outreach nem indulhat"
+    },
+    {
+      "id": 2,
+      "name": "Apify integráció + lead scraping konfiguráció",
+      "status": "pending"
+    },
+    {
+      "id": 3,
+      "name": "n8n KKV + Brand onboarding intake workflow",
+      "status": "pending"
+    },
+    {
+      "id": 4,
+      "name": "LinkedIn profil szövegek + Upwork Agency profil",
+      "status": "pending"
+    },
+    {
+      "id": 5,
+      "name": "Onboarding kérdőívek (Typeform) + Google Sheets CRM tracker",
+      "status": "pending"
+    },
+    {
+      "id": 6,
+      "name": "Brand Accelerator csomag + Case Study termékesítés",
+      "status": "pending"
+    },
+    {
+      "id": 7,
+      "name": "Pilot ügyfél kampány — első 25 lead + 3 outreach próba",
+      "status": "pending"
+    }
+  ]
+}

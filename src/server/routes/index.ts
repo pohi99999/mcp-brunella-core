@@ -128,6 +128,7 @@ export function createV1Router(): Router {
   router.use("/webhooks", lazy(() => import("./webhooks.js"), "default", db));
   // KKV follow-up webhook (lightweight receiver used by n8n/workflows)
   router.use("/webhooks/kkv", lazy(() => import("./kkvWebhook.js"), "createKkvWebhookRoutes", db));
+  router.use("/webhook/onboarding-intake", lazy(() => import("./onboardingIntake.js"), "createOnboardingIntakeRoutes"));
   router.use("/contact", lazy(() => import("./contact.js"), "default"));
   router.use("/harvest", lazy(() => import("./harvest.js"), "harvestRouter"));
   router.use("/reflection", lazy(() => import("./reflection.js"), "createReflectionRouter"));
