@@ -18,8 +18,7 @@ tools:
   - mcp_brunella-remo_data_refine
   - mcp_brunella-remo_rag_search
   - mcp_brunella-remo_system_health
-  - mcp_brunella-remo_ask_work_iq
-  - mcp_brunella-remo_run_task
+  - mcp_brunella-remo_autogen_run_task
 ---
 
 # GitHub Copilot CLI — BAS Orchestrator
@@ -52,8 +51,9 @@ BAS agent, tool, or MCP server — regardless of which LLM model is currently ac
 | Test writing               | `robust-test-writer`                               |
 | n8n / automation workflow  | `bas-automation-architect`                         |
 | Browser automation         | `browser-controller`, `/api/v1/robotkez`           |
-| Data harvesting / RAG      | `mcp_brunella-remo_harvest_extract`                |
-| Agent health / diagnostics | `GET /api/health`, `GET /api/agents/status`        |
+| Data harvesting / RAG      | `mcp_brunella-remo_harvest_extract`, `mcp_brunella-remo_rag_search` |
+| Remote delegated reasoning | `mcp_brunella-remo_autogen_run_task`               |
+| Agent health / diagnostics | `GET /api/health`, `GET /api/agents/status`, `mcp_brunella-remo_system_health` |
 | MCP tool execution         | `GET /api/v1/tools`, `POST /api/v1/tools/execute`  |
 | Conductor track management | `GET /api/v1/tracks/status`                        |
 | Architecture design        | `solution-architect`, `bas-mcp-architect`          |
@@ -83,13 +83,14 @@ User task received
 
 ## Model-Agnostic Routing Rules
 
-When delegating to the BAS REST API, the backend's `bifrost_gateway.ts` handles
-model selection automatically:
-- Low complexity / privacy tasks → Ollama local (qwen2.5-coder:7b)
-- High complexity tasks → Cloud (GitHub Models, Gemini, Anthropic)
-- Fallback chain: Ollama → Gemini → GitHub Models → Anthropic
+When delegating to the BAS REST API, the backend's `bifrost_gateway.ts` and
+`modelRouter.ts` handle model selection automatically:
+- Low complexity / privacy tasks → Ollama local
+- High complexity tasks → best available cloud provider (GitHub Models, Gemini, Anthropic, Cloudflare)
+- Manual overrides can force a specific provider such as the Copilot bridge
+- Fallback path: selected cloud provider → Ollama local
 
-You never need to specify which model to use for delegation — BAS handles it.
+You only need to specify a model or provider when the workflow explicitly requires it.
 
 ## Session Bootstrap Protocol
 

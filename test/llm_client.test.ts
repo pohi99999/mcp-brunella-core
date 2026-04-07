@@ -1,9 +1,10 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { generateResponse } from '../src/core/llm_client.js';
 
-const { mockGenerateContent } = vi.hoisted(() => {
+const { mockGenerateContent, mockBifrostGenerate } = vi.hoisted(() => {
     const mockGenerateContent = vi.fn();
-    return { mockGenerateContent };
+    const mockBifrostGenerate = vi.fn();
+    return { mockGenerateContent, mockBifrostGenerate };
 });
 
 vi.mock('@google/genai', () => {
@@ -32,6 +33,12 @@ vi.mock('langsmith/traceable', () => ({
     traceable: (fn: any) => fn
 }));
 
+vi.mock('../src/core/bifrost_gateway.js', () => ({
+    bifrostGateway: {
+        generate: mockBifrostGenerate,
+    },
+}));
+
 // Mock fetch for Ollama and GitHub
 global.fetch = vi.fn();
 
@@ -45,6 +52,8 @@ describe('llm_client', () => {
         process.env.OLLAMA_BASE_URL = 'http://127.0.0.1:11434';
         process.env.OLLAMA_MODEL = 'qwen2.5-coder:7b';
         process.env.AI_GATEWAY_ENABLED = 'false'; // Force local Ollama for tests
+        delete process.env.ANTHROPIC_API_KEY;
+        delete process.env.CLAUDE_API_KEY;
     });
 
     describe('generateResponse', () => {
@@ -105,6 +114,24 @@ describe('llm_client', () => {
                 })
             );
             expect(result).toBe('Ollama response');
+        });
+
+        it('should use Bifrost-backed providers when requested', async () => {
+            mockBifrostGenerate.mockResolvedValue({
+                success: true,
+                content: 'Anthropic response',
+                provider: 'anthropic',
+                model: 'claude-3-5-sonnet-20241022',
+                duration_ms: 12,
+            });
+
+            const result = await generateResponse('review this architecture', 'anthropic');
+
+            expect(mockBifrostGenerate).toHaveBeenCalledWith(expect.objectContaining({
+                prompt: 'review this architecture',
+                provider: 'anthropic',
+            }));
+            expect(result).toBe('Anthropic response');
         });
 
         it('should fallback to Ollama if primary provider fails (except Ollama itself)', async () => {

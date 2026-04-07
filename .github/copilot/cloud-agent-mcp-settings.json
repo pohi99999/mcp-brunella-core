@@ -13,6 +13,11 @@
         "MANIFEST_SIGNING_SECRET": "$COPILOT_MCP_MANIFEST_SIGNING_SECRET"
       }
     },
+    "brunella-remote": {
+      "type": "http",
+      "url": "https://Brunella-Agents-System-Server.fastmcp.app/mcp",
+      "tools": ["*"]
+    },
     "fetch": {
       "type": "local",
       "command": "npx",

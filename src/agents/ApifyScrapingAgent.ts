@@ -156,10 +156,11 @@ export class ApifyScrapingAgent implements IAgent {
   private isAvailable = false;
 
   async initialize(): Promise<void> {
-    const token = process.env.APIFY_API_TOKEN;
+    // Support both APIFY_API_TOKEN and APIFY_TOKEN for backward compatibility
+    const token = process.env.APIFY_API_TOKEN ?? process.env.APIFY_TOKEN;
     
     if (!token || token === 'your_apify_token_here') {
-      logWarn(this.name, 'APIFY_API_TOKEN nincs beállítva - Apify funkciók nem elérhetők');
+      logWarn(this.name, 'APIFY_API_TOKEN (vagy APIFY_TOKEN) nincs beállítva - Apify funkciók nem elérhetők');
       logWarn(this.name, 'Szerezz API kulcsot: https://console.apify.com/account/integrations');
       this.isAvailable = false;
       return;

@@ -19,9 +19,12 @@ RUN uv pip install --system -r /app/myai/requirements.txt
 
 COPY myai/ ./myai/
 RUN mkdir -p /app/logs \
-    && chown -R appuser:appgroup /app
+    && chown appuser:appgroup /app/logs
+RUN mkdir -p /home/appuser \
+    && chown appuser:appgroup /home/appuser
 
-ENV PYTHONPATH=/app
+ENV PYTHONPATH=/app \
+    HOME=/home/appuser
 
 # Váltás nem-root felhasználóra a futtatáshoz
 USER appuser

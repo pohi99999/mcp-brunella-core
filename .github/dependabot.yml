@@ -40,6 +40,23 @@ updates:
           - "eslint*"
           - "prettier"
 
+  # Python dependencies (root pyproject / FastMCP surface)
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "06:00"
+      timezone: "Europe/Budapest"
+    open-pull-requests-limit: 3
+    commit-message:
+      prefix: "deps(pyproject)"
+    labels:
+      - "dependencies"
+      - "python"
+    reviewers:
+      - "pohi99999"
+
   # Python dependencies (myai/)
   - package-ecosystem: "pip"
     directory: "/myai"
@@ -78,7 +95,10 @@ updates:
   - package-ecosystem: "docker"
     directory: "/"
     schedule:
-      interval: "monthly"
+      interval: "weekly"
+      day: "monday"
+      time: "06:00"
+      timezone: "Europe/Budapest"
     commit-message:
       prefix: "deps(docker)"
     labels:
