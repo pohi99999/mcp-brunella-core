@@ -551,13 +551,16 @@ function ensureCuratedTable(): void {
     CREATE INDEX IF NOT EXISTS idx_curated_approval_state ON curated_golden_samples(approval_state);
   `);
 
-  db.prepare(`
-    UPDATE curated_golden_samples
-    SET approval_state = 'pending'
-    WHERE approval_state = 'candidate'
-  `).run();
+  if (!hasLegacyCuratedApprovalState(db)) {
+    db.prepare(`
+      UPDATE curated_golden_samples
+      SET approval_state = 'pending'
+      WHERE approval_state = 'candidate'
+    `).run();
+  }
 
   ensureGoldenLocalTable();
+  const seedApprovalState = getCuratedApprovalStateForDb(db, 'pending');
   db.prepare(`
     INSERT OR IGNORE INTO curated_golden_samples (
       id, prompt, completion, source, quality, approval_state, created_at
@@ -568,10 +571,92 @@ function ensureCuratedTable(): void {
       completion,
       source,
       quality,
-      'pending',
+      ?,
       created_at
     FROM golden_samples
-  `).run();
+  `).run(seedApprovalState);
+}
+
+type CuratedGoldenDbApprovalState = CuratedGoldenApprovalState | 'candidate';
+
+const CURATED_GOLDEN_SAMPLE_UPSERT_SQL = `
+  INSERT INTO curated_golden_samples (
+    id, prompt, completion, source, quality, approval_state, provenance, created_at, approved_at, reviewed_by, review_notes
+  ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+  ON CONFLICT(id) DO UPDATE SET
+    prompt = excluded.prompt,
+    completion = excluded.completion,
+    source = excluded.source,
+    quality = excluded.quality,
+    provenance = COALESCE(excluded.provenance, curated_golden_samples.provenance),
+    approval_state = CASE
+      WHEN curated_golden_samples.approval_state IN ('approved', 'rejected') THEN curated_golden_samples.approval_state
+      ELSE excluded.approval_state
+    END,
+    approved_at = CASE
+      WHEN curated_golden_samples.approval_state = 'approved' THEN curated_golden_samples.approved_at
+      ELSE excluded.approved_at
+    END,
+    reviewed_by = CASE
+      WHEN curated_golden_samples.approval_state IN ('approved', 'rejected') THEN curated_golden_samples.reviewed_by
+      ELSE excluded.reviewed_by
+    END,
+    review_notes = CASE
+      WHEN curated_golden_samples.approval_state IN ('approved', 'rejected') THEN curated_golden_samples.review_notes
+      ELSE excluded.review_notes
+    END`;
+
+function getCuratedTableSql(db = getGlobalDb()): string {
+  const row = db.prepare(
+    "SELECT sql FROM sqlite_master WHERE type = 'table' AND name = ?"
+  ).get('curated_golden_samples') as { sql?: string } | undefined;
+  return typeof row?.sql === 'string' ? row.sql.toLowerCase() : '';
+}
+
+function hasLegacyCuratedApprovalState(db = getGlobalDb()): boolean {
+  const sql = getCuratedTableSql(db);
+  return sql.includes('candidate') && !sql.includes('pending');
+}
+
+function normalizeCuratedApprovalState(state: string): CuratedGoldenApprovalState {
+  return state === 'candidate' ? 'pending' : (state as CuratedGoldenApprovalState);
+}
+
+function getCuratedApprovalStateForDb(
+  db: ReturnType<typeof getGlobalDb>,
+  approvalState: CuratedGoldenApprovalState,
+): CuratedGoldenDbApprovalState {
+  return approvalState === 'pending' && hasLegacyCuratedApprovalState(db) ? 'candidate' : approvalState;
+}
+
+function getCuratedApprovalStateFilters(
+  db: ReturnType<typeof getGlobalDb>,
+  state?: CuratedGoldenApprovalState,
+): CuratedGoldenDbApprovalState[] {
+  if (!state) return [];
+  if (state === 'pending' && hasLegacyCuratedApprovalState(db)) {
+    return ['pending', 'candidate'];
+  }
+  return [state];
+}
+
+function upsertCuratedGoldenCandidate(
+  db: ReturnType<typeof getGlobalDb>,
+  args: [
+    string,
+    string,
+    string,
+    string,
+    number,
+    CuratedGoldenDbApprovalState,
+    string | null,
+    string,
+    string | null,
+    string | null,
+    string | null,
+  ],
+): void {
+  db.prepare(CURATED_GOLDEN_SAMPLE_UPSERT_SQL).run(...args);
 }
 
 function rowToCuratedSample(row: Record<string, unknown>): CuratedGoldenSample {
@@ -581,7 +666,7 @@ function rowToCuratedSample(row: Record<string, unknown>): CuratedGoldenSample {
     completion: String(row['completion']),
     source: String(row['source']),
     quality: Number(row['quality']),
-    approvalState: String(row['approval_state']) as CuratedGoldenApprovalState,
+    approvalState: normalizeCuratedApprovalState(String(row['approval_state'])),
     provenance: row['provenance'] ? JSON.parse(String(row['provenance'])) as Record<string, unknown> : undefined,
     piiRedactedCount: Number(row['pii_redacted_count'] ?? 0),
     createdAt: String(row['created_at']),
@@ -605,9 +690,13 @@ export function listCuratedGoldenSamples(opts: {
   const conditions: string[] = [];
   const params: Array<string | number> = [];
 
-  if (opts.state) {
+  const approvalStates = getCuratedApprovalStateFilters(db, opts.state);
+  if (approvalStates.length === 1) {
     conditions.push('approval_state = ?');
-    params.push(opts.state);
+    params.push(approvalStates[0]);
+  } else if (approvalStates.length > 1) {
+    conditions.push(`approval_state IN (${approvalStates.map(() => '?').join(', ')})`);
+    params.push(...approvalStates);
   }
   if (opts.source) {
     conditions.push('source = ?');
@@ -638,6 +727,7 @@ export function captureCuratedGoldenCandidate(opts: {
   const id = opts.id ?? `curated_${Date.now()}_${Math.random().toString(36).slice(2)}`;
   const quality = opts.quality ?? calculateQuality(opts.prompt, opts.completion);
   const approvalState: CuratedGoldenApprovalState = opts.autoApprove ? 'approved' : 'pending';
+  const approvalStateForDb = getCuratedApprovalStateForDb(db, approvalState);
   const now = new Date().toISOString();
   const existing = db.prepare(
     'SELECT approval_state AS approvalState, approved_at AS approvedAt, reviewed_by AS reviewedBy, review_notes AS reviewNotes FROM curated_golden_samples WHERE id = ?'
@@ -647,95 +737,22 @@ export function captureCuratedGoldenCandidate(opts: {
     reviewedBy?: string | null;
     reviewNotes?: string | null;
   } | undefined;
-  try {
-    db.prepare(
-      `INSERT INTO curated_golden_samples (
-        id, prompt, completion, source, quality, approval_state, provenance, created_at, approved_at, reviewed_by, review_notes
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-      ON CONFLICT(id) DO UPDATE SET
-        prompt = excluded.prompt,
-        completion = excluded.completion,
-        source = excluded.source,
-        quality = excluded.quality,
-        provenance = COALESCE(excluded.provenance, curated_golden_samples.provenance),
-        approval_state = CASE
-          WHEN curated_golden_samples.approval_state IN ('approved', 'rejected') THEN curated_golden_samples.approval_state
-          ELSE excluded.approval_state
-        END,
-        approved_at = CASE
-          WHEN curated_golden_samples.approval_state = 'approved' THEN curated_golden_samples.approved_at
-          ELSE excluded.approved_at
-        END,
-        reviewed_by = CASE
-          WHEN curated_golden_samples.approval_state IN ('approved', 'rejected') THEN curated_golden_samples.reviewed_by
-          ELSE excluded.reviewed_by
-        END,
-        review_notes = CASE
-          WHEN curated_golden_samples.approval_state IN ('approved', 'rejected') THEN curated_golden_samples.review_notes
-          ELSE excluded.review_notes
-        END`
-    ).run(
+  upsertCuratedGoldenCandidate(
+    db,
+    [
       id,
       opts.prompt,
       opts.completion,
       opts.source,
       quality,
-      approvalState,
+      approvalStateForDb,
       opts.provenance ? JSON.stringify(opts.provenance) : null,
       now,
-      approvalState === 'approved' ? (opts.approvedAt ?? now) : existing?.approvedAt ?? null,
+      approvalStateForDb === 'approved' ? (opts.approvedAt ?? now) : existing?.approvedAt ?? null,
       opts.reviewedBy ?? existing?.reviewedBy ?? null,
       opts.reviewNotes ?? existing?.reviewNotes ?? null,
-    );
-  } catch (err) {
-    const errMsg = (err && (err as Error).message) ? String((err as Error).message) : String(err);
-    if (errMsg.includes('CHECK constraint failed') && errMsg.includes('approval_state')) {
-      // Fallback: some DB schemas still expect 'candidate' instead of 'pending'
-      const approvalStateForDb = approvalState === 'pending' ? 'candidate' : approvalState;
-      db.prepare(
-        `INSERT INTO curated_golden_samples (
-          id, prompt, completion, source, quality, approval_state, provenance, created_at, approved_at, reviewed_by, review_notes
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        ON CONFLICT(id) DO UPDATE SET
-          prompt = excluded.prompt,
-          completion = excluded.completion,
-          source = excluded.source,
-          quality = excluded.quality,
-          provenance = COALESCE(excluded.provenance, curated_golden_samples.provenance),
-          approval_state = CASE
-            WHEN curated_golden_samples.approval_state IN ('approved', 'rejected') THEN curated_golden_samples.approval_state
-            ELSE excluded.approval_state
-          END,
-          approved_at = CASE
-            WHEN curated_golden_samples.approval_state = 'approved' THEN curated_golden_samples.approved_at
-            ELSE excluded.approved_at
-          END,
-          reviewed_by = CASE
-            WHEN curated_golden_samples.approval_state IN ('approved', 'rejected') THEN curated_golden_samples.reviewed_by
-            ELSE excluded.reviewed_by
-          END,
-          review_notes = CASE
-            WHEN curated_golden_samples.approval_state IN ('approved', 'rejected') THEN curated_golden_samples.review_notes
-            ELSE excluded.review_notes
-          END`
-      ).run(
-        id,
-        opts.prompt,
-        opts.completion,
-        opts.source,
-        quality,
-        approvalStateForDb,
-        opts.provenance ? JSON.stringify(opts.provenance) : null,
-        now,
-        approvalStateForDb === 'approved' ? (opts.approvedAt ?? now) : existing?.approvedAt ?? null,
-        opts.reviewedBy ?? existing?.reviewedBy ?? null,
-        opts.reviewNotes ?? existing?.reviewNotes ?? null,
-      );
-      // If fallback used, DB stores 'candidate' for now; normalize via migration when possible.
-    } else {
-      throw err;
-    }
-  }
+    ],
+  );
   return { success: true, id };
 }
 
@@ -854,9 +871,10 @@ export function getCuratedGoldenStats(): CuratedGoldenStats {
       const count = Number(row.count);
       stats.totalCandidates += count;
       weightedQuality += (Number(row.avg_quality ?? 0) * count);
-      if (row.approval_state === 'pending') stats.pendingReview = count;
-      if (row.approval_state === 'approved') stats.approvedCount = count;
-      if (row.approval_state === 'rejected') stats.rejectedCount = count;
+      const approvalState = normalizeCuratedApprovalState(row.approval_state);
+      if (approvalState === 'pending') stats.pendingReview = count;
+      if (approvalState === 'approved') stats.approvedCount = count;
+      if (approvalState === 'rejected') stats.rejectedCount = count;
     }
     if (stats.totalCandidates > 0) {
       stats.avgQuality = Math.round((weightedQuality / stats.totalCandidates) * 100) / 100;
@@ -868,12 +886,13 @@ export function getCuratedGoldenStats(): CuratedGoldenStats {
       const count = Number(row.count);
       stats.remediationDerived.totalCandidates += count;
       remediationWeightedQuality += (Number(row.avg_quality ?? 0) * count);
-      if (row.approval_state === 'pending') stats.remediationDerived.pendingReview = count;
-      if (row.approval_state === 'approved') {
+      const approvalState = normalizeCuratedApprovalState(row.approval_state);
+      if (approvalState === 'pending') stats.remediationDerived.pendingReview = count;
+      if (approvalState === 'approved') {
         stats.remediationDerived.approvedCount = count;
         latestApprovedAt = row.last_approved_at ?? latestApprovedAt;
       }
-      if (row.approval_state === 'rejected') stats.remediationDerived.rejectedCount = count;
+      if (approvalState === 'rejected') stats.remediationDerived.rejectedCount = count;
     }
     if (stats.remediationDerived.totalCandidates > 0) {
       stats.remediationDerived.avgQuality =

@@ -6,6 +6,16 @@ User requested that the Copilot CLI automatically connect to a local Brunella MC
 
 ## History
 
+### 2026-04-07 03:45 - Learning Loop dashboard hookup
+
+**Feladat:** A Learning Loop kurált minták dashboard hookupjának lezárása, a backend approval_state kompatibilitási fixekkel együtt.
+
+**Érintett fájlok:** `src/core/goldenDatasetBridge.ts`, `test/goldenDatasetBridge.test.ts`, `test/goldenDatasetBridge.curated.test.ts`, `src/tools/learningLoopTools.ts`, `src/server/routes/learningLoop.ts`, `src/dashboard/components/dashboard/LearningLoopPanel.tsx`, `src/dashboard/components/dashboard/LearningLoopPanel.test.tsx`, `C:\Users\pohi9\.copilot\session-state\9318c78b-2e83-408a-89dd-354fc7995e19\plan.md`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A dashboard most látja a curated queue-t, a pending/approved/rejected/all filtereket és az approve/reject műveleteket, a review után pedig automatikusan frissíti a listát és az overview statisztikákat. Validáció: `npx vitest run --config vitest.dashboard.config.ts src/dashboard/components/dashboard/LearningLoopPanel.test.tsx` és `npm run build:ui`.
+
 ### 2026-04-07 03:59 - HR timesheet export/alerts lezárás
 
 **Feladat:** A timesheet export és culture alerts follow-up track véglegesítése a már meglévő service, route és scheduler bekötés után.
