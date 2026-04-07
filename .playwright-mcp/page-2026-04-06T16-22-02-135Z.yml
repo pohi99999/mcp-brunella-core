@@ -1,0 +1,59 @@
+- generic [ref=e4]:
+  - generic [ref=e7]:
+    - menu [ref=e14]:
+      - generic [ref=e15]:
+        - menuitem "Media" [ref=e16] [cursor=pointer]:
+          - generic [ref=e21]: Media
+        - menuitem "Templates" [ref=e23] [cursor=pointer]:
+          - generic [ref=e27]: Templates
+        - menuitem "Elements" [ref=e29] [cursor=pointer]:
+          - generic [ref=e34]: Elements
+        - menuitem "Audio" [ref=e36] [cursor=pointer]:
+          - generic [ref=e40]: Audio
+        - menuitem "Text" [ref=e42] [cursor=pointer]:
+          - generic [ref=e46]: Text
+        - menuitem "Captions" [ref=e48] [cursor=pointer]:
+          - generic [ref=e53]: Captions
+        - menuitem "Transcript" [ref=e55] [cursor=pointer]:
+          - generic [ref=e59]: Transcript
+        - menuitem "Effects" [ref=e61] [cursor=pointer]:
+          - generic [ref=e65]: Effects
+        - menuitem "Transitions" [ref=e67] [cursor=pointer]:
+          - generic [ref=e71]: Transitions
+        - menuitem "Filters" [ref=e73] [cursor=pointer]:
+          - generic [ref=e77]: Filters
+        - menuitem "Brand Kit" [ref=e79] [cursor=pointer]:
+          - generic [ref=e86]: Brand Kit
+    - button [ref=e90] [cursor=pointer]
+  - generic [ref=e159]:
+    - generic [ref=e160]:
+      - generic [ref=e185]: 100%
+      - button "Export" [ref=e205]: Export
+      - generic:
+        - generic:
+          - generic:
+            - generic:
+              - generic: 100%
+        - generic:
+          - generic:
+            - button "Export": Export
+    - generic [ref=e234]:
+      - generic [ref=e236]:
+        - generic [ref=e237]:
+          - main [ref=e238]:
+            - generic [ref=e242]:
+              - img
+          - generic [ref=e251] [cursor=pointer]: Ratio
+        - img "loading" [ref=e255]
+      - generic [ref=e258]:
+        - generic [ref=e268]:
+          - generic [ref=e269]: 00:00:00
+          - generic [ref=e271]: 03:46:00
+        - generic [ref=e276]:
+          - generic [ref=e278]:
+            - button [ref=e280] [cursor=pointer]
+            - button [ref=e284] [cursor=pointer]
+            - button [ref=e288] [cursor=pointer]
+            - button [ref=e292] [cursor=pointer]
+            - button [ref=e296] [cursor=pointer]
+          - img [ref=e307]

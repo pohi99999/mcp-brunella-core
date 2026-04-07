@@ -1,6 +1,10 @@
 import { BaseAgent, AgentContext, AgentResult } from './BaseAgent.js';
 import { logInfo } from '../utils/logger.js';
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null;
+}
+
 /**
  * ReconciliationExceptionAgent - Párosítatlan banki tételek elemzése és megoldási javaslatok készítése.
  */
@@ -11,11 +15,14 @@ export class ReconciliationExceptionAgent extends BaseAgent {
   capabilities = ['exception-analysis', 'payment-pattern-recognition', 'semantic-description-analysis'];
 
   async executeTask(context: AgentContext): Promise<AgentResult> {
-    const { task, payload } = context as any;
+    const task = typeof context.task === 'string' ? context.task : '';
+    const payload = isRecord(context.payload) ? context.payload : undefined;
     logInfo(this.name, `Analyzing reconciliation exception: ${task}`);
 
-    const unmatchedEntry = payload?.entry;
-    if (!unmatchedEntry) return { success: false, message: 'No entry provided for analysis.' };
+    const unmatchedEntry = isRecord(payload?.entry) ? payload.entry : undefined;
+    if (!unmatchedEntry) {
+      return { success: false, message: 'No entry provided for analysis.' };
+    }
 
     return {
       success: true,

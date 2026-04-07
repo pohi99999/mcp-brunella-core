@@ -15,6 +15,7 @@
 
 import { BaseAgent, AgentContext, AgentResult } from "./BaseAgent.js";
 import { logInfo, logError, logDebug } from "../utils/logger.js";
+import { safeJsonParse } from "../utils/aiHelpers.js";
 import { ensureError } from '../utils/ensureError.js';
 import { spawn } from "child_process";
 import path from "path";
@@ -57,7 +58,12 @@ function callVisionWorker(filePath: string, mock = false): Promise<VisionRespons
         return reject(new Error(stderr.slice(0, 500) || `Exit code ${code}`));
       }
       try {
-        resolve(JSON.parse(stdout.trim()) as VisionResponse);
+        const parsed = safeJsonParse<VisionResponse>(stdout.trim(), null as unknown as VisionResponse);
+        if (!parsed) {
+          logDebug('PropertyAnalyst', `Vision worker JSON parse error: invalid JSON`);
+          return reject(new Error(`JSON parse hiba. stdout="${stdout.slice(0, 200)}"`));
+        }
+        resolve(parsed);
       } catch (error: unknown) {
         const err = ensureError(error);
         logDebug('PropertyAnalyst', `Vision worker JSON parse error: ${err.message}`);
@@ -112,7 +118,12 @@ function callCMAWorker(location: string, type: string, area: number, mock = fals
     proc.on("close", (code) => {
       if (code !== 0) return reject(new Error(stderr || `CMA Exit code ${code}`));
       try {
-        resolve(JSON.parse(stdout.trim()));
+        const parsed = safeJsonParse<any>(stdout.trim(), null);
+        if (!parsed) {
+          logDebug('PropertyAnalyst', `CMA worker JSON parse error: invalid JSON`);
+          return reject(new Error(`CMA JSON parse hiba. stdout="${stdout.slice(0,200)}"`));
+        }
+        resolve(parsed);
       } catch (error: unknown) {
         const err = ensureError(error);
         logDebug('PropertyAnalyst', `CMA worker JSON parse error: ${err.message}`);

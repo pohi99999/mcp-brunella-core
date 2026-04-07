@@ -1,0 +1,105 @@
+- generic:
+  - generic:
+    - generic:
+      - generic:
+        - generic:
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - generic:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - button:
+                                  - img
+                            - generic:
+                              - button: Untitled session
+                          - generic:
+                            - generic:
+                              - button: 500 credits
+                              - button: Upgrade
+                              - button:
+                                - img
+                              - button [ref=e374] [cursor=pointer]:
+                                - img
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic:
+                                  - generic:
+                                    - generic:
+                                      - generic:
+                                        - button:
+                                          - generic: Untitled Session
+                                          - generic:
+                                            - img
+                                        - generic: Select where your generations will be saved.
+                                      - button:
+                                        - generic:
+                                          - img
+                                          - generic: Sessions
+                                        - generic: Change folder
+                                - generic:
+                                  - generic:
+                                    - dialog [ref=e375]:
+                                      - button [ref=e376] [cursor=pointer]:
+                                        - generic [ref=e343]: Open app
+                                    - generic [ref=e346]:
+                                      - button [ref=e347] [cursor=pointer]:
+                                        - img
+                                        - generic [ref=e348]: Multi-Shot Video
+                                      - button [ref=e349] [cursor=pointer]:
+                                        - img
+  - dialog [active]:
+    - generic [ref=e378]:
+      - button [ref=e379] [cursor=pointer]:
+        - img
+      - generic [ref=e380]:
+        - generic [ref=e381]:
+          - generic [ref=e382]: More Access
+          - generic [ref=e383]: Upgrade to Pro
+        - generic [ref=e384]:
+          - generic [ref=e385]:
+            - button "Yearly Billed yearly as $336 $35 $28 per user Equivalent to 2 months free" [ref=e386] [cursor=pointer]:
+              - generic [ref=e387]:
+                - generic [ref=e388]: Yearly
+                - generic [ref=e389]: Billed yearly as $336
+              - generic [ref=e391]:
+                - generic [ref=e392]:
+                  - generic [ref=e393]: $35
+                  - generic [ref=e394]: $28 per user
+                - generic [ref=e395]: Equivalent to 2 months free
+            - generic [ref=e399]: SAVE $84
+          - button "Monthly $35 per user Cancel anytime" [ref=e401] [cursor=pointer]:
+            - generic [ref=e403]: Monthly
+            - generic [ref=e405]:
+              - generic [ref=e406]: $35 per user
+              - generic [ref=e407]: Cancel anytime
+        - generic [ref=e411]:
+          - generic [ref=e412]:
+            - img [ref=e414]
+            - generic [ref=e417]: Access to all models, including Gen-4.5 (Video), Nano Banana Pro (Image), Aleph (Video Editing), Veo 3.1 (Video with Audio), Act-Two, Kling 3.0 and more coming soon
+          - generic [ref=e418]:
+            - img [ref=e420]
+            - generic [ref=e423]: Remove watermarks
+          - generic [ref=e424]:
+            - img [ref=e426]
+            - generic [ref=e429]: Upscale videos to 4K
+          - generic [ref=e430]:
+            - img [ref=e432]
+            - generic [ref=e435]: Shorter wait times
+          - generic [ref=e436]:
+            - img [ref=e438]
+            - generic [ref=e441]: Credits reset to 2250 every month (187s of Gen-4.5, 450s of Gen-4 Turbo, 112 2K Nano Banana Pro images or 56 4K, or 187s of Gen-4)
+          - generic [ref=e442]:
+            - img [ref=e444]
+            - generic [ref=e447]: Buy more credits as needed
+      - generic [ref=e448]:
+        - button "View all plans" [ref=e449] [cursor=pointer]
+        - button "Get Pro Yearly" [ref=e450] [cursor=pointer]

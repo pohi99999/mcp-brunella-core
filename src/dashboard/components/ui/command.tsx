@@ -3,6 +3,7 @@
 import { ComponentProps } from "react"
 import { Command as CommandPrimitive } from "cmdk"
 import SearchIcon from "lucide-react/icons/search"
+import { useTranslation } from "react-i18next"
 
 import { cn } from "@/lib/utils"
 import {
@@ -30,19 +31,24 @@ function Command({
 }
 
 function CommandDialog({
-  title = "Command Palette",
-  description = "Search for a command to run...",
+  title,
+  description,
   children,
   ...props
 }: ComponentProps<typeof Dialog> & {
   title?: string
   description?: string
 }) {
+  const { t } = useTranslation()
+  const resolvedTitle = title ?? t("command.dialog_title", "Parancspaletta")
+  const resolvedDescription =
+    description ?? t("command.dialog_description", "Keress parancsot vagy nézetet a vezérlőpulton.")
+
   return (
     <Dialog {...props}>
       <DialogHeader className="sr-only">
-        <DialogTitle>{title}</DialogTitle>
-        <DialogDescription>{description}</DialogDescription>
+        <DialogTitle>{resolvedTitle}</DialogTitle>
+        <DialogDescription>{resolvedDescription}</DialogDescription>
       </DialogHeader>
       <DialogContent className="overflow-hidden p-0">
         <Command className="[&_[cmdk-group-heading]]:text-muted-foreground **:data-[slot=command-input-wrapper]:h-12 [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group]]:px-2 [&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 [&_[cmdk-input-wrapper]_svg]:h-5 [&_[cmdk-input-wrapper]_svg]:w-5 [&_[cmdk-input]]:h-12 [&_[cmdk-item]]:px-2 [&_[cmdk-item]]:py-3 [&_[cmdk-item]_svg]:h-5 [&_[cmdk-item]_svg]:w-5">
@@ -57,6 +63,8 @@ function CommandInput({
   className,
   ...props
 }: ComponentProps<typeof CommandPrimitive.Input>) {
+  const { t } = useTranslation()
+
   return (
     <div
       data-slot="command-input-wrapper"
@@ -66,7 +74,7 @@ function CommandInput({
       <CommandPrimitive.Input
         data-slot="command-input"
         name={props.name ?? "command-palette-search"}
-        aria-label={props["aria-label"] ?? "Command palette search"}
+        aria-label={props["aria-label"] ?? t("command.search_label", "Parancspaletta kereső")}
         className={cn(
           "placeholder:text-muted-foreground flex h-10 w-full rounded-md bg-transparent py-3 text-sm outline-hidden disabled:cursor-not-allowed disabled:opacity-50",
           className

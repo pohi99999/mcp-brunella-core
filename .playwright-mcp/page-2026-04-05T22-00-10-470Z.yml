@@ -1,0 +1,53 @@
+- generic [ref=e1]:
+  - generic [ref=e72]:
+    - generic [ref=e303]:
+      - generic [ref=e304]:
+        - button "View all sessions" [ref=e307] [cursor=pointer]:
+          - img
+        - button "Untitled session" [ref=e309] [cursor=pointer]
+      - generic [ref=e311]:
+        - button "500 credits" [ref=e312] [cursor=pointer]
+        - button "Upgrade" [ref=e313] [cursor=pointer]
+        - button [ref=e314] [cursor=pointer]:
+          - img
+        - button "Help" [ref=e315] [cursor=pointer]:
+          - img
+    - generic [ref=e320]:
+      - generic [ref=e323]:
+        - generic [ref=e324]:
+          - button [ref=e325] [cursor=pointer]:
+            - generic [ref=e326]: Untitled Session
+            - img [ref=e328]
+          - generic [ref=e331]: Select where your generations will be saved.
+        - button [ref=e332] [cursor=pointer]:
+          - generic [ref=e333]:
+            - img [ref=e334]
+            - generic [ref=e336]: Sessions
+          - generic [ref=e337]: Change folder
+      - generic:
+        - generic:
+          - dialog "Tools Settings" [ref=e338]:
+            - button "Open app" [ref=e341] [cursor=pointer]:
+              - generic [ref=e343]: Open app
+          - generic [ref=e346]:
+            - button [ref=e347] [cursor=pointer]:
+              - img
+              - generic [ref=e348]: Multi-Shot Video
+            - button [ref=e349] [cursor=pointer]:
+              - img
+  - dialog [ref=e261]:
+    - generic [ref=e262]:
+      - generic [ref=e350]:
+        - generic [ref=e351]: How do you prefer to create?
+        - generic [ref=e352]: We'll use this as a starting point to recommend tools.
+      - generic [ref=e353]:
+        - generic [ref=e354] [cursor=pointer]:
+          - img [ref=e355]
+          - generic [ref=e359]: Show me what's possible
+        - generic [ref=e360] [cursor=pointer]:
+          - img [ref=e361]
+          - generic [ref=e367]: Give me full creative control
+        - generic [ref=e368] [cursor=pointer]:
+          - img [ref=e369]
+          - generic [ref=e372]: Somewhere in the middle
+      - button [active] [ref=e373]: Continue

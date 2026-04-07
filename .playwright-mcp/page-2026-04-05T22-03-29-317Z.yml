@@ -1,0 +1,90 @@
+- generic [ref=e1]:
+  - generic [ref=e17]:
+    - generic [ref=e19]:
+      - generic [ref=e20]:
+        - button "View all sessions" [ref=e23] [cursor=pointer]:
+          - img
+        - button "Untitled session" [ref=e25] [cursor=pointer]
+      - generic [ref=e27]:
+        - button "500 credits" [ref=e28] [cursor=pointer]
+        - button "Quests" [ref=e29] [cursor=pointer]
+        - button "Upgrade" [ref=e30] [cursor=pointer]
+        - button [ref=e31] [cursor=pointer]:
+          - img
+        - button "Help" [ref=e32] [cursor=pointer]:
+          - img
+    - generic [ref=e37]:
+      - generic [ref=e40]:
+        - generic [ref=e41]:
+          - button [ref=e42] [cursor=pointer]:
+            - generic [ref=e43]: Untitled Session
+            - img [ref=e45]
+          - generic [ref=e48]: Select where your generations will be saved.
+        - button [ref=e49] [cursor=pointer]:
+          - generic [ref=e50]:
+            - img [ref=e51]
+            - generic [ref=e53]: Sessions
+          - generic [ref=e54]: Change folder
+      - generic:
+        - generic:
+          - dialog "Tools Settings" [active] [ref=e55]:
+            - generic [ref=e557]:
+              - generic [ref=e558]:
+                - generic [ref=e559]:
+                  - radiogroup "Output mode" [ref=e560]:
+                    - generic [ref=e561] [cursor=pointer]:
+                      - radio "Image" [ref=e563]
+                      - img [ref=e564]
+                      - text: Image
+                    - generic [ref=e568] [cursor=pointer]:
+                      - radio "Video" [checked] [ref=e570]
+                      - img [ref=e571]
+                      - text: Video
+                    - generic [ref=e574] [cursor=pointer]:
+                      - radio "Audio" [ref=e576]
+                      - img [ref=e577]
+                      - text: Audio
+                  - generic [ref=e578]:
+                    - button "Chat" [ref=e579] [cursor=pointer]:
+                      - generic [ref=e580]:
+                        - img
+                      - text: Chat
+                    - button [ref=e581] [cursor=pointer]:
+                      - img
+                - generic "Open file picker" [ref=e583] [cursor=pointer]:
+                  - generic [ref=e584]:
+                    - paragraph [ref=e585]: Drop an image (optional)
+                    - generic [ref=e586]:
+                      - button "Upload" [ref=e587]:
+                        - img
+                        - text: Upload
+                      - button "Select" [ref=e588]:
+                        - img
+                        - text: Select
+              - separator [ref=e589]
+              - generic [ref=e592]:
+                - textbox "Text Prompt Input" [ref=e593]:
+                  - paragraph [ref=e594]
+                - generic:
+                  - text: Describe your shot. View
+                  - button "guide." [ref=e595] [cursor=pointer]
+                - button "Copy text" [ref=e598] [cursor=pointer]:
+                  - img
+          - generic [ref=e600]:
+            - generic [ref=e601]:
+              - button "Settings" [ref=e602] [cursor=pointer]:
+                - img
+                - generic [ref=e603]: Settings
+              - button "5s" [ref=e605] [cursor=pointer]:
+                - img
+                - generic [ref=e606]: 5s
+              - button "16:9" [ref=e608] [cursor=pointer]:
+                - img
+                - generic [ref=e609]: 16:9
+            - generic [ref=e611]:
+              - button "Gen-4.5" [ref=e612] [cursor=pointer]:
+                - generic [ref=e613]: Gen-4.5
+                - img [ref=e614]
+              - button "Upgrade" [ref=e617] [cursor=pointer]:
+                - generic [ref=e620]: Upgrade
+  - iframe

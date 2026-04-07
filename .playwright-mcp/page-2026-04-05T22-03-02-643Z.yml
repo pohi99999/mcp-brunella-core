@@ -1,0 +1,210 @@
+- generic [ref=e1]:
+  - generic [ref=e17]:
+    - generic [ref=e19]:
+      - generic [ref=e20]:
+        - button "View all sessions" [ref=e23] [cursor=pointer]:
+          - img
+        - button "Untitled session" [ref=e25] [cursor=pointer]
+      - generic [ref=e27]:
+        - button "500 credits" [ref=e28] [cursor=pointer]
+        - button "Quests" [ref=e29] [cursor=pointer]
+        - button "Upgrade" [ref=e30] [cursor=pointer]
+        - button [ref=e31] [cursor=pointer]:
+          - img
+        - button "Help" [ref=e32] [cursor=pointer]:
+          - img
+    - generic [ref=e37]:
+      - generic [ref=e40]:
+        - generic [ref=e41]:
+          - button [ref=e42] [cursor=pointer]:
+            - generic [ref=e43]: Untitled Session
+            - img [ref=e45]
+          - generic [ref=e48]: Select where your generations will be saved.
+        - button [ref=e49] [cursor=pointer]:
+          - generic [ref=e50]:
+            - img [ref=e51]
+            - generic [ref=e53]: Sessions
+          - generic [ref=e54]: Change folder
+      - dialog "Tools Settings" [ref=e55]:
+        - generic [ref=e71]:
+          - generic [ref=e72]:
+            - tablist "Apps categories" [ref=e74]:
+              - tab "For you" [ref=e75] [cursor=pointer]:
+                - generic [ref=e76]: For you
+              - tab "Image" [ref=e77] [cursor=pointer]:
+                - generic [ref=e78]: Image
+              - tab "Video" [ref=e79] [cursor=pointer]:
+                - generic [ref=e80]: Video
+              - tab "Audio" [ref=e81] [cursor=pointer]:
+                - generic [ref=e82]: Audio
+              - tab "Models" [active] [selected] [ref=e83] [cursor=pointer]:
+                - generic [ref=e84]: Models
+              - tab "Collections" [ref=e85] [cursor=pointer]:
+                - generic [ref=e86]: Collections
+            - button "Scroll tabs left":
+              - img
+            - button "Scroll tabs right":
+              - img
+          - tabpanel "Models" [ref=e280]:
+            - generic [ref=e281]:
+              - button "Gen-4.5 - Video" [ref=e282] [cursor=pointer]:
+                - generic [ref=e283]:
+                  - img "Runway Logo" [ref=e287]
+                  - generic [ref=e289]:
+                    - paragraph [ref=e290]: Gen-4.5
+                    - paragraph [ref=e291]: Video
+              - button "Nano Banana 2 - Image" [ref=e292] [cursor=pointer]:
+                - generic [ref=e293]:
+                  - img "Gemini Logo" [ref=e297]
+                  - generic [ref=e300]:
+                    - paragraph [ref=e301]: Nano Banana 2
+                    - paragraph [ref=e302]: Image
+              - button "Kling 3.0 Pro - Video + Audio" [ref=e303] [cursor=pointer]:
+                - generic [ref=e304]:
+                  - img [ref=e308]
+                  - generic [ref=e310]:
+                    - paragraph [ref=e311]: Kling 3.0 Pro
+                    - paragraph [ref=e312]: Video + Audio
+              - button "Kling 3.0 Motion - Character Animation" [ref=e313] [cursor=pointer]:
+                - generic [ref=e314]:
+                  - img [ref=e318]
+                  - generic [ref=e320]:
+                    - paragraph [ref=e321]: Kling 3.0 Motion
+                    - paragraph [ref=e322]: Character Animation
+              - button "FLUX.2 Max - Image" [ref=e323] [cursor=pointer]:
+                - generic [ref=e324]:
+                  - img [ref=e328]
+                  - generic [ref=e331]:
+                    - paragraph [ref=e332]: FLUX.2 Max
+                    - paragraph [ref=e333]: Image
+              - button "Seedream 5.0 - Image" [ref=e334] [cursor=pointer]:
+                - generic [ref=e335]:
+                  - img [ref=e339]
+                  - generic [ref=e344]:
+                    - paragraph [ref=e345]: Seedream 5.0
+                    - paragraph [ref=e346]: Image
+              - button "FLUX.2 Klein - Image" [ref=e347] [cursor=pointer]:
+                - generic [ref=e348]:
+                  - img [ref=e352]
+                  - generic [ref=e355]:
+                    - paragraph [ref=e356]: FLUX.2 Klein
+                    - paragraph [ref=e357]: Image
+              - button "Gen-4 - Video" [ref=e358] [cursor=pointer]:
+                - generic [ref=e359]:
+                  - img "Runway Logo" [ref=e363]
+                  - generic [ref=e365]:
+                    - paragraph [ref=e366]: Gen-4
+                    - paragraph [ref=e367]: Video
+              - button "Gen-4 Aleph - Video" [ref=e368] [cursor=pointer]:
+                - generic [ref=e369]:
+                  - img "Runway Logo" [ref=e373]
+                  - generic [ref=e375]:
+                    - paragraph [ref=e376]: Gen-4 Aleph
+                    - paragraph [ref=e377]: Video
+              - button "Veo 3.1 - Video + Audio" [ref=e378] [cursor=pointer]:
+                - generic [ref=e379]:
+                  - img "Gemini Logo" [ref=e383]
+                  - generic [ref=e386]:
+                    - paragraph [ref=e387]: Veo 3.1
+                    - paragraph [ref=e388]: Video + Audio
+              - button "Veo 3 - Video + Audio" [ref=e389] [cursor=pointer]:
+                - generic [ref=e390]:
+                  - img "Gemini Logo" [ref=e394]
+                  - generic [ref=e397]:
+                    - paragraph [ref=e398]: Veo 3
+                    - paragraph [ref=e399]: Video + Audio
+              - button "Sora 2 Pro - Video + Audio" [ref=e400] [cursor=pointer]:
+                - generic [ref=e401]:
+                  - img [ref=e405]
+                  - generic [ref=e407]:
+                    - paragraph [ref=e408]:
+                      - text: Sora 2 Pro
+                      - generic [ref=e409]: Deprecated soon
+                    - paragraph [ref=e410]: Video + Audio
+              - button "Sora 2 - Video + Audio" [ref=e411] [cursor=pointer]:
+                - generic [ref=e412]:
+                  - img [ref=e416]
+                  - generic [ref=e418]:
+                    - paragraph [ref=e419]:
+                      - text: Sora 2
+                      - generic [ref=e420]: Deprecated soon
+                    - paragraph [ref=e421]: Video + Audio
+              - button "Nano Banana Pro - Image" [ref=e422] [cursor=pointer]:
+                - generic [ref=e423]:
+                  - img "Gemini Logo" [ref=e427]
+                  - generic [ref=e430]:
+                    - paragraph [ref=e431]: Nano Banana Pro
+                    - paragraph [ref=e432]: Image
+              - button "Nano Banana - Image" [ref=e433] [cursor=pointer]:
+                - generic [ref=e434]:
+                  - img "Gemini Logo" [ref=e438]
+                  - generic [ref=e441]:
+                    - paragraph [ref=e442]: Nano Banana
+                    - paragraph [ref=e443]: Image
+              - button "Gen-4 - Image" [ref=e444] [cursor=pointer]:
+                - generic [ref=e445]:
+                  - img "Runway Logo" [ref=e449]
+                  - generic [ref=e451]:
+                    - paragraph [ref=e452]: Gen-4
+                    - paragraph [ref=e453]: Image
+              - button "Gen-4 Turbo - Video" [ref=e454] [cursor=pointer]:
+                - generic [ref=e455]:
+                  - img "Runway Logo" [ref=e459]
+                  - generic [ref=e461]:
+                    - paragraph [ref=e462]: Gen-4 Turbo
+                    - paragraph [ref=e463]: Video
+              - button "Gen-4 Turbo - Image" [ref=e464] [cursor=pointer]:
+                - generic [ref=e465]:
+                  - img "Runway Logo" [ref=e469]
+                  - generic [ref=e471]:
+                    - paragraph [ref=e472]: Gen-4 Turbo
+                    - paragraph [ref=e473]: Image
+              - button "GPT Image 1.5 - Image" [ref=e474] [cursor=pointer]:
+                - generic [ref=e475]:
+                  - img [ref=e479]
+                  - generic [ref=e481]:
+                    - paragraph [ref=e482]: GPT Image 1.5
+                    - paragraph [ref=e483]: Image
+              - button "GPT Image 1 Mini - Image" [ref=e484] [cursor=pointer]:
+                - generic [ref=e485]:
+                  - img [ref=e489]
+                  - generic [ref=e491]:
+                    - paragraph [ref=e492]: GPT Image 1 Mini
+                    - paragraph [ref=e493]: Image
+              - button "WAN 2.6 - Video + Audio" [ref=e494] [cursor=pointer]:
+                - generic [ref=e495]:
+                  - img [ref=e499]
+                  - generic [ref=e502]:
+                    - paragraph [ref=e503]: WAN 2.6
+                    - paragraph [ref=e504]: Video + Audio
+              - button "WAN 2.6 Flash - Video + Audio" [ref=e505] [cursor=pointer]:
+                - generic [ref=e506]:
+                  - img [ref=e510]
+                  - generic [ref=e513]:
+                    - paragraph [ref=e514]: WAN 2.6 Flash
+                    - paragraph [ref=e515]: Video + Audio
+              - button "Kling 3.0 Standard - Video + Audio" [ref=e516] [cursor=pointer]:
+                - generic [ref=e517]:
+                  - img [ref=e521]
+                  - generic [ref=e523]:
+                    - paragraph [ref=e524]: Kling 3.0 Standard
+                    - paragraph [ref=e525]: Video + Audio
+              - button "Kling 2.6 Pro - Video + Audio" [ref=e526] [cursor=pointer]:
+                - generic [ref=e527]:
+                  - img [ref=e531]
+                  - generic [ref=e533]:
+                    - paragraph [ref=e534]: Kling 2.6 Pro
+                    - paragraph [ref=e535]: Video + Audio
+              - button "Kling 2.5 Turbo Pro - Video" [ref=e536] [cursor=pointer]:
+                - generic [ref=e537]:
+                  - img [ref=e541]
+                  - generic [ref=e543]:
+                    - paragraph [ref=e544]: Kling 2.5 Turbo Pro
+                    - paragraph [ref=e545]: Video
+              - button "Kling 2.5 Turbo - Image to Video" [ref=e546] [cursor=pointer]:
+                - generic [ref=e547]:
+                  - img [ref=e551]
+                  - generic [ref=e553]:
+                    - paragraph [ref=e554]: Kling 2.5 Turbo
+                    - paragraph [ref=e555]: Image to Video
+  - iframe

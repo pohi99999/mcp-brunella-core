@@ -1,0 +1,79 @@
+- generic [ref=e189]:
+  - generic [ref=e191]:
+    - generic [ref=e490]:
+      - menu [ref=e497]:
+        - generic [ref=e498]:
+          - menuitem "Media" [ref=e499] [cursor=pointer]:
+            - generic [ref=e504]: Media
+          - menuitem "Templates" [ref=e506] [cursor=pointer]:
+            - generic [ref=e510]: Templates
+          - menuitem "Elements" [ref=e512] [cursor=pointer]:
+            - generic [ref=e516]: Elements
+          - menuitem "Audio" [ref=e518] [cursor=pointer]:
+            - generic [ref=e522]: Audio
+          - menuitem "Text" [ref=e524] [cursor=pointer]:
+            - generic [ref=e528]: Text
+          - menuitem "Captions" [ref=e530] [cursor=pointer]:
+            - generic [ref=e535]: Captions
+          - menuitem "Transcript" [ref=e537] [cursor=pointer]:
+            - generic [ref=e541]: Transcript
+          - menuitem "Effects" [ref=e543] [cursor=pointer]:
+            - generic [ref=e547]: Effects
+          - menuitem "Transitions" [ref=e549] [cursor=pointer]:
+            - generic [ref=e553]: Transitions
+          - menuitem "Filters" [ref=e555] [cursor=pointer]:
+            - generic [ref=e559]: Filters
+          - menuitem "Brand kit" [ref=e561] [cursor=pointer]:
+            - generic [ref=e562]:
+              - generic [ref=e568]: Brand
+              - generic [ref=e569]: kit
+          - menuitem "Plugins" [ref=e572] [cursor=pointer]:
+            - generic [ref=e576]: Plugins
+      - button [ref=e583] [cursor=pointer]
+    - generic [ref=e589]:
+      - generic [ref=e590]:
+        - generic [ref=e593] [cursor=pointer]:
+          - generic [ref=e594]: J
+          - generic [ref=e595]: József Péter Pohánka tára
+        - button "Upload" [ref=e609] [cursor=pointer]:
+          - generic [ref=e613]: Upload
+      - alert [ref=e622]:
+        - generic [ref=e625] [cursor=pointer]:
+          - generic [ref=e628]:
+            - paragraph [ref=e629]: Text to speech
+            - paragraph [ref=e630]: Turn any text into lifelike speech in seconds.
+          - button "Try it" [ref=e632]:
+            - generic [ref=e633]: Try it
+  - generic [ref=e351]:
+    - generic [ref=e352]:
+      - generic [ref=e423]: 100%
+      - button "Export" [ref=e645] [cursor=pointer]: Export
+      - generic:
+        - generic:
+          - generic:
+            - generic:
+              - generic: 100%
+        - generic:
+          - generic:
+            - generic:
+              - button "Export": Export
+    - generic [ref=e354]:
+      - generic [ref=e471]:
+        - generic [ref=e472]:
+          - main [ref=e473]:
+            - generic [ref=e477]:
+              - img
+          - generic [ref=e485] [cursor=pointer]: Ratio
+        - img "loading" [ref=e489]
+      - generic [ref=e358]:
+        - generic [ref=e655]:
+          - generic [ref=e656]: 00:00:00
+          - generic [ref=e658]: 03:46:00
+        - generic [ref=e369]:
+          - generic [ref=e371]:
+            - button [ref=e660] [cursor=pointer]
+            - button [ref=e664] [cursor=pointer]
+            - button [ref=e668] [cursor=pointer]
+            - button [ref=e672] [cursor=pointer]
+            - button [ref=e676] [cursor=pointer]
+          - img [ref=e380]

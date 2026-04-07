@@ -37,8 +37,10 @@ import {
   type JulesWorkflowRun,
 } from "@/lib/apiService";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 
 export function JulesPanel() {
+  const { t } = useTranslation();
   const [prompt, setPrompt] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [sessions, setSessions] = useState<JulesSession[]>([]);
@@ -61,7 +63,7 @@ export function JulesPanel() {
       setSessions(data);
     } catch (error) {
       console.error("Failed to load Jules sessions:", error);
-      toast.error("Jules sessions load failed");
+      toast.error(t("jules.sessions_load_error", "A Jules sessionök betöltése sikertelen"));
     } finally {
       setIsLoading(false);
     }
@@ -89,11 +91,15 @@ export function JulesPanel() {
     setIsSubmitting(true);
     try {
       const result = await createJulesTask(prompt);
-      toast.success(`Jules task started: ${result.sessionId || "queued"}`);
+      toast.success(
+        t("jules.task_started", "Jules feladat elindítva: {{sessionId}}", {
+          sessionId: result.sessionId || t("jules.queued", "sorba állítva"),
+        }),
+      );
       setPrompt("");
       await refreshSessions();
     } catch (error) {
-      toast.error("Failed to create Jules task");
+      toast.error(t("jules.create_error", "Nem sikerült létrehozni a Jules feladatot"));
     } finally {
       setIsSubmitting(false);
     }
@@ -102,10 +108,10 @@ export function JulesPanel() {
   const handleSync = async (sessionId: string) => {
     try {
       await syncJulesSession(sessionId);
-      toast.success("Sync started for session");
+      toast.success(t("jules.sync_started", "A szinkron elindult a sessionhöz"));
       await refreshSessions();
     } catch (error) {
-      toast.error("Sync failed");
+      toast.error(t("jules.sync_error", "A szinkron sikertelen"));
     }
   };
 
@@ -125,17 +131,17 @@ export function JulesPanel() {
 
   return (
     <Card className="bg-transparent border-none shadow-none h-full flex flex-col">
-      <CardHeader className="flex flex-row items-center justify-between pb-3 px-4 pt-4 shrink-0">
+        <CardHeader className="flex flex-row items-center justify-between pb-3 px-4 pt-4 shrink-0">
         <CardTitle className="text-xs font-medium tracking-wide text-zinc-400 flex items-center gap-2">
           <Robot size={24} weight="duotone" />
-          Jules Integration
+          {t("jules.title", "Jules integráció")}
         </CardTitle>
         <Button
           variant="ghost"
           size="sm"
           onClick={refreshSessions}
           disabled={isLoading}
-          title="Load Jules sessions"
+          title={t("jules.load_sessions", "Jules sessionök betöltése")}
         >
           <ArrowsClockwise
             size={16}
@@ -147,7 +153,13 @@ export function JulesPanel() {
         {/* Input Area */}
         <div className="space-y-2">
           <Textarea
-            placeholder="Describe the task for Jules (e.g. 'Refactor the authentication logic in python')..."
+            id="jules-task-prompt"
+            name="jules-task-prompt"
+            aria-label={t("jules.prompt_label", "Jules feladat")}
+            placeholder={t(
+              "jules.prompt_placeholder",
+              "Írd le a Jules feladatát (pl. \"Refaktoráld a Python hitelesítési logikát\")...",
+            )}
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
             className="bg-white/[0.02] border-white/[0.04] min-h-[100px]"
@@ -163,7 +175,7 @@ export function JulesPanel() {
               ) : (
                 <Play className="mr-2 h-4 w-4" />
               )}
-              Send to Jules
+              {t("jules.send", "Küldés Jules-nak")}
             </Button>
           </div>
         </div>
@@ -173,10 +185,10 @@ export function JulesPanel() {
           <Table>
             <TableHeader className="bg-white/[0.04]">
               <TableRow className="text-xs">
-                <TableHead className="w-[80px] py-2">Session</TableHead>
-                <TableHead className="py-2">Status</TableHead>
-                <TableHead className="py-2">Task</TableHead>
-                <TableHead className="text-right py-2">Action</TableHead>
+                <TableHead className="w-[80px] py-2">{t("jules.session", "Session")}</TableHead>
+                <TableHead className="py-2">{t("jules.status", "Állapot")}</TableHead>
+                <TableHead className="py-2">{t("jules.task", "Feladat")}</TableHead>
+                <TableHead className="text-right py-2">{t("jules.action", "Művelet")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -186,7 +198,7 @@ export function JulesPanel() {
                     colSpan={4}
                     className="text-center text-zinc-500 h-16 text-xs"
                   >
-                    No active sessions found.
+                    {t("jules.no_sessions", "Nincs aktív session.")}
                   </TableCell>
                 </TableRow>
               ) : (
@@ -222,7 +234,7 @@ export function JulesPanel() {
                           variant="ghost"
                           size="sm"
                           onClick={() => handleSync(session.id)}
-                          title="Sync / Pull"
+                          title={t("jules.sync_title", "Szinkron / Lekérés")}
                           className="h-6 w-6 p-0"
                         >
                           <GitPullRequest size={14} />
@@ -242,8 +254,10 @@ export function JulesPanel() {
                 className="text-xs text-purple-400 hover:text-purple-300"
               >
                 {showAllSessions
-                  ? "Show Less"
-                  : `Show ${sessions.length - MAX_VISIBLE_SESSIONS} More`}
+                  ? t("jules.show_less", "Kevesebb mutatása")
+                  : t("jules.show_more", "{{count}} további megjelenítése", {
+                      count: sessions.length - MAX_VISIBLE_SESSIONS,
+                    })}
               </Button>
             </div>
           )}
@@ -262,10 +276,13 @@ export function JulesPanel() {
           }}
         >
           <div className="text-xs font-medium text-zinc-500 flex items-center gap-2">
-            Async Tests (GitHub Actions)
+            {t("jules.async_tests", "Aszinkron tesztek (GitHub Actions)")}
             {runs.length > 0 && (
               <Badge variant="secondary" className="text-[10px] px-1.5 py-0">
-                {runs.filter((r) => r.conclusion === "success").length}/{runs.length} Pass
+                {t("jules.pass_ratio", "{{passed}}/{{total}} sikeres", {
+                  passed: runs.filter((r) => r.conclusion === "success").length,
+                  total: runs.length,
+                })}
               </Badge>
             )}
           </div>
@@ -297,9 +314,9 @@ export function JulesPanel() {
             <TableHeader className="bg-white/[0.04]">
               <TableRow>
                 <TableHead className="w-[80px]">#</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Conclusion</TableHead>
-                <TableHead>Updated</TableHead>
+                <TableHead>{t("jules.status", "Állapot")}</TableHead>
+                <TableHead>{t("jules.conclusion", "Eredmény")}</TableHead>
+                <TableHead>{t("jules.updated", "Frissítve")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -310,10 +327,10 @@ export function JulesPanel() {
                     className="text-center text-zinc-500 h-16"
                   >
                     {isLoadingRuns
-                      ? "Betöltés..."
+                      ? t("jules.loading", "Betöltés...")
                       : hasLoadedRuns
-                        ? "Nincs adat (lehet hiányzik a GITHUB_TOKEN a szerveren)."
-                        : "Kattints a frissítésre a workflow futások betöltéséhez."}
+                        ? t("jules.no_runs_missing_token", "Nincs adat (lehet hiányzik a GITHUB_TOKEN a szerveren).")
+                        : t("jules.load_runs_hint", "Kattints a frissítésre a workflow futások betöltéséhez.")}
                   </TableCell>
                 </TableRow>
               ) : (
@@ -323,7 +340,7 @@ export function JulesPanel() {
                       {r.run_number ?? r.id}
                     </TableCell>
                     <TableCell>
-                      <Badge variant="outline">{r.status || "unknown"}</Badge>
+                      <Badge variant="outline">{r.status || t("jules.unknown", "ismeretlen")}</Badge>
                     </TableCell>
                     <TableCell>
                       <Badge
@@ -357,7 +374,7 @@ export function JulesPanel() {
             <div className="flex items-center justify-between px-3 py-2 bg-white/[0.04]">
               <div className="text-sm font-medium text-zinc-500 flex items-center gap-2">
                 <ChartLine size={16} />
-                Test Success Trend (Last 10 Runs)
+                {t("jules.success_trend", "Tesztek sikerességi trendje (utolsó 10 futás)")}
               </div>
             </div>
             <div className="p-4 bg-white/[0.02]">
@@ -391,8 +408,11 @@ export function JulesPanel() {
                 </LineChart>
               </ResponsiveContainer>
             <div className="mt-2 text-xs text-zinc-500 text-center">
-                {runs.filter((r) => r.conclusion === "success").length} / {runs.length} successful runs (
-                {Math.round((runs.filter((r) => r.conclusion === "success").length / runs.length) * 100)}% pass rate)
+                {t("jules.successful_runs", "{{passed}} / {{total}} sikeres futás ({{rate}}% sikerarány)", {
+                  passed: runs.filter((r) => r.conclusion === "success").length,
+                  total: runs.length,
+                  rate: Math.round((runs.filter((r) => r.conclusion === "success").length / runs.length) * 100),
+                })}
               </div>
             </div>
           </div>

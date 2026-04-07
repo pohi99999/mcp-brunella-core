@@ -1,5 +1,6 @@
 
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -10,6 +11,7 @@ import { toast } from 'sonner'
 import { Plus, X, RocketLaunch, IdentificationCard, ListChecks, Lightning } from '@phosphor-icons/react'
 
 export function AgentFactory() {
+    const { t } = useTranslation();
     const [name, setName] = useState('')
     const [role, setRole] = useState('')
     const [description, setDescription] = useState('')
@@ -36,7 +38,7 @@ export function AgentFactory() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
         if (!name || !role) {
-            toast.error('Név és szerepkör kötelező!')
+            toast.error(t("factory.required_error"));
             return
         }
 
@@ -49,7 +51,7 @@ export function AgentFactory() {
                 capabilities,
                 triggers
             })
-            toast.success(`A(z) ${name} ügynök sikeresen megszületett!`)
+            toast.success(t("factory.success_message", { name }));
             // Reset form
             setName('')
             setRole('')
@@ -57,7 +59,7 @@ export function AgentFactory() {
             setCapabilities([])
             setTriggers([])
         } catch (error: any) {
-            toast.error(`Hiba a szülésnél: ${error.message}`)
+            toast.error(`${t("factory.error_message")}: ${error.message}`)
         } finally {
             setIsSubmitting(false)
         }
@@ -70,8 +72,8 @@ export function AgentFactory() {
                     <RocketLaunch size={24} weight="duotone" />
                 </div>
                 <div>
-                    <h2 className="text-2xl font-bold tracking-tight">Agent Factory</h2>
-                    <p className="text-zinc-500">Hozz létre új, specializált ügynököket kódolás nélkül.</p>
+                    <h2 className="text-2xl font-bold tracking-tight">{t("factory.title")}</h2>
+                    <p className="text-zinc-500">{t("factory.description")}</p>
                 </div>
             </div>
 
@@ -80,35 +82,35 @@ export function AgentFactory() {
                     <CardHeader>
                         <CardTitle className="flex items-center gap-2 text-primary">
                             <IdentificationCard size={20} />
-                            Alapadatok
+                            {t("factory.basic_info")}
                         </CardTitle>
-                        <CardDescription>Határozd meg az ügynök identitását.</CardDescription>
+                        <CardDescription>{t("factory.identity_desc")}</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-4">
                         <div className="space-y-2">
-                            <label className="text-sm font-medium">Ügynök Neve (pl. EmailWriter)</label>
+                            <label className="text-sm font-medium">{t("factory.agent_name_label")}</label>
                             <Input
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
-                                placeholder="Csak betűk, szóköz nélkül"
+                                placeholder={t("factory.agent_name_placeholder")}
                                 className="bg-white/[0.04] border-white/10 focus:border-primary"
                             />
                         </div>
                         <div className="space-y-2">
-                            <label className="text-sm font-medium">Szerepkör (pl. Marketing Szakértő)</label>
+                            <label className="text-sm font-medium">{t("factory.role_label")}</label>
                             <Input
                                 value={role}
                                 onChange={(e) => setRole(e.target.value)}
-                                placeholder="Mit csinál ez az ügynök?"
+                                placeholder={t("factory.role_placeholder")}
                                 className="bg-white/[0.04] border-white/10 focus:border-primary"
                             />
                         </div>
                         <div className="space-y-2">
-                            <label className="text-sm font-medium">Részletes leírás</label>
+                            <label className="text-sm font-medium">{t("factory.description_label")}</label>
                             <Textarea
                                 value={description}
                                 onChange={(e) => setDescription(e.target.value)}
-                                placeholder="Mire használható ez az ügynök?"
+                                placeholder={t("factory.description_placeholder")}
                                 className="bg-white/[0.04] border-white/10 min-h-[100px] focus:border-primary"
                             />
                         </div>
@@ -120,7 +122,7 @@ export function AgentFactory() {
                         <CardHeader className="pb-3">
                             <CardTitle className="flex items-center gap-2 text-primary text-base">
                                 <ListChecks size={18} />
-                                Képességek
+                                {t("factory.capabilities")}
                             </CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-3">
@@ -129,7 +131,7 @@ export function AgentFactory() {
                                     value={newCap}
                                     onChange={(e) => setNewCap(e.target.value)}
                                     onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), handleAddCap())}
-                                    placeholder="pl. send_email"
+                                    placeholder={t("factory.capability_placeholder")}
                                     className="bg-white/[0.04] border-white/10"
                                 />
                                 <Button type="button" size="icon" onClick={handleAddCap} variant="secondary">
@@ -140,7 +142,7 @@ export function AgentFactory() {
                                 {capabilities.map(cap => (
                                     <Badge key={cap} variant="secondary" className="gap-1 pr-1">
                                         {cap}
-                                        <button type="button" aria-label={`Remove capability ${cap}`} title="Remove capability" onClick={() => setCapabilities(capabilities.filter(c => c !== cap))}>
+                                        <button type="button" aria-label={t("factory.remove_cap")} title={t("factory.remove_cap")} onClick={() => setCapabilities(capabilities.filter(c => c !== cap))}>
                                             <X size={12} />
                                         </button>
                                     </Badge>
@@ -153,7 +155,7 @@ export function AgentFactory() {
                         <CardHeader className="pb-3">
                             <CardTitle className="flex items-center gap-2 text-primary text-base">
                                 <Lightning size={18} />
-                                Triggerek
+                                {t("factory.triggers")}
                             </CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-3">
@@ -162,7 +164,7 @@ export function AgentFactory() {
                                     value={newTrigger}
                                     onChange={(e) => setNewTrigger(e.target.value)}
                                     onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), handleAddTrigger())}
-                                    placeholder="pl. levél, üzenet"
+                                    placeholder={t("factory.trigger_placeholder")}
                                     className="bg-white/[0.04] border-white/10"
                                 />
                                 <Button type="button" size="icon" onClick={handleAddTrigger} variant="secondary">
@@ -173,7 +175,7 @@ export function AgentFactory() {
                                 {triggers.map(t => (
                                     <Badge key={t} variant="outline" className="gap-1 pr-1 bg-primary/5">
                                         {t}
-                                        <button type="button" aria-label={`Remove trigger ${t}`} title="Remove trigger" onClick={() => setTriggers(triggers.filter(tr => tr !== t))}>
+                                        <button type="button" aria-label={t("factory.remove_trigger")} title={t("factory.remove_trigger")} onClick={() => setTriggers(triggers.filter(tr => tr !== t))}>
                                             <X size={12} />
                                         </button>
                                     </Badge>
@@ -188,7 +190,7 @@ export function AgentFactory() {
                     disabled={isSubmitting}
                     className="w-full h-12 text-lg font-bold shadow-lg shadow-primary/20 transition-all hover:scale-[1.01]"
                 >
-                    {isSubmitting ? 'Születés folyamatban...' : 'Ügynök Létrehozása'}
+                    {isSubmitting ? t("factory.creating_button") : t("factory.create_button")}
                 </Button>
             </form>
         </div>

@@ -1,0 +1,308 @@
+- generic:
+  - generic:
+    - generic:
+      - generic:
+        - generic:
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - generic:
+                    - banner:
+                      - button:
+                        - generic:
+                          - img
+                    - generic:
+                      - button:
+                        - generic:
+                          - generic:
+                            - img
+                        - text: Tool
+                      - button:
+                        - generic:
+                          - generic:
+                            - img
+                        - text: App
+                      - button:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - img
+                        - text: Chat
+                      - button:
+                        - generic:
+                          - generic:
+                            - img
+                        - text: Recents
+                      - button:
+                        - generic:
+                          - generic:
+                            - img
+                        - text: Workflow
+                      - button:
+                        - generic:
+                          - generic:
+                            - img
+                        - text: Live
+                    - generic:
+                      - link:
+                        - /url: /video-tools/teams/peterpohankapersonal/dashboard
+                        - img
+                      - generic:
+                        - button:
+                          - generic:
+                            - paragraph: JÓ
+                - generic:
+                  - generic:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic:
+                                  - generic:
+                                    - generic:
+                                      - banner:
+                                        - radiogroup:
+                                          - generic:
+                                            - generic:
+                                              - radio
+                                            - img
+                                            - text: Image
+                                          - generic:
+                                            - generic:
+                                              - radio [checked]
+                                            - img
+                                            - text: Video
+                                          - generic:
+                                            - generic:
+                                              - radio
+                                            - img
+                                            - text: Audio
+                                        - button:
+                                          - img
+                                      - generic:
+                                        - generic:
+                                          - generic:
+                                            - generic:
+                                              - generic:
+                                                - generic:
+                                                  - generic:
+                                                    - generic:
+                                                      - generic:
+                                                        - generic:
+                                                          - button:
+                                                            - generic:
+                                                              - generic:
+                                                                - generic:
+                                                                  - img
+                                                                - paragraph: First Video Frame
+                                                              - generic:
+                                                                - button:
+                                                                  - img
+                                                                  - generic: Upload
+                                                                - button:
+                                                                  - img
+                                                - generic:
+                                                  - generic:
+                                                    - separator
+                                                - generic:
+                                                  - generic:
+                                                    - generic:
+                                                      - generic:
+                                                        - textbox:
+                                                          - paragraph: "Cinematic fashion film opening shot. Extreme close-up of a hand-painted silk fabric in vibrant turquoise, coral and deep cobalt blue. The fabric gently ripples as if touched by a soft Mediterranean breeze. Ultra-slow motion, 4K resolution. Light flares from the left. Minimal, white background gradually reveals luxury fashion atelier. Elegant, editorial aesthetic. Shot on Arri Alexa, cinematic color grading, golden hour tone. Duration: 5 seconds."
+                                                        - generic:
+                                                          - generic:
+                                                            - generic: 449/5000
+                                                            - button:
+                                                              - img
+                                                - generic:
+                                                  - generic:
+                                                    - separator
+                                                - generic:
+                                                  - generic:
+                                                    - generic:
+                                                      - generic:
+                                                        - img
+                                                        - generic: Images
+                                                      - button:
+                                                        - img
+                                                    - generic:
+                                                      - generic:
+                                                        - generic:
+                                                          - generic:
+                                                            - button:
+                                                              - img
+                                                          - generic:
+                                                            - grid:
+                                                              - row:
+                                                                - gridcell:
+                                                                  - button:
+                                                                    - img
+                                                              - row:
+                                                                - gridcell:
+                                                                  - generic:
+                                                                    - generic:
+                                                                      - button: Person
+                                                              - row:
+                                                                - gridcell:
+                                                                  - generic:
+                                                                    - generic:
+                                                                      - button: Buildings
+                                                              - row:
+                                                                - gridcell:
+                                                                  - generic:
+                                                                    - generic:
+                                                                      - button: Street
+                                                              - row:
+                                                                - gridcell:
+                                                                  - generic:
+                                                                    - generic:
+                                                                      - button: Water
+                                                              - row:
+                                                                - gridcell:
+                                                                  - generic:
+                                                                    - generic:
+                                                                      - button: Candle
+                                                              - row:
+                                                                - gridcell:
+                                                                  - generic:
+                                                                    - generic:
+                                                                      - button: Crosswalk
+                                                              - row:
+                                                                - gridcell:
+                                                                  - generic:
+                                                                    - generic:
+                                                                      - button: Jacket Yellow
+                                                              - row:
+                                                                - gridcell:
+                                                                  - generic:
+                                                                    - generic:
+                                                                      - button: Jacket Red
+                                            - toolbar:
+                                              - button [pressed]:
+                                                - img
+                                              - button:
+                                                - img
+                                                - generic: Presets
+                                              - generic:
+                                                - button:
+                                                  - img
+                                                  - generic: 16:9
+                                                - generic:
+                                                  - generic:
+                                                    - combobox
+                                              - generic:
+                                                - button:
+                                                  - img
+                                                  - generic: 5s
+                                                - generic:
+                                                  - generic:
+                                                    - combobox
+                                              - button:
+                                                - img
+                                            - generic:
+                                              - button:
+                                                - img
+                                                - img
+                                              - button:
+                                                - text: Gen-4.5
+                                                - img
+                                              - button:
+                                                - img
+                                                - text: Generate
+                                  - generic:
+                                    - separator
+                                - generic:
+                                  - generic:
+                                    - generic:
+                                      - generic:
+                                        - generic:
+                                          - generic:
+                                            - generic:
+                                              - button:
+                                                - generic: Untitled session
+                                            - button:
+                                              - img
+                                        - generic:
+                                          - generic:
+                                            - button: 500 credits
+                                            - button:
+                                              - generic:
+                                                - img
+                                              - generic: 0/1
+                                              - text: Quests
+                                            - button: Upgrade
+                                            - button:
+                                              - img
+                                            - button [ref=e1283] [cursor=pointer]:
+                                              - img
+                                    - generic:
+                                      - generic:
+                                        - generic:
+                                          - heading [level=2]: Everything you need to make anything you want
+                                          - tablist:
+                                            - tab [selected]: Multi-Shot Video
+                                            - tab: Runway Characters
+                                            - tab: Gen-4.5
+                                            - tab: Kling 3.0
+                                            - tab: Nano Banana 2
+                                            - tab: Character Render
+                                        - generic:
+                                          - tabpanel:
+                                            - generic:
+                                              - button:
+                                                - button:
+                                                  - img
+                                        - button: Upgrade
+                            - status
+  - dialog [active]:
+    - generic [ref=e1285]:
+      - generic [ref=e1286]:
+        - generic [ref=e1287]:
+          - generic [ref=e1288]: More Access
+          - generic [ref=e1289]: Upgrade to Pro
+        - generic [ref=e1290]:
+          - generic [ref=e1291]:
+            - img [ref=e1293]
+            - generic [ref=e1296]: Access to all models, including Gen-4.5 (Video), Nano Banana Pro (Image), Aleph (Video Editing), Veo 3.1 (Video with Audio), Act-Two, Kling 3.0 and more coming soon
+          - generic [ref=e1297]:
+            - img [ref=e1299]
+            - generic [ref=e1302]: Remove watermarks
+          - generic [ref=e1303]:
+            - img [ref=e1305]
+            - generic [ref=e1308]: Upscale videos to 4K
+          - generic [ref=e1309]:
+            - img [ref=e1311]
+            - generic [ref=e1314]: Shorter wait times
+          - generic [ref=e1315]:
+            - img [ref=e1317]
+            - generic [ref=e1320]: Credits reset to 2250 every month (187s of Gen-4.5, 450s of Gen-4 Turbo, 112 2K Nano Banana Pro images or 56 4K, or 187s of Gen-4)
+          - generic [ref=e1321]:
+            - img [ref=e1323]
+            - generic [ref=e1326]: Buy more credits as needed
+        - button "Get Pro Yearly" [ref=e1327] [cursor=pointer]
+      - generic [ref=e1328]:
+        - button [ref=e1329] [cursor=pointer]:
+          - img
+        - generic [ref=e1332]:
+          - generic [ref=e1333]:
+            - generic [ref=e1334]:
+              - button "Yearly Billed yearly as $336 $35 $28 per user Equivalent to 2 months free" [ref=e1335] [cursor=pointer]:
+                - generic [ref=e1336]:
+                  - generic [ref=e1337]: Yearly
+                  - generic [ref=e1338]: Billed yearly as $336
+                - generic [ref=e1340]:
+                  - generic [ref=e1341]:
+                    - generic [ref=e1342]: $35
+                    - generic [ref=e1343]: $28 per user
+                  - generic [ref=e1344]: Equivalent to 2 months free
+              - generic [ref=e1348]: SAVE $84
+            - button "Monthly $35 per user Cancel anytime" [ref=e1350] [cursor=pointer]:
+              - generic [ref=e1352]: Monthly
+              - generic [ref=e1354]:
+                - generic [ref=e1355]: $35 per user
+                - generic [ref=e1356]: Cancel anytime
+          - button "All plans & features" [ref=e1359] [cursor=pointer]

@@ -14,7 +14,7 @@
  * @version 1.0.0
  */
 
-import { BaseAgent } from './BaseAgent.js';
+import { BaseAgent, type AgentContext, type AgentResult } from './BaseAgent.js';
 import { AgentResponse } from './types.js';
 import { logInfo, logError, logDebug, setAgentStatus } from '../utils/logger.js';
 import { ensureError } from '../utils/ensureError.js';
@@ -27,6 +27,25 @@ import * as path from 'path';
 // ============================================================================
 
 type EmailPriority = 'URGENT' | 'CUSTOMER' | 'SPAM' | 'INFO';
+
+interface EmailTaskData {
+  emailSubject?: unknown;
+  emailBody?: unknown;
+  from?: unknown;
+}
+
+interface EmailMessage {
+  id: string;
+  from: string;
+  subject: string;
+  snippet: string;
+}
+
+interface EmailTemplateContext {
+  sender_name?: unknown;
+  invoice_number?: unknown;
+  due_date?: unknown;
+}
 
 interface EmailClassification {
   messageId: string;
@@ -82,12 +101,58 @@ export class EmailTriageAgent extends BaseAgent {
   // Sender reputation cache
   private senderHistory: Map<string, { lastSeen: string; category: EmailPriority; trustScore: number }> = new Map();
 
+  private isRecord(value: unknown): value is Record<string, unknown> {
+    return typeof value === 'object' && value !== null;
+  }
+
+  private parseEmailTask(task: string): EmailTaskData {
+    const fallback: EmailTaskData = { emailSubject: task, emailBody: '', from: '' };
+
+    try {
+      const parsed: unknown = JSON.parse(task);
+      if (!this.isRecord(parsed)) {
+        return fallback;
+      }
+
+      return {
+        emailSubject: parsed.emailSubject,
+        emailBody: parsed.emailBody,
+        from: parsed.from,
+      };
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      logDebug(this.name, `Ignoring email task JSON parse error: ${err.message}`);
+      return fallback;
+    }
+  }
+
+  private readTemplateValue(
+    context: unknown,
+    key: keyof EmailTemplateContext,
+    fallback: string,
+  ): string {
+    if (!this.isRecord(context)) {
+      return fallback;
+    }
+
+    const value = context[key];
+    return typeof value === 'string' && value.length > 0 ? value : fallback;
+  }
+
   /**
    * Execute task (BaseAgent interface)
    */
-  async executeTask(context: any): Promise<any> {
-    const task = context.task || context;
-    return this.execute(task, context);
+  async executeTask(context: AgentContext): Promise<AgentResult> {
+    const task = typeof context.task === 'string' ? context.task : '';
+    const response = await this.execute(task, context);
+
+    return {
+      success: response.status === 'success',
+      message: response.message ?? response.error ?? 'Email triage completed.',
+      status: response.status,
+      data: response.data,
+      metadata: response.metadata,
+    };
   }
 
   /**
@@ -103,14 +168,7 @@ export class EmailTriageAgent extends BaseAgent {
       logInfo(this.name, 'Starting email triage process...');
 
       // Parse task input
-      let emailData = { emailSubject: '', emailBody: '', from: '' };
-      try {
-        emailData = JSON.parse(task);
-      } catch (error: unknown) {
-        const err = ensureError(error);
-        logDebug(this.name, `Ignoring email task JSON parse error: ${err.message}`);
-        emailData.emailSubject = task;
-      }
+      const emailData = this.parseEmailTask(task);
 
       // Execute triage pipeline
       const result = await this.processEmails(task);
@@ -122,8 +180,8 @@ export class EmailTriageAgent extends BaseAgent {
       let priorityScore = 5;
       let hasCalendarSuggestion = false;
 
-      const subject = (emailData.emailSubject || '').toLowerCase();
-      const body = (emailData.emailBody || '').toLowerCase();
+      const subject = typeof emailData.emailSubject === 'string' ? emailData.emailSubject.toLowerCase() : '';
+      const body = typeof emailData.emailBody === 'string' ? emailData.emailBody.toLowerCase() : '';
       const combinedText = subject + ' ' + body;
 
       // Invoice classification
@@ -165,13 +223,13 @@ export class EmailTriageAgent extends BaseAgent {
         classification: classification,
         priorityScore: priorityScore,
         suggestedResponse: firstEmail ? {
-          subject: `Re: ${emailData.emailSubject || 'Your Email'}`,
+          subject: `Re: ${typeof emailData.emailSubject === 'string' && emailData.emailSubject ? emailData.emailSubject : 'Your Email'}`,
           body: `Hello,\n\nThank you for your email. We appreciate your message and will respond shortly.\n\nBest regards`,
           template: firstEmail.autoResponseTemplate || 'default'
         } : undefined,
         calendarSuggestion: hasCalendarSuggestion ? {
-          title: `Follow-up: ${emailData.emailSubject || 'Meeting'}`,
-          description: `Review and respond to meeting request from ${emailData.from || 'colleague'}`,
+          title: `Follow-up: ${typeof emailData.emailSubject === 'string' && emailData.emailSubject ? emailData.emailSubject : 'Meeting'}`,
+          description: `Review and respond to meeting request from ${typeof emailData.from === 'string' && emailData.from ? emailData.from : 'colleague'}`,
           suggestedTime: '2026-03-22T10:00:00Z'
         } : undefined,
       };
@@ -242,7 +300,7 @@ export class EmailTriageAgent extends BaseAgent {
    * 
    * NOTE: Simulated for development. In production, uses Gmail API.
    */
-  private async fetchEmails(query: string): Promise<any[]> {
+  private async fetchEmails(query: string): Promise<EmailMessage[]> {
     logInfo(this.name, `Fetching emails with query: "${query}"`);
 
     // Simulated email data
@@ -277,7 +335,7 @@ export class EmailTriageAgent extends BaseAgent {
   /**
    * Classify email priority and determine auto-response
    */
-  private classifyEmail(email: any): EmailClassification {
+  private classifyEmail(email: EmailMessage): EmailClassification {
     const { from, subject, snippet } = email;
     const combinedText = `${subject} ${snippet}`.toLowerCase();
 
@@ -367,7 +425,7 @@ export class EmailTriageAgent extends BaseAgent {
    * 
    * Templates stored in: data/email_templates/
    */
-  private async loadTemplate(templateName: string, context: any): Promise<string> {
+  private async loadTemplate(templateName: string, context: unknown): Promise<string> {
     const templatePath = path.join(this.TEMPLATE_DIR, `${templateName}.md`);
 
     try {
@@ -375,9 +433,9 @@ export class EmailTriageAgent extends BaseAgent {
       
       // Simple template variable replacement
       return template
-        .replace(/{sender_name}/g, context.sender_name || 'Tisztelt Ügyfél')
-        .replace(/{invoice_number}/g, context.invoice_number || 'N/A')
-        .replace(/{due_date}/g, context.due_date || 'N/A')
+        .replace(/{sender_name}/g, this.readTemplateValue(context, 'sender_name', 'Tisztelt Ügyfél'))
+        .replace(/{invoice_number}/g, this.readTemplateValue(context, 'invoice_number', 'N/A'))
+        .replace(/{due_date}/g, this.readTemplateValue(context, 'due_date', 'N/A'))
         .replace(/{company_name}/g, process.env.COMPANY_NAME || '[Cég neve]');
         
     } catch (error: unknown) {

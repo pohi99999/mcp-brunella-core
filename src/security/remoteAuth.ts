@@ -21,7 +21,13 @@ function getSecret(): string {
         'REMOTE_AUTH_SECRET environment variable must be set in production. Refusing to sign tokens with the dev fallback.',
       );
     }
-    logWarn('RemoteAuth', 'REMOTE_AUTH_SECRET not set — using dev fallback. NEVER deploy without this variable set!');
+    // Avoid noisy warnings during test runs and CI where a test/dev fallback may be expected.
+    if (process.env.NODE_ENV !== 'test' && process.env.CI !== 'true') {
+      logWarn(
+        'RemoteAuth',
+        'REMOTE_AUTH_SECRET not set — using dev fallback. NEVER deploy without this variable set!'
+      );
+    }
     return DEV_SECRET;
   }
   return secret;

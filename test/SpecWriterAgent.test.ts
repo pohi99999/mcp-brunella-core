@@ -28,11 +28,12 @@ describe("SpecWriterAgent v2.0", () => {
     "test-temp",
   );
 
-  beforeEach(() => {
+  beforeEach(async () => {
     vi.setConfig({ testTimeout: 30000 });
     agent = new SpecWriterAgent();
     vi.clearAllMocks();
     process.env.BRUNELLA_CONDUCTOR_TRACKS_DIR = testTracksDir;
+    await fs.mkdir(testTracksDir, { recursive: true });
   });
 
   afterEach(async () => {

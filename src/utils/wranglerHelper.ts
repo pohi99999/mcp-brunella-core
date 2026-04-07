@@ -10,6 +10,7 @@ import { existsSync } from 'fs';
 import path from 'path';
 import { logInfo, logError } from './logger.js';
 import { getBasCloudflareApiToken } from './cloudflareConfig.js';
+import { safeJsonParse } from './aiHelpers.js';
 
 /**
  * Validates that a value is a safe Cloudflare resource identifier.
@@ -175,7 +176,7 @@ export class WranglerHelper {
           },
         },
       );
-      return JSON.parse(output);
+      return safeJsonParse<any>(output, null);
     } catch (e: unknown) {
       const error = e instanceof Error ? e.message : String(e);
       logError('WranglerHelper', `D1 query failed: ${error}`);
@@ -220,7 +221,7 @@ export class WranglerHelper {
         encoding: 'utf-8',
         env: { ...process.env, CLOUDFLARE_API_TOKEN: this.config.apiToken },
       });
-      return JSON.parse(output);
+      return safeJsonParse<any>(output, null);
     } catch (e: unknown) {
       const error = e instanceof Error ? e.message : String(e);
       logError('WranglerHelper', `Listing D1 databases failed: ${error}`);

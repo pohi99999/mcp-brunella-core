@@ -10,6 +10,8 @@ interface Env {
   BAS_API_KEY: string;
 }
 
+import { parseAiResponse } from '../../../../src/utils/aiHelpers.js';
+
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const corsHeaders = {
@@ -28,26 +30,30 @@ export default {
     }
 
     try {
-      const { agent, task, context, requestId } = await request.json() as any;
+      const bodyRaw = await request.json().catch(() => ({}));
+      const body = typeof bodyRaw === 'object' && bodyRaw !== null ? (bodyRaw as Record<string, unknown>) : {};
+      const agent = typeof body.agent === 'string' ? body.agent : '';
+      const task = typeof body.task === 'string' ? body.task : String(body.task ?? '');
+      const requestId = typeof body.requestId === 'string' ? body.requestId : String(body.requestId ?? '');
 
       if (["ResearcherAgent", "DataScientistAgent"].includes(agent)) {
         // Research logic: Vector search + AI summary
-        const queryVector = await env.AI.run("@cf/baai/bge-small-en-v1.5", { text: [task] });
-        const matches = await env.VECTORIZE_MEMORY.query(queryVector.data[0], { topK: 3 });
+        const embedModel = "@cf/baai/bge-small-en-v1.5";
+        const queryVectorRaw = await env.AI.run(embedModel as any, { text: [task] });
+        const vector = queryVectorRaw && typeof queryVectorRaw === 'object' && Array.isArray((queryVectorRaw as any).data) ? (queryVectorRaw as any).data[0] : null;
+        const matches = vector ? await env.VECTORIZE_MEMORY.query(vector, { topK: 3 }) : [];
 
-        const prompt = `You are the ${agent}. Task: ${task}.
-        Found relevant context: ${JSON.stringify(matches)}.
-        Provide a comprehensive research summary.`;
-        
-        const aiResponse = await env.AI.run("@cf/meta/llama-3.1-8b-instruct", {
-          prompt
-        });
+        const prompt = `You are the ${agent}. Task: ${task}. Found relevant context: ${JSON.stringify(matches)}. Provide a comprehensive research summary.`;
+
+        const llmModel = "@cf/meta/llama-3.1-8b-instruct";
+        const aiRaw = await env.AI.run(llmModel as any, { prompt });
+        const { text: analysis } = parseAiResponse(aiRaw);
 
         return Response.json({
           requestId,
           agent,
           status: "completed",
-          result: { analysis: aiResponse.response, sources: matches, timestamp: new Date().toISOString() }
+          result: { analysis, sources: matches, timestamp: new Date().toISOString() }
         }, { headers: corsHeaders });
       }
 

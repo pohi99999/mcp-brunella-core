@@ -52,6 +52,27 @@ interface ResolutionSuggestion {
   mediatorApproach: string;
 }
 
+type ConflictSeverity = 'low' | 'medium' | 'high' | 'critical';
+
+interface ConflictTaskData {
+  message?: string;
+  conflictType?: string;
+  conflictSeverity?: ConflictSeverity;
+  parties?: string[];
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null;
+}
+
+function isConflictSeverity(value: unknown): value is ConflictSeverity {
+  return value === 'low' || value === 'medium' || value === 'high' || value === 'critical';
+}
+
+function isStringArray(value: unknown): value is string[] {
+  return Array.isArray(value) && value.every(item => typeof item === 'string');
+}
+
 /**
  * ConflictMediatorAgent - Kreatív Súrlódás Mediátor
  * Analyzes communication patterns, detects conflicts, provides mediation suggestions
@@ -94,15 +115,7 @@ export class ConflictMediatorAgent implements IAgent {
     try {
       logInfo(this.name, `Feladat indítása: ${task.slice(0, 40)}...`);
 
-      // Parse task if it's JSON
-      let taskData: any = {};
-      try {
-        taskData = JSON.parse(task);
-      } catch (error: unknown) {
-        const err = ensureError(error);
-        logDebug(this.name, `Ignoring task JSON parse error: ${err.message}`);
-        taskData = { message: task };
-      }
+      const taskData = this.parseTaskData(task);
 
       // Process in order of specificity (most specific first)
 
@@ -186,6 +199,43 @@ export class ConflictMediatorAgent implements IAgent {
 
     // Normalize to -1 to +1
     return Math.max(-1, Math.min(1, sentiment));
+  }
+
+  private parseTaskData(task: string): ConflictTaskData {
+    try {
+      const parsed: unknown = JSON.parse(task);
+      return this.normalizeTaskData(parsed);
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      logDebug(this.name, `Ignoring task JSON parse error: ${err.message}`);
+      return { message: task };
+    }
+  }
+
+  private normalizeTaskData(parsed: unknown): ConflictTaskData {
+    if (!isRecord(parsed)) {
+      return {};
+    }
+
+    const taskData: ConflictTaskData = {};
+
+    if (typeof parsed.message === 'string') {
+      taskData.message = parsed.message;
+    }
+
+    if (typeof parsed.conflictType === 'string') {
+      taskData.conflictType = parsed.conflictType;
+    }
+
+    if (isConflictSeverity(parsed.conflictSeverity)) {
+      taskData.conflictSeverity = parsed.conflictSeverity;
+    }
+
+    if (isStringArray(parsed.parties)) {
+      taskData.parties = parsed.parties;
+    }
+
+    return taskData;
   }
 
   /**

@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { 
-    Zap, 
-    TrendingUp, 
-    AlertCircle, 
-    ExternalLink, 
-    RefreshCw, 
+import {
+    Zap,
+    TrendingUp,
+    AlertCircle,
+    ExternalLink,
+    RefreshCw,
     Search,
     ShieldCheck,
     History
@@ -16,26 +16,13 @@ import { ScrollArea } from '../ui/scroll-area';
 import { toast } from 'sonner';
 import { useSocket } from '../../context/SocketContext';
 import { useSystemSignalStore } from '../../store/systemSignalStore';
+import type { MachineAlert } from '../../types/dashboard';
 import { useShallow } from 'zustand/react/shallow';
-
-interface BuyAlert {
-    id: string;
-    title: string;
-    priceEur: number;
-    estimatedValueEur: number;
-    discountPct: number;
-    score: number;
-    source: string;
-    url: string;
-    timestamp: string;
-    category: string;
-    severity: 'critical' | 'warning';
-}
 
 export function MachineHunterWidget() {
     const [isHunting, setIsHunting] = useState(false);
     const { socket } = useSocket();
-    
+
     const { alerts, clearAlerts } = useSystemSignalStore(useShallow((state) => ({
         alerts: state.machineAlerts,
         clearAlerts: state.clearMachineAlerts
@@ -45,7 +32,7 @@ export function MachineHunterWidget() {
     useEffect(() => {
         if (!socket) return;
 
-        const handleNewAlert = (alert: BuyAlert) => {
+        const handleNewAlert = (alert: MachineAlert) => {
             if (alert.severity === 'critical') {
                 toast.error(`🔥 PROFIT LEHETŐSÉG: ${alert.title}`, {
                     description: `${alert.priceEur} EUR (${alert.discountPct}% diszkont!)`,
@@ -65,7 +52,7 @@ export function MachineHunterWidget() {
     const handleStartHunt = async () => {
         setIsHunting(true);
         toast.info("Gépvadászat elindítva...");
-        
+
         try {
             socket?.emit('agent:execute', {
                 agent: 'MarketIntel',
@@ -102,10 +89,10 @@ export function MachineHunterWidget() {
                             <History className="w-4 h-4 mr-2" />
                             Törlés
                         </Button>
-                        <Button 
-                            variant="default" 
-                            size="sm" 
-                            onClick={handleStartHunt} 
+                        <Button
+                            variant="default"
+                            size="sm"
+                            onClick={handleStartHunt}
                             disabled={isHunting}
                             className="bg-green-600 hover:bg-green-700"
                         >
@@ -139,7 +126,7 @@ export function MachineHunterWidget() {
                         Legutóbbi Riasztások
                         {alerts.length > 0 && <Badge className="bg-primary/20 text-primary hover:bg-primary/30 border-none">{alerts.length}</Badge>}
                     </h3>
-                    
+
                     <ScrollArea className="h-[350px] pr-4">
                         {alerts.length === 0 ? (
                             <div className="h-full flex flex-col items-center justify-center py-12 text-zinc-500 opacity-40">
@@ -149,11 +136,11 @@ export function MachineHunterWidget() {
                         ) : (
                             <div className="space-y-3">
                                 {alerts.map((alert) => (
-                                    <div 
+                                    <div
                                         key={alert.id}
                                         className={`p-4 rounded-lg border transition-all hover:shadow-md ${
-                                            alert.severity === 'critical' 
-                                            ? 'bg-red-500/5 border-red-500/20 hover:border-red-500/40' 
+                                            alert.severity === 'critical'
+                                            ? 'bg-red-500/5 border-red-500/20 hover:border-red-500/40'
                                             : 'bg-secondary/10 border-primary/10 hover:border-primary/30'
                                         }`}
                                     >
@@ -174,7 +161,7 @@ export function MachineHunterWidget() {
                                                 <div className="text-[10px] text-zinc-500 line-through opacity-50">{formatCurrency(alert.estimatedValueEur)}</div>
                                             </div>
                                         </div>
-                                        
+
                                         <div className="flex justify-between items-center mt-4 pt-3 border-t border-primary/5">
                                             <div className="text-[10px] text-zinc-500 font-mono">
                                                 ID: {alert.id} | {new Date(alert.timestamp).toLocaleTimeString()}

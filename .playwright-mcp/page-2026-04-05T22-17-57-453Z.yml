@@ -1,0 +1,305 @@
+- generic [ref=e1]:
+  - generic [ref=e1676]:
+    - log
+    - log
+  - generic [ref=e8]:
+    - generic [ref=e1678]:
+      - banner [ref=e1679]:
+        - button "Sessions" [ref=e1680] [cursor=pointer]:
+          - img [ref=e1682]
+      - generic [ref=e1686]:
+        - button "Tool" [ref=e1687] [cursor=pointer]:
+          - img [ref=e1690]
+          - text: Tool
+        - button "App" [ref=e1691] [cursor=pointer]:
+          - img [ref=e1694]
+          - text: App
+        - button "Chat" [ref=e1699] [cursor=pointer]:
+          - img [ref=e1703]
+          - text: Chat
+        - button "Recents" [ref=e1708] [cursor=pointer]:
+          - img [ref=e1711]
+          - text: Recents
+        - button "Workflow" [ref=e1717] [cursor=pointer]:
+          - img [ref=e1720]
+          - text: Workflow
+        - button "Live" [ref=e1724] [cursor=pointer]:
+          - img [ref=e1727]
+          - text: Live
+      - generic [ref=e1733]:
+        - link "Dashboard" [ref=e1734] [cursor=pointer]:
+          - /url: /video-tools/teams/peterpohankapersonal/dashboard
+          - img
+        - button "JÓ" [ref=e1736] [cursor=pointer]:
+          - paragraph [ref=e1738]: JÓ
+    - generic [ref=e17]:
+      - generic:
+        - region "Notifications (F8)":
+          - list
+      - generic [ref=e1066]:
+        - generic [ref=e1068]:
+          - generic [ref=e1069]:
+            - generic [ref=e1889]:
+              - banner [ref=e1890]:
+                - radiogroup "Output mode" [ref=e1891]:
+                  - generic [ref=e1892] [cursor=pointer]:
+                    - radio "Image" [ref=e1894]
+                    - img [ref=e1895]
+                    - text: Image
+                  - generic [ref=e1899] [cursor=pointer]:
+                    - radio "Video" [checked] [ref=e1901]
+                    - img [ref=e1902]
+                    - text: Video
+                  - generic [ref=e1905] [cursor=pointer]:
+                    - radio "Audio" [ref=e1907]
+                    - img [ref=e1908]
+                    - text: Audio
+                - button "Reset settings" [ref=e1909] [cursor=pointer]:
+                  - img
+              - generic [ref=e1912]:
+                - generic [ref=e1914]:
+                  - button "Open file picker" [ref=e1920]:
+                    - generic "Open file picker" [ref=e1921] [cursor=pointer]:
+                      - generic [ref=e1922]:
+                        - img [ref=e1924]
+                        - paragraph [ref=e1928]: First Video Frame (required)
+                      - generic [ref=e1929]:
+                        - button "Upload" [ref=e1930]:
+                          - img
+                          - generic [ref=e1931]: Upload
+                        - button "Generate" [ref=e1932]:
+                          - generic [ref=e1933]: Generate
+                        - button "Select" [expanded] [ref=e1934]:
+                          - img
+                  - separator [ref=e1937]
+                  - generic [ref=e1941]:
+                    - textbox "Prompt" [ref=e1942]:
+                      - paragraph [ref=e1943]: "Cinematic fashion film opening shot. Extreme close-up of a hand-painted silk fabric in vibrant turquoise, coral and deep cobalt blue. The fabric gently ripples as if touched by a soft Mediterranean breeze. Ultra-slow motion, 4K resolution. Light flares from the left. Minimal, white background gradually reveals luxury fashion atelier. Elegant, editorial aesthetic. Shot on Arri Alexa, cinematic color grading, golden hour tone. Duration: 5 seconds."
+                    - button "Enhance prompt" [ref=e1946] [cursor=pointer]:
+                      - img [ref=e1947]
+                  - separator [ref=e1951]
+                  - generic [ref=e1953]:
+                    - generic [ref=e1954]:
+                      - generic [ref=e1955]:
+                        - img [ref=e1956]
+                        - generic [ref=e1960]: Images
+                      - button "Close Panel" [ref=e1961] [cursor=pointer]:
+                        - img
+                    - generic [ref=e1964]:
+                      - button [ref=e1966] [cursor=pointer]:
+                        - img
+                      - grid "Reference images" [ref=e1968]:
+                        - row "Add Reference" [ref=e1969]:
+                          - gridcell "Add Reference" [ref=e1970]:
+                            - button "Add Reference" [ref=e1971] [cursor=pointer]:
+                              - img [ref=e1972]
+                        - row "Person" [ref=e1973]:
+                          - gridcell "Person" [ref=e1974]:
+                            - button "Person" [ref=e1978]
+                        - row "Buildings" [ref=e1979]:
+                          - gridcell "Buildings" [ref=e1980]:
+                            - button "Buildings" [ref=e1984]
+                        - row "Street" [ref=e1985]:
+                          - gridcell "Street" [ref=e1986]:
+                            - button "Street" [ref=e1990]
+                        - row "Water" [ref=e1991]:
+                          - gridcell "Water" [ref=e1992]:
+                            - button "Water" [ref=e1996]
+                        - row "Candle" [ref=e1997]:
+                          - gridcell "Candle" [ref=e1998]:
+                            - button "Candle" [ref=e2002]
+                        - row "Crosswalk" [ref=e2003]:
+                          - gridcell "Crosswalk" [ref=e2004]:
+                            - button "Crosswalk" [ref=e2008]
+                        - row "Jacket Yellow" [ref=e2009]:
+                          - gridcell "Jacket Yellow" [ref=e2010]:
+                            - button "Jacket Yellow" [ref=e2014]
+                        - row "Jacket Red" [ref=e2015]:
+                          - gridcell "Jacket Red" [ref=e2016]:
+                            - button "Jacket Red" [ref=e2020]
+                - toolbar "Settings Toolbar" [ref=e2021]:
+                  - button [pressed] [ref=e2022] [cursor=pointer]:
+                    - img
+                  - button "Presets" [ref=e2023] [cursor=pointer]:
+                    - img [ref=e2024]
+                    - generic [ref=e2030]: Presets
+                  - generic [ref=e2031]:
+                    - button "Aspect ratio" [ref=e2032] [cursor=pointer]:
+                      - img [ref=e2033]
+                      - generic [ref=e2036]: 16:9
+                    - combobox [ref=e2039]
+                  - generic [ref=e2040]:
+                    - button "Duration" [ref=e2041] [cursor=pointer]:
+                      - img [ref=e2042]
+                      - generic [ref=e2045]: 5s
+                    - combobox [ref=e2048]
+                  - button "Advanced Settings" [ref=e2049] [cursor=pointer]:
+                    - img [ref=e2050]
+                - generic [ref=e2053]:
+                  - button "Related Apps for Generate Video" [ref=e2054] [cursor=pointer]:
+                    - img
+                    - img
+                  - button "Video models" [ref=e2055] [cursor=pointer]:
+                    - text: Gen-4 Turbo
+                    - img
+                  - button "Generate" [ref=e2056]:
+                    - img
+                    - text: Generate
+            - separator [ref=e1233]
+          - generic [ref=e1235]:
+            - generic [ref=e1237]:
+              - generic [ref=e1797]:
+                - button "Luxury Silk Fashion Film" [ref=e1865] [cursor=pointer]:
+                  - generic [ref=e1800]: Luxury Silk Fashion Film
+                - button "Open session switcher" [ref=e1801] [cursor=pointer]:
+                  - img [ref=e1802]
+              - generic [ref=e1247]:
+                - button "493 credits" [ref=e1804] [cursor=pointer]
+                - button "0/1 Quests" [ref=e1249] [cursor=pointer]:
+                  - generic [ref=e1250]:
+                    - img
+                  - generic [ref=e1251]: 0/1
+                  - text: Quests
+                - button "Upgrade" [ref=e1252] [cursor=pointer]
+                - button "Share session" [ref=e1805] [cursor=pointer]:
+                  - img
+                - button [ref=e1806] [cursor=pointer]:
+                  - img
+                - button "Help" [ref=e1807] [cursor=pointer]:
+                  - img
+            - generic:
+              - generic [ref=e1809]:
+                - img [ref=e1810]
+                - paragraph [ref=e1813]: Get notifications when your generations are complete.
+              - generic [ref=e1814]:
+                - button "Don't show again" [ref=e1815] [cursor=pointer]
+                - button "Later" [ref=e1816] [cursor=pointer]
+                - button "Enable" [ref=e1817] [cursor=pointer]
+            - generic [ref=e1818]:
+              - generic [ref=e1819]:
+                - radiogroup "Content filter" [ref=e1820]:
+                  - generic [ref=e1821] [cursor=pointer]:
+                    - generic [ref=e1822]:
+                      - radio "All" [checked]
+                    - text: All
+                  - generic [ref=e1823] [cursor=pointer]:
+                    - generic [ref=e1824]:
+                      - radio "Favorited"
+                    - text: Favorited
+                  - generic [ref=e1825] [cursor=pointer]:
+                    - generic [ref=e1826]:
+                      - radio "Downloaded"
+                    - text: Downloaded
+                  - generic [ref=e1827] [cursor=pointer]:
+                    - generic [ref=e1828]:
+                      - radio "4K"
+                    - text: 4K
+                - generic [ref=e1829]:
+                  - 'button "Filter by media type: All media" [ref=e1830] [cursor=pointer]':
+                    - img [ref=e1831]
+                  - button "Download all" [ref=e1832] [cursor=pointer]:
+                    - img
+                  - group "View mode" [ref=e1833]:
+                    - button "Feed view" [pressed] [ref=e1834] [cursor=pointer]:
+                      - img [ref=e1835]
+                    - button "Grid view" [ref=e1836] [cursor=pointer]:
+                      - img [ref=e1837]
+              - generic [ref=e1847]:
+                - toolbar [ref=e1848]:
+                  - button "Cinematic fashion film still frame. Extreme close-up of hand-painted silk fabric in vibrant turquoise, coral and deep cobalt blue. The fabric has beautiful ripple texture. Ultra-sharp 4K resolution. Light flares from the left. Minimal white background with luxury fashion atelier visible. Elegant editorial aesthetic. Arri Alexa look, cinematic color grading, golden hour warm tone." [ref=e1851]:
+                    - paragraph [ref=e1852]: Cinematic fashion film still frame. Extreme close-up of hand-painted silk fabric in vibrant turquoise, coral and deep cobalt blue. The fabric has beautiful ripple texture. Ultra-sharp 4K resolution. Light flares from the left. Minimal white background with luxury fashion atelier visible. Elegant editorial aesthetic. Arri Alexa look, cinematic color grading, golden hour warm tone.
+                  - button [ref=e1853] [cursor=pointer]:
+                    - img
+                  - button "See full prompt" [ref=e1854] [cursor=pointer]:
+                    - img
+                  - button "Hide output" [ref=e1869] [cursor=pointer]:
+                    - img
+                - generic [ref=e1872]:
+                  - button "Nano Banana 2 - Cinematic fashion film still frame Extreme close-up of hand-painted silk fabric in.png" [ref=e1873] [cursor=pointer]
+                  - group [ref=e1874]:
+                    - button "feedback" [ref=e1875] [cursor=pointer]:
+                      - img
+                  - toolbar:
+                    - generic [ref=e1877]:
+                      - button "Actions" [ref=e1878] [cursor=pointer]:
+                        - img
+                      - combobox [ref=e1881]
+                    - group [ref=e1882]:
+                      - button [ref=e1883] [cursor=pointer]:
+                        - img
+                      - button "Favorite" [ref=e1884] [cursor=pointer]:
+                        - img
+                      - button [ref=e1885] [cursor=pointer]:
+                        - img
+        - status [ref=e1276]
+  - iframe
+  - generic [ref=e2058]:
+    - button "Elutasítás" [ref=e2060]
+    - dialog "Asset selector" [active] [ref=e2061]:
+      - generic [ref=e2063]:
+        - generic [ref=e2064]:
+          - radiogroup "Asset browser tab" [ref=e2065]:
+            - generic [ref=e2066] [cursor=pointer]:
+              - radio "Private" [checked] [ref=e2068]
+              - text: Private
+            - generic [ref=e2069] [cursor=pointer]:
+              - radio "Shared" [ref=e2071]
+              - text: Shared
+          - searchbox "Search" [ref=e2073]
+          - generic [ref=e2074]:
+            - button "Recents" [ref=e2075] [cursor=pointer]
+            - button "Favorites" [ref=e2076] [cursor=pointer]
+            - button "Folders" [ref=e2077] [cursor=pointer]
+          - button "Assets" [ref=e2079] [cursor=pointer]:
+            - paragraph [ref=e2080]: Assets
+          - generic [ref=e2083]:
+            - generic [ref=e2085]:
+              - img [ref=e2086]
+              - paragraph [ref=e2089]: Drag and drop file (image)
+              - paragraph [ref=e2090]: or double-click asset
+            - button "Nano Banana 2 - Cinematic fashion film still frame Extreme close-up of hand-painted silk fabric in.png Image • 16:9" [ref=e2092] [cursor=pointer]:
+              - img [ref=e2094]
+              - generic [ref=e2095]:
+                - paragraph [ref=e2096]: Nano Banana 2 - Cinematic fashion film still frame Extreme close-up of hand-painted silk fabric in.png
+                - paragraph [ref=e2097]: Image • 16:9
+            - button "Person Image" [ref=e2099] [cursor=pointer]:
+              - img [ref=e2101]
+              - generic [ref=e2102]:
+                - paragraph [ref=e2103]: Person
+                - paragraph [ref=e2104]: Image
+            - button "Buildings Image" [ref=e2106] [cursor=pointer]:
+              - img [ref=e2108]
+              - generic [ref=e2109]:
+                - paragraph [ref=e2110]: Buildings
+                - paragraph [ref=e2111]: Image
+            - button "Street Image" [ref=e2113] [cursor=pointer]:
+              - img [ref=e2115]
+              - generic [ref=e2116]:
+                - paragraph [ref=e2117]: Street
+                - paragraph [ref=e2118]: Image
+            - button "Candle Image" [ref=e2120] [cursor=pointer]:
+              - img [ref=e2122]
+              - generic [ref=e2123]:
+                - paragraph [ref=e2124]: Candle
+                - paragraph [ref=e2125]: Image
+            - button "Water Image" [ref=e2127] [cursor=pointer]:
+              - img [ref=e2129]
+              - generic [ref=e2130]:
+                - paragraph [ref=e2131]: Water
+                - paragraph [ref=e2132]: Image
+            - button "Jacket Red Image" [ref=e2134] [cursor=pointer]:
+              - img [ref=e2136]
+              - generic [ref=e2137]:
+                - paragraph [ref=e2138]: Jacket Red
+                - paragraph [ref=e2139]: Image
+            - button "Crosswalk Image" [ref=e2141] [cursor=pointer]:
+              - img [ref=e2143]
+              - generic [ref=e2144]:
+                - paragraph [ref=e2145]: Crosswalk
+                - paragraph [ref=e2146]: Image
+            - button "Jacket Yellow Image" [ref=e2148] [cursor=pointer]:
+              - img [ref=e2150]
+              - generic [ref=e2151]:
+                - paragraph [ref=e2152]: Jacket Yellow
+                - paragraph [ref=e2153]: Image
+        - status [ref=e2154]

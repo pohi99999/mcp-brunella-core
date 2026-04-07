@@ -1,0 +1,230 @@
+- generic [ref=e1]:
+  - generic [ref=e193]:
+    - generic [ref=e195]:
+      - generic [ref=e503]:
+        - menu [ref=e510]:
+          - generic [ref=e511]:
+            - menuitem "Media" [ref=e512] [cursor=pointer]:
+              - generic [ref=e517]: Media
+            - menuitem "Templates" [ref=e519] [cursor=pointer]:
+              - generic [ref=e523]: Templates
+            - menuitem "Elements" [ref=e525] [cursor=pointer]:
+              - generic [ref=e530]: Elements
+            - menuitem "Audio" [ref=e532] [cursor=pointer]:
+              - generic [ref=e536]: Audio
+            - menuitem "Text" [ref=e538] [cursor=pointer]:
+              - generic [ref=e542]: Text
+            - menuitem "Captions" [ref=e544] [cursor=pointer]:
+              - generic [ref=e549]: Captions
+            - menuitem "Transcript" [ref=e551] [cursor=pointer]:
+              - generic [ref=e555]: Transcript
+            - menuitem "Effects" [ref=e557] [cursor=pointer]:
+              - generic [ref=e561]: Effects
+            - menuitem "Transitions" [ref=e563] [cursor=pointer]:
+              - generic [ref=e567]: Transitions
+            - menuitem "Filters" [ref=e569] [cursor=pointer]:
+              - generic [ref=e573]: Filters
+            - menuitem "Brand kit" [ref=e575] [cursor=pointer]:
+              - generic [ref=e576]:
+                - generic [ref=e582]: Brand
+                - generic [ref=e583]: kit
+            - menuitem "Plugins" [ref=e586] [cursor=pointer]:
+              - generic [ref=e590]: Plugins
+        - button [ref=e597] [cursor=pointer]
+      - generic [ref=e603]:
+        - generic [ref=e604]:
+          - generic [ref=e607] [cursor=pointer]:
+            - generic [ref=e608]: J
+            - generic [ref=e609]: József Péter Pohánka tára
+          - button "Upload" [ref=e623] [cursor=pointer]:
+            - generic [ref=e627]: Upload
+        - alert [ref=e636]:
+          - generic [ref=e639] [cursor=pointer]:
+            - generic [ref=e640]:
+              - img [ref=e642]
+              - generic [ref=e643]:
+                - paragraph [ref=e644]: Text to speech
+                - paragraph [ref=e645]: Turn any text into lifelike speech in seconds.
+            - button "Try it" [ref=e647]:
+              - generic [ref=e648]: Try it
+        - grid "grid" [active] [ref=e654]:
+          - generic [ref=e655]:
+            - generic [ref=e1015]:
+              - generic [ref=e1017]:
+                - generic [ref=e1025]: Added
+                - generic [ref=e1028]:
+                  - generic [ref=e1029]: "0"
+                  - generic [ref=e1030]: "0"
+                  - generic [ref=e1031]: ":"
+                  - generic [ref=e1032]: "2"
+                  - generic [ref=e1033]: "9"
+              - generic [ref=e1034]: narration.mp3
+            - generic [ref=e1036]:
+              - generic [ref=e1045]:
+                - generic [ref=e1046]: "0"
+                - generic [ref=e1047]: "0"
+                - generic [ref=e1048]: ":"
+                - generic [ref=e1049]: "1"
+                - generic [ref=e1050]: "0"
+              - generic [ref=e1053]: Scene_08_Free_Designer.mp4
+            - generic [ref=e700]:
+              - generic [ref=e702]:
+                - generic [ref=e710]: Added
+                - generic [ref=e713]:
+                  - generic [ref=e714]: "0"
+                  - generic [ref=e715]: "0"
+                  - generic [ref=e716]: ":"
+                  - generic [ref=e717]: "2"
+                  - generic [ref=e718]: "9"
+              - generic [ref=e719]: narration.mp3
+            - generic [ref=e722]:
+              - generic [ref=e731]:
+                - generic [ref=e732]: "0"
+                - generic [ref=e733]: "0"
+                - generic [ref=e734]: ":"
+                - generic [ref=e735]: "1"
+                - generic [ref=e736]: "0"
+              - generic [ref=e739]: Scene_05_Photo_Motion.mp4
+            - generic [ref=e742]:
+              - generic [ref=e751]:
+                - generic [ref=e752]: "0"
+                - generic [ref=e753]: "0"
+                - generic [ref=e754]: ":"
+                - generic [ref=e755]: "1"
+                - generic [ref=e756]: "0"
+              - generic [ref=e759]: Scene_07_Omnichannel.mp4
+            - generic [ref=e762]:
+              - generic [ref=e771]:
+                - generic [ref=e772]: "0"
+                - generic [ref=e773]: "0"
+                - generic [ref=e774]: ":"
+                - generic [ref=e775]: "0"
+                - generic [ref=e776]: "5"
+              - generic [ref=e779]: Scene_09_Closing.mp4
+            - generic [ref=e782]:
+              - generic [ref=e791]:
+                - generic [ref=e792]: "0"
+                - generic [ref=e793]: "0"
+                - generic [ref=e794]: ":"
+                - generic [ref=e795]: "0"
+                - generic [ref=e796]: "5"
+              - generic [ref=e799]: Scene_06_Customer_AI.mp4
+            - generic [ref=e802]:
+              - generic [ref=e804]:
+                - generic [ref=e1094]: Added
+                - generic [ref=e811]:
+                  - generic [ref=e812]: "0"
+                  - generic [ref=e813]: "0"
+                  - generic [ref=e814]: ":"
+                  - generic [ref=e815]: "1"
+                  - generic [ref=e816]: "0"
+              - generic [ref=e819]: Scene_04_Phygital.mp4
+            - generic [ref=e822]:
+              - generic [ref=e824]:
+                - generic [ref=e830]: Added
+                - generic [ref=e833]:
+                  - generic [ref=e834]: "0"
+                  - generic [ref=e835]: "0"
+                  - generic [ref=e836]: ":"
+                  - generic [ref=e837]: "0"
+                  - generic [ref=e838]: "5"
+              - generic [ref=e841]: Scene_01_Opening.mp4
+            - generic [ref=e844]:
+              - generic [ref=e846]:
+                - generic [ref=e852]: Added
+                - generic [ref=e855]:
+                  - generic [ref=e856]: "0"
+                  - generic [ref=e857]: "0"
+                  - generic [ref=e858]: ":"
+                  - generic [ref=e859]: "0"
+                  - generic [ref=e860]: "5"
+              - generic [ref=e863]: Scene_02_Designer.mp4
+            - generic [ref=e866]:
+              - generic [ref=e868]:
+                - generic [ref=e874]: Added
+                - generic [ref=e877]:
+                  - generic [ref=e878]: "0"
+                  - generic [ref=e879]: "0"
+                  - generic [ref=e880]: ":"
+                  - generic [ref=e881]: "1"
+                  - generic [ref=e882]: "0"
+              - generic [ref=e885]: Scene_03_Social_AI.mp4
+    - generic [ref=e355]:
+      - generic [ref=e356]:
+        - generic [ref=e899]:
+          - generic [ref=e900]: "202604060223"
+          - textbox [ref=e902]: "202604060223"
+          - generic [ref=e904]: "202604060223"
+        - generic [ref=e912] [cursor=pointer]: 100%
+        - button "Export" [ref=e916] [cursor=pointer]: Export
+        - generic:
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - generic: "202604060223"
+                  - generic:
+                    - textbox: "202604060223"
+                  - generic:
+                    - generic: "202604060223"
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - generic: 100%
+          - generic:
+            - generic:
+              - generic:
+                - button "Export": Export
+      - generic [ref=e429]:
+        - generic [ref=e430]:
+          - generic [ref=e433]:
+            - main [ref=e434]:
+              - generic [ref=e438]:
+                - img
+                - generic [ref=e1242]:
+                  - button "Choose File" [ref=e1247] [cursor=pointer]
+                  - separator [ref=e1262]
+            - generic [ref=e1286] [cursor=pointer]: Ratio
+          - generic [ref=e454]:
+            - generic [ref=e457]:
+              - generic [ref=e458]:
+                - generic [ref=e1287]:
+                  - button [disabled]
+                - button [ref=e1288] [cursor=pointer]
+                - button [ref=e1291] [cursor=pointer]
+                - button [ref=e1294] [cursor=pointer]
+                - button [ref=e1298] [cursor=pointer]
+                - generic [ref=e1301]:
+                  - button [disabled]
+                - button [ref=e1302] [cursor=pointer]
+                - button [ref=e1305] [cursor=pointer]
+                - button [ref=e1308] [cursor=pointer]
+              - generic [ref=e956]:
+                - generic [ref=e957]: 00:00:00
+                - generic [ref=e959]: 03:46:00
+              - generic [ref=e459]:
+                - button [ref=e1314] [cursor=pointer]
+                - button [ref=e1317] [cursor=pointer]
+                - button [ref=e1321] [cursor=pointer]
+                - button [ref=e971] [cursor=pointer]
+                - button [ref=e978] [cursor=pointer]
+                - separator [ref=e981]
+                - button [ref=e1325] [cursor=pointer]
+                - button [ref=e1328] [cursor=pointer]
+            - generic [ref=e463]:
+              - generic [ref=e465]:
+                - button [ref=e467] [cursor=pointer]
+                - button [ref=e471] [cursor=pointer]
+                - button [ref=e475] [cursor=pointer]
+                - button [ref=e479] [cursor=pointer]
+                - button [ref=e989] [cursor=pointer]
+              - img [ref=e491]
+        - generic [ref=e502]:
+          - paragraph [ref=e1210] [cursor=pointer]: Basic
+          - paragraph [ref=e1216] [cursor=pointer]: Background
+          - paragraph [ref=e1222] [cursor=pointer]: Smart tools
+          - paragraph [ref=e1229] [cursor=pointer]: Animation
+          - paragraph [ref=e1235] [cursor=pointer]: Speed
+  - tooltip "Scene_08_Free_Designer.mp4" [ref=e1357]:
+    - generic [ref=e1358]: Scene_08_Free_Designer.mp4

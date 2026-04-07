@@ -15,7 +15,7 @@
  * @version 1.0.0
  */
 
-import { BaseAgent } from './BaseAgent.js';
+import { BaseAgent, type AgentContext, type AgentResult } from './BaseAgent.js';
 import { AgentResponse } from './types.js';
 import { logInfo, logError, logDebug, setAgentStatus } from '../utils/logger.js';
 import { ensureError } from '../utils/ensureError.js';
@@ -61,6 +61,8 @@ interface LogisticsResult {
   };
 }
 
+type LogisticsTaskParams = Record<string, unknown>;
+
 // ============================================================================
 // Logistics Dispatcher Agent Implementation
 // ============================================================================
@@ -85,9 +87,17 @@ export class LogisticsDispatcherAgent extends BaseAgent {
   /**
    * Execute task (BaseAgent interface)
    */
-  async executeTask(context: any): Promise<any> {
-    const task = context.task || context;
-    return this.execute(task, context);
+  async executeTask(context: AgentContext): Promise<AgentResult> {
+    const task = typeof context.task === 'string' ? context.task : '';
+    const response = await this.execute(task, context);
+
+    return {
+      success: response.status === 'success',
+      message: response.message ?? response.error ?? 'Logistics tracking completed.',
+      status: response.status,
+      data: response.data,
+      metadata: response.metadata,
+    };
   }
 
   /**
@@ -170,7 +180,7 @@ export class LogisticsDispatcherAgent extends BaseAgent {
   /**
    * Main shipment tracking pipeline
    */
-  private async trackShipments(params: any): Promise<LogisticsResult> {
+  private async trackShipments(params: LogisticsTaskParams): Promise<LogisticsResult> {
     // Step 1: Fetch shipment data from carriers
     const shipments = await this.fetchShipmentStatus(params);
 
@@ -209,7 +219,7 @@ export class LogisticsDispatcherAgent extends BaseAgent {
    * - Or integrate with carrier APIs where available
    * - Cache results in LanceDB for historical analysis
    */
-  private async fetchShipmentStatus(params: any): Promise<ShipmentStatus[]> {
+  private async fetchShipmentStatus(params: LogisticsTaskParams): Promise<ShipmentStatus[]> {
     logInfo(this.name, 'Fetching shipment status...');
 
     // Mock shipment data
@@ -373,10 +383,26 @@ Automated Logistics System
   /**
    * Parse logistics task from input
    */
-  private parseLogisticsTask(task: string): any {
+  private isRecord(value: unknown): value is Record<string, unknown> {
+    return typeof value === 'object' && value !== null;
+  }
+
+  private hasLogisticsSignals(value: Record<string, unknown>): boolean {
+    const trackingId = value.trackingId;
+    const issueType = value.issueType;
+    const carrier = value.carrier;
+
+    return (
+      (typeof trackingId === 'string' && trackingId.length > 0) ||
+      (typeof issueType === 'string' && issueType.length > 0) ||
+      (typeof carrier === 'string' && carrier.length > 0)
+    );
+  }
+
+  private parseLogisticsTask(task: string): LogisticsTaskParams {
     try {
-      const parsed = JSON.parse(task);
-      if (parsed.trackingId || parsed.issueType || parsed.carrier) {
+      const parsed: unknown = JSON.parse(task);
+      if (this.isRecord(parsed) && this.hasLogisticsSignals(parsed)) {
         return parsed;
       }
     } catch (error: unknown) {

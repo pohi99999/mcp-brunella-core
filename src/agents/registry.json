@@ -104,6 +104,28 @@
       "priority": 6
     },
     {
+      "name": "ProjectMaintainer",
+      "title": "Project Maintainer",
+      "description": "Napi 22:00-kor futó őrangyal, aki rendet rak a root-ban, archivál és ellenőrzi a rendszer egészségét.",
+      "class": "ProjectMaintainerAgent",
+      "module": "./agents/ProjectMaintainerAgent.js",
+      "category": "management",
+      "status": "active",
+      "priority": 10,
+      "capabilities": [
+        "root_cleanup",
+        "log_rotation",
+        "track_verification",
+        "build_health_check"
+      ],
+      "triggers": [
+        "maintain",
+        "cleanup",
+        "project_maintainer",
+        "janitor"
+      ]
+    },
+    {
       "name": "ReconciliationIngestion",
       "title": "Reconciliation Ingestion Agent",
       "role": "Pénzügyi adat ingesztor",
@@ -245,15 +267,35 @@
     },
     {
       "name": "DigitalHeadhunter",
+      "title": "HR Aszisztens (Digital Headhunter)",
       "module": "./agents/DigitalHeadhunterAgent.js",
       "class": "DigitalHeadhunterAgent",
-      "role": "Automated HR Screening & Recruitment",
-      "description": "CV screening with LinkedIn integration and bias-free candidate scoring",
+      "role": "Mindenes HR aszisztens és Toborzási specialist",
+      "description": "Szabadság engedélyezés, toborzás, CV szűrés és LinkedIn integráció",
+      "capabilities": [
+        "cv_parsing",
+        "candidate_matching",
+        "linkedin_integration",
+        "interview_scheduling",
+        "bias_free_scoring",
+        "automated_communication",
+        "leave_approval",
+        "timesheet_management"
+      ],
       "triggers": [
         "digitalheadhunter",
-        "digitalheadhunteragent"
+        "digitalheadhunteragent",
+        "szabadság",
+        "szabi",
+        "hr",
+        "toborzás",
+        "munkaidő",
+        "leave",
+        "recruitment"
       ],
-      "priority": 1
+      "category": "enterprise",
+      "status": "active",
+      "priority": 7
     },
     {
       "name": "documenter",
@@ -1403,6 +1445,35 @@
       "priority": 50,
       "capabilities": [
         "accounting_preparation"
+      ]
+    },
+    {
+      "name": "i18n_specialist",
+      "title": "i18n Specialist",
+      "description": "Nemzetköziesítési és lokalizációs szakértő. Szövegek kinyerése, többnyelvű támogatás és RTL illesztés.",
+      "class": "DynamicAgent",
+      "module": "./agents/DynamicAgent.js",
+      "config": {
+        "tomlPath": "myai/agents/i18n_specialist.toml"
+      },
+      "capabilities": [
+        "i18n_architecture",
+        "string_extraction",
+        "locale_management",
+        "rtl_support"
+      ],
+      "triggers": [
+        "i18n",
+        "lokalizáció",
+        "fordítás",
+        "többnyelvű"
+      ],
+      "category": "generated",
+      "status": "active",
+      "tags": [
+        "generated",
+        "i18n",
+        "localization"
       ]
     }
   ]

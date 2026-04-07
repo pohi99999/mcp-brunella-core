@@ -1,0 +1,115 @@
+- generic [ref=e1]:
+  - alert [ref=e586]:
+    - generic [ref=e588]:
+      - text: Projects will not be saved permanently when you aren’t signed in. To avoid losing your projects, sign into your account.
+      - generic [ref=e589] [cursor=pointer]: Sign in
+    - button [ref=e590] [cursor=pointer]:
+      - img [ref=e591]
+  - generic [ref=e206]:
+    - generic [ref=e208]:
+      - generic [ref=e593]:
+        - menu [ref=e600]:
+          - generic [ref=e601]:
+            - menuitem "Media" [ref=e602] [cursor=pointer]
+            - menuitem "Templates" [ref=e609] [cursor=pointer]
+            - menuitem "Elements" [ref=e615] [cursor=pointer]
+            - menuitem "Audio" [ref=e623] [cursor=pointer]
+            - menuitem "Text" [ref=e629] [cursor=pointer]
+            - menuitem "Captions" [ref=e635] [cursor=pointer]
+            - menuitem "Transcript" [ref=e642] [cursor=pointer]
+            - menuitem "Effects" [ref=e648] [cursor=pointer]
+            - menuitem "Transitions" [ref=e654] [cursor=pointer]
+            - menuitem "Filters" [ref=e660] [cursor=pointer]
+            - menuitem "Brand kit" [ref=e666] [cursor=pointer]
+            - menuitem "Plugins" [ref=e677] [cursor=pointer]
+        - button [ref=e688] [cursor=pointer]
+      - generic [ref=e692]:
+        - generic:
+          - generic:
+            - generic
+            - alert
+            - generic
+        - generic [ref=e1810]:
+          - generic [ref=e1814]:
+            - tab "Text templates" [selected] [ref=e1815] [cursor=pointer]
+            - tab "Text effects" [ref=e1817] [cursor=pointer]
+          - tabpanel "Text templates" [ref=e1821]:
+            - generic [ref=e1823]
+    - generic [ref=e368]:
+      - generic [ref=e369]:
+        - generic [ref=e757]:
+          - generic [ref=e758]: "202604060116"
+          - textbox [ref=e760]: "202604060116"
+          - generic [ref=e762]: "202604060116"
+        - generic [ref=e765] [cursor=pointer]: 100%
+        - generic [ref=e411]:
+          - separator [ref=e781]
+          - button "Export" [ref=e786] [cursor=pointer]: Export
+        - generic:
+          - generic:
+            - generic
+          - generic:
+            - generic
+          - generic:
+            - generic
+          - generic:
+            - generic
+      - generic [ref=e442]:
+        - generic [ref=e443]:
+          - generic [ref=e811]:
+            - main [ref=e830]
+            - generic [ref=e2542] [cursor=pointer]: Ratio
+          - generic [ref=e447]:
+            - generic [ref=e450]
+            - generic [ref=e465]
+        - generic [ref=e480]:
+          - paragraph [ref=e2580] [cursor=pointer]: Presets
+          - paragraph [ref=e2585] [cursor=pointer]: Basic
+          - paragraph [ref=e2592] [cursor=pointer]: Text to speech
+          - paragraph [ref=e2599] [cursor=pointer]: AI avatars
+          - paragraph [ref=e2606] [cursor=pointer]: Animation
+          - paragraph [ref=e2612] [cursor=pointer]: Motion tracking
+  - generic [ref=e2614]:
+    - generic [ref=e2616]: Basic
+    - generic [ref=e2620]:
+      - generic [ref=e2621]:
+        - generic [ref=e2623]:
+          - textbox [ref=e2624]: Enjoy life in colours.
+          - generic: Enjoy life in colours.
+        - generic [ref=e2626]:
+          - generic [ref=e2627]:
+            - combobox [ref=e2629] [cursor=pointer]
+            - combobox [ref=e2638]
+          - separator [ref=e2660]
+        - separator [ref=e2677]
+        - generic [ref=e2678]:
+          - generic [ref=e2681]: Style
+          - generic [ref=e2687]: Fill
+          - generic [ref=e2694]: Stroke
+          - generic [ref=e2704]: Background
+          - generic [ref=e2713]: Shadow
+        - separator [ref=e2722]
+        - generic [ref=e2725]:
+          - generic [ref=e2726]: Glow
+          - switch [ref=e2728] [cursor=pointer]
+        - separator [ref=e2730]
+        - generic [ref=e2731]:
+          - generic [ref=e2734]: Opacity
+          - generic [ref=e2743]:
+            - slider [ref=e2746] [cursor=pointer]
+            - generic [ref=e2750]
+        - separator [ref=e2772]
+        - generic [ref=e2773]:
+          - generic [ref=e2776]: Transform
+          - generic [ref=e2781]:
+            - generic [ref=e2782]: Scale
+            - generic [ref=e2790]
+          - generic [ref=e2819]:
+            - generic [ref=e2820]: Position
+            - generic [ref=e2826]
+          - generic [ref=e2866]:
+            - generic [ref=e2867]: Rotate
+            - generic [ref=e2877]
+      - generic [ref=e2907] [cursor=pointer]:
+        - checkbox "Apply to all"
+        - text: Apply to all

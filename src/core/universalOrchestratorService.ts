@@ -1,10 +1,19 @@
 import { getBifrostGateway, type ProviderType } from './bifrost_gateway.js';
-import { getToolRegistry } from './toolRegistry.js';
+import { getFallbackToolDefinitions, getToolRegistry } from './toolRegistry.js';
 import { agentManager } from '../agents/AgentManager.js';
 import { logInfo, logError, logWarn } from '../utils/logger.js';
 import { GraphRagEngine } from './graphRagEngine.js';
 import { ReflectionEngine } from './reflectionEngine.js';
 import { PredictiveIntelligence } from './predictiveIntelligence.js';
+import {
+  appendWorkingMemoryMessage,
+  createWorkingMemoryState,
+  formatWorkingMemory,
+  recordWorkingMemoryObservation,
+  rememberWorkingMemoryGoal,
+  resolveLatestWorkingMemoryGoal,
+  type WorkingMemoryState,
+} from './workingMemory.js';
 
 export interface ActionTriggered {
   agent: string;
@@ -85,6 +94,7 @@ interface SessionMemory {
   createdAt: number;
   updatedAt: number;
   recentMessages: UniversalChatMessage[];
+  workingMemory: WorkingMemoryState;
   recentIntents: string[];
   delegatedTaskIds: number[];
   pendingClarification?: PendingClarification;
@@ -311,8 +321,20 @@ export class UniversalOrchestratorService {
     }
 
     const bifrost = getBifrostGateway();
-    const registry = await getToolRegistry();
-    const tools = registry.getToolDefinitions();
+    const tools = await (async () => {
+      try {
+        const registry = await getToolRegistry();
+        return registry.getToolDefinitions();
+      } catch (error: unknown) {
+        const fallbackTools = getFallbackToolDefinitions();
+        const normalizedError = error instanceof Error ? error : new Error(String(error));
+        logWarn('UniversalOrchestratorService', 'Tool registry degraded mode', {
+          error: normalizedError,
+          fallbackToolCount: fallbackTools.length,
+        });
+        return fallbackTools;
+      }
+    })();
 
     const providerType: ProviderType = PROVIDER_MAP[request.provider] ?? 'github';
 
@@ -332,8 +354,10 @@ export class UniversalOrchestratorService {
 
     const systemPrompt = `${MAGYAR_SYSTEM_PROMPT(toolList, agentCapabilities)}\n\n${runtimeContext}\n\n${this.buildSessionContext(session)}${advancedContext ? `\n\n${advancedContext}` : ''}`;
 
-    // Build conversation messages — window to last 20 messages to avoid context overflow
-    const recentHistory = request.conversationHistory.slice(-20);
+    // Build conversation messages — prefer structured working memory over raw long history.
+    const recentHistory = session.workingMemory.recentMessages.length > 0
+      ? session.workingMemory.recentMessages
+      : request.conversationHistory.slice(-20);
     const messages = [
       ...recentHistory,
       { role: 'user' as const, content: request.message }
@@ -477,6 +501,7 @@ export class UniversalOrchestratorService {
         });
         const toolResult = await this.executeTool(tc.name, tc.args);
         actionsTriggered.push(...toolResult.actions);
+        this.rememberToolObservation(session, `${tc.name}: ${toolResult.resultText || 'Végrehajtva.'}`);
         toolResultsForLLM.push({
           tool_call_id: tc.name,
           name: tc.name,
@@ -484,7 +509,7 @@ export class UniversalOrchestratorService {
         });
         this.pushTimeline(missionTimeline, {
           phase: 'tool_execution',
-          status: 'completed',
+          status: toolResult.success ? 'completed' : 'blocked',
           detail: `Tool kész: ${tc.name}`,
         });
       }
@@ -800,6 +825,7 @@ export class UniversalOrchestratorService {
       createdAt: Date.now(),
       updatedAt: Date.now(),
       recentMessages: [],
+      workingMemory: createWorkingMemoryState(),
       recentIntents: [],
       delegatedTaskIds: [],
     };
@@ -826,6 +852,10 @@ export class UniversalOrchestratorService {
     if (session.recentMessages.length > 20) {
       session.recentMessages = session.recentMessages.slice(-20);
     }
+    session.workingMemory = rememberWorkingMemoryGoal(
+      appendWorkingMemoryMessage(session.workingMemory, { role: 'user', content: message.slice(0, 800) }),
+      message.slice(0, 160),
+    );
     session.updatedAt = Date.now();
   }
 
@@ -834,6 +864,14 @@ export class UniversalOrchestratorService {
     if (session.recentMessages.length > 20) {
       session.recentMessages = session.recentMessages.slice(-20);
     }
+    session.workingMemory = resolveLatestWorkingMemoryGoal(
+      appendWorkingMemoryMessage(session.workingMemory, { role: 'assistant', content: message.slice(0, 1000) }),
+    );
+    session.updatedAt = Date.now();
+  }
+
+  private rememberToolObservation(session: SessionMemory, observation: string): void {
+    session.workingMemory = recordWorkingMemoryObservation(session.workingMemory, observation);
     session.updatedAt = Date.now();
   }
 
@@ -917,6 +955,7 @@ export class UniversalOrchestratorService {
       `- Közelmúlt intentek: ${recentIntents}`,
       `- Session task referenciák: ${recentTaskIds}`,
       `- Függő tisztázó kérdés: ${pendingClarification}`,
+      formatWorkingMemory(session.workingMemory),
     ].join('\n');
   }
 
@@ -1446,9 +1485,10 @@ export class UniversalOrchestratorService {
   private async executeTool(
     toolName: string,
     args: Record<string, unknown>
-  ): Promise<{ actions: ActionTriggered[]; resultText: string }> {
+  ): Promise<{ actions: ActionTriggered[]; resultText: string; success: boolean }> {
     const actions: ActionTriggered[] = [];
     let resultText = '';
+    let success = true;
 
     try {
       // System tools
@@ -1468,7 +1508,7 @@ export class UniversalOrchestratorService {
             ? `- Aktív agentek: ${activeAgents.slice(0, 8).map((agent) => `${agent.name}[${agent.status}]`).join(', ')}`
             : '- Aktív agentek: nincs',
         ].join('\n');
-        return { actions, resultText };
+        return { actions, resultText, success };
       }
 
       if (toolName === 'list_active_tasks') {
@@ -1481,19 +1521,19 @@ export class UniversalOrchestratorService {
             .map((task, index) => `${index + 1}. ${task.agentName}: ${task.description} [${task.status}]`)
             .join('\n')}`;
         }
-        return { actions, resultText };
+        return { actions, resultText, success };
       }
 
       if (toolName === 'get_agent_logs') {
         const agentName = String(args.agentName ?? '');
         const lines = Number(args.lines ?? 20);
         resultText = `Logok lekérve: ${agentName} (${lines} sor). A log megjelenítés a CLI-ban érhető el: \`brunella agents logs ${agentName}\``;
-        return { actions, resultText };
+        return { actions, resultText, success };
       }
 
       if (toolName === 'run_full_test_suite') {
         resultText = 'Tesztcsomag futtatás elindítva. Ez néhány percet vesz igénybe. Kövesd: `npm test`';
-        return { actions, resultText };
+        return { actions, resultText, success };
       }
 
       // Agent delegation: delegate_<AgentName>
@@ -1503,7 +1543,7 @@ export class UniversalOrchestratorService {
 
         if (!task) {
           resultText = `Hiányzó feladat leírás a ${rawAgentName} számára.`;
-          return { actions, resultText };
+          return { actions, resultText, success };
         }
 
         // CloudflareWorker tools
@@ -1512,26 +1552,28 @@ export class UniversalOrchestratorService {
           logInfo('UniversalOrchestratorService', `CF Worker delegálás: ${workerName} — "${task.slice(0, 50)}"`);
           const taskId = await agentManager.queueTask(task, `CF_${workerName}`, { worker: workerName });
           actions.push({ agent: `CloudflareWorker_${workerName}`, task, taskId, status: 'started' });
-          return { actions, resultText };
+          return { actions, resultText, success };
         }
 
         // Regular agent delegation
         logInfo('UniversalOrchestratorService', `Agent delegálás: ${rawAgentName} — "${task.slice(0, 50)}"`);
         const taskId = await agentManager.queueTask(task, rawAgentName, {});
         actions.push({ agent: rawAgentName, task, taskId, status: 'started' });
-        return { actions, resultText };
+        return { actions, resultText, success };
       }
 
       logInfo('UniversalOrchestratorService', `Ismeretlen tool: ${toolName}`);
       resultText = `Ismeretlen eszköz: ${toolName}`;
+      success = false;
 
     } catch (e: unknown) {
       const error = e instanceof Error ? e.message : String(e);
       logError('UniversalOrchestratorService', `Tool végrehajtási hiba (${toolName}): ${error}`);
       resultText = `Hiba a(z) ${toolName} végrehajtásakor: ${error}`;
+      success = false;
     }
 
-    return { actions, resultText };
+    return { actions, resultText, success };
   }
 
   // ─── Advanced Intelligence Helpers ─────────────────────────────────────────

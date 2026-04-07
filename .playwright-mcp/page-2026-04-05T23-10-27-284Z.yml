@@ -1,0 +1,228 @@
+- generic [ref=e1]:
+  - generic [ref=e17]:
+    - generic [ref=e286]:
+      - banner [ref=e287]:
+        - button "Sessions" [ref=e288] [cursor=pointer]:
+          - img [ref=e290]
+      - generic [ref=e294]:
+        - button "Tool" [ref=e295] [cursor=pointer]:
+          - img [ref=e298]
+          - text: Tool
+        - button "App" [ref=e299] [cursor=pointer]:
+          - img [ref=e302]
+          - text: App
+        - button "Chat" [ref=e307] [cursor=pointer]:
+          - img [ref=e311]
+          - text: Chat
+        - button "Recents" [ref=e316] [cursor=pointer]:
+          - img [ref=e319]
+          - text: Recents
+        - button "Workflow" [ref=e325] [cursor=pointer]:
+          - img [ref=e328]
+          - text: Workflow
+        - button "Live" [ref=e332] [cursor=pointer]:
+          - img [ref=e335]
+          - text: Live
+      - generic [ref=e341]:
+        - link "Dashboard" [ref=e342] [cursor=pointer]:
+          - /url: /video-tools/teams/peterpohankapersonal/dashboard
+          - img
+        - button "JÓ" [ref=e344] [cursor=pointer]:
+          - paragraph [ref=e346]: JÓ
+    - generic [ref=e82]:
+      - generic:
+        - region "Notifications (F8)":
+          - list
+      - generic [ref=e85]:
+        - generic [ref=e87]:
+          - generic [ref=e88]:
+            - generic [ref=e90]:
+              - banner [ref=e91]:
+                - radiogroup "Output mode" [ref=e92]:
+                  - generic [ref=e93] [cursor=pointer]:
+                    - radio "Image" [checked] [ref=e95]
+                    - img [ref=e96]
+                    - text: Image
+                  - generic [ref=e100] [cursor=pointer]:
+                    - radio "Video" [ref=e102]
+                    - img [ref=e103]
+                    - text: Video
+                  - generic [ref=e106] [cursor=pointer]:
+                    - radio "Audio" [ref=e108]
+                    - img [ref=e109]
+                    - text: Audio
+                - button "Reset settings" [ref=e110] [cursor=pointer]:
+                  - img
+              - generic [ref=e113]:
+                - generic [ref=e114]:
+                  - generic [ref=e115]:
+                    - generic [ref=e117]:
+                      - button [ref=e120] [cursor=pointer]:
+                        - img [ref=e121]
+                      - generic [ref=e123]:
+                        - textbox "Text Prompt Input" [active] [ref=e124]:
+                          - paragraph [ref=e125]: Cinematic fashion film still frame. The VIKTORIAVARGA logo in elegant serif typography on pure white background. Small bursts of vibrant color — turquoise, coral, cobalt — like frozen paint drops framing the logo. Premium luxury brand end card aesthetic.
+                        - generic [ref=e127]:
+                          - generic [ref=e128]: 254/5000
+                          - button "Enhance prompt" [ref=e129] [cursor=pointer]:
+                            - img [ref=e130]
+                    - separator [ref=e134]
+                    - generic [ref=e136]:
+                      - generic [ref=e137]:
+                        - generic [ref=e138]:
+                          - img [ref=e139]
+                          - generic [ref=e143]: Images
+                        - button "Close Panel" [ref=e144] [cursor=pointer]:
+                          - img
+                      - generic [ref=e347]:
+                        - button [ref=e349] [cursor=pointer]:
+                          - img
+                        - grid "Reference images" [ref=e351]:
+                          - row "Add Reference" [ref=e352]:
+                            - gridcell "Add Reference" [ref=e353]:
+                              - button "Add Reference" [ref=e354] [cursor=pointer]:
+                                - img [ref=e355]
+                          - row "Person" [ref=e356]:
+                            - gridcell "Person" [ref=e357]:
+                              - button "Person" [ref=e361]
+                          - row "Buildings" [ref=e362]:
+                            - gridcell "Buildings" [ref=e363]:
+                              - button "Buildings" [ref=e367]
+                          - row "Street" [ref=e368]:
+                            - gridcell "Street" [ref=e369]:
+                              - button "Street" [ref=e373]
+                          - row "Water" [ref=e374]:
+                            - gridcell "Water" [ref=e375]:
+                              - button "Water" [ref=e379]
+                          - row "Candle" [ref=e380]:
+                            - gridcell "Candle" [ref=e381]:
+                              - button "Candle" [ref=e385]
+                          - row "Crosswalk" [ref=e386]:
+                            - gridcell "Crosswalk" [ref=e387]:
+                              - button "Crosswalk" [ref=e391]
+                          - row "Jacket Yellow" [ref=e392]:
+                            - gridcell "Jacket Yellow" [ref=e393]:
+                              - button "Jacket Yellow" [ref=e397]
+                          - row "Jacket Red" [ref=e398]:
+                            - gridcell "Jacket Red" [ref=e399]:
+                              - button "Jacket Red" [ref=e403]
+                  - generic [ref=e203]:
+                    - generic [ref=e204]:
+                      - button [pressed] [ref=e205] [cursor=pointer]:
+                        - img
+                      - button "Generate prompt from image" [ref=e206] [cursor=pointer]:
+                        - img
+                      - button "Help Guide" [ref=e207] [cursor=pointer]:
+                        - img
+                    - toolbar "Settings Toolbar" [ref=e208]:
+                      - generic [ref=e209]:
+                        - button "Number of images" [ref=e210] [cursor=pointer]:
+                          - img [ref=e211]
+                          - generic [ref=e215]: "1"
+                        - combobox [ref=e218]
+                      - generic [ref=e219]:
+                        - button "Aspect ratio" [ref=e220] [cursor=pointer]:
+                          - img [ref=e221]
+                          - generic [ref=e224]: 16:9
+                        - combobox [ref=e227]
+                      - generic [ref=e228]:
+                        - button "Image size" [ref=e229] [cursor=pointer]:
+                          - generic [ref=e230]: 1K
+                        - combobox [ref=e233]
+                - generic [ref=e234]:
+                  - button "View generation cost" [ref=e236] [cursor=pointer]:
+                    - img
+                  - button "Image models" [ref=e238] [cursor=pointer]:
+                    - text: Nano Banana 2
+                    - img
+                  - button "Generate" [ref=e239] [cursor=pointer]:
+                    - img
+                    - text: Generate
+            - separator [ref=e241]
+          - generic [ref=e243]:
+            - generic [ref=e245]:
+              - generic [ref=e405]:
+                - button "Luxury Fashion Brand Identity" [ref=e472] [cursor=pointer]:
+                  - generic [ref=e408]: Luxury Fashion Brand Identity
+                - button "Open session switcher" [ref=e409] [cursor=pointer]:
+                  - img [ref=e410]
+              - generic [ref=e255]:
+                - button "112 credits" [ref=e412] [cursor=pointer]
+                - button "0/1 Quests" [ref=e257] [cursor=pointer]:
+                  - generic [ref=e258]:
+                    - img
+                  - generic [ref=e259]: 0/1
+                  - text: Quests
+                - button "Upgrade" [ref=e260] [cursor=pointer]
+                - button "Share session" [ref=e413] [cursor=pointer]:
+                  - img
+                - button [ref=e414] [cursor=pointer]:
+                  - img
+                - button "Help" [ref=e415] [cursor=pointer]:
+                  - img
+            - generic:
+              - generic [ref=e416]:
+                - img [ref=e417]
+                - paragraph [ref=e420]: Get notifications when your generations are complete.
+              - generic [ref=e421]:
+                - button "Don't show again" [ref=e422] [cursor=pointer]
+                - button "Later" [ref=e423] [cursor=pointer]
+                - button "Enable" [ref=e424] [cursor=pointer]
+            - generic [ref=e425]:
+              - generic [ref=e426]:
+                - radiogroup "Content filter" [ref=e427]:
+                  - generic [ref=e428] [cursor=pointer]:
+                    - generic [ref=e429]:
+                      - radio "All" [checked]
+                    - text: All
+                  - generic [ref=e430] [cursor=pointer]:
+                    - generic [ref=e431]:
+                      - radio "Favorited"
+                    - text: Favorited
+                  - generic [ref=e432] [cursor=pointer]:
+                    - generic [ref=e433]:
+                      - radio "Downloaded"
+                    - text: Downloaded
+                  - generic [ref=e434] [cursor=pointer]:
+                    - generic [ref=e435]:
+                      - radio "4K"
+                    - text: 4K
+                - generic [ref=e436]:
+                  - 'button "Filter by media type: All media" [ref=e437] [cursor=pointer]':
+                    - img [ref=e438]
+                  - button "Download all" [ref=e439] [cursor=pointer]:
+                    - img
+                  - group "View mode" [ref=e440]:
+                    - button "Feed view" [pressed] [ref=e441] [cursor=pointer]:
+                      - img [ref=e442]
+                    - button "Grid view" [ref=e443] [cursor=pointer]:
+                      - img [ref=e444]
+              - generic [ref=e454]:
+                - toolbar [ref=e455]:
+                  - button "Cinematic fashion film still frame. The VIKTORIAVARGA logo in elegant serif typography on pure white background. Small bursts of vibrant color — turquoise, coral, cobalt — like frozen paint drops framing the logo. Premium luxury brand end card aesthetic." [ref=e458]:
+                    - paragraph [ref=e459]: Cinematic fashion film still frame. The VIKTORIAVARGA logo in elegant serif typography on pure white background. Small bursts of vibrant color — turquoise, coral, cobalt — like frozen paint drops framing the logo. Premium luxury brand end card aesthetic.
+                  - button [ref=e460] [cursor=pointer]:
+                    - img
+                  - button "See full prompt" [ref=e461] [cursor=pointer]:
+                    - img
+                  - button "Hide output" [ref=e473] [cursor=pointer]:
+                    - img
+                - generic [ref=e476]:
+                  - button "Nano Banana 2 - Cinematic fashion film still frame The VIKTORIAVARGA logo in elegant serif typograp.png" [ref=e477] [cursor=pointer]
+                  - group [ref=e478]:
+                    - button "feedback" [ref=e479] [cursor=pointer]:
+                      - img
+                  - toolbar:
+                    - generic [ref=e481]:
+                      - button "Actions" [ref=e482] [cursor=pointer]:
+                        - img
+                      - combobox [ref=e485]
+                    - group [ref=e486]:
+                      - button [ref=e487] [cursor=pointer]:
+                        - img
+                      - button "Favorite" [ref=e488] [cursor=pointer]:
+                        - img
+                      - button [ref=e489] [cursor=pointer]:
+                        - img
+        - status [ref=e284]
+  - iframe

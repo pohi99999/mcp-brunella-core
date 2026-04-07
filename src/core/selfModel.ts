@@ -6,6 +6,22 @@
 import { EventEmitter } from 'events';
 import { logInfo } from '../utils/logger.js';
 
+// Forward-declared to avoid circular dependency; populated via setFeedbackChannel()
+export interface CopilotReviewFeedback {
+  trackId: string;
+  phase: string;
+  reviewedAt: string;
+  summary: string;
+  findings: Array<{
+    ruleId: string;
+    filePath: string;
+    line?: number;
+    message: string;
+    severity: 'CRITICAL' | 'HIGH' | 'MEDIUM' | 'LOW' | 'INFO';
+  }>;
+  qualityScore: number;
+}
+
 export interface SelfModelSignal {
   signalId: string;
   source: string;
@@ -170,6 +186,58 @@ export class SelfModel extends EventEmitter {
       blindSpots: this.state.blindSpots.map(item => ({ ...item })),
       constraints: [...this.state.constraints],
     };
+  }
+
+  /**
+   * Ingest structured feedback from the Copilot CLI Code-review agent.
+   * Translates each finding into a SelfModelSignal using severity → confidence mapping.
+   * Returns the number of signals emitted.
+   */
+  ingestCopilotFeedback(feedback: CopilotReviewFeedback): number {
+    const severityToConfidence: Record<string, number> = {
+      CRITICAL: 0.95, HIGH: 0.80, MEDIUM: 0.60, LOW: 0.40, INFO: 0.20,
+    };
+    const severityToRisk = (s: string): 'high' | 'medium' | 'low' =>
+      s === 'CRITICAL' ? 'high' : s === 'HIGH' ? 'medium' : 'low';
+
+    let emitted = 0;
+
+    for (const finding of feedback.findings) {
+      const confidence = severityToConfidence[finding.severity] ?? 0.5;
+      this.ingestSignal({
+        source: `CopilotCLI/code-review/${feedback.trackId}`,
+        category: 'risk',
+        confidence,
+        payload: {
+          capability: finding.ruleId.toLowerCase().replace(/[^a-z0-9-]/g, '-'),
+          description: finding.message,
+          severity: severityToRisk(finding.severity),
+          ruleId: finding.ruleId,
+          filePath: finding.filePath,
+          trackId: feedback.trackId,
+          phase: feedback.phase,
+        },
+      });
+      emitted++;
+    }
+
+    // Summary signal
+    this.ingestSignal({
+      source: `CopilotCLI/review-summary/${feedback.trackId}`,
+      category: feedback.qualityScore >= 0.8 ? 'capability' : 'performance',
+      confidence: feedback.qualityScore,
+      payload: {
+        capability: 'code-review-quality',
+        description: feedback.summary,
+        qualityScore: feedback.qualityScore,
+        totalFindings: feedback.findings.length,
+        trackId: feedback.trackId,
+      },
+    });
+    emitted++;
+
+    logInfo('SelfModel', `CopilotFeedback ingested: ${emitted} signals from track=${feedback.trackId}`);
+    return emitted;
   }
 
   private uniqueBlindSpots(blindSpots: BlindSpot[]): BlindSpot[] {

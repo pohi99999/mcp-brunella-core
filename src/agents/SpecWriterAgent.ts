@@ -8,6 +8,7 @@ import { BaseAgent, type AgentContext, type AgentResult } from "./BaseAgent.js";
 import { generateResponse } from "../core/llm_client.js";
 import { logInfo, logError, logDebug, setAgentStatus } from "../utils/logger.js";
 import { ensureError } from "../utils/ensureError.js";
+import { safeJsonParse } from '../utils/aiHelpers.js';
 import fs from "fs/promises";
 import path from "path";
 import type {
@@ -42,6 +43,19 @@ interface RequirementsJson {
     dashboard: string;
     cli: string;
   };
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null;
+}
+
+function isSystemBlueprint(value: unknown): value is SystemBlueprint {
+  return (
+    isRecord(value) &&
+    typeof value.id === "string" &&
+    typeof value.app_name === "string" &&
+    Array.isArray(value.modules)
+  );
 }
 
 // ════════════════════════════════════════════════════════════════
@@ -88,11 +102,11 @@ export class SpecWriterAgent extends BaseAgent {
     const task = (context.task || "").toLowerCase();
 
     try {
-      const meta = (context.metadata || {}) as Record<string, unknown>;
+      const meta = isRecord(context.metadata) ? context.metadata : {};
 
       // Blueprint Spec generálás (Software Genesis Phase 2)
-      if (this.isBlueprintSpecTask(task, meta)) {
-        const blueprint = meta.blueprint as SystemBlueprint;
+      if (this.isBlueprintSpecTask(task, meta) && isSystemBlueprint(meta.blueprint)) {
+        const blueprint = meta.blueprint;
         return await this.generateBlueprintSpec(blueprint);
       }
 
@@ -574,10 +588,10 @@ export class SpecWriterAgent extends BaseAgent {
           );
         }
       }
-      const parsed = JSON.parse(jsonString) as RequirementsJson;
+      const parsed = safeJsonParse<RequirementsJson>(jsonString, null as unknown as RequirementsJson);
 
       // Validation
-      if (!parsed.title || !parsed.phases || !parsed.integrations) {
+      if (!parsed || !parsed.title || !parsed.phases || !parsed.integrations) {
         throw new Error("Missing required fields in extracted requirements");
       }
 

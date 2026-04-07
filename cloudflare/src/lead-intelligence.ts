@@ -32,6 +32,8 @@ export interface Env {
   BAS_LOCAL_URL?: string;
 }
 
+import { parseAiResponse, safeJsonParse } from './lib/aiHelpers.js';
+
 // ============================================================================
 // TYPES
 // ============================================================================
@@ -331,11 +333,11 @@ async function handleGetLeads(url: URL, env: Env): Promise<Response> {
 
   const result = await env.DB.prepare(query).bind(...params).all<Lead>();
 
-  return new Response(JSON.stringify({
+    return new Response(JSON.stringify({
     total: result.results.length,
     leads: result.results.map(l => ({
       ...l,
-      pain_reasons: JSON.parse(l.pain_reasons as unknown as string || '[]'),
+      pain_reasons: safeJsonParse<string[]>(l.pain_reasons as unknown as string || '[]', []),
     })),
   }), { headers: { 'Content-Type': 'application/json' } });
 }
@@ -413,13 +415,16 @@ async function searchGooglePlaces(
   const url = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${query}&language=hu&region=hu&key=${env.GOOGLE_PLACES_API_KEY}`;
 
   const response = await fetch(url);
-  const data = await response.json() as any;
+  const dataRaw = await response.json().catch(() => ({}));
+  const data = typeof dataRaw === 'object' && dataRaw !== null ? (dataRaw as Record<string, unknown>) : {};
 
-  if (data.status !== 'OK' && data.status !== 'ZERO_RESULTS') {
-    throw new Error(`Google Places API hiba: ${data.status}`);
+  const status = typeof data.status === 'string' ? data.status : 'ZERO_RESULTS';
+  if (status !== 'OK' && status !== 'ZERO_RESULTS') {
+    throw new Error(`Google Places API hiba: ${status}`);
   }
 
-  return (data.results || []).slice(0, limit);
+  const results = Array.isArray(data.results) ? data.results : [];
+  return (results as any[]).slice(0, limit);
 }
 
 // Mock adatok teszteléshez (Google API kulcs nélkül)
@@ -539,13 +544,19 @@ Ismert problémák: ${painPoints.join(', ')}.
 Értékeld 0-20 skálán, mennyire valószínű, hogy szüksége van marketing/webfejlesztési segítségre.
 Csak a számot válaszold!`;
 
-  const result = await env.AI.run('@cf/meta/llama-3.1-8b-instruct' as any, {
-    messages: [{ role: 'user', content: prompt }],
-    max_tokens: 5,
-  }) as { response: string };
+  try {
+    const modelName = '@cf/meta/llama-3.1-8b-instruct';
+    const aiRaw = await env.AI.run(modelName as any, {
+      messages: [{ role: 'user', content: prompt }],
+      max_tokens: 5,
+    });
 
-  const num = parseInt(result.response?.trim() || '0', 10);
-  return isNaN(num) ? 0 : Math.min(20, num);
+    const { text: respText } = parseAiResponse(aiRaw);
+    const num = parseInt(String(respText || '').trim() || '0', 10);
+    return isNaN(num) ? 0 : Math.min(20, num);
+  } catch {
+    return 0;
+  }
 }
 
 // ============================================================================

@@ -1,0 +1,181 @@
+- generic [ref=e1]:
+  - generic [ref=e8]:
+    - generic [ref=e10]:
+      - banner [ref=e11]:
+        - button "Sessions" [ref=e12] [cursor=pointer]:
+          - img [ref=e14]
+      - generic [ref=e18]:
+        - button "Tool" [ref=e19] [cursor=pointer]:
+          - img [ref=e22]
+          - text: Tool
+        - button "App" [ref=e23] [cursor=pointer]:
+          - img [ref=e26]
+          - text: App
+        - button "Chat" [ref=e31] [cursor=pointer]:
+          - img [ref=e35]
+          - text: Chat
+        - button "Recents" [ref=e40] [cursor=pointer]:
+          - img [ref=e43]
+          - text: Recents
+        - button "Workflow" [ref=e49] [cursor=pointer]:
+          - img [ref=e52]
+          - text: Workflow
+        - button "Live" [ref=e56] [cursor=pointer]:
+          - img [ref=e59]
+          - text: Live
+      - generic [ref=e64]:
+        - link "Dashboard" [ref=e65] [cursor=pointer]:
+          - /url: /video-tools/teams/peterpohankapersonal/dashboard
+          - img
+        - button "JÓ" [ref=e67] [cursor=pointer]:
+          - paragraph [ref=e69]: JÓ
+    - generic [ref=e72]:
+      - generic:
+        - region "Notifications (F8)":
+          - list
+      - generic [ref=e75]:
+        - generic [ref=e77]:
+          - generic [ref=e78]:
+            - generic [ref=e81]:
+              - heading "What do you want to create?" [level=1] [ref=e83]
+              - generic [ref=e84]:
+                - generic [ref=e88]:
+                  - button "Add media" [ref=e89] [cursor=pointer]:
+                    - img [ref=e90]
+                  - textbox "Search apps" [ref=e94]:
+                    - /placeholder: Describe your creation or search apps
+                - generic [ref=e96]:
+                  - button "Video" [ref=e97] [cursor=pointer]:
+                    - img
+                    - text: Video
+                  - button "Image" [ref=e98] [cursor=pointer]:
+                    - img
+                    - text: Image
+                  - button "Audio" [ref=e99] [cursor=pointer]:
+                    - img
+                    - text: Audio
+              - generic [ref=e100]:
+                - generic [ref=e101]:
+                  - tablist "Apps categories" [ref=e103]:
+                    - tab "For you" [selected] [ref=e104] [cursor=pointer]:
+                      - generic [ref=e105]: For you
+                    - tab "Custom" [ref=e106] [cursor=pointer]:
+                      - generic [ref=e107]: Custom
+                    - tab "Image" [ref=e108] [cursor=pointer]:
+                      - generic [ref=e109]: Image
+                    - tab "Video" [ref=e110] [cursor=pointer]:
+                      - generic [ref=e111]: Video
+                    - tab "Audio" [ref=e112] [cursor=pointer]:
+                      - generic [ref=e113]: Audio
+                    - tab "Models" [ref=e114] [cursor=pointer]:
+                      - generic [ref=e115]: Models
+                    - tab "Collections" [ref=e116] [cursor=pointer]:
+                      - generic [ref=e117]: Collections
+                  - button "Scroll tabs left":
+                    - img
+                  - button "Scroll tabs right" [ref=e118] [cursor=pointer]:
+                    - img
+                - tabpanel "For you" [ref=e119]:
+                  - generic [ref=e120]:
+                    - heading "Featured Apps" [level=3] [ref=e121]
+                    - generic [ref=e122]:
+                      - button "Multi-Shot Video" [ref=e123] [cursor=pointer]:
+                        - img [ref=e126]
+                        - generic [ref=e130]:
+                          - paragraph [ref=e131]: Multi-Shot Video
+                          - paragraph [ref=e132]: Generate multi-shot videos from a single prompt.
+                      - button "Product Reshoot" [ref=e133] [cursor=pointer]:
+                        - img [ref=e136]
+                        - generic [ref=e141]:
+                          - paragraph [ref=e142]: Product Reshoot
+                          - paragraph [ref=e143]: Instantly change the setting, lighting, or the angle of your product.
+                      - button "Expand Image" [ref=e144] [cursor=pointer]:
+                        - img [ref=e147]
+                        - generic [ref=e152]:
+                          - paragraph [ref=e153]: Expand Image
+                          - paragraph [ref=e154]: Change your image's aspect ratio.
+                      - button "Remove from Video" [ref=e155] [cursor=pointer]:
+                        - img [ref=e158]
+                        - generic [ref=e162]:
+                          - paragraph [ref=e163]: Remove from Video
+                          - paragraph [ref=e164]: Remove objects without reshooting.
+                      - button "Stylize Image" [ref=e165] [cursor=pointer]:
+                        - img [ref=e168]
+                        - generic [ref=e173]:
+                          - paragraph [ref=e174]: Stylize Image
+                          - paragraph [ref=e175]: Apply artistic styles to your image.
+                      - button "Vary Image" [ref=e176] [cursor=pointer]:
+                        - img [ref=e179]
+                        - generic [ref=e184]:
+                          - paragraph [ref=e185]: Vary Image
+                          - paragraph [ref=e186]: Change specific elements of your image.
+                      - button "Upscale Video" [ref=e187] [cursor=pointer]:
+                        - img [ref=e190]
+                        - generic [ref=e194]:
+                          - paragraph [ref=e195]: Upscale Video
+                          - paragraph [ref=e196]: Upscale video with Topaz AI.
+                      - button "Edit Video" [ref=e197] [cursor=pointer]:
+                        - img [ref=e200]
+                        - generic [ref=e204]:
+                          - paragraph [ref=e205]: Edit Video
+                          - paragraph [ref=e206]: Swap backgrounds, lighting, angles - all without reshooting.
+                      - button "Performance Capture with Act-Two" [ref=e207] [cursor=pointer]:
+                        - img [ref=e210]
+                        - generic [ref=e214]:
+                          - paragraph [ref=e215]: Performance Capture with Act-Two
+                          - paragraph [ref=e216]: Animate characters using driving performance videos.
+            - separator [ref=e218]
+          - generic [ref=e220]:
+            - generic [ref=e222]:
+              - generic [ref=e224]:
+                - button "Untitled session" [ref=e226] [cursor=pointer]:
+                  - generic [ref=e227]: Untitled session
+                - button "Open session switcher" [ref=e228] [cursor=pointer]:
+                  - img [ref=e229]
+              - generic [ref=e232]:
+                - button "500 credits" [ref=e233] [cursor=pointer]
+                - button "Upgrade" [ref=e234] [cursor=pointer]
+                - button [ref=e301] [cursor=pointer]:
+                  - img
+                - button "Help" [ref=e236] [cursor=pointer]:
+                  - img
+            - generic [ref=e238]:
+              - generic [ref=e239]:
+                - heading "Everything you need to make anything you want" [level=2] [ref=e240]
+                - tablist [ref=e241]:
+                  - tab "Multi-Shot Video" [selected] [ref=e242] [cursor=pointer]
+                  - tab "Runway Characters" [ref=e243] [cursor=pointer]
+                  - tab "Gen-4.5" [ref=e244] [cursor=pointer]
+                  - tab "Kling 3.0" [ref=e245] [cursor=pointer]
+                  - tab "Nano Banana 2" [ref=e246] [cursor=pointer]
+                  - tab "Character Render" [ref=e247] [cursor=pointer]
+              - tabpanel "Multi-Shot Video" [ref=e249]:
+                - button "Pause video" [ref=e251] [cursor=pointer]:
+                  - button "Pause video" [ref=e253]:
+                    - img [ref=e254]
+              - button "Upgrade" [ref=e257] [cursor=pointer]
+        - status [ref=e258]
+  - dialog [active] [ref=e261]:
+    - generic [ref=e262]:
+      - generic [ref=e263]: What are you making?
+      - generic [ref=e264]:
+        - generic [ref=e265] [cursor=pointer]:
+          - img [ref=e266]
+          - generic [ref=e271]: Films or shorts
+        - generic [ref=e272] [cursor=pointer]:
+          - img [ref=e273]
+          - generic [ref=e276]: Marketing campaigns
+        - generic [ref=e277] [cursor=pointer]:
+          - img [ref=e278]
+          - generic [ref=e281]: Social media
+        - generic [ref=e282] [cursor=pointer]:
+          - img [ref=e283]
+          - generic [ref=e286]: Experimental art
+        - generic [ref=e287] [cursor=pointer]:
+          - img [ref=e288]
+          - generic [ref=e291]: Educational content
+        - generic [ref=e292] [cursor=pointer]:
+          - img [ref=e293]
+          - generic [ref=e296]: Other
+      - button "Continue" [ref=e297] [cursor=pointer]
+  - iframe

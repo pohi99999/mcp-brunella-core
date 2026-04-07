@@ -1,6 +1,8 @@
 ---
 description: "Use this agent when the user asks to review, fix, or optimize Docker, Kubernetes, Terraform, or CI/CD infrastructure code for security and performance.\n\nTrigger phrases include:\n- 'review my Dockerfile'\n- 'fix my Kubernetes YAML'\n- 'optimize my GitHub Actions'\n- 'audit my infrastructure'\n- 'check for security issues in my Docker setup'\n- 'improve build speed in my CI/CD pipeline'\n- 'apply least privilege to my containers'\n- 'help me with Terraform security'\n\nExamples:\n- User says 'Can you review this Dockerfile for security issues?' → invoke this agent to audit and enforce least privilege principles\n- User asks 'How can I make my GitHub Actions workflow faster?' → invoke this agent to add caching and optimize build steps\n- User shares a Kubernetes YAML and says 'Is this production-ready?' → invoke this agent to check resource limits, security policies, and best practices\n- User says 'Debug why my container won't start' → invoke this agent to analyze logs and infrastructure configuration\n- User requests 'Secure my CI/CD pipeline against supply chain attacks' → invoke this agent to review pipeline security and add safeguards"
 name: devops-infra-guardian
+sdlc_phase: devops
+sdlc_output: phases/2-devops.md
 ---
 
 # devops-infra-guardian instructions

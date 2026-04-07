@@ -1,0 +1,37 @@
+- generic [ref=e72]:
+  - generic [ref=e303]:
+    - generic [ref=e304]:
+      - button "View all sessions" [ref=e307] [cursor=pointer]:
+        - img
+      - button "Untitled session" [ref=e309] [cursor=pointer]
+    - generic [ref=e311]:
+      - button "500 credits" [ref=e312] [cursor=pointer]
+      - button "Quests" [ref=e451] [cursor=pointer]
+      - button "Upgrade" [ref=e313] [cursor=pointer]
+      - button [ref=e314] [cursor=pointer]:
+        - img
+      - button "Help" [ref=e452] [cursor=pointer]:
+        - img
+  - generic [ref=e320]:
+    - generic [ref=e323]:
+      - generic [ref=e324]:
+        - button [ref=e325] [cursor=pointer]:
+          - generic [ref=e326]: Untitled Session
+          - img [ref=e328]
+        - generic [ref=e331]: Select where your generations will be saved.
+      - button [ref=e332] [cursor=pointer]:
+        - generic [ref=e333]:
+          - img [ref=e334]
+          - generic [ref=e336]: Sessions
+        - generic [ref=e337]: Change folder
+    - generic:
+      - generic:
+        - dialog "Tools Settings" [ref=e453]:
+          - button "Open app" [ref=e454] [cursor=pointer]:
+            - generic [ref=e343]: Open app
+        - generic [ref=e346]:
+          - button [ref=e347] [cursor=pointer]:
+            - img
+            - generic [ref=e348]: Multi-Shot Video
+          - button [ref=e349] [cursor=pointer]:
+            - img

@@ -1,0 +1,39 @@
+- generic [ref=e8]:
+  - generic [ref=e10]:
+    - banner [ref=e11]:
+      - button "Sessions" [ref=e12] [cursor=pointer]:
+        - img [ref=e14]
+    - generic [ref=e18]:
+      - button "Tool" [ref=e19] [cursor=pointer]:
+        - img [ref=e22]
+        - text: Tool
+      - button "App" [ref=e23] [cursor=pointer]:
+        - img [ref=e26]
+        - text: App
+      - button "Chat" [ref=e31] [cursor=pointer]:
+        - img [ref=e35]
+        - text: Chat
+      - button "Recents" [ref=e40] [cursor=pointer]:
+        - img [ref=e43]
+        - text: Recents
+      - button "Workflow" [ref=e49] [cursor=pointer]:
+        - img [ref=e52]
+        - text: Workflow
+      - button "Live" [ref=e56] [cursor=pointer]:
+        - img [ref=e59]
+        - text: Live
+    - generic [ref=e65]:
+      - link "Dashboard" [ref=e66] [cursor=pointer]:
+        - /url: /video-tools/teams/peterpohankapersonal/dashboard
+        - img
+      - button "JÓ" [ref=e68] [cursor=pointer]:
+        - paragraph [ref=e70]: JÓ
+  - generic [ref=e73]:
+    - generic:
+      - region "Notifications (F8)":
+        - list
+    - generic [ref=e76]:
+      - generic [ref=e78]:
+        - separator [ref=e82]
+        - img "loading animation" [ref=e90]
+      - status [ref=e95]

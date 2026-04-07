@@ -71,8 +71,10 @@ interface TaskResult {
   success: boolean;
   message: string;
   data: unknown;
+  status?: string;
   executedBy?: string;
   executionTime?: number;
+  metadata?: Record<string, unknown>;
 }
 
 type AgentRuntimeStatus = "idle" | "working" | "error" | "unloaded";
@@ -99,6 +101,88 @@ interface AgentLoadDiagnostic {
 }
 
 type AgentWithSystemPrompt = IAgent & { systemPrompt?: string };
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null;
+}
+
+function isTaskResultLike(value: unknown): value is TaskResult {
+  if (!isRecord(value)) {
+    return false;
+  }
+
+  return typeof value.success === "boolean" && typeof value.message === "string";
+}
+
+function getTaskIdFromContext(context?: Record<string, unknown>): number {
+  if (!context || !isRecord(context)) {
+    return 0;
+  }
+
+  const taskId = context.taskId;
+  return typeof taskId === "number" ? taskId : Number(taskId) || 0;
+}
+
+function normalizeTaskResult(value: unknown, fallbackMessage: string, fallbackSuccess: boolean): TaskResult {
+  const result: TaskResult = {
+    success: fallbackSuccess,
+    message: fallbackMessage,
+    data: value,
+  };
+
+  if (isRecord(value)) {
+    Object.assign(result, value);
+    const inferredSuccess =
+      typeof value.success === "boolean"
+        ? value.success
+        : inferSuccessFromStatus(value.status);
+    result.success = inferredSuccess ?? fallbackSuccess;
+    result.message = typeof value.message === "string" ? value.message : fallbackMessage;
+    result.data = "data" in value ? value.data : value;
+    if (isRecord(value.metadata)) {
+      result.metadata = value.metadata;
+    }
+  }
+
+  return result;
+}
+
+function getConfidence(result: TaskResult): number | undefined {
+  const metadata = result.metadata;
+  return isRecord(metadata) && typeof metadata.confidence === "number" ? metadata.confidence : undefined;
+}
+
+function inferSuccessFromStatus(status: unknown): boolean | undefined {
+  if (typeof status !== "string") {
+    return undefined;
+  }
+
+  const normalizedStatus = status.trim().toLowerCase();
+  if (
+    normalizedStatus === "success" ||
+    normalizedStatus === "ok" ||
+    normalizedStatus === "completed" ||
+    normalizedStatus === "done"
+  ) {
+    return true;
+  }
+
+  if (
+    normalizedStatus === "error" ||
+    normalizedStatus === "failed" ||
+    normalizedStatus === "failure"
+  ) {
+    return false;
+  }
+
+  return undefined;
+}
+
+function attachTraceMetadata(result: { metadata?: unknown }, traceId: string): void {
+  const metadata = isRecord(result.metadata) ? result.metadata : {};
+  metadata.traceId = traceId;
+  result.metadata = metadata;
+}
 
 // ============================================================================
 // AGENT MANAGER
@@ -173,11 +257,7 @@ export class AgentManager extends EventEmitter {
   constructor(socketService?: SocketServiceClass) {
     super();
     // Use provided socketService or create a no-op mock for testing
-    this.socketService = socketService || ({
-      broadcastChatter: () => {},
-      emit: () => {},
-      on: () => {},
-    } as any);
+    this.socketService = socketService || new SocketServiceClass();
     this.registry = this.loadRegistry();
     this.edgeConfig = this.loadEdgeConfig();
     this.seedAgentDiagnostics(this.registry.agents);
@@ -377,7 +457,7 @@ export class AgentManager extends EventEmitter {
         );
 
         // Check result
-        const success = (result as any)?.success ?? false;
+        const success = isTaskResultLike(result) ? result.success : false;
         if (success) {
           updateFixStatus(fix.id, "resolved");
           logInfo("AgentManager", `✅ Fix Resolved: ${fix.id}`);
@@ -385,7 +465,7 @@ export class AgentManager extends EventEmitter {
           updateFixStatus(
             fix.id,
             "failed",
-            (result as any)?.message || "Unknown error",
+            isTaskResultLike(result) ? result.message : "Unknown error",
           );
         }
       } catch (error: unknown) {
@@ -651,12 +731,7 @@ export class AgentManager extends EventEmitter {
       task.context,
     );
 
-    // Cast result to TaskResult (since execute returns unknown)
-    return (
-      typeof result === "object" && result !== null
-        ? result
-        : { success: true, data: result, message: "Edge execution completed" }
-    ) as TaskResult;
+    return normalizeTaskResult(result, "Edge execution completed", true);
   }
 
   /**
@@ -825,7 +900,7 @@ export class AgentManager extends EventEmitter {
           setAgentStatus(agentName, "working", instruction);
 
           // Task ID keresése a kontextusban vagy a sorban (ha van)
-          const taskId = (context as any)?.taskId || 0;
+          const taskId = getTaskIdFromContext(context);
           const controller = new AbortController();
           if (taskId) this.activeExecutions.set(taskId, controller);
 
@@ -833,29 +908,23 @@ export class AgentManager extends EventEmitter {
             const res = await agent.execute(instruction, { ...context, signal: controller.signal });
 
             // Result normalizálás (status -> success mapping)
-            if (typeof res === "object" && res !== null) {
-              const resObj = res as Record<string, unknown>;
-              if (resObj["success"] === undefined) {
-                resObj["success"] =
-                  resObj["status"] === "success" || resObj["status"] === "ok";
+            if (isRecord(res)) {
+              const normalized = normalizeTaskResult(
+                res,
+                formatResponse(res, agentName, { useEmojis: true }),
+                true,
+              );
+              if (typeof normalized.message !== "string" || !normalized.message) {
+                normalized.message = formatResponse(normalized, agentName, { useEmojis: true });
               }
-
-              // Format response as Hungarian human-readable text (if not already formatted)
-              if (!resObj["message"] || typeof resObj["message"] !== "string") {
-                const formatted = formatResponse(resObj, agentName, { useEmojis: true });
-                resObj["message"] = formatted;
-              }
-
-              return resObj as unknown as TaskResult;
-            } else {
-              // Format simple response
-              const formatted = formatResponse(res, agentName, { useEmojis: true });
-              return {
-                success: true,
-                data: res,
-                message: formatted,
-              } as TaskResult;
+              return normalized;
             }
+            const formatted = formatResponse(res, agentName, { useEmojis: true });
+            return {
+              success: true,
+              data: res,
+              message: formatted,
+            };
           } finally {
             if (taskId) this.activeExecutions.delete(taskId);
             // Decrement coordinator load after execution attempt
@@ -906,15 +975,14 @@ export class AgentManager extends EventEmitter {
       });
 
       // RULE-OB1: End trace span on success (+ confidence propagation)
-      const confidence = (result as any)?.metadata?.confidence;
+      const confidence = getConfidence(result);
       if (confidence !== undefined) {
         trace.span.metadata['confidence'] = confidence;
       }
       // Attach traceId to result for later lookup by tasks API / observability CLI
       try {
         if (result && typeof result === 'object') {
-          (result as any).metadata = (result as any).metadata ?? {};
-          (result as any).metadata.traceId = trace.span.traceId;
+          attachTraceMetadata(result, trace.span.traceId);
         }
       } catch (error: unknown) {
         const err = ensureError(error);
@@ -1583,7 +1651,7 @@ export class AgentManager extends EventEmitter {
   async queueTask(
     description: string,
     agentName: string,
-    context?: Record<string, any>,
+    context?: Record<string, unknown>,
     parentId?: number,
   ): Promise<number> {
     const contextStr = context ? JSON.stringify(context) : undefined;

@@ -24,10 +24,10 @@ interface TaskSubmitResult {
 }
 
 interface TaskStatusResult {
-  status: "pending" | "running" | "success" | "error";
+  status: string;
   progress?: number;
   currentStep?: string;
-  result?: any;
+  result?: unknown;
   error?: string;
 }
 
@@ -35,6 +35,8 @@ interface ChatResponse {
   response: string;
   model?: string;
 }
+
+type JsonRecord = Record<string, unknown>;
 
 // ============================================================================
 // CLIENT IMPLEMENTATION
@@ -89,9 +91,7 @@ class CloudflareClientClass {
         throw new Error(result.message || "Task submission failed");
       }
 
-      // Extract task ID from result data
-      const taskId =
-        (result.data as any)?.task?.taskId || this.generateTaskId();
+      const taskId = this.extractTaskId(result.data) ?? this.generateTaskId();
 
       return {
         taskId,
@@ -125,20 +125,14 @@ class CloudflareClientClass {
         };
       }
 
+      const status = this.normalizeStatus(taskStatus.status);
+
       return {
-        status: taskStatus.status as any,
+        status,
         result: taskStatus.result,
         // Mock progress calculation based on status
-        progress:
-          taskStatus.status === "completed"
-            ? 100
-            : taskStatus.status === "pending"
-              ? 0
-              : 50,
-        currentStep:
-          taskStatus.status === "dispatched"
-            ? "Processing..."
-            : taskStatus.status,
+        progress: this.getProgressForStatus(status),
+        currentStep: this.getCurrentStepForStatus(status),
       };
     } catch (error: unknown) {
       const err = ensureError(error);
@@ -157,7 +151,7 @@ class CloudflareClientClass {
    * @param history - Optional conversation history
    * @returns Chat response from Worker AI
    */
-  async chat(instruction: string, history?: any[]): Promise<ChatResponse> {
+  async chat(instruction: string, history?: unknown[]): Promise<ChatResponse> {
     if (!this.initialized) {
       await this.initialize();
     }
@@ -176,11 +170,7 @@ class CloudflareClientClass {
         throw new Error(result.message || "Chat request failed");
       }
 
-      // Extract response from result
-      const response =
-        (result.data as any)?.task?.result ||
-        result.message ||
-        "Response received";
+      const response = this.extractChatResponse(result.data, result.message);
 
       return {
         response,
@@ -209,7 +199,7 @@ class CloudflareClientClass {
   /**
    * Get health status details
    */
-  getHealthStatus() {
+  getHealthStatus(): ReturnType<EdgeProxyAgent["getHealth"]> {
     return this.edgeAgent.getHealth();
   }
 
@@ -230,6 +220,71 @@ class CloudflareClientClass {
 
   private generateTaskId(): string {
     return `task_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
+  }
+
+  private normalizeStatus(status: unknown): string {
+    return typeof status === "string" && status.trim().length > 0 ? status : "unknown";
+  }
+
+  private getProgressForStatus(status: string): number {
+    if (status === "completed" || status === "success") {
+      return 100;
+    }
+
+    if (status === "pending") {
+      return 0;
+    }
+
+    return 50;
+  }
+
+  private getCurrentStepForStatus(status: string): string {
+    return status === "dispatched" ? "Processing..." : status;
+  }
+
+  private extractTaskId(data: unknown): string | undefined {
+    if (!this.isRecord(data)) {
+      return undefined;
+    }
+
+    const directTaskId = this.pickString(data.taskId, data.id);
+    if (directTaskId) {
+      return directTaskId;
+    }
+
+    const nestedTask = this.isRecord(data.task) ? data.task : undefined;
+    return nestedTask ? this.pickString(nestedTask.taskId, nestedTask.id) : undefined;
+  }
+
+  private extractChatResponse(data: unknown, fallbackMessage: string): string {
+    if (this.isRecord(data)) {
+      const nestedTask = this.isRecord(data.task) ? data.task : undefined;
+      const nestedResult = nestedTask?.result;
+      if (typeof nestedResult === "string" && nestedResult.trim().length > 0) {
+        return nestedResult;
+      }
+
+      const directResult = data.result;
+      if (typeof directResult === "string" && directResult.trim().length > 0) {
+        return directResult;
+      }
+    }
+
+    return fallbackMessage || "Response received";
+  }
+
+  private isRecord(value: unknown): value is JsonRecord {
+    return typeof value === "object" && value !== null;
+  }
+
+  private pickString(...values: unknown[]): string | undefined {
+    for (const value of values) {
+      if (typeof value === "string" && value.trim().length > 0) {
+        return value;
+      }
+    }
+
+    return undefined;
   }
 }
 

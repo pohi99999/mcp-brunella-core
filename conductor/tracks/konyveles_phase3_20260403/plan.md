@@ -1,3 +1,30 @@
+# Könyvelés — Phase 3 (Track: konyveles_phase3_20260403)
+
+## Goal
+Provide a Phase 3 skeleton that wires invoice ingestion (IMAP), basic refinement, and a placeholder Szamlazz client for downstream integration and QA.
+
+## Steps
+1. Create feature branch:
+   ```bash
+   git checkout -b feature/konyveles_phase3_skeleton
+   ```
+2. Add stubs: Szamlazz client, IMAP fetcher stub, refine endpoint, n8n workflow export.
+3. Run Python unit tests under `myai/`:
+   ```bash
+   cd myai
+   pytest -q
+   ```
+4. Push branch and open PR for review.
+
+## PR checklist (short)
+- [ ] Branch created and pushed
+- [ ] `cd myai && pytest` passes locally
+- [ ] n8n workflow attached in PR as JSON
+
+## Next steps after merge
+- Implement real IMAP fetching, robust attachment parsing
+- Wire Szamlazz client to production endpoint and credential handling
+- Add integration tests that exercise the full pipeline
 # Végrehajtási Terv: Könyvelési Automatizálás Phase 3
 
 **Track ID:** `konyveles_phase3_20260403`

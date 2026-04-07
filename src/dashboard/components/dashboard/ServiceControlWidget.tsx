@@ -5,6 +5,7 @@
  */
 
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
@@ -13,14 +14,6 @@ import { ArrowsClockwise } from "@phosphor-icons/react";
 import * as api from "@/lib/apiService";
 import type { ServiceState } from "@/lib/apiService";
 import { toast } from "sonner";
-
-const SERVICE_LABELS: Record<string, string> = {
-  ollama: "Ollama",
-  anythingllm: "AnythingLLM",
-  python: "Python Subsystem",
-  n8n: "n8n Automation",
-  langflow: "Langflow (Docker)",
-};
 
 const STATUS_EMOJI: Record<string, string> = {
   online: "🟢",
@@ -31,9 +24,18 @@ const STATUS_EMOJI: Record<string, string> = {
 };
 
 export function ServiceControlWidget() {
+  const { t } = useTranslation();
   const [services, setServices] = useState<ServiceState[]>([]);
   const [loading, setLoading] = useState<Record<string, boolean>>({});
   const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const SERVICE_LABELS: Record<string, string> = {
+    ollama: t("services.labels.ollama"),
+    anythingllm: t("services.labels.anythingllm"),
+    python: t("services.labels.python"),
+    n8n: t("services.labels.n8n"),
+    langflow: t("services.labels.langflow"),
+  };
 
   const fetchStatus = async () => {
     setIsRefreshing(true);
@@ -41,7 +43,7 @@ export function ServiceControlWidget() {
       const states = await api.getServiceStatus();
       setServices(states);
     } catch (e) {
-      toast.error("Státusz lekérés sikertelen");
+      toast.error(t("services.fetch_error"));
     } finally {
       setIsRefreshing(false);
     }
@@ -60,7 +62,7 @@ export function ServiceControlWidget() {
     try {
       if (currentlyOnline) {
         if (serviceId === "anythingllm") {
-          toast.info("AnythingLLM Desktop app – manuálisan zárd be");
+          toast.info(t("services.manual_close"));
           return;
         }
         const result = await api.stopService(serviceId as any);
@@ -81,23 +83,23 @@ export function ServiceControlWidget() {
       }
       await fetchStatus();
     } catch (e: any) {
-      toast.error(e.message || "Művelet sikertelen");
+      toast.error(e.message || t("services.op_failed"));
     } finally {
       setLoading((prev) => ({ ...prev, [serviceId]: false }));
     }
   };
 
   const startAutomationStack = async () => {
-    toast.info("Automation Stack indítása...");
+    toast.info(t("services.automation_start"));
     try {
       await Promise.all([
         api.startService("n8n"),
         api.startService("langflow")
       ]);
-      toast.success("n8n és Langflow indítási parancs kiküldve");
+      toast.success(t("services.automation_sent"));
       fetchStatus();
     } catch (e: any) {
-      toast.error("Hiba a stack indításakor");
+      toast.error(t("services.automation_error"));
     }
   };
 
@@ -105,7 +107,7 @@ export function ServiceControlWidget() {
     <Card className="bg-transparent border-none shadow-none">
       <CardHeader className="flex flex-row items-center justify-between pb-2">
         <CardTitle className="flex items-center gap-2 text-base font-medium text-zinc-200">
-          Rendszervezérlő
+          {t("services.title")}
         </CardTitle>
         <div className="flex gap-2">
           <Button
@@ -114,15 +116,15 @@ export function ServiceControlWidget() {
             onClick={startAutomationStack}
             className="h-7 text-[10px] uppercase tracking-wider border-cyan-500/30 text-cyan-400 hover:bg-cyan-500/10"
           >
-            Start Stack
+            {t("services.start_stack")}
           </Button>
           <Button
             variant="ghost"
             size="sm"
             onClick={fetchStatus}
             disabled={isRefreshing}
-            aria-label="Refresh service status"
-            title="Refresh service status"
+            aria-label={t("services.refresh")}
+            title={t("services.refresh")}
             className="text-zinc-400 hover:text-zinc-200"
           >
             <ArrowsClockwise
@@ -137,7 +139,6 @@ export function ServiceControlWidget() {
           const isOnline = svc.status === "online";
           const isStarting =
             svc.status === "starting" || svc.status === "stopping";
-          const canStop = svc.id !== "anythingllm" && isOnline;
 
           return (
             <div
@@ -153,7 +154,7 @@ export function ServiceControlWidget() {
                 </span>
                 {isStarting && (
                   <Badge variant="secondary" className="text-xs">
-                    {svc.status === "starting" ? "Indul..." : "Leáll..."}
+                    {svc.status === "starting" ? t("services.starting") : t("services.stopping")}
                   </Badge>
                 )}
               </div>
@@ -166,7 +167,7 @@ export function ServiceControlWidget() {
           );
         })}
         {services.length === 0 && (
-          <p className="text-sm text-zinc-500">Szolgáltatások betöltése...</p>
+          <p className="text-sm text-zinc-500">{t("services.loading")}</p>
         )}
       </CardContent>
     </Card>

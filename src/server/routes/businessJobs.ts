@@ -1,9 +1,9 @@
 import { Router } from 'express';
-import { getBusinessJobs, saveBusinessJob, updateBusinessJobStatus, getLeadsByJob, getPipelineStats, updateLeadStatus, getDb } from '../../utils/db.js';
+import { defaultDatabaseManager, type DatabaseManager, getBusinessJobs, saveBusinessJob, updateBusinessJobStatus, getLeadsByJob, getPipelineStats, updateLeadStatus } from '../../utils/db.js';
 import { agentManager } from '../../agents/AgentManager.js';
 import { v4 as uuidv4 } from 'uuid';
 
-export function createBusinessJobsRoutes(): Router {
+export function createBusinessJobsRoutes(dbManager: DatabaseManager = defaultDatabaseManager): Router {
     const router = Router();
 
     /**
@@ -26,7 +26,7 @@ export function createBusinessJobsRoutes(): Router {
      */
     router.get('/leads/all', async (_req, res) => {
         try {
-            const database = await getDb();
+            const database = await dbManager.getDb();
             if (!database) {
                 res.json({ success: true, leads: [] });
                 return;

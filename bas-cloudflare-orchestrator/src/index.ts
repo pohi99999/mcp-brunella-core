@@ -7,6 +7,7 @@
  */
 
 import { Ai } from "@cloudflare/ai";
+import { safeJsonParse } from './utils/aiHelpers.js';
 export { SwarmCoordinator } from "./swarmCoordinator.js";
 import { handleQueueBatch, enqueueTask, type TaskMessage } from "./queueHandler.js";
 import { R2ArtifactManager } from "./r2Artifacts.js";
@@ -263,7 +264,7 @@ export default {
       return Response.json({
         success: true,
         mirroredAt: row.mirrored_at,
-        summary: JSON.parse(row.summary_json),
+        summary: safeJsonParse<any>(row.summary_json, null),
       }, { headers: corsHeaders });
     }
 

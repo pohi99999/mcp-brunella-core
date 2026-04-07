@@ -53,6 +53,7 @@ npm run lint         # ESLint (max-warnings=0 — CI meghiúsítja)
 npm run lint:fix     # ESLint auto-fix
 npm run smoke        # Health check (Ollama, Express, FastAPI)
 start-full.bat       # Teljes rendszer (Windows)
+dashboard.bat        # Browser-ready launcher: Ollama+FastAPI+Backend+UI, megnyitja :5173
 
 # Tesztelés
 npm run test:fast                     # Gyors tesztek (~1-2 perc) — napi munka
@@ -300,6 +301,22 @@ Minden új CLI parancsnak:
 
 ## Fejlesztési Workflow
 
+### MCP Auto-start
+
+Az MCP szerverek automatikus indítását a `mcp_servers.json` vezérli (`src/server/McpProcessManager.ts`). Az `autoStart`, `requiredEnv`, `platforms`, retry metadata mind itt konfigurálható — ne hardkódold a lista`index.ts`-be vagy `web.ts`-be. A `brunella-core` saját magát `self` MCP bejegyzésként jelöli — ne hozz létre rekurzív `node ./build/index.js` spawnt a core processből.
+
+### Google hitelesítés (két szerződés)
+
+- **Service account automatizálás:** `GOOGLE_CREDENTIALS_FILE` vagy `GOOGLE_SERVICE_ACCOUNT_JSON` → preferált fájl: `credentials/google-service-account.json`
+- **Interaktív Workspace OAuth:** `GOOGLE_WORKSPACE_CREDENTIALS_FILE` + `GOOGLE_WORKSPACE_TOKEN_FILE` → `credentials/` alatt
+- A régi `config/` és gyökérszintű útvonalak csak kompatibilitási fallback-ek — ne vezess be ilyet új kódban.
+
+### Federation Manifest Signing
+
+`src/core/federation/capabilityManifest.ts` megköveteli a `MANIFEST_SIGNING_SECRET`-et (minimum 32 karakter). Nincs alapértelmezett shared-secret fallback.
+
+---
+
 **Track életciklus:** PROPOSED → ACTIVE → TESTING → COMPLETED → ARCHIVED
 
 **EPP v2 — 7 Arany Szabály (mind kötelező!):**
@@ -316,6 +333,14 @@ Minden új CLI parancsnak:
 - [ ] Panel regisztrálva `src/dashboard/lib/navigation.tsx`-ben?
 - [ ] Agent hozzáadva `src/agents/registry.json`-hoz?
 - [ ] `npm run build` + `npm run test:fast` zöld?
+
+---
+
+### Startup sorrendje és lazy-loading
+
+- `src/index.ts` először a HTTP szervert indítja (`startWebServer()`), így `/ping` azonnal elérhető.
+- `src/server/web.ts` nehéz inicializációt `deferredInit()`-ban végzi (adatbázisok, agent registry) — ez szándékos, OOM elkerülés miatt.
+- A route-ok lazy-loading-gal töltődnek be (`lazy()` proxy) a `src/server/routes/index.ts`-ben. Új route-okat ott regisztrálj, ne importáld közvetlenül `web.ts`-ben.
 
 ---
 
@@ -372,6 +397,9 @@ OLLAMA_MODEL=qwen2.5-coder:7b # Alapértelmezett lokális modell
 | FastAPI nem indul | `cd myai && uv sync && uvicorn server:app --reload --port 8000` |
 | Windows Unicode hiba | Emoji → ASCII (`[OK]` / `[AI]`) a Python logokban |
 | cron-parser v5 | Csak `CronExpressionParser.parse()` érvényes — nem `parseExpression()` |
+| `better-sqlite3` Node v24+ | ABI eltérés → `npm rebuild better-sqlite3`. Ha `deferredInit()` Phase 2-nél crashel, minden `/api/*` route 404-et ad (csak `/ping` működik). Ellenőrizd: `logs/node-server.log` |
+| Root `AGENTS.md` figyelmen kívül | A gyökér `AGENTS.md` a `cloudflare-docs` repo konvencióit írja le — BAS-hoz nem releváns. A mérvadó fájl: `.github/copilot-instructions.md` |
+| `buildHealthResponse` paramétere | 10 argumentumot vár: `(ollama, anythingllm, python, n8n, langflow, wab, cloudflare, agentCount, mcpCount, requestId)`. A mock-oknak pontosan ezt kell visszaadni. |
 
 ---
 

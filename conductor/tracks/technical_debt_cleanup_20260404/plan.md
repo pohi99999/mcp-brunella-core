@@ -3,8 +3,8 @@
 ## 📋 Fázisok
 
 ### 1. Fázis: Linter takarítás
-- [ ] `npm run lint:fix` futtatása és a változások ellenőrzése.
-- [ ] Manuális javítás ott, ahol az automata nem boldogult.
+- [x] `npm run lint:fix` futtatása és a változások ellenőrzése.
+- [x] Manuális javítás ott, ahol az automata nem boldogult (redundant Boolean casts, empty object interface, unused eslint-disable, empty catch blocks, @ts-nocheck elimánálás).
 
 ### 2. Fázis: TODO Audit
 - [ ] Teljes TODO lista exportálása.

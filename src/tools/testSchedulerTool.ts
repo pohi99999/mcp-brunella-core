@@ -1,6 +1,42 @@
 import { logInfo, logError } from '../utils/logger.js';
 import { runTests, getSchedulerStatus } from '../server/schedulers/testRunner.js';
-import { getTestStats, getTestRuns, type TestRun } from '../core/testResultsService.js';
+import {
+  getTestStats,
+  getTestRuns,
+  type TestRun,
+  type TestStats
+} from '../core/testResultsService.js';
+
+type TestSchedulerRunResponse = {
+  success: boolean;
+  runId?: string;
+  status?: TestRun['status'];
+  error?: string;
+};
+
+type TestSchedulerRecentRun = Pick<TestRun, 'id' | 'status' | 'passed' | 'failed' | 'startedAt'> & {
+  duration: string;
+};
+
+type TestSchedulerStatusStats = {
+  totalRuns: number;
+  passRate: string;
+  averageDuration: string;
+  lastRunStatus: TestStats['lastRunStatus'];
+  lastRunTime: string;
+  sevenDayPassRate: string;
+  sevenDayStats: TestStats['sevenDayStats'];
+};
+
+type TestSchedulerStatusResponse = {
+  success: boolean;
+  schedule?: string;
+  enabled?: boolean;
+  active?: boolean;
+  stats?: TestSchedulerStatusStats;
+  recentRuns?: TestSchedulerRecentRun[];
+  error?: string;
+};
 
 export const testSchedulerRunDefinition = {
   name: 'test-scheduler-run',
@@ -32,7 +68,7 @@ export const testSchedulerStatusDefinition = {
 
 export async function testSchedulerRunHandler(params: {
   triggerReason?: string;
-}): Promise<{ success: boolean; runId?: string; status?: string; error?: string }> {
+}): Promise<TestSchedulerRunResponse> {
   try {
     logInfo('TestSchedulerTool', `Triggering manual test run: ${params.triggerReason || 'Agent-initiated'}`);
     const result = await runTests('api');
@@ -52,44 +88,52 @@ export async function testSchedulerRunHandler(params: {
   }
 }
 
+function formatPassRate(ratio: number): string {
+  return `${(ratio * 100).toFixed(2)}%`;
+}
+
+function formatDuration(ms: number): string {
+  return `${Math.round(ms)}ms`;
+}
+
+function buildStatsSummary(stats: TestStats): TestSchedulerStatusStats {
+  return {
+    totalRuns: stats.totalRuns,
+    passRate: formatPassRate(stats.passRate),
+    averageDuration: formatDuration(stats.averageDuration),
+    lastRunStatus: stats.lastRunStatus,
+    lastRunTime: stats.lastRunTime,
+    sevenDayPassRate: formatPassRate(stats.sevenDayStats.passRate),
+    sevenDayStats: stats.sevenDayStats
+  };
+}
+
+function buildRecentRunSummary(run: TestRun): TestSchedulerRecentRun {
+  return {
+    id: run.id,
+    status: run.status,
+    duration: `${run.duration}ms`,
+    passed: run.passed,
+    failed: run.failed,
+    startedAt: run.startedAt
+  };
+}
+
 export async function testSchedulerStatusHandler(params: {
   includeDetails?: boolean;
-}): Promise<{
-  success: boolean;
-  schedule?: string;
-  enabled?: boolean;
-  active?: boolean;
-  stats?: any;
-  recentRuns?: any[];
-  error?: string;
-}> {
+}): Promise<TestSchedulerStatusResponse> {
   try {
     const scheduleStatus = getSchedulerStatus();
     const stats = await getTestStats();
-    
-    const response: any = {
+
+    const response: TestSchedulerStatusResponse = {
       success: true,
       ...scheduleStatus,
-      stats: {
-        totalRuns: stats.totalRuns,
-        passRate: (stats.passRate * 100).toFixed(2) + '%',
-        averageDuration: Math.round(stats.averageDuration) + 'ms',
-        lastRunStatus: stats.lastRunStatus,
-        lastRunTime: stats.lastRunTime,
-        sevenDayPassRate: (stats.sevenDayStats.passRate * 100).toFixed(2) + '%'
-      }
+      stats: buildStatsSummary(stats)
     };
 
     if (params.includeDetails) {
-      const recentRuns = getTestRuns(5);
-      response.recentRuns = recentRuns.map((run: TestRun) => ({
-        id: run.id,
-        status: run.status,
-        duration: run.duration + 'ms',
-        passed: run.passed,
-        failed: run.failed,
-        startedAt: run.startedAt
-      }));
+      response.recentRuns = getTestRuns(5).map(buildRecentRunSummary);
     }
 
     return response;

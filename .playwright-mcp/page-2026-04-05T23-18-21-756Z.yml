@@ -1,0 +1,174 @@
+- generic [ref=e1]:
+  - alert [ref=e586]:
+    - generic [ref=e588]:
+      - text: Projects will not be saved permanently when you aren’t signed in. To avoid losing your projects, sign into your account.
+      - generic [ref=e589] [cursor=pointer]: Sign in
+    - button [ref=e590] [cursor=pointer]:
+      - img [ref=e591]
+  - generic [ref=e206]:
+    - generic [ref=e208]:
+      - generic [ref=e593]:
+        - menu [ref=e600]:
+          - generic [ref=e601]:
+            - menuitem "Media" [ref=e602] [cursor=pointer]:
+              - generic [ref=e607]: Media
+            - menuitem "Templates" [ref=e609] [cursor=pointer]:
+              - generic [ref=e613]: Templates
+            - menuitem "Elements" [ref=e615] [cursor=pointer]:
+              - generic [ref=e621]: Elements
+            - menuitem "Audio" [ref=e623] [cursor=pointer]:
+              - generic [ref=e627]: Audio
+            - menuitem "Text" [ref=e629] [cursor=pointer]:
+              - generic [ref=e633]: Text
+            - menuitem "Captions" [ref=e635] [cursor=pointer]:
+              - generic [ref=e640]: Captions
+            - menuitem "Transcript" [ref=e642] [cursor=pointer]:
+              - generic [ref=e646]: Transcript
+            - menuitem "Effects" [ref=e648] [cursor=pointer]:
+              - generic [ref=e652]: Effects
+            - menuitem "Transitions" [ref=e654] [cursor=pointer]:
+              - generic [ref=e658]: Transitions
+            - menuitem "Filters" [ref=e660] [cursor=pointer]:
+              - generic [ref=e664]: Filters
+            - menuitem "Brand kit" [ref=e666] [cursor=pointer]:
+              - generic [ref=e667]:
+                - generic [ref=e673]: Brand
+                - generic [ref=e674]: kit
+            - menuitem "Plugins" [ref=e677] [cursor=pointer]:
+              - generic [ref=e681]: Plugins
+        - button [ref=e688] [cursor=pointer]
+      - generic [ref=e694]:
+        - generic [ref=e695]:
+          - generic [ref=e699]: Sign in to upload items
+          - button "Upload" [ref=e706] [cursor=pointer]:
+            - generic [ref=e710]: Upload
+        - alert [ref=e716]:
+          - generic [ref=e719] [cursor=pointer]:
+            - generic [ref=e720]:
+              - img [ref=e932]
+              - generic [ref=e723]:
+                - paragraph [ref=e724]: Pippit AI
+                - paragraph [ref=e725]: Create stunning marketing content in a few clicks
+            - button "Try it" [ref=e727]:
+              - generic [ref=e728]: Try it
+        - paragraph [ref=e734]:
+          - text: There’s nothing yet
+          - text: Drag and drop your files here
+    - generic [ref=e368]:
+      - generic [ref=e369]:
+        - generic [ref=e757]:
+          - generic [ref=e758]: "202604060116"
+          - textbox [ref=e760]: "202604060116"
+          - generic [ref=e762]: "202604060116"
+        - generic [ref=e765]: 100%
+        - generic [ref=e411]:
+          - separator [ref=e781]
+          - button "Export" [ref=e786] [cursor=pointer]: Export
+        - generic:
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - generic: "202604060116"
+                  - generic:
+                    - textbox: "202604060116"
+                  - generic:
+                    - generic: "202604060116"
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - generic: 100%
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - separator
+          - generic:
+            - generic:
+              - generic:
+                - button "Export": Export
+      - generic [ref=e443]:
+        - generic [ref=e811]:
+          - generic [ref=e816]:
+            - paragraph [ref=e820]: Click to upload
+            - paragraph [ref=e821]: Or drag and drop file here
+          - main [ref=e830]
+          - generic [ref=e840] [cursor=pointer]: Ratio
+        - generic [ref=e450]:
+          - generic [ref=e451]:
+            - generic [ref=e841]:
+              - button [disabled]
+            - generic [ref=e842]:
+              - button [disabled]
+          - generic [ref=e457]:
+            - generic [ref=e458]: 00:00:00
+            - generic [ref=e460]: 00:00:00
+          - generic [ref=e461]:
+            - button [ref=e843] [cursor=pointer]
+            - button [ref=e846] [cursor=pointer]
+            - button [ref=e850] [cursor=pointer]
+            - button [ref=e854]
+            - button [ref=e860]
+            - separator [ref=e863]
+            - generic [ref=e864]:
+              - button [disabled]
+            - button [ref=e865] [cursor=pointer]
+  - generic [ref=e483]:
+    - generic [ref=e487]:
+      - generic [ref=e489]:
+        - figure [ref=e491]:
+          - img [ref=e933]
+        - heading [level=2] [ref=e934]:
+          - strong [ref=e494]: Create stunning videos online
+          - text: with unlimited possibilities
+      - generic [ref=e496]:
+        - figure [ref=e498]:
+          - img "login panel carousel picture" [ref=e935]
+        - heading "Make high-quality images effortlessly" [level=2] [ref=e936]:
+          - strong [ref=e501]: Make high-quality images effortlessly
+      - generic [ref=e503]:
+        - figure [ref=e505]:
+          - img [ref=e922]
+        - heading [level=2] [ref=e923]:
+          - strong [ref=e508]: Millions of video and image templates
+          - text: for all your design needs
+      - generic [ref=e510]:
+        - figure [ref=e512]:
+          - img [ref=e929]
+        - heading [level=2] [ref=e930]:
+          - strong [ref=e515]: "Magic tools: smartly edit and process"
+          - text: your footage
+      - generic [ref=e517]:
+        - figure [ref=e519]:
+          - img [ref=e913]
+        - heading [level=2] [ref=e914]:
+          - strong [ref=e522]: Share and review projects with your team
+          - text: in real time
+    - generic [ref=e541]:
+      - generic [ref=e542]:
+        - heading "Welcome to CapCut" [level=2] [ref=e543]
+        - generic [ref=e544]:
+          - generic [ref=e553] [cursor=pointer]: Continue with Google
+          - generic [ref=e561] [cursor=pointer]: Continue with TikTok
+          - generic [ref=e567] [cursor=pointer]: Continue with Facebook
+        - generic [ref=e571] [cursor=pointer]: Continue with CapCut Mobile
+        - generic [ref=e573]: OR
+        - generic [ref=e575]:
+          - textbox "Enter email" [active] [ref=e577]
+          - generic [ref=e915]: Enter a valid email address
+          - button "Continue" [ref=e578] [cursor=pointer]
+      - generic [ref=e579]:
+        - text: By clicking Continue, you accept our
+        - link "Terms of Service" [ref=e580] [cursor=pointer]:
+          - /url: /clause/terms-of-service?store_region=hu&lang=en
+        - text: and
+        - link "Privacy Policy" [ref=e581] [cursor=pointer]:
+          - /url: /clause/privacy-policy?store_region=hu&lang=en
+  - generic [ref=e874]:
+    - generic [ref=e878]: Material resources
+    - generic [ref=e879]: You can upload your own materials as well as use online ones
+    - generic [ref=e880]:
+      - generic [ref=e881]: 1/2
+      - button "Next" [ref=e883] [cursor=pointer]:
+        - generic [ref=e884]: Next

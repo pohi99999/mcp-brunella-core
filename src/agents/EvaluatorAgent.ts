@@ -1,7 +1,7 @@
 import { BaseAgent, AgentContext, AgentResult } from "./BaseAgent.js";
 import { Logger, logInfo, logError, setAgentStatus } from "../utils/logger.js";
 import { checkOllamaHealth, checkAnythingLLMHealth } from "../utils/health.js";
-import { getBifrostGateway } from "../core/bifrost_gateway.js";
+import { getBifrostGateway, type GenerateResponse, type OpenAIToolDefinition } from "../core/bifrost_gateway.js";
 import { socketService } from "../server/SocketService.js";
 import { execSync } from "child_process";
 import fs from "fs/promises";
@@ -14,7 +14,7 @@ export interface HallucinationCheckResult {
   recommendations: string[];
 }
 
-const EVALUATOR_TOOLS = [
+const EVALUATOR_TOOLS: OpenAIToolDefinition[] = [
   {
     type: "function",
     function: {
@@ -41,6 +41,73 @@ const EVALUATOR_TOOLS = [
     }
   }
 ];
+
+type EvaluatorToolCall = NonNullable<GenerateResponse["toolCalls"]>[number];
+
+interface EvaluatorMessage {
+  role: "system" | "user" | "assistant" | "tool";
+  content: string;
+  tool_calls?: EvaluatorToolCall[];
+  tool_call_id?: string;
+  name?: string;
+}
+
+interface EvaluatorRunData {
+  testOutput?: string;
+  testError?: string;
+  health?: {
+    ollama: unknown;
+    anythingllm: unknown;
+  };
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null;
+}
+
+function getStringProperty(record: Record<string, unknown> | undefined, key: string): string | undefined {
+  if (!record) {
+    return undefined;
+  }
+
+  const value = record[key];
+  return typeof value === "string" ? value : undefined;
+}
+
+function getNumberProperty(record: Record<string, unknown> | undefined, key: string): number | undefined {
+  if (!record) {
+    return undefined;
+  }
+
+  const value = record[key];
+  return typeof value === "number" ? value : undefined;
+}
+
+function parseToolArguments(rawArguments: string): Record<string, unknown> {
+  if (!rawArguments.trim()) {
+    return {};
+  }
+
+  const parsed: unknown = JSON.parse(rawArguments);
+  if (!isRecord(parsed)) {
+    throw new Error("Tool arguments must be a JSON object.");
+  }
+
+  return parsed;
+}
+
+function getErrorInfo(error: unknown): { message: string; code?: string; status?: number; stdout?: string; stderr?: string } {
+  const normalized = ensureError(error);
+  const record = isRecord(error) ? error : undefined;
+
+  return {
+    message: normalized.message,
+    code: getStringProperty(record, "code"),
+    status: getNumberProperty(record, "status"),
+    stdout: getStringProperty(record, "stdout"),
+    stderr: getStringProperty(record, "stderr"),
+  };
+}
 
 export class EvaluatorAgent extends BaseAgent {
   name = "Evaluator";
@@ -77,7 +144,7 @@ export class EvaluatorAgent extends BaseAgent {
     }
   }
 
-  private async runEvaluatorReActLoop(task: string, context?: any): Promise<AgentResult> {
+  private async runEvaluatorReActLoop(task: string, context?: AgentContext): Promise<AgentResult> {
     logInfo(this.name, "Starting Evaluator ReAct Execution Loop");
 
     const systemPrompt = `Te vagy a Brunella Agent System "Evaluator" (QA Lead) ügynöke.
@@ -89,7 +156,7 @@ A feladatod a rendszerek auditálása, egészségügyi ellenőrzések és TESZTE
 3. Miután megkaptad az eszközök kimenetét, adj egy professzionális, rövid, lényegretörő magyar nyelvű értékelést a felhasználónak. Ha a tesztek hibát jeleznek, írd le röviden a hiba okát.
 `;
 
-    const messages: any[] = [
+    const messages: EvaluatorMessage[] = [
       { role: 'system', content: systemPrompt },
       { role: 'user', content: task }
     ];
@@ -97,81 +164,92 @@ A feladatod a rendszerek auditálása, egészségügyi ellenőrzések és TESZTE
     const gateway = getBifrostGateway();
     const MAX_ITERATIONS = 5;
     let finalMessage = "A kiértékelés befejeződött.";
-    const finalData: any = {};
+    const finalData: EvaluatorRunData = {};
+    const userId = typeof context?.userId === "string" ? context.userId : undefined;
 
     for (let i = 0; i < MAX_ITERATIONS; i++) {
       this.logger.info(`ReAct iteráció ${i + 1}/${MAX_ITERATIONS}`);
-      
+
       const response = await gateway.generate({
-          prompt: task,
-          taskType: 'reasoning',
-          model: this.llmProvider === 'github' ? 'gpt-4.1' : undefined,
-          tools: EVALUATOR_TOOLS,
-          messages: messages,
-          userId: context?.userId as string | undefined,
+        prompt: task,
+        taskType: 'reasoning',
+        model: this.llmProvider === 'github' ? 'gpt-4.1' : undefined,
+        tools: EVALUATOR_TOOLS,
+        messages: messages,
+        userId,
       });
 
       if (!response.success) {
-          logError(this.name, `LLM Gateway hiba: ${response.error}`);
-          return { success: false, message: "Hiba az LLM kommunikációban." };
+        logError(this.name, `LLM Gateway hiba: ${response.error}`);
+        return { success: false, message: "Hiba az LLM kommunikációban." };
       }
 
       const replyContent = response.content || "";
       const toolCalls = response.toolCalls;
 
-      const assistantMessage: any = { role: 'assistant', content: replyContent };
+      const assistantMessage: EvaluatorMessage = { role: 'assistant', content: replyContent };
       if (toolCalls && toolCalls.length > 0) {
-          assistantMessage.tool_calls = toolCalls;
+        assistantMessage.tool_calls = toolCalls;
       }
       messages.push(assistantMessage);
 
       if (replyContent && (!toolCalls || toolCalls.length === 0)) {
-          finalMessage = replyContent;
-          socketService.broadcastChatter(this.name, finalMessage, 'assistant');
-          break;
+        finalMessage = replyContent;
+        socketService.broadcastChatter(this.name, finalMessage, 'assistant');
+        break;
       }
 
       if (toolCalls && toolCalls.length > 0) {
-          for (const toolCall of toolCalls) {
-              const name = toolCall.function.name;
-              const args = toolCall.function.arguments ? JSON.parse(toolCall.function.arguments) : {};
-              let toolResult: string;
+        for (const toolCall of toolCalls) {
+          const name = toolCall.function.name;
+          let toolResult: string;
 
-              logInfo(this.name, `Tool meghívva: ${name}`);
+          logInfo(this.name, `Tool meghívva: ${name}`);
 
-              try {
-                  if (name === 'run_shell_command') {
-                      socketService.broadcastChatter(this.name, `Teszt futtatása: ${args.command}`, 'system');
-                      try {
-                          const out = execSync(args.command, { encoding: 'utf-8', stdio: 'pipe' });
-                          toolResult = out || "Command succeeded with no output.";
-                          finalData.testOutput = toolResult;
-                      } catch (err: any) {
-                          toolResult = `Command failed. Exit code: ${err.status}. Output: ${err.stdout} ${err.stderr}`;
-                          finalData.testError = toolResult;
-                      }
-                  } else if (name === 'get_system_health') {
-                      const ollama = await checkOllamaHealth();
-                      const anything = await checkAnythingLLMHealth();
-                      toolResult = JSON.stringify({ ollama, anythingllm: anything });
-                      finalData.health = { ollama, anything };
-                  } else {
-                      toolResult = `Ismeretlen eszköz: ${name}`;
-                  }
-              } catch (toolErr: any) {
-                  logError(this.name, `Tool error (${name}): ${toolErr.message}`);
-                  toolResult = `Hiba az eszköz futtatása közben: ${toolErr.message}`;
+          try {
+            const args = parseToolArguments(toolCall.function.arguments);
+            if (name === 'run_shell_command') {
+              const command = getStringProperty(args, 'command');
+              if (!command) {
+                throw new Error('Missing command argument for run_shell_command.');
               }
 
-              messages.push({
-                  role: 'tool',
-                  tool_call_id: toolCall.id,
-                  name: name,
-                  content: toolResult
-              });
+              socketService.broadcastChatter(this.name, `Teszt futtatása: ${command}`, 'system');
+              try {
+                const out = execSync(command, { encoding: 'utf-8', stdio: 'pipe' });
+                toolResult = out || "Command succeeded with no output.";
+                finalData.testOutput = toolResult;
+              } catch (error: unknown) {
+                const shellError = getErrorInfo(error);
+                const output = [shellError.stdout, shellError.stderr]
+                  .filter((value): value is string => typeof value === 'string' && value.length > 0)
+                  .join(' ');
+                toolResult = `Command failed. Exit code: ${shellError.status ?? 'unknown'}. Output: ${output || 'No output.'}`;
+                finalData.testError = toolResult;
+              }
+            } else if (name === 'get_system_health') {
+              const ollama = await checkOllamaHealth();
+              const anything = await checkAnythingLLMHealth();
+              toolResult = JSON.stringify({ ollama, anythingllm: anything });
+              finalData.health = { ollama, anythingllm: anything };
+            } else {
+              toolResult = `Ismeretlen eszköz: ${name}`;
+            }
+          } catch (error: unknown) {
+            const toolError = ensureError(error);
+            logError(this.name, `Tool error (${name}): ${toolError.message}`);
+            toolResult = `Hiba az eszköz futtatása közben: ${toolError.message}`;
           }
+
+          messages.push({
+            role: 'tool',
+            tool_call_id: toolCall.id,
+            name: name,
+            content: toolResult
+          });
+        }
       } else {
-          break;
+        break;
       }
     }
 
@@ -196,8 +274,10 @@ A feladatod a rendszerek auditálása, egészségügyi ellenőrzések és TESZTE
       try {
         const stats = await fs.stat(filePath);
         currentSize = stats.size;
-      } catch (fileError: any) {
-        if (fileError.code === 'ENOENT') {
+      } catch (error: unknown) {
+        const fileError = ensureError(error);
+        const code = getStringProperty(isRecord(error) ? error : undefined, 'code');
+        if (code === 'ENOENT') {
           return {
             success: false,
             message: `File not found: ${filePath}. Cannot verify growth.`, 
@@ -211,8 +291,10 @@ A feladatod a rendszerek auditálása, egészségügyi ellenőrzések és TESZTE
       try {
         const baselineContent = await fs.readFile(baselineFilePath, 'utf-8');
         baselineData = JSON.parse(baselineContent);
-      } catch (readError: any) {
-        if (readError.code !== 'ENOENT') {
+      } catch (error: unknown) {
+        const readError = ensureError(error);
+        const code = getStringProperty(isRecord(error) ? error : undefined, 'code');
+        if (code !== 'ENOENT') {
           this.logger.error(`Failed to read baseline for ${filePath}: ${readError.message}`);
         }
       }
@@ -289,8 +371,8 @@ Respond with JSON:
       });
 
       if (response.ok) {
-        const data = await response.json();
-        const llmOutput = data.response;
+        const data: unknown = await response.json();
+        const llmOutput = isRecord(data) && typeof data.response === 'string' ? data.response : '';
 
         try {
           const jsonMatch = llmOutput.match(/\{[\s\S]*\}/);
@@ -308,8 +390,9 @@ Respond with JSON:
               recommendations.push('Provide more specific details or caveats');
             }
           }
-        } catch (parseError) {
-          this.logger.warn(`Failed to parse LLM hallucination check output: ${parseError}`);
+        } catch (parseError: unknown) {
+          const error = ensureError(parseError);
+          this.logger.warn(`Failed to parse LLM hallucination check output: ${error.message}`);
         }
       }
 
@@ -332,7 +415,9 @@ Respond with JSON:
             flags.push(`RULE-G3: Invalid URL reference: ${url} (HTTP ${headResponse.status})`);
             recommendations.push(`Verify URL ${url} or remove it`);
           }
-        } catch (urlError) {
+        } catch (urlError: unknown) {
+          const error = ensureError(urlError);
+          this.logger.warn(`URL check failed for ${url}: ${error.message}`);
           flags.push(`RULE-G3: Unreachable URL: ${url}`);
           recommendations.push(`Check connectivity or remove broken link: ${url}`);
         }
@@ -349,7 +434,7 @@ Respond with JSON:
         recommendations
       };
     } catch (error: unknown) {
-      const msg = error instanceof Error ? error.message : String(error);
+      const msg = ensureError(error).message;
       this.logger.error(`Hallucination check failed: ${msg}`);
 
       return {
