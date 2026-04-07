@@ -1,0 +1,108 @@
+{
+  "name": "Pohánka AI — Brand Onboarding Intake",
+  "nodes": [
+    {
+      "name": "🎨 Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "parameters": {
+        "path": "brand-onboarding",
+        "method": "POST",
+        "responseMode": "responseNode"
+      },
+      "position": [100, 300]
+    },
+    {
+      "name": "🤖 Brunella — Tone of Voice Draft",
+      "type": "n8n-nodes-base.httpRequest",
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:3000/api/v1/webhook/onboarding-intake",
+        "headers": {
+          "Content-Type": "application/json",
+          "X-Brunella-Token": "={{$env.BRUNELLA_WEBHOOK_SECRET}}"
+        },
+        "body": {
+          "trigger": "copywriter",
+          "task": "tone_of_voice_draft",
+          "brand_name": "={{$json.body.marka_nev}}",
+          "brand_sentence": "={{$json.body.marka_mondat}}",
+          "target_customer": "={{$json.body.tipikus_vasarlo}}",
+          "forbidden_words": "={{$json.body.tiltott_szavak}}",
+          "admired_brands": "={{$json.body.csodalt_markak}}",
+          "brand_adjectives": "={{$json.body.jelzok}}",
+          "pilot_product": "={{$json.body.pilot_termek}}",
+          "form_type": "premium_brand"
+        }
+      },
+      "position": [350, 300]
+    },
+    {
+      "name": "📧 Értesítő Email — Neked",
+      "type": "n8n-nodes-base.gmail",
+      "parameters": {
+        "to": "pohanka@pohankaestarsa.com",
+        "subject": "✨ Új Brand érdeklődő: {{$json.body.marka_nev}}",
+        "html": true,
+        "message": "<h2>Új prémium márka onboarding érkezett!</h2><table><tr><td><b>Márka:</b></td><td>{{$json.body.marka_nev}}</td></tr><tr><td><b>Instagram:</b></td><td>{{$json.body.instagram}}</td></tr><tr><td><b>Pilot termék:</b></td><td>{{$json.body.pilot_termek}}</td></tr><tr><td><b>Fő mérőszám:</b></td><td>{{$json.body.meroszam}}</td></tr><tr><td><b>Heti tartalom idő:</b></td><td>{{$json.body.heti_orak}} óra</td></tr><tr><td><b>Launch határidő:</b></td><td>{{$json.body.launch_datum}}</td></tr></table><p><b>Brunella Tone of Voice draft:</b> 30 percen belül elérhető a Dashboardon.</p><p><a href='http://localhost:5173'>👉 Brunella Dashboard megnyitása</a></p>"
+      },
+      "position": [650, 200]
+    },
+    {
+      "name": "📩 Auto-válasz — Márkának",
+      "type": "n8n-nodes-base.gmail",
+      "parameters": {
+        "to": "={{$json.body.email}}",
+        "subject": "Megkaptuk — rövidesen jelentkezünk ✨",
+        "html": true,
+        "message": "<p>Szia {{$json.body.kapcsolattarto_nev}}!</p><p>Köszönjük — minden részletet elolvastunk a {{$json.body.marka_nev}} márkával kapcsolatban.</p><p><b>Mi történik most:</b></p><ul><li>🎨 Elkészítünk egy első tone of voice vázlatot a válaszaid alapján</li><li>📞 24 órán belül egyeztetünk a kickoff időpontról</li><li>📦 7-10 napon belül kézbe kapod az első outputot</li></ul><p>Pohánka Péter<br>Pohánka és Társa Kft.<br>pohankaestarsa.com</p>"
+      },
+      "position": [650, 400]
+    },
+    {
+      "name": "📊 Google Sheets — Brand Lead",
+      "type": "n8n-nodes-base.googleSheets",
+      "parameters": {
+        "operation": "append",
+        "spreadsheetId": "={{$env.LEADS_SHEET_ID || $env.GOOGLE_SHEETS_ID}}",
+        "range": "Brand_Leads!A:Z",
+        "values": [
+          "={{new Date().toISOString()}}",
+          "={{$json.body.marka_nev}}",
+          "={{$json.body.email}}",
+          "={{$json.body.instagram}}",
+          "={{$json.body.pilot_termek}}",
+          "={{$json.body.heti_orak}}",
+          "STARTER",
+          "PENDING_CALL"
+        ]
+      },
+      "position": [650, 600]
+    },
+    {
+      "name": "✅ Webhook Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "parameters": {
+        "responseCode": 200,
+        "responseBody": "{\"status\": \"ok\"}"
+      },
+      "position": [950, 300]
+    }
+  ],
+  "connections": {
+    "🎨 Webhook Trigger": { "main": [["🤖 Brunella — Tone of Voice Draft"]] },
+    "🤖 Brunella — Tone of Voice Draft": {
+      "main": [[
+        "📧 Értesítő Email — Neked",
+        "📩 Auto-válasz — Márkának",
+        "📊 Google Sheets — Brand Lead",
+        "✅ Webhook Response"
+      ]]
+    }
+  },
+  "_meta": {
+    "brunella_endpoint": "POST /api/v1/webhook/onboarding-intake",
+    "required_env_n8n": ["BRUNELLA_WEBHOOK_SECRET", "LEADS_SHEET_ID"],
+    "import_instructions": "n8n UI → Workflows → Import from JSON → paste this file",
+    "source": ".worktrees/sel.md lines 1624-1710"
+  }
+}

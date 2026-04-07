@@ -156,3 +156,23 @@ TYPEFORM_SECRET=<Typeform webhook secret>
 - `sel2.md` — `.worktrees/sel2.md` (478 sor, KKV lead-gen monetizáció)
 - P-Sales20260327 — `completed`, ingatlanplatform (különálló, nem releváns)
 - `registry.json` — SalesHunterAgent, LeadMiningAgent, CampaignGeneratorAgent, ApifyScraping, copywriter ✅
+
+---
+
+## Munkamenet állapot — 2026-04-07
+
+### Elkészült
+- A `/api/v1/webhook/onboarding-intake` endpoint és a route mount kész.
+- A KKV és Brand n8n workflow JSON-ok lokálisan importálva vannak.
+- A `docker-compose.yml` átadja a `LEADS_SHEET_ID` értéket az n8n sandboxnak.
+- Az `onboarding_forms_spec.json` elkészült a későbbi form builderhez.
+
+### Hol hagytuk abba
+- A `GOOGLE_PLACES_API_KEY` még hiányzik, ezért a Cloudflare secret lépés maradt.
+- A végleges Tally/Typeform builder kiválasztása még külső kézi lépés.
+- Az `APIFY_API_TOKEN` egységesítése és a további scraping finomhangolás külön kör.
+
+### Következő lépés
+- add meg a Google Places secretet,
+- döntsd el a végleges form providert,
+- és ha kell, folytatjuk a LinkedIn/Upwork csatornákkal.
