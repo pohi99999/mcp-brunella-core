@@ -5,6 +5,7 @@
       "url": "http://localhost:3000/sse",
       "headers": {
         "x-api-key": "${input:BRUNELLA_API_KEY}"
+
       }
     },
     "brunella-remote": {
@@ -126,6 +127,34 @@
         "C:\\",
         "C:\\Users\\pohi9",
         "F:\\mcp-brunella-core"
+      ]
+    },
+    "csharp-mcp-server": {
+      "type": "stdio",
+      "command": "powershell.exe",
+      "args": [
+        "-NoLogo",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "csharp-mcp-server\\launch.ps1"
+      ],
+      "description": "Standalone C# MCP server with workspace file tools and review prompt",
+      "platforms": [
+        "win32"
+      ]
+    },
+    "workspace-mcp-server": {
+      "type": "stdio",
+      "command": "uv",
+      "args": [
+        "run",
+        "--project",
+        "workspace-mcp-server",
+        "workspace-mcp-server",
+        "--workspace-root",
+        "."
       ]
     },
     "microsoft/playwright-mcp": {
