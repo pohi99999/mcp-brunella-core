@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { logInfo, logError } from "./logger.js";
+import { safeJsonParse } from "./aiHelpers.js";
 
 const FIX_QUEUE_FILE = path.join(process.cwd(), "data", "fix_queue.json");
 
@@ -38,8 +39,9 @@ export function addToFixQueue(
 ): string {
   ensureQueueFile();
   try {
-    const queue: FixItem[] = JSON.parse(
+    const queue = safeJsonParse<FixItem[]>(
       fs.readFileSync(FIX_QUEUE_FILE, "utf-8"),
+      [],
     );
     const id = `fix-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
 
@@ -78,8 +80,9 @@ export function addToFixQueue(
 export function getPendingFixes(): FixItem[] {
   ensureQueueFile();
   try {
-    const queue: FixItem[] = JSON.parse(
+    const queue = safeJsonParse<FixItem[]>(
       fs.readFileSync(FIX_QUEUE_FILE, "utf-8"),
+      [],
     );
     return queue
       .filter((i) => i.status === "pending" || i.status === "in-progress")
@@ -102,8 +105,9 @@ export function updateFixStatus(
 ) {
   ensureQueueFile();
   try {
-    const queue: FixItem[] = JSON.parse(
+    const queue = safeJsonParse<FixItem[]>(
       fs.readFileSync(FIX_QUEUE_FILE, "utf-8"),
+      [],
     );
     const idx = queue.findIndex((i) => i.id === id);
     if (idx !== -1) {

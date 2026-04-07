@@ -9,6 +9,19 @@ import path from 'path';
 import fs from 'fs/promises';
 import { ensureError } from '../utils/ensureError.js';
 
+type JobContext = {
+    jobId?: unknown;
+};
+
+function readJobId(taskContext: unknown): string | undefined {
+    if (typeof taskContext !== 'object' || taskContext === null) {
+        return undefined;
+    }
+
+    const { jobId } = taskContext as JobContext;
+    return typeof jobId === 'string' ? jobId : undefined;
+}
+
 export class MarketingDirectorAgent extends BaseAgent {
     name = "Marketing Director";
     description = "Orchestrates marketing campaigns: generates strategy, social posts, video scripts, and triggers landing page development.";
@@ -19,7 +32,7 @@ export class MarketingDirectorAgent extends BaseAgent {
 
     async executeTask(context: AgentContext): Promise<AgentResult> {
         const { task, context: taskContext } = context;
-        const jobId = (taskContext as any)?.jobId as string;
+        const jobId = readJobId(taskContext);
         
         logInfo(this.name, `Starting Campaign Generation: ${task}`);
 

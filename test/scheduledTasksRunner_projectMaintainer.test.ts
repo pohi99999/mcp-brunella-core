@@ -36,8 +36,8 @@ vi.mock('../src/core/reflectionEngine.js', () => ({
   },
 }));
 
-vi.mock('../src/data/crm_db.js', () => ({
-  dispatchDueCrmFollowUpActions: crmHarness.dispatchDueCrmFollowUpActions,
+vi.mock('../src/server/services/crmFollowUpExecutionService.js', () => ({
+  executeDueCrmFollowUpActions: crmHarness.dispatchDueCrmFollowUpActions,
 }));
 
 describe('ScheduledTasksRunner project maintainer handler', () => {

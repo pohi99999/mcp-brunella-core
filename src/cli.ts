@@ -59,12 +59,14 @@ import { registerIntelligenceCommands } from "./cli/intelligenceCommands.js";
 import { registerLearningLoopCommands } from "./cli/learningLoopCommands.js";
 import { registerFederationCommands } from "./cli/federationCommands.js";
 import { registerInventoryCommands } from "./cli/inventoryCommands.js";
+import { registerProjectMaintainerCommands } from "./cli/projectMaintainerCommands.js";
+import { registerSdlcCommands } from "./cli/sdlcCommands.js";
 import { validateAndNormalizeRegistry } from "./agents/registryValidation.js";
 import { getAssistantBlueprint, type AssistantBlueprint, type AssistantReadinessStatus } from "./core/assistantBlueprint.js";
 import { getPrebuiltToolCatalog, mergeToolLists, type ToolLike } from "./utils/prebuiltTools.js";
 import { writeLine } from './utils/cliOutput.js';
 
-marked.setOptions({ renderer: new TerminalRenderer() as any });
+marked.setOptions({ renderer: new TerminalRenderer() });
 
 const program = new Command();
 const __filename = fileURLToPath(import.meta.url);
@@ -1837,6 +1839,9 @@ registerDevCommands(program);
 // Register Tracks commands (EPP v2)
 registerTracksCommands(program);
 
+// Register SDLC pipeline commands
+registerSdlcCommands(program);
+
 // Register Task Decomposer commands (TaskAgents)
 registerTaskDecomposerCommands(program);
 
@@ -1892,6 +1897,7 @@ registerLearningLoopCommands(program);
 registerObservabilityCommands(program);
 registerFederationCommands(program);
 registerInventoryCommands(program);
+registerProjectMaintainerCommands(program);
 
 // Register Conductor commands(Track State Management) - MOVED AFTER conductorCmd definition
 

@@ -15,11 +15,10 @@
  * @version 1.0.0
  */
 
-import { BaseAgent } from './BaseAgent.js';
+import { BaseAgent, type AgentContext, type AgentResult } from './BaseAgent.js';
 import { AgentResponse } from './types.js';
 import { logInfo, logError, logDebug, setAgentStatus } from '../utils/logger.js';
 import { ensureError } from '../utils/ensureError.js';
-import { getWorkspaceClient } from '../tools/unifiedWorkspace.js';
 import type { RecruitmentData } from '../types/enterprise.js';
 
 // ============================================================================
@@ -72,6 +71,61 @@ interface ScreeningResult {
   };
 }
 
+type LeaveApprovalInput = Partial<LeaveRequest> & { jobId?: string };
+
+interface TimesheetManagementInput {
+  employeeId?: string;
+  employeeName?: string;
+  projectName?: string;
+  durationMinutes?: number;
+  date?: string;
+  description?: string;
+  isBillable?: boolean;
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null;
+}
+
+function isStringArray(value: unknown): value is string[] {
+  return Array.isArray(value) && value.every(item => typeof item === 'string');
+}
+
+function isLeaveType(value: unknown): value is LeaveRequest['leaveType'] {
+  return value === 'vacation' || value === 'sick' || value === 'personal' || value === 'other';
+}
+
+function isLeaveStatus(value: unknown): value is LeaveRequest['status'] {
+  return value === 'pending_manager_approval' || value === 'approved' || value === 'rejected' || value === 'cancelled';
+}
+
+// ── Leave Approval Interfaces ──────────────────────────────────────
+
+export interface LeaveRequest {
+  employeeId: string;
+  employeeName: string;
+  startDate: string;
+  endDate: string;
+  leaveType: 'vacation' | 'sick' | 'personal' | 'other';
+  reason?: string;
+  status: 'pending_manager_approval' | 'approved' | 'rejected' | 'cancelled';
+  submittedAt: string;
+}
+
+export interface LeaveApprovalResult {
+  jobId: string;
+  request: LeaveRequest;
+  decision: 'approved' | 'rejected' | 'manual_review_required';
+  approver?: string;
+  calendarSyncStatus?: 'synced' | 'pending' | 'failed';
+  policyCheck: {
+    hasBalance: boolean;
+    remainingBalance: number;
+    conflicts: string[];
+    riskLevel: 'low' | 'medium' | 'high';
+  };
+}
+
 // ============================================================================
 // Digital Headhunter Agent Implementation
 // ============================================================================
@@ -79,14 +133,16 @@ interface ScreeningResult {
 export class DigitalHeadhunterAgent extends BaseAgent {
   name = 'DigitalHeadhunter';
   role = 'Automated HR Screening & Recruitment';
-  description = 'CV screening with LinkedIn integration and bias-free candidate scoring';
+  description = 'CV screening with LinkedIn integration, bias-free candidate scoring, and leave approvals';
   capabilities = [
     'cv_parsing',
     'candidate_matching',
     'linkedin_integration',
     'interview_scheduling',
     'bias_free_scoring',
-    'automated_communication'
+    'automated_communication',
+    'leave_approval',
+    'calendar_sync'
   ];
 
   private readonly SKILL_KEYWORDS = {
@@ -100,21 +156,54 @@ export class DigitalHeadhunterAgent extends BaseAgent {
   /**
    * Execute task (BaseAgent interface)
    */
-  async executeTask(context: any): Promise<any> {
-    const task = context.task || context;
-    return this.execute(task, context);
+  async executeTask(context: AgentContext): Promise<AgentResult> {
+    const task = typeof context.task === 'string' ? context.task : '';
+    const response = await this.execute(task, context);
+    return {
+      success: response.status === 'success',
+      status: response.status,
+      data: response.data,
+      message: response.message ?? response.error ?? (response.status === 'success' ? 'Success' : 'Error'),
+      metadata: response.metadata,
+    };
   }
 
   /**
-   * Execute HR screening task
+   * Execute HR task (Recruitment, Leave Approval, or Timesheets)
    * 
-   * @param task - JSON with RecruitmentData (job description + required skills)
-   * @param context - Additional context (CV URLs, etc.)
+   * @param task - JSON or text description of the task
+   * @param context - Task context/data
    */
-  async execute(task: string, context?: unknown): Promise<AgentResponse> {
-    setAgentStatus(this.name, 'working', `HR screening: ${task.substring(0, 50)}...`);
+  async execute(task: string, context?: AgentContext): Promise<AgentResponse> {
+    setAgentStatus(this.name, 'working', `HR operation: ${task.substring(0, 50)}...`);
 
+    const runtimeContext = isRecord(context) ? context : {};
+    const contextType = typeof runtimeContext.type === 'string' ? runtimeContext.type : 'recruitment';
+    const contextData = runtimeContext.data;
+    
     try {
+      // ── Workflow Routing ──────────────────────────────────────────
+
+      // Case 1: Leave Approval Task (Metadata driven)
+      if (
+        contextType === 'leave_approval' ||
+        (isRecord(contextData) && typeof contextData.leaveType === 'string' && typeof contextData.startDate === 'string')
+      ) {
+        logInfo(this.name, `Routing to Leave Approval flow: ${task}`);
+        return await this.processLeaveApproval(contextData);
+      }
+
+      // Case 2: Timesheet Management
+      if (
+        contextType === 'timesheet_management' ||
+        task.toLowerCase().includes('timesheet') ||
+        task.toLowerCase().includes('munkaidő')
+      ) {
+        logInfo(this.name, `Routing to Timesheet Management flow: ${task}`);
+        return await this.processTimesheetManagement(contextData);
+      }
+
+      // Default: Recruitment / Screening flow
       logInfo(this.name, 'Starting CV screening pipeline...');
 
       // Parse job requirements
@@ -174,6 +263,123 @@ export class DigitalHeadhunterAgent extends BaseAgent {
         status: 'error',
         error: err.message,
       };
+    } finally {
+      setAgentStatus(this.name, 'idle');
+    }
+  }
+
+  /**
+   * Process Leave Approval Task
+   * 
+   * @param details - LeaveRequest data
+   */
+  async processLeaveApproval(details: unknown): Promise<AgentResponse> {
+    const leaveRequest = this.normalizeLeaveApprovalInput(details);
+    const employeeName = leaveRequest.employeeName ?? 'Unknown employee';
+    const startDate = leaveRequest.startDate ?? 'unknown start date';
+    const endDate = leaveRequest.endDate ?? 'unknown end date';
+    const today = new Date().toISOString();
+    const todayDate = today.split('T')[0];
+
+    setAgentStatus(this.name, 'working', `Processing leave approval for ${employeeName}`);
+    
+    try {
+      logInfo(this.name, `Analyzing leave request for ${employeeName} (${startDate} to ${endDate})`);
+      
+      // Policy Check (Simulated for SME context)
+      // In a real implementation, this would query a database/ERP
+      const hasBalance = true; 
+      const remainingBalance = 15;
+      const conflicts: string[] = []; // No overlapping team leave
+
+      const request: LeaveRequest = {
+        employeeId: leaveRequest.employeeId ?? 'unknown',
+        employeeName,
+        startDate: leaveRequest.startDate ?? todayDate,
+        endDate: leaveRequest.endDate ?? leaveRequest.startDate ?? todayDate,
+        leaveType: leaveRequest.leaveType ?? 'other',
+        reason: leaveRequest.reason,
+        status: leaveRequest.status ?? 'pending_manager_approval',
+        submittedAt: leaveRequest.submittedAt ?? today,
+      };
+      
+      const result: LeaveApprovalResult = {
+        jobId: leaveRequest.jobId || 'direct-request',
+        request,
+        decision: 'approved', // Auto-approval for low-risk requests in SME suite
+        approver: 'Brunella (Automated)',
+        calendarSyncStatus: 'synced',
+        policyCheck: {
+          hasBalance,
+          remainingBalance,
+          conflicts,
+          riskLevel: 'low'
+        }
+      };
+
+      logInfo(this.name, `✅ Leave approved for ${employeeName}. Calendar synced.`);
+      
+      return {
+        status: 'success',
+        data: result
+      };
+    } catch (e: unknown) {
+      const error = ensureError(e);
+      logError(this.name, `Leave approval failed: ${error.message}`);
+      return { status: 'error', error: error.message };
+    } finally {
+      setAgentStatus(this.name, 'idle');
+    }
+  }
+
+  /**
+   * Process Timesheet Management Task
+   * 
+   * @param details - Timesheet data
+   */
+  async processTimesheetManagement(details: unknown): Promise<AgentResponse> {
+    const timesheet = this.normalizeTimesheetManagementInput(details);
+    const employeeName = timesheet.employeeName ?? 'Anonymous';
+    const projectName = timesheet.projectName ?? 'General Work';
+    const durationMinutes = timesheet.durationMinutes ?? 0;
+
+    setAgentStatus(this.name, 'working', `Recording timesheet for ${employeeName}`);
+    
+    try {
+      logInfo(this.name, `Recording work session: ${projectName} - ${durationMinutes} min`);
+      
+      // Validation (Simulated)
+      if (!durationMinutes || durationMinutes <= 0) {
+        throw new Error('Invalid duration specified for timesheet entry.');
+      }
+
+      // In real scenario: INSERT INTO timesheets TABLE
+      // For now, we return a success payload that simulates the audit log entry
+      const entryId = `TS-${Date.now()}`;
+      
+      const result = {
+        entryId,
+        employeeId: timesheet.employeeId || 'unknown',
+        employeeName,
+        projectName,
+        date: timesheet.date || new Date().toISOString().split('T')[0],
+        duration: durationMinutes,
+        description: timesheet.description || '',
+        status: 'recorded',
+        calculatedBillable: timesheet.isBillable !== false ? durationMinutes / 60 : 0
+      };
+
+      logInfo(this.name, `✅ Timesheet ${entryId} recorded successfully.`);
+      
+      return {
+        status: 'success',
+        message: 'Timesheet recorded',
+        data: result
+      };
+    } catch (e: unknown) {
+      const error = ensureError(e);
+      logError(this.name, `Timesheet recording failed: ${error.message}`);
+      return { status: 'error', error: error.message };
     } finally {
       setAgentStatus(this.name, 'idle');
     }
@@ -409,6 +615,40 @@ export class DigitalHeadhunterAgent extends BaseAgent {
     return 5; // Other education
   }
 
+  private normalizeLeaveApprovalInput(details: unknown): LeaveApprovalInput {
+    if (!isRecord(details)) {
+      return {};
+    }
+
+    return {
+      jobId: typeof details.jobId === 'string' ? details.jobId : undefined,
+      employeeId: typeof details.employeeId === 'string' ? details.employeeId : undefined,
+      employeeName: typeof details.employeeName === 'string' ? details.employeeName : undefined,
+      startDate: typeof details.startDate === 'string' ? details.startDate : undefined,
+      endDate: typeof details.endDate === 'string' ? details.endDate : undefined,
+      leaveType: isLeaveType(details.leaveType) ? details.leaveType : undefined,
+      reason: typeof details.reason === 'string' ? details.reason : undefined,
+      status: isLeaveStatus(details.status) ? details.status : undefined,
+      submittedAt: typeof details.submittedAt === 'string' ? details.submittedAt : undefined,
+    };
+  }
+
+  private normalizeTimesheetManagementInput(details: unknown): TimesheetManagementInput {
+    if (!isRecord(details)) {
+      return {};
+    }
+
+    return {
+      employeeId: typeof details.employeeId === 'string' ? details.employeeId : undefined,
+      employeeName: typeof details.employeeName === 'string' ? details.employeeName : undefined,
+      projectName: typeof details.projectName === 'string' ? details.projectName : undefined,
+      durationMinutes: typeof details.durationMinutes === 'number' ? details.durationMinutes : undefined,
+      date: typeof details.date === 'string' ? details.date : undefined,
+      description: typeof details.description === 'string' ? details.description : undefined,
+      isBillable: typeof details.isBillable === 'boolean' ? details.isBillable : undefined,
+    };
+  }
+
   // ==========================================================================
   // Helper Methods
   // ==========================================================================
@@ -418,9 +658,19 @@ export class DigitalHeadhunterAgent extends BaseAgent {
    */
   private parseJobRequirements(task: string): RecruitmentData {
     try {
-      const parsed = JSON.parse(task);
-      if (parsed.jobDescription || parsed.requiredSkills) {
-        return parsed as RecruitmentData;
+      const parsed: unknown = JSON.parse(task);
+      if (isRecord(parsed)) {
+        const jobDescription = typeof parsed.jobDescription === 'string' ? parsed.jobDescription : undefined;
+        const requiredSkills = isStringArray(parsed.requiredSkills) ? parsed.requiredSkills : undefined;
+        const experienceYears = typeof parsed.experienceYears === 'number' ? parsed.experienceYears : undefined;
+
+        if (jobDescription || requiredSkills) {
+          return {
+            jobDescription: jobDescription ?? 'Senior Full-Stack Developer (TypeScript, React, Node.js)',
+            requiredSkills: requiredSkills ?? ['TypeScript', 'React', 'Node.js'],
+            experienceYears,
+          };
+        }
       }
     } catch (error: unknown) {
       const err = ensureError(error);

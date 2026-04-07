@@ -1,0 +1,21 @@
+{
+  "name": "n8n_konyveles_phase3_skeleton",
+  "nodes": [
+    {
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "parameters": {"httpMethod": "POST", "path": "konyveles-phase3-webhook"}
+    },
+    {
+      "name": "HTTP Request Placeholder",
+      "type": "n8n-nodes-base.httpRequest",
+      "parameters": {"url": "https://example.local/placeholder", "method": "POST"}
+    },
+    {
+      "name": "Function Transform",
+      "type": "n8n-nodes-base.function",
+      "parameters": {"functionCode": "// transform payload stub"}
+    }
+  ],
+  "connections": {}
+}

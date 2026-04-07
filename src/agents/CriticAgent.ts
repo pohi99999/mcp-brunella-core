@@ -11,6 +11,7 @@
 
 import { BaseAgent, type AgentResult, type AgentContext } from './BaseAgent.js';
 import { logInfo, logWarn } from '../utils/logger.js';
+import { quickReviewOutput } from '../core/criticQuickReview.js';
 
 export interface CriticReview {
   approved: boolean;
@@ -217,16 +218,6 @@ export class CriticAgent extends BaseAgent {
    * Quick review — lightweight check for non-critical tasks.
    */
   quickReview(output: string): { ok: boolean; score: number; reason?: string } {
-    if (!output || output.trim().length === 0) {
-      return { ok: false, score: 0, reason: 'Üres válasz' };
-    }
-
-    // Check for secrets only (fast path)
-    const secretPattern = /(?:ghp_|sk-|cfut_|AIza)[a-zA-Z0-9_-]{20,}/;
-    if (secretPattern.test(output)) {
-      return { ok: false, score: 0, reason: 'Titok szivárgás!' };
-    }
-
-    return { ok: true, score: 0.8 };
+    return quickReviewOutput(output);
   }
 }

@@ -1723,6 +1723,73 @@ export async function toggleTrackTodo(params: {
   return data as TrackTodosResponse;
 }
 
+export interface TrackMonitorEntry {
+  id: string;
+  title: string;
+  status: string;
+  priority?: string;
+  progress: number;
+  assignee?: string;
+  description?: string;
+  updated?: string;
+}
+
+export interface TrackMonitorStats {
+  total: number;
+  proposed: number;
+  active: number;
+  completed: number;
+  archived: number;
+}
+
+export interface TrackMonitorResponse {
+  success: boolean;
+  stats: TrackMonitorStats;
+  proposed: TrackMonitorEntry[];
+  active: TrackMonitorEntry[];
+  completed: TrackMonitorEntry[];
+  archived: TrackMonitorEntry[];
+}
+
+export interface TrackDetailResponse {
+  success: boolean;
+  id: string;
+  title: string;
+  status: string;
+  priority?: string;
+  progress: number;
+  assignee?: string;
+  description?: string;
+  updated?: string;
+  planMd: string | null;
+  specMd: string | null;
+  trackMd: string | null;
+}
+
+export async function getTracksMonitor(): Promise<TrackMonitorResponse> {
+  const response = await fetchWithTimeout(`${API_BASE}/api/v1/tracks/monitor`);
+  const data = await safeJson<TrackMonitorResponse | { error?: string }>(
+    response,
+  ).catch(() => ({
+    error: `HTTP ${response.status}: ${response.statusText}`,
+  }));
+  if (!response.ok)
+    throw new Error(getErrorMessage(data) || "Failed to load tracks monitor");
+  return data as TrackMonitorResponse;
+}
+
+export async function getTrackDetail(trackId: string): Promise<TrackDetailResponse> {
+  const response = await fetchWithTimeout(`${API_BASE}/api/v1/tracks/${encodeURIComponent(trackId)}/detail`);
+  const data = await safeJson<TrackDetailResponse | { error?: string }>(
+    response,
+  ).catch(() => ({
+    error: `HTTP ${response.status}: ${response.statusText}`,
+  }));
+  if (!response.ok)
+    throw new Error(getErrorMessage(data) || "Failed to load track detail");
+  return data as TrackDetailResponse;
+}
+
 export interface AutonomousReplicationNode {
   nodeId: string;
   region: string;

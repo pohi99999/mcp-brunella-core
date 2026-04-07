@@ -6,6 +6,7 @@ import { socketService } from '../server/SocketService.js';
 import { agentManager } from './AgentManager.js';
 import { v4 as uuidv4 } from 'uuid';
 import { ensureError } from '../utils/ensureError.js';
+import { parseAiResponse, safeJsonParse } from '../utils/aiHelpers.js';
 
 export class PropertyVisionaryAgent extends BaseAgent {
   name = 'PropertyVisionary';
@@ -52,7 +53,8 @@ export class PropertyVisionaryAgent extends BaseAgent {
         }
       `;
       const profileRes = await generateResponse(profilePrompt, 'gemini', 'gemini-2.0-flash');
-      const profileJson = JSON.parse(profileRes.match(/\{[\s\S]*\}/)![0]);
+      const { text: profileText } = parseAiResponse(profileRes);
+      const profileJson = safeJsonParse(profileText.match(/\{[\s\S]*\}/)?.[0] ?? profileText, { buyerProfile: '', targetSectors: [], usp: [], riskProfile: 'medium' } as any);
 
       // 2. Intelligens Vevőfelkutatás (Researcher + Robotkez)
       logInfo(this.name, "Beruházási trendek és tőkeerős célpontok keresése...");
@@ -62,14 +64,14 @@ export class PropertyVisionaryAgent extends BaseAgent {
         Kiemelten keresd a magyarországi és közép-európai piacot ismerő szereplőket.
         Adj vissza egy JSON listát: [ { "companyName": "...", "reason": "...", "contactRole": "...", "linkedinHint": "..." } ]
       `;
-      const searchResponse = await agentManager.delegate('researcher', searchInstruction) as any;
+        const searchResponse = await agentManager.delegate('researcher', searchInstruction) as any;
       
-      let potentialBuyers = [];
-      if (searchResponse && searchResponse.success) {
-          const content = searchResponse.message || "";
-          const jsonMatch = content.match(/\[[\s\S]*\]/);
-          if (jsonMatch) potentialBuyers = JSON.parse(jsonMatch[0]);
-      }
+        let potentialBuyers: any[] = [];
+        if (searchResponse && searchResponse.success) {
+          const { text: searchText } = parseAiResponse(searchResponse.message ?? searchResponse.data ?? searchResponse);
+          const jsonMatch = searchText.match(/\[[\s\S]*\]/);
+          potentialBuyers = safeJsonParse<any[]>(jsonMatch?.[0] ?? searchText, []);
+        }
 
       if (potentialBuyers.length === 0) {
           // Ha a keresés nem hoz eredményt, generáljunk szektor-specifikus mintákat
@@ -97,7 +99,8 @@ export class PropertyVisionaryAgent extends BaseAgent {
             }
           `;
           const strategyRes = await generateResponse(strategyPrompt, 'gemini', 'gemini-2.0-flash');
-          const strategyJson = JSON.parse(strategyRes.match(/\{[\s\S]*\}/)![0]);
+          const { text: strategyText } = parseAiResponse(strategyRes);
+          const strategyJson = safeJsonParse(strategyText.match(/\{[\s\S]*\}/)?.[0] ?? strategyText, { openingLine: '', valueProposition: '', outreachChannel: '' } as any);
           
           finalLeads.push({
               ...buyer,

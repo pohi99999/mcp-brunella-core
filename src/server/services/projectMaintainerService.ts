@@ -1,16 +1,16 @@
 /**
- * @fileoverview Project Maintainer Service — report-only daily maintenance scan.
+ * @fileoverview Project Maintainer Service — repository maintenance scan.
  *
- * Performs a non-destructive audit of the repository root, artefact files and
+ * Performs an audit of the repository root, artefact files and
  * conductor tracks. Results are persisted to the `project_maintainer_reports`
  * SQLite table and returned as a structured `ProjectMaintainerReport`.
  *
- * This service NEVER deletes, moves or modifies any file. It only reads and
- * reports. Safe to run via the scheduler or an on-demand API call.
+ * This service provides both non-destructive reporting and active archival
+ * of identified noise artefacts.
  */
 
 import { randomUUID } from 'crypto';
-import { existsSync, readdirSync, statSync } from 'fs';
+import { existsSync, readdirSync, statSync, mkdirSync, renameSync } from 'fs';
 import path from 'path';
 import type Database from 'better-sqlite3';
 import { getGlobalDb } from '../../utils/globalDb.js';
@@ -171,6 +171,7 @@ const ROOT_ALLOWLIST = new Set<string>([
   'dashboard-snapshot.md',
   'Brunella.jpg',
   'Brunella.md',
+  'BRUNELLA_IDENTITY.md',
 ]);
 
 /** File-name patterns at root that are known temp/debug artefacts */
@@ -275,6 +276,45 @@ function repoRoot(): string {
 
 function isNoiseFile(name: string): boolean {
   return NOISE_PATTERNS.some((pattern) => pattern.test(name));
+}
+
+/**
+ * Moves identified noise files from root to logs/archive.
+ * @param root - The repo root path
+ * @param findings - All categorized findings
+ * @returns Number of files moved
+ */
+function archiveNoiseFiles(root: string, findings: ProjectMaintainerFinding[]): number {
+  const archivePath = path.join(root, 'logs', 'archive');
+  if (!existsSync(archivePath)) {
+    try {
+      mkdirSync(archivePath, { recursive: true });
+    } catch (e: unknown) {
+      logError(MODULE, `Failed to create archive directory: ${ensureError(e).message}`);
+      return 0;
+    }
+  }
+
+  let movedCount = 0;
+  const actionable = findings.filter((f) => f.category === 'root-noise' || f.category === 'misplaced-file');
+
+  for (const finding of actionable) {
+    if (!finding.path) continue;
+    const oldPath = path.join(root, finding.path);
+    const newPath = path.join(archivePath, finding.path);
+
+    try {
+      if (existsSync(oldPath)) {
+        renameSync(oldPath, newPath);
+        logInfo(MODULE, `[ARCHIVE] Moved ${finding.path} to logs/archive/`);
+        movedCount++;
+      }
+    } catch (e: unknown) {
+      logError(MODULE, `Failed to archive ${finding.path}: ${ensureError(e).message}`);
+    }
+  }
+
+  return movedCount;
 }
 
 // ── Core scan functions ───────────────────────────────────────────────────────
@@ -491,7 +531,8 @@ function persistReport(db: Database.Database, report: ProjectMaintainerReport): 
       JSON.stringify(report),
       report.triggeredBy,
     );
-    logInfo(MODULE, `Report persisted: ${report.id} (${report.findings.length} findings)`);
+    logInfo(MODULE, `🤖 [Brunella's Verdict]: Integrity check complete. ${report.findings.length} findings, ${report.suggestions.length} suggestions.`);
+    logInfo(MODULE, 'System partner mission: Reliability and Transparency — Maintainer duty fulfilled.');
   } catch (error: unknown) {
     const err = ensureError(error);
     logError(MODULE, `Failed to persist report: ${err.message}`);
@@ -517,7 +558,8 @@ export async function runProjectMaintainerReport(options: {
   const { triggeredBy = 'api', dryRun = true } = options;
   const db = options.db ?? getGlobalDb();
 
-  logInfo(MODULE, `Starting project maintainer scan (triggeredBy=${triggeredBy}, dryRun=${dryRun})`);
+  logInfo(MODULE, '🤖 Brunella Project Integrity Report — Start');
+  logInfo(MODULE, `Starting maintenance scan (triggeredBy=${triggeredBy}, dryRun=${dryRun})`);
 
   const root = repoRoot();
 
@@ -537,6 +579,12 @@ export async function runProjectMaintainerReport(options: {
     ...conductorScan.suggestions,
   ];
 
+  if (!dryRun) {
+    logWarn(MODULE, '⚠️ Active Maintenance Mode: Archiving noise files...');
+    const archivedCount = archiveNoiseFiles(root, allFindings);
+    logInfo(MODULE, `🚀 [ARCHIVE]: Finished moving ${archivedCount} artefacts to logs/archive/`);
+  }
+
   const report: ProjectMaintainerReport = {
     id: randomUUID(),
     generatedAt: new Date().toISOString(),
@@ -549,7 +597,7 @@ export async function runProjectMaintainerReport(options: {
 
   persistReport(db, report);
 
-  logInfo(MODULE, `Scan complete: ${allFindings.length} findings, ${allSuggestions.length} suggestions`);
+  logInfo(MODULE, `🤖 [Brunella's Verdict]: Integrity check complete — Mission accomplished.`);
 
   return report;
 }

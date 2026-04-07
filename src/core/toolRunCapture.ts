@@ -6,7 +6,41 @@
  */
 
 import { recordToolRun } from '../utils/globalDb.js';
-import { logInfo, logError } from '../utils/logger.js';
+import { logInfo, logError, logWarn } from '../utils/logger.js';
+import { classifyToolError } from './toolErrorClassifier.js';
+
+function safeSerialize(value: unknown): string {
+  const seen = new WeakSet<object>();
+
+  try {
+    return JSON.stringify(value, (_key, candidate) => {
+      if (typeof candidate === 'bigint') {
+        return `${candidate.toString()}n`;
+      }
+
+      if (typeof candidate === 'object' && candidate !== null) {
+        if (seen.has(candidate)) {
+          return '[Circular]';
+        }
+        seen.add(candidate);
+      }
+
+      return candidate;
+    }) ?? 'null';
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : String(error);
+    return JSON.stringify({ serializationError: message });
+  }
+}
+
+function recordToolRunSafely(run: Parameters<typeof recordToolRun>[0]): void {
+  try {
+    recordToolRun(run);
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : String(error);
+    logWarn(`[ToolRunCapture] Telemetry persist skipped for ${run.tool_name}: ${message}`);
+  }
+}
 
 /**
  * Wrap an MCP tool handler so every invocation is recorded in the tool_runs table.
@@ -25,34 +59,45 @@ export function wrapToolHandler<TArgs extends unknown[], TResult>(
         ? result as Record<string, unknown>
         : undefined;
       const success = resultObj?.success !== false;
-      const serializedInput = JSON.stringify(args.length <= 1 ? args[0] : args);
+      const serializedInput = safeSerialize(args.length <= 1 ? args[0] : args);
+      const classification = !success
+        ? classifyToolError(resultObj?.error ?? resultObj?.message ?? 'Tool returned success=false')
+        : undefined;
 
-      recordToolRun({
+      recordToolRunSafely({
         tool_name: toolName,
         input_params: serializedInput,
-        output_data: JSON.stringify(result).slice(0, 10_000),
+        output_data: safeSerialize(classification
+          ? { result, errorType: classification.type, retryable: classification.retryable, planRevision: classification.planRevision }
+          : result).slice(0, 10_000),
         success: success ? 1 : 0,
         duration_ms: duration,
         quality_score: calculateQuality(result, duration),
       });
 
-      logInfo('ToolRunCapture', `${toolName} completed in ${duration}ms (success=${success})`);
+      logInfo('ToolRunCapture', `${toolName} completed in ${duration}ms (success=${success}${classification ? `, errorType=${classification.type}` : ''})`);
       return result;
     } catch (e: unknown) {
       const duration = Date.now() - start;
       const error = e instanceof Error ? e.message : String(e);
-      const serializedInput = JSON.stringify(args.length <= 1 ? args[0] : args);
+      const serializedInput = safeSerialize(args.length <= 1 ? args[0] : args);
+      const classification = classifyToolError(e);
 
-      recordToolRun({
+      recordToolRunSafely({
         tool_name: toolName,
         input_params: serializedInput,
-        output_data: JSON.stringify({ error }),
+        output_data: safeSerialize({
+          error,
+          errorType: classification.type,
+          retryable: classification.retryable,
+          planRevision: classification.planRevision,
+        }),
         success: 0,
         duration_ms: duration,
         quality_score: 0,
       });
 
-      logError('ToolRunCapture', `${toolName} failed after ${duration}ms: ${error}`);
+      logError('ToolRunCapture', `${toolName} failed after ${duration}ms [${classification.type}]: ${error}`);
       throw e;
     }
   };

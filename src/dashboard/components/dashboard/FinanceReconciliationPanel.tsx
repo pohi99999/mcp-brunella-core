@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -30,6 +31,7 @@ import {
 } from "lucide-react";
 
 export function FinanceReconciliationPanel() {
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState<any>(null);
   const [unmatched, setUnmatched] = useState<BookkeepingTransaction[]>([]);
@@ -52,13 +54,13 @@ export function FinanceReconciliationPanel() {
 
   const handleRunReconciliation = async () => {
     setLoading(true);
-    toast.info("Párosítás indítása...");
+    toast.info(t("finance_recon.running"));
     try {
       await executeAgent("MatchingAgent", "Match all PENDING bank transactions");
-      toast.success("Párosítás befejeződött.");
+      toast.success(t("finance_recon.complete"));
       await loadData();
     } catch (error: any) {
-      toast.error(`Hiba: ${error.message}`);
+      toast.error(`${t("common.error", "Hiba")}: ${error.message}`);
     } finally {
       setLoading(false);
     }
@@ -67,9 +69,9 @@ export function FinanceReconciliationPanel() {
   const handleSendEmail = async () => {
     try {
       await sendBookkeepingSummaryEmail();
-      toast.success("Összefoglaló email elküldve.");
+      toast.success(t("finance_recon.report_sent"));
     } catch (error: any) {
-      toast.error(`Hiba az email küldésekor: ${error.message}`);
+      toast.error(`${t("common.error", "Hiba")} az email küldésekor: ${error.message}`);
     }
   };
 
@@ -77,51 +79,51 @@ export function FinanceReconciliationPanel() {
     <div className="p-6 space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold text-white tracking-tight">Pénzügyi Egyeztetés</h1>
-          <p className="text-zinc-400 text-sm">Számlák és banki tranzakciók automatikus párosítása.</p>
+          <h1 className="text-2xl font-bold text-white tracking-tight">{t("finance_recon.title")}</h1>
+          <p className="text-zinc-400 text-sm">{t("finance_recon.description")}</p>
         </div>
         <div className="flex gap-3">
           <Button variant="outline" onClick={handleSendEmail} className="gap-2 border-white/10 hover:bg-white/5 text-zinc-300">
             <Mail size={16} />
-            Riport Küldése
+            {t("finance_recon.send_report")}
           </Button>
           <Button onClick={handleRunReconciliation} disabled={loading} className="gap-2 bg-purple-600 hover:bg-purple-700 text-white">
             {loading ? <RefreshCcw size={16} className="animate-spin" /> : <RefreshCcw size={16} />}
-            Futtatás
+            {t("finance_recon.run_recon")}
           </Button>
         </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <StatusCard title="Összes" value={status?.summary?.total || 0} icon={<BarChart3 className="text-blue-400" />} />
-        <StatusCard title="Párosítva" value={status?.summary?.completed || 0} icon={<CheckCircle2 className="text-emerald-400" />} color="text-emerald-400" />
-        <StatusCard title="Várakozik" value={status?.summary?.pending || 0} icon={<Clock className="text-yellow-400" />} color="text-yellow-400" />
-        <StatusCard title="Kivétel" value={status?.summary?.unmatched || 0} icon={<AlertCircle className="text-red-400" />} color="text-red-400" />
+        <StatusCard title={t("finance_recon.stats.total")} value={status?.summary?.total || 0} icon={<BarChart3 className="text-blue-400" />} />
+        <StatusCard title={t("finance_recon.stats.matched")} value={status?.summary?.completed || 0} icon={<CheckCircle2 className="text-emerald-400" />} color="text-emerald-400" />
+        <StatusCard title={t("finance_recon.stats.pending")} value={status?.summary?.pending || 0} icon={<Clock className="text-yellow-400" />} color="text-yellow-400" />
+        <StatusCard title={t("finance_recon.stats.exception")} value={status?.summary?.unmatched || 0} icon={<AlertCircle className="text-red-400" />} color="text-red-400" />
       </div>
 
       <Card className="glass-card border-white/[0.04] bg-white/[0.02]">
         <CardHeader>
           <CardTitle className="text-lg flex items-center gap-2">
             <AlertCircle size={18} className="text-red-400" />
-            Kivételes Tételek (Unmatched)
+            {t("finance_recon.exceptions_title")}
           </CardTitle>
-          <CardDescription>Ezeket a tételeket nem sikerült automatikusan párosítani.</CardDescription>
+          <CardDescription>{t("finance_recon.exceptions_desc")}</CardDescription>
         </CardHeader>
         <CardContent>
           <Table>
             <TableHeader>
               <TableRow className="border-white/5 hover:bg-transparent">
-                <TableHead className="text-zinc-500 uppercase text-[10px] font-bold">Dátum</TableHead>
-                <TableHead className="text-zinc-500 uppercase text-[10px] font-bold">Partner</TableHead>
-                <TableHead className="text-zinc-500 uppercase text-[10px] font-bold text-right">Összeg</TableHead>
-                <TableHead className="text-zinc-500 uppercase text-[10px] font-bold">Leírás</TableHead>
-                <TableHead className="text-zinc-500 uppercase text-[10px] font-bold text-center">Akció</TableHead>
+                <TableHead className="text-zinc-500 uppercase text-[10px] font-bold">{t("finance_recon.table.date")}</TableHead>
+                <TableHead className="text-zinc-500 uppercase text-[10px] font-bold">{t("finance_recon.table.partner")}</TableHead>
+                <TableHead className="text-zinc-500 uppercase text-[10px] font-bold text-right">{t("finance_recon.table.amount")}</TableHead>
+                <TableHead className="text-zinc-500 uppercase text-[10px] font-bold">{t("finance_recon.table.description")}</TableHead>
+                <TableHead className="text-zinc-500 uppercase text-[10px] font-bold text-center">{t("finance_recon.table.action")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {unmatched.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={5} className="text-center py-8 text-zinc-500">Nincs kivételes tétel.</TableCell>
+                  <TableCell colSpan={5} className="text-center py-8 text-zinc-500">{t("finance_recon.no_exceptions")}</TableCell>
                 </TableRow>
               ) : (
                 unmatched.map((tx) => (

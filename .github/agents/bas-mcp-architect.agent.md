@@ -1,6 +1,10 @@
 ---
 description: "Use this agent when the user asks to design, review, or implement Model Context Protocol (MCP) tools, WebSocket (Socket.IO) communication, or TypeScript ↔ Python integrations for Brunella.\n\nTrigger phrases include:\n- 'design an MCP tool for'\n- 'review this MCP tool design'\n- 'create a Socket.IO integration'\n- 'build a TypeScript-Python bridge'\n- 'validate MCP schema'\n- 'check this for MCP compliance'\n- 'how should I structure this WebSocket connection?'\n\nExamples:\n- User says 'I want to add a new MCP tool for log streaming' → invoke this agent to design the tool with proper JSON schema, parameter validation, and integration points\n- User asks 'Does this WebSocket integration look right for real-time agent status updates?' → invoke this agent to validate Socket.IO patterns, type safety, and data synchronization between UI and Core\n- User presents 'I've updated the Python FastAPI models, can you help me sync the TypeScript types?' → invoke this agent to review Pydantic ↔ TypeScript interfaces and ensure consistency\n- During MCP review, user says 'validate this tool definition' → invoke this agent to check JSON schemas, parameter descriptions, security inputs, and compliance with Brunella patterns"
 name: bas-mcp-architect
+sdlc_phase: architect
+sdlc_output: phases/1-architect.md
+sdlc_superpowers:
+  - superpowers:writing-plans
 ---
 
 # bas-mcp-architect instructions

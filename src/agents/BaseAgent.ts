@@ -9,18 +9,24 @@
 import { IAgent, ISwarmContext, AgentHandoff, AgentResponse } from './types.js';
 import { formatAgentResult } from '../utils/responseFormatter.js';
 import { searchRAG, addToIndex } from '../utils/rag.js';
-import { logInfo, logError, setAgentStatus } from '../utils/logger.js';
+import { logInfo, logError, logWarn, setAgentStatus } from '../utils/logger.js';
 import { ensureError } from '../utils/ensureError.js';
-import { validateAgentResult } from './middleware/validateOutput.js';
 import { calculateConfidence } from './scoring/confidenceCalculator.js';
 import { wrapWithSpan } from '../utils/otelTracing.js';
-import { safeRedactAgentOutput } from '../security/redactor.js';
-import { checkPattern } from '../core/patternReuse.js';
+import { checkPattern, getPatternReuseThreshold } from '../core/patternReuse.js';
 import { queryMemory as queryStructuredMemory, saveMemory as saveStructuredMemory, type StoredAgentMemory } from '../core/structuredMemory.js';
+import { guardAgentResponseOutput, guardAgentResultOutput } from '../core/outputGuard.js';
+import {
+  attachWorkingMemoryObservation,
+  appendWorkingMemoryMessage,
+  createWorkingMemoryState,
+  type WorkingMemoryState,
+} from '../core/workingMemory.js';
 
 export interface AgentContext {
   task?: string;
   swarm?: ISwarmContext;
+  workingMemory?: WorkingMemoryState;
   payload?: {
       bankCsvPath?: string;
       [key: string]: unknown;
@@ -120,11 +126,23 @@ export abstract class BaseAgent implements IAgent {
     const testMode = this.isTestMode();
 
     if (!testMode) {
-      const cachedPattern = await wrapWithSpan(
-        'bas-base-agent', `${this.name}::pattern-reuse`,
-        { 'bas.agent.name': this.name, 'bas.operation': 'pattern_reuse' },
-        async () => checkPattern<AgentResult>(this.name, task),
-      );
+      const patternReuseThreshold = getPatternReuseThreshold();
+      const cachedPattern = await (async () => {
+        try {
+          return await wrapWithSpan(
+            'bas-base-agent', `${this.name}::pattern-reuse`,
+            { 'bas.agent.name': this.name, 'bas.operation': 'pattern_reuse' },
+            async () => checkPattern<AgentResult>(this.name, task),
+          );
+        } catch (error: unknown) {
+          const normalized = ensureError(error);
+          logWarn(`${this.name} pattern reuse fallback`, {
+            error: normalized,
+            threshold: patternReuseThreshold,
+          });
+          return { matched: false, threshold: patternReuseThreshold };
+        }
+      })();
 
       if (cachedPattern.matched && cachedPattern.memory) {
         const cachedResult = this.normalizeCachedResult(cachedPattern.memory.result);
@@ -136,10 +154,8 @@ export abstract class BaseAgent implements IAgent {
         cachedResult.metadata.cachedAt = cachedPattern.memory.updatedAt;
         cachedResult.metadata.reuseCount = cachedPattern.memory.reuseCount;
 
-        validateAgentResult(cachedResult, this.name);
-
         const formattedMessage = formatAgentResult(cachedResult, this.name, { useEmojis: true });
-        return safeRedactAgentOutput({
+        return guardAgentResponseOutput({
           success: cachedResult.success,
           status: cachedResult.success ? 'success' : 'error',
           message: formattedMessage,
@@ -151,53 +167,89 @@ export abstract class BaseAgent implements IAgent {
     }
 
     // 1. Kognitív memória lekérdezése végrehajtás előtt (OTel sub-span)
-    const pastExperiences = testMode ? [] : await wrapWithSpan(
-      'bas-base-agent', `${this.name}::rag-query`,
-      { 'bas.agent.name': this.name, 'bas.operation': 'rag_query' },
-      () => this.queryMemory(task, 3),
-    );
+    const pastExperiences = testMode ? [] : await (async () => {
+      try {
+        return await wrapWithSpan(
+          'bas-base-agent', `${this.name}::rag-query`,
+          { 'bas.agent.name': this.name, 'bas.operation': 'rag_query' },
+          () => this.queryMemory(task, 3),
+        );
+      } catch (error: unknown) {
+        const normalized = ensureError(error);
+        logWarn(`${this.name} RAG query fallback: ${normalized.message}`);
+        return [];
+      }
+    })();
     
+    let workingMemory = createWorkingMemoryState();
+    workingMemory = appendWorkingMemoryMessage(workingMemory, { role: 'user', content: task });
+    for (const experience of pastExperiences) {
+      workingMemory = appendWorkingMemoryMessage(workingMemory, {
+        role: 'system',
+        content: experience.text.slice(0, 500),
+      });
+    }
+
     const agentContext: AgentContext = {
       task,
       pastExperiences, // Átadjuk az ügynöknek a múltbeli tapasztalatokat
+      workingMemory,
       ...(context || {})
     };
 
     setAgentStatus(this.name, 'working', task.slice(0, 50));
 
     try {
-      const result = await this.executeTask(agentContext);
+      const rawResult = await this.executeTask(agentContext);
 
-      // 2. Guardrails: AgentResult validáció
-      validateAgentResult(result, this.name);
+      // 2. Confidence scoring
+      const confidence = calculateConfidence(rawResult);
+      if (!rawResult.metadata) rawResult.metadata = {};
+      rawResult.metadata.confidence = confidence.score;
+      rawResult.metadata.confidenceFactors = confidence.factors;
 
-      // 3. Confidence scoring
-      const confidence = calculateConfidence(result);
-      if (!result.metadata) result.metadata = {};
-      result.metadata.confidence = confidence.score;
-      result.metadata.confidenceFactors = confidence.factors;
+      const result = guardAgentResultOutput(
+        attachWorkingMemoryObservation(rawResult, rawResult.message),
+        this.name,
+      );
 
       // 4. Tapasztalat mentése a memóriába (OTel sub-span)
       // Teszt módban kihagyjuk a perzisztens RAG IO-t a stabilitás/gyorsaság miatt.
       if (!testMode) {
-        saveStructuredMemory({
-          agentName: this.name,
-          task,
-          result,
-          confidence: confidence.score,
-          status: result.success ? 'success' : 'error',
-        });
+        try {
+          saveStructuredMemory({
+            agentName: this.name,
+            task,
+            result,
+            confidence: confidence.score,
+            status: result.success ? 'success' : 'error',
+          });
+        } catch (error: unknown) {
+          const normalized = ensureError(error);
+          logWarn(`${this.name} structured memory snapshot fallback`, {
+            error: normalized,
+            task,
+          });
+        }
 
         const outcome = result.success ? 'SIKER' : 'HIBA';
         const experienceContent = `Feladat: "${task}" | Eredmény: ${outcome} | Üzenet: ${result.message}`;
-        await wrapWithSpan(
-          'bas-base-agent', `${this.name}::memory-save`,
-          { 'bas.agent.name': this.name, 'bas.operation': 'memory_save', 'bas.confidence': confidence.score },
-          () => this.saveToMemory(experienceContent, {
-            status: result.success ? 'success' : 'error',
-            taskId: context?.taskId
-          }),
-        );
+        try {
+          await wrapWithSpan(
+            'bas-base-agent', `${this.name}::memory-save`,
+            { 'bas.agent.name': this.name, 'bas.operation': 'memory_save', 'bas.confidence': confidence.score },
+            () => this.saveToMemory(experienceContent, {
+              status: result.success ? 'success' : 'error',
+              taskId: context?.taskId
+            }),
+          );
+        } catch (error: unknown) {
+          const normalized = ensureError(error);
+          logWarn(`${this.name} structured memory save fallback`, {
+            error: normalized,
+            task,
+          });
+        }
       }
 
       // Format result as Hungarian human-readable text
@@ -213,7 +265,16 @@ export abstract class BaseAgent implements IAgent {
         handoff: result.handoff,
       };
 
-      return safeRedactAgentOutput(response, this.name);
+      return guardAgentResponseOutput(response, this.name);
+    } catch (error: unknown) {
+      const normalized = ensureError(error);
+      logError(`${this.name} executeTask hiba: ${normalized.message}`, normalized);
+      return guardAgentResponseOutput({
+        success: false,
+        status: 'error',
+        error: normalized.message,
+        message: normalized.message,
+      }, this.name);
     } finally {
       setAgentStatus(this.name, 'idle');
     }

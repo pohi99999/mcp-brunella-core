@@ -2,6 +2,7 @@ import { IAgent, AgentResponse } from './types.js';
 import { logInfo, logError, setAgentStatus } from '../utils/logger.js';
 import { createCrmFollowUpPlan, ingestCrmLead } from '../data/crm_db.js';
 import { normalizeCrmLead } from '../utils/crmLead.js';
+import { safeJsonParse } from '../utils/aiHelpers.js';
 
 /**
  * Lead Quality Score Model
@@ -354,13 +355,9 @@ Brunella Agent System
   }
 
   private parseStructuredTask(task: string): CrmFollowUpTask | null {
-    try {
-      const parsed = JSON.parse(task) as Partial<CrmFollowUpTask>;
-      if (parsed && parsed.intent === 'crm_follow_up' && parsed.lead) {
-        return parsed as CrmFollowUpTask;
-      }
-    } catch {
-      return null;
+    const parsed = safeJsonParse<Partial<CrmFollowUpTask> | null>(task, null);
+    if (parsed && parsed.intent === 'crm_follow_up' && parsed.lead) {
+      return parsed as CrmFollowUpTask;
     }
     return null;
   }

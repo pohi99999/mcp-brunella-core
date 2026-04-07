@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
@@ -10,6 +11,8 @@ import { pSalesTrack, formatPSalesPhaseStatus } from "@/data/pSalesTrack";
 import { toast } from "sonner";
 
 export function PropertySalesWidget() {
+  const { t } = useTranslation();
+
   return (
     <div className="space-y-6">
       <Card className="glass-card border-white/[0.04] bg-white/[0.03] backdrop-blur-xl">
@@ -22,10 +25,10 @@ export function PropertySalesWidget() {
                 </div>
                 <div>
                   <CardTitle className="text-2xl font-black tracking-tight text-white">
-                    Ingatlan Értékesítési Platform
+                    {t("property_sales.title")}
                   </CardTitle>
                   <p className="text-sm text-zinc-500">
-                    BAS enterprise integráció + külön telepíthető standalone út ugyanazzal a core workflow-val.
+                    {t("property_sales.description")}
                   </p>
                 </div>
               </div>
@@ -37,7 +40,7 @@ export function PropertySalesWidget() {
                   {pSalesTrack.trackId}
                 </Badge>
                 <Badge variant="outline" className="border-white/[0.08] bg-white/[0.04] text-zinc-300">
-                  Phase 1 fókusz
+                  {t("property_sales.phase1_focus")}
                 </Badge>
               </div>
             </div>
@@ -46,17 +49,17 @@ export function PropertySalesWidget() {
               <Button
                 variant="outline"
                 className="border-white/[0.08] bg-white/[0.04] text-zinc-200 hover:bg-white/[0.08]"
-                onClick={() => toast.info("Architektúra dokumentum: " + pSalesTrack.architectureDoc)}
+                onClick={() => toast.info(`${t("property_sales.architecture")}: ${pSalesTrack.architectureDoc}`)}
               >
                 <FileText className="mr-2 h-4 w-4" />
-                Architektúra
+                {t("property_sales.architecture")}
               </Button>
               <Button
                 className="bg-primary/20 text-primary hover:bg-primary/30 border border-primary/20"
-                onClick={() => toast.success(`A következő ready lépés: ${pSalesTrack.nextReadyStep}`)}
+                onClick={() => toast.success(`${t("property_sales.next_step")}: ${pSalesTrack.nextReadyStep}`)}
               >
                 <Rocket className="mr-2 h-4 w-4" />
-                Következő lépés
+                {t("property_sales.next_step")}
               </Button>
             </div>
           </div>
@@ -65,26 +68,26 @@ export function PropertySalesWidget() {
         <CardContent className="p-4 space-y-4">
           <div className="grid gap-4 md:grid-cols-4">
             <div className="rounded-xl border border-white/[0.04] bg-white/[0.03] p-4">
-              <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-500">Közös core</p>
-              <p className="mt-2 text-sm font-semibold text-white">Dokumentum → kutatás → stratégia → végrehajtás</p>
+              <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-500">{t("property_sales.core_workflow")}</p>
+              <p className="mt-2 text-sm font-semibold text-white">{t("property_sales.core_workflow_desc")}</p>
             </div>
             <div className="rounded-xl border border-white/[0.04] bg-white/[0.03] p-4">
-              <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-500">Delivery surfaces</p>
-              <p className="mt-2 text-sm font-semibold text-white">{pSalesTrack.surfaces.length} szállítási modell</p>
+              <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-500">{t("property_sales.delivery_surfaces")}</p>
+              <p className="mt-2 text-sm font-semibold text-white">{t("property_sales.delivery_surfaces_count", { count: pSalesTrack.surfaces.length })}</p>
             </div>
             <div className="rounded-xl border border-white/[0.04] bg-white/[0.03] p-4">
-              <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-500">Ügynökök</p>
-              <p className="mt-2 text-sm font-semibold text-white">{pSalesTrack.agents.length} fő szerep</p>
+              <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-500">{t("property_sales.agents")}</p>
+              <p className="mt-2 text-sm font-semibold text-white">{t("property_sales.agents_count", { count: pSalesTrack.agents.length })}</p>
             </div>
             <div className="rounded-xl border border-white/[0.04] bg-white/[0.03] p-4">
-              <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-500">Progress</p>
+              <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-500">{t("property_sales.progress")}</p>
               <p className="mt-2 text-sm font-semibold text-white">{pSalesTrack.progress}%</p>
             </div>
           </div>
 
           <div className="space-y-2">
             <div className="flex items-center justify-between text-xs uppercase tracking-[0.2em] text-zinc-500">
-              <span>Track státusz</span>
+              <span>{t("property_sales.track_status")}</span>
               <span>{pSalesTrack.currentFocus}</span>
             </div>
             <Progress value={pSalesTrack.progress} className="h-1 bg-white/[0.04]" />
@@ -95,28 +98,28 @@ export function PropertySalesWidget() {
       <Tabs defaultValue="workflow" className="w-full">
         <TabsList className="grid h-12 w-full grid-cols-8 rounded-xl bg-white/[0.03] p-1 backdrop-blur-md lg:w-[1520px]">
           <TabsTrigger value="workflow" className="text-[10px] font-bold uppercase tracking-wider data-[state=active]:bg-primary data-[state=active]:text-white">
-            Folyamat
+            {t("property_sales.tabs.workflow")}
           </TabsTrigger>
           <TabsTrigger value="intake" className="text-[10px] font-bold uppercase tracking-wider data-[state=active]:bg-primary data-[state=active]:text-white">
-            Intake
+            {t("property_sales.tabs.intake")}
           </TabsTrigger>
           <TabsTrigger value="research" className="text-[10px] font-bold uppercase tracking-wider data-[state=active]:bg-primary data-[state=active]:text-white">
-            Kutatás
+            {t("property_sales.tabs.research")}
           </TabsTrigger>
           <TabsTrigger value="strategy" className="text-[10px] font-bold uppercase tracking-wider data-[state=active]:bg-primary data-[state=active]:text-white">
-            Stratégia
+            {t("property_sales.tabs.strategy")}
           </TabsTrigger>
           <TabsTrigger value="execution" className="text-[10px] font-bold uppercase tracking-wider data-[state=active]:bg-primary data-[state=active]:text-white">
-            Végrehajtás
+            {t("property_sales.tabs.execution")}
           </TabsTrigger>
           <TabsTrigger value="agents" className="text-[10px] font-bold uppercase tracking-wider data-[state=active]:bg-primary data-[state=active]:text-white">
-            Ügynökök
+            {t("property_sales.tabs.agents")}
           </TabsTrigger>
           <TabsTrigger value="delivery" className="text-[10px] font-bold uppercase tracking-wider data-[state=active]:bg-primary data-[state=active]:text-white">
-            Szállítás
+            {t("property_sales.tabs.delivery")}
           </TabsTrigger>
           <TabsTrigger value="context" className="text-[10px] font-bold uppercase tracking-wider data-[state=active]:bg-primary data-[state=active]:text-white">
-            Kontextus
+            {t("property_sales.tabs.context")}
           </TabsTrigger>
         </TabsList>
 
@@ -125,7 +128,7 @@ export function PropertySalesWidget() {
             <CardHeader className="pb-3">
               <CardTitle className="flex items-center gap-2 text-sm text-white">
                 <Target className="h-4 w-4 text-primary" />
-                P-Sales ütemterv
+                {t("property_sales.workflow_title")}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
@@ -165,18 +168,18 @@ export function PropertySalesWidget() {
             <CardHeader className="pb-3">
               <CardTitle className="flex items-center gap-2 text-sm text-white">
                 <ClipboardList className="h-4 w-4 text-primary" />
-                Intake és felmérés
+                {t("property_sales.intake_title")}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <p className="text-sm text-zinc-400">
-                A belépési pont feladata, hogy a feltöltött dokumentumokból hiánylistát, kérdéslistát és intake státuszt állítson elő, mielőtt a kutató ügynök dolgozni kezd.
+                {t("property_sales.intake_desc")}
               </p>
               <div className="grid gap-4 md:grid-cols-3">
                 <div className="rounded-xl border border-white/[0.04] bg-black/20 p-4">
                   <div className="flex items-center gap-2">
                     <FileCheck2 className="h-4 w-4 text-primary" />
-                    <h3 className="text-sm font-bold text-white">Dokumentum-csomag</h3>
+                    <h3 className="text-sm font-bold text-white">{t("property_sales.doc_package")}</h3>
                   </div>
                   <ScrollArea className="mt-3 h-64 pr-3">
                     <div className="space-y-3">
@@ -196,7 +199,7 @@ export function PropertySalesWidget() {
                 <div className="rounded-xl border border-white/[0.04] bg-black/20 p-4">
                   <div className="flex items-center gap-2">
                     <HelpCircle className="h-4 w-4 text-primary" />
-                    <h3 className="text-sm font-bold text-white">Felmérő kérdések</h3>
+                    <h3 className="text-sm font-bold text-white">{t("property_sales.survey_questions")}</h3>
                   </div>
                   <ScrollArea className="mt-3 h-64 pr-3">
                     <ol className="space-y-3 text-sm text-zinc-300">
@@ -214,7 +217,7 @@ export function PropertySalesWidget() {
                 <div className="rounded-xl border border-white/[0.04] bg-black/20 p-4">
                   <div className="flex items-center gap-2">
                     <ClipboardList className="h-4 w-4 text-primary" />
-                    <h3 className="text-sm font-bold text-white">Várt outputok</h3>
+                    <h3 className="text-sm font-bold text-white">{t("property_sales.expected_outputs")}</h3>
                   </div>
                   <div className="mt-3 space-y-3">
                     {pSalesTrack.intake.outputs.map((output) => (
@@ -234,18 +237,18 @@ export function PropertySalesWidget() {
             <CardHeader className="pb-3">
               <CardTitle className="flex items-center gap-2 text-sm text-white">
                 <Search className="h-4 w-4 text-primary" />
-                Kutatási és értékelési modell
+                {t("property_sales.research_title")}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <p className="text-sm text-zinc-400">
-                A kutató és értékelő ügynök feladata a piaci összehasonlítás, a tranzakciós bizonyítékok összegyűjtése és az értéktartomány meghatározása.
+                {t("property_sales.research_desc")}
               </p>
               <div className="grid gap-4 md:grid-cols-3">
                 <div className="rounded-xl border border-white/[0.04] bg-black/20 p-4">
                   <div className="flex items-center gap-2">
                     <Globe2 className="h-4 w-4 text-primary" />
-                    <h3 className="text-sm font-bold text-white">Forrástípusok</h3>
+                    <h3 className="text-sm font-bold text-white">{t("property_sales.source_types")}</h3>
                   </div>
                   <ScrollArea className="mt-3 h-56 pr-3">
                     <div className="space-y-3">
@@ -260,7 +263,7 @@ export function PropertySalesWidget() {
                 <div className="rounded-xl border border-white/[0.04] bg-black/20 p-4">
                   <div className="flex items-center gap-2">
                     <Target className="h-4 w-4 text-primary" />
-                    <h3 className="text-sm font-bold text-white">Komparálási kritériumok</h3>
+                    <h3 className="text-sm font-bold text-white">{t("property_sales.comp_criteria")}</h3>
                   </div>
                   <ScrollArea className="mt-3 h-56 pr-3">
                     <ol className="space-y-3 text-sm text-zinc-300">
@@ -278,11 +281,11 @@ export function PropertySalesWidget() {
                 <div className="rounded-xl border border-white/[0.04] bg-black/20 p-4">
                   <div className="flex items-center gap-2">
                     <FileText className="h-4 w-4 text-primary" />
-                    <h3 className="text-sm font-bold text-white">Riport és értékesítési output</h3>
+                    <h3 className="text-sm font-bold text-white">{t("property_sales.report_output")}</h3>
                   </div>
                   <div className="mt-3 space-y-4">
                     <div>
-                      <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-500">Értéktartomány outputok</p>
+                      <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-500">{t("property_sales.valuation_outputs")}</p>
                       <div className="mt-2 space-y-2">
                         {pSalesTrack.research.valuationOutputs.map((output) => (
                           <div key={output} className="rounded-lg border border-white/[0.04] bg-white/[0.02] px-3 py-2 text-sm text-zinc-300">
@@ -292,7 +295,7 @@ export function PropertySalesWidget() {
                       </div>
                     </div>
                     <div>
-                      <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-500">Kockázati jelzések</p>
+                      <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-500">{t("property_sales.risk_flags")}</p>
                       <div className="mt-2 space-y-2">
                         {pSalesTrack.research.riskFlags.map((risk) => (
                           <div key={risk} className="rounded-lg border border-amber-500/20 bg-amber-500/10 px-3 py-2 text-sm text-amber-100">
@@ -313,18 +316,18 @@ export function PropertySalesWidget() {
             <CardHeader className="pb-3">
               <CardTitle className="flex items-center gap-2 text-sm text-white">
                 <Rocket className="h-4 w-4 text-primary" />
-                Stratégia és approval
+                {t("property_sales.strategy_title")}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <p className="text-sm text-zinc-400">
-                A stratégiai réteg a kutatási eredményeket csatorna-mixre, célcsoportra és jóváhagyási kapura fordítja, mielőtt bármi külső lépés indulna.
+                {t("property_sales.strategy_desc")}
               </p>
               <div className="grid gap-4 md:grid-cols-3">
                 <div className="rounded-xl border border-white/[0.04] bg-black/20 p-4">
                   <div className="flex items-center gap-2">
                     <TrendingUp className="h-4 w-4 text-primary" />
-                    <h3 className="text-sm font-bold text-white">Csatorna-ajánlatok</h3>
+                    <h3 className="text-sm font-bold text-white">{t("property_sales.channel_options")}</h3>
                   </div>
                   <ScrollArea className="mt-3 h-56 pr-3">
                     <div className="space-y-3">
@@ -339,7 +342,7 @@ export function PropertySalesWidget() {
                 <div className="rounded-xl border border-white/[0.04] bg-black/20 p-4">
                   <div className="flex items-center gap-2">
                     <Users className="h-4 w-4 text-primary" />
-                    <h3 className="text-sm font-bold text-white">Célcsoport és döntéshozók</h3>
+                    <h3 className="text-sm font-bold text-white">{t("property_sales.target_segments")}</h3>
                   </div>
                   <ScrollArea className="mt-3 h-56 pr-3">
                     <ol className="space-y-3 text-sm text-zinc-300">
@@ -357,11 +360,11 @@ export function PropertySalesWidget() {
                 <div className="rounded-xl border border-white/[0.04] bg-black/20 p-4">
                   <div className="flex items-center gap-2">
                     <ShieldCheck className="h-4 w-4 text-primary" />
-                    <h3 className="text-sm font-bold text-white">Approval és végrehajtás</h3>
+                    <h3 className="text-sm font-bold text-white">{t("property_sales.approval_execution")}</h3>
                   </div>
                   <div className="mt-3 space-y-4">
                     <div>
-                      <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-500">Jóváhagyási lépések</p>
+                      <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-500">{t("property_sales.approval_steps")}</p>
                       <div className="mt-2 space-y-2">
                         {pSalesTrack.strategy.approvalSteps.map((step) => (
                           <div key={step} className="rounded-lg border border-white/[0.04] bg-white/[0.02] px-3 py-2 text-sm text-zinc-300">
@@ -371,7 +374,7 @@ export function PropertySalesWidget() {
                       </div>
                     </div>
                     <div>
-                      <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-500">Kimeneti fókuszok</p>
+                      <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-500">{t("property_sales.execution_paths")}</p>
                       <div className="mt-2 space-y-2">
                         {pSalesTrack.strategy.executionPaths.map((path) => (
                           <div key={path} className="rounded-lg border border-white/[0.04] bg-white/[0.02] px-3 py-2 text-sm text-zinc-300">
@@ -381,7 +384,7 @@ export function PropertySalesWidget() {
                       </div>
                     </div>
                     <div>
-                      <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-500">Riport szekciók</p>
+                      <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-500">{t("property_sales.report_sections")}</p>
                       <div className="mt-2 flex flex-wrap gap-2">
                         {pSalesTrack.strategy.reportSections.map((section) => (
                           <Badge key={section} variant="outline" className="border-primary/20 bg-primary/10 text-primary">
@@ -402,18 +405,18 @@ export function PropertySalesWidget() {
             <CardHeader className="pb-3">
               <CardTitle className="flex items-center gap-2 text-sm text-white">
                 <ClipboardList className="h-4 w-4 text-primary" />
-                Végrehajtás és audit
+                {t("property_sales.execution_title")}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <p className="text-sm text-zinc-400">
-                Az execution réteg a jóváhagyott terv tényleges futtatását, a csatornánkénti státuszokat, a visszajelzési pontokat és az audit naplót fogja össze.
+                {t("property_sales.execution_desc")}
               </p>
               <div className="grid gap-4 md:grid-cols-3">
                 <div className="rounded-xl border border-white/[0.04] bg-black/20 p-4">
                   <div className="flex items-center gap-2">
                     <Rocket className="h-4 w-4 text-primary" />
-                    <h3 className="text-sm font-bold text-white">Végrehajtási módok</h3>
+                    <h3 className="text-sm font-bold text-white">{t("property_sales.execution_modes")}</h3>
                   </div>
                   <ScrollArea className="mt-3 h-56 pr-3">
                     <div className="space-y-3">
@@ -428,12 +431,12 @@ export function PropertySalesWidget() {
                 <div className="rounded-xl border border-white/[0.04] bg-black/20 p-4">
                   <div className="flex items-center gap-2">
                     <CheckCircle2 className="h-4 w-4 text-primary" />
-                    <h3 className="text-sm font-bold text-white">Státusz és feedback</h3>
+                    <h3 className="text-sm font-bold text-white">{t("property_sales.status_feedback")}</h3>
                   </div>
                   <ScrollArea className="mt-3 h-56 pr-3">
                     <div className="space-y-4">
                       <div>
-                        <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-500">Mérföldkövek</p>
+                        <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-500">{t("property_sales.milestones")}</p>
                         <div className="mt-2 space-y-2">
                           {pSalesTrack.execution.statusMilestones.map((milestone) => (
                             <div key={milestone} className="rounded-lg border border-white/[0.04] bg-white/[0.02] px-3 py-2 text-sm text-zinc-300">
@@ -443,7 +446,7 @@ export function PropertySalesWidget() {
                         </div>
                       </div>
                       <div>
-                        <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-500">Visszajelzési pontok</p>
+                        <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-500">{t("property_sales.feedback_loops")}</p>
                         <div className="mt-2 space-y-2">
                           {pSalesTrack.execution.feedbackLoops.map((loop) => (
                             <div key={loop} className="rounded-lg border border-white/[0.04] bg-white/[0.02] px-3 py-2 text-sm text-zinc-300">
@@ -458,11 +461,11 @@ export function PropertySalesWidget() {
                 <div className="rounded-xl border border-white/[0.04] bg-black/20 p-4">
                   <div className="flex items-center gap-2">
                     <ShieldCheck className="h-4 w-4 text-primary" />
-                    <h3 className="text-sm font-bold text-white">Audit és riport</h3>
+                    <h3 className="text-sm font-bold text-white">{t("property_sales.audit_report")}</h3>
                   </div>
                   <div className="mt-3 space-y-4">
                     <div>
-                      <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-500">Audit napló</p>
+                      <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-500">{t("property_sales.audit_trail")}</p>
                       <div className="mt-2 space-y-2">
                         {pSalesTrack.execution.auditTrail.map((entry) => (
                           <div key={entry} className="rounded-lg border border-white/[0.04] bg-white/[0.02] px-3 py-2 text-sm text-zinc-300">
@@ -472,7 +475,7 @@ export function PropertySalesWidget() {
                       </div>
                     </div>
                     <div>
-                      <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-500">Riport szekciók</p>
+                      <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-500">{t("property_sales.report_sections")}</p>
                       <div className="mt-2 flex flex-wrap gap-2">
                         {pSalesTrack.execution.reportSections.map((section) => (
                           <Badge key={section} variant="outline" className="border-primary/20 bg-primary/10 text-primary">
@@ -482,7 +485,7 @@ export function PropertySalesWidget() {
                       </div>
                     </div>
                     <div>
-                      <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-500">Kérdések a zárás előtt</p>
+                      <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-500">{t("property_sales.closing_questions")}</p>
                       <div className="mt-2 space-y-2">
                         {pSalesTrack.execution.questions.map((question, index) => (
                           <div key={question} className="rounded-lg border border-white/[0.04] bg-white/[0.02] px-3 py-2 text-sm text-zinc-300">
@@ -506,7 +509,7 @@ export function PropertySalesWidget() {
             <CardHeader className="pb-3">
               <CardTitle className="flex items-center gap-2 text-sm text-white">
                 <Users className="h-4 w-4 text-primary" />
-                Ügynöki szerepkörök
+                {t("property_sales.agent_roles")}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
@@ -528,31 +531,31 @@ export function PropertySalesWidget() {
               <CardHeader className="pb-3">
                 <CardTitle className="flex items-center gap-2 text-sm text-white">
                   <Building2 className="h-4 w-4 text-primary" />
-                  Enterprise
+                  {t("property_sales.delivery_enterprise")}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-2 text-sm text-zinc-400">
-                <p>Beépül a BAS enterprise dashboardba, külön panelként.</p>
-                <p>Intake, report és approval nézeteket ad belső felhasználóknak.</p>
+                <p>{t("property_sales.delivery_enterprise_desc1")}</p>
+                <p>{t("property_sales.delivery_enterprise_desc2")}</p>
               </CardContent>
             </Card>
             <Card className="border-white/[0.04] bg-white/[0.03] backdrop-blur-xl">
               <CardHeader className="pb-3">
                 <CardTitle className="flex items-center gap-2 text-sm text-white">
                   <Globe2 className="h-4 w-4 text-primary" />
-                  Standalone
+                  {t("property_sales.delivery_standalone")}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-2 text-sm text-zinc-400">
-                <p>Külön telepíthető shell, saját brandinggel és onboardinggal.</p>
-                <p>Ugyanazt a core workflow-t használja, mint az enterprise modul.</p>
+                <p>{t("property_sales.delivery_standalone_desc1")}</p>
+                <p>{t("property_sales.delivery_standalone_desc2")}</p>
               </CardContent>
             </Card>
             <Card className="border-white/[0.04] bg-white/[0.03] backdrop-blur-xl">
               <CardHeader className="pb-3">
                 <CardTitle className="flex items-center gap-2 text-sm text-white">
                   <ShieldCheck className="h-4 w-4 text-primary" />
-                  Cloudflare
+                  {t("property_sales.delivery_cloudflare")}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-3 text-sm text-zinc-400">
@@ -560,7 +563,7 @@ export function PropertySalesWidget() {
                 <ScrollArea className="h-64 pr-3">
                   <div className="space-y-4">
                     <div>
-                      <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-500">Storage és state</p>
+                      <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-500">{t("property_sales.storage_state")}</p>
                       <div className="mt-2 space-y-2">
                         {pSalesTrack.cloudflareDecision.storageOptions.map((option) => (
                           <div key={option} className="rounded-lg border border-white/[0.04] bg-white/[0.02] px-3 py-2">
@@ -570,7 +573,7 @@ export function PropertySalesWidget() {
                       </div>
                     </div>
                     <div>
-                      <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-500">Runtime és hosting</p>
+                      <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-500">{t("property_sales.runtime_hosting")}</p>
                       <div className="mt-2 space-y-2">
                         {pSalesTrack.cloudflareDecision.runtimeOptions.map((option) => (
                           <div key={option} className="rounded-lg border border-white/[0.04] bg-white/[0.02] px-3 py-2">
@@ -585,7 +588,7 @@ export function PropertySalesWidget() {
                       </div>
                     </div>
                     <div>
-                      <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-500">Döntési szempontok</p>
+                      <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-500">{t("property_sales.decision_criteria")}</p>
                       <div className="mt-2 flex flex-wrap gap-2">
                         {pSalesTrack.cloudflareDecision.decisionCriteria.map((criterion) => (
                           <Badge key={criterion} variant="outline" className="border-primary/20 bg-primary/10 text-primary">
@@ -595,7 +598,7 @@ export function PropertySalesWidget() {
                       </div>
                     </div>
                     <div>
-                      <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-500">Nyitott kérdések</p>
+                      <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-500">{t("property_sales.open_questions")}</p>
                       <div className="mt-2 space-y-2">
                         {pSalesTrack.cloudflareDecision.openQuestions.map((question, index) => (
                           <div key={question} className="rounded-lg border border-white/[0.04] bg-white/[0.02] px-3 py-2">
@@ -619,22 +622,22 @@ export function PropertySalesWidget() {
             <CardHeader className="pb-3">
               <CardTitle className="flex items-center gap-2 text-sm text-white">
                 <FileText className="h-4 w-4 text-primary" />
-                Track kontextus
+                {t("property_sales.context_title")}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4 text-sm text-zinc-400">
-              <p>A Phase 0 architektúra elkészült, a következő fókusz az intake és az enterprise dashboard integráció elmélyítése.</p>
+              <p>{t("property_sales.context_desc")}</p>
               <div className="rounded-xl border border-white/[0.04] bg-white/[0.02] p-4">
-                <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-500">Architektúra dokumentum</p>
+                <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-500">{t("property_sales.arch_doc")}</p>
                 <p className="mt-2 font-mono text-xs text-zinc-200">{pSalesTrack.architectureDoc}</p>
               </div>
               <div className="grid gap-3 md:grid-cols-2">
                 <div className="rounded-xl border border-white/[0.04] bg-white/[0.02] p-4">
-                  <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-500">Következő ready lépés</p>
+                  <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-500">{t("property_sales.next_step")}</p>
                   <p className="mt-2 text-zinc-200">{pSalesTrack.nextReadyStep}</p>
                 </div>
                 <div className="rounded-xl border border-white/[0.04] bg-white/[0.02] p-4">
-                  <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-500">Progress</p>
+                  <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-500">{t("property_sales.progress")}</p>
                   <p className="mt-2 text-zinc-200">{pSalesTrack.progress}% · {pSalesTrack.currentFocus}</p>
                 </div>
               </div>
@@ -647,11 +650,11 @@ export function PropertySalesWidget() {
         <CardHeader className="pb-3">
           <CardTitle className="flex items-center gap-2 text-sm text-white">
             <FileText className="h-4 w-4 text-primary" />
-            Kimeneti fókusz
+            {t("property_sales.output_focus_title")}
           </CardTitle>
         </CardHeader>
         <CardContent className="text-sm text-zinc-400">
-          A jelenlegi dashboard shell a Phase 1 elindítását szolgálja. Innen lehet továbbépíteni az intake, research, strategy és execution nézeteket.
+          {t("property_sales.output_focus_desc")}
         </CardContent>
       </Card>
     </div>

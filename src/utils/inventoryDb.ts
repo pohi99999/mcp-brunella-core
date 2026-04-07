@@ -6,6 +6,7 @@
  * WAL mód, foreign keys ON, singleton kapcsolat.
  */
 
+import Database from 'better-sqlite3';
 import { randomUUID } from 'crypto';
 import { logInfo, logError } from './logger.js';
 
@@ -106,8 +107,7 @@ export interface WacResult {
 
 // ─── Singleton DB ────────────────────────────────────────────────────────────
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-let _db: any = null;
+let _db: Database.Database | null = null;
 
 async function getDb() {
   if (_db) return _db;

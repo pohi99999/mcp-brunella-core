@@ -1,25 +1,14 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-04-05T18:00:00.462Z
+**Utolso frissites:** 2026-04-06T22:34:57.558Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 220 total | 10 active | 24 completed | 177 archived
+**Stats:** 211 total | 10 active | 19 completed | 176 archived
 
 ---
 
-## Tervezett Szalak (Proposed) (8)
-
-- [ ] **Brunella Identity + Project Maintainer** [HIGH]
-  - **ID:** `brunella_identity_project_maintainer_20260402`
-  - **Progress:** 0%
-  - Mappa: ./tracks/brunella_identity_project_maintainer_20260402/
-
-- [ ] **KKV CRM follow-up routing** [HIGH]
-  - **ID:** `kkv_crm_followup_routing_20260405`
-  - **Progress:** 0%
-  - **Assignee:** bas-automation-architect
-  - Mappa: ./tracks/kkv_crm_followup_routing_20260405/
+## Tervezett Szalak (Proposed) (6)
 
 - [ ] **KKV HR leave approvals** [HIGH]
   - **ID:** `kkv_hr_leave_approvals_20260405`
@@ -38,11 +27,6 @@
   - **Progress:** 5%
   - Mappa: ./tracks/logistics_vertical_20260222/
 
-- [ ] **OWL-inspirált Multi-Agent Conflict Resolution (AgentCoordinator)** [HIGH]
-  - **ID:** `owl_agent_coordinator_20260321`
-  - **Progress:** 0%
-  - Mappa: ./tracks/owl_agent_coordinator_20260321/
-
 - [ ] **Brunella Remote Layer — Fázis 8: Planet-Scale Supersystem** [CRITICAL]
   - **ID:** `remote_layer_phase8_planetary_supersystem_20260322`
   - **Progress:** 0%
@@ -52,6 +36,11 @@
   - **ID:** `remote_layer_phase9_emergent_superintelligence_20260322`
   - **Progress:** 0%
   - Mappa: ./tracks/remote_layer_phase9_emergent_superintelligence_20260322/
+
+- [ ] **Type Safety Follow-up — Browser and Wrangler helpers** [MEDIUM]
+  - **ID:** `type_safety_followup_browser_wrangler_20260406`
+  - **Progress:** 0%
+  - Mappa: ./tracks/type_safety_followup_browser_wrangler_20260406/
 
 ---
 
@@ -77,8 +66,8 @@
 
 - [ ] **Modular State Refactor — Globális változók Dependency Injection alapú refaktora** [MEDIUM]
   - **ID:** `modular_state_refactor_20260404`
-  - **Progress:** 0%
-  - **Updated:** 2026-04-04
+  - **Progress:** 30%
+  - **Updated:** 2026-04-06
   - Mappa: ./tracks/modular_state_refactor_20260404/
 
 - [ ] **P-Search n8n Pipeline - palyazat- es hitelkereso workflow-k** [HIGH]
@@ -123,11 +112,11 @@
 
 ---
 
-## Befejezett (Completed - Not Archived) (24)
+## Befejezett (Completed - Not Archived) (19)
 
-- [x] **apify_deep_scraping_agent_20260223**
-  - **ID:** `apify_deep_scraping_agent_20260223`
-  - Mappa: ./tracks/apify_deep_scraping_agent_20260223/
+- [x] **Agent Runtime Hardening — ReAct, Working Memory, Tool Errors, Guardrails**
+  - **ID:** `agent_runtime_hardening_20260406`
+  - Mappa: ./tracks/agent_runtime_hardening_20260406/
 
 - [x] **AutoGen GitHub Models pilot a Python MCP alrendszerben**
   - **ID:** `autogen_github_models_pilot_20260401`
@@ -137,21 +126,17 @@
   - **ID:** `brunella_federation_phase5_20260402`
   - Mappa: ./tracks/brunella_federation_phase5_20260402/
 
-- [x] **Brunella Reflection / Continual Learning Activation**
-  - **ID:** `brunella_reflection_continual_learning_20260402`
-  - Mappa: ./tracks/brunella_reflection_continual_learning_20260402/
+- [x] **Brunella Identity + Project Maintainer**
+  - **ID:** `brunella_identity_project_maintainer_20260402`
+  - Mappa: ./tracks/brunella_identity_project_maintainer_20260402/
 
-- [x] **Brunella Zero-Prompt → Ephemeral Agent Bridge**
-  - **ID:** `brunella_zero_prompt_ephemeral_bridge_20260402`
-  - Mappa: ./tracks/brunella_zero_prompt_ephemeral_bridge_20260402/
+- [x] **Copilot CLI Self-Improvement Loop — Gödel-Agent Integration**
+  - **ID:** `copilot_self_improvement_loop_20260406`
+  - Mappa: ./tracks/copilot_self_improvement_loop_20260406/
 
-- [x] **Cloudflare Workers Migration — 16 Agent Edge Orkesztrátor**
-  - **ID:** `cloudflare_workers_migration_20260226`
-  - Mappa: ./tracks/cloudflare_workers_migration_20260226/
-
-- [x] **jules_pr_integration_20260222**
-  - **ID:** `jules_pr_integration_20260222`
-  - Mappa: ./tracks/jules_pr_integration_20260222/
+- [x] **Dashboard conductor monitor láthatósági javítás**
+  - **ID:** `dashboard_conductor_monitor_visibility_20260406`
+  - Mappa: ./tracks/dashboard_conductor_monitor_visibility_20260406/
 
 - [x] **KKV CRM ingest alapok**
   - **ID:** `kkv_crm_ingest_foundation_20260405`
@@ -195,23 +180,6 @@
   - **ID:** `P-Sales20260327`
   - Mappa: ./tracks/P-Sales20260327/
 
-- [x] **Brunella Personal Assistant — Windows MVP Foundation**
-  - **ID:** `personal_assistant_windows_mvp_20260323`
-  - Mappa: ./tracks/personal_assistant_windows_mvp_20260323/
-
-- [x] **README Bootstrap & Health Fixek**
-  - **ID:** `readme_bootstrap_health_fixes_20260324`
-  - Mappa: ./tracks/readme_bootstrap_health_fixes_20260324/
-
-- [x] **RobotkezV2 Comet-szintű Upgrade — Önjavító Multi-Agent Browser**
-  - **ID:** `robotkez_comet_upgrade_20260222`
-  - Mappa: ./tracks/robotkez_comet_upgrade_20260222/
-
-- [x] **System-Wide Zero-Mock & ReAct Upgrade**
-  - **ID:** `system_wide_zero_mock_20260301`
-  - **Completed:** 2026-03-01
-  - Mappa: ./tracks/system_wide_zero_mock_20260301/
-
 - [x] **Push teszt cadence optimalizáció**
   - **ID:** `test_cadence_optimization_20260401`
   - Mappa: ./tracks/test_cadence_optimization_20260401/
@@ -226,22 +194,22 @@
 
 ---
 
-## Archivalt (Archived) (177)
+## Archivalt (Archived) (176)
 
 > Archived tracks are hidden by default. View in `conductor/archive/`
 
-- [x] **006_trojan-horse-campaign** (2026-03-22T22:47:34Z)
-- [x] **Agent Architect 2.0 Meta-Ügynök** (2026-02-13)
-- [x] **Agent diagnostics and routing modernization** (2026-03-23T08:15:00Z)
-- [x] **Agent Health Matrix** (N/A)
-- [x] **Agent Loader Modernization** (2026-03-23T08:00:00Z)
-- [x] **agent_memory_structured_20260323** (2026-03-23T12:00:00Z)
-- [x] **agent_orchestration_dag_20260323** (2026-03-23T12:00:00Z)
-- [x] **aider_integration_20260222** (N/A)
-- [x] **AI Recommendation System Integration** (2026-02-17T22:45:00Z)
 - [x] **apify_deep_scraping_agent_20260223** (N/A)
+- [x] **Brunella Reflection / Continual Learning Activation** (N/A)
+- [x] **Brunella Zero-Prompt → Ephemeral Agent Bridge** (N/A)
+- [x] **Cloudflare DNS Zone Reconciliation for Custom Domains** (N/A)
+- [x] **Cloudflare Workers Migration — 16 Agent Edge Orkesztrátor** (N/A)
+- [x] **Jules PR Integration** (N/A)
+- [x] **KKV CRM follow-up es routing** (2026-04-05)
+- [x] **OWL-inspirált Multi-Agent Conflict Resolution (AgentCoordinator)** (2026-03-28)
+- [x] **Brunella Personal Assistant — Windows MVP Foundation** (N/A)
+- [x] **README Bootstrap & Health Fixek** (N/A)
 
-... and 167 more archived tracks
+... and 166 more archived tracks
 
 ---
 

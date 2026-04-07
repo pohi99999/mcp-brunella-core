@@ -161,6 +161,58 @@ function formatValue(value: unknown): string {
   return String(value);
 }
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null;
+}
+
+function isUnknownArray(value: unknown): value is unknown[] {
+  return Array.isArray(value);
+}
+
+function toFiniteNumber(value: unknown): number | undefined {
+  if (typeof value === 'number' && Number.isFinite(value)) {
+    return value;
+  }
+
+  if (typeof value === 'string') {
+    const parsed = Number(value);
+    if (Number.isFinite(parsed)) {
+      return parsed;
+    }
+  }
+
+  return undefined;
+}
+
+function formatRobotkezStep(step: unknown, index: number): string {
+  const stepRecord = isRecord(step) ? step : undefined;
+  const status = typeof stepRecord?.status === 'string' ? stepRecord.status : '';
+  const description = typeof stepRecord?.description === 'string'
+    ? stepRecord.description
+    : formatValue(stepRecord?.description ?? step);
+  const icon = status === 'completed' ? '✅' : status === 'error' ? '❌' : '⏳';
+
+  return `${index + 1}. ${icon} ${description}\n`;
+}
+
+function isCompletedStep(step: unknown): boolean {
+  return isRecord(step) && step.status === 'completed';
+}
+
+function formatSourceLabel(source: unknown): string {
+  if (typeof source === 'string') {
+    return source;
+  }
+
+  if (isRecord(source)) {
+    const title = typeof source.title === 'string' ? source.title : '';
+    const url = typeof source.url === 'string' ? source.url : '';
+    return title || url || formatValue(source);
+  }
+
+  return formatValue(source);
+}
+
 /**
  * AgentResponse-t formáz magyar nyelvű szöveggé
  */
@@ -268,15 +320,14 @@ export const specialFormatters = {
       return formatError(result.message, options);
     }
 
-    const data = result.data as any;
+    const data = isRecord(result.data) ? result.data : undefined;
     let response = `${emoji}**Robotkéz V2 - Végrehajtva**\n\n`;
 
     // Plan steps
-    if (data?.plan && Array.isArray(data.plan)) {
+    if (isUnknownArray(data?.plan) && data.plan.length > 0) {
       response += `**Végrehajtott lépések:**\n`;
-      data.plan.forEach((step: any, idx: number) => {
-        const status = step.status === 'completed' ? '✅' : step.status === 'error' ? '❌' : '⏳';
-        response += `${idx + 1}. ${status} ${step.description}\n`;
+      data.plan.forEach((step, idx) => {
+        response += formatRobotkezStep(step, idx);
       });
       response += '\n';
     }
@@ -284,8 +335,8 @@ export const specialFormatters = {
     response += result.message;
 
     // Completed steps summary
-    if (data?.completedSteps && Array.isArray(data.completedSteps)) {
-      const successful = data.completedSteps.filter((s: any) => s.status === 'completed').length;
+    if (isUnknownArray(data?.completedSteps) && data.completedSteps.length > 0) {
+      const successful = data.completedSteps.filter(isCompletedStep).length;
       response += `\n\n**Összesítés:** ${successful}/${data.completedSteps.length} lépés sikeres`;
     }
 
@@ -303,17 +354,19 @@ export const specialFormatters = {
       return formatError(result.message, options);
     }
 
-    const data = result.data as any;
+    const data = isRecord(result.data) ? result.data : undefined;
     let response = `${emoji}**Developer Agent - Kód írva**\n\n`;
 
     response += result.message;
 
-    if (data?.filesModified) {
-      response += `\n\n**Módosított fájlok:** ${data.filesModified}`;
+    if (data && 'filesModified' in data) {
+      response += `\n\n**Módosított fájlok:** ${formatValue(data.filesModified)}`;
     }
 
-    if (data?.linesAdded || data?.linesRemoved) {
-      response += `\n**Változtatások:** +${data.linesAdded || 0} / -${data.linesRemoved || 0} sor`;
+    if (data && ('linesAdded' in data || 'linesRemoved' in data)) {
+      const linesAdded = toFiniteNumber(data.linesAdded) ?? 0;
+      const linesRemoved = toFiniteNumber(data.linesRemoved) ?? 0;
+      response += `\n**Változtatások:** +${linesAdded} / -${linesRemoved} sor`;
     }
 
     return response;
@@ -330,15 +383,15 @@ export const specialFormatters = {
       return formatError(result.message, options);
     }
 
-    const data = result.data as any;
+    const data = isRecord(result.data) ? result.data : undefined;
     let response = `${emoji}**Researcher Agent - Kutatás kész**\n\n`;
 
     response += result.message;
 
-    if (data?.sources && Array.isArray(data.sources)) {
+    if (isUnknownArray(data?.sources) && data.sources.length > 0) {
       response += `\n\n**Források (${data.sources.length}):**\n`;
-      data.sources.slice(0, 5).forEach((source: any, idx: number) => {
-        response += `${idx + 1}. ${source.title || source.url || source}\n`;
+      data.sources.slice(0, 5).forEach((source, idx) => {
+        response += `${idx + 1}. ${formatSourceLabel(source)}\n`;
       });
     }
 

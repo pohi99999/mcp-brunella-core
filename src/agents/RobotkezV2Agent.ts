@@ -23,6 +23,37 @@ import { generateExecutionPlan, ExecutionPlan, ExecutionStep } from '../utils/ll
 import { socketService } from '../server/SocketService.js';
 import { robotkezPro, UIAction } from '../services/RobotkezProService.js';
 
+type Coordinates = {
+  x: number;
+  y: number;
+};
+
+type BrowserResponseWithCoords = import('../utils/persistentBrowser.js').BrowserResponse & {
+  coords?: Coordinates;
+};
+
+type VisionResponse = BrowserResponseWithCoords;
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null;
+}
+
+function isCoordinates(value: unknown): value is Coordinates {
+  return isRecord(value) && typeof value.x === 'number' && typeof value.y === 'number';
+}
+
+function isVisionResponse(value: unknown): value is VisionResponse {
+  return isRecord(value) && typeof value.status === 'string';
+}
+
+function getCoords(value: unknown): Coordinates | undefined {
+  if (!isRecord(value)) {
+    return undefined;
+  }
+
+  return isCoordinates(value.coords) ? value.coords : undefined;
+}
+
 export interface RobotkezV2Options {
   mode?: 'auto' | 'playwright' | 'browser-use';
   headless?: boolean;
@@ -276,13 +307,13 @@ export class RobotkezV2Agent extends BaseAgent {
         try {
           // VISION ACTION: If action is explicitly vision-click
           if (step.action === 'vision-click') {
-            const visionRes = await robotkezPro.executeAction(step as unknown as UIAction);
+            const visionRes: unknown = await robotkezPro.executeAction(step as unknown as UIAction);
             completedSteps.push({ ...step, status: 'completed', result: visionRes });
             socketService.emit('robotkez:step', { 
                 index: i, 
                 status: 'completed', 
                 description: step.description,
-                coords: (visionRes as any).coords 
+                coords: getCoords(visionRes) 
             });
             continue;
           }
@@ -290,15 +321,15 @@ export class RobotkezV2Agent extends BaseAgent {
           // DYNAMIC SELECTOR: If selector is missing but description exists
           if (['click', 'type', 'wait', 'extract'].includes(step.action) && !step.selector && step.description) {
             logInfo(this.name, `Dynamic vision query for: ${step.description}`);
-            const queryResp = await browserEngine.sendCommand({
+            const queryCommand: BrowserCommand = {
                 action: 'query',
                 description: step.description
-            } as any);
+            };
+            const queryResp = await browserEngine.sendCommand(queryCommand);
             
             if (queryResp.status === 'success') {
-                const queryData = queryResp.data as Record<string, unknown>;
-                if (queryData.selector) {
-                    step.selector = String(queryData.selector);
+                if (isRecord(queryResp.data) && queryResp.data.selector) {
+                    step.selector = String(queryResp.data.selector);
                     logInfo(this.name, `Resolved selector: ${step.selector}`);
                 } else {
                     throw new Error(`Nem találtam meg a következő elemet: "${step.description}"`);
@@ -324,9 +355,9 @@ export class RobotkezV2Agent extends BaseAgent {
                 target: step.description,
                 description: `Self-healing: ${step.description}`
             };
-            const visionRes = await robotkezPro.executeAction(visionStep) as Record<string, unknown>;
-            if (visionRes['status'] === 'success') {
-                response = visionRes as any;
+            const visionRes: unknown = await robotkezPro.executeAction(visionStep);
+            if (isVisionResponse(visionRes) && visionRes.status === 'success') {
+                response = visionRes;
             }
           }
 
@@ -341,7 +372,7 @@ export class RobotkezV2Agent extends BaseAgent {
             index: i, 
             status: response.status === 'success' ? 'completed' : 'error', 
             screenshot: response.screenshot,
-            coords: (response as any).coords
+            coords: getCoords(response)
           });
 
           if (response.status === 'error') {

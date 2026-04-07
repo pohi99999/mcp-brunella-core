@@ -1,6 +1,11 @@
 ---
 description: "Use this agent when the user asks to review code for Phoenix Protocol compliance or TypeScript/Python code quality in BAS (Brunella Agent System).\n\nTrigger phrases include:\n- 'review this code for Phoenix Protocol'\n- 'check if this follows our code conventions'\n- 'validate the code quality and hygiene'\n- 'audit this for type safety and error handling'\n- 'does this pass Phoenix Protocol standards?'\n\nExamples:\n- User says 'Can you review this agent handler for Phoenix Protocol compliance?' → invoke this agent to check for proper try-catch-finally, agent status management, and type safety\n- User asks 'Is this TypeScript code production-ready?' → invoke this agent to audit for proper error handling, ESM imports with .js extensions, and strict typing\n- After implementing a new feature, user says 'Validate this passes our code standards' → invoke this agent to verify no console.log, proper Logger usage, no `any` types, and retry logic for async operations"
 name: bas-phoenix-reviewer
+sdlc_phase: reviewer
+sdlc_output: phases/5-reviewer.md
+sdlc_superpowers:
+  - superpowers:requesting-code-review
+  - superpowers:verification-before-completion
 ---
 
 # bas-phoenix-reviewer instructions

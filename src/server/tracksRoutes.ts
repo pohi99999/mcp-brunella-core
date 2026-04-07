@@ -140,6 +140,17 @@ type TrackTodoSummary = {
   totalCount: number;
 };
 
+type TrackMonitorEntry = {
+  id: string;
+  title: string;
+  status: string;
+  priority?: string;
+  progress: number;
+  assignee?: string;
+  description?: string;
+  updated?: string;
+};
+
 async function readTrackMeta(
   tracksDir: string,
   trackId: string,
@@ -296,6 +307,90 @@ export function createTracksRouter(opts?: {
       res.json({ success: true, count: active.length, tracks: active });
     } catch (error: unknown) {
       const err = ensureError(error);
+      res.status(500).json({ success: false, error: err.message });
+    }
+  });
+
+  /**
+   * GET /api/tracks/monitor
+   * Returns all tracks grouped by status (proposed / active / completed / archived).
+   * Reads meta.json for each track folder — does not require track.md.
+   */
+  router.get("/monitor", async (_req, res) => {
+    try {
+      const entries = await fs.readdir(tracksDir, { withFileTypes: true });
+      const proposed: TrackMonitorEntry[] = [];
+      const active: TrackMonitorEntry[] = [];
+      const completed: TrackMonitorEntry[] = [];
+      const archived: TrackMonitorEntry[] = [];
+
+      for (const e of entries) {
+        if (!e.isDirectory()) continue;
+        const trackId = e.name;
+        if (!isSafeTrackId(trackId)) continue;
+
+        const meta = await readTrackMeta(tracksDir, trackId);
+        if (!meta) continue;
+
+        const status = typeof meta.status === "string" ? meta.status : "unknown";
+        const title =
+          typeof meta.title === "string"
+            ? meta.title
+            : typeof meta.name === "string"
+              ? meta.name
+              : trackId;
+        const priority = typeof meta.priority === "string" ? meta.priority : undefined;
+        const progress = typeof meta.progress === "number" ? meta.progress : 0;
+        const assignee = typeof meta.assignee === "string" ? meta.assignee : undefined;
+        const description = typeof meta.description === "string" ? meta.description : undefined;
+        const updated = typeof meta.updated === "string" ? meta.updated : undefined;
+
+        const entry: TrackMonitorEntry = {
+          id: trackId,
+          title,
+          status,
+          priority,
+          progress,
+          assignee,
+          description,
+          updated,
+        };
+
+        if (status === "active" || status === "in_progress" || status === "testing") {
+          active.push(entry);
+        } else if (status === "proposed" || status === "planning") {
+          proposed.push(entry);
+        } else if (status === "completed" || status === "done") {
+          completed.push(entry);
+        } else if (status === "archived") {
+          archived.push(entry);
+        }
+      }
+
+      const priorityOrder: Record<string, number> = { P0: 0, P1: 1, P2: 2 };
+      const sortByPriority = (a: TrackMonitorEntry, b: TrackMonitorEntry) =>
+        (priorityOrder[a.priority ?? "P2"] ?? 2) -
+        (priorityOrder[b.priority ?? "P2"] ?? 2);
+      active.sort(sortByPriority);
+      proposed.sort(sortByPriority);
+
+      res.json({
+        success: true,
+        stats: {
+          total: proposed.length + active.length + completed.length + archived.length,
+          proposed: proposed.length,
+          active: active.length,
+          completed: completed.length,
+          archived: archived.length,
+        },
+        proposed,
+        active,
+        completed,
+        archived,
+      });
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      logError("TracksRoutes", `Monitor endpoint error: ${err.message}`);
       res.status(500).json({ success: false, error: err.message });
     }
   });
@@ -584,6 +679,70 @@ export function createTracksRouter(opts?: {
       res.json({ success: true, ...data });
     } catch (error: unknown) {
       const err = ensureError(error);
+      res.status(500).json({ success: false, error: err.message });
+    }
+  });
+
+  /**
+   * GET /api/tracks/:trackId/detail
+   * Returns meta.json + plan.md + spec.md content for a single track.
+   */
+  router.get("/:trackId/detail", async (req, res) => {
+    try {
+      const { trackId } = req.params;
+      if (!trackId || !isSafeTrackId(trackId)) {
+        res.status(400).json({ success: false, error: "Invalid trackId" });
+        return;
+      }
+
+      const meta = await readTrackMeta(tracksDir, trackId);
+      if (!meta) {
+        res.status(404).json({ success: false, error: "Track not found" });
+        return;
+      }
+
+      const readOptional = async (filename: string): Promise<string | null> => {
+        try {
+          const content = await fs.readFile(
+            path.join(tracksDir, trackId, filename),
+            "utf-8",
+          );
+          return content;
+        } catch {
+          return null;
+        }
+      };
+
+      const [planMd, specMd, trackMd] = await Promise.all([
+        readOptional("plan.md"),
+        readOptional("spec.md"),
+        readOptional("track.md"),
+      ]);
+
+      const title =
+        typeof meta.title === "string"
+          ? meta.title
+          : typeof meta.name === "string"
+            ? meta.name
+            : trackId;
+
+      res.json({
+        success: true,
+        id: trackId,
+        title,
+        status: meta.status ?? "unknown",
+        priority: meta.priority,
+        progress: meta.progress ?? 0,
+        assignee: meta.assignee,
+        description: meta.description,
+        updated: meta.updated,
+        planMd,
+        specMd,
+        trackMd,
+      });
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      logError("TracksRoutes", `Detail endpoint error: ${err.message}`);
       res.status(500).json({ success: false, error: err.message });
     }
   });

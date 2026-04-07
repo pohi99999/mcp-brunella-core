@@ -9,6 +9,78 @@ import fs from "fs/promises";
 import path from "path";
 import { ensureError } from "../utils/ensureError.js";
 
+type DeveloperHistoryEntry = {
+  role: 'user' | 'assistant' | 'system';
+  content: string;
+};
+
+type DeveloperAgentContext = Record<string, unknown> & {
+  task?: string;
+  mode?: 'interpreter' | string;
+  code?: string;
+  model?: string;
+  branchName?: string;
+  commitMessage?: string;
+  trackId?: string;
+  userId?: string;
+  history?: DeveloperHistoryEntry[];
+};
+
+type ReActToolCall = {
+  id: string;
+  function: {
+    name: string;
+    arguments: string;
+  };
+};
+
+type ReActMessage = {
+  role: 'system' | 'user' | 'assistant' | 'tool';
+  content: string;
+  tool_calls?: ReActToolCall[];
+  tool_call_id?: string;
+  name?: string;
+};
+
+type ToolArgs = Record<string, unknown>;
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null;
+}
+
+function getStringArg(args: Record<string, unknown>, key: string): string | undefined {
+  const value = args[key];
+  return typeof value === 'string' ? value : undefined;
+}
+
+function isHistoryEntry(value: unknown): value is DeveloperHistoryEntry {
+  if (!isRecord(value)) {
+    return false;
+  }
+
+  return (
+    (value.role === 'user' || value.role === 'assistant' || value.role === 'system') &&
+    typeof value.content === 'string'
+  );
+}
+
+function parseToolArgs(raw: string): ToolArgs {
+  const parsed: unknown = JSON.parse(raw);
+  return isRecord(parsed) ? parsed : {};
+}
+
+function isExecSyncError(error: unknown): error is Error & {
+  status?: number;
+  stdout?: string;
+  stderr?: string;
+} {
+  return isRecord(error) && (
+    'status' in error ||
+    'stdout' in error ||
+    'stderr' in error
+  );
+}
+
 const DEVELOPER_TOOLS = [
   {
     type: "function",
@@ -113,14 +185,14 @@ export class DeveloperAgent implements IAgent {
 
   private llmProvider = process.env.LLM_PROVIDER || "github"; // GPT-4o default
 
-  async execute(task: string, context?: any): Promise<AgentResponse> {
+  async execute(task: string, context?: DeveloperAgentContext): Promise<AgentResponse> {
     const taskDesc = task.length > 80 ? task.slice(0, 77) + "..." : task;
     setAgentStatus(this.name, "working", taskDesc);
     logInfo(this.name, `Processing: ${task}`);
 
     try {
       // ── SPEC GATE (RULE-SF1) ────────────────────────────────────
-      const trackId = context?.trackId as string | undefined;
+      const trackId = typeof context?.trackId === 'string' ? context.trackId : undefined;
       if (
         trackId &&
         requiresSpec(this.name) &&
@@ -166,7 +238,7 @@ export class DeveloperAgent implements IAgent {
     }
   }
 
-  private async runDeveloperReActLoop(task: string, context?: any): Promise<AgentResponse> {
+  private async runDeveloperReActLoop(task: string, context?: DeveloperAgentContext): Promise<AgentResponse> {
     logInfo(this.name, "Starting Developer ReAct Execution Loop");
 
     const systemPrompt = `Te vagy a Brunella Agent System "Developer" ügynöke (Senior Szoftvermérnök).
@@ -182,7 +254,7 @@ A feladatod a fejlesztési kérések (kódolás, tesztelés, hibajavítás) VÉG
 Kontextus a projektről: ESM modulokat használunk (imports with .js extensions), logger.ts a konzol logok helyett.
 `;
 
-    const messages: any[] = [
+    const messages: ReActMessage[] = [
       { role: 'system', content: systemPrompt },
       { role: 'user', content: task }
     ];
@@ -203,7 +275,7 @@ Kontextus a projektről: ESM modulokat használunk (imports with .js extensions)
           model: this.llmProvider === 'github' ? 'gpt-4.1' : undefined,
           tools: DEVELOPER_TOOLS,
           messages: messages,
-          userId: context?.userId as string | undefined,
+          userId: typeof context?.userId === 'string' ? context.userId : undefined,
       });
 
       if (!response.success) {
@@ -214,7 +286,7 @@ Kontextus a projektről: ESM modulokat használunk (imports with .js extensions)
       const replyContent = response.content || "";
       const toolCalls = response.toolCalls;
 
-      const assistantMessage: any = { role: 'assistant', content: replyContent };
+      const assistantMessage: ReActMessage = { role: 'assistant', content: replyContent };
       if (toolCalls && toolCalls.length > 0) {
           assistantMessage.tool_calls = toolCalls;
       }
@@ -229,50 +301,77 @@ Kontextus a projektről: ESM modulokat használunk (imports with .js extensions)
       if (toolCalls && toolCalls.length > 0) {
           for (const toolCall of toolCalls) {
               const name = toolCall.function.name;
-              const args = JSON.parse(toolCall.function.arguments);
+              const args = parseToolArgs(toolCall.function.arguments);
               let toolResult: string;
 
               logInfo(this.name, `Tool meghívva: ${name}`);
 
               try {
                   if (name === 'read_file') {
-                      const content = await fs.readFile(args.path, 'utf-8');
+                      const pathArg = getStringArg(args, 'path');
+                      if (!pathArg) {
+                        throw new Error('Hiányzó path paraméter.');
+                      }
+                      const content = await fs.readFile(pathArg, 'utf-8');
                       toolResult = content;
                   } else if (name === 'write_file') {
-                      await this.saveCode(args.path, args.content);
+                      const pathArg = getStringArg(args, 'path');
+                      const contentArg = getStringArg(args, 'content');
+                      if (!pathArg || contentArg === undefined) {
+                        throw new Error('Hiányzó path vagy content paraméter.');
+                      }
+                      await this.saveCode(pathArg, contentArg);
                       toolResult = "File written successfully.";
-                      socketService.broadcastChatter(this.name, `Fájl mentve: ${args.path}`, 'system');
+                      socketService.broadcastChatter(this.name, `Fájl mentve: ${pathArg}`, 'system');
                   } else if (name === 'replace_in_file') {
-                      let content = await fs.readFile(args.path, 'utf-8');
-                      if (content.includes(args.old_string)) {
-                          content = content.replace(args.old_string, args.new_string);
-                          await this.saveCode(args.path, content);
+                      const pathArg = getStringArg(args, 'path');
+                      const oldString = getStringArg(args, 'old_string');
+                      const newString = getStringArg(args, 'new_string');
+                      if (!pathArg || oldString === undefined || newString === undefined) {
+                        throw new Error('Hiányzó path, old_string vagy new_string paraméter.');
+                      }
+                      let content = await fs.readFile(pathArg, 'utf-8');
+                      if (content.includes(oldString)) {
+                          content = content.replace(oldString, newString);
+                          await this.saveCode(pathArg, content);
                           toolResult = "File modified successfully.";
-                          socketService.broadcastChatter(this.name, `Fájl módosítva: ${args.path}`, 'system');
+                          socketService.broadcastChatter(this.name, `Fájl módosítva: ${pathArg}`, 'system');
                       } else {
                           toolResult = "Error: old_string not found in file.";
                       }
                   } else if (name === 'run_shell_command') {
-                      if (args.command.includes('rm -rf /') || args.command.includes('mkfs')) {
+                      const command = getStringArg(args, 'command');
+                      if (!command) {
+                        throw new Error('Hiányzó command paraméter.');
+                      }
+                      if (command.includes('rm -rf /') || command.includes('mkfs')) {
                           toolResult = "Error: Command blocked for safety reasons.";
                       } else {
-                          socketService.broadcastChatter(this.name, `Parancs futtatása: ${args.command}`, 'system');
+                          socketService.broadcastChatter(this.name, `Parancs futtatása: ${command}`, 'system');
                           try {
-                              const out = execSync(args.command, { encoding: 'utf-8', stdio: 'pipe' });
+                              const out = execSync(command, { encoding: 'utf-8', stdio: 'pipe' });
                               toolResult = out || "Command succeeded with no output.";
-                          } catch (err: any) {
+                          } catch (error: unknown) {
+                              const err = isExecSyncError(error)
+                                ? error
+                                : { status: undefined, stdout: undefined, stderr: undefined };
                               toolResult = `Command failed. Exit code: ${err.status}. Output: ${err.stdout} ${err.stderr}`;
                           }
                       }
                   } else if (name === 'send_status_message') {
-                      socketService.broadcastChatter(this.name, args.message, 'assistant');
+                      const message = getStringArg(args, 'message');
+                      if (!message) {
+                        throw new Error('Hiányzó message paraméter.');
+                      }
+                      socketService.broadcastChatter(this.name, message, 'assistant');
                       toolResult = "Status sent.";
                   } else {
                       toolResult = `Ismeretlen eszköz: ${name}`;
                   }
-              } catch (toolErr: any) {
-                  logError(this.name, `Tool error (${name}): ${toolErr.message}`);
-                  toolResult = `Hiba az eszköz futtatása közben: ${toolErr.message}`;
+              } catch (error: unknown) {
+                   const toolErr = ensureError(error);
+                   logError(this.name, `Tool error (${name}): ${toolErr.message}`);
+                   toolResult = `Hiba az eszköz futtatása közben: ${toolErr.message}`;
               }
 
               messages.push({
@@ -295,7 +394,7 @@ Kontextus a projektről: ESM modulokat használunk (imports with .js extensions)
 
   // ==================== Task Type Detection ====================
 
-  private isPythonTask(task: string, context?: any): boolean {
+  private isPythonTask(task: string, context?: DeveloperAgentContext): boolean {
     return !!(
       context?.code ||
       task.includes("print(") ||
@@ -311,14 +410,15 @@ Kontextus a projektről: ESM modulokat használunk (imports with .js extensions)
 
   private async handleInterpreterTask(
     task: string,
-    context?: any,
+    context?: DeveloperAgentContext,
   ): Promise<AgentResponse> {
     logInfo(this.name, "🧠 AI-Interpreter mode");
 
     let historyText = "";
-    if (context?.history && Array.isArray(context.history)) {
-      historyText = "\nELŐZMÉNYEK:\n" + context.history.map((h: any) => `${h.role === 'user' ? 'Mester' : 'Brunella'}: ${h.content}`).join('\n') + "\n";
-    }
+      if (context?.history && Array.isArray(context.history)) {
+        const history = context.history.filter(isHistoryEntry);
+        historyText = "\nELŐZMÉNYEK:\n" + history.map((h) => `${h.role === 'user' ? 'Mester' : 'Brunella'}: ${h.content}`).join('\n') + "\n";
+      }
 
     const systemPrompt = `Te egy Python szakértő vagy, aki egy folyamatos (perzisztens) interpretert irányít.
 - A Mester magyar nyelvű utasításait fordítsd valid, futtatható Python kódra.
@@ -359,7 +459,7 @@ Kontextus a projektről: ESM modulokat használunk (imports with .js extensions)
 
   private async handlePythonExecution(
     task: string,
-    context?: any,
+    context?: DeveloperAgentContext,
   ): Promise<AgentResponse> {
     logInfo(this.name, "🐍 Python execution mode");
 
@@ -383,7 +483,7 @@ Kontextus a projektről: ESM modulokat használunk (imports with .js extensions)
 
   private async handleGitOperation(
     task: string,
-    context?: any,
+    context?: DeveloperAgentContext,
   ): Promise<AgentResponse> {
     logInfo(this.name, "📦 Git operation mode");
 

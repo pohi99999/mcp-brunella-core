@@ -28,6 +28,7 @@ import { MarketWatcherConfig } from "@/components/dashboard/MarketWatcherConfig"
 import { InvoiceSyncWidget } from "@/components/dashboard/InvoiceSyncWidget";
 import { LeadMiningWidget } from "@/components/dashboard/LeadMiningWidget";
 import { TrackGenerator } from "@/components/dashboard/TrackGenerator";
+import { ConductorTracksMonitor } from "@/components/dashboard/ConductorTracksMonitor";
 import { TaskDecomposerPanel } from "@/components/dashboard/TaskDecomposerPanel";
 import { SuggestedTasksWidget } from "@/components/dashboard/SuggestedTasksWidget";
 import { CEANLayout } from "@/components/cean/CEANLayout";
@@ -71,6 +72,8 @@ import { IntelligenceMonitorPanel } from "@/components/dashboard/IntelligenceMon
 import { UserPreferencesPanel } from "@/components/dashboard/UserPreferencesPanel";
 import LLMObservabilityPanel from "@/components/dashboard/LLMObservabilityPanel";
 import { CopilotCommanderPanel } from "@/components/dashboard/CopilotCommanderPanel";
+import { CopilotOrchestratorPanel } from "@/components/dashboard/CopilotOrchestratorPanel";
+import { KernelPipelinePanel } from "@/components/dashboard/KernelPipelinePanel";
 import { RemoteConsolePanel } from "@/components/dashboard/RemoteConsolePanel";
 import { ZeroPromptNotificationPanel } from "@/components/dashboard/ZeroPromptNotificationPanel";
 import { EphemeralAgentsPanel } from "@/components/dashboard/EphemeralAgentsPanel";
@@ -174,7 +177,8 @@ export function initializeNavigation ()
     { id: "management", label: "Agent Roster", icon: Sparkles, component: <AgentManagementPanel /> },
     { id: "agent-diagnostics", label: "Agent Diagnostics", icon: Gauge, component: <AgentDiagnosticsPanel /> },
     { id: "decomposer", label: "Decompose", icon: Layers, component: <TaskDecomposerPanel /> },
-    { id: "tracks", label: "Tracks", icon: History, component: <TrackGenerator /> },
+    { id: "tracks", label: "Track generátor", icon: History, component: <TrackGenerator /> },
+    { id: "conductor-monitor", label: "Trackek állapota", icon: ClipboardList, component: <ConductorTracksMonitor /> },
     { id: "incubator", label: "Incubator", icon: FlaskConical, component: <IncubatorPanel /> },
     { id: "knowledge", label: "Neural Knowledge", icon: Brain, component: <KnowledgeBasePanel /> },
     { id: "memory", label: "Agent Memory", icon: Database, component: <MemoryPanel /> },
@@ -188,7 +192,7 @@ export function initializeNavigation ()
       label: "Enterprise Analytics",
       icon: BarChart3,
       component: (
-        <Suspense fallback={<div className="p-4 text-sm text-zinc-400">Enterprise Analytics betöltése...</div>}>
+        <Suspense fallback={ <div className="p-4 text-sm text-zinc-400">Enterprise Analytics betöltése...</div> }>
           <LazyEnterpriseAnalyticsWidget />
         </Suspense>
       ),
@@ -229,10 +233,10 @@ export function initializeNavigation ()
     { id: "settings", label: "System Config", icon: Settings, component: <SettingsPanel /> },
     { id: "guardrails", label: "Guardrails", icon: ShieldAlert, component: <GuardrailsPanel /> },
     { id: "telemetry", label: "Telemetria", icon: Gauge, component: <TelemetryPanel /> },
-    { id: "chrome-acp", label: "Chrome ACP", icon: Code2, component: <EmbeddedWorkflow title="Chrome ACP Browser" url="http://localhost:9315" icon={<Code2 size={20} />} allowSameOrigin={true} /> },
-    { id: "n8n", label: "n8n Automation", icon: Workflow, component: <EmbeddedWorkflow title="n8n Automation" url="http://localhost:5678" icon={<Workflow size={20} />} /> },
-    { id: "langflow", label: "Langflow Orchestration", icon: Sparkles, component: <EmbeddedWorkflow title="Langflow Orchestration" url="http://localhost:3000" icon={<Sparkles size={20} />} /> },
-    { id: "vscode", label: "VSCode Stream", icon: Code2, component: <EmbeddedWorkflow title="VSCode — Brunella Workspace" url="http://localhost:8080" icon={<Code2 size={20} />} allowSameOrigin={true} /> },
+    { id: "chrome-acp", label: "Chrome ACP", icon: Code2, component: <EmbeddedWorkflow title="Chrome ACP Browser" url="http://localhost:9315" icon={ <Code2 size={ 20 } /> } allowSameOrigin={ true } /> },
+    { id: "n8n", label: "n8n Automation", icon: Workflow, component: <EmbeddedWorkflow title="n8n Automation" url="http://localhost:5678" icon={ <Workflow size={ 20 } /> } /> },
+    { id: "langflow", label: "Langflow Orchestration", icon: Sparkles, component: <EmbeddedWorkflow title="Langflow Orchestration" url="http://localhost:3000" icon={ <Sparkles size={ 20 } /> } /> },
+    { id: "vscode", label: "VSCode Stream", icon: Code2, component: <EmbeddedWorkflow title="VSCode — Brunella Workspace" url="http://localhost:8080" icon={ <Code2 size={ 20 } /> } allowSameOrigin={ true } /> },
     { id: "swarm-panel", label: "Swarm Intelligence", icon: Users, component: <SwarmPanel /> },
     { id: "tool-discovery", label: "Tool Discovery", icon: Wrench, component: <ToolDiscoveryPanel /> },
     { id: "security-panel", label: "Security Monitor", icon: Shield, component: <SecurityPanel /> },
@@ -241,6 +245,8 @@ export function initializeNavigation ()
     { id: "user-preferences", label: "Felhasználói Memória", icon: Database, component: <UserPreferencesPanel /> },
     { id: "llm-observability", label: "LLM Observability", icon: BarChart3, component: <LLMObservabilityPanel /> },
     { id: "copilot-commander", label: "Copilot Commander", icon: Terminal, component: <CopilotCommanderPanel /> },
+    { id: "kernel-pipeline", label: "Kernel Pipeline", icon: Layers, component: <KernelPipelinePanel /> },
+    { id: "copilot-orchestrator", label: "Copilot Orchestrator", icon: Rocket, component: <CopilotOrchestratorPanel /> },
     { id: "remote-console", label: "Remote Layer", icon: Target, component: <RemoteConsolePanel /> },
     { id: "admin-check", label: "Admin Self-Check", icon: Shield, component: <AdminSelfCheckWidget /> },
     { id: "cognitive-memory", label: "Cognitive Memory", icon: Brain, component: <CognitiveMemoryPanel /> },
@@ -263,11 +269,11 @@ export function initializeNavigation ()
 
   // Register groups
   navigationRegistry.registerGroup( { title: "Core Systems", icon: Layers, items: ["dashboard", "neural-map", "system-arch", "studio", "vscode", "process-control", "service-control"] } );
-  navigationRegistry.registerGroup( { title: "AI & Agents", icon: Brain, items: ["chat", "paios", "copilot-commander", "assistant-blueprint", "phoenix", "zero-prompt-notifications", "ephemeral-agents", "learning-loop", "federation", "management", "agent-diagnostics", "agent-factory", "decomposer", "incubator", "knowledge", "memory", "cognitive-memory", "user-preferences", "developer", "edge", "robotkez", "browser-copilot", "jules"] } );
+  navigationRegistry.registerGroup( { title: "AI & Agents", icon: Brain, items: ["chat", "paios", "copilot-orchestrator", "copilot-commander", "kernel-pipeline", "assistant-blueprint", "phoenix", "zero-prompt-notifications", "ephemeral-agents", "learning-loop", "federation", "management", "agent-diagnostics", "agent-factory", "decomposer", "incubator", "knowledge", "memory", "cognitive-memory", "user-preferences", "developer", "edge", "robotkez", "browser-copilot", "jules"] } );
   navigationRegistry.registerGroup( { title: "Enterprise", icon: Briefcase, items: ["enterprise-suite", "digital-hr", "grant-hunter", "law-detective", "property-visionary", "property-sales", "psales-intake", "psales-research", "psales-strategy", "enterprise-analytics", "intelligence-monitor"] } );
   navigationRegistry.registerGroup( { title: "Értékesítési Központ", icon: DollarSign, items: ["trojan-horse", "lead-monitor", "demo-factory", "showcase", "campaign-studio", "leads-master", "innovation-bridge", "invoice-sync", "bookkeeping", "finance-reconciliation", "kp-penztar", "lead-mining", "marketwatcher", "inventory"] } );
   navigationRegistry.registerGroup( { title: "Orchestration", icon: Rocket, items: ["cean", "cloudflare", "fleet_manager", "autonomy", "tasks", "workflow-engine", "swarm-panel", "tool-discovery", "tools-manager", "crawl4ai", "harvest-pipeline"] } );
-  navigationRegistry.registerGroup( { title: "Project Mgmt", icon: FileText, items: ["tracks", "suggested-tasks", "tests", "spec-manager"] } );
+  navigationRegistry.registerGroup( { title: "Project Mgmt", icon: FileText, items: ["conductor-monitor", "tracks", "suggested-tasks", "spec-manager", "tests"] } );
   navigationRegistry.registerGroup( { title: "System", icon: Settings, items: ["python-workers", "files", "guardrails", "telemetry", "llm-observability", "security-panel", "chrome-acp", "settings", "n8n", "langflow", "remote-console", "admin-check", "trace-viewer", "log-viewer", "audit-log", "model-router", "scheduled-tasks", "vector-stats"] } );
 
   logInfo( "NavigationRegistry", "Navigation Registry Initialized." );

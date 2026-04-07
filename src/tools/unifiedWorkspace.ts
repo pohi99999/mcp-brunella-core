@@ -8,7 +8,8 @@
  * @version 1.0.0
  */
 
-import { google, Auth } from 'googleapis';
+import { google } from 'googleapis';
+import type { Auth } from 'googleapis';
 import { logInfo, logError } from '../utils/logger.js';
 import { getGoogleAuth } from '../utils/googleAuth.js';
 import * as fs from 'fs/promises';
@@ -52,20 +53,205 @@ export interface CalendarEvent {
   attendees?: { email: string }[];
 }
 
+type SheetCellValue = string | number | boolean | null;
+type SheetRow = SheetCellValue[];
+type SheetRows = SheetRow[];
+
+interface GoogleAuthClient {
+  setCredentials(credentials: unknown): void;
+}
+
+function isGoogleAuthClient(value: unknown): value is GoogleAuthClient {
+  return typeof value === 'object' && value !== null && typeof (value as GoogleAuthClient).setCredentials === 'function';
+}
+
+interface GmailDraftCreateResponse {
+  data: { id?: string | null };
+}
+
+interface GmailMessageSummary {
+  id?: string | null;
+  threadId?: string | null;
+}
+
+interface GmailMessageListResponse {
+  data: { messages?: GmailMessageSummary[] | null };
+}
+
+interface GmailMessageAttachment {
+  data: { data: string };
+}
+
+interface GmailMessageAttachmentResponse {
+  data: { data: string };
+}
+
+interface GmailMessagePart {
+  filename?: string | null;
+  body?: { attachmentId?: string | null } | null;
+}
+
+interface GmailMessageData {
+  payload?: { parts?: GmailMessagePart[] | null } | null;
+}
+
+interface GmailMessageGetResponse {
+  data: GmailMessageData;
+}
+
+interface GmailUsersDraftsResource {
+  create(request: {
+    userId: string;
+    requestBody: {
+      message: { raw: string };
+    };
+  }): Promise<GmailDraftCreateResponse>;
+}
+
+interface GmailUsersMessagesResource {
+  list(request: {
+    userId: string;
+    q: string;
+    maxResults: number;
+  }): Promise<GmailMessageListResponse>;
+  get(request: {
+    userId: string;
+    id: string;
+  }): Promise<GmailMessageGetResponse>;
+  modify(request: {
+    userId: string;
+    id: string;
+    requestBody: {
+      addLabelIds?: string[];
+      removeLabelIds?: string[];
+    };
+  }): Promise<{ data: unknown }>;
+  attachments: {
+    get(request: {
+      userId: string;
+      messageId: string;
+      id: string;
+    }): Promise<GmailMessageAttachmentResponse>;
+  };
+}
+
+interface GmailUsersResource {
+  drafts: GmailUsersDraftsResource;
+  messages: GmailUsersMessagesResource;
+  getProfile(request: { userId: string }): Promise<{ data: { emailAddress?: string | null } }>;
+}
+
+interface SheetsReadResponse {
+  data: { values?: SheetRows | null };
+}
+
+interface SheetsServiceClient {
+  spreadsheets: {
+    create(request: {
+      resource: {
+        properties: { title: string };
+      };
+    }): Promise<{ data: { spreadsheetId?: string | null; spreadsheetUrl?: string | null } }>;
+    values: {
+      get(request: {
+        spreadsheetId: string;
+        range: string;
+      }): Promise<SheetsReadResponse>;
+      append(request: {
+        spreadsheetId: string;
+        range: string;
+        valueInputOption: 'USER_ENTERED';
+        resource: {
+          values: unknown[][];
+        };
+      }): Promise<{ data: SheetMutationResult }>;
+      update(request: {
+        spreadsheetId: string;
+        range: string;
+        valueInputOption: 'USER_ENTERED';
+        resource: {
+          values: unknown[][];
+        };
+      }): Promise<{ data: SheetMutationResult }>;
+    };
+  };
+}
+
+interface DriveFileRequestBody {
+  name: string;
+  mimeType: string;
+  parents?: string[];
+}
+
+interface DriveFileCreateResponse {
+  data: { id?: string | null; webViewLink?: string | null };
+}
+
+interface DriveFileListItem {
+  id?: string | null;
+  name?: string | null;
+  mimeType?: string | null;
+  createdTime?: string | null;
+  modifiedTime?: string | null;
+}
+
+interface DriveFileListResponse {
+  data: { files?: DriveFileListItem[] | null };
+}
+
+interface DriveServiceClient {
+  files: {
+    create(request: {
+      requestBody: DriveFileRequestBody;
+      media?: {
+        mimeType: string;
+        body: string | Buffer | NodeJS.ReadableStream;
+      };
+      fields?: string;
+    }): Promise<DriveFileCreateResponse>;
+    list(request: {
+      q?: string;
+      fields?: string;
+      pageSize?: number;
+    }): Promise<DriveFileListResponse>;
+  };
+}
+
+interface CalendarEventInsertResponse {
+  data: { id?: string | null; htmlLink?: string | null };
+}
+
+interface CalendarServiceClient {
+  events: {
+    insert(request: {
+      calendarId: string;
+      requestBody: CalendarEvent;
+    }): Promise<CalendarEventInsertResponse>;
+  };
+}
+
+type SheetReadResult = SheetRows;
+interface SheetMutationResult {
+  [key: string]: unknown;
+  updatedRows?: number | null;
+  updates?: { updatedRows?: number | null; [key: string]: unknown };
+}
+type SheetOperationResult = SheetReadResult | SheetMutationResult;
+
 // ============================================================================
 // Unified Workspace Client
 // ============================================================================
 
 export class UnifiedWorkspaceClient {
   private auth: Auth.OAuth2Client | undefined;
-   
-  private gmail: any;
-   
-  private sheets: any;
-   
-  private drive: any;
-   
-  private calendar: any;
+
+  private gmail: ReturnType<typeof google.gmail> | undefined;
+
+  private sheets: ReturnType<typeof google.sheets> | undefined;
+
+  private drive: ReturnType<typeof google.drive> | undefined;
+
+  private calendar: ReturnType<typeof google.calendar> | undefined;
 
   constructor(private config: WorkspaceConfig) {}
 
@@ -77,7 +263,13 @@ export class UnifiedWorkspaceClient {
       logInfo('UnifiedWorkspace', 'Initializing Google Workspace authentication via utility...');
 
       // Use shared auth utility
-      this.auth = await getGoogleAuth() as Auth.OAuth2Client;
+      const auth = await getGoogleAuth();
+
+      if (!isGoogleAuthClient(auth)) {
+        throw new Error('Google auth utility returned an invalid OAuth2 client');
+      }
+
+      this.auth = auth as Auth.OAuth2Client;
 
       // Initialize service clients
       this.gmail = google.gmail({ version: 'v1', auth: this.auth });
@@ -93,6 +285,54 @@ export class UnifiedWorkspaceClient {
     }
   }
 
+  private async getGmailClient(): Promise<ReturnType<typeof google.gmail>> {
+    if (!this.gmail) {
+      await this.initialize();
+    }
+
+    if (!this.gmail) {
+      throw new Error('Gmail client is not initialized');
+    }
+
+    return this.gmail;
+  }
+
+  private async getSheetsClient(): Promise<ReturnType<typeof google.sheets>> {
+    if (!this.sheets) {
+      await this.initialize();
+    }
+
+    if (!this.sheets) {
+      throw new Error('Sheets client is not initialized');
+    }
+
+    return this.sheets;
+  }
+
+  private async getDriveClient(): Promise<ReturnType<typeof google.drive>> {
+    if (!this.drive) {
+      await this.initialize();
+    }
+
+    if (!this.drive) {
+      throw new Error('Drive client is not initialized');
+    }
+
+    return this.drive;
+  }
+
+  private async getCalendarClient(): Promise<ReturnType<typeof google.calendar>> {
+    if (!this.calendar) {
+      await this.initialize();
+    }
+
+    if (!this.calendar) {
+      throw new Error('Calendar client is not initialized');
+    }
+
+    return this.calendar;
+  }
+
   // ========================================================================
   // Gmail Operations
   // ========================================================================
@@ -101,15 +341,12 @@ export class UnifiedWorkspaceClient {
    * Create email draft (requires human approval before sending)
    */
   async createEmailDraft(draft: EmailDraft): Promise<{ draftId: string; url: string }> {
-    if (!this.gmail) {
-      await this.initialize();
-    }
-
     try {
+      const gmail = await this.getGmailClient();
       logInfo('UnifiedWorkspace', `Creating email draft to: ${draft.to}`);
 
       const message = this.createEmailMessage(draft);
-      const response = await this.gmail.users.drafts.create({
+      const response = await gmail.users.drafts.create({
         userId: 'me',
         requestBody: {
           message: {
@@ -118,7 +355,7 @@ export class UnifiedWorkspaceClient {
         },
       });
 
-      const draftId = response.data.id;
+      const draftId = response.data.id!;
       const url = `https://mail.google.com/mail/u/0/#drafts/${draftId}`;
 
       logInfo('UnifiedWorkspace', `✅ Draft created: ${draftId}`);
@@ -134,14 +371,11 @@ export class UnifiedWorkspaceClient {
    * Search emails by query
    */
   async searchEmails(query: string, maxResults: number = 10): Promise<unknown[]> {
-    if (!this.gmail) {
-      await this.initialize();
-    }
-
     try {
+      const gmail = await this.getGmailClient();
       logInfo('UnifiedWorkspace', `Searching emails: "${query}"`);
 
-      const response = await this.gmail.users.messages.list({
+      const response = await gmail.users.messages.list({
         userId: 'me',
         q: query,
         maxResults,
@@ -159,12 +393,9 @@ export class UnifiedWorkspaceClient {
    * Modify email labels
    */
   async modifyEmail(messageId: string, options: { addLabelIds?: string[], removeLabelIds?: string[] }): Promise<void> {
-    if (!this.gmail) {
-      await this.initialize();
-    }
-
     try {
-      await this.gmail.users.messages.modify({
+      const gmail = await this.getGmailClient();
+      await gmail.users.messages.modify({
         userId: 'me',
         id: messageId,
         requestBody: {
@@ -184,12 +415,9 @@ export class UnifiedWorkspaceClient {
    * Get email attachments (for invoice processing, etc.)
    */
   async getEmailAttachments(messageId: string): Promise<{ filename: string; data: Buffer }[]> {
-    if (!this.gmail) {
-      await this.initialize();
-    }
-
     try {
-      const message = await this.gmail.users.messages.get({
+      const gmail = await this.getGmailClient();
+      const message = await gmail.users.messages.get({
         userId: 'me',
         id: messageId,
       });
@@ -198,19 +426,19 @@ export class UnifiedWorkspaceClient {
 
       if (message.data.payload?.parts) {
         for (const part of message.data.payload.parts) {
-          if (part.filename && part.body?.attachmentId) {
-            const attachment = await this.gmail.users.messages.attachments.get({
-              userId: 'me',
-              messageId: messageId,
-              id: part.body.attachmentId,
-            });
+            if (part.filename && part.body?.attachmentId) {
+              const attachment = await gmail.users.messages.attachments.get({
+                userId: 'me',
+                messageId: messageId,
+                id: part.body.attachmentId,
+              });
 
-            attachments.push({
-              filename: part.filename,
-              data: Buffer.from(attachment.data.data, 'base64'),
-            });
+              attachments.push({
+                filename: part.filename,
+                data: Buffer.from(attachment.data.data!, 'base64'),
+              });
+            }
           }
-        }
       }
 
       return attachments;
@@ -228,17 +456,17 @@ export class UnifiedWorkspaceClient {
   /**
    * Batch operations on Google Sheets (read/write/append)
    */
-  async performSheetOperation(operation: SheetOperation): Promise<any> {
-    if (!this.sheets) {
-      await this.initialize();
-    }
-
+  async performSheetOperation(operation: SheetOperation & { operation: 'read' }): Promise<SheetReadResult>;
+  async performSheetOperation(operation: SheetOperation & { operation: 'append' | 'update' }): Promise<SheetMutationResult>;
+  async performSheetOperation(operation: SheetOperation): Promise<SheetOperationResult>;
+  async performSheetOperation(operation: SheetOperation): Promise<SheetOperationResult> {
     try {
+      const sheets = await this.getSheetsClient();
       logInfo('UnifiedWorkspace', `Sheet ${operation.operation}: ${operation.spreadsheetId}`);
 
       switch (operation.operation) {
         case 'read': {
-          const readResponse = await this.sheets.spreadsheets.values.get({
+          const readResponse = await sheets.spreadsheets.values.get({
             spreadsheetId: operation.spreadsheetId,
             range: operation.range,
           });
@@ -246,27 +474,38 @@ export class UnifiedWorkspaceClient {
         }
 
         case 'append': {
-          const appendResponse = await this.sheets.spreadsheets.values.append({
+          const appendResponse = await sheets.spreadsheets.values.append({
             spreadsheetId: operation.spreadsheetId,
             range: operation.range,
             valueInputOption: 'USER_ENTERED',
-            resource: {
+            requestBody: {
               values: operation.values,
             },
           });
-          return appendResponse.data;
+          return {
+            ...appendResponse.data,
+            updates: appendResponse.data.updates
+              ? {
+                  ...appendResponse.data.updates,
+                  updatedRows: appendResponse.data.updates.updatedRows ?? null,
+                }
+              : undefined,
+          };
         }
 
         case 'update': {
-          const updateResponse = await this.sheets.spreadsheets.values.update({
+          const updateResponse = await sheets.spreadsheets.values.update({
             spreadsheetId: operation.spreadsheetId,
             range: operation.range,
             valueInputOption: 'USER_ENTERED',
-            resource: {
+            requestBody: {
               values: operation.values,
             },
           });
-          return updateResponse.data;
+          return {
+            ...updateResponse.data,
+            updatedRows: updateResponse.data.updatedRows ?? null,
+          };
         }
 
         default: {
@@ -284,13 +523,10 @@ export class UnifiedWorkspaceClient {
    * Create new spreadsheet
    */
   async createSpreadsheet(title: string): Promise<{ spreadsheetId: string; url: string }> {
-    if (!this.sheets) {
-      await this.initialize();
-    }
-
     try {
-      const response = await this.sheets.spreadsheets.create({
-        resource: {
+      const sheets = await this.getSheetsClient();
+      const response = await sheets.spreadsheets.create({
+        requestBody: {
           properties: {
             title,
           },
@@ -317,11 +553,8 @@ export class UnifiedWorkspaceClient {
    * Upload file to Google Drive
    */
   async uploadFile(fileInfo: DriveFileInfo): Promise<{ fileId: string; webViewLink: string }> {
-    if (!this.drive) {
-      await this.initialize();
-    }
-
     try {
+      const drive = await this.getDriveClient();
       if (!fileInfo.localPath) {
         throw new Error('localPath is required for file upload');
       }
@@ -342,7 +575,7 @@ export class UnifiedWorkspaceClient {
         body: await fs.readFile(fileInfo.localPath),
       };
 
-      const response = await this.drive.files.create({
+      const response = await drive.files.create({
         requestBody: fileMetadata,
         media: media,
         fields: 'id,webViewLink',
@@ -350,8 +583,8 @@ export class UnifiedWorkspaceClient {
 
       logInfo('UnifiedWorkspace', `✅ File uploaded: ${response.data.id}`);
       return {
-        fileId: response.data.id,
-        webViewLink: response.data.webViewLink,
+        fileId: response.data.id!,
+        webViewLink: response.data.webViewLink!,
       };
     } catch (error: unknown) {
       const errorMsg = error instanceof Error ? error.message : String(error);
@@ -364,12 +597,9 @@ export class UnifiedWorkspaceClient {
    * Upload file from Buffer
    */
   async uploadFileFromBuffer(data: Buffer, name: string, mimeType: string, parentId?: string): Promise<{ fileId: string; webViewLink: string }> {
-    if (!this.drive) {
-      await this.initialize();
-    }
-
     try {
-      const fileMetadata: any = {
+      const drive = await this.getDriveClient();
+      const fileMetadata: DriveFileRequestBody = {
         name,
         mimeType,
       };
@@ -381,7 +611,7 @@ export class UnifiedWorkspaceClient {
       const stream = new (await import('stream')).PassThrough();
       stream.end(data);
 
-      const response = await this.drive.files.create({
+      const response = await drive.files.create({
         requestBody: fileMetadata,
         media: {
           mimeType,
@@ -392,8 +622,8 @@ export class UnifiedWorkspaceClient {
 
       logInfo('UnifiedWorkspace', `✅ File uploaded from buffer: ${response.data.id}`);
       return {
-        fileId: response.data.id,
-        webViewLink: response.data.webViewLink,
+        fileId: response.data.id!,
+        webViewLink: response.data.webViewLink!,
       };
     } catch (error: unknown) {
       const errorMsg = error instanceof Error ? error.message : String(error);
@@ -406,23 +636,28 @@ export class UnifiedWorkspaceClient {
    * Find a folder by name
    */
   async findFolder(name: string, parentId?: string): Promise<{ id: string, name: string } | null> {
-    if (!this.drive) {
-      await this.initialize();
-    }
-
     try {
+      const drive = await this.getDriveClient();
       let q = `mimeType='application/vnd.google-apps.folder' and name='${name}' and trashed=false`;
       if (parentId) {
         q += ` and '${parentId}' in parents`;
       }
 
-      const response = await this.drive.files.list({
+      const response = await drive.files.list({
         q,
         fields: 'files(id, name)',
         pageSize: 1,
       });
 
-      return response.data.files && response.data.files.length > 0 ? response.data.files[0] : null;
+      if (!response.data.files || response.data.files.length === 0) {
+        return null;
+      }
+
+      const file = response.data.files[0];
+      return {
+        id: file.id!,
+        name: file.name!,
+      };
     } catch (error: unknown) {
       const errorMsg = error instanceof Error ? error.message : String(error);
       logError('UnifiedWorkspace', `Find folder failed: ${errorMsg}`);
@@ -434,12 +669,9 @@ export class UnifiedWorkspaceClient {
    * Create a folder
    */
   async createFolder(name: string, parentId?: string): Promise<{ id: string, name: string }> {
-    if (!this.drive) {
-      await this.initialize();
-    }
-
     try {
-      const fileMetadata: any = {
+      const drive = await this.getDriveClient();
+      const fileMetadata: DriveFileRequestBody = {
         name,
         mimeType: 'application/vnd.google-apps.folder',
       };
@@ -448,13 +680,16 @@ export class UnifiedWorkspaceClient {
         fileMetadata.parents = [parentId];
       }
 
-      const response = await this.drive.files.create({
+      const response = await drive.files.create({
         requestBody: fileMetadata,
         fields: 'id, name',
       });
 
       logInfo('UnifiedWorkspace', `✅ Folder created: ${name} (${response.data.id})`);
-      return response.data;
+      return {
+        id: response.data.id!,
+        name,
+      };
     } catch (error: unknown) {
       const errorMsg = error instanceof Error ? error.message : String(error);
       logError('UnifiedWorkspace', `Create folder failed: ${errorMsg}`);
@@ -466,14 +701,11 @@ export class UnifiedWorkspaceClient {
    * Create a new Google Doc
    */
   async createDocument(content: string, title?: string): Promise<string> {
-    if (!this.drive) {
-      await this.initialize();
-    }
-
     try {
+      const drive = await this.getDriveClient();
       logInfo('UnifiedWorkspace', `Creating Google Doc: ${title || 'Untitled Document'}`);
 
-      const response = await this.drive.files.create({
+      const response = await drive.files.create({
         requestBody: {
           name: title || 'Untitled Document',
           mimeType: 'application/vnd.google-apps.document',
@@ -486,7 +718,7 @@ export class UnifiedWorkspaceClient {
       });
 
       logInfo('UnifiedWorkspace', `✅ Google Doc created: ${response.data.webViewLink}`);
-      return response.data.webViewLink;
+      return response.data.webViewLink!;
     } catch (error: unknown) {
       const errorMsg = error instanceof Error ? error.message : String(error);
       logError('UnifiedWorkspace', `Failed to create Google Doc: ${errorMsg}`);
@@ -498,17 +730,14 @@ export class UnifiedWorkspaceClient {
    * List files in a Drive folder
    */
   async listFiles(folderId?: string, query?: string): Promise<unknown[]> {
-    if (!this.drive) {
-      await this.initialize();
-    }
-
     try {
+      const drive = await this.getDriveClient();
       let q = query || '';
       if (folderId) {
         q += (q ? ' and ' : '') + `'${folderId}' in parents`;
       }
 
-      const response = await this.drive.files.list({
+      const response = await drive.files.list({
         q,
         fields: 'files(id, name, mimeType, createdTime, modifiedTime)',
         pageSize: 100,
@@ -530,22 +759,19 @@ export class UnifiedWorkspaceClient {
    * Create calendar event
    */
   async createCalendarEvent(event: CalendarEvent, calendarId: string = 'primary'): Promise<{ eventId: string; htmlLink: string }> {
-    if (!this.calendar) {
-      await this.initialize();
-    }
-
     try {
+      const calendar = await this.getCalendarClient();
       logInfo('UnifiedWorkspace', `Creating calendar event: ${event.summary}`);
 
-      const response = await this.calendar.events.insert({
+      const response = await calendar.events.insert({
         calendarId,
         requestBody: event,
       });
 
       logInfo('UnifiedWorkspace', `✅ Event created: ${response.data.id}`);
       return {
-        eventId: response.data.id,
-        htmlLink: response.data.htmlLink,
+        eventId: response.data.id!,
+        htmlLink: response.data.htmlLink!,
       };
     } catch (error: unknown) {
       const errorMsg = error instanceof Error ? error.message : String(error);

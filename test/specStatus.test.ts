@@ -1,12 +1,14 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { getSpecStatus, approveSpec, rejectSpec, requiresSpec, isSpecApproved, listSpecStatuses, type SpecStatus } from '../src/agents/specStatus.js';
 import fs from 'fs/promises';
+import path from 'path';
 
 // Mock logger
 vi.mock('../src/utils/logger.js', () => ({
     logInfo: vi.fn(),
     logWarn: vi.fn(),
     logError: vi.fn(),
+    logDebug: vi.fn(),
     setAgentStatus: vi.fn()
 }));
 
@@ -15,12 +17,12 @@ vi.mock('fs/promises');
 
 describe('specStatus', () => {
     beforeEach(() => {
-        vi.clearAllMocks();
+        vi.resetAllMocks();
     });
 
     describe('getSpecStatus', () => {
         it('should return approved when meta.json has approved spec_status', async () => {
-            (fs.readFile as any).mockResolvedValue(JSON.stringify({
+            vi.mocked(fs.readFile).mockResolvedValue(JSON.stringify({
                 id: 'test_track',
                 spec_status: 'approved'
             }));
@@ -30,7 +32,7 @@ describe('specStatus', () => {
         });
 
         it('should return pending_approval when spec is pending', async () => {
-            (fs.readFile as any).mockResolvedValue(JSON.stringify({
+            vi.mocked(fs.readFile).mockResolvedValue(JSON.stringify({
                 id: 'test_track',
                 spec_status: 'pending_approval'
             }));
@@ -40,7 +42,7 @@ describe('specStatus', () => {
         });
 
         it('should return rejected when spec was rejected', async () => {
-            (fs.readFile as any).mockResolvedValue(JSON.stringify({
+            vi.mocked(fs.readFile).mockResolvedValue(JSON.stringify({
                 id: 'test_track',
                 spec_status: 'rejected'
             }));
@@ -50,14 +52,14 @@ describe('specStatus', () => {
         });
 
         it('should return not_found when meta.json does not exist', async () => {
-            (fs.readFile as any).mockRejectedValue(new Error('ENOENT'));
+            vi.mocked(fs.readFile).mockRejectedValue(new Error('ENOENT'));
 
             const status = await getSpecStatus('nonexistent_track');
             expect(status).toBe('not_found');
         });
 
         it('should return not_found for invalid spec_status values', async () => {
-            (fs.readFile as any).mockResolvedValue(JSON.stringify({
+            vi.mocked(fs.readFile).mockResolvedValue(JSON.stringify({
                 id: 'test_track',
                 spec_status: 'invalid_status'
             }));
@@ -67,7 +69,7 @@ describe('specStatus', () => {
         });
 
         it('should return not_found when spec_status is missing', async () => {
-            (fs.readFile as any).mockResolvedValue(JSON.stringify({
+            vi.mocked(fs.readFile).mockResolvedValue(JSON.stringify({
                 id: 'test_track'
             }));
 
@@ -78,25 +80,25 @@ describe('specStatus', () => {
 
     describe('approveSpec', () => {
         it('should set spec_status to approved and status to active', async () => {
-            (fs.readFile as any).mockResolvedValue(JSON.stringify({
+            vi.mocked(fs.readFile).mockResolvedValue(JSON.stringify({
                 id: 'test_track',
                 spec_status: 'pending_approval',
                 status: 'draft',
                 updated: '2026-01-01'
             }));
-            (fs.writeFile as any).mockResolvedValue(undefined);
+            vi.mocked(fs.writeFile).mockResolvedValue(undefined);
 
             const result = await approveSpec('test_track');
             expect(result).toBe(true);
 
-            const writeCall = (fs.writeFile as any).mock.calls[0];
-            const writtenMeta = JSON.parse(writeCall[1]);
+            const writeCall = vi.mocked(fs.writeFile).mock.calls[0];
+            const writtenMeta = JSON.parse(writeCall[1] as string);
             expect(writtenMeta.spec_status).toBe('approved');
             expect(writtenMeta.status).toBe('active');
         });
 
         it('should return false for nonexistent track', async () => {
-            (fs.readFile as any).mockRejectedValue(new Error('ENOENT'));
+            vi.mocked(fs.readFile).mockRejectedValue(new Error('ENOENT'));
 
             const result = await approveSpec('nonexistent');
             expect(result).toBe(false);
@@ -105,36 +107,36 @@ describe('specStatus', () => {
 
     describe('rejectSpec', () => {
         it('should set spec_status to rejected with reason', async () => {
-            (fs.readFile as any).mockResolvedValue(JSON.stringify({
+            vi.mocked(fs.readFile).mockResolvedValue(JSON.stringify({
                 id: 'test_track',
                 spec_status: 'pending_approval',
                 updated: '2026-01-01'
             }));
-            (fs.writeFile as any).mockResolvedValue(undefined);
+            vi.mocked(fs.writeFile).mockResolvedValue(undefined);
 
             const result = await rejectSpec('test_track', 'Incomplete requirements');
             expect(result).toBe(true);
 
-            const writeCall = (fs.writeFile as any).mock.calls[0];
-            const writtenMeta = JSON.parse(writeCall[1]);
+            const writeCall = vi.mocked(fs.writeFile).mock.calls[0];
+            const writtenMeta = JSON.parse(writeCall[1] as string);
             expect(writtenMeta.spec_status).toBe('rejected');
             expect(writtenMeta.rejection_reason).toBe('Incomplete requirements');
         });
 
         it('should work without a reason', async () => {
-            (fs.readFile as any).mockResolvedValue(JSON.stringify({
+            vi.mocked(fs.readFile).mockResolvedValue(JSON.stringify({
                 id: 'test_track',
                 spec_status: 'pending_approval',
                 updated: '2026-01-01'
             }));
-            (fs.writeFile as any).mockResolvedValue(undefined);
+            vi.mocked(fs.writeFile).mockResolvedValue(undefined);
 
             const result = await rejectSpec('test_track');
             expect(result).toBe(true);
         });
 
         it('should return false for nonexistent track', async () => {
-            (fs.readFile as any).mockRejectedValue(new Error('ENOENT'));
+            vi.mocked(fs.readFile).mockRejectedValue(new Error('ENOENT'));
 
             const result = await rejectSpec('nonexistent');
             expect(result).toBe(false);
@@ -165,7 +167,7 @@ describe('specStatus', () => {
 
     describe('isSpecApproved', () => {
         it('should return true when spec is approved', async () => {
-            (fs.readFile as any).mockResolvedValue(JSON.stringify({
+            vi.mocked(fs.readFile).mockResolvedValue(JSON.stringify({
                 id: 'test_track',
                 spec_status: 'approved'
             }));
@@ -174,7 +176,7 @@ describe('specStatus', () => {
         });
 
         it('should return false when spec is pending', async () => {
-            (fs.readFile as any).mockResolvedValue(JSON.stringify({
+            vi.mocked(fs.readFile).mockResolvedValue(JSON.stringify({
                 id: 'test_track',
                 spec_status: 'pending_approval'
             }));
@@ -183,7 +185,7 @@ describe('specStatus', () => {
         });
 
         it('should return false when spec is rejected', async () => {
-            (fs.readFile as any).mockResolvedValue(JSON.stringify({
+            vi.mocked(fs.readFile).mockResolvedValue(JSON.stringify({
                 id: 'test_track',
                 spec_status: 'rejected'
             }));
@@ -192,7 +194,7 @@ describe('specStatus', () => {
         });
 
         it('should return false when track does not exist', async () => {
-            (fs.readFile as any).mockRejectedValue(new Error('ENOENT'));
+            vi.mocked(fs.readFile).mockRejectedValue(new Error('ENOENT'));
 
             expect(await isSpecApproved('nonexistent')).toBe(false);
         });
@@ -200,58 +202,53 @@ describe('specStatus', () => {
 
     describe('listSpecStatuses', () => {
         it('should list all tracks with their spec statuses', async () => {
-            (fs.readdir as any).mockResolvedValue([
-                { name: 'track_a', isDirectory: () => true },
-                { name: 'track_b', isDirectory: () => true },
-                { name: 'readme.md', isDirectory: () => false }
-            ]);
+            vi.mocked(fs.readdir).mockResolvedValue([
+                { name: 'track_a', isDirectory: () => true, isFile: () => false, isSymbolicLink: () => false, isBlockDevice: () => false, isCharacterDevice: () => false, isFIFO: () => false, isSocket: () => false },
+                { name: 'track_b', isDirectory: () => true, isFile: () => false, isSymbolicLink: () => false, isBlockDevice: () => false, isCharacterDevice: () => false, isFIFO: () => false, isSocket: () => false },
+                { name: 'readme.md', isDirectory: () => false, isFile: () => true, isSymbolicLink: () => false, isBlockDevice: () => false, isCharacterDevice: () => false, isFIFO: () => false, isSocket: () => false }
+            ] as any);
 
-            (fs.readFile as any)
-                .mockResolvedValueOnce(JSON.stringify({ id: 'track_a', spec_status: 'approved' }))
-                .mockResolvedValueOnce(JSON.stringify({ id: 'track_b', spec_status: 'pending_approval' }));
+            vi.mocked(fs.readFile).mockImplementation(async (filePath: any) => {
+                const p = String(filePath);
+                if (p.includes('track_a')) return JSON.stringify({ id: 'track_a', spec_status: 'approved' });
+                if (p.includes('track_b')) return JSON.stringify({ id: 'track_b', spec_status: 'pending_approval' });
+                throw new Error('ENOENT');
+            });
 
             const results = await listSpecStatuses();
             expect(results).toHaveLength(2);
-            expect(results[0].spec_status).toBe('approved');
-            expect(results[1].spec_status).toBe('pending_approval');
+            expect(results.find(r => r.id === 'track_a')?.spec_status).toBe('approved');
+            expect(results.find(r => r.id === 'track_b')?.spec_status).toBe('pending_approval');
         });
 
         it('should skip directories without meta.json', async () => {
-            (fs.readdir as any).mockResolvedValue([
-                { name: 'track_a', isDirectory: () => true },
-                { name: 'track_broken', isDirectory: () => true }
-            ]);
+            vi.mocked(fs.readdir).mockResolvedValue([
+                { name: 'track_a', isDirectory: () => true, isFile: () => false, isSymbolicLink: () => false, isBlockDevice: () => false, isCharacterDevice: () => false, isFIFO: () => false, isSocket: () => false },
+                { name: 'track_broken', isDirectory: () => true, isFile: () => false, isSymbolicLink: () => false, isBlockDevice: () => false, isCharacterDevice: () => false, isFIFO: () => false, isSocket: () => false }
+            ] as any);
 
-            (fs.readFile as any)
-                .mockResolvedValueOnce(JSON.stringify({ id: 'track_a', spec_status: 'approved' }))
-                .mockRejectedValueOnce(new Error('ENOENT'));
+            vi.mocked(fs.readFile).mockImplementation(async (filePath: any) => {
+                const p = String(filePath);
+                if (p.includes('track_a')) return JSON.stringify({ id: 'track_a', spec_status: 'approved' });
+                throw new Error('ENOENT');
+            });
 
             const results = await listSpecStatuses();
             expect(results).toHaveLength(1);
+            expect(results[0].id).toBe('track_a');
         });
     });
 });
 
 describe('DeveloperAgent Spec Gate', () => {
-    let originalEnv: NodeJS.ProcessEnv;
-
     beforeEach(() => {
-        vi.clearAllMocks();
-        originalEnv = process.env;
-    });
-
-    afterEach(() => {
-        process.env = originalEnv;
+        vi.resetAllMocks();
     });
 
     it('should block DeveloperAgent when spec is not approved (integration concept)', async () => {
-        // This tests the concept: when getSpecStatus returns 'pending_approval',
-        // requiresSpec('Developer') = true → execute should return SPEC_NOT_APPROVED error
-
-        // Verify the gate logic components
         expect(requiresSpec('Developer')).toBe(true);
 
-        (fs.readFile as any).mockResolvedValue(JSON.stringify({
+        vi.mocked(fs.readFile).mockResolvedValue(JSON.stringify({
             id: 'test_track',
             spec_status: 'pending_approval'
         }));
@@ -264,7 +261,7 @@ describe('DeveloperAgent Spec Gate', () => {
     it('should allow DeveloperAgent when spec is approved (integration concept)', async () => {
         expect(requiresSpec('Developer')).toBe(true);
 
-        (fs.readFile as any).mockResolvedValue(JSON.stringify({
+        vi.mocked(fs.readFile).mockResolvedValue(JSON.stringify({
             id: 'test_track',
             spec_status: 'approved'
         }));
@@ -274,8 +271,6 @@ describe('DeveloperAgent Spec Gate', () => {
     });
 
     it('should skip spec gate when no trackId is provided', () => {
-        // EXCEPTION rule: ad-hoc tasks without trackId skip the gate
-        // The gate check in DeveloperAgent: if (trackId && requiresSpec(this.name))
         const trackId = undefined;
         expect(trackId && requiresSpec('Developer')).toBeFalsy();
     });

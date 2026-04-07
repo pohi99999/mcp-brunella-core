@@ -1,4 +1,5 @@
 import { WorkflowEntrypoint, WorkflowStep, WorkflowEvent } from 'cloudflare:workers';
+import { parseAiResponse, safeJsonParse } from '../lib/aiHelpers.js';
 
 interface Env {
   DB: D1Database;
@@ -29,8 +30,9 @@ export class TaskPipelineWorkflow extends WorkflowEntrypoint<Env> {
         : (this.env.FAST_MODEL || '@cf/microsoft/phi-4');
 
       try {
-        const response = await this.env.AI.run(model as any, {
-          messages: [
+        const modelName = typeof model === 'string' ? model : String(model ?? '');
+        const aiRaw = await this.env.AI.run(modelName as any, {
+            messages: [
             {
               role: 'system',
               content: `You are a task analysis engine. Analyze the task and return a JSON object with:
@@ -43,18 +45,17 @@ Respond with ONLY valid JSON.`,
             { role: 'user', content: `Task type: ${type}\nInstruction: ${instruction}` },
           ],
           max_tokens: 500,
-        }) as { response: string };
+          });
 
-        try {
-          return JSON.parse(response.response);
-        } catch {
-          return {
+          const { text: responseText } = parseAiResponse(aiRaw);
+          const parsed = safeJsonParse(responseText, {
             subtasks: [instruction],
             estimatedComplexity: 'simple',
             requiredAgents: ['general'],
             riskLevel: 'low',
-          };
-        }
+          });
+
+          return parsed;
       } catch {
         return {
           subtasks: [instruction],
