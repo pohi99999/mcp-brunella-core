@@ -26,6 +26,9 @@ import {
 describe('Model Router (G3)', () => {
   beforeEach(() => {
     clearRoutingHistory();
+    process.env.GEMINI_API_KEY ||= 'test-gemini-key';
+    delete process.env.ANTHROPIC_API_KEY;
+    delete process.env.CLAUDE_API_KEY;
   });
 
   // ========================================================================
@@ -109,6 +112,45 @@ describe('Model Router (G3)', () => {
       expect(decision.fallback).toBeDefined();
       expect(decision.fallback?.provider).toBe('ollama');
     });
+
+    it('should route to Anthropic when it is the only configured cloud provider', () => {
+      const originalEnv = {
+        GEMINI_API_KEY: process.env.GEMINI_API_KEY,
+        GH_TOKEN: process.env.GH_TOKEN,
+        GITHUB_TOKEN: process.env.GITHUB_TOKEN,
+        GITHUB_PAT: process.env.GITHUB_PAT,
+        CF_AI_API_TOKEN: process.env.CF_AI_API_TOKEN,
+        CF_API_TOKEN: process.env.CF_API_TOKEN,
+        CF_TOKEN: process.env.CF_TOKEN,
+        ANTHROPIC_API_KEY: process.env.ANTHROPIC_API_KEY,
+      };
+
+      delete process.env.GEMINI_API_KEY;
+      delete process.env.GH_TOKEN;
+      delete process.env.GITHUB_TOKEN;
+      delete process.env.GITHUB_PAT;
+      delete process.env.CF_AI_API_TOKEN;
+      delete process.env.CF_API_TOKEN;
+      delete process.env.CF_TOKEN;
+      process.env.ANTHROPIC_API_KEY = 'test-anthropic-key';
+
+      const task: TaskProfile = {
+        description: 'Architect the microservice migration',
+        complexity: 'high',
+        category: 'planning'
+      };
+
+      const decision = selectModel(task, { budget: 50 });
+      expect(decision.model.provider).toBe('anthropic');
+
+      Object.entries(originalEnv).forEach(([key, value]) => {
+        if (value === undefined) {
+          delete process.env[key];
+        } else {
+          process.env[key] = value;
+        }
+      });
+    });
   });
 
   // ========================================================================
@@ -186,6 +228,21 @@ describe('Model Router (G3)', () => {
       const decision = selectModel(task, { overrideModel: 'gpt-4o', budget: 50 });
       expect(decision.model.name).toBe('gpt-4o');
       expect(decision.reason).toContain('Manual override');
+    });
+
+    it('should preserve overrideProvider for manual cloud routes', () => {
+      const task: TaskProfile = {
+        description: 'Any task',
+        complexity: 'high',
+        category: 'analysis'
+      };
+
+      const decision = selectModel(task, {
+        overrideModel: 'copilot-cli',
+        overrideProvider: 'copilot',
+        budget: 50,
+      });
+      expect(decision.model.provider).toBe('copilot');
     });
   });
 

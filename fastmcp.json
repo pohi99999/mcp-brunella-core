@@ -10,7 +10,9 @@
       "fastmcp>=2.14.3",
       "lancedb",
       "chromadb",
-      "python-dotenv"
+      "python-dotenv",
+      "autogen-agentchat>=0.7.5",
+      "autogen-ext[openai,azure]>=0.7.5"
     ]
   },
   "deployment": {

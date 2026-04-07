@@ -16,7 +16,10 @@ vi.mock('apify-client', () => ({
 
 import { ApifyScrapingAgent } from '../src/agents/ApifyScrapingAgent.js';
 
-const originalToken = process.env.APIFY_API_TOKEN;
+const originalTokens = {
+  api: process.env.APIFY_API_TOKEN,
+  legacy: process.env.APIFY_TOKEN,
+};
 
 function configureMockClient(items: unknown[]) {
   apifyMocks.actor.mockReturnValue({ call: apifyMocks.actorCall });
@@ -34,13 +37,20 @@ async function createAgent() {
 beforeEach(() => {
   vi.clearAllMocks();
   process.env.APIFY_API_TOKEN = 'test-token';
+  delete process.env.APIFY_TOKEN;
 });
 
 afterAll(() => {
-  if (originalToken === undefined) {
+  if (originalTokens.api === undefined) {
     delete process.env.APIFY_API_TOKEN;
   } else {
-    process.env.APIFY_API_TOKEN = originalToken;
+    process.env.APIFY_API_TOKEN = originalTokens.api;
+  }
+
+  if (originalTokens.legacy === undefined) {
+    delete process.env.APIFY_TOKEN;
+  } else {
+    process.env.APIFY_TOKEN = originalTokens.legacy;
   }
 });
 

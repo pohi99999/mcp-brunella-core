@@ -11,7 +11,7 @@ import { logInfo, logError } from '../utils/logger.js';
 export type ModelRole = 'brain' | 'muscle';
 export type ModelSpeed = 'fast' | 'medium' | 'slow';
 export type TaskComplexity = 'high' | 'medium' | 'low';
-export type ProviderName = 'ollama' | 'gemini' | 'github' | 'cloudflare';
+export type ProviderName = 'ollama' | 'gemini' | 'github' | 'cloudflare' | 'anthropic' | 'copilot';
 
 export interface ModelProfile {
   name: string;
@@ -69,6 +69,15 @@ export const MODEL_REGISTRY: ModelProfile[] = [
     costPerToken: 0.0001,
     speed: 'fast',
     strengths: ['planning', 'analysis', 'long_context', 'documentation', 'summarization']
+  },
+  {
+    name: process.env.ANTHROPIC_MODEL || process.env.CLAUDE_MODEL || 'claude-3-5-sonnet-20241022',
+    provider: 'anthropic',
+    role: 'brain',
+    contextWindow: 200000,
+    costPerToken: 0.003,
+    speed: 'medium',
+    strengths: ['planning', 'architecture', 'analysis', 'complex_reasoning', 'code_review']
   },
   // Muscle models (Ollama local) — code gen, tests, repetitive tasks
   {
@@ -321,7 +330,10 @@ function findBestCloud(task: TaskProfile, cfg: RouterConfig): ModelProfile {
   const available = cloudModels.filter(m => {
     if (m.provider === 'gemini') return !!process.env.GEMINI_API_KEY;
     if (m.provider === 'github') return !!(process.env.GH_TOKEN || process.env.GITHUB_TOKEN || process.env.GITHUB_PAT);
-    if (m.provider === 'cloudflare') return !!((process.env.CF_AI_API_TOKEN || process.env.CF_API_TOKEN) && process.env.AI_GATEWAY_ENABLED === 'true');
+    if (m.provider === 'anthropic') return !!(process.env.ANTHROPIC_API_KEY || process.env.CLAUDE_API_KEY);
+    if (m.provider === 'cloudflare') {
+      return !!((process.env.CF_AI_API_TOKEN || process.env.CF_API_TOKEN || process.env.CF_TOKEN) && process.env.AI_GATEWAY_ENABLED === 'true');
+    }
     return true;
   });
 

@@ -12,6 +12,7 @@ import {
 } from "./modelRouter.js";
 import { aiGateway } from "../utils/aiGateway.js";
 import { recordLlmUsageAndCost } from "../utils/metrics.js";
+import { bifrostGateway } from "./bifrost_gateway.js";
 
 // Configuration
 const OLLAMA_MODEL = process.env.OLLAMA_MODEL || "qwen2.5-coder:7b";
@@ -21,11 +22,11 @@ const LLM_TIMEOUT_MS = parseInt(process.env.LLM_TIMEOUT_MS || "120000"); // 2 mi
 const genAI = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || "" });
 
 /**
- * Poliglott generálási metódus, amely támogatja a helyi (Ollama) és felhő (Gemini) modelleket.
+ * Poliglott generálási metódus, amely támogatja a helyi és felhő providereket.
  * Automatikus fallback mechanizmussal rendelkezik.
  *
  * @param prompt - A generálási prompt
- * @param provider - A szolgáltató neve ('ollama' vagy 'gemini')
+ * @param provider - A szolgáltató neve ('ollama', 'gemini', 'github', 'anthropic', 'cloudflare', 'copilot')
  * @param modelName - Opcionális: egyedi modell név felülíráshoz
  */
 export const generateResponse: (
@@ -109,7 +110,32 @@ export const generateResponse: (
         return text;
       }
 
-      // Default: Ollama/CF Workers AI via AI Gateway v3.0 (pure fetch)
+      if (
+        provider === "anthropic"
+        || provider === "cloudflare"
+        || provider === "copilot"
+      ) {
+        const response = await bifrostGateway.generate({
+          prompt,
+          provider,
+          model: modelName,
+          taskType: /code|test|refactor|debug|implement/i.test(prompt) ? "code" : "general",
+        });
+
+        if (!response.success || !response.content) {
+          throw new Error(response.error || `${provider} generation failed`);
+        }
+
+        recordLlmUsageAndCost({
+          provider,
+          model: response.model || modelName || provider,
+          prompt,
+          completion: response.content,
+        });
+        return response.content;
+      }
+
+      // Default: Ollama / AI Gateway path
 
       const response = await aiGateway.generate(prompt, {
         model: modelName || OLLAMA_MODEL,
