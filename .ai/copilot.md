@@ -1079,6 +1079,43 @@ Megjegyzés: minden trackhez további, finomabb subtasks (n8n flows, connector-s
 
 ---
 
+### 2026-04-06 — Dokumentációs szinkron + kernel/orchestrator compile fix + biztonságos commit előkészítés
+
+**Feladat:** A felhasználó kérése alapján az aktuális, publikus állapotú változtatások dokumentálása a releváns fájlokban, a kernel / Copilot Orchestrator csomag build-blokkoló hibáinak javítása, majd a biztonságos commit/push előkészítése úgy, hogy a lokális/sensitive zaj ne kerüljön fel a távoli repóba.
+
+**Érintett fájlok:**
+- `CHANGELOG.md`
+- `.ai/copilot.md`
+- `.ai/FOSZAL.md`
+- `src/core/guardrail.ts`
+- `src/core/toolExecutor.ts`
+- `src/server/routes/kernelRoute.ts`
+
+**Mit csináltunk:**
+- A `CHANGELOG.md` kapott friss bejegyzéseket a Copilot Orchestrator + Kernel Pipeline megjelenéséről, a runtime hardening follow-upokról, valamint az aktuális type-safety / technical debt batchről.
+- A `.ai/copilot.md` fájlból eltávolítottunk egy bent maradt merge markert, majd rögzítettük ezt az új session-összefoglalót is.
+- A kernel/orchestrator friss kódban három tényleges TypeScript contract driftet javítottunk:
+  - `src/core/guardrail.ts`: a policy engine lazy import és az átadott evaluation context az aktuális `policyEngine` szerződéshez lett igazítva.
+  - `src/core/toolExecutor.ts`: a hibás tool registry integráció helyett a szerveroldali `executeLocalTool(...)` útvonal lett bekötve.
+  - `src/server/routes/kernelRoute.ts`: a `createRunEnvelope(...)` hívás és a route-param/priority/knowledge scope mapping a valódi `kernelTypes.ts` contracthoz lett igazítva.
+- A RAG segédrétegben a globális LanceDB cache-ek helyett egy példány-szintű `RagEngine` került bevezetésre opcionális loader/dbPath injektálással és `dispose()` lifecycle-lel; a visszafelé kompatibilitást a `HybridMemory extends RagEngine` megtartása biztosítja.
+- Külön audit alapján azonosítottuk, hogy a `.vscode/settings.json` valódi secretet és lokális gépspecifikus beállításokat tartalmaz, ezért ez nem része a commitnak.
+
+**Validáció:**
+- `npx tsc --noEmit` → **exit code 0**
+- `npx vitest run test/reactLoop.test.ts test/orchestratorReact.test.ts test/universalOrchestratorService.test.ts test/guardrails/outputGuard.test.ts test/DeveloperAgent.test.ts test/digitalHeadhunterAgent.test.ts test/conflictMediatorAgent.test.ts test/grantWatcherAgent.test.ts test/phase4_supply_chain.test.ts test/robotkezV2Agent.test.ts test/metricsArchiveService.test.ts` → **11 fájl PASS, 84 passed / 1 skipped**
+- `npx vitest run --config vitest.dashboard.config.ts test/dashboard/components/InventoryCatalog.test.tsx test/dashboard/components/InventoryRadarWidget.test.tsx` → **2 fájl PASS, 6 passed**
+- `npx vitest run --config vitest.dashboard.config.ts src/dashboard/store/systemSignalStore.test.ts` → **1 fájl PASS, 28 passed**
+- `npx vitest run test/businessJobsRoutes.test.ts test/databaseManager.test.ts test/tasksDatabaseManager.test.ts` → **3 fájl PASS, 3 passed**
+- `npx vitest run test/rag.test.ts test/rag-engine.test.ts` → **2 fájl PASS, 3 passed**
+
+**Megjegyzés:**
+- A commit előtt csak a ténylegesen publikus és validált forrás/dokumentációs változtatásokat szabad stage-elni; a `.vscode/*`, runtime adatfájlok, build-zaj és ideiglenes worktree/submodule módosítások kimaradnak.
+
+**Státusz:** ✅ Befejezve
+
+---
+
 ### 2026-04-02 — Reflection + Ephemeral Bridge Trackok lezárva és archiválva
 **Feladat:** `brunella_reflection_continual_learning_20260402` és `brunella_zero_prompt_ephemeral_bridge_20260402` trackek 100%-ra vitele, archiválása, dokumentálása és GitHub push.
 
