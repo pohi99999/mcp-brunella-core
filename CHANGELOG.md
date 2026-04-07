@@ -10,6 +10,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Added
 
+- **Python Copilot SDK environment alignment** (`pyproject.toml`, `uv.lock`): Added `github-copilot-sdk>=0.2.1` to the Python dependency manifest and lockfile so the `myai/` environment can follow the newer Copilot orchestration/runtime integration work without ad-hoc local installs.
+
 - **Copilot Orchestrator + kernel pipeline observability surface** (`.github/agents/copilot-cli-orchestrator.agent.md`, `.github/agents/brunella-orchestrator.agent.md`, `src/core/{kernelTypes,conductor,intentRouter,planner,toolExecutor,guardrail,copilotOrchestratorBridge}.ts`, `src/server/routes/{copilotOrchestratorRoute,kernelRoute}.ts`, `src/dashboard/components/dashboard/{CopilotOrchestratorPanel,KernelPipelinePanel}.tsx`, `src/dashboard/lib/navigation.tsx`, `src/server/routes/index.ts`): Added a model-agnostic Copilot orchestration contract and a supervisor-style kernel pipeline surface. The backend now exposes in-memory orchestration session/step logs plus kernel run/status endpoints, and the dashboard gained dedicated panels for real-time Copilot delegation traces and the multi-stage kernel pipeline ledger.
 
 - **P-Sales human-in-loop slice — persistent SQLite storage, pause/resume/audit/weekly-status endpoints** (`src/data/psales_db.ts`, `src/agents/StrategyPlannerAgent.ts`, `src/server/routes/psales-strategy.ts`, `src/dashboard/components/dashboard/PSalesStrategyPanel.tsx`, `test/integration/psales.strategy.integration.test.ts`): Replaced the in-memory strategy plan store with a persistent SQLite database (`better-sqlite3`) and extended the P-Sales strategy API with human-in-loop controls:
@@ -30,7 +32,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   - All affected tests now pass consistently on Windows: 19 passed, 2 skipped (integration tests requiring external dependencies)
   - See `myai/PYTEST_WINDOWS_FIX_REPORT.md` for detailed root cause analysis and technical documentation
 
-### Added
+### Added — continued
 
 - **HR onboarding dry-run helper split** (`src/utils/hrOnboardingDryRun.ts`, `src/server/routes/hrOnboarding.ts`, `src/dashboard/lib/hrOnboardingApi.ts`, `src/dashboard/components/dashboard/HROnboardingWidget.tsx`, `src/cli/commands/hr-onboarding-hu.ts`): Added a dedicated dry-run module wrapper and routed the dashboard, API, CLI, and HTTP flow through it so the HR onboarding slice has the requested file boundary.
 
@@ -118,6 +120,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Changed
 
+- **Modular state follow-up — LanceDB lifecycle + RAG route DI hardening** (`src/utils/lancedb_client.ts`, `src/server/routes/files.ts`, `conductor/project_state.json`, `conductor/tracks.md`, `conductor/tracks/modular_state_refactor_20260404/{meta.json,plan.md}`): Continued the `modular_state_refactor_20260404` track by moving the LanceDB module/connection cache behind `LanceDBClient` instance lifecycle (`dispose()` included), preserving the backward-compatible `lanceDBClient` / `invoiceStore` exports, and converting `/api/v1/rag/*` to an explicit dependency-injected route factory (`RagServiceDeps`, `DEFAULT_RAG_DEPS`) instead of per-request dynamic imports. The conductor state was synced to reflect the Phase 3 completion marker (50% progress).
+
 - **RAG engine lifecycle isolation** (`src/utils/rag.ts`, `test/rag-engine.test.ts`): Refactored the LanceDB-backed RAG helper into an instance-scoped `RagEngine` with injectable loader/database path dependencies and an explicit `dispose()` lifecycle hook. `HybridMemory` now subclasses `RagEngine`, preserving the old public surface while avoiding shared module/connection globals and making the engine easier to test in isolation.
 
 - **Runtime hardening follow-up + orchestration guardrail alignment** (`src/core/reactLoop.ts`, `src/agents/OrchestratorAgent.ts`, `test/reactLoop.test.ts`, `test/orchestratorReact.test.ts`, `test/guardrails/outputGuard.test.ts`, `test/universalOrchestratorService.test.ts`, `conductor/tracks/agent_runtime_hardening_20260406/{meta.json,plan.md,spec.md}`): Synced the completed runtime-hardening slice with the current orchestration flow, keeping the ReAct loop, guardrail/output-path checks, and conductor metadata aligned with the stabilized runtime contract.
@@ -131,6 +135,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   also refreshed after a successful reconciliation run.
 
 ### Tests
+
+- Refreshed the fast pre-push route coverage around the modular-state follow-up: `test/hrTimesheetRoutes.test.ts` now uses an explicit hoisted `delegateTask` mock, and `test/projectMaintainerRoutes.test.ts` mounts the same `express.json()` middleware path as production before exercising the dry-run POST route.
 
 - Added or refreshed focused regression coverage for the runtime hardening, kernel/orchestrator, and type-safety cleanup slices (`test/{reactLoop,orchestratorReact,universalOrchestratorService}.test.ts`, `test/guardrails/outputGuard.test.ts`, `test/{DeveloperAgent,conflictMediatorAgent,digitalHeadhunterAgent,grantWatcherAgent,phase4_supply_chain,robotkezV2Agent}.test.ts`, `test/dashboard/components/{InventoryCatalog,InventoryRadarWidget}.test.tsx`, `src/dashboard/store/systemSignalStore.test.ts`).
 
