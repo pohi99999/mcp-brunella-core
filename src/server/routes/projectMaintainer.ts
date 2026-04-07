@@ -106,16 +106,17 @@ export function createProjectMaintainerRoutes(db: Database.Database): Router {
    */
   router.post('/run', async (req: Request, res: Response) => {
     try {
-      const bodyStr = JSON.stringify(req.body);
+      const body = req.body ?? {};
+      const bodyStr = JSON.stringify(body);
       logInfo('ProjectMaintainerRoute', `On-demand scan triggered via API. Body: ${bodyStr}`);
 
       // Check if body is empty object (often happens if json parser is skipped or fails)
-      if (Object.keys(req.body).length === 0 && req.headers['content-type']?.includes('application/json')) {
+      if (Object.keys(body).length === 0 && req.headers['content-type']?.includes('application/json')) {
         logError('ProjectMaintainerRoute', 'WARNING: Received empty body but content-type was JSON. Possible middleware skip?');
       }
 
       // Robust boolean check: must be explicitly false (boolean) or "false" (string) to disable dryRun
-      const dryRun = req.body.dryRun !== false && String(req.body.dryRun).toLowerCase() !== 'false';
+      const dryRun = body.dryRun !== false && String(body.dryRun).toLowerCase() !== 'false';
       logInfo('ProjectMaintainerRoute', `DryRun decided: ${dryRun} (from raw: ${JSON.stringify(req.body)})`);
 
       const report = await runProjectMaintainerReport({
