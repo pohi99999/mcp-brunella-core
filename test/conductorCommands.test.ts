@@ -102,7 +102,8 @@ describe('Conductor CLI Commands', () => {
 
     const output = stdoutSpy.mock.calls.map(([chunk]) => String(chunk)).join('');
     expect(output).toContain('Project Status Report');
-    expect(output).toContain('CLI cleanup (high)');
+    expect(output).toContain('CLI cleanup');
+    expect(output).toContain('Priority: high');
     expect(output).toContain('Inventory polish (medium)');
     expect(output).toContain('1 tracks');
     expect(output).toContain('Total: 3 tracks');

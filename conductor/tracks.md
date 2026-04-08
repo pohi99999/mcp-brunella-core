@@ -1,11 +1,11 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-04-08T01:08:00.125Z
+**Utolso frissites:** 2026-04-08T14:00:00.449Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 219 total | 17 active | 21 completed | 179 archived
-**Csoportok:** Könyvelés / üzleti automatizálás: 44 | Nova asszisztens: 21 | Brunella rendszer: 88 | Egyéb: 66
+**Stats:** 220 total | 15 active | 24 completed | 179 archived
+**Csoportok:** Könyvelés / üzleti automatizálás: 45 | Nova asszisztens: 21 | Brunella rendszer: 88 | Egyéb: 66
 
 ---
 
@@ -28,9 +28,9 @@
 
 ---
 
-## Aktiv Szalak (Active) (17)
+## Aktiv Szalak (Active) (15)
 
-### Könyvelés / üzleti automatizálás (8)
+### Könyvelés / üzleti automatizálás (6)
 
 - [ ] **KKV CRM es lead-utanakovetes automatizalas** [HIGH]
   - **ID:** `kkv_crm_automation_20260404`
@@ -38,13 +38,6 @@
   - **Assignee:** GitHub Copilot
   - **Updated:** 2026-04-04
   - Mappa: ./tracks/kkv_crm_automation_20260404/
-
-- [ ] **KKV HR leave approvals** [HIGH]
-  - **ID:** `kkv_hr_leave_approvals_20260405`
-  - **Progress:** 70%
-  - **Assignee:** GitHub Copilot
-  - **Updated:** 2026-04-07
-  - Mappa: ./tracks/kkv_hr_leave_approvals_20260405/
 
 - [ ] **KKV HR timesheet es kultura automatizalas** [HIGH]
   - **ID:** `kkv_hr_timesheet_culture_20260405`
@@ -73,19 +66,12 @@
   - **Assignee:** Pohánka Péter
   - Mappa: ./tracks/konyveles_phase3_20260403/
 
-- [ ] **Logistics Vertical — repository-local Brunella boundary** [HIGH]
-  - **ID:** `logistics_vertical_repo_local_20260407`
-  - **Progress:** 80%
+- [ ] **Pohánka freelancer terjeszkedés és profilrendszer** [HIGH]
+  - **ID:** `pohanka_freelancer_terjeszkedes_20260408`
+  - **Progress:** 5%
   - **Assignee:** GitHub Copilot
-  - **Updated:** 2026-04-07
-  - Mappa: ./tracks/logistics_vertical_repo_local_20260407/
-
-- [ ] **P-Sales Human-in-Loop Revenue Pipeline — Lead gen, onboarding, KKV + Brand csatornák** [HIGH]
-  - **ID:** `psales_human_loop_revenue_20260407`
-  - **Progress:** 70%
-  - **Assignee:** GitHub Copilot
-  - **Updated:** 2026-04-07T04:33:10Z
-  - Mappa: ./tracks/psales_human_loop_revenue_20260407/
+  - **Updated:** 2026-04-08
+  - Mappa: ./tracks/pohanka_freelancer_terjeszkedes_20260408/
 
 
 ### Nova asszisztens (5)
@@ -142,12 +128,6 @@
   - **Updated:** 2026-04-06
   - Mappa: ./tracks/modular_state_refactor_20260404/
 
-- [ ] **Technical Debt Cleanup — TODO konverzió és elavult kód elimináció** [MEDIUM]
-  - **ID:** `technical_debt_cleanup_20260404`
-  - **Progress:** 70%
-  - **Assignee:** Gemini
-  - **Updated:** 2026-04-07
-  - Mappa: ./tracks/technical_debt_cleanup_20260404/
 
 
 ### Egyéb (1)
@@ -162,9 +142,9 @@
 
 ---
 
-## Befejezett (Completed - Not Archived) (21)
+## Befejezett (Completed - Not Archived) (24)
 
-### Könyvelés / üzleti automatizálás (9)
+### Könyvelés / üzleti automatizálás (12)
 
 - [x] **KKV CRM ingest alapok**
   - **ID:** `kkv_crm_ingest_foundation_20260405`
@@ -175,6 +155,10 @@
   - **ID:** `kkv_hr_automation_20260404`
   - **Completed:** 2026-04-05T12:00:00Z
   - Mappa: ./tracks/kkv_hr_automation_20260404/
+
+- [x] **KKV HR leave approvals**
+  - **ID:** `kkv_hr_leave_approvals_20260405`
+  - Mappa: ./tracks/kkv_hr_leave_approvals_20260405/
 
 - [x] **KKV HR leave wait/resume orchestration**
   - **ID:** `kkv_hr_leave_wait_resume_20260407`
@@ -196,10 +180,18 @@
   - **Completed:** 2026-04-05T12:00:00Z
   - Mappa: ./tracks/kkv_customer_service_ai_20260404/
 
+- [x] **Logistics Vertical — repository-local Brunella boundary**
+  - **ID:** `logistics_vertical_repo_local_20260407`
+  - Mappa: ./tracks/logistics_vertical_repo_local_20260407/
+
 - [x] **n8n Könyvelési Pipeline — Bank + KP + szamlazz.hu**
   - **ID:** `n8n_konyveles_pipeline_20260328`
   - **Completed:** 2026-04-03
   - Mappa: ./tracks/n8n_konyveles_pipeline_20260328/
+
+- [x] **P-Sales Human-in-Loop Revenue Pipeline — Lead gen, onboarding, KKV + Brand csatornák**
+  - **ID:** `psales_human_loop_revenue_20260407`
+  - Mappa: ./tracks/psales_human_loop_revenue_20260407/
 
 - [x] **KKV marketing es kommunikacios automatizalas**
   - **ID:** `kkv_marketing_automation_20260404`

@@ -6,6 +6,106 @@ User requested that the Copilot CLI automatically connect to a local Brunella MC
 
 ## History
 
+### 2026-04-08 22:55 - Brunella Project Manager status surface
+
+**Feladat:** A BrunellaProjectManagerAgent, a brunella-pm-status MCP tool, a read-only track/FOSZAL snapshot helper és a kapcsolódó tesztek véglegesítése.
+
+**Érintett fájlok:** `src/agents/BrunellaProjectManagerAgent.ts`, `src/tools/brunellaPmStatus.ts`, `src/services/brunellaProjectManagerStatus.ts`, `src/services/brunellaProjectManagerFoszal.ts`, `src/services/brunellaProjectManagerRag.ts`, `src/services/trackStatusSnapshot.ts`, `src/agents/permissions.ts`, `src/agents/registry.json`, `src/server/registry.ts`, `test/BrunellaProjectManagerAgent.test.ts`, `test/brunellaPmStatus.test.ts`, `test/brunellaProjectManagerStatus.test.ts`, `test/brunellaProjectManagerStatus.readonly.test.ts`, `.github/copilot-instructions.md`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A PM felület most read-only snapshotot használ, a kérdés pedig a RAG query-be is bekerül; a build és a célzott Vitest csomag zöld lett.
+
+### 2026-04-08 22:15 - Brunella Project Manager status surface
+
+**Feladat:** A BrunellaProjectManager read-only státusz felszínének befejezése külön agent, MCP tool, FOSZAL parser és RAG summary helper bontásban.
+
+**Érintett fájlok:** `src/agents/BrunellaProjectManagerAgent.ts`, `src/tools/brunellaPmStatus.ts`, `src/services/brunellaProjectManagerStatus.ts`, `src/services/brunellaProjectManagerFoszal.ts`, `src/services/brunellaProjectManagerRag.ts`, `test/BrunellaProjectManagerAgent.test.ts`, `test/brunellaPmStatus.test.ts`, `test/brunellaProjectManagerStatus.test.ts`, `test/brunellaProjectManagerStatus.readonly.test.ts`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A PM agent most a singleton `agentManager`-en keresztül delegál, a snapshot útvonal csak `buildTrackStatusSnapshot(trackStateManager.getState())`-et használ, és a FOSZAL / RAG logika külön helper fájlokba került.
+
+### 2026-04-08 20:24 - KKV CRM conductor completion
+
+**Feladat:** A korábban aktív `kkv_crm_automation_20260404` track lezárása completed/100%-os állapotra, majd a conductor indexek újraszinkronizálása.
+
+**Érintett fájlok:** `conductor/tracks/kkv_crm_automation_20260404/meta.json`, `conductor/project_state.json`, `conductor/tracks.md`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A meta most completed státuszban van, a `node build/cli.js conductor rescan` pedig a generált indexekben is completedként jeleníti meg a tracket.
+
+### 2026-04-08 19:53 - HR timesheet status surface completion
+
+**Feladat:** A KKV HR timesheet/culture track read-only status surface lezárása route, külön dashboard API, panel, CLI command és conductor meta/rescan frissítéssel.
+
+**Érintett fájlok:** `src/server/routes/hrTimesheet.ts`, `src/server/services/hrTimesheetStatusSnapshot.ts`, `src/types/hrTimesheetStatus.ts`, `src/dashboard/lib/hrTimesheetApi.ts`, `src/dashboard/components/dashboard/HRTimesheetStatusPanel.tsx`, `src/dashboard/lib/navigation.tsx`, `src/dashboard/lib/widgetRegistry.tsx`, `src/dashboard/components/dashboard/EnterpriseSuitePanel.tsx`, `src/cli/hrCommands.ts`, `src/cli/hrTimesheetCommands.ts`, `src/cli/commands/hr-timesheet-hu.ts`, `test/hrTimesheetRoutes.test.ts`, `test/hrTimesheetCommands.test.ts`, `test/dashboard/lib/hrTimesheetApi.test.ts`, `test/dashboard/components/HRTimesheetStatusPanel.test.tsx`, `conductor/tracks/kkv_hr_timesheet_culture_20260405/meta.json`, `conductor/project_state.json`, `conductor/tracks.md`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A panel most a dedikált `hrTimesheetApi.ts` kliensen át olvas, a `conductor rescan` pedig a tracket `completed` / 100%-os állapotba hozta a generált indexekben. Validáció: `npx vitest run --config vitest.dashboard.config.ts test/dashboard/lib/hrTimesheetApi.test.ts test/dashboard/components/HRTimesheetStatusPanel.test.tsx`, `npx vitest run test/hrTimesheetRoutes.test.ts test/hrTimesheetCommands.test.ts`, `node build/cli.js conductor rescan`.
+
+### 2026-04-08 18:56 - KKV masterplan status surface
+
+**Feladat:** A következő releváns trackhez read-only KKV masterplan status surface implementálása route, CLI, dashboard és közös snapshot helper formában.
+
+**Érintett fájlok:** `src/services/trackStatusSnapshot.ts`, `src/types/trackStatus.ts`, `src/server/tracksRoutes.ts`, `src/dashboard/lib/apiService.ts`, `src/dashboard/components/dashboard/KkvMasterplanStatusPanel.tsx`, `src/dashboard/lib/navigation.tsx`, `src/dashboard/components/dashboard/CopilotCommanderPanel.tsx`, `src/cli/conductorCommands.ts`, `test/conductorTracksMonitorRoute.test.ts`, `test/conductorCommands.test.ts`, `test/dashboard/components/KkvMasterplanStatusPanel.test.ts`, `conductor/tracks/kkv_business_automation_20260408/meta.json`, `conductor/project_state.json`, `conductor/tracks.md`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A status route tesztelhető `stateProvider` injektálással, a CLI `conductor status`/`state` ugyanazt a snapshotot írja ki, a dashboard panel a `getTrackStatusSnapshot()` API-t használja, és a build + célzott vitest csomag zöld volt.
+
+### 2026-04-08 19:52 - Docs/config SOT archive finalization
+
+**Feladat:** A docs/config SOT track verifikációja, archiválása és a conductor indexek újraszinkronizálása.
+
+**Érintett fájlok:** `conductor/archive/docs_config_sot_unification_20260408/{meta.json,plan.md,spec.md}`, `conductor/project_state.json`, `conductor/tracks.md`, `C:\Users\pohi9\.copilot\session-state\188c43f9-c00b-4b5b-abf5-42c07308d4c9\plan.md`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A `test/docsConfigSot.test.ts`, `test/configGuardian.test.ts` és `npm run build` zöld; a track most `archived` státuszban szerepel, és nincs szükség follow-up trackre.
+
+### 2026-04-08 19:10 - Mission/Test DevEx delivery
+
+**Feladat:** A Mission Templates & Test Cadence DevEx track befejezése: template loader, mission planner, test cadence advisor, CLI, dashboard panelek és a hozzájuk tartozó tesztek összekötése.
+
+**Érintett fájlok:** `src/tools/devExTypes.ts`, `src/tools/missionPlanner.ts`, `src/tools/testCadenceAdvisor.ts`, `src/server/routes/devex.ts`, `src/cli/devexCommands.ts`, `src/dashboard/lib/apiService.ts`, `src/dashboard/components/dashboard/MissionPlannerPanel.tsx`, `src/dashboard/components/dashboard/TestPlanPanel.tsx`, `test/missionPlanner.test.ts`, `test/testCadenceAdvisor.test.ts`, `test/devexRoutes.test.ts`, `src/dashboard/components/dashboard/MissionPlannerPanel.test.tsx`, `src/dashboard/components/dashboard/TestPlanPanel.test.tsx`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A DevEx snapshot most ugyanabból a planner core-ból szolgálja ki a CLI-t, a dashboardot és a route-ot. A célzott build, a DevEx tesztcsomag és a `npm run test:fast` zöld; a teljes `npm run test:ui` suite-ben meglévő, nem ehhez a slice-hoz kötődő dashboard regressziók maradtak.
+
+### 2026-04-08 18:42 - Phoenix/Flywheel observability delivery
+
+**Feladat:** A Phoenix + Data Flywheel observability és self-healing track implementálása, közös snapshot/markdown core, backend route, CLI és dashboard panel összekötése, majd build és teszt verifikáció.
+
+**Érintett fájlok:** `src/tools/dataFlywheelMetrics.ts`, `src/tools/phoenixInsights.ts`, `src/server/routes/observability.ts`, `src/dashboard/lib/apiService.ts`, `src/dashboard/lib/navigation.tsx`, `src/dashboard/components/dashboard/PhoenixFlywheelObservabilityPanel.tsx`, `src/dashboard/components/dashboard/PhoenixFlywheelObservabilityPanel.test.tsx`, `src/cli/observabilityCommands.ts`, `test/dataFlywheelMetrics.test.ts`, `test/phoenixInsights.test.ts`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A combined observability view most ugyanazt a snapshotot szolgálja ki a route, a CLI és a dashboard számára; a panel külön UI-konfiggal fut, a `npm run build`, a célzott vitest csomag és a `npm run test:fast` is zöld.
+
+### 2026-04-08 15:03 - Agent registry governance archive finalization
+
+**Feladat:** Az Agent Registry Governance track lezárása, a dashboard card teszt selectorának javítása, a track archívumba mozgatása és a conductor indexek újraszinkronizálása.
+
+**Érintett fájlok:** `src/dashboard/components/dashboard/AgentRegistryCard.test.tsx`, `conductor/tracks/agent_registry_governance_20260408/meta.json`, `conductor/archive/agent_registry_governance_20260408/{meta.json,plan.md,spec.md}`, `conductor/project_state.json`, `conductor/tracks.md`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A summary chip teszt most szűkebb selectorral fut, a track `archived` státuszra állt, és a `node build/cli.js conductor rescan` frissítette a generált conductor indexeket.
+
+### 2026-04-08 14:10 - Brunella optimization tracks scaffolding
+
+**Feladat:** A Brunella Agent System rendszer-elemzési dokumentuma alapján 5 új active conductor track létrehozása, a track scaffoldok elkészítése, majd a conductor rescan futtatása.
+
+**Erintett fajlok:** `conductor/tracks/agent_registry_governance_20260408/{meta.json,plan.md,spec.md}`, `conductor/tracks/docs_config_sot_unification_20260408/{meta.json,plan.md,spec.md}`, `conductor/tracks/phoenix_data_flywheel_observability_20260408/{meta.json,plan.md,spec.md}`, `conductor/tracks/mission_templates_test_cadence_devex_20260408/{meta.json,plan.md,spec.md}`, `conductor/tracks/kkv_pack_productization_20260408/{meta.json,plan.md,spec.md}`, `conductor/tracks.md`, `conductor/project_state.json`, `C:\Users\pohi9\.copilot\session-state\188c43f9-c00b-4b5b-abf5-42c07308d4c9\plan.md`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** Az új trackek most active státuszban szerepelnek a conductor indexben; az asszisztens javaslata alapján a KKV pack track alacsonyabb prioritású follow-up maradt, de user-kérésre active-ként lett felvéve. Validáció: `npx tsx src/cli.ts conductor rescan`.
+
 ### 2026-04-08 01:24 - KKV roadmap docs + Copilot sync
 
 **Feladat:** A KKV uzleti automatizalasi masterplan, a conductor dokumentacio es a Copilot session log frissitese, majd a teljes munkafolyamat commit/push elokeszitese.
@@ -2155,3 +2255,18 @@ pm run test:dashboard → 200 passed | 0 failed | 20 test file ✅**
 **Státusz:** ✅ Befejezve
 
 **Megjegyzés:** A szerver `uv run --project workspace-mcp-server workspace-mcp-server --workspace-root ${WORKSPACE_ROOT}` paranccsal fut és `autoStart: true`, ezért a backend indulásakor — így a `dashboard.bat` útvonalon is — automatikusan indul, ha a `uv` elérhető a gépen.
+
+### 2026-04-08 04:05 - Freelancer terjeszkedés track
+
+**Feladat:** A Pohánka & Társa terjeszkedési tervéhez magyar fókuszú freelancer platformtérképet, profil sablont és Brunella-támogatott terjesztési workflow-kat létrehozni, majd ezt conductor trackként rögzíteni.
+
+**Érintett fájlok:** `F:\\mcp-brunella-core\\.worktrees\\terjeszkedés\\terv.md`, `conductor/tracks/pohanka_freelancer_terjeszkedes_20260408/{meta.json,plan.md,spec.md}`, `conductor/tracks.md`, `conductor/project_state.json`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A track aktívra állt, a magyar platformprioritás (LinkedIn, Malt, Upwork, helyi közösségek) és a Brunella belső lead/content/outreach támogatása rögzítve lett.
+### 2026-04-08 18:15 - Docs/config SOT unification
+**Feladat:** A dokumentáció/config single source of truth réteg, a route-ok, CLI, dashboard, MCP toolok és a unified sync script bekötése.
+**Érintett fájlok:** src/tools/docsConfigSot.ts, src/tools/docUnifier.ts, src/tools/configGuardian.ts, src/server/routes/docsConfig.ts, src/server/routes/index.ts, src/server/registry.ts, src/cli/docsConfigCommands.ts, src/cli.ts, src/dashboard/components/dashboard/DocsSotPanel.tsx, src/dashboard/components/dashboard/ConfigHealthPanel.tsx, src/dashboard/lib/apiService.ts, src/dashboard/lib/navigation.tsx, scripts/sync_docs.ts, scripts/update_master_context.ts, package.json, test/docsConfigSot.test.ts, test/docUnifier.test.ts, test/configGuardian.test.ts, test/docsConfigFixture.ts
+**Státusz:** ✅ Befejezve
+**Megjegyzés:** Build zöld, docs/config gyors tesztek zöldek, a következő track a fennmaradó roadmap szerinti következő epic lehet.

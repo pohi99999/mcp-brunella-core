@@ -1,6 +1,6 @@
 # FŐSZÁL - Egyesített Fejlesztési Napló
 
-**Generálva:** 2026-04-08 03:27
+**Generálva:** 2026-04-08 22:56
 **Script:** `scripts/sync_foszal.py`
 
 ---
@@ -29,6 +29,70 @@ start-full.bat
 ## Összesített Napló (Időrendben)
 
 ### 2026-04-08
+
+#### 22:55 - [Copilot] Brunella Project Manager status surface
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `src/agents/BrunellaProjectManagerAgent.ts`, `src/tools/brunellaPmStatus.ts`, `src/services/brunellaProjectManagerStatus.ts`, `src/services/brunellaProjectManagerFoszal.ts`, `src/services/brunellaProjectManagerRag.ts`, `src/services/trackStatusSnapshot.ts`, `src/agents/permissions.ts`, `src/agents/registry.json`, `src/server/registry.ts`, `test/BrunellaProjectManagerAgent.test.ts`, `test/brunellaPmStatus.test.ts`, `test/brunellaProjectManagerStatus.test.ts`, `test/brunellaProjectManagerStatus.readonly.test.ts`, `.github/copilot-instructions.md`
+
+#### 22:15 - [Copilot] Brunella Project Manager status surface
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `src/agents/BrunellaProjectManagerAgent.ts`, `src/tools/brunellaPmStatus.ts`, `src/services/brunellaProjectManagerStatus.ts`, `src/services/brunellaProjectManagerFoszal.ts`, `src/services/brunellaProjectManagerRag.ts`, `test/BrunellaProjectManagerAgent.test.ts`, `test/brunellaPmStatus.test.ts`, `test/brunellaProjectManagerStatus.test.ts`, `test/brunellaProjectManagerStatus.readonly.test.ts`
+
+#### 20:24 - [Copilot] KKV CRM conductor completion
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `conductor/tracks/kkv_crm_automation_20260404/meta.json`, `conductor/project_state.json`, `conductor/tracks.md`
+
+#### 19:53 - [Copilot] HR timesheet status surface completion
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `src/server/routes/hrTimesheet.ts`, `src/server/services/hrTimesheetStatusSnapshot.ts`, `src/types/hrTimesheetStatus.ts`, `src/dashboard/lib/hrTimesheetApi.ts`, `src/dashboard/components/dashboard/HRTimesheetStatusPanel.tsx`, `src/dashboard/lib/navigation.tsx`, `src/dashboard/lib/widgetRegistry.tsx`, `src/dashboard/components/dashboard/EnterpriseSuitePanel.tsx`, `src/cli/hrCommands.ts`, `src/cli/hrTimesheetCommands.ts`, `src/cli/commands/hr-timesheet-hu.ts`, `test/hrTimesheetRoutes.test.ts`, `test/hrTimesheetCommands.test.ts`, `test/dashboard/lib/hrTimesheetApi.test.ts`, `test/dashboard/components/HRTimesheetStatusPanel.test.tsx`, `conductor/tracks/kkv_hr_timesheet_culture_20260405/meta.json`, `conductor/project_state.json`, `conductor/tracks.md`
+
+#### 19:52 - [Copilot] Docs/config SOT archive finalization
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `conductor/archive/docs_config_sot_unification_20260408/{meta.json,plan.md,spec.md}`, `conductor/project_state.json`, `conductor/tracks.md`, `C:\Users\pohi9\.copilot\session-state\188c43f9-c00b-4b5b-abf5-42c07308d4c9\plan.md`
+
+#### 19:10 - [Copilot] Mission/Test DevEx delivery
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `src/tools/devExTypes.ts`, `src/tools/missionPlanner.ts`, `src/tools/testCadenceAdvisor.ts`, `src/server/routes/devex.ts`, `src/cli/devexCommands.ts`, `src/dashboard/lib/apiService.ts`, `src/dashboard/components/dashboard/MissionPlannerPanel.tsx`, `src/dashboard/components/dashboard/TestPlanPanel.tsx`, `test/missionPlanner.test.ts`, `test/testCadenceAdvisor.test.ts`, `test/devexRoutes.test.ts`, `src/dashboard/components/dashboard/MissionPlannerPanel.test.tsx`, `src/dashboard/components/dashboard/TestPlanPanel.test.tsx`
+
+#### 18:56 - [Claude] KKV masterplan status surface
+- **Agent:** Claude
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `src/services/trackStatusSnapshot.ts`, `src/types/trackStatus.ts`, `src/server/tracksRoutes.ts`, `src/dashboard/lib/apiService.ts`, `src/dashboard/components/dashboard/KkvMasterplanStatusPanel.tsx`, `src/dashboard/lib/navigation.tsx`, `src/dashboard/components/dashboard/CopilotCommanderPanel.tsx`, `src/cli/conductorCommands.ts`, `test/conductorTracksMonitorRoute.test.ts`, `test/conductorCommands.test.ts`, `test/dashboard/components/KkvMasterplanStatusPanel.test.ts`, `conductor/tracks/kkv_business_automation_20260408/meta.json`, `conductor/project_state.json`, `conductor/tracks.md`
+
+#### 18:56 - [Copilot] KKV masterplan status surface
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `src/services/trackStatusSnapshot.ts`, `src/types/trackStatus.ts`, `src/server/tracksRoutes.ts`, `src/dashboard/lib/apiService.ts`, `src/dashboard/components/dashboard/KkvMasterplanStatusPanel.tsx`, `src/dashboard/lib/navigation.tsx`, `src/dashboard/components/dashboard/CopilotCommanderPanel.tsx`, `src/cli/conductorCommands.ts`, `test/conductorTracksMonitorRoute.test.ts`, `test/conductorCommands.test.ts`, `test/dashboard/components/KkvMasterplanStatusPanel.test.ts`, `conductor/tracks/kkv_business_automation_20260408/meta.json`, `conductor/project_state.json`, `conductor/tracks.md`
+
+#### 18:42 - [Copilot] Phoenix/Flywheel observability delivery
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `src/tools/dataFlywheelMetrics.ts`, `src/tools/phoenixInsights.ts`, `src/server/routes/observability.ts`, `src/dashboard/lib/apiService.ts`, `src/dashboard/lib/navigation.tsx`, `src/dashboard/components/dashboard/PhoenixFlywheelObservabilityPanel.tsx`, `src/dashboard/components/dashboard/PhoenixFlywheelObservabilityPanel.test.tsx`, `src/cli/observabilityCommands.ts`, `test/dataFlywheelMetrics.test.ts`, `test/phoenixInsights.test.ts`
+
+#### 18:15 - [Copilot] Docs/config SOT unification
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** src/tools/docsConfigSot.ts, src/tools/docUnifier.ts, src/tools/configGuardian.ts, src/server/routes/docsConfig.ts, src/server/routes/index.ts, src/server/registry.ts, src/cli/docsConfigCommands.ts, src/cli.ts, src/dashboard/components/dashboard/DocsSotPanel.tsx, src/dashboard/components/dashboard/ConfigHealthPanel.tsx, src/dashboard/lib/apiService.ts, src/dashboard/lib/navigation.tsx, scripts/sync_docs.ts, scripts/update_master_context.ts, package.json, test/docsConfigSot.test.ts, test/docUnifier.test.ts, test/configGuardian.test.ts, test/docsConfigFixture.ts
+
+#### 15:03 - [Copilot] Agent registry governance archive finalization
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `src/dashboard/components/dashboard/AgentRegistryCard.test.tsx`, `conductor/tracks/agent_registry_governance_20260408/meta.json`, `conductor/archive/agent_registry_governance_20260408/{meta.json,plan.md,spec.md}`, `conductor/project_state.json`, `conductor/tracks.md`
+
+#### 14:10 - [Copilot] Brunella optimization tracks scaffolding
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+
+#### 04:05 - [Copilot] Freelancer terjeszkedés track
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `F:\\mcp-brunella-core\\.worktrees\\terjeszkedés\\terv.md`, `conductor/tracks/pohanka_freelancer_terjeszkedes_20260408/{meta.json,plan.md,spec.md}`, `conductor/tracks.md`, `conductor/project_state.json`
 
 #### 02:30 - [Gemini] Toura Helyi Fejlesztési Hub Beállítása
 - **Agent:** Gemini
@@ -1016,10 +1080,10 @@ start-full.bat
 
 | Agent | Bejegyzések | Utolsó Aktivitás |
 |-------|-------------|------------------|
-| Claude | 85 | 2026-03-31 |
+| Claude | 86 | 2026-04-08 |
 | Gemini | 1 | 2026-04-08 |
 | Cursor | 0 | N/A |
-| Copilot | 88 | 2026-04-08 |
+| Copilot | 100 | 2026-04-08 |
 
 ---
 

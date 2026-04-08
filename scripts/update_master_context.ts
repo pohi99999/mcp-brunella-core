@@ -1,6 +1,8 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { buildDocsConfigSotSnapshot } from '../src/tools/docsConfigSot.js';
 
 // Paths
 const ROOT_DIR = process.cwd();
@@ -22,7 +24,7 @@ interface PackageJson {
   dependencies: Record<string, string>;
 }
 
-async function updateMasterContext() {
+export async function updateMasterContext(dryRun = false) {
   console.log("🔄 Updating BRUNELLA_MASTER_CONTEXT.md...");
 
   try {
@@ -33,6 +35,7 @@ async function updateMasterContext() {
 
     const packageRaw = await fs.promises.readFile(PACKAGE_PATH, 'utf-8');
     const pkg: PackageJson = JSON.parse(packageRaw);
+    const sotSnapshot = buildDocsConfigSotSnapshot(ROOT_DIR);
 
     // 2. Format Agent Table
     const coreAgents = agents.filter(a => ['orchestrator', 'agent_manager', 'evaluator', 'project_conductor'].includes(a.name.toLowerCase()) || (a.role && a.role.toLowerCase().includes('manager')));
@@ -67,6 +70,7 @@ A **Brunella Agent System (BAS)** egy hibrid, multi-agent AI ökoszisztéma, ame
 *   **Lokális + Felhő AI:** Ollama (Privát) + Gemini/OpenAI (Teljesítmény).
 *   **Öngyógyító:** Phoenix Protocol v2 (Hiba detektálás és újraindítás).
 *   **Memória:** SQLite (Feladatok) + LanceDB (Vektor/RAG) + AnythingLLM (Tudásbázis).
+*   **Docs/config SOT:** ${sotSnapshot.summary.status} (${sotSnapshot.summary.score}/100, docs ${sotSnapshot.documents.presentRequiredCount}/${sotSnapshot.documents.requiredCount}, config ${sotSnapshot.config.docsKeyCoveragePercent}% / ${sotSnapshot.config.exampleKeyCoveragePercent}%).
 
 ---
 
@@ -116,8 +120,14 @@ ${formatAgentTable(businessAgents)}
 `;
 
     // 4. Write File
-    await fs.promises.writeFile(MASTER_CONTEXT_PATH, content, 'utf-8');
+    const existing = fs.existsSync(MASTER_CONTEXT_PATH) ? await fs.promises.readFile(MASTER_CONTEXT_PATH, 'utf-8') : '';
+    const changed = existing !== content;
+
+    if (!dryRun && changed) {
+      await fs.promises.writeFile(MASTER_CONTEXT_PATH, content, 'utf-8');
+    }
     console.log("✅ BRUNELLA_MASTER_CONTEXT.md updated successfully!");
+    return { changed, content };
 
   } catch (error) {
     console.error("❌ Error updating master context:", error);
@@ -125,4 +135,10 @@ ${formatAgentTable(businessAgents)}
   }
 }
 
-updateMasterContext();
+const isDirectRun = process.argv[1]
+  ? path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)
+  : false;
+
+if (isDirectRun) {
+  void updateMasterContext();
+}
