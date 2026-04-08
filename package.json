@@ -190,7 +190,8 @@
     "toml": "^4.1.1",
     "uuid": "^13.0.0",
     "zod": "^4.3.6",
-    "zustand": "^5.0.12"
+    "zustand": "^5.0.12",
+    "lancedb": "^0.0.1"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
@@ -228,6 +229,17 @@
     "typescript": "^5.7.3",
     "typescript-eslint": "^8.58.1",
     "vite": "^8.0.7",
-    "vitest": "^3.0.5"
+    "vitest": "^3.0.5",
+    "@types/express-serve-static-core": "^5.1.1",
+    "@types/glob": "^9.0.0",
+    "@types/minimatch": "^6.0.0",
+    "@types/yaml": "^1.9.7",
+    "express-serve-static-core": "^0.1.1",
+    "glob": "^13.0.6",
+    "jose": "^6.2.2",
+    "minimatch": "^10.2.5",
+    "playwright": "^1.59.1",
+    "yaml": "^2.8.3",
+    "zod-to-json-schema": "^3.25.2"
   }
 }
