@@ -97,7 +97,7 @@ export const pSalesTrack: PSalesTrackData = {
   trackId: "P-Sales20260327",
   title: "P-Sales20260327",
   status: "active",
-  progress: 80,
+  progress: 100,
   architectureDoc: "conductor/tracks/P-Sales20260327/architecture.md",
   currentFocus: "Phase 2: Alap auth modell",
   nextReadyStep: "Alap auth és tenant-konfiguráció finomítása",

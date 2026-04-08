@@ -81,12 +81,12 @@ A `README.md` a master dokumentum (~1100 sor). NE olvasd be egészben indulásko
 ## 📊 Auto-generated projekt statisztikák
 
 - Agent registry entries: **78**
-- Route modulok a `src/server/routes/` alatt: **81**
-- Aktív route mountok a központi routerben: **96**
+- Route modulok a `src/server/routes/` alatt: **85**
+- Aktív route mountok a központi routerben: **99**
 - MCP tool fájlok a `src/tools/` alatt: **37**
 - Detektált MCP tool definíciók / regisztrációk: **4**
-- CLI parancs deklarációk: **234**
-- Dashboard navigációs panelek: **93**
+- CLI parancs deklarációk: **239**
+- Dashboard navigációs panelek: **95**
 
 > Ezt a blokkot a `npm run sync:doc-stats` generálja.
 <!-- DOC_STATS_END -->
