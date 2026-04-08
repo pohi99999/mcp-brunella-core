@@ -70,5 +70,6 @@
     "npm test and npm run build pass",
     "EPP v2 compliance"
   ],
-  "nextStep": "Track archived."
+  "nextStep": "Track archived.",
+  "group": "other"
 }

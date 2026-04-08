@@ -1,16 +1,19 @@
 import { Command } from "commander";
 import chalk from "chalk";
 import ora from "ora";
-import { cloudflareClient } from "../utils/cloudflareClient.js";
 import { logDebug } from "../utils/logger.js";
 import { ensureError } from "../utils/ensureError.js";
-import { edgeCommand as edgeHuCommand } from "./commands/edge-hu.js";
 import { writeLine } from '../utils/cliOutput.js';
 
 const API_BASE = process.env.BRUNELLA_API_URL || "http://localhost:3000";
 
 function getErrorMessage(error: unknown): string {
   return ensureError(error).message;
+}
+
+async function getCloudflareClient() {
+  const { cloudflareClient } = await import("../utils/cloudflareClient.js");
+  return cloudflareClient;
 }
 
 export function registerEdgeCommands(program: Command) {
@@ -24,6 +27,7 @@ export function registerEdgeCommands(program: Command) {
     .action(async () => {
       const spinner = ora("Checking Edge status...").start();
       try {
+        const cloudflareClient = await getCloudflareClient();
         // Perform a simple check by fetching history with limit 1
         await cloudflareClient.fetchHistory(1);
         spinner.succeed(chalk.green("Edge Worker is Online"));
@@ -45,6 +49,7 @@ export function registerEdgeCommands(program: Command) {
     .action(async (instruction: string, options: { context?: string }) => {
       const spinner = ora("Submitting task to Edge...").start();
       try {
+        const cloudflareClient = await getCloudflareClient();
         let context = {};
         if (options.context) {
           try {
@@ -145,6 +150,7 @@ export function registerEdgeCommands(program: Command) {
       const limit = parseInt(options.limit, 10);
       const spinner = ora(`Fetching last ${limit} tasks...`).start();
       try {
+        const cloudflareClient = await getCloudflareClient();
         const data = await cloudflareClient.fetchHistory(limit);
         spinner.stop();
 

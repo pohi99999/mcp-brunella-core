@@ -44,8 +44,8 @@ export interface TaskItem {
   status: 'pending' | 'running' | 'done' | 'error' | 'cancelled' | 'paused';
   created_at: string;
   completed_at?: string | null;
-  context?: any;
-  result?: any;
+  context?: string | null;
+  result?: string | null;
 }
 
 export interface BusinessJob {

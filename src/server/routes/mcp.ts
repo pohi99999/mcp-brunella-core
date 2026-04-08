@@ -159,7 +159,7 @@ router.post('/tools/:toolName', async (req, res) => {
   } catch (e: unknown) {
     const error = e instanceof Error ? e.message : String(e);
     logError('MCP API', `POST /tools/${req.params.toolName} failed: ${error}`);
-    res.json({ success: false, error });
+    res.status(500).json({ success: false, error });
   }
 });
 
@@ -192,11 +192,11 @@ router.get('/audit', (req, res) => {
  */
 router.get('/safezones', (req, res) => {
   try {
-    const config = (validator as any).config;
+    const config = validator.getConfig();
 
     res.json({
       success: true,
-      safe_zones: config.safe_zones.map((zone: any) => ({
+      safe_zones: config.safe_zones.map((zone) => ({
         name: zone.name,
         path: zone.path,
         permissions: zone.permissions,

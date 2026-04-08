@@ -22,5 +22,6 @@
   "description": "Cloudflare Chat Integration második iterációja: WebSocket real-time kommunikáció, D1 perzisztens task storage, CLI parancsok (edge status/chat/task/query/history).",
   "spec_status": "completed",
   "spec_approved_at": "2026-02-12T18:35:00Z",
-  "archived_at": "2026-02-13T00:00:00Z"
+  "archived_at": "2026-02-13T00:00:00Z",
+  "group": "nova"
 }

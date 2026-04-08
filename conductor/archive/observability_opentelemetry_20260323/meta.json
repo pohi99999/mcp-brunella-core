@@ -68,5 +68,6 @@
     "Prometheus /metrics endpoint bővítve",
     "npm run build && npm test → 0 hiba"
   ],
-  "dependencies": []
+  "dependencies": [],
+  "group": "other"
 }

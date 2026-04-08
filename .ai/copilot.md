@@ -6,6 +6,16 @@ User requested that the Copilot CLI automatically connect to a local Brunella MC
 
 ## History
 
+### 2026-04-08 01:24 - KKV roadmap docs + Copilot sync
+
+**Feladat:** A KKV uzleti automatizalasi masterplan, a conductor dokumentacio es a Copilot session log frissitese, majd a teljes munkafolyamat commit/push elokeszitese.
+
+**Erintett fajlok:** `conductor/tracks/kkv_business_automation_20260408/{meta.json,plan.md,spec.md}`, `conductor/tracks.md`, `conductor/project_state.json`, `.ai/copilot.md`, `.ai/FOSZAL.md`, `C:\\Users\\pohi9\\.copilot\\session-state\\f72e95c7-8f94-484e-b3e7-a8b9d3b66156\\plan.md`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A roadmap most már jelzi a Brunella-local indulást és a későbbi standalone / embedded termékesítési irányt is; a Copilot napló és a conductor állapot is ezt a kört rögzítik, majd jön a commit és a push.
+
 ### 2026-04-07 21:07 - Dashboard C# MCP warmup
 
 **Feladat:** A C# MCP szerver bekötése a dashboard launcherbe úgy, hogy a build/warmup lépés megjelenjen a `dashboard.bat`-ban, de a tényleges futó processzt továbbra is Brunella auto-startja kezelje.

@@ -16,5 +16,6 @@
   ],
   "estimatedHours": 10,
   "description": "Jules AI integráció GitHub Actions-be - biztonsági audit, auto-fix, performance optimization, self-healing CI.",
-  "spec_status": "pending_approval"
+  "spec_status": "pending_approval",
+  "group": "brunella"
 }

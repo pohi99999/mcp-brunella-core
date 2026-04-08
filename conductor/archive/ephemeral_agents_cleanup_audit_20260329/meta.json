@@ -31,5 +31,6 @@
     "Ideiglenes state és foglalások felszabadulnak",
     "A fontos artifactek retention policy szerint megmaradnak",
     "A supervisor vagy dashboard képes rövid postmortem összefoglalót megjeleníteni"
-  ]
+  ],
+  "group": "other"
 }

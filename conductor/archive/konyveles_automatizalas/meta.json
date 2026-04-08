@@ -7,20 +7,73 @@
   "start_date": "2026-03-26",
   "estimated_days": 22,
   "milestones": [
-    { "id": "discovery", "title": "Discovery & Data mapping", "estimate_days": 2 },
-    { "id": "email_agent", "title": "Email-Agent prototípus", "estimate_days": 3 },
-    { "id": "nav_integration", "title": "NAV API integráció", "estimate_days": 3 },
-    { "id": "ocr_extract", "title": "OCR / Adatkinyerés", "estimate_days": 4 },
-    { "id": "matching_engine", "title": "Matching Engine", "estimate_days": 4 },
-    { "id": "bank_recon", "title": "Bank Reconciliation", "estimate_days": 3 },
-    { "id": "reporting", "title": "Riportálás és értesítések", "estimate_days": 1 },
-    { "id": "qa_deploy", "title": "Tesztelés, QA, Deploy", "estimate_days": 2 }
+    {
+      "id": "discovery",
+      "title": "Discovery & Data mapping",
+      "estimate_days": 2
+    },
+    {
+      "id": "email_agent",
+      "title": "Email-Agent prototípus",
+      "estimate_days": 3
+    },
+    {
+      "id": "nav_integration",
+      "title": "NAV API integráció",
+      "estimate_days": 3
+    },
+    {
+      "id": "ocr_extract",
+      "title": "OCR / Adatkinyerés",
+      "estimate_days": 4
+    },
+    {
+      "id": "matching_engine",
+      "title": "Matching Engine",
+      "estimate_days": 4
+    },
+    {
+      "id": "bank_recon",
+      "title": "Bank Reconciliation",
+      "estimate_days": 3
+    },
+    {
+      "id": "reporting",
+      "title": "Riportálás és értesítések",
+      "estimate_days": 1
+    },
+    {
+      "id": "qa_deploy",
+      "title": "Tesztelés, QA, Deploy",
+      "estimate_days": 2
+    }
   ],
-  "dependencies": ["NAV API hozzáférés", "Bank API/CMS hozzáférés (vagy napi CSV)", "Google Drive / IMAP hozzáférés"],
-  "required_credentials": ["NAV_API_KEY", "BANK_API_CREDENTIALS", "GDRIVE_SERVICE_ACCOUNT"],
+  "dependencies": [
+    "NAV API hozzáférés",
+    "Bank API/CMS hozzáférés (vagy napi CSV)",
+    "Google Drive / IMAP hozzáférés"
+  ],
+  "required_credentials": [
+    "NAV_API_KEY",
+    "BANK_API_CREDENTIALS",
+    "GDRIVE_SERVICE_ACCOUNT"
+  ],
   "recommended_branch": "feature/konyveles_automatizalas",
-  "tags": ["finance","automation","nav","bank-reconciliation","ocr","agent"],
-  "files": ["plan.md","spec.md","meta.json","tasks.md"],
+  "tags": [
+    "finance",
+    "automation",
+    "nav",
+    "bank-reconciliation",
+    "ocr",
+    "agent"
+  ],
+  "files": [
+    "plan.md",
+    "spec.md",
+    "meta.json",
+    "tasks.md"
+  ],
   "notes": "Első priority: Discovery - mezőtérképek és mintahalmaz előállítása. Ha hiányzik bármely külső hozzáférés, fallback: manuális CSV import.",
-  "risk_level": "medium"
+  "risk_level": "medium",
+  "group": "business"
 }

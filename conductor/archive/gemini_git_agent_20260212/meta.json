@@ -16,5 +16,6 @@
   ],
   "estimatedHours": 12,
   "description": "Öntanuló ágensrendszer Git commit history + fájlrendszer memóriával. Ütemezett demands, Issue/PR alapú interakció.",
-  "spec_status": "pending_approval"
+  "spec_status": "pending_approval",
+  "group": "other"
 }

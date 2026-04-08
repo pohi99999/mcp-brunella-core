@@ -8,8 +8,16 @@
   "owner": "Claude",
   "spec_status": "approved",
   "progress": 100,
-  "tags": ["ci", "github-actions", "testing", "automation", "dashboard", "cli"],
+  "tags": [
+    "ci",
+    "github-actions",
+    "testing",
+    "automation",
+    "dashboard",
+    "cli"
+  ],
   "dependencies": [],
   "estimated_effort": "high",
-  "business_value": "Automated long-running test coverage + reporting"
+  "business_value": "Automated long-running test coverage + reporting",
+  "group": "brunella"
 }

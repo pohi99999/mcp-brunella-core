@@ -36,7 +36,7 @@ async function apiFetch<T>(path: string, options?: RequestInit): Promise<T> {
     const data = JSON.parse(text) as T;
 
     if (!response.ok) {
-        throw new Error((data as any).error || `HTTP ${response.status}`);
+        throw new Error((data as { error?: string }).error || `HTTP ${response.status}`);
     }
 
     return data;
@@ -50,17 +50,26 @@ function formatTime(timestamp: string): string {
     return date.toLocaleString('hu-HU');
 }
 
+interface TaskResultLike {
+    status?: string;
+    message?: string;
+    data?: unknown;
+}
+function isTaskResultLike(v: unknown): v is TaskResultLike {
+    return typeof v === 'object' && v !== null;
+}
+
 /**
  * Task result formatter (pretty print)
  */
-function formatTaskResult(result: any) {
+function formatTaskResult(result: unknown): void {
     if (typeof result === 'string') {
         writeLine(chalk.cyan(`\n📋 Eredmény:\n`));
         writeLine(chalk.gray(`   ${result}`));
         return;
     }
 
-    if (result?.status) {
+    if (isTaskResultLike(result) && result.status) {
         writeLine(chalk.cyan(`\n📋 Eredmény:\n`));
         writeLine(chalk.gray(`   Státusz: ${result.status}`));
         if (result.message) writeLine(chalk.gray(`   Üzenet: ${result.message}`));
@@ -88,7 +97,7 @@ export function registerTaskCommands(program: Command) {
         .description('Természetes nyelvű feladat végrehajtás')
         .option('-c, --context <json>', 'További kontextus JSON formátumban')
         .option('-i, --interactive', 'Interaktív mód')
-        .action(async (descriptionArgs: string[], options: any) => {
+        .action(async (descriptionArgs: string[], options: { interactive?: boolean; context?: string }) => {
             // If no args or --interactive flag, start interactive mode
             if (descriptionArgs.length === 0 || options.interactive) {
                 await startInteractiveTaskMode();
@@ -99,7 +108,7 @@ export function registerTaskCommands(program: Command) {
             const spinner = ora(`Feladat végrehajtása: "${description}"`).start();
 
             try {
-                let context: any = {};
+                let context: Record<string, unknown> = {};
 
                 if (options.context) {
                     try {
@@ -113,7 +122,7 @@ export function registerTaskCommands(program: Command) {
 
                 const result = await apiFetch<{
                     status: string;
-                    result: any;
+                    result: unknown;
                     executedAt: string;
                 }>('/api/enterprise/execute', {
                     method: 'POST',
@@ -260,7 +269,7 @@ async function executeTask(taskDescription: string) {
     try {
         const result = await apiFetch<{
             status: string;
-            result: any;
+            result: unknown;
             executedAt: string;
         }>('/api/enterprise/execute', {
             method: 'POST',

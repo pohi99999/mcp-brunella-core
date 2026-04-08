@@ -30,5 +30,6 @@
     "Költség vagy token budget túllépés leállítja a futást",
     "A supervisor valós időben látja a budget állapotot",
     "A limitált agent nem tud végtelen retry loopba kerülni"
-  ]
+  ],
+  "group": "other"
 }

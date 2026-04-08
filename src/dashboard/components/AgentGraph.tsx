@@ -1,5 +1,5 @@
 
-import { useCallback, useEffect, useState } from 'react';
+import { type ElementType, useCallback, useEffect, useState } from 'react';
 import ReactFlow, {
     MiniMap,
     Controls,
@@ -26,7 +26,7 @@ import {
     MagicWand
 } from '@phosphor-icons/react';
 
-const AGENT_ICONS: Record<string, any> = {
+const AGENT_ICONS: Record<string, ElementType> = {
     'Orchestrator': MagicWand,
     'Researcher': MagnifyingGlass,
     'Developer': Code,

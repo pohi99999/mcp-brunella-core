@@ -38,7 +38,19 @@
     "AccountingKbWidget.tsx, CashFlowWidget.tsx dashboard komponensek",
     "brunella kb * CLI parancsok"
   ],
-  "tags": ["könyvelés", "MCP", "Langflow", "LanceDB", "multi-agent", "reconciliation", "anomáliadetektálás", "NAV", "n8n", "RAG", "kognitív"],
+  "tags": [
+    "könyvelés",
+    "MCP",
+    "Langflow",
+    "LanceDB",
+    "multi-agent",
+    "reconciliation",
+    "anomáliadetektálás",
+    "NAV",
+    "n8n",
+    "RAG",
+    "kognitív"
+  ],
   "phases": {
     "phase0": {
       "name": "Előfeltétel ellenőrzés — BLOKKOLVA: konyveles_phase3 kell előbb",
@@ -122,5 +134,6 @@
     "CashFlowPredictionAgent: 14 napos forecast MAPE < 15% historikus adaton",
     "Összes Playwright E2E zöld, npm run build 0 hibával",
     "Dashboard CashFlowWidget megjelenik és adatot mutat"
-  ]
+  ],
+  "group": "business"
 }

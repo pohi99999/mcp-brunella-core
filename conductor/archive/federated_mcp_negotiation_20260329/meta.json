@@ -29,5 +29,6 @@
     "Kritikus üzleti küszöbértékek fölött approval checkpoint lép be",
     "A teljes tárgyalási transcript auditálható",
     "A negotiation outcome integrálható a remote routing flowba"
-  ]
+  ],
+  "group": "brunella"
 }

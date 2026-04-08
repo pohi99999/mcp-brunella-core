@@ -16,11 +16,6 @@ vi.mock('apify-client', () => ({
 
 import { ApifyScrapingAgent } from '../src/agents/ApifyScrapingAgent.js';
 
-const originalTokens = {
-  api: process.env.APIFY_API_TOKEN,
-  legacy: process.env.APIFY_TOKEN,
-};
-
 function configureMockClient(items: unknown[]) {
   apifyMocks.actor.mockReturnValue({ call: apifyMocks.actorCall });
   apifyMocks.dataset.mockReturnValue({ listItems: apifyMocks.datasetListItems });
@@ -36,22 +31,12 @@ async function createAgent() {
 
 beforeEach(() => {
   vi.clearAllMocks();
-  process.env.APIFY_API_TOKEN = 'test-token';
-  delete process.env.APIFY_TOKEN;
+  vi.stubEnv('APIFY_API_TOKEN', 'test-token');
+  vi.stubEnv('APIFY_TOKEN', '');
 });
 
 afterAll(() => {
-  if (originalTokens.api === undefined) {
-    delete process.env.APIFY_API_TOKEN;
-  } else {
-    process.env.APIFY_API_TOKEN = originalTokens.api;
-  }
-
-  if (originalTokens.legacy === undefined) {
-    delete process.env.APIFY_TOKEN;
-  } else {
-    process.env.APIFY_TOKEN = originalTokens.legacy;
-  }
+  vi.unstubAllEnvs();
 });
 
 describe('ApifyScrapingAgent', () => {
@@ -246,7 +231,8 @@ describe('ApifyScrapingAgent', () => {
   });
 
   it('returns a clear error when APIFY_API_TOKEN is missing', async () => {
-    delete process.env.APIFY_API_TOKEN;
+    vi.stubEnv('APIFY_API_TOKEN', '');
+    vi.stubEnv('APIFY_TOKEN', '');
 
     const agent = new ApifyScrapingAgent();
     const result = await agent.execute('Keress cégeket');

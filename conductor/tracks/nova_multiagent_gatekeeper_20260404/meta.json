@@ -8,8 +8,22 @@
   "updated": "2026-04-04",
   "assignee": "GitHub Copilot",
   "progress": 0,
-  "tags": ["nova", "multi-agent", "gatekeeper", "routing", "shared-memory", "n8n"],
-  "dependencies": ["nova_knowledge_workflows_20260404"],
+  "tags": [
+    "nova",
+    "multi-agent",
+    "gatekeeper",
+    "routing",
+    "shared-memory",
+    "n8n"
+  ],
+  "dependencies": [
+    "nova_knowledge_workflows_20260404"
+  ],
   "sourceDocument": ".worktrees\\nova.zip",
-  "phase": 1
+  "phase": 1,
+  "group": "nova",
+  "parentTrack": "nova_assiss_local_dev_20260408",
+  "repoPath": ".worktrees/Nova_Assiss",
+  "updated": "2026-04-08",
+  "note": "Subtrack — a nova_assiss_local_dev_20260408 hub track alatt fejlesztjük. Forráskód: .worktrees/Nova_Assiss/"
 }

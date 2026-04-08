@@ -34,8 +34,8 @@ export function AgentManagementPanel() {
         try {
             const data = await getAgentStatuses()
             setAgents(data as AgentStatus[])
-        } catch (err: any) {
-            toast.error(`Nem sikerült betölteni az ügynököket: ${err.message}`)
+        } catch (err: unknown) {
+            toast.error(`Nem sikerült betölteni az ügynököket: ${err instanceof Error ? err.message : String(err)}`)
         } finally {
             setLoading(false)
         }
@@ -105,9 +105,9 @@ export function AgentManagementPanel() {
             const formattedResult = formatAgentResponse(result, selectedAgent)
             setLogs((prev: string[]) => [...prev, `<<< Eredmény:\n${formattedResult}`])
             setTaskInput('')
-        } catch (err: any) {
-            toast.error(`Végrehajtási hiba: ${err.message}`)
-            setLogs((prev: string[]) => [...prev, `!!! HIBA: ${err.message}`])
+        } catch (err: unknown) {
+            toast.error(`Végrehajtási hiba: ${err instanceof Error ? err.message : String(err)}`)
+            setLogs((prev: string[]) => [...prev, `!!! HIBA: ${err instanceof Error ? err.message : String(err)}`])
         } finally {
             setExecuting(false)
         }

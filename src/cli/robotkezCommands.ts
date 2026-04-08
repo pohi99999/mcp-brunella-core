@@ -46,7 +46,8 @@ async function apiFetch<T>(path: string, options?: RequestInit): Promise<T> {
     const data = JSON.parse(text) as T;
 
     if (!response.ok) {
-        throw new Error((data as any).error || `HTTP ${response.status}`);
+        const errorData = data as { error?: string };
+        throw new Error(errorData.error || `HTTP ${response.status}`);
     }
 
     return data;
@@ -80,6 +81,125 @@ function getStatusIcon(status: string): string {
     }
 }
 
+type RobotkezHybridOptions = {
+    mode: 'auto' | 'playwright' | 'browser-use';
+    headless: boolean;
+    url?: string;
+    screenshot?: string;
+    pdf?: string;
+};
+
+type RobotkezExecutionData = {
+    mode?: string;
+    duration_ms?: number;
+    screenshot_path?: string;
+    [key: string]: unknown;
+};
+
+type RobotkezChatData = {
+    taskId?: string;
+    estimatedDuration?: number;
+    [key: string]: unknown;
+};
+
+type RobotkezChatResponse = {
+    success: boolean;
+    message: string;
+    data?: RobotkezChatData;
+};
+
+type RobotkezPlanStep = {
+    action?: string;
+    description?: string;
+    [key: string]: unknown;
+};
+
+type RobotkezPlanPreview = {
+    plan: RobotkezPlanStep[];
+    estimatedDuration: number;
+    backgroundEligible: boolean;
+    [key: string]: unknown;
+};
+
+type RobotkezPlanResponse = {
+    success: boolean;
+    plan: RobotkezPlanPreview;
+    message: string;
+};
+
+type RobotkezExecOptions = {
+    action: string;
+    url?: string;
+    selector?: string;
+    text?: string;
+    direction?: string;
+    amount?: number;
+    timeout?: number;
+};
+
+type RobotkezExecResponse = {
+    success: boolean;
+    result: unknown;
+    message: string;
+};
+
+type RobotkezTaskStep = {
+    status: string;
+    description: string;
+    [key: string]: unknown;
+};
+
+type RobotkezTask = {
+    id: string;
+    instruction: string;
+    status: string;
+    progress: number;
+    startedAt: number;
+    completedAt?: number | null;
+    steps: RobotkezTaskStep[];
+    error?: string | null;
+    [key: string]: unknown;
+};
+
+type RobotkezTasksListResponse = {
+    success: boolean;
+    tasks: RobotkezTask[];
+    count: number;
+};
+
+type RobotkezTaskResponse = {
+    success: boolean;
+    task: RobotkezTask;
+};
+
+type RobotkezStatusResponse = {
+    success: boolean;
+    agent: {
+        name: string;
+        role: string;
+        capabilities: string[];
+    };
+    browser: {
+        active: boolean;
+        engine: string;
+    };
+    tasks: {
+        total: number;
+        running: number;
+        completed: number;
+        error: number;
+    };
+};
+
+type RobotkezInteractiveStatus = {
+    browser: {
+        active: boolean;
+    };
+    tasks: {
+        running: number;
+    };
+};
+
 export function registerRobotkezCommands(program: Command) {
     const robotkez = program
         .command('robotkez')
@@ -99,7 +219,7 @@ export function registerRobotkezCommands(program: Command) {
         .option('--screenshot <path>', 'Screenshot output path')
         .option('--pdf <path>', 'PDF output path')
         .description('Hybrid browser automation (Playwright + Browser-Use)')
-        .action(async (instruction: string, options: any) => {
+        .action(async (instruction: string, options: RobotkezHybridOptions) => {
             const spinner = ora(`Executing: "${instruction}" (mode=${options.mode})`).start();
 
             try {
@@ -108,7 +228,7 @@ export function registerRobotkezCommands(program: Command) {
                 const agent = new RobotkezV2Agent();
 
                 // Build context
-                const context: any = {
+                const context: Record<string, unknown> = {
                     mode: options.mode,
                     headless: options.headless
                 };
@@ -122,7 +242,7 @@ export function registerRobotkezCommands(program: Command) {
                 if (result.status === 'success') {
                     spinner.succeed(chalk.green('Success!'));
                     writeLine(chalk.cyan('\n📝 Result:'));
-                    const data = result.data as any;
+                    const data = result.data as RobotkezExecutionData;
                     if (data?.mode) writeLine(chalk.gray(`   Mode: ${data.mode}`));
                     if (data?.duration_ms) writeLine(chalk.gray(`   Duration: ${data.duration_ms}ms`));
                     if (data?.screenshot_path) {
@@ -159,7 +279,7 @@ export function registerRobotkezCommands(program: Command) {
             const spinner = ora(`Feldolgozás: "${instruction}"`).start();
 
             try {
-                const result = await apiFetch<{ success: boolean; message: string; data?: any }>('/chat', {
+                const result = await apiFetch<RobotkezChatResponse>('/chat', {
                     method: 'POST',
                     body: JSON.stringify({ instruction }),
                 });
@@ -197,7 +317,7 @@ export function registerRobotkezCommands(program: Command) {
             const spinner = ora('Terv generálása...').start();
 
             try {
-                const result = await apiFetch<{ success: boolean; plan: any; message: string }>('/plan', {
+                const result = await apiFetch<RobotkezPlanResponse>('/plan', {
                     method: 'POST',
                     body: JSON.stringify({ instruction }),
                 });
@@ -207,7 +327,7 @@ export function registerRobotkezCommands(program: Command) {
                     writeLine(chalk.cyan(`\n📋 Lépések (${result.plan.plan.length}):
 `));
 
-                    result.plan.plan.forEach((step: any, i: number) => {
+                    result.plan.plan.forEach((step, i) => {
                         writeLine(chalk.gray(`   ${i + 1}. ${step.action}: ${step.description}`));
                     });
 
@@ -238,11 +358,11 @@ export function registerRobotkezCommands(program: Command) {
         .option('--direction <direction>', 'Scroll irány (up, down, left, right)')
         .option('--amount <amount>', 'Scroll mennyiség (px)', parseInt)
         .option('--timeout <timeout>', 'Timeout (ms)', parseInt)
-        .action(async (options: any) => {
+        .action(async (options: RobotkezExecOptions) => {
             const spinner = ora(`Végrehajtás: ${options.action}`).start();
 
             try {
-                const params: any = { action: options.action };
+                const params: Record<string, string | number> = { action: options.action };
                 if (options.url) params.url = options.url;
                 if (options.selector) params.selector = options.selector;
                 if (options.text) params.text = options.text;
@@ -250,7 +370,7 @@ export function registerRobotkezCommands(program: Command) {
                 if (options.amount) params.amount = options.amount;
                 if (options.timeout) params.timeout = options.timeout;
 
-                const result = await apiFetch<{ success: boolean; result: any; message: string }>('/exec', {
+                const result = await apiFetch<RobotkezExecResponse>('/exec', {
                     method: 'POST',
                     body: JSON.stringify(params),
                 });
@@ -280,12 +400,7 @@ export function registerRobotkezCommands(program: Command) {
             const spinner = ora('Státusz lekérése...').start();
 
             try {
-                const result = await apiFetch<{
-                    success: boolean;
-                    agent: any;
-                    browser: any;
-                    tasks: any;
-                }>('/status');
+                const result = await apiFetch<RobotkezStatusResponse>('/status');
 
                 spinner.stop();
 
@@ -372,7 +487,7 @@ export function registerRobotkezCommands(program: Command) {
                 if (options.status) params.set('status', options.status);
                 if (options.limit) params.set('limit', String(options.limit));
 
-                const result = await apiFetch<{ success: boolean; tasks: any[]; count: number }>(
+                const result = await apiFetch<RobotkezTasksListResponse>(
                     `/tasks?${params.toString()}`
                 );
 
@@ -385,7 +500,7 @@ export function registerRobotkezCommands(program: Command) {
 
                 writeLine(chalk.cyan(`\n📋 Feladatok (${result.count}):\n`));
 
-                result.tasks.forEach((task: any) => {
+                result.tasks.forEach((task) => {
                     const icon = getStatusIcon(task.status);
                     writeLine(`${icon} ${chalk.bold(task.instruction.slice(0, 60))}${task.instruction.length > 60 ? '...' : ''}`);
                     writeLine(chalk.gray(`   ID: ${task.id}`));
@@ -416,7 +531,7 @@ export function registerRobotkezCommands(program: Command) {
             const spinner = ora(`Feladat lekérése: ${id}`).start();
 
             try {
-                const result = await apiFetch<{ success: boolean; task: any }>(`/tasks/${id}`);
+                const result = await apiFetch<RobotkezTaskResponse>(`/tasks/${id}`);
 
                 spinner.stop();
 
@@ -435,7 +550,7 @@ export function registerRobotkezCommands(program: Command) {
                 }
 
                 writeLine(chalk.cyan(`\n📝 Lépések (${task.steps.length}):\n`));
-                task.steps.forEach((step: any, i: number) => {
+                task.steps.forEach((step) => {
                     const stepIcon = getStatusIcon(step.status);
                     writeLine(`   ${stepIcon} ${step.description}`);
                 });
@@ -518,7 +633,7 @@ export function registerRobotkezCommands(program: Command) {
 
                     // Special commands
                     if (trimmed === 'status') {
-                        const result = await apiFetch<any>('/status');
+                        const result = await apiFetch<RobotkezInteractiveStatus>('/status');
                         writeLine(chalk.green(`   ✅ Böngésző: ${result.browser.active ? 'Aktív' : 'Leállítva'}`));
                         writeLine(chalk.gray(`   Futó feladatok: ${result.tasks.running}`));
                         continue;
@@ -537,7 +652,7 @@ export function registerRobotkezCommands(program: Command) {
                     const spinner = ora('Feldolgozás...').start();
 
                     try {
-                        const result = await apiFetch<{ success: boolean; message: string; data?: any }>(
+                        const result = await apiFetch<RobotkezChatResponse>(
                             '/chat',
                             {
                                 method: 'POST',

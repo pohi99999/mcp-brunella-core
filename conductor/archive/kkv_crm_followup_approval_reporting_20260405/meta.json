@@ -9,9 +9,19 @@
   "owner": "GitHub Copilot",
   "assignee": "GitHub Copilot",
   "progress": 100,
-  "tags": ["kkv", "crm", "approval", "reporting", "audit", "slack"],
-  "dependencies": ["kkv_crm_followup_routing_20260405"],
+  "tags": [
+    "kkv",
+    "crm",
+    "approval",
+    "reporting",
+    "audit",
+    "slack"
+  ],
+  "dependencies": [
+    "kkv_crm_followup_routing_20260405"
+  ],
   "sourceDocument": "Derived from kkv_crm_followup_routing_20260405 split",
   "archiveReason": "Approval, pause/resume, summary, and audit reporting were implemented and validated; no follow-up track remained.",
-  "phase": 3
+  "phase": 3,
+  "group": "business"
 }

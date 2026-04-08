@@ -8,8 +8,17 @@
   "updated": "2026-04-04",
   "assignee": "GitHub Copilot",
   "progress": 0,
-  "tags": ["briefing", "gmail", "calendar", "linear", "google-chat", "n8n", "gpt-4o"],
+  "tags": [
+    "briefing",
+    "gmail",
+    "calendar",
+    "linear",
+    "google-chat",
+    "n8n",
+    "gpt-4o"
+  ],
   "dependencies": [],
   "sourceDocument": "User-provided Napi Intelligens Briefing Agent workflow plan",
-  "phase": 1
+  "phase": 1,
+  "group": "nova"
 }

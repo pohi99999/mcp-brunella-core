@@ -8,8 +8,16 @@
   "owner": "Claude",
   "spec_status": "approved",
   "progress": 100,
-  "tags": ["agents", "orchestration", "dag", "parallelism", "dashboard", "cli"],
+  "tags": [
+    "agents",
+    "orchestration",
+    "dag",
+    "parallelism",
+    "dashboard",
+    "cli"
+  ],
   "dependencies": [],
   "estimated_effort": "high",
-  "business_value": "Decompose complex tasks into executable micro-tasks"
+  "business_value": "Decompose complex tasks into executable micro-tasks",
+  "group": "brunella"
 }

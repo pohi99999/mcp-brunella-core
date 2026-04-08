@@ -30,5 +30,6 @@
     "Failure esetén fallback vagy safe abort történik",
     "Minden remote hívás auditált és policy-ellenőrzött",
     "A routing decision figyelembe veszi a trust és manifest adatokat"
-  ]
+  ],
+  "group": "brunella"
 }

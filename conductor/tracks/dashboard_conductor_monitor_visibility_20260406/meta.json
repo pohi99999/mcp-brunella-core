@@ -8,9 +8,16 @@
   "updated": "2026-04-06",
   "assignee": "GitHub Copilot",
   "progress": 100,
-  "tags": ["dashboard", "conductor", "tracks", "navigation", "i18n"],
+  "tags": [
+    "dashboard",
+    "conductor",
+    "tracks",
+    "navigation",
+    "i18n"
+  ],
   "dependencies": [],
   "sourceDocument": "Felhasználói hibajelzés - a Conductor track monitor nem látható a dashboard menüben",
   "phase": 5,
-  "description": "A meglévő ConductorTracksMonitor oldal külön menüpontként történő láthatóvá tétele, magyar címkézéssel és regressziós teszttel."
+  "description": "A meglévő ConductorTracksMonitor oldal külön menüpontként történő láthatóvá tétele, magyar címkézéssel és regressziós teszttel.",
+  "group": "brunella"
 }

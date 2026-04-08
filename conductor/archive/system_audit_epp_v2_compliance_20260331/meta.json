@@ -30,5 +30,6 @@
     "route-consolidation",
     "dashboard"
   ],
-  "summary": "EPP v2 compliance teljesítve: BaseAgent.ts finally blokkba emelt setAgentStatus(idle), DeveloperAgent.ts és OrchestratorAgent.ts azonos javítása, db.ts console.log cleanup. Route konszolidáció és Dashboard panel regisztrációk. Minden változtatás build-ellenőrzéssel megerősítve."
+  "summary": "EPP v2 compliance teljesítve: BaseAgent.ts finally blokkba emelt setAgentStatus(idle), DeveloperAgent.ts és OrchestratorAgent.ts azonos javítása, db.ts console.log cleanup. Route konszolidáció és Dashboard panel regisztrációk. Minden változtatás build-ellenőrzéssel megerősítve.",
+  "group": "nova"
 }

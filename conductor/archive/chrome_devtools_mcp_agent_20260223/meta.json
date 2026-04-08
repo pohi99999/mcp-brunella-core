@@ -48,5 +48,6 @@
     "registry.json-ban regisztrálva ✅",
     "Unit tesztek (8 passed, 8 skipped integration) ✅",
     "npm run build && npm test → 0 hiba ✅"
-  ]
+  ],
+  "group": "other"
 }

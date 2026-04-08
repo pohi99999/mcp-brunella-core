@@ -20,5 +20,6 @@
   "dependencies": [
     "brunella_core_stabilization_20260402",
     "brunella_identity_project_maintainer_20260402"
-  ]
+  ],
+  "group": "brunella"
 }

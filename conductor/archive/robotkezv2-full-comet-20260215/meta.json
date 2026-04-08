@@ -50,5 +50,6 @@
     "Phoenix Protocol (auto-recovery on crash)",
     "Task queue + checkpoint system",
     "Smart context compression"
-  ]
+  ],
+  "group": "brunella"
 }

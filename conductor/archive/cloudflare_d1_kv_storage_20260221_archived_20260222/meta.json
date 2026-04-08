@@ -122,5 +122,6 @@
       "src/dashboard/lib/apiService.ts (Phase 4: exported safeJson helper)"
     ],
     "pending": []
-  }
+  },
+  "group": "other"
 }

@@ -21,5 +21,6 @@
   ],
   "estimated_effort": "medium",
   "business_value": "Isolated training environment for Robotkéz automation",
-  "archived_at": "2026-02-13T00:00:00Z"
+  "archived_at": "2026-02-13T00:00:00Z",
+  "group": "brunella"
 }

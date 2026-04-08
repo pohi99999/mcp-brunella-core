@@ -68,6 +68,7 @@
     "marp-team.marp-vscode",
     "lekman.tts-code",
     "ms-pyright.pyright",
-    "tcchan.gemini-code"
+    "tcchan.gemini-code",
+    "cweijan.chat-copilot"
   ]
 }

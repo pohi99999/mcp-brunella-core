@@ -13,8 +13,20 @@
   "archivedAt": "2026-03-30T14:15:00.000Z",
   "archiveReason": "Teljesen validált és lezárt track; Conductor archive-ba mozgatva.",
   "phases": [
-    { "name": "Phase 1: Health check script", "status": "completed" },
-    { "name": "Phase 2: Vitest integráció", "status": "completed" }
+    {
+      "name": "Phase 1: Health check script",
+      "status": "completed"
+    },
+    {
+      "name": "Phase 2: Vitest integráció",
+      "status": "completed"
+    }
   ],
-  "tags": ["agents", "health", "vitest", "quality"]
+  "tags": [
+    "agents",
+    "health",
+    "vitest",
+    "quality"
+  ],
+  "group": "brunella"
 }

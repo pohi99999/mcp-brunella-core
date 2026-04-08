@@ -10,8 +10,16 @@
   "assignee": "GitHub Copilot",
   "progress": 100,
   "completed": "2026-04-05",
-  "tags": ["kkv", "crm", "ingest", "dedupe", "hubspot", "n8n"],
+  "tags": [
+    "kkv",
+    "crm",
+    "ingest",
+    "dedupe",
+    "hubspot",
+    "n8n"
+  ],
   "dependencies": [],
   "sourceDocument": "Derived from kkv_crm_automation_20260404",
-  "phase": 1
+  "phase": 1,
+  "group": "business"
 }

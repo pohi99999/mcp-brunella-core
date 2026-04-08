@@ -35,5 +35,6 @@
     "invoice-to-sheets-automation-20260214 (COMPLETED)"
   ],
   "estimated_duration_days": 7,
-  "notes": "E2E tests are optional for local dev. CI/CD runs with mocked data."
+  "notes": "E2E tests are optional for local dev. CI/CD runs with mocked data.",
+  "group": "business"
 }

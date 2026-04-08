@@ -16,7 +16,13 @@
   "completion_phase_3": true,
   "completion_phase_4": true,
   "completion_phase_5": true,
-  "tags": ["finance", "automation", "szamlazz.hu", "google-sheets", "data-flywheel"],
+  "tags": [
+    "finance",
+    "automation",
+    "szamlazz.hu",
+    "google-sheets",
+    "data-flywheel"
+  ],
   "implementation": {
     "pydantic_schema": "myai/schemas/invoice.py",
     "env_config": ".env - Invoice Automation section",
@@ -27,5 +33,6 @@
     "epp_v2": true,
     "dashboard_widget": "PENDING - Phase 5",
     "cli_command": "PENDING - Phase 5"
-  }
+  },
+  "group": "business"
 }

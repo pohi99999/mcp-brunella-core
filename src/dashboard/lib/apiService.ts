@@ -4,6 +4,7 @@
  */
 
 import { AgentStatusType, TaskItem } from '../types/dashboard.js';
+import type { HealthResponse } from '../../utils/health.js';
 
 export const API_BASE = ""; // Same origin
 const DEFAULT_TIMEOUT_MS = 30000; // 30 seconds default timeout
@@ -24,8 +25,8 @@ export async function fetchWithTimeout(
       signal: controller.signal,
     });
     return response;
-  } catch (error: any) {
-    if (error.name === "AbortError") {
+  } catch (error: unknown) {
+    if (error instanceof Error && error.name === "AbortError") {
       throw new Error(`Időtúllépés (${timeoutMs / 1000}s)`);
     }
     throw error;
@@ -60,6 +61,35 @@ function getErrorMessage(value: unknown): string | undefined {
   return typeof value.error === "string" ? value.error : undefined;
 }
 
+type ApiErrorResponse = {
+  error?: string;
+};
+
+type ApiResultResponse<T> = ApiErrorResponse & {
+  result?: T;
+};
+
+export interface DashboardToolSummary {
+  id?: string;
+  name: string;
+  description?: string;
+  enabled?: boolean;
+  category?: string;
+  parameters?: Array<{ name: string; type: string; required?: boolean }>;
+}
+
+export interface RobotkezChatResponse {
+  success?: boolean;
+  message?: string;
+  data?: {
+    taskId?: string;
+    plan?: unknown;
+    screenshot?: string;
+    [key: string]: unknown;
+  };
+  error?: string;
+}
+
 function isCloudflareTaskResponse(
   value: unknown,
 ): value is CloudflareTaskResponse {
@@ -92,18 +122,7 @@ function isCloudflareStatus(value: unknown): value is CloudflareStatus {
   );
 }
 
-export interface HealthStatus {
-  status: string;
-  timestamp: string;
-  services: {
-    ollama: any;
-    anythingllm: any;
-    agents: any;
-    mcp: any;
-    python: any;
-    cloudflare: any;
-  };
-}
+export type HealthStatus = HealthResponse;
 
 export interface Agent {
   name: string;
@@ -1072,13 +1091,14 @@ export async function getWorkflowStatuses(): Promise<WorkflowStatusItem[]> {
   return data.workflows || [];
 }
 
-export async function executePendingTask(): Promise<any> {
+export async function executePendingTask(): Promise<unknown> {
   const response = await fetchWithTimeout(`${API_BASE}/api/tasks/execute`, {
     method: "POST",
   });
-  const data: any = await safeJson<{ result?: any; error?: string }>(
-    response,
-  ).catch(() => ({ error: `HTTP ${response.status}` }));
+  const data = await safeJson<ApiResultResponse<unknown>>(response).catch(() => ({
+    error: `HTTP ${response.status}`,
+    result: undefined,
+  } as ApiResultResponse<unknown>));
   if (!response.ok) throw new Error(data.error || "Task execute failed");
   return data.result;
 }
@@ -1089,11 +1109,12 @@ export async function cancelTask(taskId: number): Promise<void> {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ taskId }),
   });
-  const data: any = await safeJson<{ error?: string }>(response).catch(() => ({
+  const data = await safeJson<ApiErrorResponse>(response).catch(() => ({
     error: `HTTP ${response.status}`,
   }));
   if (!response.ok) throw new Error(data.error || "Task cancel failed");
 }
+
 
 export async function retryTask(taskId: number, debugMode = false): Promise<void> {
   const response = await fetchWithTimeout(`${API_BASE}/api/tasks/retry`, {
@@ -1101,7 +1122,7 @@ export async function retryTask(taskId: number, debugMode = false): Promise<void
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ taskId, debugMode }),
   });
-  const data: any = await safeJson<{ error?: string }>(response).catch(() => ({
+  const data = await safeJson<ApiErrorResponse>(response).catch(() => ({
     error: `HTTP ${response.status}`,
   }));
   if (!response.ok) throw new Error(data.error || "Task retry failed");
@@ -1113,7 +1134,7 @@ export async function pauseTask(taskId: number): Promise<void> {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ taskId }),
   });
-  const data: any = await safeJson<{ error?: string }>(response).catch(() => ({
+  const data = await safeJson<ApiErrorResponse>(response).catch(() => ({
     error: `HTTP ${response.status}`,
   }));
   if (!response.ok) throw new Error(data.error || "Task pause failed");
@@ -1125,7 +1146,7 @@ export async function resumeTask(taskId: number): Promise<void> {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ taskId }),
   });
-  const data: any = await safeJson<{ error?: string }>(response).catch(() => ({
+  const data = await safeJson<ApiErrorResponse>(response).catch(() => ({
     error: `HTTP ${response.status}`,
   }));
   if (!response.ok) throw new Error(data.error || "Task resume failed");
@@ -1137,7 +1158,7 @@ export async function updateTaskOrder(taskIds: number[]): Promise<void> {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ taskIds }),
   });
-  const data: any = await safeJson<{ error?: string }>(response).catch(() => ({
+  const data = await safeJson<ApiErrorResponse>(response).catch(() => ({
     error: `HTTP ${response.status}`,
   }));
   if (!response.ok) throw new Error(data.error || "Task reorder failed");
@@ -1422,8 +1443,8 @@ export async function verifyFederationManifest(manifest: FederationManifest): Pr
 export async function executeAgent(
   agentName: string,
   task: string,
-  context?: any,
-): Promise<any> {
+  context?: unknown,
+): Promise<unknown> {
   const response = await fetchWithTimeout(
     `${API_BASE}/api/agents/${encodeURIComponent(agentName)}/execute`,
     {
@@ -1433,9 +1454,10 @@ export async function executeAgent(
     },
     LONG_TIMEOUT_MS, // 2 minutes for agent execution
   );
-  const data: any = await safeJson<{ result?: any; error?: string }>(
-    response,
-  ).catch(() => ({ error: `HTTP ${response.status}` }));
+  const data = await safeJson<ApiResultResponse<unknown>>(response).catch(() => ({
+    error: `HTTP ${response.status}`,
+    result: undefined,
+  } as ApiResultResponse<unknown>));
   if (!response.ok) throw new Error(data.error || "Agent execution failed");
   return data.result;
 }
@@ -1455,13 +1477,13 @@ export async function orchestrateTask(
     LONG_TIMEOUT_MS,
   );
   const data = await safeJson<{ message?: string; taskId?: number; steps?: number[]; success?: boolean; error?: string }>(response)
-    .catch(() => ({ error: `HTTP ${response.status}` }));
-  if (!response.ok) throw new Error((data as any).error || "Orkesztráció sikertelen");
+    .catch(() => ({ error: `HTTP ${response.status}` } as { message?: string; taskId?: number; steps?: number[]; success?: boolean; error?: string }));
+  if (!response.ok) throw new Error(data.error || "Orkesztráció sikertelen");
   return {
-    success: true,
-    message: (data as any).message || "Kész.",
-    taskId: (data as any).taskId,
-    steps: (data as any).steps,
+    success: data.success ?? true,
+    message: data.message || "Kész.",
+    taskId: data.taskId,
+    steps: data.steps,
   };
 }
 
@@ -1472,15 +1494,15 @@ export async function createAgent(config: {
   description: string;
   capabilities: string[];
   triggers?: string[];
-}): Promise<any> {
+}): Promise<{ success?: boolean; message?: string }> {
   const response = await fetchWithTimeout(`${API_BASE}/api/agents/create`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(config),
   });
-  const data: any = await safeJson<{ status?: string; error?: string }>(
+  const data = await safeJson<{ success?: boolean; message?: string; error?: string }>(
     response,
-  ).catch(() => ({ error: `HTTP ${response.status}` }));
+  ).catch(() => ({ error: `HTTP ${response.status}` } as { success?: boolean; message?: string; error?: string }));
   if (!response.ok) throw new Error(data.error || "Agent creation failed");
   return data;
 }
@@ -1723,6 +1745,8 @@ export async function toggleTrackTodo(params: {
   return data as TrackTodosResponse;
 }
 
+export type TrackGroupId = 'business' | 'nova' | 'brunella' | 'other';
+
 export interface TrackMonitorEntry {
   id: string;
   title: string;
@@ -1732,6 +1756,7 @@ export interface TrackMonitorEntry {
   assignee?: string;
   description?: string;
   updated?: string;
+  group?: TrackGroupId;
 }
 
 export interface TrackMonitorStats {
@@ -1761,6 +1786,7 @@ export interface TrackDetailResponse {
   assignee?: string;
   description?: string;
   updated?: string;
+  group?: TrackGroupId;
   planMd: string | null;
   specMd: string | null;
   trackMd: string | null;
@@ -2103,23 +2129,23 @@ export async function chatWithAnythingLLM(
 /**
  * Chat Messages API
  */
-export async function getChatMessages(chatId?: string): Promise<any[]> {
+export async function getChatMessages(chatId?: string): Promise<unknown[]> {
   const url = chatId
     ? `${API_BASE}/api/chat/messages?chatId=${chatId}`
     : `${API_BASE}/api/chat/messages`;
   const response = await fetch(url);
   if (!response.ok) throw new Error(`Chat: HTTP ${response.status}`);
-  const data = await safeJson<{ messages?: any[] }>(response);
+  const data = await safeJson<{ messages?: unknown[] }>(response);
   return data.messages || [];
 }
 
 /**
  * Tools API
  */
-export async function getTools(): Promise<any[]> {
+export async function getTools(): Promise<DashboardToolSummary[]> {
   const response = await fetch(`${API_BASE}/api/tools`);
   if (!response.ok) throw new Error(`Tools: HTTP ${response.status}`);
-  const data = await safeJson<{ tools?: any[] }>(response);
+  const data = await safeJson<{ tools?: DashboardToolSummary[] }>(response);
   return data.tools || [];
 }
 
@@ -2175,7 +2201,7 @@ export async function stopService(
   };
 }
 
-export async function executeTool(toolName: string, args: any): Promise<any> {
+export async function executeTool(toolName: string, args: Record<string, unknown>): Promise<unknown> {
   const response = await fetch(
     `${API_BASE}/api/tools/${encodeURIComponent(toolName)}/execute`,
     {
@@ -2184,8 +2210,8 @@ export async function executeTool(toolName: string, args: any): Promise<any> {
       body: JSON.stringify(args),
     },
   );
-  const data = await safeJson<{ result?: any; error?: string }>(response).catch(
-    (): { result?: any; error?: string } => ({ error: `HTTP ${response.status}` }),
+  const data = await safeJson<{ result?: unknown; error?: string }>(response).catch(
+    (): { result?: unknown; error?: string } => ({ error: `HTTP ${response.status}` }),
   );
   if (!response.ok) throw new Error(data.error || "Tool execution failed");
   return data.result;
@@ -2242,7 +2268,7 @@ export interface BrowserStartOptions {
 
 export async function startBrowser(
   options?: BrowserStartOptions,
-): Promise<any> {
+): Promise<unknown> {
   const response = await fetchWithTimeout(`${PYTHON_API_BASE}/browser/start`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -2251,7 +2277,7 @@ export async function startBrowser(
   return safeJson(response);
 }
 
-export async function stopBrowser(sessionId?: string): Promise<any> {
+export async function stopBrowser(sessionId?: string): Promise<unknown> {
   const response = await fetchWithTimeout(`${PYTHON_API_BASE}/browser/stop`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -2310,7 +2336,7 @@ export interface RobotkezPlanRequest {
 
 export interface RobotkezExecRequest {
   action: string;
-  [key: string]: any; // Other action params (url, selector, text, etc.)
+  [key: string]: unknown; // Other action params (url, selector, text, etc.)
 }
 
 export interface ExecutionStep {
@@ -2388,7 +2414,7 @@ export interface RobotkezStatusResponse {
   };
 }
 
-export async function robotkezChat(instruction: string): Promise<any> {
+export async function robotkezChat(instruction: string): Promise<RobotkezChatResponse> {
   const response = await fetchWithTimeout(
     `${API_BASE}/api/v1/robotkez/chat`,
     {
@@ -2398,9 +2424,9 @@ export async function robotkezChat(instruction: string): Promise<any> {
     },
     LONG_TIMEOUT_MS
   );
-  const data: any = await safeJson<{ error?: string }>(response).catch(() => ({
+  const data = await safeJson<RobotkezChatResponse>(response).catch(() => ({
     error: `HTTP ${response.status}`,
-  }));
+  } as RobotkezChatResponse));
   if (!response.ok) throw new Error(data.error || 'Robotkez chat failed');
   return data;
 }
@@ -2419,7 +2445,7 @@ export async function robotkezPlan(instruction: string): Promise<RobotkezPlanRes
   return safeJson<RobotkezPlanResponse>(response);
 }
 
-export async function robotkezExec(action: string, params: Record<string, any> = {}): Promise<any> {
+export async function robotkezExec(action: string, params: Record<string, unknown> = {}): Promise<unknown> {
   const response = await fetchWithTimeout(
     `${API_BASE}/api/v1/robotkez/exec`,
     {
@@ -2429,7 +2455,7 @@ export async function robotkezExec(action: string, params: Record<string, any> =
     },
     DEFAULT_TIMEOUT_MS
   );
-  const data: any = await safeJson<{ error?: string }>(response).catch(() => ({
+  const data = await safeJson<ApiErrorResponse>(response).catch(() => ({
     error: `HTTP ${response.status}`,
   }));
   if (!response.ok) throw new Error(data.error || 'Robotkez exec failed');
@@ -2875,11 +2901,15 @@ export async function trainModel(config?: Record<string, unknown>): Promise<{ su
     },
     LONG_TIMEOUT_MS // Training lehet hosszú
   );
-  const data: any = await safeJson<{ error?: string }>(response).catch(() => ({
+  const data = await safeJson<{ success?: boolean; message?: string; task_id?: string; error?: string }>(response).catch(() => ({
     error: `HTTP ${response.status}`,
-  }));
+  } as { success?: boolean; message?: string; task_id?: string; error?: string }));
   if (!response.ok) throw new Error(data.error || 'Training failed');
-  return data;
+  return {
+    success: data.success ?? true,
+    message: data.message || 'Training started.',
+    task_id: data.task_id,
+  };
 }
 
 /**
@@ -2954,9 +2984,9 @@ export async function executeDeveloperTask(
     LONG_TIMEOUT_MS,
   );
   if (!response.ok) {
-    const data = await safeJson<{ error?: string }>(response).catch(() => ({
+    const data = await safeJson<{ error?: string; taskId?: string }>(response).catch(() => ({
       error: `HTTP ${response.status}`,
-    }));
+    } as { error?: string; taskId?: string }));
     throw new Error(data.error || "Developer task failed");
   }
   return safeJson<{ taskId: string }>(response);
@@ -3026,11 +3056,11 @@ export interface ApprovalRequest {
   id: string;
   type: "file_edit" | "command_exec" | "critical_action";
   description: string;
-  metadata?: any;
+  metadata?: unknown;
   status: ApprovalStatus;
   createdAt: number;
   expiresAt: number;
-  response?: any;
+  response?: unknown;
   respondedAt?: number;
 }
 
@@ -3049,7 +3079,7 @@ export async function listApprovals(
 export async function respondApprovalRequest(
   id: string,
   action: "approve" | "reject",
-  responsePayload?: any,
+  responsePayload?: unknown,
 ): Promise<void> {
   const response = await fetchWithTimeout(
     `${API_BASE}/api/v1/developer/approval/${id}/respond`,
@@ -3059,7 +3089,7 @@ export async function respondApprovalRequest(
       body: JSON.stringify({ action, response: responsePayload }),
     },
   );
-  const data: any = await safeJson<{ error?: string }>(response).catch(() => ({
+  const data = await safeJson<{ error?: string }>(response).catch(() => ({
     error: `HTTP ${response.status}`,
   }));
   if (!response.ok) throw new Error(data.error || "Approval response failed");
@@ -3245,7 +3275,7 @@ export async function getArchitectureStatus(): Promise<ArchitectureStatus> {
 export interface BookkeepingTransaction {
   id: string;
   source: string;
-  data: any;
+  data: unknown;
   status: 'PENDING_MATCH' | 'PARTIALLY_MATCHED' | 'COMPLETED' | 'MANUAL_REVIEW' | 'UNMATCHED' | 'ERROR';
   matchedInvoice?: string;
 }
@@ -3289,7 +3319,7 @@ export async function sendBookkeepingSummaryEmail(): Promise<{ success: boolean;
   return safeJson(response);
 }
 
-export async function getReconciliationEvents(runId?: string): Promise<{ success: boolean; events: any[] }> {
+export async function getReconciliationEvents(runId?: string): Promise<{ success: boolean; events: unknown[] }> {
   const qs = runId ? `?run_id=${encodeURIComponent(runId)}` : '';
   const response = await fetchWithTimeout(`${API_BASE}/api/v1/bookkeeping/reconciliation-events${qs}`);
   if (!response.ok) throw new Error(`Events: HTTP ${response.status}`);
@@ -3333,4 +3363,3 @@ export async function fetchOpenStocktakes(): Promise<InventoryStocktakeSummary[]
   const data = await safeJson<{ success: boolean; stocktakes: InventoryStocktakeSummary[] }>(response);
   return data.stocktakes || [];
 }
-

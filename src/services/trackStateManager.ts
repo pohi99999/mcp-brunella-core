@@ -11,6 +11,13 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { logInfo, logError, logWarn } from '../utils/logger.js';
+import {
+  TRACK_GROUP_LABELS,
+  TRACK_GROUP_ORDER,
+  groupTracksByGroup,
+  inferTrackGroup,
+  type TrackGroupId,
+} from '../utils/trackGroups.js';
 import chokidar, { FSWatcher } from 'chokidar';
 
 // ============================================================================
@@ -30,6 +37,7 @@ export interface TrackMetadata {
   assignee?: string;
   tags?: string[];
   dependencies?: string[];
+  group: TrackGroupId;
 
   // Original path (active or archived)
   _sourcePath?: string;
@@ -47,6 +55,8 @@ export interface ProjectState {
     proposed: number;
   };
 }
+
+type TrackSectionMode = 'proposed' | 'active' | 'completed' | 'archived';
 
 // ============================================================================
 // CONSTANTS
@@ -83,15 +93,21 @@ export class TrackStateManager {
         const rawClean = raw.replace(/^(?:\uFEFF|\u200B|\u200C|\u200D|\u200E|\u200F)+/, '');
         const data = JSON.parse(rawClean);
 
-        // Ensure tracks array exists
-        if (!data.tracks || !Array.isArray(data.tracks)) {
-          data.tracks = [];
-        }
+        const rawTracks: unknown[] = Array.isArray(data.tracks) ? data.tracks : [];
+        const tracks = rawTracks
+          .map((track) => {
+            if (!track || typeof track !== 'object') {
+              return null;
+            }
+
+            return this.normalizeTrackRecord(track as Record<string, unknown>);
+          })
+          .filter((track): track is TrackMetadata => track !== null);
 
         return {
           lastUpdated: data.lastUpdated || new Date().toISOString(),
-          tracks: data.tracks,
-          stats: this.calculateStats(data.tracks),
+          tracks,
+          stats: this.calculateStats(tracks),
         };
       } catch (e) {
         logError('TrackStateManager', `State load failed: ${e}. Creating new state.`);
@@ -134,63 +150,181 @@ export class TrackStateManager {
     };
   }
 
+  private normalizeTrackRecord(
+    record: Record<string, unknown>,
+    trackDir?: string,
+    isArchived?: boolean,
+  ): TrackMetadata | null {
+    const pickString = (...values: unknown[]): string | undefined => {
+      for (const value of values) {
+        if (typeof value === 'string' && value.trim()) {
+          return value.trim();
+        }
+      }
+
+      return undefined;
+    };
+
+    const id = pickString(
+      record.id,
+      record.track_id,
+      record.trackId,
+      trackDir ? path.basename(trackDir) : undefined,
+    );
+
+    if (!id) {
+      return null;
+    }
+
+    const name = pickString(record.name, record.title, id) || id;
+    const title = pickString(record.title, record.name, name) || name;
+
+    let status: TrackMetadata['status'] = 'active';
+    const statusRaw = pickString(record.status, 'active')?.toLowerCase() || 'active';
+    if (['proposed', 'planning'].includes(statusRaw)) {
+      status = 'proposed';
+    } else if (['active', 'in_progress', 'testing'].includes(statusRaw)) {
+      status = 'active';
+    } else if (['completed', 'done'].includes(statusRaw)) {
+      status = 'completed';
+    } else if (statusRaw === 'paused') {
+      status = 'paused';
+    } else if (statusRaw === 'archived') {
+      status = 'archived';
+    }
+
+    if (isArchived) {
+      status = 'archived';
+    }
+
+    let priority: TrackMetadata['priority'] = 'medium';
+    const priorityRaw = pickString(record.priority, 'medium')?.toLowerCase() || 'medium';
+    if (priorityRaw.includes('p0') || priorityRaw.includes('critical')) {
+      priority = 'critical';
+    } else if (priorityRaw.includes('p1') || priorityRaw.includes('high')) {
+      priority = 'high';
+    } else if (priorityRaw.includes('p2') || priorityRaw.includes('medium')) {
+      priority = 'medium';
+    } else if (priorityRaw.includes('p3') || priorityRaw.includes('low')) {
+      priority = 'low';
+    }
+
+    let progress = Number(record.progress ?? 0);
+    if (!Number.isFinite(progress) || progress < 0) {
+      progress = 0;
+    } else if (progress > 100) {
+      progress = 100;
+    }
+
+    const tags = Array.isArray(record.tags) ? record.tags.map((tag) => String(tag)) : [];
+    const dependencies = Array.isArray(record.dependencies)
+      ? record.dependencies.map((dependency) => String(dependency))
+      : [];
+
+    const sourcePath = pickString(record._sourcePath, trackDir);
+    const archived = typeof record._isArchived === 'boolean' ? record._isArchived : Boolean(isArchived || status === 'archived');
+
+    return {
+      id,
+      name,
+      status,
+      priority,
+      progress,
+      created: pickString(record.created, record.createdAt, record.created_at),
+      updated: pickString(record.updated, record.updatedAt, record.updated_at),
+      completed: pickString(record.completed, record.completedAt, record.completed_at),
+      assignee: pickString(record.assignee, record.assigned_agent, record.owner),
+      tags,
+      dependencies,
+      group: inferTrackGroup({
+        id,
+        name,
+        title,
+        description: pickString(record.description),
+        sourceDocument: pickString(record.sourceDocument),
+        tags,
+        group: record.group,
+      }),
+      _sourcePath: sourcePath,
+      _isArchived: archived,
+    };
+  }
+
+  private sortTracksForDisplay(tracks: TrackMetadata[]): TrackMetadata[] {
+    const priorityRank: Record<TrackMetadata['priority'], number> = {
+      critical: 0,
+      high: 1,
+      medium: 2,
+      low: 3,
+    };
+
+    return [...tracks].sort((a, b) => {
+      const priorityDiff = priorityRank[a.priority] - priorityRank[b.priority];
+      if (priorityDiff !== 0) {
+        return priorityDiff;
+      }
+
+      const groupDiff = TRACK_GROUP_ORDER.indexOf(a.group) - TRACK_GROUP_ORDER.indexOf(b.group);
+      if (groupDiff !== 0) {
+        return groupDiff;
+      }
+
+      return a.name.localeCompare(b.name);
+    });
+  }
+
+  private calculateGroupStats(tracks: TrackMetadata[]): Record<TrackGroupId, number> {
+    const stats: Record<TrackGroupId, number> = {
+      business: 0,
+      nova: 0,
+      brunella: 0,
+      other: 0,
+    };
+
+    for (const track of tracks) {
+      stats[track.group] += 1;
+    }
+
+    return stats;
+  }
+
+  private formatTrackEntry(track: TrackMetadata, mode: TrackSectionMode): string {
+    if (mode === 'completed') {
+      let content = `- [x] **${track.name}**\n`;
+      content += `  - **ID:** \`${track.id}\`\n`;
+      if (track.completed) content += `  - **Completed:** ${track.completed}\n`;
+      content += `  - Mappa: ./tracks/${track.id}/\n\n`;
+      return content;
+    }
+
+    if (mode === 'archived') {
+      let content = `- [x] **${track.name}**`;
+      if (track.completed || track.updated) {
+        content += ` (${track.completed || track.updated})`;
+      }
+      content += `\n`;
+      return content;
+    }
+
+    let content = `- [${mode === 'active' && track.progress === 100 ? 'x' : ' '}] **${track.name}** [${track.priority.toUpperCase()}]\n`;
+    content += `  - **ID:** \`${track.id}\`\n`;
+    content += `  - **Progress:** ${track.progress}%\n`;
+    if (track.assignee) content += `  - **Assignee:** ${track.assignee}\n`;
+    if (mode === 'active' && track.updated) content += `  - **Updated:** ${track.updated}\n`;
+    content += `  - Mappa: ./tracks/${track.id}/\n\n`;
+    return content;
+  }
+
   /**
    * Parse meta.json with unified schema support
    */
   private parseMetaJson(metaPath: string, trackDir: string, isArchived: boolean): TrackMetadata | null {
     try {
       const raw = fs.readFileSync(metaPath, 'utf-8');
-      // Strip BOM / zero-width chars that may precede JSON content
-        const rawClean = raw.replace(/^(?:\uFEFF|\u200B|\u200C|\u200D|\u200E|\u200F)+/, '');
-      const meta = JSON.parse(rawClean);
+      const rawClean = raw.replace(/^(?:\uFEFF|\u200B|\u200C|\u200D|\u200E|\u200F)+/, '');
+      const meta = JSON.parse(rawClean) as Record<string, unknown>;
 
-      // Unified ID extraction (supports both "id" and "track_id")
-      const id = String(meta.id || meta.track_id || path.basename(trackDir));
-      const name = String(meta.name || meta.title || id);
-
-      // Status normalization
-      let status: TrackMetadata['status'] = 'active';
-      const statusRaw = String(meta.status || 'active').toLowerCase();
-      if (['proposed', 'active', 'paused', 'completed', 'archived'].includes(statusRaw)) {
-        status = statusRaw as TrackMetadata['status'];
-      }
-
-      // Priority mapping (P0/P1/P2/P3 → critical/high/medium/low)
-      let priority: TrackMetadata['priority'] = 'medium';
-      const priorityRaw = String(meta.priority || 'medium').toLowerCase();
-      if (priorityRaw.includes('p0') || priorityRaw.includes('critical')) {
-        priority = 'critical';
-      } else if (priorityRaw.includes('p1') || priorityRaw.includes('high')) {
-        priority = 'high';
-      } else if (priorityRaw.includes('p2') || priorityRaw.includes('medium')) {
-        priority = 'medium';
-      } else if (priorityRaw.includes('p3') || priorityRaw.includes('low')) {
-        priority = 'low';
-      }
-
-      // Progress validation (0-100)
-      let progress = Number(meta.progress || 0);
-      if (!Number.isFinite(progress) || progress < 0) {
-        progress = 0;
-      } else if (progress > 100) {
-        progress = 100;
-      }
-
-      return {
-        id,
-        name,
-        status,
-        priority,
-        progress,
-        created: meta.created || meta.created_at,
-        updated: meta.updated || meta.updated_at,
-        completed: meta.completed,
-        assignee: meta.assignee || meta.assigned_agent,
-        tags: Array.isArray(meta.tags) ? meta.tags : [],
-        dependencies: Array.isArray(meta.dependencies) ? meta.dependencies : [],
-        _sourcePath: trackDir,
-        _isArchived: isArchived,
-      };
+      return this.normalizeTrackRecord(meta, trackDir, isArchived);
     } catch (e) {
       logError('TrackStateManager', `Failed to parse ${metaPath}: ${e}`);
       return null;
@@ -284,66 +418,76 @@ export class TrackStateManager {
    */
   private async generateTracksMd(): Promise<void> {
     try {
-      const proposed = this.state.tracks.filter(t => t.status === 'proposed');
-      const active = this.state.tracks.filter(t => t.status === 'active');
-      const completed = this.state.tracks.filter(t => t.status === 'completed' && !t._isArchived);
-      const archived = this.state.tracks.filter(t => t._isArchived);
+      const proposed = this.sortTracksForDisplay(
+        this.state.tracks.filter((track) => track.status === 'proposed'),
+      );
+      const active = this.sortTracksForDisplay(
+        this.state.tracks.filter((track) => track.status === 'active'),
+      );
+      const completed = this.sortTracksForDisplay(
+        this.state.tracks.filter((track) => track.status === 'completed' && !track._isArchived),
+      );
+      const archived = this.sortTracksForDisplay(
+        this.state.tracks.filter((track) => track._isArchived),
+      );
+      const groupStats = this.calculateGroupStats(this.state.tracks);
+
+      const renderGroupedSection = (
+        title: string,
+        tracks: TrackMetadata[],
+        mode: TrackSectionMode,
+        note?: string,
+      ): string => {
+        let section = `## ${title} (${tracks.length})\n\n`;
+
+        if (note) {
+          section += `${note}\n\n`;
+        }
+
+        if (tracks.length === 0) {
+          section += `_Nincs track ebben a szekcioban._\n\n`;
+          section += `---\n\n`;
+          return section;
+        }
+
+        const grouped = groupTracksByGroup(tracks);
+        for (const group of TRACK_GROUP_ORDER) {
+          const groupTracks = grouped[group];
+          if (groupTracks.length === 0) {
+            continue;
+          }
+
+          section += `### ${TRACK_GROUP_LABELS[group]} (${groupTracks.length})\n\n`;
+          for (const track of groupTracks) {
+            section += this.formatTrackEntry(track, mode);
+          }
+          section += `\n`;
+        }
+
+        section += `---\n\n`;
+        return section;
+      };
 
       let content = `# Projekt Nyomkovetes (Tracks)\n\n`;
       content += `**Utolso frissites:** ${this.state.lastUpdated}\n`;
       content += `**Generator:** Track State Manager v2.0\n`;
       content += `**Auto-Sync:** Enabled (realtime)\n\n`;
-      content += `**Stats:** ${this.state.stats.total} total | ${this.state.stats.active} active | ${this.state.stats.completed} completed | ${this.state.stats.archived} archived\n\n`;
+      content += `**Stats:** ${this.state.stats.total} total | ${this.state.stats.active} active | ${this.state.stats.completed} completed | ${this.state.stats.archived} archived\n`;
+      content += `**Csoportok:** ${TRACK_GROUP_ORDER.map((group) => `${TRACK_GROUP_LABELS[group]}: ${groupStats[group]}`).join(' | ')}\n\n`;
       content += `---\n\n`;
+      content += renderGroupedSection('Tervezett Szalak (Proposed)', proposed, 'proposed');
+      content += renderGroupedSection('Aktiv Szalak (Active)', active, 'active');
 
-      // Proposed
-      content += `## Tervezett Szalak (Proposed) (${proposed.length})\n\n`;
-      for (const t of proposed) {
-        content += `- [ ] **${t.name}** [${t.priority.toUpperCase()}]\n`;
-        content += `  - **ID:** \`${t.id}\`\n`;
-        content += `  - **Progress:** ${t.progress}%\n`;
-        if (t.assignee) content += `  - **Assignee:** ${t.assignee}\n`;
-        content += `  - Mappa: ./tracks/${t.id}/\n\n`;
-      }
-
-      content += `---\n\n`;
-
-      // Active
-      content += `## Aktiv Szalak (Active) (${active.length})\n\n`;
-      for (const t of active) {
-        content += `- [${t.progress === 100 ? 'x' : ' '}] **${t.name}** [${t.priority.toUpperCase()}]\n`;
-        content += `  - **ID:** \`${t.id}\`\n`;
-        content += `  - **Progress:** ${t.progress}%\n`;
-        if (t.assignee) content += `  - **Assignee:** ${t.assignee}\n`;
-        if (t.updated) content += `  - **Updated:** ${t.updated}\n`;
-        content += `  - Mappa: ./tracks/${t.id}/\n\n`;
-      }
-
-      content += `---\n\n`;
-
-      // Completed (not archived yet)
       if (completed.length > 0) {
-        content += `## Befejezett (Completed - Not Archived) (${completed.length})\n\n`;
-        for (const t of completed) {
-          content += `- [x] **${t.name}**\n`;
-          content += `  - **ID:** \`${t.id}\`\n`;
-          if (t.completed) content += `  - **Completed:** ${t.completed}\n`;
-          content += `  - Mappa: ./tracks/${t.id}/\n\n`;
-        }
-        content += `---\n\n`;
+        content += renderGroupedSection('Befejezett (Completed - Not Archived)', completed, 'completed');
       }
 
-      // Archived
-      content += `## Archivalt (Archived) (${archived.length})\n\n`;
-      content += `> Archived tracks are hidden by default. View in \`conductor/archive/\`\n\n`;
-      for (const t of archived.slice(0, 10)) {
-        content += `- [x] **${t.name}** (${t.completed || t.updated || 'N/A'})\n`;
-      }
-      if (archived.length > 10) {
-        content += `\n... and ${archived.length - 10} more archived tracks\n`;
-      }
-
-      content += `\n---\n\n`;
+      content += renderGroupedSection(
+        'Archivalt (Archived)',
+        archived,
+        'archived',
+        '> Archived tracks are hidden by default. View in `conductor/archive/`',
+      );
       content += `*Auto-generated by Track State Manager v2.0*\n`;
 
       fs.writeFileSync(TRACKS_MD, content, 'utf-8');

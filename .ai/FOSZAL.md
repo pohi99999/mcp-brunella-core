@@ -1,6 +1,6 @@
 # FŐSZÁL - Egyesített Fejlesztési Napló
 
-**Generálva:** 2026-04-07 06:35
+**Generálva:** 2026-04-08 03:27
 **Script:** `scripts/sync_foszal.py`
 
 ---
@@ -28,7 +28,30 @@ start-full.bat
 
 ## Összesített Napló (Időrendben)
 
+### 2026-04-08
+
+#### 02:30 - [Gemini] Toura Helyi Fejlesztési Hub Beállítása
+- **Agent:** Gemini
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** .worktrees/toura/, conductor/tracks/toura_local_dev_20260408/, conductor/tracks.md
+
+#### 01:24 - [Copilot] KKV roadmap docs + Copilot sync
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+
+---
+
 ### 2026-04-07
+
+#### 21:07 - [Copilot] Dashboard C# MCP warmup
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `dashboard.bat`, `csharp-mcp-server/launch.ps1`, `csharp-mcp-server/README.md`, `.github/copilot-instructions.md`, `C:\Users\pohi9\.copilot\session-state\39276f1b-8241-4d44-a131-7deef2a179c2\plan.md`
+
+#### 21:07 - [Copilot] workspace-mcp-server Brunella integráció
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `workspace-mcp-server/**`, `mcp_servers.json`, `.vscode/mcp.json`, `test/workspace_mcp_server.test.ts`, `.github/copilot-instructions.md`
 
 #### 04:33 - [Copilot] P-Sales intake folytatás + track note sync
 - **Agent:** Copilot
@@ -70,20 +93,6 @@ start-full.bat
 - **Státusz:** ✅ Befejezve
 - **Érintett fájlok:** `src/server/routes/files.ts`, `src/utils/lancedb_client.ts`, `test/lancedb_client.test.ts`, `test/ragRoutes.test.ts`, `test/hrTimesheetRoutes.test.ts`, `test/projectMaintainerRoutes.test.ts`, `pyproject.toml`, `uv.lock`, `conductor/project_state.json`, `conductor/tracks.md`, `conductor/tracks/modular_state_refactor_20260404/{meta.json,plan.md}`
 
-#### 01:50 - [Gemini] 🔐 Sikeres Cloudflare Secret Rotáció & Verifikáció
-- **Agent:** Gemini
-- **Státusz:** ✅ Befejezve
-
-#### 01:35 - [Gemini] 🔐 Cloudflare Secret Rotációs Automatizmus
-- **Agent:** Gemini
-- **Státusz:** ✅ Befejezve
-- **Érintett fájlok:** scripts/rotate-cloudflare-secrets.ts (Új TypeScript automatizációs script), package.json (Új `cf:rotate-secrets` parancs hozzáadva)
-
-#### 01:10 - [Gemini] ☁️ Cloudflare Integráció Modernizáció & Gemma 4 Migráció
-- **Agent:** Gemini
-- **Státusz:** ✅ Befejezve
-- **Érintett fájlok:** bas-cloudflare-orchestrator/wrangler.jsonc (Gemma 4 modell + biztonságos API kulcs), cloudflare/wrangler.jsonc (Gemma 4 modell beállítása), .env (URL-ek konszolidálása a cean-orchestrator felé, API kulcs frissítése), src/utils/cloudflareConfig.ts (Hardcoded fallback URL-ek frissítése)
-
 #### 00:00 - [Copilot] 8-Module Kernel Pipeline Architecture
 - **Agent:** Copilot
 - **Státusz:** ✅ Befejezve
@@ -98,24 +107,10 @@ start-full.bat
 
 ### 2026-04-06
 
-#### 06:25 - [Gemini] Project Maintainer Élesítés & Janitor Fix
-- **Agent:** Gemini
-- **Státusz:** ✅ Befejezve
-- **Érintett fájlok:** src/server/routes/projectMaintainer.ts (boolean parsing fix), build/server/routes/projectMaintainer.js (manuális szinkronizáció), logs/archive/ (archivált fájlok célhelye)
-
 #### 03:28 - [Copilot] Dashboard runtime + magyarítás helyreállítás
 - **Agent:** Copilot
 - **Státusz:** ✅ Befejezve
 - **Érintett fájlok:** `src/dashboard/lib/widgetRegistry.tsx`, `src/dashboard/i18n/config.ts`, `src/dashboard/components/ui/command.tsx`, `src/dashboard/components/dashboard/CloudflareAgentsCard.tsx`, `src/dashboard/components/dashboard/JulesPanel.tsx` (+3 további)
-
-#### 01:15 - [Gemini] 🎨 Dashboard Üzleti Modulok Magyarítása
-- **Agent:** Gemini
-- **Státusz:** ✅ Befejezve
-- **Érintett fájlok:** src/dashboard/components/dashboard/PropertySalesWidget.tsx (Lokalizált ingatlan platform ütemterv és fázisok), src/dashboard/components/dashboard/LeadsMasterMonitor.tsx (Lokalizált kampánykövetés és statisztikák), src/dashboard/components/dashboard/FinanceReconciliationPanel.tsx (Lokalizált banki egyeztető és kivételkezelő táblázat), src/dashboard/i18n/locales/hu.json (Új szekciók: property_sales, leads_monitor, finance_recon - 100+ új kulcs), src/dashboard/i18n/locales/en.json (Angol párhuzamos kulcsok)
-
-#### 00:40 - [Gemini] 🎨 Dashboard Mély Magyarítás (Factory & Preferences)
-- **Agent:** Gemini
-- **Státusz:** ✅ Befejezve
 
 #### 00:00 - [Copilot] Modular state DB wrapper slice
 - **Agent:** Copilot
@@ -314,14 +309,6 @@ start-full.bat
 ---
 
 ### 2026-04-05
-
-#### 23:30 - [Gemini] 🎨 Dashboard Mély Magyarítás & Build Fixek
-- **Agent:** Gemini
-- **Státusz:** ✅ Befejezve
-
-#### 19:10 - [Gemini] 🎨 Dashboard Magyarítás & i18n Infrastruktúra
-- **Agent:** Gemini
-- **Státusz:** ✅ Befejezve
 
 #### 18:21 - [Copilot] Bookkeeping phase0 readiness archive
 - **Agent:** Copilot
@@ -1030,9 +1017,9 @@ start-full.bat
 | Agent | Bejegyzések | Utolsó Aktivitás |
 |-------|-------------|------------------|
 | Claude | 85 | 2026-03-31 |
-| Gemini | 8 | 2026-04-07 |
+| Gemini | 1 | 2026-04-08 |
 | Cursor | 0 | N/A |
-| Copilot | 85 | 2026-04-07 |
+| Copilot | 88 | 2026-04-08 |
 
 ---
 

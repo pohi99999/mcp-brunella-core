@@ -18,5 +18,6 @@
   "dependencies": [],
   "estimated_effort": "multi-sprint",
   "business_value": "Edge-first deployment and services",
-  "archived_at": "2026-02-13T00:00:00Z"
+  "archived_at": "2026-02-13T00:00:00Z",
+  "group": "brunella"
 }

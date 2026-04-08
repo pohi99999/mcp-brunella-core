@@ -30,5 +30,6 @@
     "Fájl- vagy hálózati scope sértése blokkolódik és auditálódik",
     "Tool composition esetén is érvényes a scope",
     "A supervisor látja a kiosztott capability készletet"
-  ]
+  ],
+  "group": "other"
 }

@@ -78,7 +78,7 @@
       "type": "n8n-nodes-base.googleSheets",
       "parameters": {
         "operation": "append",
-        "spreadsheetId": "={{$env.LEADS_SHEET_ID}}",
+        "spreadsheetId": "={{$env.LEADS_SHEET_ID || $env.GOOGLE_SHEETS_ID}}",
         "range": "KKV_Leads!A:Z",
         "values": [
           "={{new Date().toISOString()}}",

@@ -14,6 +14,15 @@
   "completed_at": "2026-02-12T10:30:00Z",
   "assigned_agent": "DeveloperAgent",
   "progress": 100,
-  "dependencies": ["code_quality_improvements_20260210"],
-  "tags": ["testing", "dashboard", "playwright", "e2e", "vitest"]
+  "dependencies": [
+    "code_quality_improvements_20260210"
+  ],
+  "tags": [
+    "testing",
+    "dashboard",
+    "playwright",
+    "e2e",
+    "vitest"
+  ],
+  "group": "brunella"
 }

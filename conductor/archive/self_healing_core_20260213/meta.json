@@ -10,5 +10,10 @@
   "created_at": "2026-02-13T00:00:00Z",
   "updated_at": "2026-02-13T00:00:00Z",
   "progress": 100,
-  "tags": ["phoenix", "self-healing", "fix-queue"]
+  "tags": [
+    "phoenix",
+    "self-healing",
+    "fix-queue"
+  ],
+  "group": "brunella"
 }

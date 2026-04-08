@@ -467,7 +467,7 @@ export async function getGoldenStats(): Promise<GoldenDatasetStats | null> {
               const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
               return created > weekAgo;
             }).length,
-            lastTrainingAt: undefined // TODO: track training runs in D1
+            lastTrainingAt: undefined // TODO [tech-debt-cleanup]: track training runs in D1
           };
         }
       } catch (d1Error: unknown) {

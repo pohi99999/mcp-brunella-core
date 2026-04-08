@@ -67,5 +67,6 @@
     "Security test suite (40+) a CI/CD-ben",
     "Performance: < 10% overhead az isolation miatt",
     "Zero-trust multi-agent execution model"
-  ]
+  ],
+  "group": "other"
 }

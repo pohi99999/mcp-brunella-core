@@ -75,5 +75,6 @@
     "CLI parancs a futtatáshoz és review-hoz",
     "Auditálható scoring és promotion folyamat",
     "Mérhető minőségjavulás az evalokon"
-  ]
+  ],
+  "group": "other"
 }

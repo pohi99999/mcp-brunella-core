@@ -70,7 +70,7 @@ export async function processWorkflowFailure(
 
     workflow.status = 'generating';
 
-    // TODO: Send to Jules API in Phase 3.3.2
+    // TODO [tech-debt-cleanup]: Send to Jules API in Phase 3.3.2
     // For now, log the prompt for manual inspection
     logInfo('JulesIntegration', `Fix prompt generated:\n${fixPrompt}`);
 

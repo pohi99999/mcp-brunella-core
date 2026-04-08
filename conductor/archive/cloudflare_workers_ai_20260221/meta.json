@@ -73,5 +73,6 @@
     "@cf/mistral/mistral-7b-instruct-v0.1",
     "@cf/google/gemma-7b-it"
   ],
-  "apiEndpoint": "https://api.cloudflare.com/client/v4/accounts/{CF_ACCOUNT_ID}/ai/run/{model}"
+  "apiEndpoint": "https://api.cloudflare.com/client/v4/accounts/{CF_ACCOUNT_ID}/ai/run/{model}",
+  "group": "other"
 }

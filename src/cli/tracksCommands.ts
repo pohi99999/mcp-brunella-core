@@ -17,6 +17,7 @@ import { logInfo, logError } from '../utils/logger.js';
 import { marked } from 'marked';
 import TerminalRenderer from 'marked-terminal';
 import { ensureError } from '../utils/ensureError.js';
+import { getTrackGroupLabel } from '../utils/trackGroups.js';
 import { writeLine } from '../utils/cliOutput.js';
 
 marked.setOptions({ renderer: new TerminalRenderer() });
@@ -180,6 +181,7 @@ async function listTracksAction() {
       result.tracks.map((t: any) => ({
         ID: t.id,
         Title: t.title || 'N/A',
+        Group: getTrackGroupLabel(t.group),
         Priority: t.priority || 'P2',
         Progress: `${t.progress || 0}%`,
       }))
@@ -205,7 +207,7 @@ async function viewTrackAction(trackId: string) {
     spinner.stop();
 
     writeLine(chalk.green(`\n✅ ${result.metadata.title}\n`));
-    writeLine(chalk.dim(`Priority: ${result.metadata.priority} | Progress: ${result.metadata.progress}%\n`));
+    writeLine(chalk.dim(`Group: ${getTrackGroupLabel(result.metadata.group)} | Priority: ${result.metadata.priority} | Progress: ${result.metadata.progress}%\n`));
 
     // Render markdown content
     writeLine(marked(result.content));

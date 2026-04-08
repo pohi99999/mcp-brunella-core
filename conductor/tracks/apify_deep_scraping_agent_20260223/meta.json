@@ -51,5 +51,6 @@
     "LanceDB indexelés scraped adatokból",
     "registry.json-ban regisztrálva",
     "npm run build && npm test → 0 hiba"
-  ]
+  ],
+  "group": "other"
 }

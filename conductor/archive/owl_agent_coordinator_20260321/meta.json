@@ -90,5 +90,6 @@
   "spec": "docs/superpowers/specs/2026-03-21-owl-multi-agent-conflict-resolution-design.md",
   "archived": true,
   "archivedAt": "2026-03-28T17:00:00Z",
-  "completionNotes": "Track marked completed and archived per user request. See track.md for summary. Implementation artifacts may be referenced or implemented in follow-up tasks as needed."
+  "completionNotes": "Track marked completed and archived per user request. See track.md for summary. Implementation artifacts may be referenced or implemented in follow-up tasks as needed.",
+  "group": "brunella"
 }

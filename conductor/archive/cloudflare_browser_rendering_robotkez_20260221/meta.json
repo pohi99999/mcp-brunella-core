@@ -80,5 +80,6 @@
     ]
   },
   "cfWorker": "cean-orchestrator.iam-dd1.workers.dev",
-  "notes": "A lokális interactive_browser.py javítások (anti-detection args, consent kezelés) megmaradnak fallback-ként. CF Browser Rendering az elsődleges engine. Production deploy sikeres. /browser tesztelés sikeres Google-lal. willhaben teszt elsőre timeout volt (15s), 30s timeout + domcontentloaded sikeres. autoscout24 teszt sikeres. BROWSER binding wrapper: relatív /v1/acquire URL -> abszolút URL (nodejs_compat). Cookie persistence implementálva: sessionId paraméter támogatás, KV mentés/visszatöltés, 24 órás TTL. Teszt: 3 navigációval validálva (első: mentés, második: visszatöltés, harmadik: új session)."
+  "notes": "A lokális interactive_browser.py javítások (anti-detection args, consent kezelés) megmaradnak fallback-ként. CF Browser Rendering az elsődleges engine. Production deploy sikeres. /browser tesztelés sikeres Google-lal. willhaben teszt elsőre timeout volt (15s), 30s timeout + domcontentloaded sikeres. autoscout24 teszt sikeres. BROWSER binding wrapper: relatív /v1/acquire URL -> abszolút URL (nodejs_compat). Cookie persistence implementálva: sessionId paraméter támogatás, KV mentés/visszatöltés, 24 órás TTL. Teszt: 3 navigációval validálva (első: mentés, második: visszatöltés, harmadik: új session).",
+  "group": "other"
 }

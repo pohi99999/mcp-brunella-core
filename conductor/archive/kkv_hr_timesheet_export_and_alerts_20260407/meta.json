@@ -10,8 +10,20 @@
   "owner": "GitHub Copilot",
   "assignee": "GitHub Copilot",
   "progress": 100,
-  "tags": ["kkv", "hr", "timesheet", "export", "payroll", "birthday", "anniversary", "scheduler"],
-  "dependencies": ["kkv_hr_timesheet_culture_20260405"],
+  "tags": [
+    "kkv",
+    "hr",
+    "timesheet",
+    "export",
+    "payroll",
+    "birthday",
+    "anniversary",
+    "scheduler"
+  ],
+  "dependencies": [
+    "kkv_hr_timesheet_culture_20260405"
+  ],
   "sourceDocument": "Gap analysis from kkv_hr_timesheet_culture_20260405",
-  "phase": 4
+  "phase": 4,
+  "group": "business"
 }

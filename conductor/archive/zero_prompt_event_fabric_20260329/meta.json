@@ -29,5 +29,6 @@
     "Duplikált webhook vagy poll esemény nem indít kétszer ugyanazt a láncot",
     "Az események visszajátszhatók diagnosztikához vagy teszthez",
     "A dashboard legalább aggregált formában látja az új eseményeket"
-  ]
+  ],
+  "group": "brunella"
 }

@@ -9,8 +9,18 @@
   "owner": "bas-automation-architect",
   "assignee": "bas-automation-architect",
   "progress": 0,
-  "tags": ["kkv", "crm", "followup", "routing", "n8n", "orchestrator"],
-  "dependencies": ["kkv_crm_ingest_foundation_20260405"],
+  "tags": [
+    "kkv",
+    "crm",
+    "followup",
+    "routing",
+    "n8n",
+    "orchestrator"
+  ],
+  "dependencies": [
+    "kkv_crm_ingest_foundation_20260405"
+  ],
   "sourceDocument": "Conceived from KKV CRM automation roadmap",
-  "phase": 1
+  "phase": 1,
+  "group": "business"
 }

@@ -21,6 +21,13 @@
   "assignee": "Copilot",
   "assigned_agent": "Copilot",
   "progress": 100,
-  "tags": ["dashboard", "mobile", "responsive", "ui", "research"],
-  "dependencies": []
+  "tags": [
+    "dashboard",
+    "mobile",
+    "responsive",
+    "ui",
+    "research"
+  ],
+  "dependencies": [],
+  "group": "brunella"
 }

@@ -6,6 +6,7 @@
 import { Command } from 'commander';
 import chalk from 'chalk';
 import { trackStateManager } from '../services/trackStateManager.js';
+import { getTrackGroupLabel, normalizeTrackGroup, TRACK_GROUP_LABELS } from '../utils/trackGroups.js';
 
 function writeLine(message = ''): void {
   process.stdout.write(`${message}\n`);
@@ -75,7 +76,8 @@ export function registerConductorCommands(conductorCmd: Command): void {
       } else {
         active.slice(0, 10).forEach(t => {
           const progressBar = '█'.repeat(Math.floor(t.progress / 10)) + '░'.repeat(10 - Math.floor(t.progress / 10));
-          writeLine(chalk.white(`  [${progressBar}] ${t.progress}% - ${t.name} (${t.priority})`));
+          writeLine(chalk.white(`  [${progressBar}] ${t.progress}% - ${t.name}`));
+          writeLine(chalk.gray(`           Group: ${getTrackGroupLabel(t.group)} | Priority: ${t.priority}`));
         });
         if (active.length > 10) {
           writeLine(chalk.gray(`  ... and ${active.length - 10} more`));
@@ -89,6 +91,7 @@ export function registerConductorCommands(conductorCmd: Command): void {
       } else {
         proposed.slice(0, 5).forEach(t => {
           writeLine(chalk.white(`  - ${t.name} (${t.priority})`));
+          writeLine(chalk.gray(`           Group: ${getTrackGroupLabel(t.group)}`));
         });
         if (proposed.length > 5) {
           writeLine(chalk.gray(`  ... and ${proposed.length - 5} more`));
@@ -111,6 +114,7 @@ export function registerConductorCommands(conductorCmd: Command): void {
     .description('List all tracks with details')
     .option('-s, --status <status>', 'Filter by status (active|proposed|completed|archived)')
     .option('-p, --priority <priority>', 'Filter by priority (low|medium|high|critical)')
+    .option('-g, --group <group>', 'Filter by group (business|nova|brunella|other)')
     .action(async (options) => {
       let tracks = trackStateManager.getState().tracks;
 
@@ -122,6 +126,17 @@ export function registerConductorCommands(conductorCmd: Command): void {
       // Filter by priority
       if (options.priority) {
         tracks = tracks.filter(t => t.priority === options.priority);
+      }
+
+      // Filter by group
+      if (options.group) {
+        const selectedGroup = normalizeTrackGroup(options.group);
+        if (!selectedGroup) {
+          writeError(chalk.red(`Unknown group: ${options.group}. Use one of: ${Object.values(TRACK_GROUP_LABELS).join(' | ')}`));
+          process.exit(1);
+          return;
+        }
+        tracks = tracks.filter(t => t.group === selectedGroup);
       }
 
       writeLine(chalk.blue(`📋 Track List (${tracks.length} tracks)\n`));
@@ -145,6 +160,7 @@ export function registerConductorCommands(conductorCmd: Command): void {
           chalk.gray('[P3]');
 
         writeLine(statusColor(`${t.status.toUpperCase().padEnd(10)} ${priorityBadge} ${t.progress}% - ${t.name}`));
+        writeLine(chalk.gray(`           Group: ${getTrackGroupLabel(t.group)}`));
         writeLine(chalk.gray(`           ID: ${t.id}`));
         if (t.assignee) {
           writeLine(chalk.gray(`           Assignee: ${t.assignee}`));

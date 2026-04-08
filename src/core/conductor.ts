@@ -309,7 +309,7 @@ export async function executeKernelPipeline(
 
   // ── 3. Context Builder ────────────────────────────────────────────────────
   const ctxBuilder = await getContextBuilder();
-  let contextResult: ContextResult = {
+  const contextResult: ContextResult = {
     contextPacket: {
       conversationSummary: '',
       userPreferences: envelope.userContext.preferences,

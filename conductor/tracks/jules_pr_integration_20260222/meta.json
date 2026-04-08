@@ -27,7 +27,13 @@
         "Task 1.4: PR #89 — EdgeProxy KV-SQLite szinkronizáció. FIGYELEM: globalDb edge_tasks tábla már létezik — conflict check kötelező!",
         "Task 1.5: PR #66 — Audit trail permission denial logolás. Kis változás, alacsony kockázat."
       ],
-      "prs": [94, 92, 96, 89, 66]
+      "prs": [
+        94,
+        92,
+        96,
+        89,
+        66
+      ]
     },
     {
       "id": "phase2",
@@ -42,7 +48,13 @@
         "Task 2.4: PR #81 — KV-SQLite szinkronizáció (régebbi változat — #89-es az újabb, conflict check!).",
         "Task 2.5: PR #67 — Browser Agent live chat view n8n konfiguráláshoz. Nagy feature, óvatos review."
       ],
-      "prs": [98, 99, 93, 81, 67]
+      "prs": [
+        98,
+        99,
+        93,
+        81,
+        67
+      ]
     },
     {
       "id": "phase3",
@@ -60,7 +72,16 @@
         "Task 3.7: PR #74 — myai/server.py async log streaming (aiofiles). Python async refactor.",
         "Task 3.8: PR #71 — faster-whisper async (asyncio.to_thread). Python async."
       ],
-      "prs": [100, 91, 90, 72, 64, 63, 74, 71]
+      "prs": [
+        100,
+        91,
+        90,
+        72,
+        64,
+        63,
+        74,
+        71
+      ]
     },
     {
       "id": "phase4",
@@ -77,7 +98,17 @@
         "Task 4.6: PR #69, #59 — AgentStatusCard accessibility (legrégebbi batch).",
         "Task 4.7: PR #80, #79 — Image description display (Python open-interpreter). Review: más projektre vonatkozhat!"
       ],
-      "prs": [102, 101, 97, 88, 77, 69, 59, 80, 79],
+      "prs": [
+        102,
+        101,
+        97,
+        88,
+        77,
+        69,
+        59,
+        80,
+        79
+      ],
       "warning": "PR #101 conflict risk! useShallow már implementálva (src/dashboard/hooks/useSystemSignal.ts). Csak a tooltip részt szabad merge-elni."
     },
     {
@@ -91,7 +122,13 @@
         "Task 5.2: PR #86 (Dependabot) — Go modules update. A2A Go projekt — csak ha aktuális.",
         "Task 5.3: PR #87, #76, #75 (Copilot) — WIP PR-ok, csak refek — valószínűleg CLOSE."
       ],
-      "prs": [73, 86, 87, 76, 75],
+      "prs": [
+        73,
+        86,
+        87,
+        76,
+        75
+      ],
       "note": "Copilot WIP PR-okat (#87, #76, #75) érdemes CLOSE-olni, nem kész munkák."
     }
   ],
@@ -107,5 +144,6 @@
     "Conflict PR-ok (#101, #81) kezelt és dokumentált.",
     "Copilot WIP PR-ok (#87, #76, #75) lezárva."
   ],
-  "nextStep": "Review remaining high-risk local .Jules diffs (prompt-style and model-ordering changes) and cherry-pick only measurable improvements"
+  "nextStep": "Review remaining high-risk local .Jules diffs (prompt-style and model-ordering changes) and cherry-pick only measurable improvements",
+  "group": "other"
 }

@@ -33,5 +33,6 @@
     "Az ágens parent taskhoz kötötten követhető",
     "A task végén az ephemeral agent lezárható vagy felszabadítható",
     "A létrejövő példány auditált metaadatot hagy maga után"
-  ]
+  ],
+  "group": "other"
 }

@@ -32,5 +32,6 @@
     "Csak jóváhagyott/passing candidate lehet active",
     "Rollback egy lépésben végrehajtható",
     "A ModelRouter tud reflex modellt választani rutin taskokra"
-  ]
+  ],
+  "group": "brunella"
 }

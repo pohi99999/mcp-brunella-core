@@ -9,8 +9,18 @@
   "owner": "GitHub Copilot",
   "assignee": "GitHub Copilot",
   "progress": 70,
-  "tags": ["kkv", "hr", "leave", "approvals", "calendar", "n8n"],
-  "dependencies": ["kkv_hr_onboarding_provisioning_20260405"],
+  "tags": [
+    "kkv",
+    "hr",
+    "leave",
+    "approvals",
+    "calendar",
+    "n8n"
+  ],
+  "dependencies": [
+    "kkv_hr_onboarding_provisioning_20260405"
+  ],
   "sourceDocument": "Derived from kkv_hr_automation_20260404",
-  "phase": 2
+  "phase": 2,
+  "group": "business"
 }

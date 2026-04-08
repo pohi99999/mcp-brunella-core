@@ -54,5 +54,6 @@
     "litellm_config.yaml (5 model provider konfig)",
     "scripts/start-litellm.bat + .sh (startup scripts)"
   ],
-  "nextStep": "Aider használata opcionális - minden infrastruktúra kész. Használd az AIDER.md dokumentáció szerint."
+  "nextStep": "Aider használata opcionális - minden infrastruktúra kész. Használd az AIDER.md dokumentáció szerint.",
+  "group": "other"
 }

@@ -25,7 +25,6 @@ async function getDecomposer(): Promise<typeof _decomposer> {
   if (!_decomposer) {
     try {
       const mod = await import('../agents/TaskDecomposerAgent.js');
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       _decomposer = new (mod as any).TaskDecomposerAgent();
     } catch {
       _decomposer = null;

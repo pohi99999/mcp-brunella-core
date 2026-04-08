@@ -53,7 +53,7 @@ npm run lint         # ESLint (max-warnings=0 — CI meghiúsítja)
 npm run lint:fix     # ESLint auto-fix
 npm run smoke        # Health check (Ollama, Express, FastAPI)
 start-full.bat       # Teljes rendszer (Windows)
-dashboard.bat        # Browser-ready launcher: Ollama+FastAPI+Backend+UI, megnyitja :5173
+dashboard.bat        # Browser-ready launcher: csharp-mcp-server warmup, majd Ollama+FastAPI+Backend+UI, megnyitja :5173
 
 # Tesztelés
 npm run test:fast                     # Gyors tesztek (~1-2 perc) — napi munka
@@ -62,6 +62,8 @@ npx vitest run test/foo.test.ts       # Egy teszt fájl
 npm run test:watch                    # Watch mód
 npm run test:coverage                 # Lefedettségi riport
 npm run test:e2e                      # Playwright e2e
+npm run test:dashboard                # Dashboard-specifikus Vitest konfig
+npm run test:ui                       # UI-specifikus Vitest konfig
 cd myai && pytest tests/              # Python tesztek
 
 # Mikor mit futtass:
@@ -301,9 +303,50 @@ Minden új CLI parancsnak:
 
 ## Fejlesztési Workflow
 
+### Husky Git Hook-ok
+
+- **`.husky/pre-commit`** — `npx tsx scripts/sync_bootstrap.ts --stage` + `npm run build` + `node scripts/precommit-lint.mjs`
+- **`.husky/pre-push`** — `npx tsx scripts/sync_doc_stats.ts --dry-run` + `npm run test:fast`
+
 ### MCP Auto-start
 
 Az MCP szerverek automatikus indítását a `mcp_servers.json` vezérli (`src/server/McpProcessManager.ts`). Az `autoStart`, `requiredEnv`, `platforms`, retry metadata mind itt konfigurálható — ne hardkódold a lista`index.ts`-be vagy `web.ts`-be. A `brunella-core` saját magát `self` MCP bejegyzésként jelöli — ne hozz létre rekurzív `node ./build/index.js` spawnt a core processből.
+
+### workspace-mcp-server
+
+Önálló `uv`-managed MCP alrendszer (`workspace-mcp-server/`). Integráció: `mcp_servers.json` + `.vscode/mcp.json`. **Ne adj külön dashboard/CLI kábelezést** — a registry bejegyzések elegendők. A backend startup `startAutoStartServers()`-t hív, így `dashboard.bat` is elindítja, ha `uv` elérhető.
+
+### SDLC Pipeline
+
+Minden új conductor track automatikusan kap egy 5 fázisú SDLC blokkot (`meta.json` → `sdlc.enabled: true`). Vezérlés:
+
+```bash
+# Copilot Chat-ben:
+@sdlc-pipeline /start <trackId>          # Összes fázis
+@sdlc-pipeline /status <trackId>         # Státuszok
+@sdlc-pipeline /phase coder <trackId>    # Egy fázis
+@sdlc-pipeline /reset <trackId>          # Reset
+
+# CLI-ből:
+brunella sdlc status|run|reset <trackId>
+brunella sdlc phase <trackId> <phase>
+```
+
+**Fázis sorrend:** `architect → devops → coder → qa → reviewer`
+
+| Fázis | Fókusz | Kötelező kimenet |
+|-------|--------|-----------------|
+| architect | Spec, pszeudokód, adatmodell | `phases/1-architect.md` |
+| devops | Env, függőségek, build validáció | `phases/2-devops.md` |
+| coder | Implementáció | `phases/3-coder.md` |
+| qa | Tesztek, debug | `phases/4-qa.md` |
+| reviewer | Refaktor, EPP v2 review | `phases/5-reviewer.md` |
+
+> Meglévő trackek `sdlc` blokk nélkül nem érinthetők — explicit `sdlcPipeline.init()` kell.
+
+### Kernel Pipeline
+
+`src/core/conductor.ts` — 8 fázisú supervisor pipeline (`IntentRouter → Planner → ContextBuilder → ToolExecutor → Critic → Guardrail → LearningLoop`). Megosztott `RunEnvelope` + `ModuleResponse<T>` contract (`src/core/kernelTypes.ts`), 10-esemény typed bus (`src/core/kernelEventBus.ts`). REST: `/api/v1/kernel`. Minden modul lazy-importált, max 2 retry per modul, `RunLedger` tárolja az utolsó 50 futást.
 
 ### Google hitelesítés (két szerződés)
 
@@ -400,6 +443,8 @@ OLLAMA_MODEL=qwen2.5-coder:7b # Alapértelmezett lokális modell
 | `better-sqlite3` Node v24+ | ABI eltérés → `npm rebuild better-sqlite3`. Ha `deferredInit()` Phase 2-nél crashel, minden `/api/*` route 404-et ad (csak `/ping` működik). Ellenőrizd: `logs/node-server.log` |
 | Root `AGENTS.md` figyelmen kívül | A gyökér `AGENTS.md` a `cloudflare-docs` repo konvencióit írja le — BAS-hoz nem releváns. A mérvadó fájl: `.github/copilot-instructions.md` |
 | `buildHealthResponse` paramétere | 10 argumentumot vár: `(ollama, anythingllm, python, n8n, langflow, wab, cloudflare, agentCount, mcpCount, requestId)`. A mock-oknak pontosan ezt kell visszaadni. |
+| `federation_replay_nonces_runtime` INSERT | A tábla `created_at` oszlopán `DEFAULT datetime('now')` van, de SQLite `INSERT OR REPLACE` esetén ez **nem lép életbe**. Mindig add meg explicit: `..., datetime('now')` az értékek közt. |
+| `CopilotFeedbackChannel` singleton | A `copilotFeedbackChannel` a `src/core/autonomousInfraRuntime.ts`-ből exportált **egyetlen** példány. **Ne hozz létre `new CopilotFeedbackChannel()`-t** máshol — árva példány lesz, amelyet a HyperKernel nem lát. Jeleket csak a `copilotFeedbackChannel.ingest()`-en keresztül küldj. |
 
 ---
 

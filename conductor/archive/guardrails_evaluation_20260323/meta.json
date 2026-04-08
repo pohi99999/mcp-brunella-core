@@ -68,5 +68,6 @@
     "CLI parancs: brunella evaluate",
     "npm run build && npm test → 0 hiba"
   ],
-  "dependencies": []
+  "dependencies": [],
+  "group": "other"
 }

@@ -67,5 +67,8 @@
     "CLI: brunella memory",
     "npm run build && npm test → 0 hiba"
   ],
-  "dependencies": ["guardrails_evaluation_20260323"]
+  "dependencies": [
+    "guardrails_evaluation_20260323"
+  ],
+  "group": "other"
 }

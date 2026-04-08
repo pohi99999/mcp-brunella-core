@@ -1,14 +1,20 @@
 {
   "id": "type_safety_enforcement_20260404",
   "title": "Type Safety Enforcement — any elimináció és Type Guard implementáció",
-  "status": "active",
+  "status": "COMPLETED",
   "priority": "high",
   "createdAt": "2026-04-04",
   "owner": "Gemini",
-  "progress": 80,
-  "tags": ["typescript", "types", "safety", "refactor"],
+  "progress": 100,
+  "tags": [
+    "typescript",
+    "types",
+    "safety",
+    "refactor"
+  ],
   "sourceDocument": "Gemini System Audit 2026-04-04",
   "phase": 4,
   "updated": "2026-04-07",
-  "dependencies": []
+  "dependencies": [],
+  "group": "brunella"
 }

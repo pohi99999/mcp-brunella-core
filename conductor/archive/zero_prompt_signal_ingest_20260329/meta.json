@@ -31,5 +31,6 @@
     "Health degradáció önálló rendszeres pollból eseményt hoz létre",
     "Scheduled task success/failure eseményként látszik az Event Fabricben",
     "A három forrásból jövő események policy-ra küldhetők"
-  ]
+  ],
+  "group": "brunella"
 }

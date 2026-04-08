@@ -12,8 +12,16 @@
   "verified": true,
   "verifiedAt": "2026-04-05",
   "verificationNotes": "Completed end-to-end: n8n triggers, ticket ingestion, basic escalation flow. No further top-level track required; minor integrations can be created as child tracks if requested.",
-  "tags": ["kkv", "customer-service", "ai", "tickets", "email", "faq"],
+  "tags": [
+    "kkv",
+    "customer-service",
+    "ai",
+    "tickets",
+    "email",
+    "faq"
+  ],
   "dependencies": [],
   "sourceDocument": "User-provided KKV n8n workflow pack",
-  "phase": 1
+  "phase": 1,
+  "group": "business"
 }

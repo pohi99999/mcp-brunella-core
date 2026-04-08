@@ -16,5 +16,6 @@
   "sourceDocument": "System audit 2026-04-03 — dual MCP config divergence identified",
   "phase": 1,
   "updated": "2026-04-03",
-  "dependencies": []
+  "dependencies": [],
+  "group": "brunella"
 }

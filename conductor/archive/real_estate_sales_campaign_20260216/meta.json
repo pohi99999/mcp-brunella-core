@@ -13,7 +13,12 @@
     "Corporate hunter lead pipeline",
     "CRM sync + follow-up"
   ],
-  "tags": ["real-estate", "valuation", "crm", "sales"],
+  "tags": [
+    "real-estate",
+    "valuation",
+    "crm",
+    "sales"
+  ],
   "related_files": [
     "myai/core/vision_worker.py",
     "src/agents/PropertyAnalystAgent.ts",
@@ -21,11 +26,16 @@
     "src/utils/db.ts",
     "src/tools/googleWorkspace.ts"
   ],
-  "dependencies": ["gemini_vision", "lancedb_rag", "google_workspace_api"],
+  "dependencies": [
+    "gemini_vision",
+    "lancedb_rag",
+    "google_workspace_api"
+  ],
   "blockers": [],
   "constraints": [
     "GDPR: PII nem logolható",
     "Email validáció kötelező",
     "Sheets batch write szükséges"
-  ]
+  ],
+  "group": "business"
 }

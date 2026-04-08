@@ -21,5 +21,6 @@
   "estimated_effort": "high",
   "business_value": "Remote chat + orchestration control",
   "notes": "Iteration 1 complete: Backend API (4 routes) + Dashboard UI (2 modes + connection status badge) + Tests (9/9 passed, 5 disabled + 4 enabled scenarios) + README.md documentation (usage examples, env vars, API endpoints). Optional enhancements complete: README usage examples, Connection status indicator UI, Extra test scenarios for Edge enabled state.",
-  "archived_at": "2026-02-13T00:00:00Z"
+  "archived_at": "2026-02-13T00:00:00Z",
+  "group": "brunella"
 }

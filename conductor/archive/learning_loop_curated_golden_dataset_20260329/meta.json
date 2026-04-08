@@ -29,5 +29,6 @@
     "Minden rekordnál megvan a provenance és quality score",
     "Duplikált vagy érzékeny rekord nem jut át a promotion lépésen",
     "A dataset export egyértelműen használható a trainer számára"
-  ]
+  ],
+  "group": "brunella"
 }
