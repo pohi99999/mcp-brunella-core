@@ -6,11 +6,21 @@
   "createdAt": "2026-03-22",
   "owner": "GitHub Copilot",
   "progress": 100,
-  "tags": ["self-replication", "infra-ai", "global-optimizer", "evo-ecosystem", "self-model", "hyperkernel"],
+  "tags": [
+    "self-replication",
+    "infra-ai",
+    "global-optimizer",
+    "evo-ecosystem",
+    "self-model",
+    "hyperkernel"
+  ],
   "sourceDocument": ".worktrees/Brunella_superinnteligencia.md",
   "phase": 7,
-  "dependencies": ["remote_layer_phase6_collective_evolution_20260322"],
+  "dependencies": [
+    "remote_layer_phase6_collective_evolution_20260322"
+  ],
   "completedAt": "2026-03-22",
   "archivedAt": "2026-03-22",
-  "archiveReason": "Implementation complete, validated, and archived per user request."
+  "archiveReason": "Implementation complete, validated, and archived per user request.",
+  "group": "brunella"
 }

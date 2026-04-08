@@ -20,5 +20,6 @@
   "phase": 2,
   "dependencies": [
     "brunella_core_stabilization_20260402"
-  ]
+  ],
+  "group": "brunella"
 }

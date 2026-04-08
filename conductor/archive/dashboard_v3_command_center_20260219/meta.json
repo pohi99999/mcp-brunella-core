@@ -11,11 +11,11 @@
   "completedAt": "2026-02-23T05:00:00Z",
   "phases": [
     {
-      "name": "Phase 1: A \u201eSmart Grid\u201d Architektúra (Layout & Positioning)",
+      "name": "Phase 1: A „Smart Grid” Architektúra (Layout & Positioning)",
       "status": "completed",
       "problem": "A jelenlegi panelek fixek vagy nehezen átláthatók sok ügynök esetén.",
       "solution": "Implementálj egy **Context-Aware Layout Engine**-t.",
-      "function": "A Dashboard automatikusan rendezze át a modulokat az aktuális fókusz alapján (pl. \u201eDev Mode\u201d -> Terminal & Editor nagyban; \u201eOps Mode\u201d -> Health & Metrics nagyban).",
+      "function": "A Dashboard automatikusan rendezze át a modulokat az aktuális fókusz alapján (pl. „Dev Mode” -> Terminal & Editor nagyban; „Ops Mode” -> Health & Metrics nagyban).",
       "tech": "React Context API + CSS Grid Area dinamikus manipuláció.",
       "tasks": [
         "✅ LayoutContext.tsx létrehozva (már létezett)",
@@ -26,21 +26,21 @@
       ]
     },
     {
-      "name": "Phase 2: Unified Signal Bus (A \u201eBek\u00f6t\u00e9s\u201d T\u00f6k\u00e9letes\u00edt\u00e9se)",
+      "name": "Phase 2: Unified Signal Bus (A „Bekötés” Tökéletesítése)",
       "status": "completed",
-      "problem": "A Socket.IO eventek \u00e9s a REST API h\u00edv\u00e1sok n\u00e9hol redund\u00e1nsak vagy nem szinkronizáltak.",
-      "solution": " hozz létre egy **`useSystemSignal`** nev\u0171 k\u00f6zponti React hook-ot.",
-      "function": "Ez az egyetlen hook feleljen az \u00f6sszes val\u00f3s idej\u0171 adat (Logs, AgentStatus, TaskQueue) szinkroniz\u00e1l\u00e1s\u00e1\u00e9rt. Ha a Socket megszakad, automatikusan v\u00e1ltson REST pollingra (Fallback), majd vissza. Garant\u00e1ld a \u201eSingle Source of Truth\u201d elvet a frontend \u00e1llapotkezel\u00e9s\u00e9ben (Zustand store)."
+      "problem": "A Socket.IO eventek és a REST API hívások néhol redundánsak vagy nem szinkronizáltak.",
+      "solution": " hozz létre egy **`useSystemSignal`** nevű központi React hook-ot.",
+      "function": "Ez az egyetlen hook feleljen az összes valós idejű adat (Logs, AgentStatus, TaskQueue) szinkronizálásáért. Ha a Socket megszakad, automatikusan váltson REST pollingra (Fallback), majd vissza. Garantáld a „Single Source of Truth” elvet a frontend állapotkezelésében (Zustand store)."
     },
     {
-      "name": "Phase 3: The Process Governor (Vez\u00e9rl\u00e9s minden szinten)",
+      "name": "Phase 3: The Process Governor (Vezérlés minden szinten)",
       "status": "completed",
-      "problem": "L\u00e1tjuk a feladatokat, de neh\u00e9zkes a beavatkoz\u00e1s.",
-      "solution": "Fejleszd ki a **`ProcessControlWidget`** k\u00f6mponeust.",
+      "problem": "Látjuk a feladatokat, de nehézkes a beavatkozás.",
+      "solution": "Fejleszd ki a **`ProcessControlWidget`** kömponeust.",
       "function": [
-        "**Live Intervenci\u00f3:** Gombok a folyamatokhoz: [PAUSE], [RESUME], [KILL], [RETRY w/ DEBUG].",
-        "**M\u00e9lyf\u00far\u00e1s:** Egy folyamatra kattintva mutassa a teljes Trace-t (LangSmith/OpenTelemetry adatok vizualiz\u00e1ci\u00f3ja).",
-        "**Priorit\u00e1s v\u00e1lt\u00e1s:** Drag-and-drop a Task Queue-ban a sorrend megv\u00e1ltoztat\u00e1s\u00e1hoz."
+        "**Live Intervenció:** Gombok a folyamatokhoz: [PAUSE], [RESUME], [KILL], [RETRY w/ DEBUG].",
+        "**Mélyfúrás:** Egy folyamatra kattintva mutassa a teljes Trace-t (LangSmith/OpenTelemetry adatok vizualizációja).",
+        "**Prioritás váltás:** Drag-and-drop a Task Queue-ban a sorrend megváltoztatásához."
       ],
       "tasks": [
         "✅ ProcessControlWidget mind a 6 akció implementálva: PAUSE, RESUME, KILL, RETRY, DEBUG RETRY, TRACE",
@@ -52,10 +52,10 @@
       ]
     },
     {
-      "name": "Phase 4: Self-Maintenance & Health (Karbantart\u00e1s)",
+      "name": "Phase 4: Self-Maintenance & Health (Karbantartás)",
       "status": "completed",
-      "solution": "Integr\u00e1lj egy **UI Test Suite**-ot a Dashboardon bel\u00fcl.",
-      "function": "Egy rejtett \u201eAdmin/Self-Check\u201d f\u00fcl, ahol gombnyom\u00e1sra lefuttathat\u00f3 egy kliens oldali diagnosztika (el\u00e9ri-e a backendet, renderel\u0151dnek-e a komponensek, v\u00e1laszolnak-e a socketek).",
+      "solution": "Integrálj egy **UI Test Suite**-ot a Dashboardon belül.",
+      "function": "Egy rejtett „Admin/Self-Check” fül, ahol gombnyomásra lefuttatható egy kliens oldali diagnosztika (eléri-e a backendet, renderelődnek-e a komponensek, válaszolnak-e a socketek).",
       "tasks": [
         "✅ AdminSelfCheckWidget implementálva",
         "✅ Backend health check integrálva (/api/system/health)",
@@ -65,9 +65,10 @@
     }
   ],
   "expectedOutput": [
-    "A `src/dashboard/components/dashboard/` mappa j\u00fangradruktur\u00e1l\u00e1sa modul\u00e1ris widgetekk\u00e9.",
-    "A `MissionControlLayout.tsx` refaktor\u00e1l\u00e1sa az \u00faj Grid Engine haszn\u00e1lat\u00e1ra.",
-    "Minden API h\u00edv\u00e1s t\u00edpusbiztos (Type-Safe) \u00e9s hibat\u0171r\u0151.",
-    "A CLI-b\u0151l is el\u00e9rhet\u0151 legyen a dashboard \u00e1llapot\u00e1nak lek\u00e9rdez\u00e9se (`brunella dashboard status`)."
-  ]
+    "A `src/dashboard/components/dashboard/` mappa júngradrukturálása moduláris widgetekké.",
+    "A `MissionControlLayout.tsx` refaktorálása az új Grid Engine használatára.",
+    "Minden API hívás típusbiztos (Type-Safe) és hibatűrő.",
+    "A CLI-ből is elérhető legyen a dashboard állapotának lekérdezése (`brunella dashboard status`)."
+  ],
+  "group": "other"
 }

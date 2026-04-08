@@ -24,5 +24,6 @@
     "brunella_reflection_continual_learning_20260402",
     "brunella_zero_prompt_ephemeral_bridge_20260402"
   ],
-  "verificationNotes": "Federation execute, discovery, operator mutation routes, operator evidence surface, and manifest signing contract are fail-closed with runtime lifecycle evidence, revoke propagation invalidation, manifest route auth+validation, and focused federation/backend/dashboard validation green"
+  "verificationNotes": "Federation execute, discovery, operator mutation routes, operator evidence surface, and manifest signing contract are fail-closed with runtime lifecycle evidence, revoke propagation invalidation, manifest route auth+validation, and focused federation/backend/dashboard validation green",
+  "group": "brunella"
 }

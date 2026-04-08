@@ -15,18 +15,26 @@
     "RAG-alapú ajánlás",
     "Fallback statikus ajánlásra"
   ],
-  "tags": ["recommendation", "rag", "api", "orchestrator"],
+  "tags": [
+    "recommendation",
+    "rag",
+    "api",
+    "orchestrator"
+  ],
   "related_files": [
     "src/server/web.ts",
     "src/server/registry.ts",
     "src/utils/rag.ts",
     "src/agents/OrchestratorAgent.ts"
   ],
-  "dependencies": ["lancedb_rag"],
+  "dependencies": [
+    "lancedb_rag"
+  ],
   "blockers": [],
   "constraints": [
     "2s latency SLA",
     "Fallback szükséges",
     "Anonim userSessionId"
-  ]
+  ],
+  "group": "nova"
 }

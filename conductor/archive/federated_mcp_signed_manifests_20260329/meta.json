@@ -29,5 +29,6 @@
     "A BAS csak érvényes aláírású remote manifestet fogad el",
     "Lejárt vagy sérült manifest nem használható routingra",
     "A manifest verzió- és deprecációs adatai láthatók"
-  ]
+  ],
+  "group": "brunella"
 }

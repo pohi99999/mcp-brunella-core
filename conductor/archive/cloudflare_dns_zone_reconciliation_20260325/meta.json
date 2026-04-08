@@ -8,7 +8,16 @@
   "progress": 100,
   "completedAt": "2026-03-28T19:00:00.000Z",
   "updatedAt": "2026-03-28T20:25:00.000Z",
-  "tags": ["cloudflare", "dns", "domain", "tunnel", "ops"],
+  "tags": [
+    "cloudflare",
+    "dns",
+    "domain",
+    "tunnel",
+    "ops"
+  ],
   "phase": 2,
-  "dependencies": ["cloudflare_full_optimization_20260325"]
+  "dependencies": [
+    "cloudflare_full_optimization_20260325"
+  ],
+  "group": "brunella"
 }

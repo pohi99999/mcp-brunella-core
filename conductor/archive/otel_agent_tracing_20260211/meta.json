@@ -11,5 +11,12 @@
   "updated_at": "2026-02-11T00:00:00Z",
   "assigned_agent": "GitHub Copilot",
   "progress": 100,
-  "tags": ["otel", "opentelemetry", "otlp", "tracing", "observability"]
+  "tags": [
+    "otel",
+    "opentelemetry",
+    "otlp",
+    "tracing",
+    "observability"
+  ],
+  "group": "other"
 }

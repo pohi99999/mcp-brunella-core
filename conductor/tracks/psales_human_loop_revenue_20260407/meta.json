@@ -3,12 +3,12 @@
   "title": "P-Sales Human-in-Loop Revenue Pipeline — Lead gen, onboarding, KKV + Brand csatornák",
   "type": "Business / Revenue Development",
   "priority": "HIGH",
-  "status": "active",
-  "progress": 70,
+  "status": "completed",
+  "progress": 100,
   "owner": "copilot",
   "assignee": "GitHub Copilot",
   "createdAt": "2026-04-07T03:43:48Z",
-  "updatedAt": "2026-04-07T04:33:10Z",
+  "updatedAt": "2026-04-08T03:20:53Z",
   "coverageAnalysis": "conductor/tracks/psales_human_loop_revenue_20260407/coverage.md",
   "gapAnalysis": "conductor/tracks/psales_human_loop_revenue_20260407/gaps.md",
   "bugsFixed": [
@@ -25,10 +25,22 @@
     ".worktrees/sel2.md"
   ],
   "goal": "Pohánka Péter Brunella-alapú üzletének bevételtermelő csatornáit kiépíteni: P-Sales Human-in-Loop safety pipeline, automatizált lead-gen (KKV + prémium brand szegmens), Apify integráció, n8n onboarding intake, LinkedIn/Upwork piaci megjelenés.",
-  "targetSegments": ["Magyar KKV (10-100 fő)", "Prémium/lifestyle divatmárkák"],
+  "targetSegments": [
+    "Magyar KKV (10-100 fő)",
+    "Prémium/lifestyle divatmárkák"
+  ],
   "revenueTargets": {
-    "kkv": { "start": "149000 Ft egyszeri", "grow": "289000 + 89000/hó", "scale": "590000 + 189000/hó" },
-    "brand": { "starter": "150000 Ft pilot", "alap": "280000/hó", "premium": "480000/hó", "full": "680000/hó" }
+    "kkv": {
+      "start": "149000 Ft egyszeri",
+      "grow": "289000 + 89000/hó",
+      "scale": "590000 + 189000/hó"
+    },
+    "brand": {
+      "starter": "150000 Ft pilot",
+      "alap": "280000/hó",
+      "premium": "480000/hó",
+      "full": "680000/hó"
+    }
   },
   "keyAgents": [
     "SalesHunterAgent",
@@ -88,5 +100,6 @@
       "name": "Pilot ügyfél kampány — első 25 lead + 3 outreach próba",
       "status": "pending"
     }
-  ]
+  ],
+  "group": "business"
 }

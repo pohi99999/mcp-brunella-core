@@ -612,7 +612,7 @@ except Exception as e:
         operation: 'append',
       });
 
-      // TODO: Apply color-coding based on status
+      // TODO [tech-debt-cleanup]: Apply color-coding based on status
       // Red background for anomalies, green for OK
 
       logInfo(this.name, `✅ Exported to Sheets: ${url}`);

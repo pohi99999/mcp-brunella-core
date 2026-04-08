@@ -48,5 +48,6 @@
     "Filter lehetőség (recovery / restart / error / checkpoint)",
     "Dashboard navigációba regisztrálva",
     "npm run build && npm test → 0 hiba"
-  ]
+  ],
+  "group": "other"
 }

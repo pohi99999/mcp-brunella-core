@@ -1,0 +1,33 @@
+{
+  "id": "kkv_business_automation_20260408",
+  "name": "KKV uzleti automatizalas masterplan",
+  "title": "KKV uzleti automatizalas masterplan",
+  "status": "active",
+  "priority": "high",
+  "created": "2026-04-08",
+  "updated": "2026-04-08",
+  "assignee": "GitHub Copilot",
+  "progress": 10,
+  "tags": [
+    "kkv",
+    "business",
+    "finance",
+    "inventory",
+    "invoice",
+    "cash",
+    "bank",
+    "roadmap",
+    "productization",
+    "embedded",
+    "sales"
+  ],
+  "dependencies": [
+    "kkv_finance_automation_20260404",
+    "kkv_inventory_automation_20260404",
+    "invoice_automation_20260326",
+    "n8n_konyveles_pipeline_20260328"
+  ],
+  "sourceDocument": "User request for global KKV backoffice roadmap",
+  "phase": 1,
+  "group": "business"
+}

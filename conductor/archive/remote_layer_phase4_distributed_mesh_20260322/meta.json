@@ -6,7 +6,14 @@
   "createdAt": "2026-03-22",
   "owner": "GitHub Copilot",
   "progress": 100,
-  "tags": ["remote-layer", "mesh", "edge", "offline-sync", "federation", "phoenix"],
+  "tags": [
+    "remote-layer",
+    "mesh",
+    "edge",
+    "offline-sync",
+    "federation",
+    "phoenix"
+  ],
   "sourceDocument": ".worktrees/Brunella_superinnteligencia.md",
   "phase": 4,
   "dependencies": [
@@ -16,5 +23,6 @@
   ],
   "completedAt": "2026-03-22",
   "archivedAt": "2026-03-22",
-  "archiveReason": "Verified complete via Copilot implementation log, dedicated tests, and live conductor audit."
+  "archiveReason": "Verified complete via Copilot implementation log, dedicated tests, and live conductor audit.",
+  "group": "brunella"
 }

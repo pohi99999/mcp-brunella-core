@@ -32,5 +32,6 @@
     "Hiba esetén fallback csatorna vagy delivery failure log keletkezik",
     "A felhasználó csatornánként más jelzési policy-t tud beállítani",
     "Az Approval Router integráltan hívja a transport réteget"
-  ]
+  ],
+  "group": "brunella"
 }

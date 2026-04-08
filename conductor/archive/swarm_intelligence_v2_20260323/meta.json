@@ -68,5 +68,9 @@
     "CLI: brunella swarm-v2",
     "npm run build && npm test → 0 hiba"
   ],
-  "dependencies": ["agent_memory_structured_20260323", "agent_orchestration_dag_20260323"]
+  "dependencies": [
+    "agent_memory_structured_20260323",
+    "agent_orchestration_dag_20260323"
+  ],
+  "group": "other"
 }

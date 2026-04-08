@@ -3,8 +3,8 @@
 ## 📋 Fázisok
 
 ### 1. Fázis: Domináns any-k azonosítása
-- [ ] `utils/db.ts` és `utils/tasksDb.ts` refaktorálása (DB objektumok típusozása).
-- [ ] `utils/rag.ts` és `utils/lancedb_client.ts` refaktorálása.
+- [x] `utils/db.ts` és `utils/tasksDb.ts` refaktorálása (DB objektumok típusozása).
+- [x] `utils/rag.ts` és `utils/lancedb_client.ts` refaktorálása.
 
 ### 2. Fázis: Agent és Tool réteg típusozása
 - [x] `BaseAgent.ts` és az IAgent interfész szigorítása (már tiszta, nincs teendő).
@@ -19,10 +19,10 @@
 - [x] `npm run lint` (0 any warning). ✔️ 0 problems (lint exit 0)
 
 ## 🎨 Dashboard Integráció
-- [ ] Típusbiztos Store-ok használatának verifikálása a komponensekben.
+- [x] Típusbiztos Store-ok használatának verifikálása a komponensekben.
 
 ## 🖥️ CLI Integráció
-- [ ] CLI parancs paraméterek típusozásának ellenőrzése.
+- [x] CLI parancs paraméterek típusozásának ellenőrzése.
 
 ## Jegyzetek
 - 2026-04-06: A `src/server/routes/testScheduler.ts` route-slice is lezárható lesz ebben a trackben; a cél a query/body parsing és a response payloadok szigorítása a public contract megtartásával.

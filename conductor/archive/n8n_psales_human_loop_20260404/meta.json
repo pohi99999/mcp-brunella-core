@@ -8,11 +8,20 @@
   "updated": "2026-04-05",
   "assignee": "GitHub Copilot",
   "progress": 100,
-  "tags": ["n8n", "psales", "real-estate", "human-in-loop", "sales"],
-  "dependencies": ["P-Sales20260327"],
+  "tags": [
+    "n8n",
+    "psales",
+    "real-estate",
+    "human-in-loop",
+    "sales"
+  ],
+  "dependencies": [
+    "P-Sales20260327"
+  ],
   "sourceDocument": ".worktrees\\n8n_workflow_tervek.md",
   "phase": 1,
   "completedAt": "2026-04-05T00:00:00Z",
   "archivedAt": "2026-04-05T00:00:00Z",
-  "archiveReason": "Persistent approval state, pause/resume, audit trail, weekly status reporting, and dashboard support are implemented and verified; no follow-up track is needed."
+  "archiveReason": "Persistent approval state, pause/resume, audit trail, weekly status reporting, and dashboard support are implemented and verified; no follow-up track is needed.",
+  "group": "business"
 }

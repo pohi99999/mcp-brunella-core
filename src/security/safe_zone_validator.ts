@@ -313,6 +313,13 @@ export class SafeZoneValidator {
   }
 
   /**
+   * Get the loaded Safe Zone configuration
+   */
+  getConfig(): SafeZoneConfig {
+    return this.config;
+  }
+
+  /**
    * Get audit log entries (last N entries)
    */
   getAuditLog(limit: number = 100): AuditEntry[] {

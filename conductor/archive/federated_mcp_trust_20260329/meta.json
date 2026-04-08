@@ -30,5 +30,6 @@
     "Trust state és revocation visszakövethető",
     "Capability láthatóság peer-szinten korlátozható",
     "A remote kapcsolat előfeltételeként policy- és trust-check fut"
-  ]
+  ],
+  "group": "brunella"
 }

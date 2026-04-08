@@ -15,6 +15,7 @@ import { Router } from "express";
 import { agentManager } from "../agents/AgentManager.js";
 import { logInfo, logError, logDebug } from "../utils/logger.js";
 import { ensureError } from "../utils/ensureError.js";
+import { inferTrackGroup, TRACK_GROUP_ORDER, type TrackGroupId } from "../utils/trackGroups.js";
 import { socketService } from "./SocketService.js";
 import chokidar, { type FSWatcher } from "chokidar";
 import fs from "fs/promises";
@@ -149,6 +150,7 @@ type TrackMonitorEntry = {
   assignee?: string;
   description?: string;
   updated?: string;
+  group?: TrackGroupId;
 };
 
 async function readTrackMeta(
@@ -344,6 +346,19 @@ export function createTracksRouter(opts?: {
         const assignee = typeof meta.assignee === "string" ? meta.assignee : undefined;
         const description = typeof meta.description === "string" ? meta.description : undefined;
         const updated = typeof meta.updated === "string" ? meta.updated : undefined;
+        const rawTags = meta.tags;
+        const tags = Array.isArray(rawTags) ? rawTags.filter((tag): tag is string => typeof tag === "string") : [];
+        const rawSourceDocument = meta.sourceDocument;
+        const sourceDocument =
+          typeof rawSourceDocument === "string" ? rawSourceDocument : undefined;
+        const group = inferTrackGroup({
+          id: trackId,
+          title,
+          description,
+          sourceDocument,
+          tags,
+          group: meta.group,
+        });
 
         const entry: TrackMonitorEntry = {
           id: trackId,
@@ -354,6 +369,7 @@ export function createTracksRouter(opts?: {
           assignee,
           description,
           updated,
+          group,
         };
 
         if (status === "active" || status === "in_progress" || status === "testing") {
@@ -367,12 +383,28 @@ export function createTracksRouter(opts?: {
         }
       }
 
-      const priorityOrder: Record<string, number> = { P0: 0, P1: 1, P2: 2 };
-      const sortByPriority = (a: TrackMonitorEntry, b: TrackMonitorEntry) =>
-        (priorityOrder[a.priority ?? "P2"] ?? 2) -
-        (priorityOrder[b.priority ?? "P2"] ?? 2);
-      active.sort(sortByPriority);
-      proposed.sort(sortByPriority);
+      const priorityOrder: Record<string, number> = { P0: 0, P1: 1, P2: 2, P3: 3 };
+      const sortMonitorEntries = (a: TrackMonitorEntry, b: TrackMonitorEntry) => {
+        const groupDiff =
+          TRACK_GROUP_ORDER.indexOf(a.group ?? "other") -
+          TRACK_GROUP_ORDER.indexOf(b.group ?? "other");
+        if (groupDiff !== 0) {
+          return groupDiff;
+        }
+
+        const priorityDiff =
+          (priorityOrder[a.priority ?? "P2"] ?? 2) -
+          (priorityOrder[b.priority ?? "P2"] ?? 2);
+        if (priorityDiff !== 0) {
+          return priorityDiff;
+        }
+
+        return a.title.localeCompare(b.title);
+      };
+      proposed.sort(sortMonitorEntries);
+      active.sort(sortMonitorEntries);
+      completed.sort(sortMonitorEntries);
+      archived.sort(sortMonitorEntries);
 
       res.json({
         success: true,
@@ -522,7 +554,46 @@ export function createTracksRouter(opts?: {
         });
       }
 
-      const tracks = result.data?.tracks || [];
+      const rawTracks = Array.isArray(result.data?.tracks) ? result.data.tracks : [];
+      const tracks = await Promise.all(
+        rawTracks.map(async (track: unknown) => {
+          if (!track || typeof track !== "object") {
+            return track;
+          }
+
+          const trackRecord = track as Record<string, unknown>;
+          const trackId =
+            typeof trackRecord.id === "string"
+              ? trackRecord.id
+              : typeof trackRecord.trackId === "string"
+                ? trackRecord.trackId
+                : undefined;
+
+          if (!trackId || !isSafeTrackId(trackId)) {
+            return trackRecord;
+          }
+
+          const meta = await readTrackMeta(tracksDir, trackId);
+          const rawTags = meta?.tags;
+          const tags = Array.isArray(rawTags)
+            ? rawTags.filter((tag): tag is string => typeof tag === "string")
+            : [];
+          const rawSourceDocument = meta?.sourceDocument;
+          const sourceDocument =
+            typeof rawSourceDocument === "string" ? rawSourceDocument : undefined;
+          const group = inferTrackGroup({
+            id: trackId,
+            title: typeof trackRecord.title === "string" ? trackRecord.title : undefined,
+            name: typeof trackRecord.name === "string" ? trackRecord.name : undefined,
+            description: typeof trackRecord.description === "string" ? trackRecord.description : undefined,
+            sourceDocument,
+            tags,
+            group: meta?.group,
+          });
+
+          return { ...trackRecord, group };
+        }),
+      );
 
       res.json({
         success: true,
@@ -725,6 +796,21 @@ export function createTracksRouter(opts?: {
           : typeof meta.name === "string"
             ? meta.name
             : trackId;
+      const rawTags = meta.tags;
+      const tags = Array.isArray(rawTags)
+        ? rawTags.filter((tag): tag is string => typeof tag === "string")
+        : [];
+      const rawSourceDocument = meta.sourceDocument;
+      const sourceDocument =
+        typeof rawSourceDocument === "string" ? rawSourceDocument : undefined;
+      const group = inferTrackGroup({
+        id: trackId,
+        title,
+        description: typeof meta.description === "string" ? meta.description : undefined,
+        sourceDocument,
+        tags,
+        group: meta.group,
+      });
 
       res.json({
         success: true,
@@ -736,6 +822,7 @@ export function createTracksRouter(opts?: {
         assignee: meta.assignee,
         description: meta.description,
         updated: meta.updated,
+        group,
         planMd,
         specMd,
         trackMd,

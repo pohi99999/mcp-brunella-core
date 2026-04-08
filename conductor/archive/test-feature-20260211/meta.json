@@ -23,5 +23,6 @@
   "acceptanceCriteria": [
     "meta.json is accurate reflecting the project state."
   ],
-  "nextStep": "Review and update meta.json"
+  "nextStep": "Review and update meta.json",
+  "group": "other"
 }

@@ -21,6 +21,15 @@
   "assignee": "Copilot",
   "assigned_agent": "Copilot",
   "progress": 100,
-  "tags": ["sales", "outreach", "demo-factory", "lead-mining", "campaign"],
-  "dependencies": ["006_trojan-horse-campaign"]
+  "tags": [
+    "sales",
+    "outreach",
+    "demo-factory",
+    "lead-mining",
+    "campaign"
+  ],
+  "dependencies": [
+    "006_trojan-horse-campaign"
+  ],
+  "group": "business"
 }

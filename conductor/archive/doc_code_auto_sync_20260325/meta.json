@@ -13,8 +13,20 @@
   "archivedAt": "2026-03-30T14:15:00.000Z",
   "archiveReason": "Teljesen validált és lezárt track; Conductor archive-ba mozgatva.",
   "phases": [
-    { "name": "Phase 1: Sync script létrehozása", "status": "completed" },
-    { "name": "Phase 2: CI integráció", "status": "completed" }
+    {
+      "name": "Phase 1: Sync script létrehozása",
+      "status": "completed"
+    },
+    {
+      "name": "Phase 2: CI integráció",
+      "status": "completed"
+    }
   ],
-  "tags": ["docs", "sync", "automation", "stats"]
+  "tags": [
+    "docs",
+    "sync",
+    "automation",
+    "stats"
+  ],
+  "group": "brunella"
 }

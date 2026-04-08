@@ -9,5 +9,6 @@
   "description": "Hyperdrive connection pooling D1 teljesítmény javításhoz. Opcionális - csak ha D1 query latency probléma jelentkezik.",
   "archiveReason": "Hyperdrive is designed for external PostgreSQL/MySQL databases, not for Cloudflare D1. D1 is a native Cloudflare database that is already optimized for Workers and does not support Hyperdrive connection pooling.",
   "dependencies": [],
-  "phase": "optimization"
+  "phase": "optimization",
+  "group": "other"
 }

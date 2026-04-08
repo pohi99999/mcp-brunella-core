@@ -31,5 +31,6 @@
     "Magas kockázatú esemény nem tud approval nélkül végrehajtást indítani",
     "A policy döntés visszakövethető audit logban",
     "A decision outcome használható az Approval Router inputjaként"
-  ]
+  ],
+  "group": "brunella"
 }

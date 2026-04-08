@@ -6,10 +6,18 @@
   "createdAt": "2026-04-06",
   "owner": "Gemini",
   "progress": 100,
-  "tags": ["typescript", "types", "safety", "helpers"],
+  "tags": [
+    "typescript",
+    "types",
+    "safety",
+    "helpers"
+  ],
   "sourceDocument": "db-type-refactor follow-up review",
   "phase": 1,
   "completedAt": "2026-04-07",
   "updated": "2026-04-07",
-  "dependencies": ["type_safety_enforcement_20260404"]
+  "dependencies": [
+    "type_safety_enforcement_20260404"
+  ],
+  "group": "business"
 }

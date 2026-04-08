@@ -31,5 +31,6 @@
     "A harness kimutatja a regressziókat a baseline-hoz képest",
     "A score report alkalmas registry promotion döntéshez",
     "Legalább egy nightly trainer outputtal összeköthető"
-  ]
+  ],
+  "group": "brunella"
 }

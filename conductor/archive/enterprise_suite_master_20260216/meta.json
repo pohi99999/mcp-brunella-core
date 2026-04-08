@@ -92,36 +92,64 @@
     {
       "role": "DeveloperAgent",
       "responsibility": "Backend implementation",
-      "modules": ["All Phase 1-5"]
+      "modules": [
+        "All Phase 1-5"
+      ]
     },
     {
       "role": "ArchitectAgent",
       "responsibility": "System design validation",
-      "modules": ["Phase 1 design"]
+      "modules": [
+        "Phase 1 design"
+      ]
     },
     {
       "role": "ResearcherAgent",
       "responsibility": "Market intelligence",
-      "modules": ["Sales modules"]
+      "modules": [
+        "Sales modules"
+      ]
     },
     {
       "role": "DataScientistAgent",
       "responsibility": "LanceDB optimization",
-      "modules": ["Memory layer"]
+      "modules": [
+        "Memory layer"
+      ]
     },
     {
       "role": "EvaluatorAgent",
       "responsibility": "Testing & QA",
-      "modules": ["All"]
+      "modules": [
+        "All"
+      ]
     }
   ],
   "estimated_effort": {
-    "phase_1": { "hours": 80, "weeks": 2 },
-    "phase_2": { "hours": 120, "weeks": 3 },
-    "phase_3": { "hours": 120, "weeks": 3 },
-    "phase_4": { "hours": 120, "weeks": 3 },
-    "phase_5": { "hours": 80, "weeks": 2 },
-    "total": { "hours": 520, "weeks": 13 }
+    "phase_1": {
+      "hours": 80,
+      "weeks": 2
+    },
+    "phase_2": {
+      "hours": 120,
+      "weeks": 3
+    },
+    "phase_3": {
+      "hours": 120,
+      "weeks": 3
+    },
+    "phase_4": {
+      "hours": 120,
+      "weeks": 3
+    },
+    "phase_5": {
+      "hours": 80,
+      "weeks": 2
+    },
+    "total": {
+      "hours": 520,
+      "weeks": 13
+    }
   },
   "constraints": [
     "Type safety (NO any types)",
@@ -136,5 +164,6 @@
     "brunella health reports green",
     "E2E workflows tested",
     "Conductor tracks updated"
-  ]
+  ],
+  "group": "business"
 }

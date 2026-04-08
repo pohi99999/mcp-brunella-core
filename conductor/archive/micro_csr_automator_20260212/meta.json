@@ -16,5 +16,6 @@
   ],
   "estimatedHours": 10,
   "description": "Geo-fenced helyi hírek figyelése segítségkérésekért, összevetés cég felesleg leltárával. n8n + Python hibrid.",
-  "spec_status": "pending_approval"
+  "spec_status": "pending_approval",
+  "group": "other"
 }

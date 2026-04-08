@@ -14,11 +14,31 @@
   "relatedTracks": [
     "test_cadence_optimization_20260401"
   ],
-  "tags": ["autogen", "github-models", "python", "mcp", "pilot", "ollama-fallback"],
+  "tags": [
+    "autogen",
+    "github-models",
+    "python",
+    "mcp",
+    "pilot",
+    "ollama-fallback"
+  ],
   "phases": [
-    { "name": "Phase 1: Adapter design és provider routing", "status": "completed" },
-    { "name": "Phase 2: MCP tool integráció", "status": "completed" },
-    { "name": "Phase 3: Python unit tesztek", "status": "completed" },
-    { "name": "Phase 4: Validáció és dokumentáció", "status": "completed" }
-  ]
+    {
+      "name": "Phase 1: Adapter design és provider routing",
+      "status": "completed"
+    },
+    {
+      "name": "Phase 2: MCP tool integráció",
+      "status": "completed"
+    },
+    {
+      "name": "Phase 3: Python unit tesztek",
+      "status": "completed"
+    },
+    {
+      "name": "Phase 4: Validáció és dokumentáció",
+      "status": "completed"
+    }
+  ],
+  "group": "brunella"
 }

@@ -18,5 +18,6 @@
   ],
   "estimatedHours": 8,
   "description": "Automatizált ügynök elektromos autók keresésére willhaben.at-on. Szűrés ár és eladó típusa szerint, email értesítés a legjobb ajánlatokról.",
-  "spec_status": "approved"
+  "spec_status": "approved",
+  "group": "brunella"
 }

@@ -627,14 +627,14 @@ async function deferredInit(
   app.get("/sse", requireOperatorAccess, async (req, res) => {
     const { McpServer } = await import("@modelcontextprotocol/sdk/server/mcp.js");
     const { SSEServerTransport } = await import("@modelcontextprotocol/sdk/server/sse.js");
-    const { v4: uuidv4 } = await import("uuid");
     const { registerAllTools } = await import("./registry.js");
-    const sessionId = uuidv4();
-    const transport = new SSEServerTransport(`/messages?sessionId=${sessionId}`, res);
+    const transport = new SSEServerTransport("/messages", res);
     const server = new McpServer({ name: "mcp-brunella-core-web", version: PACKAGE_VERSION });
     await registerAllTools(server);
-    mcpSessions.set(sessionId, { transport, server });
-    res.on("close", () => mcpSessions.delete(sessionId));
+    mcpSessions.set(transport.sessionId, { transport, server });
+    transport.onclose = () => {
+      mcpSessions.delete(transport.sessionId);
+    };
     await server.connect(transport);
   });
 
@@ -645,7 +645,7 @@ async function deferredInit(
       return;
     }
     const { transport } = mcpSessions.get(sessionId)!;
-    await transport.handlePostMessage(req, res);
+    await transport.handlePostMessage(req, res, req.body);
   });
 
   // ── Root & SPA fallback (MUST be AFTER api routes) ─────────────

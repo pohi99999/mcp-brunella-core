@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-04-07T02:06:54.706Z",
+  "lastUpdated": "2026-04-08T01:08:00.125Z",
   "tracks": [
     {
       "id": "agent_runtime_hardening_20260406",
@@ -7,6 +7,8 @@
       "status": "completed",
       "priority": "critical",
       "progress": 100,
+      "created": "2026-04-06T22:55:00.000Z",
+      "assignee": "GitHub Copilot",
       "tags": [
         "runtime",
         "react-loop",
@@ -18,6 +20,7 @@
       "dependencies": [
         "brunella_reflection_continual_learning_20260402"
       ],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\agent_runtime_hardening_20260406",
       "_isArchived": false
     },
@@ -27,9 +30,12 @@
       "status": "archived",
       "priority": "low",
       "progress": 60,
+      "created": "2026-02-23T08:00:00Z",
+      "updated": "2026-02-24T00:44:00Z",
       "assignee": "Claude (Phase 1-2 Complete)",
       "tags": [],
       "dependencies": [],
+      "group": "other",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\apify_deep_scraping_agent_20260223",
       "_isArchived": true
     },
@@ -39,6 +45,9 @@
       "status": "completed",
       "priority": "high",
       "progress": 100,
+      "created": "2026-04-01T00:00:00.000Z",
+      "updated": "2026-04-01T06:15:00.000Z",
+      "completed": "2026-04-01T06:15:00.000Z",
       "assignee": "Copilot",
       "tags": [
         "autogen",
@@ -49,6 +58,7 @@
         "ollama-fallback"
       ],
       "dependencies": [],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\autogen_github_models_pilot_20260401",
       "_isArchived": false
     },
@@ -58,7 +68,9 @@
       "status": "completed",
       "priority": "medium",
       "progress": 100,
+      "created": "2026-04-02",
       "updated": "2026-04-03",
+      "assignee": "GitHub Copilot",
       "tags": [
         "brunella",
         "federation",
@@ -74,6 +86,7 @@
         "brunella_reflection_continual_learning_20260402",
         "brunella_zero_prompt_ephemeral_bridge_20260402"
       ],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\brunella_federation_phase5_20260402",
       "_isArchived": false
     },
@@ -83,6 +96,9 @@
       "status": "completed",
       "priority": "high",
       "progress": 100,
+      "created": "2026-04-02",
+      "completed": "2026-04-06",
+      "assignee": "GitHub Copilot",
       "tags": [
         "brunella",
         "identity",
@@ -95,6 +111,7 @@
       "dependencies": [
         "brunella_core_stabilization_20260402"
       ],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\brunella_identity_project_maintainer_20260402",
       "_isArchived": false
     },
@@ -104,6 +121,8 @@
       "status": "archived",
       "priority": "high",
       "progress": 100,
+      "created": "2026-04-02",
+      "assignee": "GitHub Copilot",
       "tags": [
         "brunella",
         "reflection",
@@ -117,6 +136,7 @@
         "brunella_core_stabilization_20260402",
         "brunella_identity_project_maintainer_20260402"
       ],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\brunella_reflection_continual_learning_20260402",
       "_isArchived": true
     },
@@ -126,6 +146,8 @@
       "status": "archived",
       "priority": "high",
       "progress": 100,
+      "created": "2026-04-02",
+      "assignee": "GitHub Copilot",
       "tags": [
         "brunella",
         "zero-prompt",
@@ -140,6 +162,7 @@
         "brunella_identity_project_maintainer_20260402",
         "brunella_reflection_continual_learning_20260402"
       ],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\brunella_zero_prompt_ephemeral_bridge_20260402",
       "_isArchived": true
     },
@@ -149,6 +172,10 @@
       "status": "archived",
       "priority": "high",
       "progress": 100,
+      "created": "2026-03-25",
+      "updated": "2026-03-28T20:25:00.000Z",
+      "completed": "2026-03-28T19:00:00.000Z",
+      "assignee": "Gemini CLI",
       "tags": [
         "cloudflare",
         "dns",
@@ -159,6 +186,7 @@
       "dependencies": [
         "cloudflare_full_optimization_20260325"
       ],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\cloudflare_dns_zone_reconciliation_20260325",
       "_isArchived": true
     },
@@ -169,6 +197,7 @@
       "priority": "high",
       "progress": 0,
       "created": "2026-02-26",
+      "assignee": "Pohánka Péter",
       "tags": [],
       "dependencies": [
         "Cloudflare account dd107933ac970dac857f27cee7a7ff46 (BAS_server) — MEGVAN",
@@ -177,6 +206,7 @@
         "wrangler CLI telepítve — ellenőrizd: npx wrangler --version",
         "D1 binding: bas-metadata (1c4e7d00-7b09-4ddf-88b4-8df42e1123ab) — MEGVAN"
       ],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\cloudflare_workers_migration_20260226",
       "_isArchived": true
     },
@@ -186,6 +216,9 @@
       "status": "completed",
       "priority": "high",
       "progress": 100,
+      "created": "2026-04-06T20:00:00.000Z",
+      "completed": "2026-04-06",
+      "assignee": "GitHub Copilot",
       "tags": [
         "self-improvement",
         "copilot-cli",
@@ -196,6 +229,7 @@
       "dependencies": [
         "brunella_reflection_continual_learning_20260402"
       ],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\copilot_self_improvement_loop_20260406",
       "_isArchived": false
     },
@@ -216,6 +250,7 @@
         "i18n"
       ],
       "dependencies": [],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\dashboard_conductor_monitor_visibility_20260406",
       "_isArchived": false
     },
@@ -225,11 +260,47 @@
       "status": "archived",
       "priority": "high",
       "progress": 100,
+      "created": "2026-02-22T00:00:00Z",
+      "updated": "2026-04-01T02:00:00.000Z",
+      "completed": "2026-04-01T02:00:00.000Z",
       "assignee": "Claude + Pohánka Péter",
       "tags": [],
       "dependencies": [],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\jules_pr_integration_20260222",
       "_isArchived": true
+    },
+    {
+      "id": "kkv_business_automation_20260408",
+      "name": "KKV uzleti automatizalas masterplan",
+      "status": "active",
+      "priority": "high",
+      "progress": 10,
+      "created": "2026-04-08",
+      "updated": "2026-04-08",
+      "assignee": "GitHub Copilot",
+      "tags": [
+        "kkv",
+        "business",
+        "finance",
+        "inventory",
+        "invoice",
+        "cash",
+        "bank",
+        "roadmap",
+        "productization",
+        "embedded",
+        "sales"
+      ],
+      "dependencies": [
+        "kkv_finance_automation_20260404",
+        "kkv_inventory_automation_20260404",
+        "invoice_automation_20260326",
+        "n8n_konyveles_pipeline_20260328"
+      ],
+      "group": "business",
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\kkv_business_automation_20260408",
+      "_isArchived": false
     },
     {
       "id": "kkv_crm_automation_20260404",
@@ -249,6 +320,7 @@
         "n8n"
       ],
       "dependencies": [],
+      "group": "business",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\kkv_crm_automation_20260404",
       "_isArchived": false
     },
@@ -274,6 +346,7 @@
       "dependencies": [
         "kkv_crm_ingest_foundation_20260405"
       ],
+      "group": "business",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\kkv_crm_followup_routing_20260405",
       "_isArchived": true
     },
@@ -296,6 +369,7 @@
         "n8n"
       ],
       "dependencies": [],
+      "group": "business",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\kkv_crm_ingest_foundation_20260405",
       "_isArchived": false
     },
@@ -307,6 +381,7 @@
       "progress": 100,
       "created": "2026-04-04",
       "updated": "2026-04-05",
+      "completed": "2026-04-05T12:00:00Z",
       "assignee": "GitHub Copilot",
       "tags": [
         "kkv",
@@ -317,6 +392,7 @@
         "faq"
       ],
       "dependencies": [],
+      "group": "business",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\kkv_customer_service_ai_20260404",
       "_isArchived": false
     },
@@ -328,6 +404,7 @@
       "progress": 100,
       "created": "2026-04-04",
       "updated": "2026-04-05",
+      "completed": "2026-04-05T12:00:00Z",
       "assignee": "GitHub Copilot",
       "tags": [
         "kkv",
@@ -338,6 +415,7 @@
         "n8n"
       ],
       "dependencies": [],
+      "group": "business",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\kkv_finance_automation_20260404",
       "_isArchived": false
     },
@@ -349,6 +427,7 @@
       "progress": 100,
       "created": "2026-04-04",
       "updated": "2026-04-05",
+      "completed": "2026-04-05T12:00:00Z",
       "assignee": "GitHub Copilot",
       "tags": [
         "kkv",
@@ -359,6 +438,7 @@
         "n8n"
       ],
       "dependencies": [],
+      "group": "business",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\kkv_hr_automation_20260404",
       "_isArchived": false
     },
@@ -382,6 +462,7 @@
       "dependencies": [
         "kkv_hr_onboarding_provisioning_20260405"
       ],
+      "group": "business",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\kkv_hr_leave_approvals_20260405",
       "_isArchived": false
     },
@@ -393,6 +474,7 @@
       "progress": 100,
       "created": "2026-04-07",
       "updated": "2026-04-07",
+      "completed": "2026-04-07",
       "assignee": "GitHub Copilot",
       "tags": [
         "kkv",
@@ -406,6 +488,7 @@
       "dependencies": [
         "kkv_hr_leave_approvals_20260405"
       ],
+      "group": "business",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\kkv_hr_leave_wait_resume_20260407",
       "_isArchived": false
     },
@@ -430,6 +513,7 @@
       "dependencies": [
         "kkv_hr_onboarding_provisioning_20260405"
       ],
+      "group": "business",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\kkv_hr_timesheet_culture_20260405",
       "_isArchived": false
     },
@@ -441,6 +525,7 @@
       "progress": 100,
       "created": "2026-04-04",
       "updated": "2026-04-05",
+      "completed": "2026-04-05",
       "assignee": "GitHub Copilot",
       "tags": [
         "kkv",
@@ -451,6 +536,7 @@
         "supabase"
       ],
       "dependencies": [],
+      "group": "business",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\kkv_inventory_automation_20260404",
       "_isArchived": false
     },
@@ -462,6 +548,7 @@
       "progress": 100,
       "created": "2026-04-04",
       "updated": "2026-04-05",
+      "completed": "2026-04-05",
       "assignee": "GitHub Copilot",
       "tags": [
         "kkv",
@@ -472,6 +559,7 @@
         "n8n"
       ],
       "dependencies": [],
+      "group": "business",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\kkv_marketing_automation_20260404",
       "_isArchived": false
     },
@@ -483,6 +571,7 @@
       "progress": 100,
       "created": "2026-04-04",
       "updated": "2026-04-05",
+      "completed": "2026-04-05",
       "assignee": "GitHub Copilot",
       "tags": [
         "kkv",
@@ -493,6 +582,7 @@
         "n8n"
       ],
       "dependencies": [],
+      "group": "business",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\kkv_project_task_automation_20260404",
       "_isArchived": false
     },
@@ -504,6 +594,7 @@
       "progress": 0,
       "created": "2026-03-30",
       "updated": "2026-04-03",
+      "assignee": "Pohánka Péter",
       "tags": [
         "könyvelés",
         "MCP",
@@ -521,6 +612,7 @@
         "konyveles_phase3_20260403",
         "n8n_konyveles_pipeline_20260328"
       ],
+      "group": "business",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\konyveles_kognitiv_bovites_20260330",
       "_isArchived": false
     },
@@ -531,6 +623,7 @@
       "priority": "high",
       "progress": 0,
       "created": "2026-04-03",
+      "assignee": "Pohánka Péter",
       "tags": [
         "n8n",
         "szamlazz.hu",
@@ -547,6 +640,7 @@
         "n8n_konyveles_pipeline_20260328",
         "konyveles_automatizalas"
       ],
+      "group": "business",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\konyveles_phase3_20260403",
       "_isArchived": false
     },
@@ -569,6 +663,7 @@
       "dependencies": [
         "logistics_vertical_20260222"
       ],
+      "group": "business",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\logistics_vertical_repo_local_20260407",
       "_isArchived": false
     },
@@ -578,7 +673,9 @@
       "status": "completed",
       "priority": "medium",
       "progress": 100,
+      "created": "2026-04-03",
       "updated": "2026-04-03",
+      "assignee": "Claude Code",
       "tags": [
         "mcp",
         "config",
@@ -587,6 +684,7 @@
         "tooling"
       ],
       "dependencies": [],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\mcp_sync_config_20260403",
       "_isArchived": false
     },
@@ -596,7 +694,9 @@
       "status": "active",
       "priority": "medium",
       "progress": 30,
+      "created": "2026-04-04",
       "updated": "2026-04-06",
+      "assignee": "Gemini",
       "tags": [
         "architecture",
         "solid",
@@ -606,6 +706,7 @@
       "dependencies": [
         "type_safety_enforcement_20260404"
       ],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\modular_state_refactor_20260404",
       "_isArchived": false
     },
@@ -617,6 +718,7 @@
       "progress": 100,
       "created": "2026-03-28",
       "completed": "2026-04-03",
+      "assignee": "Pohánka Péter",
       "tags": [
         "n8n",
         "könyvelés",
@@ -630,6 +732,7 @@
       "dependencies": [
         "konyveles_automatizalas"
       ],
+      "group": "business",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\n8n_konyveles_pipeline_20260328",
       "_isArchived": false
     },
@@ -651,6 +754,7 @@
         "automation"
       ],
       "dependencies": [],
+      "group": "other",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\n8n_psearch_pipeline_20260404",
       "_isArchived": false
     },
@@ -673,7 +777,31 @@
         "gpt-4o"
       ],
       "dependencies": [],
+      "group": "nova",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\napi_intelligens_briefing_20260404",
+      "_isArchived": false
+    },
+    {
+      "id": "nova_assiss_local_dev_20260408",
+      "name": "Nova Irodai Asszisztens — helyi fejlesztési hub",
+      "status": "active",
+      "priority": "high",
+      "progress": 5,
+      "created": "2026-04-08",
+      "updated": "2026-04-08",
+      "assignee": "Claude Code",
+      "tags": [
+        "nova",
+        "nextjs",
+        "openai",
+        "rag",
+        "python-agent",
+        "docker",
+        "local-dev"
+      ],
+      "dependencies": [],
+      "group": "nova",
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\nova_assiss_local_dev_20260408",
       "_isArchived": false
     },
     {
@@ -683,7 +811,7 @@
       "priority": "high",
       "progress": 0,
       "created": "2026-04-04",
-      "updated": "2026-04-04",
+      "updated": "2026-04-08",
       "assignee": "GitHub Copilot",
       "tags": [
         "nova",
@@ -694,6 +822,7 @@
         "assistant"
       ],
       "dependencies": [],
+      "group": "nova",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\nova_knowledge_workflows_20260404",
       "_isArchived": false
     },
@@ -704,7 +833,7 @@
       "priority": "high",
       "progress": 0,
       "created": "2026-04-04",
-      "updated": "2026-04-04",
+      "updated": "2026-04-08",
       "assignee": "GitHub Copilot",
       "tags": [
         "nova",
@@ -717,6 +846,7 @@
       "dependencies": [
         "nova_knowledge_workflows_20260404"
       ],
+      "group": "nova",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\nova_multiagent_gatekeeper_20260404",
       "_isArchived": false
     },
@@ -728,8 +858,10 @@
       "progress": 100,
       "created": "2026-03-21",
       "completed": "2026-03-28",
+      "assignee": "Pohánka Péter",
       "tags": [],
       "dependencies": [],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\owl_agent_coordinator_20260321",
       "_isArchived": true
     },
@@ -739,9 +871,33 @@
       "status": "completed",
       "priority": "high",
       "progress": 100,
+      "created": "2026-03-27T23:51:21.608Z",
+      "updated": "2026-03-30T12:00:00.000Z",
+      "completed": "2026-03-30T12:00:00.000Z",
       "tags": [],
       "dependencies": [],
+      "group": "other",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\P-Sales20260327",
+      "_isArchived": false
+    },
+    {
+      "id": "p-search_20260408",
+      "name": "p-search",
+      "status": "active",
+      "priority": "high",
+      "progress": 0,
+      "created": "2026-04-08",
+      "updated": "2026-04-08",
+      "assignee": "pohi99999",
+      "tags": [
+        "research",
+        "cloudflare",
+        "wrangler",
+        "agent"
+      ],
+      "dependencies": [],
+      "group": "brunella",
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\p-search",
       "_isArchived": false
     },
     {
@@ -750,6 +906,9 @@
       "status": "archived",
       "priority": "high",
       "progress": 100,
+      "created": "2026-03-23",
+      "completed": "2026-03-25",
+      "assignee": "GitHub Copilot",
       "tags": [
         "assistant",
         "windows",
@@ -762,8 +921,24 @@
         "cli"
       ],
       "dependencies": [],
+      "group": "business",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\personal_assistant_windows_mvp_20260323",
       "_isArchived": true
+    },
+    {
+      "id": "psales_human_loop_revenue_20260407",
+      "name": "P-Sales Human-in-Loop Revenue Pipeline — Lead gen, onboarding, KKV + Brand csatornák",
+      "status": "active",
+      "priority": "high",
+      "progress": 70,
+      "created": "2026-04-07T03:43:48Z",
+      "updated": "2026-04-07T04:33:10Z",
+      "assignee": "GitHub Copilot",
+      "tags": [],
+      "dependencies": [],
+      "group": "business",
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\psales_human_loop_revenue_20260407",
+      "_isArchived": false
     },
     {
       "id": "readme_bootstrap_health_fixes_20260324",
@@ -771,6 +946,9 @@
       "status": "archived",
       "priority": "high",
       "progress": 100,
+      "created": "2026-03-24",
+      "completed": "2026-03-25",
+      "assignee": "GitHub Copilot",
       "tags": [
         "bootstrap",
         "smoke",
@@ -779,6 +957,7 @@
         "registry"
       ],
       "dependencies": [],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\readme_bootstrap_health_fixes_20260324",
       "_isArchived": true
     },
@@ -788,6 +967,8 @@
       "status": "proposed",
       "priority": "critical",
       "progress": 0,
+      "created": "2026-03-22",
+      "assignee": "GitHub Copilot",
       "tags": [
         "planet-mesh",
         "emergent-intelligence",
@@ -799,6 +980,7 @@
       "dependencies": [
         "remote_layer_phase7_superintelligent_infra_20260322"
       ],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\remote_layer_phase8_planetary_supersystem_20260322",
       "_isArchived": false
     },
@@ -808,6 +990,8 @@
       "status": "proposed",
       "priority": "critical",
       "progress": 0,
+      "created": "2026-03-22",
+      "assignee": "GitHub Copilot",
       "tags": [
         "superintelligence",
         "meta-cognition",
@@ -820,6 +1004,7 @@
       "dependencies": [
         "remote_layer_phase8_planetary_supersystem_20260322"
       ],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\remote_layer_phase9_emergent_superintelligence_20260322",
       "_isArchived": false
     },
@@ -831,8 +1016,11 @@
       "progress": 100,
       "created": "2026-02-22",
       "updated": "2026-03-23",
+      "completed": "2026-03-25",
+      "assignee": "Pohánka Péter",
       "tags": [],
       "dependencies": [],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\robotkez_comet_upgrade_20260222",
       "_isArchived": true
     },
@@ -859,6 +1047,7 @@
         "orchestrator_cognition_upgrade_20260320",
         "robotkezv2-full-comet-20260215"
       ],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\system_wide_zero_mock_20260301",
       "_isArchived": true
     },
@@ -868,7 +1057,9 @@
       "status": "active",
       "priority": "medium",
       "progress": 70,
+      "created": "2026-04-04",
       "updated": "2026-04-07",
+      "assignee": "Gemini",
       "tags": [
         "tech-debt",
         "todo",
@@ -876,6 +1067,7 @@
         "refactor"
       ],
       "dependencies": [],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\technical_debt_cleanup_20260404",
       "_isArchived": false
     },
@@ -885,6 +1077,9 @@
       "status": "completed",
       "priority": "medium",
       "progress": 100,
+      "created": "2026-04-01T00:00:00.000Z",
+      "updated": "2026-04-01T02:40:00.000Z",
+      "completed": "2026-04-01T02:40:00.000Z",
       "assignee": "Copilot",
       "tags": [
         "husky",
@@ -895,16 +1090,42 @@
         "github-actions"
       ],
       "dependencies": [],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\test_cadence_optimization_20260401",
+      "_isArchived": false
+    },
+    {
+      "id": "toura_local_dev_20260408",
+      "name": "Toura — Helyi Fejlesztési Hub",
+      "status": "active",
+      "priority": "high",
+      "progress": 5,
+      "created": "2026-04-08",
+      "updated": "2026-04-08",
+      "assignee": "Gemini",
+      "tags": [
+        "toura",
+        "nova",
+        "cloudflare-workers",
+        "d1",
+        "r2",
+        "nextjs",
+        "local-dev"
+      ],
+      "dependencies": [],
+      "group": "nova",
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\toura_local_dev_20260408",
       "_isArchived": false
     },
     {
       "id": "type_safety_enforcement_20260404",
       "name": "Type Safety Enforcement — any elimináció és Type Guard implementáció",
-      "status": "active",
+      "status": "completed",
       "priority": "high",
-      "progress": 80,
+      "progress": 100,
+      "created": "2026-04-04",
       "updated": "2026-04-07",
+      "assignee": "Gemini",
       "tags": [
         "typescript",
         "types",
@@ -912,6 +1133,7 @@
         "refactor"
       ],
       "dependencies": [],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\type_safety_enforcement_20260404",
       "_isArchived": false
     },
@@ -921,7 +1143,9 @@
       "status": "completed",
       "priority": "low",
       "progress": 100,
+      "created": "2026-04-03",
       "updated": "2026-04-03",
+      "assignee": "Claude Code",
       "tags": [
         "vscode",
         "build",
@@ -930,6 +1154,7 @@
         "tasks"
       ],
       "dependencies": [],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\vscode_auto_build_20260403",
       "_isArchived": false
     },
@@ -939,7 +1164,9 @@
       "status": "completed",
       "priority": "medium",
       "progress": 100,
+      "created": "2026-04-03",
       "updated": "2026-04-03",
+      "assignee": "Claude Code",
       "tags": [
         "windows",
         "bridge",
@@ -948,6 +1175,7 @@
         "wab"
       ],
       "dependencies": [],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\windows_bridge_health_20260403",
       "_isArchived": false
     },
@@ -957,11 +1185,13 @@
       "status": "archived",
       "priority": "high",
       "progress": 100,
+      "created": "2026-02-24T00:00:00Z",
       "updated": "2026-03-22T22:47:34Z",
       "completed": "2026-03-22T22:47:34Z",
       "assignee": "Gemini + Pohánka Péter",
       "tags": [],
       "dependencies": [],
+      "group": "other",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\006_trojan-horse-campaign",
       "_isArchived": true
     },
@@ -974,6 +1204,7 @@
       "created": "2026-02-05",
       "updated": "2026-02-13",
       "completed": "2026-02-13",
+      "assignee": "Claude",
       "tags": [
         "meta-agent",
         "code-generation",
@@ -981,6 +1212,7 @@
         "dynamic-loading"
       ],
       "dependencies": [],
+      "group": "other",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\agent_architect_upgrade_20260205",
       "_isArchived": true
     },
@@ -990,9 +1222,13 @@
       "status": "archived",
       "priority": "medium",
       "progress": 100,
+      "created": "2026-03-23",
+      "updated": "2026-03-23",
       "completed": "2026-03-23T08:15:00Z",
+      "assignee": "copilot",
       "tags": [],
       "dependencies": [],
+      "group": "other",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\agent_diagnostics_routing_modernization_20260323",
       "_isArchived": true
     },
@@ -1002,6 +1238,9 @@
       "status": "archived",
       "priority": "medium",
       "progress": 100,
+      "created": "2026-03-25T00:00:00.000Z",
+      "updated": "2026-03-30T14:15:00.000Z",
+      "completed": "2026-03-30T15:30:00.000Z",
       "assignee": "Copilot",
       "tags": [
         "agents",
@@ -1010,6 +1249,7 @@
         "quality"
       ],
       "dependencies": [],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\agent_health_matrix_20260325",
       "_isArchived": true
     },
@@ -1019,9 +1259,12 @@
       "status": "archived",
       "priority": "high",
       "progress": 100,
+      "created": "2026-03-23T00:00:00Z",
+      "updated": "2026-03-23T08:00:00Z",
       "completed": "2026-03-23T08:00:00Z",
       "tags": [],
       "dependencies": [],
+      "group": "other",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\agent_loader_modernization_20260323",
       "_isArchived": true
     },
@@ -1039,6 +1282,7 @@
       "dependencies": [
         "guardrails_evaluation_20260323"
       ],
+      "group": "other",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\agent_memory_structured_20260323",
       "_isArchived": true
     },
@@ -1056,6 +1300,7 @@
       "dependencies": [
         "observability_opentelemetry_20260323"
       ],
+      "group": "other",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\agent_orchestration_dag_20260323",
       "_isArchived": true
     },
@@ -1065,9 +1310,13 @@
       "status": "archived",
       "priority": "medium",
       "progress": 100,
+      "created": "2026-02-22T00:00:00Z",
+      "updated": "2026-02-24T01:10:00Z",
+      "completed": "2026-02-24T01:10:00Z",
       "assignee": "Claude (All phases completed)",
       "tags": [],
       "dependencies": [],
+      "group": "other",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\aider_integration_20260222",
       "_isArchived": true
     },
@@ -1079,6 +1328,7 @@
       "progress": 100,
       "created": "2026-02-16T00:00:00Z",
       "updated": "2026-02-17T22:45:00Z",
+      "assignee": "SpecWriterAgent",
       "tags": [
         "recommendation",
         "rag",
@@ -1088,6 +1338,7 @@
       "dependencies": [
         "lancedb_rag"
       ],
+      "group": "nova",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\ai_recommendation_system_20260216",
       "_isArchived": true
     },
@@ -1097,9 +1348,12 @@
       "status": "archived",
       "priority": "medium",
       "progress": 0,
+      "created": "2026-02-22T19:45:46.996Z",
+      "updated": "2026-02-22T19:45:46.996Z",
       "assignee": "System",
       "tags": [],
       "dependencies": [],
+      "group": "other",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\basic-test-task-structure-20260219",
       "_isArchived": true
     },
@@ -1125,15 +1379,18 @@
         "code_quality_improvements_20260210",
         "dashboard_test_suite_20260210"
       ],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\bas_comprehensive_test_protocol_20260210",
       "_isArchived": true
     },
     {
-      "id": "bas_enterprise_suite",
+      "id": "bas_enterprise_suite_20260216",
       "name": "BAS Enterprise Suite - 18 Module Business Automation",
       "status": "archived",
       "priority": "high",
       "progress": 100,
+      "created": "2026-02-16T00:00:00Z",
+      "updated": "2026-02-19T11:45:00Z",
       "tags": [
         "enterprise",
         "automation",
@@ -1147,6 +1404,7 @@
         "google_workspace_api",
         "orchestrator_v2"
       ],
+      "group": "business",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\bas_enterprise_suite",
       "_isArchived": true
     },
@@ -1156,9 +1414,12 @@
       "status": "archived",
       "priority": "high",
       "progress": 100,
+      "created": "2026-02-21T10:00:00Z",
+      "updated": "2026-02-21T23:55:00Z",
       "assignee": "DeveloperAgent + Claude",
       "tags": [],
       "dependencies": [],
+      "group": "other",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\bas_orchestration_chain_20260221",
       "_isArchived": true
     },
@@ -1168,9 +1429,13 @@
       "status": "archived",
       "priority": "high",
       "progress": 100,
+      "created": "2026-02-21T00:00:00Z",
+      "updated": "2026-02-23T22:40:00Z",
+      "completed": "2026-02-23T22:40:00Z",
       "assignee": "DeveloperAgent + SecurityAgent",
       "tags": [],
       "dependencies": [],
+      "group": "other",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\bas_security_sandbox_20260221",
       "_isArchived": true
     },
@@ -1180,6 +1445,9 @@
       "status": "archived",
       "priority": "high",
       "progress": 100,
+      "created": "2026-03-25T00:00:00.000Z",
+      "updated": "2026-03-30T14:15:00.000Z",
+      "completed": "2026-03-30T15:30:00.000Z",
       "assignee": "Copilot",
       "tags": [
         "bootstrap",
@@ -1187,6 +1455,7 @@
         "sync"
       ],
       "dependencies": [],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\bootstrap_single_source_20260325",
       "_isArchived": true
     },
@@ -1200,6 +1469,7 @@
       "assignee": "Brunella",
       "tags": [],
       "dependencies": [],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\browser_use_harvester_20260131",
       "_isArchived": true
     },
@@ -1209,7 +1479,10 @@
       "status": "archived",
       "priority": "critical",
       "progress": 100,
+      "created": "2026-04-02",
       "updated": "2026-04-04",
+      "completed": "2026-04-04",
+      "assignee": "GitHub Copilot",
       "tags": [
         "brunella",
         "stability",
@@ -1221,6 +1494,7 @@
         "dashboard"
       ],
       "dependencies": [],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\brunella_core_stabilization_20260402",
       "_isArchived": true
     },
@@ -1230,6 +1504,9 @@
       "status": "archived",
       "priority": "critical",
       "progress": 100,
+      "created": "2026-03-25",
+      "completed": "2026-03-26",
+      "assignee": "Gemini CLI",
       "tags": [
         "documentation",
         "inventory",
@@ -1239,6 +1516,7 @@
         "feature-matrix"
       ],
       "dependencies": [],
+      "group": "business",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\brunella_function_matrix_20260325",
       "_isArchived": true
     },
@@ -1251,8 +1529,10 @@
       "created": "2026-02-25",
       "updated": "2026-03-22T22:47:34Z",
       "completed": "2026-02-25",
+      "assignee": "Gemini",
       "tags": [],
       "dependencies": [],
+      "group": "business",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\campaign-generator-agent-20260225",
       "_isArchived": true
     },
@@ -1262,9 +1542,12 @@
       "status": "archived",
       "priority": "medium",
       "progress": 0,
+      "created": "2026-02-22T19:45:46.999Z",
+      "updated": "2026-02-22T19:45:46.999Z",
       "assignee": "System",
       "tags": [],
       "dependencies": [],
+      "group": "other",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\cean_operations_center_ui_20260215",
       "_isArchived": true
     },
@@ -1274,9 +1557,12 @@
       "status": "archived",
       "priority": "medium",
       "progress": 0,
+      "created": "2026-02-22T19:45:47.000Z",
+      "updated": "2026-02-22T19:45:47.000Z",
       "assignee": "System",
       "tags": [],
       "dependencies": [],
+      "group": "other",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\cean_phase2_c_prometheus_20250216",
       "_isArchived": true
     },
@@ -1286,9 +1572,12 @@
       "status": "archived",
       "priority": "medium",
       "progress": 0,
+      "created": "2026-02-22T19:45:47.001Z",
+      "updated": "2026-02-22T19:45:47.001Z",
       "assignee": "System",
       "tags": [],
       "dependencies": [],
+      "group": "other",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\cean_phase_2_fleet_management_20260215",
       "_isArchived": true
     },
@@ -1299,8 +1588,10 @@
       "priority": "low",
       "progress": 100,
       "created": "2026-03-23",
+      "assignee": "Pohánka Péter",
       "tags": [],
       "dependencies": [],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\cf_analytics_engine_20260323",
       "_isArchived": true
     },
@@ -1311,8 +1602,10 @@
       "priority": "high",
       "progress": 100,
       "created": "2026-03-23",
+      "assignee": "Pohánka Péter",
       "tags": [],
       "dependencies": [],
+      "group": "other",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\cf_durable_object_migrations_20260323",
       "_isArchived": true
     },
@@ -1323,8 +1616,10 @@
       "priority": "low",
       "progress": 100,
       "created": "2026-03-23",
+      "assignee": "Pohánka Péter",
       "tags": [],
       "dependencies": [],
+      "group": "other",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\cf_hyperdrive_d1_20260323",
       "_isArchived": true
     },
@@ -1335,8 +1630,10 @@
       "priority": "high",
       "progress": 100,
       "created": "2026-03-23",
+      "assignee": "Pohánka Péter",
       "tags": [],
       "dependencies": [],
+      "group": "nova",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\cf_queues_task_distribution_20260323",
       "_isArchived": true
     },
@@ -1347,8 +1644,10 @@
       "priority": "critical",
       "progress": 100,
       "created": "2026-03-23",
+      "assignee": "Pohánka Péter",
       "tags": [],
       "dependencies": [],
+      "group": "nova",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\cf_r2_activation_20260323",
       "_isArchived": true
     },
@@ -1359,10 +1658,12 @@
       "priority": "high",
       "progress": 100,
       "created": "2026-03-23",
+      "assignee": "Pohánka Péter",
       "tags": [],
       "dependencies": [
         "cf_r2_activation_20260323"
       ],
+      "group": "nova",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\cf_r2_artifact_storage_20260323",
       "_isArchived": true
     },
@@ -1373,8 +1674,10 @@
       "priority": "critical",
       "progress": 100,
       "created": "2026-03-23",
+      "assignee": "Pohánka Péter",
       "tags": [],
       "dependencies": [],
+      "group": "nova",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\cf_token_permissions_fix_20260323",
       "_isArchived": true
     },
@@ -1385,8 +1688,10 @@
       "priority": "medium",
       "progress": 100,
       "created": "2026-03-23",
+      "assignee": "Pohánka Péter",
       "tags": [],
       "dependencies": [],
+      "group": "other",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\cf_workers_ai_models_20260323",
       "_isArchived": true
     },
@@ -1398,8 +1703,10 @@
       "progress": 100,
       "created": "2026-03-23",
       "completed": "2026-03-24",
+      "assignee": "Pohánka Péter",
       "tags": [],
       "dependencies": [],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\cf_workflows_orchestration_20260323",
       "_isArchived": true
     },
@@ -1417,6 +1724,7 @@
       "dependencies": [
         "agent_orchestration_dag_20260323"
       ],
+      "group": "other",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\chrome_acp_integration_20260323",
       "_isArchived": true
     },
@@ -1426,9 +1734,12 @@
       "status": "archived",
       "priority": "low",
       "progress": 100,
+      "created": "2026-02-23T08:00:00Z",
+      "updated": "2026-02-24T00:56:00Z",
       "assignee": "Claude (All phases completed)",
       "tags": [],
       "dependencies": [],
+      "group": "other",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\chrome_devtools_mcp_agent_20260223",
       "_isArchived": true
     },
@@ -1440,6 +1751,7 @@
       "progress": 100,
       "created": "2026-02-11",
       "updated": "2026-02-12T18:00:00Z",
+      "assignee": "Claude",
       "tags": [
         "cloudflare",
         "chat",
@@ -1449,6 +1761,7 @@
         "d1"
       ],
       "dependencies": [],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\cloudflare-chat-integration-20260211",
       "_isArchived": true
     },
@@ -1472,6 +1785,7 @@
       "dependencies": [
         "cloudflare-chat-integration-20260211"
       ],
+      "group": "nova",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\cloudflare-iteration-2-20260212",
       "_isArchived": true
     },
@@ -1481,9 +1795,12 @@
       "status": "archived",
       "priority": "high",
       "progress": 100,
+      "created": "2026-02-21T00:00:00Z",
+      "updated": "2026-02-21T15:45:00Z",
       "assignee": "DeveloperAgent + Claude",
       "tags": [],
       "dependencies": [],
+      "group": "other",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\cloudflare_browser_rendering_robotkez_20260221",
       "_isArchived": true
     },
@@ -1493,9 +1810,12 @@
       "status": "archived",
       "priority": "medium",
       "progress": 100,
+      "created": "2026-02-21T00:00:00Z",
+      "updated": "2026-02-21T18:12:00Z",
       "assignee": "DeveloperAgent + Claude",
       "tags": [],
       "dependencies": [],
+      "group": "other",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\cloudflare_d1_kv_storage_20260221_archived_20260222",
       "_isArchived": true
     },
@@ -1505,6 +1825,8 @@
       "status": "archived",
       "priority": "medium",
       "progress": 100,
+      "created": "2026-02-15T16:50:00Z",
+      "assignee": "Brunella AI",
       "tags": [
         "cloudflare",
         "workers",
@@ -1514,6 +1836,7 @@
         "distributed-systems"
       ],
       "dependencies": [],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\cloudflare_edge_agents_network_20260215",
       "_isArchived": true
     },
@@ -1537,6 +1860,7 @@
       "dependencies": [
         "cloudflare_workers_migration_20260226"
       ],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\cloudflare_edge_browser_orchestration_20260404",
       "_isArchived": true
     },
@@ -1548,6 +1872,7 @@
       "progress": 100,
       "created": "2026-02-02",
       "updated": "2026-02-12",
+      "assignee": "System",
       "tags": [
         "cloudflare",
         "edge",
@@ -1556,6 +1881,7 @@
         "r2"
       ],
       "dependencies": [],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\cloudflare_edge_integration_20260202",
       "_isArchived": true
     },
@@ -1565,7 +1891,9 @@
       "status": "archived",
       "priority": "critical",
       "progress": 100,
+      "created": "2026-03-25",
       "updated": "2026-03-25T16:19:39Z",
+      "assignee": "GitHub Copilot",
       "tags": [
         "cloudflare",
         "edge",
@@ -1582,6 +1910,7 @@
         "cloudflare_workers_migration_20260226",
         "cf_hyperdrive_d1_20260323"
       ],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\cloudflare_full_optimization_20260325",
       "_isArchived": true
     },
@@ -1591,7 +1920,9 @@
       "status": "archived",
       "priority": "high",
       "progress": 100,
+      "created": "2026-04-03",
       "updated": "2026-04-04",
+      "assignee": "Claude Code",
       "tags": [
         "cloudflare",
         "security",
@@ -1600,6 +1931,7 @@
         "infrastructure"
       ],
       "dependencies": [],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\cloudflare_token_separation_20260403",
       "_isArchived": true
     },
@@ -1609,9 +1941,12 @@
       "status": "archived",
       "priority": "medium",
       "progress": 100,
+      "created": "2026-02-21T00:00:00Z",
+      "updated": "2026-02-21T13:45:00Z",
       "assignee": "DeveloperAgent",
       "tags": [],
       "dependencies": [],
+      "group": "other",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\cloudflare_vectorize_rag_20260221",
       "_isArchived": true
     },
@@ -1621,9 +1956,12 @@
       "status": "archived",
       "priority": "critical",
       "progress": 100,
+      "created": "2026-02-21T00:00:00Z",
+      "updated": "2026-02-21T10:05:00Z",
       "assignee": "DeveloperAgent + Claude",
       "tags": [],
       "dependencies": [],
+      "group": "other",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\cloudflare_workers_ai_20260221",
       "_isArchived": true
     },
@@ -1633,9 +1971,12 @@
       "status": "archived",
       "priority": "high",
       "progress": 100,
+      "created": "2026-02-21T10:40:00Z",
+      "updated": "2026-02-21T11:01:00Z",
       "assignee": "DeveloperAgent + Claude",
       "tags": [],
       "dependencies": [],
+      "group": "other",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\cloudflare_workers_audit_20260221",
       "_isArchived": true
     },
@@ -1656,6 +1997,7 @@
         "typescript"
       ],
       "dependencies": [],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\codex_chat_refactor_20260212",
       "_isArchived": true
     },
@@ -1667,6 +2009,7 @@
       "progress": 100,
       "created": "2026-02-10",
       "updated": "2026-02-12",
+      "assignee": "System",
       "tags": [
         "quality",
         "testing",
@@ -1674,6 +2017,7 @@
         "security"
       ],
       "dependencies": [],
+      "group": "other",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\code_quality_improvements_20260210",
       "_isArchived": true
     },
@@ -1694,6 +2038,7 @@
         "sentiment-analysis"
       ],
       "dependencies": [],
+      "group": "other",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\creative_friction_mediator_20260212",
       "_isArchived": true
     },
@@ -1706,12 +2051,14 @@
       "created": "2026-02-25",
       "updated": "2026-03-22T22:47:34Z",
       "completed": "2026-03-22T22:47:34Z",
+      "assignee": "Gemini",
       "tags": [
         "marketing",
         "campaign",
         "cserszegtomaj"
       ],
       "dependencies": [],
+      "group": "business",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\cserszegtomaj-campaign-20260225",
       "_isArchived": true
     },
@@ -1724,8 +2071,10 @@
       "created": "2026-03-20",
       "updated": "2026-03-22T22:47:34Z",
       "completed": "2026-03-21",
+      "assignee": "Copilot",
       "tags": [],
       "dependencies": [],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\dashboard-500-and-test-timeouts-20260320",
       "_isArchived": true
     },
@@ -1738,8 +2087,10 @@
       "created": "2026-02-25",
       "updated": "2026-03-22T22:47:34Z",
       "completed": "2026-02-25",
+      "assignee": "Gemini",
       "tags": [],
       "dependencies": [],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\dashboard-stabilization-20260225",
       "_isArchived": true
     },
@@ -1751,6 +2102,7 @@
       "progress": 100,
       "created": "2026-02-11",
       "updated": "2026-02-13",
+      "assignee": "Claude",
       "tags": [
         "dashboard",
         "tracks",
@@ -1760,6 +2112,7 @@
         "socket"
       ],
       "dependencies": [],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\dashboard-todo-widget-20260211",
       "_isArchived": true
     },
@@ -1769,6 +2122,8 @@
       "status": "archived",
       "priority": "high",
       "progress": 84,
+      "created": "2026-04-01T15:30:00.000Z",
+      "updated": "2026-04-01T17:25:00.000Z",
       "assignee": "Copilot",
       "tags": [
         "dashboard",
@@ -1780,6 +2135,7 @@
         "stabilization"
       ],
       "dependencies": [],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\dashboard_cockpit_redesign_20260401",
       "_isArchived": true
     },
@@ -1791,6 +2147,7 @@
       "progress": 100,
       "created": "2026-02-10T15:00:00Z",
       "updated": "2026-02-12T10:30:00Z",
+      "completed": "2026-02-12T10:30:00Z",
       "assignee": "DeveloperAgent",
       "tags": [
         "testing",
@@ -1802,6 +2159,7 @@
       "dependencies": [
         "code_quality_improvements_20260210"
       ],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\dashboard_test_suite_20260210",
       "_isArchived": true
     },
@@ -1813,6 +2171,7 @@
       "progress": 100,
       "created": "2026-02-08",
       "updated": "2026-02-12",
+      "assignee": "System",
       "tags": [
         "dashboard",
         "robotkez",
@@ -1820,6 +2179,7 @@
         "automation"
       ],
       "dependencies": [],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\dashboard_v2_robotkez_control_20260208",
       "_isArchived": true
     },
@@ -1829,9 +2189,13 @@
       "status": "archived",
       "priority": "high",
       "progress": 100,
+      "created": "2026-02-19T00:00:00Z",
+      "updated": "2026-02-23T05:00:00Z",
+      "completed": "2026-02-23T05:00:00Z",
       "assignee": "DeveloperAgent + Claude",
       "tags": [],
       "dependencies": [],
+      "group": "other",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\dashboard_v3_command_center_20260219",
       "_isArchived": true
     },
@@ -1843,6 +2207,7 @@
       "progress": 0,
       "created": "2026-02-05",
       "updated": "2026-02-05",
+      "assignee": "Developer",
       "tags": [
         "fine-tuning",
         "llm",
@@ -1853,6 +2218,7 @@
       "dependencies": [
         "browser_use_harvester_20260131"
       ],
+      "group": "other",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\data_flywheel_incubator_20260205",
       "_isArchived": true
     },
@@ -1876,6 +2242,7 @@
       "dependencies": [
         "006_trojan-horse-campaign"
       ],
+      "group": "business",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\deep_market_research_20260227",
       "_isArchived": true
     },
@@ -1888,6 +2255,7 @@
       "created": "2026-02-06",
       "updated": "2026-02-12",
       "completed": "2026-02-12",
+      "assignee": "Claude",
       "tags": [
         "developer-agent",
         "self-healing",
@@ -1897,6 +2265,7 @@
         "vitest"
       ],
       "dependencies": [],
+      "group": "nova",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\developer_agent_2_0_20260206",
       "_isArchived": true
     },
@@ -1920,6 +2289,7 @@
         "system_wide_zero_mock_20260301",
         "orchestrator_cognition_upgrade_20260320"
       ],
+      "group": "nova",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\developer_live_studio_research_20260301",
       "_isArchived": true
     },
@@ -1929,6 +2299,9 @@
       "status": "archived",
       "priority": "high",
       "progress": 100,
+      "created": "2026-03-25T00:00:00.000Z",
+      "updated": "2026-03-30T14:15:00.000Z",
+      "completed": "2026-03-30T15:30:00.000Z",
       "assignee": "Copilot",
       "tags": [
         "docs",
@@ -1937,6 +2310,7 @@
         "stats"
       ],
       "dependencies": [],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\doc_code_auto_sync_20260325",
       "_isArchived": true
     },
@@ -1948,8 +2322,10 @@
       "progress": 100,
       "created": "2026-03-25",
       "completed": "2026-03-28",
+      "assignee": "copilot",
       "tags": [],
       "dependencies": [],
+      "group": "other",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\e2b_sandbox_crawl4ai_20260325",
       "_isArchived": true
     },
@@ -1961,6 +2337,7 @@
       "progress": 0,
       "created": "2026-02-16T00:00:00Z",
       "updated": "2026-02-17T21:15:00Z",
+      "assignee": "ArchitectAgent",
       "tags": [
         "enterprise",
         "multi-module",
@@ -1974,6 +2351,7 @@
         "intelligence"
       ],
       "dependencies": [],
+      "group": "business",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\enterprise_suite_master_20260216",
       "_isArchived": true
     },
@@ -1985,6 +2363,7 @@
       "progress": 100,
       "created": "2026-03-29",
       "completed": "2026-03-29",
+      "assignee": "Pohánka Péter",
       "tags": [
         "ephemeral-agents",
         "cleanup",
@@ -1994,6 +2373,7 @@
       "dependencies": [
         "ephemeral_agents_ttl_budget_20260329"
       ],
+      "group": "other",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\ephemeral_agents_cleanup_audit_20260329",
       "_isArchived": true
     },
@@ -2005,6 +2385,7 @@
       "progress": 100,
       "created": "2026-03-29",
       "completed": "2026-03-29",
+      "assignee": "Pohánka Péter",
       "tags": [
         "ephemeral-agents",
         "sandbox",
@@ -2014,6 +2395,7 @@
       "dependencies": [
         "ephemeral_agents_runtime_spawn_20260329"
       ],
+      "group": "other",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\ephemeral_agents_limited_tools_20260329",
       "_isArchived": true
     },
@@ -2025,6 +2407,7 @@
       "progress": 100,
       "created": "2026-03-29",
       "completed": "2026-03-29",
+      "assignee": "Pohánka Péter",
       "tags": [
         "ephemeral-agents",
         "runtime",
@@ -2034,6 +2417,7 @@
       "dependencies": [
         "zero_prompt_policy_engine_20260329"
       ],
+      "group": "other",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\ephemeral_agents_runtime_spawn_20260329",
       "_isArchived": true
     },
@@ -2045,6 +2429,7 @@
       "progress": 100,
       "created": "2026-03-29",
       "completed": "2026-03-29",
+      "assignee": "Pohánka Péter",
       "tags": [
         "ephemeral-agents",
         "ttl",
@@ -2055,6 +2440,7 @@
         "ephemeral_agents_runtime_spawn_20260329",
         "ephemeral_agents_limited_tools_20260329"
       ],
+      "group": "other",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\ephemeral_agents_ttl_budget_20260329",
       "_isArchived": true
     },
@@ -2066,6 +2452,7 @@
       "progress": 100,
       "created": "2026-02-11",
       "updated": "2026-02-12",
+      "assignee": "Claude",
       "tags": [
         "process",
         "protocol",
@@ -2074,6 +2461,7 @@
         "cli"
       ],
       "dependencies": [],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\epp-v2-protocol-20260211",
       "_isArchived": true
     },
@@ -2083,7 +2471,10 @@
       "status": "archived",
       "priority": "high",
       "progress": 100,
+      "created": "2026-04-04",
       "updated": "2026-04-04",
+      "completed": "2026-04-04",
+      "assignee": "Gemini",
       "tags": [
         "errors",
         "standard",
@@ -2093,6 +2484,7 @@
       "dependencies": [
         "error_handling_standard_20260404"
       ],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\error_handling_implementation_20260404",
       "_isArchived": true
     },
@@ -2102,7 +2494,10 @@
       "status": "archived",
       "priority": "high",
       "progress": 100,
+      "created": "2026-04-04",
       "updated": "2026-04-04",
+      "completed": "2026-04-04",
+      "assignee": "Gemini",
       "tags": [
         "errors",
         "standard",
@@ -2110,6 +2505,7 @@
         "debugging"
       ],
       "dependencies": [],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\error_handling_standard_20260404",
       "_isArchived": true
     },
@@ -2121,6 +2517,7 @@
       "progress": 100,
       "created": "2026-03-29",
       "completed": "2026-03-30",
+      "assignee": "Pohánka Péter",
       "tags": [
         "federated-mcp",
         "negotiation",
@@ -2130,6 +2527,7 @@
       "dependencies": [
         "federated_mcp_remote_routing_20260329"
       ],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\federated_mcp_negotiation_20260329",
       "_isArchived": true
     },
@@ -2141,6 +2539,7 @@
       "progress": 100,
       "created": "2026-03-29",
       "completed": "2026-03-30",
+      "assignee": "Pohánka Péter",
       "tags": [
         "federated-mcp",
         "routing",
@@ -2151,6 +2550,7 @@
         "federated_mcp_trust_20260329",
         "federated_mcp_signed_manifests_20260329"
       ],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\federated_mcp_remote_routing_20260329",
       "_isArchived": true
     },
@@ -2162,6 +2562,7 @@
       "progress": 100,
       "created": "2026-03-29",
       "completed": "2026-03-30",
+      "assignee": "Pohánka Péter",
       "tags": [
         "federated-mcp",
         "manifest",
@@ -2171,6 +2572,7 @@
       "dependencies": [
         "federated_mcp_trust_20260329"
       ],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\federated_mcp_signed_manifests_20260329",
       "_isArchived": true
     },
@@ -2182,6 +2584,7 @@
       "progress": 100,
       "created": "2026-03-29",
       "completed": "2026-03-30",
+      "assignee": "Pohánka Péter",
       "tags": [
         "federated-mcp",
         "trust",
@@ -2192,6 +2595,7 @@
         "zero_prompt_policy_engine_20260329",
         "remote_layer_phase1_foundation_20260322"
       ],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\federated_mcp_trust_20260329",
       "_isArchived": true
     },
@@ -2209,6 +2613,7 @@
         "agent"
       ],
       "dependencies": [],
+      "group": "business",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\onboarding-knowledge-manager-20260214",
       "_isArchived": true
     },
@@ -2221,8 +2626,10 @@
       "created": "2026-02-25",
       "updated": "2026-03-22T22:47:34Z",
       "completed": "2026-02-25",
+      "assignee": "Gemini",
       "tags": [],
       "dependencies": [],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\functional-integrity-fix-20260225",
       "_isArchived": true
     },
@@ -2243,6 +2650,7 @@
         "github-actions"
       ],
       "dependencies": [],
+      "group": "other",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\gemini_git_agent_20260212",
       "_isArchived": true
     },
@@ -2252,8 +2660,12 @@
       "status": "archived",
       "priority": "high",
       "progress": 100,
+      "created": "2026-03-28T04:05:11.517Z",
+      "updated": "2026-03-30T14:15:00.000Z",
+      "completed": "2026-03-30T15:30:00.000Z",
       "tags": [],
       "dependencies": [],
+      "group": "other",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\goldeninteligencia20260327",
       "_isArchived": true
     },
@@ -2265,6 +2677,7 @@
       "progress": 100,
       "created": "2026-02-09",
       "updated": "2026-02-12",
+      "assignee": "System",
       "tags": [
         "observability",
         "governance",
@@ -2272,6 +2685,7 @@
         "spec-driven"
       ],
       "dependencies": [],
+      "group": "other",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\gold_protocol",
       "_isArchived": true
     },
@@ -2293,6 +2707,7 @@
         "email-notification"
       ],
       "dependencies": [],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\green_lightning_20260212",
       "_isArchived": true
     },
@@ -2308,6 +2723,7 @@
       "assignee": "Copilot + Pohánka Péter",
       "tags": [],
       "dependencies": [],
+      "group": "other",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\guardrails_evaluation_20260323",
       "_isArchived": true
     },
@@ -2320,8 +2736,10 @@
       "created": "2026-02-25",
       "updated": "2026-03-22T22:47:34Z",
       "completed": "2026-02-25",
+      "assignee": "Gemini",
       "tags": [],
       "dependencies": [],
+      "group": "other",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\hungarian-orchestration-tuning-20260225",
       "_isArchived": true
     },
@@ -2333,6 +2751,7 @@
       "progress": 0,
       "created": "2026-02-16T00:00:00Z",
       "updated": "2026-02-16T00:00:00Z",
+      "assignee": "SpecWriterAgent",
       "tags": [
         "logistics",
         "geo-fencing",
@@ -2342,6 +2761,7 @@
       "dependencies": [
         "robotkezv2"
       ],
+      "group": "business",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\hyper_local_supply_chain_20260216",
       "_isArchived": true
     },
@@ -2353,6 +2773,7 @@
       "progress": 100,
       "created": "2026-02-16T00:00:00Z",
       "updated": "2026-02-18T01:00:00Z",
+      "assignee": "SpecWriterAgent",
       "tags": [
         "auction",
         "arbitrage",
@@ -2362,6 +2783,7 @@
       "dependencies": [
         "robotkezv2"
       ],
+      "group": "nova",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\industrial_machine_hunter_20260216",
       "_isArchived": true
     },
@@ -2373,6 +2795,7 @@
       "progress": 100,
       "created": "2026-02-12T00:00:00Z",
       "updated": "2026-02-24T01:27:00Z",
+      "completed": "2026-02-24T01:27:00Z",
       "assignee": "Claude (Complete)",
       "tags": [
         "innovation",
@@ -2381,6 +2804,7 @@
         "research"
       ],
       "dependencies": [],
+      "group": "nova",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\innovation_bridge_20260212",
       "_isArchived": true
     },
@@ -2393,6 +2817,7 @@
       "created": "2026-02-25",
       "updated": "2026-03-22T22:47:34Z",
       "completed": "2026-03-22T22:47:34Z",
+      "assignee": "Gemini",
       "tags": [
         "TRIZ",
         "innovation",
@@ -2400,6 +2825,7 @@
         "swarm"
       ],
       "dependencies": [],
+      "group": "nova",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\innovation_bridge_20260225",
       "_isArchived": true
     },
@@ -2410,6 +2836,7 @@
       "priority": "medium",
       "progress": 100,
       "created": "2026-03-30",
+      "assignee": "Pohánka Péter",
       "tags": [
         "készlet",
         "leltár",
@@ -2425,6 +2852,7 @@
         "stocktake"
       ],
       "dependencies": [],
+      "group": "business",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\inventory_automation_20260330",
       "_isArchived": true
     },
@@ -2446,6 +2874,7 @@
       "dependencies": [
         "invoice-to-sheets-automation-20260214 (COMPLETED)"
       ],
+      "group": "business",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\invoice-e2e-testing-20260217",
       "_isArchived": true
     },
@@ -2465,6 +2894,7 @@
         "data-flywheel"
       ],
       "dependencies": [],
+      "group": "business",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\invoice-to-sheets-automation-20260214",
       "_isArchived": true
     },
@@ -2490,6 +2920,7 @@
         "dashboard"
       ],
       "dependencies": [],
+      "group": "business",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\invoice_automation_20260326",
       "_isArchived": true
     },
@@ -2512,6 +2943,7 @@
         "backend"
       ],
       "dependencies": [],
+      "group": "other",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\iron_clad_backend_20260212",
       "_isArchived": true
     },
@@ -2523,6 +2955,7 @@
       "progress": 100,
       "created": "2026-02-11",
       "updated": "2026-02-13",
+      "assignee": "Claude",
       "tags": [
         "ci",
         "github-actions",
@@ -2532,6 +2965,7 @@
         "cli"
       ],
       "dependencies": [],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\jules-async-test-automation-20260211",
       "_isArchived": true
     },
@@ -2543,6 +2977,7 @@
       "progress": 100,
       "created": "2026-02-15T00:00:00Z",
       "updated": "2026-02-17T15:00:00Z",
+      "assignee": "Brunella AI",
       "tags": [
         "automation",
         "ci-cd",
@@ -2556,6 +2991,7 @@
         "github_sync_scripts",
         "dashboard_framework"
       ],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\jules_continuous_ai_integration_20260215",
       "_isArchived": true
     },
@@ -2576,6 +3012,7 @@
         "automation"
       ],
       "dependencies": [],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\jules_enterprise_cicd_20260212",
       "_isArchived": true
     },
@@ -2599,6 +3036,7 @@
       "dependencies": [
         "kkv_crm_followup_routing_20260405"
       ],
+      "group": "business",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\kkv_crm_followup_approval_reporting_20260405",
       "_isArchived": true
     },
@@ -2610,6 +3048,7 @@
       "progress": 100,
       "created": "2026-04-05",
       "updated": "2026-04-05",
+      "completed": "2026-04-05T17:08:54.7826616Z",
       "assignee": "GitHub Copilot",
       "tags": [
         "kkv",
@@ -2621,6 +3060,7 @@
         "n8n"
       ],
       "dependencies": [],
+      "group": "business",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\kkv_hr_onboarding_provisioning_20260405",
       "_isArchived": true
     },
@@ -2632,6 +3072,7 @@
       "progress": 100,
       "created": "2026-04-07",
       "updated": "2026-04-07",
+      "completed": "2026-04-07",
       "assignee": "GitHub Copilot",
       "tags": [
         "kkv",
@@ -2646,6 +3087,7 @@
       "dependencies": [
         "kkv_hr_timesheet_culture_20260405"
       ],
+      "group": "business",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\kkv_hr_timesheet_export_and_alerts_20260407",
       "_isArchived": true
     },
@@ -2656,6 +3098,7 @@
       "priority": "medium",
       "progress": 0,
       "created": "2026-03-26",
+      "assignee": "Finance / ProjectConductor",
       "tags": [
         "finance",
         "automation",
@@ -2669,6 +3112,7 @@
         "Bank API/CMS hozzáférés (vagy napi CSV)",
         "Google Drive / IMAP hozzáférés"
       ],
+      "group": "business",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\konyveles_automatizalas",
       "_isArchived": true
     },
@@ -2680,6 +3124,7 @@
       "progress": 100,
       "created": "2026-04-05",
       "updated": "2026-04-05",
+      "completed": "2026-04-05T00:00:00Z",
       "assignee": "GitHub Copilot",
       "tags": [
         "bookkeeping",
@@ -2692,6 +3137,7 @@
       "dependencies": [
         "n8n_konyveles_pipeline_20260328"
       ],
+      "group": "business",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\konyveles_phase3_readiness_20260405",
       "_isArchived": true
     },
@@ -2701,9 +3147,13 @@
       "status": "archived",
       "priority": "medium",
       "progress": 100,
+      "created": "2026-02-23T00:00:00Z",
+      "updated": "2026-02-24T01:47:00Z",
+      "completed": "2026-02-24T01:47:00Z",
       "assignee": "Claude (Complete)",
       "tags": [],
       "dependencies": [],
+      "group": "other",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\law_detective_20260223",
       "_isArchived": true
     },
@@ -2716,6 +3166,7 @@
       "created": "2026-03-29",
       "updated": "2026-03-29",
       "completed": "2026-03-29",
+      "assignee": "Pohánka Péter",
       "tags": [
         "learning",
         "golden-dataset",
@@ -2724,6 +3175,7 @@
         "privacy"
       ],
       "dependencies": [],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\learning_loop_curated_golden_dataset_20260329",
       "_isArchived": true
     },
@@ -2736,6 +3188,7 @@
       "created": "2026-03-29",
       "updated": "2026-03-29",
       "completed": "2026-03-29",
+      "assignee": "Pohánka Péter",
       "tags": [
         "learning",
         "eval",
@@ -2746,6 +3199,7 @@
       "dependencies": [
         "learning_loop_curated_golden_dataset_20260329"
       ],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\learning_loop_eval_harness_20260329",
       "_isArchived": true
     },
@@ -2758,6 +3212,7 @@
       "created": "2026-03-29",
       "updated": "2026-03-29",
       "completed": "2026-03-29",
+      "assignee": "Pohánka Péter",
       "tags": [
         "learning",
         "training",
@@ -2768,6 +3223,7 @@
       "dependencies": [
         "learning_loop_curated_golden_dataset_20260329"
       ],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\learning_loop_nightly_trainer_20260329",
       "_isArchived": true
     },
@@ -2780,6 +3236,7 @@
       "created": "2026-03-29",
       "updated": "2026-03-29",
       "completed": "2026-03-29",
+      "assignee": "Pohánka Péter",
       "tags": [
         "learning",
         "model-registry",
@@ -2791,6 +3248,7 @@
         "learning_loop_nightly_trainer_20260329",
         "learning_loop_eval_harness_20260329"
       ],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\learning_loop_reflex_model_registry_20260329",
       "_isArchived": true
     },
@@ -2800,11 +3258,13 @@
       "status": "archived",
       "priority": "medium",
       "progress": 100,
+      "created": "2026-02-22T19:45:47.006Z",
       "updated": "2026-03-22T22:47:34Z",
       "completed": "2026-02-13",
       "assignee": "System",
       "tags": [],
       "dependencies": [],
+      "group": "other",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\living_documentation_system_20260213",
       "_isArchived": true
     },
@@ -2814,9 +3274,12 @@
       "status": "archived",
       "priority": "medium",
       "progress": 0,
+      "created": "2026-02-22T19:45:47.007Z",
+      "updated": "2026-02-22T19:45:47.007Z",
       "assignee": "System",
       "tags": [],
       "dependencies": [],
+      "group": "other",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\local_test_scheduler_20260215",
       "_isArchived": true
     },
@@ -2826,7 +3289,10 @@
       "status": "archived",
       "priority": "high",
       "progress": 100,
+      "created": "2026-04-04",
       "updated": "2026-04-05",
+      "completed": "2026-04-05T00:00:00Z",
+      "assignee": "Gemini",
       "tags": [
         "logging",
         "standard",
@@ -2834,6 +3300,7 @@
         "observability"
       ],
       "dependencies": [],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\logging_refactor_20260404",
       "_isArchived": true
     },
@@ -2844,6 +3311,7 @@
       "priority": "high",
       "progress": 5,
       "created": "2026-02-22",
+      "assignee": "Pohánka Péter",
       "tags": [],
       "dependencies": [
         "TimberMatchAgent (src/agents/TimberMatchAgent.ts) — ÚJ, létrehozandó (a meglévő LogisticsDispatcherAgent parcel tracking, más domain!)",
@@ -2852,6 +3320,7 @@
         "goldenDatasetBridge.ts — sikeres logistics match-ek mentése (kész)",
         "Socket.IO — real-time shipment tracking (kész)"
       ],
+      "group": "business",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\logistics_vertical_20260222",
       "_isArchived": true
     },
@@ -2863,6 +3332,7 @@
       "progress": 100,
       "created": "2026-02-11",
       "updated": "2026-02-12",
+      "assignee": "Claude",
       "tags": [
         "cli",
         "i18n",
@@ -2872,6 +3342,7 @@
         "chalk"
       ],
       "dependencies": [],
+      "group": "other",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\magyar-cli-menu-system-20260211",
       "_isArchived": true
     },
@@ -2883,6 +3354,7 @@
       "progress": 100,
       "created": "2026-02-16T00:00:00Z",
       "updated": "2026-02-17T23:30:00Z",
+      "assignee": "SpecWriterAgent",
       "tags": [
         "marketing",
         "swarm",
@@ -2894,6 +3366,7 @@
         "robotkezv2",
         "lancedb_rag"
       ],
+      "group": "business",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\marketing_swarm_20260216",
       "_isArchived": true
     },
@@ -2903,11 +3376,13 @@
       "status": "archived",
       "priority": "high",
       "progress": 100,
+      "created": "2026-02-23T00:00:00Z",
       "updated": "2026-03-22T22:47:34Z",
       "completed": "2026-02-28T00:00:00Z",
       "assignee": "Gemini (Phase 1-3) + Claude (Phase 4 CLI)",
       "tags": [],
       "dependencies": [],
+      "group": "other",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\master_track_1_lead_mining_20260223",
       "_isArchived": true
     },
@@ -2917,11 +3392,13 @@
       "status": "archived",
       "priority": "high",
       "progress": 100,
+      "created": "2026-02-23T00:00:00Z",
       "updated": "2026-03-22T22:47:34Z",
       "completed": "2026-02-28T00:00:00Z",
       "assignee": "Gemini (Phase 1-3) + Claude (invoiceCommands.ts CLI)",
       "tags": [],
       "dependencies": [],
+      "group": "other",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\master_track_2_invoice_to_sheets_20260223",
       "_isArchived": true
     },
@@ -2931,11 +3408,13 @@
       "status": "archived",
       "priority": "high",
       "progress": 100,
+      "created": "2026-02-23T00:00:00Z",
       "updated": "2026-03-22T22:47:34Z",
       "completed": "2026-02-28T00:00:00Z",
       "assignee": "Gemini (Phase 1-3) + Claude (Phase 4 CLI)",
       "tags": [],
       "dependencies": [],
+      "group": "other",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\master_track_3_market_watcher_20260223",
       "_isArchived": true
     },
@@ -2947,6 +3426,7 @@
       "progress": 100,
       "created": "2026-02-18T03:30:00Z",
       "updated": "2026-02-18T09:00:00Z",
+      "assignee": "Brunella AI Development Team",
       "tags": [
         "mcp",
         "ollama",
@@ -2964,6 +3444,7 @@
         "@google/generative-ai",
         "@anthropic-ai/sdk"
       ],
+      "group": "business",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\mcp_ollama_integration_20260218",
       "_isArchived": true
     },
@@ -2981,6 +3462,7 @@
       "dependencies": [
         "observability_opentelemetry_20260323"
       ],
+      "group": "other",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\mcp_tool_discovery_20260323",
       "_isArchived": true
     },
@@ -3001,6 +3483,7 @@
         "local-news"
       ],
       "dependencies": [],
+      "group": "other",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\micro_csr_automator_20260212",
       "_isArchived": true
     },
@@ -3022,6 +3505,7 @@
         "research"
       ],
       "dependencies": [],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\mobile_responsiveness_research_20260227",
       "_isArchived": true
     },
@@ -3031,9 +3515,13 @@
       "status": "archived",
       "priority": "high",
       "progress": 100,
+      "created": "2026-02-19T00:00:00.000Z",
+      "updated": "2026-02-23T23:55:00.000Z",
+      "completed": "2026-02-23T23:55:00.000Z",
       "assignee": "System",
       "tags": [],
       "dependencies": [],
+      "group": "other",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\modular-command-center-dashboard-v3-20260219",
       "_isArchived": true
     },
@@ -3045,6 +3533,7 @@
       "progress": 100,
       "created": "2026-04-04",
       "updated": "2026-04-05",
+      "completed": "2026-04-05T00:00:00Z",
       "assignee": "GitHub Copilot",
       "tags": [
         "n8n",
@@ -3057,6 +3546,7 @@
         "n8n_konyveles_pipeline_20260328",
         "konyveles_phase3_20260403"
       ],
+      "group": "business",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\n8n_bookkeeping_phase3_finalization_20260404",
       "_isArchived": true
     },
@@ -3068,6 +3558,7 @@
       "progress": 100,
       "created": "2026-04-04",
       "updated": "2026-04-05",
+      "completed": "2026-04-05T00:00:00Z",
       "assignee": "GitHub Copilot",
       "tags": [
         "n8n",
@@ -3079,6 +3570,7 @@
       "dependencies": [
         "P-Sales20260327"
       ],
+      "group": "business",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\n8n_psales_human_loop_20260404",
       "_isArchived": true
     },
@@ -3094,6 +3586,7 @@
       "assignee": "Copilot + Pohánka Péter",
       "tags": [],
       "dependencies": [],
+      "group": "other",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\observability_opentelemetry_20260323",
       "_isArchived": true
     },
@@ -3106,8 +3599,10 @@
       "created": "2026-03-20",
       "updated": "2026-03-22T22:47:34Z",
       "completed": "2026-03-20",
+      "assignee": "Copilot",
       "tags": [],
       "dependencies": [],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\orchestrator_chat_upgrade_20260320",
       "_isArchived": true
     },
@@ -3120,8 +3615,10 @@
       "created": "2026-03-20",
       "updated": "2026-03-22T22:47:34Z",
       "completed": "2026-03-20",
+      "assignee": "Copilot",
       "tags": [],
       "dependencies": [],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\orchestrator_cognition_upgrade_20260320",
       "_isArchived": true
     },
@@ -3131,8 +3628,10 @@
       "status": "archived",
       "priority": "high",
       "progress": 100,
+      "created": "2026-03-20",
       "updated": "2026-03-22T22:47:34Z",
       "completed": "2026-03-20",
+      "assignee": "Copilot",
       "tags": [
         "orchestrator",
         "autopilot",
@@ -3141,6 +3640,7 @@
         "timeline"
       ],
       "dependencies": [],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\orchestrator_safe_autopilot_20260320",
       "_isArchived": true
     },
@@ -3153,8 +3653,10 @@
       "created": "2026-03-21",
       "updated": "2026-03-22T22:47:34Z",
       "completed": "2026-03-22T22:47:34Z",
+      "assignee": "Pohánka Péter",
       "tags": [],
       "dependencies": [],
+      "group": "nova",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\orchestrator_state_machine_20260321",
       "_isArchived": true
     },
@@ -3175,6 +3677,7 @@
         "observability"
       ],
       "dependencies": [],
+      "group": "other",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\otel_agent_tracing_20260211",
       "_isArchived": true
     },
@@ -3184,9 +3687,13 @@
       "status": "archived",
       "priority": "medium",
       "progress": 100,
+      "created": "2026-02-23T08:00:00Z",
+      "updated": "2026-02-23T17:05:00Z",
+      "completed": "2026-02-23T17:05:00Z",
       "assignee": "DeveloperAgent + Claude",
       "tags": [],
       "dependencies": [],
+      "group": "other",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\paios_model_selector_ui_20260223",
       "_isArchived": true
     },
@@ -3196,9 +3703,13 @@
       "status": "archived",
       "priority": "high",
       "progress": 100,
+      "created": "2026-02-23T08:00:00Z",
+      "updated": "2026-02-23T16:50:00Z",
+      "completed": "2026-02-23T16:50:00Z",
       "assignee": "DeveloperAgent + Claude",
       "tags": [],
       "dependencies": [],
+      "group": "other",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\paios_orchestrator_chat_20260223",
       "_isArchived": true
     },
@@ -3208,9 +3719,13 @@
       "status": "archived",
       "priority": "medium",
       "progress": 100,
+      "created": "2026-02-23T08:00:00Z",
+      "updated": "2026-02-23T17:30:00Z",
+      "completed": "2026-02-23T17:30:00Z",
       "assignee": "DeveloperAgent + Claude",
       "tags": [],
       "dependencies": [],
+      "group": "other",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\paios_phoenix_events_panel_20260223",
       "_isArchived": true
     },
@@ -3220,9 +3735,13 @@
       "status": "archived",
       "priority": "low",
       "progress": 100,
+      "created": "2026-02-23T08:00:00Z",
+      "updated": "2026-02-23T18:00:00Z",
+      "completed": "2026-02-23T18:00:00Z",
       "assignee": "DeveloperAgent + Claude",
       "tags": [],
       "dependencies": [],
+      "group": "other",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\paios_unified_config_20260223",
       "_isArchived": true
     },
@@ -3235,6 +3754,7 @@
       "created": "2026-02-05",
       "updated": "2026-02-16T16:20:00Z",
       "completed": "2026-02-16T16:20:00Z",
+      "assignee": "Developer",
       "tags": [
         "self-healing",
         "resilience",
@@ -3243,6 +3763,7 @@
         "degradation"
       ],
       "dependencies": [],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\phoenix_protocol_v2_20260205",
       "_isArchived": true
     },
@@ -3252,6 +3773,9 @@
       "status": "archived",
       "priority": "medium",
       "progress": 100,
+      "created": "2026-03-25T00:00:00.000Z",
+      "updated": "2026-03-30T14:15:00.000Z",
+      "completed": "2026-03-30T15:30:00.000Z",
       "assignee": "Copilot",
       "tags": [
         "husky",
@@ -3260,6 +3784,7 @@
         "validation"
       ],
       "dependencies": [],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\precommit_hook_optimization_20260325",
       "_isArchived": true
     },
@@ -3271,6 +3796,7 @@
       "progress": 0,
       "created": "2026-02-16T00:00:00Z",
       "updated": "2026-02-16T00:00:00Z",
+      "assignee": "SpecWriterAgent",
       "tags": [
         "real-estate",
         "valuation",
@@ -3282,6 +3808,7 @@
         "lancedb_rag",
         "google_workspace_api"
       ],
+      "group": "business",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\real_estate_sales_campaign_20260216",
       "_isArchived": true
     },
@@ -3291,6 +3818,9 @@
       "status": "archived",
       "priority": "high",
       "progress": 100,
+      "created": "2026-03-22",
+      "completed": "2026-04-05T00:00:00Z",
+      "assignee": "GitHub Copilot",
       "tags": [
         "remote-layer",
         "api",
@@ -3300,6 +3830,7 @@
         "paios"
       ],
       "dependencies": [],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\remote_layer_phase1_foundation_20260322",
       "_isArchived": true
     },
@@ -3309,6 +3840,9 @@
       "status": "archived",
       "priority": "high",
       "progress": 100,
+      "created": "2026-03-22",
+      "completed": "2026-03-22",
+      "assignee": "GitHub Copilot",
       "tags": [
         "remote-layer",
         "mcp-discovery",
@@ -3320,6 +3854,7 @@
       "dependencies": [
         "remote_layer_phase1_foundation_20260322"
       ],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\remote_layer_phase2_discovery_auth_20260322",
       "_isArchived": true
     },
@@ -3329,6 +3864,9 @@
       "status": "archived",
       "priority": "high",
       "progress": 100,
+      "created": "2026-03-22",
+      "completed": "2026-03-22",
+      "assignee": "GitHub Copilot",
       "tags": [
         "remote-layer",
         "mobile",
@@ -3341,6 +3879,7 @@
         "remote_layer_phase1_foundation_20260322",
         "remote_layer_phase2_discovery_auth_20260322"
       ],
+      "group": "nova",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\remote_layer_phase3_mobile_voice_20260322",
       "_isArchived": true
     },
@@ -3350,6 +3889,9 @@
       "status": "archived",
       "priority": "high",
       "progress": 100,
+      "created": "2026-03-22",
+      "completed": "2026-03-22",
+      "assignee": "GitHub Copilot",
       "tags": [
         "remote-layer",
         "mesh",
@@ -3363,6 +3905,7 @@
         "remote_layer_phase2_discovery_auth_20260322",
         "remote_layer_phase3_mobile_voice_20260322"
       ],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\remote_layer_phase4_distributed_mesh_20260322",
       "_isArchived": true
     },
@@ -3372,6 +3915,9 @@
       "status": "archived",
       "priority": "high",
       "progress": 100,
+      "created": "2026-03-22",
+      "completed": "2026-03-22",
+      "assignee": "GitHub Copilot",
       "tags": [
         "swarm",
         "adaptive-flow",
@@ -3383,6 +3929,7 @@
       "dependencies": [
         "remote_layer_phase4_distributed_mesh_20260322"
       ],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\remote_layer_phase5_adaptive_swarms_20260322",
       "_isArchived": true
     },
@@ -3392,6 +3939,9 @@
       "status": "archived",
       "priority": "critical",
       "progress": 100,
+      "created": "2026-03-22",
+      "completed": "2026-03-22",
+      "assignee": "GitHub Copilot",
       "tags": [
         "evolutionary-agents",
         "genetic-flow",
@@ -3403,6 +3953,7 @@
       "dependencies": [
         "remote_layer_phase5_adaptive_swarms_20260322"
       ],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\remote_layer_phase6_collective_evolution_20260322",
       "_isArchived": true
     },
@@ -3412,6 +3963,9 @@
       "status": "archived",
       "priority": "critical",
       "progress": 100,
+      "created": "2026-03-22",
+      "completed": "2026-03-22",
+      "assignee": "GitHub Copilot",
       "tags": [
         "self-replication",
         "infra-ai",
@@ -3423,6 +3977,7 @@
       "dependencies": [
         "remote_layer_phase6_collective_evolution_20260322"
       ],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\remote_layer_phase7_superintelligent_infra_20260322",
       "_isArchived": true
     },
@@ -3446,6 +4001,7 @@
       "dependencies": [
         "006_trojan-horse-campaign"
       ],
+      "group": "business",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\revenue_acceleration_20260227",
       "_isArchived": true
     },
@@ -3477,6 +4033,7 @@
         "Dashboard komponens (React)",
         "CLI framework (Commander.js)"
       ],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\robotkezv2-full-comet-20260215",
       "_isArchived": true
     },
@@ -3501,6 +4058,7 @@
         "system_wide_zero_mock_20260301",
         "orchestrator_cognition_upgrade_20260320"
       ],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\robotkez_browser_chat_research_20260301",
       "_isArchived": true
     },
@@ -3512,6 +4070,7 @@
       "progress": 100,
       "created": "2026-02-11",
       "updated": "2026-02-12",
+      "assignee": "Claude",
       "tags": [
         "robotkez",
         "n8n",
@@ -3523,6 +4082,7 @@
         "browser_use_harvester_20260131",
         "bas_scale_up_stabilization_20260131"
       ],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\robotkez_n8n_sandbox_edzesterv",
       "_isArchived": true
     },
@@ -3541,6 +4101,7 @@
         "stability"
       ],
       "dependencies": [],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\robotkez_stabilization_20260212",
       "_isArchived": true
     },
@@ -3558,6 +4119,7 @@
       "dependencies": [
         "guardrails_evaluation_20260323"
       ],
+      "group": "other",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\sandbox_security_hardening_20260323",
       "_isArchived": true
     },
@@ -3575,6 +4137,7 @@
         "fix-queue"
       ],
       "dependencies": [],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\self_healing_core_20260213",
       "_isArchived": true
     },
@@ -3586,6 +4149,7 @@
       "progress": 0,
       "created": "2026-02-16T00:00:00Z",
       "updated": "2026-02-16T00:00:00Z",
+      "assignee": "SpecWriterAgent",
       "tags": [
         "sdlc",
         "automation",
@@ -3595,6 +4159,7 @@
       "dependencies": [
         "orchestrator_v2"
       ],
+      "group": "other",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\software_genesis_protocol_20260216",
       "_isArchived": true
     },
@@ -3606,6 +4171,7 @@
       "progress": 100,
       "created": "2026-02-11T00:00:00Z",
       "updated": "2026-02-13T02:00:00Z",
+      "completed": "2026-02-13T02:00:00Z",
       "assignee": "SpecWriterAgent",
       "tags": [
         "epp-v2",
@@ -3615,6 +4181,7 @@
         "cli"
       ],
       "dependencies": [],
+      "group": "nova",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\spec-writer-agent-20260211",
       "_isArchived": true
     },
@@ -3624,6 +4191,9 @@
       "status": "archived",
       "priority": "medium",
       "progress": 100,
+      "created": "2026-03-25T00:00:00.000Z",
+      "updated": "2026-03-30T14:15:00.000Z",
+      "completed": "2026-03-30T15:30:00.000Z",
       "assignee": "Copilot",
       "tags": [
         "smoke",
@@ -3631,6 +4201,7 @@
         "health"
       ],
       "dependencies": [],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\startup_smoke_test_20260325",
       "_isArchived": true
     },
@@ -3649,6 +4220,7 @@
         "agent_memory_structured_20260323",
         "agent_orchestration_dag_20260323"
       ],
+      "group": "other",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\swarm_intelligence_v2_20260323",
       "_isArchived": true
     },
@@ -3674,6 +4246,7 @@
         "dashboard"
       ],
       "dependencies": [],
+      "group": "nova",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\system_audit_epp_v2_compliance_20260331",
       "_isArchived": true
     },
@@ -3685,6 +4258,7 @@
       "progress": 100,
       "created": "2026-02-11",
       "updated": "2026-02-13",
+      "assignee": "Claude",
       "tags": [
         "agents",
         "orchestration",
@@ -3694,6 +4268,7 @@
         "cli"
       ],
       "dependencies": [],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\task-decomposer-agent-20260211",
       "_isArchived": true
     },
@@ -3703,9 +4278,12 @@
       "status": "archived",
       "priority": "medium",
       "progress": 0,
+      "created": "2026-02-22T19:45:47.011Z",
+      "updated": "2026-02-22T19:45:47.011Z",
       "assignee": "System",
       "tags": [],
       "dependencies": [],
+      "group": "other",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\test-20260211",
       "_isArchived": true
     },
@@ -3715,9 +4293,12 @@
       "status": "archived",
       "priority": "medium",
       "progress": 0,
+      "created": "2026-02-22T19:45:47.012Z",
+      "updated": "2026-02-22T19:45:47.012Z",
       "assignee": "System",
       "tags": [],
       "dependencies": [],
+      "group": "other",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\test-feature-20260211",
       "_isArchived": true
     },
@@ -3727,9 +4308,12 @@
       "status": "archived",
       "priority": "medium",
       "progress": 0,
+      "created": "2026-02-22T19:45:47.013Z",
+      "updated": "2026-02-22T19:45:47.013Z",
       "assignee": "System",
       "tags": [],
       "dependencies": [],
+      "group": "other",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\test-track-12345678",
       "_isArchived": true
     },
@@ -3739,9 +4323,12 @@
       "status": "archived",
       "priority": "medium",
       "progress": 0,
+      "created": "2026-02-22T19:45:47.014Z",
+      "updated": "2026-02-22T19:45:47.014Z",
       "assignee": "System",
       "tags": [],
       "dependencies": [],
+      "group": "other",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\test-track-20260211",
       "_isArchived": true
     },
@@ -3751,6 +4338,9 @@
       "status": "archived",
       "priority": "high",
       "progress": 100,
+      "created": "2026-03-25T00:00:00.000Z",
+      "updated": "2026-03-30T14:15:00.000Z",
+      "completed": "2026-03-30T15:30:00.000Z",
       "assignee": "Copilot",
       "tags": [
         "tests",
@@ -3759,6 +4349,7 @@
         "hooks"
       ],
       "dependencies": [],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\test_infrastructure_stabilization_20260325",
       "_isArchived": true
     },
@@ -3768,9 +4359,12 @@
       "status": "archived",
       "priority": "high",
       "progress": 100,
+      "created": "2026-02-21T00:00:00Z",
+      "updated": "2026-02-21T20:30:00Z",
       "assignee": "DeveloperAgent + Claude",
       "tags": [],
       "dependencies": [],
+      "group": "other",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\test_stabilization_20260221",
       "_isArchived": true
     },
@@ -3793,6 +4387,7 @@
         "incubator"
       ],
       "dependencies": [],
+      "group": "nova",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\TR-20260212-TECH-HAR",
       "_isArchived": true
     },
@@ -3802,11 +4397,13 @@
       "status": "archived",
       "priority": "high",
       "progress": 100,
+      "created": "2026-02-24T00:00:00Z",
       "updated": "2026-03-22T22:47:34Z",
       "completed": "2026-03-22T22:47:34Z",
       "assignee": "Gemini + Pohánka Péter",
       "tags": [],
       "dependencies": [],
+      "group": "other",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\trojan-horse-campaign-20260224",
       "_isArchived": true
     },
@@ -3816,7 +4413,10 @@
       "status": "archived",
       "priority": "medium",
       "progress": 100,
+      "created": "2026-04-06",
       "updated": "2026-04-07",
+      "completed": "2026-04-07",
+      "assignee": "Gemini",
       "tags": [
         "typescript",
         "types",
@@ -3826,6 +4426,7 @@
       "dependencies": [
         "type_safety_enforcement_20260404"
       ],
+      "group": "business",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\type_safety_followup_browser_wrangler_20260406",
       "_isArchived": true
     },
@@ -3838,6 +4439,7 @@
       "created": "2026-03-29",
       "updated": "2026-03-29",
       "completed": "2026-03-29",
+      "assignee": "Pohánka Péter",
       "tags": [
         "autonomy",
         "approval",
@@ -3847,6 +4449,7 @@
       "dependencies": [
         "zero_prompt_policy_engine_20260329"
       ],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\zero_prompt_approval_router_20260329",
       "_isArchived": true
     },
@@ -3859,6 +4462,7 @@
       "created": "2026-03-29",
       "updated": "2026-03-29",
       "completed": "2026-03-29",
+      "assignee": "Pohánka Péter",
       "tags": [
         "autonomy",
         "zero-prompt",
@@ -3867,6 +4471,7 @@
         "scheduler"
       ],
       "dependencies": [],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\zero_prompt_event_fabric_20260329",
       "_isArchived": true
     },
@@ -3879,6 +4484,7 @@
       "created": "2026-03-29",
       "updated": "2026-03-29",
       "completed": "2026-03-29",
+      "assignee": "Pohánka Péter",
       "tags": [
         "autonomy",
         "notifications",
@@ -3890,6 +4496,7 @@
         "zero_prompt_approval_router_20260329",
         "zero_prompt_signal_ingest_20260329"
       ],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\zero_prompt_notification_channels_20260329",
       "_isArchived": true
     },
@@ -3902,6 +4509,7 @@
       "created": "2026-03-29",
       "updated": "2026-03-29",
       "completed": "2026-03-29",
+      "assignee": "Pohánka Péter",
       "tags": [
         "autonomy",
         "policy",
@@ -3912,6 +4520,7 @@
       "dependencies": [
         "zero_prompt_event_fabric_20260329"
       ],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\zero_prompt_policy_engine_20260329",
       "_isArchived": true
     },
@@ -3924,6 +4533,7 @@
       "created": "2026-03-29",
       "updated": "2026-03-29",
       "completed": "2026-03-29",
+      "assignee": "Pohánka Péter",
       "tags": [
         "autonomy",
         "github",
@@ -3934,14 +4544,15 @@
       "dependencies": [
         "zero_prompt_event_fabric_20260329"
       ],
+      "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\zero_prompt_signal_ingest_20260329",
       "_isArchived": true
     }
   ],
   "stats": {
-    "total": 214,
-    "active": 13,
-    "completed": 20,
+    "total": 219,
+    "active": 17,
+    "completed": 21,
     "archived": 179,
     "proposed": 2
   }

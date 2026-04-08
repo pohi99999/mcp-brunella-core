@@ -85,5 +85,6 @@
       "src/dashboard/lib/widgetRegistry.tsx",
       "src/server/routes/files.ts"
     ]
-  }
+  },
+  "group": "other"
 }

@@ -26,6 +26,118 @@ import { writeLine } from '../utils/cliOutput.js';
 
 const API_BASE = process.env.BRUNELLA_API_URL || 'http://localhost:3000';
 
+type DevPipelineResult = {
+    status?: string;
+    data: {
+        output?: string;
+        code?: string;
+    };
+};
+
+type DevPipelineResponse = {
+    pipeline: {
+        result?: DevPipelineResult;
+        error?: string;
+    };
+};
+
+type DeveloperMetricsResponse = {
+    metrics: {
+        builds: { total: number; success: number; fail: number; lastStatus: string; lastDurationMs: number };
+        tests: { totalRuns: number; lastPassRate: number; lastDurationMs: number };
+        tasks: { total: number; success: number; error: number; avgDurationMs: number };
+        history: Array<{ type: string; status: string; timestamp: string | number; details: string }>;
+    };
+};
+
+type ScaffoldTemplateVariable = {
+    name: string;
+    required?: boolean;
+};
+
+type ScaffoldTemplate = {
+    category?: string;
+    name: string;
+    description: string;
+    variables?: ScaffoldTemplateVariable[];
+};
+
+type ScaffoldFile = {
+    path: string;
+    content: string;
+};
+
+type ScaffoldTemplatesResponse = {
+    templates: ScaffoldTemplate[];
+};
+
+type ScaffoldGenerateResponse = {
+    message: string;
+    files: ScaffoldFile[];
+};
+
+type ApprovalRequest = {
+    id: string;
+    type: string;
+    description: string;
+    createdAt: number | string;
+    [key: string]: unknown;
+};
+
+type ApprovalRequestsResponse = {
+    requests: ApprovalRequest[];
+};
+
+type DevActivity = {
+    id: string;
+    type: string;
+    status: string;
+    timestamp: string | number;
+    source: string;
+    message: string;
+    details: string;
+    [key: string]: unknown;
+};
+
+type FeedResponse = {
+    activities: DevActivity[];
+};
+
+type EphemeralAgent = {
+    id: string;
+    state: 'running' | 'pending' | 'terminated' | 'expired' | 'failed';
+    spec: {
+        allowedTools: string[];
+        allowedPaths?: string[];
+        allowedHosts?: string[];
+        purpose: string;
+        parentAgentName?: string;
+    };
+    lease?: {
+        renewalsUsed?: number;
+        maxRenewals?: number;
+    };
+    approval?: {
+        reason?: string;
+        kind?: string;
+    };
+    [key: string]: unknown;
+};
+
+type EphemeralAgentsResponse = {
+    agents: EphemeralAgent[];
+};
+
+type EphemeralPostmortem = {
+    agentId: string;
+    state: string;
+    summary: string;
+};
+
+type EphemeralPostmortemsResponse = {
+    postmortems: EphemeralPostmortem[];
+};
+
 /**
  * Simple fetch helper for CLI → REST API calls
  */
@@ -329,7 +441,7 @@ export function registerDevCommands(program: Command): void {
                         await pollPipeline(taskId, spinner);
                         
                         // After polling, fetch the pipeline result
-                        const { pipeline } = await apiFetch<{ pipeline: { result?: any, error?: string } }>(`/pipeline/${taskId}`);
+                        const { pipeline } = await apiFetch<DevPipelineResponse>(`/pipeline/${taskId}`);
                         
                         if (pipeline.result && pipeline.result.status === 'success') {
                             const output = pipeline.result.data.output;
@@ -734,7 +846,7 @@ export function registerDevCommands(program: Command): void {
                         builds: { total: number; success: number; fail: number; lastStatus: string; lastDurationMs: number };
                         tests: { totalRuns: number; lastPassRate: number; lastDurationMs: number };
                         tasks: { total: number; success: number; error: number; avgDurationMs: number };
-                        history: Array<any>;
+                        history: Array<{ type: string; status: string; timestamp: string | number; details: string }>;
                     };
                 }>('/metrics');
 
@@ -1268,7 +1380,7 @@ export function registerDevCommands(program: Command): void {
         .action(async (options: { json?: boolean }) => {
             const spinner = ora('Fetching templates...').start();
             try {
-                const result = await apiFetch<{ templates: any[] }>('/scaffold/templates');
+                const result = await apiFetch<ScaffoldTemplatesResponse>('/scaffold/templates');
                 const templates = result.templates;
                 
                 spinner.stop();
@@ -1281,7 +1393,7 @@ export function registerDevCommands(program: Command): void {
                 writeLine(chalk.bold('📋 Available Templates:\n'));
                 
                 // Group by category
-                const groups: Record<string, any[]> = {};
+                const groups: Record<string, ScaffoldTemplate[]> = {};
                 for (const t of templates) {
                     const cat = t.category || 'other';
                     if (!groups[cat]) groups[cat] = [];
@@ -1294,7 +1406,7 @@ export function registerDevCommands(program: Command): void {
                         writeLine(`    ${chalk.green(t.name.padEnd(20))} ${chalk.dim(t.description)}`);
                         // Show variables
                         if (t.variables && t.variables.length > 0) {
-                            const vars = t.variables.map((v: any) => 
+                            const vars = t.variables.map((v) => 
                                 v.required ? chalk.yellow(v.name) : chalk.dim(`${v.name}?`)
                             ).join(', ');
                             writeLine(`      ${chalk.dim('Variables:')} ${vars}`);
@@ -1329,7 +1441,7 @@ export function registerDevCommands(program: Command): void {
                     }
                 }
 
-                const result = await apiFetch<{ message: string; files: any[] }>('/scaffold', {
+                const result = await apiFetch<ScaffoldGenerateResponse>('/scaffold', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -1378,7 +1490,7 @@ export function registerDevCommands(program: Command): void {
         .action(async () => {
             const spinner = ora('Fetching approval requests...').start();
             try {
-                const result = await apiFetch<{ requests: any[] }>('/approval?status=pending');
+                const result = await apiFetch<ApprovalRequestsResponse>('/approval?status=pending');
                 const { requests } = result;
                 spinner.stop();
 
@@ -1391,7 +1503,7 @@ export function registerDevCommands(program: Command): void {
                 for (const req of requests) {
                     writeLine(`${chalk.cyan(req.id)} [${req.type}]`);
                     writeLine(`  ${req.description}`);
-                    const age = Math.round((Date.now() - req.createdAt) / 1000);
+                    const age = Math.round((Date.now() - Number(req.createdAt)) / 1000);
                     writeLine(`  ${chalk.dim(`Created ${age}s ago`)}`);
                     writeLine('');
                 }
@@ -1724,7 +1836,7 @@ export function registerDevCommands(program: Command): void {
                 const limit = parseInt(opts.limit, 10) || 20;
 
                 const fetchAndShow = async (lastId?: string) => {
-                    const result = await apiFetch<{ activities: any[] }>(`/feed?limit=${limit}`);
+                    const result = await apiFetch<FeedResponse>(`/feed?limit=${limit}`);
                     // If watching, filter out old ones
                     const newItems = lastId 
                         ? result.activities.filter(a => a.id > lastId) // Simple lexicographical check or timestamp check needed? ID is random. 
@@ -1781,7 +1893,7 @@ export function registerDevCommands(program: Command): void {
                     // Let's keep it simple: just poll.
                     
                     setInterval(async () => {
-                        const result = await apiFetch<{ activities: any[] }>(`/feed?limit=20`);
+                        const result = await apiFetch<FeedResponse>(`/feed?limit=20`);
                         const newActivities = result.activities.filter(a => !seen.has(a.id)).reverse(); // Oldest first for streaming
                         
                         for (const item of newActivities) {
@@ -1800,7 +1912,7 @@ export function registerDevCommands(program: Command): void {
                     }, 2000);
                     
                     // Prime the set with recent ones so we don't dump 20 old ones
-                    const initial = await apiFetch<{ activities: any[] }>(`/feed?limit=${limit}`);
+                    const initial = await apiFetch<FeedResponse>(`/feed?limit=${limit}`);
                     initial.activities.forEach(a => seen.add(a.id));
                 }
 
@@ -1828,9 +1940,9 @@ export function registerDevCommands(program: Command): void {
         .action(async (opts: { state?: string; json?: boolean }) => {
             const spinner = ora('Ephemeral ügynökök lekérése...').start();
             try {
-                const data = await apiFetch<{ agents: unknown[] }>('/ephemeral/agents');
+                const data = await apiFetch<EphemeralAgentsResponse>('/ephemeral/agents');
                 const agents = opts.state
-                    ? data.agents.filter((a: any) => a.state === opts.state)
+                    ? data.agents.filter((a) => a.state === opts.state)
                     : data.agents;
 
                 spinner.stop();
@@ -1850,7 +1962,7 @@ export function registerDevCommands(program: Command): void {
                     { padding: 1, borderStyle: 'round', borderColor: 'magentaBright' },
                 ));
 
-                for (const a of agents as any[]) {
+                for (const a of agents) {
                     const stateColor = a.state === 'running' ? chalk.green
                         : a.state === 'pending' ? chalk.yellow
                         : a.state === 'expired' ? chalk.yellowBright
@@ -1913,7 +2025,7 @@ export function registerDevCommands(program: Command): void {
             const limit = parseInt(opts.limit, 10) || 20;
             const spinner = ora('Postmortems lekérése...').start();
             try {
-                const data = await apiFetch<{ postmortems: unknown[] }>(`/ephemeral/postmortems?limit=${limit}`);
+                const data = await apiFetch<EphemeralPostmortemsResponse>(`/ephemeral/postmortems?limit=${limit}`);
                 spinner.stop();
 
                 if (opts.json) {
@@ -1931,7 +2043,7 @@ export function registerDevCommands(program: Command): void {
                     { padding: 1, borderStyle: 'round', borderColor: 'cyan' },
                 ));
 
-                for (const pm of data.postmortems as any[]) {
+                for (const pm of data.postmortems) {
                     writeLine(`  ${chalk.cyan(pm.agentId.slice(0, 8))} ${chalk.dim(pm.state)} — ${pm.summary}`);
                 }
             } catch (e: unknown) {

@@ -7,8 +7,15 @@
   "created": "2026-02-12T00:00:00Z",
   "updated": "2026-02-13T18:00:00Z",
   "assignee": "DeveloperAgent",
-  "tags": ["dashboard", "refactor", "chat", "provider-pattern", "typescript"],
+  "tags": [
+    "dashboard",
+    "refactor",
+    "chat",
+    "provider-pattern",
+    "typescript"
+  ],
   "estimatedHours": 6,
   "description": "NeuralLinkChat.tsx komponens refaktor - Provider Adapter minta, típusbiztonság, session perzisztencia.",
-  "spec_status": "approved"
+  "spec_status": "approved",
+  "group": "brunella"
 }

@@ -5,7 +5,13 @@
   "status": "completed",
   "priority": "high",
   "progress": 100,
-  "tags": ["enterprise", "automation", "multi-agent", "business-intelligence", "erp"],
+  "tags": [
+    "enterprise",
+    "automation",
+    "multi-agent",
+    "business-intelligence",
+    "erp"
+  ],
   "estimatedEffort": "80-120 hours",
   "dependencies": [
     "robotkezv2",
@@ -32,27 +38,48 @@
     {
       "id": 1,
       "name": "Infrastructure (Agy és Kéz)",
-      "modules": ["EnterpriseOrchestrator", "RefinerFactory", "UnifiedWorkspace"]
+      "modules": [
+        "EnterpriseOrchestrator",
+        "RefinerFactory",
+        "UnifiedWorkspace"
+      ]
     },
     {
       "id": 2,
       "name": "Profit & Sales",
-      "modules": ["SalesHunter", "DynamicPricing", "MarketIntel", "AutoNegotiator"]
+      "modules": [
+        "SalesHunter",
+        "DynamicPricing",
+        "MarketIntel",
+        "AutoNegotiator"
+      ]
     },
     {
       "id": 3,
       "name": "Admin & Finance",
-      "modules": ["FinancialGuard", "DigitalOfficeManager", "GrantWatcher"]
+      "modules": [
+        "FinancialGuard",
+        "DigitalOfficeManager",
+        "GrantWatcher"
+      ]
     },
     {
       "id": 4,
       "name": "HR & Soft Skills",
-      "modules": ["DigitalHeadhunter", "ConflictMediator", "LocalCSR"]
+      "modules": [
+        "DigitalHeadhunter",
+        "ConflictMediator",
+        "LocalCSR"
+      ]
     },
     {
       "id": 5,
       "name": "Logistics & Wiki",
-      "modules": ["LogisticsDispatcher", "KnowledgeBaseBuilder"]
+      "modules": [
+        "LogisticsDispatcher",
+        "KnowledgeBaseBuilder"
+      ]
     }
-  ]
+  ],
+  "group": "business"
 }

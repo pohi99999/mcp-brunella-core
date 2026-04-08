@@ -7,7 +7,14 @@
   "completedAt": "2026-03-25",
   "owner": "GitHub Copilot",
   "progress": 100,
-  "tags": ["bootstrap", "smoke", "health", "webhook", "registry"],
+  "tags": [
+    "bootstrap",
+    "smoke",
+    "health",
+    "webhook",
+    "registry"
+  ],
   "phase": 1,
-  "dependencies": []
+  "dependencies": [],
+  "group": "brunella"
 }

@@ -47,5 +47,6 @@
     "modelRouter.ts + orchestratorCore.ts: konfig alapú működés",
     "Backward compatible: .env fallback ha nincs YAML",
     "npm run build && npm test → 0 hiba"
-  ]
+  ],
+  "group": "other"
 }

@@ -8,8 +8,17 @@
   "owner": "Developer",
   "spec_status": "draft",
   "progress": 0,
-  "tags": ["fine-tuning", "llm", "automation", "unsloth", "lora"],
-  "dependencies": ["browser_use_harvester_20260131"],
+  "tags": [
+    "fine-tuning",
+    "llm",
+    "automation",
+    "unsloth",
+    "lora"
+  ],
+  "dependencies": [
+    "browser_use_harvester_20260131"
+  ],
   "estimated_effort": "large",
-  "business_value": "critical"
+  "business_value": "critical",
+  "group": "other"
 }

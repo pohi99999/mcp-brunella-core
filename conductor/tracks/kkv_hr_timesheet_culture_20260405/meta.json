@@ -9,8 +9,19 @@
   "owner": "GitHub Copilot",
   "assignee": "GitHub Copilot",
   "progress": 35,
-  "tags": ["kkv", "hr", "timesheet", "reports", "birthday", "anniversary", "n8n"],
-  "dependencies": ["kkv_hr_onboarding_provisioning_20260405"],
+  "tags": [
+    "kkv",
+    "hr",
+    "timesheet",
+    "reports",
+    "birthday",
+    "anniversary",
+    "n8n"
+  ],
+  "dependencies": [
+    "kkv_hr_onboarding_provisioning_20260405"
+  ],
   "sourceDocument": "Derived from kkv_hr_automation_20260404",
-  "phase": 3
+  "phase": 3,
+  "group": "business"
 }

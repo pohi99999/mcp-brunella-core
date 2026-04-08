@@ -68,5 +68,8 @@
     "CLI: brunella workflow",
     "npm run build && npm test → 0 hiba"
   ],
-  "dependencies": ["observability_opentelemetry_20260323"]
+  "dependencies": [
+    "observability_opentelemetry_20260323"
+  ],
+  "group": "other"
 }

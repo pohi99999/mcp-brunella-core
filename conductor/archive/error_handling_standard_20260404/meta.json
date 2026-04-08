@@ -6,11 +6,17 @@
   "createdAt": "2026-04-04",
   "owner": "Gemini",
   "progress": 100,
-  "tags": ["errors", "standard", "robustness", "debugging"],
+  "tags": [
+    "errors",
+    "standard",
+    "robustness",
+    "debugging"
+  ],
   "sourceDocument": "Gemini System Audit 2026-04-04",
   "phase": 1,
   "updated": "2026-04-04",
   "completedAt": "2026-04-04",
   "archiveReason": "Design complete; implementation continues in error_handling_implementation_20260404",
-  "dependencies": []
+  "dependencies": [],
+  "group": "brunella"
 }

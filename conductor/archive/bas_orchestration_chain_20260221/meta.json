@@ -47,5 +47,6 @@
     "A SystemArchitectureWidget valós adatot mutat (nem mock) a 4 rétegről.",
     "0 TypeScript build hiba, minden vitest teszt ZÖLD."
   ],
-  "nextStep": "Track KÉSZ. Archiválható: conductor/archive/bas_orchestration_chain_20260221/"
+  "nextStep": "Track KÉSZ. Archiválható: conductor/archive/bas_orchestration_chain_20260221/",
+  "group": "other"
 }

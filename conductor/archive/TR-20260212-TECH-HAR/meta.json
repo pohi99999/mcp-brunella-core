@@ -18,5 +18,6 @@
   ],
   "estimatedHours": 14,
   "description": "Autonóm Python alrendszer technológiai források feltérképezéséhez (GitHub, DevTools, AI News). Harvesting + Refining + Memory Injection + Self-Evolution.",
-  "spec_status": "approved"
+  "spec_status": "approved",
+  "group": "nova"
 }

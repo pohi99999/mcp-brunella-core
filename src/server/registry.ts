@@ -15,6 +15,7 @@ import { ensureError } from "../utils/ensureError.js";
 export { getAllToolDefinitions, executeLocalTool, getRegisteredToolsList };
 
 let agentManager: any = null;
+let registerAgentsPromise: Promise<void> | null = null;
 
 function isZodSchemaLike(value: unknown): boolean {
   return Boolean(
@@ -185,28 +186,37 @@ export function normalizeToolInputSchema(
 }
 
 export async function registerAgents() {
-  if (!agentManager) {
-    agentManager = (await import("../agents/AgentManager.js")).agentManager;
+  if (!registerAgentsPromise) {
+    registerAgentsPromise = (async () => {
+      if (!agentManager) {
+        agentManager = (await import("../agents/AgentManager.js")).agentManager;
+      }
+
+      // Initialize AgentManager - this loads all agents from registry.json
+      await agentManager.initialize();
+
+      // Initialize Dynamic Agents (not in registry.json)
+      try {
+        const { DynamicAgent } = await import("../agents/DynamicAgent.js");
+        const path = await import("path");
+        const agentsDir = path.default.join(process.cwd(), "myai/agents");
+        agentManager.registerAgent(
+          new DynamicAgent(path.default.join(agentsDir, "project_organizer.toml")),
+        );
+        agentManager.registerAgent(
+          new DynamicAgent(path.default.join(agentsDir, "agent_architect.toml")),
+        );
+      } catch (error: unknown) {
+        const err = ensureError(error);
+        logWarn("System", `Could not load dynamic agents: ${err.message}`);
+      }
+    })().catch((error) => {
+      registerAgentsPromise = null;
+      throw error;
+    });
   }
 
-  // Initialize AgentManager - this loads all agents from registry.json
-  await agentManager.initialize();
-
-  // Initialize Dynamic Agents (not in registry.json)
-  try {
-    const { DynamicAgent } = await import("../agents/DynamicAgent.js");
-    const path = await import("path");
-    const agentsDir = path.default.join(process.cwd(), "myai/agents");
-    agentManager.registerAgent(
-      new DynamicAgent(path.default.join(agentsDir, "project_organizer.toml")),
-    );
-    agentManager.registerAgent(
-      new DynamicAgent(path.default.join(agentsDir, "agent_architect.toml")),
-    );
-  } catch (error: unknown) {
-    const err = ensureError(error);
-    logWarn("System", `Could not load dynamic agents: ${err.message}`);
-  }
+  await registerAgentsPromise;
 }
 
 export async function registerAllTools(server: McpServer) {
@@ -469,7 +479,7 @@ export async function registerAllTools(server: McpServer) {
       testSchedulerStatusMcpHandler,
     );
 
-    // Register Számlázz.hu Invoice Fetcher Tool
+    // Register Szamlazz.hu Invoice Fetcher Tool
     const getSzamlazzInvoicesMcpHandler = async (args: any) => {
       const result = await getSzamlazzInvoicesHandler(args);
       return {

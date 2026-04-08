@@ -329,7 +329,7 @@ export class EnterpriseOrchestratorAgent extends OrchestratorAgent {
    */
   private async extractPayload(input: string, module: ModuleType): Promise<ModulePayload> {
     // Placeholder: Return minimal valid payload structure
-    // TODO: Implement LLM-based entity extraction for complex payloads
+    // TODO [tech-debt-cleanup]: Implement LLM-based entity extraction for complex payloads
 
     switch (module) {
       case 'HR':
@@ -437,7 +437,7 @@ export class EnterpriseOrchestratorAgent extends OrchestratorAgent {
     response: EnterpriseAgentResponse
   ): Promise<void> {
     try {
-      // TODO: Implement LanceDB storage
+      // TODO [tech-debt-cleanup]: Implement LanceDB storage
       logInfo(this.name, `Would store execution history for event ${event.id}`);
     } catch (error: unknown) {
       const err = ensureError(error);
@@ -473,7 +473,7 @@ export class EnterpriseOrchestratorAgent extends OrchestratorAgent {
    * Monitor execution status of an event
    */
   async monitorExecution(eventId: string): Promise<{status: string; details: string}> {
-    // TODO: Implement real monitoring via LanceDB/SQLite query
+    // TODO [tech-debt-cleanup]: Implement real monitoring via LanceDB/SQLite query
     logInfo(this.name, `Monitoring execution for event ${eventId}`);
     return {
       status: 'completed',

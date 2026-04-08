@@ -14,12 +14,36 @@
     "test_cadence_optimization_20260401",
     "system_audit_epp_v2_compliance_20260331"
   ],
-  "tags": ["dashboard", "mission-control", "ux", "vite", "react", "playwright", "stabilization"],
+  "tags": [
+    "dashboard",
+    "mission-control",
+    "ux",
+    "vite",
+    "react",
+    "playwright",
+    "stabilization"
+  ],
   "phases": [
-    { "name": "Phase 1: Runtime stabilization és build unblock", "status": "completed" },
-    { "name": "Phase 2: Shell-first cockpit redesign", "status": "completed" },
-    { "name": "Phase 3: Core widget polish", "status": "in_progress" },
-    { "name": "Phase 4: Dashboard smoke/E2E/test hardening", "status": "completed" },
-    { "name": "Phase 5: Documentation és handoff", "status": "completed" }
-  ]
+    {
+      "name": "Phase 1: Runtime stabilization és build unblock",
+      "status": "completed"
+    },
+    {
+      "name": "Phase 2: Shell-first cockpit redesign",
+      "status": "completed"
+    },
+    {
+      "name": "Phase 3: Core widget polish",
+      "status": "in_progress"
+    },
+    {
+      "name": "Phase 4: Dashboard smoke/E2E/test hardening",
+      "status": "completed"
+    },
+    {
+      "name": "Phase 5: Documentation és handoff",
+      "status": "completed"
+    }
+  ],
+  "group": "brunella"
 }

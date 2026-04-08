@@ -126,7 +126,7 @@ const router = Router();
 router.get('/', async (req, res) => {
     try {
         logInfo('{{ResourceName}}API', 'Fetching all resources...');
-        // TODO: Implement list logic
+        // TODO [tech-debt-cleanup]: Implement list logic
         res.json({ resources: [] });
     } catch (e: unknown) {
         const msg = e instanceof Error ? e.message : String(e);
@@ -140,7 +140,7 @@ router.get('/:id', async (req, res) => {
     try {
         const { id } = req.params;
         logInfo('{{ResourceName}}API', \`Fetching resource: \${id}\`);
-        // TODO: Implement get logic
+        // TODO [tech-debt-cleanup]: Implement get logic
         res.json({ resource: { id } });
     } catch (e: unknown) {
         const msg = e instanceof Error ? e.message : String(e);
@@ -153,7 +153,7 @@ router.get('/:id', async (req, res) => {
 router.post('/', async (req, res) => {
     try {
         logInfo('{{ResourceName}}API', 'Creating resource...');
-        // TODO: Implement create logic
+        // TODO [tech-debt-cleanup]: Implement create logic
         res.status(201).json({ resource: { id: '1' } });
     } catch (e: unknown) {
         const msg = e instanceof Error ? e.message : String(e);
@@ -167,7 +167,7 @@ router.put('/:id', async (req, res) => {
     try {
         const { id } = req.params;
         logInfo('{{ResourceName}}API', \`Updating resource: \${id}\`);
-        // TODO: Implement update logic
+        // TODO [tech-debt-cleanup]: Implement update logic
         res.json({ resource: { id } });
     } catch (e: unknown) {
         const msg = e instanceof Error ? e.message : String(e);
@@ -181,7 +181,7 @@ router.delete('/:id', async (req, res) => {
     try {
         const { id } = req.params;
         logInfo('{{ResourceName}}API', \`Deleting resource: \${id}\`);
-        // TODO: Implement delete logic
+        // TODO [tech-debt-cleanup]: Implement delete logic
         res.status(204).send();
     } catch (e: unknown) {
         const msg = e instanceof Error ? e.message : String(e);
@@ -286,7 +286,7 @@ export class {{AgentName}} implements IAgent {
         logInfo(this.name, \`Executing task: \${task}\`);
 
         try {
-            // TODO: Implement agent logic here
+            // TODO [tech-debt-cleanup]: Implement agent logic here
             const result = { success: true, message: 'Task completed' };
 
             logInfo(this.name, 'Task completed successfully');
@@ -335,7 +335,7 @@ describe('{{AgentName}} Agent', () => {
     });
 
     it('should handle errors gracefully', async () => {
-        // TODO: Add error test case
+        // TODO [tech-debt-cleanup]: Add error test case
         expect(true).toBe(true);
     });
 });
@@ -378,12 +378,12 @@ describe('{{TestSuite}}', () => {
     });
 
     it('should handle basic operations', () => {
-        // TODO: Implement test
+        // TODO [tech-debt-cleanup]: Implement test
         expect(1 + 1).toBe(2);
     });
 
     it('should handle edge cases', () => {
-        // TODO: Implement test
+        // TODO [tech-debt-cleanup]: Implement test
         expect(true).toBe(true);
     });
 });

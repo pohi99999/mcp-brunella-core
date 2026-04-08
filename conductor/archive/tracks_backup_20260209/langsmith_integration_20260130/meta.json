@@ -4,5 +4,6 @@
   "status": "new",
   "created_at": "2026-01-30T08:53:00Z",
   "updated_at": "2026-01-30T08:53:00Z",
-  "description": "LangSmith tracing és observability integrálása a BAS stackbe."
+  "description": "LangSmith tracing és observability integrálása a BAS stackbe.",
+  "group": "other"
 }

@@ -21,6 +21,16 @@
   "assignee": "Copilot",
   "assigned_agent": "Copilot",
   "progress": 100,
-  "tags": ["robotkez", "browser-chat", "orchestrator", "research", "zero-mock"],
-  "dependencies": ["system_wide_zero_mock_20260301", "orchestrator_cognition_upgrade_20260320"]
+  "tags": [
+    "robotkez",
+    "browser-chat",
+    "orchestrator",
+    "research",
+    "zero-mock"
+  ],
+  "dependencies": [
+    "system_wide_zero_mock_20260301",
+    "orchestrator_cognition_upgrade_20260320"
+  ],
+  "group": "brunella"
 }

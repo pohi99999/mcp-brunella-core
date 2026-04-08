@@ -47,12 +47,10 @@ export class BrunellaClient {
     );
 
     const servers = options.coreOnly
-      ? allServers.filter(
-          (server) => server.name === "brunella-core" || server.name === "brunella-remote",
-        )
+      ? allServers.filter((server) => server.name === "brunella-core")
       : allServers;
 
-    const defaultTimeout = Number(process.env.BRUNELLA_MCP_CONNECT_TIMEOUT_MS || "8000");
+    const defaultTimeout = Number(process.env.BRUNELLA_MCP_CONNECT_TIMEOUT_MS || "30000");
     const timeoutMs = options.timeoutMs ?? defaultTimeout;
 
     const activeServers = servers.filter((s) => !s.disabled);
@@ -78,7 +76,7 @@ export class BrunellaClient {
             { capabilities: {} },
           );
           const sseTransport = new SSEClientTransport(sseUrl);
-          const selfTimeout = 2000; // short — server is local or not running
+          const selfTimeout = Math.max(2000, timeoutMs);
           try {
             await Promise.race([
               sseClient.connect(sseTransport),

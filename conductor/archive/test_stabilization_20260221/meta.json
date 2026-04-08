@@ -26,5 +26,6 @@
   "acceptanceCriteria": [
     "npm test PASS (0 failed)",
     "Timeoutos agent tesztek stabilak (15s+)."
-  ]
+  ],
+  "group": "other"
 }

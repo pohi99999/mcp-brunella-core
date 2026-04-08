@@ -8,8 +8,16 @@
   "updated": "2026-04-04",
   "assignee": "GitHub Copilot",
   "progress": 0,
-  "tags": ["n8n", "psearch", "grants", "loans", "workflow", "automation"],
+  "tags": [
+    "n8n",
+    "psearch",
+    "grants",
+    "loans",
+    "workflow",
+    "automation"
+  ],
   "dependencies": [],
   "sourceDocument": ".worktrees\\n8n_workflow_tervek.md",
-  "phase": 1
+  "phase": 1,
+  "group": "other"
 }

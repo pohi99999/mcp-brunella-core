@@ -336,7 +336,7 @@ export class LogisticsDispatcherAgent extends BaseAgent {
       });
     }
 
-    // TODO: Actually send emails via Gmail API
+    // TODO [tech-debt-cleanup]: Actually send emails via Gmail API
     logInfo(this.name, `📧 Would send ${complaints.length} complaint emails`);
 
     return complaints;

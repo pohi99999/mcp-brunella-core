@@ -24,7 +24,12 @@
   "what_exists": {
     "frontend_pages": 35,
     "data_models": 15,
-    "visualizations": ["MatchmakingVisualization", "SimulatedRouteMap", "VisualTruckLoad", "ShipmentMap"],
+    "visualizations": [
+      "MatchmakingVisualization",
+      "SimulatedRouteMap",
+      "VisualTruckLoad",
+      "ShipmentMap"
+    ],
     "current_storage": "localStorage (mock)",
     "ai_calls": "Gemini 2.5-Flash (matchmaking, negotiation, invoice generation, CMR)"
   },
@@ -116,5 +121,6 @@
   ],
   "archivedAt": "2026-04-07T00:00:00.000Z",
   "archivedReason": "External frontend repo unavailable in this workspace; repo-local boundary split into logistics_vertical_repo_local_20260407",
-  "followUpTrackId": "logistics_vertical_repo_local_20260407"
+  "followUpTrackId": "logistics_vertical_repo_local_20260407",
+  "group": "business"
 }

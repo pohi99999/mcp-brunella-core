@@ -6,8 +6,19 @@
   "createdAt": "2026-03-22",
   "owner": "GitHub Copilot",
   "progress": 0,
-  "tags": ["superintelligence", "meta-cognition", "goal-evolution", "consciousness", "knowledge-fabric", "meta-mesh", "conscious-kernel"],
+  "tags": [
+    "superintelligence",
+    "meta-cognition",
+    "goal-evolution",
+    "consciousness",
+    "knowledge-fabric",
+    "meta-mesh",
+    "conscious-kernel"
+  ],
   "sourceDocument": ".worktrees/Brunella_superinnteligencia.md",
   "phase": 9,
-  "dependencies": ["remote_layer_phase8_planetary_supersystem_20260322"]
+  "dependencies": [
+    "remote_layer_phase8_planetary_supersystem_20260322"
+  ],
+  "group": "brunella"
 }

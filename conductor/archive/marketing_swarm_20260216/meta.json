@@ -15,7 +15,13 @@
     "Media assetek gyártása Draft Mode-dal",
     "Kampánycsomag mentés a KNOWLEDGE_BASE struktúrába"
   ],
-  "tags": ["marketing", "swarm", "automation", "copywriting", "media"],
+  "tags": [
+    "marketing",
+    "swarm",
+    "automation",
+    "copywriting",
+    "media"
+  ],
   "related_files": [
     "src/agents/MarketingDirectorAgent.ts",
     "src/agents/CopywriterAgent.ts",
@@ -23,16 +29,29 @@
     "myai/workers/media_factory.py",
     "src/tools/workspace.ts"
   ],
-  "dependencies": ["robotkezv2", "lancedb_rag"],
+  "dependencies": [
+    "robotkezv2",
+    "lancedb_rag"
+  ],
   "blockers": [],
   "milestones": [
-    { "name": "Swarm orchestration ready", "status": "completed" },
-    { "name": "Trend analyst online", "status": "completed" },
-    { "name": "Media factory + assembly", "status": "completed" }
+    {
+      "name": "Swarm orchestration ready",
+      "status": "completed"
+    },
+    {
+      "name": "Trend analyst online",
+      "status": "completed"
+    },
+    {
+      "name": "Media factory + assembly",
+      "status": "completed"
+    }
   ],
   "constraints": [
     "Draft Mode alapértelmezett a költségkontroll miatt",
     "Max 3 perces trendkutatási timeout",
     "Fájlmentés csak _KNOWLEDGE_BASE alá"
-  ]
+  ],
+  "group": "business"
 }

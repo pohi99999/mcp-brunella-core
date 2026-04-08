@@ -13,7 +13,12 @@
     "Párhuzamos frontend/backend kivitelezés",
     "QA + DevOps automatizálás"
   ],
-  "tags": ["sdlc", "automation", "multi-agent", "workflow"],
+  "tags": [
+    "sdlc",
+    "automation",
+    "multi-agent",
+    "workflow"
+  ],
   "related_files": [
     "src/agents/ArchitectAgent.ts",
     "src/agents/UXDesignerAgent.ts",
@@ -21,16 +26,31 @@
     "src/workflows/GenesisWorkflow.ts",
     "src/agents/OrchestratorAgent.ts"
   ],
-  "dependencies": ["orchestrator_v2"],
+  "dependencies": [
+    "orchestrator_v2"
+  ],
   "blockers": [],
   "milestones": [
-    { "name": "Interview + Blueprint", "target_date": "2026-02-23", "status": "planned" },
-    { "name": "Task engineering", "target_date": "2026-03-02", "status": "planned" },
-    { "name": "Production + QA", "target_date": "2026-03-16", "status": "planned" }
+    {
+      "name": "Interview + Blueprint",
+      "target_date": "2026-02-23",
+      "status": "planned"
+    },
+    {
+      "name": "Task engineering",
+      "target_date": "2026-03-02",
+      "status": "planned"
+    },
+    {
+      "name": "Production + QA",
+      "target_date": "2026-03-16",
+      "status": "planned"
+    }
   ],
   "constraints": [
     "Shared types kötelező",
     "3 QA retry után manuális review",
     "Mock-first UI fejlesztés"
-  ]
+  ],
+  "group": "other"
 }

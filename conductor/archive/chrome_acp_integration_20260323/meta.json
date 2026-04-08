@@ -63,5 +63,8 @@
     "Dokumentált Chrome ACP setup",
     "Build validáció"
   ],
-  "dependencies": ["agent_orchestration_dag_20260323"]
+  "dependencies": [
+    "agent_orchestration_dag_20260323"
+  ],
+  "group": "other"
 }

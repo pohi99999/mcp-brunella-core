@@ -5,10 +5,17 @@ import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { toast } from 'sonner';
 
+interface GrantAdvisorResult {
+    grant_name: string;
+    support: string;
+    max: string;
+    next: string;
+}
+
 export function GrantAdvisorWidget() {
     const [step, setStep] = useState(1);
     const [loading, setLoading] = useState(false);
-    const [result, setResult] = useState<any>(null);
+    const [result, setResult] = useState<GrantAdvisorResult | null>(null);
 
     const checkEligibility = async () => {
         setLoading(true);

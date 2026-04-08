@@ -20,5 +20,6 @@
   "dependencies": [],
   "estimated_effort": "high",
   "business_value": "End-to-end agent-driven development workflow",
-  "archived_at": "2026-02-13T00:00:00Z"
+  "archived_at": "2026-02-13T00:00:00Z",
+  "group": "nova"
 }

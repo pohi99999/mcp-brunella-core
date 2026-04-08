@@ -8,10 +8,19 @@
   "updated": "2026-04-07",
   "assignee": "GitHub Copilot",
   "progress": 80,
-  "tags": ["logistics", "enterprise", "api", "dashboard", "track-split"],
-  "dependencies": ["logistics_vertical_20260222"],
+  "tags": [
+    "logistics",
+    "enterprise",
+    "api",
+    "dashboard",
+    "track-split"
+  ],
+  "dependencies": [
+    "logistics_vertical_20260222"
+  ],
   "sourceDocument": "Split from logistics_vertical_20260222 after external frontend blocker",
   "phase": 1,
   "blocker": "PohiAIProt2 frontend repository is outside this workspace",
-  "scope": "Repository-local only"
+  "scope": "Repository-local only",
+  "group": "business"
 }

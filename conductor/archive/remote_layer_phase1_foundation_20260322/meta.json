@@ -6,11 +6,19 @@
   "createdAt": "2026-03-22",
   "owner": "GitHub Copilot",
   "progress": 100,
-  "tags": ["remote-layer", "api", "websocket", "mcp-router", "dashboard", "paios"],
+  "tags": [
+    "remote-layer",
+    "api",
+    "websocket",
+    "mcp-router",
+    "dashboard",
+    "paios"
+  ],
   "sourceDocument": ".worktrees/Brunella_superinnteligencia.md",
   "phase": 1,
   "dependencies": [],
   "completedAt": "2026-04-05T00:00:00Z",
   "archivedAt": "2026-04-05T00:00:00Z",
-  "archiveReason": "Remote session, target, and command contract is aligned with the backend and dashboard, with validation passing."
+  "archiveReason": "Remote session, target, and command contract is aligned with the backend and dashboard, with validation passing.",
+  "group": "brunella"
 }

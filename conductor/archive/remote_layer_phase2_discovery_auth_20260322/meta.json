@@ -6,11 +6,21 @@
   "createdAt": "2026-03-22",
   "owner": "GitHub Copilot",
   "progress": 100,
-  "tags": ["remote-layer", "mcp-discovery", "capability-mapping", "auth", "sqlite", "dashboard"],
+  "tags": [
+    "remote-layer",
+    "mcp-discovery",
+    "capability-mapping",
+    "auth",
+    "sqlite",
+    "dashboard"
+  ],
   "sourceDocument": ".worktrees/Brunella_superinnteligencia.md",
   "phase": 2,
-  "dependencies": ["remote_layer_phase1_foundation_20260322"],
+  "dependencies": [
+    "remote_layer_phase1_foundation_20260322"
+  ],
   "completedAt": "2026-03-22",
   "archivedAt": "2026-03-22",
-  "archiveReason": "Verified complete via implemented modules, dedicated tests, and live conductor audit."
+  "archiveReason": "Verified complete via implemented modules, dedicated tests, and live conductor audit.",
+  "group": "brunella"
 }

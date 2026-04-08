@@ -12,8 +12,16 @@
   "verified": true,
   "verifiedAt": "2026-04-05",
   "verificationNotes": "Completed: invoice reminders, approval flow, basic accounting hooks. No immediate child track required; integrations may be added if further connectors needed.",
-  "tags": ["kkv", "finance", "invoice", "approval", "costs", "n8n"],
+  "tags": [
+    "kkv",
+    "finance",
+    "invoice",
+    "approval",
+    "costs",
+    "n8n"
+  ],
   "dependencies": [],
   "sourceDocument": "User-provided KKV n8n workflow pack",
-  "phase": 1
+  "phase": 1,
+  "group": "business"
 }

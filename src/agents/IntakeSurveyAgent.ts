@@ -2,7 +2,7 @@ import { IAgent, AgentResponse } from './types.js';
 import { logInfo, logError, setAgentStatus } from '../utils/logger.js';
 
 // Kötelező iratok ingatlantípusonként
-// TODO: replace with dynamic document requirements from property database
+// TODO [tech-debt-cleanup]: replace with dynamic document requirements from property database
 const REQUIRED_DOCS: Record<string, string[]> = {
   apartment: [
     'tulajdoni lap',

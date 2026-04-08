@@ -2,7 +2,7 @@ import { IAgent, AgentResponse } from './types.js';
 import { logInfo, logError, setAgentStatus } from '../utils/logger.js';
 
 // Alap EUR/m² értékek típusonként
-// TODO: replace with real market data from ResearcherAgent web scraping
+// TODO [tech-debt-cleanup]: replace with real market data from ResearcherAgent web scraping
 const BASE_EUR_SQM: Record<string, number> = {
   apartment: 2200,
   house: 1800,
@@ -85,7 +85,7 @@ export class PropertyResearchAgent implements IAgent {
     };
 
     // Mock comparables
-    // TODO: replace with real comparable data from web scraping / property databases
+    // TODO [tech-debt-cleanup]: replace with real comparable data from web scraping / property databases
     const comparables: Comparable[] = Array.from({ length: 5 }, (_, i) => {
       const variation = 0.85 + (i * 0.08);
       const compArea = Math.round(areaSqm * (0.9 + i * 0.05));
@@ -99,7 +99,7 @@ export class PropertyResearchAgent implements IAgent {
     });
 
     // Véletlenszerű 2-3 kockázati jelzés
-    // TODO: replace with real risk assessment based on document analysis
+    // TODO [tech-debt-cleanup]: replace with real risk assessment based on document analysis
     const shuffled = [...RISK_FLAGS_POOL].sort(() => Math.random() - 0.5);
     const riskFlags = shuffled.slice(0, 2 + Math.floor(Math.random() * 2));
 

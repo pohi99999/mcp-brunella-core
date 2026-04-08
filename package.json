@@ -158,7 +158,6 @@
     "inquirer": "^12.4.1",
     "js-yaml": "^4.1.0",
     "jsdom": "^29.0.1",
-    "lancedb": "^0.0.1",
     "langsmith": "^0.5.7",
     "lucide-react": "^0.475.0",
     "mailparser": "^3.8.0",

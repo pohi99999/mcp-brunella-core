@@ -227,12 +227,12 @@ export class SecurityEventsMonitor extends EventEmitter {
         break;
       
       case 'alert':
-        // TODO: Send notification (email, Slack, etc.)
+        // TODO [tech-debt-cleanup]: Send notification (email, Slack, etc.)
         logWarn('SecurityMonitor', `Alert notification should be sent for: ${rule.name}`);
         break;
       
       case 'block':
-        // TODO: Implement blocking mechanism
+        // TODO [tech-debt-cleanup]: Implement blocking mechanism
         logError('SecurityMonitor', `Blocking action required for: ${rule.name}`);
         if (event.agent) {
           this.emit('block-agent', event.agent);

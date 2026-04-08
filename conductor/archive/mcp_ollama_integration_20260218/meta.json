@@ -183,5 +183,6 @@
     "WebAssembly sandboxes (browser execution)",
     "MCP tool marketplace",
     "LangChain MCP adapter"
-  ]
+  ],
+  "group": "business"
 }

@@ -8,8 +8,16 @@
   "owner": "Claude",
   "spec_status": "approved",
   "progress": 100,
-  "tags": ["dashboard", "tracks", "todo", "realtime", "chokidar", "socket"],
+  "tags": [
+    "dashboard",
+    "tracks",
+    "todo",
+    "realtime",
+    "chokidar",
+    "socket"
+  ],
   "dependencies": [],
   "estimated_effort": "medium",
-  "business_value": "Visible progress tracking"
+  "business_value": "Visible progress tracking",
+  "group": "brunella"
 }

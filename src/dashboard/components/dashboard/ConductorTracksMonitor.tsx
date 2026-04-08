@@ -27,6 +27,7 @@ import
   {
     getTracksMonitor,
     getTrackDetail,
+    type TrackGroupId,
     type TrackMonitorEntry,
     type TrackMonitorResponse,
     type TrackDetailResponse,
@@ -90,6 +91,72 @@ function statusLabel ( status: string ): string
   }
 }
 
+const TRACK_GROUP_LABELS: Record<TrackGroupId, string> = {
+  business: "Könyvelés / üzleti automatizálás",
+  nova: "Nova asszisztens",
+  brunella: "Brunella rendszer",
+  other: "Egyéb",
+};
+
+const TRACK_GROUP_ORDER: TrackGroupId[] = ["business", "nova", "brunella", "other"];
+
+function groupLabel ( group?: TrackGroupId ): string
+{
+  return group ? TRACK_GROUP_LABELS[ group ] : TRACK_GROUP_LABELS.other;
+}
+
+function groupBadgeClass ( group?: TrackGroupId ): string
+{
+  switch ( group )
+  {
+    case "business":
+      return "border-emerald-500/30 text-emerald-300 bg-emerald-500/10";
+    case "nova":
+      return "border-blue-500/30 text-blue-300 bg-blue-500/10";
+    case "brunella":
+      return "border-violet-500/30 text-violet-300 bg-violet-500/10";
+    default:
+      return "border-zinc-600/40 text-zinc-400 bg-zinc-700/20";
+  }
+}
+
+function sortTracksForDisplay ( tracks: TrackMonitorEntry[] ): TrackMonitorEntry[]
+{
+  const priorityOrder: Record<string, number> = { P0: 0, P1: 1, P2: 2, P3: 3 };
+
+  return [ ...tracks ].sort( ( a, b ) =>
+  {
+    const groupDiff =
+      TRACK_GROUP_ORDER.indexOf( a.group ?? "other" ) -
+      TRACK_GROUP_ORDER.indexOf( b.group ?? "other" );
+    if ( groupDiff !== 0 ) return groupDiff;
+
+    const priorityDiff =
+      ( priorityOrder[ a.priority ?? "P2" ] ?? 2 ) -
+      ( priorityOrder[ b.priority ?? "P2" ] ?? 2 );
+    if ( priorityDiff !== 0 ) return priorityDiff;
+
+    return a.title.localeCompare( b.title );
+  } );
+}
+
+function groupTracksByGroup ( tracks: TrackMonitorEntry[] ): Record<TrackGroupId, TrackMonitorEntry[]>
+{
+  const grouped: Record<TrackGroupId, TrackMonitorEntry[]> = {
+    business: [],
+    nova: [],
+    brunella: [],
+    other: [],
+  };
+
+  for ( const track of tracks )
+  {
+    grouped[ track.group ?? "other" ].push( track );
+  }
+
+  return grouped;
+}
+
 // ─── Stat Badge ──────────────────────────────────────────────────────────────
 
 function StatBadge ( {
@@ -129,6 +196,11 @@ function TrackRow ( {
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap mb-1">
             <span className="font-medium text-zinc-100 text-sm truncate">{ track.title }</span>
+            { track.group && (
+              <span className={ `text-[10px] font-bold px-1.5 py-0.5 rounded border ${ groupBadgeClass( track.group ) }` }>
+                { groupLabel( track.group ) }
+              </span>
+            ) }
             { track.priority && (
               <span className={ `text-[10px] font-bold px-1.5 py-0.5 rounded ${ priorityColor( track.priority ) }` }>
                 { track.priority }
@@ -236,6 +308,11 @@ function DetailPanel ( {
                 <span className={ `px-2 py-0.5 rounded border ${ statusColor( detail.status ) }` }>
                   { statusLabel( detail.status ) }
                 </span>
+                { detail.group && (
+                  <span className={ `px-2 py-0.5 rounded border ${ groupBadgeClass( detail.group ) }` }>
+                    { groupLabel( detail.group ) }
+                  </span>
+                ) }
                 <span className="flex items-center gap-1 text-zinc-400">
                   <TrendingUp size={ 12 } />
                   { detail.progress }%
@@ -311,6 +388,53 @@ function DetailPanel ( {
   );
 }
 
+// ─── Track Group List ───────────────────────────────────────────────────────
+
+function TrackGroupList ( {
+  tracks,
+  onTrackClick,
+  empty,
+}: {
+  tracks: TrackMonitorEntry[];
+  onTrackClick: ( id: string ) => void;
+  empty: string;
+} )
+{
+  const sortedTracks = useMemo( () => sortTracksForDisplay( tracks ), [ tracks ] );
+  const groupedTracks = useMemo( () => groupTracksByGroup( sortedTracks ), [ sortedTracks ] );
+
+  if ( sortedTracks.length === 0 )
+  {
+    return <p className="text-xs text-zinc-600 px-2">{ empty }</p>;
+  }
+
+  return (
+    <div className="space-y-3">
+      { TRACK_GROUP_ORDER.map( ( group ) =>
+      {
+        const items = groupedTracks[ group ];
+        if ( items.length === 0 ) return null;
+
+        return (
+          <div key={ group } className="space-y-1.5">
+            <div className="flex items-center gap-2 px-1">
+              <Badge variant="outline" className={ `text-[10px] px-1.5 py-0 ${ groupBadgeClass( group ) }` }>
+                { groupLabel( group ) }
+              </Badge>
+              <span className="text-[10px] text-zinc-500">{ items.length }</span>
+            </div>
+            <div className="space-y-1.5 pl-1">
+              { items.map( ( track ) => (
+                <TrackRow key={ track.id } track={ track } onClick={ onTrackClick } />
+              ) ) }
+            </div>
+          </div>
+        );
+      } ) }
+    </div>
+  );
+}
+
 // ─── Section ─────────────────────────────────────────────────────────────────
 
 function Section ( {
@@ -348,14 +472,8 @@ function Section ( {
       </button>
 
       { open && (
-        <div className="space-y-1.5 pl-1">
-          { tracks.length === 0 ? (
-            <p className="text-xs text-zinc-600 px-2">{ empty }</p>
-          ) : (
-            tracks.map( ( t ) => (
-              <TrackRow key={ t.id } track={ t } onClick={ onTrackClick } />
-            ) )
-          ) }
+        <div className="pl-1">
+          <TrackGroupList tracks={ tracks } onTrackClick={ onTrackClick } empty={ empty } />
         </div>
       ) }
     </div>
@@ -383,16 +501,17 @@ function ArchivedSection ( {
       filter.trim() === ""
         ? tracks
         : tracks.filter(
-          ( t ) =>
-            t.id.toLowerCase().includes( filter.toLowerCase() ) ||
-            t.title.toLowerCase().includes( filter.toLowerCase() ) ||
-            ( t.description ?? "" ).toLowerCase().includes( filter.toLowerCase() ),
-        ),
-    [tracks, filter],
+            ( t ) =>
+              t.id.toLowerCase().includes( filter.toLowerCase() ) ||
+              t.title.toLowerCase().includes( filter.toLowerCase() ) ||
+              ( t.description ?? "" ).toLowerCase().includes( filter.toLowerCase() ),
+          ),
+    [ tracks, filter ],
   );
 
-  const page_count = Math.ceil( filtered.length / ARCHIVED_PAGE_SIZE );
-  const visible = filtered.slice( page * ARCHIVED_PAGE_SIZE, ( page + 1 ) * ARCHIVED_PAGE_SIZE );
+  const sortedFiltered = useMemo( () => sortTracksForDisplay( filtered ), [ filtered ] );
+  const page_count = Math.ceil( sortedFiltered.length / ARCHIVED_PAGE_SIZE );
+  const visible = sortedFiltered.slice( page * ARCHIVED_PAGE_SIZE, ( page + 1 ) * ARCHIVED_PAGE_SIZE );
 
   return (
     <div className="space-y-1">
@@ -641,15 +760,7 @@ export function ConductorTracksMonitor ()
                 </CardTitle>
               </CardHeader>
               <CardContent className="px-4 pb-4">
-                { data.active.length === 0 ? (
-                  <p className="text-xs text-zinc-600">Nincs aktív track.</p>
-                ) : (
-                  <div className="space-y-1.5">
-                    { data.active.map( ( t ) => (
-                      <TrackRow key={ t.id } track={ t } onClick={ openDetail } />
-                    ) ) }
-                  </div>
-                ) }
+                <TrackGroupList tracks={ data.active } onTrackClick={ openDetail } empty="Nincs aktív track." />
               </CardContent>
             </Card>
 

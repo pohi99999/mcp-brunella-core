@@ -17,5 +17,6 @@
   "dependencies": [],
   "estimated_effort": "24 hours",
   "business_value": "100% agent autonomy + full transparency",
-  "archived_at": "2026-02-13T00:00:00Z"
+  "archived_at": "2026-02-13T00:00:00Z",
+  "group": "other"
 }

@@ -9,7 +9,9 @@
   "createdAt": "2026-02-23T08:00:00Z",
   "updatedAt": "2026-02-23T17:05:00Z",
   "completedAt": "2026-02-23T17:05:00Z",
-  "blockedBy": ["paios_orchestrator_chat_20260223"],
+  "blockedBy": [
+    "paios_orchestrator_chat_20260223"
+  ],
   "phases": [
     {
       "name": "Phase 1: ModelSelector komponens",
@@ -49,5 +51,6 @@
     "Provider health badge (UP/DOWN indikátor)",
     "localStorage persistence (session-en belül megmarad a választás)",
     "npm run build && npm test → 0 hiba"
-  ]
+  ],
+  "group": "other"
 }

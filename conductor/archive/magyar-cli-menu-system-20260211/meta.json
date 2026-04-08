@@ -19,5 +19,6 @@
   "dependencies": [],
   "estimated_effort": "high",
   "business_value": "No-typing, fully Hungarian interactive CLI",
-  "archived_at": "2026-02-13T00:00:00Z"
+  "archived_at": "2026-02-13T00:00:00Z",
+  "group": "other"
 }

@@ -44,6 +44,18 @@ interface TrackMetadata {
   priority: string;
   progress: number;
   created: string;
+  group?: "business" | "nova" | "brunella" | "other";
+}
+
+const TRACK_GROUP_LABELS: Record<string, string> = {
+  business: "Könyvelés / üzleti automatizálás",
+  nova: "Nova asszisztens",
+  brunella: "Brunella rendszer",
+  other: "Egyéb",
+};
+
+function trackGroupLabel(group?: string): string {
+  return TRACK_GROUP_LABELS[group ?? "other"] ?? TRACK_GROUP_LABELS.other;
 }
 
 // ==================== API Helpers ====================
@@ -189,9 +201,14 @@ export function TrackGenerator() {
                     className="flex items-center gap-3 px-4 py-3 hover:bg-muted/50 transition-colors"
                   >
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium truncate">
-                        {track.title}
-                      </p>
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <p className="text-sm font-medium truncate">
+                          {track.title}
+                        </p>
+                        <Badge variant="outline" className="text-[10px]">
+                          {trackGroupLabel(track.group)}
+                        </Badge>
+                      </div>
                       <p className="text-xs text-zinc-500">
                         ID: {track.id} • {track.created}
                       </p>

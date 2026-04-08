@@ -13,8 +13,19 @@
   "archivedAt": "2026-03-30T14:15:00.000Z",
   "archiveReason": "Teljesen validált és lezárt track; Conductor archive-ba mozgatva.",
   "phases": [
-    { "name": "Phase 1: Single source megvalósítás", "status": "completed" },
-    { "name": "Phase 2: Automatikus szinkron", "status": "completed" }
+    {
+      "name": "Phase 1: Single source megvalósítás",
+      "status": "completed"
+    },
+    {
+      "name": "Phase 2: Automatikus szinkron",
+      "status": "completed"
+    }
   ],
-  "tags": ["bootstrap", "docs", "sync"]
+  "tags": [
+    "bootstrap",
+    "docs",
+    "sync"
+  ],
+  "group": "brunella"
 }

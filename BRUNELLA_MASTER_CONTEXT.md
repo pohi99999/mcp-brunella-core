@@ -1,7 +1,7 @@
 # 🌌 BRUNELLA MASTER CONTEXT (Élő Rendszertérkép)
 
 **Verzió:** 2.4.0
-**Frissítve:** 2026-04-02
+**Frissítve:** 2026-04-07
 **Státusz:** ACTIVE (Élő rendszer)
 
 ---
@@ -20,7 +20,7 @@ A **Brunella Agent System (BAS)** egy hibrid, multi-agent AI ökoszisztéma, ame
 
 ## 2. 🤖 Az Ügynök Sereg (The Legion)
 
-A rendszer **69** regisztrált ügynökkel rendelkezik.
+A rendszer **78** regisztrált ügynökkel rendelkezik.
 
 ### 👑 Vezérkar (Core Leadership)
 | Ügynök | Szerep | Képességek |
@@ -46,6 +46,9 @@ A rendszer **69** regisztrált ügynökkel rendelkezik.
 | **ChromeDevTools** | Web Debug & Performance Analyst |  |
 | **CampaignGenerator** | undefined |  |
 | **MarketingDirector** | undefined |  |
+| **ProjectMaintainer** | undefined | root_cleanup, log_rotation, track_verification |
+| **ReconciliationIngestion** | Pénzügyi adat ingesztor | finance-ingestion, data-normalization, accounting-parsing |
+| **AdvancedMatching** | Intelligens párosító motor | smart-reconciliation, partial-payment-split, fx-recalculation |
 | **PropertyVisionary** | undefined |  |
 | **ConflictMediator** | Organizational Conflict Resolution |  |
 | **copywriter** | undefined | social_media_generation, email_drafting, copywriting |
@@ -53,9 +56,14 @@ A rendszer **69** regisztrált ügynökkel rendelkezik.
 | **DependencyGraph** | Dependency Graph Analyzer |  |
 | **Developer** | undefined | code_generation, self_healing |
 | **DevOps** | devops |  |
-| **DigitalHeadhunter** | Automated HR Screening & Recruitment |  |
+| **DigitalHeadhunter** | Mindenes HR aszisztens és Toborzási specialist | cv_parsing, candidate_matching, linkedin_integration |
 | **documenter** | undefined | docs, summarization |
 | **EdgeProxy** | Edge Proxy & Remote Access |  |
+| **ReconciliationException** | Pénzügyi kivételkezelő |  |
+| **ReconciliationCommunication** | Pénzügyi kommunikátor |  |
+| **NavCrossCheck** | NAV validátor |  |
+| **AnomalyDetection** | Pénzügyi anomáliadetektáló |  |
+| **CashFlowPrediction** | Cash-flow elemző |  |
 | **email_triage** | undefined | email_classification, priority_detection, auto_response |
 | **enterprise_orchestrator** | undefined | enterprise_event_parsing, priority_assignment, module_routing |
 | **finance_guardian** | undefined | invoice_processing, ocr_extraction, anomaly_detection |
@@ -104,6 +112,7 @@ A rendszer **69** regisztrált ügynökkel rendelkezik.
 | **StocktakeReconciliationAgent** | undefined | inventory_reconciliation |
 | **StocktakeReportAgent** | undefined | inventory_reporting |
 | **InventoryAdjustmentAgent** | undefined | accounting_preparation |
+| **i18n_specialist** | undefined | i18n_architecture, string_extraction, locale_management |
 
 
 ---

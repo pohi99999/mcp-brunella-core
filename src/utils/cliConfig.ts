@@ -263,10 +263,10 @@ export class ConfigManager {
     const sysDefaultsPath = getSystemDefaultsPath();
     if (sysDefaultsPath && fs.existsSync(sysDefaultsPath)) {
       const raw = this.loadJson(sysDefaultsPath);
-      base = deepMerge(base as any, raw as any) as CliSettings;
+      base = deepMerge(base as unknown as Record<string, unknown>, raw as unknown as Record<string, unknown>) as unknown as CliSettings;
     }
 
-    let userRaw = this.loadJson(this.userConfigPath) as any;
+    let userRaw = this.loadJson(this.userConfigPath) as Record<string, unknown>;
     if (userRaw && Object.keys(userRaw).length > 0 && isLegacyFlat(userRaw)) {
       const migrated = migrateLegacyToNested(userRaw);
       try {
@@ -277,17 +277,17 @@ export class ConfigManager {
       userRaw = migrated;
     }
 
-    let merged = deepMerge(base as any, userRaw as any) as CliSettings;
+    let merged = deepMerge(base as unknown as Record<string, unknown>, userRaw as unknown as Record<string, unknown>) as unknown as CliSettings;
 
     if (this.projectConfigPath) {
       const projRaw = this.loadJson(this.projectConfigPath);
-      merged = deepMerge(merged as any, projRaw as any) as CliSettings;
+      merged = deepMerge(merged as unknown as Record<string, unknown>, projRaw as unknown as Record<string, unknown>) as unknown as CliSettings;
     }
 
     const sysSettingsPath = getSystemSettingsPath();
     if (sysSettingsPath && fs.existsSync(sysSettingsPath)) {
       const sysRaw = this.loadJson(sysSettingsPath);
-      merged = deepMerge(merged as any, sysRaw as any) as CliSettings;
+      merged = deepMerge(merged as unknown as Record<string, unknown>, sysRaw as unknown as Record<string, unknown>) as unknown as CliSettings;
     }
 
     const mergedObj = merged as unknown as Record<string, unknown>;
@@ -323,7 +323,7 @@ export class ConfigManager {
   /** Set by dot path or legacy key. Persists to user file only; nested keys are merged. */
   public set(key: string, value: unknown): void {
     if (key in this.settings && !key.includes('.') && (key === 'serverUrl' || key === 'apiKey' || key === 'theme')) {
-      (this.settings as any)[key] = value;
+      (this.settings as unknown as Record<string, unknown>)[key] = value;
     } else {
       setByPath(this.settings as unknown as Record<string, unknown>, key, value);
     }
@@ -331,7 +331,7 @@ export class ConfigManager {
   }
 
   public setAll(updates: Partial<CliSettings>): void {
-    this.settings = deepMerge(this.settings as any, updates as any) as CliSettings;
+    this.settings = deepMerge(this.settings as unknown as Record<string, unknown>, updates as unknown as Record<string, unknown>) as unknown as CliSettings;
     this.saveUser();
   }
 

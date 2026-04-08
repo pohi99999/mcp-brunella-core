@@ -71,6 +71,20 @@ marked.setOptions({ renderer: new TerminalRenderer() });
 const program = new Command();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
+const CLI_MCP_CONNECT_TIMEOUT_MS = Number(process.env.BRUNELLA_MCP_CONNECT_TIMEOUT_MS || "30000");
+
+type WorkflowRunRecord = {
+  status?: string;
+  conclusion?: string;
+  updated_at?: string;
+  created_at?: string;
+  run_number?: number | string;
+  id?: string;
+  duration?: string | number;
+  passed?: number;
+  failed?: number;
+  startedAt: string | number;
+};
 
 // Try to read package.json version
 let version = "0.0.0";
@@ -106,7 +120,7 @@ try {
     telemetry?: { enabled?: boolean; target?: string };
     serverUrl?: string;
   };
-  initTelemetryFromConfig(all as any);
+  initTelemetryFromConfig(all);
   if (all?.telemetry?.enabled) {
     recordSessionStart({
       cli_version: version,
@@ -184,6 +198,11 @@ function printAssistantRoadmap(blueprint: AssistantBlueprint): void {
     writeLine(`   Cél: ${phase.goal}`);
     phase.deliverables.forEach((deliverable) => writeLine(`   • ${deliverable}`));
   });
+}
+
+async function getCloudflareClient() {
+  const { cloudflareClient } = await import("./utils/cloudflareClient.js");
+  return cloudflareClient;
 }
 
 function printFusionCard( blueprint: AssistantBlueprint ): void {
@@ -291,7 +310,6 @@ program
       writeLine(chalk.red(`✖ Server: Connection failed (${ensureError(error).message})`));
     } finally {
       await client.close();
-      process.exit(0);
     }
   });
 
@@ -344,7 +362,6 @@ program
       }
     } finally {
       await client.close();
-      process.exit(0);
     }
   });
 
@@ -355,7 +372,7 @@ program
   .action(async () => {
     const client = new BrunellaClient();
     try {
-      await client.connect({ coreOnly: true });
+      await client.connect({ coreOnly: true, timeoutMs: CLI_MCP_CONNECT_TIMEOUT_MS });
       // Use the agent_list tool
       const result = await client.callTool("agent_list", {});
       // @ts-expect-error content might be missing The result from agent_list tool might not have 'content[0].text'.
@@ -372,7 +389,6 @@ program
       console.error(chalk.red("Error fetching agents:"), ensureError(error).message);
     } finally {
       await client.close();
-      process.exit(0);
     }
   });
 
@@ -537,7 +553,7 @@ program
         process.exit(1);
       }
       
-      let context: any = {};
+      let context: Record<string, unknown> = {};
 
       if (opts.context) {
         try {
@@ -552,7 +568,7 @@ program
       const client = new BrunellaClient();
 
       try {
-        await client.connect();
+        await client.connect({ coreOnly: true, timeoutMs: CLI_MCP_CONNECT_TIMEOUT_MS });
 
         // Call agent_execute tool
         const result = await client.callTool("agent_execute", {
@@ -578,7 +594,7 @@ program
       } catch (error: unknown) {
         spinner.fail(chalk.red(`${agentName} failed`));
         console.error(chalk.red("Error:"), ensureError(error).message);
-        process.exit(1);
+        process.exitCode = 1;
       } finally {
         await client.close();
         process.exit(0);
@@ -635,10 +651,9 @@ program
         }
       } catch (error: unknown) {
         console.error(chalk.red("Tool execution failed:"), ensureError(error).message);
-        process.exit(1);
+        process.exitCode = 1;
       } finally {
         await client.close();
-        process.exit(0);
       }
     },
   );
@@ -650,7 +665,10 @@ program
   .option("-v, --verbose", "Show model/provider trace details")
   .option("--debug", "Show extended orchestration trace (includes Phoenix/fallback)")
   .action(async (cmd?: { opts: () => { verbose?: boolean; debug?: boolean } }) => {
-    marked.setOptions({ renderer: new TerminalRenderer() as any });
+    const terminalRenderer = new TerminalRenderer();
+    marked.setOptions({
+      renderer: terminalRenderer as unknown as NonNullable<Parameters<typeof marked.setOptions>[0]>['renderer'],
+    });
 
     writeLine(chalk.cyan("Starting chat..."));
     writeLine(chalk.dim("Type 'exit' to quit"));
@@ -1123,6 +1141,7 @@ program
           let responseText = "";
 
           if (edgeMode) {
+            const cloudflareClient = await getCloudflareClient();
             const edgeResult = await cloudflareClient.submitTask(prompt, {
               history,
             });
@@ -1288,7 +1307,6 @@ program
       console.error(chalk.red("\nConnection failed:"), ensureError(error).message);
     } finally {
       await client.close();
-      process.exit(0);
     }
   });
 
@@ -1330,7 +1348,6 @@ program
       writeLine(chalk.red(ensureError(error).message));
     } finally {
       await client.close();
-      process.exit(0);
     }
   });
 
@@ -1346,7 +1363,7 @@ conductorCmd
     const client = new BrunellaClient();
     const spinner = ora("Fetching project status...").start();
     try {
-      await client.connect({ coreOnly: true, timeoutMs: 10_000 });
+      await client.connect({ coreOnly: true, timeoutMs: CLI_MCP_CONNECT_TIMEOUT_MS });
       const result = await client.callTool("agent_delegate", {
         agent_name: "ProjectConductor",
         task: "status",
@@ -1372,7 +1389,6 @@ conductorCmd
       console.error(chalk.red("Error:"), ensureError(error).message);
     } finally {
       await client.close();
-      process.exit(0);
     }
   });
 
@@ -1424,9 +1440,10 @@ conductorCmd
 
           spinner.stop();
 
+          const toolResult = result as { content?: Array<{ text?: string }>; message?: string };
           const text =
-            (result as any).content?.[0]?.text ||
-            (result as any).message ||
+            toolResult.content?.[0]?.text ||
+            toolResult.message ||
             "No response";
 
           let responseText = text;
@@ -1451,7 +1468,6 @@ conductorCmd
       console.error(chalk.red("Connection error:"), ensureError(error).message);
     } finally {
       await client.close();
-      process.exit(0);
     }
   });
 
@@ -1474,7 +1490,6 @@ conductorCmd
       console.error(chalk.red("Error:"), ensureError(error).message);
     } finally {
       await client.close();
-      process.exit(0);
     }
   });
 
@@ -1498,7 +1513,6 @@ conductorCmd
       console.error(chalk.red("Error:"), ensureError(error).message);
     } finally {
       await client.close();
-      process.exit(0);
     }
   });
 
@@ -1532,7 +1546,6 @@ conductorCmd
       console.error(chalk.red("Error:"), ensureError(error).message);
     } finally {
       await client.close();
-      process.exit(0);
     }
   });
 
@@ -1582,10 +1595,10 @@ julesCmd
         if (action === "runs") {
           const url = `${baseUrl}/api/v1/jules/workflow-runs?workflow=${encodeURIComponent(workflow)}&limit=${limit}`;
           const res = await fetch(url, { signal: AbortSignal.timeout(15000) });
-          const data = (await res.json()) as any;
+          const data = (await res.json()) as { error?: string; runs?: Array<WorkflowRunRecord> };
           if (!res.ok) throw new Error(data?.error || `HTTP ${res.status}`);
 
-          const runs = (data?.runs || []) as Array<any>;
+          const runs = (data?.runs || []) as Array<WorkflowRunRecord>;
           if (runs.length === 0) {
             writeLine(
               chalk.yellow(
@@ -1600,8 +1613,8 @@ julesCmd
           );
 
           // Trend Analysis
-          const successCount = runs.filter((r: any) => r.conclusion === "success").length;
-          const failureCount = runs.filter((r: any) => r.conclusion === "failure").length;
+          const successCount = runs.filter((r) => r.conclusion === "success").length;
+          const failureCount = runs.filter((r) => r.conclusion === "failure").length;
           const passRate = runs.length > 0 ? Math.round((successCount / runs.length) * 100) : 0;
 
           writeLine(chalk.cyan("📊 Trend Analysis (last " + runs.length + " runs):"));
@@ -1636,7 +1649,7 @@ julesCmd
             body: JSON.stringify({ workflow, ref: "main", inputs: {} }),
             signal: AbortSignal.timeout(15000),
           });
-          const data = (await res.json()) as any;
+          const data = (await res.json()) as { error?: string; workflow?: string; ref?: string };
           if (!res.ok) throw new Error(data?.error || `HTTP ${res.status}`);
           writeLine(
             chalk.green(
@@ -1946,7 +1959,7 @@ testsCmd
           sevenDayStats?: { passRate?: number };
         };
       };
-      const resultsPayload = (await resultsRes.json()) as { data?: any[] };
+      const resultsPayload = (await resultsRes.json()) as { data?: Array<{ status?: string; passed?: number; failed?: number; startedAt?: string; id?: string }> };
       const stats = statsPayload.data || {};
       const data = {
         schedule: schedulePayload.schedule,
@@ -1978,7 +1991,7 @@ testsCmd
 
       if (data.recentRuns && data.recentRuns.length > 0) {
         writeLine(chalk.bold("\n📋 Recent Runs (Last 5)\n"));
-        data.recentRuns.forEach((run: any, i: number) => {
+        data.recentRuns.forEach((run, i: number) => {
           const status = run.status === "passed" ? chalk.green("✓") : chalk.red("✗");
           writeLine(`  ${i + 1}. ${status} (${run.passed}✓ / ${run.failed}✗) @ ${run.startedAt}`);
         });
@@ -2044,7 +2057,7 @@ testsCmd
       
       if (!response.ok) throw new Error("Failed to fetch results");
       
-      const data = (await response.json()) as { data?: any[] };
+      const data = (await response.json()) as { data?: Array<WorkflowRunRecord> };
       writeLine(chalk.bold(`\n🧪 Recent Test Runs (Last ${limit})\n`));
 
       const runs = data.data || [];
@@ -2052,7 +2065,7 @@ testsCmd
       if (runs.length === 0) {
         writeLine(chalk.dim("No test runs found"));
       } else {
-        runs.forEach((run: any, i: number) => {
+        runs.forEach((run, i: number) => {
           const status = run.status === "passed" ? chalk.green("✓") : chalk.red("✗");
           const duration = run.duration || "N/A";
           writeLine(`${i + 1}. ${status} ID: ${chalk.cyan(run.id)} | ${run.passed}✓ ${run.failed}✗ | ${duration}`);

@@ -31,5 +31,6 @@
     "Sikertelen training futás nem ír felül meglévő modelleket",
     "Artifact, config és run metadata verziózottan elmenthető",
     "A trainer futás beépül a scheduled task és observability rétegbe"
-  ]
+  ],
+  "group": "brunella"
 }

@@ -30,5 +30,6 @@
     "Approve után a függő végrehajtás folytatható ugyanazzal a kontextussal",
     "Reject vagy timeout után a rendszer nem hajt végre veszélyes akciót",
     "Az approval flow auditálható és visszajátszható"
-  ]
+  ],
+  "group": "brunella"
 }

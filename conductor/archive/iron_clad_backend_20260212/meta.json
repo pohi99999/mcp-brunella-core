@@ -8,9 +8,17 @@
   "updated": "2026-02-17T14:30:00Z",
   "completed": "2026-02-17T14:30:00Z",
   "assignee": "DeveloperAgent",
-  "tags": ["python", "fastapi", "litellm", "vllm", "langgraph", "backend"],
+  "tags": [
+    "python",
+    "fastapi",
+    "litellm",
+    "vllm",
+    "langgraph",
+    "backend"
+  ],
   "estimatedHours": 16,
   "description": "Egységes Python AI backend - FastAPI + LiteLLM Gateway + vLLM inference + LangGraph orchestration + OpenInterpreter. IMPLEMENTED: myai/server.py",
   "spec_status": "approved",
-  "implementation": "myai/server.py - LIVE"
+  "implementation": "myai/server.py - LIVE",
+  "group": "other"
 }

@@ -22,11 +22,26 @@
   "sdlc": {
     "enabled": true,
     "phases": {
-      "architect": { "status": "completed", "completedAt": "2026-04-06" },
-      "devops": { "status": "completed", "completedAt": "2026-04-06" },
-      "coder": { "status": "completed", "completedAt": "2026-04-06" },
-      "qa": { "status": "completed", "completedAt": "2026-04-06" },
-      "reviewer": { "status": "completed", "completedAt": "2026-04-06" }
+      "architect": {
+        "status": "completed",
+        "completedAt": "2026-04-06"
+      },
+      "devops": {
+        "status": "completed",
+        "completedAt": "2026-04-06"
+      },
+      "coder": {
+        "status": "completed",
+        "completedAt": "2026-04-06"
+      },
+      "qa": {
+        "status": "completed",
+        "completedAt": "2026-04-06"
+      },
+      "reviewer": {
+        "status": "completed",
+        "completedAt": "2026-04-06"
+      }
     }
   },
   "deliverables": [
@@ -44,5 +59,6 @@
     "test/guardrails/outputGuard.test.ts",
     "test/orchestratorReact.test.ts",
     "test/golden-dataset-tools.vitest.ts"
-  ]
+  ],
+  "group": "brunella"
 }

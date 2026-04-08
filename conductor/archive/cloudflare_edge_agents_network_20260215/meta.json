@@ -16,9 +16,21 @@
       "status": "completed",
       "estimatedDays": 7,
       "subphases": [
-        { "id": "1A", "name": "Cloudflare Asset Audit", "status": "completed" },
-        { "id": "1B", "name": "Schema Design (D1 + R1)", "status": "completed" },
-        { "id": "1C", "name": "GitHub Actions CI/CD", "status": "completed" }
+        {
+          "id": "1A",
+          "name": "Cloudflare Asset Audit",
+          "status": "completed"
+        },
+        {
+          "id": "1B",
+          "name": "Schema Design (D1 + R1)",
+          "status": "completed"
+        },
+        {
+          "id": "1C",
+          "name": "GitHub Actions CI/CD",
+          "status": "completed"
+        }
       ]
     },
     {
@@ -27,11 +39,31 @@
       "status": "completed",
       "estimatedDays": 10,
       "subphases": [
-        { "id": "2A", "name": "Research Agent Worker", "status": "completed" },
-        { "id": "2B", "name": "Grant Monitor Worker", "status": "completed" },
-        { "id": "2C", "name": "Data Harvester Worker", "status": "completed" },
-        { "id": "2D", "name": "Data Extractor Worker", "status": "completed" },
-        { "id": "2E", "name": "Builder Agent Worker", "status": "completed" }
+        {
+          "id": "2A",
+          "name": "Research Agent Worker",
+          "status": "completed"
+        },
+        {
+          "id": "2B",
+          "name": "Grant Monitor Worker",
+          "status": "completed"
+        },
+        {
+          "id": "2C",
+          "name": "Data Harvester Worker",
+          "status": "completed"
+        },
+        {
+          "id": "2D",
+          "name": "Data Extractor Worker",
+          "status": "completed"
+        },
+        {
+          "id": "2E",
+          "name": "Builder Agent Worker",
+          "status": "completed"
+        }
       ]
     },
     {
@@ -40,8 +72,16 @@
       "status": "completed",
       "estimatedDays": 7,
       "subphases": [
-        { "id": "3A", "name": "Task Orchestrator Worker", "status": "completed" },
-        { "id": "3B", "name": "Dashboard Integration", "status": "completed" }
+        {
+          "id": "3A",
+          "name": "Task Orchestrator Worker",
+          "status": "completed"
+        },
+        {
+          "id": "3B",
+          "name": "Dashboard Integration",
+          "status": "completed"
+        }
       ]
     },
     {
@@ -50,9 +90,21 @@
       "status": "completed",
       "estimatedDays": 7,
       "subphases": [
-        { "id": "4A", "name": "Load Testing", "status": "completed" },
-        { "id": "4B", "name": "Cost Optimization", "status": "completed" },
-        { "id": "4C", "name": "E2E Testing", "status": "completed" }
+        {
+          "id": "4A",
+          "name": "Load Testing",
+          "status": "completed"
+        },
+        {
+          "id": "4B",
+          "name": "Cost Optimization",
+          "status": "completed"
+        },
+        {
+          "id": "4C",
+          "name": "E2E Testing",
+          "status": "completed"
+        }
       ]
     },
     {
@@ -60,10 +112,26 @@
       "name": "Production Deployment",
       "status": "completed",
       "subphases": [
-        { "id": "5.1", "name": "Worker Deployment", "status": "completed" },
-        { "id": "5.2", "name": "Monitoring & Dashboards", "status": "completed" },
-        { "id": "5.3", "name": "Alerting", "status": "completed" },
-        { "id": "5.4", "name": "Documentation", "status": "completed" }
+        {
+          "id": "5.1",
+          "name": "Worker Deployment",
+          "status": "completed"
+        },
+        {
+          "id": "5.2",
+          "name": "Monitoring & Dashboards",
+          "status": "completed"
+        },
+        {
+          "id": "5.3",
+          "name": "Alerting",
+          "status": "completed"
+        },
+        {
+          "id": "5.4",
+          "name": "Documentation",
+          "status": "completed"
+        }
       ]
     },
     {
@@ -71,11 +139,31 @@
       "name": "Final Testing & Launch",
       "status": "completed",
       "subphases": [
-        { "id": "6.1", "name": "Load Testing (10k pipelines)", "status": "completed" },
-        { "id": "6.2", "name": "Disaster Recovery Drill", "status": "completed" },
-        { "id": "6.3", "name": "Security Audit", "status": "completed" },
-        { "id": "6.4", "name": "Go-Live Checklist", "status": "completed" },
-        { "id": "6.5", "name": "Launch Communication", "status": "completed" }
+        {
+          "id": "6.1",
+          "name": "Load Testing (10k pipelines)",
+          "status": "completed"
+        },
+        {
+          "id": "6.2",
+          "name": "Disaster Recovery Drill",
+          "status": "completed"
+        },
+        {
+          "id": "6.3",
+          "name": "Security Audit",
+          "status": "completed"
+        },
+        {
+          "id": "6.4",
+          "name": "Go-Live Checklist",
+          "status": "completed"
+        },
+        {
+          "id": "6.5",
+          "name": "Launch Communication",
+          "status": "completed"
+        }
       ]
     }
   ],
@@ -109,5 +197,6 @@
     "ai-agents",
     "orchestration",
     "distributed-systems"
-  ]
+  ],
+  "group": "brunella"
 }

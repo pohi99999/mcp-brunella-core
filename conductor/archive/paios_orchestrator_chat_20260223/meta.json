@@ -59,5 +59,6 @@
     "Socket.IO real-time visszajelzés a dashboardra",
     "Teljesen tesztelt (unit + integration)",
     "npm run build && npm test → 0 hiba"
-  ]
+  ],
+  "group": "other"
 }
