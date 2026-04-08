@@ -1,9 +1,15 @@
 # LiteLLM Proxy Configuration for Brunella AI System
 # Version: 1.0
-# Last Updated: 2026-02-24
+# Last Updated: 2026-04-09
 
 model_list:
   # === GitHub Models (Free for GitHub Pro+ users) ===
+  - model_name: gpt-5-mini
+    litellm_params:
+      model: github/gpt-5-mini
+      api_base: https://models.inference.ai.azure.com
+      api_key: os.environ/GITHUB_PAT
+
   - model_name: gpt-4o
     litellm_params:
       model: github/gpt-4o
