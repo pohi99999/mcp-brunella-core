@@ -8,6 +8,26 @@
 
 ## 📋 LEGUTÓBBI MUNKAMENET
 
+### 2026-04-09 00:08 - Viktoria brand voice foundation
+
+**Feladat:** A VIKTORIAVARGA brand voice TOML agent, registry entry, fókuszteszt és a kapcsolódó conductor track scaffoldok befejezése.
+
+**Érintett fájlok:** `myai/agents/ViktoriaBrandVoice.toml`, `src/agents/registry.json`, `test/viktoriaBrandVoiceAgent.test.ts`, `conductor/tracks/viktoria_brand_voice_20260408/{meta.json,plan.md,spec.md}`, `conductor/tracks/viktoria_social_concierge_20260408/{meta.json,plan.md,spec.md}`, `conductor/tracks/viktoria_shopping_assistant_20260408/{meta.json,plan.md,spec.md}`, `conductor/tracks/viktoria_phygital_pipeline_20260408/{meta.json,plan.md,spec.md}`, `conductor/tracks/viktoria_brand_monitor_20260408/{meta.json,plan.md,spec.md}`, `conductor/tracks.md`, `conductor/project_state.json`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A DynamicAgent konfiguráció és a kapcsolódó teszt zöld; a TOML már indexelve van a meglévő RAG store-ba, és a build is sikeresen lefutott.
+
+### 2026-04-08 18:56 - KKV masterplan status surface
+
+**Feladat:** A következő releváns trackhez read-only KKV masterplan status surface implementálása route, CLI, dashboard és közös snapshot helper formában.
+
+**Érintett fájlok:** `src/services/trackStatusSnapshot.ts`, `src/types/trackStatus.ts`, `src/server/tracksRoutes.ts`, `src/dashboard/lib/apiService.ts`, `src/dashboard/components/dashboard/KkvMasterplanStatusPanel.tsx`, `src/dashboard/lib/navigation.tsx`, `src/dashboard/components/dashboard/CopilotCommanderPanel.tsx`, `src/cli/conductorCommands.ts`, `test/conductorTracksMonitorRoute.test.ts`, `test/conductorCommands.test.ts`, `test/dashboard/components/KkvMasterplanStatusPanel.test.ts`, `conductor/tracks/kkv_business_automation_20260408/meta.json`, `conductor/project_state.json`, `conductor/tracks.md`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A status route tesztelhető `stateProvider` injektálással, a CLI `conductor status`/`state` ugyanazt a snapshotot írja ki, a dashboard panel a `getTrackStatusSnapshot()` API-t használja, és a build + célzott vitest csomag zöld volt.
+
 ### 2026-04-08 — Nova_Assiss helyi fejlesztési hub: teljes projekt-felmérés + kritikus javítások + GitHub push ✅
 
 **Feladat:** Nova_Assiss (github.com/pohi99999/Nova_Assiss) helyi fejlesztési környezet kiépítése brunella `.worktrees/` alatt; projekt állapotfelmérés; kritikus bugok javítása; tesztek írása; GitHub push.
