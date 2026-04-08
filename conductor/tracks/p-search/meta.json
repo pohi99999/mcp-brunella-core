@@ -1,0 +1,15 @@
+{
+  "id": "p-search_20260408",
+  "name": "p-search",
+  "title": "P-SEARCH: Local dev & integration",
+  "status": "active",
+  "priority": "high",
+  "created": "2026-04-08",
+  "updated": "2026-04-08",
+  "assignee": "pohi99999",
+  "progress": 0,
+  "tags": ["research","cloudflare","wrangler","agent"],
+  "sourceRepository": "https://github.com/pohi99999/P-SEARCH.git",
+  "sourcePath": ".worktrees/P-SEARCH/",
+  "phase": "discovery"
+}
