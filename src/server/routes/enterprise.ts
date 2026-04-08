@@ -15,6 +15,7 @@ import { Router, Request, Response } from 'express';
 import { agentManager } from '../../agents/AgentManager.js';
 import { EnterpriseOrchestratorAgent } from '../../agents/EnterpriseOrchestratorAgent.js';
 import { logInfo, logError } from '../../utils/logger.js';
+import { taskQueueManager } from '../../agents/taskQueue.js';
 
 interface Module {
   name: string;
@@ -247,14 +248,27 @@ export function createEnterpriseRouter(): Router {
 
   /**
    * GET /api/enterprise/history
-   * Get execution history (placeholder - integrate with task queue later)
+   * Get execution history from task queue
    */
   router.get('/history', async (req: Request, res: Response) => {
     try {
       logInfo('EnterpriseAPI', 'Fetching execution history');
 
-      // TODO: Integrate with TaskQueueManager for real history
-      const history: any[] = [];
+      // Get tasks from TaskQueueManager
+      const tasks = taskQueueManager.getTasks();
+      const history = tasks.map((task) => ({
+        id: task.id,
+        type: task.type,
+        description: task.description,
+        status: task.status,
+        priority: task.priority,
+        createdAt: task.createdAt,
+        startedAt: task.startedAt,
+        completedAt: task.completedAt,
+        result: task.result,
+        error: task.error,
+        retryCount: task.retryCount,
+      }));
 
       res.json({
         status: 'success',

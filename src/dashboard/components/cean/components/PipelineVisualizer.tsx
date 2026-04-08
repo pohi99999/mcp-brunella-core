@@ -260,9 +260,38 @@ export const PipelineVisualizer = ({
         <canvas
           ref={canvasRef}
           onClick={(e) => {
-            // TODO: Add click handling for node selection
+            if (!canvasRef.current) return;
+            const rect = canvasRef.current.getBoundingClientRect();
+            const clickX = e.clientX - rect.left;
+            const clickY = e.clientY - rect.top;
+
+            const clickedNode = pipeline.nodes.find((node) => {
+              const col = Math.floor(
+                (node.id.charCodeAt(0) + node.id.length) % 5,
+              );
+              const row = Math.floor(
+                (node.id.charCodeAt(0) + node.id.length * 2) % 4,
+              );
+              const x = 50 + col * 150;
+              const y = 50 + row * 80;
+              const nodeWidth = 120;
+              const nodeHeight = 60;
+
+              return (
+                clickX >= x &&
+                clickX <= x + nodeWidth &&
+                clickY >= y &&
+                clickY <= y + nodeHeight
+              );
+            });
+
+            if (clickedNode) {
+              setSelectedNode(clickedNode.id);
+            } else {
+              setSelectedNode(null);
+            }
           }}
-          className="block w-full"
+          className="block w-full cursor-pointer"
         />
       </div>
 

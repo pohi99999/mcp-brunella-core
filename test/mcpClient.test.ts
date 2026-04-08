@@ -14,6 +14,22 @@ vi.mock('../src/utils/prebuiltTools.js', () => ({
   hasPrebuiltTool: vi.fn((name: string) => name === 'stale_tool'),
 }));
 
+// Mock MCP SDK to prevent actual network attempts
+vi.mock('@modelcontextprotocol/sdk/client/index.js', () => ({
+  Client: vi.fn().mockImplementation(() => ({
+    connect: vi.fn().mockRejectedValue(new Error('Connection refused')),
+    listTools: vi.fn().mockResolvedValue({ tools: [] }),
+    close: vi.fn(),
+  })),
+}));
+
+vi.mock('@modelcontextprotocol/sdk/client/sse.js', () => ({
+  SSEClientTransport: vi.fn().mockImplementation(() => ({
+    on: vi.fn(),
+    close: vi.fn(),
+  })),
+}));
+
 describe('BrunellaClient self-managed fallback', () => {
   beforeEach(() => {
     vi.resetAllMocks();

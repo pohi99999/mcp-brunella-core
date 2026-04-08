@@ -55,6 +55,7 @@ async function executePython(task: WorkerTask): Promise<WorkerResult> {
     await fs.writeFile(scriptPath, task.code, 'utf-8');
 
     // Execute Python
+    const startCpu = process.cpuUsage();
     const startTime = Date.now();
     const { stdout, stderr } = await execAsync(`python "${scriptPath}"`, {
       timeout: task.timeout || 60000,
@@ -64,6 +65,10 @@ async function executePython(task: WorkerTask): Promise<WorkerResult> {
     });
 
     const duration = Date.now() - startTime;
+    const endCpu = process.cpuUsage(startCpu);
+    const cpu_percent = duration > 0 
+      ? Math.min(100, Math.round(((endCpu.user + endCpu.system) / (duration * 1000)) * 100))
+      : 0;
 
     return {
       success: true,
@@ -71,9 +76,9 @@ async function executePython(task: WorkerTask): Promise<WorkerResult> {
       error: stderr || undefined,
       exitCode: 0,
       stats: {
-        duration_ms:duration,
+        duration_ms: duration,
         memory_mb: process.memoryUsage().heapUsed / 1024 / 1024,
-        cpu_percent: 0 // TODO: Implement CPU tracking
+        cpu_percent: cpu_percent
       }
     };
   } catch (error: unknown) {
@@ -109,6 +114,7 @@ async function executeJavaScript(task: WorkerTask): Promise<WorkerResult> {
     await fs.writeFile(scriptPath, task.code, 'utf-8');
 
     // Execute Node.js
+    const startCpu = process.cpuUsage();
     const startTime = Date.now();
     const { stdout, stderr } = await execAsync(`node "${scriptPath}"`, {
       timeout: task.timeout || 60000,
@@ -118,6 +124,10 @@ async function executeJavaScript(task: WorkerTask): Promise<WorkerResult> {
     });
 
     const duration = Date.now() - startTime;
+    const endCpu = process.cpuUsage(startCpu);
+    const cpu_percent = duration > 0 
+      ? Math.min(100, Math.round(((endCpu.user + endCpu.system) / (duration * 1000)) * 100))
+      : 0;
 
     return {
       success: true,
@@ -127,7 +137,7 @@ async function executeJavaScript(task: WorkerTask): Promise<WorkerResult> {
       stats: {
         duration_ms: duration,
         memory_mb: process.memoryUsage().heapUsed / 1024 / 1024,
-        cpu_percent: 0
+        cpu_percent: cpu_percent
       }
     };
   } catch (error: unknown) {
@@ -163,6 +173,7 @@ async function executeTypeScript(task: WorkerTask): Promise<WorkerResult> {
     await fs.writeFile(scriptPath, task.code, 'utf-8');
 
     // Execute TypeScript via ts-node or tsx
+    const startCpu = process.cpuUsage();
     const startTime = Date.now();
     const { stdout, stderr } = await execAsync(`npx tsx "${scriptPath}"`, {
       timeout: task.timeout || 60000,
@@ -172,6 +183,10 @@ async function executeTypeScript(task: WorkerTask): Promise<WorkerResult> {
     });
 
     const duration = Date.now() - startTime;
+    const endCpu = process.cpuUsage(startCpu);
+    const cpu_percent = duration > 0 
+      ? Math.min(100, Math.round(((endCpu.user + endCpu.system) / (duration * 1000)) * 100))
+      : 0;
 
     return {
       success: true,
@@ -181,7 +196,7 @@ async function executeTypeScript(task: WorkerTask): Promise<WorkerResult> {
       stats: {
         duration_ms: duration,
         memory_mb: process.memoryUsage().heapUsed / 1024 / 1024,
-        cpu_percent: 0
+        cpu_percent: cpu_percent
       }
     };
   } catch (error: unknown) {

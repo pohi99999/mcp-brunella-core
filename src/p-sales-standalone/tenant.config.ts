@@ -7,5 +7,5 @@ export interface TenantConfig {
 export const defaultTenantConfig: TenantConfig = {
   tenantId: 'default',
   name: 'P-Sales',
-  authProvider: 'local', // TODO: switch to 'clerk' or 'auth0' in production
+  authProvider: 'local', // TODO [production-auth]: switch to 'clerk' or 'auth0' in production
 };

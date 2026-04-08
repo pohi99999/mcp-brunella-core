@@ -7,13 +7,14 @@
 - [x] Manuális javítás ott, ahol az automata nem boldogult (redundant Boolean casts, empty object interface, unused eslint-disable, empty catch blocks, @ts-nocheck elimánálás).
 
 ### 2. Fázis: TODO Audit
-- [ ] Teljes TODO lista exportálása.
-- [ ] Kategóriákba sorolás: "Törölhető", "Azonnal javítandó", "Track szükséges".
-- [ ] A megmaradó TODO-k kiegészítése Track ID-val.
+- [x] Teljes TODO lista exportálása (lásd `todos_audit.md`).
+- [x] Kategóriákba sorolás: "Törölhető", "Azonnal javítandó", "Track szükséges".
+- [x] A megmaradó TODO-k kiegészítése Track ID-val vagy kategóriával (példák: `[security_hardening]`, `[production-auth]`).
 
 ### 3. Fázis: Halott kód elimináció
-- [ ] Kikommentelt kódblokkok keresése és törlése.
-- [ ] Nem használt importok ellenőrzése.
+- [x] Az "Azonnal javítandó" TODO-k végrehajtása (CPU tracking, Logout handler, CheckRun logging).
+- [x] Kikommentelt, elavult kódblokkok törlése (pl. `evhunter.ts`, `accountingKbIngest.ts`).
+- [ ] Nem használt importok ellenőrzése (Linter futtatása utáni manuális kör).
 
 ### 4. Fázis: Verifikáció
 - [ ] `npm run build` és `npm test`.
