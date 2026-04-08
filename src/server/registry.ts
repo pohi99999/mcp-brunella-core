@@ -6,6 +6,8 @@ import { buildAgentRegistryGovernanceSnapshot } from "./agentRegistryGovernance.
 import { buildDocsConfigSotSnapshot } from "../tools/docsConfigSot.js";
 import { buildDocsUnifierReport } from "../tools/docUnifier.js";
 import { buildConfigGuardianReport } from "../tools/configGuardian.js";
+import { buildKkvPackResponse } from "../tools/kkvPack.js";
+import { crmCreateLeadHandler, crmCreateLeadTool } from "../tools/crm_create_lead.js";
 import {
   registerToolHandler,
   registerToolDefinition,
@@ -314,6 +316,7 @@ export async function registerAllTools(server: McpServer) {
       await import("../tools/githubModelsTool.js");
     const { registerGeminiTool } = await import("../tools/geminiTool.js");
     const { registerEvHunterTools } = await import("../tools/evHunterTool.js");
+    const { registerBrunellaPmStatusTool } = await import("../tools/brunellaPmStatus.js");
 
     registerWorkspaceTools(server);
     registerKnowledgeTools(server);
@@ -333,6 +336,7 @@ export async function registerAllTools(server: McpServer) {
     registerGithubModelsTool(server);
     registerGeminiTool(server);
     registerEvHunterTools(server);
+    registerBrunellaPmStatusTool(server);
 
     // AI Recommendation tool (Track: ai_recommendation_system_20260216)
     const { registerAiRecommendationTool } = await import("../tools/getAiRecommendation.js");
@@ -442,6 +446,40 @@ export async function registerAllTools(server: McpServer) {
       "Returns the combined docs/config health report.",
       {},
       docsConfigHealthHandler,
+    );
+
+    const kkvPackSnapshotHandler = async ({ pack }: { pack?: string }) => {
+      try {
+        const response = buildKkvPackResponse({ packId: pack });
+        return {
+          content: [
+            { type: "text" as const, text: JSON.stringify(response, null, 2) },
+          ],
+        };
+      } catch (error: unknown) {
+        const err = ensureError(error);
+        return {
+          isError: true,
+          content: [
+            { type: "text" as const, text: `KKV Pack Error: ${err.message}` },
+          ],
+        };
+      }
+    };
+    server.tool(
+      "kkv_pack_snapshot",
+      "Returns the KKV pack productization snapshot and brief.",
+      {
+        pack: z.string().optional(),
+      },
+      kkvPackSnapshotHandler,
+    );
+
+    server.tool(
+      crmCreateLeadTool.name,
+      crmCreateLeadTool.description,
+      crmCreateLeadTool.inputSchema,
+      crmCreateLeadHandler,
     );
 
     const agentDelegateHandler = async ({ agent_name, task }: any) => {
