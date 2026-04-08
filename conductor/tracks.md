@@ -1,6 +1,6 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-04-08T13:00:00.401Z
+**Utolso frissites:** 2026-04-08T14:00:00.449Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
@@ -128,12 +128,6 @@
   - **Updated:** 2026-04-06
   - Mappa: ./tracks/modular_state_refactor_20260404/
 
-- [x] **Technical Debt Cleanup — TODO konverzió és elavult kód elimináció** [MEDIUM]
-  - **ID:** `technical_debt_cleanup_20260404`
-  - **Progress:** 100%
-  - **Assignee:** Gemini
-  - **Updated:** 2026-04-07
-  - Mappa: ./tracks/technical_debt_cleanup_20260404/
 
 
 ### Egyéb (1)
