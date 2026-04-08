@@ -63,6 +63,9 @@ import { TelemetryPanel } from "@/components/dashboard/TelemetryPanel";
 import { MemoryPanel } from "@/components/dashboard/MemoryPanel";
 import { WorkflowPanel } from "@/components/dashboard/WorkflowPanel";
 import { AgentDiagnosticsPanel } from "@/components/dashboard/AgentDiagnosticsPanel";
+import { AgentRegistryHealthPanel } from "@/components/dashboard/AgentRegistryHealthPanel";
+import { DocsSotPanel } from "@/components/dashboard/DocsSotPanel";
+import { ConfigHealthPanel } from "@/components/dashboard/ConfigHealthPanel";
 import { AssistantBlueprintPanel } from "@/components/dashboard/AssistantBlueprintPanel";
 import SwarmPanel from "@/components/dashboard/SwarmPanel";
 import ToolDiscoveryPanel from "@/components/dashboard/ToolDiscoveryPanel";
@@ -176,6 +179,9 @@ export function initializeNavigation ()
     { id: "federation", label: "Federated MCP", icon: Globe, component: <FederationCenter /> },
     { id: "management", label: "Agent Roster", icon: Sparkles, component: <AgentManagementPanel /> },
     { id: "agent-diagnostics", label: "Agent Diagnostics", icon: Gauge, component: <AgentDiagnosticsPanel /> },
+    { id: "agent-registry-governance", label: "Registry Governance", icon: ClipboardList, component: <AgentRegistryHealthPanel /> },
+    { id: "docs-config-sot", label: "Docs / Config SOT", icon: FileText, component: <DocsSotPanel /> },
+    { id: "config-health", label: "Config Health", icon: Shield, component: <ConfigHealthPanel /> },
     { id: "decomposer", label: "Decompose", icon: Layers, component: <TaskDecomposerPanel /> },
     { id: "tracks", label: "Track generátor", icon: History, component: <TrackGenerator /> },
     { id: "conductor-monitor", label: "Trackek állapota", icon: ClipboardList, component: <ConductorTracksMonitor /> },
@@ -269,11 +275,11 @@ export function initializeNavigation ()
 
   // Register groups
   navigationRegistry.registerGroup( { title: "Core Systems", icon: Layers, items: ["dashboard", "neural-map", "system-arch", "studio", "vscode", "process-control", "service-control"] } );
-  navigationRegistry.registerGroup( { title: "AI & Agents", icon: Brain, items: ["chat", "paios", "copilot-orchestrator", "copilot-commander", "kernel-pipeline", "assistant-blueprint", "phoenix", "zero-prompt-notifications", "ephemeral-agents", "learning-loop", "federation", "management", "agent-diagnostics", "agent-factory", "decomposer", "incubator", "knowledge", "memory", "cognitive-memory", "user-preferences", "developer", "edge", "robotkez", "browser-copilot", "jules"] } );
+  navigationRegistry.registerGroup( { title: "AI & Agents", icon: Brain, items: ["chat", "paios", "copilot-orchestrator", "copilot-commander", "kernel-pipeline", "assistant-blueprint", "phoenix", "zero-prompt-notifications", "ephemeral-agents", "learning-loop", "federation", "management", "agent-diagnostics", "agent-registry-governance", "agent-factory", "decomposer", "incubator", "knowledge", "memory", "cognitive-memory", "user-preferences", "developer", "edge", "robotkez", "browser-copilot", "jules"] } );
   navigationRegistry.registerGroup( { title: "Enterprise", icon: Briefcase, items: ["enterprise-suite", "digital-hr", "grant-hunter", "law-detective", "property-visionary", "property-sales", "psales-intake", "psales-research", "psales-strategy", "enterprise-analytics", "intelligence-monitor"] } );
   navigationRegistry.registerGroup( { title: "Értékesítési Központ", icon: DollarSign, items: ["trojan-horse", "lead-monitor", "demo-factory", "showcase", "campaign-studio", "leads-master", "innovation-bridge", "invoice-sync", "bookkeeping", "finance-reconciliation", "kp-penztar", "lead-mining", "marketwatcher", "inventory"] } );
   navigationRegistry.registerGroup( { title: "Orchestration", icon: Rocket, items: ["cean", "cloudflare", "fleet_manager", "autonomy", "tasks", "workflow-engine", "swarm-panel", "tool-discovery", "tools-manager", "crawl4ai", "harvest-pipeline"] } );
-  navigationRegistry.registerGroup( { title: "Project Mgmt", icon: FileText, items: ["conductor-monitor", "tracks", "suggested-tasks", "spec-manager", "tests"] } );
+  navigationRegistry.registerGroup( { title: "Project Mgmt", icon: FileText, items: ["conductor-monitor", "tracks", "suggested-tasks", "spec-manager", "tests", "docs-config-sot", "config-health"] } );
   navigationRegistry.registerGroup( { title: "System", icon: Settings, items: ["python-workers", "files", "guardrails", "telemetry", "llm-observability", "security-panel", "chrome-acp", "settings", "n8n", "langflow", "remote-console", "admin-check", "trace-viewer", "log-viewer", "audit-log", "model-router", "scheduled-tasks", "vector-stats"] } );
 
   logInfo( "NavigationRegistry", "Navigation Registry Initialized." );

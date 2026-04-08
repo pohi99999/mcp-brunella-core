@@ -2,6 +2,10 @@ import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { logWarn } from "../utils/logger.js";
 import { wrapToolHandler } from "../core/toolRunCapture.js";
+import { buildAgentRegistryGovernanceSnapshot } from "./agentRegistryGovernance.js";
+import { buildDocsConfigSotSnapshot } from "../tools/docsConfigSot.js";
+import { buildDocsUnifierReport } from "../tools/docUnifier.js";
+import { buildConfigGuardianReport } from "../tools/configGuardian.js";
 import {
   registerToolHandler,
   registerToolDefinition,
@@ -363,6 +367,81 @@ export async function registerAllTools(server: McpServer) {
       "Lists all agent definitions.",
       {},
       agentRegistryHandler,
+    );
+
+    const agentRegistryGovernanceHandler = async () => {
+      const snapshot = await buildAgentRegistryGovernanceSnapshot();
+      return {
+        content: [
+          { type: "text" as const, text: JSON.stringify(snapshot, null, 2) },
+        ],
+      };
+    };
+    server.tool(
+      "agent_registry_audit",
+      "Returns the canonical read-only agent registry governance audit snapshot.",
+      {},
+      agentRegistryGovernanceHandler,
+    );
+
+    const agentRegistryRecommendationsHandler = async () => {
+      const snapshot = await buildAgentRegistryGovernanceSnapshot();
+      return {
+        content: [
+          {
+            type: "text" as const,
+            text: JSON.stringify(
+              {
+                checkedAt: snapshot.checkedAt,
+                recommendations: snapshot.recommendations,
+              },
+              null,
+              2,
+            ),
+          },
+        ],
+      };
+    };
+    server.tool(
+      "agent_registry_recommendations",
+      "Returns read-only agent registry governance recommendations.",
+      {},
+      agentRegistryRecommendationsHandler,
+    );
+
+    const docsConfigSnapshotHandler = async () => {
+      const snapshot = buildDocsConfigSotSnapshot();
+      return {
+        content: [
+          { type: "text" as const, text: JSON.stringify(snapshot, null, 2) },
+        ],
+      };
+    };
+    server.tool(
+      "docs_config_snapshot",
+      "Returns the canonical docs/config SOT snapshot.",
+      {},
+      docsConfigSnapshotHandler,
+    );
+
+    const docsConfigHealthHandler = async () => {
+      const snapshot = buildDocsConfigSotSnapshot();
+      const docs = buildDocsUnifierReport(snapshot);
+      const config = buildConfigGuardianReport(snapshot);
+      return {
+        content: [
+          {
+            type: "text" as const,
+            text: JSON.stringify({ snapshot, docs, config }, null, 2),
+          },
+        ],
+      };
+    };
+    server.tool(
+      "docs_config_health",
+      "Returns the combined docs/config health report.",
+      {},
+      docsConfigHealthHandler,
     );
 
     const agentDelegateHandler = async ({ agent_name, task }: any) => {

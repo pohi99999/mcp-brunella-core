@@ -15,6 +15,8 @@
     "sync:bootstrap": "tsx scripts/sync_bootstrap.ts",
     "sync:doc-stats": "tsx scripts/sync_doc_stats.ts",
     "sync:doc-stats:check": "tsx scripts/sync_doc_stats.ts --dry-run --fail-on-drift",
+    "sync:docs": "tsx scripts/sync_docs.ts",
+    "sync:docs:check": "tsx scripts/sync_docs.ts --dry-run --fail-on-drift",
     "agent:health": "tsx scripts/agent_health_check.ts",
     "mcp:sync": "node scripts/sync_mcp_config.js",
     "mcp:validate": "node scripts/validate_mcp_config.js",

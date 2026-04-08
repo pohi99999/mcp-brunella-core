@@ -66,6 +66,7 @@ export function createV1Router(): Router {
   router.use("/tasks", lazy(() => import("./tasks.js"), "createTaskRoutes"));
   router.use("/tools", lazy(() => import("./tools.js"), "createToolRoutes"));
   router.use("/debug", lazy(() => import("./tools.js"), "createDebugRoutes"));
+  router.use("/docs-config", lazy(() => import("./docsConfig.js"), "createDocsConfigRoutes"));
   router.use("/chat", lazy(() => import("./chat.js"), "createChatRoutes"));
   router.use("/anythingllm", lazy(() => import("./chat.js"), "createAnythingLLMRoutes"));
   router.use("/incubator", lazy(() => import("./external.js"), "createIncubatorRoutes"));
