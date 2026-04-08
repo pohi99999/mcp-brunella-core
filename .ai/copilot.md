@@ -6,6 +6,26 @@ User requested that the Copilot CLI automatically connect to a local Brunella MC
 
 ## History
 
+### 2026-04-08 15:03 - Agent registry governance archive finalization
+
+**Feladat:** Az Agent Registry Governance track lezárása, a dashboard card teszt selectorának javítása, a track archívumba mozgatása és a conductor indexek újraszinkronizálása.
+
+**Érintett fájlok:** `src/dashboard/components/dashboard/AgentRegistryCard.test.tsx`, `conductor/tracks/agent_registry_governance_20260408/meta.json`, `conductor/archive/agent_registry_governance_20260408/{meta.json,plan.md,spec.md}`, `conductor/project_state.json`, `conductor/tracks.md`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A summary chip teszt most szűkebb selectorral fut, a track `archived` státuszra állt, és a `node build/cli.js conductor rescan` frissítette a generált conductor indexeket.
+
+### 2026-04-08 14:10 - Brunella optimization tracks scaffolding
+
+**Feladat:** A Brunella Agent System rendszer-elemzési dokumentuma alapján 5 új active conductor track létrehozása, a track scaffoldok elkészítése, majd a conductor rescan futtatása.
+
+**Erintett fajlok:** `conductor/tracks/agent_registry_governance_20260408/{meta.json,plan.md,spec.md}`, `conductor/tracks/docs_config_sot_unification_20260408/{meta.json,plan.md,spec.md}`, `conductor/tracks/phoenix_data_flywheel_observability_20260408/{meta.json,plan.md,spec.md}`, `conductor/tracks/mission_templates_test_cadence_devex_20260408/{meta.json,plan.md,spec.md}`, `conductor/tracks/kkv_pack_productization_20260408/{meta.json,plan.md,spec.md}`, `conductor/tracks.md`, `conductor/project_state.json`, `C:\Users\pohi9\.copilot\session-state\188c43f9-c00b-4b5b-abf5-42c07308d4c9\plan.md`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** Az új trackek most active státuszban szerepelnek a conductor indexben; az asszisztens javaslata alapján a KKV pack track alacsonyabb prioritású follow-up maradt, de user-kérésre active-ként lett felvéve. Validáció: `npx tsx src/cli.ts conductor rescan`.
+
 ### 2026-04-08 01:24 - KKV roadmap docs + Copilot sync
 
 **Feladat:** A KKV uzleti automatizalasi masterplan, a conductor dokumentacio es a Copilot session log frissitese, majd a teljes munkafolyamat commit/push elokeszitese.
@@ -2155,3 +2175,18 @@ pm run test:dashboard → 200 passed | 0 failed | 20 test file ✅**
 **Státusz:** ✅ Befejezve
 
 **Megjegyzés:** A szerver `uv run --project workspace-mcp-server workspace-mcp-server --workspace-root ${WORKSPACE_ROOT}` paranccsal fut és `autoStart: true`, ezért a backend indulásakor — így a `dashboard.bat` útvonalon is — automatikusan indul, ha a `uv` elérhető a gépen.
+
+### 2026-04-08 04:05 - Freelancer terjeszkedés track
+
+**Feladat:** A Pohánka & Társa terjeszkedési tervéhez magyar fókuszú freelancer platformtérképet, profil sablont és Brunella-támogatott terjesztési workflow-kat létrehozni, majd ezt conductor trackként rögzíteni.
+
+**Érintett fájlok:** `F:\\mcp-brunella-core\\.worktrees\\terjeszkedés\\terv.md`, `conductor/tracks/pohanka_freelancer_terjeszkedes_20260408/{meta.json,plan.md,spec.md}`, `conductor/tracks.md`, `conductor/project_state.json`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A track aktívra állt, a magyar platformprioritás (LinkedIn, Malt, Upwork, helyi közösségek) és a Brunella belső lead/content/outreach támogatása rögzítve lett.
+### 2026-04-08 18:15 - Docs/config SOT unification
+**Feladat:** A dokumentáció/config single source of truth réteg, a route-ok, CLI, dashboard, MCP toolok és a unified sync script bekötése.
+**Érintett fájlok:** src/tools/docsConfigSot.ts, src/tools/docUnifier.ts, src/tools/configGuardian.ts, src/server/routes/docsConfig.ts, src/server/routes/index.ts, src/server/registry.ts, src/cli/docsConfigCommands.ts, src/cli.ts, src/dashboard/components/dashboard/DocsSotPanel.tsx, src/dashboard/components/dashboard/ConfigHealthPanel.tsx, src/dashboard/lib/apiService.ts, src/dashboard/lib/navigation.tsx, scripts/sync_docs.ts, scripts/update_master_context.ts, package.json, test/docsConfigSot.test.ts, test/docUnifier.test.ts, test/configGuardian.test.ts, test/docsConfigFixture.ts
+**Státusz:** ✅ Befejezve
+**Megjegyzés:** Build zöld, docs/config gyors tesztek zöldek, a következő track a fennmaradó roadmap szerinti következő epic lehet.

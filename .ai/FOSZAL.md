@@ -1,6 +1,6 @@
 # FŐSZÁL - Egyesített Fejlesztési Napló
 
-**Generálva:** 2026-04-08 03:27
+**Generálva:** 2026-04-08 18:15
 **Script:** `scripts/sync_foszal.py`
 
 ---
@@ -29,6 +29,25 @@ start-full.bat
 ## Összesített Napló (Időrendben)
 
 ### 2026-04-08
+
+#### 18:15 - [Copilot] Docs/config SOT unification
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** src/tools/docsConfigSot.ts, src/tools/docUnifier.ts, src/tools/configGuardian.ts, src/server/routes/docsConfig.ts, src/server/routes/index.ts, src/server/registry.ts, src/cli/docsConfigCommands.ts, src/cli.ts, src/dashboard/components/dashboard/DocsSotPanel.tsx, src/dashboard/components/dashboard/ConfigHealthPanel.tsx, src/dashboard/lib/apiService.ts, src/dashboard/lib/navigation.tsx, scripts/sync_docs.ts, scripts/update_master_context.ts, package.json, test/docsConfigSot.test.ts, test/docUnifier.test.ts, test/configGuardian.test.ts, test/docsConfigFixture.ts
+
+#### 15:03 - [Copilot] Agent registry governance archive finalization
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `src/dashboard/components/dashboard/AgentRegistryCard.test.tsx`, `conductor/tracks/agent_registry_governance_20260408/meta.json`, `conductor/archive/agent_registry_governance_20260408/{meta.json,plan.md,spec.md}`, `conductor/project_state.json`, `conductor/tracks.md`
+
+#### 14:10 - [Copilot] Brunella optimization tracks scaffolding
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+
+#### 04:05 - [Copilot] Freelancer terjeszkedés track
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `F:\\mcp-brunella-core\\.worktrees\\terjeszkedés\\terv.md`, `conductor/tracks/pohanka_freelancer_terjeszkedes_20260408/{meta.json,plan.md,spec.md}`, `conductor/tracks.md`, `conductor/project_state.json`
 
 #### 02:30 - [Gemini] Toura Helyi Fejlesztési Hub Beállítása
 - **Agent:** Gemini
@@ -1019,7 +1038,7 @@ start-full.bat
 | Claude | 85 | 2026-03-31 |
 | Gemini | 1 | 2026-04-08 |
 | Cursor | 0 | N/A |
-| Copilot | 88 | 2026-04-08 |
+| Copilot | 92 | 2026-04-08 |
 
 ---
 
