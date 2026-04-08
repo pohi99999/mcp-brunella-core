@@ -153,7 +153,25 @@ async function handleCheckRun(payload: unknown, res: Response): Promise<void> {
 
     logInfo('GitHubWebhook', `Check run failure: ${checkRun.name} (ID: ${checkRun.id})`);
 
-    // TODO: More granular error tracking
+    // Granular error tracking
+    if (checkRun.output) {
+      logInfo('GitHubWebhook', `Failure Detail: ${checkRun.output.title}`);
+      if (checkRun.output.summary) {
+        logDebug('GitHubWebhook', `Failure Summary: ${checkRun.output.summary}`);
+      }
+      if (checkRun.output.annotations_count > 0) {
+        logInfo('GitHubWebhook', `Found ${checkRun.output.annotations_count} error annotations in check run`);
+      }
+    }
+
+    // Identify failure category
+    const name = checkRun.name.toLowerCase();
+    let category = 'unknown';
+    if (name.includes('lint')) category = 'lint';
+    else if (name.includes('test')) category = 'test';
+    else if (name.includes('build')) category = 'build';
+    
+    logInfo('GitHubWebhook', `Categorized failure: ${category}`);
 
     res.status(202).json({
       status: 'processing',

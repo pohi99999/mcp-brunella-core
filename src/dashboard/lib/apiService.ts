@@ -872,6 +872,287 @@ export async function getAgentDiagnostics(): Promise<AgentDiagnosticsResponse> {
   return safeJson<AgentDiagnosticsResponse>(response);
 }
 
+export interface AgentRegistryGovernanceSnapshot {
+  checkedAt: string;
+  registry: Registry;
+  diagnostics: AgentDiagnosticsResponse;
+  governanceDocuments: Array<{
+    name: string;
+    path: string;
+    present: boolean;
+    characters: number;
+  }>;
+  audit: {
+    checkedAt: string;
+    summary: {
+      totalAgents: number;
+      activeAgents: number;
+      loadedAgents: number;
+      loadErrorCount: number;
+      duplicateNameCount: number;
+      duplicateCapabilityGroupCount: number;
+      staleAgentCount: number;
+      undocumentedAgentCount: number;
+      warningCount: number;
+      score: number;
+      overallStatus: "healthy" | "attention" | "critical";
+    };
+    duplicateNames: Array<{
+      name: string;
+      count: number;
+      agents: string[];
+    }>;
+    duplicateCapabilityOverlapGroups: Array<{
+      id: string;
+      agents: string[];
+      sharedCapabilities: string[];
+      overlapScore: number;
+      pairCount: number;
+    }>;
+    staleAgents: Array<{
+      name: string;
+      usageStatus: "active" | "stale" | "never-used" | "unknown";
+      lastTaskAt?: string;
+      lastTask?: string;
+      successCount: number;
+      errorCount: number;
+      daysSinceLastTask?: number;
+      reason: string;
+    }>;
+    undocumentedAgents: Array<{
+      name: string;
+      title?: string;
+      mentions: string[];
+    }>;
+    loadErrors: Array<{
+      name: string;
+      module: string;
+      configuredClass: string;
+      loadStatus: "pending" | "loaded" | "error" | "skipped";
+      error: string;
+    }>;
+    perAgentHealth: Array<{
+      name: string;
+      title?: string;
+      category?: string;
+      health: "healthy" | "warning" | "critical" | "unknown";
+      score: number;
+      loadStatus: "pending" | "loaded" | "error" | "skipped";
+      runtimeStatus: "idle" | "working" | "error" | "unloaded";
+      usageStatus: "active" | "stale" | "never-used" | "unknown";
+      documented: boolean;
+      duplicateName: boolean;
+      duplicateCapabilityGroupIds: string[];
+      issues: string[];
+      lastTaskAt?: string;
+      lastTask?: string;
+      successCount: number;
+      errorCount: number;
+    }>;
+    documentCoverage: {
+      documents: Array<{
+        name: string;
+        path?: string;
+        present: boolean;
+        agentMentions: number;
+      }>;
+      agentsReferenced: number;
+      agentsMissingReferences: string[];
+      coveragePercent: number;
+    };
+    warnings: string[];
+  };
+  recommendations: Array<{
+    id: string;
+    type: "merge" | "archive" | "document" | "fix" | "consolidate";
+    priority: "critical" | "high" | "medium" | "low";
+    title: string;
+    rationale: string;
+    targets: string[];
+    evidence: string[];
+  }>;
+}
+
+export async function getAgentRegistryGovernanceSnapshot(): Promise<AgentRegistryGovernanceSnapshot> {
+  const response = await fetchWithTimeout(`${API_BASE}/api/agents/registry-governance`);
+  if (!response.ok) throw new Error(`Agent registry governance: HTTP ${response.status}`);
+  return safeJson<AgentRegistryGovernanceSnapshot>(response);
+}
+
+export interface DocsConfigSurfaceSummary {
+  name: string;
+  path: string;
+  kind: "doc" | "config" | "script";
+  required: boolean;
+  present: boolean;
+  characters: number;
+  lines: number;
+  matchedMarkers: string[];
+  expectedMarkers: string[];
+}
+
+export interface DocsConfigKeyCoverage {
+  key: string;
+  sources: string[];
+  inDocs: string[];
+  inExample: boolean;
+  inYaml: boolean;
+}
+
+export interface DocsConfigSotSnapshot {
+  checkedAt: string;
+  rootDir: string;
+  documents: {
+    surfaces: DocsConfigSurfaceSummary[];
+    requiredCount: number;
+    presentRequiredCount: number;
+    managedCount: number;
+    managedHealthyCount: number;
+    coveragePercent: number;
+    managedCoveragePercent: number;
+    missingRequired: string[];
+    missingManagedMarkers: string[];
+  };
+  config: {
+    surfaces: DocsConfigSurfaceSummary[];
+    runtimeKeys: string[];
+    exampleKeys: string[];
+    yamlBindings: string[];
+    keyCoverage: DocsConfigKeyCoverage[];
+    docsKeyCoveragePercent: number;
+    exampleKeyCoveragePercent: number;
+    missingFromDocs: DocsConfigKeyCoverage[];
+    missingFromExample: DocsConfigKeyCoverage[];
+    yamlBindingsMissingFromRuntime: string[];
+  };
+  summary: {
+    score: number;
+    status: "healthy" | "warning" | "critical";
+    docsStatus: "healthy" | "warning" | "critical";
+    configStatus: "healthy" | "warning" | "critical";
+  };
+  warnings: string[];
+}
+
+export interface DocsUnifierFinding {
+  id: string;
+  severity: "low" | "medium" | "high" | "critical";
+  message: string;
+  surfaces: string[];
+}
+
+export interface DocsUnifierRecommendation {
+  id: string;
+  priority: "low" | "medium" | "high" | "critical";
+  title: string;
+  rationale: string;
+  actions: string[];
+}
+
+export interface DocsUnifierReport {
+  checkedAt: string;
+  summary: {
+    requiredPresent: number;
+    requiredTotal: number;
+    managedHealthy: number;
+    managedTotal: number;
+    coveragePercent: number;
+    managedCoveragePercent: number;
+    score: number;
+    status: "healthy" | "warning" | "critical";
+  };
+  canonicalDocs: DocsConfigSurfaceSummary[];
+  managedDocs: DocsConfigSurfaceSummary[];
+  scripts: DocsConfigSurfaceSummary[];
+  missingCanonical: string[];
+  missingManagedMarkers: string[];
+  findings: DocsUnifierFinding[];
+  recommendations: DocsUnifierRecommendation[];
+}
+
+export interface ConfigGuardianFinding {
+  id: string;
+  severity: "low" | "medium" | "high" | "critical";
+  message: string;
+  keys: string[];
+}
+
+export interface ConfigGuardianRecommendation {
+  id: string;
+  priority: "low" | "medium" | "high" | "critical";
+  title: string;
+  rationale: string;
+  actions: string[];
+}
+
+export interface ConfigGuardianReport {
+  checkedAt: string;
+  summary: {
+    runtimeKeys: number;
+    docsCoveragePercent: number;
+    exampleCoveragePercent: number;
+    score: number;
+    status: "healthy" | "warning" | "critical";
+  };
+  missingFromDocs: DocsConfigKeyCoverage[];
+  missingFromExample: DocsConfigKeyCoverage[];
+  yamlBindingsMissingFromRuntime: string[];
+  findings: ConfigGuardianFinding[];
+  recommendations: ConfigGuardianRecommendation[];
+}
+
+export interface DocsConfigHealthResponse {
+  snapshot: DocsConfigSotSnapshot;
+  docs: DocsUnifierReport;
+  config: ConfigGuardianReport;
+}
+
+export interface DocsConfigMarkdownResponse {
+  snapshot: string;
+  docs: string;
+  config: string;
+}
+
+export async function getDocsConfigSnapshot(): Promise<DocsConfigSotSnapshot> {
+  const response = await fetchWithTimeout(`${API_BASE}/api/docs-config/snapshot`);
+  if (!response.ok) {
+    throw new Error(`Docs/config snapshot: HTTP ${response.status}`);
+  }
+  return safeJson<DocsConfigSotSnapshot>(response);
+}
+
+export async function getDocsConfigHealth(): Promise<DocsConfigHealthResponse> {
+  const response = await fetchWithTimeout(`${API_BASE}/api/docs-config/health`);
+  if (!response.ok) {
+    throw new Error(`Docs/config health: HTTP ${response.status}`);
+  }
+  return safeJson<DocsConfigHealthResponse>(response);
+}
+
+export async function getDocsUnifierReport(): Promise<DocsUnifierReport> {
+  const response = await fetchWithTimeout(`${API_BASE}/api/docs-config/docs`);
+  if (!response.ok) {
+    throw new Error(`Docs unifier: HTTP ${response.status}`);
+  }
+  return safeJson<DocsUnifierReport>(response);
+}
+
+export async function getConfigGuardianReport(): Promise<ConfigGuardianReport> {
+  const response = await fetchWithTimeout(`${API_BASE}/api/docs-config/config`);
+  if (!response.ok) {
+    throw new Error(`Config guardian: HTTP ${response.status}`);
+  }
+  return safeJson<ConfigGuardianReport>(response);
+}
+
+export async function getDocsConfigMarkdown(): Promise<DocsConfigMarkdownResponse> {
+  const response = await fetchWithTimeout(`${API_BASE}/api/docs-config/markdown`);
+  if (!response.ok) {
+    throw new Error(`Docs/config markdown: HTTP ${response.status}`);
+  }
+  return safeJson<DocsConfigMarkdownResponse>(response);
+}
+
 export interface TasksResponse {
   tasks: TaskItem[];
   total: number;

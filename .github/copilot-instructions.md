@@ -150,6 +150,7 @@ Twenty-plus domain-specific agents live in `.github/agents/*.agent.md`. Invoke t
 ## Copilot-specific reminders
 
 - Prefer extending the existing architecture over bypassing it: use route lazy-loading, `BaseAgent`, navigation registration, and `server.tool()` registration instead of ad-hoc side paths.
+- `BrunellaProjectManagerAgent` + `brunella-pm-status` is the read-only PM summary surface; use it for track/FOSZAL/RAG overviews instead of triggering conductor sync.
 - Keep AI-session docs aligned with actual behavior. The current coordination flow in `README.md`, `CLAUDE.md`, and `.ai/FOSZAL.md` assumes sync-first startup, per-agent logs, and `sync_foszal.py` after meaningful work.
 
 ## Önellenőrzési protokoll
