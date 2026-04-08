@@ -2,11 +2,89 @@
 
 **Agent:** Claude Code (Anthropic)
 **Fájl:** `.ai/claude.md`
-**Utolsó frissítés:** 2026-03-27
+**Utolsó frissítés:** 2026-04-08
 
 ---
 
 ## 📋 LEGUTÓBBI MUNKAMENET
+
+### 2026-04-08 — Nova_Assiss helyi fejlesztési hub: teljes projekt-felmérés + kritikus javítások + GitHub push ✅
+
+**Feladat:** Nova_Assiss (github.com/pohi99999/Nova_Assiss) helyi fejlesztési környezet kiépítése brunella `.worktrees/` alatt; projekt állapotfelmérés; kritikus bugok javítása; tesztek írása; GitHub push.
+
+**Elvégzett feladatok:**
+
+1. **Fejlesztői környezet beállítása:**
+   - `.worktrees/Nova_Assiss/` — külső repo klónozva (gitignored brunella-ban)
+   - `.env` és `agent/.env` API kulcsok bemásolva (`G:\Brunella\.000_PROJEKTEK\005_Chat_Agent_Nova\...\.env`-ből)
+   - `npm install` lefuttatva (968 csomag)
+   - `.adal/skills/nova-feature-dev/SKILL.md` skill létrehozva Nova fejlesztési workflow-hoz
+   - `conductor/tracks/nova_assiss_local_dev_20260408/` hub track + meta.json + plan.md létrehozva
+
+2. **Kritikus bugok javítva:**
+   - **pdf-parse import bug** (`/api/ingest`): `import pdfParse from 'pdf-parse'` → `from 'pdf-parse/lib/pdf-parse.js'` (modul-szintű ENOENT hiba javítva)
+   - **Thread save bug** (`ChatInterface.tsx`): hiányzó `Content-Type: application/json` header a thread POST-ban
+   - **DocumentInfo interfész**: hiányzó `lastAdded: string` mező (TypeScript hiba)
+   - **KnowledgeModal**: teljesen újraírva — valóban listázza a dokumentumokat `/api/documents`-ből, törlés gombbal
+   - **OPENAI_API_KEY env konfliktus**: brunella shell `OPENAI_API_KEY=github_pat_...` felülírta Nova `.env`-jét → megoldás: `env -i PATH=... OPENAI_API_KEY="$NOVA_KEY" npm run dev`
+
+3. **Új végpont létrehozva:**
+   - `src/app/api/documents/route.ts` (ÚJ): GET (dokumentumok forrás szerint csoportosítva), DELETE (összes törlése)
+
+4. **Tesztek írva/javítva:**
+   - `src/__tests__/db.test.ts` — teljesen újraírva: 9 teszt (init, addRecord, cosine search, upsert, deleteRecord, thread CRUD), async IIFE (CJS top-level await fix), temp dir
+   - `src/__tests__/embeddings.test.ts` — ÚJ: 5 teszt a `chunkText()` függvényhez (no OpenAI API)
+   - `e2e/chat.spec.ts` — törött selectorok javítva (`button:has(svg)` + Enter billentyű)
+   - `e2e/history.spec.ts` — valódi API hívás eltávolítva, helyes selectorok
+   - `e2e/ui.spec.ts` — nem létező modal tesztek eltávolítva, audio gomb selector javítva
+
+5. **Gitignore javítások:**
+   - `data/*.json`, `data/*.db`, `/test-results/`, `/playwright-report/` hozzáadva
+   - `data/.gitkeep` létrehozva (üres mappa megtartásához)
+   - Véletlenül trackelt brunella SQLite fájlok (`brunella.db` stb.) eltávolítva (`git rm --cached`)
+
+6. **Live API tesztek (minden végpont zöld):**
+   - `GET /api/memories` ✅ — üres JSON tömb (normális)
+   - `POST /api/ingest` (text) ✅ — 5 chunk ingested
+   - `GET /api/documents` ✅ — 5 dokumentum listázva
+   - `POST /api/chat` ✅ — RAG keresés + OpenAI GPT-4o válasz (stream)
+   - `POST /api/tts` ✅ — audio buffer visszaadva
+   - `POST /api/threads` ✅ — thread mentve (Content-Type fix után)
+
+7. **GitHub push:**
+   - Nova repo: `https://github.com/pohi99999/Nova_Assiss.git`
+   - 3 commit pusholva: `afd60ff`, `1d7fa9b`, `545da3e`
+   - Brunella repóba NEM kerültek változások (`.worktrees/` gitignored)
+
+**Érintett fájlok (Nova_Assiss repo):**
+- `src/app/components/ChatInterface.tsx` (javítva: thread header, DocumentInfo, KnowledgeModal)
+- `src/app/api/documents/route.ts` (ÚJ)
+- `src/app/api/ingest/route.ts` (pdf-parse import fix)
+- `src/__tests__/db.test.ts` (újraírva)
+- `src/__tests__/embeddings.test.ts` (ÚJ)
+- `e2e/chat.spec.ts`, `e2e/history.spec.ts`, `e2e/ui.spec.ts` (mind javítva)
+- `.gitignore` (runtime adatok kizárva)
+- `data/.gitkeep` (ÚJ)
+
+**Érintett fájlok (brunella repo):**
+- `.adal/skills/nova-feature-dev/SKILL.md` (ÚJ)
+- `conductor/tracks/nova_assiss_local_dev_20260408/meta.json` (ÚJ)
+- `conductor/tracks/nova_assiss_local_dev_20260408/plan.md` (ÚJ, Phase 1+2 ✅)
+- `docs/superpowers/specs/2026-04-08-nova-feature-dev-skill-design.md` (ÚJ)
+
+**Figyelemre méltó:**
+- **Python agent (`agent/` mappa) DEPRECATED** — `Agents.md` expliciten írja: "agent/ mappa DEPRECATED/HASZNÁLATON KÍVÜL", a focus csak Next.js
+- **OPENAI_API_KEY env ütközés** kritikus fejlesztői tudnivaló: brunella shell-ben `OPENAI_API_KEY` a GitHub PAT-ra van állítva, Nova indításakor `env -i` trükk szükséges
+- `client_secret_*.json` Google OAuth kulcs a Nova repo gyökerében — biztonsági kockázat, érdemes `.gitignore`-olni
+
+**Conductor track:** `nova_assiss_local_dev_20260408` (ACTIVE, Phase 1+2 ✅, Phase 3-5 pending)
+**Subtracks:** `nova_knowledge_workflows_20260404`, `nova_multiagent_gatekeeper_20260404`
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés a következő ügynöknek:**
+- Nova fejlesztés: `cd .worktrees/Nova_Assiss && npm run dev` — de ellenőrizd az `OPENAI_API_KEY`-t (ne legyen brunella GitHub PAT)!
+- Nova git push CSAK `cd .worktrees/Nova_Assiss && git push origin main` — soha ne `git push` a brunella gyökérből
+- Phase 3 feladatok: `nova_knowledge_workflows_20260404` és `nova_multiagent_gatekeeper_20260404` subtracks
 
 ### 2026-03-31 - 7 Jules PR beépítése (Phase 1 + Phase 2) ✅
 
