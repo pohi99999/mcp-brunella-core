@@ -1,0 +1,25 @@
+{
+  "id": "viktoria_social_concierge_20260408",
+  "name": "VIKTORIAVARGA social concierge",
+  "title": "VIKTORIAVARGA social concierge",
+  "status": "active",
+  "priority": "high",
+  "created": "2026-04-08",
+  "updated": "2026-04-08",
+  "assignee": "GitHub Copilot",
+  "progress": 0,
+  "tags": [
+    "viktoria",
+    "social",
+    "concierge",
+    "copywriting",
+    "community",
+    "fashion"
+  ],
+  "dependencies": [
+    "viktoria_brand_voice_20260408"
+  ],
+  "sourceDocument": "User request for VIKTORIAVARGA brand stack",
+  "phase": 2,
+  "group": "business"
+}

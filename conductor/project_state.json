@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-04-08T01:08:00.125Z",
+  "lastUpdated": "2026-04-08T22:03:39.576Z",
   "tracks": [
     {
       "id": "agent_runtime_hardening_20260406",
@@ -7,7 +7,7 @@
       "status": "completed",
       "priority": "critical",
       "progress": 100,
-      "created": "2026-04-06T22:55:00.000Z",
+      "created": "2026-04-06T22:55:00Z",
       "assignee": "GitHub Copilot",
       "tags": [
         "runtime",
@@ -45,9 +45,9 @@
       "status": "completed",
       "priority": "high",
       "progress": 100,
-      "created": "2026-04-01T00:00:00.000Z",
-      "updated": "2026-04-01T06:15:00.000Z",
-      "completed": "2026-04-01T06:15:00.000Z",
+      "created": "2026-04-01T00:00:00Z",
+      "updated": "2026-04-01T06:15:00Z",
+      "completed": "2026-04-01T06:15:00Z",
       "assignee": "Copilot",
       "tags": [
         "autogen",
@@ -173,8 +173,8 @@
       "priority": "high",
       "progress": 100,
       "created": "2026-03-25",
-      "updated": "2026-03-28T20:25:00.000Z",
-      "completed": "2026-03-28T19:00:00.000Z",
+      "updated": "2026-03-28T20:25:00Z",
+      "completed": "2026-03-28T19:00:00Z",
       "assignee": "Gemini CLI",
       "tags": [
         "cloudflare",
@@ -216,7 +216,7 @@
       "status": "completed",
       "priority": "high",
       "progress": 100,
-      "created": "2026-04-06T20:00:00.000Z",
+      "created": "2026-04-06T20:00:00Z",
       "completed": "2026-04-06",
       "assignee": "GitHub Copilot",
       "tags": [
@@ -261,8 +261,8 @@
       "priority": "high",
       "progress": 100,
       "created": "2026-02-22T00:00:00Z",
-      "updated": "2026-04-01T02:00:00.000Z",
-      "completed": "2026-04-01T02:00:00.000Z",
+      "updated": "2026-04-01T02:00:00Z",
+      "completed": "2026-04-01T02:00:00Z",
       "assignee": "Claude + Pohánka Péter",
       "tags": [],
       "dependencies": [],
@@ -275,7 +275,7 @@
       "name": "KKV uzleti automatizalas masterplan",
       "status": "active",
       "priority": "high",
-      "progress": 10,
+      "progress": 30,
       "created": "2026-04-08",
       "updated": "2026-04-08",
       "assignee": "GitHub Copilot",
@@ -305,11 +305,12 @@
     {
       "id": "kkv_crm_automation_20260404",
       "name": "KKV CRM es lead-utanakovetes automatizalas",
-      "status": "active",
+      "status": "completed",
       "priority": "high",
-      "progress": 20,
+      "progress": 100,
       "created": "2026-04-04",
-      "updated": "2026-04-04",
+      "updated": "2026-04-08",
+      "completed": "2026-04-08T20:21:16Z",
       "assignee": "GitHub Copilot",
       "tags": [
         "kkv",
@@ -445,9 +446,9 @@
     {
       "id": "kkv_hr_leave_approvals_20260405",
       "name": "KKV HR leave approvals",
-      "status": "active",
+      "status": "completed",
       "priority": "high",
-      "progress": 70,
+      "progress": 100,
       "created": "2026-04-05",
       "updated": "2026-04-07",
       "assignee": "GitHub Copilot",
@@ -495,11 +496,12 @@
     {
       "id": "kkv_hr_timesheet_culture_20260405",
       "name": "KKV HR timesheet es kultura automatizalas",
-      "status": "active",
+      "status": "completed",
       "priority": "high",
-      "progress": 35,
+      "progress": 100,
       "created": "2026-04-05",
-      "updated": "2026-04-07",
+      "updated": "2026-04-08",
+      "completed": "2026-04-08",
       "assignee": "GitHub Copilot",
       "tags": [
         "kkv",
@@ -647,9 +649,9 @@
     {
       "id": "logistics_vertical_repo_local_20260407",
       "name": "Logistics Vertical — repository-local Brunella boundary",
-      "status": "active",
+      "status": "completed",
       "priority": "high",
-      "progress": 80,
+      "progress": 100,
       "created": "2026-04-07",
       "updated": "2026-04-07",
       "assignee": "GitHub Copilot",
@@ -686,6 +688,30 @@
       "dependencies": [],
       "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\mcp_sync_config_20260403",
+      "_isArchived": false
+    },
+    {
+      "id": "mission_templates_test_cadence_devex_20260408",
+      "name": "Mission Templates & Test Cadence DevEx Optimization",
+      "status": "completed",
+      "priority": "high",
+      "progress": 100,
+      "created": "2026-04-08",
+      "updated": "2026-04-08",
+      "assignee": "GitHub Copilot",
+      "tags": [
+        "mission",
+        "devex",
+        "tests",
+        "templates",
+        "cli",
+        "dashboard"
+      ],
+      "dependencies": [
+        "docs_config_sot_unification_20260408"
+      ],
+      "group": "brunella",
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\mission_templates_test_cadence_devex_20260408",
       "_isArchived": false
     },
     {
@@ -872,8 +898,8 @@
       "priority": "high",
       "progress": 100,
       "created": "2026-03-27T23:51:21.608Z",
-      "updated": "2026-03-30T12:00:00.000Z",
-      "completed": "2026-03-30T12:00:00.000Z",
+      "updated": "2026-03-30T12:00:00Z",
+      "completed": "2026-03-30T12:00:00Z",
       "tags": [],
       "dependencies": [],
       "group": "other",
@@ -926,13 +952,65 @@
       "_isArchived": true
     },
     {
-      "id": "psales_human_loop_revenue_20260407",
-      "name": "P-Sales Human-in-Loop Revenue Pipeline — Lead gen, onboarding, KKV + Brand csatornák",
+      "id": "phoenix_data_flywheel_observability_20260408",
+      "name": "Phoenix + Data Flywheel Observability & Self-Healing",
+      "status": "completed",
+      "priority": "high",
+      "progress": 100,
+      "created": "2026-04-08",
+      "updated": "2026-04-08",
+      "assignee": "GitHub Copilot",
+      "tags": [
+        "phoenix",
+        "observability",
+        "self-healing",
+        "metrics",
+        "flywheel",
+        "telemetry"
+      ],
+      "dependencies": [],
+      "group": "brunella",
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\phoenix_data_flywheel_observability_20260408",
+      "_isArchived": false
+    },
+    {
+      "id": "pohanka_freelancer_terjeszkedes_20260408",
+      "name": "Pohánka freelancer terjeszkedés és profilrendszer",
       "status": "active",
       "priority": "high",
-      "progress": 70,
+      "progress": 5,
+      "created": "2026-04-08",
+      "updated": "2026-04-08",
+      "assignee": "GitHub Copilot",
+      "tags": [
+        "freelancer",
+        "linkedin",
+        "upwork",
+        "malt",
+        "leadgen",
+        "marketing",
+        "profile",
+        "distribution",
+        "brunella",
+        "kkv"
+      ],
+      "dependencies": [
+        "kkv_business_automation_20260408",
+        "kkv_marketing_automation_20260404",
+        "psales_human_loop_revenue_20260407"
+      ],
+      "group": "business",
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\pohanka_freelancer_terjeszkedes_20260408",
+      "_isArchived": false
+    },
+    {
+      "id": "psales_human_loop_revenue_20260407",
+      "name": "P-Sales Human-in-Loop Revenue Pipeline — Lead gen, onboarding, KKV + Brand csatornák",
+      "status": "completed",
+      "priority": "high",
+      "progress": 100,
       "created": "2026-04-07T03:43:48Z",
-      "updated": "2026-04-07T04:33:10Z",
+      "updated": "2026-04-08T03:20:53Z",
       "assignee": "GitHub Copilot",
       "tags": [],
       "dependencies": [],
@@ -1052,34 +1130,14 @@
       "_isArchived": true
     },
     {
-      "id": "technical_debt_cleanup_20260404",
-      "name": "Technical Debt Cleanup — TODO konverzió és elavult kód elimináció",
-      "status": "active",
-      "priority": "medium",
-      "progress": 70,
-      "created": "2026-04-04",
-      "updated": "2026-04-07",
-      "assignee": "Gemini",
-      "tags": [
-        "tech-debt",
-        "todo",
-        "cleanup",
-        "refactor"
-      ],
-      "dependencies": [],
-      "group": "brunella",
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\technical_debt_cleanup_20260404",
-      "_isArchived": false
-    },
-    {
       "id": "test_cadence_optimization_20260401",
       "name": "Push teszt cadence optimalizáció",
       "status": "completed",
       "priority": "medium",
       "progress": 100,
-      "created": "2026-04-01T00:00:00.000Z",
-      "updated": "2026-04-01T02:40:00.000Z",
-      "completed": "2026-04-01T02:40:00.000Z",
+      "created": "2026-04-01T00:00:00Z",
+      "updated": "2026-04-01T02:40:00Z",
+      "completed": "2026-04-01T02:40:00Z",
       "assignee": "Copilot",
       "tags": [
         "husky",
@@ -1135,6 +1193,130 @@
       "dependencies": [],
       "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\type_safety_enforcement_20260404",
+      "_isArchived": false
+    },
+    {
+      "id": "viktoria_brand_monitor_20260408",
+      "name": "Viktoria Brand Monitor",
+      "status": "active",
+      "priority": "high",
+      "progress": 0,
+      "created": "2026-04-08T00:00:00Z",
+      "updated": "2026-04-08T00:00:00Z",
+      "assignee": "GitHub Copilot",
+      "tags": [
+        "viktoriavarga",
+        "brand-monitor",
+        "market-intel",
+        "apify",
+        "scheduled-tasks",
+        "alerts",
+        "monitoring"
+      ],
+      "dependencies": [
+        "viktoria_phygital_pipeline_20260408"
+      ],
+      "group": "business",
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\viktoria_brand_monitor_20260408",
+      "_isArchived": false
+    },
+    {
+      "id": "viktoria_brand_voice_20260408",
+      "name": "Viktoria Brand Voice",
+      "status": "active",
+      "priority": "high",
+      "progress": 15,
+      "created": "2026-04-08T00:00:00Z",
+      "updated": "2026-04-08T00:00:00Z",
+      "assignee": "GitHub Copilot",
+      "tags": [
+        "viktoriavarga",
+        "brand-voice",
+        "tone",
+        "copy",
+        "prompting",
+        "foundation"
+      ],
+      "dependencies": [],
+      "group": "business",
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\viktoria_brand_voice_20260408",
+      "_isArchived": false
+    },
+    {
+      "id": "viktoria_phygital_pipeline_20260408",
+      "name": "Viktoria Phygital Pipeline",
+      "status": "active",
+      "priority": "high",
+      "progress": 0,
+      "created": "2026-04-08T00:00:00Z",
+      "updated": "2026-04-08T00:00:00Z",
+      "assignee": "GitHub Copilot",
+      "tags": [
+        "viktoriavarga",
+        "phygital",
+        "python-workers",
+        "harvest-pipeline",
+        "vision",
+        "media-factory",
+        "web-scraper"
+      ],
+      "dependencies": [
+        "viktoria_shopping_assistant_20260408"
+      ],
+      "group": "business",
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\viktoria_phygital_pipeline_20260408",
+      "_isArchived": false
+    },
+    {
+      "id": "viktoria_shopping_assistant_20260408",
+      "name": "Viktoria Shopping Assistant",
+      "status": "active",
+      "priority": "high",
+      "progress": 0,
+      "created": "2026-04-08T00:00:00Z",
+      "updated": "2026-04-08T00:00:00Z",
+      "assignee": "GitHub Copilot",
+      "tags": [
+        "viktoriavarga",
+        "shopping",
+        "assistant",
+        "customer-service",
+        "bifrost",
+        "golden-dataset",
+        "routing"
+      ],
+      "dependencies": [
+        "viktoria_social_concierge_20260408",
+        "kkv_customer_service_ai_20260404",
+        "copilot_self_improvement_loop_20260406"
+      ],
+      "group": "business",
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\viktoria_shopping_assistant_20260408",
+      "_isArchived": false
+    },
+    {
+      "id": "viktoria_social_concierge_20260408",
+      "name": "Viktoria Social Concierge",
+      "status": "active",
+      "priority": "high",
+      "progress": 0,
+      "created": "2026-04-08T00:00:00Z",
+      "updated": "2026-04-08T00:00:00Z",
+      "assignee": "GitHub Copilot",
+      "tags": [
+        "viktoriavarga",
+        "social",
+        "concierge",
+        "dm",
+        "comments",
+        "inbox",
+        "engagement"
+      ],
+      "dependencies": [
+        "viktoria_brand_voice_20260408"
+      ],
+      "group": "business",
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\viktoria_social_concierge_20260408",
       "_isArchived": false
     },
     {
@@ -1238,9 +1420,9 @@
       "status": "archived",
       "priority": "medium",
       "progress": 100,
-      "created": "2026-03-25T00:00:00.000Z",
-      "updated": "2026-03-30T14:15:00.000Z",
-      "completed": "2026-03-30T15:30:00.000Z",
+      "created": "2026-03-25T00:00:00Z",
+      "updated": "2026-03-30T14:15:00Z",
+      "completed": "2026-03-30T15:30:00Z",
       "assignee": "Copilot",
       "tags": [
         "agents",
@@ -1302,6 +1484,29 @@
       ],
       "group": "other",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\agent_orchestration_dag_20260323",
+      "_isArchived": true
+    },
+    {
+      "id": "agent_registry_governance_20260408",
+      "name": "Agent Registry Governance & Consolidation",
+      "status": "archived",
+      "priority": "high",
+      "progress": 100,
+      "created": "2026-04-08",
+      "updated": "2026-04-08",
+      "completed": "2026-04-08T15:01:55.3350365Z",
+      "assignee": "GitHub Copilot",
+      "tags": [
+        "agents",
+        "registry",
+        "governance",
+        "consolidation",
+        "hygiene",
+        "audit"
+      ],
+      "dependencies": [],
+      "group": "brunella",
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\agent_registry_governance_20260408",
       "_isArchived": true
     },
     {
@@ -1445,9 +1650,9 @@
       "status": "archived",
       "priority": "high",
       "progress": 100,
-      "created": "2026-03-25T00:00:00.000Z",
-      "updated": "2026-03-30T14:15:00.000Z",
-      "completed": "2026-03-30T15:30:00.000Z",
+      "created": "2026-03-25T00:00:00Z",
+      "updated": "2026-03-30T14:15:00Z",
+      "completed": "2026-03-30T15:30:00Z",
       "assignee": "Copilot",
       "tags": [
         "bootstrap",
@@ -1557,8 +1762,8 @@
       "status": "archived",
       "priority": "medium",
       "progress": 0,
-      "created": "2026-02-22T19:45:47.000Z",
-      "updated": "2026-02-22T19:45:47.000Z",
+      "created": "2026-02-22T19:45:47Z",
+      "updated": "2026-02-22T19:45:47Z",
       "assignee": "System",
       "tags": [],
       "dependencies": [],
@@ -2122,8 +2327,8 @@
       "status": "archived",
       "priority": "high",
       "progress": 84,
-      "created": "2026-04-01T15:30:00.000Z",
-      "updated": "2026-04-01T17:25:00.000Z",
+      "created": "2026-04-01T15:30:00Z",
+      "updated": "2026-04-01T17:25:00Z",
       "assignee": "Copilot",
       "tags": [
         "dashboard",
@@ -2294,14 +2499,37 @@
       "_isArchived": true
     },
     {
+      "id": "docs_config_sot_unification_20260408",
+      "name": "Documentation/Config Single Source of Truth Unification",
+      "status": "archived",
+      "priority": "high",
+      "progress": 100,
+      "created": "2026-04-08",
+      "updated": "2026-04-08",
+      "completed": "2026-04-08T19:51:46Z",
+      "assignee": "GitHub Copilot",
+      "tags": [
+        "docs",
+        "config",
+        "sot",
+        "drift",
+        "validation",
+        "governance"
+      ],
+      "dependencies": [],
+      "group": "brunella",
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\docs_config_sot_unification_20260408",
+      "_isArchived": true
+    },
+    {
       "id": "doc_code_auto_sync_20260325",
       "name": "Documentation-Code Auto-Sync",
       "status": "archived",
       "priority": "high",
       "progress": 100,
-      "created": "2026-03-25T00:00:00.000Z",
-      "updated": "2026-03-30T14:15:00.000Z",
-      "completed": "2026-03-30T15:30:00.000Z",
+      "created": "2026-03-25T00:00:00Z",
+      "updated": "2026-03-30T14:15:00Z",
+      "completed": "2026-03-30T15:30:00Z",
       "assignee": "Copilot",
       "tags": [
         "docs",
@@ -2661,8 +2889,8 @@
       "priority": "high",
       "progress": 100,
       "created": "2026-03-28T04:05:11.517Z",
-      "updated": "2026-03-30T14:15:00.000Z",
-      "completed": "2026-03-30T15:30:00.000Z",
+      "updated": "2026-03-30T14:15:00Z",
+      "completed": "2026-03-30T15:30:00Z",
       "tags": [],
       "dependencies": [],
       "group": "other",
@@ -3092,6 +3320,31 @@
       "_isArchived": true
     },
     {
+      "id": "kkv_pack_productization_20260408",
+      "name": "KKV Pack Productization & Cockpit Definition",
+      "status": "archived",
+      "priority": "medium",
+      "progress": 100,
+      "created": "2026-04-08",
+      "updated": "2026-04-08",
+      "completed": "2026-04-08T19:41:31Z",
+      "assignee": "GitHub Copilot",
+      "tags": [
+        "kkv",
+        "productization",
+        "packs",
+        "cockpit",
+        "verticals",
+        "roadmap"
+      ],
+      "dependencies": [
+        "kkv_business_automation_20260408"
+      ],
+      "group": "brunella",
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\kkv_pack_productization_20260408",
+      "_isArchived": true
+    },
+    {
       "id": "konyveles_automatizalas",
       "name": "Könyvelés automatizálása",
       "status": "archived",
@@ -3515,9 +3768,9 @@
       "status": "archived",
       "priority": "high",
       "progress": 100,
-      "created": "2026-02-19T00:00:00.000Z",
-      "updated": "2026-02-23T23:55:00.000Z",
-      "completed": "2026-02-23T23:55:00.000Z",
+      "created": "2026-02-19T00:00:00Z",
+      "updated": "2026-02-23T23:55:00Z",
+      "completed": "2026-02-23T23:55:00Z",
       "assignee": "System",
       "tags": [],
       "dependencies": [],
@@ -3773,9 +4026,9 @@
       "status": "archived",
       "priority": "medium",
       "progress": 100,
-      "created": "2026-03-25T00:00:00.000Z",
-      "updated": "2026-03-30T14:15:00.000Z",
-      "completed": "2026-03-30T15:30:00.000Z",
+      "created": "2026-03-25T00:00:00Z",
+      "updated": "2026-03-30T14:15:00Z",
+      "completed": "2026-03-30T15:30:00Z",
       "assignee": "Copilot",
       "tags": [
         "husky",
@@ -4191,9 +4444,9 @@
       "status": "archived",
       "priority": "medium",
       "progress": 100,
-      "created": "2026-03-25T00:00:00.000Z",
-      "updated": "2026-03-30T14:15:00.000Z",
-      "completed": "2026-03-30T15:30:00.000Z",
+      "created": "2026-03-25T00:00:00Z",
+      "updated": "2026-03-30T14:15:00Z",
+      "completed": "2026-03-30T15:30:00Z",
       "assignee": "Copilot",
       "tags": [
         "smoke",
@@ -4273,6 +4526,26 @@
       "_isArchived": true
     },
     {
+      "id": "technical_debt_cleanup_20260404",
+      "name": "Technical Debt Cleanup — TODO konverzió és elavult kód elimináció",
+      "status": "archived",
+      "priority": "medium",
+      "progress": 70,
+      "created": "2026-04-04",
+      "updated": "2026-04-07",
+      "assignee": "Gemini",
+      "tags": [
+        "tech-debt",
+        "todo",
+        "cleanup",
+        "refactor"
+      ],
+      "dependencies": [],
+      "group": "brunella",
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\technical_debt_cleanup_20260404",
+      "_isArchived": true
+    },
+    {
       "id": "test-20260211",
       "name": "test-20260211",
       "status": "archived",
@@ -4338,9 +4611,9 @@
       "status": "archived",
       "priority": "high",
       "progress": 100,
-      "created": "2026-03-25T00:00:00.000Z",
-      "updated": "2026-03-30T14:15:00.000Z",
-      "completed": "2026-03-30T15:30:00.000Z",
+      "created": "2026-03-25T00:00:00Z",
+      "updated": "2026-03-30T14:15:00Z",
+      "completed": "2026-03-30T15:30:00Z",
       "assignee": "Copilot",
       "tags": [
         "tests",
@@ -4550,10 +4823,10 @@
     }
   ],
   "stats": {
-    "total": 219,
+    "total": 230,
     "active": 17,
-    "completed": 21,
-    "archived": 179,
+    "completed": 28,
+    "archived": 183,
     "proposed": 2
   }
 }

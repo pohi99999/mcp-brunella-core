@@ -1,0 +1,26 @@
+{
+  "id": "viktoria_brand_monitor_20260408",
+  "name": "VIKTORIAVARGA brand monitor",
+  "title": "VIKTORIAVARGA brand monitor",
+  "status": "active",
+  "priority": "high",
+  "created": "2026-04-08",
+  "updated": "2026-04-08",
+  "assignee": "GitHub Copilot",
+  "progress": 0,
+  "tags": [
+    "viktoria",
+    "monitoring",
+    "market-intel",
+    "apify",
+    "scheduled-tasks",
+    "fashion"
+  ],
+  "dependencies": [
+    "viktoria_brand_voice_20260408",
+    "viktoria_phygital_pipeline_20260408"
+  ],
+  "sourceDocument": "User request for VIKTORIAVARGA brand stack",
+  "phase": 5,
+  "group": "business"
+}

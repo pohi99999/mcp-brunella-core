@@ -1,0 +1,26 @@
+{
+  "id": "viktoria_phygital_pipeline_20260408",
+  "name": "VIKTORIAVARGA phygital pipeline",
+  "title": "VIKTORIAVARGA phygital pipeline",
+  "status": "active",
+  "priority": "high",
+  "created": "2026-04-08",
+  "updated": "2026-04-08",
+  "assignee": "GitHub Copilot",
+  "progress": 0,
+  "tags": [
+    "viktoria",
+    "phygital",
+    "browser",
+    "python",
+    "harvest",
+    "fashion"
+  ],
+  "dependencies": [
+    "viktoria_brand_voice_20260408",
+    "viktoria_social_concierge_20260408"
+  ],
+  "sourceDocument": "User request for VIKTORIAVARGA brand stack",
+  "phase": 4,
+  "group": "business"
+}

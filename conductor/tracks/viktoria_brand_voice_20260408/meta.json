@@ -1,0 +1,23 @@
+{
+  "id": "viktoria_brand_voice_20260408",
+  "name": "VIKTORIAVARGA brand voice foundation",
+  "title": "VIKTORIAVARGA brand voice foundation",
+  "status": "active",
+  "priority": "high",
+  "created": "2026-04-08",
+  "updated": "2026-04-08",
+  "assignee": "GitHub Copilot",
+  "progress": 15,
+  "tags": [
+    "viktoria",
+    "brand-voice",
+    "fashion",
+    "copywriting",
+    "premium",
+    "bilingual"
+  ],
+  "dependencies": [],
+  "sourceDocument": "User request for VIKTORIAVARGA brand stack",
+  "phase": 1,
+  "group": "business"
+}
