@@ -130,6 +130,26 @@ export const PermissionProfiles: Record<string, AgentPermissionConfig> = {
         },
     },
 
+    // Brunella Project Manager - Read-only status reporting
+    BRUNELLA_PROJECT_MANAGER: {
+        permissions: [
+            Permission.READ_FILE,
+            Permission.READ_DIR,
+        ],
+        pathRestrictions: {
+            allowed: [
+                '.ai/**',
+                'conductor/**',
+                'data/**',
+                'logs/**',
+            ],
+            denied: [
+                'src/**',
+                'test/**',
+            ]
+        },
+    },
+
     // Robotkéz Agent - Browser control
     ROBOTKEZ: {
         permissions: [
@@ -207,6 +227,7 @@ export class PermissionManager {
             'Developer': 'DEVELOPER',
             'Researcher': 'RESEARCHER',
             'ProjectConductor': 'PROJECT_CONDUCTOR',
+            'BrunellaProjectManager': 'BRUNELLA_PROJECT_MANAGER',
             'Robotkez': 'ROBOTKEZ',
             'Evaluator': 'EVALUATOR',
             'Voice': 'VOICE',

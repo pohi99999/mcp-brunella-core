@@ -104,6 +104,33 @@
       "priority": 6
     },
     {
+      "name": "BrunellaProjectManager",
+      "title": "Brunella Project Manager",
+      "description": "Projekt státusz, FOSZAL összegzés és RAG alapú rövid project review.",
+      "class": "BrunellaProjectManagerAgent",
+      "module": "./agents/BrunellaProjectManagerAgent.js",
+      "capabilities": [
+        "project_status",
+        "track_snapshot",
+        "foszal_summary",
+        "rag_summary"
+      ],
+      "triggers": [
+        "project manager",
+        "pm status",
+        "status snapshot",
+        "foszal summary"
+      ],
+      "category": "management",
+      "status": "active",
+      "tags": [
+        "management",
+        "status",
+        "rag"
+      ],
+      "priority": 10
+    },
+    {
       "name": "ProjectMaintainer",
       "title": "Project Maintainer",
       "description": "Napi 22:00-kor futó őrangyal, aki rendet rak a root-ban, archivál és ellenőrzi a rendszer egészségét.",
