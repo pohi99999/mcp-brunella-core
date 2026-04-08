@@ -6,6 +6,26 @@ User requested that the Copilot CLI automatically connect to a local Brunella MC
 
 ## History
 
+### 2026-04-09 00:08 - Viktoria brand voice foundation
+
+**Feladat:** A VIKTORIAVARGA brand voice TOML agent, registry entry, fókuszteszt és a kapcsolódó conductor track scaffoldok befejezése.
+
+**Érintett fájlok:** `myai/agents/ViktoriaBrandVoice.toml`, `src/agents/registry.json`, `test/viktoriaBrandVoiceAgent.test.ts`, `conductor/tracks/viktoria_brand_voice_20260408/{meta.json,plan.md,spec.md}`, `conductor/tracks/viktoria_social_concierge_20260408/{meta.json,plan.md,spec.md}`, `conductor/tracks/viktoria_shopping_assistant_20260408/{meta.json,plan.md,spec.md}`, `conductor/tracks/viktoria_phygital_pipeline_20260408/{meta.json,plan.md,spec.md}`, `conductor/tracks/viktoria_brand_monitor_20260408/{meta.json,plan.md,spec.md}`, `conductor/tracks.md`, `conductor/project_state.json`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A DynamicAgent konfiguráció és a kapcsolódó teszt zöld; a TOML már indexelve van a meglévő RAG store-ba, és a build is sikeresen lefutott.
+
+### 2026-04-08 22:58 - Main branch cleanup completion
+
+**Feladat:** A mainen kívüli megmaradt remote branch-ek és az archiváló tagek rendezése, hogy a repó tiszta és rendezett legyen.
+
+**Érintett fájlok:** `.ai/copilot.md`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** Az archív tagek felkerültek, a megmaradt öt remote branch törölve lett, és a `git ls-remote --heads origin` most már csak `refs/heads/main`-t mutat.
+
 ### 2026-04-08 22:55 - Brunella Project Manager status surface
 
 **Feladat:** A BrunellaProjectManagerAgent, a brunella-pm-status MCP tool, a read-only track/FOSZAL snapshot helper és a kapcsolódó tesztek véglegesítése.
