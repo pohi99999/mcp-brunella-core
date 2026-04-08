@@ -44,7 +44,7 @@ export async function ingestAccountingDocs() {
       const table = await db.openTable('accounting_kb');
       await table.add([{
         id: crypto.randomUUID(),
-        source_type: 'policy', // TODO: detektálni kiterjesztés vagy tartalom alapján
+        source_type: 'policy',
         content: content,
         vector: vector,
         metadata: {
