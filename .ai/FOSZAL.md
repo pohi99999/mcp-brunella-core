@@ -1,6 +1,6 @@
 # FŐSZÁL - Egyesített Fejlesztési Napló
 
-**Generálva:** 2026-04-08 22:53
+**Generálva:** 2026-04-08 22:56
 **Script:** `scripts/sync_foszal.py`
 
 ---
@@ -29,6 +29,11 @@ start-full.bat
 ## Összesített Napló (Időrendben)
 
 ### 2026-04-08
+
+#### 22:55 - [Copilot] Brunella Project Manager status surface
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `src/agents/BrunellaProjectManagerAgent.ts`, `src/tools/brunellaPmStatus.ts`, `src/services/brunellaProjectManagerStatus.ts`, `src/services/brunellaProjectManagerFoszal.ts`, `src/services/brunellaProjectManagerRag.ts`, `src/services/trackStatusSnapshot.ts`, `src/agents/permissions.ts`, `src/agents/registry.json`, `src/server/registry.ts`, `test/BrunellaProjectManagerAgent.test.ts`, `test/brunellaPmStatus.test.ts`, `test/brunellaProjectManagerStatus.test.ts`, `test/brunellaProjectManagerStatus.readonly.test.ts`, `.github/copilot-instructions.md`
 
 #### 22:15 - [Copilot] Brunella Project Manager status surface
 - **Agent:** Copilot
@@ -1078,7 +1083,7 @@ start-full.bat
 | Claude | 86 | 2026-04-08 |
 | Gemini | 1 | 2026-04-08 |
 | Cursor | 0 | N/A |
-| Copilot | 99 | 2026-04-08 |
+| Copilot | 100 | 2026-04-08 |
 
 ---
 

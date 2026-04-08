@@ -6,6 +6,16 @@ User requested that the Copilot CLI automatically connect to a local Brunella MC
 
 ## History
 
+### 2026-04-08 22:55 - Brunella Project Manager status surface
+
+**Feladat:** A BrunellaProjectManagerAgent, a brunella-pm-status MCP tool, a read-only track/FOSZAL snapshot helper és a kapcsolódó tesztek véglegesítése.
+
+**Érintett fájlok:** `src/agents/BrunellaProjectManagerAgent.ts`, `src/tools/brunellaPmStatus.ts`, `src/services/brunellaProjectManagerStatus.ts`, `src/services/brunellaProjectManagerFoszal.ts`, `src/services/brunellaProjectManagerRag.ts`, `src/services/trackStatusSnapshot.ts`, `src/agents/permissions.ts`, `src/agents/registry.json`, `src/server/registry.ts`, `test/BrunellaProjectManagerAgent.test.ts`, `test/brunellaPmStatus.test.ts`, `test/brunellaProjectManagerStatus.test.ts`, `test/brunellaProjectManagerStatus.readonly.test.ts`, `.github/copilot-instructions.md`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A PM felület most read-only snapshotot használ, a kérdés pedig a RAG query-be is bekerül; a build és a célzott Vitest csomag zöld lett.
+
 ### 2026-04-08 22:15 - Brunella Project Manager status surface
 
 **Feladat:** A BrunellaProjectManager read-only státusz felszínének befejezése külön agent, MCP tool, FOSZAL parser és RAG summary helper bontásban.
