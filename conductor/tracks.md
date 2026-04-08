@@ -1,10 +1,10 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-04-07T02:06:54.706Z
+**Utolso frissites:** 2026-04-08T01:00:00.754Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 214 total | 13 active | 20 completed | 179 archived
+**Stats:** 219 total | 17 active | 21 completed | 179 archived
 
 ---
 
@@ -22,7 +22,14 @@
 
 ---
 
-## Aktiv Szalak (Active) (13)
+## Aktiv Szalak (Active) (17)
+
+- [ ] **KKV uzleti automatizalas masterplan** [HIGH]
+  - **ID:** `kkv_business_automation_20260408`
+  - **Progress:** 10%
+  - **Assignee:** GitHub Copilot
+  - **Updated:** 2026-04-08
+  - Mappa: ./tracks/kkv_business_automation_20260408/
 
 - [ ] **KKV CRM es lead-utanakovetes automatizalas** [HIGH]
   - **ID:** `kkv_crm_automation_20260404`
@@ -83,19 +90,39 @@
   - **Updated:** 2026-04-04
   - Mappa: ./tracks/napi_intelligens_briefing_20260404/
 
+- [ ] **Nova Irodai Asszisztens — helyi fejlesztési hub** [HIGH]
+  - **ID:** `nova_assiss_local_dev_20260408`
+  - **Progress:** 5%
+  - **Assignee:** Claude Code
+  - **Updated:** 2026-04-08
+  - Mappa: ./tracks/nova_assiss_local_dev_20260408/
+
 - [ ] **Nova tudasbazis es interakcios workflow-k** [HIGH]
   - **ID:** `nova_knowledge_workflows_20260404`
   - **Progress:** 0%
   - **Assignee:** GitHub Copilot
-  - **Updated:** 2026-04-04
+  - **Updated:** 2026-04-08
   - Mappa: ./tracks/nova_knowledge_workflows_20260404/
 
 - [ ] **Nova multi-agent gatekeeper architektura** [HIGH]
   - **ID:** `nova_multiagent_gatekeeper_20260404`
   - **Progress:** 0%
   - **Assignee:** GitHub Copilot
-  - **Updated:** 2026-04-04
+  - **Updated:** 2026-04-08
   - Mappa: ./tracks/nova_multiagent_gatekeeper_20260404/
+
+- [x] **p-search** [HIGH]
+  - **ID:** `p-search_20260408`
+  - **Progress:** 0%
+  - **Assignee:** pohi99999
+  - **Updated:** 2026-04-08
+  - Mappa: ./tracks/p-search_20260408/
+
+- [ ] **P-Sales Human-in-Loop Revenue Pipeline — Lead gen, onboarding, KKV + Brand csatornák** [HIGH]
+  - **ID:** `psales_human_loop_revenue_20260407`
+  - **Progress:** 70%
+  - **Assignee:** GitHub Copilot
+  - Mappa: ./tracks/psales_human_loop_revenue_20260407/
 
 - [ ] **Technical Debt Cleanup — TODO konverzió és elavult kód elimináció** [MEDIUM]
   - **ID:** `technical_debt_cleanup_20260404`
@@ -103,15 +130,16 @@
   - **Updated:** 2026-04-07
   - Mappa: ./tracks/technical_debt_cleanup_20260404/
 
-- [ ] **Type Safety Enforcement — any elimináció és Type Guard implementáció** [HIGH]
-  - **ID:** `type_safety_enforcement_20260404`
-  - **Progress:** 80%
-  - **Updated:** 2026-04-07
-  - Mappa: ./tracks/type_safety_enforcement_20260404/
+- [ ] **Toura — Helyi Fejlesztési Hub** [HIGH]
+  - **ID:** `toura_local_dev_20260408`
+  - **Progress:** 5%
+  - **Assignee:** Gemini
+  - **Updated:** 2026-04-08
+  - Mappa: ./tracks/toura_local_dev_20260408/
 
 ---
 
-## Befejezett (Completed - Not Archived) (20)
+## Befejezett (Completed - Not Archived) (21)
 
 - [x] **Agent Runtime Hardening — ReAct, Working Memory, Tool Errors, Guardrails**
   - **ID:** `agent_runtime_hardening_20260406`
@@ -186,6 +214,10 @@
 - [x] **Push teszt cadence optimalizáció**
   - **ID:** `test_cadence_optimization_20260401`
   - Mappa: ./tracks/test_cadence_optimization_20260401/
+
+- [x] **Type Safety Enforcement — any elimináció és Type Guard implementáció**
+  - **ID:** `type_safety_enforcement_20260404`
+  - Mappa: ./tracks/type_safety_enforcement_20260404/
 
 - [x] **VSCode Auto-Build Task (TypeScript watch)**
   - **ID:** `vscode_auto_build_20260403`
