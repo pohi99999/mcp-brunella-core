@@ -1,1 +1,0 @@
-{"id":"d698aa8e-2beb-402f-adb8-d6500e87e0f7","source":"health","type":"health.recovery","priority":"low","riskHint":"safe","dedupKey":"health:recovery:fastapi","payload":{"serviceName":"fastapi","details":"Service recovered: fastapi","status":"healthy"},"timestamp":"2026-04-08T00:54:22.994Z","metadata":{"category":"health"}}
