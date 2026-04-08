@@ -237,6 +237,42 @@
       "priority": 4
     },
     {
+      "name": "viktoria-brand-voice",
+      "title": "VIKTORIAVARGA Márka AI",
+      "description": "Prémium fashion brand voice agent - Enjoy life in colours",
+      "class": "DynamicAgent",
+      "module": "./agents/DynamicAgent.js",
+      "config": {
+        "tomlPath": "myai/agents/ViktoriaBrandVoice.toml"
+      },
+      "capabilities": [
+        "brand-voice",
+        "caption-writing",
+        "email-drafting",
+        "campaign-copy",
+        "product-descriptions",
+        "bilingual-copywriting",
+        "tone-guardrails"
+      ],
+      "triggers": [
+        "viktoria",
+        "brand",
+        "vv",
+        "fashion",
+        "kampány"
+      ],
+      "category": "marketing",
+      "status": "active",
+      "tags": [
+        "fashion",
+        "brand-voice",
+        "copywriting",
+        "premium",
+        "bilingual"
+      ],
+      "priority": 4
+    },
+    {
       "name": "DataScientist",
       "module": "./agents/DataScientistAgent.js",
       "class": "DataScientistAgent",
@@ -820,6 +856,40 @@
         "orchestration"
       ],
       "priority": 4
+    },
+    {
+      "name": "viktoria-brand-voice",
+      "title": "VIKTORIAVARGA Márka AI",
+      "description": "Prémium fashion brand voice foundation for VIKTORIAVARGA.",
+      "class": "DynamicAgent",
+      "module": "./agents/DynamicAgent.js",
+      "config": {
+        "tomlPath": "myai/agents/ViktoriaBrandVoice.toml"
+      },
+      "capabilities": [
+        "brand_voice_foundation",
+        "bilingual_copywriting",
+        "premium_fashion_copy",
+        "caption_generation",
+        "email_drafting"
+      ],
+      "triggers": [
+        "viktoriavarga",
+        "viktoria brand voice",
+        "brand voice",
+        "fashion copy",
+        "bilingual copy"
+      ],
+      "category": "marketing",
+      "status": "active",
+      "tags": [
+        "marketing",
+        "fashion",
+        "brand-voice",
+        "premium-copywriting",
+        "bilingual-copywriting"
+      ],
+      "priority": 5
     },
     {
       "name": "NurturerAgent",

@@ -1,0 +1,26 @@
+{
+  "id": "viktoria_shopping_assistant_20260408",
+  "name": "VIKTORIAVARGA shopping assistant",
+  "title": "VIKTORIAVARGA shopping assistant",
+  "status": "active",
+  "priority": "high",
+  "created": "2026-04-08",
+  "updated": "2026-04-08",
+  "assignee": "GitHub Copilot",
+  "progress": 0,
+  "tags": [
+    "viktoria",
+    "shopping",
+    "assistant",
+    "customer-service",
+    "brand-voice",
+    "fashion"
+  ],
+  "dependencies": [
+    "viktoria_brand_voice_20260408",
+    "viktoria_social_concierge_20260408"
+  ],
+  "sourceDocument": "User request for VIKTORIAVARGA brand stack",
+  "phase": 3,
+  "group": "business"
+}
