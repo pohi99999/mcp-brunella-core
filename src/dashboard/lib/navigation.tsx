@@ -107,6 +107,7 @@ import { ProcessControlWidget } from "@/components/dashboard/ProcessControlWidge
 import { ServiceControlWidget } from "@/components/dashboard/ServiceControlWidget";
 import { ProjectExplorer } from "@/components/dashboard/ProjectExplorer";
 import { AIAgentBriefingPanel } from "@/components/dashboard/AIAgentBriefingPanel";
+import { AnythingLLMActionBridgePanel } from "@/components/dashboard/AnythingLLMActionBridgePanel";
 import { logInfo } from "@/utils/logger";
 
 const LazyEnterpriseAnalyticsWidget = React.lazy( async () =>
@@ -199,6 +200,7 @@ export function initializeNavigation ()
     { id: "incubator", label: "Incubator", icon: FlaskConical, component: <IncubatorPanel /> },
     { id: "knowledge", label: "Neural Knowledge", icon: Brain, component: <KnowledgeBasePanel /> },
     { id: "memory", label: "Agent Memory", icon: Database, component: <MemoryPanel /> },
+    { id: "anythingllm-bridge", label: "AnythingLLM Bridge", icon: Zap, component: <AnythingLLMActionBridgePanel /> },
     { id: "mcp", label: "MCP Command Center", icon: Shield, component: <MCPCommandCenter /> },
     { id: "developer", label: "Developer", icon: Code2, component: <DeveloperPanel /> },
     { id: "edge", label: "Edge", icon: Zap, component: <EdgePanel /> },
