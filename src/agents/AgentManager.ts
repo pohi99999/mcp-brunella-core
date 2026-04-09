@@ -222,6 +222,7 @@ export class AgentManager extends EventEmitter {
   private edgeConfig: EdgeConfig;
   private edgeProxy?: IAgent; // EdgeProxy agent instance
   private taskQueue: QueuedTask[] = [];
+  private taskQueueMap: Map<number, QueuedTask> = new Map();
   private taskIdCounter = 0;
   private workerInterval?: ReturnType<typeof setInterval>;
   private agentRuntime: Map<string, AgentRuntimeInfo> = new Map();
@@ -398,14 +399,16 @@ export class AgentManager extends EventEmitter {
         if (pt.status === "running") {
           await updateTaskStatus(pt.id, "pending");
         }
-        this.taskQueue.push({
+        const hydratedTask: QueuedTask = {
           id: pt.id,
           description: pt.task,
           agentName: pt.agent,
           context: pt.context ? JSON.parse(pt.context) : undefined,
           createdAt: pt.created_at,
           status,
-        });
+        };
+        this.taskQueue.push(hydratedTask);
+        this.taskQueueMap.set(hydratedTask.id, hydratedTask);
       }
       if (persistedTasks.length > 0) {
         logInfo("AgentManager", `${persistedTasks.length} feladat visszaállítva a sorba`);
@@ -1662,7 +1665,7 @@ export class AgentManager extends EventEmitter {
     });
 
     const id = Number(dbId) || ++this.taskIdCounter;
-    this.taskQueue.push({
+    const newTask: QueuedTask = {
       id,
       description,
       agentName,
@@ -1670,7 +1673,9 @@ export class AgentManager extends EventEmitter {
       parentId,
       createdAt: new Date().toISOString(),
       status: "pending",
-    });
+    };
+    this.taskQueue.push(newTask);
+    this.taskQueueMap.set(id, newTask);
     return id;
   }
 
@@ -1825,7 +1830,7 @@ export class AgentManager extends EventEmitter {
   }
 
   async cancelTask(taskId: number): Promise<boolean> {
-    const task = this.taskQueue.find((t) => t.id === taskId);
+    const task = this.taskQueueMap.get(taskId);
     if (!task) return false;
 
     // Ha fut a feladat, megszakítjuk
@@ -1842,7 +1847,7 @@ export class AgentManager extends EventEmitter {
   }
 
   async retryTask(taskId: number, debugMode = false): Promise<boolean> {
-    const task = this.taskQueue.find((t) => t.id === taskId);
+    const task = this.taskQueueMap.get(taskId);
     if (!task) return false;
     task.status = "pending";
     task.startedAt = undefined;
@@ -1854,7 +1859,7 @@ export class AgentManager extends EventEmitter {
   }
 
   async pauseTask(taskId: number): Promise<boolean> {
-    const task = this.taskQueue.find((t) => t.id === taskId);
+    const task = this.taskQueueMap.get(taskId);
     if (!task) return false;
     if (task.status === "running" || task.status === "pending") {
       task.status = "paused";
@@ -1865,7 +1870,7 @@ export class AgentManager extends EventEmitter {
   }
 
   async resumeTask(taskId: number): Promise<boolean> {
-    const task = this.taskQueue.find((t) => t.id === taskId);
+    const task = this.taskQueueMap.get(taskId);
     if (!task) return false;
     if (task.status === "paused") {
       task.status = "pending";
@@ -1891,6 +1896,8 @@ export class AgentManager extends EventEmitter {
 
     // Add any remaining tasks that were not in the newOrderIds (e.g., newly queued tasks)
     this.taskQueue = [...newQueue, ...Array.from(taskMap.values())];
+    this.taskQueueMap.clear();
+    this.taskQueue.forEach(t => this.taskQueueMap.set(t.id, t));
     logInfo("AgentManager", `Task queue reordered. New order: ${this.taskQueue.map(t => t.id).join(", ")}`);
   }
 
@@ -2001,7 +2008,7 @@ export class AgentManager extends EventEmitter {
   ): Promise<string> {
     const parts: string[] = [];
     for (const id of plan.taskIds) {
-      const t = this.taskQueue.find((q) => q.id === id);
+      const t = this.taskQueueMap.get(id);
       if (!t || t.status !== "pending") continue;
       emit("task_start", {
         id,
