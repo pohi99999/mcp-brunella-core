@@ -45,7 +45,7 @@ jobs:
           cache: 'npm'
 
       - name: 🔧 Install dependencies
-        run: npm install --no-frozen-lockfile
+        run: npm install --legacy-peer-deps --no-frozen-lockfile
 
       - name: 🏗️ Build main project
         run: npm run build
@@ -59,7 +59,7 @@ jobs:
       - name: ✨ Validate test-worker build
         run: |
           cd myai/agents/workers/cean-test
-          npm install --no-frozen-lockfile
+          npm install --legacy-peer-deps --no-frozen-lockfile
           npm run build
 
       - name: 🎯 Dry-run deploy (validation only)
@@ -94,7 +94,7 @@ jobs:
           cache: 'npm'
 
       - name: 🔧 Install dependencies
-        run: npm install --no-frozen-lockfile
+        run: npm install --legacy-peer-deps --no-frozen-lockfile
 
       - name: 🏗️ Build main project
         run: npm run build
@@ -111,7 +111,7 @@ jobs:
       - name: 📤 Deploy test-worker to Cloudflare
         run: |
           cd myai/agents/workers/cean-test
-          npm install --no-frozen-lockfile
+          npm install --legacy-peer-deps --no-frozen-lockfile
           npm run build
           wrangler deploy --env production
         env:
