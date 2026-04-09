@@ -42,25 +42,25 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
+          cache: "pnpm"
 
       - name: 🔧 Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: 🏗️ Build main project
-        run: npm run build
+        run: pnpm run build
 
       - name: 🧪 Run tests
-        run: npm test
+        run: pnpm test
 
       - name: 🔍 Setup Wrangler
-        run: npm install -g wrangler@latest
+        run: pnpm install -g wrangler@latest
 
       - name: ✨ Validate test-worker build
         run: |
           cd myai/agents/workers/cean-test
-          npm ci
-          npm run build
+          pnpm install --frozen-lockfile
+          pnpm run build
 
       - name: 🎯 Dry-run deploy (validation only)
         run: |
@@ -91,16 +91,16 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
+          cache: "pnpm"
 
       - name: 🔧 Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: 🏗️ Build main project
-        run: npm run build
+        run: pnpm run build
 
       - name: 🔍 Setup Wrangler
-        run: npm install -g wrangler@latest
+        run: pnpm install -g wrangler@latest
 
       - name: 🔐 Verify Cloudflare auth
         run: wrangler whoami
@@ -111,8 +111,8 @@ jobs:
       - name: 📤 Deploy test-worker to Cloudflare
         run: |
           cd myai/agents/workers/cean-test
-          npm ci
-          npm run build
+          pnpm install --frozen-lockfile
+          pnpm run build
           wrangler deploy --env production
         env:
           CF_BAS_API_TOKEN: ${{ secrets['CF_BAS_API_TOKEN'] }}

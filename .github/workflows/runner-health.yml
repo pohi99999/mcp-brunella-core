@@ -60,7 +60,7 @@ jobs:
         run: |
           echo "📦 Node.js:"
           node --version || echo "Node.js not found"
-          npm --version || echo "npm not found"
+          pnpm --version || echo "npm not found"
 
       - name: Check Python
         run: |

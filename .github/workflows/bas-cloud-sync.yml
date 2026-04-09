@@ -55,6 +55,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 10.30.3
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -68,7 +73,7 @@ jobs:
       - name: Install dependencies
         run: |
           cd bas-cloudflare-orchestrator
-          npm install
+          pnpm install
 
       - name: Wrangler Login Check
         shell: bash
@@ -135,6 +140,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 10.30.3
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -144,7 +154,7 @@ jobs:
         shell: bash
         run: |
           cd bas-cloudflare-orchestrator
-          npm install
+          pnpm install
           npx wrangler deploy
         env:
           CF_BAS_API_TOKEN: ${{ secrets['CF_BAS_API_TOKEN'] }}
