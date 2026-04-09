@@ -102,7 +102,7 @@ async function fetchWithRetry(url, options, maxRetries = 3) {
     throw new Error(`Rate limited after ${maxRetries} retries`);
 }
 function generateTaskId() {
-    return `task_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    return `task_${Date.now()}_${Math.random().toString(36).slice(2, 11)}`;
 }
 async function insertTask(db, task) {
     await db

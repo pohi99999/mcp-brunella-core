@@ -27,7 +27,7 @@ jobs:
           cache: "npm"
 
       - name: Install dependencies
-        run: npm install --no-frozen-lockfile
+        run: npm install --legacy-peer-deps --no-frozen-lockfile
 
       - name: Fetch last 24h workflow runs
         id: fetch_runs

@@ -44,7 +44,7 @@ jobs:
           cache: "npm"
 
       - name: Install
-        run: npm install --no-frozen-lockfile
+        run: npm install --legacy-peer-deps --no-frozen-lockfile
 
       - name: Run selected suite
         shell: bash
