@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { v4 as uuidv4 } from 'uuid';
 import { agentManager } from '../../agents/AgentManager.js';
 import { record as auditRecord } from '../../core/auditLog.js';
+import { fireHookSafely } from '../../core/hookRegistry.js';
 import { approvalManager, type ApprovalAction } from '../../utils/approvalManager.js';
 import { getBusinessJobById, getBusinessJobs, saveBusinessJob, updateBusinessJobStatus } from '../../utils/db.js';
 import { ensureError } from '../../utils/ensureError.js';
@@ -186,6 +187,22 @@ export function createHRLeaveRoutes(): Router {
           analysisStatus: 'queued',
           message: 'Leave request submitted and awaiting manager approval.'
         }),
+      });
+
+      await fireHookSafely('hr:leave:requested', {
+        jobId,
+        employeeId,
+        employeeName,
+        startDate,
+        endDate,
+        leaveType: normalizedLeaveType,
+        reason,
+        approvalRequestId,
+        submittedAt,
+      }, {
+        source: 'hr-leave-route',
+        metadata: { jobId, approvalRequestId },
+        logContext: 'HRLeaveRoute',
       });
 
       logInfo('HRLeaveRoute', `Leave request ${jobId} submitted for ${employeeName}`);

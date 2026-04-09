@@ -18,6 +18,9 @@ vi.mock('../src/utils/logger.js', () => ({
 }));
 // Mock fetch for log retrieval
 global.fetch = vi.fn();
+function signPayload(payload) {
+    return `sha256=${crypto.createHmac('sha256', 'test-secret').update(JSON.stringify(payload)).digest('hex')}`;
+}
 describe('Webhook Routes Integration', () => {
     let app;
     let db;
@@ -89,10 +92,7 @@ describe('Webhook Routes Integration', () => {
                 name: 'owner/repo'
             }
         };
-        const payloadString = JSON.stringify(payload);
-        // Calculate signature
-        const hmac = crypto.createHmac('sha256', 'test-secret');
-        const signature = 'sha256=' + hmac.update(payloadString).digest('hex');
+        const signature = signPayload(payload);
         const response = await request(app)
             .post('/api/github')
             .set('X-GitHub-Event', 'workflow_run')
@@ -109,6 +109,39 @@ describe('Webhook Routes Integration', () => {
         // NOTE: Automatic suggested_task creation from webhook failures
         // is a future enhancement (would require log parsing + AI analysis)
         // For now, we just verify the webhook event was stored and processed
+    });
+    it('should reject missing signature when a GitHub webhook secret is configured', async () => {
+        const response = await request(app)
+            .post('/api/github')
+            .set('X-GitHub-Event', 'push')
+            .send({ foo: 'bar' });
+        expect(response.status).toBe(401);
+        expect(response.body.error).toBe('Missing signature');
+    });
+    it('should require a valid signature for GitHub push webhooks', async () => {
+        const fetchSpy = vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({
+            ok: true,
+            status: 200,
+            json: async () => ({ success: true, data: { count: 0, tasks: [] } }),
+        });
+        const payload = {
+            repository: { name: 'mcp-brunella-core' },
+            pusher: { name: 'tester' },
+            ref: 'refs/heads/main',
+            head_commit: { id: 'abc123' },
+        };
+        const missingSignature = await request(app)
+            .post('/api/github/push')
+            .send(payload);
+        expect(missingSignature.status).toBe(401);
+        expect(missingSignature.body.error).toBe('Missing signature');
+        const signed = await request(app)
+            .post('/api/github/push')
+            .set('X-Hub-Signature-256', signPayload(payload))
+            .send(payload);
+        expect(signed.status).toBe(200);
+        expect(signed.body.success).toBe(true);
+        fetchSpy.mockRestore();
     });
     it('should reject invalid signature', async () => {
         const payload = { foo: 'bar' };

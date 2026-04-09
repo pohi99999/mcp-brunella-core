@@ -1,0 +1,32 @@
+@startuml
+' Agent -> MCP tool invocation — PlantUML with retry / circuit-breaker
+actor Agent
+participant "Local MCP Client" as MCPClient
+participant "MCP Tool (server)" as MCPServer
+database "State DB" as DB
+
+Agent -> MCPClient: invokeTool(name, input, corrId)
+MCPClient -> MCPServer: callTool
+alt success
+  MCPServer -> MCPClient: result
+  MCPClient -> Agent: result
+  Agent -> DB: mark success
+else error
+  MCPServer -> MCPClient: error(code)
+  MCPClient -> Agent: error
+  Agent -> Agent: classifyError()
+  alt isRetriable
+    Agent -> MCPClient: retry(count++)
+    note right: exponential backoff (1s,2s,4s)
+    MCPClient -> MCPServer: callTool (retry)
+  else nonRetriable
+    Agent -> DB: persist failure + details
+    Agent -> Operator: alert/raise ticket
+  end
+end
+
+note over Agent
+  - Implement circuit-breaker: open after N failures
+  - Use idempotencyKey to avoid duplicate side-effects
+end note
+@enduml

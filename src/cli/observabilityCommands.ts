@@ -1,5 +1,6 @@
 import type { Command } from 'commander';
 import { logInfo } from '../utils/logger.js';
+import type { PhoenixFlywheelObservabilityResponse } from '../dashboard/lib/apiService.js';
 
 interface AgentStatusEntry {
   name?: string;
@@ -40,6 +41,94 @@ export function registerObservabilityCommands(program: Command): void {
     .command('observability')
     .alias('obs')
     .description('LLM Observability — hívás statisztikák és monitorozás');
+
+  obs
+    .command('status')
+    .description('Phoenix / Flywheel observability státusz')
+    .option('--hours <count>', 'Időablak órában', '24')
+    .option('-j, --json', 'Nyers JSON kimenet')
+    .option('--markdown', 'Markdown kimenet')
+    .action(async (opts: { hours?: string; json?: boolean; markdown?: boolean }) => {
+      try {
+        const hours = Math.max(1, parseInt(opts.hours || '24', 10));
+        const API_BASE = process.env.BRUNELLA_API_URL || 'http://localhost:3000';
+        const response = await fetch(`${API_BASE}/api/v1/observability/phoenix-flywheel?hours=${hours}`);
+
+        if (!response.ok) {
+          throw new Error(`Phoenix/Flywheel observability: HTTP ${response.status}`);
+        }
+
+        const data = await response.json() as PhoenixFlywheelObservabilityResponse;
+        const snapshot = data.snapshot;
+
+        if (opts.json) {
+          writeLine(JSON.stringify(snapshot, null, 2));
+          return;
+        }
+
+        if (opts.markdown) {
+          writeLine(data.markdown || '');
+          return;
+        }
+
+        const chalk = (await import('chalk')).default;
+        const boxen = (await import('boxen')).default;
+
+        const lines = [
+          chalk.bold('🧭 Phoenix / Flywheel Observability'),
+          '',
+          `  Időablak:        ${chalk.cyan(`last ${snapshot.windowHours}h`)}`,
+          `  Összes score:    ${snapshot.summary.score >= 85 ? chalk.green(snapshot.summary.score) : snapshot.summary.score >= 65 ? chalk.yellow(snapshot.summary.score) : chalk.red(snapshot.summary.score)}`,
+          `  Phoenix score:   ${snapshot.summary.phoenixScore} (${snapshot.summary.phoenixStatus})`,
+          `  Flywheel score:  ${snapshot.summary.flywheelScore} (${snapshot.summary.flywheelStatus})`,
+          `  Failure signals: ${chalk.red(snapshot.summary.failureSignals)}`,
+          `  Recovery signals: ${chalk.green(snapshot.summary.recoverySignals)}`,
+          `  Pending approvals:${chalk.yellow(` ${snapshot.summary.pendingFinalApproval}`)}`,
+          `  Curated review:  ${chalk.yellow(snapshot.summary.pendingCuratedReview)}`,
+          `  Heartbeat:       ${snapshot.phoenix.heartbeat.status}`,
+          `  Reflex model:    ${snapshot.flywheel.learningLoop.activeReflexModel ?? 'n/a'}`,
+          '',
+          chalk.bold('Phoenix jelzések:'),
+        ];
+
+        if (snapshot.phoenix.eventBus.recentSignals.length === 0) {
+          lines.push(`  ${chalk.gray('Még nincs Phoenix jelzés.')}`);
+        } else {
+          for (const signal of snapshot.phoenix.eventBus.recentSignals.slice(0, 5)) {
+            lines.push(`  ${chalk.gray(signal.timestamp.slice(0, 19))} ${chalk.blue(signal.event)} ${chalk.gray(signal.detail)}`);
+          }
+        }
+
+        lines.push('', chalk.bold('Ajánlások:'));
+        if (snapshot.recommendations.length === 0) {
+          lines.push(`  ${chalk.green('Nincs aktív ajánlás.')}`);
+        } else {
+          for (const recommendation of snapshot.recommendations.slice(0, 5)) {
+            lines.push(`  ${chalk.blue(recommendation.title)} ${chalk.gray(`(${recommendation.target}/${recommendation.priority})`)}`);
+          }
+        }
+
+        lines.push('', chalk.bold('Mitigation trackek:'));
+        if (snapshot.mitigationTracks.length === 0) {
+          lines.push(`  ${chalk.green('Nincs javasolt mitigation track.')}`);
+        } else {
+          for (const track of snapshot.mitigationTracks.slice(0, 5)) {
+            lines.push(`  ${chalk.magenta(track.title)} ${chalk.gray(`(${track.priority})`)}`);
+          }
+        }
+
+        const output = boxen(lines.join('\n'), {
+          padding: 1,
+          borderStyle: 'round',
+          borderColor: 'magenta',
+        });
+        writeLine(output);
+      } catch (e: unknown) {
+        const msg = e instanceof Error ? e.message : String(e);
+        writeError(`Hiba: ${msg}`);
+        process.exit(1);
+      }
+    });
 
   obs
     .command('stats')

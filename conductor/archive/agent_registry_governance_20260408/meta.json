@@ -1,0 +1,26 @@
+{
+  "id": "agent_registry_governance_20260408",
+  "name": "Agent Registry Governance & Consolidation",
+  "title": "Agent Registry Governance & Consolidation",
+  "status": "archived",
+  "priority": "high",
+  "created": "2026-04-08",
+  "updated": "2026-04-08",
+  "assignee": "GitHub Copilot",
+  "progress": 100,
+  "tags": [
+    "agents",
+    "registry",
+    "governance",
+    "consolidation",
+    "hygiene",
+    "audit"
+  ],
+  "dependencies": [],
+  "sourceDocument": "Brunella Agent System – rendszer-elemzés és optimalizálási javaslatok.md",
+  "phase": 5,
+  "completedAt": "2026-04-08T15:01:55.3350365Z",
+  "archivedAt": "2026-04-08T15:01:55.3350365Z",
+  "archiveReason": "Agent registry governance implementation completed, verified, and archived after dashboard and test stabilization.",
+  "group": "brunella"
+}

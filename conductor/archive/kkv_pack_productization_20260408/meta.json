@@ -1,0 +1,29 @@
+{
+  "id": "kkv_pack_productization_20260408",
+  "name": "KKV Pack Productization & Cockpit Definition",
+  "title": "KKV Pack Productization & Cockpit Definition",
+  "status": "archived",
+  "priority": "medium",
+  "created": "2026-04-08",
+  "updated": "2026-04-08",
+  "assignee": "GitHub Copilot",
+  "progress": 100,
+  "completedAt": "2026-04-08T19:41:31Z",
+  "verified": true,
+  "verifiedAt": "2026-04-08",
+  "verificationNotes": "KKV cockpit test and build passed; no additional follow-up track was required.",
+  "tags": [
+    "kkv",
+    "productization",
+    "packs",
+    "cockpit",
+    "verticals",
+    "roadmap"
+  ],
+  "dependencies": [
+    "kkv_business_automation_20260408"
+  ],
+  "sourceDocument": "Brunella Agent System – rendszer-elemzés és optimalizálási javaslatok.md",
+  "phase": 3,
+  "group": "brunella"
+}

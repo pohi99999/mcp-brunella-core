@@ -5,7 +5,68 @@
 
 import { AgentStatusType, TaskItem } from '../types/dashboard.js';
 import type { HealthResponse } from '../../utils/health.js';
-
+import type { PhoenixFlywheelObservabilitySnapshot } from '../../tools/phoenixInsights.js';
+import type { KkvPackResponse } from '../../tools/kkvPack.js';
+import type {
+  MissionSurface,
+  TestCadenceTier,
+  DevExPlannerResponse,
+} from '../../tools/devExTypes.js';
+import type {
+  HookCircuitSnapshot,
+  HookDlqEntry,
+  HookExecutionRecord,
+  HookSnapshot,
+  HookSummary,
+} from '../../core/hookRegistry.js';
+import type { TrackStatusSnapshot } from '../../types/trackStatus.js';
+export {
+  missionSurfaceLabels,
+  missionSurfaceValues,
+  testCadenceTierLabels,
+  testCadenceTierValues,
+} from '../../tools/devExTypes.js';
+export {
+  kkvPackDomainLabels,
+  kkvPackIds,
+  kkvPackStatusLabels,
+  kkvPackSurfaceKindLabels,
+} from '../../tools/kkvPack.js';
+export type {
+  MissionSurface,
+  MissionTemplate,
+  TestCadenceTier,
+  TestCadenceAdvice,
+  DevExPlannerSnapshot,
+  DevExPlannerResponse,
+  DevExRecommendation,
+} from '../../tools/devExTypes.js';
+export type {
+  KkvPackBrief,
+  KkvPackDefinition,
+  KkvPackDomain,
+  KkvPackResponse,
+  KkvPackSnapshot,
+  KkvPackStatus,
+  KkvPackSurface,
+} from '../../tools/kkvPack.js';
+export type {
+  TrackBucket,
+  TrackLifecycleStatus,
+  TrackPriority,
+  TrackStatusBusinessGroupStats,
+  TrackStatusOverallStats,
+  TrackStatusRecommendation,
+  TrackStatusSnapshot,
+  TrackStatusTrack,
+} from '../../types/trackStatus.js';
+export type {
+  HookCircuitSnapshot,
+  HookDlqEntry,
+  HookExecutionRecord,
+  HookSnapshot,
+  HookSummary,
+} from '../../core/hookRegistry.js';
 export const API_BASE = ""; // Same origin
 const DEFAULT_TIMEOUT_MS = 30000; // 30 seconds default timeout
 const LONG_TIMEOUT_MS = 120000; // 2 minutes for LLM calls
@@ -1113,6 +1174,48 @@ export interface DocsConfigMarkdownResponse {
   config: string;
 }
 
+export interface PhoenixFlywheelObservabilityResponse {
+  snapshot: PhoenixFlywheelObservabilitySnapshot;
+  markdown: string;
+}
+
+export interface HookObservabilitySnapshot {
+  windowHours: number;
+  summary: HookSummary;
+  registry: HookSnapshot[];
+  executions: HookExecutionRecord[];
+  dlq: HookDlqEntry[];
+  circuits: HookCircuitSnapshot[];
+}
+
+export interface HookObservabilityResponse {
+  snapshot: HookObservabilitySnapshot;
+}
+
+export async function getDevExPlannerSnapshot(
+  templateId?: string,
+  surface?: MissionSurface,
+  tier?: TestCadenceTier,
+): Promise<DevExPlannerResponse> {
+  const params = new URLSearchParams();
+  if (templateId) params.set('templateId', templateId);
+  if (surface) params.set('surface', surface);
+  if (tier) params.set('tier', tier);
+
+  const query = params.toString();
+  const response = await fetchWithTimeout(
+    `${API_BASE}/api/v1/devex/planner${query ? `?${query}` : ''}`,
+    {},
+    DEFAULT_TIMEOUT_MS,
+  );
+
+  if (!response.ok) {
+    throw new Error(`DevEx planner: HTTP ${response.status}`);
+  }
+
+  return safeJson<DevExPlannerResponse>(response);
+}
+
 export async function getDocsConfigSnapshot(): Promise<DocsConfigSotSnapshot> {
   const response = await fetchWithTimeout(`${API_BASE}/api/docs-config/snapshot`);
   if (!response.ok) {
@@ -1151,6 +1254,42 @@ export async function getDocsConfigMarkdown(): Promise<DocsConfigMarkdownRespons
     throw new Error(`Docs/config markdown: HTTP ${response.status}`);
   }
   return safeJson<DocsConfigMarkdownResponse>(response);
+}
+
+export async function getPhoenixFlywheelObservabilitySnapshot(windowHours: number = 24): Promise<PhoenixFlywheelObservabilityResponse> {
+  const response = await fetchWithTimeout(`${API_BASE}/api/v1/observability/phoenix-flywheel?hours=${windowHours}`);
+  if (!response.ok) {
+    throw new Error(`Phoenix/Flywheel observability: HTTP ${response.status}`);
+  }
+  return safeJson<PhoenixFlywheelObservabilityResponse>(response);
+}
+
+export async function getHookObservabilitySnapshot(windowHours: number = 24): Promise<HookObservabilityResponse> {
+  const response = await fetchWithTimeout(`${API_BASE}/api/v1/hooks/summary?hours=${windowHours}`);
+  if (!response.ok) {
+    throw new Error(`Hook observability: HTTP ${response.status}`);
+  }
+  return safeJson<HookObservabilityResponse>(response);
+}
+
+export async function getKkvPackSnapshot(packId?: string): Promise<KkvPackResponse> {
+  const params = new URLSearchParams();
+  if (packId) {
+    params.set("pack", packId);
+  }
+
+  const query = params.toString();
+  const response = await fetchWithTimeout(
+    `${API_BASE}/api/v1/kkv-pack/snapshot${query ? `?${query}` : ""}`,
+    {},
+    DEFAULT_TIMEOUT_MS,
+  );
+
+  if (!response.ok) {
+    throw new Error(`KKV pack snapshot: HTTP ${response.status}`);
+  }
+
+  return safeJson<KkvPackResponse>(response);
 }
 
 export interface TasksResponse {
@@ -2095,6 +2234,19 @@ export async function getTrackDetail(trackId: string): Promise<TrackDetailRespon
   if (!response.ok)
     throw new Error(getErrorMessage(data) || "Failed to load track detail");
   return data as TrackDetailResponse;
+}
+
+export async function getTrackStatusSnapshot(): Promise<TrackStatusSnapshot> {
+  const response = await fetchWithTimeout(`${API_BASE}/api/v1/tracks/status`);
+  const data = await safeJson<TrackStatusSnapshot | { error?: string }>(response).catch(() => ({
+    error: `HTTP ${response.status}: ${response.statusText}`,
+  }));
+
+  if (!response.ok) {
+    throw new Error(getErrorMessage(data) || "Failed to load track status snapshot");
+  }
+
+  return data as TrackStatusSnapshot;
 }
 
 export interface AutonomousReplicationNode {
@@ -3643,4 +3795,290 @@ export async function fetchOpenStocktakes(): Promise<InventoryStocktakeSummary[]
   if (!response.ok) throw new Error(`Open stocktakes: HTTP ${response.status}`);
   const data = await safeJson<{ success: boolean; stocktakes: InventoryStocktakeSummary[] }>(response);
   return data.stocktakes || [];
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+// PROJECT MAINTAINER — Types & API calls
+// ════════════════════════════════════════════════════════════════════════════
+
+export interface ProjectMaintainerFinding {
+  category: "root-noise" | "misplaced-file" | "track-anomaly" | "structure-drift";
+  severity: "high" | "medium" | "low" | "info";
+  message: string;
+  path: string;
+}
+
+export interface ProjectMaintainerSuggestion {
+  action: "review" | "create";
+  target: string;
+  reason: string;
+}
+
+export interface ProjectMaintainerReport {
+  id: string;
+  generatedAt: string;
+  triggeredBy: string;
+  findings: ProjectMaintainerFinding[];
+  suggestions: ProjectMaintainerSuggestion[];
+  trackSummary: {
+    total: number;
+    missingSpec: number;
+    missingPlan: number;
+    healthy: number;
+  };
+  dryRun: boolean;
+}
+
+export interface ProjectMaintainerLatestReportResponse {
+  id: string;
+  generatedAt: string;
+  findingsCount: number;
+  suggestionsCount: number;
+  triggeredBy: string;
+  report: ProjectMaintainerReport;
+}
+
+/**
+ * Fetch the latest Project Maintainer analysis report.
+ * Returns `null` if no report has been generated yet (404).
+ */
+export async function getLatestProjectMaintainerReport(): Promise<ProjectMaintainerLatestReportResponse | null> {
+  try {
+    const response = await fetchWithTimeout(`${API_BASE}/api/project-maintainer/reports/latest`, {}, 10000);
+    if (response.status === 404) return null;
+    if (!response.ok) throw new Error(`Project Maintainer report: HTTP ${response.status}`);
+    return await safeJson<ProjectMaintainerLatestReportResponse>(response);
+  } catch (error) {
+    console.error("[apiService] getLatestProjectMaintainerReport error:", error);
+    return null;
+  }
+}
+
+/**
+ * Trigger a new Project Maintainer analysis run.
+ * @param dryRun - If true, the analysis runs but the result is not persisted.
+ */
+export async function runProjectMaintainerReport(dryRun = false): Promise<{ success: boolean; id?: string; error?: string }> {
+  try {
+    const response = await fetchWithTimeout(
+      `${API_BASE}/api/project-maintainer/run`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ dryRun }),
+      },
+      60000,
+    );
+    if (!response.ok) throw new Error(`Project Maintainer run: HTTP ${response.status}`);
+    return await safeJson<{ success: boolean; id?: string; error?: string }>(response);
+  } catch (error) {
+    return { success: false, error: String(error) };
+  }
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+// DAILY AI AGENT BRIEFING — Types & API calls
+// ════════════════════════════════════════════════════════════════════════════
+
+export interface BriefingItem {
+  title: string;
+  url?: string;
+  source: string;
+  excerpt: string;
+  relevance: string;
+  brunellaLayers?: string[];
+  brunellaLayer?: string;
+  publishedAt?: string;
+}
+
+export interface BriefingReport {
+  id: string;
+  generatedAt: string;
+  reportDate: string;
+  triggeredBy: string;
+  items: BriefingItem[];
+  brunellaLayersCount: number;
+  markdownPath?: string;
+  dryRun: boolean;
+}
+
+export interface BriefingReportSummary {
+  id: string;
+  generatedAt: string;
+  reportDate: string;
+  itemsCount: number;
+  brunellaLayersCount: number;
+  triggeredBy: string;
+}
+
+export interface BriefingLatestReportResponse {
+  id: string;
+  generatedAt: string;
+  reportDate: string;
+  itemsCount: number;
+  brunellaLayersCount: number;
+  triggeredBy: string;
+  report: BriefingReport;
+}
+
+type BriefingItemPayload = BriefingItem;
+
+type BriefingReportPayload = Omit<BriefingReport, "items"> & {
+  items: BriefingItemPayload[];
+};
+
+type BriefingLatestReportPayload = Omit<BriefingLatestReportResponse, "report"> & {
+  report: BriefingReportPayload;
+};
+
+function normalizeBriefingLayers(item: BriefingItemPayload): string[] {
+  if (Array.isArray(item.brunellaLayers) && item.brunellaLayers.length > 0) {
+    return item.brunellaLayers;
+  }
+
+  if (typeof item.brunellaLayer === "string" && item.brunellaLayer.trim()) {
+    return [item.brunellaLayer.trim()];
+  }
+
+  return [];
+}
+
+function normalizeBriefingItem(item: BriefingItemPayload): BriefingItem {
+  const brunellaLayers = normalizeBriefingLayers(item);
+  return {
+    ...item,
+    brunellaLayers,
+  };
+}
+
+function normalizeBriefingReport(report: BriefingReportPayload): BriefingReport {
+  const items = Array.isArray(report.items) ? report.items.map(normalizeBriefingItem) : [];
+  const brunellaLayersCount =
+    typeof report.brunellaLayersCount === "number" && report.brunellaLayersCount > 0
+      ? report.brunellaLayersCount
+      : new Set(items.flatMap((item) => item.brunellaLayers ?? [])).size;
+
+  return {
+    ...report,
+    items,
+    brunellaLayersCount,
+  };
+}
+
+function normalizeBriefingLatestReportResponse(
+  response: BriefingLatestReportPayload,
+): BriefingLatestReportResponse {
+  const report = normalizeBriefingReport(response.report);
+
+  return {
+    id: response.id ?? report.id,
+    generatedAt: response.generatedAt ?? report.generatedAt,
+    reportDate: response.reportDate ?? report.reportDate,
+    itemsCount: response.itemsCount ?? report.items.length,
+    brunellaLayersCount: response.brunellaLayersCount ?? report.brunellaLayersCount,
+    triggeredBy: response.triggeredBy ?? report.triggeredBy,
+    report,
+  };
+}
+
+/**
+ * Fetch the latest Daily AI Agent Briefing report.
+ * Returns `null` if no report has been generated yet (404).
+ */
+export async function getLatestBriefingReport(): Promise<BriefingLatestReportResponse | null> {
+  try {
+    const response = await fetchWithTimeout(`${API_BASE}/api/v1/briefing/reports/latest`, {}, 10000);
+    if (response.status === 404) return null;
+    if (!response.ok) throw new Error(`Briefing report: HTTP ${response.status}`);
+    const payload = await safeJson<BriefingLatestReportPayload>(response);
+    return normalizeBriefingLatestReportResponse(payload);
+  } catch (error) {
+    console.error("[apiService] getLatestBriefingReport error:", error);
+    return null;
+  }
+}
+
+/**
+ * Trigger a new Daily AI Agent Briefing run.
+ * @param dryRun - If true, the briefing is generated but not persisted to the database.
+ */
+export async function runBriefingReport(dryRun = false): Promise<{ success: boolean; id?: string; reportDate?: string; error?: string }> {
+  try {
+    const response = await fetchWithTimeout(
+      `${API_BASE}/api/v1/briefing/run`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ dryRun }),
+      },
+      120000, // 2 minutes — LLM synthesis may take time
+    );
+    if (!response.ok) throw new Error(`Briefing run: HTTP ${response.status}`);
+    const payload = await safeJson<
+      { success: boolean; id?: string; reportDate?: string; error?: string; report?: BriefingReportPayload }
+    >(response);
+    return {
+      success: payload.success,
+      id: payload.id ?? payload.report?.id,
+      reportDate: payload.reportDate ?? payload.report?.reportDate,
+      error: payload.error,
+    };
+  } catch (error) {
+    return { success: false, error: String(error) };
+  }
+}
+
+// ── AnythingLLM Action Bridge ─────────────────────────────────────────────
+
+export interface AnythingLLMActionRequest {
+  action: string;
+  payload?: { task?: string; context?: Record<string, unknown> };
+}
+
+export interface AnythingLLMActionResponse {
+  success: boolean;
+  action: string;
+  agent: string;
+  result: string;
+  riskLevel: 'normal' | 'high';
+  auditId: string;
+  error?: string;
+}
+
+export interface AnythingLLMActionAuditRecord {
+  id: string;
+  timestamp: string;
+  action: string;
+  agent: string;
+  payloadSummary: string;
+  resultSummary: string;
+  riskLevel: 'normal' | 'high';
+  durationMs: number;
+  success: boolean;
+}
+
+export async function executeAnythingLLMAction(
+  req: AnythingLLMActionRequest,
+  secret?: string,
+): Promise<AnythingLLMActionResponse> {
+  const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+  if (secret) headers['X-Brunella-Secret'] = secret;
+  const response = await fetchWithTimeout(
+    `${API_BASE}/api/v1/anythingllm/action`,
+    { method: 'POST', headers, body: JSON.stringify(req) },
+    60000,
+  );
+  return safeJson<AnythingLLMActionResponse>(response);
+}
+
+export async function getAnythingLLMActionAudit(
+  secret?: string,
+): Promise<{ records: AnythingLLMActionAuditRecord[]; total: number }> {
+  const headers: Record<string, string> = {};
+  if (secret) headers['X-Brunella-Secret'] = secret;
+  const response = await fetchWithTimeout(
+    `${API_BASE}/api/v1/anythingllm/action/audit`,
+    { headers },
+  );
+  return safeJson<{ records: AnythingLLMActionAuditRecord[]; total: number }>(response);
 }

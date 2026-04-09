@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { agentManager } from '../../agents/AgentManager.js';
 import { AgentArchitect } from '../../agents/AgentArchitect.js';
+import { buildAgentRegistryGovernanceSnapshot } from '../agentRegistryGovernance.js';
 import { logEmitter, type LogEvent } from '../../utils/logger.js';
 
 export function createAgentRoutes(): Router {
@@ -40,6 +41,16 @@ export function createAgentRoutes(): Router {
         try {
             const diagnostics = agentManager.getAgentDiagnostics();
             res.json(diagnostics);
+        } catch (e: unknown) {
+            const msg = e instanceof Error ? e.message : String(e);
+            res.status(500).json({ error: msg });
+        }
+    });
+
+    router.get('/registry-governance', async (req, res) => {
+        try {
+            const snapshot = await buildAgentRegistryGovernanceSnapshot();
+            res.json(snapshot);
         } catch (e: unknown) {
             const msg = e instanceof Error ? e.message : String(e);
             res.status(500).json({ error: msg });

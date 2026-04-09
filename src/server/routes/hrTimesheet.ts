@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { agentManager } from '../../agents/AgentManager.js';
 import { record as auditRecord } from '../../core/auditLog.js';
 import { initHRTimesheetSchema, recordHRTimesheetSubmission, runDailyCultureAlerts, runMonthlyPayrollExport } from '../services/hrTimesheetService.js';
+import { buildHRTimesheetStatusSnapshot } from '../services/hrTimesheetStatusSnapshot.js';
 import { ensureError } from '../../utils/ensureError.js';
 import { getGlobalDb } from '../../utils/globalDb.js';
 import { logError, logInfo } from '../../utils/logger.js';
@@ -37,6 +38,21 @@ const DailyAlertSchema = z.object({
 export function createHRTimesheetRoutes(): Router {
   const router = Router();
   const db = initHRTimesheetSchema(getGlobalDb());
+
+  /**
+   * GET /api/v1/hr/timesheet/status
+   * Read-only snapshot of the current HR timesheet and culture state.
+   */
+  router.get('/status', (_req: Request, res: Response) => {
+    try {
+      const snapshot = buildHRTimesheetStatusSnapshot(db);
+      res.json({ success: true, snapshot, timestamp: snapshot.checkedAt });
+    } catch (error: unknown) {
+      const normalized = ensureError(error);
+      logError('HRTimesheetRoute', `GET /status failed: ${normalized.message}`);
+      res.status(500).json({ success: false, error: normalized.message });
+    }
+  });
 
   /**
    * POST /api/v1/hr/timesheet/submit

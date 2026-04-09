@@ -1,0 +1,34 @@
+@startuml
+' Developer dev loop — PlantUML sequence + component
+actor Developer
+node "Dev Machine" as Local
+cloud "GitHub" as GH
+participant "CI Runner" as CI
+database "Artifacts" as Artifacts
+participant "Node App" as Node
+participant "Python myai" as Py
+
+Developer -> Local: edit code, run unit tests
+Local -> Node: npm run dev (hot-reload)
+Local -> Py: start myai (uvicorn)
+Developer -> GH: push branch / open PR
+GH -> CI: trigger pipeline (PR checks)
+CI -> Node: npm ci && npm run build
+CI -> Node: npm run test:fast (unit tests)
+CI -> Py: run myai integration tests
+alt All checks pass
+  CI -> GH: report success
+  GH -> CI: trigger deploy workflow
+  CI -> Artifacts: publish build
+  CI -> Node: deploy / start-full
+  CI -> GH: report deployed (smoke ok)
+else Any check fails
+  CI -> GH: report failure
+  GH -> Developer: notify failing checks
+end
+
+note left of CI
+  Best practice: split lint/unit/integration
+  Use caching for node_modules and build artifacts
+end note
+@enduml

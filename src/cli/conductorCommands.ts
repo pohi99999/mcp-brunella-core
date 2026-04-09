@@ -6,6 +6,7 @@
 import { Command } from 'commander';
 import chalk from 'chalk';
 import { trackStateManager } from '../services/trackStateManager.js';
+import { buildTrackStatusSnapshot, formatTrackStatusSnapshot } from '../services/trackStatusSnapshot.js';
 import { getTrackGroupLabel, normalizeTrackGroup, TRACK_GROUP_LABELS } from '../utils/trackGroups.js';
 
 function writeLine(message = ''): void {
@@ -58,54 +59,13 @@ export function registerConductorCommands(conductorCmd: Command): void {
       }
     });
 
-  // brunella conductor state (renamed to avoid conflict)
+  // brunella conductor masterplan
   conductorCmd
-    .command('state')
-    .description('Show current project status (tracks summary)')
+    .command('masterplan')
+    .description('Show KKV masterplan status snapshot')
     .action(async () => {
-      writeLine(chalk.blue('📊 Project Status Report\n'));
-
-      const state = trackStateManager.getState();
-
-      writeLine(chalk.white(`Last Updated: ${state.lastUpdated}\n`));
-
-      writeLine(chalk.cyan('🚀 Active Tracks:'));
-      const active = state.tracks.filter(t => t.status === 'active');
-      if (active.length === 0) {
-        writeLine(chalk.gray('  (none)'));
-      } else {
-        active.slice(0, 10).forEach(t => {
-          const progressBar = '█'.repeat(Math.floor(t.progress / 10)) + '░'.repeat(10 - Math.floor(t.progress / 10));
-          writeLine(chalk.white(`  [${progressBar}] ${t.progress}% - ${t.name}`));
-          writeLine(chalk.gray(`           Group: ${getTrackGroupLabel(t.group)} | Priority: ${t.priority}`));
-        });
-        if (active.length > 10) {
-          writeLine(chalk.gray(`  ... and ${active.length - 10} more`));
-        }
-      }
-
-      writeLine(chalk.yellow('\n📝 Proposed Tracks:'));
-      const proposed = state.tracks.filter(t => t.status === 'proposed');
-      if (proposed.length === 0) {
-        writeLine(chalk.gray('  (none)'));
-      } else {
-        proposed.slice(0, 5).forEach(t => {
-          writeLine(chalk.white(`  - ${t.name} (${t.priority})`));
-          writeLine(chalk.gray(`           Group: ${getTrackGroupLabel(t.group)}`));
-        });
-        if (proposed.length > 5) {
-          writeLine(chalk.gray(`  ... and ${proposed.length - 5} more`));
-        }
-      }
-
-      writeLine(chalk.green('\n✅ Completed (Not Archived):'));
-      const completed = state.tracks.filter(t => t.status === 'completed' && !t._isArchived);
-      writeLine(chalk.white(`  ${completed.length} tracks`));
-
-      writeLine(chalk.gray('\n📦 Archived:'));
-      writeLine(chalk.white(`  ${state.stats.archived} tracks`));
-
-      writeLine(chalk.white(`\n📊 Total: ${state.stats.total} tracks`));
+      const snapshot = buildTrackStatusSnapshot(trackStateManager.getState());
+      writeLine(formatTrackStatusSnapshot(snapshot));
     });
 
   // brunella conductor list

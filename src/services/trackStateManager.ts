@@ -11,6 +11,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { logInfo, logError, logWarn } from '../utils/logger.js';
+import { fireHookSafely } from '../core/hookRegistry.js';
 import {
   TRACK_GROUP_LABELS,
   TRACK_GROUP_ORDER,
@@ -80,6 +81,49 @@ export class TrackStateManager {
 
   constructor() {
     this.state = this.loadState();
+  }
+
+  private async emitTrackLifecycleHooks(
+    previousTracks: Map<string, TrackMetadata>,
+    nextTracks: TrackMetadata[],
+  ): Promise<void> {
+    for (const track of nextTracks) {
+      const previous = previousTracks.get(track.id);
+      if (!previous) {
+        continue;
+      }
+
+      if (previous.status !== track.status || previous.progress !== track.progress || previous._isArchived !== track._isArchived) {
+        await fireHookSafely('track:status:changed', {
+          trackId: track.id,
+          trackName: track.name,
+          previousStatus: previous.status,
+          status: track.status,
+          previousProgress: previous.progress,
+          progress: track.progress,
+          archived: track._isArchived,
+          updated: track.updated ?? new Date().toISOString(),
+        }, {
+          source: 'track-state-manager',
+          metadata: { trackId: track.id, status: track.status },
+          logContext: 'TrackStateManager',
+        });
+      }
+
+      if (previous.status !== 'completed' && track.status === 'completed') {
+        await fireHookSafely('track:completed', {
+          trackId: track.id,
+          trackName: track.name,
+          completedAt: track.completed ?? track.updated ?? new Date().toISOString(),
+          progress: track.progress,
+          assignee: track.assignee,
+        }, {
+          source: 'track-state-manager',
+          metadata: { trackId: track.id },
+          logContext: 'TrackStateManager',
+        });
+      }
+    }
   }
 
   /**
@@ -342,6 +386,7 @@ export class TrackStateManager {
 
     this.syncInProgress = true;
     logInfo('TrackStateManager', 'Starting full sync (active + archived)...');
+    const previousTracks = new Map(this.state.tracks.map((track) => [track.id, track]));
 
     const trackMap = new Map<string, TrackMetadata>();
     const registerTrack = (track: TrackMetadata): void => {
@@ -404,6 +449,7 @@ export class TrackStateManager {
 
       // 4. Generate tracks.md
       await this.generateTracksMd();
+      await this.emitTrackLifecycleHooks(previousTracks, newTracks);
 
       logInfo('TrackStateManager', `✅ Full sync complete: ${newTracks.length} tracks (${this.state.stats.active} active, ${this.state.stats.archived} archived)`);
     } catch (e) {

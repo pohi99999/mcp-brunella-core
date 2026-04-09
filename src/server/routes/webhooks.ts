@@ -5,6 +5,7 @@ import crypto from 'crypto';
 import { logInfo, logError } from '../../utils/logger.js';
 import { JulesAutomationService } from '../../core/julesAutomationService.js';
 import { ingestGitHubWorkflowFailure } from '../../core/githubWebhookIngress.js';
+import { fireHookSafely } from '../../core/hookRegistry.js';
 import { config } from '../../config/schema.js';
 
 interface WebhookEvent {
@@ -16,6 +17,99 @@ interface WebhookEvent {
   created_at: string;
 }
 
+async function emitWebhookHooks(
+  provider: string,
+  event: string,
+  payload: unknown,
+  webhookId: string,
+): Promise<void> {
+  await fireHookSafely('webhook.received', {
+    provider,
+    event,
+    webhookId,
+    payload,
+  }, {
+    source: 'webhooks',
+    metadata: { provider, event, webhookId },
+    logContext: 'Webhooks',
+  });
+
+  if (provider === 'github' && event === 'github.push') {
+    await fireHookSafely('github.push', {
+      webhookId,
+      payload,
+    }, {
+      source: 'webhooks',
+      metadata: { webhookId },
+      logContext: 'Webhooks',
+    });
+  }
+}
+
+function deriveN8nWorkflowEvent(body: unknown): 'n8n:workflow:completed' | 'n8n:workflow:failed' | 'n8n:workflow:timeout' | null {
+  if (!body || typeof body !== 'object') {
+    return null;
+  }
+
+  const record = body as Record<string, unknown>;
+  const status = typeof record.status === 'string'
+    ? record.status.toLowerCase()
+    : typeof record.state === 'string'
+      ? record.state.toLowerCase()
+      : typeof record.result === 'string'
+        ? record.result.toLowerCase()
+        : '';
+
+  if (status.includes('timeout')) {
+    return 'n8n:workflow:timeout';
+  }
+
+  if (status.includes('fail') || status.includes('error')) {
+    return 'n8n:workflow:failed';
+  }
+
+  if (status.includes('success') || status.includes('complete') || status.includes('completed')) {
+    return 'n8n:workflow:completed';
+  }
+
+  return null;
+}
+
+function verifyGitHubSignature(req: Request, res: Response): boolean {
+  if (!config.githubWebhookSecret) {
+    return true;
+  }
+
+  const signatureHeader = req.headers['x-hub-signature-256'];
+  const signature = Array.isArray(signatureHeader) ? signatureHeader[0] : signatureHeader;
+
+  if (!signature) {
+    logError('Webhooks', 'Missing GitHub webhook signature');
+    res.status(401).json({ error: 'Missing signature' });
+    return false;
+  }
+
+  // @ts-expect-error - rawBody added by middleware
+  const rawBody = req.rawBody as Buffer | string | undefined;
+  if (!rawBody) {
+    res.status(400).json({ error: 'Raw body not available for signature verification' });
+    return false;
+  }
+
+  const hmac = crypto.createHmac('sha256', config.githubWebhookSecret);
+  const digest = `sha256=${hmac.update(rawBody).digest('hex')}`;
+  const received = Buffer.from(signature);
+  const expected = Buffer.from(digest);
+
+  if (received.length !== expected.length || !crypto.timingSafeEqual(received, expected)) {
+    logError('Webhooks', 'Invalid GitHub webhook signature');
+    res.status(401).json({ error: 'Invalid signature' });
+    return false;
+  }
+
+  return true;
+}
+
 export function createWebhookRoutes(db: Database.Database): Router {
   const router = Router();
 
@@ -25,6 +119,10 @@ export function createWebhookRoutes(db: Database.Database): Router {
    */
   router.post('/github/push', async (req: Request, res: Response) => {
     try {
+      if (!verifyGitHubSignature(req, res)) {
+        return;
+      }
+
       const { repository, pusher, ref, head_commit } = req.body;
 
       if (!repository || !pusher) {
@@ -39,6 +137,7 @@ export function createWebhookRoutes(db: Database.Database): Router {
         INSERT INTO webhook_events (id, type, provider, payload, processed)
         VALUES (?, ?, ?, ?, ?)
       `).run(webhookId, eventType, 'github', JSON.stringify(req.body), 0);
+      await emitWebhookHooks('github', eventType, req.body, webhookId);
 
       logInfo('Webhooks', `GitHub push detected: ${repository.name} (${ref})`);
 
@@ -81,27 +180,15 @@ export function createWebhookRoutes(db: Database.Database): Router {
    */
   router.post('/github', async (req: Request, res: Response) => {
     try {
-      // Verify GitHub signature
-      const signature = req.headers['x-hub-signature-256'] as string;
-      const event = req.headers['x-github-event'] as string;
-
-      if (config.githubWebhookSecret && signature) {
-        // @ts-expect-error - rawBody added by middleware
-        const rawBody = req.rawBody as Buffer | string;
-        if (!rawBody) {
-          return res.status(400).json({ error: 'Raw body not available for signature verification' });
-        }
-
-        const hmac = crypto.createHmac('sha256', config.githubWebhookSecret);
-        const digest = 'sha256=' + hmac.update(rawBody).digest('hex');
-
-        if (signature !== digest) {
-          logError('Webhooks', 'Invalid GitHub webhook signature');
-          return res.status(401).json({ error: 'Invalid signature' });
-        }
+      if (!verifyGitHubSignature(req, res)) {
+        return;
       }
 
+      const eventHeader = req.headers['x-github-event'];
+      const event = Array.isArray(eventHeader) ? eventHeader[0] : eventHeader;
+
       const result = ingestGitHubWorkflowFailure(db, event || 'unknown', req.body);
+      await emitWebhookHooks('github', `github.${event || 'unknown'}`, req.body, result.webhookId);
       logInfo('Webhooks', `GitHub ${event} event received`);
 
       res.json({
@@ -132,6 +219,7 @@ export function createWebhookRoutes(db: Database.Database): Router {
         INSERT INTO webhook_events (id, type, provider, payload, processed)
         VALUES (?, ?, ?, ?, ?)
       `).run(webhookId, eventType, 'render', JSON.stringify(req.body), 0);
+      await emitWebhookHooks('render', eventType, req.body, webhookId);
 
       logInfo('Webhooks', `Render deployment detected`);
 
@@ -147,6 +235,16 @@ export function createWebhookRoutes(db: Database.Database): Router {
 
         // Mark event as processed
         db.prepare('UPDATE webhook_events SET processed = 1 WHERE id = ?').run(webhookId);
+        await fireHookSafely('dashboard:deploy:completed', {
+          webhookId,
+          provider: 'render',
+          payload: req.body,
+          result,
+        }, {
+          source: 'webhooks',
+          metadata: { provider: 'render', webhookId },
+          logContext: 'Webhooks',
+        });
 
         logInfo('Webhooks', `Jules automations imported: ${result.imported} imported, ${result.skipped} skipped`);
 
@@ -185,7 +283,20 @@ export function createWebhookRoutes(db: Database.Database): Router {
       db.prepare(`
         INSERT INTO webhook_events (id, type, provider, payload, processed)
         VALUES (?, ?, ?, ?, ?)
-      `).run(webhookId, `${provider}.custom`, provider, JSON.stringify(req.body), 0);
+      `).run(webhookId, `${provider}.custom`, provider as string, JSON.stringify(req.body), 0);
+      await emitWebhookHooks(provider as string, `${provider}.custom`, req.body, webhookId);
+      const workflowEvent = provider === 'n8n' ? deriveN8nWorkflowEvent(req.body) : null;
+      if (workflowEvent) {
+        await fireHookSafely(workflowEvent, {
+          provider,
+          webhookId,
+          payload: req.body,
+        }, {
+          source: 'webhooks',
+          metadata: { provider, webhookId, workflowEvent },
+          logContext: 'Webhooks',
+        });
+      }
 
       logInfo('Webhooks', `Webhook received from ${provider}`);
 

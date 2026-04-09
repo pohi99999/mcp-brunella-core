@@ -259,16 +259,23 @@
         "brand",
         "vv",
         "fashion",
-        "kampány"
+        "kampány",
+        "viktoriavarga",
+        "viktoria brand voice",
+        "fashion copy",
+        "bilingual copy"
       ],
       "category": "marketing",
       "status": "active",
       "tags": [
+        "marketing",
         "fashion",
         "brand-voice",
         "copywriting",
         "premium",
-        "bilingual"
+        "bilingual",
+        "premium-copywriting",
+        "bilingual-copywriting"
       ],
       "priority": 4
     },
@@ -856,40 +863,6 @@
         "orchestration"
       ],
       "priority": 4
-    },
-    {
-      "name": "viktoria-brand-voice",
-      "title": "VIKTORIAVARGA Márka AI",
-      "description": "Prémium fashion brand voice foundation for VIKTORIAVARGA.",
-      "class": "DynamicAgent",
-      "module": "./agents/DynamicAgent.js",
-      "config": {
-        "tomlPath": "myai/agents/ViktoriaBrandVoice.toml"
-      },
-      "capabilities": [
-        "brand_voice_foundation",
-        "bilingual_copywriting",
-        "premium_fashion_copy",
-        "caption_generation",
-        "email_drafting"
-      ],
-      "triggers": [
-        "viktoriavarga",
-        "viktoria brand voice",
-        "brand voice",
-        "fashion copy",
-        "bilingual copy"
-      ],
-      "category": "marketing",
-      "status": "active",
-      "tags": [
-        "marketing",
-        "fashion",
-        "brand-voice",
-        "premium-copywriting",
-        "bilingual-copywriting"
-      ],
-      "priority": 5
     },
     {
       "name": "NurturerAgent",
@@ -1571,6 +1544,36 @@
         "generated",
         "i18n",
         "localization"
+      ]
+    },
+    {
+      "name": "DailyAgentBriefing",
+      "description": "Napi AI agent ökoszisztéma összefoglaló — minden nap 11:00-kor GitHub + web crawl alapján strukturált magyar riportot generál, Brunella architektúra rétegekre leképezve (cortex, memoria, corpus, nexus, fabrica, interface, conductor).",
+      "file": "DailyAgentBriefingAgent.ts",
+      "module": "./agents/DailyAgentBriefingAgent.js",
+      "class": "DailyAgentBriefingAgent",
+      "capabilities": [
+        "github_search",
+        "web_crawl",
+        "llm_synthesis",
+        "markdown_report",
+        "scheduled_briefing"
+      ],
+      "triggers": [
+        "napi briefing",
+        "ai agent összefoglaló",
+        "daily briefing",
+        "agent briefing",
+        "naponta"
+      ],
+      "category": "research",
+      "status": "active",
+      "tags": [
+        "daily",
+        "ai-agents",
+        "briefing",
+        "research",
+        "scheduler"
       ]
     }
   ]

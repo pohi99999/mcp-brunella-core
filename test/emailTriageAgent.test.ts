@@ -3,13 +3,25 @@
  * Tests email classification, auto-response, and calendar integration
  */
 
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+
+const hookHarness = vi.hoisted(() => ({
+  fireHook: vi.fn(async () => ({ status: 'fired' })),
+}));
+
+vi.mock('../src/core/hookRegistry.js', () => ({
+  fireHook: hookHarness.fireHook,
+  fireHookSafely: hookHarness.fireHook,
+  isHookEnabled: vi.fn(() => false),
+}));
+
 import { EmailTriageAgent } from '../src/agents/EmailTriageAgent.js';
 
 describe('EmailTriageAgent', () => {
   let agent: EmailTriageAgent;
 
   beforeEach(() => {
+    hookHarness.fireHook.mockClear();
     agent = new EmailTriageAgent();
   });
 
@@ -64,6 +76,18 @@ describe('EmailTriageAgent', () => {
 
       expect(result.status).toBe('success');
       expect(result.data.classification).toBe('invoice');
+      expect(hookHarness.fireHook.mock.calls).toEqual(
+        expect.arrayContaining([
+          [
+            'email:classified',
+            expect.objectContaining({
+              classification: 'invoice',
+              from: 'supplier@example.com',
+            }),
+            expect.anything(),
+          ],
+        ]),
+      );
     });
   });
 

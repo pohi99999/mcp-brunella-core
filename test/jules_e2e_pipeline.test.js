@@ -9,6 +9,8 @@ import { createScheduledTasksRoutes } from "../src/server/routes/scheduledTasks.
 import { createWebhookRoutes } from "../src/server/routes/webhooks.js";
 import { suggestedTasksRouter } from "../src/server/routes/suggestedTasks.js";
 import { initSuggestedTasksDb, getSuggestedTasksDb } from "../src/core/suggestedTasksScanner.js";
+import { config } from "../src/config/schema.js";
+import crypto from "crypto";
 function isRecord(value) {
     return typeof value === "object" && value !== null;
 }
@@ -69,7 +71,11 @@ function insertSuggestedTask() {
     INSERT OR REPLACE INTO suggested_tasks (
       id, file_path, line_number, todo_text, context, confidence_score, status, created_at, updated_at
     ) VALUES (?, ?, ?, ?, ?, ?, ?, datetime('now'), datetime('now'))
-  `).run("todo_test_file_1", "src/test/sample.ts", 42, "TODO: E2E test item", "context line", 0.8, "pending");
+    `).run("todo_test_file_1", "src/test/sample.ts", 42, "TODO: E2E test item", "context line", 0.8, "pending");
+}
+function signGitHubPayload(payload) {
+    const secret = config.githubWebhookSecret ?? "test-secret";
+    return `sha256=${crypto.createHmac("sha256", secret).update(JSON.stringify(payload)).digest("hex")}`;
 }
 describe("Jules Continuous AI E2E flow", () => {
     let app;
@@ -78,7 +84,11 @@ describe("Jules Continuous AI E2E flow", () => {
         db = createTestDb();
         await initSuggestedTasksDb(":memory:");
         app = express();
-        app.use(express.json());
+        app.use(express.json({
+            verify: (req, _res, buf) => {
+                req.rawBody = buf;
+            },
+        }));
         app.use("/api/v1/scheduled-tasks", createScheduledTasksRoutes(db));
         app.use("/api/v1/webhooks", createWebhookRoutes(db));
         app.use("/api/v1/suggested-tasks", suggestedTasksRouter);
@@ -123,14 +133,16 @@ describe("Jules Continuous AI E2E flow", () => {
             status: 200,
             json: async () => ({ success: true, data: { count: 0, tasks: [] } }),
         });
-        const res = await request(app)
-            .post("/api/v1/webhooks/github/push")
-            .send({
+        const payload = {
             repository: { name: "mcp-brunella-core" },
             pusher: { name: "tester" },
             ref: "refs/heads/main",
             head_commit: { id: "abc123" },
-        });
+        };
+        const res = await request(app)
+            .post("/api/v1/webhooks/github/push")
+            .set("X-Hub-Signature-256", signGitHubPayload(payload))
+            .send(payload);
         expect(res.status).toBe(200);
         const event = db.prepare("SELECT * FROM webhook_events WHERE provider = ?").get("github");
         expect(getString(event, "provider")).toBe("github");

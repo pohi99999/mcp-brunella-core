@@ -12,10 +12,10 @@
     "lastDurationMs": 0
   },
   "tasks": {
-    "total": 11,
-    "success": 10,
+    "total": 3,
+    "success": 2,
     "error": 1,
-    "avgDurationMs": 0
+    "avgDurationMs": 1
   },
   "ai": {
     "totalTokenUsage": 0,
@@ -25,79 +25,23 @@
     {
       "type": "task",
       "status": "success",
-      "details": "dev-1775612037489-1",
-      "durationMs": 0,
-      "timestamp": 1775612037492
-    },
-    {
-      "type": "task",
-      "status": "success",
-      "details": "dev-1775607544975-1",
-      "durationMs": 0,
-      "timestamp": 1775607544979
-    },
-    {
-      "type": "task",
-      "status": "success",
-      "details": "dev-1775604899433-1",
+      "details": "dev-1775702318597-1",
       "durationMs": 1,
-      "timestamp": 1775604899439
+      "timestamp": 1775702318600
     },
     {
       "type": "task",
       "status": "success",
-      "details": "dev-1775596847923-1",
-      "durationMs": 0,
-      "timestamp": 1775596847925
-    },
-    {
-      "type": "task",
-      "status": "success",
-      "details": "dev-1775596539244-1",
-      "durationMs": 0,
-      "timestamp": 1775596539247
-    },
-    {
-      "type": "task",
-      "status": "success",
-      "details": "dev-1775596445863-1",
-      "durationMs": 0,
-      "timestamp": 1775596445866
-    },
-    {
-      "type": "task",
-      "status": "success",
-      "details": "dev-1775579973277-1",
-      "durationMs": 0,
-      "timestamp": 1775579973279
-    },
-    {
-      "type": "task",
-      "status": "success",
-      "details": "dev-1775578486746-1",
-      "durationMs": 0,
-      "timestamp": 1775578486751
-    },
-    {
-      "type": "task",
-      "status": "success",
-      "details": "dev-1775578024793-1",
-      "durationMs": 0,
-      "timestamp": 1775578024797
-    },
-    {
-      "type": "task",
-      "status": "success",
-      "details": "dev-1775578024794-1",
-      "durationMs": 0,
-      "timestamp": 1775578024797
+      "details": "dev-1775702318596-1",
+      "durationMs": 1,
+      "timestamp": 1775702318600
     },
     {
       "type": "task",
       "status": "error",
-      "details": "dev-1775578024791-1",
+      "details": "dev-1775702318595-1",
       "durationMs": 0,
-      "timestamp": 1775578024797
+      "timestamp": 1775702318600
     }
   ]
 }

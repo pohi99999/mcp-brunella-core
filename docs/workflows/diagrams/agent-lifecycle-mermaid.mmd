@@ -1,0 +1,36 @@
+<!-- Agent lifecycle & MCP discovery — Mermaid -->
+
+```mermaid
+sequenceDiagram
+  participant Dev as Developer
+  participant CSharp as csharp-mcp-server
+  participant Core as Brunella Core (Node)
+  participant MyAI as myai (Python)
+  participant MCP as MCP Discovery
+  participant Registry as agents/registry.json
+
+  Dev->>CSharp: optional warmup (launch.ps1 -WarmupOnly)
+  Dev->>Core: npm run dev (start Node backend)
+  Core->>MyAI: start Python subsystem (uv sync && uvicorn)
+  Core->>MCP: query mcp_servers.json
+  MCP-->>Core: list of available MCP servers & tools
+  Core->>Registry: load agents registry (agents/registry.json)
+  Registry-->>Core: agent metadata, entrypoints
+  Core->>MCP: register MCP tools (auto-discovery)
+  Core-->>Dev: status: "ready" (all MCP tools available)
+```
+
+```mermaid
+flowchart TB
+  subgraph Runtime
+    CoreNode[Brunella Core]
+    MyAISvc[Python myai]
+    MCPsvc[MCP servers]
+    AgentRegistry[agents/registry.json]
+  end
+  CoreNode --> MCPsvc
+  CoreNode --> AgentRegistry
+  AgentRegistry --> MCPsvc
+  MCPsvc --> CoreNode
+  MyAISvc --> CoreNode
+```
