@@ -16,6 +16,8 @@ import { wrapWithSpan } from '../utils/otelTracing.js';
 import { checkPattern, getPatternReuseThreshold } from '../core/patternReuse.js';
 import { queryMemory as queryStructuredMemory, saveMemory as saveStructuredMemory, type StoredAgentMemory } from '../core/structuredMemory.js';
 import { guardAgentResponseOutput, guardAgentResultOutput } from '../core/outputGuard.js';
+import { fireHookSafely, isHookEnabled } from '../core/hookRegistry.js';
+import { fireHooks } from '../core/hookEngine.js';
 import {
   attachWorkingMemoryObservation,
   appendWorkingMemoryMessage,
@@ -124,6 +126,34 @@ export abstract class BaseAgent implements IAgent {
    */
   async execute(task: string, context?: AgentContext): Promise<AgentResponse> {
     const testMode = this.isTestMode();
+    const lifecycleContext = {
+      agentName: this.name,
+      task,
+      context,
+      testMode,
+    };
+    const emitLifecycleHook = async (
+      hookName: 'BeforeAgent' | 'AfterAgent',
+      payload: Record<string, unknown>,
+    ): Promise<void> => {
+      if (!isHookEnabled(hookName)) {
+        return;
+      }
+
+      await fireHookSafely(hookName, payload, {
+        source: 'BaseAgent.execute',
+        logContext: `${this.name} lifecycle hook ${hookName}`,
+      });
+    };
+
+    await emitLifecycleHook('BeforeAgent', lifecycleContext);
+    // Keep the legacy hook engine non-blocking, but never invisible.
+    try {
+      await fireHooks('BeforeAgent', lifecycleContext);
+    } catch (error: unknown) {
+      const normalized = ensureError(error);
+      logWarn(`${this.name} hookEngine BeforeAgent fallback: ${normalized.message}`);
+    }
 
     if (!testMode) {
       const patternReuseThreshold = getPatternReuseThreshold();
@@ -155,7 +185,7 @@ export abstract class BaseAgent implements IAgent {
         cachedResult.metadata.reuseCount = cachedPattern.memory.reuseCount;
 
         const formattedMessage = formatAgentResult(cachedResult, this.name, { useEmojis: true });
-        return guardAgentResponseOutput({
+        const response = guardAgentResponseOutput({
           success: cachedResult.success,
           status: cachedResult.success ? 'success' : 'error',
           message: formattedMessage,
@@ -163,6 +193,15 @@ export abstract class BaseAgent implements IAgent {
           error: cachedResult.success ? undefined : cachedResult.message,
           handoff: cachedResult.handoff,
         }, this.name);
+
+        await emitLifecycleHook('AfterAgent', {
+          ...lifecycleContext,
+          outcome: cachedResult.success ? 'success' : 'error',
+          cached: true,
+          response,
+        });
+
+        return response;
       }
     }
 
@@ -265,16 +304,54 @@ export abstract class BaseAgent implements IAgent {
         handoff: result.handoff,
       };
 
-      return guardAgentResponseOutput(response, this.name);
+      const guardedResponse = guardAgentResponseOutput(response, this.name);
+      await emitLifecycleHook('AfterAgent', {
+        ...lifecycleContext,
+        outcome: result.success ? 'success' : 'error',
+        cached: false,
+        response: guardedResponse,
+      });
+      // Keep the legacy hook engine non-blocking, but never invisible.
+      try {
+        await fireHooks('AfterAgent', {
+          ...lifecycleContext,
+          outcome: result.success ? 'success' : 'error',
+          cached: false,
+        });
+      } catch (error: unknown) {
+        const normalized = ensureError(error);
+        logWarn(`${this.name} hookEngine AfterAgent fallback: ${normalized.message}`);
+      }
+      return guardedResponse;
     } catch (error: unknown) {
       const normalized = ensureError(error);
       logError(`${this.name} executeTask hiba: ${normalized.message}`, normalized);
-      return guardAgentResponseOutput({
+      const response = guardAgentResponseOutput({
         success: false,
         status: 'error',
         error: normalized.message,
         message: normalized.message,
       }, this.name);
+
+      await emitLifecycleHook('AfterAgent', {
+        ...lifecycleContext,
+        outcome: 'error',
+        cached: false,
+        error: normalized.message,
+        response,
+      });
+      // Keep the legacy hook engine non-blocking, but never invisible.
+      try {
+        await fireHooks('AfterAgent', {
+          ...lifecycleContext,
+          outcome: 'error',
+          cached: false,
+        });
+      } catch (error: unknown) {
+        const normalized = ensureError(error);
+        logWarn(`${this.name} hookEngine AfterAgent fallback: ${normalized.message}`);
+      }
+      return response;
     } finally {
       setAgentStatus(this.name, 'idle');
     }

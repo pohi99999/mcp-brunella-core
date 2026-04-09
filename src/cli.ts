@@ -22,6 +22,7 @@ import {
 import { getMemory } from "./utils/memoryContext.js";
 import { discoverSkills } from "./utils/skillsLoader.js";
 import { listHooks } from "./utils/hooks.js";
+import { registerHookCommands } from "./cli/hooksCommands.js";
 import { logDebug } from "./utils/logger.js";
 import { ensureError } from "./utils/ensureError.js";
 import { startInteractiveMenu } from "./interactive.js";
@@ -52,16 +53,20 @@ import { registerBrowserCopilotCommands } from "./cli/browserCopilotCommands.js"
 import { registerCrawl4aiCommands } from "./cli/crawl4aiCommands.js";
 import { registerBookkeepingCommands } from "./cli/bookkeepingCommands.js";
 import { registerHROnboardingCommands } from "./cli/hrOnboardingCommands.js";
+import { registerHRTimesheetCommands } from "./cli/hrTimesheetCommands.js";
 import { registerPropertySalesCommands } from "./cli/propertySalesCommands.js";
 import { registerMemoriaCommands } from "./cli/memoriaCommands.js";
 import { registerObservabilityCommands } from "./cli/observabilityCommands.js";
+import { registerDevExCommands } from "./cli/devexCommands.js";
 import { registerAgentGovernanceCommands } from "./cli/agentGovernanceCommands.js";
 import { registerDocsConfigCommands } from "./cli/docsConfigCommands.js";
 import { registerIntelligenceCommands } from "./cli/intelligenceCommands.js";
 import { registerLearningLoopCommands } from "./cli/learningLoopCommands.js";
 import { registerFederationCommands } from "./cli/federationCommands.js";
 import { registerInventoryCommands } from "./cli/inventoryCommands.js";
+import { registerKkvPackCommands } from "./cli/kkvPackCommands.js";
 import { registerProjectMaintainerCommands } from "./cli/projectMaintainerCommands.js";
+import { registerBriefingCommands } from "./cli/briefingCommands.js";
 import { registerSdlcCommands } from "./cli/sdlcCommands.js";
 import { validateAndNormalizeRegistry } from "./agents/registryValidation.js";
 import { getAssistantBlueprint, type AssistantBlueprint, type AssistantReadinessStatus } from "./core/assistantBlueprint.js";
@@ -1910,11 +1915,15 @@ registerMemoriaCommands(program);
 registerIntelligenceCommands(program);
 registerLearningLoopCommands(program);
 registerObservabilityCommands(program);
+registerDevExCommands(program);
 registerAgentGovernanceCommands(program);
 registerDocsConfigCommands(program);
 registerFederationCommands(program);
 registerInventoryCommands(program);
+registerKkvPackCommands(program);
 registerProjectMaintainerCommands(program);
+registerBriefingCommands(program);
+registerHookCommands(program);
 
 // Register Conductor commands(Track State Management) - MOVED AFTER conductorCmd definition
 

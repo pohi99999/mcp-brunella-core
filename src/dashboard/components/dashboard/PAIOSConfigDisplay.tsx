@@ -12,7 +12,8 @@ import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Loader2, FileCode2, CheckCircle2, XCircle } from 'lucide-react';
 
-interface PAIOSConfigData {
+interface PAIOSConfigData
+{
     orchestrator: {
         default_model: string;
         max_tasks_per_request: number;
@@ -25,6 +26,11 @@ interface PAIOSConfigData {
         enabled: boolean;
         model: string;
     }>;
+    voice?: {
+        response_voice: string;
+        tts_model: string;
+        speed: number;
+    };
     phoenix?: {
         retry_max_attempts: number;
         checkpoint_interval_ms: number;
@@ -36,31 +42,39 @@ interface PAIOSConfigData {
     };
 }
 
-export function PAIOSConfigDisplay() {
-    const [config, setConfig] = useState<PAIOSConfigData | null>(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
+export function PAIOSConfigDisplay ()
+{
+    const [config, setConfig] = useState<PAIOSConfigData | null>( null );
+    const [loading, setLoading] = useState( true );
+    const [error, setError] = useState<string | null>( null );
 
-    useEffect(() => {
-        const fetchConfig = async () => {
-            try {
-                const response = await fetch('/api/paios/config');
-                if (!response.ok) {
-                    throw new Error('Failed to load config');
+    useEffect( () =>
+    {
+        const fetchConfig = async () =>
+        {
+            try
+            {
+                const response = await fetch( '/api/paios/config' );
+                if ( !response.ok )
+                {
+                    throw new Error( 'Failed to load config' );
                 }
                 const data = await response.json();
-                setConfig(data);
-            } catch (err) {
-                setError(err instanceof Error ? err.message : 'Unknown error');
-            } finally {
-                setLoading(false);
+                setConfig( data );
+            } catch ( err )
+            {
+                setError( err instanceof Error ? err.message : 'Unknown error' );
+            } finally
+            {
+                setLoading( false );
             }
         };
 
         fetchConfig();
-    }, []);
+    }, [] );
 
-    if (loading) {
+    if ( loading )
+    {
         return (
             <div className="flex items-center justify-center py-8">
                 <Loader2 className="w-6 h-6 animate-spin text-blue-500" />
@@ -69,7 +83,8 @@ export function PAIOSConfigDisplay() {
         );
     }
 
-    if (error || !config) {
+    if ( error || !config )
+    {
         return (
             <div className="text-xs text-zinc-500 font-mono p-3 bg-zinc-900/50 rounded border border-white/[0.04]">
                 <p>⚠️ Config not loaded: {error || 'Unknown error'}</p>
@@ -102,7 +117,7 @@ export function PAIOSConfigDisplay() {
                         <span className="font-semibold text-zinc-300">Providers</span>
                     </div>
                     <div className="space-y-2">
-                        {Object.entries(config.providers).map(([name, provider]) => (
+                        {Object.entries( config.providers ).map( ( [name, provider] ) => (
                             <div key={name} className="flex items-center justify-between">
                                 <div className="flex items-center gap-2">
                                     {provider.enabled ? (
@@ -114,9 +129,29 @@ export function PAIOSConfigDisplay() {
                                 </div>
                                 <span className="text-zinc-500 font-mono text-xs">{provider.model}</span>
                             </div>
-                        ))}
+                        ) )}
                     </div>
                 </div>
+
+                {/* Voice */}
+                {config.voice && (
+                    <div className="p-3 bg-zinc-900/50 rounded border border-white/[0.04]">
+                        <div className="flex items-center gap-2 mb-2">
+                            <FileCode2 className="w-4 h-4 text-pink-500" />
+                            <span className="font-semibold text-zinc-300">Voice / TTS</span>
+                        </div>
+                        <div className="space-y-1 font-mono text-zinc-400">
+                            <p>
+                                response_voice:{' '}
+                                <Badge variant="outline" className="ml-1">
+                                    {config.voice.response_voice === 'nova' ? 'nova — női' : config.voice.response_voice}
+                                </Badge>
+                            </p>
+                            <p>tts_model: {config.voice.tts_model}</p>
+                            <p>speed: {config.voice.speed}</p>
+                        </div>
+                    </div>
+                )}
 
                 {/* Phoenix */}
                 {config.phoenix && (
@@ -140,7 +175,7 @@ export function PAIOSConfigDisplay() {
                             <span className="font-semibold text-zinc-300">Dashboard</span>
                         </div>
                         <div className="space-y-1 text-zinc-400">
-                            {Object.entries(config.dashboard).map(([key, value]) => (
+                            {Object.entries( config.dashboard ).map( ( [key, value] ) => (
                                 <div key={key} className="flex items-center gap-2">
                                     {typeof value === 'boolean' ? (
                                         value ? (
@@ -151,7 +186,7 @@ export function PAIOSConfigDisplay() {
                                     ) : null}
                                     <span className="font-mono text-xs">{key}</span>
                                 </div>
-                            ))}
+                            ) )}
                         </div>
                     </div>
                 )}

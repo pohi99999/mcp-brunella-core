@@ -5,7 +5,7 @@ import
   Sparkles, Layers, History, FlaskConical, Brain, Shield, Code2,
   Zap, FileText, Gauge, Activity, Box, FolderOpen, Settings, Workflow, Terminal,
   BarChart3, Flame, Briefcase, Palette, DollarSign, Lightbulb, Database, Bell, Wallet,
-  Search, Target, Receipt, ShieldAlert, Users, Wrench, Building2, Globe, ClipboardList
+  Search, Target, Receipt, ShieldAlert, Users, Wrench, Building2, Globe, ClipboardList, PackageSearch
 } from "lucide-react";
 
 // Component Imports
@@ -66,6 +66,12 @@ import { AgentDiagnosticsPanel } from "@/components/dashboard/AgentDiagnosticsPa
 import { AgentRegistryHealthPanel } from "@/components/dashboard/AgentRegistryHealthPanel";
 import { DocsSotPanel } from "@/components/dashboard/DocsSotPanel";
 import { ConfigHealthPanel } from "@/components/dashboard/ConfigHealthPanel";
+import { PhoenixFlywheelObservabilityPanel } from "@/components/dashboard/PhoenixFlywheelObservabilityPanel";
+import { HookMonitorPanel } from "@/components/dashboard/HookMonitorPanel";
+import { MissionPlannerPanel } from "@/components/dashboard/MissionPlannerPanel";
+import { TestPlanPanel } from "@/components/dashboard/TestPlanPanel";
+import { KKVPackCockpit } from "@/components/dashboard/KKVPackCockpit";
+import { HRTimesheetStatusPanel } from "@/components/dashboard/HRTimesheetStatusPanel";
 import { AssistantBlueprintPanel } from "@/components/dashboard/AssistantBlueprintPanel";
 import SwarmPanel from "@/components/dashboard/SwarmPanel";
 import ToolDiscoveryPanel from "@/components/dashboard/ToolDiscoveryPanel";
@@ -100,6 +106,7 @@ import { HarvestPipelineWidget } from "@/components/dashboard/HarvestPipelineWid
 import { ProcessControlWidget } from "@/components/dashboard/ProcessControlWidget";
 import { ServiceControlWidget } from "@/components/dashboard/ServiceControlWidget";
 import { ProjectExplorer } from "@/components/dashboard/ProjectExplorer";
+import { AIAgentBriefingPanel } from "@/components/dashboard/AIAgentBriefingPanel";
 import { logInfo } from "@/utils/logger";
 
 const LazyEnterpriseAnalyticsWidget = React.lazy( async () =>
@@ -173,15 +180,19 @@ export function initializeNavigation ()
     { id: "paios", label: "PAIOS Orchestrator", icon: Brain, component: <PAIOSOrchestratorChat /> },
     { id: "assistant-blueprint", label: "Personal Assistant", icon: Sparkles, component: <AssistantBlueprintPanel /> },
     { id: "phoenix", label: "Phoenix Events", icon: Flame, component: <PhoenixEventsPanel /> },
+    { id: "phoenix-flywheel", label: "Phoenix / Flywheel", icon: Activity, component: <PhoenixFlywheelObservabilityPanel /> },
     { id: "zero-prompt-notifications", label: "Approval Notifications", icon: Bell, component: <ZeroPromptNotificationPanel /> },
     { id: "ephemeral-agents", label: "Ephemeral Agents", icon: Zap, component: <EphemeralAgentsPanel /> },
     { id: "learning-loop", label: "Learning Loop", icon: Brain, component: <LearningLoopPanel /> },
+    { id: "hook-monitor", label: "Hook Monitor", icon: Activity, component: <HookMonitorPanel /> },
     { id: "federation", label: "Federated MCP", icon: Globe, component: <FederationCenter /> },
     { id: "management", label: "Agent Roster", icon: Sparkles, component: <AgentManagementPanel /> },
     { id: "agent-diagnostics", label: "Agent Diagnostics", icon: Gauge, component: <AgentDiagnosticsPanel /> },
     { id: "agent-registry-governance", label: "Registry Governance", icon: ClipboardList, component: <AgentRegistryHealthPanel /> },
     { id: "docs-config-sot", label: "Docs / Config SOT", icon: FileText, component: <DocsSotPanel /> },
     { id: "config-health", label: "Config Health", icon: Shield, component: <ConfigHealthPanel /> },
+    { id: "mission-devex", label: "Mission Planner", icon: Workflow, component: <MissionPlannerPanel /> },
+    { id: "test-cadence-devex", label: "Test Cadence", icon: Gauge, component: <TestPlanPanel /> },
     { id: "decomposer", label: "Decompose", icon: Layers, component: <TaskDecomposerPanel /> },
     { id: "tracks", label: "Track generátor", icon: History, component: <TrackGenerator /> },
     { id: "conductor-monitor", label: "Trackek állapota", icon: ClipboardList, component: <ConductorTracksMonitor /> },
@@ -209,9 +220,11 @@ export function initializeNavigation ()
     { id: "workflow-engine", label: "Workflow Engine", icon: Workflow, component: <WorkflowPanel /> },
     { id: "python-workers", label: "Python Workers", icon: Cpu, component: <PythonWorkersPanel /> },
     { id: "inventory", label: "Assets", icon: Box, component: <InventoryCatalog /> },
+    { id: "kkv-pack", label: "KKV Pack", icon: PackageSearch, component: <KKVPackCockpit /> },
     { id: "files", label: "Filesystem", icon: FolderOpen, component: <FileExplorer /> },
     // { id: "projects", label: "Projektek", icon: FolderOpen, component: <ProjectExplorer /> },
     { id: "enterprise-suite", label: "Enterprise Suite", icon: Briefcase, component: <EnterpriseSuitePanel /> },
+    { id: "hr-timesheet", label: "HR Timesheet", icon: ClipboardList, component: <HRTimesheetStatusPanel /> },
     { id: "studio", label: "Brunella Studio", icon: Palette, component: <BrunellaStudio /> },
     { id: "campaign-studio", label: "Kampány Stúdió", icon: DollarSign, component: <CampaignStudio /> },
     { id: "innovation-bridge", label: "Innovation Bridge", icon: Lightbulb, component: <InnovationBridgeWidget /> },
@@ -269,18 +282,20 @@ export function initializeNavigation ()
     { id: "harvest-pipeline", label: "Harvest Pipeline", icon: Activity, component: <HarvestPipelineWidget /> },
     { id: "process-control", label: "Process Control", icon: Gauge, component: <ProcessControlWidget /> },
     { id: "service-control", label: "Service Control", icon: Settings, component: <ServiceControlWidget /> },
+    { id: "ai-agent-briefing", label: "Napi AI Összefoglaló", icon: Brain, component: <AIAgentBriefingPanel /> },
   ];
 
   items.forEach( item => navigationRegistry.registerItem( item ) );
 
   // Register groups
   navigationRegistry.registerGroup( { title: "Core Systems", icon: Layers, items: ["dashboard", "neural-map", "system-arch", "studio", "vscode", "process-control", "service-control"] } );
-  navigationRegistry.registerGroup( { title: "AI & Agents", icon: Brain, items: ["chat", "paios", "copilot-orchestrator", "copilot-commander", "kernel-pipeline", "assistant-blueprint", "phoenix", "zero-prompt-notifications", "ephemeral-agents", "learning-loop", "federation", "management", "agent-diagnostics", "agent-registry-governance", "agent-factory", "decomposer", "incubator", "knowledge", "memory", "cognitive-memory", "user-preferences", "developer", "edge", "robotkez", "browser-copilot", "jules"] } );
-  navigationRegistry.registerGroup( { title: "Enterprise", icon: Briefcase, items: ["enterprise-suite", "digital-hr", "grant-hunter", "law-detective", "property-visionary", "property-sales", "psales-intake", "psales-research", "psales-strategy", "enterprise-analytics", "intelligence-monitor"] } );
+  navigationRegistry.registerGroup( { title: "AI & Agents", icon: Brain, items: ["chat", "paios", "copilot-orchestrator", "copilot-commander", "kernel-pipeline", "assistant-blueprint", "phoenix", "phoenix-flywheel", "zero-prompt-notifications", "ephemeral-agents", "learning-loop", "federation", "management", "agent-diagnostics", "agent-registry-governance", "agent-factory", "decomposer", "incubator", "knowledge", "memory", "cognitive-memory", "user-preferences", "developer", "edge", "robotkez", "browser-copilot", "jules", "ai-agent-briefing"] } );
+  navigationRegistry.registerGroup( { title: "Enterprise", icon: Briefcase, items: ["enterprise-suite", "digital-hr", "hr-timesheet", "hr-onboarding", "grant-hunter", "law-detective", "property-visionary", "property-sales", "psales-intake", "psales-research", "psales-strategy", "enterprise-analytics", "intelligence-monitor"] } );
   navigationRegistry.registerGroup( { title: "Értékesítési Központ", icon: DollarSign, items: ["trojan-horse", "lead-monitor", "demo-factory", "showcase", "campaign-studio", "leads-master", "innovation-bridge", "invoice-sync", "bookkeeping", "finance-reconciliation", "kp-penztar", "lead-mining", "marketwatcher", "inventory"] } );
+  navigationRegistry.registerGroup( { title: "KKV Pack", icon: PackageSearch, items: ["kkv-pack"] } );
   navigationRegistry.registerGroup( { title: "Orchestration", icon: Rocket, items: ["cean", "cloudflare", "fleet_manager", "autonomy", "tasks", "workflow-engine", "swarm-panel", "tool-discovery", "tools-manager", "crawl4ai", "harvest-pipeline"] } );
-  navigationRegistry.registerGroup( { title: "Project Mgmt", icon: FileText, items: ["conductor-monitor", "tracks", "suggested-tasks", "spec-manager", "tests", "docs-config-sot", "config-health"] } );
-  navigationRegistry.registerGroup( { title: "System", icon: Settings, items: ["python-workers", "files", "guardrails", "telemetry", "llm-observability", "security-panel", "chrome-acp", "settings", "n8n", "langflow", "remote-console", "admin-check", "trace-viewer", "log-viewer", "audit-log", "model-router", "scheduled-tasks", "vector-stats"] } );
+  navigationRegistry.registerGroup( { title: "Project Mgmt", icon: FileText, items: ["conductor-monitor", "tracks", "suggested-tasks", "spec-manager", "tests", "docs-config-sot", "config-health", "mission-devex", "test-cadence-devex"] } );
+  navigationRegistry.registerGroup( { title: "System", icon: Settings, items: ["python-workers", "files", "guardrails", "telemetry", "llm-observability", "security-panel", "chrome-acp", "settings", "n8n", "langflow", "remote-console", "admin-check", "trace-viewer", "log-viewer", "audit-log", "hook-monitor", "model-router", "scheduled-tasks", "vector-stats"] } );
 
   logInfo( "NavigationRegistry", "Navigation Registry Initialized." );
 }

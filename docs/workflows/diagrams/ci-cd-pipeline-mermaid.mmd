@@ -1,0 +1,43 @@
+<!-- CI/CD pipeline — Mermaid flow and sequence -->
+
+```mermaid
+flowchart TD
+  A[Checkout & Cache] --> B[Install deps (npm ci)]
+  B --> C[Lint (ESLint)]
+  C --> D[Build (tsc, bundling)]
+  D --> E{Tests}
+  E -->|unit| F[Unit tests (fast)]
+  E -->|integration| G[Integration tests (mini-MCP)]
+  E -->|e2e| H[E2E (Playwright)]
+  F --> I{pass?}
+  G --> I
+  H --> I
+  I -->|all pass| J[Package & Upload Artifacts]
+  J --> K[Deploy (staging/prod)]
+  K --> L[Smoke + Monitoring]
+  I -->|any fail| M[Fail pipeline & notify PR]
+
+  classDef critical fill:#f96,stroke:#333,stroke-width:2px;
+  D,F,G,H,J,K critical
+```
+
+```mermaid
+sequenceDiagram
+  participant Git as GitHub
+  participant CI as Runner
+  participant Builder
+  Git->>CI: push/PR
+  CI->>Builder: install & build
+  CI->>Builder: run lint & unit tests
+  par parallel test
+    Builder->>Builder: run integration tests
+    Builder->>Builder: run e2e tests
+  end
+  alt all pass
+    CI->>CI: package artifacts
+    CI->>Deploy: deploy to target
+    Deploy->>CI: smoke ok
+  else any fail
+    CI->>Git: report failed checks
+  end
+```

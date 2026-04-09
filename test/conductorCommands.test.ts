@@ -34,6 +34,7 @@ describe('Conductor CLI Commands', () => {
           priority: 'high',
           progress: 70,
           assignee: 'Developer',
+          group: 'business',
           _isArchived: false,
         },
         {
@@ -42,6 +43,7 @@ describe('Conductor CLI Commands', () => {
           status: 'proposed',
           priority: 'medium',
           progress: 10,
+          group: 'business',
           _isArchived: false,
         },
         {
@@ -50,6 +52,7 @@ describe('Conductor CLI Commands', () => {
           status: 'completed',
           priority: 'critical',
           progress: 100,
+          group: 'business',
           _isArchived: false,
         },
       ],
@@ -70,7 +73,7 @@ describe('Conductor CLI Commands', () => {
     const conductor = program.commands.find((command) => command.name() === 'conductor');
     expect(conductor).toBeDefined();
     expect(conductor?.commands.map((command) => command.name())).toEqual(
-      expect.arrayContaining(['rescan', 'state', 'list']),
+      expect.arrayContaining(['rescan', 'masterplan', 'list']),
     );
   });
 
@@ -92,21 +95,35 @@ describe('Conductor CLI Commands', () => {
     expect(output).toContain('conductor/tracks.md');
   });
 
-  it('should render conductor state summary to stdout', async () => {
+  it('should render conductor masterplan summary to stdout', async () => {
     const program = new Command();
     registerConductorCommands(program.command('conductor'));
 
     const stdoutSpy = vi.spyOn(process.stdout, 'write').mockReturnValue(true);
 
-    await program.parseAsync(['node', 'test', 'conductor', 'state']);
+    await program.parseAsync(['node', 'test', 'conductor', 'masterplan']);
 
     const output = stdoutSpy.mock.calls.map(([chunk]) => String(chunk)).join('');
-    expect(output).toContain('Project Status Report');
+    expect(output).toContain('KKV Masterplan Status Snapshot');
     expect(output).toContain('CLI cleanup');
-    expect(output).toContain('Priority: high');
-    expect(output).toContain('Inventory polish (medium)');
-    expect(output).toContain('1 tracks');
-    expect(output).toContain('Total: 3 tracks');
+    expect(output).toContain('Business: 3 total');
+    expect(output).toContain('Fókusz: CLI cleanup');
+    expect(output).toContain('Next steps:');
+  });
+
+  it('should render KKV masterplan status snapshot from the masterplan command', async () => {
+    const program = new Command();
+    registerConductorCommands(program.command('conductor'));
+
+    const stdoutSpy = vi.spyOn(process.stdout, 'write').mockReturnValue(true);
+
+    await program.parseAsync(['node', 'test', 'conductor', 'masterplan']);
+
+    const output = stdoutSpy.mock.calls.map(([chunk]) => String(chunk)).join('');
+    expect(output).toContain('KKV Masterplan Status Snapshot');
+    expect(output).toContain('Business: 3 total');
+    expect(output).toContain('Fókusz: CLI cleanup');
+    expect(output).toContain('Next steps:');
   });
 
   it('should filter track list output', async () => {

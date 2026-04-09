@@ -1,0 +1,51 @@
+<!-- Developer dev loop — Mermaid diagrams -->
+
+```mermaid
+flowchart LR
+  subgraph LocalDev [Local development machine]
+    Dev[Developer] --> IDE[IDE / Editor]
+    IDE --> DevServer[Node dev server (npm run dev)]
+    IDE --> PyServer[Python myai (uvicorn)]
+    IDE --> TestRunner[Vitest (npm run test:fast)]
+  end
+
+  Dev -->|commit & push| GitHub[GitHub]
+  GitHub -->|open PR| CI[CI (GitHub Actions)]
+  CI --> Build[Build: npm ci && npm run build]
+  Build --> Lint[ESLint]
+  Build --> UnitTests[Unit tests (fast)]
+  UnitTests -->|pass| Merge[Merge / Approve]
+  Merge --> Deploy[Deploy / Start-full.bat]
+  Deploy --> Smoke[Smoke tests (npm run smoke)]
+  Smoke --> Monitor[Monitoring & Alerts]
+
+  DevServer -->|hot-reload| IDE
+  PyServer -->|background| IDE
+```
+
+```mermaid
+sequenceDiagram
+  participant Dev as Developer
+  participant IDE as IDE/Local
+  participant Node as Node App
+  participant Py as Python myai
+  participant Git as GitHub
+  participant CI as CI Runner
+
+  Dev->>IDE: edit code, add tests
+  IDE->>Node: npm run dev (local)
+  IDE->>Py: cd myai && uv (local)
+  Dev->>Git: git add / commit / push
+  Git->>CI: trigger pipeline (PR)
+  CI->>Node: build + unit tests
+  CI->>Py: run python integration tests
+  alt tests pass
+    CI-->>Dev: status=green (PR checks passed)
+    Dev->>Git: merge
+    Git->>CI: deploy workflow
+    CI->>Node: start staging/full system
+    CI->>Monitor: run smoke checks
+  else tests fail
+    CI-->>Dev: status=red (failing checks)
+  end
+```

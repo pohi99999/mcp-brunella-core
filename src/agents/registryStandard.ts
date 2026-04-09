@@ -19,6 +19,7 @@ export interface AgentMetadataStandard {
 
 export interface AgentConfig {
   name: string;
+  title?: string;
   class: string;
   module: string;
   description: string;
@@ -121,6 +122,7 @@ export function buildMetadataStandard(agent: AgentConfig): AgentMetadataStandard
 export function normalizeAgentConfig(agent: Partial<AgentConfig>): AgentConfig {
   const normalized: AgentConfig = {
     name: typeof agent.name === "string" ? agent.name.trim() : "",
+    title: typeof agent.title === "string" ? agent.title.trim() : undefined,
     class: typeof agent.class === "string" ? agent.class.trim() : "",
     module: typeof agent.module === "string" ? agent.module.trim() : "",
     description: typeof agent.description === "string" ? agent.description.trim() : "",

@@ -1,0 +1,18 @@
+{
+  "id": "ai_agent_daily_briefing_20260408",
+  "title": "Napi AI Agent Összefoglaló Pipeline",
+  "status": "active",
+  "priority": 6,
+  "owner": "Brunella",
+  "created_at": "2026-04-08T00:00:00.000Z",
+  "updated_at": "2026-04-08T00:00:00.000Z",
+  "tags": ["briefing", "ai-agents", "daily", "research", "scheduler"],
+  "related_agents": ["DailyAgentBriefing"],
+  "related_files": [
+    "src/agents/DailyAgentBriefingAgent.ts",
+    "src/server/services/briefingService.ts",
+    "src/server/routes/briefing.ts",
+    "src/dashboard/components/dashboard/AIAgentBriefingPanel.tsx",
+    "src/cli/briefingCommands.ts"
+  ]
+}

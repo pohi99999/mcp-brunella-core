@@ -453,6 +453,8 @@ async function deferredInit(
   // ── Phase 6: Phoenix, ZeroPrompt, CEAN, Pipeline ───────────────
   try {
     const { phoenixEventBus } = await import("../core/phoenixEventBus.js");
+    const { initializeBuiltinHooks } = await import("../core/hooks/builtinHooks.js");
+    initializeBuiltinHooks();
     phoenixEventBus.connectSocketBroadcaster((event: string, data: unknown) => {
       socketService.emit(event, data);
     });

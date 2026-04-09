@@ -8,6 +8,10 @@ import { createWebhookRoutes } from '../src/server/routes/webhooks.js';
 import { config } from '../src/config/schema.js';
 import { eventFabric } from '../src/core/eventFabric.js';
 
+const hookHarness = vi.hoisted(() => ({
+  fireHook: vi.fn(async () => ({ status: 'fired' })),
+}));
+
 // Mock config
 vi.mock('../src/config/schema.js', () => ({
   config: {
@@ -22,6 +26,12 @@ vi.mock('../src/utils/logger.js', () => ({
   logError: vi.fn()
 }));
 
+vi.mock('../src/core/hookRegistry.js', () => ({
+  fireHook: hookHarness.fireHook,
+  fireHookSafely: hookHarness.fireHook,
+  isHookEnabled: vi.fn(() => false),
+}));
+
 // Mock fetch for log retrieval
 global.fetch = vi.fn();
 
@@ -32,6 +42,7 @@ describe('Webhook Routes Integration', () => {
   beforeEach(() => {
     // Clear event fabric history to avoid duplicate dedupKey errors
     eventFabric.clearHistory();
+    hookHarness.fireHook.mockClear();
 
     // Setup in-memory DB
     db = new Database(':memory:');
@@ -132,10 +143,37 @@ describe('Webhook Routes Integration', () => {
     expect(event).toBeDefined();
     expect(event.type).toBe('github.workflow_run');
     expect(event.processed).toBe(1); // Should be marked as processed for failure events
+    expect(hookHarness.fireHook).toHaveBeenCalledWith(
+      'webhook.received',
+      expect.objectContaining({
+        provider: 'github',
+        event: 'github.workflow_run',
+      }),
+      expect.anything(),
+    );
 
     // NOTE: Automatic suggested_task creation from webhook failures
     // is a future enhancement (would require log parsing + AI analysis)
     // For now, we just verify the webhook event was stored and processed
+  });
+
+  it('should emit n8n workflow completion hooks for generic n8n webhooks', async () => {
+    const response = await request(app)
+      .post('/api/webhook/n8n')
+      .send({
+        workflowId: 'wf-1',
+        status: 'completed',
+      });
+
+    expect(response.status).toBe(200);
+    expect(response.body.success).toBe(true);
+    expect(hookHarness.fireHook).toHaveBeenCalledWith(
+      'n8n:workflow:completed',
+      expect.objectContaining({
+        provider: 'n8n',
+      }),
+      expect.anything(),
+    );
   });
 
   it('should reject invalid signature', async () => {

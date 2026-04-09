@@ -1,0 +1,29 @@
+id: api-route
+title: API Route Mission
+description: Implement or refine a backend route and keep the HTTP contract, validation, and tests aligned.
+goal: Deliver a route that is explicit, testable, and wired into the shared API surface.
+surface: api
+category: backend
+tags:
+  - api
+  - route
+  - validation
+  - tests
+  - json
+steps:
+  - Define the request shape and validation rules.
+  - Implement the route handler with tight error handling.
+  - Wire the route into the existing router tree.
+  - Add route tests for success and invalid input.
+  - Run the build and the fast suite.
+commands:
+  - npm run build
+  - npm run test:fast
+  - npm test
+artifacts:
+  - src/server/routes/*.ts
+  - test/*.test.ts
+trackRefs:
+  - src/server/routes/index.ts
+  - src/server/routes/observability.ts
+  - src/server/routes/docsConfig.ts

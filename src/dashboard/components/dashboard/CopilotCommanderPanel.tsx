@@ -19,7 +19,7 @@ const QUICK_COMMANDS = [
     { label: "LLM Status", icon: Cpu, endpoint: "/api/llm/status", description: "LLM provider állapot" },
     { label: "Memory Stats", icon: Database, endpoint: "/api/v1/memory/stats", description: "Memória statisztika" },
     { label: "Phoenix Events", icon: AlertCircle, endpoint: "/api/phoenix/events", description: "Utolsó phoenix események" },
-    { label: "Track Status", icon: BarChart3, endpoint: "/api/tracks/status", description: "Aktív trackek" },
+    { label: "Track Status", icon: BarChart3, endpoint: "/api/v1/tracks/status", description: "Aktív trackek" },
 ];
 
 export function CopilotCommanderPanel() {

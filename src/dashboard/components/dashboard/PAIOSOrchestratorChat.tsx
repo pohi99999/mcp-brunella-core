@@ -241,6 +241,9 @@ export function PAIOSOrchestratorChat() {
         tts_model: 'tts-1',
         speed: 1,
     });
+    const activeVoiceLabel = voiceConfig.response_voice === 'nova'
+        ? 'Nova női hang'
+        : voiceConfig.response_voice;
     const [sessionId, setSessionId] = useState<string>(() => {
         if (typeof window === 'undefined') {
             return createSessionId();
@@ -337,7 +340,7 @@ export function PAIOSOrchestratorChat() {
         };
 
         recognition.onresult = (event: BrowserSpeechRecognitionResultEvent) => {
-            const transcript = event.results[0][0].transcript;
+            const [{ transcript }] = event.results[0];
             setInput(transcript);
             toast.success('Sikeres hangfelismerés.');
         };
@@ -381,7 +384,7 @@ export function PAIOSOrchestratorChat() {
                 audio.onended = () => { setIsSpeaking(false); URL.revokeObjectURL(audioUrl); };
                 audio.onerror = () => { setIsSpeaking(false); URL.revokeObjectURL(audioUrl); };
                 await audio.play();
-                toast.success(`🎙️ Brunella beszél... (${voiceConfig.response_voice})`);
+                toast.success(`🎙️ Brunella beszél... (${activeVoiceLabel})`);
                 return;
             }
         } catch {
@@ -607,6 +610,9 @@ export function PAIOSOrchestratorChat() {
                     <p className="text-[10px] text-zinc-600">
                         Session: <span className="font-mono">{ sessionId.slice(-12) }</span>
                     </p>
+                        <Badge variant="secondary" className="h-5 px-2 text-[10px]">
+                            🎙️ { activeVoiceLabel }
+                        </Badge>
                 </div>
             </CardHeader>
 

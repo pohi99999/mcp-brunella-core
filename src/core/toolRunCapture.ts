@@ -7,6 +7,7 @@
 
 import { recordToolRun } from '../utils/globalDb.js';
 import { logInfo, logError, logWarn } from '../utils/logger.js';
+import { fireHookSafely } from './hookRegistry.js';
 import { classifyToolError } from './toolErrorClassifier.js';
 
 function safeSerialize(value: unknown): string {
@@ -51,6 +52,16 @@ export function wrapToolHandler<TArgs extends unknown[], TResult>(
 ): (...args: TArgs) => Promise<TResult> {
   return async (...args: TArgs): Promise<TResult> => {
     const start = Date.now();
+    const hookPayload = args.length === 0 ? {} : args.length === 1 ? args[0] : args;
+    await fireHookSafely('tool:before', {
+      toolName,
+      args: hookPayload,
+    }, {
+      source: 'tool-run-capture',
+      metadata: { toolName },
+      logContext: 'ToolRunCapture',
+    });
+
     try {
       const result = await handler(...args);
       const duration = Date.now() - start;
@@ -76,6 +87,20 @@ export function wrapToolHandler<TArgs extends unknown[], TResult>(
       });
 
       logInfo('ToolRunCapture', `${toolName} completed in ${duration}ms (success=${success}${classification ? `, errorType=${classification.type}` : ''})`);
+      await fireHookSafely('tool:after', {
+        toolName,
+        args: hookPayload,
+        result,
+        success,
+        durationMs: duration,
+        errorType: classification?.type,
+        retryable: classification?.retryable,
+        planRevision: classification?.planRevision,
+      }, {
+        source: 'tool-run-capture',
+        metadata: { toolName, success },
+        logContext: 'ToolRunCapture',
+      });
       return result;
     } catch (e: unknown) {
       const duration = Date.now() - start;
@@ -98,6 +123,19 @@ export function wrapToolHandler<TArgs extends unknown[], TResult>(
       });
 
       logError('ToolRunCapture', `${toolName} failed after ${duration}ms [${classification.type}]: ${error}`);
+      await fireHookSafely('tool:error', {
+        toolName,
+        args: hookPayload,
+        error,
+        durationMs: duration,
+        errorType: classification.type,
+        retryable: classification.retryable,
+        planRevision: classification.planRevision,
+      }, {
+        source: 'tool-run-capture',
+        metadata: { toolName, success: false },
+        logContext: 'ToolRunCapture',
+      });
       throw e;
     }
   };

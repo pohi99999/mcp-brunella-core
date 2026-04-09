@@ -1,0 +1,26 @@
+@startuml
+' Agent lifecycle & MCP discovery - PlantUML
+actor Developer
+participant "csharp-mcp-server" as CSharp
+participant "Brunella Core (Node)" as Core
+participant "myai (Python)" as MyAI
+participant "MCP Discovery" as MCP
+database "agents/registry.json" as Registry
+
+Developer -> CSharp: warmup (optional)
+Developer -> Core: start dev server (npm run dev)
+Core -> MyAI: start python subsystem
+Core -> MCP: GET /_next/mcp or read mcp_servers.json
+MCP -> Core: return available tools & ports
+Core -> Registry: load agent metadata
+Registry -> Core: provide agent entrypoint definitions
+Core -> MCP: register and validate tools
+Core -> Developer: emit "ready" event (tools loaded)
+
+note over Core,MCP
+  Runtime responsibilities:
+  - MCP discovery, tool health checks
+  - Agent lifecycle (start/stop/retry)
+  - Sync registry metadata
+end note
+@enduml
