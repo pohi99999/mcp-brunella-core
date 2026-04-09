@@ -2,159 +2,103 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-> **Master dokumentum: `README.md`** — Részletes architektúra, API-k, konvenciók.
-> **Copilot referencia: `.github/copilot-instructions.md`** — Teljes parancsreferencia, agent routing táblázat.
+> **Részletes architektúra, API-k:** `README.md`
+> **Copilot agent referencia:** `.github/copilot-instructions.md`
 
-## Projekt Röviden
+## Projekt
 
 **Brunella Agent System (BAS)** — Hibrid Node.js/Python multi-agent rendszer, MCP protokoll.
-Technológiák: TypeScript ESM, Express 4, React 19, Ollama, Gemini, GitHub Models, FastAPI, Cloudflare Workers.
-
-Méret (2026-03-25 audit): 95+ agent, 53 MCP tool, 52 route fájl (~20 aktív), ~55 dashboard panel, 6 SQLite DB, 5 LLM provider.
-
----
-
-## KÖTELEZŐ Bootstrap (Munkamenet Elején!)
-
-### 1. GitHub Szinkronizálás
-```bash
-bash scripts/sync.sh              # Git Bash / WSL
-# VAGY: scripts\sync.bat (CMD) / .\scripts\sync.ps1 (PowerShell)
-```
-
-### 2. Kontextus Fájlok (sorrendben!)
-```
-1. .ai/BOOTSTRAP.md              # Projekt összefoglaló
-2. conductor/tracks.md            # Aktív fejlesztések (mit csinálunk MOST)
-3. .ai/FOSZAL.md                  # Mi történt legutóbb?
-4. .ai/claude.md                  # Te mit csináltál legutóbb
-```
-
-### 3. Rendszer Validáció
-```bash
-npm run build                 # TypeScript fordítás (MUSZÁJ OK!)
-npm run test:fast             # Gyors tesztek (~1-2 perc) — commit/push előtt
-npm test                      # Teljes suite (~10 perc) — napi scheduled run / manuális release-check
-```
-
-**Ha BUILD FAIL vagy TESZT FAIL → NE kezdj fejlesztésbe! Javítsd először!**
+TypeScript ESM, Express 4, React 19, Ollama, Gemini, GitHub Models, FastAPI, Cloudflare Workers.
+Méret: 95+ agent, 53 MCP tool, 52 route fájl, ~55 dashboard panel, 6 SQLite DB, 5 LLM provider.
 
 ---
 
-## Gyors Parancs Referencia
+## Munkamenet Bootstrap (Kötelező!)
+
+```bash
+bash scripts/sync.sh          # Git szinkronizálás (CMD: scripts\sync.bat)
+```
+
+Olvasd el sorrendben:
+1. `.ai/BOOTSTRAP.md` — projekt összefoglaló
+2. `conductor/tracks.md` — aktív fejlesztések
+3. `.ai/FOSZAL.md` — mi történt legutóbb
+4. `.ai/claude.md` — te mit csináltál legutóbb
+
+Ha BUILD FAIL vagy TESZT FAIL → javítsd először, ne kezdj fejlesztésbe.
+
+---
+
+## Parancsok
 
 ```bash
 # Build & Run
-npm run build        # TypeScript fordítás (src/ → build/) + registry.json/TRIZ adatok másolása
-npm run build:ui     # Dashboard build (tsconfig.ui.json + vite.config.ts — KÜLÖNÁLLÓ!)
-npm run dev          # MCP stdio + Express :3000 (ts-node/esm loader)
-npm run dev:ui       # Vite Dashboard :5173
-npm run lint         # ESLint (max-warnings=0 — CI meghiúsítja)
-npm run lint:fix     # ESLint auto-fix
-npm run smoke        # Health check (Ollama, Express, FastAPI)
-start-full.bat       # Teljes rendszer (Windows)
-dashboard.bat        # Browser-ready launcher: csharp-mcp-server warmup, majd Ollama+FastAPI+Backend+UI, megnyitja :5173
+npm run build          # TypeScript fordítás (src/ → build/) + registry/TRIZ adatok másolása
+npm run build:ui       # Dashboard build (KÜLÖNÁLLÓ — tsconfig.ui.json + vite.config.ts)
+npm run dev            # Express :3000 + MCP stdio
+npm run dev:ui         # Vite Dashboard :5173
+dashboard.bat          # Teljes indítás + browser megnyitás :5173 (Windows)
+start-full.bat         # Teljes Windows indítás (Ollama + FastAPI + backend + dashboard)
+npm run build:stable   # TypeScript + dashboard build egyben
+npm run smoke          # Health check
 
-# Tesztelés
-npm run test:fast                     # Gyors tesztek (~1-2 perc) — napi munka
-npm test                              # Build + teljes Vitest suite (~10 perc)
-npx vitest run test/foo.test.ts       # Egy teszt fájl
-npm run test:watch                    # Watch mód
-npm run test:coverage                 # Lefedettségi riport
-npm run test:e2e                      # Playwright e2e
-npm run test:dashboard                # Dashboard-specifikus Vitest konfig
-npm run test:ui                       # UI-specifikus Vitest konfig
-cd myai && pytest tests/              # Python tesztek
+# Tesztelés — mikor mit:
+npm run test:fast                    # Commit/push előtt (~1-2 perc) — pre-push hook is futtatja
+npm test                             # Build + teljes suite (~10 perc) — release/track lezárás előtt
+npx vitest run test/foo.test.ts      # Egy fájl
+npm run test:dashboard               # Dashboard-specifikus konfig (vitest.dashboard.config.ts)
+npm run test:ui                      # UI-specifikus konfig (vitest.ui.config.ts)
+npm run test:e2e                     # Playwright e2e
+cd myai && pytest tests/             # Python tesztek
 
-# Mikor mit futtass:
-# | Esemény                          | Parancs                  |
-# | Commit előtt                     | npm run test:fast        |  ← pre-commit hook is futtatja
-# | Push előtt                       | npm run test:fast        |  ← pre-push hook ezt futtatja
-# | Napi teljes kör                  | GitHub Actions daily full suite (`npm test`) |
-# | Track lezárásakor / Release előtt| npm test + npm run smoke |
-# | Napi fejlesztés                  | npm run test:fast        |
+# Lint
+npm run lint
+npm run lint:fix
 
 # CLI
-brunella                  # Interaktív menü (nyíl + enter navigáció)
-brunella chat             # Chat
-brunella agents           # Ügynökök listája
-brunella conductor status # Projekt státusz
-
-# Python alrendszer (Python ≥3.12, uv a csomagkezelő)
-cd myai && uv sync                          # Függőségek
-uvicorn server:app --reload --port 8000     # FastAPI
-
-# Copilot Dashboard Bridge (szerver nélküli gyors műveletek)
-node scripts/copilot-dashboard.js tracks list
+brunella                             # Interaktív menü
+brunella conductor status            # Track státusz
+node scripts/copilot-route.js "feladat"  # Agent routing (confidence score)
 node scripts/copilot-dashboard.js agents execute <name> "<task>"
-node scripts/copilot-route.js "feladat"     # Agent routing (confidence score)
+
+# Python (Python ≥3.12, uv)
+cd myai && uv sync
+uvicorn server:app --reload --port 8000
 
 # Szinkronizálás
-python scripts/sync_foszal.py  # .ai/FOSZAL.md frissítése munka után
-npm run sync:bootstrap         # .ai/BOOTSTRAP.md regenerálása
-npm run agent:health           # Agent registry + capability health check
+python scripts/sync_foszal.py        # .ai/FOSZAL.md frissítése munka után
+npm run sync:bootstrap               # .ai/BOOTSTRAP.md regenerálása
 ```
 
 ---
 
 ## Architektúra
 
-### Belépési Pontok
+**Két runtime, egy rendszer:** `src/` a Node/TypeScript vezérlősík (MCP server, REST API, dashboard, CLI). `myai/` a Python alrendszer (FastAPI `:8000`, FastMCP, browser/RAG/ML).
 
-- **`src/index.ts`** — Dual-mode: egyszerre indít MCP `StdioServerTransport`-ot (Claude Desktop-hoz) és Express HTTP szervert (`:3000`). Mindkét mód `registerAllTools()`-t hív.
-- **`src/cli.ts`** — CLI belépési pont (Commander.js, 70+ parancs). Magyar nyelvű, inquirer.js menüvezérelt.
+**Startup fázisolt:** `src/index.ts` először HTTP szervert indít (`startWebServer()`), nehéz inicializáció `deferredInit()`-ban fut — OOM elkerülés, `/ping` azonnal elérhető.
 
-### Fő Alrendszerek
+**Route-ok lazy-load:** `src/server/routes/index.ts` a mount tábla `/api/v1`-hez, a `lazy()` proxy első kérésig halasztja az importot. Új route-ot itt regisztrálj, ne `web.ts`-ben.
 
-| Alrendszer | Helye | Technológia |
-|---|---|---|
-| Node.js backend | `src/` | TypeScript ESM, Express 4, Socket.IO |
-| REST routes | `src/server/routes/` | 52 fájl, központosítva `index.ts`-ben |
-| Dashboard | `src/dashboard/` | React 19, Vite, Tailwind v4, Radix UI |
-| Python alrendszer | `myai/` | FastAPI `:8000`, FastMCP, LanceDB |
-| Agent rendszer | `src/agents/` | 95+ agent, SQLite task queue |
-| MCP tools | `src/tools/` | 53 tool, 33 fájl |
+**MCP tool regisztráció kettős célú:** `src/server/registry.ts` patcheli a `server.tool()`-t — a handlerek és JSON sémák lokális végrehajtáshoz és discovery-hoz is tárolódnak.
 
-> ✅ **Route regisztráció:** Az összes (52+) route fájl központilag regisztrálva van a `src/server/routes/index.ts`-ben.
-> ✅ **Dashboard panelek:** Az összes elérhető komponens regisztrálva van a `src/dashboard/lib/navigation.tsx`-ben (NavigationRegistry).
+**MCP auto-start deklaratív:** `mcp_servers.json` fájl vezérli — `autoStart`, `requiredEnv`, `platforms`, retry metaadatok. Az `McpProcessManager.ts` olvassa induláskor; ne adj hozzá hardcoded startup logikát `index.ts`-be vagy `web.ts`-be. A `brunella-core` entry `self` típusú — nem spawn-olja magát.
 
-### Agent Hierarchia
+**Agensek registry-vezéreltek:** `src/agents/registry.json` a TypeScript katalógus (`AgentManager`). TOML-alapú dinamikus ágensek: `myai/agents/*.toml` → `DynamicAgent`.
 
-```
-OrchestratorAgent / EnterpriseOrchestratorAgent  (koordinátorok)
-├── Core: Developer, Evaluator, Researcher, TaskDecomposer
-├── Automatizálás: RobotkezV2 (Playwright/browser-use), Voice (Whisper)
-├── Engineering: SpecWriter, GenesisOrchestrator, LintFixer
-├── Enterprise (~20): Finance, Sales, HR, Logistics, Legal, Marketing…
-├── Swarm: SwarmManager + SwarmAgent (src/agents/swarm/)
-├── TOML Dynamic: myai/agents/*.toml
-└── Menedzsment: ProjectConductor (tracks.md sync)
-```
+**`BaseAgent` több mint kényelmi osztály:** Mintaújrahasználást, RAG lookup-ot, confidence scoring-ot, output validációt, redaction-t és automatikus státusz-visszaállítást ad `executeTask()` körül.
 
-**Registry:** `src/agents/registry.json` — minden bejegyzés: `name`, `module`, `class`, `triggers`, `priority`, `capabilities`. TOML-alapú agentek `"class": "DynamicAgent"` + `"tomlPath"`.
+**Model routing két réteg:** `src/core/modelRouter.ts` (local vs cloud: brain/muscle), `src/core/bifrost_gateway.ts` (Ollama → Gemini → GitHub Models → Anthropic fallback lánc).
 
-**RBAC:** `src/agents/permissions.ts` — 6 profil: `ADMIN`, `DEVELOPER`, `RESEARCHER`, `EVALUATOR`, `ROBOTKEZ`, `READONLY`.
+**Kernel Pipeline:** `src/core/conductor.ts` — 8 fázis: IntentRouter → Planner → ContextBuilder → ToolExecutor → Critic → Guardrail → LearningLoop. Megosztott `RunEnvelope` + `ModuleResponse<T>` (`kernelTypes.ts`), 10-esemény bus (`kernelEventBus.ts`), max 2 retry/modul, `RunLedger` utolsó 50 futás. REST: `/api/v1/kernel`.
 
-**Agent routing (confidence-alapú):**
-```bash
-node scripts/copilot-route.js "feladat"   # → { bestAgent, confidence }
-# confidence >= 0.7 → delegálj; < 0.7 → csinálj magad vagy keress alternativát
-# Fájl szerkesztés / git → NE delegálj (natív Claude képesség jobb)
-```
+**CopilotFeedbackChannel singleton:** Az exportált `copilotFeedbackChannel` az `autonomousInfraRuntime.ts`-ből az egyetlen híd. Ne hozz létre `new CopilotFeedbackChannel()`-t máshol — árva példány lesz, amelyet HyperKernel nem lát. Signalokat csak `copilotFeedbackChannel.ingest()`-en keresztül küldj.
 
-### Model Router / Bifrost Gateway
+**Dashboard és CLI párhuzamos felületek:** `src/dashboard/lib/navigation.tsx` a panel regisztráció. `src/dashboard/` ki van zárva a fő `tsconfig.json`-ból. Minden új feature-höz mindkét felület kötelező.
 
-- **Model Router** (`src/core/modelRouter.ts`) — RULE-MR1–4: Brain (Cloud: Gemini, GPT-4o) = `complexity: 'high'`; Muscle (Local: Ollama `qwen2.5-coder:7b`) = `complexity: 'low'` vagy `budget=0`
-- **Bifrost Gateway** (`src/core/bifrost_gateway.ts`) — 4 provider (Ollama, Gemini, GitHub Models, Anthropic) auto-fallback lánccal.
+**Python kettős interfész:** `myai/server.py` FastAPI `:8000` + OpenAI-kompatibilis `/models`. `myai/mcp_server.py` Python toolokat expo stdio/SSE via FastMCP.
 
-### Phoenix Protocol (Self-Healing)
-
-`src/core/checkpoint.ts` + `src/core/phoenixEventBus.ts` — hiba esetén:
-1. SQLite-ba checkpoint (`executing` → `failed`)
-2. AgentManager auto-retry: 1s → 3s → 10s, max 3 kísérlet
-3. Git recovery `sync_foszal.py` + commit
-
-### SQLite Adatbázisok
+### SQLite adatbázisok
 
 | DB | Tartalom |
 |----|----------|
@@ -165,68 +109,39 @@ node scripts/copilot-route.js "feladat"   # → { bestAgent, confidence }
 | `cean.db` | Cloudflare Edge Agent Network |
 | `comet_memory.db` | COMET memória |
 
-### TypeScript konfiguráció
-
-- Target: ES2022, Module: Node16, Strict mode
-- `rootDir: ./src`, `outDir: ./build`
-- **`src/dashboard/` KI VAN ZÁRVA a fő `tsconfig.json`-ból** — saját `tsconfig.ui.json` és `vite.config.ts` van. Buildelés: `npm run build:ui`.
-
----
-
-## Data Flywheel Pipeline
-
-```
-1. Harvest  → myai/agents/tech_harvester.py (Playwright/browser-use scraping)
-2. Refine   → myai/refiner_logic.py (LLM summary, adattisztítás, dedup)
-3. Index    → LanceDB (data/brunella_lancedb/) + Golden Dataset (JSONL)
-4. Learn    → Agent RAG (src/core/goldenDatasetBridge.ts)
-5. Execute  → OrchestratorAgent döntések (RAG-enhanced)
-```
-
-```bash
-brunella harvest run      # Teljes pipeline
-brunella harvest status   # Utolsó harvest összegzés
-```
-
-**Golden Dataset formátum** (`myai/data/training/golden_dataset.jsonl`):
-```json
-{ "instruction": "...", "input": "", "output": "...", "metadata": {"source": "...", "timestamp": "..."} }
-```
-
 ---
 
 ## Kód Konvenciók
 
-**TypeScript kritikus szabályok:**
-- **ESM `.js` kiterjesztés KÖTELEZŐ:** `import { foo } from './bar.js'` — BUILD FAIL nélküle
-- **`any` TILOS** — használj `unknown` + type guard
-- **`console.log` TILOS** — ESLint `no-console: warn` érvényesíti. Használd:
-  - Agent kódban: `logInfo('AgentName', 'msg')`, `logError('AgentName', 'msg')`, `setAgentStatus()`
-  - Szerver/utility kódban: `new Logger('feature.log')` → `logger.info('msg')`
-- **Agent `finally` KÖTELEZŐ:** `setAgentStatus(this.name, 'idle')` mindig legyen `finally`-ban. Megjegyzés: A `BaseAgent` ezt automatikusan kezeli az `execute()` metódusában, de a standalone (IAgent-et közvetlenül megvalósító) ágenseknél manuálisan kell alkalmazni!
-- **Vitest (NE Jest!):** `vi.fn()`, `vi.mock()`, `vi.spyOn()` — soha nem `jest.*`
-- **Teszt konfig:** `fileParallelism: false`, 15s default timeout, `test/setup.ts`
+**TypeScript:**
+- ESM `.js` kiterjesztés KÖTELEZŐ importokban — BUILD FAIL nélküle
+- `any` TILOS — `unknown` + type guard
+- `console.log` TILOS — agent kódban: `logInfo/logError/setAgentStatus`; szerveren: `new Logger('feature.log')`
+- IAgent implementálásnál `setAgentStatus(this.name, 'idle')` legyen `finally`-ban — `BaseAgent` ezt automatikusan kezeli
+- Vitest (NEM Jest): `vi.fn()`, `vi.mock()`, `vi.spyOn()`; `fileParallelism: false`, 15s timeout
 
-**Python kritikus szabályok:**
-- **Pydantic modellek** kötelezők (`myai/pydantic_models.py`) — ne használj nyers dict-et
-- **FastMCP ≥2.14.3** a Python MCP serverhez
-- **browser-use** a Playwright helyett LLM-vezérelt böngészőautomatizáláshoz
-- **Windows Unicode:** emoji-t NE használj logban — `[OK]` / `[AI]` ASCII alternatívák (UnicodeEncodeError!)
-- **LanceDB opcionális import:** `try: import lancedb; HAS_LANCEDB = True except: HAS_LANCEDB = False`
+**Python:**
+- Pydantic modellek kötelezők (`myai/pydantic_models.py`) — ne nyers dict
+- Windows logban emoji TILOS — `[OK]` / `[AI]` ASCII alternatívák (UnicodeEncodeError!)
+- LanceDB opcionális: `try: import lancedb; HAS_LANCEDB = True except: HAS_LANCEDB = False`
+- FastMCP ≥2.14.3, Python ≥3.12, uv csomagkezelő
+
+**CLI UX:** Magyar nyelvű, menüvezérelt — Inquirer + Chalk + Boxen + Ora; ne sima text prompt
 
 **Commit:** Conventional Commits — `feat(scope): subject`, `fix(scope): subject`
 
+**Husky hook-ok:**
+- `.husky/pre-commit`: `npx tsx scripts/sync_bootstrap.ts --stage` → `npm run build` → `node scripts/precommit-lint.mjs`
+- `.husky/pre-push`: `npx tsx scripts/sync_doc_stats.ts --dry-run` → `npm run test:fast`
+
 ---
 
-## Agent Implementációs Minták (3 féle)
+## Agent Implementációs Minták
 
-### 1. Egyszerű agent — `IAgent` interfész
+**1. Egyszerű — `IAgent` interfész:**
 ```typescript
-import { IAgent, AgentResponse } from './types.js';
-import { logInfo, logError, setAgentStatus } from '../utils/logger.js';
-
 export class MyAgent implements IAgent {
-  name = 'MyAgent'; role = 'Purpose'; description = 'What it does';
+  name = 'MyAgent'; role = 'Purpose'; description = '...';
   capabilities = ['skill1'];
 
   async execute(task: string, context?: unknown): Promise<AgentResponse> {
@@ -234,45 +149,36 @@ export class MyAgent implements IAgent {
     try {
       return { status: 'success', data: result };
     } catch (e: unknown) {
-      const error = e instanceof Error ? e.message : String(e);
-      logError(this.name, error);
-      return { status: 'error', error };
+      logError(this.name, e instanceof Error ? e.message : String(e));
+      return { status: 'error', error: e instanceof Error ? e.message : String(e) };
     } finally {
-      setAgentStatus(this.name, 'idle'); // KÖTELEZŐ finally-ban!
+      setAgentStatus(this.name, 'idle');
     }
   }
 }
 ```
 
-### 2. RAG memóriával — `BaseAgent` (Bridge Pattern)
+**2. RAG memóriával — `BaseAgent`:**
 ```typescript
-import { BaseAgent, AgentContext, AgentResult } from './BaseAgent.js';
-
-export class MyComplexAgent extends BaseAgent {
-  name = 'MyComplex'; role = 'Role'; description = '...';
-  capabilities = ['skill1'];
+export class MyAgent extends BaseAgent {
+  name = 'MyAgent'; role = '...'; description = '...'; capabilities = ['skill1'];
 
   async executeTask(context: AgentContext): Promise<AgentResult> {
-    // A BaseAgent.execute() automatikusan kezeli a státusz-visszaállítást finally blokkban!
-    // context.pastExperiences — RAG memória auto-betöltve
+    // context.pastExperiences — RAG auto-betöltve; státusz auto-reset a BaseAgent-ben
     return { success: true, message: 'OK', data: result };
   }
 }
 ```
 
-### 3. TOML-alapú DynamicAgent
-Hozz létre `myai/agents/MyAgent.toml` fájlt (systemPrompt, query template, tags).
-A `registry.json`-ban állítsd be: `"class": "DynamicAgent"` + `"tomlPath"`. TypeScript kód nem kell.
+**3. TOML-alapú DynamicAgent:** Hozz létre `myai/agents/MyAgent.toml`-t. `registry.json`-ban: `"class": "DynamicAgent"` + `"tomlPath"`. TypeScript kód nem kell.
 
-### Új agent regisztrálása
-Add hozzá `src/agents/registry.json`-hoz, majd regisztráld `src/server/registry.ts`-ben.
+**Regisztráció:** Add hozzá `src/agents/registry.json`-hoz, majd `src/server/registry.ts`-hez.
 
 ---
 
 ## MCP Tool Minta
 
 ```typescript
-// src/tools/myTool.ts
 export const myToolDefinition = {
   name: 'my_tool', description: 'Tool purpose',
   inputSchema: { type: 'object', properties: { param: { type: 'string' } }, required: ['param'] }
@@ -291,107 +197,54 @@ Regisztrálás: `src/server/registry.ts` → `registerAllTools()` → `server.to
 
 ---
 
-## CLI Konvenció
-
-Minden új CLI parancsnak:
-- **Magyar nyelvűnek** kell lennie
-- **Inquirer.js menüvezérelt** (nyíl + enter — nem szabad szöveges input)
-- **Színes output:** chalk, boxen, ora spinner
-- Fájlok: `src/cli/commands/`. Regisztrálás: `src/cli.ts`.
-
----
-
 ## Fejlesztési Workflow
 
-### Husky Git Hook-ok
+### Track rendszer
 
-- **`.husky/pre-commit`** — `npx tsx scripts/sync_bootstrap.ts --stage` + `npm run build` + `node scripts/precommit-lint.mjs`
-- **`.husky/pre-push`** — `npx tsx scripts/sync_doc_stats.ts --dry-run` + `npm run test:fast`
+- `conductor/tracks.md` — összefoglaló index (ne szerkeszd manuálisan, `ProjectConductor` kezeli)
+- `conductor/tracks/<id>/meta.json` — státusz, owner, SDLC fázisok
+- `conductor/tracks/<id>/plan.md` — implementációs checklist
+- Életciklus: PROPOSED → ACTIVE → TESTING → COMPLETED → ARCHIVED
 
-### MCP Auto-start
+### SDLC Pipeline (5 fázis)
 
-Az MCP szerverek automatikus indítását a `mcp_servers.json` vezérli (`src/server/McpProcessManager.ts`). Az `autoStart`, `requiredEnv`, `platforms`, retry metadata mind itt konfigurálható — ne hardkódold a lista`index.ts`-be vagy `web.ts`-be. A `brunella-core` saját magát `self` MCP bejegyzésként jelöli — ne hozz létre rekurzív `node ./build/index.js` spawnt a core processből.
-
-### workspace-mcp-server
-
-Önálló `uv`-managed MCP alrendszer (`workspace-mcp-server/`). Integráció: `mcp_servers.json` + `.vscode/mcp.json`. **Ne adj külön dashboard/CLI kábelezést** — a registry bejegyzések elegendők. A backend startup `startAutoStartServers()`-t hív, így `dashboard.bat` is elindítja, ha `uv` elérhető.
-
-### SDLC Pipeline
-
-Minden új conductor track automatikusan kap egy 5 fázisú SDLC blokkot (`meta.json` → `sdlc.enabled: true`). Vezérlés:
+Minden új track automatikusan kap SDLC blokkot (`sdlc.enabled: true` a `meta.json`-ban).
 
 ```bash
-# Copilot Chat-ben:
-@sdlc-pipeline /start <trackId>          # Összes fázis
-@sdlc-pipeline /status <trackId>         # Státuszok
-@sdlc-pipeline /phase coder <trackId>    # Egy fázis
-@sdlc-pipeline /reset <trackId>          # Reset
-
-# CLI-ből:
 brunella sdlc status|run|reset <trackId>
 brunella sdlc phase <trackId> <phase>
 ```
 
-**Fázis sorrend:** `architect → devops → coder → qa → reviewer`
+Fázis sorrend: **architect → devops → coder → qa → reviewer**
 
-| Fázis | Fókusz | Kötelező kimenet |
-|-------|--------|-----------------|
-| architect | Spec, pszeudokód, adatmodell | `phases/1-architect.md` |
-| devops | Env, függőségek, build validáció | `phases/2-devops.md` |
-| coder | Implementáció | `phases/3-coder.md` |
-| qa | Tesztek, debug | `phases/4-qa.md` |
-| reviewer | Refaktor, EPP v2 review | `phases/5-reviewer.md` |
+| Fázis | Kötelező kimenet |
+|-------|-----------------|
+| architect | `phases/1-architect.md` (spec, pszeudokód, adatmodell) |
+| devops | `phases/2-devops.md` (env, dependencia, build validáció) |
+| coder | `phases/3-coder.md` (implementáció) |
+| qa | `phases/4-qa.md` (tesztek, debug) |
+| reviewer | `phases/5-reviewer.md` (refaktor, EPP v2 review) |
 
-> Meglévő trackek `sdlc` blokk nélkül nem érinthetők — explicit `sdlcPipeline.init()` kell.
+### EPP v2 — 7 Arany Szabály
 
-### Kernel Pipeline
-
-`src/core/conductor.ts` — 8 fázisú supervisor pipeline (`IntentRouter → Planner → ContextBuilder → ToolExecutor → Critic → Guardrail → LearningLoop`). Megosztott `RunEnvelope` + `ModuleResponse<T>` contract (`src/core/kernelTypes.ts`), 10-esemény typed bus (`src/core/kernelEventBus.ts`). REST: `/api/v1/kernel`. Minden modul lazy-importált, max 2 retry per modul, `RunLedger` tárolja az utolsó 50 futást.
-
-### Google hitelesítés (két szerződés)
-
-- **Service account automatizálás:** `GOOGLE_CREDENTIALS_FILE` vagy `GOOGLE_SERVICE_ACCOUNT_JSON` → preferált fájl: `credentials/google-service-account.json`
-- **Interaktív Workspace OAuth:** `GOOGLE_WORKSPACE_CREDENTIALS_FILE` + `GOOGLE_WORKSPACE_TOKEN_FILE` → `credentials/` alatt
-- A régi `config/` és gyökérszintű útvonalak csak kompatibilitási fallback-ek — ne vezess be ilyet új kódban.
-
-### Federation Manifest Signing
-
-`src/core/federation/capabilityManifest.ts` megköveteli a `MANIFEST_SIGNING_SECRET`-et (minimum 32 karakter). Nincs alapértelmezett shared-secret fallback.
-
----
-
-**Track életciklus:** PROPOSED → ACTIVE → TESTING → COMPLETED → ARCHIVED
-
-**EPP v2 — 7 Arany Szabály (mind kötelező!):**
 1. Minden feature = új track a `conductor/tracks/`-ban
 2. Hibák javítása AZONNAL — ne haladj tovább törött kóddal
 3. Commit gyakran — kis, logikus egységek
 4. TODO lista frissítése folyamatosan
 5. `npm run build` + `npm run test:fast` MUSZÁJ PASS commit előtt
-6. Minden új funkció = **Dashboard panel** (React, Radix UI) + **CLI parancs** (magyar, inquirer.js) IS KÖTELEZŐ
-7. Track lezárásakor: teljes dokumentáció + `sync_foszal.py`
+6. Minden új funkció = **Dashboard panel** (`navigation.tsx`) + **CLI parancs** (`src/cli/`) IS KÖTELEZŐ
+7. Track lezárásakor: teljes dokumentáció + `python scripts/sync_foszal.py`
 
-**Új feature ellenőrzőlista:**
+### Új feature ellenőrzőlista
+
 - [ ] Route regisztrálva `src/server/routes/index.ts`-ben?
 - [ ] Panel regisztrálva `src/dashboard/lib/navigation.tsx`-ben?
 - [ ] Agent hozzáadva `src/agents/registry.json`-hoz?
 - [ ] `npm run build` + `npm run test:fast` zöld?
 
----
+### Munkamenet napló
 
-### Startup sorrendje és lazy-loading
-
-- `src/index.ts` először a HTTP szervert indítja (`startWebServer()`), így `/ping` azonnal elérhető.
-- `src/server/web.ts` nehéz inicializációt `deferredInit()`-ban végzi (adatbázisok, agent registry) — ez szándékos, OOM elkerülés miatt.
-- A route-ok lazy-loading-gal töltődnek be (`lazy()` proxy) a `src/server/routes/index.ts`-ben. Új route-okat ott regisztrálj, ne importáld közvetlenül `web.ts`-ben.
-
----
-
-## Claude-Specifikus Koordináció
-
-### Munkamenet Napló (.ai/claude.md)
-
-**Munkamenet végén** add hozzá `.ai/claude.md`-be:
+Munkamenet végén add hozzá `.ai/claude.md`-hez (Claude-specifikus log — más ügynökök saját fájljukat írják: `.ai/copilot.md`, `.ai/gemini.md`, `.ai/cursor.md`):
 ```markdown
 ### YYYY-MM-DD HH:MM - [Rövid cím]
 **Feladat:** Mit csináltál
@@ -401,58 +254,65 @@ brunella sdlc phase <trackId> <phase>
 ```
 Majd: `python scripts/sync_foszal.py`
 
-### Glass Box Filozófia
+---
 
-**Magyarázd el MIÉRT** csinálsz valamit, mielőtt megteszed. Ha hibát találsz, mondd el a gyökér okát.
+## Copilot Agents (`.github/agents/*.agent.md`)
+
+Invoke Copilot Chat-ban `@<name>` prefixszel:
+
+| Agent | Cél |
+|-------|-----|
+| `sdlc-pipeline` | Összes SDLC fázis orchestrálása |
+| `bas-lead-developer` | End-to-end feature implementáció (TDD, docs, tests) |
+| `bas-phoenix-reviewer` | EPP v2 / Phoenix Protocol code review |
+| `bas-mcp-architect` | MCP tool design, TypeScript↔Python bridge |
+| `devops-infra-guardian` | Deps, env, build validáció (SDLC phase 2) |
+| `robust-test-writer` | Unit + integration tesztek, edge-case coverage |
+| `bas-orchestrator-commander` | Multi-agent workflow, Phoenix retry lánc |
+| `brunella-orchestrator` | Top-level cross-agent routing confidence scoring-gal |
+| `strict-code-reviewer` | Clean Code / SOLID review commit előtt |
+| `bas-self-reflect` | Post-track FOSZAL pattern elemzés |
 
 ---
 
-## Környezeti Változók (.env)
+## Önellenőrzési Protokoll (Kötelező!)
 
-**KÖTELEZŐ:**
-```env
-OLLAMA_BASE_URL=http://localhost:11434
-BRUNELLA_WORKSPACE_ROOT=.
-```
-
-**LLM providerek (prioritás sorrendben):**
-```env
-GITHUB_PAT=...               # GitHub Models — GITHUB_TOKEN előtt prioritás!
-GEMINI_API_KEY=...            # Gemini
-ANTHROPIC_API_KEY=...         # Claude (Bifrost Gateway)
-OLLAMA_MODEL=qwen2.5-coder:7b # Alapértelmezett lokális modell
-```
-
-**.env változtatás után MINDIG:** Node.js restart + FastAPI restart + health check!
+| # | Szabály |
+|---|---------|
+| 1 | **Forrás előbb** — kódbeli állításhoz hivatkozz konkrét fájlra+sorra, ne emlékezetből |
+| 2 | **Árva-singleton tilalom** — `new SelfModel()` / `new ReflectionEngine()` csak `autonomousInfraRuntime.ts`-ből |
+| 3 | **Nem-standard mező tiltás** — `mcp_servers.json`, `meta.json`, `registry.json` mezőit csak sémában definiált kulcsokra bővítsd |
+| 4 | **async-határok konzisztenciája** — ha szinkron metódust aszinkronná teszel, frissítsd az összes hívóhelyet |
+| 5 | **Dupla írás elkerülése** — `copilotCognitiveBridge.reflect()` már meghívja ReflectionEngine-t és GraphRAG-ot; ne hívd külön |
+| 6 | **Severity leképezés** — `CRITICAL` és `HIGH` = `'high'` risk; eredeti severity-t tárold `payload.copilotSeverity`-ként |
+| 7 | **Teszt lefedettség** — minden új publikus API-hoz legalább 5 Vitest teszt kell track COMPLETED előtt |
 
 ---
 
-## Gyakori Hibák
+## Ismert Hibák
 
 | Probléma | Megoldás |
 |----------|----------|
-| `ERR_MODULE_NOT_FOUND` | Import hiányzó `.js` kiterjesztés → add hozzá |
+| `ERR_MODULE_NOT_FOUND` | Hiányzó `.js` import kiterjesztés |
 | BUILD FAIL | `rmdir /s /q build && npm run build` |
-| Dashboard build fail | `npm run build:ui` — különálló Vite build, saját tsconfig |
-| Ollama nem elérhető | `ollama serve` futtatása |
-| Agent "stuck" | Phoenix auto-retry, kézi: `setAgentStatus(name, 'idle')` |
-| GitHub Models 401 | `GITHUB_PAT` lejárt — frissítsd (ne a `GITHUB_TOKEN`-t!) |
+| Dashboard build fail | `npm run build:ui` — különálló Vite build |
+| `better-sqlite3` Node v24+ | ABI eltérés → `npm rebuild better-sqlite3`. Ha `deferredInit()` Phase 2-nél crashel, `/api/*` 404, csak `/ping` működik → ellenőrizd: `logs/node-server.log` |
+| `federation_replay_nonces_runtime` INSERT | SQLite `DEFAULT` nem lép életbe `INSERT OR REPLACE`-nél — adj meg explicit `datetime('now')`-t |
+| GitHub Models 401 | `GITHUB_PAT` lejárt (NEM `GITHUB_TOKEN`) — `GITHUB_PAT` elsőbbséget élvez |
+| `buildHealthResponse` paramétere | 10 arg: `(ollama, anythingllm, python, n8n, langflow, wab, cloudflare, agentCount, mcpCount, requestId)` |
+| Root `AGENTS.md` | `cloudflare-docs` konvenciókat ír le — BAS-hoz irreleváns; mérvadó: `.github/copilot-instructions.md` |
+| Windows Unicode | Emoji → `[OK]` / `[AI]` Python logokban |
 | FastAPI nem indul | `cd myai && uv sync && uvicorn server:app --reload --port 8000` |
-| Windows Unicode hiba | Emoji → ASCII (`[OK]` / `[AI]`) a Python logokban |
-| cron-parser v5 | Csak `CronExpressionParser.parse()` érvényes — nem `parseExpression()` |
-| `better-sqlite3` Node v24+ | ABI eltérés → `npm rebuild better-sqlite3`. Ha `deferredInit()` Phase 2-nél crashel, minden `/api/*` route 404-et ad (csak `/ping` működik). Ellenőrizd: `logs/node-server.log` |
-| Root `AGENTS.md` figyelmen kívül | A gyökér `AGENTS.md` a `cloudflare-docs` repo konvencióit írja le — BAS-hoz nem releváns. A mérvadó fájl: `.github/copilot-instructions.md` |
-| `buildHealthResponse` paramétere | 10 argumentumot vár: `(ollama, anythingllm, python, n8n, langflow, wab, cloudflare, agentCount, mcpCount, requestId)`. A mock-oknak pontosan ezt kell visszaadni. |
-| `federation_replay_nonces_runtime` INSERT | A tábla `created_at` oszlopán `DEFAULT datetime('now')` van, de SQLite `INSERT OR REPLACE` esetén ez **nem lép életbe**. Mindig add meg explicit: `..., datetime('now')` az értékek közt. |
-| `CopilotFeedbackChannel` singleton | A `copilotFeedbackChannel` a `src/core/autonomousInfraRuntime.ts`-ből exportált **egyetlen** példány. **Ne hozz létre `new CopilotFeedbackChannel()`-t** máshol — árva példány lesz, amelyet a HyperKernel nem lát. Jeleket csak a `copilotFeedbackChannel.ingest()`-en keresztül küldj. |
 
----
+## Google Hitelesítés (két szerződés)
+
+- **Service account:** `GOOGLE_CREDENTIALS_FILE` vagy `GOOGLE_SERVICE_ACCOUNT_JSON` → `credentials/google-service-account.json`
+- **Workspace OAuth:** `GOOGLE_WORKSPACE_CREDENTIALS_FILE` + `GOOGLE_WORKSPACE_TOKEN_FILE` → `credentials/`
+- Régi `config/` és gyökérszintű útvonalak csak legacy fallback — ne vezess be ilyet új kódban
 
 ## Védett Fájlok — SOHA NE TÖRÖLD!
 
 `src/index.ts`, `src/cli.ts`, `src/agents/types.ts`, `src/agents/registry.json`, `src/server/web.ts`, `src/server/registry.ts`, `src/core/llm_client.ts`, `conductor/tracks.md`, `.ai/FOSZAL.md`
-
-**Ha "takarítani" akarsz — KÉRDEZZ ELŐSZÖR!**
 
 ---
 

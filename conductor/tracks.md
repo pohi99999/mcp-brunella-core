@@ -1,17 +1,26 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-04-08T22:03:39.576Z
+**Utolso frissites:** 2026-04-09T01:00:01.765Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 230 total | 17 active | 28 completed | 183 archived
-**Csoportok:** Könyvelés / üzleti automatizálás: 50 | Nova asszisztens: 21 | Brunella rendszer: 93 | Egyéb: 66
+**Stats:** 231 total | 18 active | 28 completed | 183 archived
+**Csoportok:** Könyvelés / üzleti automatizálás: 50 | Nova asszisztens: 22 | Brunella rendszer: 93 | Egyéb: 66
 
 ---
 
-## Tervezett Szalak (Proposed) (2)
+## Tervezett Szalak (Proposed) (3)
 
-### Brunella rendszer (2)
+### Brunella rendszer (3)
+
+- [ ] **Brunella–AnythingLLM Desktop Integration** [HIGH]
+  - **ID:** `brunella-anythingllm-desktop-integration`
+  - **Progress:** 0%
+  - **Assignee:** GitHub Copilot
+  - **Updated:** 2026-04-09
+  - Mappa: ./tracks/brunella-anythingllm-desktop-integration/
+
+
 
 - [ ] **Brunella Remote Layer — Fázis 8: Planet-Scale Supersystem** [CRITICAL]
   - **ID:** `remote_layer_phase8_planetary_supersystem_20260322`
@@ -28,16 +37,9 @@
 
 ---
 
-## Aktiv Szalak (Active) (17)
+## Aktiv Szalak (Active) (18)
 
 ### Könyvelés / üzleti automatizálás (9)
-
-- [ ] **Viktoria Brand Voice** [HIGH]
-  - **ID:** `viktoria_brand_voice_20260408`
-  - **Progress:** 15%
-  - **Assignee:** GitHub Copilot
-  - **Updated:** 2026-04-08T00:00:00.000Z
-  - Mappa: ./tracks/viktoria_brand_voice_20260408/
 
 - [ ] **KKV uzleti automatizalas masterplan** [HIGH]
   - **ID:** `kkv_business_automation_20260408`
@@ -66,36 +68,43 @@
   - **Updated:** 2026-04-08
   - Mappa: ./tracks/pohanka_freelancer_terjeszkedes_20260408/
 
-- [ ] **Viktoria Brand Monitor** [HIGH]
+- [ ] **VIKTORIAVARGA brand monitor** [HIGH]
   - **ID:** `viktoria_brand_monitor_20260408`
   - **Progress:** 0%
   - **Assignee:** GitHub Copilot
-  - **Updated:** 2026-04-08T00:00:00.000Z
+  - **Updated:** 2026-04-08
   - Mappa: ./tracks/viktoria_brand_monitor_20260408/
 
-- [ ] **Viktoria Phygital Pipeline** [HIGH]
+- [ ] **VIKTORIAVARGA brand voice foundation** [HIGH]
+  - **ID:** `viktoria_brand_voice_20260408`
+  - **Progress:** 15%
+  - **Assignee:** GitHub Copilot
+  - **Updated:** 2026-04-08
+  - Mappa: ./tracks/viktoria_brand_voice_20260408/
+
+- [ ] **VIKTORIAVARGA phygital pipeline** [HIGH]
   - **ID:** `viktoria_phygital_pipeline_20260408`
   - **Progress:** 0%
   - **Assignee:** GitHub Copilot
-  - **Updated:** 2026-04-08T00:00:00.000Z
+  - **Updated:** 2026-04-08
   - Mappa: ./tracks/viktoria_phygital_pipeline_20260408/
 
-- [ ] **Viktoria Shopping Assistant** [HIGH]
+- [ ] **VIKTORIAVARGA shopping assistant** [HIGH]
   - **ID:** `viktoria_shopping_assistant_20260408`
   - **Progress:** 0%
   - **Assignee:** GitHub Copilot
-  - **Updated:** 2026-04-08T00:00:00.000Z
+  - **Updated:** 2026-04-08
   - Mappa: ./tracks/viktoria_shopping_assistant_20260408/
 
-- [ ] **Viktoria Social Concierge** [HIGH]
+- [ ] **VIKTORIAVARGA social concierge** [HIGH]
   - **ID:** `viktoria_social_concierge_20260408`
   - **Progress:** 0%
   - **Assignee:** GitHub Copilot
-  - **Updated:** 2026-04-08T00:00:00.000Z
+  - **Updated:** 2026-04-08
   - Mappa: ./tracks/viktoria_social_concierge_20260408/
 
 
-### Nova asszisztens (5)
+### Nova asszisztens (6)
 
 - [ ] **Napi intelligens reggeli briefing ugynok** [HIGH]
   - **ID:** `napi_intelligens_briefing_20260404`
@@ -131,6 +140,13 @@
   - **Assignee:** Gemini
   - **Updated:** 2026-04-08
   - Mappa: ./tracks/toura_local_dev_20260408/
+
+- [ ] **Napi AI Agent Összefoglaló Pipeline** [MEDIUM]
+  - **ID:** `ai_agent_daily_briefing_20260408`
+  - **Progress:** 0%
+  - **Assignee:** Brunella
+  - **Updated:** 2026-04-08T00:00:00.000Z
+  - Mappa: ./tracks/ai_agent_daily_briefing_20260408/
 
 
 ### Brunella rendszer (2)

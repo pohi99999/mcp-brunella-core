@@ -6,6 +6,16 @@ User requested that the Copilot CLI automatically connect to a local Brunella MC
 
 ## History
 
+### 2026-04-09 01:07 - Aider Brunella integration hardening
+
+**Feladat:** Aider jelenléti ellenőrzése, GPT-5-mini + Hungarian profile beállítása, repo-szintű ignore/config fájlok létrehozása, valamint a használati útmutató és a Copilot instrukciók frissítése.
+
+**Érintett fájlok:** `.aider.conf.yml`, `.aiderignore`, `litellm_config.yaml`, `AIDER.md`, `.github/copilot-instructions.md`, `.worktrees/Aider_parancsok_leiras.md`
+
+**Státusz:** ⏳ Folyamatban
+
+**Megjegyzés:** Az Aider már telepítve volt a gépen; a Brunella default profil GPT-5-mini-t használ a helyi LiteLLM proxyn át, a magyar chat/commit nyelv pedig configból jön.
+
 ### 2026-04-09 00:08 - Viktoria brand voice foundation
 
 **Feladat:** A VIKTORIAVARGA brand voice TOML agent, registry entry, fókuszteszt és a kapcsolódó conductor track scaffoldok befejezése.
