@@ -71,8 +71,7 @@ public class JsonEventMatcher extends DoFn<KV<String, String>, KV<String, String
       }
 
     } catch (JsonProcessingException e) {
-      // TODO: Should Throw or give alert to user
-      e.printStackTrace();
+      throw new RuntimeException("Error processing JSON in JsonEventMatcher", e);
     }
   }
 

@@ -64,8 +64,7 @@ public class JsonSchemaExist extends DoFn<KV<String, String>, KV<String, String>
       context.output(returnValue);
 
     } catch (JsonProcessingException e) {
-      // TODO: Should Throw or give alert to user
-      e.printStackTrace();
+      throw new RuntimeException("Error processing JSON in JsonSchemaExist", e);
     }
   }
 
