@@ -58,7 +58,7 @@ jobs:
           cache: "pip"
 
       - name: Install Python dependencies
-        run: pip install -r requirements.txt
+        run: pip install -r myai/requirements.txt
 
       - name: Run Python tests
         run: |
@@ -89,7 +89,7 @@ jobs:
         run: |
           python3 -m venv .venv
           . .venv/bin/activate
-          pip install -r requirements.txt
+          pip install -r myai/requirements.txt
 
       - name: Install Node deps & build
         run: pnpm install --frozen-lockfile && pnpm run build
