@@ -14,22 +14,17 @@ jobs:
         with:
           lfs: true
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v3
-        with:
-          version: 9
-
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "24"
-          cache: "pnpm"
+          cache: "npm"
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: npm install --no-frozen-lockfile
 
       - name: Run quick Node validation
-        run: pnpm run test:fast
+        run: npm run test:fast
         env:
           WEB_UI_ENABLED: "0"
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
@@ -58,7 +53,7 @@ jobs:
           cache: "pip"
 
       - name: Install Python dependencies
-        run: pip install -r myai/requirements.txt
+        run: pip install -r requirements.txt
 
       - name: Run Python tests
         run: |
@@ -75,11 +70,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v3
-        with:
-          version: 9
-
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
@@ -89,10 +79,10 @@ jobs:
         run: |
           python3 -m venv .venv
           . .venv/bin/activate
-          pip install -r myai/requirements.txt
+          pip install -r requirements.txt
 
       - name: Install Node deps & build
-        run: pnpm install --frozen-lockfile && pnpm run build
+        run: npm install --no-frozen-lockfile && npm run build
       - name: PythonShell tests
         run: node --loader ts-node/esm --test test/python_shell.test.ts
         env:
@@ -106,22 +96,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v3
-        with:
-          version: 9
-
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "24"
-          cache: "pnpm"
+          cache: "npm"
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: npm install --no-frozen-lockfile
 
       - name: Run linter
-        run: pnpm run lint
+        run: npm run lint
   
 
   integration-tests:
@@ -136,19 +121,14 @@ jobs:
           sudo apt-get update -y
           sudo apt-get install -y sqlite3
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v3
-        with:
-          version: 9
-
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "24"
-          cache: "pnpm"
+          cache: "npm"
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: npm ci
 
       - name: Prepare test DB & run migrations
         shell: bash
@@ -190,7 +170,7 @@ jobs:
           printf 'NODE_ENV=test\nDB_PATH=%s\n' "$TEST_DB_PATH" > .env.test
 
       - name: Build TypeScript
-        run: pnpm run build
+        run: npm run build
 
       - name: Run integration Vitest suite
         run: npx vitest run test/integration --run
