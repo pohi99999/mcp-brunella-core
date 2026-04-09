@@ -128,7 +128,7 @@ jobs:
           cache: "npm"
 
       - name: Install dependencies
-        run: npm ci
+        run: npm install --no-frozen-lockfile
 
       - name: Prepare test DB & run migrations
         shell: bash

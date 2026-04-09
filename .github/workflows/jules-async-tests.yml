@@ -44,7 +44,7 @@ jobs:
           cache: "npm"
 
       - name: Install
-        run: npm ci
+        run: npm install --no-frozen-lockfile
 
       - name: Run selected suite
         shell: bash
