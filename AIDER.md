@@ -1,8 +1,8 @@
 # 🤖 Aider AI Assistant Integration Guide
 
-**Last Updated:** 2026-02-24  
+**Last Updated:** 2026-04-09
 **Status:** Active Integration  
-**Model:** GPT-4o (GitHub Models) / Gemini 2.0 Flash (via LiteLLM)
+**Model:** GPT-5-mini (GitHub Models via LiteLLM) / Gemini 2.0 Flash (fallback)
 
 ---
 
@@ -102,11 +102,11 @@ pip install aider-chat
 pipx install aider-chat
 ```
 
-### 2. Start LiteLLM Proxy (if using GitHub Models or Gemini)
+### 2. Start LiteLLM Proxy (if using GitHub Models / GPT-5-mini or Gemini)
 
 ```bash
 # Start LiteLLM on port 4000
-litellm --model github/gpt-4o --port 4000
+litellm --model github/gpt-5-mini --port 4000
 
 # Or for Gemini
 litellm --model gemini/gemini-2.0-flash --port 4000
@@ -115,18 +115,22 @@ litellm --model gemini/gemini-2.0-flash --port 4000
 ### 3. Run Aider
 
 ```bash
-# Using GitHub Models GPT-4o (via LiteLLM)
-aider --model openai/gpt-4o \
+# Using GitHub Models GPT-5-mini (via LiteLLM)
+aider --model openai/gpt-5-mini \
       --openai-api-base http://localhost:4000 \
-      --openai-api-key dummy
+      --openai-api-key dummy \
+      --chat-language hu \
+      --commit-language hu
 
 # Or using Gemini (via LiteLLM)
 aider --model openai/gemini-2.0-flash \
       --openai-api-base http://localhost:4000 \
-      --openai-api-key dummy
+      --openai-api-key dummy \
+      --chat-language hu \
+      --commit-language hu
 
 # Or direct OpenAI (if you have API key)
-aider --model gpt-4o --openai-api-key YOUR_KEY
+aider --model gpt-5-mini --openai-api-key YOUR_KEY --chat-language hu --commit-language hu
 
 # Or Anthropic Claude
 aider --model claude-3-5-sonnet-20241022 --anthropic-api-key YOUR_KEY
@@ -223,7 +227,7 @@ Before Aider commits, ensure:
 
 1. **Simplify the task** - Break into smaller steps
 2. **Add more context** - `/add` relevant files
-3. **Check model** - Try different model if GPT-4o struggles
+3. **Check model** - Try different model if GPT-5-mini struggles
 4. **Fallback to Claude** - For complex architectural changes
 
 ---
@@ -234,6 +238,12 @@ Before Aider commits, ensure:
 
 ```yaml
 model_list:
+  - model_name: gpt-5-mini
+    litellm_params:
+      model: github/gpt-5-mini
+      api_base: https://models.inference.ai.azure.com
+      api_key: os.environ/GITHUB_PAT
+
   - model_name: gpt-4o
     litellm_params:
       model: github/gpt-4o
@@ -269,7 +279,7 @@ Track Aider usage in `.ai/aider.md` (optional):
 **Files:** src/agents/ChromeDevToolsAgent.ts
 **Result:** ✅ Success (3 methods added, tests passing)
 **Duration:** 15 minutes
-**Model:** GPT-4o (GitHub Models)
+**Model:** GPT-5-mini (GitHub Models via LiteLLM)
 ```
 
 ---
