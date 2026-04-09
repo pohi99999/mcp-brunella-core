@@ -25,7 +25,7 @@ public class JsonSchemaExistTest {
   @Rule public final MockitoRule mockito = MockitoJUnit.rule();
   @Rule public final transient TestPipeline pipeline = TestPipeline.create();
 
-  @Mock private static BQDatasetSchemas mockBQDatasetSchema = BQDatasetSchemas.getInstance();
+  @Mock private BQDatasetSchemas mockBQDatasetSchema;
 
   final KV<String, String> MOCK_INPUT =
       KV.of(

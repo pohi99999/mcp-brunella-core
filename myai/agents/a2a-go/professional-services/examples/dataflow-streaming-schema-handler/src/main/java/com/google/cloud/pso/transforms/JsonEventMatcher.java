@@ -28,12 +28,15 @@ import com.google.cloud.pso.util.Constants;
 import com.google.common.annotations.VisibleForTesting;
 import org.apache.beam.sdk.transforms.DoFn;
 import org.apache.beam.sdk.values.KV;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The {@link JsonEventMatcher} builds the connection to BigQuery schema as well as validating
  * incoming JSON file with the schema in BigQuery.
  */
 public class JsonEventMatcher extends DoFn<KV<String, String>, KV<String, String>> {
+  private static final Logger LOG = LoggerFactory.getLogger(JsonEventMatcher.class);
   private static BQDatasetSchemas testBqDatasetSchema;
 
   private BQDatasetSchemas bqDatasetSchema;
@@ -71,8 +74,8 @@ public class JsonEventMatcher extends DoFn<KV<String, String>, KV<String, String
       }
 
     } catch (JsonProcessingException e) {
-      // TODO: Should Throw or give alert to user
-      e.printStackTrace();
+      LOG.error("Unable to parse JSON Message, check the format of the JSON", e);
+      throw new RuntimeException("Unable to parse JSON Message", e);
     }
   }
 

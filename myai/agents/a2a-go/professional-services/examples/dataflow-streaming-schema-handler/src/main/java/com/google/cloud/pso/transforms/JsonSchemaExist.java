@@ -25,12 +25,15 @@ import com.google.cloud.pso.util.Constants;
 import com.google.common.annotations.VisibleForTesting;
 import org.apache.beam.sdk.transforms.DoFn;
 import org.apache.beam.sdk.values.KV;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The {@code JsonSchemaExist} check whether the incoming the event schema is a known schema. In the
  * case of unknown schema, the result will be outputted in {@code UNKNOWN_SCHEMA_TAG}.
  */
 public class JsonSchemaExist extends DoFn<KV<String, String>, KV<String, String>> {
+  private static final Logger LOG = LoggerFactory.getLogger(JsonSchemaExist.class);
   // Requires 2 BQDataSetSchemas for testing purposes
   private BQDatasetSchemas bqDatasetSchema;
   private static BQDatasetSchemas testBqDatasetSchema;
@@ -64,8 +67,8 @@ public class JsonSchemaExist extends DoFn<KV<String, String>, KV<String, String>
       context.output(returnValue);
 
     } catch (JsonProcessingException e) {
-      // TODO: Should Throw or give alert to user
-      e.printStackTrace();
+      LOG.error("Unable to parse JSON Message, check the format of the JSON", e);
+      throw new RuntimeException("Unable to parse JSON Message", e);
     }
   }
 
