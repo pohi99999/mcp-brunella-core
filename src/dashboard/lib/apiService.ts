@@ -4027,3 +4027,58 @@ export async function runBriefingReport(dryRun = false): Promise<{ success: bool
     return { success: false, error: String(error) };
   }
 }
+
+// ── AnythingLLM Action Bridge ─────────────────────────────────────────────
+
+export interface AnythingLLMActionRequest {
+  action: string;
+  payload?: { task?: string; context?: Record<string, unknown> };
+}
+
+export interface AnythingLLMActionResponse {
+  success: boolean;
+  action: string;
+  agent: string;
+  result: string;
+  riskLevel: 'normal' | 'high';
+  auditId: string;
+  error?: string;
+}
+
+export interface AnythingLLMActionAuditRecord {
+  id: string;
+  timestamp: string;
+  action: string;
+  agent: string;
+  payloadSummary: string;
+  resultSummary: string;
+  riskLevel: 'normal' | 'high';
+  durationMs: number;
+  success: boolean;
+}
+
+export async function executeAnythingLLMAction(
+  req: AnythingLLMActionRequest,
+  secret?: string,
+): Promise<AnythingLLMActionResponse> {
+  const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+  if (secret) headers['X-Brunella-Secret'] = secret;
+  const response = await fetchWithTimeout(
+    `${API_BASE}/api/v1/anythingllm/action`,
+    { method: 'POST', headers, body: JSON.stringify(req) },
+    60000,
+  );
+  return safeJson<AnythingLLMActionResponse>(response);
+}
+
+export async function getAnythingLLMActionAudit(
+  secret?: string,
+): Promise<{ records: AnythingLLMActionAuditRecord[]; total: number }> {
+  const headers: Record<string, string> = {};
+  if (secret) headers['X-Brunella-Secret'] = secret;
+  const response = await fetchWithTimeout(
+    `${API_BASE}/api/v1/anythingllm/action/audit`,
+    { headers },
+  );
+  return safeJson<{ records: AnythingLLMActionAuditRecord[]; total: number }>(response);
+}
