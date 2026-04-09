@@ -2,7 +2,52 @@
 
 **Agent:** Claude Code (Anthropic)
 **Fájl:** `.ai/claude.md`
-**Utolsó frissítés:** 2026-04-08
+**Utolsó frissítés:** 2026-04-09
+
+---
+
+## 📋 LEGUTÓBBI MUNKAMENET
+
+### 2026-04-09 02:00 - CLAUDE.md fejlesztés + brunella-anythingllm-desktop-integration track létrehozása
+
+**Feladat:**
+1. `/init` parancs: CLAUDE.md elemzése és fejlesztése (`.github/copilot-instructions.md` és `package.json` alapján)
+2. Új conductor track létrehozása: `brunella-anythingllm-desktop-integration` (4 fájl)
+3. Git commit + push + PR merge mainba
+
+**Elvégzett feladatok:**
+
+1. **CLAUDE.md 6 célzott fejlesztés:**
+   - `npm run test:ui` hozzáadva a teszt parancsokhoz
+   - `start-full.bat` és `npm run build:stable` dokumentálva
+   - Husky hook-ok (`.husky/pre-commit`, `.husky/pre-push`) dokumentálva
+   - MCP auto-start (`mcp_servers.json`) megjegyzés hozzáadva
+   - CLI UX konvenció (Magyar, Inquirer + Chalk + Boxen + Ora) dokumentálva
+   - Agent-specifikus logfájlok (`.ai/claude.md` Claude-nak stb.) tisztázva
+
+2. **Új track létrehozva:** `conductor/tracks/brunella-anythingllm-desktop-integration/`
+   - `meta.json` — SDLC-enabled, status: proposed, owner: copilot, priority: high
+   - `spec.md` — Cél, probléma, képességek, szabályok, architektúra
+   - `plan.md` — 5 SDLC fázis: architect, devops, coder, qa, reviewer
+   - `README.md` — Felhasználói dokumentáció: használat, támogatott műveletek, szabályok
+
+3. **conductor/tracks.md frissítve** — új track a Proposed szekcióban
+
+**Érintett fájlok:**
+- `CLAUDE.md` (6 javítás)
+- `conductor/tracks/brunella-anythingllm-desktop-integration/meta.json` (ÚJ)
+- `conductor/tracks/brunella-anythingllm-desktop-integration/spec.md` (ÚJ)
+- `conductor/tracks/brunella-anythingllm-desktop-integration/plan.md` (ÚJ)
+- `conductor/tracks/brunella-anythingllm-desktop-integration/README.md` (ÚJ)
+- `conductor/tracks.md` (Proposed szekció +1 track)
+- `.ai/CLAUDE.md` (ez a bejegyzés)
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés a következő ügynöknek:**
+- A `brunella-anythingllm-desktop-integration` track PROPOSED státuszban van, első fázis: **architect**
+- Az SDLC pipeline: `brunella sdlc run brunella-anythingllm-desktop-integration`
+- Ezt a branch-et (`copilot/viktoria-brand-stack`) a mainba mergeltük PR-rel
 
 ---
 
