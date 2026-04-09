@@ -17,7 +17,6 @@ import { checkPattern, getPatternReuseThreshold } from '../core/patternReuse.js'
 import { queryMemory as queryStructuredMemory, saveMemory as saveStructuredMemory, type StoredAgentMemory } from '../core/structuredMemory.js';
 import { guardAgentResponseOutput, guardAgentResultOutput } from '../core/outputGuard.js';
 import { fireHookSafely, isHookEnabled } from '../core/hookRegistry.js';
-import { fireHooks } from '../core/hookEngine.js';
 import {
   attachWorkingMemoryObservation,
   appendWorkingMemoryMessage,
@@ -147,13 +146,6 @@ export abstract class BaseAgent implements IAgent {
     };
 
     await emitLifecycleHook('BeforeAgent', lifecycleContext);
-    // Keep the legacy hook engine non-blocking, but never invisible.
-    try {
-      await fireHooks('BeforeAgent', lifecycleContext);
-    } catch (error: unknown) {
-      const normalized = ensureError(error);
-      logWarn(`${this.name} hookEngine BeforeAgent fallback: ${normalized.message}`);
-    }
 
     if (!testMode) {
       const patternReuseThreshold = getPatternReuseThreshold();
@@ -311,17 +303,6 @@ export abstract class BaseAgent implements IAgent {
         cached: false,
         response: guardedResponse,
       });
-      // Keep the legacy hook engine non-blocking, but never invisible.
-      try {
-        await fireHooks('AfterAgent', {
-          ...lifecycleContext,
-          outcome: result.success ? 'success' : 'error',
-          cached: false,
-        });
-      } catch (error: unknown) {
-        const normalized = ensureError(error);
-        logWarn(`${this.name} hookEngine AfterAgent fallback: ${normalized.message}`);
-      }
       return guardedResponse;
     } catch (error: unknown) {
       const normalized = ensureError(error);
@@ -340,17 +321,6 @@ export abstract class BaseAgent implements IAgent {
         error: normalized.message,
         response,
       });
-      // Keep the legacy hook engine non-blocking, but never invisible.
-      try {
-        await fireHooks('AfterAgent', {
-          ...lifecycleContext,
-          outcome: 'error',
-          cached: false,
-        });
-      } catch (error: unknown) {
-        const normalized = ensureError(error);
-        logWarn(`${this.name} hookEngine AfterAgent fallback: ${normalized.message}`);
-      }
       return response;
     } finally {
       setAgentStatus(this.name, 'idle');

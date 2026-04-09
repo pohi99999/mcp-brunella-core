@@ -34,6 +34,7 @@ import {
   getHookSummary,
   isHookEnabled,
   registerHook,
+  retryHookDlqEntry,
 } from '../src/core/hookRegistry.js';
 
 hookHarness.db = new Database(':memory:');
@@ -122,6 +123,32 @@ describe('Hook registry engine', () => {
     const executions = getHookExecutions(10, { event: 'test.fire.retry' });
     expect(executions.map((entry) => entry.status)).toContain('failed');
     expect(executions.map((entry) => entry.status)).toContain('fired');
+  });
+
+  it('preserves the dlq entry when targeted replay fails again', async () => {
+    let attempts = 0;
+    registerHook('test.fire.retry-fails', () => {
+      attempts += 1;
+      throw new Error(`still-broken-${attempts}`);
+    }, {
+      category: 'business',
+      retryOnFail: false,
+      handlerName: 'retry-fails-handler',
+    });
+
+    const summary = await fireHook('test.fire.retry-fails', { ok: false }, { source: 'test' });
+    expect(summary.status).toBe('failed');
+
+    const [entry] = getHookDlqEntries(10);
+    expect(entry).toBeDefined();
+
+    const replay = await retryHookDlqEntry(entry!.id);
+    expect(replay).toBeNull();
+
+    const [retained] = getHookDlqEntries(10);
+    expect(retained?.id).toBe(entry!.id);
+    expect(retained?.attempts).toBe(1);
+    expect(retained?.status).toBe('failed');
   });
 
   it('disableHook blocks events until re-enabled', async () => {

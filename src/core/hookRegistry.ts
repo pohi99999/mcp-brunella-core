@@ -1380,35 +1380,99 @@ export async function retryHookDlqEntry(id: number): Promise<HookFireSummary | n
   };
   hookDlq.update(updated);
 
-  try {
-    const summary = await fireHook(entry.event, entry.context, {
-      force: true,
-      source: 'hook-dlq-replay',
-      metadata: entry.metadata,
-    });
+  const metadata = ensureRecord(entry.metadata);
+  const handlerName = typeof metadata.handlerName === 'string' ? metadata.handlerName : undefined;
+  const registration = handlerName
+    ? getRegistrations(entry.event).find((candidate) => candidate.handlerName === handlerName)
+    : undefined;
 
+  if (!registration) {
+    updated.status = 'failed';
+    hookDlq.update(updated);
+    logError('HookRegistry', `DLQ replay target missing for ${entry.event}: ${handlerName ?? 'unknown-handler'}`);
+    return null;
+  }
+
+  const definition = getDefinitionSnapshot(entry.event);
+  const attempt = updated.attempts;
+  const attemptStartedAt = Date.now();
+  const dispatchContext: HookDispatchContext = {
+    event: entry.event,
+    payload: entry.context,
+    attempt,
+    timestamp: updated.updatedAt,
+    registration: toSummary(registration),
+    definition,
+    metadata,
+  };
+
+  try {
+    await registration.handler(dispatchContext);
+    const durationMs = Date.now() - attemptStartedAt;
+    hookCircuitBreaker.recordSuccess(entry.event);
     hookDlq.delete(id);
     hookAuditTrail.record({
       event: entry.event,
-      handlerName: '__dlq_retry__',
-      category: 'infra',
-      priority: DEFAULT_PRIORITY,
+      handlerName: registration.handlerName,
+      category: registration.category,
+      priority: registration.priority,
       status: 'fired',
-      attempt: updated.attempts,
-      durationMs: summary.durationMs,
+      attempt,
+      durationMs,
       context: entry.context,
       metadata: {
         dlqId: id,
+        replay: true,
         reason: entry.reason,
+        ...metadata,
       },
     });
 
-    return summary;
+    return {
+      event: entry.event,
+      status: 'fired',
+      durationMs,
+      handlerCount: 1,
+      firedCount: 1,
+      failedCount: 0,
+      skippedCount: 0,
+      blockedCount: 0,
+      deadLetterCount: 0,
+      retriedCount: 0,
+      errors: [],
+      timestamp: new Date().toISOString(),
+      circuit: hookCircuitBreaker.snapshot(entry.event)[0] ?? {
+        event: entry.event,
+        state: 'closed',
+        failures: 0,
+        threshold: CIRCUIT_THRESHOLD,
+        coolDownMs: CIRCUIT_COOL_DOWN_MS,
+      },
+    };
   } catch (error: unknown) {
     const normalized = ensureError(error);
+    const durationMs = Date.now() - attemptStartedAt;
+    hookCircuitBreaker.recordFailure(entry.event);
     updated.status = 'failed';
     hookDlq.update(updated);
     logError('HookRegistry', `DLQ replay failed for ${entry.event}: ${normalized.message}`);
+    hookAuditTrail.record({
+      event: entry.event,
+      handlerName: registration.handlerName,
+      category: registration.category,
+      priority: registration.priority,
+      status: 'failed',
+      attempt,
+      durationMs,
+      error: normalized.message,
+      context: entry.context,
+      metadata: {
+        dlqId: id,
+        replay: true,
+        reason: entry.reason,
+        ...metadata,
+      },
+    });
     return null;
   }
 }

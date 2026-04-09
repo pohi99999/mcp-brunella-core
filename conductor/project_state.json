@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-04-09T02:00:00.101Z",
+  "lastUpdated": "2026-04-09T02:40:50.431Z",
   "tracks": [
     {
       "id": "agent_runtime_hardening_20260406",
@@ -86,11 +86,11 @@
     {
       "id": "brunella-anythingllm-desktop-integration",
       "name": "Brunella–AnythingLLM Desktop Integration",
-      "status": "proposed",
+      "status": "active",
       "priority": "high",
       "progress": 0,
       "created": "2026-04-09T01:50:00+02:00",
-      "updated": "2026-04-09T01:50:00+02:00",
+      "updated": "2026-04-09T03:00:00+02:00",
       "assignee": "copilot",
       "tags": [
         "anythingllm",
@@ -4865,9 +4865,9 @@
   ],
   "stats": {
     "total": 232,
-    "active": 18,
+    "active": 19,
     "completed": 28,
     "archived": 183,
-    "proposed": 3
+    "proposed": 2
   }
 }

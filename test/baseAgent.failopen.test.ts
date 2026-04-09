@@ -1,9 +1,19 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-const { checkPatternMock, saveMemoryMock, addToIndexMock } = vi.hoisted(() => ({
+const {
+  checkPatternMock,
+  saveMemoryMock,
+  addToIndexMock,
+  fireHookSafelyMock,
+  isHookEnabledMock,
+  fireHooksMock,
+} = vi.hoisted(() => ({
   checkPatternMock: vi.fn(),
   saveMemoryMock: vi.fn(),
   addToIndexMock: vi.fn(),
+  fireHookSafelyMock: vi.fn(),
+  isHookEnabledMock: vi.fn(),
+  fireHooksMock: vi.fn(),
 }));
 
 vi.mock('../src/core/patternReuse.js', () => ({
@@ -23,6 +33,15 @@ vi.mock('../src/utils/rag.js', () => ({
 
 vi.mock('../src/utils/responseFormatter.js', () => ({
   formatAgentResult: vi.fn((result: { message: string }) => result.message),
+}));
+
+vi.mock('../src/core/hookRegistry.js', () => ({
+  fireHookSafely: fireHookSafelyMock,
+  isHookEnabled: isHookEnabledMock,
+}));
+
+vi.mock('../src/core/hookEngine.js', () => ({
+  fireHooks: fireHooksMock,
 }));
 
 import { BaseAgent, type AgentContext, type AgentResult } from '../src/agents/BaseAgent.js';
@@ -61,6 +80,9 @@ describe('BaseAgent fail-open guards', () => {
     vi.clearAllMocks();
     checkPatternMock.mockReturnValue({ matched: false, threshold: 0.7 });
     saveMemoryMock.mockReturnValue(undefined);
+    fireHookSafelyMock.mockResolvedValue({ status: 'fired' });
+    isHookEnabledMock.mockReturnValue(true);
+    fireHooksMock.mockResolvedValue(undefined);
   });
 
   it('continues execution when pattern reuse lookup throws', async () => {
@@ -94,5 +116,14 @@ describe('BaseAgent fail-open guards', () => {
 
     expect(response.status).toBe('error');
     expect(response.error).toContain('agent core exploded');
+  });
+
+  it('emits lifecycle hooks only through the hook registry path', async () => {
+    const agent = new FailOpenTestAgent();
+
+    await agent.execute('Ellenorizd a lifecycle hookot');
+
+    expect(fireHookSafelyMock).toHaveBeenCalledTimes(2);
+    expect(fireHooksMock).not.toHaveBeenCalled();
   });
 });

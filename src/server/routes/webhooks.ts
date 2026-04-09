@@ -75,6 +75,41 @@ function deriveN8nWorkflowEvent(body: unknown): 'n8n:workflow:completed' | 'n8n:
   return null;
 }
 
+function verifyGitHubSignature(req: Request, res: Response): boolean {
+  if (!config.githubWebhookSecret) {
+    return true;
+  }
+
+  const signatureHeader = req.headers['x-hub-signature-256'];
+  const signature = Array.isArray(signatureHeader) ? signatureHeader[0] : signatureHeader;
+
+  if (!signature) {
+    logError('Webhooks', 'Missing GitHub webhook signature');
+    res.status(401).json({ error: 'Missing signature' });
+    return false;
+  }
+
+  // @ts-expect-error - rawBody added by middleware
+  const rawBody = req.rawBody as Buffer | string | undefined;
+  if (!rawBody) {
+    res.status(400).json({ error: 'Raw body not available for signature verification' });
+    return false;
+  }
+
+  const hmac = crypto.createHmac('sha256', config.githubWebhookSecret);
+  const digest = `sha256=${hmac.update(rawBody).digest('hex')}`;
+  const received = Buffer.from(signature);
+  const expected = Buffer.from(digest);
+
+  if (received.length !== expected.length || !crypto.timingSafeEqual(received, expected)) {
+    logError('Webhooks', 'Invalid GitHub webhook signature');
+    res.status(401).json({ error: 'Invalid signature' });
+    return false;
+  }
+
+  return true;
+}
+
 export function createWebhookRoutes(db: Database.Database): Router {
   const router = Router();
 
@@ -84,6 +119,10 @@ export function createWebhookRoutes(db: Database.Database): Router {
    */
   router.post('/github/push', async (req: Request, res: Response) => {
     try {
+      if (!verifyGitHubSignature(req, res)) {
+        return;
+      }
+
       const { repository, pusher, ref, head_commit } = req.body;
 
       if (!repository || !pusher) {
@@ -141,25 +180,12 @@ export function createWebhookRoutes(db: Database.Database): Router {
    */
   router.post('/github', async (req: Request, res: Response) => {
     try {
-      // Verify GitHub signature
-      const signature = req.headers['x-hub-signature-256'] as string;
-      const event = req.headers['x-github-event'] as string;
-
-      if (config.githubWebhookSecret && signature) {
-        // @ts-expect-error - rawBody added by middleware
-        const rawBody = req.rawBody as Buffer | string;
-        if (!rawBody) {
-          return res.status(400).json({ error: 'Raw body not available for signature verification' });
-        }
-
-        const hmac = crypto.createHmac('sha256', config.githubWebhookSecret);
-        const digest = 'sha256=' + hmac.update(rawBody).digest('hex');
-
-        if (signature !== digest) {
-          logError('Webhooks', 'Invalid GitHub webhook signature');
-          return res.status(401).json({ error: 'Invalid signature' });
-        }
+      if (!verifyGitHubSignature(req, res)) {
+        return;
       }
+
+      const eventHeader = req.headers['x-github-event'];
+      const event = Array.isArray(eventHeader) ? eventHeader[0] : eventHeader;
 
       const result = ingestGitHubWorkflowFailure(db, event || 'unknown', req.body);
       await emitWebhookHooks('github', `github.${event || 'unknown'}`, req.body, result.webhookId);
