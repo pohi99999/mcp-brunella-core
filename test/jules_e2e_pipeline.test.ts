@@ -9,6 +9,8 @@ import { createScheduledTasksRoutes } from "../src/server/routes/scheduledTasks.
 import { createWebhookRoutes } from "../src/server/routes/webhooks.js";
 import { suggestedTasksRouter } from "../src/server/routes/suggestedTasks.js";
 import { initSuggestedTasksDb, getSuggestedTasksDb } from "../src/core/suggestedTasksScanner.js";
+import { config } from "../src/config/schema.js";
+import crypto from "crypto";
 
 type FetchResponse = {
   ok: boolean;
@@ -91,6 +93,11 @@ function insertSuggestedTask(): void {
   );
 }
 
+function signGitHubPayload(payload: unknown): string {
+  const secret = config.githubWebhookSecret ?? "test-secret";
+  return `sha256=${crypto.createHmac("sha256", secret).update(JSON.stringify(payload)).digest("hex")}`;
+}
+
 describe("Jules Continuous AI E2E flow", () => {
   let app: express.Express;
   let db: Database.Database;
@@ -100,7 +107,11 @@ describe("Jules Continuous AI E2E flow", () => {
     await initSuggestedTasksDb(":memory:");
 
     app = express();
-    app.use(express.json());
+    app.use(express.json({
+      verify: (req: any, _res, buf) => {
+        req.rawBody = buf;
+      },
+    }));
     app.use("/api/v1/scheduled-tasks", createScheduledTasksRoutes(db));
     app.use("/api/v1/webhooks", createWebhookRoutes(db));
     app.use("/api/v1/suggested-tasks", suggestedTasksRouter);
@@ -155,14 +166,17 @@ describe("Jules Continuous AI E2E flow", () => {
       json: async () => ({ success: true, data: { count: 0, tasks: [] } }),
     } as FetchResponse as unknown as Response);
 
+    const payload = {
+      repository: { name: "mcp-brunella-core" },
+      pusher: { name: "tester" },
+      ref: "refs/heads/main",
+      head_commit: { id: "abc123" },
+    };
+
     const res = await request(app)
       .post("/api/v1/webhooks/github/push")
-      .send({
-        repository: { name: "mcp-brunella-core" },
-        pusher: { name: "tester" },
-        ref: "refs/heads/main",
-        head_commit: { id: "abc123" },
-      });
+      .set("X-Hub-Signature-256", signGitHubPayload(payload))
+      .send(payload);
 
     expect(res.status).toBe(200);
     const event = db.prepare("SELECT * FROM webhook_events WHERE provider = ?").get("github") as unknown;

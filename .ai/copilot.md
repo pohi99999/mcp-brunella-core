@@ -6,6 +6,16 @@ User requested that the Copilot CLI automatically connect to a local Brunella MC
 
 ## History
 
+### 2026-04-09 05:20 - Hook security and replay hardening
+
+**Feladat:** A hook reviewbol jott GitHub webhook auth, lifecycle duplikacio es DLQ replay hibak javitasa, majd a regresszios hook/webhook tesztek lefuttatasa.
+
+**Erintett fajlok:** `src/server/routes/webhooks.ts`, `src/agents/BaseAgent.ts`, `src/core/hookRegistry.ts`, `test/webhooks.test.ts`, `test/webhooks.test.js`, `test/hooksRoutes.test.ts`, `test/hookRegistry.test.ts`, `test/baseAgent.failopen.test.ts`, `test/jules_e2e_pipeline.test.ts`, `test/jules_e2e_pipeline.test.js`, `.ai/copilot.md`
+
+**Statusz:** ✅ Befejezve
+
+**Megjegyzes:** A GitHub webhook route-ok most mar kotelezo signature ellenorzest hasznalnak, a `BaseAgent` lifecycle hook emission egyszeres lett, a DLQ replay handler-szintu es retry-safe, a celzott regresszios tesztek es a lint/build/fast tesztkor zold.
+
 ### 2026-04-09 05:00 - Enterprise Core Architecture Patterns
 
 **Feladat:** A Brunella rendszer kibővítése 10 új architekturális mintával (Event Sourcing, CQRS, Saga, Outbox, Materialized Views, stb.) és 24 új fejlett hook integrálása az EPP v2 protokoll alapján.

@@ -85,16 +85,26 @@ describe('Hook routes', () => {
     expect(handler).toHaveBeenCalledTimes(1);
   });
 
-  it('replays a DLQ entry through the API', async () => {
+  it('replays only the failed handler through the API', async () => {
+    const successHandler = vi.fn(async () => undefined);
     let shouldFail = true;
-    registerHook('route.dlq.event', () => {
+    const retryHandler = vi.fn(() => {
       if (shouldFail) {
         shouldFail = false;
         throw new Error('temporary');
       }
-    }, {
+    });
+
+    registerHook('route.dlq.event', successHandler, {
       category: 'business',
       retryOnFail: false,
+      handlerName: 'success-handler',
+    });
+
+    registerHook('route.dlq.event', retryHandler, {
+      category: 'business',
+      retryOnFail: false,
+      handlerName: 'retry-handler',
     });
 
     const app = createApp();
@@ -105,7 +115,7 @@ describe('Hook routes', () => {
         payload: { retry: true },
       });
 
-    expect(first.body.summary.status).toBe('failed');
+    expect(first.body.summary.status).toBe('partial');
     expect(first.body.summary.deadLetterCount).toBe(1);
 
     const dlq = await request(app).get('/api/v1/hooks/dlq');
@@ -118,5 +128,7 @@ describe('Hook routes', () => {
     expect(replay.status).toBe(200);
     expect(replay.body.success).toBe(true);
     expect(replay.body.summary.status).toBe('fired');
+    expect(successHandler).toHaveBeenCalledTimes(1);
+    expect(retryHandler).toHaveBeenCalledTimes(2);
   });
 });

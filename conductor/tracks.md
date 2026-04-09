@@ -1,24 +1,15 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-04-09T02:00:00.101Z
+**Utolso frissites:** 2026-04-09T02:40:50.431Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 232 total | 18 active | 28 completed | 183 archived
+**Stats:** 232 total | 19 active | 28 completed | 183 archived
 **Csoportok:** Könyvelés / üzleti automatizálás: 50 | Nova asszisztens: 23 | Brunella rendszer: 93 | Egyéb: 66
 
 ---
 
-## Tervezett Szalak (Proposed) (3)
-
-### Nova asszisztens (1)
-
-- [ ] **Brunella–AnythingLLM Desktop Integration** [HIGH]
-  - **ID:** `brunella-anythingllm-desktop-integration`
-  - **Progress:** 0%
-  - **Assignee:** copilot
-  - Mappa: ./tracks/brunella-anythingllm-desktop-integration/
-
+## Tervezett Szalak (Proposed) (2)
 
 ### Brunella rendszer (2)
 
@@ -37,7 +28,7 @@
 
 ---
 
-## Aktiv Szalak (Active) (18)
+## Aktiv Szalak (Active) (19)
 
 ### Könyvelés / üzleti automatizálás (9)
 
@@ -104,7 +95,14 @@
   - Mappa: ./tracks/viktoria_social_concierge_20260408/
 
 
-### Nova asszisztens (6)
+### Nova asszisztens (7)
+
+- [ ] **Brunella–AnythingLLM Desktop Integration** [HIGH]
+  - **ID:** `brunella-anythingllm-desktop-integration`
+  - **Progress:** 0%
+  - **Assignee:** copilot
+  - **Updated:** 2026-04-09T03:00:00+02:00
+  - Mappa: ./tracks/brunella-anythingllm-desktop-integration/
 
 - [ ] **Napi intelligens reggeli briefing ugynok** [HIGH]
   - **ID:** `napi_intelligens_briefing_20260404`
