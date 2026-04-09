@@ -1,4 +1,6 @@
 import { Command } from 'commander';
+
+import { getOrCreateHrCommand } from './hrCommands.js';
 import {
   hrOnboardingDryRunCommand,
   hrOnboardingSamplesCommand,
@@ -6,7 +8,7 @@ import {
 } from './commands/hr-onboarding-hu.js';
 
 export function registerHROnboardingCommands(program: Command): void {
-  const hr = program.command('hr').description('HR automatizálás parancsok');
+  const hr = getOrCreateHrCommand(program);
 
   const onboarding = hr.command('onboarding').description('HR onboarding és provisioning');
 

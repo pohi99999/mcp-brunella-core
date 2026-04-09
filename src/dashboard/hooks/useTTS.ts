@@ -97,7 +97,7 @@ export function useTTS() {
         if (autoPlay) {
           await audio.play();
           toast.success(`🎙️ Brunella beszél...`, {
-            description: `Hang: ${voice === 'nova' ? 'Nova (alapértelmezett)' : voice}`,
+            description: `Hang: ${voice === 'nova' ? 'Nova (női hang)' : voice}`,
           });
         }
 

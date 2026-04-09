@@ -1,0 +1,25 @@
+{
+  "id": "mission_templates_test_cadence_devex_20260408",
+  "name": "Mission Templates & Test Cadence DevEx Optimization",
+  "title": "Mission Templates & Test Cadence DevEx Optimization",
+  "status": "completed",
+  "priority": "high",
+  "created": "2026-04-08",
+  "updated": "2026-04-08",
+  "assignee": "GitHub Copilot",
+  "progress": 100,
+  "tags": [
+    "mission",
+    "devex",
+    "tests",
+    "templates",
+    "cli",
+    "dashboard"
+  ],
+  "dependencies": [
+    "docs_config_sot_unification_20260408"
+  ],
+  "sourceDocument": "Brunella Agent System – rendszer-elemzés és optimalizálási javaslatok.md",
+  "phase": 3,
+  "group": "brunella"
+}

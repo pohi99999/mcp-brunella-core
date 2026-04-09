@@ -1,55 +1,122 @@
-/**
- * Hooks pipeline – Gemini-style: BeforeTool, AfterTool, SessionStart, SessionEnd, etc.
- * Hooks are registered by name; runHooks(name, context) runs enabled handlers.
- * Enable/disable via config hooksConfig.enabled and hooksConfig.disabled.
- */
-export type HookName =
-  | 'BeforeTool'
-  | 'AfterTool'
-  | 'BeforeAgent'
-  | 'AfterAgent'
-  | 'Notification'
-  | 'SessionStart'
-  | 'SessionEnd'
-  | 'PreCompress'
-  | 'BeforeModel'
-  | 'AfterModel'
-  | 'BeforeToolSelection';
+import {
+  clearHookAuditTrail,
+  clearHookDlq,
+  clearHooks,
+  disableHook,
+  enableHook,
+  fireHook,
+  getHookCircuitSnapshot,
+  getHookDlqEntries,
+  getHookExecutions,
+  getHookRegistrySnapshot,
+  getHookSummary as getHookSummaryFromRegistry,
+  isHookEnabled,
+  listHooks,
+  registerHook,
+  retryAllHookDlqEntries,
+  retryHookDlqEntry,
+  runHooks,
+  type HookCategory,
+  type HookCircuitSnapshot,
+  type HookDlqEntry,
+  type HookDlqEntryInput,
+  type HookDlqStatus,
+  type HookDispatchContext,
+  type HookExecutionRecord,
+  type HookExecutionRecordInput,
+  type HookExecutionStatus,
+  type HookFireOptions,
+  type HookFireSummary,
+  type HookHandler,
+  type HookName,
+  type HookRegistration,
+  type HookRegistrationOptions,
+  type HookRegistrationSummary,
+  type HookRunStatus,
+  type HookSnapshot,
+  type HookSummary,
+} from '../core/hookRegistry.js';
 
-export type HookHandler<T = unknown> = (context: T) => void | Promise<void>;
-
-const registry = new Map<HookName, HookHandler[]>();
-
-export function registerHook(name: HookName, handler: HookHandler): void {
-  const list = registry.get(name) ?? [];
-  list.push(handler);
-  registry.set(name, list);
+export interface HookDefinitionSummary {
+  name: HookName;
+  index: number;
+  priority: number;
+  timeout: number;
+  category: HookCategory;
+  description: string;
+  enabled: boolean;
+  retryOnFail: boolean;
+  handlerName: string;
+  metadata: Record<string, unknown>;
 }
 
-export function listHooks(): Array<{ name: HookName; count: number }> {
-  return Array.from(registry.entries()).map(([name, list]) => ({ name, count: list.length }));
-}
-
-/** Run all handlers for a hook. disabledNames: from config hooksConfig.disabled. */
-export async function runHooks(
-  name: HookName,
-  context: unknown,
-  options: { disabled?: string[]; enabled?: boolean } = {}
-): Promise<void> {
-  if (options.enabled === false) return;
-  const disabled = new Set(options.disabled ?? []);
-  if (disabled.has(name)) return;
-  const list = registry.get(name) ?? [];
-  for (const h of list) {
-    try {
-      await h(context);
-    } catch (_) {
-      /* log and continue */
+export function listHookDefinitions(): HookDefinitionSummary[] {
+  return getHookRegistrySnapshot().flatMap((snapshot) => {
+    if (snapshot.handlers.length === 0) {
+      return [{
+        name: snapshot.event,
+        index: 1,
+        priority: snapshot.priority,
+        timeout: snapshot.timeoutMs,
+        category: snapshot.category,
+        description: snapshot.description,
+        enabled: snapshot.enabled,
+        retryOnFail: snapshot.retryOnFail,
+        handlerName: snapshot.event,
+        metadata: {},
+      }];
     }
-  }
+
+    return snapshot.handlers.map((handler, index) => ({
+      name: snapshot.event,
+      index: index + 1,
+      priority: handler.priority,
+      timeout: handler.timeoutMs,
+      category: handler.category,
+      description: handler.description,
+      enabled: handler.enabled,
+      retryOnFail: handler.retryOnFail,
+      handlerName: handler.handlerName,
+      metadata: handler.metadata,
+    }));
+  });
 }
 
-export function clearHooks(name?: HookName): void {
-  if (name) registry.delete(name);
-  else registry.clear();
-}
+export {
+  clearHookAuditTrail,
+  clearHookDlq,
+  clearHooks,
+  disableHook,
+  enableHook,
+  fireHook,
+  getHookCircuitSnapshot,
+  getHookDlqEntries,
+  getHookExecutions,
+  getHookRegistrySnapshot,
+  getHookSummaryFromRegistry as getHookSummary,
+  isHookEnabled,
+  listHooks,
+  registerHook,
+  retryAllHookDlqEntries,
+  retryHookDlqEntry,
+  runHooks,
+  type HookCategory,
+  type HookCircuitSnapshot,
+  type HookDlqEntry,
+  type HookDlqEntryInput,
+  type HookDlqStatus,
+  type HookDispatchContext,
+  type HookExecutionRecord,
+  type HookExecutionRecordInput,
+  type HookExecutionStatus,
+  type HookFireOptions,
+  type HookFireSummary,
+  type HookHandler,
+  type HookName,
+  type HookRegistration,
+  type HookRegistrationOptions,
+  type HookRegistrationSummary,
+  type HookRunStatus,
+  type HookSnapshot,
+  type HookSummary,
+};

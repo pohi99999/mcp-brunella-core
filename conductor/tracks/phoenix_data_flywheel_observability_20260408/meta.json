@@ -1,0 +1,23 @@
+{
+  "id": "phoenix_data_flywheel_observability_20260408",
+  "name": "Phoenix + Data Flywheel Observability & Self-Healing",
+  "title": "Phoenix + Data Flywheel Observability & Self-Healing",
+  "status": "completed",
+  "priority": "high",
+  "created": "2026-04-08",
+  "updated": "2026-04-08",
+  "assignee": "GitHub Copilot",
+  "progress": 100,
+  "tags": [
+    "phoenix",
+    "observability",
+    "self-healing",
+    "metrics",
+    "flywheel",
+    "telemetry"
+  ],
+  "dependencies": [],
+  "sourceDocument": "Brunella Agent System – rendszer-elemzés és optimalizálási javaslatok.md",
+  "phase": 2,
+  "group": "brunella"
+}

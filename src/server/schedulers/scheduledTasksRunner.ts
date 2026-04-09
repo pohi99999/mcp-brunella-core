@@ -1,4 +1,5 @@
 import cron from 'node-cron';
+import path from 'path';
 import { getGlobalDb } from '../../utils/globalDb.js';
 import { logInfo, logError, logWarn } from '../../utils/logger.js';
 import { agentManager } from '../../agents/AgentManager.js';
@@ -6,6 +7,7 @@ import { PythonShell } from 'python-shell';
 import { JulesAutomationService } from '../../core/julesAutomationService.js';
 import { executeLearningLoopCycle } from '../../core/learningLoopService.js';
 import { eventFabric, createSchedulerTaskOutcomeEnvelope } from '../../core/eventFabric.js';
+import { fireHookSafely } from '../../core/hookRegistry.js';
 import { executeDueCrmFollowUpActions } from '../services/crmFollowUpExecutionService.js';
 import {
   resolveSchedulerExportMonth,
@@ -59,6 +61,31 @@ interface CrmFollowUpDispatchTaskMetadata extends Record<string, unknown> {
 export class ScheduledTasksRunner {
   private activeJobs: Map<string, cron.ScheduledTask> = new Map();
 
+  private async emitDerivedCronHooks(task: ScheduledTask, result: unknown): Promise<void> {
+    const derivedEvents: string[] = [];
+
+    if (task.id === 'daily-ai-agent-briefing') {
+      derivedEvents.push('cron:daily:briefing');
+    }
+
+    if (task.id === 'weekly-ai-research') {
+      derivedEvents.push('cron:weekly:monday');
+    }
+
+    for (const eventName of derivedEvents) {
+      await fireHookSafely(eventName, {
+        taskId: task.id,
+        title: task.title,
+        handler: task.handler,
+        result,
+      }, {
+        source: 'scheduled-tasks-runner',
+        metadata: { taskId: task.id, eventName },
+        logContext: 'ScheduledTasksRunner',
+      });
+    }
+  }
+
   /**
    * Start the runner and schedule all enabled tasks
    */
@@ -66,6 +93,7 @@ export class ScheduledTasksRunner {
     logInfo('ScheduledTasksRunner', 'Initializing dynamic task scheduler...');
     await this.seedDefaults();
     await this.ensureWeeklyResearchTask();
+    await this.ensureDailyAgentBriefingTask();
     await this.ensureCrmFollowUpDispatchTask();
     await this.ensureHRTimesheetFollowUpTasks();
     await this.importJulesAutomations();
@@ -179,6 +207,87 @@ export class ScheduledTasksRunner {
       logInfo('ScheduledTasksRunner', 'Weekly AI research task ensured.');
     } catch (error) {
       logError('ScheduledTasksRunner', `Failed to ensure weekly AI research task: ${error}`);
+    }
+  }
+
+  /**
+   * Ensure the daily AI agent briefing task exists and stays configured.
+   * Scheduled at 11:00 AM every day (cron: `0 11 * * *`).
+   */
+  private async ensureDailyAgentBriefingTask() {
+    try {
+      const db = getGlobalDb();
+      const now = new Date().toISOString();
+
+      const metadata: WeeklyResearchTaskMetadata = {
+        agentName: 'DailyAgentBriefing',
+        reportTitle: 'Napi AI Agent Összefoglaló',
+        reportType: 'daily_agent_briefing',
+        reportOutputDir: 'docs/001_Jelentés/briefing',
+        lookbackDays: 1,
+        githubQueries: [
+          'AI agent framework release',
+          'autonomous agent architecture 2025',
+          'multi-agent system orchestration',
+          'LLM tool use agent benchmark',
+          'agent memory planning reasoning',
+        ],
+        sourcePages: [
+          { name: 'LangChain Blog', url: 'https://blog.langchain.dev/' },
+          { name: 'Anthropic News', url: 'https://www.anthropic.com/news' },
+          { name: 'OpenAI News', url: 'https://openai.com/news/' },
+          { name: 'Google AI Blog', url: 'https://blog.google/technology/ai/' },
+          { name: 'Microsoft AI Foundry', url: 'https://www.microsoft.com/en-us/ai/ai-foundry' },
+        ],
+        topics: [
+          'AI agent framework frissítések',
+          'Multi-agent orchestráció fejlemények',
+          'LLM tool use és reasoning előrelépések',
+          'Agentic workflow minták',
+          'AI agent memory és tervezés',
+        ],
+        tags: ['daily', 'ai-agents', 'briefing', 'research'],
+        maxGitHubResults: 5,
+        maxExcerptLength: 3000,
+      };
+
+      const prompt = 'Napi AI agent összefoglaló generálása és Brunella architektúra relevanciák feltérképezése';
+
+      db.prepare(`
+        INSERT INTO scheduled_tasks (
+          id,
+          title,
+          prompt,
+          cron_expression,
+          handler,
+          enabled,
+          metadata,
+          created_at,
+          updated_at
+        )
+        VALUES (?, ?, ?, ?, ?, 1, ?, ?, ?)
+        ON CONFLICT(id) DO UPDATE SET
+          title = excluded.title,
+          prompt = excluded.prompt,
+          cron_expression = excluded.cron_expression,
+          handler = excluded.handler,
+          enabled = excluded.enabled,
+          metadata = excluded.metadata,
+          updated_at = excluded.updated_at
+      `).run(
+        'daily-ai-agent-briefing',
+        'Napi AI Agent Összefoglaló',
+        prompt,
+        '0 11 * * *',
+        'agent',
+        JSON.stringify(metadata),
+        now,
+        now,
+      );
+
+      logInfo('ScheduledTasksRunner', 'Daily AI agent briefing task ensured.');
+    } catch (error) {
+      logError('ScheduledTasksRunner', `Failed to ensure daily AI agent briefing task: ${error}`);
     }
   }
 
@@ -508,6 +617,17 @@ export class ScheduledTasksRunner {
   public async executeTask(task: ScheduledTask) {
     const startTime = new Date().toISOString();
     logInfo('ScheduledTasksRunner', `Executing task: ${task.title} (ID: ${task.id})`);
+    await fireHookSafely('scheduler.task.started', {
+      taskId: task.id,
+      title: task.title,
+      handler: task.handler,
+      cronExpression: task.cron_expression,
+      startedAt: startTime,
+    }, {
+      source: 'scheduled-tasks-runner',
+      metadata: { taskId: task.id, status: 'started' },
+      logContext: 'ScheduledTasksRunner',
+    });
 
     try {
       let result: unknown = null;
@@ -544,19 +664,46 @@ export class ScheduledTasksRunner {
         const response = await fetch('http://localhost:3000/api/v1/suggested-tasks/scan', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ source: 'scheduled', taskId: task.id })
+          body: JSON.stringify({ source: 'scheduled', taskId: task.id }),
+          signal: AbortSignal.timeout(30_000),
         });
         result = await response.json();
       } else if (task.handler === 'python_script') {
-        const path = await import('path');
-        const scriptPath = task.prompt.split(' ')[0];
-        const absoluteScriptPath = path.default.resolve(process.cwd(), scriptPath);
-        
+        const pythonMeta = this.parseTaskMetadata(task);
+        const promptParts = task.prompt.split(/\s+/).filter(Boolean);
+        const configuredScriptPath = typeof pythonMeta.scriptPath === 'string' && pythonMeta.scriptPath.trim().length > 0
+          ? pythonMeta.scriptPath.trim()
+          : promptParts[0];
+
+        if (!configuredScriptPath) {
+          throw new Error(`Python task ${task.id} is missing a script path`);
+        }
+
+        const absoluteScriptPath = path.resolve(process.cwd(), configuredScriptPath);
+        const normalizedScriptPath = absoluteScriptPath.toLowerCase();
+        const allowedRoots = [
+          path.resolve(process.cwd(), 'myai'),
+          path.resolve(process.cwd(), 'scripts'),
+        ];
+        const allowed = allowedRoots.some((root) => {
+          const normalizedRoot = root.toLowerCase();
+          return normalizedScriptPath === normalizedRoot
+            || normalizedScriptPath.startsWith(`${normalizedRoot}${path.sep}`);
+        });
+
+        if (!allowed) {
+          throw new Error(`Python task ${task.id} references a script outside the allowed roots: ${configuredScriptPath}`);
+        }
+
+        const pythonArgs = Array.isArray(pythonMeta.args)
+          ? pythonMeta.args.filter((arg): arg is string => typeof arg === 'string')
+          : promptParts.slice(1);
+         
         logInfo('ScheduledTasksRunner', `Executing Python script: ${absoluteScriptPath}`);
         const pythonShell = new PythonShell(absoluteScriptPath, {
           mode: 'text',
           pythonOptions: ['-u'],
-          args: task.prompt.split(' ').slice(1),
+          args: pythonArgs,
         });
 
         result = await new Promise((resolve, reject) => {
@@ -627,6 +774,20 @@ export class ScheduledTasksRunner {
 
       // Update DB with success
       this.updateTaskStatus(task.id, 'success', result);
+      await fireHookSafely('scheduler.task.succeeded', {
+        taskId: task.id,
+        title: task.title,
+        handler: task.handler,
+        cronExpression: task.cron_expression,
+        startedAt: startTime,
+        finishedAt: new Date().toISOString(),
+        result,
+      }, {
+        source: 'scheduled-tasks-runner',
+        metadata: { taskId: task.id, status: 'success' },
+        logContext: 'ScheduledTasksRunner',
+      });
+      await this.emitDerivedCronHooks(task, result);
       logInfo('ScheduledTasksRunner', `Task executed successfully: ${task.title}`);
       return result;
 
@@ -634,6 +795,19 @@ export class ScheduledTasksRunner {
       const errorMsg = error instanceof Error ? error.message : String(error);
       logError('ScheduledTasksRunner', `Task execution failed (${task.title}): ${errorMsg}`);
       this.updateTaskStatus(task.id, 'failed', { error: errorMsg });
+      await fireHookSafely('scheduler.task.failed', {
+        taskId: task.id,
+        title: task.title,
+        handler: task.handler,
+        cronExpression: task.cron_expression,
+        startedAt: startTime,
+        finishedAt: new Date().toISOString(),
+        error: errorMsg,
+      }, {
+        source: 'scheduled-tasks-runner',
+        metadata: { taskId: task.id, status: 'failed' },
+        logContext: 'ScheduledTasksRunner',
+      });
     }
   }
 

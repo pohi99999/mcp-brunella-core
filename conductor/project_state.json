@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-04-08T22:03:39.576Z",
+  "lastUpdated": "2026-04-09T02:00:00.101Z",
   "tracks": [
     {
       "id": "agent_runtime_hardening_20260406",
@@ -7,7 +7,7 @@
       "status": "completed",
       "priority": "critical",
       "progress": 100,
-      "created": "2026-04-06T22:55:00Z",
+      "created": "2026-04-06T22:55:00.000Z",
       "assignee": "GitHub Copilot",
       "tags": [
         "runtime",
@@ -22,6 +22,27 @@
       ],
       "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\agent_runtime_hardening_20260406",
+      "_isArchived": false
+    },
+    {
+      "id": "ai_agent_daily_briefing_20260408",
+      "name": "Napi AI Agent Összefoglaló Pipeline",
+      "status": "active",
+      "priority": "medium",
+      "progress": 0,
+      "created": "2026-04-08T00:00:00.000Z",
+      "updated": "2026-04-08T00:00:00.000Z",
+      "assignee": "Brunella",
+      "tags": [
+        "briefing",
+        "ai-agents",
+        "daily",
+        "research",
+        "scheduler"
+      ],
+      "dependencies": [],
+      "group": "nova",
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\ai_agent_daily_briefing_20260408",
       "_isArchived": false
     },
     {
@@ -45,9 +66,9 @@
       "status": "completed",
       "priority": "high",
       "progress": 100,
-      "created": "2026-04-01T00:00:00Z",
-      "updated": "2026-04-01T06:15:00Z",
-      "completed": "2026-04-01T06:15:00Z",
+      "created": "2026-04-01T00:00:00.000Z",
+      "updated": "2026-04-01T06:15:00.000Z",
+      "completed": "2026-04-01T06:15:00.000Z",
       "assignee": "Copilot",
       "tags": [
         "autogen",
@@ -60,6 +81,29 @@
       "dependencies": [],
       "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\autogen_github_models_pilot_20260401",
+      "_isArchived": false
+    },
+    {
+      "id": "brunella-anythingllm-desktop-integration",
+      "name": "Brunella–AnythingLLM Desktop Integration",
+      "status": "proposed",
+      "priority": "high",
+      "progress": 0,
+      "created": "2026-04-09T01:50:00+02:00",
+      "updated": "2026-04-09T01:50:00+02:00",
+      "assignee": "copilot",
+      "tags": [
+        "anythingllm",
+        "desktop",
+        "brunella",
+        "api",
+        "mcp",
+        "rag",
+        "ui"
+      ],
+      "dependencies": [],
+      "group": "nova",
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\brunella-anythingllm-desktop-integration",
       "_isArchived": false
     },
     {
@@ -173,8 +217,8 @@
       "priority": "high",
       "progress": 100,
       "created": "2026-03-25",
-      "updated": "2026-03-28T20:25:00Z",
-      "completed": "2026-03-28T19:00:00Z",
+      "updated": "2026-03-28T20:25:00.000Z",
+      "completed": "2026-03-28T19:00:00.000Z",
       "assignee": "Gemini CLI",
       "tags": [
         "cloudflare",
@@ -216,7 +260,7 @@
       "status": "completed",
       "priority": "high",
       "progress": 100,
-      "created": "2026-04-06T20:00:00Z",
+      "created": "2026-04-06T20:00:00.000Z",
       "completed": "2026-04-06",
       "assignee": "GitHub Copilot",
       "tags": [
@@ -261,8 +305,8 @@
       "priority": "high",
       "progress": 100,
       "created": "2026-02-22T00:00:00Z",
-      "updated": "2026-04-01T02:00:00Z",
-      "completed": "2026-04-01T02:00:00Z",
+      "updated": "2026-04-01T02:00:00.000Z",
+      "completed": "2026-04-01T02:00:00.000Z",
       "assignee": "Claude + Pohánka Péter",
       "tags": [],
       "dependencies": [],
@@ -898,8 +942,8 @@
       "priority": "high",
       "progress": 100,
       "created": "2026-03-27T23:51:21.608Z",
-      "updated": "2026-03-30T12:00:00Z",
-      "completed": "2026-03-30T12:00:00Z",
+      "updated": "2026-03-30T12:00:00.000Z",
+      "completed": "2026-03-30T12:00:00.000Z",
       "tags": [],
       "dependencies": [],
       "group": "other",
@@ -1135,9 +1179,9 @@
       "status": "completed",
       "priority": "medium",
       "progress": 100,
-      "created": "2026-04-01T00:00:00Z",
-      "updated": "2026-04-01T02:40:00Z",
-      "completed": "2026-04-01T02:40:00Z",
+      "created": "2026-04-01T00:00:00.000Z",
+      "updated": "2026-04-01T02:40:00.000Z",
+      "completed": "2026-04-01T02:40:00.000Z",
       "assignee": "Copilot",
       "tags": [
         "husky",
@@ -1197,23 +1241,23 @@
     },
     {
       "id": "viktoria_brand_monitor_20260408",
-      "name": "Viktoria Brand Monitor",
+      "name": "VIKTORIAVARGA brand monitor",
       "status": "active",
       "priority": "high",
       "progress": 0,
-      "created": "2026-04-08T00:00:00Z",
-      "updated": "2026-04-08T00:00:00Z",
+      "created": "2026-04-08",
+      "updated": "2026-04-08",
       "assignee": "GitHub Copilot",
       "tags": [
-        "viktoriavarga",
-        "brand-monitor",
+        "viktoria",
+        "monitoring",
         "market-intel",
         "apify",
         "scheduled-tasks",
-        "alerts",
-        "monitoring"
+        "fashion"
       ],
       "dependencies": [
+        "viktoria_brand_voice_20260408",
         "viktoria_phygital_pipeline_20260408"
       ],
       "group": "business",
@@ -1222,20 +1266,20 @@
     },
     {
       "id": "viktoria_brand_voice_20260408",
-      "name": "Viktoria Brand Voice",
+      "name": "VIKTORIAVARGA brand voice foundation",
       "status": "active",
       "priority": "high",
       "progress": 15,
-      "created": "2026-04-08T00:00:00Z",
-      "updated": "2026-04-08T00:00:00Z",
+      "created": "2026-04-08",
+      "updated": "2026-04-08",
       "assignee": "GitHub Copilot",
       "tags": [
-        "viktoriavarga",
+        "viktoria",
         "brand-voice",
-        "tone",
-        "copy",
-        "prompting",
-        "foundation"
+        "fashion",
+        "copywriting",
+        "premium",
+        "bilingual"
       ],
       "dependencies": [],
       "group": "business",
@@ -1244,24 +1288,24 @@
     },
     {
       "id": "viktoria_phygital_pipeline_20260408",
-      "name": "Viktoria Phygital Pipeline",
+      "name": "VIKTORIAVARGA phygital pipeline",
       "status": "active",
       "priority": "high",
       "progress": 0,
-      "created": "2026-04-08T00:00:00Z",
-      "updated": "2026-04-08T00:00:00Z",
+      "created": "2026-04-08",
+      "updated": "2026-04-08",
       "assignee": "GitHub Copilot",
       "tags": [
-        "viktoriavarga",
+        "viktoria",
         "phygital",
-        "python-workers",
-        "harvest-pipeline",
-        "vision",
-        "media-factory",
-        "web-scraper"
+        "browser",
+        "python",
+        "harvest",
+        "fashion"
       ],
       "dependencies": [
-        "viktoria_shopping_assistant_20260408"
+        "viktoria_brand_voice_20260408",
+        "viktoria_social_concierge_20260408"
       ],
       "group": "business",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\viktoria_phygital_pipeline_20260408",
@@ -1269,26 +1313,24 @@
     },
     {
       "id": "viktoria_shopping_assistant_20260408",
-      "name": "Viktoria Shopping Assistant",
+      "name": "VIKTORIAVARGA shopping assistant",
       "status": "active",
       "priority": "high",
       "progress": 0,
-      "created": "2026-04-08T00:00:00Z",
-      "updated": "2026-04-08T00:00:00Z",
+      "created": "2026-04-08",
+      "updated": "2026-04-08",
       "assignee": "GitHub Copilot",
       "tags": [
-        "viktoriavarga",
+        "viktoria",
         "shopping",
         "assistant",
         "customer-service",
-        "bifrost",
-        "golden-dataset",
-        "routing"
+        "brand-voice",
+        "fashion"
       ],
       "dependencies": [
-        "viktoria_social_concierge_20260408",
-        "kkv_customer_service_ai_20260404",
-        "copilot_self_improvement_loop_20260406"
+        "viktoria_brand_voice_20260408",
+        "viktoria_social_concierge_20260408"
       ],
       "group": "business",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\viktoria_shopping_assistant_20260408",
@@ -1296,21 +1338,20 @@
     },
     {
       "id": "viktoria_social_concierge_20260408",
-      "name": "Viktoria Social Concierge",
+      "name": "VIKTORIAVARGA social concierge",
       "status": "active",
       "priority": "high",
       "progress": 0,
-      "created": "2026-04-08T00:00:00Z",
-      "updated": "2026-04-08T00:00:00Z",
+      "created": "2026-04-08",
+      "updated": "2026-04-08",
       "assignee": "GitHub Copilot",
       "tags": [
-        "viktoriavarga",
+        "viktoria",
         "social",
         "concierge",
-        "dm",
-        "comments",
-        "inbox",
-        "engagement"
+        "copywriting",
+        "community",
+        "fashion"
       ],
       "dependencies": [
         "viktoria_brand_voice_20260408"
@@ -1420,9 +1461,9 @@
       "status": "archived",
       "priority": "medium",
       "progress": 100,
-      "created": "2026-03-25T00:00:00Z",
-      "updated": "2026-03-30T14:15:00Z",
-      "completed": "2026-03-30T15:30:00Z",
+      "created": "2026-03-25T00:00:00.000Z",
+      "updated": "2026-03-30T14:15:00.000Z",
+      "completed": "2026-03-30T15:30:00.000Z",
       "assignee": "Copilot",
       "tags": [
         "agents",
@@ -1650,9 +1691,9 @@
       "status": "archived",
       "priority": "high",
       "progress": 100,
-      "created": "2026-03-25T00:00:00Z",
-      "updated": "2026-03-30T14:15:00Z",
-      "completed": "2026-03-30T15:30:00Z",
+      "created": "2026-03-25T00:00:00.000Z",
+      "updated": "2026-03-30T14:15:00.000Z",
+      "completed": "2026-03-30T15:30:00.000Z",
       "assignee": "Copilot",
       "tags": [
         "bootstrap",
@@ -1762,8 +1803,8 @@
       "status": "archived",
       "priority": "medium",
       "progress": 0,
-      "created": "2026-02-22T19:45:47Z",
-      "updated": "2026-02-22T19:45:47Z",
+      "created": "2026-02-22T19:45:47.000Z",
+      "updated": "2026-02-22T19:45:47.000Z",
       "assignee": "System",
       "tags": [],
       "dependencies": [],
@@ -2327,8 +2368,8 @@
       "status": "archived",
       "priority": "high",
       "progress": 84,
-      "created": "2026-04-01T15:30:00Z",
-      "updated": "2026-04-01T17:25:00Z",
+      "created": "2026-04-01T15:30:00.000Z",
+      "updated": "2026-04-01T17:25:00.000Z",
       "assignee": "Copilot",
       "tags": [
         "dashboard",
@@ -2527,9 +2568,9 @@
       "status": "archived",
       "priority": "high",
       "progress": 100,
-      "created": "2026-03-25T00:00:00Z",
-      "updated": "2026-03-30T14:15:00Z",
-      "completed": "2026-03-30T15:30:00Z",
+      "created": "2026-03-25T00:00:00.000Z",
+      "updated": "2026-03-30T14:15:00.000Z",
+      "completed": "2026-03-30T15:30:00.000Z",
       "assignee": "Copilot",
       "tags": [
         "docs",
@@ -2889,8 +2930,8 @@
       "priority": "high",
       "progress": 100,
       "created": "2026-03-28T04:05:11.517Z",
-      "updated": "2026-03-30T14:15:00Z",
-      "completed": "2026-03-30T15:30:00Z",
+      "updated": "2026-03-30T14:15:00.000Z",
+      "completed": "2026-03-30T15:30:00.000Z",
       "tags": [],
       "dependencies": [],
       "group": "other",
@@ -3768,9 +3809,9 @@
       "status": "archived",
       "priority": "high",
       "progress": 100,
-      "created": "2026-02-19T00:00:00Z",
-      "updated": "2026-02-23T23:55:00Z",
-      "completed": "2026-02-23T23:55:00Z",
+      "created": "2026-02-19T00:00:00.000Z",
+      "updated": "2026-02-23T23:55:00.000Z",
+      "completed": "2026-02-23T23:55:00.000Z",
       "assignee": "System",
       "tags": [],
       "dependencies": [],
@@ -4026,9 +4067,9 @@
       "status": "archived",
       "priority": "medium",
       "progress": 100,
-      "created": "2026-03-25T00:00:00Z",
-      "updated": "2026-03-30T14:15:00Z",
-      "completed": "2026-03-30T15:30:00Z",
+      "created": "2026-03-25T00:00:00.000Z",
+      "updated": "2026-03-30T14:15:00.000Z",
+      "completed": "2026-03-30T15:30:00.000Z",
       "assignee": "Copilot",
       "tags": [
         "husky",
@@ -4444,9 +4485,9 @@
       "status": "archived",
       "priority": "medium",
       "progress": 100,
-      "created": "2026-03-25T00:00:00Z",
-      "updated": "2026-03-30T14:15:00Z",
-      "completed": "2026-03-30T15:30:00Z",
+      "created": "2026-03-25T00:00:00.000Z",
+      "updated": "2026-03-30T14:15:00.000Z",
+      "completed": "2026-03-30T15:30:00.000Z",
       "assignee": "Copilot",
       "tags": [
         "smoke",
@@ -4611,9 +4652,9 @@
       "status": "archived",
       "priority": "high",
       "progress": 100,
-      "created": "2026-03-25T00:00:00Z",
-      "updated": "2026-03-30T14:15:00Z",
-      "completed": "2026-03-30T15:30:00Z",
+      "created": "2026-03-25T00:00:00.000Z",
+      "updated": "2026-03-30T14:15:00.000Z",
+      "completed": "2026-03-30T15:30:00.000Z",
       "assignee": "Copilot",
       "tags": [
         "tests",
@@ -4823,10 +4864,10 @@
     }
   ],
   "stats": {
-    "total": 230,
-    "active": 17,
+    "total": 232,
+    "active": 18,
     "completed": 28,
     "archived": 183,
-    "proposed": 2
+    "proposed": 3
   }
 }

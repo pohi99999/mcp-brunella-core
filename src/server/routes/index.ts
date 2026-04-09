@@ -84,6 +84,8 @@ export function createV1Router(): Router {
   router.use("/invoice", lazy(() => import("./szamlazz.js"), "createSzamlazzRoutes"));
   router.use("/szamlazz", lazy(() => import("./szamlazz.js"), "createSzamlazzRoutes"));
   router.use("/inventory", lazy(() => import("./inventory.js"), "createInventoryRoutes"));
+  router.use("/kkv-pack", lazy(() => import("./kkvPack.js"), "createKkvPackRoutes"));
+  router.use("/kkv-crm", lazy(() => import("./kkvCrm.js"), "default"));
   router.use("/hr-onboarding", lazy(() => import("./hrOnboarding.js"), "createHROnboardingRoutes"));
   router.use("/hr/leave", lazy(() => import("./hrLeave.js"), "createHRLeaveRoutes"));
   router.use("/hr/timesheet", lazy(() => import("./hrTimesheet.js"), "createHRTimesheetRoutes"));
@@ -112,6 +114,7 @@ export function createV1Router(): Router {
   router.use("/audit", lazy(() => import("../auditRoutes.js"), "createAuditRouter"));
   router.use("/specs", lazy(() => import("../specRoutes.js"), "createSpecRouter"));
   router.use("/phoenix", lazy(() => import("../phoenixRoutes.js"), "createPhoenixRouter"));
+  router.use("/hooks", lazy(() => import("./hooks.js"), "createHookRoutes"));
   router.use("/router", lazy(() => import("../routerRoutes.js"), "createRouterRouter"));
   router.use("/memory", lazy(() => import("../memoryRoutes.js"), "createMemoryRouter"));
   router.use("/mcp", lazy(() => import("./mcp.js"), "default"));
@@ -158,6 +161,7 @@ export function createV1Router(): Router {
 
   // ── Activated dormant routes ───────────────────────────────────────
   router.use("/observability", lazy(() => import("./observability.js"), "createObservabilityRouter"));
+  router.use("/devex", lazy(() => import("./devex.js"), "createDevExRouter"));
   router.use("/swarm", lazy(() => import("./swarm.js"), "swarmRouter"));
   router.use("/golden-dataset", lazy(() => import("./goldenDataset.js"), "createGoldenDatasetRouter"));
   router.use("/learning-loop", lazy(() => import("./learningLoop.js"), "createLearningLoopRouter"));
@@ -176,6 +180,7 @@ export function createV1Router(): Router {
   router.use("/psales/strategy", lazy(() => import("./psales-strategy.js"), "createPSalesStrategyRoutes"));
   router.use("/voice", lazy(() => import("./voice.js"), "default"));
   router.use("/project-maintainer", lazy(() => import("./projectMaintainer.js"), "createProjectMaintainerRoutes", db));
+  router.use("/briefing", lazy(() => import("./briefing.js"), "createBriefingRoutes", db));
 
   return router;
 }

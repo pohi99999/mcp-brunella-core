@@ -1,0 +1,29 @@
+id: docs-config
+title: Docs and Config Mission
+description: Keep docs, config, and generated sync artifacts aligned with runtime sources.
+goal: Make documentation and runtime configuration changes predictable and easy to verify.
+surface: docs
+category: documentation
+tags:
+  - docs
+  - config
+  - yaml
+  - sync
+  - tests
+steps:
+  - Update the authoritative source and the generated mirrors together.
+  - Keep the documentation path and config path in lockstep.
+  - Regenerate any session-sync or snapshot artifacts that depend on the source.
+  - Run the build and a fast verification pass.
+  - Refresh the session notes when the change lands.
+commands:
+  - npm run build
+  - npm run test:fast
+  - python scripts/sync_foszal.py
+artifacts:
+  - README.md
+  - .ai/copilot.md
+  - .ai/FOSZAL.md
+trackRefs:
+  - conductor/tracks/docs_config_sot_unification_20260408
+  - src/tools/missionPlanner.ts

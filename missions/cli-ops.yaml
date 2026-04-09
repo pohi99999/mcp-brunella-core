@@ -1,0 +1,29 @@
+id: cli-ops
+title: CLI Operations Mission
+description: Add or refine a CLI workflow that prints useful operational guidance and stays in sync with backend routes.
+goal: Deliver a discoverable command group that mirrors the current runtime truth.
+surface: cli
+category: operations
+tags:
+  - cli
+  - command
+  - smoke
+  - ops
+  - tests
+steps:
+  - Design the command UX and flag set.
+  - Implement the command group against the shared API.
+  - Wire the command into the main CLI entrypoint.
+  - Add a smoke path or focused command test where possible.
+  - Run the build, fast suite, and a smoke check.
+commands:
+  - npm run build
+  - npm run test:fast
+  - npm run smoke
+artifacts:
+  - src/cli/*.ts
+  - test/*.test.ts
+trackRefs:
+  - src/cli.ts
+  - src/cli/observabilityCommands.ts
+  - src/cli/docsConfigCommands.ts

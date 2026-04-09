@@ -8,7 +8,8 @@ Create the smallest safe Brunella-local implementation surface for logistics whi
 - [x] P2 Add a read-only logistics status/capability route under Brunella.
 - [x] P3 Mount the route in the API router.
 - [x] P4 Add tests for the new logistics route.
-- [ ] P5 Decide whether a future timber-match agent track is needed for full B2B matchmaking.
+- [x] P5 Decide whether a future timber-match agent track is needed for full B2B matchmaking.
+  <!-- Deferred: Timber-match agent deferred to separate follow-up conductor track per spec.md scope boundary. Out of scope for this track. -->
 
 ## Repo-local scope
 - Read-only status and capability discovery only.

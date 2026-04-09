@@ -1,0 +1,29 @@
+id: track-bootstrap
+title: Track Bootstrap Mission
+description: Turn a scoped Brunella track into a clear implementation plan with owner, scope, and validation gates.
+goal: Convert a new or resumed track into a clean plan/spec/meta scaffold and a verified execution path.
+surface: track
+category: planning
+tags:
+  - track
+  - conductor
+  - plan
+  - spec
+  - meta
+steps:
+  - Confirm the source track scope and exclude overlapping work.
+  - Create or refresh meta.json, plan.md, and spec.md.
+  - Mark the track active and wire any dependencies.
+  - Run the matching validation commands and rescan conductor state.
+  - Sync session notes and FOSZAL after the change lands.
+commands:
+  - node build/cli.js conductor rescan
+  - npm run build
+  - npm run test:fast
+artifacts:
+  - conductor/tracks/<track-id>/meta.json
+  - conductor/tracks/<track-id>/plan.md
+  - conductor/tracks/<track-id>/spec.md
+trackRefs:
+  - conductor/tracks.md
+  - conductor/project_state.json

@@ -1,26 +1,26 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-04-09T01:00:01.765Z
+**Utolso frissites:** 2026-04-09T02:00:00.101Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 231 total | 18 active | 28 completed | 183 archived
-**Csoportok:** Könyvelés / üzleti automatizálás: 50 | Nova asszisztens: 22 | Brunella rendszer: 93 | Egyéb: 66
+**Stats:** 232 total | 18 active | 28 completed | 183 archived
+**Csoportok:** Könyvelés / üzleti automatizálás: 50 | Nova asszisztens: 23 | Brunella rendszer: 93 | Egyéb: 66
 
 ---
 
 ## Tervezett Szalak (Proposed) (3)
 
-### Brunella rendszer (3)
+### Nova asszisztens (1)
 
 - [ ] **Brunella–AnythingLLM Desktop Integration** [HIGH]
   - **ID:** `brunella-anythingllm-desktop-integration`
   - **Progress:** 0%
-  - **Assignee:** GitHub Copilot
-  - **Updated:** 2026-04-09
+  - **Assignee:** copilot
   - Mappa: ./tracks/brunella-anythingllm-desktop-integration/
 
 
+### Brunella rendszer (2)
 
 - [ ] **Brunella Remote Layer — Fázis 8: Planet-Scale Supersystem** [CRITICAL]
   - **ID:** `remote_layer_phase8_planetary_supersystem_20260322`

@@ -13,6 +13,10 @@ import {
   readRepoRuntimeContract,
 } from '../../utils/runtimeThresholdRollout.js';
 import { logError } from '../../utils/logger.js';
+import {
+  buildPhoenixFlywheelObservabilitySnapshot,
+  renderPhoenixFlywheelMarkdown,
+} from '../../tools/phoenixInsights.js';
 
 export function createObservabilityRouter(): Router {
   const router = Router();
@@ -110,6 +114,34 @@ export function createObservabilityRouter(): Router {
     } catch (e: unknown) {
       const error = e instanceof Error ? e.message : String(e);
       logError('ObservabilityRoute', `GET /runtime-threshold-rollouts failed: ${error}`);
+      res.status(500).json({ success: false, error });
+    }
+  });
+
+  /**
+   * GET /api/v1/observability/phoenix-flywheel
+   * Combined Phoenix Protocol + data flywheel observability snapshot.
+   */
+  router.get('/phoenix-flywheel', async (req, res) => {
+    try {
+      const rawHours = typeof req.query.hours === 'string' ? parseInt(req.query.hours, 10) : 24;
+      if (!Number.isFinite(rawHours) || rawHours <= 0) {
+        res.status(400).json({ success: false, error: 'Invalid hours parameter' });
+        return;
+      }
+
+      const snapshot = await buildPhoenixFlywheelObservabilitySnapshot({
+        windowHours: rawHours,
+      });
+
+      res.json({
+        success: true,
+        snapshot,
+        markdown: renderPhoenixFlywheelMarkdown(snapshot),
+      });
+    } catch (e: unknown) {
+      const error = e instanceof Error ? e.message : String(e);
+      logError('ObservabilityRoute', `GET /phoenix-flywheel failed: ${error}`);
       res.status(500).json({ success: false, error });
     }
   });

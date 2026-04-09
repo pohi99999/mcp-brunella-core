@@ -94,6 +94,9 @@ const {
     updateBusinessJobStatusMock,
   };
 });
+const hookHarness = vi.hoisted(() => ({
+  fireHook: vi.fn(async () => ({ status: 'fired' })),
+}));
 
 vi.mock('../src/agents/AgentManager.js', () => ({
   agentManager: {
@@ -125,6 +128,11 @@ vi.mock('../src/tools/unifiedWorkspace.js', () => ({
   })),
 }));
 
+vi.mock('../src/core/hookRegistry.js', () => ({
+  fireHook: hookHarness.fireHook,
+  fireHookSafely: hookHarness.fireHook,
+}));
+
 describe('HR Leave Routes', () => {
   const app = express();
   app.use(express.json());
@@ -141,6 +149,7 @@ describe('HR Leave Routes', () => {
     getBusinessJobByIdMock.mockClear();
     saveBusinessJobMock.mockClear();
     updateBusinessJobStatusMock.mockClear();
+    hookHarness.fireHook.mockClear();
     requestApprovalMock.mockResolvedValue('APR-123');
     respondApprovalMock.mockReturnValue(true);
     delegateTaskMock.mockResolvedValue({
@@ -193,6 +202,14 @@ describe('HR Leave Routes', () => {
     expect(response.body.decisionEndpoint).toContain(`/hr/leave/decision/${response.body.jobId}`);
     expect(requestApprovalMock).toHaveBeenCalledTimes(1);
     expect(delegateTaskMock).toHaveBeenCalledTimes(1);
+    expect(hookHarness.fireHook).toHaveBeenCalledWith(
+      'hr:leave:requested',
+      expect.objectContaining({
+        employeeName: 'John Doe',
+        leaveType: 'vacation',
+      }),
+      expect.anything(),
+    );
     expect(updateBusinessJobStatusMock).toHaveBeenCalledWith(
       response.body.jobId,
       'pending_manager_approval',

@@ -1,0 +1,33 @@
+<!-- Agent -> MCP tool invocation — Mermaid (retries, error handling) -->
+
+```mermaid
+sequenceDiagram
+  participant Agent
+  participant MCPClient as "MCP Client (local)"
+  participant MCPServer as "MCP Server / Tool"
+  participant DB as "State DB"
+
+  Agent->>MCPClient: prepareRequest(tool, input, correlationId)
+  MCPClient->>MCPServer: invoke(tool, input)
+  alt success
+    MCPServer-->>MCPClient: result
+    MCPClient-->>Agent: deliver(result)
+    Agent->>DB: persist success metadata
+  else error
+    MCPServer-->>MCPClient: error(code)
+    MCPClient-->>Agent: error
+    Agent->>Agent: classify error (retriable/non-retriable)
+    alt retriable
+      Agent->>MCPClient: retry with backoff (1s -> 2s -> 4s)
+    else non-retriable
+      Agent->>DB: persist failure state, notify operator
+    end
+  end
+
+  note over Agent,MCPClient
+    Best practices:
+    - CorrelationId for tracing
+    - Circuit-breaker for frequent failures
+    - Idempotency keys for tool re-invocations
+  end note
+```

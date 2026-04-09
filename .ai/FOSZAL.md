@@ -1,6 +1,6 @@
 # FŐSZÁL - Egyesített Fejlesztési Napló
 
-**Generálva:** 2026-04-09 01:12
+**Generálva:** 2026-04-09 03:08
 **Script:** `scripts/sync_foszal.py`
 
 ---
@@ -29,6 +29,11 @@ start-full.bat
 ## Összesített Napló (Időrendben)
 
 ### 2026-04-09
+
+#### 03:06 - [Copilot] Hook engine integration
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `src/core/hookRegistry.ts`, `src/core/hookEngine.ts`, `src/utils/hooks.ts`, `src/server/routes/hooks.ts`, `src/cli/hooksCommands.ts`, `src/dashboard/components/dashboard/HookMonitorPanel.tsx`, `test/hookRegistry.test.ts`, `test/hooksRoutes.test.ts`, `test/hooksCommands.test.ts`
 
 #### 01:07 - [Copilot] Aider Brunella integration hardening
 - **Agent:** Copilot
@@ -1107,7 +1112,7 @@ start-full.bat
 | Claude | 87 | 2026-04-09 |
 | Gemini | 1 | 2026-04-08 |
 | Cursor | 0 | N/A |
-| Copilot | 103 | 2026-04-09 |
+| Copilot | 104 | 2026-04-09 |
 
 ---
 

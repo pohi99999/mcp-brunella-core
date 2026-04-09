@@ -10,8 +10,6 @@ export function createEvHunterRouter(): Router {
 
     // Helper to find config path
     const getConfigPath = () => {
-        // Priority 1: myai/agents/ev_hunter/config.json
-        // const p1 = path.join(process.cwd(), 'myai', 'agents', 'ev_hunter', 'config.json');
         // Priority 2: external_research/ev_hunter_bot/config.json
         const p2 = path.join(process.cwd(), 'external_research', 'ev_hunter_bot', 'config.json');
         return p2; // Defaulting to p2 as per setup, logic could be improved to check existence

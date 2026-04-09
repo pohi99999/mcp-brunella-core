@@ -2,6 +2,7 @@ import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { logWarn } from "../utils/logger.js";
 import { wrapToolHandler } from "../core/toolRunCapture.js";
+import { initializeBuiltinHooks } from "../core/hooks/builtinHooks.js";
 import { buildAgentRegistryGovernanceSnapshot } from "./agentRegistryGovernance.js";
 import { buildDocsConfigSotSnapshot } from "../tools/docsConfigSot.js";
 import { buildDocsUnifierReport } from "../tools/docUnifier.js";
@@ -226,6 +227,7 @@ export async function registerAgents() {
 }
 
 export async function registerAllTools(server: McpServer) {
+  initializeBuiltinHooks();
   // Dynamically import Node.js-specific modules only in Node environment
   const isNode = typeof process !== "undefined" && process.versions?.node;
 

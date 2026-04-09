@@ -15,6 +15,25 @@ export function AgentRegistryCard() {
   const [showOnlyActive, setShowOnlyActive] = useState(false);
   const [disabled, setDisabled] = useState<Record<string, boolean>>({});
 
+  const registrySummary = useMemo(() => {
+    const statusCounts = new Map<string, number>();
+    const nameCounts = new Map<string, number>();
+
+    agentsRegistry.agents.forEach((agent) => {
+      const status = typeof agent.status === 'string' && agent.status.trim() ? agent.status.trim() : 'active';
+      statusCounts.set(status, (statusCounts.get(status) ?? 0) + 1);
+      nameCounts.set(agent.name, (nameCounts.get(agent.name) ?? 0) + 1);
+    });
+
+    return {
+      total: agentsRegistry.agents.length,
+      active: statusCounts.get('active') ?? 0,
+      disabled: statusCounts.get('disabled') ?? 0,
+      experimental: statusCounts.get('experimental') ?? 0,
+      duplicateNames: Array.from(nameCounts.values()).filter((count) => count > 1).length,
+    };
+  }, []);
+
   const categories = useMemo(() => {
     const set = new Set<string>();
     agentsRegistry.agents.forEach(a => a.category && set.add(a.category));
@@ -38,11 +57,30 @@ export function AgentRegistryCard() {
           <FunnelSimple size={22} className="text-primary" />
           <div>
             <CardTitle>Agypiac – Ügynökök</CardTitle>
-            <CardDescription>Ügynök-regiszter: keresés, szűrés, státusz jelzés</CardDescription>
+            <CardDescription>Ügynök-regiszter: keresés, szűrés, státusz jelzés, governance összegzés</CardDescription>
           </div>
         </div>
       </CardHeader>
       <CardContent className="space-y-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+          <div className="rounded-md border border-border/50 bg-muted/20 p-3">
+            <div className="text-[10px] uppercase tracking-[0.18em] text-zinc-500">Összes agent</div>
+            <div className="text-xl font-semibold">{registrySummary.total}</div>
+          </div>
+          <div className="rounded-md border border-border/50 bg-muted/20 p-3">
+            <div className="text-[10px] uppercase tracking-[0.18em] text-zinc-500">Aktív</div>
+            <div className="text-xl font-semibold text-emerald-400">{registrySummary.active}</div>
+          </div>
+          <div className="rounded-md border border-border/50 bg-muted/20 p-3">
+            <div className="text-[10px] uppercase tracking-[0.18em] text-zinc-500">Inaktív</div>
+            <div className="text-xl font-semibold text-amber-400">{registrySummary.disabled + registrySummary.experimental}</div>
+          </div>
+          <div className="rounded-md border border-border/50 bg-muted/20 p-3">
+            <div className="text-[10px] uppercase tracking-[0.18em] text-zinc-500">Duplikált nevek</div>
+            <div className="text-xl font-semibold text-violet-400">{registrySummary.duplicateNames}</div>
+          </div>
+        </div>
+
         <div className="flex flex-col md:flex-row gap-3">
           <div className="flex-1 relative">
             <MagnifyingGlass size={16} className="absolute left-2 top-1/2 -translate-y-1/2 text-zinc-500" />

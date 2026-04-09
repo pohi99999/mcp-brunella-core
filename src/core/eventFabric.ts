@@ -3,6 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import { phoenixEventBus } from './phoenixEventBus.js';
 import { logInfo, logWarn } from '../utils/logger.js';
+import { fireHook, isHookEnabled } from './hookRegistry.js';
 import type { ApprovalWorkflow } from './approvalRouter.js';
 
 export type EventFabricPriority = 'critical' | 'high' | 'medium' | 'low';
@@ -588,6 +589,19 @@ class EventFabric {
     });
 
     logInfo('EventFabric', `Accepted event: ${envelope.type} (${envelope.source})`);
+    if (isHookEnabled('event.fabric.published')) {
+      void fireHook(
+        'event.fabric.published',
+        {
+          envelope,
+          accepted: true,
+        },
+        { source: 'eventFabric.publish' },
+      ).catch((error: unknown) => {
+        const normalized = error instanceof Error ? error : new Error(String(error));
+        logWarn('EventFabric', `Hook dispatch fallback: ${normalized.message}`);
+      });
+    }
     return {
       accepted: true,
       envelope,
