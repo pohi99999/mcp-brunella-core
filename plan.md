@@ -1,6 +1,23 @@
 # ContextFusion Integration Layer — Plan
 
-## 2026-04-04 Runtime wiring fixes ✓
+## 2026-04-09 Hook Infrastructure ✓
+
+- [x] `src/core/hookEngine.ts` — `fireHooks()` orchestrator (circuit breaker + audit + DLQ); `skipCircuitBreaker`, `disabled`, `enabled` options
+- [x] `src/core/hookAuditTrail.ts` — SQLite audit trail; `hook_executions` table; `recordHookExecution`, `getRecentExecutions`, `getFailureStats`
+- [x] `src/core/hookDlq.ts` — DLQ with exponential backoff (60 * 5^attempt s, max 5 attempts); `pushToDlq`, `listDlqEntries`, `retryAllDlq`, `clearDlq`, `processDlqQueue`, `getRetryableCount`
+- [x] `src/core/hookCircuitBreaker.ts` — standalone circuit breaker (threshold=3, cooldown=60s); `guardWithCircuitBreaker`, `getCircuitState`, `getAllCircuitStates`, `resetCircuit`, `resetAllCircuits`
+- [x] `src/cli/hookCommands.ts` — `brunella hooks list/fire/status/enable/disable/dlq/circuit/audit`
+- [x] `src/server/routes/hooks.ts` — 8 REST endpoints via `createHooksRoutes()`; registered under `/hooks`
+- [x] `src/utils/hooks.ts` — re-export barrel + `listHookDefinitions()` helper
+- [x] `src/core/hookRegistry.ts` — enhanced: priority, per-handler timeout, enable/disable, `force` option in `runHooks()`
+- [x] `src/agents/BaseAgent.ts` — `fireHooks` wired at `SessionStart`, `BeforeModel`, `AfterModel`
+- [x] `test/hooks.test.ts` — 39 tests; priority, timeout, enable/disable, audit, DLQ, circuit breaker state machine, engine integration, snapshots
+- [x] `npm run build` → 0 TypeScript errors
+- [x] `npx vitest run test/hooks.test.ts` → 39/39 tests pass
+- [x] `CHANGELOG.md` updated
+
+---
+
 
 - [x] Golden mirror sync now retries through the Python incubator path when the D1 worker returns malformed/HTML responses, so legacy failed samples can be recovered safely.
 - [x] Curated golden dataset normalization now migrates legacy `candidate` state to `pending` and automatically mirrors local golden samples into the approval queue.

@@ -18,6 +18,7 @@ import { BaseAgent, type AgentContext, type AgentResult } from './BaseAgent.js';
 import { AgentResponse } from './types.js';
 import { logInfo, logError, logDebug, setAgentStatus } from '../utils/logger.js';
 import { ensureError } from '../utils/ensureError.js';
+import { fireHookSafely } from '../core/hookRegistry.js';
 import { getWorkspaceClient } from '../tools/unifiedWorkspace.js';
 import * as fs from 'fs/promises';
 import * as path from 'path';
@@ -139,6 +140,43 @@ export class EmailTriageAgent extends BaseAgent {
     return typeof value === 'string' && value.length > 0 ? value : fallback;
   }
 
+  private deriveWorkflowClassification(subjectValue: string, bodyValue: string): {
+    classification: string;
+    priorityScore: number;
+    hasCalendarSuggestion: boolean;
+  } {
+    let classification = 'email';
+    let priorityScore = 5;
+    let hasCalendarSuggestion = false;
+    const combinedText = `${subjectValue} ${bodyValue}`.toLowerCase();
+
+    if (combinedText.includes('invoice') || combinedText.includes('bill') || combinedText.includes('receipt')) {
+      classification = 'invoice';
+      priorityScore = 7;
+    } else if (combinedText.includes('meeting') || combinedText.includes('meet') ||
+               combinedText.includes('call') || combinedText.includes('schedule') ||
+               combinedText.includes('discuss') || combinedText.includes('thursday') ||
+               combinedText.includes('tuesday') || combinedText.includes('wednesday') ||
+               combinedText.includes('monday') || combinedText.includes('friday') ||
+               combinedText.includes('pm')) {
+      if (combinedText.includes('meet') || combinedText.includes('call') ||
+          combinedText.includes('schedule') || combinedText.includes('pm') ||
+          combinedText.includes('am')) {
+        classification = 'meeting_request';
+        priorityScore = 6;
+        hasCalendarSuggestion = true;
+      }
+    } else if (combinedText.includes('newsletter') || combinedText.includes('weekly') || combinedText.includes('update')) {
+      classification = 'newsletter';
+      priorityScore = 1;
+    } else if (this.URGENT_KEYWORDS.some((kw) => combinedText.includes(kw.toLowerCase()))) {
+      classification = 'urgent';
+      priorityScore = 9;
+    }
+
+    return { classification, priorityScore, hasCalendarSuggestion };
+  }
+
   /**
    * Execute task (BaseAgent interface)
    */
@@ -175,59 +213,22 @@ export class EmailTriageAgent extends BaseAgent {
 
       logInfo(this.name, `✅ Email triage complete: ${result.processed} emails processed`);
 
-      // Classify email based on subject and body
-      let classification = 'email';
-      let priorityScore = 5;
-      let hasCalendarSuggestion = false;
-
       const subject = typeof emailData.emailSubject === 'string' ? emailData.emailSubject.toLowerCase() : '';
       const body = typeof emailData.emailBody === 'string' ? emailData.emailBody.toLowerCase() : '';
-      const combinedText = subject + ' ' + body;
-
-      // Invoice classification
-      if (combinedText.includes('invoice') || combinedText.includes('bill') || combinedText.includes('receipt')) {
-        classification = 'invoice';
-        priorityScore = 7;
-      }
-      // Meeting request classification
-      else if (combinedText.includes('meeting') || combinedText.includes('meet') || 
-               combinedText.includes('call') || combinedText.includes('schedule') || 
-               combinedText.includes('discuss') || combinedText.includes('thursday') ||
-               combinedText.includes('tuesday') || combinedText.includes('wednesday') ||
-               combinedText.includes('monday') || combinedText.includes('friday') ||
-               combinedText.includes('pm')) {
-        // Check if it's actually a meeting (have timing or action verb)
-        if (combinedText.includes('meet') || combinedText.includes('call') || 
-            combinedText.includes('schedule') || combinedText.includes('pm') ||
-            combinedText.includes('am')) {
-          classification = 'meeting_request';
-          priorityScore = 6;
-          hasCalendarSuggestion = true;
-        }
-      }
-      // Newsletter classification
-      else if (combinedText.includes('newsletter') || combinedText.includes('weekly') || combinedText.includes('update')) {
-        classification = 'newsletter';
-        priorityScore = 1;
-      }
-      // Urgent classification
-      else if (this.URGENT_KEYWORDS.some(kw => combinedText.includes(kw.toLowerCase()))) {
-        classification = 'urgent';
-        priorityScore = 9;
-      }
+      const workflowClassification = this.deriveWorkflowClassification(subject, body);
 
       // Transform result for test expectations
       const firstEmail = result.classified.length > 0 ? result.classified[0] : null;
       const transformedData = {
         ...result,
-        classification: classification,
-        priorityScore: priorityScore,
+        classification: workflowClassification.classification,
+        priorityScore: workflowClassification.priorityScore,
         suggestedResponse: firstEmail ? {
           subject: `Re: ${typeof emailData.emailSubject === 'string' && emailData.emailSubject ? emailData.emailSubject : 'Your Email'}`,
           body: `Hello,\n\nThank you for your email. We appreciate your message and will respond shortly.\n\nBest regards`,
           template: firstEmail.autoResponseTemplate || 'default'
         } : undefined,
-        calendarSuggestion: hasCalendarSuggestion ? {
+        calendarSuggestion: workflowClassification.hasCalendarSuggestion ? {
           title: `Follow-up: ${typeof emailData.emailSubject === 'string' && emailData.emailSubject ? emailData.emailSubject : 'Meeting'}`,
           description: `Review and respond to meeting request from ${typeof emailData.from === 'string' && emailData.from ? emailData.from : 'colleague'}`,
           suggestedTime: '2026-03-22T10:00:00Z'
@@ -269,6 +270,28 @@ export class EmailTriageAgent extends BaseAgent {
     for (const email of emails) {
       const classification = this.classifyEmail(email);
       classified.push(classification);
+      const workflowClassification = this.deriveWorkflowClassification(email.subject, email.snippet);
+
+      await fireHookSafely('email:classified', {
+        classification: workflowClassification.classification,
+        priorityScore: workflowClassification.priorityScore,
+        subject: email.subject,
+        emailBody: email.snippet,
+        from: email.from,
+        triage: {
+          ...classification,
+          priorityScore: workflowClassification.priorityScore,
+          hasCalendarSuggestion: workflowClassification.hasCalendarSuggestion,
+        },
+      }, {
+        source: 'EmailTriageAgent',
+        metadata: {
+          agentName: this.name,
+          classification: workflowClassification.classification,
+          messageId: email.id,
+        },
+        logContext: 'EmailTriageAgent',
+      });
 
       // Apply labels via Gmail API
       // await this.applyLabels(email.id, classification.labels);

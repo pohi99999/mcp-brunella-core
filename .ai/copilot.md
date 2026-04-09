@@ -6,6 +6,56 @@ User requested that the Copilot CLI automatically connect to a local Brunella MC
 
 ## History
 
+### 2026-04-09 05:20 - Hook security and replay hardening
+
+**Feladat:** A hook reviewbol jott GitHub webhook auth, lifecycle duplikacio es DLQ replay hibak javitasa, majd a regresszios hook/webhook tesztek lefuttatasa.
+
+**Erintett fajlok:** `src/server/routes/webhooks.ts`, `src/agents/BaseAgent.ts`, `src/core/hookRegistry.ts`, `test/webhooks.test.ts`, `test/webhooks.test.js`, `test/hooksRoutes.test.ts`, `test/hookRegistry.test.ts`, `test/baseAgent.failopen.test.ts`, `test/jules_e2e_pipeline.test.ts`, `test/jules_e2e_pipeline.test.js`, `.ai/copilot.md`
+
+**Statusz:** ✅ Befejezve
+
+**Megjegyzes:** A GitHub webhook route-ok most mar kotelezo signature ellenorzest hasznalnak, a `BaseAgent` lifecycle hook emission egyszeres lett, a DLQ replay handler-szintu es retry-safe, a celzott regresszios tesztek es a lint/build/fast tesztkor zold.
+
+### 2026-04-09 05:00 - Enterprise Core Architecture Patterns
+
+**Feladat:** A Brunella rendszer kibővítése 10 új architekturális mintával (Event Sourcing, CQRS, Saga, Outbox, Materialized Views, stb.) és 24 új fejlett hook integrálása az EPP v2 protokoll alapján.
+
+**Érintett fájlok:** `src/core/eventStore.ts`, `src/core/sagaOrchestrator.ts`, `src/core/commandBus.ts`, `src/core/queryBus.ts`, `src/core/outboxProcessor.ts`, `src/core/materializedViewEngine.ts`, `src/core/businessPolicies.ts`, `src/core/ambientContext.ts`, `src/core/agentRateLimiter.ts`, `src/core/temporalWorkflow.ts`, `src/core/selfDiagnostics.ts`, `src/core/advancedHooks.ts`, `src/core/hooks/builtinHooks.ts`, `test/agent_health_matrix.test.ts`, `test/dashboard/lib/hrTimesheetApi.test.ts`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** Az összes kért Enterprise pattern implementálva lett. A 24 hook (PAIOS, Nova, Federation, ChromeDevTools stb.) a `advancedHooks.ts`-ben definiálva lett és bekötve a `builtinHooks.ts`-be. Kijavítottam a vitest teszthibákat, a build és a tesztek zöldek.
+
+### 2026-04-09 04:10 - Hook runtime hardening and registry hygiene
+
+**Feladat:** A hook runtime producerpontok nem-blokkolóvá tétele, az email triage valós per-email hook emissionre állítása, valamint a registry duplikációk és a DailyAgentBriefing bejegyzés Health Matrix kompatibilissé tétele.
+
+**Érintett fájlok:** `src/core/hookRegistry.ts`, `src/core/toolRunCapture.ts`, `src/agents/BaseAgent.ts`, `src/agents/EmailTriageAgent.ts`, `src/core/bifrost_gateway.ts`, `src/services/trackStateManager.ts`, `src/server/services/kkvCrmService.ts`, `src/server/routes/hrLeave.ts`, `src/server/routes/webhooks.ts`, `src/server/schedulers/scheduledTasksRunner.ts`, `src/server/routes/index.ts`, `scripts/check-active-track.mjs`, `src/agents/registry.json`, `test/emailTriageAgent.test.ts`, `test/hrLeaveRoutes.test.ts`, `test/scheduledTasksRunner_projectMaintainer.test.ts`, `test/toolRunCapture.test.ts`, `test/trackStateManagerHooks.test.ts`, `test/unit/kkvCrm.service.test.ts`, `test/webhooks.test.ts`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A runtime oldali emit pontok most `fireHookSafely()`-t használnak, így hook infrastruktúra hiba nem blokkolhatja a primer tool/scheduler/CRM/HR/webhook folyamatokat; az email hook payloadok ténylegesen feldolgozott emailekből jönnek, a pre-commit guard fail-closed módon viselkedik, és a registry ismét egyedi agent neveket + teljes DailyAgentBriefing modulmeta-adatot tartalmaz.
+
+### 2026-04-09 03:55 - Hook runtime emitter rollout
+
+**Feladat:** A központi hook engine bekötése a valódi BAS runtime producerpontokhoz, builtin hook catalog/bootstrap réteggel és pre-commit guarddal együtt.
+
+**Érintett fájlok:** `src/core/hookRegistry.ts`, `src/core/hooks/builtinHookCatalog.ts`, `src/core/hooks/builtinHooks.ts`, `src/core/toolRunCapture.ts`, `src/tools/toolPermissions.ts`, `src/server/routes/webhooks.ts`, `src/server/services/kkvCrmService.ts`, `src/agents/EmailTriageAgent.ts`, `src/server/schedulers/scheduledTasksRunner.ts`, `src/services/trackStateManager.ts`, `src/core/bifrost_gateway.ts`, `src/server/routes/hrLeave.ts`, `src/server/web.ts`, `src/server/registry.ts`, `scripts/check-active-track.mjs`, `test/builtinHooks.test.ts`, `test/toolRunCapture.test.ts`, `test/trackStateManagerHooks.test.ts`, `test/webhooks.test.ts`, `test/unit/kkvCrm.service.test.ts`, `test/emailTriageAgent.test.ts`, `test/scheduledTasksRunner_projectMaintainer.test.ts`, `test/hrLeaveRoutes.test.ts`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A hook infrastruktúra most már nem csak registry-szintű, hanem élő runtime emittereket is kapott a tool, webhook, scheduler, track, CRM, email, LLM failover és HR flow-kban; a builtin bootstrap idempotens, a DLQ háttérfeldolgozó indul, a célzott hook suite, a `npm run build` és a `npm run lint` zöld.
+
+### 2026-04-09 03:06 - Hook engine integration
+
+**Feladat:** A Brunella hook architektúra központi registry, compatibility layer, CLI, route, dashboard és teszt felületének véglegesítése.
+
+**Érintett fájlok:** `src/core/hookRegistry.ts`, `src/core/hookEngine.ts`, `src/utils/hooks.ts`, `src/server/routes/hooks.ts`, `src/cli/hooksCommands.ts`, `src/dashboard/components/dashboard/HookMonitorPanel.tsx`, `test/hookRegistry.test.ts`, `test/hooksRoutes.test.ts`, `test/hooksCommands.test.ts`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A hook pipeline most audit trail, DLQ, circuit breaker és observability felülettel fut; a célzott hook tesztek, a `npm run lint` és a `npm run build` is zöld.
+
 ### 2026-04-09 01:07 - Aider Brunella integration hardening
 
 **Feladat:** Aider jelenléti ellenőrzése, GPT-5-mini + Hungarian profile beállítása, repo-szintű ignore/config fájlok létrehozása, valamint a használati útmutató és a Copilot instrukciók frissítése.

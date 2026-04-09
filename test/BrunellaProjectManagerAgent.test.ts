@@ -46,7 +46,7 @@ describe('BrunellaProjectManagerAgent', () => {
     const agent = new BrunellaProjectManagerAgent();
     const result = await agent.executeTask({
       task: 'status',
-      payload: { limit: 3, ragLimit: 2, refreshTracks: false },
+      payload: { limit: 3, ragLimit: 2 },
     });
 
     expect(result.success).toBe(true);

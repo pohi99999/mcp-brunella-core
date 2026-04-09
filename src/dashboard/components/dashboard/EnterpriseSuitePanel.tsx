@@ -26,6 +26,7 @@ import { MarketWatcherWidget } from './MarketWatcherWidget';
 import { InnovationBridgeWidget } from './InnovationBridgeWidget';
 import { DigitalHRWidget } from './DigitalHRWidget';
 import { HROnboardingWidget } from './HROnboardingWidget';
+import { HRTimesheetStatusPanel } from './HRTimesheetStatusPanel';
 import { GrantHunterWidget } from './GrantHunterWidget'; // To be created next
 
 export function EnterpriseSuitePanel() {
@@ -77,6 +78,7 @@ export function EnterpriseSuitePanel() {
                         <div className="space-y-6">
                             <DigitalHRWidget />
                             <HROnboardingWidget />
+                            <HRTimesheetStatusPanel />
                         </div>
                     </TabsContent>
                     <TabsContent value="grants" className="animate-in fade-in zoom-in duration-300">

@@ -13,9 +13,28 @@ const hrTimesheetHarness = vi.hoisted(() => ({
   runMonthlyPayrollExport: vi.fn(),
   runDailyCultureAlerts: vi.fn(),
 }));
+const schedulerHookHarness = vi.hoisted(() => ({
+  fireHook: vi.fn(async () => ({ status: 'fired' })),
+}));
+const scheduledAgentHarness = vi.hoisted(() => ({
+  delegate: vi.fn(async () => ({ success: true, message: 'ok' })),
+  delegateTask: vi.fn(async () => ({ success: true, message: 'ok' })),
+}));
 
 vi.mock('../src/utils/globalDb.js', () => ({
   getGlobalDb: vi.fn(() => mockDb),
+}));
+
+vi.mock('../src/core/hookRegistry.js', () => ({
+  fireHook: schedulerHookHarness.fireHook,
+  fireHookSafely: schedulerHookHarness.fireHook,
+}));
+
+vi.mock('../src/agents/AgentManager.js', () => ({
+  agentManager: {
+    delegate: scheduledAgentHarness.delegate,
+    delegateTask: scheduledAgentHarness.delegateTask,
+  },
 }));
 
 vi.mock('../src/server/services/projectMaintainerService.js', () => ({
@@ -56,6 +75,9 @@ describe('ScheduledTasksRunner project maintainer handler', () => {
     crmHarness.dispatchDueCrmFollowUpActions.mockReset();
     hrTimesheetHarness.runMonthlyPayrollExport.mockReset();
     hrTimesheetHarness.runDailyCultureAlerts.mockReset();
+    schedulerHookHarness.fireHook.mockReset();
+    scheduledAgentHarness.delegate.mockReset();
+    scheduledAgentHarness.delegateTask.mockReset();
     mockDb.prepare.mockReturnValue({
       run: vi.fn(),
       get: vi.fn(),
@@ -160,5 +182,39 @@ describe('ScheduledTasksRunner project maintainer handler', () => {
       triggeredBy: 'scheduler',
     });
     expect(result).toEqual(expect.objectContaining({ date: '2026-04-07' }));
+  });
+
+  it('emits scheduler hooks and derived cron events for the daily briefing task', async () => {
+    scheduledAgentHarness.delegate.mockResolvedValue({
+      success: true,
+      message: 'briefing delivered',
+    });
+
+    const result = await scheduledTasksRunner.executeTask({
+      id: 'daily-ai-agent-briefing',
+      title: 'Daily AI Agent Briefing',
+      prompt: 'Generate daily briefing',
+      cron_expression: '0 11 * * *',
+      handler: 'agent',
+      enabled: true,
+      metadata: JSON.stringify({ agentName: 'DailyAgentBriefing' }),
+    });
+
+    expect(result).toEqual(expect.objectContaining({ success: true }));
+    expect(schedulerHookHarness.fireHook).toHaveBeenCalledWith(
+      'scheduler.task.started',
+      expect.objectContaining({ taskId: 'daily-ai-agent-briefing' }),
+      expect.anything(),
+    );
+    expect(schedulerHookHarness.fireHook).toHaveBeenCalledWith(
+      'scheduler.task.succeeded',
+      expect.objectContaining({ taskId: 'daily-ai-agent-briefing' }),
+      expect.anything(),
+    );
+    expect(schedulerHookHarness.fireHook).toHaveBeenCalledWith(
+      'cron:daily:briefing',
+      expect.objectContaining({ taskId: 'daily-ai-agent-briefing' }),
+      expect.anything(),
+    );
   });
 });

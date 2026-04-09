@@ -37,6 +37,12 @@ describe("Agent Health Matrix", () => {
   it("should have unique agent names", () => {
     const names = agents.map((a) => a.name);
     const unique = new Set(names);
+    if (unique.size !== names.length) {
+      const counts: Record<string, number> = {};
+      names.forEach(n => counts[n] = (counts[n] || 0) + 1);
+      console.log('Duplicates:', Object.keys(counts).filter(k => counts[k] > 1));
+      console.log('Total agents:', names.length, 'Unique:', unique.size);
+    }
     expect(unique.size).toBe(names.length);
   });
 
@@ -46,7 +52,7 @@ describe("Agent Health Matrix", () => {
       const modulePath = path.resolve(
         process.cwd(),
         "build",
-        agent.module.replace("./", "")
+        (agent.module || "").replace("./", "")
       );
 
       it("module file should exist", () => {

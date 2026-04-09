@@ -2,6 +2,7 @@
 // PURPOSE: Permission checking wrapper for MCP tools
 
 import { globalPermissionManager, Permission } from '../agents/permissions.js';
+import { fireHook } from '../core/hookRegistry.js';
 import { logError, logWarn } from '../utils/logger.js';
 
 export interface ToolExecutionContext {
@@ -79,6 +80,18 @@ export function checkToolPermission(
 
         const reason = `Tool ${toolName} is not explicitly allowlisted for agent ${agentName}`;
         globalPermissionManager.logDeniedOperation(agentName, `tool:${toolName}`, reason, toolName);
+        void fireHook('security:permission:denied', {
+            agentName,
+            toolName,
+            reason,
+            requestId: context.requestId,
+            metadata: context.metadata ?? {},
+        }, {
+            source: 'tool-permissions',
+            metadata: { agentName, toolName },
+        }).catch((error: unknown) => {
+            logWarn('ToolPermissions', `security:permission:denied hook failed: ${error instanceof Error ? error.message : String(error)}`);
+        });
         return { allowed: false, reason };
     }
 
@@ -87,6 +100,19 @@ export function checkToolPermission(
         if (!globalPermissionManager.hasPermission(agentName, permission)) {
             const reason = `Agent ${agentName} lacks ${permission} permission for ${toolName}`;
             globalPermissionManager.logDeniedOperation(agentName, `tool:${toolName}`, reason, toolName);
+            void fireHook('security:permission:denied', {
+                agentName,
+                toolName,
+                permission,
+                reason,
+                requestId: context.requestId,
+                metadata: context.metadata ?? {},
+            }, {
+                source: 'tool-permissions',
+                metadata: { agentName, toolName, permission },
+            }).catch((error: unknown) => {
+                logWarn('ToolPermissions', `security:permission:denied hook failed: ${error instanceof Error ? error.message : String(error)}`);
+            });
             return { allowed: false, reason };
         }
     }
@@ -109,6 +135,17 @@ export function checkFilePermission(
     if (!globalPermissionManager.canAccessPath(agentName, filePath, operation)) {
         const reason = `Agent ${agentName} cannot ${operation} file: ${filePath}`;
         globalPermissionManager.logDeniedOperation(agentName, `file:${operation}`, reason, filePath);
+        void fireHook('security:permission:denied', {
+            agentName,
+            filePath,
+            operation,
+            reason,
+        }, {
+            source: 'tool-permissions',
+            metadata: { agentName, operation },
+        }).catch((error: unknown) => {
+            logWarn('ToolPermissions', `security:permission:denied hook failed: ${error instanceof Error ? error.message : String(error)}`);
+        });
         return { allowed: false, reason };
     }
 

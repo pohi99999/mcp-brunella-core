@@ -1,0 +1,48 @@
+<!-- API endpoint → DB — Mermaid sequence and flow -->
+
+```mermaid
+sequenceDiagram
+  participant Client
+  participant Router
+  participant Controller
+  participant Validator
+  participant Service
+  participant Repo
+  participant DB
+  participant Queue
+
+  Client->>Router: POST /api/v1/resource {body}
+  Router->>Validator: validate DTO
+  Validator-->>Router: ok / errors
+  alt valid
+    Router->>Controller: forward request
+    Controller->>Service: createResource(dto)
+    Service->>Repo: beginTransaction()
+    Service->>Repo: insert(entity)
+    Repo->>DB: INSERT INTO resource ...
+    DB-->>Repo: OK
+    Repo->>Service: commit()
+    Service->>Queue: enqueue background notification (optional)
+    Service-->>Controller: ResourceCreated(response)
+    Controller->>Client: 201 Created + body
+  else invalid
+    Router->>Client: 400 Bad Request
+  end
+
+  alt DB error
+    Repo-->>Service: error
+    Service->>Repo: rollback()
+    Service->>Controller: generate 500 error response
+  end
+```
+
+```mermaid
+flowchart LR
+  A[Client] --> B[API Gateway / Router]
+  B --> C[Controller]
+  C --> D[Service Layer]
+  D --> E[Repository / DB Transaction]
+  D --> F[Background Queue]
+  E --> G[SQL Database]
+  F --> H[Worker: process notifications]
+```

@@ -1,0 +1,41 @@
+@startuml
+' API -> DB detailed PlantUML sequence with error paths
+actor Client
+participant Router
+participant Controller
+participant Validator
+participant Service
+participant Repository
+database DB
+queue Queue
+
+Client -> Router: POST /api/v1/resource
+Router -> Validator: validate(dto)
+alt valid
+  Router -> Controller: handle(dto)
+  Controller -> Service: createResource(dto)
+  Service -> Repository: beginTransaction()
+  Service -> Repository: insert(entity)
+  Repository -> DB: execute INSERT
+  DB --> Repository: success
+  Repository -> Service: commit()
+  Service -> Queue: enqueue(notification)
+  Service --> Controller: return resourceDTO
+  Controller -> Client: 201 Created
+else invalid
+  Router -> Client: 400 Bad Request
+end
+
+alt DB failure
+  Repository --> Service: exception
+  Service -> Repository: rollback()
+  Service --> Controller: throw InternalServerError
+  Controller -> Client: 500 Internal Server Error
+end
+
+note right of Service
+  - Validate input early
+  - Keep transactions short
+  - Publish events AFTER commit
+end note
+@enduml

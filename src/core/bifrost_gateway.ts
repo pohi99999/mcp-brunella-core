@@ -5,6 +5,7 @@ import { logInfo, logError, logWarn } from '../utils/logger.js';
 import { aiGateway, type ChatMessage as AIChatMessage } from '../utils/aiGateway.js';
 import { type UniversalToolDefinition } from './toolRegistry.js';
 import { phoenixEventBus } from './phoenixEventBus.js';
+import { fireHookSafely } from './hookRegistry.js';
 import { wrapWithSpan } from '../utils/otelTracing.js';
 import { getPreferenceContext } from './userPreferences.js';
 import { recordLlmCall } from '../utils/globalDb.js';
@@ -110,6 +111,7 @@ export class BifrostGateway {
   private lastHealthCheck: number;
   private healthCheckInterval: number;
   private mode: GatewayMode = 'local-preferred';
+  private degradedProviders: Set<ProviderType>;
 
   // Provider clients
   private ollamaClient?: Ollama;
@@ -123,6 +125,7 @@ export class BifrostGateway {
     this.requestCount = new Map();
     this.lastHealthCheck = 0;
     this.healthCheckInterval = 5 * 60 * 1000; // 5 minutes
+    this.degradedProviders = new Set();
 
     this.initializeProviders();
     logInfo('BifrostGateway', 'Initialized with 5 provider adapters (Ollama, Gemini, GitHub, Anthropic, Cloudflare)');
@@ -472,6 +475,7 @@ export class BifrostGateway {
     const config = this.providers.get(provider);
 
     if (!config?.enabled) {
+      await this.markProviderFailure(provider, `Provider ${provider} not enabled`);
       return {
         success: false,
         provider,
@@ -484,31 +488,47 @@ export class BifrostGateway {
     const model = options.model || config.defaultModel;
 
     try {
+      let response: GenerateResponse;
       switch (provider) {
         case 'ollama':
-          return await this.generateOllama(model, options, startTime);
+          response = await this.generateOllama(model, options, startTime);
+          break;
 
         case 'gemini':
-          return await this.generateGemini(model, options, startTime);
+          response = await this.generateGemini(model, options, startTime);
+          break;
 
         case 'github':
-          return await this.generateGitHub(model, options, startTime);
+          response = await this.generateGitHub(model, options, startTime);
+          break;
 
         case 'anthropic':
-          return await this.generateAnthropic(model, options, startTime);
+          response = await this.generateAnthropic(model, options, startTime);
+          break;
 
         case 'cloudflare':
-          return await this.generateCloudflare(model, options, startTime);
+          response = await this.generateCloudflare(model, options, startTime);
+          break;
 
         case 'copilot':
-          return await this.generateCopilot(model, options, startTime);
+          response = await this.generateCopilot(model, options, startTime);
+          break;
 
         default:
           throw new Error(`Unknown provider: ${provider}`);
       }
+
+      if (response.success) {
+        await this.markProviderRestored(provider);
+      } else {
+        await this.markProviderFailure(provider, response.error ?? 'provider returned unsuccessful response');
+      }
+
+      return response;
     } catch (e: unknown) {
       const error = e instanceof Error ? e.message : String(e);
       logError('BifrostGateway', `${provider} generation failed: ${error}`);
+      await this.markProviderFailure(provider, error);
       return {
         success: false,
         provider,
@@ -517,6 +537,39 @@ export class BifrostGateway {
         error
       };
     }
+  }
+
+  private async markProviderFailure(provider: ProviderType, error: string): Promise<void> {
+    if (this.degradedProviders.has(provider)) {
+      return;
+    }
+
+    this.degradedProviders.add(provider);
+    await fireHookSafely('llm:provider:failed', {
+      provider,
+      error,
+      timestamp: new Date().toISOString(),
+    }, {
+      source: 'bifrost-gateway',
+      metadata: { provider },
+      logContext: 'BifrostGateway',
+    });
+  }
+
+  private async markProviderRestored(provider: ProviderType): Promise<void> {
+    if (!this.degradedProviders.has(provider)) {
+      return;
+    }
+
+    this.degradedProviders.delete(provider);
+    await fireHookSafely('llm:provider:restored', {
+      provider,
+      timestamp: new Date().toISOString(),
+    }, {
+      source: 'bifrost-gateway',
+      metadata: { provider },
+      logContext: 'BifrostGateway',
+    });
   }
 
   /**

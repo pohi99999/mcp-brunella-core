@@ -2,6 +2,10 @@
 
 > Use `README.md` as the main project guide. This file is the compact, Copilot-focused version of the repo rules and architecture.
 
+## Enterprise Core Patterns & Hooks
+The system incorporates 10 Enterprise architectural patterns (in `src/core/`): Event Sourcing, Saga, Command/Query Bus, Outbox, Materialized Views, Business Policies, Ambient Context, Rate Limiter, Temporal Workflow, and Self Diagnostics.
+Advanced hooks are registered in `src/core/advancedHooks.ts` and triggered globally via the hook engine. Use these patterns when designing new business logic.
+
 ## Session bootstrap
 
 1. Sync before non-trivial work:
@@ -79,6 +83,7 @@ cd myai && pytest tests/
 Local hooks are part of the workflow:
 
 - `.husky/pre-commit` runs `npx tsx scripts/sync_bootstrap.ts --stage`, `npm run build`, and `node scripts/precommit-lint.mjs`.
+- `.husky/pre-commit` also runs `node scripts/check-active-track.mjs` after the build so active-track context and the `git:pre:commit` hook stay enforced before linting. The script is intentionally fail-closed if the freshly built hook runtime artifacts are missing.
 - `.husky/pre-push` runs `npx tsx scripts/sync_doc_stats.ts --dry-run` and `npm run test:fast`.
 
 ## High-level architecture
@@ -92,6 +97,7 @@ Local hooks are part of the workflow:
 - **Dashboard and CLI are parallel product surfaces.** The dashboard is a separate React/Vite app under `src/dashboard/`; `src/dashboard/lib/navigation.tsx` is the registration point for Mission Control panels. The CLI entrypoint is `src/cli.ts`, with many subcommand modules under `src/cli/`.
 - **Model routing is split in two layers.** `src/core/modelRouter.ts` chooses between local vs cloud execution ("brain vs muscle"), while `src/core/bifrost_gateway.ts` handles provider fallback across GitHub Models, Ollama, Gemini, Anthropic, and related bridges.
 - **Python exposes both HTTP and MCP interfaces.** `myai/server.py` runs the FastAPI subsystem on `:8000` and includes OpenAI-compatible model listing endpoints (`/models` and `/v1/models`). `myai/mcp_server.py` exposes Python tools over stdio/SSE via FastMCP.
+- **Hooks are registry-driven and dual-bootstrapped.** `src/core/hookRegistry.ts` is the single source of truth for hook execution, audit, DLQ, and circuit breaking, while `src/core/hooks/builtinHookCatalog.ts` + `src/core/hooks/builtinHooks.ts` define the BAS-native hook catalog/bootstrap. Builtin hooks must initialize from both `src/server/web.ts` and `src/server/registry.ts` so web runtime and MCP/tool runtime see the same automation surface.
 - **Kernel Pipeline is the supervisor-driven execution backbone.** `src/core/conductor.ts` orchestrates the 8-stage pipeline (IntentRouter → Planner → ContextBuilder → ToolExecutor → Critic → Guardrail → LearningLoop) using a shared `RunEnvelope` + `ModuleResponse<T>` contract defined in `src/core/kernelTypes.ts`. The typed 10-event bus lives in `src/core/kernelEventBus.ts`. Each stage module is imported lazily; the Conductor retries each module up to 2 times and maintains a `RunLedger` of the last 50 runs. REST surface is at `/api/v1/kernel` (`src/server/routes/kernelRoute.ts`). The "Kernel Pipeline" dashboard panel is registered under the "AI & Agents" nav group. Integrated with the Copilot Orchestrator bridge (`startSession/addStep/completeSession/failSession`).
 - **Copilot CLI is wired as a proactive self-improvement layer (Data Flywheel).** `src/core/copilotFeedbackChannel.ts` translates Copilot CLI code-review JSON into `SelfModelSignal`s and feeds them to the `autonomousInfraRuntime.selfModel` instance (the one visible to HyperKernel). One aggregate reflection per review batch also calls `copilotCognitiveBridge.reflect()` to update GoldenDataset, MetaReasoner, and GraphRAG. **Always use the exported `copilotFeedbackChannel` singleton from `autonomousInfraRuntime.ts`** — do not create a second `CopilotFeedbackChannel` instance. The daily `.github/workflows/self-improve.yml` (cron `30 8 * * *`) drives the outer loop, and three Agent Skills (`.github/agents/bas-self-reflect.agent.md`, `bas-golden-dataset-enricher.agent.md`, `bas-pattern-scout.agent.md`) provide activation hooks.
 
@@ -100,6 +106,8 @@ Local hooks are part of the workflow:
 - **ESM imports must include `.js`.** The repo uses `moduleResolution: "Node16"`, so extensionless relative imports break builds.
 - **Dashboard code is built and tested separately.** `src/dashboard/` is excluded from the main `tsconfig.json`; use `npm run build:ui`, `npm run test:dashboard`, and `npm run test:ui` for dashboard work.
 - **Use the project logger, not `console.log`.** Agent code typically uses `logInfo`, `logError`, and `setAgentStatus` from `src/utils/logger.js`. Longer-lived services often use the `Logger` class.
+- **Hook automation belongs in the central hook layer.** Register hook metadata and builtins under `src/core/hookRegistry.ts` / `src/core/hooks/*`, and let runtime producers emit events into that layer. Do not scatter new cross-service automation as ad-hoc direct side effects when a hook event is the intended integration seam.
+- **Runtime hook producers should default to `fireHookSafely()`.** Tool, scheduler, webhook, CRM, HR, and similar primary workflows must not fail just because hook audit/DLQ/circuit-breaker persistence has a transient issue. Reserve direct `fireHook()` for hook-management surfaces where failure should stay visible.
 - **Tests use Vitest, not Jest.** Globals are enabled, timeout is 15 seconds, `fileParallelism` is off, and the suite runs in a single fork. Use `vi.*` APIs.
 - **CLI UX is intentionally Hungarian.** New CLI commands are expected to be Hungarian-language, menu-driven, and implemented with Inquirer + Chalk + Boxen + Ora rather than free-form text input.
 - **Track-based development is real, not ceremonial.** `conductor/tracks.md` is the summary index, while `conductor/tracks/<id>/meta.json`, `plan.md`, and `spec.md` hold the actionable scope. For non-trivial work, align changes to the active track artifacts instead of coding ad hoc.

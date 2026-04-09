@@ -1,0 +1,28 @@
+{
+  "id": "docs_config_sot_unification_20260408",
+  "name": "Documentation/Config Single Source of Truth Unification",
+  "title": "Documentation/Config Single Source of Truth Unification",
+  "status": "archived",
+  "priority": "high",
+  "created": "2026-04-08",
+  "updated": "2026-04-08",
+  "assignee": "GitHub Copilot",
+  "progress": 100,
+  "completedAt": "2026-04-08T19:51:46Z",
+  "verified": true,
+  "verifiedAt": "2026-04-08",
+  "archivedAt": "2026-04-08T19:51:46Z",
+  "archiveReason": "Docs/config SOT implementation, CLI, dashboard, MCP, scripts, tests, and build verification are complete.",
+  "tags": [
+    "docs",
+    "config",
+    "sot",
+    "drift",
+    "validation",
+    "governance"
+  ],
+  "dependencies": [],
+  "sourceDocument": "Brunella Agent System – rendszer-elemzés és optimalizálási javaslatok.md",
+  "phase": 1,
+  "group": "brunella"
+}

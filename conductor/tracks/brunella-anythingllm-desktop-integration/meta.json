@@ -1,12 +1,12 @@
 {
   "id": "brunella-anythingllm-desktop-integration",
   "title": "Brunella–AnythingLLM Desktop Integration",
-  "status": "proposed",
+  "status": "active",
   "owner": "copilot",
   "priority": "high",
   "category": "integration",
   "createdAt": "2026-04-09T01:50:00+02:00",
-  "updatedAt": "2026-04-09T01:50:00+02:00",
+  "updatedAt": "2026-04-09T03:00:00+02:00",
   "summary": "AnythingLLM Desktop kényelmi UI-ként integrálódik a Brunella Agent Systembe. UI indít, Brunella dönt és hajt végre.",
   "sdlc": {
     "enabled": true,

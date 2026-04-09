@@ -1,0 +1,29 @@
+id: dashboard-panel
+title: Dashboard Panel Mission
+description: Build or update a React dashboard panel with a clear information hierarchy and UI regression coverage.
+goal: Ship a dashboard view that surfaces the right state, actions, and supporting details in one place.
+surface: dashboard
+category: ui
+tags:
+  - dashboard
+  - react
+  - panel
+  - ui
+  - tests
+steps:
+  - Map the data model to the panel layout.
+  - Implement the UI with existing dashboard primitives.
+  - Register the panel in the navigation registry.
+  - Add a focused UI test for the rendered states.
+  - Run the dashboard build and the UI suite.
+commands:
+  - npm run build
+  - npm run build:ui
+  - npm run test:ui
+  - npm run test:fast
+artifacts:
+  - src/dashboard/components/dashboard/*.tsx
+  - src/dashboard/lib/navigation.tsx
+trackRefs:
+  - src/dashboard/components/dashboard/PhoenixFlywheelObservabilityPanel.tsx
+  - src/dashboard/components/dashboard/DocsSotPanel.tsx

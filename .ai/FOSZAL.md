@@ -1,6 +1,6 @@
 # FŐSZÁL - Egyesített Fejlesztési Napló
 
-**Generálva:** 2026-04-09 01:12
+**Generálva:** 2026-04-09 05:04
 **Script:** `scripts/sync_foszal.py`
 
 ---
@@ -29,6 +29,40 @@ start-full.bat
 ## Összesített Napló (Időrendben)
 
 ### 2026-04-09
+
+#### 12:00 - [Claude] brunella-anythingllm-desktop-integration track teljes implementáció
+- **Agent:** Claude
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `conductor/tracks/brunella-anythingllm-desktop-integration/meta.json` (aktiválva), `test/anythingllmActions.test.ts` (ÚJ — 7 teszt), `src/server/routes/anythingllmActions.ts` (ÚJ — Action Bridge), `src/server/routes/index.ts` (route bővítve), `src/dashboard/lib/apiService.ts` (2 új függvény + 3 interface) (+5 további)
+
+#### 05:20 - [Copilot] Hook security and replay hardening
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+
+#### 05:00 - [Copilot] Enterprise Core Architecture Patterns
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `src/core/eventStore.ts`, `src/core/sagaOrchestrator.ts`, `src/core/commandBus.ts`, `src/core/queryBus.ts`, `src/core/outboxProcessor.ts`, `src/core/materializedViewEngine.ts`, `src/core/businessPolicies.ts`, `src/core/ambientContext.ts`, `src/core/agentRateLimiter.ts`, `src/core/temporalWorkflow.ts`, `src/core/selfDiagnostics.ts`, `src/core/advancedHooks.ts`, `src/core/hooks/builtinHooks.ts`, `test/agent_health_matrix.test.ts`, `test/dashboard/lib/hrTimesheetApi.test.ts`
+
+#### 04:10 - [Copilot] Hook runtime hardening and registry hygiene
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `src/core/hookRegistry.ts`, `src/core/toolRunCapture.ts`, `src/agents/BaseAgent.ts`, `src/agents/EmailTriageAgent.ts`, `src/core/bifrost_gateway.ts`, `src/services/trackStateManager.ts`, `src/server/services/kkvCrmService.ts`, `src/server/routes/hrLeave.ts`, `src/server/routes/webhooks.ts`, `src/server/schedulers/scheduledTasksRunner.ts`, `src/server/routes/index.ts`, `scripts/check-active-track.mjs`, `src/agents/registry.json`, `test/emailTriageAgent.test.ts`, `test/hrLeaveRoutes.test.ts`, `test/scheduledTasksRunner_projectMaintainer.test.ts`, `test/toolRunCapture.test.ts`, `test/trackStateManagerHooks.test.ts`, `test/unit/kkvCrm.service.test.ts`, `test/webhooks.test.ts`
+
+#### 03:55 - [Copilot] Hook runtime emitter rollout
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `src/core/hookRegistry.ts`, `src/core/hooks/builtinHookCatalog.ts`, `src/core/hooks/builtinHooks.ts`, `src/core/toolRunCapture.ts`, `src/tools/toolPermissions.ts`, `src/server/routes/webhooks.ts`, `src/server/services/kkvCrmService.ts`, `src/agents/EmailTriageAgent.ts`, `src/server/schedulers/scheduledTasksRunner.ts`, `src/services/trackStateManager.ts`, `src/core/bifrost_gateway.ts`, `src/server/routes/hrLeave.ts`, `src/server/web.ts`, `src/server/registry.ts`, `scripts/check-active-track.mjs`, `test/builtinHooks.test.ts`, `test/toolRunCapture.test.ts`, `test/trackStateManagerHooks.test.ts`, `test/webhooks.test.ts`, `test/unit/kkvCrm.service.test.ts`, `test/emailTriageAgent.test.ts`, `test/scheduledTasksRunner_projectMaintainer.test.ts`, `test/hrLeaveRoutes.test.ts`
+
+#### 03:06 - [Copilot] Hook engine integration
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `src/core/hookRegistry.ts`, `src/core/hookEngine.ts`, `src/utils/hooks.ts`, `src/server/routes/hooks.ts`, `src/cli/hooksCommands.ts`, `src/dashboard/components/dashboard/HookMonitorPanel.tsx`, `test/hookRegistry.test.ts`, `test/hooksRoutes.test.ts`, `test/hooksCommands.test.ts`
+
+#### 02:00 - [Claude] CLAUDE.md fejlesztés + brunella-anythingllm-desktop-integration track létrehozása
+- **Agent:** Claude
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `CLAUDE.md` (6 javítás), `conductor/tracks/brunella-anythingllm-desktop-integration/meta.json` (ÚJ), `conductor/tracks/brunella-anythingllm-desktop-integration/spec.md` (ÚJ), `conductor/tracks/brunella-anythingllm-desktop-integration/plan.md` (ÚJ), `conductor/tracks/brunella-anythingllm-desktop-integration/README.md` (ÚJ) (+2 további)
 
 #### 01:07 - [Copilot] Aider Brunella integration hardening
 - **Agent:** Copilot
@@ -1104,10 +1138,10 @@ start-full.bat
 
 | Agent | Bejegyzések | Utolsó Aktivitás |
 |-------|-------------|------------------|
-| Claude | 87 | 2026-04-09 |
+| Claude | 89 | 2026-04-09 |
 | Gemini | 1 | 2026-04-08 |
 | Cursor | 0 | N/A |
-| Copilot | 103 | 2026-04-09 |
+| Copilot | 108 | 2026-04-09 |
 
 ---
 

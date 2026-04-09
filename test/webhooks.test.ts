@@ -8,6 +8,10 @@ import { createWebhookRoutes } from '../src/server/routes/webhooks.js';
 import { config } from '../src/config/schema.js';
 import { eventFabric } from '../src/core/eventFabric.js';
 
+const hookHarness = vi.hoisted(() => ({
+  fireHook: vi.fn(async () => ({ status: 'fired' })),
+}));
+
 // Mock config
 vi.mock('../src/config/schema.js', () => ({
   config: {
@@ -22,8 +26,18 @@ vi.mock('../src/utils/logger.js', () => ({
   logError: vi.fn()
 }));
 
+vi.mock('../src/core/hookRegistry.js', () => ({
+  fireHook: hookHarness.fireHook,
+  fireHookSafely: hookHarness.fireHook,
+  isHookEnabled: vi.fn(() => false),
+}));
+
 // Mock fetch for log retrieval
 global.fetch = vi.fn();
+
+function signPayload(payload: unknown): string {
+  return `sha256=${crypto.createHmac('sha256', 'test-secret').update(JSON.stringify(payload)).digest('hex')}`;
+}
 
 describe('Webhook Routes Integration', () => {
   let app: express.Express;
@@ -32,6 +46,7 @@ describe('Webhook Routes Integration', () => {
   beforeEach(() => {
     // Clear event fabric history to avoid duplicate dedupKey errors
     eventFabric.clearHistory();
+    hookHarness.fireHook.mockClear();
 
     // Setup in-memory DB
     db = new Database(':memory:');
@@ -110,11 +125,7 @@ describe('Webhook Routes Integration', () => {
       }
     };
 
-    const payloadString = JSON.stringify(payload);
-    
-    // Calculate signature
-    const hmac = crypto.createHmac('sha256', 'test-secret');
-    const signature = 'sha256=' + hmac.update(payloadString).digest('hex');
+    const signature = signPayload(payload);
 
     const response = await request(app)
       .post('/api/github')
@@ -132,10 +143,79 @@ describe('Webhook Routes Integration', () => {
     expect(event).toBeDefined();
     expect(event.type).toBe('github.workflow_run');
     expect(event.processed).toBe(1); // Should be marked as processed for failure events
+    expect(hookHarness.fireHook).toHaveBeenCalledWith(
+      'webhook.received',
+      expect.objectContaining({
+        provider: 'github',
+        event: 'github.workflow_run',
+      }),
+      expect.anything(),
+    );
 
     // NOTE: Automatic suggested_task creation from webhook failures
     // is a future enhancement (would require log parsing + AI analysis)
     // For now, we just verify the webhook event was stored and processed
+  });
+
+  it('should emit n8n workflow completion hooks for generic n8n webhooks', async () => {
+    const response = await request(app)
+      .post('/api/webhook/n8n')
+      .send({
+        workflowId: 'wf-1',
+        status: 'completed',
+      });
+
+    expect(response.status).toBe(200);
+    expect(response.body.success).toBe(true);
+    expect(hookHarness.fireHook).toHaveBeenCalledWith(
+      'n8n:workflow:completed',
+      expect.objectContaining({
+        provider: 'n8n',
+      }),
+      expect.anything(),
+    );
+  });
+
+  it('should reject missing signature when a GitHub webhook secret is configured', async () => {
+    const response = await request(app)
+      .post('/api/github')
+      .set('X-GitHub-Event', 'push')
+      .send({ foo: 'bar' });
+
+    expect(response.status).toBe(401);
+    expect(response.body.error).toBe('Missing signature');
+  });
+
+  it('should require a valid signature for GitHub push webhooks', async () => {
+    const fetchSpy = vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({
+      ok: true,
+      status: 200,
+      json: async () => ({ success: true, data: { count: 0, tasks: [] } }),
+    } as Response);
+
+    const payload = {
+      repository: { name: 'mcp-brunella-core' },
+      pusher: { name: 'tester' },
+      ref: 'refs/heads/main',
+      head_commit: { id: 'abc123' },
+    };
+
+    const missingSignature = await request(app)
+      .post('/api/github/push')
+      .send(payload);
+
+    expect(missingSignature.status).toBe(401);
+    expect(missingSignature.body.error).toBe('Missing signature');
+
+    const signed = await request(app)
+      .post('/api/github/push')
+      .set('X-Hub-Signature-256', signPayload(payload))
+      .send(payload);
+
+    expect(signed.status).toBe(200);
+    expect(signed.body.success).toBe(true);
+
+    fetchSpy.mockRestore();
   });
 
   it('should reject invalid signature', async () => {

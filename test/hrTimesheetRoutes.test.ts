@@ -186,4 +186,68 @@ describe('HR Timesheet Routes', () => {
       expect.any(String),
     );
   });
+
+  it('GET /hr/timesheet/status should return the shared read-only snapshot', async () => {
+    const app = buildApp();
+
+    await request(app).post('/hr/timesheet/submit').send({
+      employeeId: 'EMP-001',
+      employeeName: 'John Doe',
+      hours: 8,
+      taskDescription: 'Coding',
+      date: '2026-04-05',
+      birthDate: '1990-04-07',
+      hireDate: '2020-04-07',
+    });
+
+    await request(app).post('/hr/timesheet/submit').send({
+      employeeId: 'EMP-002',
+      employeeName: 'Jane Roe',
+      hours: 6,
+      taskDescription: 'Reporting',
+      date: '2026-04-06',
+    });
+
+    const exportResponse = await request(app)
+      .post('/hr/timesheet/export/monthly')
+      .send({ month: '2026-04' });
+
+    expect(exportResponse.status).toBe(200);
+
+    const alertResponse = await request(app)
+      .post('/hr/timesheet/alerts/daily')
+      .send({ date: '2026-04-07' });
+
+    expect(alertResponse.status).toBe(200);
+
+    const response = await request(app).get('/hr/timesheet/status');
+
+    expect(response.status).toBe(200);
+    expect(response.body.success).toBe(true);
+    expect(response.body.timestamp).toBeTruthy();
+    expect(response.body.snapshot.headline).toBe('HR timesheet and culture flow is healthy.');
+    expect(response.body.snapshot.counts).toEqual({
+      entries: 2,
+      employees: 2,
+      monthlyExports: 1,
+      dailyAlertRuns: 1,
+    });
+    expect(response.body.snapshot.latestMonthlyExport).toMatchObject({
+      month: '2026-04',
+      status: 'completed',
+      employeeCount: 2,
+      totalEntries: 2,
+      totalHours: 14,
+    });
+    expect(response.body.snapshot.latestDailyAlert).toMatchObject({
+      date: '2026-04-07',
+      status: 'completed',
+      generatedCount: 2,
+      suppressedCount: 0,
+    });
+    expect(response.body.snapshot.alertTotalsByType).toEqual({
+      birthday: 1,
+      anniversary: 1,
+    });
+  });
 });

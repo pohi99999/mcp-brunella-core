@@ -1,0 +1,34 @@
+@startuml
+' CI/CD pipeline — PlantUML activity diagram
+start
+:Checkout & restore cache;
+:Install dependencies (npm ci);
+:Run lint (ESLint);
+if (Lint OK?) then (yes)
+  :Build (tsc, bundle);
+  if (Build OK?) then (yes)
+    :Run unit tests (fast);
+    if (Unit tests OK?) then (yes)
+      fork
+        :Run integration tests (mini-MCP);
+      fork again
+        :Run E2E tests (Playwright);
+      end fork
+      if (All tests OK?) then (yes)
+        :Package & upload artifacts;
+        :Deploy (staging/prod) [manual gate optional];
+        :Run smoke tests & healthchecks;
+      else (no)
+        :Fail pipeline & notify authors;
+      endif
+    else (no)
+      :Fail pipeline & notify authors;
+    endif
+  else (no)
+    :Fail pipeline & notify authors;
+  endif
+else (no)
+  :Fail pipeline & notify authors;
+endif
+stop
+@enduml

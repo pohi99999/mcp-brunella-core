@@ -8,6 +8,7 @@
  * Endpoints:
  *   POST /api/tracks/generate - Generate track from idea (3-stage LLM pipeline)
  *   GET /api/tracks - List all tracks with metadata
+ *   GET /api/v1/tracks/status - Read-only KKV masterplan snapshot
  *   GET /api/tracks/:trackId - Get specific track details
  */
 
@@ -15,7 +16,9 @@ import { Router } from "express";
 import { agentManager } from "../agents/AgentManager.js";
 import { logInfo, logError, logDebug } from "../utils/logger.js";
 import { ensureError } from "../utils/ensureError.js";
-import { inferTrackGroup, TRACK_GROUP_ORDER, type TrackGroupId } from "../utils/trackGroups.js";
+import { inferTrackGroup, normalizeTrackGroup, TRACK_GROUP_ORDER, type TrackGroupId } from "../utils/trackGroups.js";
+import { type ProjectState, type TrackMetadata } from "../services/trackStateManager.js";
+import { buildTrackStatusSnapshot } from "../services/trackStatusSnapshot.js";
 import { socketService } from "./SocketService.js";
 import chokidar, { type FSWatcher } from "chokidar";
 import fs from "fs/promises";
@@ -166,6 +169,122 @@ async function readTrackMeta(
     logDebug("TracksRoutes", `Meta read failed for ${trackId}: ${err.message}`);
     return null;
   }
+}
+
+function pickString(...values: unknown[]): string | undefined {
+  for (const value of values) {
+    if (typeof value === "string" && value.trim()) {
+      return value.trim();
+    }
+  }
+  return undefined;
+}
+
+function toTrackStatus(value: unknown): TrackMetadata["status"] {
+  const raw = typeof value === "string" ? value.trim().toLowerCase() : "";
+  if (raw === "proposed" || raw === "planning") return "proposed";
+  if (raw === "paused") return "paused";
+  if (raw === "completed" || raw === "done") return "completed";
+  if (raw === "archived") return "archived";
+  return "active";
+}
+
+function toTrackPriority(value: unknown): TrackMetadata["priority"] {
+  const raw = typeof value === "string" ? value.trim().toLowerCase() : "";
+  if (raw === "low" || raw === "medium" || raw === "high" || raw === "critical") {
+    return raw;
+  }
+  return "medium";
+}
+
+function toNumber(value: unknown, fallback = 0): number {
+  if (typeof value === "number" && Number.isFinite(value)) {
+    return Math.min(100, Math.max(0, Math.round(value)));
+  }
+  if (typeof value === "string" && value.trim()) {
+    const parsed = Number(value);
+    if (Number.isFinite(parsed)) {
+      return Math.min(100, Math.max(0, Math.round(parsed)));
+    }
+  }
+  return fallback;
+}
+
+function toStringArray(value: unknown): string[] | undefined {
+  if (!Array.isArray(value)) return undefined;
+  const items = value.filter((entry): entry is string => typeof entry === "string" && entry.trim().length > 0);
+  return items.length > 0 ? items.map((entry) => entry.trim()) : undefined;
+}
+
+function normalizeTrackFromMeta(trackId: string, meta: Record<string, unknown>): TrackMetadata | null {
+  const id = pickString(meta.id, meta.track_id, meta.trackId, trackId);
+  if (!id) {
+    return null;
+  }
+
+  const name = pickString(meta.name, meta.title, id) ?? id;
+  const title = pickString(meta.title, meta.name, name) ?? name;
+  const description = pickString(meta.description);
+  const sourceDocument = pickString(meta.sourceDocument, meta.source_document);
+  const tags = toStringArray(meta.tags);
+  const dependencies = toStringArray(meta.dependencies);
+  const group =
+    normalizeTrackGroup(meta.group) ??
+    inferTrackGroup({
+      id,
+      name,
+      title,
+      description,
+      sourceDocument,
+      tags,
+    });
+
+  return {
+    id,
+    name: title,
+    status: toTrackStatus(meta.status),
+    priority: toTrackPriority(meta.priority),
+    progress: toNumber(meta.progress, 0),
+    created: pickString(meta.created),
+    updated: pickString(meta.updated),
+    completed: pickString(meta.completed),
+    assignee: pickString(meta.assignee),
+    tags,
+    dependencies,
+    group,
+  };
+}
+
+async function buildTrackStatusState(tracksDir: string): Promise<ProjectState> {
+  const entries = await fs.readdir(tracksDir, { withFileTypes: true });
+  const tracks: TrackMetadata[] = [];
+
+  for (const entry of entries) {
+    if (!entry.isDirectory()) continue;
+
+    const trackId = entry.name;
+    if (!isSafeTrackId(trackId)) continue;
+
+    const meta = await readTrackMeta(tracksDir, trackId);
+    if (!meta) continue;
+
+    const track = normalizeTrackFromMeta(trackId, meta);
+    if (track) {
+      tracks.push(track);
+    }
+  }
+
+  return {
+    lastUpdated: new Date().toISOString(),
+    tracks,
+    stats: {
+      total: tracks.length,
+      active: tracks.filter((track) => track.status === "active" || track.status === "paused").length,
+      completed: tracks.filter((track) => track.status === "completed").length,
+      archived: tracks.filter((track) => track.status === "archived").length,
+      proposed: tracks.filter((track) => track.status === "proposed").length,
+    },
+  };
 }
 
 async function listTrackTodoSummaries(
@@ -423,6 +542,21 @@ export function createTracksRouter(opts?: {
     } catch (error: unknown) {
       const err = ensureError(error);
       logError("TracksRoutes", `Monitor endpoint error: ${err.message}`);
+      res.status(500).json({ success: false, error: err.message });
+    }
+  });
+
+  /**
+   * GET /api/v1/tracks/status
+   * Returns a business automation snapshot derived from conductor/tracks/*.json.
+   */
+  router.get("/status", async (_req, res) => {
+    try {
+      const snapshot = buildTrackStatusSnapshot(await buildTrackStatusState(tracksDir));
+      res.json(snapshot);
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      logError("TracksRoutes", `Status endpoint error: ${err.message}`);
       res.status(500).json({ success: false, error: err.message });
     }
   });

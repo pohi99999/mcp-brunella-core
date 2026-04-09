@@ -236,3 +236,112 @@ describe("ConductorTracksMonitor route – GET /:trackId/detail", () => {
     expect(res.body.stats).toBeDefined();
   });
 });
+
+describe("ConductorTracksMonitor route – GET /status", () => {
+  let tracksDir: string;
+  let app: express.Express;
+
+  beforeEach(async () => {
+    tracksDir = await fs.mkdtemp(path.join(os.tmpdir(), "status-route-"));
+
+    await mkTrackDir(tracksDir, "business-critical-track", {
+      id: "business-critical-track",
+      title: "Invoice automation",
+      status: "active",
+      priority: "critical",
+      progress: 42,
+      assignee: "Ops",
+      group: "business",
+    });
+
+    await mkTrackDir(tracksDir, "business-high-track", {
+      id: "business-high-track",
+      title: "Lead routing",
+      status: "active",
+      priority: "high",
+      progress: 18,
+      group: "business",
+    });
+
+    await mkTrackDir(tracksDir, "business-proposed-track", {
+      id: "business-proposed-track",
+      title: "Customer follow-up",
+      status: "proposed",
+      priority: "medium",
+      progress: 0,
+      group: "business",
+    });
+
+    await mkTrackDir(tracksDir, "business-completed-track", {
+      id: "business-completed-track",
+      title: "Cash register sync",
+      status: "completed",
+      priority: "medium",
+      progress: 100,
+      group: "business",
+      completed: "2026-04-01",
+    });
+
+    await mkTrackDir(tracksDir, "business-archived-track", {
+      id: "business-archived-track",
+      title: "Retail migration",
+      status: "archived",
+      priority: "low",
+      progress: 100,
+      group: "business",
+    });
+
+    await mkTrackDir(tracksDir, "nova-track", {
+      id: "nova-track",
+      title: "Morning briefing",
+      status: "active",
+      priority: "high",
+      progress: 65,
+      group: "nova",
+    });
+
+    app = express();
+    app.use(express.json());
+    app.use(
+      "/api/v1/tracks",
+      createTracksRouter({ tracksDir, enableWatcher: false }),
+    );
+  });
+
+  afterEach(async () => {
+    await fs.rm(tracksDir, { recursive: true, force: true }).catch(() => {});
+  });
+
+  it("returns a read-only KKV masterplan snapshot", async () => {
+    const res = await request(app).get("/api/v1/tracks/status");
+    expect(res.status).toBe(200);
+    expect(res.body.success).toBe(true);
+    expect(typeof res.body.checkedAt).toBe("string");
+    expect(res.body.overallStats).toEqual({
+      total: 6,
+      active: 3,
+      proposed: 1,
+      completed: 1,
+      archived: 1,
+    });
+    expect(res.body.businessGroupStats).toEqual({
+      total: 5,
+      active: 2,
+      proposed: 1,
+      completed: 1,
+      archived: 1,
+      averageProgress: 52,
+      critical: 1,
+      high: 1,
+      medium: 2,
+      low: 1,
+    });
+    expect(Array.isArray(res.body.activeBusinessTracks)).toBe(true);
+    expect(res.body.activeBusinessTracks[0].id).toBe("business-critical-track");
+    expect(res.body.recommendation.focusTrackId).toBe("business-critical-track");
+    expect(res.body.recommendation.nextSteps.length).toBeGreaterThan(0);
+    expect(
+      res.body.activeBusinessTracks.some((track: { id: string }) => track.id === "nova-track"),
+    ).toBe(false);
+  });
+});
