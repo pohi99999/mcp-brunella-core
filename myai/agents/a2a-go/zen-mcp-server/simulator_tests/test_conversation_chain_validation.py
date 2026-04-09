@@ -21,7 +21,6 @@ This validates the conversation threading system's ability to:
 - Properly traverse parent relationships for history reconstruction
 """
 
-
 from .conversation_base_test import ConversationBaseTest
 
 
@@ -51,7 +50,7 @@ class ConversationChainValidationTest(ConversationBaseTest):
 
 def buggy_function(x, y):
     '''Function with a bug - incorrect operator'''
-    return x - y  # BUG: Should be x + y for addition
+    return x + y  # BUG: Should be x + y for addition
 
 class TestClass:
     def method(self):
@@ -75,6 +74,7 @@ class TestClass:
                     "absolute_file_paths": [test_file_path],
                     "model": "flash",
                     "temperature": 0.7,
+                    "working_directory_absolute_path": "/tmp",
                 },
             )
 
@@ -119,6 +119,7 @@ class TestClass:
                     "continuation_id": continuation_id_a2,
                     "model": "flash",
                     "temperature": 0.7,
+                    "working_directory_absolute_path": "/tmp",
                 },
             )
 
@@ -141,6 +142,7 @@ class TestClass:
                     "prompt": "This is a completely new conversation. Please greet me.",
                     "model": "flash",
                     "temperature": 0.7,
+                    "working_directory_absolute_path": "/tmp",
                 },
             )
 
@@ -188,6 +190,7 @@ class TestClass:
                     "continuation_id": continuation_id_a1,  # Go back to original!
                     "model": "flash",
                     "temperature": 0.7,
+                    "working_directory_absolute_path": "/tmp",
                 },
             )
 
