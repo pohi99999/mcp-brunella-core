@@ -2457,3 +2457,8 @@ pm run test:dashboard → 200 passed | 0 failed | 20 test file ✅**
 **Megjegyzés:** A Phoenix Protocol workflow még teljes npm test-et futtatott push/PR eseményre; ezt 
 pm run test:fast profilra állítottam, a napi teljes suite továbbra is a daily-full-tests.yml alatt maradt. 
 pm run test:fast validáció sikeres (364 fájl passed, 1 skipped / 2797 teszt passed, 39 skipped).
+### 2026-04-10 21:14 - kkv_hr_leave_wait_resume archiválás
+**Feladat:** A HR leave wait/resume orchestration track archiválási verifikációja és lezárása.
+**Érintett fájlok:** conductor/archive/kkv_hr_leave_wait_resume_20260407/meta.json, conductor/archive/kkv_hr_leave_wait_resume_20260407/plan.md, conductor/archive/kkv_hr_leave_wait_resume_20260407/spec.md, conductor/tracks.md, conductor/project_state.json
+**Státusz:** ✅ Archiválva
+**Megjegyzés:** A 	est/hrLeaveRoutes.test.ts fókuszált regresszió zöld (5/5), beleértve approve, reject és calendar-failure retry ágakat; follow-up track nem szükséges.
