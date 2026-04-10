@@ -4032,6 +4032,7 @@ export async function runBriefingReport(dryRun = false): Promise<{ success: bool
 
 export interface AnythingLLMActionRequest {
   action: string;
+  approvalId?: string;
   payload?: { task?: string; context?: Record<string, unknown> };
 }
 
@@ -4042,6 +4043,12 @@ export interface AnythingLLMActionResponse {
   result: string;
   riskLevel: 'normal' | 'high';
   auditId: string;
+  approvalRequired?: boolean;
+  approvalId?: string;
+  approvalStatus?: 'pending' | 'approved' | 'rejected' | 'expired';
+  requiredRole?: 'viewer' | 'operator' | 'admin';
+  role?: 'viewer' | 'operator' | 'admin';
+  profile?: string;
   error?: string;
 }
 
