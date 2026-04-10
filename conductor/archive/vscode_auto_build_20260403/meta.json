@@ -1,11 +1,14 @@
 {
   "id": "vscode_auto_build_20260403",
   "title": "VSCode Auto-Build Task (TypeScript watch)",
-  "status": "completed",
+  "status": "archived",
   "priority": "low",
   "createdAt": "2026-04-03",
   "owner": "Claude Code",
   "progress": 100,
+  "completedAt": "2026-04-03T23:59:59.000Z",
+  "archivedAt": "2026-04-10T19:56:00.000Z",
+  "archiveReason": "The build watch now auto-starts on folder open, manual build/test/lint tasks exist, and dedicated debug-start plus attach configurations are present and JSON-validated; no follow-up track is required.",
   "tags": [
     "vscode",
     "build",
@@ -15,7 +18,7 @@
   ],
   "sourceDocument": "System audit 2026-04-03 — .vscode/tasks.json nincs auto-build trigger",
   "phase": 1,
-  "updated": "2026-04-03",
+  "updated": "2026-04-10",
   "dependencies": [],
   "group": "brunella"
 }

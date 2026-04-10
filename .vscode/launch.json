@@ -26,6 +26,16 @@
             "console": "integratedTerminal"
         },
         {
+            "name": "Attach to Brunella Core (9229)",
+            "type": "node",
+            "request": "attach",
+            "port": 9229,
+            "restart": true,
+            "skipFiles": [
+                "<node_internals>/**"
+            ]
+        },
+        {
             "name": "Attach to PowerShell Functions",
             "type": "PowerShell",
             "request": "attach",

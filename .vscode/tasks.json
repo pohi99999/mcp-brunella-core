@@ -6,14 +6,16 @@
 			"type": "shell",
 			"command": "npx tsc -w",
 			"group": {
-				"kind": "build",
-				"isDefault": true
+				"kind": "build"
 			},
 			"isBackground": true,
 			"problemMatcher": "$tsc-watch",
 			"presentation": {
 				"reveal": "never",
 				"panel": "dedicated"
+			},
+			"runOptions": {
+				"runOn": "folderOpen"
 			},
 			"detail": "Ez a háttérben fut és azonnal lefordítja a TypeScript kódot, ha mentesz."
 		},
@@ -61,19 +63,55 @@
 			"detail": "Lefuttatja a Brunella szinkronizációs protokollt (Git add/commit/push + Pull)."
 		},
 		{
-			"label": "build",
-			"type": "shell",
-			"command": "npm run build"
+			"label": "🛠️ BUILD (Egyszeri Fordítás)",
+			"type": "npm",
+			"script": "build",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"presentation": {
+				"reveal": "always",
+				"panel": "shared"
+			},
+			"detail": "Egyszeri teljes TypeScript build a build/ mappába."
 		},
 		{
-			"label": "build",
-			"type": "shell",
-			"command": "npm run build"
+			"label": "⚡ TEST:FAST (Gyors ellenőrzés)",
+			"type": "npm",
+			"script": "test:fast",
+			"group": "test",
+			"presentation": {
+				"reveal": "always",
+				"panel": "shared"
+			},
+			"detail": "Gyors build + Vitest ellenőrzés commit előtt."
 		},
 		{
-			"label": "build",
+			"label": "🧹 LINT (ESLint)",
+			"type": "npm",
+			"script": "lint",
+			"group": "test",
+			"problemMatcher": [
+				"$eslint-stylish"
+			],
+			"presentation": {
+				"reveal": "always",
+				"panel": "shared"
+			},
+			"detail": "ESLint ellenőrzés VS Code Problems integrációval."
+		},
+		{
+			"label": "🐞 START BRUNELLA CORE (Debug 9229)",
 			"type": "shell",
-			"command": "npm run build"
+			"command": "node --inspect=9229 --max-old-space-size=6144 --loader ts-node/esm src/index.ts",
+			"presentation": {
+				"reveal": "always",
+				"panel": "dedicated",
+				"group": "servers"
+			},
+			"isBackground": true,
+			"detail": "A fő Node szervert inspectorral indítja az attach debughoz."
 		},
 		{
 			"label": "🖥️ START WEB DASHBOARD (UI Indítás)",

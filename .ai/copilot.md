@@ -408,6 +408,16 @@ User requested that the Copilot CLI automatically connect to a local Brunella MC
 
 **Megjegyzés:** Validáció: `npx vitest run --config vitest.dashboard.config.ts src/dashboard/lib/navigation.contract.test.ts` (1/1, 6 ms) és `npm run build:ui` zöld. Follow-up track nem szükséges; az archiválást a gyorsított contract-regresszióval együtt zártam le.
 
+### 2026-04-10 22:04 - VSCode auto-build track tényleges befejezése és archiválása
+
+**Feladat:** A `vscode_auto_build_20260403` completed státusza nem fedte a valós repoállapotot: a build-watch task nem indult automatikusan folder openre, hiányzott a `test:fast` és ESLint task, illetve nem volt dedikált attach konfiguráció a fő Brunella Core szerverhez. Ezeket pótoltam, JSON-szinten verifikáltam, majd archiváltam a tracket.
+
+**Érintett fájlok:** `.vscode/tasks.json`, `.vscode/launch.json`, `conductor/tracks/vscode_auto_build_20260403/meta.json` → `conductor/archive/vscode_auto_build_20260403/meta.json`, `conductor/archive/vscode_auto_build_20260403/plan.md`, `conductor/tracks.md`, `conductor/project_state.json`, `.ai/copilot.md`, `.ai/FOSZAL.md`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** Validáció: PowerShell `ConvertFrom-Json` sikeresen parse-olta a `.vscode/tasks.json` és `.vscode/launch.json` fájlokat, és a task/launch listák már tartalmazzák az auto-build, manual build, `test:fast`, ESLint, debug start és attach elemeket. Follow-up track nem szükséges.
+
 **Érintett fájlok:** `src/agents/SpecWriterAgent.ts`, `test/specWriterAgent.test.ts`, `conductor/tracks/type_safety_enforcement_20260404/plan.md`
 
 **Státusz:** ✅ Befejezve

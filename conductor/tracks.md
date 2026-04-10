@@ -1,10 +1,10 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-04-10T19:48:24.709Z
+**Utolso frissites:** 2026-04-10T20:04:44.161Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 243 total | 27 active | 25 completed | 189 archived
+**Stats:** 243 total | 27 active | 24 completed | 190 archived
 **Csoportok:** Könyvelés / üzleti automatizálás: 53 | Nova asszisztens: 24 | Brunella rendszer: 95 | Egyéb: 71
 
 ---
@@ -232,7 +232,7 @@
 
 ---
 
-## Befejezett (Completed - Not Archived) (25)
+## Befejezett (Completed - Not Archived) (24)
 
 ### Könyvelés / üzleti automatizálás (14)
 
@@ -304,7 +304,7 @@
   - Mappa: ./tracks/kkv_project_task_automation_20260404/
 
 
-### Brunella rendszer (10)
+### Brunella rendszer (9)
 
 - [x] **Agent Runtime Hardening — ReAct, Working Memory, Tool Errors, Guardrails**
   - **ID:** `agent_runtime_hardening_20260406`
@@ -346,10 +346,6 @@
   - **ID:** `windows_bridge_health_20260403`
   - Mappa: ./tracks/windows_bridge_health_20260403/
 
-- [x] **VSCode Auto-Build Task (TypeScript watch)**
-  - **ID:** `vscode_auto_build_20260403`
-  - Mappa: ./tracks/vscode_auto_build_20260403/
-
 
 ### Egyéb (1)
 
@@ -361,7 +357,7 @@
 
 ---
 
-## Archivalt (Archived) (189)
+## Archivalt (Archived) (190)
 
 > Archived tracks are hidden by default. View in `conductor/archive/`
 
@@ -417,7 +413,7 @@
 - [x] **Innovation Bridge - Cross-Industry Knowledge Transfer** (2026-02-24T01:27:00Z)
 - [x] **Napi AI Agent Összefoglaló Pipeline** (2026-04-10T19:10:00.000Z)
 
-### Brunella rendszer (79)
+### Brunella rendszer (80)
 
 - [x] **BAS Átfogó Tesztprotokol** (2026-02-16T15:05:00Z)
 - [x] **Brunella Core Stabilization** (2026-04-04)
@@ -498,6 +494,7 @@
 - [x] **Universal Orchestrator Chat Upgrade (Dashboard + CLI)** (2026-03-20)
 - [x] **Zero-Prompt Core — Slack/Discord/Email Jóváhagyás** (2026-03-29)
 - [x] **Cloudflare Analytics Engine Egyedi Metrikák**
+- [x] **VSCode Auto-Build Task (TypeScript watch)** (2026-04-03T23:59:59.000Z)
 
 ### Egyéb (64)
 
