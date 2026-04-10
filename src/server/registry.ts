@@ -17,6 +17,7 @@ import {
   getRegisteredToolsList
 } from "./toolRegistry.js";
 import { ensureError } from "../utils/ensureError.js";
+import { globalChaosInjector } from "../utils/chaos_injector.js";
 
 // Re-export for compatibility
 export { getAllToolDefinitions, executeLocalTool, getRegisteredToolsList };
@@ -245,7 +246,12 @@ export async function registerAllTools(server: McpServer) {
   const originalTool = server.tool.bind(server);
   // @ts-expect-error patching server.tool for tool registration tracking
   server.tool = (name: string, description: string, parameters: any, handler: any) => {
-    const wrappedHandler = wrapToolHandler(name, handler as (...args: any[]) => any) as typeof handler;
+    // Chaos Middleware Integration
+    const chaosWrappedHandler = async (...args: any[]) => {
+      return await globalChaosInjector.injectChaos(name, () => handler(...args));
+    };
+
+    const wrappedHandler = wrapToolHandler(name, chaosWrappedHandler as (...args: any[]) => any) as typeof handler;
 
     // 1. Store handler for local execution
     registerToolHandler(name, wrappedHandler);

@@ -213,6 +213,17 @@ export abstract class BaseAgent implements IAgent {
     })();
     
     let workingMemory = createWorkingMemoryState();
+    
+    // 1.5. Swarm Context integráció: Ha van raj-történet, azt adjuk hozzá a munkamemóriához
+    if (context?.swarm?.history) {
+      for (const msg of context.swarm.history) {
+        workingMemory = appendWorkingMemoryMessage(workingMemory, {
+          role: msg.role,
+          content: msg.agent ? `[${msg.agent}] ${msg.content}` : msg.content,
+        });
+      }
+    }
+
     workingMemory = appendWorkingMemoryMessage(workingMemory, { role: 'user', content: task });
     for (const experience of pastExperiences) {
       workingMemory = appendWorkingMemoryMessage(workingMemory, {

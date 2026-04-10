@@ -3,6 +3,7 @@ import { Logger, logInfo, logError, setAgentStatus } from "../utils/logger.js";
 import { checkOllamaHealth, checkAnythingLLMHealth } from "../utils/health.js";
 import { getBifrostGateway, type GenerateResponse, type OpenAIToolDefinition } from "../core/bifrost_gateway.js";
 import { socketService } from "../server/SocketService.js";
+import { executeLocalTool } from "../server/registry.js";
 import { execSync } from "child_process";
 import fs from "fs/promises";
 import { ensureError } from "../utils/ensureError.js";
@@ -37,6 +38,19 @@ const EVALUATOR_TOOLS: OpenAIToolDefinition[] = [
       parameters: {
         type: "object",
         properties: {}
+      }
+    }
+  },
+  {
+    type: "function",
+    function: {
+      name: "run_chaos_test_suite",
+      description: "Futtat egy chaos teszt sorozatot a rendszer megbízhatóságának ellenőrzésére (időtúllépés, rate limit, korrupció).",
+      parameters: {
+        type: "object",
+        properties: {
+          testCount: { type: "number", description: "Hány tesztesetet futtasson le (alapértelmezett: 5)." }
+        }
       }
     }
   }
@@ -232,6 +246,29 @@ A feladatod a rendszerek auditálása, egészségügyi ellenőrzések és TESZTE
               const anything = await checkAnythingLLMHealth();
               toolResult = JSON.stringify({ ollama, anythingllm: anything });
               finalData.health = { ollama, anythingllm: anything };
+            } else if (name === 'run_chaos_test_suite') {
+              const testCount = getNumberProperty(args, 'testCount') || 5;
+              socketService.broadcastChatter(this.name, `Chaos teszt sorozat indítása: ${testCount} kísérlet`, 'system');
+              
+              const originalChaosMode = process.env.CHAOS_MODE;
+              process.env.CHAOS_MODE = 'true';
+              
+              const results = [];
+              const testTools = ['ping', 'workspace_list_directory'];
+              
+              for (let i = 0; i < testCount; i++) {
+                const targetTool = testTools[Math.floor(Math.random() * testTools.length)];
+                try {
+                  const res = await executeLocalTool(targetTool, targetTool === 'ping' ? {} : { directory: '.' });
+                  results.push({ attempt: i + 1, tool: targetTool, status: 'success', data_preview: JSON.stringify(res).slice(0, 50) });
+                } catch (e: unknown) {
+                  const err = ensureError(e);
+                  results.push({ attempt: i + 1, tool: targetTool, status: 'error_caught', message: err.message });
+                }
+              }
+              
+              process.env.CHAOS_MODE = originalChaosMode;
+              toolResult = JSON.stringify({ summary: "Chaos teszt lefutott", results }, null, 2);
             } else {
               toolResult = `Ismeretlen eszköz: ${name}`;
             }

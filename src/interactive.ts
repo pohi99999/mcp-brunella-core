@@ -44,6 +44,7 @@ const STRINGS: Record<Lang, Record<string, string>> = {
         'menu.agents.dev_refactor': '♻️  Refactor',
         'menu.agents.dev_context': '📊  Context elemzés',
         'menu.agents.dev_metrics': '📈  Metrikák',
+        'menu.agents.swarm': '🐝  Swarm (Raj Intelligencia)',
 
         // Tracks menu
         'menu.tracks.title': '📋 Track-ek (Fejlesztési Tervek)',
@@ -80,6 +81,8 @@ const STRINGS: Record<Lang, Record<string, string>> = {
         'menu.tests.queue_list': '📋  Task queue lista',
         'menu.tests.queue_add': '➕  Task queue hozzáadás',
         'menu.tests.queue_cancel': '❌  Task queue cancel',
+        'menu.tests.chaos': '☣  Chaos Engine vezérlő',
+        'menu.tests.security': '🛡️  Security Sandbox',
 
         // System menu
         'menu.system.title': '🔧 Rendszer & Infrastruktúra',
@@ -362,6 +365,7 @@ async function agentsMenuV2(): Promise<void> {
     const action = await subMenu(chalk.green(t('menu.agents.title')), [
         { name: t('menu.agents.list'), value: 'list' },
         { name: t('menu.agents.execute'), value: 'execute' },
+        { name: t('menu.agents.swarm'), value: 'swarm' },
         { name: t('menu.agents.dev_generate'), value: 'dev_generate' },
         { name: t('menu.agents.dev_ai'), value: 'dev_ai' },
         { name: t('menu.agents.dev_test'), value: 'dev_test' },
@@ -383,6 +387,9 @@ async function agentsMenuV2(): Promise<void> {
         const task = await askInput(t('prompt.agent_task'));
         if (!task) return;
         runCli(`agent "${name}" "${task}"`);
+        await pause();
+    } else if (action === 'swarm') {
+        runCli('swarm');
         await pause();
     } else if (action === 'dev_generate') {
         const prompt = await askInput(t('prompt.code_prompt'));
@@ -497,6 +504,8 @@ async function testsMenuV2(): Promise<void> {
     const action = await subMenu(chalk.yellow(t('menu.tests.title')), [
         { name: t('menu.tests.build'), value: 'build' },
         { name: t('menu.tests.run'), value: 'run' },
+        { name: t('menu.tests.chaos'), value: 'chaos' },
+        { name: t('menu.tests.security'), value: 'security' },
         { name: t('menu.tests.coverage'), value: 'coverage' },
         { name: t('menu.tests.review'), value: 'review' },
         { name: t('menu.tests.refactor'), value: 'refactor' },
@@ -520,6 +529,12 @@ async function testsMenuV2(): Promise<void> {
         await pause();
     } else if (action === 'run') {
         runCli('dev test');
+        await pause();
+    } else if (action === 'chaos') {
+        runCli('chaos');
+        await pause();
+    } else if (action === 'security') {
+        runCli('security');
         await pause();
     } else if (action === 'coverage') {
         runCli('dev coverage --run');

@@ -7,7 +7,7 @@
  */
 
 import { Ai } from "@cloudflare/ai";
-import { safeJsonParse } from './utils/aiHelpers.js';
+import { safeJsonParse, applyPromptArmor } from './utils/aiHelpers.js';
 export { SwarmCoordinator } from "./swarmCoordinator.js";
 import { handleQueueBatch, enqueueTask, type TaskMessage } from "./queueHandler.js";
 import { R2ArtifactManager } from "./r2Artifacts.js";
@@ -68,11 +68,14 @@ export default {
     // --- DISPATCH: Route task to specific agent worker ---
     if (path === "/dispatch" && request.method === "POST") {
       const body = await request.json() as any;
-      const { agent, task, context, requestId } = body;
+      let { agent, task, context, requestId } = body;
 
       if (!agent || !task) {
         return Response.json({ error: "agent and task required" }, { status: 400, headers: corsHeaders });
       }
+
+      // Apply Prompt Armor
+      task = applyPromptArmor(task);
 
       const reqId = requestId || `req_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
 
@@ -162,14 +165,19 @@ export default {
     // --- QUEUE: Submit task for async processing ---
     if (path === "/queue/submit" && request.method === "POST") {
       const body = await request.json() as any;
-      if (!body.instruction) {
+      let { instruction } = body;
+      
+      if (!instruction) {
         return Response.json({ error: "instruction required" }, { status: 400, headers: corsHeaders });
       }
+
+      // Apply Prompt Armor
+      instruction = applyPromptArmor(instruction);
 
       const taskId = `task_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
       const task: TaskMessage = {
         taskId,
-        instruction: body.instruction,
+        instruction,
         type: body.type || "general",
         priority: body.priority || "normal",
         metadata: body.metadata,

@@ -1214,8 +1214,17 @@ export class AgentManager extends EventEmitter {
             logInfo('AgentManager', `[Phoenix Recovery] State restored from checkpoint`);
           }
 
-          // 3. Wait before retry (exponential backoff)
-          const delay = calculateDelay(attempt, DEFAULT_RETRY_CONFIG);
+          // 3. Wait before retry (exponential backoff with chaos awareness)
+          let delay = calculateDelay(attempt, DEFAULT_RETRY_CONFIG);
+          
+          if (errorMsg.includes('429') || errorMsg.toLowerCase().includes('too many requests')) {
+            delay = Math.max(delay, 5000) * 1.5; // Minimum 5s delay for rate limits
+            logWarn('AgentManager', `[Phoenix Recovery] Rate limit detektálva, emelt várakozás: ${Math.round(delay)}ms`);
+          } else if (errorMsg.includes('504') || errorMsg.toLowerCase().includes('timeout')) {
+            delay = Math.max(delay, 2000);
+            logWarn('AgentManager', `[Phoenix Recovery] Időtúllépés detektálva, várakozás: ${delay}ms`);
+          }
+
           await new Promise(resolve => setTimeout(resolve, delay));
           continue; // Try next attempt
         }
@@ -1268,8 +1277,17 @@ export class AgentManager extends EventEmitter {
             logInfo('AgentManager', `[Phoenix Recovery] State restored from checkpoint`);
           }
 
-          // 3. Wait before retry (exponential backoff)
-          const delay = calculateDelay(attempt, DEFAULT_RETRY_CONFIG);
+          // 3. Wait before retry (exponential backoff with chaos awareness)
+          let delay = calculateDelay(attempt, DEFAULT_RETRY_CONFIG);
+          
+          if (errorMsg.includes('429') || errorMsg.toLowerCase().includes('too many requests')) {
+            delay = Math.max(delay, 5000) * 1.5; // Minimum 5s delay for rate limits
+            logWarn('AgentManager', `[Phoenix Recovery] Rate limit detektálva, emelt várakozás: ${Math.round(delay)}ms`);
+          } else if (errorMsg.includes('504') || errorMsg.toLowerCase().includes('timeout')) {
+            delay = Math.max(delay, 2000);
+            logWarn('AgentManager', `[Phoenix Recovery] Időtúllépés detektálva, várakozás: ${delay}ms`);
+          }
+
           await new Promise(resolve => setTimeout(resolve, delay));
           continue; // Try next attempt
         }

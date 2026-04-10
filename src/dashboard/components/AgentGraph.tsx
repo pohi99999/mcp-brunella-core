@@ -13,7 +13,7 @@ import ReactFlow, {
     Edge
 } from 'reactflow';
 import 'reactflow/dist/style.css';
-import { getRegistry, type RegistryAgent } from '@/lib/apiService';
+import { getRegistry, getSwarmSessions, type RegistryAgent } from '@/lib/apiService';
 import { useSystemSignal } from '@/hooks/useSystemSignal';
 import {
     Robot,
@@ -44,8 +44,14 @@ export function AgentGraph() {
 
     const updateGraph = useCallback(async () => {
         try {
-            const registry = await getRegistry();
+            const [registry, sessions] = await Promise.all([
+                getRegistry(),
+                getSwarmSessions()
+            ]);
             const registryAgents = registry.agents || [];
+            const activeSwarmParticipants = new Set(
+                sessions.filter(s => s.status === 'active').flatMap(s => s.participants)
+            );
 
             const newNodes: Node[] = [];
             const newEdges: Edge[] = [];
@@ -56,6 +62,7 @@ export function AgentGraph() {
             registryAgents.forEach((agent, index) => {
                 const liveData = Array.from(liveAgents.values()).find(a => a.name === agent.name);
                 const isWorking = liveData?.status === 'working';
+                const isInSwarm = activeSwarmParticipants.has(agent.name);
 
                 // Elhelyezkedés számítása (egyszerű körpálya az Orchestrator körül)
                 const angle = (index / registryAgents.length) * 2 * Math.PI;
@@ -71,8 +78,8 @@ export function AgentGraph() {
                     data: {
                         label: (
                             <div className="flex flex-col items-center gap-1">
-                                <div className={`p-2 rounded-lg ${isWorking ? 'bg-primary/20 animate-pulse' : 'bg-white/5'}`}>
-                                    <Icon size={24} weight={isWorking ? "fill" : "thin"} className={isWorking ? "text-primary thin-glow" : "text-muted-foreground"} />
+                                <div className={`p-2 rounded-lg ${isWorking ? 'bg-primary/20 animate-pulse' : isInSwarm ? 'bg-blue-500/20' : 'bg-white/5'}`}>
+                                    <Icon size={24} weight={isWorking || isInSwarm ? "fill" : "thin"} className={isWorking ? "text-primary thin-glow" : isInSwarm ? "text-blue-400" : "text-muted-foreground"} />
                                 </div>
                                 <span className="font-bold text-[10px]">{agent.name}</span>
                                 <span className="text-[7px] opacity-70 uppercase tracking-tighter">{agent.role || 'Agent'}</span>
@@ -89,7 +96,8 @@ export function AgentGraph() {
                     className: cn(
                         'glass-card p-3 rounded-xl border transition-all duration-700 shadow-2xl overflow-visible',
                         agent.name === 'Orchestrator' ? 'border-primary/50 shadow-primary/10 ring-4 ring-primary/5' : 'border-white/10',
-                        isWorking && 'border-primary shadow-primary/30 scale-105 z-50'
+                        isWorking && 'border-primary shadow-primary/30 scale-105 z-50',
+                        isInSwarm && !isWorking && 'border-blue-500/50 shadow-blue-500/10'
                     )
                 });
 
@@ -105,11 +113,28 @@ export function AgentGraph() {
                         markerEnd: { type: MarkerType.ArrowClosed, color: isWorking ? '#10b981' : '#333', width: 20, height: 20 },
                         style: {
                             stroke: isWorking ? '#10b981' : '#333',
-                            strokeWidth: isWorking ? 3 : 1,
+                            strokeWidth: isWorking ? 2 : 1,
                             filter: isWorking ? 'drop-shadow(0 0 8px #10b981)' : 'none',
                             transition: 'all 1s ease'
                         }
                     });
+                }
+            });
+
+            // Raj kapcsolatok (Swarm Edges) megjelenítése
+            sessions.filter(s => s.status === 'active').forEach(session => {
+                const p = session.participants;
+                for (let i = 0; i < p.length; i++) {
+                    for (let j = i + 1; j < p.length; j++) {
+                        newEdges.push({
+                            id: `swarm-${session.id}-${p[i]}-${p[j]}`,
+                            source: p[i],
+                            target: p[j],
+                            animated: true,
+                            style: { stroke: '#3b82f6', strokeWidth: 2, strokeDasharray: '5,5', opacity: 0.6 },
+                            markerEnd: { type: MarkerType.ArrowClosed, color: '#3b82f6' }
+                        });
+                    }
                 }
             });
 

@@ -22,6 +22,12 @@ const mockLoggerInstance = vi.hoisted(() => ({
   error: vi.fn(),
 }));
 const mockBroadcastChatter = vi.hoisted(() => vi.fn());
+const mockSocketService = vi.hoisted(() => ({
+  broadcastChatter: mockBroadcastChatter,
+}));
+const mockSocketServiceClass = vi.hoisted(() =>
+  vi.fn().mockImplementation(() => mockSocketService)
+);
 const mockExecSync = vi.hoisted(() => vi.fn());
 
 vi.mock('../src/core/bifrost_gateway.js', () => ({
@@ -55,6 +61,9 @@ vi.mock('../src/utils/logger.js', () => ({
 }));
 
 vi.mock('../src/server/SocketService.js', () => ({
+  SocketServiceClass: vi.fn().mockImplementation(() => ({
+    broadcastChatter: mockBroadcastChatter,
+  })),
   socketService: {
     broadcastChatter: mockBroadcastChatter,
   },
@@ -83,6 +92,7 @@ describe('EvaluatorAgent', () => {
     mockGenerate.mockReset();
     mockExecSync.mockReset();
     mockBroadcastChatter.mockReset();
+    mockSocketServiceClass.mockClear();
     mockLoggerInstance.info.mockReset();
     mockLoggerInstance.warn.mockReset();
     mockLoggerInstance.error.mockReset();

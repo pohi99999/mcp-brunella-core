@@ -222,9 +222,24 @@ OrchestratorAgent / EnterpriseOrchestratorAgent (Koordinátorok)
 
 ```
 Hiba detektálva → Checkpointing (SQLite task queue)
+                → Chaos Awareness (429/504 adaptív várakozás) [ÚJ]
                 → Auto-Reset (max 3 kísérlet)
                 → Git Recovery (sync_foszal.py + commit)
 ```
+
+### Prompt Armor & Security Sandbox (IPI Defense) [ÚJ]
+
+A BAS mostantól beépített védelmet tartalmaz az **Indirekt Prompt Injektálás (IPI)** ellen:
+- **Strukturális izoláció:** A külső forrásból (web, fájlrendszer) érkező adatokat XML elválasztók (`<external_data>`) közé zárja.
+- **Mintafelismerés:** Proaktívan szűri a gyanús utasításokat (pl. "ignore previous instructions").
+- **Edge Protection:** A védelem a Cloudflare Worker szintjén is aktív.
+
+### Swarm Orchestration (ClawSwarm) [ÚJ]
+
+A hagyományos hierarchikus delegálás mellett elérhető a **Raj Intelligencia** üzemmód:
+- **Unified Group Chat:** Több ügynök dolgozik egyetlen megosztott kontextusban.
+- **Direct Agent Interakció:** Az ügynökök "@mention" segítségével tudnak egymástól segítséget kérni.
+- **Vizualizáció:** Az `AgentGraph` a Dashboard-on valós időben mutatja a raj-kapcsolatokat.
 
 ### Model Router & Bifrost Gateway
 
@@ -1131,6 +1146,16 @@ brunella robotkez status      # Agent status
 - **NEW:** CLI commands (`brunella robotkez ...`)
 - **IMPROVED:** Persistent Browser (Playwright + Python bridge)
 - **DOCS:** User Guide + Developer Guide for RobotkezV2
+
+### v2.5.0 (2026-04-10)
+
+- **NEW:** Chaos Engine — Agent instability testing (timeout, rate-limit, data corruption simulation).
+- **NEW:** Prompt Armor — IPI (Indirect Prompt Injection) defense with XML structural isolation.
+- **NEW:** Swarm Orchestration (ClawSwarm) — Multi-agent unified group chat for collaborative task solving.
+- **NEW:** Adaptive Phoenix Recovery — Chaos-aware retry logic with exponential backoff for 429/504 errors.
+- **NEW:** Interactive Swarm/Chaos/Security menus in Brunella CLI.
+- **IMPROVED:** AgentGraph now visualizes real-time swarm connections.
+- **STABILIZATION:** Fixed test mocks for EvaluatorAgent and improved ESM compatibility.
 
 ### v2.4.1 (2026-02-24)
 

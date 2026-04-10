@@ -27,6 +27,27 @@ export function safeJsonParse<T = any>(s: string, fallback: T): T {
   }
 }
 
+/**
+ * Prompt Armor: Sanitize text for IPI defense on the Edge.
+ */
+export function applyPromptArmor(text: string): string {
+  const maliciousPatterns = [
+    /ignore previous instructions/i,
+    /ignore all previous/i,
+    /system override/i,
+    /bypass guardrails/i,
+    /you are now an/i,
+  ];
+
+  let sanitized = text;
+  for (const pattern of maliciousPatterns) {
+    if (pattern.test(sanitized)) {
+      sanitized = sanitized.replace(pattern, (match) => `[EDGE_PROTECT: ${match}]`);
+    }
+  }
+  return sanitized;
+}
+
 export function extractEmbedding(aiRaw: unknown): number[] | null {
   try {
     const raw = aiRaw as Record<string, any>;

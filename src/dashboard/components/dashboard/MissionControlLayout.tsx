@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { Zap, ChevronDown, ChevronRight, Menu, Mail, Github, Calendar, Sparkles, HardDrive } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { Switch } from "@/components/ui/switch";
+import { toast } from "sonner";
 import * as api from "@/lib/apiService";
 import { Sheet, SheetContent, SheetDescription, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
@@ -22,6 +24,7 @@ export function MissionControlLayout() {
   const [isConnected, setIsConnected] = useState(false);
   const [coreStatus, setCoreStatus] = useState<'HEALTHY' | 'DEGRADED' | 'OFFLINE'>('OFFLINE');
   const [terminalCollapsed, setTerminalCollapsed] = useState(true);
+  const [chaos, setChaos] = useState<api.ChaosStatus | null>(null);
 
   useEffect(() => {
     const check = async () => {
@@ -36,9 +39,31 @@ export function MissionControlLayout() {
       }
     };
     check();
+    
+    api.getChaosStatus().then(setChaos).catch(() => {});
+
     const interval = setInterval(check, 30000);
     return () => clearInterval(interval);
   }, []);
+
+  const handleToggleChaos = async (checked: boolean) => {
+    try {
+      const res = await api.toggleChaosMode({ enabled: checked });
+      setChaos(res.status);
+      if (checked) {
+        toast.error("CHAOS ENGINE ACTIVE", {
+          description: "A rendszer szándékos hibákat injektál a teszteléshez.",
+          duration: 5000,
+        });
+      } else {
+        toast.success("Chaos Engine leállítva", {
+          description: "A rendszer stabil állapotba került.",
+        });
+      }
+    } catch (e) {
+      toast.error("Hiba történt a Chaos Engine vezérlése közben.");
+    }
+  };
 
   const activeItem = navigationRegistry.getItem(activeTab);
 
@@ -139,6 +164,16 @@ export function MissionControlLayout() {
         </div>
 
         <div className="flex items-center gap-3">
+          {chaos && (
+            <div className="flex items-center gap-2 mr-2 border-r pr-4 border-white/10">
+              <span className="text-[10px] text-white/40 uppercase tracking-[0.2em] font-mono hidden sm:inline">Chaos Engine</span>
+              <Switch 
+                checked={chaos.enabled} 
+                onCheckedChange={handleToggleChaos}
+                className="data-[state=checked]:bg-red-600 border-white/20 scale-75"
+              />
+            </div>
+          )}
           <div className="hidden rounded-full border border-white/[0.07] bg-white/[0.025] px-3 py-1.5 shadow-[0_18px_42px_-28px_rgba(0,0,0,0.96)] md:flex items-center gap-2">
             <div className="relative flex items-center">
               <div className={cn("w-1.5 h-1.5 rounded-full", statusColor)} />
