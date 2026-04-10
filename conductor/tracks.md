@@ -1,11 +1,11 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-04-10T20:04:44.161Z
+**Utolso frissites:** 2026-04-10T20:19:51.204Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 243 total | 27 active | 24 completed | 190 archived
-**Csoportok:** Könyvelés / üzleti automatizálás: 53 | Nova asszisztens: 24 | Brunella rendszer: 95 | Egyéb: 71
+**Stats:** 246 total | 30 active | 23 completed | 191 archived
+**Csoportok:** Könyvelés / üzleti automatizálás: 53 | Nova asszisztens: 24 | Brunella rendszer: 96 | Egyéb: 73
 
 ---
 
@@ -28,7 +28,7 @@
 
 ---
 
-## Aktiv Szalak (Active) (27)
+## Aktiv Szalak (Active) (30)
 
 ### Könyvelés / üzleti automatizálás (11)
 
@@ -154,7 +154,7 @@
   - Mappa: ./tracks/toura_local_dev_20260408/
 
 
-### Brunella rendszer (4)
+### Brunella rendszer (5)
 
 - [ ] **L5 Hook Engine — Az Autonóm Idegrendszer** [CRITICAL]
   - **ID:** `l5_hook_engine_20260410`
@@ -184,8 +184,14 @@
   - **Updated:** 2026-04-06
   - Mappa: ./tracks/modular_state_refactor_20260404/
 
+- [ ] **Swarm Orchestration Chat (ClawSwarm)** [MEDIUM]
+  - **ID:** `swarm_orchestration_chat_20260410`
+  - **Progress:** 0%
+  - **Assignee:** Brunella Orchestrator
+  - Mappa: ./tracks/swarm_orchestration_chat_20260410/
 
-### Egyéb (6)
+
+### Egyéb (8)
 
 - [ ] **L5 Event Store + Outbox — Garantált Memória & Üzenetküldés** [CRITICAL]
   - **ID:** `l5_event_store_outbox_20260410`
@@ -193,6 +199,18 @@
   - **Assignee:** Claude
   - **Updated:** 2026-04-10T00:00:00.000Z
   - Mappa: ./tracks/l5_event_store_outbox_20260410/
+
+- [ ] **Agent Instability Chaos Testing (Chaeos-env)** [HIGH]
+  - **ID:** `agent_instability_chaos_testing_20260410`
+  - **Progress:** 0%
+  - **Assignee:** Brunella Orchestrator
+  - Mappa: ./tracks/agent_instability_chaos_testing_20260410/
+
+- [ ] **Agent Security Sandbox (IPI Defense)** [HIGH]
+  - **ID:** `agent_security_ipi_defense_20260410`
+  - **Progress:** 0%
+  - **Assignee:** Brunella Orchestrator
+  - Mappa: ./tracks/agent_security_ipi_defense_20260410/
 
 - [ ] **P-Search n8n Pipeline - palyazat- es hitelkereso workflow-k** [HIGH]
   - **ID:** `n8n_psearch_pipeline_20260404`
@@ -232,19 +250,14 @@
 
 ---
 
-## Befejezett (Completed - Not Archived) (24)
+## Befejezett (Completed - Not Archived) (23)
 
-### Könyvelés / üzleti automatizálás (14)
+### Könyvelés / üzleti automatizálás (13)
 
 - [x] **KKV CRM es lead-utanakovetes automatizalas**
   - **ID:** `kkv_crm_automation_20260404`
   - **Completed:** 2026-04-08T20:21:16Z
   - Mappa: ./tracks/kkv_crm_automation_20260404/
-
-- [x] **KKV CRM ingest alapok**
-  - **ID:** `kkv_crm_ingest_foundation_20260405`
-  - **Completed:** 2026-04-05
-  - Mappa: ./tracks/kkv_crm_ingest_foundation_20260405/
 
 - [x] **KKV HR es dolgozoi adminisztracio automatizalas**
   - **ID:** `kkv_hr_automation_20260404`
@@ -357,11 +370,11 @@
 
 ---
 
-## Archivalt (Archived) (190)
+## Archivalt (Archived) (191)
 
 > Archived tracks are hidden by default. View in `conductor/archive/`
 
-### Könyvelés / üzleti automatizálás (28)
+### Könyvelés / üzleti automatizálás (29)
 
 - [x] **Brunella teljes funkció- és tulajdonságmátrix dokumentáció** (2026-03-26)
 - [x] **Enterprise Suite Master - 14 Modulos Vállalati Irányító** (2026-02-17T21:15:00Z)
@@ -374,6 +387,7 @@
 - [x] **Hyper-Local Supply Chain** (2026-02-16T00:00:00Z)
 - [x] **KKV CRM follow-up approval es reporting** (2026-04-05)
 - [x] **KKV CRM follow-up es routing** (2026-04-05)
+- [x] **KKV CRM ingest alapok** (2026-04-05)
 - [x] **KKV HR onboarding es provisioning** (2026-04-05T17:08:54.7826616Z)
 - [x] **KKV HR timesheet export and culture alerts** (2026-04-07)
 - [x] **Konyvelesi Phase 0 readiness** (2026-04-05T00:00:00Z)

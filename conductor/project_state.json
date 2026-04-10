@@ -1,6 +1,25 @@
 {
-  "lastUpdated": "2026-04-10T20:04:44.161Z",
+  "lastUpdated": "2026-04-10T20:19:51.204Z",
   "tracks": [
+    {
+      "id": "agent_instability_chaos_testing_20260410",
+      "name": "Agent Instability Chaos Testing (Chaeos-env)",
+      "status": "active",
+      "priority": "high",
+      "progress": 0,
+      "created": "2026-04-10T12:00:00Z",
+      "assignee": "Brunella Orchestrator",
+      "tags": [
+        "testing",
+        "phoenix-protocol",
+        "robustness",
+        "chaos-engineering"
+      ],
+      "dependencies": [],
+      "group": "other",
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\agent_instability_chaos_testing_20260410",
+      "_isArchived": false
+    },
     {
       "id": "agent_runtime_hardening_20260406",
       "name": "Agent Runtime Hardening — ReAct, Working Memory, Tool Errors, Guardrails",
@@ -22,6 +41,25 @@
       ],
       "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\agent_runtime_hardening_20260406",
+      "_isArchived": false
+    },
+    {
+      "id": "agent_security_ipi_defense_20260410",
+      "name": "Agent Security Sandbox (IPI Defense)",
+      "status": "active",
+      "priority": "high",
+      "progress": 0,
+      "created": "2026-04-10T12:00:00Z",
+      "assignee": "Brunella Orchestrator",
+      "tags": [
+        "security",
+        "ipi-defense",
+        "llm-armor",
+        "benchmark"
+      ],
+      "dependencies": [],
+      "group": "other",
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\agent_security_ipi_defense_20260410",
       "_isArchived": false
     },
     {
@@ -234,28 +272,6 @@
       "_isArchived": false
     },
     {
-      "id": "dashboard_conductor_monitor_visibility_20260406",
-      "name": "Dashboard conductor monitor láthatósági javítás",
-      "status": "archived",
-      "priority": "high",
-      "progress": 100,
-      "created": "2026-04-06",
-      "updated": "2026-04-10",
-      "completed": "2026-04-06T23:59:59.000Z",
-      "assignee": "GitHub Copilot",
-      "tags": [
-        "dashboard",
-        "conductor",
-        "tracks",
-        "navigation",
-        "i18n"
-      ],
-      "dependencies": [],
-      "group": "brunella",
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\dashboard_conductor_monitor_visibility_20260406",
-      "_isArchived": true
-    },
-    {
       "id": "jules_pr_integration_20260222",
       "name": "Jules PR Integration",
       "status": "archived",
@@ -351,29 +367,6 @@
       "group": "business",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\kkv_crm_followup_routing_20260405",
       "_isArchived": true
-    },
-    {
-      "id": "kkv_crm_ingest_foundation_20260405",
-      "name": "KKV CRM ingest alapok",
-      "status": "completed",
-      "priority": "high",
-      "progress": 100,
-      "created": "2026-04-05",
-      "updated": "2026-04-05",
-      "completed": "2026-04-05",
-      "assignee": "GitHub Copilot",
-      "tags": [
-        "kkv",
-        "crm",
-        "ingest",
-        "dedupe",
-        "hubspot",
-        "n8n"
-      ],
-      "dependencies": [],
-      "group": "business",
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\kkv_crm_ingest_foundation_20260405",
-      "_isArchived": false
     },
     {
       "id": "kkv_customer_service_ai_20260404",
@@ -1345,6 +1338,25 @@
       "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\robotkez_comet_upgrade_20260222",
       "_isArchived": true
+    },
+    {
+      "id": "swarm_orchestration_chat_20260410",
+      "name": "Swarm Orchestration Chat (ClawSwarm)",
+      "status": "active",
+      "priority": "medium",
+      "progress": 0,
+      "created": "2026-04-10T12:00:00Z",
+      "assignee": "Brunella Orchestrator",
+      "tags": [
+        "orchestration",
+        "swarm-intelligence",
+        "collaboration",
+        "multi-agent"
+      ],
+      "dependencies": [],
+      "group": "brunella",
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\swarm_orchestration_chat_20260410",
+      "_isArchived": false
     },
     {
       "id": "system_wide_zero_mock_20260301",
@@ -2589,6 +2601,28 @@
       "_isArchived": true
     },
     {
+      "id": "dashboard_conductor_monitor_visibility_20260406",
+      "name": "Dashboard conductor monitor láthatósági javítás",
+      "status": "archived",
+      "priority": "high",
+      "progress": 100,
+      "created": "2026-04-06",
+      "updated": "2026-04-10",
+      "completed": "2026-04-06T23:59:59.000Z",
+      "assignee": "GitHub Copilot",
+      "tags": [
+        "dashboard",
+        "conductor",
+        "tracks",
+        "navigation",
+        "i18n"
+      ],
+      "dependencies": [],
+      "group": "brunella",
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\dashboard_conductor_monitor_visibility_20260406",
+      "_isArchived": true
+    },
+    {
       "id": "dashboard_test_suite_20260210",
       "name": "Dashboard Komplett Tesztsorozat",
       "status": "archived",
@@ -3510,6 +3544,29 @@
       ],
       "group": "business",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\kkv_crm_followup_approval_reporting_20260405",
+      "_isArchived": true
+    },
+    {
+      "id": "kkv_crm_ingest_foundation_20260405",
+      "name": "KKV CRM ingest alapok",
+      "status": "archived",
+      "priority": "high",
+      "progress": 100,
+      "created": "2026-04-05",
+      "updated": "2026-04-10",
+      "completed": "2026-04-05",
+      "assignee": "GitHub Copilot",
+      "tags": [
+        "kkv",
+        "crm",
+        "ingest",
+        "dedupe",
+        "hubspot",
+        "n8n"
+      ],
+      "dependencies": [],
+      "group": "business",
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\kkv_crm_ingest_foundation_20260405",
       "_isArchived": true
     },
     {
@@ -5160,10 +5217,10 @@
     }
   ],
   "stats": {
-    "total": 243,
-    "active": 27,
-    "completed": 24,
-    "archived": 190,
+    "total": 246,
+    "active": 30,
+    "completed": 23,
+    "archived": 191,
     "proposed": 2
   }
 }
