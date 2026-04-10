@@ -1,10 +1,10 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-04-10T18:42:46.030Z
+**Utolso frissites:** 2026-04-10T19:11:45.066Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 243 total | 28 active | 28 completed | 185 archived
+**Stats:** 243 total | 27 active | 28 completed | 186 archived
 **Csoportok:** Könyvelés / üzleti automatizálás: 53 | Nova asszisztens: 24 | Brunella rendszer: 95 | Egyéb: 71
 
 ---
@@ -28,7 +28,7 @@
 
 ---
 
-## Aktiv Szalak (Active) (28)
+## Aktiv Szalak (Active) (27)
 
 ### Könyvelés / üzleti automatizálás (11)
 
@@ -109,7 +109,7 @@
   - Mappa: ./tracks/l5_multitenant_platform_20260410/
 
 
-### Nova asszisztens (7)
+### Nova asszisztens (6)
 
 - [ ] **L5 4-Szintű Memória Architektúra — FourLayerMemory** [HIGH]
   - **ID:** `l5_memory_architecture_20260410`
@@ -152,13 +152,6 @@
   - **Assignee:** Gemini
   - **Updated:** 2026-04-08
   - Mappa: ./tracks/toura_local_dev_20260408/
-
-- [ ] **Napi AI Agent Összefoglaló Pipeline** [MEDIUM]
-  - **ID:** `ai_agent_daily_briefing_20260408`
-  - **Progress:** 0%
-  - **Assignee:** Brunella
-  - **Updated:** 2026-04-08T00:00:00.000Z
-  - Mappa: ./tracks/ai_agent_daily_briefing_20260408/
 
 
 ### Brunella rendszer (4)
@@ -380,7 +373,7 @@
 
 ---
 
-## Archivalt (Archived) (185)
+## Archivalt (Archived) (186)
 
 > Archived tracks are hidden by default. View in `conductor/archive/`
 
@@ -415,7 +408,7 @@
 - [x] **Revenue Acceleration — archival alias** (2026-02-27)
 - [x] **Type Safety Follow-up — Browser and Wrangler helpers** (2026-04-07)
 
-### Nova asszisztens (17)
+### Nova asszisztens (18)
 
 - [x] **Cloudflare API Token Jogosultság Bővítés**
 - [x] **Cloudflare R2 Object Storage Aktiválás**
@@ -434,6 +427,7 @@
 - [x] **AI Recommendation System Integration** (2026-02-17T22:45:00Z)
 - [x] **Developer Live Studio research** (2026-03-01)
 - [x] **Innovation Bridge - Cross-Industry Knowledge Transfer** (2026-02-24T01:27:00Z)
+- [x] **Napi AI Agent Összefoglaló Pipeline** (2026-04-10T19:10:00.000Z)
 
 ### Brunella rendszer (76)
 
