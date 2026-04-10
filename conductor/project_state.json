@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-04-10T20:19:51.204Z",
+  "lastUpdated": "2026-04-10T20:50:41.182Z",
   "tracks": [
     {
       "id": "agent_instability_chaos_testing_20260410",
@@ -1384,29 +1384,6 @@
       "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\system_wide_zero_mock_20260301",
       "_isArchived": true
-    },
-    {
-      "id": "test_cadence_optimization_20260401",
-      "name": "Push teszt cadence optimalizáció",
-      "status": "completed",
-      "priority": "medium",
-      "progress": 100,
-      "created": "2026-04-01T00:00:00.000Z",
-      "updated": "2026-04-01T02:40:00.000Z",
-      "completed": "2026-04-01T02:40:00.000Z",
-      "assignee": "Copilot",
-      "tags": [
-        "husky",
-        "hooks",
-        "ci",
-        "vitest",
-        "developer-experience",
-        "github-actions"
-      ],
-      "dependencies": [],
-      "group": "brunella",
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\test_cadence_optimization_20260401",
-      "_isArchived": false
     },
     {
       "id": "toura_local_dev_20260408",
@@ -4955,6 +4932,29 @@
       "_isArchived": true
     },
     {
+      "id": "test_cadence_optimization_20260401",
+      "name": "Push teszt cadence optimalizáció",
+      "status": "archived",
+      "priority": "medium",
+      "progress": 100,
+      "created": "2026-04-01T00:00:00.000Z",
+      "updated": "2026-04-10T20:50:00.000Z",
+      "completed": "2026-04-10T20:50:00.000Z",
+      "assignee": "Copilot",
+      "tags": [
+        "husky",
+        "hooks",
+        "ci",
+        "vitest",
+        "developer-experience",
+        "github-actions"
+      ],
+      "dependencies": [],
+      "group": "brunella",
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\test_cadence_optimization_20260401",
+      "_isArchived": true
+    },
+    {
       "id": "test_infrastructure_stabilization_20260325",
       "name": "Test Infrastructure Stabilization",
       "status": "archived",
@@ -5219,8 +5219,8 @@
   "stats": {
     "total": 246,
     "active": 30,
-    "completed": 23,
-    "archived": 191,
+    "completed": 22,
+    "archived": 192,
     "proposed": 2
   }
 }

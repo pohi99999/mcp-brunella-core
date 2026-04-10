@@ -33,9 +33,9 @@ jobs:
           cd myai
           pip install -r requirements.txt
 
-      # 3. Run Tests (includes build via package.json)
-      - name: Run Tests
-        run: npm test
+      # 3. Run quick validation on push/PR; full suite runs in daily-full-tests.yml
+      - name: Run Fast Validation
+        run: npm run test:fast
         env:
           WEB_UI_ENABLED: '0'
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}

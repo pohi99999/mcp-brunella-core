@@ -4,12 +4,14 @@
   "name": "Push teszt cadence optimalizáció",
   "type": "Developer Experience / CI / Hooks",
   "priority": "MEDIUM",
-  "status": "COMPLETED",
+  "status": "archived",
   "progress": 100,
   "assignee": "Copilot",
   "createdAt": "2026-04-01T00:00:00.000Z",
-  "updatedAt": "2026-04-01T02:40:00.000Z",
-  "completedAt": "2026-04-01T02:40:00.000Z",
+  "updatedAt": "2026-04-10T20:50:00.000Z",
+  "completedAt": "2026-04-10T20:50:00.000Z",
+  "archivedAt": "2026-04-10T20:50:00.000Z",
+  "archiveReason": "The local pre-push hook, the main CI workflow, and the Phoenix Protocol push/PR workflow now all use the fast validation profile, while the full npm test suite remains isolated to the scheduled daily-full-tests workflow; no follow-up track is required.",
   "goal": "A pushoknál csak gyors alaptesztek fussanak, miközben a teljes Node.js tesztkör napi egyszer scheduled workflow-ban fusson le.",
   "relatedTracks": [
     "precommit_hook_optimization_20260325"
