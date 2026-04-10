@@ -368,6 +368,16 @@ User requested that the Copilot CLI automatically connect to a local Brunella MC
 
 **Megjegyzés:** A teszt most fake system time-ot állít be (`2026-04-08T12:00:00Z`), így a windowHours-szűrés determinisztikus marad; validáció: `npx vitest run test/phoenixInsights.test.ts` (5/5).
 
+### 2026-04-10 21:11 - Daily AI Agent Briefing stale-active track archiválása
+
+**Feladat:** Az `ai_agent_daily_briefing_20260408` track verifikálása és lezárása, mert a teljes feature-lánc (agent + service + API + dashboard + CLI + scheduler + registry) már implementálva volt, de a conductor még aktívként tartotta nyilván.
+
+**Érintett fájlok:** `conductor/tracks/ai_agent_daily_briefing_20260408/meta.json` → `conductor/archive/ai_agent_daily_briefing_20260408/meta.json`, `conductor/archive/ai_agent_daily_briefing_20260408/plan.md`, `conductor/archive/ai_agent_daily_briefing_20260408/spec.md`, `conductor/tracks.md`, `conductor/project_state.json`, `.ai/copilot.md`, `.ai/FOSZAL.md`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** Validáció: `npx vitest run test/briefingService.test.ts` (9/9), `npx vitest run --config vitest.dashboard.config.ts src/dashboard/components/dashboard/AIAgentBriefingPanel.test.tsx` (8/8), továbbá a teljes `npm run test:fast` zöld. Follow-up track nem szükséges, ezért archiváltam.
+
 **Érintett fájlok:** `src/agents/SpecWriterAgent.ts`, `test/specWriterAgent.test.ts`, `conductor/tracks/type_safety_enforcement_20260404/plan.md`
 
 **Státusz:** ✅ Befejezve
