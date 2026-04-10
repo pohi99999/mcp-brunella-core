@@ -378,6 +378,16 @@ User requested that the Copilot CLI automatically connect to a local Brunella MC
 
 **Megjegyzés:** Validáció: `npx vitest run test/briefingService.test.ts` (9/9), `npx vitest run --config vitest.dashboard.config.ts src/dashboard/components/dashboard/AIAgentBriefingPanel.test.tsx` (8/8), továbbá a teljes `npm run test:fast` zöld. Follow-up track nem szükséges, ezért archiváltam.
 
+### 2026-04-10 21:16 - Phoenix + Data Flywheel observability completed-track archiválása
+
+**Feladat:** A `phoenix_data_flywheel_observability_20260408` completed-but-not-archived track lezárása és archiválása, mivel a tool/CLI/dashboard rétegek és a kapcsolódó tesztek ténylegesen készen állnak.
+
+**Érintett fájlok:** `conductor/tracks/phoenix_data_flywheel_observability_20260408/meta.json` → `conductor/archive/phoenix_data_flywheel_observability_20260408/meta.json`, `conductor/archive/phoenix_data_flywheel_observability_20260408/plan.md`, `conductor/archive/phoenix_data_flywheel_observability_20260408/spec.md`, `conductor/tracks.md`, `conductor/project_state.json`, `.ai/copilot.md`, `.ai/FOSZAL.md`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** Validáció: `npx vitest run test/phoenixInsights.test.ts test/dataFlywheelMetrics.test.ts test/observabilityCommands.test.ts` (16/16). Follow-up track nem szükséges; a completed állapotból archive-ba került.
+
 **Érintett fájlok:** `src/agents/SpecWriterAgent.ts`, `test/specWriterAgent.test.ts`, `conductor/tracks/type_safety_enforcement_20260404/plan.md`
 
 **Státusz:** ✅ Befejezve
