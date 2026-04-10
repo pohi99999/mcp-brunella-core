@@ -1,10 +1,10 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-04-10T19:11:45.066Z
+**Utolso frissites:** 2026-04-10T19:16:51.644Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 243 total | 27 active | 28 completed | 186 archived
+**Stats:** 243 total | 27 active | 27 completed | 187 archived
 **Csoportok:** Könyvelés / üzleti automatizálás: 53 | Nova asszisztens: 24 | Brunella rendszer: 95 | Egyéb: 71
 
 ---
@@ -232,7 +232,7 @@
 
 ---
 
-## Befejezett (Completed - Not Archived) (28)
+## Befejezett (Completed - Not Archived) (27)
 
 ### Könyvelés / üzleti automatizálás (14)
 
@@ -304,7 +304,7 @@
   - Mappa: ./tracks/kkv_project_task_automation_20260404/
 
 
-### Brunella rendszer (13)
+### Brunella rendszer (12)
 
 - [x] **Agent Runtime Hardening — ReAct, Working Memory, Tool Errors, Guardrails**
   - **ID:** `agent_runtime_hardening_20260406`
@@ -332,10 +332,6 @@
 - [x] **Mission Templates & Test Cadence DevEx Optimization**
   - **ID:** `mission_templates_test_cadence_devex_20260408`
   - Mappa: ./tracks/mission_templates_test_cadence_devex_20260408/
-
-- [x] **Phoenix + Data Flywheel Observability & Self-Healing**
-  - **ID:** `phoenix_data_flywheel_observability_20260408`
-  - Mappa: ./tracks/phoenix_data_flywheel_observability_20260408/
 
 - [x] **Type Safety Enforcement — any elimináció és Type Guard implementáció**
   - **ID:** `type_safety_enforcement_20260404`
@@ -373,7 +369,7 @@
 
 ---
 
-## Archivalt (Archived) (186)
+## Archivalt (Archived) (187)
 
 > Archived tracks are hidden by default. View in `conductor/archive/`
 
@@ -429,7 +425,7 @@
 - [x] **Innovation Bridge - Cross-Industry Knowledge Transfer** (2026-02-24T01:27:00Z)
 - [x] **Napi AI Agent Összefoglaló Pipeline** (2026-04-10T19:10:00.000Z)
 
-### Brunella rendszer (76)
+### Brunella rendszer (77)
 
 - [x] **BAS Átfogó Tesztprotokol** (2026-02-16T15:05:00Z)
 - [x] **Brunella Core Stabilization** (2026-04-04)
@@ -473,6 +469,7 @@
 - [x] **Learning Loop — Reflex Model Registry** (2026-03-29)
 - [x] **Logging Audit — console.log elimináció és Logger standardizálás** (2026-04-05T00:00:00Z)
 - [x] **OWL-inspirált Multi-Agent Conflict Resolution (AgentCoordinator)** (2026-03-28)
+- [x] **Phoenix + Data Flywheel Observability & Self-Healing** (2026-04-08T23:59:59.000Z)
 - [x] **README Bootstrap & Health Fixek** (2026-03-25)
 - [x] **Robotkéz Stabilizáció & Gemini 2.0** (2026-02-12T00:00:00Z)
 - [x] **RobotkezV2 Comet-szintű Upgrade — Önjavító Multi-Agent Browser** (2026-03-25)

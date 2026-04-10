@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-04-10T19:11:45.066Z",
+  "lastUpdated": "2026-04-10T19:16:51.644Z",
   "tracks": [
     {
       "id": "agent_runtime_hardening_20260406",
@@ -1239,28 +1239,6 @@
       "group": "business",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\personal_assistant_windows_mvp_20260323",
       "_isArchived": true
-    },
-    {
-      "id": "phoenix_data_flywheel_observability_20260408",
-      "name": "Phoenix + Data Flywheel Observability & Self-Healing",
-      "status": "completed",
-      "priority": "high",
-      "progress": 100,
-      "created": "2026-04-08",
-      "updated": "2026-04-08",
-      "assignee": "GitHub Copilot",
-      "tags": [
-        "phoenix",
-        "observability",
-        "self-healing",
-        "metrics",
-        "flywheel",
-        "telemetry"
-      ],
-      "dependencies": [],
-      "group": "brunella",
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\phoenix_data_flywheel_observability_20260408",
-      "_isArchived": false
     },
     {
       "id": "pohanka_freelancer_terjeszkedes_20260408",
@@ -4309,6 +4287,29 @@
       "_isArchived": true
     },
     {
+      "id": "phoenix_data_flywheel_observability_20260408",
+      "name": "Phoenix + Data Flywheel Observability & Self-Healing",
+      "status": "archived",
+      "priority": "high",
+      "progress": 100,
+      "created": "2026-04-08",
+      "updated": "2026-04-10",
+      "completed": "2026-04-08T23:59:59.000Z",
+      "assignee": "GitHub Copilot",
+      "tags": [
+        "phoenix",
+        "observability",
+        "self-healing",
+        "metrics",
+        "flywheel",
+        "telemetry"
+      ],
+      "dependencies": [],
+      "group": "brunella",
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\phoenix_data_flywheel_observability_20260408",
+      "_isArchived": true
+    },
+    {
       "id": "phoenix_protocol_v2_20260205",
       "name": "Phoenix Protocol v2 - Öngyógyító Rendszer",
       "status": "archived",
@@ -5158,8 +5159,8 @@
   "stats": {
     "total": 243,
     "active": 27,
-    "completed": 28,
-    "archived": 186,
+    "completed": 27,
+    "archived": 187,
     "proposed": 2
   }
 }
