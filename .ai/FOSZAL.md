@@ -1,6 +1,6 @@
 # FŐSZÁL - Egyesített Fejlesztési Napló
 
-**Generálva:** 2026-04-10 22:05
+**Generálva:** 2026-04-10 22:20
 **Script:** `scripts/sync_foszal.py`
 
 ---
@@ -29,6 +29,11 @@ start-full.bat
 ## Összesített Napló (Időrendben)
 
 ### 2026-04-10
+
+#### 22:19 - [Copilot] KKV CRM ingest foundation completed-track archiválása
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `conductor/tracks/kkv_crm_ingest_foundation_20260405/meta.json` → `conductor/archive/kkv_crm_ingest_foundation_20260405/meta.json`, `conductor/archive/kkv_crm_ingest_foundation_20260405/plan.md`, `conductor/archive/kkv_crm_ingest_foundation_20260405/spec.md`, `conductor/tracks.md`, `conductor/project_state.json`, `.ai/copilot.md`, `.ai/FOSZAL.md`
 
 #### 22:04 - [Copilot] VSCode auto-build track tényleges befejezése és archiválása
 - **Agent:** Copilot
@@ -1189,7 +1194,7 @@ start-full.bat
 | Claude | 89 | 2026-04-09 |
 | Gemini | 1 | 2026-04-08 |
 | Cursor | 0 | N/A |
-| Copilot | 117 | 2026-04-09 |
+| Copilot | 118 | 2026-04-09 |
 
 ---
 

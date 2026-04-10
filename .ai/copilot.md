@@ -418,6 +418,16 @@ User requested that the Copilot CLI automatically connect to a local Brunella MC
 
 **Megjegyzés:** Validáció: PowerShell `ConvertFrom-Json` sikeresen parse-olta a `.vscode/tasks.json` és `.vscode/launch.json` fájlokat, és a task/launch listák már tartalmazzák az auto-build, manual build, `test:fast`, ESLint, debug start és attach elemeket. Follow-up track nem szükséges.
 
+### 2026-04-10 22:19 - KKV CRM ingest foundation completed-track archiválása
+
+**Feladat:** A `kkv_crm_ingest_foundation_20260405` completed státuszú CRM foundation track újraverifikálása és archiválása. A delivery-lead subagent ezt jelölte ki a következő alacsony blast-radiusú, dependency nélküli closure-jelöltnek.
+
+**Érintett fájlok:** `conductor/tracks/kkv_crm_ingest_foundation_20260405/meta.json` → `conductor/archive/kkv_crm_ingest_foundation_20260405/meta.json`, `conductor/archive/kkv_crm_ingest_foundation_20260405/plan.md`, `conductor/archive/kkv_crm_ingest_foundation_20260405/spec.md`, `conductor/tracks.md`, `conductor/project_state.json`, `.ai/copilot.md`, `.ai/FOSZAL.md`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** Validáció: `npx vitest run test/unit/kkvCrm.service.test.ts test/integration/crm.ingest.integration.test.ts test/crmLead.test.ts` → 10/10 zöld. A normalizálás, dedupe, ingest route és follow-up foundation együtt validált, follow-up track nem szükséges.
+
 **Érintett fájlok:** `src/agents/SpecWriterAgent.ts`, `test/specWriterAgent.test.ts`, `conductor/tracks/type_safety_enforcement_20260404/plan.md`
 
 **Státusz:** ✅ Befejezve
