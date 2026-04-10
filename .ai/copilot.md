@@ -358,6 +358,16 @@ User requested that the Copilot CLI automatically connect to a local Brunella MC
 
 **Megjegyzés:** A route most már role-gate-et és high-risk approval flow-t is tartalmaz; validáció: `npx vitest run test/anythingllmActions.test.ts` (9/9) és `npm run build` zöld. Nem kellett follow-up track.
 
+### 2026-04-10 20:56 - phoenixInsights pre-push időfüggő teszt stabilizálása
+
+**Feladat:** A `git push` közben elbukó `test/phoenixInsights.test.ts` regresszió javítása, amely a hardcoded 2026-04-08 fixture időbélyegei és a valós `Date.now()` driftje miatt ürítette ki a timeline ablakot.
+
+**Érintett fájlok:** `test/phoenixInsights.test.ts`, `.ai/copilot.md`, `.ai/FOSZAL.md`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A teszt most fake system time-ot állít be (`2026-04-08T12:00:00Z`), így a windowHours-szűrés determinisztikus marad; validáció: `npx vitest run test/phoenixInsights.test.ts` (5/5).
+
 **Érintett fájlok:** `src/agents/SpecWriterAgent.ts`, `test/specWriterAgent.test.ts`, `conductor/tracks/type_safety_enforcement_20260404/plan.md`
 
 **Státusz:** ✅ Befejezve

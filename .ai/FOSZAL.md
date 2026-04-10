@@ -1,6 +1,6 @@
 # FŐSZÁL - Egyesített Fejlesztési Napló
 
-**Generálva:** 2026-04-10 20:44
+**Generálva:** 2026-04-10 20:56
 **Script:** `scripts/sync_foszal.py`
 
 ---
@@ -29,6 +29,11 @@ start-full.bat
 ## Összesített Napló (Időrendben)
 
 ### 2026-04-10
+
+#### 20:56 - [Copilot] phoenixInsights pre-push időfüggő teszt stabilizálása
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `test/phoenixInsights.test.ts`, `.ai/copilot.md`, `.ai/FOSZAL.md`
 
 #### 20:42 - [Copilot] VIKTORIAVARGA brand voice foundation archival validation
 - **Agent:** Copilot
@@ -1159,7 +1164,7 @@ start-full.bat
 | Claude | 89 | 2026-04-09 |
 | Gemini | 1 | 2026-04-08 |
 | Cursor | 0 | N/A |
-| Copilot | 111 | 2026-04-09 |
+| Copilot | 112 | 2026-04-09 |
 
 ---
 

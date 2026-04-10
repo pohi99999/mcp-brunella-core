@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 vi.mock('../src/tools/dataFlywheelMetrics.js', () => ({
   buildDataFlywheelMetricsSnapshot: vi.fn(),
@@ -135,7 +135,13 @@ function buildFlywheelSnapshot(overrides: Record<string, unknown> = {}) {
 
 describe('buildPhoenixFlywheelObservabilitySnapshot', () => {
   beforeEach(() => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-04-08T12:00:00.000Z'));
     vi.clearAllMocks();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
   });
 
   it('builds a healthy combined snapshot', async () => {
