@@ -1,10 +1,10 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-04-10T20:19:51.204Z
+**Utolso frissites:** 2026-04-10T20:50:41.182Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 246 total | 30 active | 23 completed | 191 archived
+**Stats:** 246 total | 30 active | 22 completed | 192 archived
 **Csoportok:** Könyvelés / üzleti automatizálás: 53 | Nova asszisztens: 24 | Brunella rendszer: 96 | Egyéb: 73
 
 ---
@@ -250,7 +250,7 @@
 
 ---
 
-## Befejezett (Completed - Not Archived) (23)
+## Befejezett (Completed - Not Archived) (22)
 
 ### Könyvelés / üzleti automatizálás (13)
 
@@ -317,7 +317,7 @@
   - Mappa: ./tracks/kkv_project_task_automation_20260404/
 
 
-### Brunella rendszer (9)
+### Brunella rendszer (8)
 
 - [x] **Agent Runtime Hardening — ReAct, Working Memory, Tool Errors, Guardrails**
   - **ID:** `agent_runtime_hardening_20260406`
@@ -350,11 +350,6 @@
   - **ID:** `mcp_sync_config_20260403`
   - Mappa: ./tracks/mcp_sync_config_20260403/
 
-- [x] **Push teszt cadence optimalizáció**
-  - **ID:** `test_cadence_optimization_20260401`
-  - **Completed:** 2026-04-01T02:40:00.000Z
-  - Mappa: ./tracks/test_cadence_optimization_20260401/
-
 - [x] **Windows Bridge Health Check Endpoint**
   - **ID:** `windows_bridge_health_20260403`
   - Mappa: ./tracks/windows_bridge_health_20260403/
@@ -370,7 +365,7 @@
 
 ---
 
-## Archivalt (Archived) (191)
+## Archivalt (Archived) (192)
 
 > Archived tracks are hidden by default. View in `conductor/archive/`
 
@@ -427,7 +422,7 @@
 - [x] **Innovation Bridge - Cross-Industry Knowledge Transfer** (2026-02-24T01:27:00Z)
 - [x] **Napi AI Agent Összefoglaló Pipeline** (2026-04-10T19:10:00.000Z)
 
-### Brunella rendszer (80)
+### Brunella rendszer (81)
 
 - [x] **BAS Átfogó Tesztprotokol** (2026-02-16T15:05:00Z)
 - [x] **Brunella Core Stabilization** (2026-04-04)
@@ -500,6 +495,7 @@
 - [x] **Orchestrator Cognition Upgrade — Magyar társalgó + rendszerérzékelés** (2026-03-20)
 - [x] **Phoenix Protocol v2 - Öngyógyító Rendszer** (2026-02-16T16:20:00Z)
 - [x] **Pre-commit Hook Optimalizáció** (2026-03-30T15:30:00.000Z)
+- [x] **Push teszt cadence optimalizáció** (2026-04-10T20:50:00.000Z)
 - [x] **Robotkez browser chat research** (2026-03-01)
 - [x] **Robotkéz n8n Sandbox és Edzésterv** (2026-02-12)
 - [x] **Startup Smoke Test** (2026-03-30T15:30:00.000Z)
