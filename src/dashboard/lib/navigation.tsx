@@ -109,6 +109,7 @@ import { ProjectExplorer } from "@/components/dashboard/ProjectExplorer";
 import { AIAgentBriefingPanel } from "@/components/dashboard/AIAgentBriefingPanel";
 import { AnythingLLMActionBridgePanel } from "@/components/dashboard/AnythingLLMActionBridgePanel";
 import { logInfo } from "@/utils/logger";
+import { CONDUCTOR_MONITOR_NAV, PROJECT_MGMT_NAV_GROUP } from "./navigationContract.js";
 
 const LazyEnterpriseAnalyticsWidget = React.lazy( async () =>
 {
@@ -196,7 +197,7 @@ export function initializeNavigation ()
     { id: "test-cadence-devex", label: "Test Cadence", icon: Gauge, component: <TestPlanPanel /> },
     { id: "decomposer", label: "Decompose", icon: Layers, component: <TaskDecomposerPanel /> },
     { id: "tracks", label: "Track generátor", icon: History, component: <TrackGenerator /> },
-    { id: "conductor-monitor", label: "Trackek állapota", icon: ClipboardList, component: <ConductorTracksMonitor /> },
+    { id: CONDUCTOR_MONITOR_NAV.id, label: CONDUCTOR_MONITOR_NAV.label, icon: ClipboardList, component: <ConductorTracksMonitor /> },
     { id: "incubator", label: "Incubator", icon: FlaskConical, component: <IncubatorPanel /> },
     { id: "knowledge", label: "Neural Knowledge", icon: Brain, component: <KnowledgeBasePanel /> },
     { id: "memory", label: "Agent Memory", icon: Database, component: <MemoryPanel /> },
@@ -211,7 +212,7 @@ export function initializeNavigation ()
       label: "Enterprise Analytics",
       icon: BarChart3,
       component: (
-        <Suspense fallback={ <div className="p-4 text-sm text-zinc-400">Enterprise Analytics betöltése...</div> }>
+        <Suspense fallback={<div className="p-4 text-sm text-zinc-400">Enterprise Analytics betöltése...</div>}>
           <LazyEnterpriseAnalyticsWidget />
         </Suspense>
       ),
@@ -254,10 +255,10 @@ export function initializeNavigation ()
     { id: "settings", label: "System Config", icon: Settings, component: <SettingsPanel /> },
     { id: "guardrails", label: "Guardrails", icon: ShieldAlert, component: <GuardrailsPanel /> },
     { id: "telemetry", label: "Telemetria", icon: Gauge, component: <TelemetryPanel /> },
-    { id: "chrome-acp", label: "Chrome ACP", icon: Code2, component: <EmbeddedWorkflow title="Chrome ACP Browser" url="http://localhost:9315" icon={ <Code2 size={ 20 } /> } allowSameOrigin={ true } /> },
-    { id: "n8n", label: "n8n Automation", icon: Workflow, component: <EmbeddedWorkflow title="n8n Automation" url="http://localhost:5678" icon={ <Workflow size={ 20 } /> } /> },
-    { id: "langflow", label: "Langflow Orchestration", icon: Sparkles, component: <EmbeddedWorkflow title="Langflow Orchestration" url="http://localhost:3000" icon={ <Sparkles size={ 20 } /> } /> },
-    { id: "vscode", label: "VSCode Stream", icon: Code2, component: <EmbeddedWorkflow title="VSCode — Brunella Workspace" url="http://localhost:8080" icon={ <Code2 size={ 20 } /> } allowSameOrigin={ true } /> },
+    { id: "chrome-acp", label: "Chrome ACP", icon: Code2, component: <EmbeddedWorkflow title="Chrome ACP Browser" url="http://localhost:9315" icon={<Code2 size={20} />} allowSameOrigin={true} /> },
+    { id: "n8n", label: "n8n Automation", icon: Workflow, component: <EmbeddedWorkflow title="n8n Automation" url="http://localhost:5678" icon={<Workflow size={20} />} /> },
+    { id: "langflow", label: "Langflow Orchestration", icon: Sparkles, component: <EmbeddedWorkflow title="Langflow Orchestration" url="http://localhost:3000" icon={<Sparkles size={20} />} /> },
+    { id: "vscode", label: "VSCode Stream", icon: Code2, component: <EmbeddedWorkflow title="VSCode — Brunella Workspace" url="http://localhost:8080" icon={<Code2 size={20} />} allowSameOrigin={true} /> },
     { id: "swarm-panel", label: "Swarm Intelligence", icon: Users, component: <SwarmPanel /> },
     { id: "tool-discovery", label: "Tool Discovery", icon: Wrench, component: <ToolDiscoveryPanel /> },
     { id: "security-panel", label: "Security Monitor", icon: Shield, component: <SecurityPanel /> },
@@ -296,7 +297,7 @@ export function initializeNavigation ()
   navigationRegistry.registerGroup( { title: "Értékesítési Központ", icon: DollarSign, items: ["trojan-horse", "lead-monitor", "demo-factory", "showcase", "campaign-studio", "leads-master", "innovation-bridge", "invoice-sync", "bookkeeping", "finance-reconciliation", "kp-penztar", "lead-mining", "marketwatcher", "inventory"] } );
   navigationRegistry.registerGroup( { title: "KKV Pack", icon: PackageSearch, items: ["kkv-pack"] } );
   navigationRegistry.registerGroup( { title: "Orchestration", icon: Rocket, items: ["cean", "cloudflare", "fleet_manager", "autonomy", "tasks", "workflow-engine", "swarm-panel", "tool-discovery", "tools-manager", "crawl4ai", "harvest-pipeline"] } );
-  navigationRegistry.registerGroup( { title: "Project Mgmt", icon: FileText, items: ["conductor-monitor", "tracks", "suggested-tasks", "spec-manager", "tests", "docs-config-sot", "config-health", "mission-devex", "test-cadence-devex"] } );
+  navigationRegistry.registerGroup( { title: PROJECT_MGMT_NAV_GROUP.title, icon: FileText, items: [...PROJECT_MGMT_NAV_GROUP.items] } );
   navigationRegistry.registerGroup( { title: "System", icon: Settings, items: ["python-workers", "files", "guardrails", "telemetry", "llm-observability", "security-panel", "chrome-acp", "settings", "n8n", "langflow", "remote-console", "admin-check", "trace-viewer", "log-viewer", "audit-log", "hook-monitor", "model-router", "scheduled-tasks", "vector-stats"] } );
 
   logInfo( "NavigationRegistry", "Navigation Registry Initialized." );

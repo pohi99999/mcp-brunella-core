@@ -1,10 +1,10 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-04-10T19:23:23.214Z
+**Utolso frissites:** 2026-04-10T19:48:24.709Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 243 total | 27 active | 26 completed | 188 archived
+**Stats:** 243 total | 27 active | 25 completed | 189 archived
 **Csoportok:** Könyvelés / üzleti automatizálás: 53 | Nova asszisztens: 24 | Brunella rendszer: 95 | Egyéb: 71
 
 ---
@@ -232,7 +232,7 @@
 
 ---
 
-## Befejezett (Completed - Not Archived) (26)
+## Befejezett (Completed - Not Archived) (25)
 
 ### Könyvelés / üzleti automatizálás (14)
 
@@ -304,7 +304,7 @@
   - Mappa: ./tracks/kkv_project_task_automation_20260404/
 
 
-### Brunella rendszer (11)
+### Brunella rendszer (10)
 
 - [x] **Agent Runtime Hardening — ReAct, Working Memory, Tool Errors, Guardrails**
   - **ID:** `agent_runtime_hardening_20260406`
@@ -324,10 +324,6 @@
   - **ID:** `copilot_self_improvement_loop_20260406`
   - **Completed:** 2026-04-06
   - Mappa: ./tracks/copilot_self_improvement_loop_20260406/
-
-- [x] **Dashboard conductor monitor láthatósági javítás**
-  - **ID:** `dashboard_conductor_monitor_visibility_20260406`
-  - Mappa: ./tracks/dashboard_conductor_monitor_visibility_20260406/
 
 - [x] **Type Safety Enforcement — any elimináció és Type Guard implementáció**
   - **ID:** `type_safety_enforcement_20260404`
@@ -365,7 +361,7 @@
 
 ---
 
-## Archivalt (Archived) (188)
+## Archivalt (Archived) (189)
 
 > Archived tracks are hidden by default. View in `conductor/archive/`
 
@@ -421,7 +417,7 @@
 - [x] **Innovation Bridge - Cross-Industry Knowledge Transfer** (2026-02-24T01:27:00Z)
 - [x] **Napi AI Agent Összefoglaló Pipeline** (2026-04-10T19:10:00.000Z)
 
-### Brunella rendszer (78)
+### Brunella rendszer (79)
 
 - [x] **BAS Átfogó Tesztprotokol** (2026-02-16T15:05:00Z)
 - [x] **Brunella Core Stabilization** (2026-04-04)
@@ -447,6 +443,7 @@
 - [x] **Cloudflare Workers Migration — 16 Agent Edge Orkesztrátor**
 - [x] **Codex NeuralLink Chat Refactor** (2026-02-13T18:00:00Z)
 - [x] **Dashboard Cockpit Redesign + Stabilization** (2026-04-01T17:25:00.000Z)
+- [x] **Dashboard conductor monitor láthatósági javítás** (2026-04-06T23:59:59.000Z)
 - [x] **Dashboard Komplett Tesztsorozat** (2026-02-12T10:30:00Z)
 - [x] **Dashboard V2 Robotkéz Control** (2026-02-12)
 - [x] **Documentation-Code Auto-Sync** (2026-03-30T15:30:00.000Z)

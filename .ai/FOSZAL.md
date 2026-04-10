@@ -1,6 +1,6 @@
 # FŐSZÁL - Egyesített Fejlesztési Napló
 
-**Generálva:** 2026-04-10 21:23
+**Generálva:** 2026-04-10 21:48
 **Script:** `scripts/sync_foszal.py`
 
 ---
@@ -29,6 +29,11 @@ start-full.bat
 ## Összesített Napló (Időrendben)
 
 ### 2026-04-10
+
+#### 21:48 - [Copilot] Dashboard conductor monitor visibility completed-track archiválása és timeout-regresszió javítása
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `src/dashboard/lib/navigationContract.ts`, `src/dashboard/lib/navigation.tsx`, `src/dashboard/lib/navigation.contract.test.ts`, `conductor/tracks/dashboard_conductor_monitor_visibility_20260406/meta.json` → `conductor/archive/dashboard_conductor_monitor_visibility_20260406/meta.json`, `conductor/archive/dashboard_conductor_monitor_visibility_20260406/plan.md`, `conductor/archive/dashboard_conductor_monitor_visibility_20260406/spec.md`, `conductor/tracks.md`, `conductor/project_state.json`, `.ai/copilot.md`, `.ai/FOSZAL.md`
 
 #### 21:23 - [Copilot] Mission Templates & Test Cadence DevEx completed-track archiválása
 - **Agent:** Copilot
@@ -1179,7 +1184,7 @@ start-full.bat
 | Claude | 89 | 2026-04-09 |
 | Gemini | 1 | 2026-04-08 |
 | Cursor | 0 | N/A |
-| Copilot | 115 | 2026-04-09 |
+| Copilot | 116 | 2026-04-09 |
 
 ---
 
