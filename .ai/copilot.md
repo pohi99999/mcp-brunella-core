@@ -388,6 +388,16 @@ User requested that the Copilot CLI automatically connect to a local Brunella MC
 
 **Megjegyzés:** Validáció: `npx vitest run test/phoenixInsights.test.ts test/dataFlywheelMetrics.test.ts test/observabilityCommands.test.ts` (16/16). Follow-up track nem szükséges; a completed állapotból archive-ba került.
 
+### 2026-04-10 21:23 - Mission Templates & Test Cadence DevEx completed-track archiválása
+
+**Feladat:** A `mission_templates_test_cadence_devex_20260408` completed státuszú, de még nem archivált track lezárása a mission template-ek, mission planner és test cadence advisor teljes verifikációja után.
+
+**Érintett fájlok:** `conductor/tracks/mission_templates_test_cadence_devex_20260408/meta.json` → `conductor/archive/mission_templates_test_cadence_devex_20260408/meta.json`, `conductor/archive/mission_templates_test_cadence_devex_20260408/plan.md`, `conductor/archive/mission_templates_test_cadence_devex_20260408/spec.md`, `conductor/tracks.md`, `conductor/project_state.json`, `.ai/copilot.md`, `.ai/FOSZAL.md`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** Validáció: `npx vitest run test/missionPlanner.test.ts test/testCadenceAdvisor.test.ts test/smoke-phase4.vitest.ts` (24/24) és `npx vitest run --config vitest.dashboard.config.ts src/dashboard/components/dashboard/MissionPlannerPanel.test.tsx src/dashboard/components/dashboard/TestPlanPanel.test.tsx` (4/4). Follow-up track nem szükséges.
+
 **Érintett fájlok:** `src/agents/SpecWriterAgent.ts`, `test/specWriterAgent.test.ts`, `conductor/tracks/type_safety_enforcement_20260404/plan.md`
 
 **Státusz:** ✅ Befejezve
