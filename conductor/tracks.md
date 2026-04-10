@@ -1,10 +1,10 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-04-10T21:13:21.216Z
+**Utolso frissites:** 2026-04-10T23:00:00.354Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 246 total | 30 active | 21 completed | 193 archived
+**Stats:** 246 total | 28 active | 22 completed | 194 archived
 **Csoportok:** Könyvelés / üzleti automatizálás: 53 | Nova asszisztens: 24 | Brunella rendszer: 96 | Egyéb: 73
 
 ---
@@ -28,7 +28,7 @@
 
 ---
 
-## Aktiv Szalak (Active) (30)
+## Aktiv Szalak (Active) (28)
 
 ### Könyvelés / üzleti automatizálás (11)
 
@@ -158,9 +158,9 @@
 
 - [ ] **L5 Hook Engine — Az Autonóm Idegrendszer** [CRITICAL]
   - **ID:** `l5_hook_engine_20260410`
-  - **Progress:** 0%
+  - **Progress:** 20%
   - **Assignee:** Claude
-  - **Updated:** 2026-04-10T00:00:00.000Z
+  - **Updated:** 2026-04-11T00:00:00.000Z
   - Mappa: ./tracks/l5_hook_engine_20260410/
 
 - [ ] **p-search** [HIGH]
@@ -184,33 +184,21 @@
   - **Updated:** 2026-04-06
   - Mappa: ./tracks/modular_state_refactor_20260404/
 
-- [ ] **Swarm Orchestration Chat (ClawSwarm)** [MEDIUM]
+- [x] **Swarm Orchestration Chat (ClawSwarm)** [MEDIUM]
   - **ID:** `swarm_orchestration_chat_20260410`
-  - **Progress:** 0%
+  - **Progress:** 100%
   - **Assignee:** Brunella Orchestrator
   - Mappa: ./tracks/swarm_orchestration_chat_20260410/
 
 
-### Egyéb (8)
+### Egyéb (6)
 
 - [ ] **L5 Event Store + Outbox — Garantált Memória & Üzenetküldés** [CRITICAL]
   - **ID:** `l5_event_store_outbox_20260410`
-  - **Progress:** 0%
+  - **Progress:** 20%
   - **Assignee:** Claude
-  - **Updated:** 2026-04-10T00:00:00.000Z
+  - **Updated:** 2026-04-11T00:00:00.000Z
   - Mappa: ./tracks/l5_event_store_outbox_20260410/
-
-- [ ] **Agent Instability Chaos Testing (Chaeos-env)** [HIGH]
-  - **ID:** `agent_instability_chaos_testing_20260410`
-  - **Progress:** 0%
-  - **Assignee:** Brunella Orchestrator
-  - Mappa: ./tracks/agent_instability_chaos_testing_20260410/
-
-- [ ] **Agent Security Sandbox (IPI Defense)** [HIGH]
-  - **ID:** `agent_security_ipi_defense_20260410`
-  - **Progress:** 0%
-  - **Assignee:** Brunella Orchestrator
-  - Mappa: ./tracks/agent_security_ipi_defense_20260410/
 
 - [ ] **P-Search n8n Pipeline - palyazat- es hitelkereso workflow-k** [HIGH]
   - **ID:** `n8n_psearch_pipeline_20260404`
@@ -250,7 +238,7 @@
 
 ---
 
-## Befejezett (Completed - Not Archived) (21)
+## Befejezett (Completed - Not Archived) (22)
 
 ### Könyvelés / üzleti automatizálás (12)
 
@@ -312,7 +300,7 @@
   - Mappa: ./tracks/kkv_project_task_automation_20260404/
 
 
-### Brunella rendszer (8)
+### Brunella rendszer (7)
 
 - [x] **Agent Runtime Hardening — ReAct, Working Memory, Tool Errors, Guardrails**
   - **ID:** `agent_runtime_hardening_20260406`
@@ -345,12 +333,18 @@
   - **ID:** `mcp_sync_config_20260403`
   - Mappa: ./tracks/mcp_sync_config_20260403/
 
-- [x] **Windows Bridge Health Check Endpoint**
-  - **ID:** `windows_bridge_health_20260403`
-  - Mappa: ./tracks/windows_bridge_health_20260403/
 
+### Egyéb (3)
 
-### Egyéb (1)
+- [x] **Agent Instability Chaos Testing (Chaeos-env)**
+  - **ID:** `agent_instability_chaos_testing_20260410`
+  - **Completed:** 2026-04-10T22:45:00Z
+  - Mappa: ./tracks/agent_instability_chaos_testing_20260410/
+
+- [x] **Agent Security Sandbox (IPI Defense)**
+  - **ID:** `agent_security_ipi_defense_20260410`
+  - **Completed:** 2026-04-10T22:55:00Z
+  - Mappa: ./tracks/agent_security_ipi_defense_20260410/
 
 - [x] **P-Sales20260327**
   - **ID:** `P-Sales20260327`
@@ -360,7 +354,7 @@
 
 ---
 
-## Archivalt (Archived) (193)
+## Archivalt (Archived) (194)
 
 > Archived tracks are hidden by default. View in `conductor/archive/`
 
@@ -418,7 +412,7 @@
 - [x] **Innovation Bridge - Cross-Industry Knowledge Transfer** (2026-02-24T01:27:00Z)
 - [x] **Napi AI Agent Összefoglaló Pipeline** (2026-04-10T19:10:00.000Z)
 
-### Brunella rendszer (81)
+### Brunella rendszer (82)
 
 - [x] **BAS Átfogó Tesztprotokol** (2026-02-16T15:05:00Z)
 - [x] **Brunella Core Stabilization** (2026-04-04)
@@ -498,6 +492,7 @@
 - [x] **Task Decomposer Agent (Mikro-Ügynök Orchestrator)** (2026-02-13)
 - [x] **Technical Debt Cleanup — TODO konverzió és elavult kód elimináció** (2026-04-07)
 - [x] **Universal Orchestrator Chat Upgrade (Dashboard + CLI)** (2026-03-20)
+- [x] **Windows Bridge Health Check Endpoint** (2026-04-03)
 - [x] **Zero-Prompt Core — Slack/Discord/Email Jóváhagyás** (2026-03-29)
 - [x] **Cloudflare Analytics Engine Egyedi Metrikák**
 - [x] **VSCode Auto-Build Task (TypeScript watch)** (2026-04-03T23:59:59.000Z)

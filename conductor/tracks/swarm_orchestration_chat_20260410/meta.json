@@ -1,0 +1,17 @@
+{
+  "id": "swarm_orchestration_chat_20260410",
+  "name": "Swarm Orchestration Chat (ClawSwarm)",
+  "status": "COMPLETED",
+  "priority": "MEDIUM",
+  "created_at": "2026-04-10T12:00:00Z",
+  "completed_at": "2026-04-10T23:05:00Z",
+  "owner": "Brunella Orchestrator",
+  "tags": ["orchestration", "swarm-intelligence", "collaboration", "multi-agent"],
+  "progress": 100,
+  "phases": [
+    { "name": "SwarmManager Alapok", "status": "COMPLETED" },
+    { "name": "Ügynök Protokoll Frissítés", "status": "COMPLETED" },
+    { "name": "Dashboard & Vizualizáció", "status": "COMPLETED" },
+    { "name": "EPP v2 CLI & Demo", "status": "COMPLETED" }
+  ]
+}

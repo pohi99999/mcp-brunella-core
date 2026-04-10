@@ -1,0 +1,17 @@
+{
+  "id": "agent_security_ipi_defense_20260410",
+  "name": "Agent Security Sandbox (IPI Defense)",
+  "status": "COMPLETED",
+  "priority": "HIGH",
+  "created_at": "2026-04-10T12:00:00Z",
+  "completed_at": "2026-04-10T22:55:00Z",
+  "owner": "Brunella Orchestrator",
+  "tags": ["security", "ipi-defense", "llm-armor", "benchmark"],
+  "progress": 100,
+  "phases": [
+    { "name": "llm_client.ts Védelmi Réteg", "status": "COMPLETED" },
+    { "name": "Security Benchmark Kialakítása", "status": "COMPLETED" },
+    { "name": "Cloudflare Edge Integráció", "status": "COMPLETED" },
+    { "name": "EPP v2 Dashboard & CLI", "status": "COMPLETED" }
+  ]
+}

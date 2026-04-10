@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { swarmManager } from '../../agents/AgentManager.js';
 import { logInfo, logError } from '../../utils/logger.js';
 import { listCheckpoints, getCheckpointStats } from '../../core/swarm/colonyPersistence.js';
+import { globalSwarmChatManager } from "../../core/SwarmChatManager.js";
 
 const swarmRouter = Router();
 
@@ -56,7 +57,33 @@ swarmRouter.post('/dispatch', async (req, res) => {
   }
 });
 
-export { swarmRouter };
+// --- Raj Chat Endpoints (ClawSwarm) ---
+
+/**
+ * GET /api/v1/swarm/sessions
+ * Kilistázza az összes raj chat munkamenetet.
+ */
+swarmRouter.get("/sessions", (_req, res) => {
+  const sessions = globalSwarmChatManager.listSessions();
+  res.json({
+    success: true,
+    sessions
+  });
+});
+
+/**
+ * POST /api/v1/swarm/create
+ * Új raj munkamenet létrehozása.
+ */
+swarmRouter.post("/create", (req, res) => {
+  const { objective, participants } = req.body;
+  if (!objective || !participants) {
+    return res.status(400).json({ error: "objective and participants required" });
+  }
+
+  const session = globalSwarmChatManager.createSession(objective, participants);
+  res.json({ success: true, session });
+});
 
 // --- Additional Routes: Checkpoint endpoints (Track #5) ---
 
@@ -87,3 +114,5 @@ swarmRouter.get('/checkpoints', async (req, res) => {
     return res.status(500).json({ error });
   }
 });
+
+export { swarmRouter };

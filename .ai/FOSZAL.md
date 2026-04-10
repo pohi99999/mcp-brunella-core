@@ -1,6 +1,6 @@
 # FŐSZÁL - Egyesített Fejlesztési Napló
 
-**Generálva:** 2026-04-10 23:14
+**Generálva:** 2026-04-11 01:13
 **Script:** `scripts/sync_foszal.py`
 
 ---
@@ -29,6 +29,11 @@ start-full.bat
 ## Összesített Napló (Időrendben)
 
 ### 2026-04-10
+
+#### 23:30 - [Gemini] Research Integration (Chaos, Security, Swarm)
+- **Agent:** Gemini
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** src/utils/chaos_injector.ts, src/core/SwarmChatManager.ts, src/core/llm_client.ts, src/agents/AgentManager.ts, src/agents/EvaluatorAgent.ts, src/server/routes/chaos.ts, src/server/routes/swarm.ts, src/cli/commands/chaos-hu.ts, src/cli/commands/security-hu.ts, src/cli/commands/swarm-hu.ts, src/interactive.ts, README.md, conductor/tracks.md
 
 #### 22:19 - [Copilot] KKV CRM ingest foundation completed-track archiválása
 - **Agent:** Copilot
@@ -1202,7 +1207,7 @@ start-full.bat
 | Agent | Bejegyzések | Utolsó Aktivitás |
 |-------|-------------|------------------|
 | Claude | 89 | 2026-04-09 |
-| Gemini | 1 | 2026-04-08 |
+| Gemini | 2 | 2026-04-08 |
 | Cursor | 0 | N/A |
 | Copilot | 120 | 2026-04-09 |
 

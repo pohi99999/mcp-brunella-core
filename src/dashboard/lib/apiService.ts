@@ -4089,3 +4089,44 @@ export async function getAnythingLLMActionAudit(
   );
   return safeJson<{ records: AnythingLLMActionAuditRecord[]; total: number }>(response);
 }
+
+// ── Chaos Mode API ────────────────────────────────────────────────────────
+
+export interface ChaosStatus {
+  enabled: boolean;
+  probability: number;
+  types: string[];
+  maxDelayMs: number;
+}
+
+export async function getChaosStatus(): Promise<ChaosStatus> {
+  const response = await fetchWithTimeout(`${API_BASE}/api/v1/chaos/status`);
+  if (!response.ok) throw new Error(`Chaos status: HTTP ${response.status}`);
+  return safeJson<ChaosStatus>(response);
+}
+
+export async function toggleChaosMode(config: Partial<ChaosStatus>): Promise<{ success: boolean; status: ChaosStatus }> {
+  const response = await fetchWithTimeout(`${API_BASE}/api/v1/chaos/toggle`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(config),
+  });
+  if (!response.ok) throw new Error(`Chaos toggle: HTTP ${response.status}`);
+  return safeJson<{ success: boolean; status: ChaosStatus }>(response);
+}
+
+// ── Swarm Mode API ────────────────────────────────────────────────────────
+
+export interface SwarmSession {
+  id: string;
+  objective: string;
+  participants: string[];
+  status: 'active' | 'resolved' | 'failed';
+}
+
+export async function getSwarmSessions(): Promise<SwarmSession[]> {
+  const response = await fetchWithTimeout(`${API_BASE}/api/v1/swarm/sessions`);
+  if (!response.ok) return [];
+  const data = await response.json();
+  return data.sessions || [];
+}
