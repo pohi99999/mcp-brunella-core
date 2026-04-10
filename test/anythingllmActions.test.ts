@@ -2,13 +2,35 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import request from 'supertest';
 import express from 'express';
 
-const { delegateMock } = vi.hoisted(() => {
+const { delegateMock, requestApprovalMock, getRequestMock, checkPermissionMock } = vi.hoisted(() => {
   const delegateMock = vi.fn().mockResolvedValue({ message: 'OK' });
-  return { delegateMock };
+  const requestApprovalMock = vi.fn().mockResolvedValue('approval-123');
+  const getRequestMock = vi.fn();
+  const checkPermissionMock = vi.fn(() => ({
+    allowed: true,
+    agent: 'InvoiceAutomation',
+    action: 'read_file',
+    reason: 'Permission granted',
+    profile: 'READONLY',
+  }));
+  return { delegateMock, requestApprovalMock, getRequestMock, checkPermissionMock };
 });
 
 vi.mock('../src/agents/AgentManager.js', () => ({
   agentManager: { delegate: delegateMock }
+}));
+
+vi.mock('../src/utils/approvalManager.js', () => ({
+  approvalManager: {
+    requestApproval: requestApprovalMock,
+    getRequest: getRequestMock,
+  },
+}));
+
+vi.mock('../src/core/rbac/agentPermissions.js', () => ({
+  getEnhancedPermissionManager: () => ({
+    checkPermission: checkPermissionMock,
+  }),
 }));
 
 vi.mock('../src/utils/logger.js', () => ({
@@ -28,6 +50,14 @@ describe('AnythingLLM Action Routes', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     process.env.BRUNELLA_ACTION_SECRET = 'test-secret';
+    checkPermissionMock.mockImplementation((agentName: string, action: string) => ({
+      allowed: true,
+      agent: agentName,
+      action,
+      reason: 'Permission granted',
+      profile: agentName === 'Orchestrator' ? 'ADMIN' : 'READONLY',
+    }));
+    getRequestMock.mockReturnValue(undefined);
   });
 
   it('returns 401 without secret header', async () => {
@@ -69,24 +99,77 @@ describe('AnythingLLM Action Routes', () => {
     expect(delegateMock).toHaveBeenCalledWith('InvoiceAutomation', 'Process emails', {});
   });
 
-  it('flags browser_task as high risk', async () => {
+  it('blocks high-risk actions for non-admin role', async () => {
     const app = await buildApp();
     const res = await request(app)
       .post('/')
       .set('X-Brunella-Secret', 'test-secret')
+      .set('X-Brunella-Role', 'operator')
       .send({ action: 'browser_task', payload: { task: 'Navigate somewhere' } });
-    expect(res.status).toBe(200);
-    expect(res.body.riskLevel).toBe('high');
+    expect(res.status).toBe(403);
+    expect(res.body.requiredRole).toBe('admin');
+    expect(delegateMock).not.toHaveBeenCalled();
   });
 
-  it('flags agent_start as high risk', async () => {
+  it('requests approval before high-risk execution', async () => {
     const app = await buildApp();
     const res = await request(app)
       .post('/')
       .set('X-Brunella-Secret', 'test-secret')
+      .set('X-Brunella-Role', 'admin')
       .send({ action: 'agent_start', payload: { task: 'Start agent' } });
+    expect(res.status).toBe(202);
+    expect(res.body.approvalRequired).toBe(true);
+    expect(res.body.approvalId).toBe('approval-123');
+    expect(requestApprovalMock).toHaveBeenCalledTimes(1);
+    expect(delegateMock).not.toHaveBeenCalled();
+  });
+
+  it('executes high-risk action after approval', async () => {
+    getRequestMock.mockReturnValue({
+      id: 'approval-123',
+      status: 'approved',
+      metadata: { action: 'browser_task', agent: 'RobotkezV2' },
+    });
+
+    const app = await buildApp();
+    const res = await request(app)
+      .post('/')
+      .set('X-Brunella-Secret', 'test-secret')
+      .set('X-Brunella-Role', 'admin')
+      .send({
+        action: 'browser_task',
+        approvalId: 'approval-123',
+        payload: { task: 'Navigate somewhere' },
+      });
+
     expect(res.status).toBe(200);
     expect(res.body.riskLevel).toBe('high');
+    expect(res.body.role).toBe('admin');
+    expect(delegateMock).toHaveBeenCalledWith('RobotkezV2', 'Navigate somewhere', {});
+  });
+
+  it('rejects unresolved approval tokens', async () => {
+    getRequestMock.mockReturnValue({
+      id: 'approval-123',
+      status: 'pending',
+      metadata: { action: 'agent_start', agent: 'Orchestrator' },
+    });
+
+    const app = await buildApp();
+    const res = await request(app)
+      .post('/')
+      .set('X-Brunella-Secret', 'test-secret')
+      .set('X-Brunella-Role', 'admin')
+      .send({
+        action: 'agent_start',
+        approvalId: 'approval-123',
+        payload: { task: 'Start agent' },
+      });
+
+    expect(res.status).toBe(409);
+    expect(res.body.approvalStatus).toBe('pending');
+    expect(delegateMock).not.toHaveBeenCalled();
   });
 
   it('returns audit log with executed records', async () => {

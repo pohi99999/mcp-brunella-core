@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-04-09T03:04:08.311Z",
+  "lastUpdated": "2026-04-10T18:42:46.030Z",
   "tracks": [
     {
       "id": "agent_runtime_hardening_20260406",
@@ -81,29 +81,6 @@
       "dependencies": [],
       "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\autogen_github_models_pilot_20260401",
-      "_isArchived": false
-    },
-    {
-      "id": "brunella-anythingllm-desktop-integration",
-      "name": "Brunella–AnythingLLM Desktop Integration",
-      "status": "active",
-      "priority": "high",
-      "progress": 0,
-      "created": "2026-04-09T01:50:00+02:00",
-      "updated": "2026-04-09T03:00:00+02:00",
-      "assignee": "copilot",
-      "tags": [
-        "anythingllm",
-        "desktop",
-        "brunella",
-        "api",
-        "mcp",
-        "rag",
-        "ui"
-      ],
-      "dependencies": [],
-      "group": "nova",
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\brunella-anythingllm-desktop-integration",
       "_isArchived": false
     },
     {
@@ -691,6 +668,295 @@
       "_isArchived": false
     },
     {
+      "id": "l5_daily_financial_pulse_20260410",
+      "name": "L5 Napi Pénzügyi Pulzus — 08:00 Automatikus Briefing",
+      "status": "active",
+      "priority": "high",
+      "progress": 0,
+      "created": "2026-04-10T00:00:00.000Z",
+      "updated": "2026-04-10T00:00:00.000Z",
+      "assignee": "Claude",
+      "tags": [
+        "daily-briefing",
+        "cron",
+        "financial",
+        "tts",
+        "cash-flow",
+        "nav",
+        "l5",
+        "kkv"
+      ],
+      "dependencies": [
+        "l5_hook_engine_20260410",
+        "ai_agent_daily_briefing_20260408"
+      ],
+      "group": "business",
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\l5_daily_financial_pulse_20260410",
+      "_isArchived": false
+    },
+    {
+      "id": "l5_ethical_governance_20260410",
+      "name": "L5 Etikai & Governance Réteg — A Rendszer Lelkiismerete",
+      "status": "active",
+      "priority": "medium",
+      "progress": 0,
+      "created": "2026-04-10T00:00:00.000Z",
+      "updated": "2026-04-10T00:00:00.000Z",
+      "assignee": "Claude",
+      "tags": [
+        "ethics",
+        "governance",
+        "gdpr",
+        "audit-trail",
+        "kill-switch",
+        "compliance",
+        "l5",
+        "safety"
+      ],
+      "dependencies": [
+        "l5_hook_engine_20260410",
+        "l5_event_store_outbox_20260410"
+      ],
+      "group": "other",
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\l5_ethical_governance_20260410",
+      "_isArchived": false
+    },
+    {
+      "id": "l5_event_store_outbox_20260410",
+      "name": "L5 Event Store + Outbox — Garantált Memória & Üzenetküldés",
+      "status": "active",
+      "priority": "critical",
+      "progress": 0,
+      "created": "2026-04-10T00:00:00.000Z",
+      "updated": "2026-04-10T00:00:00.000Z",
+      "assignee": "Claude",
+      "tags": [
+        "event-sourcing",
+        "outbox",
+        "dlq",
+        "sqlite",
+        "audit-trail",
+        "l5",
+        "foundation"
+      ],
+      "dependencies": [
+        "l5_hook_engine_20260410"
+      ],
+      "group": "other",
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\l5_event_store_outbox_20260410",
+      "_isArchived": false
+    },
+    {
+      "id": "l5_hook_engine_20260410",
+      "name": "L5 Hook Engine — Az Autonóm Idegrendszer",
+      "status": "active",
+      "priority": "critical",
+      "progress": 0,
+      "created": "2026-04-10T00:00:00.000Z",
+      "updated": "2026-04-10T00:00:00.000Z",
+      "assignee": "Claude",
+      "tags": [
+        "hook-engine",
+        "event-driven",
+        "policy-pattern",
+        "circuit-breaker",
+        "dlq",
+        "l5",
+        "foundation"
+      ],
+      "dependencies": [],
+      "group": "brunella",
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\l5_hook_engine_20260410",
+      "_isArchived": false
+    },
+    {
+      "id": "l5_invoice_zerotouchl_20260410",
+      "name": "L5 Zero-Touch Számla Pipeline — Teljes Automatizáció",
+      "status": "active",
+      "priority": "high",
+      "progress": 0,
+      "created": "2026-04-10T00:00:00.000Z",
+      "updated": "2026-04-10T00:00:00.000Z",
+      "assignee": "Claude",
+      "tags": [
+        "invoice",
+        "automation",
+        "ocr",
+        "nav",
+        "gmail",
+        "saga",
+        "zero-touch",
+        "l5",
+        "kkv"
+      ],
+      "dependencies": [
+        "l5_hook_engine_20260410",
+        "l5_event_store_outbox_20260410",
+        "invoice_automation_20260326"
+      ],
+      "group": "business",
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\l5_invoice_zerotouchl_20260410",
+      "_isArchived": false
+    },
+    {
+      "id": "l5_memory_architecture_20260410",
+      "name": "L5 4-Szintű Memória Architektúra — FourLayerMemory",
+      "status": "active",
+      "priority": "high",
+      "progress": 0,
+      "created": "2026-04-10T00:00:00.000Z",
+      "updated": "2026-04-10T00:00:00.000Z",
+      "assignee": "Claude",
+      "tags": [
+        "memory",
+        "lancedb",
+        "sqlite",
+        "golden-dataset",
+        "fine-tuning",
+        "rag",
+        "l5",
+        "learning"
+      ],
+      "dependencies": [
+        "l5_event_store_outbox_20260410",
+        "brunella_reflection_continual_learning_20260402"
+      ],
+      "group": "nova",
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\l5_memory_architecture_20260410",
+      "_isArchived": false
+    },
+    {
+      "id": "l5_multitenant_platform_20260410",
+      "name": "L5 Multi-Tenant KKV Platform — Több Szervezet Egyidejű Kiszolgálása",
+      "status": "active",
+      "priority": "low",
+      "progress": 0,
+      "created": "2026-04-10T00:00:00.000Z",
+      "updated": "2026-04-10T00:00:00.000Z",
+      "assignee": "Claude",
+      "tags": [
+        "multi-tenant",
+        "platform",
+        "cloudflare-d1",
+        "isolation",
+        "saas",
+        "l5",
+        "productization"
+      ],
+      "dependencies": [
+        "l5_strategic_goal_engine_20260410",
+        "l5_ethical_governance_20260410",
+        "brunella_federation_phase5_20260402"
+      ],
+      "group": "business",
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\l5_multitenant_platform_20260410",
+      "_isArchived": false
+    },
+    {
+      "id": "l5_predictive_decision_20260410",
+      "name": "L5 PredictiveDecisionEngine — Jövő Szimulálása Monte Carlo",
+      "status": "active",
+      "priority": "low",
+      "progress": 0,
+      "created": "2026-04-10T00:00:00.000Z",
+      "updated": "2026-04-10T00:00:00.000Z",
+      "assignee": "Claude",
+      "tags": [
+        "prediction",
+        "simulation",
+        "monte-carlo",
+        "decision-support",
+        "roi",
+        "l5"
+      ],
+      "dependencies": [
+        "l5_strategic_goal_engine_20260410",
+        "l5_world_perception_20260410",
+        "l5_memory_architecture_20260410"
+      ],
+      "group": "other",
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\l5_predictive_decision_20260410",
+      "_isArchived": false
+    },
+    {
+      "id": "l5_self_modification_20260410",
+      "name": "L5 SelfModificationEngine — Sandbox Önfejlesztés",
+      "status": "active",
+      "priority": "medium",
+      "progress": 0,
+      "created": "2026-04-10T00:00:00.000Z",
+      "updated": "2026-04-10T00:00:00.000Z",
+      "assignee": "Claude",
+      "tags": [
+        "self-improvement",
+        "sandbox",
+        "agent-metrics",
+        "human-review",
+        "toml",
+        "l5"
+      ],
+      "dependencies": [
+        "l5_memory_architecture_20260410",
+        "brunella_reflection_continual_learning_20260402"
+      ],
+      "group": "other",
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\l5_self_modification_20260410",
+      "_isArchived": false
+    },
+    {
+      "id": "l5_strategic_goal_engine_20260410",
+      "name": "L5 StrategicGoalEngine — Önálló Célmeghatározás",
+      "status": "active",
+      "priority": "medium",
+      "progress": 0,
+      "created": "2026-04-10T00:00:00.000Z",
+      "updated": "2026-04-10T00:00:00.000Z",
+      "assignee": "Claude",
+      "tags": [
+        "strategic-goals",
+        "autonomous",
+        "planning",
+        "orchestrator",
+        "l5",
+        "self-directing"
+      ],
+      "dependencies": [
+        "l5_world_perception_20260410",
+        "l5_memory_architecture_20260410",
+        "l5_daily_financial_pulse_20260410"
+      ],
+      "group": "brunella",
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\l5_strategic_goal_engine_20260410",
+      "_isArchived": false
+    },
+    {
+      "id": "l5_world_perception_20260410",
+      "name": "L5 WorldPerceptionLayer — Folyamatos Külső Világ Figyelés",
+      "status": "active",
+      "priority": "medium",
+      "progress": 0,
+      "created": "2026-04-10T00:00:00.000Z",
+      "updated": "2026-04-10T00:00:00.000Z",
+      "assignee": "Claude",
+      "tags": [
+        "perception",
+        "world-model",
+        "rss",
+        "mnb",
+        "nav",
+        "market-intel",
+        "cron",
+        "l5"
+      ],
+      "dependencies": [
+        "l5_hook_engine_20260410",
+        "l5_memory_architecture_20260410"
+      ],
+      "group": "other",
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\l5_world_perception_20260410",
+      "_isArchived": false
+    },
+    {
       "id": "logistics_vertical_repo_local_20260407",
       "name": "Logistics Vertical — repository-local Brunella boundary",
       "status": "completed",
@@ -1265,28 +1531,6 @@
       "_isArchived": false
     },
     {
-      "id": "viktoria_brand_voice_20260408",
-      "name": "VIKTORIAVARGA brand voice foundation",
-      "status": "active",
-      "priority": "high",
-      "progress": 15,
-      "created": "2026-04-08",
-      "updated": "2026-04-08",
-      "assignee": "GitHub Copilot",
-      "tags": [
-        "viktoria",
-        "brand-voice",
-        "fashion",
-        "copywriting",
-        "premium",
-        "bilingual"
-      ],
-      "dependencies": [],
-      "group": "business",
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\viktoria_brand_voice_20260408",
-      "_isArchived": false
-    },
-    {
       "id": "viktoria_phygital_pipeline_20260408",
       "name": "VIKTORIAVARGA phygital pipeline",
       "status": "active",
@@ -1717,6 +1961,30 @@
       "dependencies": [],
       "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\browser_use_harvester_20260131",
+      "_isArchived": true
+    },
+    {
+      "id": "brunella-anythingllm-desktop-integration",
+      "name": "Brunella–AnythingLLM Desktop Integration",
+      "status": "archived",
+      "priority": "high",
+      "progress": 100,
+      "created": "2026-04-09T01:50:00+02:00",
+      "updated": "2026-04-10T20:41:00+02:00",
+      "completed": "2026-04-10T20:41:00+02:00",
+      "assignee": "copilot",
+      "tags": [
+        "anythingllm",
+        "desktop",
+        "brunella",
+        "api",
+        "mcp",
+        "rag",
+        "ui"
+      ],
+      "dependencies": [],
+      "group": "nova",
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\brunella-anythingllm-desktop-integration",
       "_isArchived": true
     },
     {
@@ -4745,6 +5013,29 @@
       "_isArchived": true
     },
     {
+      "id": "viktoria_brand_voice_20260408",
+      "name": "VIKTORIAVARGA brand voice foundation",
+      "status": "archived",
+      "priority": "high",
+      "progress": 100,
+      "created": "2026-04-08",
+      "updated": "2026-04-10",
+      "completed": "2026-04-10T20:42:00+02:00",
+      "assignee": "GitHub Copilot",
+      "tags": [
+        "viktoria",
+        "brand-voice",
+        "fashion",
+        "copywriting",
+        "premium",
+        "bilingual"
+      ],
+      "dependencies": [],
+      "group": "business",
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\viktoria_brand_voice_20260408",
+      "_isArchived": true
+    },
+    {
       "id": "zero_prompt_approval_router_20260329",
       "name": "Zero-Prompt Core — Approval Router",
       "status": "archived",
@@ -4864,10 +5155,10 @@
     }
   ],
   "stats": {
-    "total": 232,
-    "active": 19,
+    "total": 243,
+    "active": 28,
     "completed": 28,
-    "archived": 183,
+    "archived": 185,
     "proposed": 2
   }
 }

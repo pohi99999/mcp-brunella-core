@@ -6,6 +6,16 @@ User requested that the Copilot CLI automatically connect to a local Brunella MC
 
 ## History
 
+### 2026-04-09 05:34 - Dashboard launcher warmup + AnythingLLM hardening
+
+**Feladat:** A `dashboard.bat` javítása, hogy ne hasaljon el a C# MCP warmup build-lock helyzeten, és a dashboard-ready indulasi utvonalba az AnythingLLM Desktop ellenorzese/inditasa is bekeruljon.
+
+**Érintett fájlok:** `dashboard.bat`, `csharp-mcp-server/launch.ps1`, `.ai/copilot.md`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A C# warmup hiba oka az volt, hogy a `CsharpMcpServer.dll` mar futó `.NET Host` processzek altal lockolva volt; a `launch.ps1 -WarmupOnly` ezt most mar sikeres allapotkent kezeli, ha a binaris elerheto es a szerver mar fut. A `dashboard.bat` emellett kapott AnythingLLM Desktop processz-checket/inditast, Program Files-os Ollama fallbacket, frissitett lepesszamokat es bovitett hibalistazast a `csharp-mcp-warmup.log`-gal.
+
 ### 2026-04-09 05:20 - Hook security and replay hardening
 
 **Feladat:** A hook reviewbol jott GitHub webhook auth, lifecycle duplikacio es DLQ replay hibak javitasa, majd a regresszios hook/webhook tesztek lefuttatasa.
@@ -327,6 +337,26 @@ User requested that the Copilot CLI automatically connect to a local Brunella MC
 ### 2026-04-06 - SpecWriterAgent metadata guard slice
 
 **Feladat:** A `src/agents/SpecWriterAgent.ts` maradék `any` eltávolítása a metadata/blueprint normalizálásból, a track-generálás és blueprint-spec útvonal megtartásával.
+
+### 2026-04-10 20:42 - VIKTORIAVARGA brand voice foundation archival validation
+
+**Feladat:** A `viktoria_brand_voice_20260408` track valós implementációjának ellenőrzése, majd lezárása és archiválása, mert a conductor még aktívként tartotta a már elkészült foundation szeletet.
+
+**Érintett fájlok:** `conductor/archive/viktoria_brand_voice_20260408/meta.json`, `conductor/archive/viktoria_brand_voice_20260408/plan.md`, `conductor/archive/viktoria_brand_voice_20260408/spec.md`, `myai/agents/ViktoriaBrandVoice.toml`, `src/agents/registry.json`, `test/viktoriaBrandVoiceAgent.test.ts`, `conductor/project_state.json`, `conductor/tracks.md`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** Nem kellett új follow-up track, mert a foundation deliverable már kész volt, a későbbi brand capability-k pedig külön aktív subtrackekben folytatódnak.
+
+### 2026-04-10 20:41 - AnythingLLM integration hardening + archival closure
+
+**Feladat:** A `brunella-anythingllm-desktop-integration` track tényleges lezárása: a hiányzó RBAC/approval réteg beépítése az action bridge route-ba, a fókuszteszt kibővítése, majd a track archiválása.
+
+**Érintett fájlok:** `src/server/routes/anythingllmActions.ts`, `test/anythingllmActions.test.ts`, `src/dashboard/lib/apiService.ts`, `conductor/archive/brunella-anythingllm-desktop-integration/meta.json`, `conductor/archive/brunella-anythingllm-desktop-integration/plan.md`, `conductor/archive/brunella-anythingllm-desktop-integration/spec.md`, `conductor/archive/brunella-anythingllm-desktop-integration/README.md`, `conductor/project_state.json`, `conductor/tracks.md`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A route most már role-gate-et és high-risk approval flow-t is tartalmaz; validáció: `npx vitest run test/anythingllmActions.test.ts` (9/9) és `npm run build` zöld. Nem kellett follow-up track.
 
 **Érintett fájlok:** `src/agents/SpecWriterAgent.ts`, `test/specWriterAgent.test.ts`, `conductor/tracks/type_safety_enforcement_20260404/plan.md`
 
