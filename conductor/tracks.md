@@ -1,10 +1,10 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-04-10T20:50:41.182Z
+**Utolso frissites:** 2026-04-10T21:13:21.216Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 246 total | 30 active | 22 completed | 192 archived
+**Stats:** 246 total | 30 active | 21 completed | 193 archived
 **Csoportok:** Könyvelés / üzleti automatizálás: 53 | Nova asszisztens: 24 | Brunella rendszer: 96 | Egyéb: 73
 
 ---
@@ -250,9 +250,9 @@
 
 ---
 
-## Befejezett (Completed - Not Archived) (22)
+## Befejezett (Completed - Not Archived) (21)
 
-### Könyvelés / üzleti automatizálás (13)
+### Könyvelés / üzleti automatizálás (12)
 
 - [x] **KKV CRM es lead-utanakovetes automatizalas**
   - **ID:** `kkv_crm_automation_20260404`
@@ -267,11 +267,6 @@
 - [x] **KKV HR leave approvals**
   - **ID:** `kkv_hr_leave_approvals_20260405`
   - Mappa: ./tracks/kkv_hr_leave_approvals_20260405/
-
-- [x] **KKV HR leave wait/resume orchestration**
-  - **ID:** `kkv_hr_leave_wait_resume_20260407`
-  - **Completed:** 2026-04-07
-  - Mappa: ./tracks/kkv_hr_leave_wait_resume_20260407/
 
 - [x] **KKV HR timesheet es kultura automatizalas**
   - **ID:** `kkv_hr_timesheet_culture_20260405`
@@ -365,11 +360,11 @@
 
 ---
 
-## Archivalt (Archived) (192)
+## Archivalt (Archived) (193)
 
 > Archived tracks are hidden by default. View in `conductor/archive/`
 
-### Könyvelés / üzleti automatizálás (29)
+### Könyvelés / üzleti automatizálás (30)
 
 - [x] **Brunella teljes funkció- és tulajdonságmátrix dokumentáció** (2026-03-26)
 - [x] **Enterprise Suite Master - 14 Modulos Vállalati Irányító** (2026-02-17T21:15:00Z)
@@ -383,6 +378,7 @@
 - [x] **KKV CRM follow-up approval es reporting** (2026-04-05)
 - [x] **KKV CRM follow-up es routing** (2026-04-05)
 - [x] **KKV CRM ingest alapok** (2026-04-05)
+- [x] **KKV HR leave wait/resume orchestration** (2026-04-07)
 - [x] **KKV HR onboarding es provisioning** (2026-04-05T17:08:54.7826616Z)
 - [x] **KKV HR timesheet export and culture alerts** (2026-04-07)
 - [x] **Konyvelesi Phase 0 readiness** (2026-04-05T00:00:00Z)

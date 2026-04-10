@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-04-10T20:50:41.182Z",
+  "lastUpdated": "2026-04-10T21:13:21.216Z",
   "tracks": [
     {
       "id": "agent_instability_chaos_testing_20260410",
@@ -459,32 +459,6 @@
       ],
       "group": "business",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\kkv_hr_leave_approvals_20260405",
-      "_isArchived": false
-    },
-    {
-      "id": "kkv_hr_leave_wait_resume_20260407",
-      "name": "KKV HR leave wait/resume orchestration",
-      "status": "completed",
-      "priority": "high",
-      "progress": 100,
-      "created": "2026-04-07",
-      "updated": "2026-04-07",
-      "completed": "2026-04-07",
-      "assignee": "GitHub Copilot",
-      "tags": [
-        "kkv",
-        "hr",
-        "leave",
-        "approval",
-        "wait-resume",
-        "calendar",
-        "audit"
-      ],
-      "dependencies": [
-        "kkv_hr_leave_approvals_20260405"
-      ],
-      "group": "business",
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\kkv_hr_leave_wait_resume_20260407",
       "_isArchived": false
     },
     {
@@ -3547,6 +3521,32 @@
       "_isArchived": true
     },
     {
+      "id": "kkv_hr_leave_wait_resume_20260407",
+      "name": "KKV HR leave wait/resume orchestration",
+      "status": "archived",
+      "priority": "high",
+      "progress": 100,
+      "created": "2026-04-07",
+      "updated": "2026-04-10",
+      "completed": "2026-04-07",
+      "assignee": "GitHub Copilot",
+      "tags": [
+        "kkv",
+        "hr",
+        "leave",
+        "approval",
+        "wait-resume",
+        "calendar",
+        "audit"
+      ],
+      "dependencies": [
+        "kkv_hr_leave_approvals_20260405"
+      ],
+      "group": "business",
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\kkv_hr_leave_wait_resume_20260407",
+      "_isArchived": true
+    },
+    {
       "id": "kkv_hr_onboarding_provisioning_20260405",
       "name": "KKV HR onboarding es provisioning",
       "status": "archived",
@@ -5219,8 +5219,8 @@
   "stats": {
     "total": 246,
     "active": 30,
-    "completed": 22,
-    "archived": 192,
+    "completed": 21,
+    "archived": 193,
     "proposed": 2
   }
 }

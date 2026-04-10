@@ -1,6 +1,6 @@
 # FŐSZÁL - Egyesített Fejlesztési Napló
 
-**Generálva:** 2026-04-10 22:51
+**Generálva:** 2026-04-10 23:14
 **Script:** `scripts/sync_foszal.py`
 
 ---
@@ -54,6 +54,11 @@ start-full.bat
 - **Agent:** Copilot
 - **Státusz:** ✅ Befejezve
 - **Érintett fájlok:** `conductor/tracks/phoenix_data_flywheel_observability_20260408/meta.json` → `conductor/archive/phoenix_data_flywheel_observability_20260408/meta.json`, `conductor/archive/phoenix_data_flywheel_observability_20260408/plan.md`, `conductor/archive/phoenix_data_flywheel_observability_20260408/spec.md`, `conductor/tracks.md`, `conductor/project_state.json`, `.ai/copilot.md`, `.ai/FOSZAL.md`
+
+#### 21:14 - [Copilot] kkv_hr_leave_wait_resume archiválás
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** conductor/archive/kkv_hr_leave_wait_resume_20260407/meta.json, conductor/archive/kkv_hr_leave_wait_resume_20260407/plan.md, conductor/archive/kkv_hr_leave_wait_resume_20260407/spec.md, conductor/tracks.md, conductor/project_state.json
 
 #### 21:11 - [Copilot] Daily AI Agent Briefing stale-active track archiválása
 - **Agent:** Copilot
@@ -1199,7 +1204,7 @@ start-full.bat
 | Claude | 89 | 2026-04-09 |
 | Gemini | 1 | 2026-04-08 |
 | Cursor | 0 | N/A |
-| Copilot | 119 | 2026-04-09 |
+| Copilot | 120 | 2026-04-09 |
 
 ---
 
