@@ -398,6 +398,16 @@ User requested that the Copilot CLI automatically connect to a local Brunella MC
 
 **Megjegyzés:** Validáció: `npx vitest run test/missionPlanner.test.ts test/testCadenceAdvisor.test.ts test/smoke-phase4.vitest.ts` (24/24) és `npx vitest run --config vitest.dashboard.config.ts src/dashboard/components/dashboard/MissionPlannerPanel.test.tsx src/dashboard/components/dashboard/TestPlanPanel.test.tsx` (4/4). Follow-up track nem szükséges.
 
+### 2026-04-10 21:48 - Dashboard conductor monitor visibility completed-track archiválása és timeout-regresszió javítása
+
+**Feladat:** A `dashboard_conductor_monitor_visibility_20260406` track aktuális verifikációja közben a `src/dashboard/lib/navigation.contract.test.ts` timeouttal bukott, mert a teljes `navigation.tsx` importgráfot felhúzta. A regressziós szerződést könnyű, közös modulba emeltem, majd a tracket archiváltam.
+
+**Érintett fájlok:** `src/dashboard/lib/navigationContract.ts`, `src/dashboard/lib/navigation.tsx`, `src/dashboard/lib/navigation.contract.test.ts`, `conductor/tracks/dashboard_conductor_monitor_visibility_20260406/meta.json` → `conductor/archive/dashboard_conductor_monitor_visibility_20260406/meta.json`, `conductor/archive/dashboard_conductor_monitor_visibility_20260406/plan.md`, `conductor/archive/dashboard_conductor_monitor_visibility_20260406/spec.md`, `conductor/tracks.md`, `conductor/project_state.json`, `.ai/copilot.md`, `.ai/FOSZAL.md`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** Validáció: `npx vitest run --config vitest.dashboard.config.ts src/dashboard/lib/navigation.contract.test.ts` (1/1, 6 ms) és `npm run build:ui` zöld. Follow-up track nem szükséges; az archiválást a gyorsított contract-regresszióval együtt zártam le.
+
 **Érintett fájlok:** `src/agents/SpecWriterAgent.ts`, `test/specWriterAgent.test.ts`, `conductor/tracks/type_safety_enforcement_20260404/plan.md`
 
 **Státusz:** ✅ Befejezve

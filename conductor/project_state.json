@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-04-10T19:23:23.214Z",
+  "lastUpdated": "2026-04-10T19:48:24.709Z",
   "tracks": [
     {
       "id": "agent_runtime_hardening_20260406",
@@ -231,27 +231,6 @@
       ],
       "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\copilot_self_improvement_loop_20260406",
-      "_isArchived": false
-    },
-    {
-      "id": "dashboard_conductor_monitor_visibility_20260406",
-      "name": "Dashboard conductor monitor láthatósági javítás",
-      "status": "completed",
-      "priority": "high",
-      "progress": 100,
-      "created": "2026-04-06",
-      "updated": "2026-04-06",
-      "assignee": "GitHub Copilot",
-      "tags": [
-        "dashboard",
-        "conductor",
-        "tracks",
-        "navigation",
-        "i18n"
-      ],
-      "dependencies": [],
-      "group": "brunella",
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\dashboard_conductor_monitor_visibility_20260406",
       "_isArchived": false
     },
     {
@@ -1214,29 +1193,6 @@
       "dependencies": [],
       "group": "business",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\personal_assistant_windows_mvp_20260323",
-      "_isArchived": true
-    },
-    {
-      "id": "phoenix_data_flywheel_observability_20260408",
-      "name": "Phoenix + Data Flywheel Observability & Self-Healing",
-      "status": "archived",
-      "priority": "high",
-      "progress": 100,
-      "created": "2026-04-08",
-      "updated": "2026-04-10",
-      "completed": "2026-04-08T23:59:59.000Z",
-      "assignee": "GitHub Copilot",
-      "tags": [
-        "phoenix",
-        "observability",
-        "self-healing",
-        "metrics",
-        "flywheel",
-        "telemetry"
-      ],
-      "dependencies": [],
-      "group": "brunella",
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\phoenix_data_flywheel_observability_20260408",
       "_isArchived": true
     },
     {
@@ -2629,6 +2585,28 @@
       "dependencies": [],
       "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\dashboard_cockpit_redesign_20260401",
+      "_isArchived": true
+    },
+    {
+      "id": "dashboard_conductor_monitor_visibility_20260406",
+      "name": "Dashboard conductor monitor láthatósági javítás",
+      "status": "archived",
+      "priority": "high",
+      "progress": 100,
+      "created": "2026-04-06",
+      "updated": "2026-04-10",
+      "completed": "2026-04-06T23:59:59.000Z",
+      "assignee": "GitHub Copilot",
+      "tags": [
+        "dashboard",
+        "conductor",
+        "tracks",
+        "navigation",
+        "i18n"
+      ],
+      "dependencies": [],
+      "group": "brunella",
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\dashboard_conductor_monitor_visibility_20260406",
       "_isArchived": true
     },
     {
@@ -4311,6 +4289,29 @@
       "_isArchived": true
     },
     {
+      "id": "phoenix_data_flywheel_observability_20260408",
+      "name": "Phoenix + Data Flywheel Observability & Self-Healing",
+      "status": "archived",
+      "priority": "high",
+      "progress": 100,
+      "created": "2026-04-08",
+      "updated": "2026-04-10",
+      "completed": "2026-04-08T23:59:59.000Z",
+      "assignee": "GitHub Copilot",
+      "tags": [
+        "phoenix",
+        "observability",
+        "self-healing",
+        "metrics",
+        "flywheel",
+        "telemetry"
+      ],
+      "dependencies": [],
+      "group": "brunella",
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\phoenix_data_flywheel_observability_20260408",
+      "_isArchived": true
+    },
+    {
       "id": "phoenix_protocol_v2_20260205",
       "name": "Phoenix Protocol v2 - Öngyógyító Rendszer",
       "status": "archived",
@@ -5160,8 +5161,8 @@
   "stats": {
     "total": 243,
     "active": 27,
-    "completed": 26,
-    "archived": 188,
+    "completed": 25,
+    "archived": 189,
     "proposed": 2
   }
 }
