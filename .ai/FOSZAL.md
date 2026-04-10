@@ -1,6 +1,6 @@
 # FŐSZÁL - Egyesített Fejlesztési Napló
 
-**Generálva:** 2026-04-10 21:48
+**Generálva:** 2026-04-10 22:05
 **Script:** `scripts/sync_foszal.py`
 
 ---
@@ -29,6 +29,11 @@ start-full.bat
 ## Összesített Napló (Időrendben)
 
 ### 2026-04-10
+
+#### 22:04 - [Copilot] VSCode auto-build track tényleges befejezése és archiválása
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `.vscode/tasks.json`, `.vscode/launch.json`, `conductor/tracks/vscode_auto_build_20260403/meta.json` → `conductor/archive/vscode_auto_build_20260403/meta.json`, `conductor/archive/vscode_auto_build_20260403/plan.md`, `conductor/tracks.md`, `conductor/project_state.json`, `.ai/copilot.md`, `.ai/FOSZAL.md`
 
 #### 21:48 - [Copilot] Dashboard conductor monitor visibility completed-track archiválása és timeout-regresszió javítása
 - **Agent:** Copilot
@@ -1184,7 +1189,7 @@ start-full.bat
 | Claude | 89 | 2026-04-09 |
 | Gemini | 1 | 2026-04-08 |
 | Cursor | 0 | N/A |
-| Copilot | 116 | 2026-04-09 |
+| Copilot | 117 | 2026-04-09 |
 
 ---
 
