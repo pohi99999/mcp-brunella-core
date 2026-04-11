@@ -32,6 +32,9 @@ import {
   getOpenStocktakes,
   getValuationSummary,
   getMovementsByItem,
+  getItemById,
+  updateStocktakeStatus,
+  updatePurchaseOrderStatus,
 } from '../../utils/inventoryDb.js';
 import { InventoryFifoAgent } from '../../agents/InventoryFifoAgent.js';
 import { InventoryWacAgent } from '../../agents/InventoryWacAgent.js';
@@ -210,6 +213,7 @@ export function createInventoryRoutes(): Router {
       await logMovement({
         item_id: item.id,
         movement_type: 'SCRAP',
+        status: 'COMPLETED',
         quantity,
         reference,
         notes,
@@ -350,20 +354,22 @@ export function createInventoryRoutes(): Router {
   // ── POST /investigate-stocktake/:id — Leltáreltérés kivizsgálása ─────────────
   router.post('/investigate-stocktake/:id', async (req: Request, res: Response) => {
     try {
-      const { id } = req.params;
-      const { updateStocktakeStatus, getDb } = await import('../../utils/inventoryDb.js');
-      
-      const db = await (getDb as any)();
-      const stocktake = db.prepare('SELECT s.*, i.sku FROM inventory_stocktakes s JOIN inventory_items i ON s.item_id = i.id WHERE s.id = ?').get(id) as any;
-      
+      const id = normalizeRouteParam(req.params.id);
+
+      const stocktakes = await getOpenStocktakes();
+      const stocktake = stocktakes.find(s => s.id === id);
+
       if (!stocktake) {
         return res.status(404).json({ error: 'Leltár tétel nem található' });
       }
 
+      const inventoryItem = await getItemById(stocktake.item_id);
+      const sku = inventoryItem?.sku ?? stocktake.item_id;
+
       await updateStocktakeStatus(id, 'INVESTIGATING');
 
       const result = await reconAgent.execute(JSON.stringify({
-        sku: stocktake.sku,
+        sku,
         discrepancy_qty: stocktake.discrepancy,
         discrepancy_value: stocktake.discrepancy_value
       }));
@@ -449,12 +455,11 @@ export function createInventoryRoutes(): Router {
   // ── POST /approve-order/:id — PO Jóváhagyása ────────────────────────────────
   router.post('/approve-order/:id', async (req: Request, res: Response) => {
     try {
-      const id = req.params.id;
+      const id = normalizeRouteParam(req.params.id);
       const { approved_by } = req.body as { approved_by?: string };
 
       if (!id) return res.status(400).json({ error: 'ID kötelező' });
 
-      const { updatePurchaseOrderStatus } = await import('../../utils/inventoryDb.js');
       await updatePurchaseOrderStatus(id, 'APPROVED', approved_by ?? 'human_operator');
 
       logInfo('InventoryRoute', `PO jóváhagyva: ${id} (by: ${approved_by ?? 'operator'})`);
@@ -468,10 +473,9 @@ export function createInventoryRoutes(): Router {
   // ── POST /reject-order/:id — PO Elutasítása ────────────────────────────────
   router.post('/reject-order/:id', async (req: Request, res: Response) => {
     try {
-      const id = req.params.id;
+      const id = normalizeRouteParam(req.params.id);
       if (!id) return res.status(400).json({ error: 'ID kötelező' });
 
-      const { updatePurchaseOrderStatus } = await import('../../utils/inventoryDb.js');
       await updatePurchaseOrderStatus(id, 'CANCELLED');
 
       logInfo('InventoryRoute', `PO elutasítva: ${id}`);

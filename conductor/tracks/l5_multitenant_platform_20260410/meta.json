@@ -6,10 +6,24 @@
   "createdAt": "2026-04-11T00:00:00.000Z",
   "owner": "GitHub Copilot",
   "progress": 0,
-  "tags": ["kkv", "platform", "multi-tenant", "architecture", "tenant-isolation"],
+  "tags": [
+    "kkv",
+    "platform",
+    "multi-tenant",
+    "architecture",
+    "tenant-isolation"
+  ],
   "sourceDocument": "Conductor queue continuation after VIKTORIAVARGA archive",
   "phase": 1,
   "updated": "2026-04-11",
-  "dependencies": [],
-  "group": "business"
+  "dependencies": [
+    "modular_state_refactor_20260404"
+  ],
+  "group": "business",
+  "dod": {
+    "tests_pass": false,
+    "build_clean": false,
+    "code_committed": false,
+    "no_verify_used": false
+  }
 }
