@@ -3,6 +3,7 @@
 ## Fazisok
 
 ### 1. Ingestion es tudastar
+- ✅ External knowledge MVP: staged web + YouTube ingest, screened source tarolas, provisional knowledge card workflow, governance review queue, canonical-only RAG indexeles.
 - WF-NOVA-1 dokumentum ingest, chunkolas, embedding es vector store.
 - Metadata schema es kategoriazas kialakitasa.
 

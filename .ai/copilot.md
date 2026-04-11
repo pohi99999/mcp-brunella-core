@@ -6,6 +6,26 @@ User requested that the Copilot CLI automatically connect to a local Brunella MC
 
 ## History
 
+### 2026-04-11 10:40 - External knowledge staged canonicalization MVP
+
+**Feladat:** A `fejlesztesvideo.md` alapján a Brunella rendszerbe egy biztonságos, staged external knowledge pipeline MVP beépítése web + YouTube ingesttel, governance review queue-val, canonical-only RAG indexeléssel, valamint a hozzá tartozó REST/MCP/CLI felületek és tesztek alapjainak létrehozása.
+
+**Érintett fájlok:** `src/server/services/externalKnowledgeService.ts`, `src/server/routes/externalKnowledge.ts`, `src/tools/externalKnowledge.ts`, `src/cli/externalKnowledgeCommands.ts`, `src/server/routes/index.ts`, `src/server/registry.ts`, `src/cli.ts`, `test/externalKnowledgeService.test.ts`, `test/externalKnowledgeRoutes.test.ts`, `test/externalKnowledgeTool.test.ts`, `test/externalKnowledgeCommands.test.ts`, `docs/EXTERNAL_KNOWLEDGE_PIPELINE_MVP.md`, `.github/copilot-instructions.md`, `conductor/tracks/nova_knowledge_workflows_20260404/{meta.json,plan.md}`
+
+**Státusz:** ⏳ Folyamatban
+
+**Megjegyzés:** Az új slice most külön tárolja a staged source-okat/chunkokat és a knowledge cardokat; raw vagy screened internetes tartalom nem kerülhet közvetlenül a kanonikus retrieval indexbe. A RAG-ba csak `knowledge_card:<id>` prefixű, reviewer által canonical státuszra emelt kártyák indexelődnek. A GitHub push/merge még blokkolt, mert a lokális `main` már korábban is jóval `origin/main` előtt járt és a working tree erősen szennyezett, ezért a végső szállítás előtt külön óvatos git-stratégiára lesz szükség.
+
+### 2026-04-11 02:47 - Hook Engine devops phase validation
+
+**Feladat:** A `l5_hook_engine_20260410` track devops fázisának lefuttatása a jelenlegi repoállapot alapján: canonical hook SOT verifikáció, build/test readiness ellenőrzés, route/CLI/dashboard/test felületek dokumentálása, majd a track továbbléptetése coder fázisba.
+
+**Érintett fájlok:** `conductor/tracks/l5_hook_engine_20260410/phases/2-devops.md`, `conductor/tracks/l5_hook_engine_20260410/meta.json`, `.ai/copilot.md`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A canonical SOT továbbra is a `src/core/hookRegistry.ts` + builtin hook stack; a `npm run build` zöld, a fókuszált hook regressziós csomag (`test/hookRegistry.test.ts`, `test/hooksRoutes.test.ts`, `test/hooksCommands.test.ts`, `test/unit/eventStoreCommandBus.test.ts`, `test/unit/enterpriseCore.test.ts`) 30/30 PASS. Nem találtam devops blockert, ezért a track meta `coder` fázisra és 40%-os progressre lett léptetve. A generált conductor állapotot végül a `trackStateManager.fullSync()` runtime útvonallal szinkronizáltam, mert a CLI-s `conductor rescan` jelenleg egy különálló `swarm` duplikációs hibába fut.
+
 ### 2026-04-09 05:34 - Dashboard launcher warmup + AnythingLLM hardening
 
 **Feladat:** A `dashboard.bat` javítása, hogy ne hasaljon el a C# MCP warmup build-lock helyzeten, és a dashboard-ready indulasi utvonalba az AnythingLLM Desktop ellenorzese/inditasa is bekeruljon.
