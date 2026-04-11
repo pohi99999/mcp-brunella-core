@@ -1,359 +1,319 @@
-# AGENTS.md — Cloudflare Docs
+# CLAUDE.md
 
-This file helps AI agents understand the structure, tooling, and conventions of the `cloudflare-docs` repository so they can make correct, buildable changes.
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Repository overview
+> **Részletes architektúra, API-k:** `README.md`
+> **Copilot agent referencia:** `.github/copilot-instructions.md`
 
-This is the source for [developers.cloudflare.com](https://developers.cloudflare.com). It is an **Astro** site using the **Starlight** documentation framework. Content is authored in **MDX** (Markdown + JSX). The site is deployed as a Cloudflare Worker.
+## Projekt
 
-- **Node.js**: 22.x (pinned via Volta)
-- **Package manager**: npm (use `npm ci` to install)
-- **Primary branch**: `production` (not `main`)
+**Brunella Agent System (BAS)** — Hibrid Node.js/Python multi-agent rendszer, MCP protokoll.
+TypeScript ESM, Express 4, React 19, Ollama, Gemini, GitHub Models, FastAPI, Cloudflare Workers.
+Méret: 95+ agent, 53 MCP tool, 52 route fájl, ~55 dashboard panel, 6 SQLite DB, 5 LLM provider.
 
-## Directory structure
-
-```
-cloudflare-docs/
-├── src/
-│   ├── content/
-│   │   ├── docs/           # 5,400+ MDX pages — the user-facing documentation
-│   │   ├── partials/       # 1,200+ reusable MDX snippets (by product)
-│   │   ├── changelog/      # Product changelogs (by product subdirectory)
-│   │   ├── glossary/       # Glossary term definitions (YAML)
-│   │   ├── products/       # Product metadata (YAML, 135 files)
-│   │   └── ...             # Other data collections (plans, fields, models, etc.)
-│   ├── components/         # Custom Astro + React components
-│   │   ├── index.ts        # Central re-export barrel — all MDX imports come from here
-│   │   └── overrides/      # Starlight component overrides (Banner, Footer, Head, etc.)
-│   ├── schemas/            # Zod schemas for all content collections
-│   ├── plugins/            # Remark, Rehype, Starlight, and Expressive Code plugins
-│   ├── icons/              # Product SVG icons (~110)
-│   ├── assets/             # Processed images (optimized by Astro)
-│   ├── styles/             # CSS (Tailwind 4)
-│   ├── pages/              # Dynamic route pages (changelog, glossary, search)
-│   └── util/               # Shared utility functions
-├── public/                 # Static files served as-is (images, redirects, robots.txt)
-├── worker/                 # Cloudflare Worker for serving the site
-├── bin/                    # Build scripts and CI helpers
-│   └── fetch-skills.ts     # Downloads skills.tar.gz from middlecache, extracts to skills/
-├── skills/                 # Agent Skills served at /.well-known/skills/ — GENERATED, do not edit
-│                           # Fetched from https://middlecache.ced.cloudflare.com/v1/cloudflare-skills/skills.tar.gz
-│                           # by bin/fetch-skills.ts, which runs automatically via prebuild/predev hooks.
-│                           # skills/ is in .gitignore and is NOT committed to the repository.
-├── astro.config.ts         # Astro + Starlight configuration
-├── ec.config.mjs           # Expressive Code (syntax highlighting) configuration
-├── package.json
-└── tsconfig.json
-```
-
-## Content — writing and editing docs
-
-### File locations
-
-- Docs pages: `src/content/docs/{product}/`
-- Partials (reusable snippets): `src/content/partials/{product}/`
-- Images: `src/assets/images/{product}/`
-- Changelogs: `src/content/changelog/{product}/`
-
-Every folder must have an `index.mdx`. Filenames must be lowercase with dashes between words.
-
-### Allowed file types in `src/content/`
-
-Only `.mdx`, `.json`, `.yml`, `.yaml`, `.txt` files are allowed. The CI will reject anything else. Images must go in `src/assets/images/`, not in `src/content/`.
-
-### Frontmatter
-
-All docs pages require frontmatter. Key fields:
-
-```yaml
 ---
-title: Page Title # Required
-description: SEO meta description # Recommended
-pcx_content_type: how-to # Page type (see below)
-sidebar:
-  order: 1 # Sort order in sidebar
-  label: Custom Label # Override sidebar text
-tags: # Optional, validated against allowlist
-  - JavaScript
-  - Workers
-products: # References to src/content/products/ entries
-  - workers
-difficulty: Beginner # For tutorials: Beginner | Intermediate | Advanced
-reviewed: 2025-01-15 # YYYY-MM-DD of last content review
+
+## Munkamenet Bootstrap (Kötelező!)
+
+```bash
+bash scripts/sync.sh          # Git szinkronizálás (CMD: scripts\sync.bat)
+```
+
+Olvasd el sorrendben:
+1. `.ai/BOOTSTRAP.md` — projekt összefoglaló
+2. `conductor/tracks.md` — aktív fejlesztések
+3. `.ai/FOSZAL.md` — mi történt legutóbb
+4. `.ai/claude.md` — te mit csináltál legutóbb
+
+Ha BUILD FAIL vagy TESZT FAIL → javítsd először, ne kezdj fejlesztésbe.
+
 ---
-```
 
-Valid `pcx_content_type` values: `changelog`, `concept`, `configuration`, `design-guide`, `example`, `faq`, `get-started`, `how-to`, `integration-guide`, `implementation-guide`, `learning-unit`, `navigation`, `overview`, `reference`, `reference-architecture`, `reference-architecture-diagram`, `release-notes`, `solution-guide`, `troubleshooting`, `tutorial`, `video`.
-
-Tags are validated against an allowlist in `src/schemas/tags.ts`. Invalid tags will fail the build.
-
-### MDX gotchas — the #1 cause of build failures
-
-MDX is parsed as JSX, not plain Markdown. These characters have special meaning and **will break the build** if used unescaped in prose:
-
-| Character | Problem                       | Fix                                    |
-| --------- | ----------------------------- | -------------------------------------- |
-| `{` `}`   | Interpreted as JS expressions | Wrap in backticks or use `\{` `\}`     |
-| `<` `>`   | Interpreted as JSX elements   | Use `&lt;` `&gt;` or wrap in backticks |
-
-This is the single most common build failure. Always check prose, tables, and headings for these characters.
-
-### Links
-
-- Use **relative paths**: `/workers/get-started/` not `https://developers.cloudflare.com/workers/get-started/`
-- No file extensions in links: `/workers/get-started/` not `/workers/get-started.mdx/`
-- No relative file links: `./page` is **not supported** — use absolute paths from root
-- Descriptive link text: never use "here", "this page", or "read more"
-- Standard phrasing: "For more information, refer to [Page Title](/path/)."
-
-### Code blocks
-
-Always specify a language after the opening triple backticks. Language names must be **lowercase**.
-
-Supported languages: `bash`, `sh`, `shell`, `c`, `css`, `dart`, `diff`, `go`, `graphql`, `hcl`, `tf`, `html`, `ini`, `java`, `js`, `javascript`, `json`, `kotlin`, `php`, `powershell`, `python`, `py`, `ruby`, `rb`, `rust`, `rs`, `sql`, `swift`, `toml`, `ts`, `typescript`, `txt`, `text`, `plaintext`, `xml`, `yaml`, `yml`.
-
-Unsupported languages (like `promql`, `env`, `output`, `csharp`) cause warnings and fall back to `txt`. Use `txt` for generic output.
-
-Do **not** prefix terminal commands with `$` — the copy button copies the entire block.
-
-### Style guide rules
-
-The full style guide is at `src/content/docs/style-guide/`. Key rules:
-
-- **Active voice, present tense**. One sentence = one idea.
-- **No contractions** (use "do not" instead of "don't").
-- Use **"select"** not "click", **"go to"** not "navigate", **"turn on/off"** not "enable/disable".
-- **Bold** for clickable UI elements: **Save**, **DNS** > **Records**.
-- **Monospace** for code, paths, IPs, ports, HTTP verbs, status codes.
-- Headings must be sequential (H2 then H3 then H4 — never skip levels).
-- Use `<br/>` for line breaks, never two trailing spaces.
-- Placeholder values: use `example.com` for domains, `192.0.2.0/24` for IPs, `<YOUR_DOMAIN>` in URLs.
-
-## Components — major APIs
-
-Components are imported from `~/components` in MDX files:
-
-```mdx
-import {
-	Render,
-	TypeScriptExample,
-	WranglerConfig,
-	Details,
-} from "~/components";
-
-;
-```
-
-Components **must** be imported after the frontmatter block. Forgetting the import is a common mistake.
-
-### Render (partials)
-
-Renders a reusable partial from `src/content/partials/`. This is the primary content reuse mechanism.
-
-```mdx
-<Render file="partial-name" product="workers" />
-
-<!-- With parameters: -->
-
-<Render file="partial-name" product="workers" params={{ key: "value" }} />
-```
-
-The component looks up `src/content/partials/{product}/{file}.mdx`. If the partial defines `params` in its frontmatter, the caller must provide matching props.
-
-### TypeScriptExample
-
-Auto-transpiles TypeScript to JavaScript and shows both in synced tabs.
-
-```mdx
-<TypeScriptExample filename="src/index.ts">
-
-{/* TypeScript code here — the JS tab is auto-generated */}
-
-</TypeScriptExample>
-```
-
-### WranglerConfig
-
-Shows Wrangler configuration in both TOML and JSON formats with synced tabs. Auto-converts between formats.
-
-````mdx
-<WranglerConfig>
-
-```toml
-name = "my-worker"
-main = "src/index.ts"
-compatibility_date = "$today"
-```
-````
-
-</WranglerConfig>
-```
-You should generally use `$today` for the compatibility_date value for new projects. This magic string is automatically replaced with the current date at build time, ensuring documentation always suggests the latest date. When `$today` is used, the component also automatically injects a comment above the `compatibility_date` line (e.g., `# Set this to today's date` in TOML, `// Set this to today's date` in JSONC) so readers know to keep it current.
-
-### TabItem (Starlight built-in)
-
-Starlight's `<Tabs>` and `<TabItem>` are re-exported from `~/components`:
-
-```mdx
-import { Tabs, TabItem } from "~/components";
-
-<Tabs>
-	<TabItem label="npm">npm install package</TabItem>
-	<TabItem label="yarn">yarn add package</TabItem>
-</Tabs>
-```
-
-### PackageManagers
-
-Shows a command across npm, yarn, and pnpm:
-
-```mdx
-<PackageManagers type="exec" pkg="wrangler" args="init my-project" />
-```
-
-### Details
-
-Collapsible content block:
-
-```mdx
-<Details header="Click to expand">
-
-Content inside the collapsible section.
-
-</Details>
-```
-
-### Other frequently used components
-
-| Component          | Purpose                                                        |
-| ------------------ | -------------------------------------------------------------- |
-| `Plan`             | Display plan availability (e.g., `<Plan type="enterprise" />`) |
-| `GlossaryTooltip`  | Inline hover tooltip with glossary definition                  |
-| `InlineBadge`      | Status badges: `<InlineBadge preset="beta" />`                 |
-| `LinkTitleCard`    | Navigation card with icon, title, and description              |
-| `DirectoryListing` | Auto-generated listing of child pages                          |
-| `YouTube`          | Embed YouTube video by ID                                      |
-| `Stream`           | Embed Cloudflare Stream video                                  |
-| `APIRequest`       | Generate curl commands from the Cloudflare OpenAPI schema      |
-| `DashButton`       | "Go to Dashboard" button with validated deeplink               |
-| `ListTutorials`    | Auto-generated tutorial listing table                          |
-| `GitHubCode`       | Fetch and display code from a GitHub repository                |
-
-For the full component list and their props, see `src/components/index.ts` (barrel export) and the individual `.astro` / `.tsx` files.
-
-## Validation — what to run after making changes
-
-> **CI note:** `npm run build` will time out in CI environments (GitHub Actions, etc. where `CI=true`). When running in CI, use `npm run check` and linters only — do **not** run a full build. The full build is only practical in local development environments.
-
-### Minimum validation for content changes (MDX edits)
+## Parancsok
 
 ```bash
-npm run check          # Type-check (validates frontmatter schemas + Astro types)
-npm run build          # Full build (validates MDX parsing, image paths, internal links) — LOCAL ONLY, skip in CI
+# Build & Run
+npm run build          # TypeScript fordítás (src/ → build/) + registry/TRIZ adatok másolása
+npm run build:ui       # Dashboard build (KÜLÖNÁLLÓ — tsconfig.ui.json + vite.config.ts)
+npm run dev            # Express :3000 + MCP stdio
+npm run dev:ui         # Vite Dashboard :5173
+dashboard.bat          # Teljes indítás + browser megnyitás :5173 (Windows)
+start-full.bat         # Teljes Windows indítás (Ollama + FastAPI + backend + dashboard)
+npm run build:stable   # TypeScript + dashboard build egyben
+npm run smoke          # Health check
+
+# Tesztelés — mikor mit:
+npm run test:fast                    # Commit/push előtt (~1-2 perc) — pre-push hook is futtatja
+npm test                             # Build + teljes suite (~10 perc) — release/track lezárás előtt
+npx vitest run test/foo.test.ts      # Egy fájl
+npm run test:dashboard               # Dashboard-specifikus konfig (vitest.dashboard.config.ts)
+npm run test:ui                      # UI-specifikus konfig (vitest.ui.config.ts)
+npm run test:e2e                     # Playwright e2e
+cd myai && pytest tests/             # Python tesztek
+
+# Lint
+npm run lint
+npm run lint:fix
+
+# CLI
+brunella                             # Interaktív menü
+brunella conductor status            # Track státusz
+node scripts/copilot-route.js "feladat"  # Agent routing (confidence score)
+node scripts/copilot-dashboard.js agents execute <name> "<task>"
+
+# Python (Python ≥3.12, uv)
+cd myai && uv sync
+uvicorn server:app --reload --port 8000
+
+# Szinkronizálás
+python scripts/sync_foszal.py        # .ai/FOSZAL.md frissítése munka után
+npm run sync:bootstrap               # .ai/BOOTSTRAP.md regenerálása
 ```
 
-### Minimum validation for code changes (.ts/.tsx/.astro/.js)
+---
+
+## Architektúra
+
+**Két runtime, egy rendszer:** `src/` a Node/TypeScript vezérlősík (MCP server, REST API, dashboard, CLI). `myai/` a Python alrendszer (FastAPI `:8000`, FastMCP, browser/RAG/ML).
+
+**Startup fázisolt:** `src/index.ts` először HTTP szervert indít (`startWebServer()`), nehéz inicializáció `deferredInit()`-ban fut — OOM elkerülés, `/ping` azonnal elérhető.
+
+**Route-ok lazy-load:** `src/server/routes/index.ts` a mount tábla `/api/v1`-hez, a `lazy()` proxy első kérésig halasztja az importot. Új route-ot itt regisztrálj, ne `web.ts`-ben.
+
+**MCP tool regisztráció kettős célú:** `src/server/registry.ts` patcheli a `server.tool()`-t — a handlerek és JSON sémák lokális végrehajtáshoz és discovery-hoz is tárolódnak.
+
+**MCP auto-start deklaratív:** `mcp_servers.json` fájl vezérli — `autoStart`, `requiredEnv`, `platforms`, retry metaadatok. Az `McpProcessManager.ts` olvassa induláskor; ne adj hozzá hardcoded startup logikát `index.ts`-be vagy `web.ts`-be. A `brunella-core` entry `self` típusú — nem spawn-olja magát.
+
+**Agensek registry-vezéreltek:** `src/agents/registry.json` a TypeScript katalógus (`AgentManager`). TOML-alapú dinamikus ágensek: `myai/agents/*.toml` → `DynamicAgent`.
+
+**`BaseAgent` több mint kényelmi osztály:** Mintaújrahasználást, RAG lookup-ot, confidence scoring-ot, output validációt, redaction-t és automatikus státusz-visszaállítást ad `executeTask()` körül.
+
+**Model routing két réteg:** `src/core/modelRouter.ts` (local vs cloud: brain/muscle), `src/core/bifrost_gateway.ts` (Ollama → Gemini → GitHub Models → Anthropic fallback lánc).
+
+**Kernel Pipeline:** `src/core/conductor.ts` — 8 fázis: IntentRouter → Planner → ContextBuilder → ToolExecutor → Critic → Guardrail → LearningLoop. Megosztott `RunEnvelope` + `ModuleResponse<T>` (`kernelTypes.ts`), 10-esemény bus (`kernelEventBus.ts`), max 2 retry/modul, `RunLedger` utolsó 50 futás. REST: `/api/v1/kernel`.
+
+**CopilotFeedbackChannel singleton:** Az exportált `copilotFeedbackChannel` az `autonomousInfraRuntime.ts`-ből az egyetlen híd. Ne hozz létre `new CopilotFeedbackChannel()`-t máshol — árva példány lesz, amelyet HyperKernel nem lát. Signalokat csak `copilotFeedbackChannel.ingest()`-en keresztül küldj.
+
+**Dashboard és CLI párhuzamos felületek:** `src/dashboard/lib/navigation.tsx` a panel regisztráció. `src/dashboard/` ki van zárva a fő `tsconfig.json`-ból. Minden új feature-höz mindkét felület kötelező.
+
+**Python kettős interfész:** `myai/server.py` FastAPI `:8000` + OpenAI-kompatibilis `/models`. `myai/mcp_server.py` Python toolokat expo stdio/SSE via FastMCP.
+
+### SQLite adatbázisok
+
+| DB | Tartalom |
+|----|----------|
+| `brunella.db` | Fő rendszer adatok |
+| `tasks.db` | Agent task queue |
+| `checkpoints.db` | Phoenix Protocol checkpointok |
+| `audit.db` | Audit trail |
+| `cean.db` | Cloudflare Edge Agent Network |
+| `comet_memory.db` | COMET memória |
+
+---
+
+## Kód Konvenciók
+
+**TypeScript:**
+- ESM `.js` kiterjesztés KÖTELEZŐ importokban — BUILD FAIL nélküle
+- `any` TILOS — `unknown` + type guard
+- `console.log` TILOS — agent kódban: `logInfo/logError/setAgentStatus`; szerveren: `new Logger('feature.log')`
+- IAgent implementálásnál `setAgentStatus(this.name, 'idle')` legyen `finally`-ban — `BaseAgent` ezt automatikusan kezeli
+- Vitest (NEM Jest): `vi.fn()`, `vi.mock()`, `vi.spyOn()`; `fileParallelism: false`, 15s timeout
+
+**Python:**
+- Pydantic modellek kötelezők (`myai/pydantic_models.py`) — ne nyers dict
+- Windows logban emoji TILOS — `[OK]` / `[AI]` ASCII alternatívák (UnicodeEncodeError!)
+- LanceDB opcionális: `try: import lancedb; HAS_LANCEDB = True except: HAS_LANCEDB = False`
+- FastMCP ≥2.14.3, Python ≥3.12, uv csomagkezelő
+
+**CLI UX:** Magyar nyelvű, menüvezérelt — Inquirer + Chalk + Boxen + Ora; ne sima text prompt
+
+**Commit:** Conventional Commits — `feat(scope): subject`, `fix(scope): subject`
+
+**Husky hook-ok:**
+- `.husky/pre-commit`: `npx tsx scripts/sync_bootstrap.ts --stage` → `npm run build` → `node scripts/precommit-lint.mjs`
+- `.husky/pre-push`: `npx tsx scripts/sync_doc_stats.ts --dry-run` → `npm run test:fast`
+
+---
+
+## Agent Implementációs Minták
+
+**1. Egyszerű — `IAgent` interfész:**
+```typescript
+export class MyAgent implements IAgent {
+  name = 'MyAgent'; role = 'Purpose'; description = '...';
+  capabilities = ['skill1'];
+
+  async execute(task: string, context?: unknown): Promise<AgentResponse> {
+    setAgentStatus(this.name, 'working', task.slice(0, 50));
+    try {
+      return { status: 'success', data: result };
+    } catch (e: unknown) {
+      logError(this.name, e instanceof Error ? e.message : String(e));
+      return { status: 'error', error: e instanceof Error ? e.message : String(e) };
+    } finally {
+      setAgentStatus(this.name, 'idle');
+    }
+  }
+}
+```
+
+**2. RAG memóriával — `BaseAgent`:**
+```typescript
+export class MyAgent extends BaseAgent {
+  name = 'MyAgent'; role = '...'; description = '...'; capabilities = ['skill1'];
+
+  async executeTask(context: AgentContext): Promise<AgentResult> {
+    // context.pastExperiences — RAG auto-betöltve; státusz auto-reset a BaseAgent-ben
+    return { success: true, message: 'OK', data: result };
+  }
+}
+```
+
+**3. TOML-alapú DynamicAgent:** Hozz létre `myai/agents/MyAgent.toml`-t. `registry.json`-ban: `"class": "DynamicAgent"` + `"tomlPath"`. TypeScript kód nem kell.
+
+**Regisztráció:** Add hozzá `src/agents/registry.json`-hoz, majd `src/server/registry.ts`-hez.
+
+---
+
+## MCP Tool Minta
+
+```typescript
+export const myToolDefinition = {
+  name: 'my_tool', description: 'Tool purpose',
+  inputSchema: { type: 'object', properties: { param: { type: 'string' } }, required: ['param'] }
+};
+
+export async function myToolHandler(params: { param: string }) {
+  try {
+    return { success: true, data: await doSomething(params.param) };
+  } catch (e: unknown) {
+    return { success: false, error: e instanceof Error ? e.message : String(e) };
+  }
+}
+```
+
+Regisztrálás: `src/server/registry.ts` → `registerAllTools()` → `server.tool(name, desc, schema, handler)`.
+
+---
+
+## Fejlesztési Workflow
+
+### Track rendszer
+
+- `conductor/tracks.md` — összefoglaló index (ne szerkeszd manuálisan, `ProjectConductor` kezeli)
+- `conductor/tracks/<id>/meta.json` — státusz, owner, SDLC fázisok
+- `conductor/tracks/<id>/plan.md` — implementációs checklist
+- Életciklus: PROPOSED → ACTIVE → TESTING → COMPLETED → ARCHIVED
+
+### SDLC Pipeline (5 fázis)
+
+Minden új track automatikusan kap SDLC blokkot (`sdlc.enabled: true` a `meta.json`-ban).
 
 ```bash
-npm run check          # Type-check (Astro + Worker)
-npm run lint           # ESLint
-npm run format:core:check  # Prettier formatting check
-npm run test           # Vitest (Workers, Node, and Astro suites)
+brunella sdlc status|run|reset <trackId>
+brunella sdlc phase <trackId> <phase>
 ```
 
-### CI-only validation (when `CI=true`)
+Fázis sorrend: **architect → devops → coder → qa → reviewer**
 
-Use this reduced set when running as a GitHub Action or in any CI environment:
+| Fázis | Kötelező kimenet |
+|-------|-----------------|
+| architect | `phases/1-architect.md` (spec, pszeudokód, adatmodell) |
+| devops | `phases/2-devops.md` (env, dependencia, build validáció) |
+| coder | `phases/3-coder.md` (implementáció) |
+| qa | `phases/4-qa.md` (tesztek, debug) |
+| reviewer | `phases/5-reviewer.md` (refaktor, EPP v2 review) |
 
-```bash
-npm run check              # Type-check (validates frontmatter schemas + Astro types)
-npm run lint               # ESLint
-npm run format:core:check  # Prettier formatting check
+### EPP v2 — 7 Arany Szabály
+
+1. Minden feature = új track a `conductor/tracks/`-ban
+2. Hibák javítása AZONNAL — ne haladj tovább törött kóddal
+3. Commit gyakran — kis, logikus egységek
+4. TODO lista frissítése folyamatosan
+5. `npm run build` + `npm run test:fast` MUSZÁJ PASS commit előtt
+6. Minden új funkció = **Dashboard panel** (`navigation.tsx`) + **CLI parancs** (`src/cli/`) IS KÖTELEZŐ
+7. Track lezárásakor: teljes dokumentáció + `python scripts/sync_foszal.py`
+
+### Új feature ellenőrzőlista
+
+- [ ] Route regisztrálva `src/server/routes/index.ts`-ben?
+- [ ] Panel regisztrálva `src/dashboard/lib/navigation.tsx`-ben?
+- [ ] Agent hozzáadva `src/agents/registry.json`-hoz?
+- [ ] `npm run build` + `npm run test:fast` zöld?
+
+### Munkamenet napló
+
+Munkamenet végén add hozzá `.ai/claude.md`-hez (Claude-specifikus log — más ügynökök saját fájljukat írják: `.ai/copilot.md`, `.ai/gemini.md`, `.ai/cursor.md`):
+```markdown
+### YYYY-MM-DD HH:MM - [Rövid cím]
+**Feladat:** Mit csináltál
+**Érintett fájlok:** fájl1.ts, fájl2.ts
+**Státusz:** ✅ Befejezve / ⏳ Folyamatban
+**Megjegyzés:** Info a következő ügynöknek
 ```
+Majd: `python scripts/sync_foszal.py`
 
-### Full validation (matches CI pipeline, local only)
+---
 
-```bash
-npm run check              # Astro + Worker type checking
-npm run lint               # ESLint
-npm run format:core:check  # Prettier formatting check
-npm run build              # Full build with link checking (set RUN_LINK_CHECK=true)
-npm run test               # All test suites
-npx tsm bin/validate-redirects.ts  # Only if public/__redirects was modified
-```
+## Copilot Agents (`.github/agents/*.agent.md`)
 
-### Fixing formatting
+Invoke Copilot Chat-ban `@<name>` prefixszel:
 
-```bash
-npm run format             # Auto-fix code + data files
-npm run format:content     # Auto-fix MDX/MD/Astro files
-```
+| Agent | Cél |
+|-------|-----|
+| `sdlc-pipeline` | Összes SDLC fázis orchestrálása |
+| `bas-lead-developer` | End-to-end feature implementáció (TDD, docs, tests) |
+| `bas-phoenix-reviewer` | EPP v2 / Phoenix Protocol code review |
+| `bas-mcp-architect` | MCP tool design, TypeScript↔Python bridge |
+| `devops-infra-guardian` | Deps, env, build validáció (SDLC phase 2) |
+| `robust-test-writer` | Unit + integration tesztek, edge-case coverage |
+| `bas-orchestrator-commander` | Multi-agent workflow, Phoenix retry lánc |
+| `brunella-orchestrator` | Top-level cross-agent routing confidence scoring-gal |
+| `strict-code-reviewer` | Clean Code / SOLID review commit előtt |
+| `bas-self-reflect` | Post-track FOSZAL pattern elemzés |
 
-### Syncing types after content collection changes
+---
 
-```bash
-npm run sync               # Regenerate Astro content collection types
-```
+## Önellenőrzési Protokoll (Kötelező!)
 
-## CI pipeline
+| # | Szabály |
+|---|---------|
+| 1 | **Forrás előbb** — kódbeli állításhoz hivatkozz konkrét fájlra+sorra, ne emlékezetből |
+| 2 | **Árva-singleton tilalom** — `new SelfModel()` / `new ReflectionEngine()` csak `autonomousInfraRuntime.ts`-ből |
+| 3 | **Nem-standard mező tiltás** — `mcp_servers.json`, `meta.json`, `registry.json` mezőit csak sémában definiált kulcsokra bővítsd |
+| 4 | **async-határok konzisztenciája** — ha szinkron metódust aszinkronná teszel, frissítsd az összes hívóhelyet |
+| 5 | **Dupla írás elkerülése** — `copilotCognitiveBridge.reflect()` már meghívja ReflectionEngine-t és GraphRAG-ot; ne hívd külön |
+| 6 | **Severity leképezés** — `CRITICAL` és `HIGH` = `'high'` risk; eredeti severity-t tárold `payload.copilotSeverity`-ként |
+| 7 | **Teszt lefedettség** — minden új publikus API-hoz legalább 5 Vitest teszt kell track COMPLETED előtt |
 
-The CI workflow (`.github/workflows/ci.yml`) runs on PRs to `production` and checks in order:
+---
 
-1. File extension validation (only allowed types in `src/content/`)
-2. `npm run check` (Astro + Worker type checking)
-3. ESLint (reported inline on PR via reviewdog)
-4. `npm run format:core:check` (Prettier formatting)
-5. `npm run build` with `RUN_LINK_CHECK=true` (full build + internal link validation)
-6. Redirect validation (`bin/validate-redirects.ts`)
-7. `npm run test` (all Vitest suites)
+## Ismert Hibák
 
-A separate Semgrep workflow checks style guide compliance (dates, "coming soon" phrases) and produces warnings.
+| Probléma | Megoldás |
+|----------|----------|
+| `ERR_MODULE_NOT_FOUND` | Hiányzó `.js` import kiterjesztés |
+| BUILD FAIL | `rmdir /s /q build && npm run build` |
+| Dashboard build fail | `npm run build:ui` — különálló Vite build |
+| `better-sqlite3` Node v24+ | ABI eltérés → `npm rebuild better-sqlite3`. Ha `deferredInit()` Phase 2-nél crashel, `/api/*` 404, csak `/ping` működik → ellenőrizd: `logs/node-server.log` |
+| `federation_replay_nonces_runtime` INSERT | SQLite `DEFAULT` nem lép életbe `INSERT OR REPLACE`-nél — adj meg explicit `datetime('now')`-t |
+| GitHub Models 401 | `GITHUB_PAT` lejárt (NEM `GITHUB_TOKEN`) — `GITHUB_PAT` elsőbbséget élvez |
+| `buildHealthResponse` paramétere | 10 arg: `(ollama, anythingllm, python, n8n, langflow, wab, cloudflare, agentCount, mcpCount, requestId)` |
+| Root `AGENTS.md` | `cloudflare-docs` konvenciókat ír le — BAS-hoz irreleváns; mérvadó: `.github/copilot-instructions.md` |
+| Windows Unicode | Emoji → `[OK]` / `[AI]` Python logokban |
+| FastAPI nem indul | `cd myai && uv sync && uvicorn server:app --reload --port 8000` |
 
-## Common mistakes to avoid
+## Google Hitelesítés (két szerződés)
 
-1. **Unescaped `{`, `}`, `<`, `>` in MDX prose** — the #1 build failure. Wrap in backticks or escape.
-2. **Forgetting component imports** — `<Details>`, `<Tabs>`, etc. must be imported from `~/components`.
-3. **Unsupported code block languages** — use `txt` for generic output, not `output` or `env`.
-4. **Capitalized language names** — use `json` not `JSON`, `javascript` not `JavaScript`.
-5. **Full URLs for internal links** — use `/workers/` not `https://developers.cloudflare.com/workers/`.
-6. **Relative file links** — `./page` is not supported. Use absolute paths from root.
-7. **Wrong image location** — images go in `src/assets/images/`, never in `src/content/`.
-8. **Skipping heading levels** — H2 then H4 without H3 will violate style guide rules.
-9. **`$` prefix in terminal commands** — the copy button copies verbatim, including the `$`.
-10. **Invalid changelog product folders** — the product directory must exist in `src/content/products/`.
-11. **Invalid tags** — tags are validated against the allowlist in `src/schemas/tags.ts`.
-12. **Redirect issues** — source URLs in `public/__redirects` must end in `/` (or `*`, `.xml`, `.json`, `.html`). No fragments in source URLs. No infinite loops.
+- **Service account:** `GOOGLE_CREDENTIALS_FILE` vagy `GOOGLE_SERVICE_ACCOUNT_JSON` → `credentials/google-service-account.json`
+- **Workspace OAuth:** `GOOGLE_WORKSPACE_CREDENTIALS_FILE` + `GOOGLE_WORKSPACE_TOKEN_FILE` → `credentials/`
+- Régi `config/` és gyökérszintű útvonalak csak legacy fallback — ne vezess be ilyet új kódban
 
-## Content collections
+## Védett Fájlok — SOHA NE TÖRÖLD!
 
-The site defines 20 content collections in `src/content.config.ts` with schemas in `src/schemas/`. The major ones:
+`src/index.ts`, `src/cli.ts`, `src/agents/types.ts`, `src/agents/registry.json`, `src/server/web.ts`, `src/server/registry.ts`, `src/core/llm_client.ts`, `conductor/tracks.md`, `.ai/FOSZAL.md`
 
-| Collection          | Location                         | Description                             |
-| ------------------- | -------------------------------- | --------------------------------------- |
-| `docs`              | `src/content/docs/`              | Main documentation pages (MDX)          |
-| `partials`          | `src/content/partials/`          | Reusable content snippets (MDX)         |
-| `changelog`         | `src/content/changelog/`         | Product changelogs (MDX)                |
-| `glossary`          | `src/content/glossary/`          | Glossary terms (YAML)                   |
-| `products`          | `src/content/products/`          | Product metadata (YAML)                 |
-| `plans`             | `src/content/plans/`             | Plan/pricing data (YAML)                |
-| `workers-ai-models` | `src/content/workers-ai-models/` | AI model definitions (JSON)             |
-| `fields`            | `src/content/fields/`            | Ruleset engine field definitions (YAML) |
-| `learning-paths`    | `src/content/learning-paths/`    | Learning path definitions (JSON)        |
+---
 
-## Testing
-
-Tests use Vitest with three workspace projects (`vitest.workspace.ts`):
-
-| Suite   | File pattern       | Runtime                           |
-| ------- | ------------------ | --------------------------------- |
-| Workers | `*.worker.test.ts` | `@cloudflare/vitest-pool-workers` |
-| Node    | `*.node.test.ts`   | Node.js                           |
-| Astro   | `*.astro.test.ts`  | Astro Vite config                 |
-
-Run all tests: `npm run test`
-
-## Commit conventions
-
-- Format: `[Product] description` or `type: description`
-- Examples: `[Workers] Fix broken link in get-started`, `docs: clarify rate limiting behavior`, `fix: correct TypeScript example`
-- Common prefixes: `docs:`, `fix:`, `chore:`, `[Product]`
+**Projekt tulajdonos:** Pohánka Péter — Ha kérdésed van, kérdezz, ne találgass!
