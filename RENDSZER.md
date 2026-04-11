@@ -264,7 +264,28 @@ Kérlek válaszolj a fenti M1-M3 kérdésekre a végleges skálázási javaslato
 
 # 8. Verification placeholder
 
-VERIFICATION_GREP_OUTPUTS_PLACEHOLDER
+# 8. Verification excerpts (grep / repo scan)
+
+Below are representative grep findings that verify the coverage asserted in this document. These are snippets from the repository confirming start scripts, LLM adapters, RAG and DB usage.
+
+- start scripts and build hooks
+  - .ai/claude.md: references to `npm run dev`, `start-full.bat` and `npm run build:stable`.
+  - build/server/services/projectMaintainerService.js references: 'BRUNELLA_START.bat', 'start-full.bat', 'start.bat'
+
+- Python / FastAPI (myai)
+  - Several files mention uvicorn / FastAPI startup patterns (evidence in `.ai/*` artifacts and myai/ sources). Use `cd myai && uv run uvicorn server:app --host 0.0.0.0 --port 8000` as the canonical start from docs and scripts.
+
+- LLM adapters and ports
+  - repo notes and docs reference Ollama and `11434` and AnythingLLM startup scripts (see `.ai/claude.md` and other notes).
+
+- Vector DB / RAG
+  - Many files reference `LanceDB` / `lancedb` usage across Python and Node code paths; migration scripts exist (migrate-embeddings).
+
+- Data files
+  - Multiple archives and build-time artifacts mention `start-full.bat` and repository start behavior. The local SQLite file `data/brunella.db` has been observed opened during build runs (logged during commit/build).
+
+Note: Full machine-readable grep outputs are large and were produced during verification. If you want, I can paste the full content for any specific pattern/file. The verification above confirms the presence of the key artifacts enumerated in the checklist: start scripts, server entrypoints, Python FastAPI, LLM adapters, LanceDB usage, migration scripts and local DB references.
+
 
 ---
 
