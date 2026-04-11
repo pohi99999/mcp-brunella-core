@@ -4,7 +4,7 @@
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 244 total | 13 active | 25 completed | 204 archived
+**Stats:** 244 total | 13 active | 0 completed | 231 archived
 **Csoportok:** Könyvelés / üzleti automatizálás: 52 | Nova asszisztens: 23 | Brunella rendszer: 95 | Egyéb: 74
 
 ---
@@ -134,133 +134,7 @@
 
 ---
 
-## Befejezett (Completed - Not Archived) (25)
-
-### Könyvelés / üzleti automatizálás (12)
-
-- [x] **KKV CRM es lead-utanakovetes automatizalas**
-  - **ID:** `kkv_crm_automation_20260404`
-  - **Completed:** 2026-04-08T20:21:16Z
-  - Mappa: ./tracks/kkv_crm_automation_20260404/
-
-- [x] **KKV HR es dolgozoi adminisztracio automatizalas**
-  - **ID:** `kkv_hr_automation_20260404`
-  - **Completed:** 2026-04-05T12:00:00Z
-  - Mappa: ./tracks/kkv_hr_automation_20260404/
-
-- [x] **KKV HR leave approvals**
-  - **ID:** `kkv_hr_leave_approvals_20260405`
-  - Mappa: ./tracks/kkv_hr_leave_approvals_20260405/
-
-- [x] **KKV HR timesheet es kultura automatizalas**
-  - **ID:** `kkv_hr_timesheet_culture_20260405`
-  - **Completed:** 2026-04-08
-  - Mappa: ./tracks/kkv_hr_timesheet_culture_20260405/
-
-- [x] **KKV keszlet es leltar automatizalas**
-  - **ID:** `kkv_inventory_automation_20260404`
-  - **Completed:** 2026-04-05
-  - Mappa: ./tracks/kkv_inventory_automation_20260404/
-
-- [x] **KKV penzugyi emlekezteto es jovahagyasi automatizalas**
-  - **ID:** `kkv_finance_automation_20260404`
-  - **Completed:** 2026-04-05T12:00:00Z
-  - Mappa: ./tracks/kkv_finance_automation_20260404/
-
-- [x] **KKV ugyfelszolgalati AI es ticketkezeles**
-  - **ID:** `kkv_customer_service_ai_20260404`
-  - **Completed:** 2026-04-05T12:00:00Z
-  - Mappa: ./tracks/kkv_customer_service_ai_20260404/
-
-- [x] **Logistics Vertical — repository-local Brunella boundary**
-  - **ID:** `logistics_vertical_repo_local_20260407`
-  - Mappa: ./tracks/logistics_vertical_repo_local_20260407/
-
-- [x] **n8n Könyvelési Pipeline — Bank + KP + szamlazz.hu**
-  - **ID:** `n8n_konyveles_pipeline_20260328`
-  - **Completed:** 2026-04-03
-  - Mappa: ./tracks/n8n_konyveles_pipeline_20260328/
-
-- [x] **P-Sales Human-in-Loop Revenue Pipeline — Lead gen, onboarding, KKV + Brand csatornák**
-  - **ID:** `psales_human_loop_revenue_20260407`
-  - Mappa: ./tracks/psales_human_loop_revenue_20260407/
-
-- [x] **KKV marketing es kommunikacios automatizalas**
-  - **ID:** `kkv_marketing_automation_20260404`
-  - **Completed:** 2026-04-05
-  - Mappa: ./tracks/kkv_marketing_automation_20260404/
-
-- [x] **KKV projekt es feladat automatizalas**
-  - **ID:** `kkv_project_task_automation_20260404`
-  - **Completed:** 2026-04-05
-  - Mappa: ./tracks/kkv_project_task_automation_20260404/
-
-
-### Brunella rendszer (9)
-
-- [x] **Agent Runtime Hardening — ReAct, Working Memory, Tool Errors, Guardrails**
-  - **ID:** `agent_runtime_hardening_20260406`
-  - Mappa: ./tracks/agent_runtime_hardening_20260406/
-
-- [x] **AutoGen GitHub Models pilot a Python MCP alrendszerben**
-  - **ID:** `autogen_github_models_pilot_20260401`
-  - **Completed:** 2026-04-01T06:15:00.000Z
-  - Mappa: ./tracks/autogen_github_models_pilot_20260401/
-
-- [x] **Brunella Identity + Project Maintainer**
-  - **ID:** `brunella_identity_project_maintainer_20260402`
-  - **Completed:** 2026-04-06
-  - Mappa: ./tracks/brunella_identity_project_maintainer_20260402/
-
-- [x] **Copilot CLI Self-Improvement Loop — Gödel-Agent Integration**
-  - **ID:** `copilot_self_improvement_loop_20260406`
-  - **Completed:** 2026-04-06
-  - Mappa: ./tracks/copilot_self_improvement_loop_20260406/
-
-- [x] **Type Safety Enforcement — any elimináció és Type Guard implementáció**
-  - **ID:** `type_safety_enforcement_20260404`
-  - Mappa: ./tracks/type_safety_enforcement_20260404/
-
-- [x] **Brunella Federation — Phase 5 Execute Hardening**
-  - **ID:** `brunella_federation_phase5_20260402`
-  - Mappa: ./tracks/brunella_federation_phase5_20260402/
-
-- [x] **MCP Config Sync: mcp_servers.json ↔ .vscode/mcp.json**
-  - **ID:** `mcp_sync_config_20260403`
-  - Mappa: ./tracks/mcp_sync_config_20260403/
-
-- [x] **Swarm Orchestration Chat (ClawSwarm)**
-  - **ID:** `swarm_orchestration_chat_20260410`
-  - **Completed:** 2026-04-10T23:05:00Z
-  - Mappa: ./tracks/swarm_orchestration_chat_20260410/
-
-- [x] **Windows Bridge Health Check Endpoint**
-  - **ID:** `windows_bridge_health_20260403`
-  - Mappa: ./tracks/windows_bridge_health_20260403/
-
-
-### Egyéb (4)
-
-- [x] **Agent Instability Chaos Testing (Chaeos-env)**
-  - **ID:** `agent_instability_chaos_testing_20260410`
-  - **Completed:** 2026-04-10T22:45:00Z
-  - Mappa: ./tracks/agent_instability_chaos_testing_20260410/
-
-- [x] **Agent Security Sandbox (IPI Defense)**
-  - **ID:** `agent_security_ipi_defense_20260410`
-  - **Completed:** 2026-04-10T22:55:00Z
-  - Mappa: ./tracks/agent_security_ipi_defense_20260410/
-
-- [x] **Node↔Python Bridge E2E Integráció Tesztek**
-  - **ID:** `node_python_bridge_e2e_20260411`
-  - **Completed:** 2026-04-12T00:00:00Z
-  - Mappa: ./tracks/node_python_bridge_e2e_20260411/
-
-- [x] **P-Sales20260327**
-  - **ID:** `P-Sales20260327`
-  - **Completed:** 2026-03-30T12:00:00.000Z
-  - Mappa: ./tracks/P-Sales20260327/
-
+## Befejezett (Completed - Not Archived) (0)
 
 ---
 
@@ -268,8 +142,21 @@
 
 > Archived tracks are hidden by default. View in `conductor/archive/`
 
-### Könyvelés / üzleti automatizálás (35)
+### Könyvelés / üzleti automatizálás (48)
 
+- [x] **KKV uzleti automatizalas masterplan** (2026-04-11)
+- [x] **KKV CRM es lead-utanakovetes automatizalas** (2026-04-08)
+- [x] **KKV HR es dolgozoi adminisztracio automatizalas** (2026-04-05)
+- [x] **KKV HR leave approvals** (2026-04-05)
+- [x] **KKV HR timesheet es kultura automatizalas** (2026-04-08)
+- [x] **KKV keszlet es leltar automatizalas** (2026-04-05)
+- [x] **KKV penzugyi emlekezteto es jovahagyasi automatizalas** (2026-04-05)
+- [x] **KKV ugyfelszolgalati AI es ticketkezeles** (2026-04-05)
+- [x] **Logistics Vertical — repository-local Brunella boundary** (2026-04-07)
+- [x] **n8n Könyvelési Pipeline — Bank + KP + szamlazz.hu** (2026-04-03)
+- [x] **P-Sales Human-in-Loop Revenue Pipeline** (2026-04-07)
+- [x] **KKV marketing es kommunikacios automatizalas** (2026-04-05)
+- [x] **KKV projekt es feladat automatizalas** (2026-04-05)
 - [x] **Brunella teljes funkció- és tulajdonságmátrix dokumentáció** (2026-03-26)
 - [x] **Enterprise Suite Master - 14 Modulos Vállalati Irányító** (2026-02-17T21:15:00Z)
 - [x] **Konyvelesi n8n Phase 3 finalizalas** (2026-04-05T00:00:00Z)
@@ -327,8 +214,18 @@
 - [x] **Innovation Bridge - Cross-Industry Knowledge Transfer** (2026-02-24T01:27:00Z)
 - [x] **Napi AI Agent Összefoglaló Pipeline** (2026-04-10T19:10:00.000Z)
 
-### Brunella rendszer (82)
+### Brunella rendszer (91)
 
+- [x] **Agent Runtime Hardening — ReAct, Working Memory, Tool Errors, Guardrails** (2026-04-06)
+- [x] **AutoGen GitHub Models pilot a Python MCP alrendszerben** (2026-04-01)
+- [x] **Brunella Identity + Project Maintainer** (2026-04-06)
+- [x] **Copilot CLI Self-Improvement Loop — Gödel-Agent Integration** (2026-04-06)
+- [x] **Type Safety Enforcement — any elimináció és Type Guard implementáció** (2026-04-04)
+- [x] **Brunella Federation — Phase 5 Execute Hardening** (2026-04-02)
+- [x] **MCP Config Sync: mcp_servers.json ↔ .vscode/mcp.json** (2026-04-03)
+- [x] **Swarm Orchestration Chat (ClawSwarm)** (2026-04-10)
+- [x] **Windows Bridge Health Check Endpoint** (2026-04-03)
+- [x] **Modular State Refactor — Globális változók Dependency Injection alapú refaktora** (2026-04-11)
 - [x] **BAS Átfogó Tesztprotokol** (2026-02-16T15:05:00Z)
 - [x] **Brunella Core Stabilization** (2026-04-04)
 - [x] **Brunella Remote Layer — Fázis 6: Evolutionary Collective Intelligence** (2026-03-22)
@@ -412,8 +309,12 @@
 - [x] **Cloudflare Analytics Engine Egyedi Metrikák**
 - [x] **VSCode Auto-Build Task (TypeScript watch)** (2026-04-03T23:59:59.000Z)
 
-### Egyéb (69)
+### Egyéb (73)
 
+- [x] **Agent Instability Chaos Testing (Chaeos-env)** (2026-04-10)
+- [x] **Agent Security Sandbox (IPI Defense)** (2026-04-10)
+- [x] **Node↔Python Bridge E2E Integráció Tesztek** (2026-04-11) — Completed: 2026-04-12, Archived: 2026-04-12
+- [x] **P-Sales20260327** (2026-03-30)
 - [x] **cloudflare_workers_ai_20260221** (2026-02-21T10:05:00Z)
 - [x] **Gold Protocol - BAS Observability & Governance** (2026-02-12)
 - [x] **guardrails_evaluation_20260323** (2026-03-23T03:15:00Z)

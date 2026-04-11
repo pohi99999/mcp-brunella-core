@@ -1,0 +1,17 @@
+{
+  "id": "node_python_bridge_e2e_20260411",
+  "title": "Node↔Python Bridge E2E Integráció Tesztek",
+  "status": "archived",
+  "progress": 100,
+  "assignee": "Copilot",
+  "priority": "high",
+  "risk": "Ha a FastAPI bridge elcsúszik, a RAG és browser automation csendesen hibázhat.",
+  "created_at": "2026-04-11T22:00:00Z",
+  "updated_at": "2026-04-12T00:00:00Z",
+  "archived_at": "2026-04-12T01:00:00Z",
+  "mappa": "./tracks/node_python_bridge_e2e_20260411/",
+  "sdlc": {
+    "enabled": true,
+    "phase": "completed"
+  }
+}
