@@ -1,3 +1,0 @@
-BROWSER_USE_API_KEY=bu_7f6cBASbHaJRcp0In_QyHk9X8MjhwsD4irgZ70eWt3A
-
-export BROWSER_USE_API_KEY=bu_jC1_C3Byd2V9sA48mEf8TWOoQzvn3hmWGtZd0yJevgk && curl -fsSL https://browser-use.com/profile.sh | sh

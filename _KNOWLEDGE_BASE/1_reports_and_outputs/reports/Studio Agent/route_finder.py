@@ -8,6 +8,6 @@ def find_route(origin, destination):
     return directions_result
 
 if __name__ == "__main__":
-    os.environ['Maps_API_KEY'] = 'AIzaSyC34rqDXxQ4wGjSm2izJQ0Qr1Q4vlS1g2k'
+    os.environ['Maps_API_KEY'] = 'AIzaSy_REDACTED'
     result = find_route(origin="budapest", destination="debrecen")
     print(result)

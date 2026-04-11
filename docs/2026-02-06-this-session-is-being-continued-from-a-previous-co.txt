@@ -635,8 +635,8 @@
       34 +EDGE_HEALTH_CHECK_INTERVAL=30000                               
       35 +                                                               
       36  # === EXTERNAL AI APIS ===                                     
-      37  GEMINI_API_KEY=AIzaSyCohm3LnbT2T_Yf1AA6J83KpcFv0zt92Ts         
-      38  GOOGLE_API_KEY=AIzaSyCohm3LnbT2T_Yf1AA6J83KpcFv0zt92Ts         
+      37  GEMINI_API_KEY=AIzaSy_REDACTED
+      38  GOOGLE_API_KEY=AIzaSy_REDACTED
 
 ● Most létrehozok egy gyors teszt scriptet ami bemutatja hogyan lehet használni
   a Cloudflare Worker flottát:
@@ -1391,8 +1391,8 @@
   2️⃣ Environment Változók Ellenőrzés
 
 ● Bash(cd /f/mcp-brunella-core && grep -E "BROWSER_USE|GEMINI" .env | head -5)
-  ⎿  GEMINI_API_KEY=AIzaSyCohm3LnbT2T_Yf1AA6J83KpcFv0zt92Ts
-     BROWSER_USE_API_KEY=bu_g4faSN9Pz1lqAnA1vJabh0orDcN0tmhgpSt3g4610ts
+  ⎿  GEMINI_API_KEY=AIzaSy_REDACTED
+     BROWSER_USE_API_KEY=bu_REDACTED
 
 ● ✅ API kulcsok megvannak! Most készítek egy komplett teszt és használati 
   útmutatót:
