@@ -62,6 +62,7 @@ import { registerInventoryCommands } from "./cli/inventoryCommands.js";
 import { registerKkvPackCommands } from "./cli/kkvPackCommands.js";
 import { registerProjectMaintainerCommands } from "./cli/projectMaintainerCommands.js";
 import { registerBriefingCommands } from "./cli/briefingCommands.js";
+import { registerExternalKnowledgeCommands } from "./cli/externalKnowledgeCommands.js";
 import { registerChaosCommands } from "./cli/chaosCommands.js";
 import { registerWorkflowCommands } from "./cli/workflowCommands.js";
 import { registerSwarmCommands } from "./cli/swarmCommands.js";
@@ -1923,6 +1924,7 @@ registerInventoryCommands(program);
 registerKkvPackCommands(program);
 registerProjectMaintainerCommands(program);
 registerBriefingCommands(program);
+registerExternalKnowledgeCommands(program);
 registerChaosCommands(program);
 registerHookCommands(program);
 
@@ -2379,3 +2381,4 @@ if (!process.argv.slice(2).length) {
 } else {
   program.parse(process.argv);
 }
+

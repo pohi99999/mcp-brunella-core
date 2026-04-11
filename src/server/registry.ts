@@ -325,6 +325,7 @@ export async function registerAllTools(server: McpServer) {
     const { registerGeminiTool } = await import("../tools/geminiTool.js");
     const { registerEvHunterTools } = await import("../tools/evHunterTool.js");
     const { registerBrunellaPmStatusTool } = await import("../tools/brunellaPmStatus.js");
+    const { registerExternalKnowledgeTools } = await import("../tools/externalKnowledge.js");
 
     registerWorkspaceTools(server);
     registerKnowledgeTools(server);
@@ -345,6 +346,7 @@ export async function registerAllTools(server: McpServer) {
     registerGeminiTool(server);
     registerEvHunterTools(server);
     registerBrunellaPmStatusTool(server);
+    registerExternalKnowledgeTools(server);
 
     // AI Recommendation tool (Track: ai_recommendation_system_20260216)
     const { registerAiRecommendationTool } = await import("../tools/getAiRecommendation.js");
