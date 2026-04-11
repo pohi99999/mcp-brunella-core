@@ -1,7 +1,7 @@
 # 🌌 BRUNELLA MASTER CONTEXT (Élő Rendszertérkép)
 
 **Verzió:** 2.4.0
-**Frissítve:** 2026-04-07
+**Frissítve:** 2026-04-11
 **Státusz:** ACTIVE (Élő rendszer)
 
 ---
@@ -15,12 +15,13 @@ A **Brunella Agent System (BAS)** egy hibrid, multi-agent AI ökoszisztéma, ame
 *   **Lokális + Felhő AI:** Ollama (Privát) + Gemini/OpenAI (Teljesítmény).
 *   **Öngyógyító:** Phoenix Protocol v2 (Hiba detektálás és újraindítás).
 *   **Memória:** SQLite (Feladatok) + LanceDB (Vektor/RAG) + AnythingLLM (Tudásbázis).
+*   **Docs/config SOT:** warning (82/100, docs 4/4, config 61% / 47%).
 
 ---
 
 ## 2. 🤖 Az Ügynök Sereg (The Legion)
 
-A rendszer **78** regisztrált ügynökkel rendelkezik.
+A rendszer **82** regisztrált ügynökkel rendelkezik.
 
 ### 👑 Vezérkar (Core Leadership)
 | Ügynök | Szerep | Képességek |
@@ -40,18 +41,21 @@ A rendszer **78** regisztrált ügynökkel rendelkezik.
 | Ügynök | Szerep | Képességek |
 | :--- | :--- | :--- |
 | **InvoiceAutomation** | undefined | gmail_read, vision_extraction, drive_organization |
+| **SzamlazzHu** | undefined | szamlazz_fetch, invoice_normalization, sheets_sync |
 | **agent_architect** | undefined | prompt_engineering, agent_design, configuration |
 | **ApifyScraping** | Research & Intelligence — Deep Web Scraper |  |
 | **Architect** | architect |  |
 | **ChromeDevTools** | Web Debug & Performance Analyst |  |
 | **CampaignGenerator** | undefined |  |
 | **MarketingDirector** | undefined |  |
+| **BrunellaProjectManager** | undefined | project_status, track_snapshot, foszal_summary |
 | **ProjectMaintainer** | undefined | root_cleanup, log_rotation, track_verification |
 | **ReconciliationIngestion** | Pénzügyi adat ingesztor | finance-ingestion, data-normalization, accounting-parsing |
 | **AdvancedMatching** | Intelligens párosító motor | smart-reconciliation, partial-payment-split, fx-recalculation |
 | **PropertyVisionary** | undefined |  |
 | **ConflictMediator** | Organizational Conflict Resolution |  |
 | **copywriter** | undefined | social_media_generation, email_drafting, copywriting |
+| **viktoria-brand-voice** | undefined | brand-voice, caption-writing, email-drafting |
 | **DataScientist** | scientist |  |
 | **DependencyGraph** | Dependency Graph Analyzer |  |
 | **Developer** | undefined | code_generation, self_healing |
@@ -113,6 +117,7 @@ A rendszer **78** regisztrált ügynökkel rendelkezik.
 | **StocktakeReportAgent** | undefined | inventory_reporting |
 | **InventoryAdjustmentAgent** | undefined | accounting_preparation |
 | **i18n_specialist** | undefined | i18n_architecture, string_extraction, locale_management |
+| **DailyAgentBriefing** | undefined | github_search, web_crawl, llm_synthesis |
 
 
 ---
