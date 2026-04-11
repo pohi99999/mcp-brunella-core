@@ -20,7 +20,7 @@ export function createZeroPromptRouter(): Router {
    * GET /status
    * Zero-Prompt runtime állapota és esemény statisztikák.
    */
-  router.get('/status', (_req: Request, res: Response) => {
+  router.get('/status', (_req: any, res: any) => {
     try {
       const stats = eventFabric.getStats();
       const pending = approvalRouter.listWorkflows('pending');
@@ -42,7 +42,7 @@ export function createZeroPromptRouter(): Router {
    * GET /events
    * Esemény előzmények (szűrhető source, type, limit query paraméterekkel).
    */
-  router.get('/events', (req: Request, res: Response) => {
+  router.get('/events', (req: any, res: any) => {
     try {
       const source = isString(req.query.source) ? req.query.source : undefined;
       const type = isString(req.query.type) ? req.query.type : undefined;
@@ -60,7 +60,7 @@ export function createZeroPromptRouter(): Router {
    * Manuálisan publikál egy eseményt az EventFabricba (orchestrátor által vezérelhető).
    * Body: { source, type, priority?, riskHint?, payload, metadata? }
    */
-  router.post('/events', (req: Request, res: Response) => {
+  router.post('/events', (req: any, res: any) => {
     try {
       const { source, type, priority, riskHint, payload, metadata } = req.body as Record<string, unknown>;
       if (!isString(source) || !isString(type)) {
@@ -98,7 +98,7 @@ export function createZeroPromptRouter(): Router {
    * POST /start
    * Zero-Prompt runtime indítása (ha le lett állítva).
    */
-  router.post('/start', (_req: Request, res: Response) => {
+  router.post('/start', (_req: any, res: any) => {
     try {
       if (zeroPromptRuntime.isActive()) {
         if (!githubRemediationRuntime.isActive()) {
@@ -120,7 +120,7 @@ export function createZeroPromptRouter(): Router {
    * POST /stop
    * Zero-Prompt runtime leállítása.
    */
-  router.post('/stop', (_req: Request, res: Response) => {
+  router.post('/stop', (_req: any, res: any) => {
     try {
       if (!zeroPromptRuntime.isActive()) {
         if (githubRemediationRuntime.isActive()) {
@@ -142,7 +142,7 @@ export function createZeroPromptRouter(): Router {
    * GET /approvals
    * Jóváhagyásra váró workflow-ok listája (status query: pending|approved|rejected|expired).
    */
-  router.get('/approvals', (req: Request, res: Response) => {
+  router.get('/approvals', (req: any, res: any) => {
     try {
       const status = isString(req.query.status) ? req.query.status : undefined;
       const validStatuses = ['pending', 'approved', 'rejected', 'expired'];
@@ -161,7 +161,7 @@ export function createZeroPromptRouter(): Router {
    * GET /approvals/:workflowId
    * Egy workflow részletei.
    */
-  router.get('/approvals/:workflowId', (req: Request, res: Response) => {
+  router.get('/approvals/:workflowId', (req: any, res: any) => {
     try {
       const workflow = approvalRouter.getWorkflow(String(req.params.workflowId));
       if (!workflow) {
@@ -179,7 +179,7 @@ export function createZeroPromptRouter(): Router {
    * GET /notifications
    * Approval notification delivery history.
    */
-  router.get('/notifications', (req: Request, res: Response) => {
+  router.get('/notifications', (req: any, res: any) => {
     try {
       const limit = parseInt(String(req.query.limit ?? '20'), 10);
       const channel = isString(req.query.channel) ? req.query.channel : undefined;
@@ -205,7 +205,7 @@ export function createZeroPromptRouter(): Router {
    * GET /notifications/summary
    * Approval notification summary + workflow counters.
    */
-  router.get('/notifications/summary', (_req: Request, res: Response) => {
+  router.get('/notifications/summary', (_req: any, res: any) => {
     try {
       const summary = notificationChannels.getSummary();
       const workflows = approvalRouter.listWorkflows();
@@ -232,7 +232,7 @@ export function createZeroPromptRouter(): Router {
    * GET /remediation-runs
    * GitHub workflow failure remediation futások listája.
    */
-  router.get('/remediation-runs', (req: Request, res: Response) => {
+  router.get('/remediation-runs', (req: any, res: any) => {
     try {
       const status = isString(req.query.status) ? req.query.status : undefined;
       const limit = parseInt(String(req.query.limit ?? '20'), 10);
@@ -275,7 +275,7 @@ export function createZeroPromptRouter(): Router {
    * GET /remediation-runs/summary
    * Remediation futások aggregált állapota.
    */
-  router.get('/remediation-runs/summary', (_req: Request, res: Response) => {
+  router.get('/remediation-runs/summary', (_req: any, res: any) => {
     try {
       res.json({
         summary: githubRemediationRuntime.getSummary(),
@@ -290,7 +290,7 @@ export function createZeroPromptRouter(): Router {
    * POST /workflows/:workflowId/notify
    * Re-dispatch notification delivery for an approval workflow.
    */
-  router.post('/workflows/:workflowId/notify', async (req: Request, res: Response) => {
+  router.post('/workflows/:workflowId/notify', async (req: any, res: any) => {
     try {
       const workflow = approvalRouter.getWorkflow(String(req.params.workflowId));
       if (!workflow) {
@@ -310,7 +310,7 @@ export function createZeroPromptRouter(): Router {
    * POST /approvals/:workflowId/approve
    * Workflow jóváhagyása — orchestrátor általi döntés.
    */
-  router.post('/approvals/:workflowId/approve', (req: Request, res: Response) => {
+  router.post('/approvals/:workflowId/approve', (req: any, res: any) => {
     try {
       const workflow = approvalRouter.getWorkflow(String(req.params.workflowId));
       if (!workflow) {
@@ -333,7 +333,7 @@ export function createZeroPromptRouter(): Router {
    * POST /approvals/:workflowId/reject
    * Workflow elutasítása.
    */
-  router.post('/approvals/:workflowId/reject', (req: Request, res: Response) => {
+  router.post('/approvals/:workflowId/reject', (req: any, res: any) => {
     try {
       const workflow = approvalRouter.getWorkflow(String(req.params.workflowId));
       if (!workflow) {
@@ -357,7 +357,7 @@ export function createZeroPromptRouter(): Router {
    * Esemény kockázatértékelése a PolicyEngine-nel, jóváhagyás létrehozása nélkül.
    * Body: { source, type, priority?, riskHint?, payload }
    */
-  router.post('/evaluate', async (req: Request, res: Response) => {
+  router.post('/evaluate', async (req: any, res: any) => {
     try {
       const { source, type, priority, riskHint, payload, resource, agentName } = req.body as Record<string, unknown>;
       if (!isString(source) || !isString(type)) {
@@ -394,7 +394,7 @@ export function createZeroPromptRouter(): Router {
    * Korábbi események újrajátszása (pl. rendszer-visszaállítás után).
    * Body: { source?, type?, limit? }
    */
-  router.post('/replay', (req: Request, res: Response) => {
+  router.post('/replay', (req: any, res: any) => {
     try {
       const { source, type, limit } = req.body as Record<string, unknown>;
       const parsedLimit = typeof limit === 'number' ? limit : parseInt(String(limit ?? '10'), 10);

@@ -91,7 +91,7 @@ export function createSzamlazzRoutes(): Router {
     }
   });
 
-  const handleSend = async (req: Request, res: Response) => {
+  const handleSend = async (req: any, res: any) => {
     try {
       const body = req.body;
       if (!isRecord(body)) {

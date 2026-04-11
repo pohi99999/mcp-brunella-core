@@ -120,7 +120,7 @@ function readQueryInteger(value: unknown, fallback: number): number {
  */
 router.get(
   '/schedule',
-  async (_req: Request<EmptyParams>, res: Response<ScheduleStatusResponse | ErrorResponse>) => {
+  async (_req: Request<EmptyParams>, res: any) => {
     try {
       const status = getSchedulerStatus();
       return res.json({
@@ -146,7 +146,7 @@ router.post(
   '/schedule',
   async (
     req: Request<EmptyParams, ScheduleUpdateResponse | ErrorResponse, ScheduleUpdateBody>,
-    res: Response<ScheduleUpdateResponse | ErrorResponse>,
+    res: any,
   ) => {
     try {
       const schedule = readString(req.body.schedule);
@@ -191,7 +191,7 @@ router.get(
   '/results',
   async (
     req: Request<EmptyParams, TestResultsListResponse | ErrorResponse, never, ResultsQuery>,
-    res: Response<TestResultsListResponse | ErrorResponse>,
+    res: any,
   ) => {
     try {
       const limit = Math.min(readQueryInteger(req.query.limit, 20), 100);
@@ -220,7 +220,7 @@ router.get(
   '/results/:id',
   async (
     req: Request<TestRunParams, TestRunResponse | ErrorResponse>,
-    res: Response<TestRunResponse | ErrorResponse>,
+    res: any,
   ) => {
     try {
       const id = req.params.id;
@@ -243,7 +243,7 @@ router.get(
  * POST /api/tests/run
  * Trigger a manual test run
  */
-router.post('/run', async (_req: Request<EmptyParams>, res: Response<{ success: true; runId: string; status: TestRun['status']; message: string } | ErrorResponse>) => {
+router.post('/run', async (_req: Request<EmptyParams>, res: any) => {
   try {
     logInfo('testScheduler', 'Manual test run triggered via API');
     const result = await runTests('api');
@@ -267,7 +267,7 @@ router.post('/run', async (_req: Request<EmptyParams>, res: Response<{ success: 
  */
 router.get(
   '/stats',
-  async (_req: Request<EmptyParams>, res: Response<TestStatsResponse | ErrorResponse>) => {
+  async (_req: Request<EmptyParams>, res: any) => {
     try {
       const stats = getTestStats();
 
@@ -303,7 +303,7 @@ router.get(
   '/results/range/:startDate/:endDate',
   async (
     req: Request<DateRangeParams, DateRangeResponse | ErrorResponse>,
-    res: Response<DateRangeResponse | ErrorResponse>,
+    res: any,
   ) => {
     try {
       const startDate = req.params.startDate;
