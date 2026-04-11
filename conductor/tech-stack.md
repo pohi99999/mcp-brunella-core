@@ -1,9 +1,10 @@
 # Tech Stack: BAS Ecosystem
 
 ## Core Infrastruktúra
-- **Szerver:** MCP Brunella Core (Node.js 24+, TypeScript).
+- **Szerver:** MCP Brunella Core (Node.js 24+, TypeScript) - Moduláris, Dependency Injection alapú architektúra.
 - **Automatizálási Platform:** n8n (API-val vezérelve), Langflow (Docker alapú vizuális ágens tervező).
 - **Runtime:** Hibrid Node.js & Perzisztens Python Shell.
+- **Szolgáltatáskezelés:** Központosított `ServiceRegistry` a modulok közötti tiszta csatolásért és életciklus-kezelésért.
 - **Modellek:**
   - *Vezérlés (Local):* llama3.1:8b (Ollama)
   - *Kódgenerálás (Local):* deepseek-coder:6.7b (Ollama), qwen2.5-coder:7b (Ollama), codegemma:7b (Ollama)
@@ -13,8 +14,8 @@
   - *Specifikus Ügynökök (Future):* Finomhangolt modellek (pl. Gemma 3, llama3.2, gemma2) a Vertex AI-ban, ha a keret engedi.
 
 ## Adat & Memória
-- **Vektor Store:** LanceDB (hibrid, lokális/Python & Node.js írás) / Qdrant vagy Milvus (skálázott).
-- **Adatbázis:** SQLite (better-sqlite3) a tranzakcióknak.
+- **Vektor Store:** LanceDB (hibrid, lokális/Python & Node.js írás) - Injektált `RagEngine`-en keresztül kezelve.
+- **Adatbázis:** SQLite (better-sqlite3) a tranzakcióknak - Osztály-alapú `DatabaseManager` wrapperrel.
 - **Ingestion:** Playwright (böngészés), Python Refiner (zajszűrés), Unstructured.io (PDF), Gemini Vision (OCR).
 - **Strukturált Adatkimenet:** Pydantic (Python) a böngésző ügynök (Robotkéz) strukturált JSON kimenetéhez.
 
