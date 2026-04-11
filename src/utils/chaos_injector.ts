@@ -33,20 +33,22 @@ export class ChaosInjector {
     logWarn("ChaosInjector", `Injektálás indítva: [${type}] az eszközön: ${toolName}`);
 
     switch (type) {
-      case "timeout":
+      case "timeout": {
         const delay = Math.floor(Math.random() * this.config.maxDelayMs);
         logInfo("ChaosInjector", `Késleltetés szimulálása: ${delay}ms`);
         await new Promise((resolve) => setTimeout(resolve, delay));
         return handler();
+      }
 
       case "rate_limit":
         logWarn("ChaosInjector", `Rate Limit (429) szimulálása.`);
         throw new Error(`Tool ${toolName} failed with status 429: Too Many Requests (Chaos Mode)`);
 
-      case "corruption":
+      case "corruption": {
         const result = await handler();
         logWarn("ChaosInjector", `Adatkorrupció szimulálása.`);
         return this.corruptData(result);
+      }
 
       default:
         return handler();
