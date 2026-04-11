@@ -14,6 +14,7 @@ import {
   runDailyCultureAlerts,
   runMonthlyPayrollExport,
 } from '../services/hrTimesheetService.js';
+import { PredictiveDecisionEngine } from '../../core/predictiveDecisionEngine.js';
 
 interface ScheduledTask {
   id: string;
@@ -95,6 +96,7 @@ export class ScheduledTasksRunner {
     await this.ensureWeeklyResearchTask();
     await this.ensureDailyAgentBriefingTask();
     await this.ensureCrmFollowUpDispatchTask();
+    await this.ensurePredictiveDecisionTask();
     await this.ensureHRTimesheetFollowUpTasks();
     await this.importJulesAutomations();
     await this.refreshSchedule();
@@ -381,6 +383,53 @@ export class ScheduledTasksRunner {
       logInfo('ScheduledTasksRunner', 'CRM follow-up dispatch task ensured.');
     } catch (error) {
       logError('ScheduledTasksRunner', `Failed to ensure CRM follow-up dispatch task: ${error}`);
+    }
+  }
+
+  /**
+   * Ensure the predictive decision task exists in the database.
+   * Runs Monte Carlo decision analysis every 15 minutes.
+   */
+  private async ensurePredictiveDecisionTask() {
+    try {
+      const db = getGlobalDb();
+      const now = new Date().toISOString();
+
+      db.prepare(`
+        INSERT INTO scheduled_tasks (
+          id,
+          title,
+          prompt,
+          cron_expression,
+          handler,
+          enabled,
+          metadata,
+          created_at,
+          updated_at
+        )
+        VALUES (?, ?, ?, ?, ?, 1, ?, ?, ?)
+        ON CONFLICT(id) DO UPDATE SET
+          title = excluded.title,
+          prompt = excluded.prompt,
+          cron_expression = excluded.cron_expression,
+          handler = excluded.handler,
+          enabled = excluded.enabled,
+          metadata = excluded.metadata,
+          updated_at = excluded.updated_at
+      `).run(
+        'predictive-decision-l5',
+        'L5 Predictive Decision Analysis',
+        'Autonomous decision analysis using Monte Carlo simulation to evaluate operational scenarios and execute safe actions.',
+        '*/15 * * * *',
+        'predictive_decision',
+        '{}',
+        now,
+        now,
+      );
+
+      logInfo('ScheduledTasksRunner', 'Predictive decision task ensured.');
+    } catch (error) {
+      logError('ScheduledTasksRunner', `Failed to ensure predictive decision task: ${error}`);
     }
   }
 
@@ -759,6 +808,9 @@ export class ScheduledTasksRunner {
           durationMs: Date.now() - new Date(startTime).getTime(),
         });
         eventFabric.publish(envelope);
+      } else if (task.handler === 'predictive_decision') {
+        const engine = new PredictiveDecisionEngine();
+        result = await engine.analyzeDecisionPoint('scheduler');
       } else if (task.handler === 'project_maintainer') {
         const { runProjectMaintainerReport } = await import('../services/projectMaintainerService.js');
         const { ReflectionEngine } = await import('../../core/reflectionEngine.js');

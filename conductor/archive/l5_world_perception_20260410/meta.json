@@ -1,0 +1,32 @@
+{
+  "id": "l5_world_perception_20260410",
+  "title": "L5 WorldPerceptionLayer - Folyamatos Kulso Vilag Figyeles",
+  "status": "archived",
+  "priority": "high",
+  "createdAt": "2026-04-11T13:25:00.000Z",
+  "owner": "GitHub Copilot",
+  "progress": 100,
+  "tags": [
+    "l5",
+    "world-perception",
+    "intelligence",
+    "monitoring",
+    "signals"
+  ],
+  "sourceDocument": "User-requested L5 queue continuation",
+  "phase": 4,
+  "updated": "2026-04-11",
+  "dependencies": [
+    "l5_hook_engine_20260410"
+  ],
+  "group": "ai",
+  "verified": true,
+  "verifiedAt": "2026-04-11",
+  "completedAt": "2026-04-11T13:40:00Z",
+  "archivedAt": "2026-04-11T13:40:00Z",
+  "archiveReason": "World perception now normalizes recent knowledge cards into reviewable world signals, provides promotion into the intelligence layer, exposes REST/CLI/dashboard operator surfaces, and runs on a recurring scheduler with hook visibility. No dedicated follow-up track is required for the perception layer itself; downstream predictive-decision work can consume it directly.",
+  "notes": [
+    "The first delivery slice uses knowledge-card sweep plus manual observations as the continuous sensing substrate.",
+    "Focused backend and dashboard validation passed alongside backend and UI builds."
+  ]
+}

@@ -110,6 +110,9 @@ export function createV1Router(): Router {
   router.use("/knowledge", lazy(() => import("./externalKnowledge.js"), "createExternalKnowledgeRoutes", db));
   router.use("/remote", lazy(() => import("./remote.js"), "createRemoteRoutes"));
   router.use("/autonomous-infra", lazy(() => import("./autonomousInfra.js"), "createAutonomousInfraRouter"));
+  router.use("/self-modification", lazy(() => import("./selfModification.js"), "createSelfModificationRouter"));
+  router.use("/world-perception", lazy(() => import("./worldPerception.js"), "createWorldPerceptionRouter"));
+  router.use("/predictive-decision", lazy(() => import("./predictiveDecision.js"), "createPredictiveDecisionRouter"));
 
   // ── Additional routes ──────────────────────────────────────────────
   router.use("/telemetry", lazy(() => import("../telemetryRoutes.js"), "createTelemetryRouter"));

@@ -84,4 +84,10 @@ export const BUILTIN_HOOK_CATALOG: HookCatalogEntry[] = [
   { event: 'cron:weekly:monday', category: 'cron', description: 'Hetfoi cron hook', priority: 7, timeoutMs: 10_000, retryOnFail: true },
   { event: 'cron:weekly:friday:close', category: 'cron', description: 'Heti zaro cron hook', priority: 7, timeoutMs: 10_000, retryOnFail: true },
   { event: 'cron:quarterly', category: 'cron', description: 'Negyedeves cron hook', priority: 6, timeoutMs: 10_000, retryOnFail: true },
+  { event: 'decision:triggered', category: 'learning', description: 'L5 decision analysis triggered hook', priority: 7, timeoutMs: 10_000, retryOnFail: false },
+  { event: 'decision:scenarios_generated', category: 'learning', description: 'L5 decision scenarios generated hook', priority: 6, timeoutMs: 10_000, retryOnFail: false },
+  { event: 'decision:action_selected', category: 'learning', description: 'L5 decision action selected hook', priority: 7, timeoutMs: 10_000, retryOnFail: true },
+  { event: 'decision:action_executed', category: 'learning', description: 'L5 decision action executed hook', priority: 8, timeoutMs: 15_000, retryOnFail: true },
+  { event: 'decision:rolled_back', category: 'learning', description: 'L5 decision action rolled back hook', priority: 8, timeoutMs: 15_000, retryOnFail: true },
+  { event: 'decision:no_action', category: 'learning', description: 'L5 decision no action taken hook', priority: 6, timeoutMs: 10_000, retryOnFail: false },
 ];

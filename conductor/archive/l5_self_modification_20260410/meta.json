@@ -1,0 +1,28 @@
+{
+  "id": "l5_self_modification_20260410",
+  "name": "L5 SelfModificationEngine - Sandbox Onfejlesztes",
+  "title": "L5 SelfModificationEngine - Sandbox Onfejlesztes",
+  "status": "archived",
+  "priority": "high",
+  "createdAt": "2026-04-10T00:00:00.000Z",
+  "owner": "GitHub Copilot",
+  "progress": 100,
+  "tags": [
+    "l5",
+    "self-modification",
+    "dynamic-agent",
+    "sandbox",
+    "governance",
+    "weekly-cycle"
+  ],
+  "sourceDocument": "User-requested L5 queue continuation",
+  "phase": 4,
+  "updated": "2026-04-11",
+  "dependencies": [],
+  "group": "ai",
+  "verified": true,
+  "verifiedAt": "2026-04-11",
+  "completedAt": "2026-04-11T13:15:00Z",
+  "archivedAt": "2026-04-11T13:15:00Z",
+  "archiveReason": "SelfModificationEngine core, REST/CLI/dashboard surfaces, scheduler hooks, agent metrics capture, and focused regression coverage are complete. No follow-up track is required because approved proposals generate their own rollout tracks automatically."
+}

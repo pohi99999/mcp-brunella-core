@@ -4,10 +4,10 @@ import { fireHooks } from './hookEngine.js';
 
 /**
  * Advanced Hooks Implementation from fejlv2.md
- * These hooks cover advanced automation, self-healing, data integrity, and KKV services.
+ * These hooks cover advanced automation, self-healing, data integrity, KKV services, and L5 predictive decisions.
  */
 export function registerAdvancedHooks() {
-  logInfo('AdvancedHooks', 'Registering 24 advanced hooks from fejlv2.md...');
+  logInfo('AdvancedHooks', 'Registering 30 advanced hooks (24 from fejlv2.md + 6 L5 decision hooks)...');
 
   // 1. PAIOS Session Hook
   registerHook('paios:session:start', async (ctx: any) => {
@@ -188,4 +188,39 @@ export function registerAdvancedHooks() {
   registerHook('cron:quarterly', async () => {
     logInfo('CronHook', 'Executing Quarterly ESG calculations. Generating carbon footprint report.');
   }, { category: 'cron' });
+
+  // 25-30. L5 Predictive Decision Hooks
+  registerHook('decision:triggered', async (ctx: any) => {
+    const { triggeredBy, decisionId } = ctx || {};
+    logInfo('DecisionHook', `L5 Decision analysis triggered by ${triggeredBy}. Decision ID: ${decisionId}`);
+  }, { category: 'learning' });
+
+  registerHook('decision:scenarios_generated', async (ctx: any) => {
+    const { decisionId, scenarioCount, avgRisk, avgImpact } = ctx || {};
+    logInfo('DecisionHook', `Generated ${scenarioCount} scenarios for ${decisionId}. Avg risk: ${avgRisk?.toFixed(2)}, Avg impact: ${avgImpact?.toFixed(2)}`);
+  }, { category: 'learning' });
+
+  registerHook('decision:action_selected', async (ctx: any) => {
+    const { decisionId, actionType, totalScore } = ctx || {};
+    logInfo('DecisionHook', `Selected action ${actionType} for ${decisionId} with score ${totalScore?.toFixed(3)}`);
+  }, { category: 'learning' });
+
+  registerHook('decision:action_executed', async (ctx: any) => {
+    const { decisionId, actionType, outcome, error } = ctx || {};
+    if (outcome === 'success') {
+      logInfo('DecisionHook', `Successfully executed ${actionType} for ${decisionId}`);
+    } else {
+      logError('DecisionHook', `Failed to execute ${actionType} for ${decisionId}: ${error}`);
+    }
+  }, { category: 'learning' });
+
+  registerHook('decision:rolled_back', async (ctx: any) => {
+    const { decisionId, actionType, reason } = ctx || {};
+    logInfo('DecisionHook', `Rolled back ${actionType} for ${decisionId}. Reason: ${reason}`);
+  }, { category: 'learning' });
+
+  registerHook('decision:no_action', async (ctx: any) => {
+    const { decisionId, reason } = ctx || {};
+    logInfo('DecisionHook', `No action taken for ${decisionId}. Reason: ${reason || 'No scenario met threshold'}`);
+  }, { category: 'learning' });
 }

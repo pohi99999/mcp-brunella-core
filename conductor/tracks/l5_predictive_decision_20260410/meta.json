@@ -1,0 +1,30 @@
+{
+  "id": "l5_predictive_decision_20260410",
+  "title": "L5 Predictive Decision Engine - Monte Carlo Simulation & Actionable Decision Records",
+  "status": "active",
+  "priority": "high",
+  "createdAt": "2026-04-11T16:30:00.000Z",
+  "owner": "GitHub Copilot",
+  "progress": 0,
+  "tags": [
+    "l5",
+    "predictive",
+    "decision-engine",
+    "monte-carlo",
+    "simulation",
+    "autonomous-decisions"
+  ],
+  "sourceDocument": "User-requested L5 queue continuation - predictive decision slice after memory architecture",
+  "phase": 4,
+  "updated": "2026-04-11",
+  "dependencies": [
+    "l5_memory_architecture_20260410"
+  ],
+  "group": "ai",
+  "verified": false,
+  "notes": [
+    "Build on existing predictiveIntelligence alerts to create actionable decision records",
+    "Use deterministic Monte Carlo scenario scoring for future simulation",
+    "Safe reversible actions only: goal creation with rollback, alert acknowledgment with rollback, review-only escalation"
+  ]
+}

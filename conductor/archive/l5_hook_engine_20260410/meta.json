@@ -1,0 +1,30 @@
+{
+  "id": "l5_hook_engine_20260410",
+  "title": "L5 Hook Engine - Esemenyvezérelt Reflex Rendszer",
+  "status": "archived",
+  "priority": "high",
+  "createdAt": "2026-04-10T00:00:00.000Z",
+  "owner": "GitHub Copilot",
+  "progress": 100,
+  "tags": [
+    "l5",
+    "hooks",
+    "event-driven",
+    "governance",
+    "observability"
+  ],
+  "sourceDocument": "User-requested L5 queue continuation",
+  "phase": 4,
+  "updated": "2026-04-11",
+  "dependencies": [],
+  "group": "ai",
+  "verified": true,
+  "verifiedAt": "2026-04-11",
+  "completedAt": "2026-04-11T13:22:00Z",
+  "archivedAt": "2026-04-11T13:22:00Z",
+  "archiveReason": "Hook registry/runtime surfaces, route and CLI integration, dashboard observability panel, and the focused hook validation suite are complete. No separate follow-up track is required for the hook platform itself; downstream hook consumers continue in their own tracks.",
+  "notes": [
+    "Devops phase was restored from Copilot/FOSZAL history before closure.",
+    "Canonical hook SOT lives in src/core/hookRegistry.ts plus the builtin hook stack."
+  ]
+}

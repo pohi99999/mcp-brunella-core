@@ -46,6 +46,19 @@ export interface ActivityPattern {
   totalActions: number;
 }
 
+interface PredictiveAlertRow {
+  id: string;
+  type: PredictiveAlert['type'];
+  severity: PredictiveAlert['severity'];
+  title: string;
+  description: string;
+  suggested_action: string;
+  confidence: number;
+  data: string;
+  created_at: number;
+  acknowledged: number;
+}
+
 // ─── Predictive Intelligence Engine ──────────────────────────────────────────
 
 export class PredictiveIntelligence {
@@ -264,22 +277,89 @@ export class PredictiveIntelligence {
 
   /** Get active (unacknowledged) alerts */
   getActiveAlerts(): PredictiveAlert[] {
-    return Array.from(this.alerts.values())
-      .filter(a => !a.acknowledged)
+    return this.listAlerts({ acknowledged: false })
       .sort((a, b) => {
         const severityOrder = { high: 3, medium: 2, low: 1 };
         return (severityOrder[b.severity] ?? 0) - (severityOrder[a.severity] ?? 0);
       });
   }
 
+  listAlerts(options: { acknowledged?: boolean; limit?: number } = {}): PredictiveAlert[] {
+    void this.init();
+
+    try {
+      const db = getGlobalDb();
+      const limit = Math.max(1, Math.trunc(options.limit ?? 25));
+      const where: string[] = [];
+      const values: Array<number> = [];
+
+      if (typeof options.acknowledged === 'boolean') {
+        where.push('acknowledged = ?');
+        values.push(options.acknowledged ? 1 : 0);
+      }
+
+      const rows = db.prepare(`
+        SELECT *
+        FROM predictive_alerts
+        ${where.length > 0 ? `WHERE ${where.join(' AND ')}` : ''}
+        ORDER BY created_at DESC
+        LIMIT ?
+      `).all(...values, limit) as PredictiveAlertRow[];
+
+      return rows.map((row) => {
+        const alert = mapAlertRow(row);
+        this.alerts.set(alert.id, alert);
+        return alert;
+      });
+    } catch {
+      return Array.from(this.alerts.values())
+        .filter((alert) => typeof options.acknowledged === 'boolean' ? alert.acknowledged === options.acknowledged : true)
+        .slice(0, options.limit ?? 25);
+    }
+  }
+
+  getAlert(alertId: string): PredictiveAlert | null {
+    const cached = this.alerts.get(alertId);
+    if (cached) {
+      return cached;
+    }
+
+    void this.init();
+    try {
+      const db = getGlobalDb();
+      const row = db.prepare('SELECT * FROM predictive_alerts WHERE id = ?').get(alertId) as PredictiveAlertRow | undefined;
+      if (!row) {
+        return null;
+      }
+      const alert = mapAlertRow(row);
+      this.alerts.set(alert.id, alert);
+      return alert;
+    } catch {
+      return null;
+    }
+  }
+
   /** Acknowledge an alert */
   acknowledgeAlert(alertId: string): boolean {
-    const alert = this.alerts.get(alertId);
+    const alert = this.getAlert(alertId);
     if (!alert) return false;
     alert.acknowledged = true;
+    this.alerts.set(alert.id, alert);
     try {
       const db = getGlobalDb();
       db.prepare('UPDATE predictive_alerts SET acknowledged = 1 WHERE id = ?').run(alertId);
+    } catch { /* best-effort */ }
+    return true;
+  }
+
+  unacknowledgeAlert(alertId: string): boolean {
+    const alert = this.getAlert(alertId);
+    if (!alert) return false;
+    alert.acknowledged = false;
+    this.alerts.set(alert.id, alert);
+    try {
+      const db = getGlobalDb();
+      db.prepare('UPDATE predictive_alerts SET acknowledged = 0 WHERE id = ?').run(alertId);
     } catch { /* best-effort */ }
     return true;
   }
@@ -301,9 +381,10 @@ export class PredictiveIntelligence {
 
   /** Get stats */
   getStats(): { signals: number; alerts: number; activeAlerts: number; patterns: number } {
+    const alerts = this.listAlerts({ limit: 500 });
     return {
       signals: this.signals.length,
-      alerts: this.alerts.size,
+      alerts: alerts.length,
       activeAlerts: this.getActiveAlerts().length,
       patterns: this.getActivityPatterns().length,
     };
@@ -343,4 +424,19 @@ export class PredictiveIntelligence {
         alert.createdAt, alert.acknowledged ? 1 : 0);
     } catch { /* best-effort */ }
   }
+}
+
+function mapAlertRow(row: PredictiveAlertRow): PredictiveAlert {
+  return {
+    id: row.id,
+    type: row.type,
+    severity: row.severity,
+    title: row.title,
+    description: row.description,
+    suggestedAction: row.suggested_action,
+    confidence: Number(row.confidence ?? 0),
+    data: JSON.parse(row.data || '{}') as Record<string, unknown>,
+    createdAt: Number(row.created_at ?? 0),
+    acknowledged: Boolean(row.acknowledged),
+  };
 }

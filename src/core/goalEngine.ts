@@ -25,7 +25,7 @@ export interface AutonomousGoal {
 export interface GoalDecision {
   decisionId: string;
   goalId: string;
-  type: 'created' | 'activated' | 'completed' | 'blocked';
+  type: 'created' | 'activated' | 'completed' | 'blocked' | 'abandoned';
   reason: string;
   timestamp: number;
 }
@@ -101,6 +101,30 @@ export class GoalEngine extends EventEmitter {
     if (!goal) return null;
     goal.currentValue = currentValue;
     this.emit('goal:progress', goal);
+    return goal;
+  }
+
+  setGoalStatus(
+    goalId: string,
+    status: Exclude<AutonomousGoal['status'], 'proposed'>,
+    reason: string,
+  ): AutonomousGoal | null {
+    const goal = this.goals.get(goalId);
+    if (!goal) return null;
+
+    goal.status = status;
+
+    if (status === 'active') {
+      this.recordDecision(goal.goalId, 'activated', reason);
+    } else if (status === 'completed') {
+      this.recordDecision(goal.goalId, 'completed', reason);
+    } else if (status === 'blocked') {
+      this.recordDecision(goal.goalId, 'blocked', reason);
+    } else if (status === 'abandoned') {
+      this.recordDecision(goal.goalId, 'abandoned', reason);
+    }
+
+    this.emit('goal:decision', { goalId: goal.goalId, status, reason });
     return goal;
   }
 

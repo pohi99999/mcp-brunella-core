@@ -5,6 +5,7 @@ tools: [vscode/memory, vscode/newWorkspace, vscode/resolveMemoryFileUri, vscode/
 
 
 
+
 model: claude-sonnet-4.6
 argument-hint: "Describe the complex task or workflow to orchestrate. Include: goal, constraints, which agents may be relevant (optional), and success criteria."
 ---

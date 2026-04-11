@@ -5,7 +5,7 @@ import
   Sparkles, Layers, History, FlaskConical, Brain, Shield, Code2,
   Zap, FileText, Gauge, Activity, Box, FolderOpen, Settings, Workflow, Terminal,
   BarChart3, Flame, Briefcase, Palette, DollarSign, Lightbulb, Database, Bell, Wallet,
-  Search, Target, Receipt, ShieldAlert, Users, Wrench, Building2, Globe, ClipboardList, PackageSearch
+  Search, Target, Receipt, ShieldAlert, Users, Wrench, Building2, Globe, ClipboardList, PackageSearch, TrendingUp
 } from "lucide-react";
 
 // Component Imports
@@ -78,10 +78,12 @@ import ToolDiscoveryPanel from "@/components/dashboard/ToolDiscoveryPanel";
 import SecurityPanel from "@/components/dashboard/SecurityPanel";
 import { Crawl4AIPanel } from "@/components/dashboard/Crawl4AIPanel";
 import { IntelligenceMonitorPanel } from "@/components/dashboard/IntelligenceMonitorPanel";
+import { WorldPerceptionPanel } from "@/components/dashboard/WorldPerceptionPanel";
 import { UserPreferencesPanel } from "@/components/dashboard/UserPreferencesPanel";
 import LLMObservabilityPanel from "@/components/dashboard/LLMObservabilityPanel";
 import { CopilotCommanderPanel } from "@/components/dashboard/CopilotCommanderPanel";
 import { CopilotOrchestratorPanel } from "@/components/dashboard/CopilotOrchestratorPanel";
+import { PredictiveDecisionPanel } from "@/components/dashboard/PredictiveDecisionPanel";
 import { KernelPipelinePanel } from "@/components/dashboard/KernelPipelinePanel";
 import { RemoteConsolePanel } from "@/components/dashboard/RemoteConsolePanel";
 import { ZeroPromptNotificationPanel } from "@/components/dashboard/ZeroPromptNotificationPanel";
@@ -264,6 +266,8 @@ export function initializeNavigation ()
     { id: "security-panel", label: "Security Monitor", icon: Shield, component: <SecurityPanel /> },
     { id: "crawl4ai", label: "Crawl4AI", icon: Search, component: <Crawl4AIPanel /> },
     { id: "intelligence-monitor", label: "Intelligence Monitor", icon: Database, component: <IntelligenceMonitorPanel /> },
+    { id: "predictive-decision", label: "Predictive Decision", icon: Lightbulb, component: <PredictiveDecisionPanel /> },
+    { id: "world-perception", label: "World Perception", icon: Globe, component: <WorldPerceptionPanel /> },
     { id: "user-preferences", label: "Felhasználói Memória", icon: Database, component: <UserPreferencesPanel /> },
     { id: "llm-observability", label: "LLM Observability", icon: BarChart3, component: <LLMObservabilityPanel /> },
     { id: "copilot-commander", label: "Copilot Commander", icon: Terminal, component: <CopilotCommanderPanel /> },
@@ -292,7 +296,7 @@ export function initializeNavigation ()
 
   // Register groups
   navigationRegistry.registerGroup( { title: "Core Systems", icon: Layers, items: ["dashboard", "neural-map", "system-arch", "studio", "vscode", "process-control", "service-control"] } );
-  navigationRegistry.registerGroup( { title: "AI & Agents", icon: Brain, items: ["chat", "paios", "copilot-orchestrator", "copilot-commander", "kernel-pipeline", "assistant-blueprint", "phoenix", "phoenix-flywheel", "zero-prompt-notifications", "ephemeral-agents", "learning-loop", "federation", "management", "agent-diagnostics", "agent-registry-governance", "agent-factory", "decomposer", "incubator", "knowledge", "memory", "cognitive-memory", "user-preferences", "developer", "edge", "robotkez", "browser-copilot", "jules", "ai-agent-briefing"] } );
+  navigationRegistry.registerGroup( { title: "AI & Agents", icon: Brain, items: ["chat", "paios", "copilot-orchestrator", "copilot-commander", "kernel-pipeline", "assistant-blueprint", "phoenix", "phoenix-flywheel", "zero-prompt-notifications", "ephemeral-agents", "learning-loop", "predictive-decision", "world-perception", "federation", "management", "agent-diagnostics", "agent-registry-governance", "agent-factory", "decomposer", "incubator", "knowledge", "memory", "cognitive-memory", "user-preferences", "developer", "edge", "robotkez", "browser-copilot", "jules", "ai-agent-briefing"] } );
   navigationRegistry.registerGroup( { title: "Enterprise", icon: Briefcase, items: ["enterprise-suite", "digital-hr", "hr-timesheet", "hr-onboarding", "grant-hunter", "law-detective", "property-visionary", "property-sales", "psales-intake", "psales-research", "psales-strategy", "enterprise-analytics", "intelligence-monitor"] } );
   navigationRegistry.registerGroup( { title: "Értékesítési Központ", icon: DollarSign, items: ["trojan-horse", "lead-monitor", "demo-factory", "showcase", "campaign-studio", "leads-master", "innovation-bridge", "invoice-sync", "bookkeeping", "finance-reconciliation", "kp-penztar", "lead-mining", "marketwatcher", "inventory"] } );
   navigationRegistry.registerGroup( { title: "KKV Pack", icon: PackageSearch, items: ["kkv-pack"] } );
