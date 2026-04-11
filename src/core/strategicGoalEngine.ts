@@ -9,7 +9,7 @@ export interface Goal {
   measurement: string;
   agents: string[];
 }
-export interface OrganizationalContext {}
+export type OrganizationalContext = Record<string, unknown>;
 
 declare const cashFlowAgent: any;
 declare const marketIntelAgent: any;

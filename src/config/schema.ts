@@ -83,10 +83,10 @@ function parseConfig(): Config {
       // Workspace
       workspaceRoot: process.env.BRUNELLA_WORKSPACE_ROOT,
     });
-  } catch (error) {
-    if (error instanceof z.ZodError) {
+  } catch (error: any) {
+    if (error && typeof error === "object" && "errors" in error) {
       const formattedErrors = error.errors.map(
-        (e) => `  - ${e.path.join('.')}: ${e.message}`
+        (e: any) => `  - ${e.path.join('.')}: ${e.message}`
       ).join('\n');
 
       throw new Error(

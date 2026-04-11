@@ -228,7 +228,7 @@ export function registerTaskManagementTools(server: McpServer): void {
         .describe("Cron kifejezés (pl. '0 9 * * *' = minden nap reggel 9-kor)"),
       handler: z.string().default("agentManager")
         .describe("Kezelő neve (alap: 'agentManager')"),
-      metadata: z.record(z.unknown()).default({}).optional()
+      metadata: z.record(z.string(), z.unknown()).default({}).optional()
         .describe("Opcionális metaadat JSON objektum"),
     },
     async ({ title, prompt, cron_expression, handler = "agentManager", metadata = {} }) => {

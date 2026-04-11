@@ -87,7 +87,7 @@ export function createHRTimesheetRoutes(): Router {
         storedEntry,
       });
     } catch (error: unknown) {
-      if (error instanceof z.ZodError) {
+      if (error && typeof error === "object" && "errors" in error) {
         res.status(400).json({ success: false, error: 'Validation failed', details: error.errors });
         return;
       }
@@ -119,7 +119,7 @@ export function createHRTimesheetRoutes(): Router {
         ...exportResult,
       });
     } catch (error: unknown) {
-      if (error instanceof z.ZodError) {
+      if (error && typeof error === "object" && "errors" in error) {
         res.status(400).json({ success: false, error: 'Validation failed', details: error.errors });
         return;
       }
@@ -149,7 +149,7 @@ export function createHRTimesheetRoutes(): Router {
         ...alertResult,
       });
     } catch (error: unknown) {
-      if (error instanceof z.ZodError) {
+      if (error && typeof error === "object" && "errors" in error) {
         res.status(400).json({ success: false, error: 'Validation failed', details: error.errors });
         return;
       }

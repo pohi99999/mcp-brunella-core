@@ -55,7 +55,7 @@ function isPlainZodShape(value: unknown): value is Record<string, z.ZodTypeAny> 
   return entries.length === 0 || entries.every((entry) => isZodSchemaLike(entry));
 }
 
-function unwrapZodType(schema: z.ZodTypeAny): z.ZodTypeAny {
+function unwrapZodType(schema: any): any {
   if (schema instanceof z.ZodOptional || schema instanceof z.ZodNullable) {
     return unwrapZodType(schema.unwrap());
   }
@@ -64,7 +64,7 @@ function unwrapZodType(schema: z.ZodTypeAny): z.ZodTypeAny {
     return unwrapZodType(schema._def.innerType);
   }
 
-  if (schema instanceof z.ZodEffects) {
+  if (schema && (schema as any)._def && (schema as any)._def.typeName === "ZodEffects") {
     return unwrapZodType(schema._def.schema);
   }
 
@@ -641,7 +641,7 @@ export async function registerAllTools(server: McpServer) {
       "write_sheets_invoices",
       writeSheetsInvoicesTool.description,
       {
-        invoices: z.array(z.record(z.any())).optional(),
+        invoices: z.array(z.record(z.string(), z.any())).optional(),
         append: z.boolean().optional(),
         include_line_items: z.boolean().optional(),
         clear_first: z.boolean().optional(),
