@@ -19,5 +19,11 @@
   "dependencies": [],
   "estimated_effort": "medium",
   "business_value": "Visible progress tracking",
-  "group": "brunella"
+  "group": "brunella",
+  "dod": {
+    "tests_pass": false,
+    "build_clean": false,
+    "code_committed": false,
+    "no_verify_used": false
+  }
 }

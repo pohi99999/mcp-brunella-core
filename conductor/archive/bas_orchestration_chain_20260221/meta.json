@@ -48,5 +48,11 @@
     "0 TypeScript build hiba, minden vitest teszt ZÖLD."
   ],
   "nextStep": "Track KÉSZ. Archiválható: conductor/archive/bas_orchestration_chain_20260221/",
-  "group": "other"
+  "group": "other",
+  "dod": {
+    "tests_pass": false,
+    "build_clean": false,
+    "code_committed": false,
+    "no_verify_used": false
+  }
 }

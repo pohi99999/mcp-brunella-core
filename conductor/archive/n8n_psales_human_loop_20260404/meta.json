@@ -23,5 +23,11 @@
   "completedAt": "2026-04-05T00:00:00Z",
   "archivedAt": "2026-04-05T00:00:00Z",
   "archiveReason": "Persistent approval state, pause/resume, audit trail, weekly status reporting, and dashboard support are implemented and verified; no follow-up track is needed.",
-  "group": "business"
+  "group": "business",
+  "dod": {
+    "tests_pass": false,
+    "build_clean": false,
+    "code_committed": false,
+    "no_verify_used": false
+  }
 }

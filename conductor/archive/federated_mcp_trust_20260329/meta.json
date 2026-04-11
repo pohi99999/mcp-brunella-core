@@ -31,5 +31,11 @@
     "Capability láthatóság peer-szinten korlátozható",
     "A remote kapcsolat előfeltételeként policy- és trust-check fut"
   ],
-  "group": "brunella"
+  "group": "brunella",
+  "dod": {
+    "tests_pass": false,
+    "build_clean": false,
+    "code_committed": false,
+    "no_verify_used": false
+  }
 }

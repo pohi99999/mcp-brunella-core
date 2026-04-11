@@ -26,5 +26,11 @@
   "notes": [
     "Structured memory is wired into BaseAgent pattern reuse, Copilot cognitive enrichment, and the feedback learning loop.",
     "Focused validation now includes a dedicated dashboard regression test for MemoryPanel in addition to backend, CLI, and cognitive-memory coverage."
-  ]
+  ],
+  "dod": {
+    "tests_pass": false,
+    "build_clean": false,
+    "code_committed": false,
+    "no_verify_used": false
+  }
 }

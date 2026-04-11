@@ -32,5 +32,11 @@
     "system_wide_zero_mock_20260301",
     "orchestrator_cognition_upgrade_20260320"
   ],
-  "group": "brunella"
+  "group": "brunella",
+  "dod": {
+    "tests_pass": false,
+    "build_clean": false,
+    "code_committed": false,
+    "no_verify_used": false
+  }
 }

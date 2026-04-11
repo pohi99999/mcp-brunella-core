@@ -103,7 +103,7 @@ export async function gitAutoCheckpoint(
     // Create recovery commit
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
     const commitMsg = `[phoenix-recovery] ${agentName} checkpoint @ ${timestamp}\n\nError: ${errorMessage.slice(0, 200)}`;
-    await execGit(['commit', '-m', commitMsg, '--no-verify']);
+    await execGit(['commit', '-m', commitMsg]);
 
     // Get commit hash
     const commitHash = await execGit(['rev-parse', '--short', 'HEAD']);

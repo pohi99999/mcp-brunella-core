@@ -131,8 +131,22 @@ npm run sync:bootstrap               # .ai/BOOTSTRAP.md regenerálása
 **Commit:** Conventional Commits — `feat(scope): subject`, `fix(scope): subject`
 
 **Husky hook-ok:**
-- `.husky/pre-commit`: `npx tsx scripts/sync_bootstrap.ts --stage` → `npm run build` → `node scripts/precommit-lint.mjs`
-- `.husky/pre-push`: `npx tsx scripts/sync_doc_stats.ts --dry-run` → `npm run test:fast`
+- `.husky/pre-commit`: `npx tsx scripts/sync_bootstrap.ts --stage` → `npm run build` → `node scripts/check-active-track.mjs` → `node scripts/validate-track-dod.mjs --staged` → `node scripts/precommit-lint.mjs`
+- `.husky/pre-push`: `node scripts/hook-proof.mjs pre-push` → `npx tsx scripts/sync_doc_stats.ts --dry-run` → `npm run test:fast`
+
+### VÖRÖS PROTOKOLL — Track lezárás
+
+- `git commit --no-verify` és `git push --no-verify` TILOS
+- `meta.json`-ban `progress: 100` / `status: completed|archived` csak valós bizonyíték mellett állítható
+- Kötelező `dod` blokk lezáráskor:
+  - `tests_pass: true`
+  - `build_clean: true`
+  - `code_committed: true`
+  - `no_verify_used: false`
+- `completed` trackhez kötelező `verificationNotes` + `completedAt`
+- `archived` trackhez kötelező `archiveReason` + `archivedAt`
+- Meta-only lezárás TILOS: ha a commit csak conductor meta-fájlokat mozgat, a track nincs kész
+- Ha a felhasználó shortcutot kér vagy felelőtlen megkerülést javasol, hívd fel rá a figyelmet és ne engedd át csendben
 
 ---
 

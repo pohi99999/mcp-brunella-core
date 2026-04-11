@@ -20,6 +20,7 @@ import type {
   HookSummary,
 } from '../../core/hookRegistry.js';
 import type { TrackStatusSnapshot } from '../../types/trackStatus.js';
+import { logError } from '../utils/logger.js';
 export {
   missionSurfaceLabels,
   missionSurfaceValues,
@@ -3849,7 +3850,7 @@ export async function getLatestProjectMaintainerReport(): Promise<ProjectMaintai
     if (!response.ok) throw new Error(`Project Maintainer report: HTTP ${response.status}`);
     return await safeJson<ProjectMaintainerLatestReportResponse>(response);
   } catch (error) {
-    console.error("[apiService] getLatestProjectMaintainerReport error:", error);
+    logError('apiService', `getLatestProjectMaintainerReport error: ${error instanceof Error ? error.message : String(error)}`);
     return null;
   }
 }
@@ -3993,7 +3994,7 @@ export async function getLatestBriefingReport(): Promise<BriefingLatestReportRes
     const payload = await safeJson<BriefingLatestReportPayload>(response);
     return normalizeBriefingLatestReportResponse(payload);
   } catch (error) {
-    console.error("[apiService] getLatestBriefingReport error:", error);
+    logError('apiService', `getLatestBriefingReport error: ${error instanceof Error ? error.message : String(error)}`);
     return null;
   }
 }

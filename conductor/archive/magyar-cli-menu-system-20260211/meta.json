@@ -20,5 +20,11 @@
   "estimated_effort": "high",
   "business_value": "No-typing, fully Hungarian interactive CLI",
   "archived_at": "2026-02-13T00:00:00Z",
-  "group": "other"
+  "group": "other",
+  "dod": {
+    "tests_pass": false,
+    "build_clean": false,
+    "code_committed": false,
+    "no_verify_used": false
+  }
 }

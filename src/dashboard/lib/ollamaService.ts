@@ -1,4 +1,5 @@
 import { OllamaStatus, ChatMessage, AgentTool, ToolCall } from './types'
+import { logError } from '../utils/logger.js'
 
 const DEFAULT_OLLAMA_BASE_URL = 'http://localhost:11434'
 const DEFAULT_MODEL = 'llama3.2'
@@ -129,7 +130,7 @@ export class OllamaService {
                 }
               }
             } catch (e) {
-              console.error('JSON parse hiba:', e)
+              logError('OllamaService', `JSON parse hiba: ${e instanceof Error ? e.message : String(e)}`)
             }
           }
         }

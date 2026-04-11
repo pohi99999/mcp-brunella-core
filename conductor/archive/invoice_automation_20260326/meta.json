@@ -31,5 +31,11 @@
     "dashboard"
   ],
   "summary": "Teljes számlafeldolgozó rendszer: InvoiceAutomationAgent (Gemini Vision), Google Workspace MCP integráció (Gmail/Drive/Sheets), InvoiceAutomationWidget dashboard komponens, brunella invoices CLI. Minden fázis 100%-ra befejezve, tesztelve.",
-  "group": "business"
+  "group": "business",
+  "dod": {
+    "tests_pass": false,
+    "build_clean": false,
+    "code_committed": false,
+    "no_verify_used": false
+  }
 }

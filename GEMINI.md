@@ -96,6 +96,7 @@ python scripts/sync_foszal.py  # .ai/FOSZAL.md frissítése munka után
 - **`console.log` TILOS** — használd `logInfo()` / `logError()` / `Logger` osztályt
 - **Agent `finally` KÖTELEZŐ:** `setAgentStatus(this.name, 'idle')` mindig legyen finally-ban
 - **Vitest (NE Jest!):** `vi.fn()`, `vi.mock()`, `vi.spyOn()`
+- **Track lezárásnál VÖRÖS PROTOKOLL:** `git commit --no-verify` / `git push --no-verify` TILOS; `completed` vagy `archived` státusz csak érvényes `dod` blokk mellett adható meg (`tests_pass=true`, `build_clean=true`, `code_committed=true`, `no_verify_used=false`), plusz `verificationNotes` / `archiveReason` kötelező
 
 **Commit:** Conventional Commits — `feat(scope): subject`, `fix(scope): subject`
 
@@ -129,6 +130,7 @@ Majd: `python scripts/sync_foszal.py`
 - **0-Hiba Stratégia:** `npm run build` + `npm run test:fast` MUSZÁJ PASS commit előtt
 - **EPP v2 6. szabály:** Minden új funkció = Dashboard + CLI is KÖTELEZŐ
 - **Új agent:** IAgent/BaseAgent implementáció + `registry.json` regisztráció + tesztek
+- **Meta-only lezárás TILOS:** conductor metadata önmagában nem elég; a lezáró commitnak valódi repo-változást is tartalmaznia kell
 
 ---
 

@@ -2,6 +2,7 @@ import EventEmitter from 'events';
 import fs from 'fs';
 import path from 'path';
 import { logInfo, logError } from '../utils/logger.js';
+import { normalizeTrackDod, type TrackDodChecklist } from '../utils/trackDod.js';
 
 export type SdlcPhase = 'architect' | 'devops' | 'coder' | 'qa' | 'reviewer';
 export type SdlcPhaseStatus = 'pending' | 'running' | 'completed' | 'failed';
@@ -25,6 +26,7 @@ interface MetaJson {
   id: string;
   status: string;
   progress: number;
+  dod?: TrackDodChecklist;
   sdlc?: SdlcBlock;
   [key: string]: unknown;
 }
@@ -71,11 +73,19 @@ export const sdlcEvents = new EventEmitter();
 
 function readMeta(trackDir: string): MetaJson {
   const p = path.join(trackDir, 'meta.json');
-  return JSON.parse(fs.readFileSync(p, 'utf-8')) as MetaJson;
+  const meta = JSON.parse(fs.readFileSync(p, 'utf-8')) as MetaJson;
+  return {
+    ...meta,
+    dod: normalizeTrackDod(meta.dod),
+  };
 }
 
 function writeMeta(trackDir: string, meta: MetaJson): void {
-  fs.writeFileSync(path.join(trackDir, 'meta.json'), JSON.stringify(meta, null, 2), 'utf-8');
+  const normalized = {
+    ...meta,
+    dod: normalizeTrackDod(meta.dod),
+  };
+  fs.writeFileSync(path.join(trackDir, 'meta.json'), JSON.stringify(normalized, null, 2), 'utf-8');
 }
 
 function renderPhaseOutput(

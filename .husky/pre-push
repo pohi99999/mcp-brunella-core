@@ -1,4 +1,5 @@
 # Pre-push: csak a gyors alapteszt profil fusson helyben.
 # A teljes suite napi GitHub Actions workflow-ban fut.
+node scripts/hook-proof.mjs pre-push || exit 1
 npx tsx scripts/sync_doc_stats.ts --dry-run || echo "[warn] Documentation stats drift detected. Run npm run sync:doc-stats."
 npm run test:fast < /dev/null || exit 1

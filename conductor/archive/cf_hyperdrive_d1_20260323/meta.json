@@ -10,5 +10,11 @@
   "archiveReason": "Hyperdrive is designed for external PostgreSQL/MySQL databases, not for Cloudflare D1. D1 is a native Cloudflare database that is already optimized for Workers and does not support Hyperdrive connection pooling.",
   "dependencies": [],
   "phase": "optimization",
-  "group": "other"
+  "group": "other",
+  "dod": {
+    "tests_pass": false,
+    "build_clean": false,
+    "code_committed": false,
+    "no_verify_used": false
+  }
 }

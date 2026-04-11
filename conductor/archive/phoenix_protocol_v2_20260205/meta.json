@@ -20,5 +20,11 @@
   "estimated_effort": "medium",
   "business_value": "high",
   "notes": "✅ ALL 4 PHASES COMPLETE (100%) | Phase 1: Heartbeat Monitor (14/14) | Phase 2: AgentManager Recovery Logic (9/9) | Phase 3: Checkpoint Retention (8/8) | Phase 4: Graceful Degradation (31/31) | Total Tests: 62/62 PASSED",
-  "group": "brunella"
+  "group": "brunella",
+  "dod": {
+    "tests_pass": false,
+    "build_clean": false,
+    "code_committed": false,
+    "no_verify_used": false
+  }
 }

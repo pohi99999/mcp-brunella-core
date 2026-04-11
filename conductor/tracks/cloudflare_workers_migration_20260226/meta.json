@@ -86,5 +86,11 @@
     "D1 Database (bas-metadata: 1bb000ba-40ea-4ddf-88b4-8df42e1123ab) — MEGVAN"
   ],
   "notes": "A korábban archivált CEAN track (cloudflare_edge_agents_network_20260215) elért 5%-ot (spec kész). Ez a track azt folytatja, de konkrét Worker kóddal és 16-ra bővített agent listával.",
-  "group": "brunella"
+  "group": "brunella",
+  "dod": {
+    "tests_pass": false,
+    "build_clean": false,
+    "code_committed": false,
+    "no_verify_used": false
+  }
 }

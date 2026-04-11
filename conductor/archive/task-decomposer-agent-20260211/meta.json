@@ -19,5 +19,11 @@
   "dependencies": [],
   "estimated_effort": "high",
   "business_value": "Decompose complex tasks into executable micro-tasks",
-  "group": "brunella"
+  "group": "brunella",
+  "dod": {
+    "tests_pass": false,
+    "build_clean": false,
+    "code_committed": false,
+    "no_verify_used": false
+  }
 }

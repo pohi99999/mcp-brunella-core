@@ -24,5 +24,11 @@
     "meta.json is accurate reflecting the project state."
   ],
   "nextStep": "Review and update meta.json",
-  "group": "other"
+  "group": "other",
+  "dod": {
+    "tests_pass": false,
+    "build_clean": false,
+    "code_committed": false,
+    "no_verify_used": false
+  }
 }

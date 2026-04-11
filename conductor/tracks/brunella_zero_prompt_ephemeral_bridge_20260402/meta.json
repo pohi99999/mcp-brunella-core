@@ -26,5 +26,11 @@
   "verifiedAt": "2026-04-02",
   "verificationNotes": "Three-way policy routing implemented; 5/5 integration tests pass",
   "testFile": "test/zeroPromptEphemeralBridge.integration.test.ts",
-  "group": "brunella"
+  "group": "brunella",
+  "dod": {
+    "tests_pass": false,
+    "build_clean": false,
+    "code_committed": false,
+    "no_verify_used": false
+  }
 }

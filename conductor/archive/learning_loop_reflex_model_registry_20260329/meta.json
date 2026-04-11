@@ -33,5 +33,11 @@
     "Rollback egy lépésben végrehajtható",
     "A ModelRouter tud reflex modellt választani rutin taskokra"
   ],
-  "group": "brunella"
+  "group": "brunella",
+  "dod": {
+    "tests_pass": false,
+    "build_clean": false,
+    "code_committed": false,
+    "no_verify_used": false
+  }
 }

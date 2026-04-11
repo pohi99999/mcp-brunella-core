@@ -41,6 +41,7 @@ import {
 import { toast } from 'sonner';
 import * as api from '@/lib/apiService';
 import { useSocket } from '@/context/SocketContext';
+import { logError } from '../../utils/logger.js';
 
 interface ChatMessage {
   role: 'user' | 'assistant';
@@ -284,7 +285,7 @@ export function RobotkezV2Chat() {
         );
       }
     } catch (err) {
-      console.error('[RobotkezV2Chat] Refresh error:', err instanceof Error ? err.message : String(err));
+      logError('RobotkezV2Chat', `Refresh error: ${err instanceof Error ? err.message : String(err)}`);
     } finally {
       setIsRefreshing(false);
     }

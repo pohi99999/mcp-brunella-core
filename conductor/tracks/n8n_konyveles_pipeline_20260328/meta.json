@@ -41,5 +41,11 @@
       "estimated_days": 10
     }
   },
-  "group": "business"
+  "group": "business",
+  "dod": {
+    "tests_pass": false,
+    "build_clean": false,
+    "code_committed": false,
+    "no_verify_used": false
+  }
 }

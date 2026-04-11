@@ -20,5 +20,11 @@
   "dependencies": [
     "error_handling_standard_20260404"
   ],
-  "group": "brunella"
+  "group": "brunella",
+  "dod": {
+    "tests_pass": false,
+    "build_clean": false,
+    "code_committed": false,
+    "no_verify_used": false
+  }
 }

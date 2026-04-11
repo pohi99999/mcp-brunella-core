@@ -7,5 +7,11 @@
   "archived_at": "2026-02-05T01:50:00Z",
   "archive_reason": "Stale - no progress for 15 days",
   "description": "A Gemini CLI teljes kiváltása egy saját Brunella CLI-vel, amely MCP-n keresztül kommunikál a Brunella Core szerverrel.",
-  "group": "brunella"
+  "group": "brunella",
+  "dod": {
+    "tests_pass": false,
+    "build_clean": false,
+    "code_committed": false,
+    "no_verify_used": false
+  }
 }

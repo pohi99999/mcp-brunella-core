@@ -60,11 +60,35 @@
       "type": "string",
       "format": "date-time"
     },
+    "completedAt": {
+      "type": "string"
+    },
+    "completed_at": {
+      "type": "string"
+    },
     "archived_at": {
       "type": "string",
       "format": "date-time"
     },
+    "archivedAt": {
+      "type": "string"
+    },
     "archive_reason": {
+      "type": "string"
+    },
+    "archiveReason": {
+      "type": "string"
+    },
+    "verified": {
+      "type": "boolean"
+    },
+    "verifiedAt": {
+      "type": "string"
+    },
+    "verificationNotes": {
+      "type": "string"
+    },
+    "verification_notes": {
       "type": "string"
     },
     "assigned_agent": {
@@ -85,6 +109,70 @@
     "tags": {
       "type": "array",
       "items": { "type": "string" }
+    },
+    "dod": {
+      "type": "object",
+      "required": ["tests_pass", "build_clean", "code_committed", "no_verify_used"],
+      "additionalProperties": false,
+      "properties": {
+        "tests_pass": {
+          "type": "boolean"
+        },
+        "build_clean": {
+          "type": "boolean"
+        },
+        "code_committed": {
+          "type": "boolean"
+        },
+        "no_verify_used": {
+          "type": "boolean",
+          "description": "Must remain false. True means a forbidden --no-verify bypass occurred."
+        }
+      }
     }
-  }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": { "const": "completed" }
+        }
+      },
+      "then": {
+        "required": ["dod", "verificationNotes", "completedAt"],
+        "properties": {
+          "progress": { "const": 100 },
+          "dod": {
+            "properties": {
+              "tests_pass": { "const": true },
+              "build_clean": { "const": true },
+              "code_committed": { "const": true },
+              "no_verify_used": { "const": false }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": { "const": "archived" }
+        }
+      },
+      "then": {
+        "required": ["dod", "archiveReason", "archivedAt"],
+        "properties": {
+          "progress": { "const": 100 },
+          "dod": {
+            "properties": {
+              "tests_pass": { "const": true },
+              "build_clean": { "const": true },
+              "code_committed": { "const": true },
+              "no_verify_used": { "const": false }
+            }
+          }
+        }
+      }
+    }
+  ]
 }

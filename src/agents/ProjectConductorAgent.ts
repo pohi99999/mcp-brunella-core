@@ -6,6 +6,7 @@ import * as path from "path";
 import { execSync } from "child_process";
 import { ensureError } from "../utils/ensureError.js";
 import * as sdlcPipeline from "../core/sdlcPipeline.js";
+import { normalizeTrackDod, type TrackDodChecklist } from "../utils/trackDod.js";
 
 // ============================================================================
 // INTERFACES
@@ -28,6 +29,7 @@ interface TrackState {
   lastActivity: string;
   blockers: string[];
   assignee?: string;
+  dod: TrackDodChecklist;
 }
 
 interface ComponentState {
@@ -430,6 +432,7 @@ ${(this.projectState.components || []).map((c) => `- **${c.name}:** ${c.status =
       progress: 0,
       created_at: createdAt,
       updated_at: createdAt,
+      dod: normalizeTrackDod(undefined),
     };
 
     fs.writeFileSync(
@@ -447,6 +450,7 @@ ${(this.projectState.components || []).map((c) => `- **${c.name}:** ${c.status =
       progress: 0,
       lastActivity: createdAt,
       blockers: [],
+      dod: normalizeTrackDod(undefined),
     };
 
     this.projectState.tracks.push(newTrack);
@@ -533,6 +537,7 @@ ${(this.projectState.components || []).map((c) => `- **${c.name}:** ${c.status =
                   existingTrack?.assignee ??
                   "",
               ) || undefined,
+            dod: normalizeTrackDod(meta.dod),
           });
 
           continue;
@@ -576,6 +581,7 @@ ${(this.projectState.components || []).map((c) => `- **${c.name}:** ${c.status =
             lastActivity: fs.statSync(trackMdPath).mtime.toISOString(),
             blockers: existingTrack?.blockers || [],
             assignee: existingTrack?.assignee,
+            dod: normalizeTrackDod(existingTrack?.dod),
           });
 
           continue;
@@ -610,6 +616,7 @@ ${(this.projectState.components || []).map((c) => `- **${c.name}:** ${c.status =
           lastActivity: fs.statSync(planPath).mtime.toISOString(),
           blockers: existingTrack?.blockers || [],
           assignee: existingTrack?.assignee,
+          dod: normalizeTrackDod(existingTrack?.dod),
         });
       }
     }
@@ -1249,7 +1256,16 @@ ${capabilities.length > 0 ? capabilities.map((c) => `- \`${c}\``).join("\n") : "
   private loadOrInitializeState(): ProjectState {
     if (fs.existsSync(STATE_FILE)) {
       try {
-        return JSON.parse(fs.readFileSync(STATE_FILE, "utf-8"));
+        const state = JSON.parse(fs.readFileSync(STATE_FILE, "utf-8")) as ProjectState;
+        return {
+          ...state,
+          tracks: Array.isArray(state.tracks)
+            ? state.tracks.map((track) => ({
+                ...track,
+                dod: normalizeTrackDod((track as { dod?: unknown }).dod),
+              }))
+            : [],
+        };
       } catch (error: unknown) {
         const err = ensureError(error);
         logError(this.name, `Állapot fájl sérült, újrainicializálás... (${err.message})`);

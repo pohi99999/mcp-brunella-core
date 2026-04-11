@@ -11,6 +11,7 @@
 
 import { logInfo, logWarn, logError, logDebug } from '../utils/logger.js';
 import { ensureError } from '../utils/ensureError.js';
+import { normalizeTrackDod, type TrackDodChecklist } from '../utils/trackDod.js';
 import fs from 'fs/promises';
 import path from 'path';
 
@@ -35,6 +36,7 @@ export interface SpecMeta {
     estimated_effort: string;
     business_value: string;
     rejection_reason?: string;
+    dod?: TrackDodChecklist;
 }
 
 // ============================================================================
@@ -197,7 +199,11 @@ async function readMeta(trackId: string): Promise<SpecMeta | null> {
     const metaPath = path.join(TRACKS_DIR, trackId, 'meta.json');
     try {
         const content = await fs.readFile(metaPath, 'utf-8');
-        return JSON.parse(content) as SpecMeta;
+        const meta = JSON.parse(content) as SpecMeta;
+        return {
+            ...meta,
+            dod: normalizeTrackDod(meta.dod),
+        };
     } catch (error: unknown) {
         const err = ensureError(error);
         logDebug('SpecStatus', `Could not read spec metadata for ${trackId}: ${err.message}`);
@@ -207,7 +213,10 @@ async function readMeta(trackId: string): Promise<SpecMeta | null> {
 
 async function writeMeta(trackId: string, meta: SpecMeta): Promise<void> {
     const metaPath = path.join(TRACKS_DIR, trackId, 'meta.json');
-    await fs.writeFile(metaPath, JSON.stringify(meta, null, 2), 'utf-8');
+    await fs.writeFile(metaPath, JSON.stringify({
+        ...meta,
+        dod: normalizeTrackDod(meta.dod),
+    }, null, 2), 'utf-8');
 }
 
 function isValidSpecStatus(status: string): status is SpecStatus {

@@ -24,5 +24,11 @@
   "verifiedAt": "2026-04-11",
   "completedAt": "2026-04-11T13:15:00Z",
   "archivedAt": "2026-04-11T13:15:00Z",
-  "archiveReason": "SelfModificationEngine core, REST/CLI/dashboard surfaces, scheduler hooks, agent metrics capture, and focused regression coverage are complete. No follow-up track is required because approved proposals generate their own rollout tracks automatically."
+  "archiveReason": "SelfModificationEngine core, REST/CLI/dashboard surfaces, scheduler hooks, agent metrics capture, and focused regression coverage are complete. No follow-up track is required because approved proposals generate their own rollout tracks automatically.",
+  "dod": {
+    "tests_pass": false,
+    "build_clean": false,
+    "code_committed": false,
+    "no_verify_used": false
+  }
 }

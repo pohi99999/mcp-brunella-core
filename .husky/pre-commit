@@ -5,4 +5,6 @@ npx tsx scripts/sync_bootstrap.ts --stage || exit 1
 # Repo-wide lint is noisy while the autofix branch is in progress.
 npm run build || exit 1
 node scripts/check-active-track.mjs || exit 1
+node scripts/validate-track-dod.mjs --staged || exit 1
 node scripts/precommit-lint.mjs || exit 1
+node scripts/hook-proof.mjs pre-commit || exit 1

@@ -35,7 +35,7 @@ npx vitest run tracks/kkv_crm_automation_20260404/tests/transform.test.js --run
    - If errors are unrelated and block merges, create a dedicated maintenance PR referencing the failure and assign to core maintainers.
 
 6) Communication
-   - In the PR thread, state: "Branch pushed with --no-verify due to local hooks; please run CI. If CI fails with unrelated errors, please raise maintenance PR referencing <CI job id>."
+   - In the PR thread, state: "Branch kept under normal hook verification. If CI still fails with unrelated errors, please raise a maintenance PR referencing <CI job id> and block merge until it is resolved."
    - Tag `@pohi99999` (repo owner) in the PR for urgent build-fix assistance.
 
 7) Post-triage

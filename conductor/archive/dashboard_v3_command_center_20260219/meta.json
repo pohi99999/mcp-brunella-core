@@ -70,5 +70,11 @@
     "Minden API hívás típusbiztos (Type-Safe) és hibatűrő.",
     "A CLI-ből is elérhető legyen a dashboard állapotának lekérdezése (`brunella dashboard status`)."
   ],
-  "group": "other"
+  "group": "other",
+  "dod": {
+    "tests_pass": false,
+    "build_clean": false,
+    "code_committed": false,
+    "no_verify_used": false
+  }
 }

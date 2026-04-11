@@ -19,6 +19,7 @@ import {
 import { trackStateManager } from '../services/trackStateManager.js';
 import { ensureError } from '../utils/ensureError.js';
 import { getGlobalDb } from '../utils/globalDb.js';
+import { normalizeTrackDod } from '../utils/trackDod.js';
 import { logInfo, logWarn } from '../utils/logger.js';
 import type Database from 'better-sqlite3';
 import type { EventEnvelope } from './eventFabric.js';
@@ -897,6 +898,7 @@ class SelfModificationEngine {
           reviewer: { status: 'pending' },
         },
       },
+      dod: normalizeTrackDod(undefined),
     };
 
     const spec = `# Spec: Self-mod rollout — ${proposal.agentName}

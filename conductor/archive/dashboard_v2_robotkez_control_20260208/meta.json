@@ -18,5 +18,11 @@
   "estimated_effort": "medium",
   "business_value": "Browser automation controllable from UI",
   "archived_at": "2026-02-13T00:00:00Z",
-  "group": "brunella"
+  "group": "brunella",
+  "dod": {
+    "tests_pass": false,
+    "build_clean": false,
+    "code_committed": false,
+    "no_verify_used": false
+  }
 }

@@ -75,5 +75,11 @@
   ],
   "notes": "Első priority: Discovery - mezőtérképek és mintahalmaz előállítása. Ha hiányzik bármely külső hozzáférés, fallback: manuális CSV import.",
   "risk_level": "medium",
-  "group": "business"
+  "group": "business",
+  "dod": {
+    "tests_pass": false,
+    "build_clean": false,
+    "code_committed": false,
+    "no_verify_used": false
+  }
 }

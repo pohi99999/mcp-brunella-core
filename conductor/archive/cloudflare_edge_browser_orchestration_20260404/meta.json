@@ -23,5 +23,11 @@
   "phase": 1,
   "archivedAt": "2026-04-04T12:50:00Z",
   "archiveReason": "Cloudflare edge browser orchestration and Robotkez integration completed, documented, validated, and closed without needing a follow-up track",
-  "group": "brunella"
+  "group": "brunella",
+  "dod": {
+    "tests_pass": false,
+    "build_clean": false,
+    "code_committed": false,
+    "no_verify_used": false
+  }
 }

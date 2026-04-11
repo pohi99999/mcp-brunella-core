@@ -30,5 +30,11 @@
     "A teljes tárgyalási transcript auditálható",
     "A negotiation outcome integrálható a remote routing flowba"
   ],
-  "group": "brunella"
+  "group": "brunella",
+  "dod": {
+    "tests_pass": false,
+    "build_clean": false,
+    "code_committed": false,
+    "no_verify_used": false
+  }
 }

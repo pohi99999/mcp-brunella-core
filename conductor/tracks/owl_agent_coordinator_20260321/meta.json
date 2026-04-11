@@ -87,5 +87,11 @@
     "npm test PASS"
   ],
   "spec": "docs/superpowers/specs/2026-03-21-owl-multi-agent-conflict-resolution-design.md",
-  "group": "brunella"
+  "group": "brunella",
+  "dod": {
+    "tests_pass": false,
+    "build_clean": false,
+    "code_committed": false,
+    "no_verify_used": false
+  }
 }

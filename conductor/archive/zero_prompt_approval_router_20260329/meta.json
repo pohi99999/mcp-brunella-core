@@ -31,5 +31,11 @@
     "Reject vagy timeout után a rendszer nem hajt végre veszélyes akciót",
     "Az approval flow auditálható és visszajátszható"
   ],
-  "group": "brunella"
+  "group": "brunella",
+  "dod": {
+    "tests_pass": false,
+    "build_clean": false,
+    "code_committed": false,
+    "no_verify_used": false
+  }
 }

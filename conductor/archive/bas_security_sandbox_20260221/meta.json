@@ -68,5 +68,11 @@
     "Performance: < 10% overhead az isolation miatt",
     "Zero-trust multi-agent execution model"
   ],
-  "group": "other"
+  "group": "other",
+  "dod": {
+    "tests_pass": false,
+    "build_clean": false,
+    "code_committed": false,
+    "no_verify_used": false
+  }
 }

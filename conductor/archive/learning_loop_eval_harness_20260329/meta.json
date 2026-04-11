@@ -32,5 +32,11 @@
     "A score report alkalmas registry promotion döntéshez",
     "Legalább egy nightly trainer outputtal összeköthető"
   ],
-  "group": "brunella"
+  "group": "brunella",
+  "dod": {
+    "tests_pass": false,
+    "build_clean": false,
+    "code_committed": false,
+    "no_verify_used": false
+  }
 }

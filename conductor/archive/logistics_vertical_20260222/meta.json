@@ -122,5 +122,11 @@
   "archivedAt": "2026-04-07T00:00:00.000Z",
   "archivedReason": "External frontend repo unavailable in this workspace; repo-local boundary split into logistics_vertical_repo_local_20260407",
   "followUpTrackId": "logistics_vertical_repo_local_20260407",
-  "group": "business"
+  "group": "business",
+  "dod": {
+    "tests_pass": false,
+    "build_clean": false,
+    "code_committed": false,
+    "no_verify_used": false
+  }
 }

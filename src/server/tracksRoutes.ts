@@ -17,6 +17,7 @@ import { agentManager } from "../agents/AgentManager.js";
 import { logInfo, logError, logDebug } from "../utils/logger.js";
 import { ensureError } from "../utils/ensureError.js";
 import { inferTrackGroup, normalizeTrackGroup, TRACK_GROUP_ORDER, type TrackGroupId } from "../utils/trackGroups.js";
+import { normalizeTrackDod } from "../utils/trackDod.js";
 import { type ProjectState, type TrackMetadata } from "../services/trackStateManager.js";
 import { buildTrackStatusSnapshot } from "../services/trackStatusSnapshot.js";
 import { socketService } from "./SocketService.js";
@@ -251,6 +252,7 @@ function normalizeTrackFromMeta(trackId: string, meta: Record<string, unknown>):
     assignee: pickString(meta.assignee),
     tags,
     dependencies,
+    dod: normalizeTrackDod(meta.dod),
     group,
   };
 }

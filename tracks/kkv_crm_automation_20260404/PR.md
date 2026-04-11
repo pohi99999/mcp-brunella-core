@@ -26,7 +26,7 @@ npx vitest run tracks/kkv_crm_automation_20260404/tests/transform.test.js --run
 
 Notes for reviewers
 -------------------
-- The branch was pushed with local hooks bypass (`--no-verify`) because a repo-wide TypeScript build is currently failing in unrelated files. Please let CI run the authoritative checks.
+- Hook bypass is not allowed. If local hooks fail because of unrelated repo debt, fix or isolate that debt first and then push with normal verification intact.
 - Focus your review on correctness of normalization rules (email lowercasing, phone numeric cleanup, created_at passthrough) and test coverage.
 
 Checklist

@@ -1,0 +1,1 @@
+node scripts/hook-proof.mjs post-commit || echo "[warn] Failed to record post-commit verification proof."

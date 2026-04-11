@@ -1,0 +1,28 @@
+name: Track Audit
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  audit-tracks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+
+      - name: Audit completed and archived tracks
+        run: node scripts/auditCompletedTracks.mjs --json --output test-results/track-audit.json
+
+      - name: Upload track audit artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: track-audit
+          path: test-results/track-audit.json

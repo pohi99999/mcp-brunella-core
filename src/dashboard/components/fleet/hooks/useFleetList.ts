@@ -6,6 +6,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Fleet, FleetHealth } from '../types.js';
 import { useCEANSocket } from '../../cean/hooks/useCEANSocket.js';
+import { logWarn } from '../../../utils/logger.js';
 
 interface UseFleetListResult {
   fleets: Fleet[];
@@ -57,7 +58,7 @@ export function useFleetList(): UseFleetListResult {
             };
           }
         } catch (err) {
-          console.warn(`Failed to fetch health for fleet ${fleet.id}:`, err);
+          logWarn('useFleetList', `Failed to fetch health for fleet ${fleet.id}: ${err instanceof Error ? err.message : String(err)}`);
           healthMap[fleet.id] = {
             total_workers: 0,
             healthy_workers: 0,

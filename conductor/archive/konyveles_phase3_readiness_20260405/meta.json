@@ -24,5 +24,11 @@
   "completedAt": "2026-04-05T00:00:00Z",
   "archivedAt": "2026-04-05T00:00:00Z",
   "archiveReason": "Phase 0 readiness is implemented and verified; the remaining phase3 work continues in the parent track.",
-  "group": "business"
+  "group": "business",
+  "dod": {
+    "tests_pass": false,
+    "build_clean": false,
+    "code_committed": false,
+    "no_verify_used": false
+  }
 }

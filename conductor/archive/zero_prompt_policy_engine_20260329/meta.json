@@ -32,5 +32,11 @@
     "A policy döntés visszakövethető audit logban",
     "A decision outcome használható az Approval Router inputjaként"
   ],
-  "group": "brunella"
+  "group": "brunella",
+  "dod": {
+    "tests_pass": false,
+    "build_clean": false,
+    "code_committed": false,
+    "no_verify_used": false
+  }
 }

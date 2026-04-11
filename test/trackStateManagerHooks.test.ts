@@ -1,4 +1,4 @@
-import { mkdtempSync, mkdirSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -85,5 +85,27 @@ describe('TrackStateManager hook integration', () => {
       }),
       expect.anything(),
     );
+  });
+
+  it('normalizes missing dod checklist values when syncing meta.json', async () => {
+    const { TrackStateManager } = await import('../src/services/trackStateManager.js');
+
+    const manager = new TrackStateManager();
+    await manager.fullSync();
+
+    const state = JSON.parse(
+      readFileSync(path.join(tempDir, 'conductor', 'project_state.json'), 'utf-8'),
+    ) as { tracks: Array<{ id: string; dod: Record<string, boolean> }> };
+
+    expect(state.tracks).toHaveLength(1);
+    expect(state.tracks[0]).toMatchObject({
+      id: 'track-1',
+      dod: {
+        tests_pass: false,
+        build_clean: false,
+        code_committed: false,
+        no_verify_used: false,
+      },
+    });
   });
 });

@@ -137,6 +137,28 @@ npm run test           # Vitest tesztek
 - [ ] Track napló frissítve
 - [ ] **EPP v2 Compliance:** Dashboard + CLI komponensek párhuzamosan készültek (lásd [EPP v2 Protocol](./epp-v2.md))
 
+### RED PROTOCOL — Track closure enforcement
+
+Track lezárás vagy archiválás **nem** lehet pusztán `meta.json` manipuláció.
+
+```json
+"dod": {
+  "tests_pass": true,
+  "build_clean": true,
+  "code_committed": true,
+  "no_verify_used": false
+}
+```
+
+Kötelező lezárási szabályok:
+
+- `status: completed|archived` és `progress: 100` csak érvényes `dod` mellett lehet igaz.
+- `completed` állapothoz kötelező `verificationNotes` + `completedAt`.
+- `archived` állapothoz kötelező `archiveReason` + `archivedAt`.
+- Meta-only lezárás TILOS: a lezáró commitnak valódi repo-munkát kell tartalmaznia, nem csak conductor meta-változást.
+- `git commit --no-verify` és `git push --no-verify` TILOS.
+- Ha a bizonyíték hiányzik, a tracket vissza kell tenni javításra vagy follow-up tracket kell nyitni.
+
 ### Engineering Precision Protocol v2 (EPP v2)
 
 **Hatálybalépés:** 2026-02-11

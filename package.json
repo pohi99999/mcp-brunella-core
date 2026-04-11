@@ -10,7 +10,8 @@
     "brunella-hu": "build/cli-hu.js"
   },
   "scripts": {
-    "build": "tsc && node -e \"const fs=require('fs');fs.mkdirSync('build/agents',{recursive:true});fs.copyFileSync('src/agents/registry.json','build/agents/registry.json');console.log('registry.json copied to build/agents/');fs.mkdirSync('build/data',{recursive:true});fs.copyFileSync('src/data/triz_matrix.json','build/data/triz_matrix.json');fs.copyFileSync('src/data/triz_principles.json','build/data/triz_principles.json');console.log('TRIZ data copied');\"",
+    "build:raw": "tsc && node -e \"const fs=require('fs');fs.mkdirSync('build/agents',{recursive:true});fs.copyFileSync('src/agents/registry.json','build/agents/registry.json');console.log('registry.json copied to build/agents/');fs.mkdirSync('build/data',{recursive:true});fs.copyFileSync('src/data/triz_matrix.json','build/data/triz_matrix.json');fs.copyFileSync('src/data/triz_principles.json','build/data/triz_principles.json');console.log('TRIZ data copied');\"",
+    "build": "npm run build:raw && node scripts/hook-proof.mjs mark-build",
     "build:stable": "npm run build && npm run build:ui",
     "sync:bootstrap": "tsx scripts/sync_bootstrap.ts",
     "sync:doc-stats": "tsx scripts/sync_doc_stats.ts",
@@ -31,7 +32,8 @@
     "cli": "node build/cli.js",
     "cli:hu": "node build/cli-hu.js",
     "test": "npm run build && vitest run",
-    "test:fast": "npm run build && vitest run --reporter=dot --exclude 'test/cli-e2e*' --exclude 'test/cli-phase*' --exclude 'test/phase*' --exclude 'test/swarm_smoke*' --exclude 'test/robotkez_integration.test.ts' --exclude 'test/lint_fixer.test.ts' --exclude 'test/core_tools.test.ts'",
+    "test:fast:raw": "npm run build && vitest run --reporter=dot --exclude 'test/cli-e2e*' --exclude 'test/cli-phase*' --exclude 'test/phase*' --exclude 'test/swarm_smoke*' --exclude 'test/robotkez_integration.test.ts' --exclude 'test/lint_fixer.test.ts' --exclude 'test/core_tools.test.ts'",
+    "test:fast": "npm run test:fast:raw && node scripts/hook-proof.mjs mark-testfast",
     "test:nightly": "npm run build && vitest run",
     "lint": "eslint src/ test/ ",
     "lint:fix": "eslint src/ test/ --fix",
@@ -39,6 +41,7 @@
     "test:coverage": "vitest run --coverage",
     "test:legacy": "node scripts/test_prepare.cjs && node --test test_build/core_tools.test.js",
     "test:python": "node --loader ts-node/esm --test test/python_shell.test.ts",
+    "test:integration": "node scripts/run-integration-tests.mjs",
     "test:vitest": "vitest run",
     "test:comprehensive": "vitest run test/llm_client.test.ts test/DeveloperAgent.test.ts",
     "test:all": "npm run test:unit:cli && npm run test:factory && npm run test:cli && npm test",
@@ -70,6 +73,8 @@
     "migrate": "npx tsx scripts/migrate-embeddings.ts",
     "prepare": "husky",
     "sync:tracks": "node ./scripts/export_tracks_to_sheet.js",
+    "track:audit": "node scripts/auditCompletedTracks.mjs",
+    "track:validate:dod": "node scripts/validate-track-dod.mjs --staged",
     "cf:rotate-secrets": "tsx scripts/rotate-cloudflare-secrets.ts"
   },
   "keywords": [

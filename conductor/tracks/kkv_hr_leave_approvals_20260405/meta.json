@@ -22,5 +22,11 @@
   ],
   "sourceDocument": "Derived from kkv_hr_automation_20260404",
   "phase": 2,
-  "group": "business"
+  "group": "business",
+  "dod": {
+    "tests_pass": false,
+    "build_clean": false,
+    "code_committed": false,
+    "no_verify_used": false
+  }
 }

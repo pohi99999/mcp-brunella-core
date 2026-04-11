@@ -33,5 +33,11 @@
     "A felhasználó csatornánként más jelzési policy-t tud beállítani",
     "Az Approval Router integráltan hívja a transport réteget"
   ],
-  "group": "brunella"
+  "group": "brunella",
+  "dod": {
+    "tests_pass": false,
+    "build_clean": false,
+    "code_committed": false,
+    "no_verify_used": false
+  }
 }

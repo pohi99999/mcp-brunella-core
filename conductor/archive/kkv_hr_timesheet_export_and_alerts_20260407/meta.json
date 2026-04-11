@@ -25,5 +25,11 @@
   ],
   "sourceDocument": "Gap analysis from kkv_hr_timesheet_culture_20260405",
   "phase": 4,
-  "group": "business"
+  "group": "business",
+  "dod": {
+    "tests_pass": false,
+    "build_clean": false,
+    "code_committed": false,
+    "no_verify_used": false
+  }
 }

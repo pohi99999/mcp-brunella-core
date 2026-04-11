@@ -32,5 +32,11 @@
   "notes": [
     "Lazy schema initialization removed import-time SQLite side effects from PredictiveDecisionEngine.",
     "Focused predictive coverage now spans engine, executor, route, CLI, scheduler, dashboard API, and dashboard panel behavior."
-  ]
+  ],
+  "dod": {
+    "tests_pass": false,
+    "build_clean": false,
+    "code_committed": false,
+    "no_verify_used": false
+  }
 }

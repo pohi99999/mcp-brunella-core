@@ -19,5 +19,11 @@
   "dependencies": [
     "remote_layer_phase7_superintelligent_infra_20260322"
   ],
-  "group": "brunella"
+  "group": "brunella",
+  "dod": {
+    "tests_pass": false,
+    "build_clean": false,
+    "code_committed": false,
+    "no_verify_used": false
+  }
 }

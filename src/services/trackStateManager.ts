@@ -19,6 +19,7 @@ import {
   inferTrackGroup,
   type TrackGroupId,
 } from '../utils/trackGroups.js';
+import { normalizeTrackDod, type TrackDodChecklist } from '../utils/trackDod.js';
 import chokidar, { FSWatcher } from 'chokidar';
 
 // ============================================================================
@@ -40,6 +41,7 @@ export interface TrackMetadata {
   riskLevel?: 'low' | 'medium' | 'high' | 'critical';
   tags?: string[];
   dependencies?: string[];
+  dod: TrackDodChecklist;
   group: TrackGroupId;
 
   // Original path (active or archived)
@@ -295,6 +297,7 @@ export class TrackStateManager {
       riskLevel,
       tags,
       dependencies,
+      dod: normalizeTrackDod(record.dod),
       group: inferTrackGroup({
         id,
         name,

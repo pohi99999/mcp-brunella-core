@@ -104,7 +104,7 @@ See [this README](integration-tests/README.md) for details.
 
 ### Pre-commit Hooks
 
-- You can skip failing precommit hooks using `--no-verify` during commit.
+- Do not bypass failing precommit hooks. Fix the underlying issue or isolate the change until the normal hook flow passes.
 
 ## Repo-Specific Utilities
 

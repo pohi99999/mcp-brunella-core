@@ -30,5 +30,11 @@
     "Duplikált vagy érzékeny rekord nem jut át a promotion lépésen",
     "A dataset export egyértelműen használható a trainer számára"
   ],
-  "group": "brunella"
+  "group": "brunella",
+  "dod": {
+    "tests_pass": false,
+    "build_clean": false,
+    "code_committed": false,
+    "no_verify_used": false
+  }
 }

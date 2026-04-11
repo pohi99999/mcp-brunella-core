@@ -21,5 +21,11 @@
   "estimated_effort": "high",
   "business_value": "End-to-end agent-driven development workflow",
   "archived_at": "2026-02-13T00:00:00Z",
-  "group": "nova"
+  "group": "nova",
+  "dod": {
+    "tests_pass": false,
+    "build_clean": false,
+    "code_committed": false,
+    "no_verify_used": false
+  }
 }

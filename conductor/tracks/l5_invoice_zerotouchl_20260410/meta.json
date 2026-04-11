@@ -25,5 +25,11 @@
     "invoice_automation_20260326"
   ],
   "phase": 1,
-  "group": "business"
+  "group": "business",
+  "dod": {
+    "tests_pass": false,
+    "build_clean": false,
+    "code_committed": false,
+    "no_verify_used": false
+  }
 }

@@ -19,5 +19,11 @@
   "dependencies": [],
   "sourceDocument": ".worktrees\\n8n_workflow_tervek.md",
   "phase": 1,
-  "group": "other"
+  "group": "other",
+  "dod": {
+    "tests_pass": false,
+    "build_clean": false,
+    "code_committed": false,
+    "no_verify_used": false
+  }
 }

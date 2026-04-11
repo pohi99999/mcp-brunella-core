@@ -23,5 +23,11 @@
   "sourceDocument": "Derived from kkv_crm_followup_routing_20260405 split",
   "archiveReason": "Approval, pause/resume, summary, and audit reporting were implemented and validated; no follow-up track remained.",
   "phase": 3,
-  "group": "business"
+  "group": "business",
+  "dod": {
+    "tests_pass": false,
+    "build_clean": false,
+    "code_committed": false,
+    "no_verify_used": false
+  }
 }

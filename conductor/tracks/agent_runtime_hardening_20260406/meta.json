@@ -60,5 +60,11 @@
     "test/orchestratorReact.test.ts",
     "test/golden-dataset-tools.vitest.ts"
   ],
-  "group": "brunella"
+  "group": "brunella",
+  "dod": {
+    "tests_pass": false,
+    "build_clean": false,
+    "code_committed": false,
+    "no_verify_used": false
+  }
 }

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
+import { logError } from '../../utils/logger.js';
 
 interface Message {
   id: string;
@@ -33,7 +34,7 @@ const ChatInterface: React.FC = () => {
           const base64 = Buffer.from(response.data, 'binary').toString('base64');
           setScreenshot(base64);
         } catch (error) {
-          console.error('Screenshot error:', error);
+          logError('ChatInterface', `Screenshot error: ${error instanceof Error ? error.message : String(error)}`);
         }
       }
     }, 2000);
@@ -78,7 +79,7 @@ const ChatInterface: React.FC = () => {
         setScreenshot(response.data.screenshot);
       }
     } catch (error) {
-      console.error('Chat error:', error);
+      logError('ChatInterface', `Chat error: ${error instanceof Error ? error.message : String(error)}`);
     } finally {
       setIsTyping(false);
     }

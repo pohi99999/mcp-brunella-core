@@ -22,5 +22,11 @@
   "sourceDocument": "Felhasználói hibajelzés - a Conductor track monitor nem látható a dashboard menüben",
   "phase": 5,
   "description": "A meglévő ConductorTracksMonitor oldal külön menüpontként történő láthatóvá tétele, magyar címkézéssel és regressziós teszttel.",
-  "group": "brunella"
+  "group": "brunella",
+  "dod": {
+    "tests_pass": false,
+    "build_clean": false,
+    "code_committed": false,
+    "no_verify_used": false
+  }
 }

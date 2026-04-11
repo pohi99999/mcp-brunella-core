@@ -24,5 +24,11 @@
   "completedAt": "2026-03-22",
   "archivedAt": "2026-03-22",
   "archiveReason": "Verified complete via implemented modules, remote route integration, dedicated tests, and live conductor audit.",
-  "group": "nova"
+  "group": "nova",
+  "dod": {
+    "tests_pass": false,
+    "build_clean": false,
+    "code_committed": false,
+    "no_verify_used": false
+  }
 }

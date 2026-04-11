@@ -26,5 +26,11 @@
   "notes": [
     "Devops phase was restored from Copilot/FOSZAL history before closure.",
     "Canonical hook SOT lives in src/core/hookRegistry.ts plus the builtin hook stack."
-  ]
+  ],
+  "dod": {
+    "tests_pass": false,
+    "build_clean": false,
+    "code_committed": false,
+    "no_verify_used": false
+  }
 }

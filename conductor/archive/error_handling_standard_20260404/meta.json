@@ -18,5 +18,11 @@
   "completedAt": "2026-04-04",
   "archiveReason": "Design complete; implementation continues in error_handling_implementation_20260404",
   "dependencies": [],
-  "group": "brunella"
+  "group": "brunella",
+  "dod": {
+    "tests_pass": false,
+    "build_clean": false,
+    "code_committed": false,
+    "no_verify_used": false
+  }
 }

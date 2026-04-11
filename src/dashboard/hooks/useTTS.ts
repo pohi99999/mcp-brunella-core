@@ -6,6 +6,7 @@
 
 import { useState, useCallback } from 'react';
 import { toast } from 'sonner';
+import { logError } from '../utils/logger.js';
 
 export type VoiceOption = 'alloy' | 'echo' | 'fable' | 'onyx' | 'nova' | 'shimmer';
 
@@ -103,7 +104,7 @@ export function useTTS() {
 
         return audio;
       } catch (error: any) {
-        console.error('TTS error:', error);
+        logError('useTTS', `TTS error: ${error instanceof Error ? error.message : String(error)}`);
         setIsSpeaking(false);
         toast.error('TTS hiba', {
           description: error.message || 'Nem sikerült a hangot generálni',

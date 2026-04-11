@@ -107,5 +107,11 @@
   },
   "updated": "2026-03-23",
   "auditNote": "Track reclassified to active after conductor audit: CometBrowserAgent, myai/agents/comet modules, FastAPI /comet/execute endpoint, registry activation, and prior implementation logs confirm ongoing real work. 2026-03-23: Browser Copilot MVP került ráépítésre a Robotkéz + Chrome ACP stackre közös session coordinator, dashboard overlay és CLI/API vezérléssel. Archiválás most még NEM indokolt: a track teljes success criteria készlete (CAPTCHA graceful fallback validáció, 80%+ 10-run sikerarány, critic self-heal bizonyítás, teljes npm test + FastAPI health evidence) nincs lezárva.",
-  "group": "brunella"
+  "group": "brunella",
+  "dod": {
+    "tests_pass": false,
+    "build_clean": false,
+    "code_committed": false,
+    "no_verify_used": false
+  }
 }

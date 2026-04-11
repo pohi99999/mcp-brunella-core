@@ -66,5 +66,11 @@
       "name": "Docker deploy + production hardening",
       "status": "pending"
     }
-  ]
+  ],
+  "dod": {
+    "tests_pass": false,
+    "build_clean": false,
+    "code_committed": false,
+    "no_verify_used": false
+  }
 }

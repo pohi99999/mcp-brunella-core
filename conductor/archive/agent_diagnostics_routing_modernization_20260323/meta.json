@@ -15,5 +15,11 @@
   ],
   "archivedAt": "2026-03-23T23:30:00Z",
   "archiveReason": "Completed 100 percent track archived on user request.",
-  "group": "other"
+  "group": "other",
+  "dod": {
+    "tests_pass": false,
+    "build_clean": false,
+    "code_committed": false,
+    "no_verify_used": false
+  }
 }

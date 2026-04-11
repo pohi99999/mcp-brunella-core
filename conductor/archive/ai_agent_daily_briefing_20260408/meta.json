@@ -12,13 +12,27 @@
   "completed_at": "2026-04-10T19:10:00.000Z",
   "archived_at": "2026-04-10T19:10:00.000Z",
   "archive_reason": "Daily AI Agent Briefing feature verified across agent, service, API, dashboard, CLI, scheduler, and registry wiring; focused Vitest coverage and full fast suite passed, and no follow-up track is needed.",
-  "tags": ["briefing", "ai-agents", "daily", "research", "scheduler"],
-  "related_agents": ["DailyAgentBriefing"],
+  "tags": [
+    "briefing",
+    "ai-agents",
+    "daily",
+    "research",
+    "scheduler"
+  ],
+  "related_agents": [
+    "DailyAgentBriefing"
+  ],
   "related_files": [
     "src/agents/DailyAgentBriefingAgent.ts",
     "src/server/services/briefingService.ts",
     "src/server/routes/briefing.ts",
     "src/dashboard/components/dashboard/AIAgentBriefingPanel.tsx",
     "src/cli/briefingCommands.ts"
-  ]
+  ],
+  "dod": {
+    "tests_pass": false,
+    "build_clean": false,
+    "code_committed": false,
+    "no_verify_used": false
+  }
 }

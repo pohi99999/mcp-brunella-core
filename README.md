@@ -119,6 +119,28 @@ tail -n 50 logs/phoenix.log   # Windows: type logs\phoenix.log | more
 
 **🔴 KRITIKUS:** A Phoenix Protocol öngyógyító, de TE vagy felelős a logok ellenőrzéséért!
 
+### 🔴 Vörös Protokoll — Track lezárási kapu
+
+`completed` vagy `archived` státusz **nem** lehet pusztán meta-frissítés eredménye. Minden lezárt track `meta.json` fájljában kötelező a `dod` blokk, és azt csak valós build + teszt + commit bizonyíték mellett szabad lezártra állítani:
+
+```json
+"dod": {
+  "tests_pass": true,
+  "build_clean": true,
+  "code_committed": true,
+  "no_verify_used": false
+}
+```
+
+Kötelező szabályok:
+
+- `progress: 100` csak akkor megengedett, ha a fenti DoD teljesül.
+- `completed` trackhez kötelező `verificationNotes` + `completedAt`.
+- `archived` trackhez kötelező `archiveReason` + `archivedAt`.
+- Meta-only lezárás TILOS: a lezáró commitnak valódi repo-munkát is kell tartalmaznia (`src/`, `myai/`, `scripts/`, `test/`, `docs/`, `.github/`, stb.).
+- `git commit --no-verify` és `git push --no-verify` TILOS.
+- Ha egy lezárás vagy archiválás bizonyíték nélkül történne, azt hibának kell tekinteni, és a tracket vissza kell vinni javításra / follow-up trackre.
+
 ### 3. Dokumentálás (Munka UTÁN)
 
 ```bash

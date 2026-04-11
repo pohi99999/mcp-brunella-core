@@ -146,5 +146,11 @@
     "Copilot WIP PR-ok (#87, #76, #75) lezárva."
   ],
   "nextStep": "None — archived after curation to avoid reprocessing obsolete or duplicate Jules material.",
-  "group": "brunella"
+  "group": "brunella",
+  "dod": {
+    "tests_pass": false,
+    "build_clean": false,
+    "code_committed": false,
+    "no_verify_used": false
+  }
 }

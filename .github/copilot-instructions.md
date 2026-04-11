@@ -82,9 +82,22 @@ cd myai && pytest tests/
 
 Local hooks are part of the workflow:
 
-- `.husky/pre-commit` runs `npx tsx scripts/sync_bootstrap.ts --stage`, `npm run build`, and `node scripts/precommit-lint.mjs`.
+- `.husky/pre-commit` runs `npx tsx scripts/sync_bootstrap.ts --stage`, `npm run build`, `node scripts/check-active-track.mjs`, `node scripts/validate-track-dod.mjs --staged`, `node scripts/precommit-lint.mjs`, and records commit verification proof.
 - `.husky/pre-commit` also runs `node scripts/check-active-track.mjs` after the build so active-track context and the `git:pre:commit` hook stay enforced before linting. The script is intentionally fail-closed if the freshly built hook runtime artifacts are missing.
-- `.husky/pre-push` runs `npx tsx scripts/sync_doc_stats.ts --dry-run` and `npm run test:fast`.
+- `.husky/pre-push` now validates outgoing commit proof first, then runs `npx tsx scripts/sync_doc_stats.ts --dry-run` and `npm run test:fast`.
+
+## Track closure Red Protocol
+
+- Treat `meta.json` closure data as **evidence-bearing state**, not as a progress toggle.
+- Any track moved to `completed` or `archived` must carry a valid `dod` block with:
+  - `tests_pass: true`
+  - `build_clean: true`
+  - `code_committed: true`
+  - `no_verify_used: false`
+- `completed` requires `verificationNotes` + `completedAt`.
+- `archived` requires `archiveReason` + `archivedAt`.
+- Meta-only closure is forbidden: if a closure commit only changes conductor metadata, fail it and call it out explicitly.
+- `git commit --no-verify` and `git push --no-verify` are forbidden. If the user suggests bypassing hooks or tests, do not quietly comply — warn them and redirect to the safe path.
 
 ## High-level architecture
 

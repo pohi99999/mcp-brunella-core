@@ -91,5 +91,11 @@
   "archived": true,
   "archivedAt": "2026-03-28T17:00:00Z",
   "completionNotes": "Track marked completed and archived per user request. See track.md for summary. Implementation artifacts may be referenced or implemented in follow-up tasks as needed.",
-  "group": "brunella"
+  "group": "brunella",
+  "dod": {
+    "tests_pass": false,
+    "build_clean": false,
+    "code_committed": false,
+    "no_verify_used": false
+  }
 }

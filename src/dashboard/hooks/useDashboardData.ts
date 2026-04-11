@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { useMcpStore } from '@/lib/mcpStore';
 import * as api from '@/lib/apiService';
 import { toast } from 'sonner';
+import { logError, logWarn } from '../utils/logger.js';
 
 export function useDashboardData() {
     const { setAgentTools, setServerState, setConnected } = useMcpStore();
@@ -71,7 +72,7 @@ export function useDashboardData() {
                 }
 
             } catch (error: any) {
-                console.error('Failed to initialize dashboard data:', error);
+                logError('useDashboardData', `Failed to initialize dashboard data: ${error instanceof Error ? error.message : String(error)}`);
                 if (mounted) {
                     setConnected(false);
                     toast.error('Kapcsolódási hiba', {
@@ -103,7 +104,7 @@ export function useOllamaModels() {
                     setModels(data);
                 }
             } catch (error) {
-                console.warn('Failed to load Ollama models:', error);
+                logWarn('useDashboardData', `Failed to load Ollama models: ${error instanceof Error ? error.message : String(error)}`);
             } finally {
                 if (mounted) {
                     setLoading(false);
@@ -135,7 +136,7 @@ export function useAnythingLLMWorkspaces() {
                     setWorkspaces(data);
                 }
             } catch (error) {
-                console.warn('Failed to load AnythingLLM workspaces:', error);
+                logWarn('useDashboardData', `Failed to load AnythingLLM workspaces: ${error instanceof Error ? error.message : String(error)}`);
             } finally {
                 if (mounted) {
                     setLoading(false);

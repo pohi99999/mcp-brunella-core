@@ -15,6 +15,7 @@ import {
 } from '../../utils/trackTodoParser.js';
 import { ensureError } from '../../utils/ensureError.js';
 import { logDebug, logError } from '../../utils/logger.js';
+import { normalizeTrackDod } from '../../utils/trackDod.js';
 
 const TRACKS_DIR = path.join(process.cwd(), 'conductor', 'tracks');
 
@@ -37,6 +38,7 @@ export function createTracksRoutes(): Router {
         try {
           const metaContent = await fs.readFile(metaPath, 'utf-8');
           const meta = JSON.parse(metaContent);
+          const dod = normalizeTrackDod(meta.dod);
 
           // Only include active/in_progress tracks
           if (!['active', 'in_progress'].includes(meta.status)) {
@@ -62,6 +64,7 @@ export function createTracksRoutes(): Router {
               completedCount: todoView.todos.filter(t => t.completed).length,
               totalCount: todoView.todos.length,
               updatedAt: new Date().toISOString(),
+              dod,
             });
           }
         } catch (error: unknown) {
@@ -206,6 +209,7 @@ export function createTracksRoutes(): Router {
             status: meta.status || 'unknown',
             priority: meta.priority || 'medium',
             progress: meta.progress || 0,
+            dod: normalizeTrackDod(meta.dod),
           });
         } catch (error: unknown) {
           logDebug('TracksRoutes', `Skipping invalid track metadata for ${dir}: ${ensureError(error).message}`);
