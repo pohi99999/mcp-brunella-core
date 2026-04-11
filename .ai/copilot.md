@@ -26,6 +26,16 @@ User requested that the Copilot CLI automatically connect to a local Brunella MC
 
 **Megjegyzés:** A track most már fizikailag is létezik a conductor alatt, és a könyvelési UI egy új Számlázz.hu lépést kapott. A következő lépés a build/test validáció és az active track státuszok további finomhangolása a phase3/kognitiv vonalra.
 
+### 2026-04-11 13:35 - SzamlazzHuAgent validation pass
+
+**Feladat:** A friss Számlázz.hu agent és BookkeepingWidget flow célzott tesztelése, valamint a build ellenőrzése.
+
+**Érintett fájlok:** `src/agents/SzamlazzHuAgent.ts`, `src/agents/registry.json`, `src/dashboard/components/dashboard/BookkeepingWidget.tsx`, `test/SzamlazzHuAgent.test.ts`, `test/dashboard/components/BookkeepingWidget.test.tsx`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A célzott SzamlazzHuAgent teszt és a dashboard bookkeeping teszt zöld, a build sikeres. A fast suite futása a repo mérete miatt háttérbe került, de a módosított felületek validáltak.
+
 ### 2026-04-11 10:40 - External knowledge staged canonicalization MVP
 
 **Feladat:** A `fejlesztesvideo.md` alapján a Brunella rendszerbe egy biztonságos, staged external knowledge pipeline MVP beépítése web + YouTube ingesttel, governance review queue-val, canonical-only RAG indexeléssel, valamint a hozzá tartozó REST/MCP/CLI felületek és tesztek alapjainak létrehozása.

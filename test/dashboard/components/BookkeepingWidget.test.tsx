@@ -115,6 +115,7 @@ describe( "BookkeepingWidget", () =>
     mockedApi.executeAgent
       .mockResolvedValueOnce( { success: true } )
       .mockResolvedValueOnce( { success: true } )
+      .mockResolvedValueOnce( { success: true } )
       .mockResolvedValueOnce( {
         success: true,
         data: {
@@ -135,21 +136,26 @@ describe( "BookkeepingWidget", () =>
 
     await waitFor( () =>
     {
-      expect( mockedApi.executeAgent ).toHaveBeenCalledTimes( 3 );
+      expect( mockedApi.executeAgent ).toHaveBeenCalledTimes( 4 );
     } );
 
     expect( mockedApi.executeAgent ).toHaveBeenNthCalledWith(
       1,
+      "SzamlazzHuAgent",
+      "Sync Számlázz.hu invoices to Sheets",
+    );
+    expect( mockedApi.executeAgent ).toHaveBeenNthCalledWith(
+      2,
       "NavAgent",
       "Process NAV invoices from samples",
     );
     expect( mockedApi.executeAgent ).toHaveBeenNthCalledWith(
-      2,
+      3,
       "BankAgent",
       "Process bank transactions from samples",
     );
     expect( mockedApi.executeAgent ).toHaveBeenNthCalledWith(
-      3,
+      4,
       "MatchingAgent",
       "Match all PENDING bank transactions",
     );
@@ -178,10 +184,10 @@ describe( "BookkeepingWidget", () =>
       expect( mockedToast.error ).not.toHaveBeenCalled();
     } );
 
-    it( "sets status to ERROR and shows toast when NavAgent throws", async () =>
+    it( "sets status to ERROR and shows toast when SzamlazzHuAgent throws", async () =>
     {
       mockedApi.getBookkeepingStatus.mockResolvedValue( statusResponse );
-      mockedApi.executeAgent.mockRejectedValue( new Error( "NavAgent crash" ) );
+      mockedApi.executeAgent.mockRejectedValue( new Error( "SzamlazzHuAgent crash" ) );
 
       await act( async () =>
       {
@@ -197,7 +203,7 @@ describe( "BookkeepingWidget", () =>
       await waitFor( () =>
       {
         expect( mockedToast.error ).toHaveBeenCalledWith(
-          "Sikertelen folyamat: NavAgent crash",
+          "Sikertelen folyamat: SzamlazzHuAgent crash",
         );
       } );
       expect( screen.getByText( "ERROR" ) ).toBeInTheDocument();
@@ -207,6 +213,7 @@ describe( "BookkeepingWidget", () =>
     {
       mockedApi.getBookkeepingStatus.mockResolvedValue( statusResponse );
       mockedApi.executeAgent
+        .mockResolvedValueOnce( { success: true } )
         .mockResolvedValueOnce( { success: true } )
         .mockResolvedValueOnce( { success: true } )
         .mockResolvedValueOnce( { success: false, message: "Párosítás sikertelen" } );

@@ -18,6 +18,21 @@
       "priority": 7
     },
     {
+      "name": "SzamlazzHu",
+      "title": "Számlázz.hu Sync Agent",
+      "description": "Számlázz.hu számlák lekérése, normalizálása és opcionális Sheets szinkronizálása zero-touch módon.",
+      "class": "SzamlazzHuAgent",
+      "module": "./agents/SzamlazzHuAgent.js",
+      "capabilities": [
+        "szamlazz_fetch",
+        "invoice_normalization",
+        "sheets_sync"
+      ],
+      "category": "enterprise",
+      "status": "active",
+      "priority": 7
+    },
+    {
       "name": "agent_architect",
       "title": "Agent Architect",
       "description": "Új ügynököket tervez, generálja a promptjaikat, függőségeiket és konfigurációjukat a leírás alapján.",

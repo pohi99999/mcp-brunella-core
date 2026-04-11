@@ -6,82 +6,97 @@ import { Progress } from "@/components/ui/progress";
 import { executeAgent, getBookkeepingStatus } from "@/lib/apiService";
 import type { BookkeepingStatusResponse } from "@/lib/apiService";
 import { toast } from "sonner";
-import {
-  BarChart3,
-  Database,
-  Scale,
-  RefreshCcw,
-  ArrowRightLeft,
-} from "lucide-react";
+import
+  {
+    BarChart3,
+    Database,
+    Scale,
+    RefreshCcw,
+    ArrowRightLeft,
+  } from "lucide-react";
 
 type BookkeepingStatus = "idle" | "ingesting" | "matching" | "success" | "error";
 
 /** Live status refresh interval — 30 seconds */
 const REFRESH_INTERVAL_MS = 30_000;
 
-export function BookkeepingWidget() {
-  const [status, setStatus] = useState<BookkeepingStatus>("idle");
-  const [progress, setProgress] = useState(0);
+export function BookkeepingWidget ()
+{
+  const [status, setStatus] = useState<BookkeepingStatus>( "idle" );
+  const [progress, setProgress] = useState( 0 );
   const [stats, setStats] = useState<{ matched: number; total: number; manual: number } | null>(
     null,
   );
-  const [liveStatus, setLiveStatus] = useState<BookkeepingStatusResponse | null>(null);
+  const [liveStatus, setLiveStatus] = useState<BookkeepingStatusResponse | null>( null );
 
   /**
    * Fetches the current bookkeeping status from the API and stores it in state.
    * Wrapped in useCallback so the identity is stable across re-renders.
    */
-  const loadStatus = useCallback(async () => {
-    try {
+  const loadStatus = useCallback( async () =>
+  {
+    try
+    {
       const data = await getBookkeepingStatus();
-      setLiveStatus(data);
-    } catch {
+      setLiveStatus( data );
+    } catch
+    {
       // Status fetch failures are silent — widget degrades gracefully
     }
-  }, []);
+  }, [] );
 
   // Load on mount and refresh periodically
-  useEffect(() => {
+  useEffect( () =>
+  {
     void loadStatus();
-    const id = setInterval(loadStatus, REFRESH_INTERVAL_MS);
-    return () => clearInterval(id);
-  }, [loadStatus]);
+    const id = setInterval( loadStatus, REFRESH_INTERVAL_MS );
+    return () => clearInterval( id );
+  }, [loadStatus] );
 
-  const startReconciliation = async () => {
-    setStatus("ingesting");
-    setProgress(10);
-    toast.info("Könyvelési adatok ingesztálása elindult...");
+  const startReconciliation = async () =>
+  {
+    setStatus( "ingesting" );
+    setProgress( 10 );
+    toast.info( "Számlázási és könyvelési adatok ingesztálása elindult..." );
 
-    try {
-      // 1. Ingest NAV
-      await executeAgent("NavAgent", "Process NAV invoices from samples");
-      setProgress(40);
+    try
+    {
+      // 1. Ingest Számlázz.hu
+      await executeAgent( "SzamlazzHuAgent", "Sync Számlázz.hu invoices to Sheets" );
+      setProgress( 30 );
 
-      // 2. Ingest Bank
-      await executeAgent("BankAgent", "Process bank transactions from samples");
-      setProgress(70);
+      // 2. Ingest NAV
+      await executeAgent( "NavAgent", "Process NAV invoices from samples" );
+      setProgress( 55 );
 
-      setStatus("matching");
-      toast.info("Intelligens párosítás folyamatban...");
+      // 3. Ingest Bank
+      await executeAgent( "BankAgent", "Process bank transactions from samples" );
+      setProgress( 75 );
 
-      // 3. Match
-      const matchRes = await executeAgent("MatchingAgent", "Match all PENDING bank transactions");
+      setStatus( "matching" );
+      toast.info( "Intelligens párosítás folyamatban..." );
 
-      if (matchRes.success) {
-        setStats(matchRes.data);
-        setStatus("success");
-        setProgress(100);
-        toast.success("A könyvelési egyeztetés sikeresen lefutott.");
+      // 4. Match
+      const matchRes = await executeAgent( "MatchingAgent", "Match all PENDING bank transactions" );
+
+      if ( matchRes.success )
+      {
+        setStats( matchRes.data );
+        setStatus( "success" );
+        setProgress( 100 );
+        toast.success( "A könyvelési egyeztetés sikeresen lefutott." );
 
         // Refresh live status to reflect the completed run
         await loadStatus();
-      } else {
-        throw new Error(matchRes.message || "Hiba a párosítás során.");
+      } else
+      {
+        throw new Error( matchRes.message || "Hiba a párosítás során." );
       }
-    } catch (error: unknown) {
-      setStatus("error");
-      const msg = error instanceof Error ? error.message : String(error);
-      toast.error(`Sikertelen folyamat: ${msg}`);
+    } catch ( error: unknown )
+    {
+      setStatus( "error" );
+      const msg = error instanceof Error ? error.message : String( error );
+      toast.error( `Sikertelen folyamat: ${ msg }` );
     }
   };
 
@@ -90,7 +105,7 @@ export function BookkeepingWidget() {
   const totalCount = liveStatus?.summary?.total;
   const readiness = liveStatus?.readiness;
   const readinessValue = readiness
-    ? Math.round((readiness.summary.ready / Math.max(readiness.summary.total, 1)) * 100)
+    ? Math.round( ( readiness.summary.ready / Math.max( readiness.summary.total, 1 ) ) * 100 )
     : 0;
 
   return (
@@ -129,11 +144,10 @@ export function BookkeepingWidget() {
 
           {readiness && (
             <div
-              className={`p-3 rounded-xl border space-y-2 ${
-                readiness.status === "ready"
+              className={`p-3 rounded-xl border space-y-2 ${ readiness.status === "ready"
                   ? "bg-emerald-500/10 border-emerald-500/20"
                   : "bg-amber-500/10 border-amber-500/20"
-              }`}
+                }`}
             >
               <div className="flex items-center justify-between gap-2">
                 <p className="text-[10px] text-zinc-500 uppercase font-mono tracking-wider">
@@ -158,7 +172,7 @@ export function BookkeepingWidget() {
                 <span>{readiness.summary.blocked} hiányzik</span>
               </div>
               {readiness.missing.length > 0 ? (
-                <p className="text-xs text-zinc-300">{readiness.missing.join(" · ")}</p>
+                <p className="text-xs text-zinc-300">{readiness.missing.join( " · " )}</p>
               ) : (
                 <p className="text-xs text-emerald-300">Minden előfeltétel rendben.</p>
               )}
@@ -183,6 +197,12 @@ export function BookkeepingWidget() {
                 >
                   CSV (Bank)
                 </Badge>
+                <Badge
+                  variant="outline"
+                  className="text-[9px] bg-emerald-500/5 border-emerald-500/20 text-emerald-400"
+                >
+                  Számlázz.hu
+                </Badge>
               </div>
             </div>
           </div>
@@ -197,31 +217,28 @@ export function BookkeepingWidget() {
 
           <div className="grid grid-cols-3 gap-2">
             <div
-              className={`p-2 rounded-lg border flex flex-col items-center gap-1 transition-all ${
-                progress >= 40
+              className={`p-2 rounded-lg border flex flex-col items-center gap-1 transition-all ${ progress >= 40
                   ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-400"
                   : "bg-white/[0.02] border-white/[0.04] text-zinc-600"
-              }`}
+                }`}
             >
               <Database size={12} />
               <span className="text-[8px] font-bold uppercase">Ingest</span>
             </div>
             <div
-              className={`p-2 rounded-lg border flex flex-col items-center gap-1 transition-all ${
-                progress >= 70
+              className={`p-2 rounded-lg border flex flex-col items-center gap-1 transition-all ${ progress >= 70
                   ? "bg-purple-500/10 border-purple-500/20 text-purple-400"
                   : "bg-white/[0.02] border-white/[0.04] text-zinc-600"
-              }`}
+                }`}
             >
               <ArrowRightLeft size={12} />
               <span className="text-[8px] font-bold uppercase">Mapping</span>
             </div>
             <div
-              className={`p-2 rounded-lg border flex flex-col items-center gap-1 transition-all ${
-                progress === 100
+              className={`p-2 rounded-lg border flex flex-col items-center gap-1 transition-all ${ progress === 100
                   ? "bg-blue-500/10 border-blue-500/20 text-blue-400"
                   : "bg-white/[0.02] border-white/[0.04] text-zinc-600"
-              }`}
+                }`}
             >
               <Scale size={12} />
               <span className="text-[8px] font-bold uppercase">Matching</span>

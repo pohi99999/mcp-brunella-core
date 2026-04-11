@@ -45,6 +45,7 @@ Provide a Phase 3 skeleton that wires invoice ingestion (IMAP), basic refinement
 - ✅ `bookkeeping_db.ts` — SQLite séma és CRUD
 - ✅ `src/server/routes/bookkeeping.ts` — `/api/v1/bookkeeping/*` végpontok
 - ✅ `src/tools/getSzamlazzInvoices.ts` — MCP tool (de SzamlazzHuAgent nincs!)
+- ✅ `SzamlazzHuAgent.ts` — Számlázz.hu fetch/sync agent (zero-touch happy path scaffold)
 - ✅ n8n WF-1..WF-5 scaffoldok importálva n8n-ben
 - ✅ Google Sheets service account + `myai/clients/google_sheets_client.py`
 - ✅ `test/e2e/n8n-konyveles-wf5.spec.ts` — Playwright E2E
@@ -59,17 +60,20 @@ Provide a Phase 3 skeleton that wires invoice ingestion (IMAP), basic refinement
 
 - [ ] szamlazz.hu fiókba belépés → Beállítások → API → agentkulcs ellenőrzése (él-e?)
 - [ ] `.env` bővítése:
+
   ```env
   SZAMLAZZ_HU_API_KEY=<agentkulcs>
   SZAMLAZZ_HU_BANK_ACCOUNT=<bankszámlaszám pl. 12345678-12345678-12345678>
   SZAMLAZZ_HU_TAX_NUMBER=<adószám pl. 12345678-2-12>
   ```
+
 - [ ] Teszt hívás: `curl -X POST https://www.szamlazz.hu/szamla/ -d "action=szamla_agent_check&..."`
 
 ### 0.2 NAV Online Számla API credential
 
 - [ ] NAV Online Számla regisztrációs oldalon technikai felhasználó ellenőrzése
 - [ ] `.env` bővítése:
+
   ```env
   NAV_USERNAME=<technikai felhasználónév>
   NAV_PASSWORD=<jelszó>
@@ -77,6 +81,7 @@ Provide a Phase 3 skeleton that wires invoice ingestion (IMAP), basic refinement
   NAV_EXCHANGE_KEY=<cserekulcs>
   NAV_BASE_URL=https://api.onlineszamla.nav.gov.hu/invoiceService/v3
   ```
+
 - [ ] Ha nincs hozzáférés: NavAgent mock marad, Phase 3b csak részlegesen teljesíthető
 
 ### 0.3 Gmail IMAP credential
@@ -85,10 +90,12 @@ Provide a Phase 3 skeleton that wires invoice ingestion (IMAP), basic refinement
   - Google Fiók → Biztonság → Alkalmazásszintű jelszavak → "n8n IMAP"
 - [ ] n8n-be importálás: Credential → IMAP → `imap.gmail.com:993`
 - [ ] `.env` bővítése (dokumentáció célra):
+
   ```env
   GMAIL_IMAP_USER=<email>
   GMAIL_APP_PASSWORD=<app-jelszó>
   ```
+
 
 ### 0.4 Bank CSV éles path
 
@@ -119,7 +126,7 @@ Provide a Phase 3 skeleton that wires invoice ingestion (IMAP), basic refinement
 
 ### 3a.3 BAS oldal
 
-- [ ] `SzamlazzHuAgent` trigger esemény hozzáadása (vagy meglévő InvoiceAutomation bővítése)
+- [x] `SzamlazzHuAgent` trigger esemény hozzáadása (vagy meglévő InvoiceAutomation bővítése)
 - [ ] `POST /api/v1/invoice/create` endpoint ellenőrzése/létrehozása
 
 ### 3a.4 Teszt
@@ -196,9 +203,7 @@ Provide a Phase 3 skeleton that wires invoice ingestion (IMAP), basic refinement
 
 ## Kockázatok
 
-| Kockázat | Valószínűség | Hatás | Mitigáció |
-|----------|-------------|-------|-----------|
-| szamlazz.hu API kulcs érvénytelen | közepes | magas | Teszt kulcs kérése |
-| NAV Online hozzáférési adatok hiányoznak | magas | közepes | Mock agent megtartása fallbackként |
-| Gmail IMAP App Password blokkolva | közepes | közepes | OAuth2 alternatíva |
-| Bank CSV formátum eltér | alacsony | magas | CSV parser konfigurálható mezőkkel |
+- **szamlazz.hu API kulcs érvénytelen** — közepes valószínűség, magas hatás. Mitigáció: teszt kulcs kérése.
+- **NAV Online hozzáférési adatok hiányoznak** — magas valószínűség, közepes hatás. Mitigáció: mock agent megtartása fallbackként.
+- **Gmail IMAP App Password blokkolva** — közepes valószínűség, közepes hatás. Mitigáció: OAuth2 alternatíva.
+- **Bank CSV formátum eltér** — alacsony valószínűség, magas hatás. Mitigáció: CSV parser konfigurálható mezőkkel.
