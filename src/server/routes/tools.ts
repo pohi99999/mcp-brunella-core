@@ -1,3 +1,4 @@
+import { Request, Response, NextFunction } from 'express';
 import { Router } from 'express';
 import { getDynamicToolRegistry } from '../../core/dynamicToolRegistry.js';
 import { toolManager } from '../ToolManager.js';

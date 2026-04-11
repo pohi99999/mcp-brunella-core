@@ -10,7 +10,7 @@ export const createWranglerRouter = () => {
    * POST /api/wrangler/auto-deploy
    * Run the full deployment pipeline (D1 Schema + Worker Deploy)
    */
-  router.post('/wrangler/auto-deploy', async (req: any, res: any): Promise<void> => {
+  router.post('/wrangler/auto-deploy', async (req: Request, res: Response): Promise<void> => {
     try {
       const { databaseId, apiToken, workerDir, schemaPath, projectName } = req.body;
 
@@ -46,7 +46,7 @@ export const createWranglerRouter = () => {
    * POST /api/wrangler/init-d1
    * Initialize Cloudflare D1 database
    */
-  router.post('/wrangler/init-d1', async (req: any, res: any): Promise<void> => {
+  router.post('/wrangler/init-d1', async (req: Request, res: Response): Promise<void> => {
     try {
       const { databaseName, accountId, apiToken } = req.body;
 
@@ -90,7 +90,7 @@ export const createWranglerRouter = () => {
    * POST /api/wrangler/deploy
    * Deploy Cloudflare Worker
    */
-  router.post('/wrangler/deploy', async (req: any, res: any): Promise<void> => {
+  router.post('/wrangler/deploy', async (req: Request, res: Response): Promise<void> => {
     try {
       const { accountId, apiToken } = req.body;
 
@@ -127,7 +127,7 @@ export const createWranglerRouter = () => {
    * GET /api/wrangler/list-databases
    * List all D1 databases
    */
-  router.get('/wrangler/list-databases', async (req: any, res: any): Promise<void> => {
+  router.get('/wrangler/list-databases', async (req: Request, res: Response): Promise<void> => {
     try {
       const { accountId, apiToken } = req.query;
 
@@ -163,7 +163,7 @@ export const createWranglerRouter = () => {
    * POST /api/wrangler/run-migration
    * Run D1 migrations from schema file
    */
-  router.post('/wrangler/run-migration', async (req: any, res: any): Promise<void> => {
+  router.post('/wrangler/run-migration', async (req: Request, res: Response): Promise<void> => {
     try {
       const { databaseId, accountId, apiToken, schemaPath } = req.body;
 
@@ -201,7 +201,7 @@ export const createWranglerRouter = () => {
    * POST /api/wrangler/execute-query
    * Execute arbitrary D1 query
    */
-  router.post('/wrangler/execute-query', async (req: any, res: any): Promise<void> => {
+  router.post('/wrangler/execute-query', async (req: Request, res: Response): Promise<void> => {
     try {
       const { databaseId, accountId, apiToken, query } = req.body;
 
@@ -239,7 +239,7 @@ export const createWranglerRouter = () => {
    * POST /api/wrangler/check-tunnels
    * Health check for Cloudflare Tunnels
    */
-  router.post('/wrangler/check-tunnels', async (req: any, res: any): Promise<void> => {
+  router.post('/wrangler/check-tunnels', async (req: Request, res: Response): Promise<void> => {
     try {
       const { urls } = req.body;
 

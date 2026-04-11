@@ -120,7 +120,7 @@ function readQueryInteger(value: unknown, fallback: number): number {
  */
 router.get(
   '/schedule',
-  async (_req: Request<EmptyParams>, res: any) => {
+  async (_req: Request<any, any, any, any>, res: Response) => {
     try {
       const status = getSchedulerStatus();
       return res.json({
@@ -145,7 +145,7 @@ router.get(
 router.post(
   '/schedule',
   async (
-    req: Request<EmptyParams, ScheduleUpdateResponse | ErrorResponse, ScheduleUpdateBody>,
+    req: Request<any, any, any, any>,
     res: any,
   ) => {
     try {
@@ -190,7 +190,7 @@ router.post(
 router.get(
   '/results',
   async (
-    req: Request<EmptyParams, TestResultsListResponse | ErrorResponse, never, ResultsQuery>,
+    req: Request<any, any, any, any>,
     res: any,
   ) => {
     try {
@@ -219,7 +219,7 @@ router.get(
 router.get(
   '/results/:id',
   async (
-    req: Request<TestRunParams, TestRunResponse | ErrorResponse>,
+    req: Request<any, any, any, any>,
     res: any,
   ) => {
     try {
@@ -243,7 +243,7 @@ router.get(
  * POST /api/tests/run
  * Trigger a manual test run
  */
-router.post('/run', async (_req: Request<EmptyParams>, res: any) => {
+router.post('/run', async (_req: Request<any, any, any, any>, res: Response) => {
   try {
     logInfo('testScheduler', 'Manual test run triggered via API');
     const result = await runTests('api');
@@ -267,7 +267,7 @@ router.post('/run', async (_req: Request<EmptyParams>, res: any) => {
  */
 router.get(
   '/stats',
-  async (_req: Request<EmptyParams>, res: any) => {
+  async (_req: Request<any, any, any, any>, res: Response) => {
     try {
       const stats = getTestStats();
 
@@ -302,7 +302,7 @@ router.get(
 router.get(
   '/results/range/:startDate/:endDate',
   async (
-    req: Request<DateRangeParams, DateRangeResponse | ErrorResponse>,
+    req: Request<any, any, any, any>,
     res: any,
   ) => {
     try {

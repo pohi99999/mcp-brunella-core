@@ -1,3 +1,4 @@
+import { Request, Response, NextFunction } from 'express';
 /**
  * System Architecture Status Route
  * Track: bas_orchestration_chain_20260221 / Phase 3

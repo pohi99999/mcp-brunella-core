@@ -21,7 +21,7 @@ export function createWorkersRouter(db: Database) {
    * POST /api/fleet/:fleetId/workers/add
    * Add a worker to a fleet
    */
-  router.post('/:fleetId/workers/add', (req: any, res: any) => {
+  router.post('/:fleetId/workers/add', (req: Request, res: Response) => {
     try {
       const { fleetId } = req.params;
       const { name, url, cloudflare_id } = req.body;
@@ -70,7 +70,7 @@ export function createWorkersRouter(db: Database) {
    * GET /api/fleet/:fleetId/workers
    * List all workers in a fleet
    */
-  router.get('/:fleetId/workers', (req: any, res: any) => {
+  router.get('/:fleetId/workers', (req: Request, res: Response) => {
     try {
       const { fleetId } = req.params;
 
@@ -104,7 +104,7 @@ export function createWorkersRouter(db: Database) {
    * PUT /api/fleet/:fleetId/workers/:workerId/status
    * Update worker status (active, paused, draining)
    */
-  router.put('/:fleetId/workers/:workerId/status', (req: any, res: any) => {
+  router.put('/:fleetId/workers/:workerId/status', (req: Request, res: Response) => {
     try {
       const { fleetId, workerId } = req.params;
       const { status } = req.body;
@@ -148,7 +148,7 @@ export function createWorkersRouter(db: Database) {
    * DELETE /api/fleet/:fleetId/workers/:workerId
    * Remove a worker from fleet
    */
-  router.delete('/:fleetId/workers/:workerId', (req: any, res: any) => {
+  router.delete('/:fleetId/workers/:workerId', (req: Request, res: Response) => {
     try {
       const { fleetId, workerId } = req.params;
 

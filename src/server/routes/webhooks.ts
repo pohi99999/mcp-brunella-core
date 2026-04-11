@@ -75,7 +75,7 @@ function deriveN8nWorkflowEvent(body: unknown): 'n8n:workflow:completed' | 'n8n:
   return null;
 }
 
-function verifyGitHubSignature(req: any, res: any): boolean {
+function verifyGitHubSignature(req: Request, res: Response): boolean {
   if (!config.githubWebhookSecret) {
     return true;
   }
@@ -90,7 +90,7 @@ function verifyGitHubSignature(req: any, res: any): boolean {
   }
 
    //- rawBody added by middleware
-  const rawBody = req.rawBody as Buffer | string | undefined;
+  const rawBody = (req as any).rawBody as Buffer | string | undefined;
   if (!rawBody) {
     res.status(400).json({ error: 'Raw body not available for signature verification' });
     return false;
@@ -117,7 +117,7 @@ export function createWebhookRoutes(db: Database.Database): Router {
    * GitHub Push Webhook
    * Triggered on repository push events
    */
-  router.post('/github/push', async (req: any, res: any) => {
+  router.post('/github/push', async (req: Request, res: Response) => {
     try {
       if (!verifyGitHubSignature(req, res)) {
         return;
@@ -178,7 +178,7 @@ export function createWebhookRoutes(db: Database.Database): Router {
    * GitHub Workflow Run Webhook
    * Triggered when GitHub Actions workflow completes (for CI/CD failure detection)
    */
-  router.post('/github', async (req: any, res: any) => {
+  router.post('/github', async (req: Request, res: Response) => {
     try {
       if (!verifyGitHubSignature(req, res)) {
         return;
@@ -209,7 +209,7 @@ export function createWebhookRoutes(db: Database.Database): Router {
    * Render Deployment Webhook
    * Triggered when Render deploys the app - imports Jules automations
    */
-  router.post('/render/deploy', async (req: any, res: any) => {
+  router.post('/render/deploy', async (req: Request, res: Response) => {
     try {
       const webhookId = uuidv4();
       const eventType = 'render.deploy';
@@ -274,7 +274,7 @@ export function createWebhookRoutes(db: Database.Database): Router {
    * Generic Webhook Receiver
    * For scheduled tasks or custom integrations
    */
-  router.post('/webhook/:provider', async (req: any, res: any) => {
+  router.post('/webhook/:provider', async (req: Request, res: Response) => {
     try {
       const { provider } = req.params;
       const webhookId = uuidv4();
@@ -315,7 +315,7 @@ export function createWebhookRoutes(db: Database.Database): Router {
   /**
    * Get webhook events history
    */
-  router.get('/webhook-events', (req: any, res: any) => {
+  router.get('/webhook-events', (req: Request, res: Response) => {
     try {
       const limit = Math.min(parseInt(req.query.limit as string, 10) || 50, 100);
       const events = db
@@ -344,7 +344,7 @@ export function createWebhookRoutes(db: Database.Database): Router {
   /**
    * Clear old webhook events (cleanup)
    */
-  router.post('/webhook-events/cleanup', (req: any, res: any) => {
+  router.post('/webhook-events/cleanup', (req: Request, res: Response) => {
     try {
       const daysOld = parseInt(req.body.daysOld, 10) || 7;
       const result = db.prepare(`
