@@ -68,7 +68,6 @@ export function createV1Router(): Router {
   router.use("/debug", lazy(() => import("./tools.js"), "createDebugRoutes"));
   router.use("/docs-config", lazy(() => import("./docsConfig.js"), "createDocsConfigRoutes"));
   router.use("/chat", lazy(() => import("./chat.js"), "createChatRoutes"));
-  router.use("/chat", lazy(() => import("./chat.js"), "createChatRoutes"));
   router.use("/anythingllm/action", lazy(() => import("./anythingllmActions.js"), "createAnythingLLMActionRoutes"));
   router.use("/anythingllm", lazy(() => import("./chat.js"), "createAnythingLLMRoutes"));
   router.use("/incubator", lazy(() => import("./external.js"), "createIncubatorRoutes"));
@@ -95,6 +94,8 @@ export function createV1Router(): Router {
   router.use("/enterprise", lazy(() => import("./enterprise.js"), "createEnterpriseRouter"));
   router.use("/enterprise/analytics", lazy(() => import("./enterprise.js"), "createEnterpriseAnalyticsRouter"));
   router.use("/logistics", lazy(() => import("./logistics.js"), "createLogisticsRoutes"));
+  // intentional: two routers share the same /system prefix — architecture status + service control.
+  // Express chains them so each handles its own sub-paths without conflict. See BAS.md.
   router.use("/system", lazy(() => import("./system.js"), "createSystemArchitectureRouter"));
   router.use("/system", lazy(() => import("./system.js"), "createSystemControlRouter"));
   router.use("/llm", lazy(() => import("./llm.js"), "createLLMRoutes"));

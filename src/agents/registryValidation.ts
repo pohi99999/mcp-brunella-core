@@ -4,6 +4,7 @@ import {
   type RegistryConfig,
   normalizeRegistryConfig,
 } from "./registryStandard.js";
+import { logWarn } from "../utils/logger.js";
 
 export interface RegistryValidationReport {
   valid: boolean;
@@ -71,6 +72,8 @@ export function validateAndNormalizeRegistry(raw: unknown): RegistryValidationRe
 
   const parsed = rawRegistrySchema.safeParse(raw);
   if (!parsed.success) {
+    const issues = parsed.error.issues.map((issue) => `${issue.path.join(".") || "registry"}: ${issue.message}`);
+    logWarn('RegistryValidation', `Registry schema parse failed — falling back to empty registry. Issues: ${issues.join('; ')}`);
     const fallbackRegistry = normalizeRegistryConfig({});
     return {
       registry: fallbackRegistry,
