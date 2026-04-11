@@ -295,6 +295,92 @@
       "priority": 4
     },
     {
+      "name": "social_concierge",
+      "title": "VIKTORIAVARGA Social Concierge",
+      "description": "Prémium social concierge a VIKTORIAVARGA brand voice alapján: post, reply és DM draftok.",
+      "class": "DynamicAgent",
+      "module": "./agents/DynamicAgent.js",
+      "config": {
+        "tomlPath": "myai/agents/SocialConciergeAgent.toml"
+      },
+      "capabilities": [
+        "social_post_drafting",
+        "social_reply_drafting",
+        "dm_drafting",
+        "community_response",
+        "clarification_fallback"
+      ],
+      "triggers": [
+        "social concierge",
+        "social reply",
+        "reply draft",
+        "dm draft",
+        "direct message",
+        "community response",
+        "community reply",
+        "comment reply",
+        "social post draft",
+        "caption draft"
+      ],
+      "category": "marketing",
+      "status": "active",
+      "tags": [
+        "marketing",
+        "fashion",
+        "brand-voice",
+        "social",
+        "concierge",
+        "premium",
+        "supportive",
+        "concise"
+      ],
+      "priority": 6
+    },
+    {
+      "name": "shopping_assistant",
+      "title": "VIKTORIAVARGA Shopping Assistant",
+      "description": "Prémium customer-service shopping assistant a VIKTORIAVARGA brand voice alapján: product discovery, availability, order és support draftok.",
+      "class": "DynamicAgent",
+      "module": "./agents/DynamicAgent.js",
+      "config": {
+        "tomlPath": "myai/agents/ShoppingAssistantAgent.toml"
+      },
+      "capabilities": [
+        "shopping_guidance",
+        "availability_reply",
+        "order_support",
+        "customer_service",
+        "support_escalation"
+      ],
+      "triggers": [
+        "shopping assistant",
+        "product help",
+        "help me choose",
+        "recommendation help",
+        "availability",
+        "in stock",
+        "order status",
+        "shipping update",
+        "where is my order",
+        "size help",
+        "return policy",
+        "exchange",
+        "customer service",
+        "support handoff"
+      ],
+      "category": "business",
+      "status": "active",
+      "tags": [
+        "shopping",
+        "customer-service",
+        "premium",
+        "support-safe",
+        "bilingual",
+        "retail"
+      ],
+      "priority": 7
+    },
+    {
       "name": "DataScientist",
       "module": "./agents/DataScientistAgent.js",
       "class": "DataScientistAgent",
@@ -1533,6 +1619,37 @@
       ]
     },
     {
+      "name": "AccountingPipeline",
+      "title": "Accounting Pipeline Agent",
+      "role": "Könyvelési folyamat koordinátor",
+      "description": "Végigvezeti a rendszert a teljes könyvelési munkafolyamaton az adatgyűjtéstől a szinkronizálásig.",
+      "class": "AccountingPipelineAgent",
+      "module": "./agents/AccountingPipelineAgent.js",
+      "capabilities": [
+        "accounting-workflow-orchestration",
+        "pipeline-management"
+      ],
+      "category": "finance",
+      "status": "active",
+      "priority": 10
+    },
+    {
+      "name": "PettyCashAgent",
+      "title": "Petty Cash Agent",
+      "role": "Házi pénztár kezelő",
+      "description": "Kezeli a házi pénztár bevételeit és kiadásait, szinkronizálja azokat a könyvelési adatbázissal.",
+      "class": "PettyCashAgent",
+      "module": "./agents/PettyCashAgent.js",
+      "capabilities": [
+        "petty-cash-management",
+        "cash-flow-tracking",
+        "accounting-records"
+      ],
+      "category": "finance",
+      "status": "active",
+      "priority": 8
+    },
+    {
       "name": "i18n_specialist",
       "title": "i18n Specialist",
       "description": "Nemzetköziesítési és lokalizációs szakértő. Szövegek kinyerése, többnyelvű támogatás és RTL illesztés.",
@@ -1560,6 +1677,21 @@
         "i18n",
         "localization"
       ]
+    },
+    {
+      "name": "InventoryPipeline",
+      "title": "Inventory Pipeline Agent",
+      "role": "Készletgazdálkodási koordinátor",
+      "description": "Végigvezeti a rendszert a készletoptimalizálási folyamaton: ROP/SS kalkuláció és PO generálás.",
+      "class": "InventoryPipelineAgent",
+      "module": "./agents/InventoryPipelineAgent.js",
+      "capabilities": [
+        "inventory-optimization-orchestration",
+        "replenishment-pipeline"
+      ],
+      "category": "finance",
+      "status": "active",
+      "priority": 10
     },
     {
       "name": "DailyAgentBriefing",

@@ -146,12 +146,14 @@ export class InventoryWacAgent implements IAgent {
     await logMovement({
       item_id: item.id,
       movement_type: 'OUT',
+      status: 'COMPLETED',
       quantity: input.quantity,
       unit_price: wacPrice,
       total_value: totalValue,
       reference: input.reference,
       counterparty: input.counterparty,
     });
+
 
     logInfo(this.name, `WAC kiadás kész: ${input.quantity} db @ ${wacPrice} Ft/db = ${totalValue.toLocaleString('hu-HU')} Ft`);
 

@@ -1,11 +1,11 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-04-11T20:00:00.699Z
+**Utolso frissites:** 2026-04-11T22:02:03.711Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 242 total | 18 active | 24 completed | 198 archived
-**Csoportok:** Könyvelés / üzleti automatizálás: 52 | Nova asszisztens: 23 | Brunella rendszer: 94 | Egyéb: 73
+**Stats:** 243 total | 16 active | 24 completed | 201 archived
+**Csoportok:** Könyvelés / üzleti automatizálás: 52 | Nova asszisztens: 23 | Brunella rendszer: 95 | Egyéb: 73
 
 ---
 
@@ -28,15 +28,15 @@
 
 ---
 
-## Aktiv Szalak (Active) (18)
+## Aktiv Szalak (Active) (16)
 
-### Könyvelés / üzleti automatizálás (10)
+### Könyvelés / üzleti automatizálás (8)
 
-- [ ] **KKV uzleti automatizalas masterplan** [HIGH]
+- [x] **KKV uzleti automatizalas masterplan** [HIGH]
   - **ID:** `kkv_business_automation_20260408`
-  - **Progress:** 30%
+  - **Progress:** 100%
   - **Assignee:** GitHub Copilot
-  - **Updated:** 2026-04-08
+  - **Updated:** 2026-04-11
   - Mappa: ./tracks/kkv_business_automation_20260408/
 
 - [ ] **Kognitív Könyvelés és Multi-Ágens Egyeztetés — Bővítmény** [HIGH]
@@ -87,20 +87,6 @@
   - **Updated:** 2026-04-08
   - Mappa: ./tracks/viktoria_phygital_pipeline_20260408/
 
-- [ ] **VIKTORIAVARGA shopping assistant** [HIGH]
-  - **ID:** `viktoria_shopping_assistant_20260408`
-  - **Progress:** 0%
-  - **Assignee:** GitHub Copilot
-  - **Updated:** 2026-04-08
-  - Mappa: ./tracks/viktoria_shopping_assistant_20260408/
-
-- [ ] **VIKTORIAVARGA social concierge** [HIGH]
-  - **ID:** `viktoria_social_concierge_20260408`
-  - **Progress:** 0%
-  - **Assignee:** GitHub Copilot
-  - **Updated:** 2026-04-08
-  - Mappa: ./tracks/viktoria_social_concierge_20260408/
-
 
 ### Nova asszisztens (5)
 
@@ -149,12 +135,12 @@
   - **Updated:** 2026-04-08
   - Mappa: ./tracks/p-search_20260408/
 
-- [x] **Modular State Refactor — Globális változók Dependency Injection alapú refaktora** [MEDIUM]
-  - **ID:** `modular_state_refactor_20260404`
-  - **Progress:** 100%
+- [ ] **Brunella System Tracking Integráció — n8n, Google Chat és GitHub Workflow** [MEDIUM]
+  - **ID:** `tracking_integration_20260411`
+  - **Progress:** 25%
   - **Assignee:** Gemini
-  - **Updated:** 2026-04-11
-  - Mappa: ./tracks/modular_state_refactor_20260404/
+  - **Updated:** 2026-04-11T21:25:00Z
+  - Mappa: ./tracks/tracking_integration_20260411/
 
 
 ### Egyéb (1)
@@ -294,11 +280,11 @@
 
 ---
 
-## Archivalt (Archived) (198)
+## Archivalt (Archived) (201)
 
 > Archived tracks are hidden by default. View in `conductor/archive/`
 
-### Könyvelés / üzleti automatizálás (30)
+### Könyvelés / üzleti automatizálás (32)
 
 - [x] **Brunella teljes funkció- és tulajdonságmátrix dokumentáció** (2026-03-26)
 - [x] **Enterprise Suite Master - 14 Modulos Vállalati Irányító** (2026-02-17T21:15:00Z)
@@ -322,6 +308,8 @@
 - [x] **Real Estate Sales Campaign (Asset Analyst + Corporate Hunter)** (2026-02-16T00:00:00Z)
 - [x] **Számla Adatkinyerés és Google Sheets Automatizáció** (2026-02-17T21:05:00Z)
 - [x] **VIKTORIAVARGA brand voice foundation** (2026-04-10T20:42:00+02:00)
+- [x] **VIKTORIAVARGA shopping assistant** (2026-04-12T00:01:34+02:00)
+- [x] **VIKTORIAVARGA social concierge** (2026-04-12T00:01:34+02:00)
 - [x] **Automata Kampány Generátor Ügynök és UI** (2026-02-25)
 - [x] **Autonóm Készlet- és Leltárkezelési Rendszer — KKV**
 - [x] **Cserszegtomaj AI Turizmus Kampány** (2026-03-22T22:47:34Z)
@@ -352,7 +340,7 @@
 - [x] **Innovation Bridge - Cross-Industry Knowledge Transfer** (2026-02-24T01:27:00Z)
 - [x] **Napi AI Agent Összefoglaló Pipeline** (2026-04-10T19:10:00.000Z)
 
-### Brunella rendszer (81)
+### Brunella rendszer (82)
 
 - [x] **BAS Átfogó Tesztprotokol** (2026-02-16T15:05:00Z)
 - [x] **Brunella Core Stabilization** (2026-04-04)
@@ -422,6 +410,7 @@
 - [x] **Jules Enterprise CI/CD & Security Suite** (2026-02-12T15:50:00Z)
 - [x] **KKV Pack Productization & Cockpit Definition** (2026-04-08T19:41:31Z)
 - [x] **Mobile responsiveness research** (2026-02-27)
+- [x] **Modular State Refactor — Globális változók Dependency Injection alapú refaktora** (2026-04-06)
 - [x] **Orchestrator Cognition Upgrade — Magyar társalgó + rendszerérzékelés** (2026-03-20)
 - [x] **Phoenix Protocol v2 - Öngyógyító Rendszer** (2026-02-16T16:20:00Z)
 - [x] **Pre-commit Hook Optimalizáció** (2026-03-30T15:30:00.000Z)

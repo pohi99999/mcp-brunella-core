@@ -39,12 +39,15 @@ import { DemandForecastAgent, type DemandForecastTask } from '../../agents/Deman
 import { SafetyStockAgent, type SafetyStockTask } from '../../agents/SafetyStockAgent.js';
 import { PurchaseOrderAgent, type PurchaseOrderTask } from '../../agents/PurchaseOrderAgent.js';
 
+import { StocktakeReconciliationAgent } from '../../agents/StocktakeReconciliationAgent.js';
+
 // Singleton agent példányok
 const fifoAgent = new InventoryFifoAgent();
 const wacAgent = new InventoryWacAgent();
 const forecastAgent = new DemandForecastAgent();
 const safetyStockAgent = new SafetyStockAgent();
 const poAgent = new PurchaseOrderAgent();
+const reconAgent = new StocktakeReconciliationAgent();
 
 function normalizeRouteParam(value: string | string[] | undefined): string {
   if (Array.isArray(value)) {
@@ -170,6 +173,7 @@ export function createInventoryRoutes(): Router {
       await logMovement({
         item_id: item.id,
         movement_type: 'TRANSFER',
+        status: 'COMPLETED',
         quantity,
         reference,
         location_from,
@@ -343,6 +347,39 @@ export function createInventoryRoutes(): Router {
     }
   });
 
+  // ── POST /investigate-stocktake/:id — Leltáreltérés kivizsgálása ─────────────
+  router.post('/investigate-stocktake/:id', async (req: Request, res: Response) => {
+    try {
+      const { id } = req.params;
+      const { updateStocktakeStatus, getDb } = await import('../../utils/inventoryDb.js');
+      
+      const db = await (getDb as any)();
+      const stocktake = db.prepare('SELECT s.*, i.sku FROM inventory_stocktakes s JOIN inventory_items i ON s.item_id = i.id WHERE s.id = ?').get(id) as any;
+      
+      if (!stocktake) {
+        return res.status(404).json({ error: 'Leltár tétel nem található' });
+      }
+
+      await updateStocktakeStatus(id, 'INVESTIGATING');
+
+      const result = await reconAgent.execute(JSON.stringify({
+        sku: stocktake.sku,
+        discrepancy_qty: stocktake.discrepancy,
+        discrepancy_value: stocktake.discrepancy_value
+      }));
+
+      if (result.status === 'success' && result.data) {
+        const reconData = result.data as any;
+        await updateStocktakeStatus(id, 'RESOLVED', reconData.probable_cause, reconData.recommended_action);
+      }
+
+      res.json(result);
+    } catch (e) {
+      logError('InventoryRoute', `POST /investigate-stocktake/:id hiba: ${e instanceof Error ? e.message : String(e)}`);
+      res.status(500).json({ error: e instanceof Error ? e.message : String(e) });
+    }
+  });
+
   // ── POST /wac-refresh — WAC napi batch frissítés (n8n WF-INV-2) ──────────
   router.post('/wac-refresh', async (_req: Request, res: Response) => {
     try {
@@ -405,6 +442,42 @@ export function createInventoryRoutes(): Router {
       res.json(result);
     } catch (e) {
       logError('InventoryRoute', `POST /generate-po/:sku hiba: ${e instanceof Error ? e.message : String(e)}`);
+      res.status(500).json({ error: e instanceof Error ? e.message : String(e) });
+    }
+  });
+
+  // ── POST /approve-order/:id — PO Jóváhagyása ────────────────────────────────
+  router.post('/approve-order/:id', async (req: Request, res: Response) => {
+    try {
+      const id = req.params.id;
+      const { approved_by } = req.body as { approved_by?: string };
+
+      if (!id) return res.status(400).json({ error: 'ID kötelező' });
+
+      const { updatePurchaseOrderStatus } = await import('../../utils/inventoryDb.js');
+      await updatePurchaseOrderStatus(id, 'APPROVED', approved_by ?? 'human_operator');
+
+      logInfo('InventoryRoute', `PO jóváhagyva: ${id} (by: ${approved_by ?? 'operator'})`);
+      res.json({ success: true, status: 'APPROVED', id });
+    } catch (e) {
+      logError('InventoryRoute', `POST /approve-order/:id hiba: ${e instanceof Error ? e.message : String(e)}`);
+      res.status(500).json({ error: e instanceof Error ? e.message : String(e) });
+    }
+  });
+
+  // ── POST /reject-order/:id — PO Elutasítása ────────────────────────────────
+  router.post('/reject-order/:id', async (req: Request, res: Response) => {
+    try {
+      const id = req.params.id;
+      if (!id) return res.status(400).json({ error: 'ID kötelező' });
+
+      const { updatePurchaseOrderStatus } = await import('../../utils/inventoryDb.js');
+      await updatePurchaseOrderStatus(id, 'CANCELLED');
+
+      logInfo('InventoryRoute', `PO elutasítva: ${id}`);
+      res.json({ success: true, status: 'CANCELLED', id });
+    } catch (e) {
+      logError('InventoryRoute', `POST /reject-order/:id hiba: ${e instanceof Error ? e.message : String(e)}`);
       res.status(500).json({ error: e instanceof Error ? e.message : String(e) });
     }
   });

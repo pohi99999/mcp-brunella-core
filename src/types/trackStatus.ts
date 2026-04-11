@@ -12,6 +12,9 @@ export interface TrackStatusTrack {
   progress: number;
   group: TrackGroupId;
   assignee?: string;
+  nextStep?: string;
+  riskLevel?: 'low' | 'medium' | 'high' | 'critical';
+  dependencies?: string[];
   updated?: string;
   completed?: string;
 }

@@ -36,6 +36,8 @@ export interface TrackMetadata {
   updated?: string;
   completed?: string;
   assignee?: string;
+  nextStep?: string;
+  riskLevel?: 'low' | 'medium' | 'high' | 'critical';
   tags?: string[];
   dependencies?: string[];
   group: TrackGroupId;
@@ -265,6 +267,17 @@ export class TrackStateManager {
       ? record.dependencies.map((dependency) => String(dependency))
       : [];
 
+    const nextStep = pickString(record.nextStep, record.next_step);
+
+    let riskLevel: TrackMetadata['riskLevel'] = undefined;
+    const riskRaw = pickString(record.riskLevel, record.risk_level)?.toLowerCase();
+    if (riskRaw) {
+      if (riskRaw.includes('critical')) riskLevel = 'critical';
+      else if (riskRaw.includes('high')) riskLevel = 'high';
+      else if (riskRaw.includes('medium')) riskLevel = 'medium';
+      else if (riskRaw.includes('low')) riskLevel = 'low';
+    }
+
     const sourcePath = pickString(record._sourcePath, trackDir);
     const archived = typeof record._isArchived === 'boolean' ? record._isArchived : Boolean(isArchived || status === 'archived');
 
@@ -278,6 +291,8 @@ export class TrackStateManager {
       updated: pickString(record.updated, record.updatedAt, record.updated_at),
       completed: pickString(record.completed, record.completedAt, record.completed_at),
       assignee: pickString(record.assignee, record.assigned_agent, record.owner),
+      nextStep,
+      riskLevel,
       tags,
       dependencies,
       group: inferTrackGroup({
@@ -354,6 +369,8 @@ export class TrackStateManager {
     content += `  - **ID:** \`${track.id}\`\n`;
     content += `  - **Progress:** ${track.progress}%\n`;
     if (track.assignee) content += `  - **Assignee:** ${track.assignee}\n`;
+    if (track.nextStep) content += `  - **Next Step:** ${track.nextStep}\n`;
+    if (track.riskLevel) content += `  - **Risk:** ${track.riskLevel.toUpperCase()}\n`;
     if (mode === 'active' && track.updated) content += `  - **Updated:** ${track.updated}\n`;
     content += `  - Mappa: ./tracks/${track.id}/\n\n`;
     return content;

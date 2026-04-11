@@ -47,6 +47,9 @@ function toSnapshotTrack(track: TrackMetadata): TrackStatusTrack {
     progress: track.progress,
     group: normalizeGroup(track),
     assignee: track.assignee,
+    nextStep: track.nextStep,
+    riskLevel: track.riskLevel,
+    dependencies: track.dependencies,
     updated: track.updated,
     completed: track.completed,
   };
@@ -249,7 +252,9 @@ export function buildTrackStatusSnapshot(state: Readonly<ProjectState>): TrackSt
 function renderTrackLine(track: TrackStatusTrack): string {
   const statusSuffix = track.status !== 'active' ? ` · ${track.status}` : '';
   const assigneeSuffix = track.assignee ? ` · ${track.assignee}` : '';
-  return `- [${track.priority.toUpperCase()}] ${track.title} — ${track.progress}%${statusSuffix}${assigneeSuffix}`;
+  const riskSuffix = track.riskLevel ? ` · Risk: ${track.riskLevel.toUpperCase()}` : '';
+  const nextStepSuffix = track.nextStep ? `\n    Next step: ${track.nextStep}` : '';
+  return `- [${track.priority.toUpperCase()}] ${track.title} — ${track.progress}%${statusSuffix}${assigneeSuffix}${riskSuffix}${nextStepSuffix}`;
 }
 
 function renderTrackSection(title: string, tracks: TrackStatusTrack[]): string {

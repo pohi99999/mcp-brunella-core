@@ -9,88 +9,24 @@
 import Database from 'better-sqlite3';
 import { randomUUID } from 'crypto';
 import { logInfo, logError } from './logger.js';
+import {
+  InventoryItem,
+  InventoryBatch,
+  InventoryMovement,
+  InventoryStocktake,
+  InventoryPurchaseOrder,
+  MovementType,
+  MovementStatus,
+  ValuationMethod
+} from '../types/inventory.d.js';
 
-// ─── Típusok ────────────────────────────────────────────────────────────────
-
-export interface InventoryItem {
-  id: string;
-  sku: string;
-  name: string;
-  unit: string;
-  category?: string;
-  valuation_method: 'FIFO' | 'WAC';
-  min_stock: number;
-  reorder_point: number;
-  safety_stock: number;
-  current_wac_price?: number;
-  current_stock: number;
-  lead_time_days: number;
-  supplier_id?: string;
-  notes?: string;
-  created_at: string;
-  updated_at: string;
-}
-
-export interface InventoryBatch {
-  id: string;
-  item_id: string;
-  purchase_date: string;
-  quantity: number;
-  remaining_qty: number;
-  unit_price: number;
-  supplier_id?: string;
-  delivery_note_ref?: string;
-  closed: number;
-  created_at: string;
-}
-
-export interface InventoryMovement {
-  id: string;
-  item_id: string;
-  movement_type: 'IN' | 'OUT' | 'TRANSFER' | 'SCRAP' | 'ADJUSTMENT';
-  quantity: number;
-  unit_price?: number;
-  total_value?: number;
-  reference?: string;
-  counterparty?: string;
-  location_from?: string;
-  location_to?: string;
-  created_by?: string;
-  notes?: string;
-  timestamp: string;
-}
-
-export interface InventoryStocktake {
-  id: string;
-  item_id: string;
-  physical_count: number;
-  system_count: number;
-  discrepancy: number;
-  discrepancy_value?: number;
-  status: 'OPEN' | 'INVESTIGATING' | 'RESOLVED' | 'BOOKED';
-  root_cause?: string;
-  resolution_notes?: string;
-  counted_by?: string;
-  location?: string;
-  created_at: string;
-  resolved_at?: string;
-}
-
-export interface InventoryPurchaseOrder {
-  id: string;
-  item_id: string;
-  sku: string;
-  order_qty: number;
-  estimated_unit_price?: number;
-  supplier_id?: string;
-  status: 'DRAFT' | 'PENDING_APPROVAL' | 'APPROVED' | 'SENT' | 'RECEIVED' | 'CANCELLED';
-  ai_reasoning?: string;
-  confidence_score?: number;
-  email_draft?: string;
-  approved_by?: string;
-  created_at: string;
-  updated_at: string;
-}
+export {
+  InventoryItem,
+  InventoryBatch,
+  InventoryMovement,
+  InventoryStocktake,
+  InventoryPurchaseOrder,
+};
 
 export interface FifoIssueResult {
   totalCogs: number;
@@ -105,6 +41,21 @@ export interface WacResult {
   totalValue: number;
 }
 
+export interface ValuationRow {
+  sku: string;
+  name: string;
+  unit: string;
+  valuation_method: string;
+  current_stock: number;
+  fifo_stock_value: number;
+  wac_stock_value: number;
+}
+
+export interface DailySalesRow {
+  date: string;   // YYYY-MM-DD
+  qty: number;
+}
+
 // ─── Singleton DB ────────────────────────────────────────────────────────────
 
 let _db: Database.Database | null = null;
@@ -114,10 +65,10 @@ async function getDb() {
 
   const { default: Database } = await import('better-sqlite3');
   const { join } = await import('path');
-  const { existsSync, mkdirSync, readFileSync } = await import('fs');
+  const { existsSync, mkdirSync, readFileSync, readdirSync } = await import('fs');
 
   const dbPath = join(process.cwd(), 'data', 'inventory.db');
-  const migrationPath = join(process.cwd(), 'data', 'migrations', 'inventory_001_initial.sql');
+  const migrationsDir = join(process.cwd(), 'data', 'migrations');
 
   const dataDir = join(process.cwd(), 'data');
   if (!existsSync(dataDir)) mkdirSync(dataDir, { recursive: true });
@@ -126,13 +77,24 @@ async function getDb() {
   _db.pragma('journal_mode = WAL');
   _db.pragma('foreign_keys = ON');
 
-  // Séma migráció
-  if (existsSync(migrationPath)) {
-    const sql = readFileSync(migrationPath, 'utf8');
-    _db.exec(sql);
-    logInfo('InventoryDb', 'Séma migráció sikeres: inventory_001_initial.sql');
-  } else {
-    logError('InventoryDb', `Migráció fájl nem található: ${migrationPath}`);
+  // Séma migrációk automatikus futtatása
+  if (existsSync(migrationsDir)) {
+    const migrationFiles = readdirSync(migrationsDir)
+      .filter(f => f.startsWith('inventory_') && f.endsWith('.sql'))
+      .sort();
+
+    for (const file of migrationFiles) {
+      try {
+        const sql = readFileSync(join(migrationsDir, file), 'utf8');
+        _db.exec(sql);
+        logInfo('InventoryDb', `Migráció sikeres: ${file}`);
+      } catch (err) {
+        const msg = err instanceof Error ? err.message : String(err);
+        if (!msg.includes('duplicate column name')) {
+          logError('InventoryDb', `Hiba a migráció során (${file}): ${msg}`);
+        }
+      }
+    }
   }
 
   return _db;
@@ -204,16 +166,18 @@ export async function createBatch(data: Omit<InventoryBatch, 'id' | 'closed' | '
     VALUES (?,?,?,?,?,?,?,?,0,?)
   `).run(id, data.item_id, data.purchase_date, data.quantity, data.remaining_qty,
          data.unit_price, data.supplier_id ?? null, data.delivery_note_ref ?? null, now);
-  return db.prepare('SELECT * FROM inventory_batches WHERE id = ?').get(id) as InventoryBatch;
+  const row = db.prepare('SELECT * FROM inventory_batches WHERE id = ?').get(id) as any;
+  return { ...row, closed: row.closed === 1 };
 }
 
 export async function getOpenBatchesByItemId(itemId: string): Promise<InventoryBatch[]> {
   const db = await getDb();
-  return db.prepare(`
+  const rows = db.prepare(`
     SELECT * FROM inventory_batches
     WHERE item_id = ? AND closed = 0
     ORDER BY purchase_date ASC
-  `).all(itemId) as InventoryBatch[];
+  `).all(itemId) as any[];
+  return rows.map(r => ({ ...r, closed: r.closed === 1 }));
 }
 
 export async function updateBatchRemainingQty(batchId: string, newRemaining: number): Promise<void> {
@@ -232,11 +196,11 @@ export async function logMovement(data: Omit<InventoryMovement, 'id' | 'timestam
   const id = randomUUID();
   db.prepare(`
     INSERT INTO inventory_movements
-      (id, item_id, movement_type, quantity, unit_price, total_value, reference,
+      (id, item_id, movement_type, status, quantity, unit_price, total_value, reference,
        counterparty, location_from, location_to, created_by, notes, timestamp)
-    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)
+    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)
   `).run(
-    id, data.item_id, data.movement_type, data.quantity,
+    id, data.item_id, data.movement_type, data.status || 'COMPLETED', data.quantity,
     data.unit_price ?? null, data.total_value ?? null, data.reference ?? null,
     data.counterparty ?? null, data.location_from ?? null, data.location_to ?? null,
     data.created_by ?? 'system', data.notes ?? null,
@@ -299,7 +263,7 @@ export async function getOpenStocktakes(): Promise<InventoryStocktake[]> {
 
 // ─── Purchase Orders ─────────────────────────────────────────────────────────
 
-export async function createPurchaseOrder(data: Omit<InventoryPurchaseOrder, 'id' | 'status' | 'created_at' | 'updated_at'>): Promise<InventoryPurchaseOrder> {
+export async function createPurchaseOrder(data: Omit<InventoryPurchaseOrder, 'id' | 'created_at' | 'updated_at'>): Promise<InventoryPurchaseOrder> {
   const db = await getDb();
   const id = randomUUID();
   const now = new Date().toISOString();
@@ -307,14 +271,16 @@ export async function createPurchaseOrder(data: Omit<InventoryPurchaseOrder, 'id
     INSERT INTO inventory_purchase_orders
       (id, item_id, sku, order_qty, estimated_unit_price, supplier_id,
        status, ai_reasoning, confidence_score, email_draft, created_at, updated_at)
-    VALUES (?,?,?,?,?,?,'DRAFT',?,?,?,?,?)
+    VALUES (?,?,?,?,?,?,?,?,?,?,?,?)
   `).run(
     id, data.item_id, data.sku, data.order_qty,
     data.estimated_unit_price ?? null, data.supplier_id ?? null,
+    data.status || 'DRAFT',
     data.ai_reasoning ?? null, data.confidence_score ?? null, data.email_draft ?? null,
     now, now
   );
-  return db.prepare('SELECT * FROM inventory_purchase_orders WHERE id = ?').get(id) as InventoryPurchaseOrder;
+  const row = db.prepare('SELECT * FROM inventory_purchase_orders WHERE id = ?').get(id) as any;
+  return row;
 }
 
 export async function updatePurchaseOrderStatus(

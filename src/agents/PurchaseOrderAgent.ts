@@ -156,6 +156,7 @@ export class PurchaseOrderAgent implements IAgent {
       email_draft: draftEmail,
       ai_reasoning: `Automatikus ROP riasztás: készlet=${item.current_stock}, ROP=${item.reorder_point}`,
       confidence_score: 0.85,
+      status: 'PENDING_APPROVAL',
     });
 
     return {

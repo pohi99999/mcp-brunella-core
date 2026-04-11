@@ -128,4 +128,46 @@ export function registerConductorCommands(conductorCmd: Command): void {
         writeLine('');
       });
     });
+
+  // brunella conductor report
+  conductorCmd
+    .command('report')
+    .description('Generate weekly or monthly summary report')
+    .option('-t, --type <type>', 'Report type (weekly|monthly)', 'weekly')
+    .action(async (options: { type: string }) => {
+      writeLine(chalk.blue(`📊 Generating ${options.type} report...\n`));
+      const state = trackStateManager.getState();
+      const snapshot = buildTrackStatusSnapshot(state);
+
+      const reportDate = new Date().toISOString().split('T')[0];
+      const filename = `conductor/reports/${options.type}_report_${reportDate}.md`;
+
+      const lines = [
+        `# KKV Masterplan ${options.type === 'weekly' ? 'Heti' : 'Havi'} Jelentés`,
+        `**Dátum:** ${reportDate}`,
+        '',
+        `## 📈 Áttekintés`,
+        `- **Összes Track:** ${snapshot.overallStats.total}`,
+        `- **Aktív:** ${snapshot.overallStats.active}`,
+        `- **Befejezett:** ${snapshot.overallStats.completed}`,
+        '',
+        `## ⚠️ Kockázati Jelentés (Risk Indicators)`,
+      ];
+
+      const highRisk = snapshot.activeBusinessTracks.filter(t => t.riskLevel === 'high' || t.riskLevel === 'critical');
+      if (highRisk.length > 0) {
+        highRisk.forEach(t => lines.push(`- **${t.title}**: ${t.riskLevel!.toUpperCase()} kockázat.`));
+      } else {
+        lines.push('- Nincs magas kockázatú aktív üzleti track.');
+      }
+
+      lines.push('', '## 📋 Előrehaladás (Progress)', formatTrackStatusSnapshot(snapshot));
+
+      const fs = await import('fs');
+      const path = await import('path');
+      fs.mkdirSync(path.dirname(filename), { recursive: true });
+      fs.writeFileSync(filename, lines.join('\n'), 'utf-8');
+
+      writeLine(chalk.green(`✅ Jelentés mentve: ${filename}`));
+    });
 }

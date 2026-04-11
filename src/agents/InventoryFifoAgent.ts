@@ -117,6 +117,7 @@ export class InventoryFifoAgent implements IAgent {
     await logMovement({
       item_id: item.id,
       movement_type: 'IN',
+      status: 'COMPLETED',
       quantity: input.quantity,
       unit_price: input.unit_price,
       total_value: input.quantity * input.unit_price,
@@ -167,6 +168,7 @@ export class InventoryFifoAgent implements IAgent {
     await logMovement({
       item_id: item.id,
       movement_type: 'OUT',
+      status: 'COMPLETED',
       quantity: input.quantity,
       unit_price: result.totalCogs / input.quantity,
       total_value: result.totalCogs,
