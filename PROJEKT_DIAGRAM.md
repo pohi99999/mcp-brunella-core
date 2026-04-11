@@ -65,13 +65,13 @@
 <!-- DOC_STATS_START -->
 ## 📊 Auto-generated projekt statisztikák
 
-- Agent registry entries: **81**
-- Route modulok a `src/server/routes/` alatt: **91**
-- Aktív route mountok a központi routerben: **106**
-- MCP tool fájlok a `src/tools/` alatt: **52**
+- Agent registry entries: **87**
+- Route modulok a `src/server/routes/` alatt: **96**
+- Aktív route mountok a központi routerben: **110**
+- MCP tool fájlok a `src/tools/` alatt: **53**
 - Detektált MCP tool definíciók / regisztrációk: **4**
-- CLI parancs deklarációk: **276**
-- Dashboard navigációs panelek: **106**
+- CLI parancs deklarációk: **297**
+- Dashboard navigációs panelek: **108**
 
 > Ezt a blokkot a `npm run sync:doc-stats` generálja.
 <!-- DOC_STATS_END -->
@@ -89,7 +89,7 @@ F:\mcp-brunella-core\
 │   │   ├── DeveloperAgent.ts        # Code Writer
 │   │   ├── EvaluatorAgent.ts        # Tester & Auditor
 │   │   ├── ResearcherAgent.ts       # Web Search & RAG
-│   │   └── [81 agents total...]
+│   │   └── [87 agents total...]
 │   │
 │   ├── tools/                        # 🔧 MCP Tool Definitions
 │   │   ├── toolDefinitions.ts       # Tool schemas

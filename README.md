@@ -60,7 +60,7 @@ scripts\sync.bat --build --test  # Sync + build + test (teljes ellenőrzés)
 |---|---|
 | Bármilyen kódolás | `README.md` → "Kód Konvenciók" szekció |
 | Új feature / architektúra | `PROJEKT_DIAGRAM.md`, `README.md` → "Architektúra" szekció |
-| Agent fejlesztés | `src/agents/registry.json` (81 agent), `README.md` → "Agent Implementáció" |
+| Agent fejlesztés | `src/agents/registry.json` (87 agent), `README.md` → "Agent Implementáció" |
 | Függőség/konfig módosítás | `package.json`, `tsconfig.json` |
 | Track-en dolgozol | `conductor/tracks/<track_id>/plan.md` |
 | Teszt probléma | `TEST_RESULTS.md`, `logs/` könyvtár |
@@ -80,13 +80,13 @@ A `README.md` a master dokumentum (~1100 sor). NE olvasd be egészben indulásko
 <!-- DOC_STATS_START -->
 ## 📊 Auto-generated projekt statisztikák
 
-- Agent registry entries: **81**
-- Route modulok a `src/server/routes/` alatt: **91**
-- Aktív route mountok a központi routerben: **106**
-- MCP tool fájlok a `src/tools/` alatt: **52**
+- Agent registry entries: **87**
+- Route modulok a `src/server/routes/` alatt: **96**
+- Aktív route mountok a központi routerben: **110**
+- MCP tool fájlok a `src/tools/` alatt: **53**
 - Detektált MCP tool definíciók / regisztrációk: **4**
-- CLI parancs deklarációk: **276**
-- Dashboard navigációs panelek: **106**
+- CLI parancs deklarációk: **297**
+- Dashboard navigációs panelek: **108**
 
 > Ezt a blokkot a `npm run sync:doc-stats` generálja.
 <!-- DOC_STATS_END -->
@@ -137,6 +137,7 @@ Kötelező szabályok:
 - `progress: 100` csak akkor megengedett, ha a fenti DoD teljesül.
 - `completed` trackhez kötelező `verificationNotes` + `completedAt`.
 - `archived` trackhez kötelező `archiveReason` + `archivedAt`.
+- Ha egy régi tracket egy későbbi, **validált** track váltott ki, az előzmény `archived` maradhat `supersededByTracks` hivatkozással. Ez nem `completed`, és nem szabad hamis DoD-vel 100%-ra kozmetikázni.
 - Meta-only lezárás TILOS: a lezáró commitnak valódi repo-munkát is kell tartalmaznia (`src/`, `myai/`, `scripts/`, `test/`, `docs/`, `.github/`, stb.).
 - `git commit --no-verify` és `git push --no-verify` TILOS.
 - Ha egy lezárás vagy archiválás bizonyíték nélkül történne, azt hibának kell tekinteni, és a tracket vissza kell vinni javításra / follow-up trackre.
