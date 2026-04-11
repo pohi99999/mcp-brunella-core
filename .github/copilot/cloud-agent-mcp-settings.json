@@ -8,6 +8,7 @@
       "env": {
         "BRUNELLA_SKIP_SECRETS_CHECK": "1",
         "WEB_UI_ENABLED": "0",
+        "BRUNELLA_FORCE_STDIO": "1",
         "NODE_ENV": "test",
         "PYTHONPATH": ".",
         "MANIFEST_SIGNING_SECRET": "$COPILOT_MCP_MANIFEST_SIGNING_SECRET"
