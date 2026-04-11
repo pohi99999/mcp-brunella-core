@@ -1,10 +1,10 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-04-11T23:26:09.581Z
+**Utolso frissites:** 2026-04-11T23:54:26.444Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 243 total | 18 active | 24 completed | 199 archived
+**Stats:** 243 total | 19 active | 24 completed | 198 archived
 **Csoportok:** Könyvelés / üzleti automatizálás: 52 | Nova asszisztens: 23 | Brunella rendszer: 94 | Egyéb: 74
 
 ---
@@ -28,7 +28,7 @@
 
 ---
 
-## Aktiv Szalak (Active) (18)
+## Aktiv Szalak (Active) (19)
 
 ### Könyvelés / üzleti automatizálás (10)
 
@@ -140,7 +140,14 @@
   - Mappa: ./tracks/toura_local_dev_20260408/
 
 
-### Brunella rendszer (2)
+### Brunella rendszer (3)
+
+- [ ] **Cloudflare DNS Zone Reconciliation for Custom Domains** [HIGH]
+  - **ID:** `cloudflare_dns_zone_reconciliation_20260325`
+  - **Progress:** 0%
+  - **Assignee:** Gemini CLI
+  - **Updated:** 2026-04-11T23:51:55.785Z
+  - Mappa: ./tracks/cloudflare_dns_zone_reconciliation_20260325/
 
 - [ ] **p-search** [HIGH]
   - **ID:** `p-search_20260408`
@@ -294,7 +301,7 @@
 
 ---
 
-## Archivalt (Archived) (199)
+## Archivalt (Archived) (198)
 
 > Archived tracks are hidden by default. View in `conductor/archive/`
 
@@ -352,7 +359,7 @@
 - [x] **Innovation Bridge - Cross-Industry Knowledge Transfer** (2026-02-24T01:27:00Z)
 - [x] **Napi AI Agent Összefoglaló Pipeline** (2026-04-10T19:10:00.000Z)
 
-### Brunella rendszer (81)
+### Brunella rendszer (80)
 
 - [x] **BAS Átfogó Tesztprotokol** (2026-02-16T15:05:00Z)
 - [x] **Brunella Core Stabilization** (2026-04-04)
@@ -371,7 +378,6 @@
 - [x] **Brunella Remote Layer — Fázis 5: Adaptive Swarms & Workflow Intelligence** (2026-03-22)
 - [x] **Brunella Zero-Prompt → Ephemeral Agent Bridge**
 - [x] **Cloudflare Chat Integration** (2026-02-12T18:00:00Z)
-- [x] **Cloudflare DNS Zone Reconciliation for Custom Domains** (2026-03-28T19:00:00.000Z)
 - [x] **Cloudflare edge browser orchestration es Robotkez integracio** (2026-04-04)
 - [x] **Cloudflare Edge Integration** (2026-02-12)
 - [x] **Cloudflare Token Separation: BAS vs Personal Account** (2026-04-04)

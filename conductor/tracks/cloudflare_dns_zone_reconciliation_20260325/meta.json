@@ -1,13 +1,16 @@
 {
   "id": "cloudflare_dns_zone_reconciliation_20260325",
+  "track_id": "cloudflare_dns_zone_reconciliation_20260325",
   "title": "Cloudflare DNS Zone Reconciliation for Custom Domains",
-  "status": "archived",
+  "description": "Resolve the deferred custom-domain DNS zone binding work from the Cloudflare optimization rollout and add an explicit domain-health verification path.",
+  "status": "pending",
   "priority": "high",
   "createdAt": "2026-03-25",
+  "created_at": "2026-03-25T00:00:00.000Z",
   "owner": "Gemini CLI",
-  "progress": 100,
-  "completedAt": "2026-03-28T19:00:00.000Z",
-  "updatedAt": "2026-03-28T20:25:00.000Z",
+  "updatedAt": "2026-04-11T23:51:55.785Z",
+  "updated_at": "2026-04-11T23:51:55.785Z",
+  "progress": 0,
   "tags": [
     "cloudflare",
     "dns",
@@ -15,7 +18,7 @@
     "tunnel",
     "ops"
   ],
-  "phase": 2,
+  "phase": 1,
   "dependencies": [
     "cloudflare_full_optimization_20260325"
   ],

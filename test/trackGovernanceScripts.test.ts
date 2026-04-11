@@ -143,6 +143,87 @@ describe('track governance scripts', () => {
     );
   });
 
+  it('accepts archived predecessor tracks that point to a valid successor', () => {
+    initRepo(tempDir);
+
+    writeText(tempDir, 'src/feature.ts', 'export const successorReady = true;\n');
+    writeJson(tempDir, 'conductor/tracks/successor-track/meta.json', {
+      id: 'successor-track',
+      status: 'completed',
+      progress: 100,
+      completedAt: '2026-04-11T00:00:00Z',
+      verificationNotes: 'Replacement flow shipped and verified.',
+      dod: {
+        tests_pass: true,
+        build_clean: true,
+        code_committed: true,
+        no_verify_used: false,
+      },
+    });
+    writeText(tempDir, 'conductor/tracks/successor-track/plan.md', '# successor\n');
+    runGit(tempDir, 'git add .');
+    runGit(tempDir, 'git commit -m "feat: ship successor"');
+
+    writeJson(tempDir, 'conductor/archive/predecessor-track/meta.json', {
+      id: 'predecessor-track',
+      status: 'archived',
+      progress: 35,
+      archivedAt: '2026-04-11T01:00:00Z',
+      archiveReason: 'Superseded by successor-track.',
+      supersededByTracks: ['successor-track'],
+    });
+    runGit(tempDir, 'git add conductor/archive/predecessor-track/meta.json');
+    runGit(tempDir, 'git commit -m "chore: archive superseded predecessor"');
+
+    const report = auditTrackRepository({ repoRoot: tempDir });
+    const track = report.tracks.find((item) => item.id === 'predecessor-track');
+
+    expect(track).toBeDefined();
+    expect(track?.issues).toEqual([]);
+    expect(track?.validatedSupersedingTracks).toEqual(['successor-track']);
+  });
+
+  it('accepts staged superseded archival without fresh build and test proofs', () => {
+    initRepo(tempDir);
+
+    writeText(tempDir, 'src/feature.ts', 'export const successorReady = true;\n');
+    writeJson(tempDir, 'conductor/tracks/predecessor-track/meta.json', {
+      id: 'predecessor-track',
+      status: 'active',
+      progress: 40,
+    });
+    writeJson(tempDir, 'conductor/tracks/successor-track/meta.json', {
+      id: 'successor-track',
+      status: 'completed',
+      progress: 100,
+      completedAt: '2026-04-11T00:00:00Z',
+      verificationNotes: 'Replacement flow shipped and verified.',
+      dod: {
+        tests_pass: true,
+        build_clean: true,
+        code_committed: true,
+        no_verify_used: false,
+      },
+    });
+    writeText(tempDir, 'conductor/tracks/successor-track/plan.md', '# successor\n');
+    runGit(tempDir, 'git add .');
+    runGit(tempDir, 'git commit -m "feat: ship successor"');
+
+    writeJson(tempDir, 'conductor/tracks/predecessor-track/meta.json', {
+      id: 'predecessor-track',
+      status: 'archived',
+      progress: 40,
+      archivedAt: '2026-04-11T01:00:00Z',
+      archiveReason: 'Superseded by successor-track.',
+      supersededByTracks: ['successor-track'],
+    });
+    runGit(tempDir, 'git add conductor/tracks/predecessor-track/meta.json');
+
+    const result = validateStagedTrackClosures({ repoRoot: tempDir });
+
+    expect(result.issues).toEqual([]);
+  });
+
   it('accepts outgoing commits that have pre-commit proof', () => {
     initRepo(tempDir);
 

@@ -79,6 +79,17 @@
     "archiveReason": {
       "type": "string"
     },
+    "supersededByTracks": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 1,
+      "description": "Optional for archived predecessor tracks that are explicitly replaced by later validated work."
+    },
+    "superseded_by_tracks": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 1
+    },
     "verified": {
       "type": "boolean"
     },
@@ -160,18 +171,29 @@
         }
       },
       "then": {
-        "required": ["dod", "archiveReason", "archivedAt"],
-        "properties": {
-          "progress": { "const": 100 },
-          "dod": {
+        "required": ["archiveReason", "archivedAt"],
+        "anyOf": [
+          {
+            "required": ["dod"],
             "properties": {
-              "tests_pass": { "const": true },
-              "build_clean": { "const": true },
-              "code_committed": { "const": true },
-              "no_verify_used": { "const": false }
+              "progress": { "const": 100 },
+              "dod": {
+                "properties": {
+                  "tests_pass": { "const": true },
+                  "build_clean": { "const": true },
+                  "code_committed": { "const": true },
+                  "no_verify_used": { "const": false }
+                }
+              }
             }
+          },
+          {
+            "anyOf": [
+              { "required": ["supersededByTracks"] },
+              { "required": ["superseded_by_tracks"] }
+            ]
           }
-        }
+        ]
       }
     }
   ]

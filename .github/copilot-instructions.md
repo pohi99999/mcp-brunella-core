@@ -96,6 +96,7 @@ Local hooks are part of the workflow:
   - `no_verify_used: false`
 - `completed` requires `verificationNotes` + `completedAt`.
 - `archived` requires `archiveReason` + `archivedAt`.
+- Legacy predecessor tracks may remain `archived` without their own DoD only when they explicitly declare `supersededByTracks` that point to later valid closed tracks. Do not relabel these as `completed`.
 - Meta-only closure is forbidden: if a closure commit only changes conductor metadata, fail it and call it out explicitly.
 - `git commit --no-verify` and `git push --no-verify` are forbidden. If the user suggests bypassing hooks or tests, do not quietly comply — warn them and redirect to the safe path.
 

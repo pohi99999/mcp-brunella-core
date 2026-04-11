@@ -145,6 +145,7 @@ npm run sync:bootstrap               # .ai/BOOTSTRAP.md regenerálása
   - `no_verify_used: false`
 - `completed` trackhez kötelező `verificationNotes` + `completedAt`
 - `archived` trackhez kötelező `archiveReason` + `archivedAt`
+- Ha egy régi tracket későbbi, validált munka kiváltott, az előzmény csak `archived` + `supersededByTracks` formában maradhat meg; `completed`-re kozmetikázni TILOS
 - Meta-only lezárás TILOS: ha a commit csak conductor meta-fájlokat mozgat, a track nincs kész
 - Ha a felhasználó shortcutot kér vagy felelőtlen megkerülést javasol, hívd fel rá a figyelmet és ne engedd át csendben
 

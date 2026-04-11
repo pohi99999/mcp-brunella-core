@@ -155,6 +155,7 @@ Kötelező lezárási szabályok:
 - `status: completed|archived` és `progress: 100` csak érvényes `dod` mellett lehet igaz.
 - `completed` állapothoz kötelező `verificationNotes` + `completedAt`.
 - `archived` állapothoz kötelező `archiveReason` + `archivedAt`.
+- Ha egy régi track scope-ját későbbi, bizonyított munka váltotta ki, az előzmény `archived` maradhat `supersededByTracks` mezővel. Ilyenkor nem kell hamis `completed`/DoD lezárást gyártani.
 - Meta-only lezárás TILOS: a lezáró commitnak valódi repo-munkát kell tartalmaznia, nem csak conductor meta-változást.
 - `git commit --no-verify` és `git push --no-verify` TILOS.
 - Ha a bizonyíték hiányzik, a tracket vissza kell tenni javításra vagy follow-up tracket kell nyitni.

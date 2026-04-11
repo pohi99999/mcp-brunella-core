@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-04-11T23:26:09.581Z",
+  "lastUpdated": "2026-04-11T23:54:26.444Z",
   "tracks": [
     {
       "id": "agent_instability_chaos_testing_20260410",
@@ -263,12 +263,11 @@
     {
       "id": "cloudflare_dns_zone_reconciliation_20260325",
       "name": "Cloudflare DNS Zone Reconciliation for Custom Domains",
-      "status": "archived",
+      "status": "active",
       "priority": "high",
-      "progress": 100,
+      "progress": 0,
       "created": "2026-03-25",
-      "updated": "2026-03-28T20:25:00.000Z",
-      "completed": "2026-03-28T19:00:00.000Z",
+      "updated": "2026-04-11T23:51:55.785Z",
       "assignee": "Gemini CLI",
       "tags": [
         "cloudflare",
@@ -287,8 +286,8 @@
         "no_verify_used": false
       },
       "group": "brunella",
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\cloudflare_dns_zone_reconciliation_20260325",
-      "_isArchived": true
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\cloudflare_dns_zone_reconciliation_20260325",
+      "_isArchived": false
     },
     {
       "id": "cloudflare_workers_migration_20260226",
@@ -6590,9 +6589,9 @@
   ],
   "stats": {
     "total": 243,
-    "active": 18,
+    "active": 19,
     "completed": 24,
-    "archived": 199,
+    "archived": 198,
     "proposed": 2
   }
 }

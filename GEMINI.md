@@ -97,6 +97,7 @@ python scripts/sync_foszal.py  # .ai/FOSZAL.md frissítése munka után
 - **Agent `finally` KÖTELEZŐ:** `setAgentStatus(this.name, 'idle')` mindig legyen finally-ban
 - **Vitest (NE Jest!):** `vi.fn()`, `vi.mock()`, `vi.spyOn()`
 - **Track lezárásnál VÖRÖS PROTOKOLL:** `git commit --no-verify` / `git push --no-verify` TILOS; `completed` vagy `archived` státusz csak érvényes `dod` blokk mellett adható meg (`tests_pass=true`, `build_clean=true`, `code_committed=true`, `no_verify_used=false`), plusz `verificationNotes` / `archiveReason` kötelező
+- **Előzmény track kiváltása:** ha egy régi scope-ot későbbi, validált track ténylegesen lefed, az előzmény maradhat `archived` `supersededByTracks` mezővel. Ez nem `completed`, és nem szabad hamis DoD-vel lezárni.
 
 **Commit:** Conventional Commits — `feat(scope): subject`, `fix(scope): subject`
 

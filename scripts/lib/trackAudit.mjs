@@ -40,6 +40,36 @@ function pickString(...values) {
   return undefined;
 }
 
+function normalizeStringArray(value) {
+  if (Array.isArray(value)) {
+    return Array.from(
+      new Set(
+        value
+          .filter((item) => typeof item === 'string')
+          .map((item) => item.trim())
+          .filter(Boolean),
+      ),
+    );
+  }
+
+  if (typeof value === 'string' && value.trim()) {
+    return [value.trim()];
+  }
+
+  return [];
+}
+
+function pickStringArray(...values) {
+  for (const value of values) {
+    const normalized = normalizeStringArray(value);
+    if (normalized.length > 0) {
+      return normalized;
+    }
+  }
+
+  return [];
+}
+
 function runGit(repoRoot, args) {
   try {
     return execFileSync('git', args, {
@@ -70,6 +100,10 @@ export function isClosedTrack(record) {
   return status === 'completed' || status === 'archived' || record.isArchived === true;
 }
 
+function isArchivedLifecycle(record) {
+  return String(record.status ?? '').toLowerCase() === 'archived' || record.isArchived === true;
+}
+
 export function isTrackMetaPath(relativePath) {
   const normalized = toPosixPath(relativePath);
   return (
@@ -89,6 +123,27 @@ export function isRepositoryWorkPath(relativePath) {
   }
 
   return !NON_EVIDENCE_PREFIXES.some((prefix) => normalized.startsWith(prefix));
+}
+
+function isSupersededArchive(record) {
+  return isArchivedLifecycle(record) && record.supersededByTracks.length > 0;
+}
+
+function issueIsCoveredBySupersession(issue) {
+  return (
+    issue === 'Missing required dod checklist.' ||
+    issue.startsWith('Closed track progress must be 100') ||
+    issue === 'dod.tests_pass must be true for completed or archived tracks.' ||
+    issue === 'dod.build_clean must be true for completed or archived tracks.' ||
+    issue === 'dod.code_committed must be true for completed or archived tracks.' ||
+    issue === 'Track folder has no plan/spec/track/phases artifact.' ||
+    issue.startsWith('Closed track cannot remain in spec_status=') ||
+    issue === 'Latest commit touching this track metadata contains no repository work evidence outside track/conductor files.'
+  );
+}
+
+function uniqueStrings(values) {
+  return Array.from(new Set(values.filter(Boolean)));
 }
 
 function readJson(filePath) {
@@ -147,6 +202,12 @@ function buildTrackRecord(repoRoot, metaPath, isArchived) {
     hasDod: Boolean(meta.dod && typeof meta.dod === 'object'),
     verificationNotes: pickString(meta.verificationNotes, meta.verification_notes),
     archiveReason: pickString(meta.archiveReason, meta.archive_reason),
+    supersededByTracks: pickStringArray(
+      meta.supersededByTracks,
+      meta.superseded_by_tracks,
+      meta.supersededBy,
+      meta.superseded_by,
+    ),
     completedAt: pickString(meta.completedAt, meta.completed_at, meta.completed),
     archivedAt: pickString(meta.archivedAt, meta.archived_at),
     updatedAt: pickString(meta.updatedAt, meta.updated_at, meta.updated),
@@ -228,7 +289,7 @@ function evaluateClosedTrack(repoRoot, record, duplicateMap) {
     issues.push('Completed track is missing verificationNotes.');
   }
 
-  if (record.isArchived && !record.archiveReason) {
+  if (isArchivedLifecycle(record) && !record.archiveReason) {
     issues.push('Archived track is missing archiveReason.');
   }
 
@@ -236,7 +297,7 @@ function evaluateClosedTrack(repoRoot, record, duplicateMap) {
     warnings.push('Completed track is missing completedAt timestamp.');
   }
 
-  if (record.isArchived && !record.archivedAt) {
+  if (isArchivedLifecycle(record) && !record.archivedAt) {
     warnings.push('Archived track is missing archivedAt timestamp.');
   }
 
@@ -275,9 +336,63 @@ function evaluateClosedTrack(repoRoot, record, duplicateMap) {
     relativePath: record.relativePath,
     trackDir: record.relativeDir,
     dod: record.dod,
+    supersededByTracks: record.supersededByTracks,
+    validatedSupersedingTracks: [],
     issues,
     warnings,
     latestCommit,
+  };
+}
+
+function findValidatedSupersedingTracks(track, auditedTracks) {
+  if (!Array.isArray(track.supersededByTracks) || track.supersededByTracks.length === 0) {
+    return [];
+  }
+
+  return uniqueStrings(
+    track.supersededByTracks.filter((trackId) =>
+      auditedTracks.some(
+        (candidate) =>
+          candidate.id === trackId &&
+          candidate.relativePath !== track.relativePath &&
+          candidate.issues.length === 0,
+      ),
+    ),
+  );
+}
+
+function applySupersessionRules(track, auditedTracks) {
+  if (!Array.isArray(track.supersededByTracks) || track.supersededByTracks.length === 0) {
+    return track;
+  }
+
+  const issues = [...track.issues];
+  if (!isArchivedLifecycle(track)) {
+    return {
+      ...track,
+      issues: uniqueStrings([
+        ...issues,
+        'Only archived tracks may use supersededByTracks.',
+      ]),
+    };
+  }
+
+  const validatedSupersedingTracks = findValidatedSupersedingTracks(track, auditedTracks);
+  if (validatedSupersedingTracks.length === 0) {
+    return {
+      ...track,
+      validatedSupersedingTracks,
+      issues: uniqueStrings([
+        ...issues,
+        'Superseded archived track must reference at least one valid successor track in supersededByTracks.',
+      ]),
+    };
+  }
+
+  return {
+    ...track,
+    validatedSupersedingTracks,
+    issues: issues.filter((issue) => !issueIsCoveredBySupersession(issue)),
   };
 }
 
@@ -291,9 +406,10 @@ export function auditTrackRepository({ repoRoot = process.cwd() } = {}) {
   ];
 
   const duplicateMap = collectDuplicateMap(records);
-  const auditedTracks = records
+  const baseAuditedTracks = records
     .filter((record) => isClosedTrack(record))
     .map((record) => evaluateClosedTrack(repoRoot, record, duplicateMap));
+  const auditedTracks = baseAuditedTracks.map((track) => applySupersessionRules(track, baseAuditedTracks));
 
   const failingTracks = auditedTracks.filter((track) => track.issues.length > 0);
   const warningTracks = auditedTracks.filter((track) => track.issues.length === 0 && track.warnings.length > 0);
@@ -379,6 +495,7 @@ export function validateStagedTrackClosures({ repoRoot = process.cwd() } = {}) {
   const repositoryWorkStaged = stagedFiles.some((relativePath) => isRepositoryWorkPath(relativePath));
   const issues = [];
   const tracks = [];
+  const auditReport = auditTrackRepository({ repoRoot });
 
   for (const relativeMetaPath of stagedMetaFiles) {
     const absoluteMetaPath = path.join(repoRoot, relativeMetaPath);
@@ -393,6 +510,24 @@ export function validateStagedTrackClosures({ repoRoot = process.cwd() } = {}) {
     }
 
     tracks.push(record.id);
+
+    if (record.supersededByTracks.length > 0 && !isArchivedLifecycle(record)) {
+      issues.push(`${record.id}: only archived tracks may use supersededByTracks.`);
+    }
+
+    if (isSupersededArchive(record)) {
+      const validatedSupersedingTracks = findValidatedSupersedingTracks(record, auditReport.tracks);
+      if (!record.archiveReason) {
+        issues.push(`${record.id}: archived track is missing archiveReason.`);
+      }
+      if (!record.archivedAt) {
+        issues.push(`${record.id}: archived superseded track is missing archivedAt.`);
+      }
+      if (validatedSupersedingTracks.length === 0) {
+        issues.push(`${record.id}: supersededByTracks must reference at least one valid closed successor track.`);
+      }
+      continue;
+    }
 
     if (!record.hasDod) {
       issues.push(`${record.id}: missing dod checklist.`);
@@ -415,7 +550,7 @@ export function validateStagedTrackClosures({ repoRoot = process.cwd() } = {}) {
     if (record.status === 'completed' && !record.verificationNotes) {
       issues.push(`${record.id}: completed track is missing verificationNotes.`);
     }
-    if (record.isArchived && !record.archiveReason) {
+    if (isArchivedLifecycle(record) && !record.archiveReason) {
       issues.push(`${record.id}: archived track is missing archiveReason.`);
     }
     if (!repositoryWorkStaged) {
