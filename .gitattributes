@@ -11,10 +11,10 @@
 *.mov filter=lfs diff=lfs merge=lfs -text
 *.mkv filter=lfs diff=lfs merge=lfs -text
 
-# Image files over 1MB should use LFS
-*.jpg filter=lfs diff=lfs merge=lfs -text
-*.jpeg filter=lfs diff=lfs merge=lfs -text
-*.png filter=lfs diff=lfs merge=lfs -text
+# Image files: NOT tracked in LFS (screenshots are small, bandwidth cost too high)
+# *.jpg filter=lfs diff=lfs merge=lfs -text
+# *.jpeg filter=lfs diff=lfs merge=lfs -text
+# *.png filter=lfs diff=lfs merge=lfs -text
 
 # Shell scripts must stay LF so bash-based validation works on Windows checkouts too
 *.sh text eol=lf
