@@ -16,8 +16,8 @@ const dbHarness = vi.hoisted(() => {
   };
 });
 
-const worldHarness = vi.hoisted(() => ({
-  runWorldPerceptionCycle: vi.fn(),
+const predictiveHarness = vi.hoisted(() => ({
+  analyzeDecisionPoint: vi.fn(),
 }));
 
 const hookHarness = vi.hoisted(() => ({
@@ -53,7 +53,13 @@ vi.mock('../src/core/selfModificationEngine.js', () => ({
 }));
 
 vi.mock('../src/core/worldPerceptionLayer.js', () => ({
-  runWorldPerceptionCycle: worldHarness.runWorldPerceptionCycle,
+  runWorldPerceptionCycle: vi.fn(),
+}));
+
+vi.mock('../src/core/predictiveDecisionEngine.js', () => ({
+  PredictiveDecisionEngine: vi.fn().mockImplementation(() => ({
+    analyzeDecisionPoint: predictiveHarness.analyzeDecisionPoint,
+  })),
 }));
 
 vi.mock('../src/server/services/projectMaintainerService.js', () => ({
@@ -82,51 +88,67 @@ vi.mock('../src/server/services/hrTimesheetService.js', () => ({
 
 import { scheduledTasksRunner } from '../src/server/schedulers/scheduledTasksRunner.js';
 
-describe('ScheduledTasksRunner world-perception handler', () => {
+describe('ScheduledTasksRunner predictive decision handler', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    worldHarness.runWorldPerceptionCycle.mockReturnValue({
-      triggeredAt: '2026-04-11T10:00:00.000Z',
-      scannedCards: 4,
-      ingestedSignals: 3,
-      createdSignals: 2,
-      refreshedSignals: 1,
-      topSignals: [],
+    predictiveHarness.analyzeDecisionPoint.mockResolvedValue({
+      id: 'pdr-1',
+      outcome: 'executed',
+      triggeredBy: 'scheduler',
+      scenarios: [],
+      selectedScenario: null,
+      executedAction: null,
+      rollbackCapability: false,
+      createdAt: '2026-04-11T10:00:00.000Z',
+      rolledBackAt: null,
+      metadata: {
+        activeAlerts: 0,
+        signalCount: 0,
+        reviewQueueCount: 0,
+        activeGoals: 0,
+        config: {
+          scenarioCount: 12,
+          riskWeight: 0.3,
+          impactWeight: 0.4,
+          alignmentWeight: 0.3,
+          selectionThreshold: 0.58,
+        },
+      },
     });
   });
 
-  it('ensures the world perception scheduled task', async () => {
-    await (scheduledTasksRunner as { ensureWorldPerceptionTask: () => Promise<void> }).ensureWorldPerceptionTask();
+  it('ensures the predictive decision scheduled task', async () => {
+    await (scheduledTasksRunner as { ensurePredictiveDecisionTask: () => Promise<void> }).ensurePredictiveDecisionTask();
 
     expect(dbHarness.mockPrepare).toHaveBeenCalled();
     expect(dbHarness.mockRun).toHaveBeenCalledWith(
-      'world-perception-sweep',
-      'World Perception Sweep',
-      expect.stringContaining('knowledge cards'),
-      '0 */6 * * *',
-      'world_perception_cycle',
-      expect.any(String),
+      'predictive-decision-l5',
+      'L5 Predictive Decision Analysis',
+      expect.stringContaining('Monte Carlo simulation'),
+      '*/15 * * * *',
+      'predictive_decision',
+      '{}',
       expect.any(String),
       expect.any(String),
     );
   });
 
-  it('executes the world_perception_cycle handler with parsed metadata', async () => {
+  it('executes the predictive_decision handler through the engine', async () => {
     const result = await scheduledTasksRunner.executeTask({
-      id: 'world-perception-sweep',
-      title: 'World Perception Sweep',
-      prompt: 'Run world perception',
-      cron_expression: '0 */6 * * *',
-      handler: 'world_perception_cycle',
+      id: 'predictive-decision-l5',
+      title: 'L5 Predictive Decision Analysis',
+      prompt: 'Run predictive decision cycle',
+      cron_expression: '*/15 * * * *',
+      handler: 'predictive_decision',
       enabled: true,
-      metadata: JSON.stringify({ limit: 9 }),
+      metadata: JSON.stringify({}),
     });
 
-    expect(worldHarness.runWorldPerceptionCycle).toHaveBeenCalledWith(9);
-    expect(result).toEqual(expect.objectContaining({ ingestedSignals: 3 }));
+    expect(predictiveHarness.analyzeDecisionPoint).toHaveBeenCalledWith('scheduler');
+    expect(result).toEqual(expect.objectContaining({ id: 'pdr-1', outcome: 'executed' }));
     expect(hookHarness.fireHook).toHaveBeenCalledWith(
-      'cron:daily:world-perception',
-      expect.objectContaining({ taskId: 'world-perception-sweep' }),
+      'scheduler.task.succeeded',
+      expect.objectContaining({ taskId: 'predictive-decision-l5' }),
       expect.anything(),
     );
   });

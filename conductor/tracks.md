@@ -1,11 +1,11 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-04-10T23:00:00.354Z
+**Utolso frissites:** 2026-04-11T14:55:39.377Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 246 total | 28 active | 22 completed | 194 archived
-**Csoportok:** Könyvelés / üzleti automatizálás: 53 | Nova asszisztens: 24 | Brunella rendszer: 96 | Egyéb: 73
+**Stats:** 242 total | 18 active | 24 completed | 198 archived
+**Csoportok:** Könyvelés / üzleti automatizálás: 52 | Nova asszisztens: 23 | Brunella rendszer: 94 | Egyéb: 73
 
 ---
 
@@ -28,9 +28,9 @@
 
 ---
 
-## Aktiv Szalak (Active) (28)
+## Aktiv Szalak (Active) (18)
 
-### Könyvelés / üzleti automatizálás (11)
+### Könyvelés / üzleti automatizálás (10)
 
 - [ ] **KKV uzleti automatizalas masterplan** [HIGH]
   - **ID:** `kkv_business_automation_20260408`
@@ -48,22 +48,22 @@
 
 - [ ] **Könyvelési Automatizálás Phase 3 — szamlazz.hu + WF-6..9 + NAV Live + IMAP** [HIGH]
   - **ID:** `konyveles_phase3_20260403`
-  - **Progress:** 0%
+  - **Progress:** 15%
   - **Assignee:** Pohánka Péter
   - Mappa: ./tracks/konyveles_phase3_20260403/
 
-- [ ] **L5 Napi Pénzügyi Pulzus — 08:00 Automatikus Briefing** [HIGH]
-  - **ID:** `l5_daily_financial_pulse_20260410`
+- [ ] **L5 Multi-Tenant KKV Platform** [HIGH]
+  - **ID:** `l5_multitenant_platform_20260410`
   - **Progress:** 0%
-  - **Assignee:** Claude
-  - **Updated:** 2026-04-10T00:00:00.000Z
-  - Mappa: ./tracks/l5_daily_financial_pulse_20260410/
+  - **Assignee:** GitHub Copilot
+  - **Updated:** 2026-04-11
+  - Mappa: ./tracks/l5_multitenant_platform_20260410/
 
 - [ ] **L5 Zero-Touch Számla Pipeline — Teljes Automatizáció** [HIGH]
   - **ID:** `l5_invoice_zerotouchl_20260410`
-  - **Progress:** 0%
+  - **Progress:** 25%
   - **Assignee:** Claude
-  - **Updated:** 2026-04-10T00:00:00.000Z
+  - **Updated:** 2026-04-11
   - Mappa: ./tracks/l5_invoice_zerotouchl_20260410/
 
 - [ ] **Pohánka freelancer terjeszkedés és profilrendszer** [HIGH]
@@ -101,22 +101,8 @@
   - **Updated:** 2026-04-08
   - Mappa: ./tracks/viktoria_social_concierge_20260408/
 
-- [ ] **L5 Multi-Tenant KKV Platform — Több Szervezet Egyidejű Kiszolgálása** [LOW]
-  - **ID:** `l5_multitenant_platform_20260410`
-  - **Progress:** 0%
-  - **Assignee:** Claude
-  - **Updated:** 2026-04-10T00:00:00.000Z
-  - Mappa: ./tracks/l5_multitenant_platform_20260410/
 
-
-### Nova asszisztens (6)
-
-- [ ] **L5 4-Szintű Memória Architektúra — FourLayerMemory** [HIGH]
-  - **ID:** `l5_memory_architecture_20260410`
-  - **Progress:** 0%
-  - **Assignee:** Claude
-  - **Updated:** 2026-04-10T00:00:00.000Z
-  - Mappa: ./tracks/l5_memory_architecture_20260410/
+### Nova asszisztens (5)
 
 - [ ] **Napi intelligens reggeli briefing ugynok** [HIGH]
   - **ID:** `napi_intelligens_briefing_20260404`
@@ -141,9 +127,9 @@
 
 - [ ] **Nova tudasbazis es interakcios workflow-k** [HIGH]
   - **ID:** `nova_knowledge_workflows_20260404`
-  - **Progress:** 0%
+  - **Progress:** 25%
   - **Assignee:** GitHub Copilot
-  - **Updated:** 2026-04-08
+  - **Updated:** 2026-04-11
   - Mappa: ./tracks/nova_knowledge_workflows_20260404/
 
 - [ ] **Toura — Helyi Fejlesztési Hub** [HIGH]
@@ -154,14 +140,7 @@
   - Mappa: ./tracks/toura_local_dev_20260408/
 
 
-### Brunella rendszer (5)
-
-- [ ] **L5 Hook Engine — Az Autonóm Idegrendszer** [CRITICAL]
-  - **ID:** `l5_hook_engine_20260410`
-  - **Progress:** 20%
-  - **Assignee:** Claude
-  - **Updated:** 2026-04-11T00:00:00.000Z
-  - Mappa: ./tracks/l5_hook_engine_20260410/
+### Brunella rendszer (2)
 
 - [ ] **p-search** [HIGH]
   - **ID:** `p-search_20260408`
@@ -170,13 +149,6 @@
   - **Updated:** 2026-04-08
   - Mappa: ./tracks/p-search_20260408/
 
-- [ ] **L5 StrategicGoalEngine — Önálló Célmeghatározás** [MEDIUM]
-  - **ID:** `l5_strategic_goal_engine_20260410`
-  - **Progress:** 0%
-  - **Assignee:** Claude
-  - **Updated:** 2026-04-10T00:00:00.000Z
-  - Mappa: ./tracks/l5_strategic_goal_engine_20260410/
-
 - [ ] **Modular State Refactor — Globális változók Dependency Injection alapú refaktora** [MEDIUM]
   - **ID:** `modular_state_refactor_20260404`
   - **Progress:** 30%
@@ -184,21 +156,8 @@
   - **Updated:** 2026-04-06
   - Mappa: ./tracks/modular_state_refactor_20260404/
 
-- [x] **Swarm Orchestration Chat (ClawSwarm)** [MEDIUM]
-  - **ID:** `swarm_orchestration_chat_20260410`
-  - **Progress:** 100%
-  - **Assignee:** Brunella Orchestrator
-  - Mappa: ./tracks/swarm_orchestration_chat_20260410/
 
-
-### Egyéb (6)
-
-- [ ] **L5 Event Store + Outbox — Garantált Memória & Üzenetküldés** [CRITICAL]
-  - **ID:** `l5_event_store_outbox_20260410`
-  - **Progress:** 20%
-  - **Assignee:** Claude
-  - **Updated:** 2026-04-11T00:00:00.000Z
-  - Mappa: ./tracks/l5_event_store_outbox_20260410/
+### Egyéb (1)
 
 - [ ] **P-Search n8n Pipeline - palyazat- es hitelkereso workflow-k** [HIGH]
   - **ID:** `n8n_psearch_pipeline_20260404`
@@ -207,38 +166,10 @@
   - **Updated:** 2026-04-04
   - Mappa: ./tracks/n8n_psearch_pipeline_20260404/
 
-- [ ] **L5 Etikai & Governance Réteg — A Rendszer Lelkiismerete** [MEDIUM]
-  - **ID:** `l5_ethical_governance_20260410`
-  - **Progress:** 0%
-  - **Assignee:** Claude
-  - **Updated:** 2026-04-10T00:00:00.000Z
-  - Mappa: ./tracks/l5_ethical_governance_20260410/
-
-- [ ] **L5 SelfModificationEngine — Sandbox Önfejlesztés** [MEDIUM]
-  - **ID:** `l5_self_modification_20260410`
-  - **Progress:** 0%
-  - **Assignee:** Claude
-  - **Updated:** 2026-04-10T00:00:00.000Z
-  - Mappa: ./tracks/l5_self_modification_20260410/
-
-- [ ] **L5 WorldPerceptionLayer — Folyamatos Külső Világ Figyelés** [MEDIUM]
-  - **ID:** `l5_world_perception_20260410`
-  - **Progress:** 0%
-  - **Assignee:** Claude
-  - **Updated:** 2026-04-10T00:00:00.000Z
-  - Mappa: ./tracks/l5_world_perception_20260410/
-
-- [ ] **L5 PredictiveDecisionEngine — Jövő Szimulálása Monte Carlo** [LOW]
-  - **ID:** `l5_predictive_decision_20260410`
-  - **Progress:** 0%
-  - **Assignee:** Claude
-  - **Updated:** 2026-04-10T00:00:00.000Z
-  - Mappa: ./tracks/l5_predictive_decision_20260410/
-
 
 ---
 
-## Befejezett (Completed - Not Archived) (22)
+## Befejezett (Completed - Not Archived) (24)
 
 ### Könyvelés / üzleti automatizálás (12)
 
@@ -300,7 +231,7 @@
   - Mappa: ./tracks/kkv_project_task_automation_20260404/
 
 
-### Brunella rendszer (7)
+### Brunella rendszer (9)
 
 - [x] **Agent Runtime Hardening — ReAct, Working Memory, Tool Errors, Guardrails**
   - **ID:** `agent_runtime_hardening_20260406`
@@ -333,6 +264,15 @@
   - **ID:** `mcp_sync_config_20260403`
   - Mappa: ./tracks/mcp_sync_config_20260403/
 
+- [x] **Swarm Orchestration Chat (ClawSwarm)**
+  - **ID:** `swarm_orchestration_chat_20260410`
+  - **Completed:** 2026-04-10T23:05:00Z
+  - Mappa: ./tracks/swarm_orchestration_chat_20260410/
+
+- [x] **Windows Bridge Health Check Endpoint**
+  - **ID:** `windows_bridge_health_20260403`
+  - Mappa: ./tracks/windows_bridge_health_20260403/
+
 
 ### Egyéb (3)
 
@@ -354,7 +294,7 @@
 
 ---
 
-## Archivalt (Archived) (194)
+## Archivalt (Archived) (198)
 
 > Archived tracks are hidden by default. View in `conductor/archive/`
 
@@ -412,7 +352,7 @@
 - [x] **Innovation Bridge - Cross-Industry Knowledge Transfer** (2026-02-24T01:27:00Z)
 - [x] **Napi AI Agent Összefoglaló Pipeline** (2026-04-10T19:10:00.000Z)
 
-### Brunella rendszer (82)
+### Brunella rendszer (81)
 
 - [x] **BAS Átfogó Tesztprotokol** (2026-02-16T15:05:00Z)
 - [x] **Brunella Core Stabilization** (2026-04-04)
@@ -492,12 +432,11 @@
 - [x] **Task Decomposer Agent (Mikro-Ügynök Orchestrator)** (2026-02-13)
 - [x] **Technical Debt Cleanup — TODO konverzió és elavult kód elimináció** (2026-04-07)
 - [x] **Universal Orchestrator Chat Upgrade (Dashboard + CLI)** (2026-03-20)
-- [x] **Windows Bridge Health Check Endpoint** (2026-04-03)
 - [x] **Zero-Prompt Core — Slack/Discord/Email Jóváhagyás** (2026-03-29)
 - [x] **Cloudflare Analytics Engine Egyedi Metrikák**
 - [x] **VSCode Auto-Build Task (TypeScript watch)** (2026-04-03T23:59:59.000Z)
 
-### Egyéb (64)
+### Egyéb (69)
 
 - [x] **cloudflare_workers_ai_20260221** (2026-02-21T10:05:00Z)
 - [x] **Gold Protocol - BAS Observability & Governance** (2026-02-12)
@@ -520,6 +459,11 @@
 - [x] **Ephemeral Agents — TTL és Budget** (2026-03-29)
 - [x] **Gemini Git Autonomous Agent Architecture** (2026-02-12T15:49:00Z)
 - [x] **goldeninteligencia20260327** (2026-03-30T15:30:00.000Z)
+- [x] **L5 Hook Engine - Esemenyvezérelt Reflex Rendszer** (2026-04-11T13:22:00Z)
+- [x] **L5 Memory Architecture - Structured, Preference es Cognitive Memory Layer** (2026-04-11T15:58:00Z)
+- [x] **L5 PredictiveDecisionEngine - Jovo Szimulalasa Monte Carlo** (2026-04-11T17:00:00Z)
+- [x] **L5 SelfModificationEngine - Sandbox Onfejlesztes** (2026-04-11T13:15:00Z)
+- [x] **L5 WorldPerceptionLayer - Folyamatos Kulso Vilag Figyeles** (2026-04-11T13:40:00Z)
 - [x] **master_track_1_lead_mining_20260223** (2026-02-28T00:00:00Z)
 - [x] **master_track_2_invoice_to_sheets_20260223** (2026-02-28T00:00:00Z)
 - [x] **master_track_3_market_watcher_20260223** (2026-02-28T00:00:00Z)

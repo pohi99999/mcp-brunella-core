@@ -89,6 +89,7 @@ import { RemoteConsolePanel } from "@/components/dashboard/RemoteConsolePanel";
 import { ZeroPromptNotificationPanel } from "@/components/dashboard/ZeroPromptNotificationPanel";
 import { EphemeralAgentsPanel } from "@/components/dashboard/EphemeralAgentsPanel";
 import { LearningLoopPanel } from "@/components/dashboard/LearningLoopPanel";
+import { SelfImprovementPanel } from "@/components/dashboard/SelfImprovementPanel";
 import { PSalesIntakePanel } from "@/components/dashboard/PSalesIntakePanel";
 import { PSalesResearchPanel } from "@/components/dashboard/PSalesResearchPanel";
 import { PSalesStrategyPanel } from "@/components/dashboard/PSalesStrategyPanel";
@@ -188,6 +189,7 @@ export function initializeNavigation ()
     { id: "zero-prompt-notifications", label: "Approval Notifications", icon: Bell, component: <ZeroPromptNotificationPanel /> },
     { id: "ephemeral-agents", label: "Ephemeral Agents", icon: Zap, component: <EphemeralAgentsPanel /> },
     { id: "learning-loop", label: "Learning Loop", icon: Brain, component: <LearningLoopPanel /> },
+    { id: "self-improvement", label: "Self Improvement", icon: Sparkles, component: <SelfImprovementPanel /> },
     { id: "hook-monitor", label: "Hook Monitor", icon: Activity, component: <HookMonitorPanel /> },
     { id: "federation", label: "Federated MCP", icon: Globe, component: <FederationCenter /> },
     { id: "management", label: "Agent Roster", icon: Sparkles, component: <AgentManagementPanel /> },
@@ -296,7 +298,7 @@ export function initializeNavigation ()
 
   // Register groups
   navigationRegistry.registerGroup( { title: "Core Systems", icon: Layers, items: ["dashboard", "neural-map", "system-arch", "studio", "vscode", "process-control", "service-control"] } );
-  navigationRegistry.registerGroup( { title: "AI & Agents", icon: Brain, items: ["chat", "paios", "copilot-orchestrator", "copilot-commander", "kernel-pipeline", "assistant-blueprint", "phoenix", "phoenix-flywheel", "zero-prompt-notifications", "ephemeral-agents", "learning-loop", "predictive-decision", "world-perception", "federation", "management", "agent-diagnostics", "agent-registry-governance", "agent-factory", "decomposer", "incubator", "knowledge", "memory", "cognitive-memory", "user-preferences", "developer", "edge", "robotkez", "browser-copilot", "jules", "ai-agent-briefing"] } );
+  navigationRegistry.registerGroup( { title: "AI & Agents", icon: Brain, items: ["chat", "paios", "copilot-orchestrator", "copilot-commander", "kernel-pipeline", "assistant-blueprint", "phoenix", "phoenix-flywheel", "zero-prompt-notifications", "ephemeral-agents", "learning-loop", "self-improvement", "predictive-decision", "world-perception", "federation", "management", "agent-diagnostics", "agent-registry-governance", "agent-factory", "decomposer", "incubator", "knowledge", "memory", "cognitive-memory", "user-preferences", "developer", "edge", "robotkez", "browser-copilot", "jules", "ai-agent-briefing"] } );
   navigationRegistry.registerGroup( { title: "Enterprise", icon: Briefcase, items: ["enterprise-suite", "digital-hr", "hr-timesheet", "hr-onboarding", "grant-hunter", "law-detective", "property-visionary", "property-sales", "psales-intake", "psales-research", "psales-strategy", "enterprise-analytics", "intelligence-monitor"] } );
   navigationRegistry.registerGroup( { title: "Értékesítési Központ", icon: DollarSign, items: ["trojan-horse", "lead-monitor", "demo-factory", "showcase", "campaign-studio", "leads-master", "innovation-bridge", "invoice-sync", "bookkeeping", "finance-reconciliation", "kp-penztar", "lead-mining", "marketwatcher", "inventory"] } );
   navigationRegistry.registerGroup( { title: "KKV Pack", icon: PackageSearch, items: ["kkv-pack"] } );

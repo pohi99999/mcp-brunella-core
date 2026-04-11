@@ -128,14 +128,21 @@ function mapRunRow(row: DecisionRunRow): DecisionResult {
 }
 
 export class PredictiveDecisionEngine {
-  constructor() {
+  private schemaReady = false;
+
+  private ensureSchema(): void {
+    if (this.schemaReady) {
+      return;
+    }
     ensureDecisionTables();
+    this.schemaReady = true;
   }
 
   async analyzeDecisionPoint(
     triggeredBy = 'manual',
     config: Partial<MonteCarloConfig> = {},
   ): Promise<DecisionResult> {
+    this.ensureSchema();
     const fullConfig: MonteCarloConfig = { ...DEFAULT_CONFIG, ...config };
     const createdAt = nowIso();
     const decisionId = `pdr_${randomUUID()}`;
@@ -280,6 +287,7 @@ export class PredictiveDecisionEngine {
   }
 
   async rollbackDecision(decisionId: string): Promise<DecisionResult> {
+    this.ensureSchema();
     const db = getGlobalDb();
     const row = db.prepare(`
       SELECT *
@@ -330,6 +338,7 @@ export class PredictiveDecisionEngine {
   }
 
   getDecisionResult(decisionId: string): DecisionResult {
+    this.ensureSchema();
     const db = getGlobalDb();
     const row = db.prepare(`
       SELECT *
@@ -345,6 +354,7 @@ export class PredictiveDecisionEngine {
   }
 
   getDecisionHistory(limit = 25): DecisionResult[] {
+    this.ensureSchema();
     const db = getGlobalDb();
     const normalizedLimit = Math.max(1, Math.min(100, Math.trunc(limit)));
     const rows = db.prepare(`
@@ -357,6 +367,7 @@ export class PredictiveDecisionEngine {
   }
 
   getDecisionStats(daysBack = 30): DecisionStats {
+    this.ensureSchema();
     const db = getGlobalDb();
     const from = new Date(Date.now() - Math.max(1, daysBack) * 24 * 60 * 60 * 1000).toISOString();
     const to = nowIso();
@@ -646,6 +657,7 @@ export class PredictiveDecisionEngine {
     result: DecisionResult,
     rollbackData: Record<string, unknown> | null,
   ): void {
+    this.ensureSchema();
     const db = getGlobalDb();
     db.prepare(`
       INSERT INTO predictive_decision_runs (

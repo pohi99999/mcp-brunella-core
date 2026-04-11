@@ -10,7 +10,7 @@ import {
   rollbackDecision,
   triggerDecision,
 } from '@/lib/predictiveDecisionApi';
-import type { DecisionResult, DecisionStats } from '@/core/decisionTypes';
+import type { DecisionResult, DecisionStats } from '../../../core/decisionTypes.js';
 
 function formatTimestamp(value?: string | null): string {
   if (!value) return '—';

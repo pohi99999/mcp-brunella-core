@@ -189,38 +189,45 @@ export function registerAdvancedHooks() {
     logInfo('CronHook', 'Executing Quarterly ESG calculations. Generating carbon footprint report.');
   }, { category: 'cron' });
 
-  // 25-30. L5 Predictive Decision Hooks
-  registerHook('decision:triggered', async (ctx: any) => {
-    const { triggeredBy, decisionId } = ctx || {};
-    logInfo('DecisionHook', `L5 Decision analysis triggered by ${triggeredBy}. Decision ID: ${decisionId}`);
+  registerHook('cron:weekly:self-improve', async () => {
+    logInfo('CronHook', 'Weekly self-improvement scheduler hook fired.');
+  }, { category: 'cron' });
+
+  registerHook('cron:daily:world-perception', async () => {
+    logInfo('CronHook', 'Daily world perception scheduler hook fired.');
+  }, { category: 'cron' });
+
+  registerHook('decision.analysis.started', async (ctx: any) => {
+    const { decisionId, triggeredBy, scenarioCount } = ctx || {};
+    logInfo('DecisionHook', `Predictive decision ${decisionId} started by ${triggeredBy} with scenarioCount=${scenarioCount}`);
   }, { category: 'learning' });
 
-  registerHook('decision:scenarios_generated', async (ctx: any) => {
-    const { decisionId, scenarioCount, avgRisk, avgImpact } = ctx || {};
-    logInfo('DecisionHook', `Generated ${scenarioCount} scenarios for ${decisionId}. Avg risk: ${avgRisk?.toFixed(2)}, Avg impact: ${avgImpact?.toFixed(2)}`);
+  registerHook('decision.scenarios.generated', async (ctx: any) => {
+    const { decisionId, scenarioCount, averageScore } = ctx || {};
+    logInfo('DecisionHook', `Predictive decision ${decisionId} generated ${scenarioCount} scenarios (avg=${averageScore ?? 'n/a'})`);
   }, { category: 'learning' });
 
-  registerHook('decision:action_selected', async (ctx: any) => {
-    const { decisionId, actionType, totalScore } = ctx || {};
-    logInfo('DecisionHook', `Selected action ${actionType} for ${decisionId} with score ${totalScore?.toFixed(3)}`);
+  registerHook('decision.action.selected', async (ctx: any) => {
+    const { decisionId, actionType, sourceType, totalScore } = ctx || {};
+    logInfo('DecisionHook', `Predictive decision ${decisionId} selected ${actionType} from ${sourceType} @ ${totalScore ?? 'n/a'}`);
   }, { category: 'learning' });
 
-  registerHook('decision:action_executed', async (ctx: any) => {
+  registerHook('decision.action.executed', async (ctx: any) => {
     const { decisionId, actionType, outcome, error } = ctx || {};
-    if (outcome === 'success') {
-      logInfo('DecisionHook', `Successfully executed ${actionType} for ${decisionId}`);
-    } else {
-      logError('DecisionHook', `Failed to execute ${actionType} for ${decisionId}: ${error}`);
+    if (outcome === 'executed') {
+      logInfo('DecisionHook', `Predictive decision ${decisionId} executed ${actionType}`);
+      return;
     }
+    logError('DecisionHook', `Predictive decision ${decisionId} failed while executing ${actionType}: ${error ?? 'unknown error'}`);
   }, { category: 'learning' });
 
-  registerHook('decision:rolled_back', async (ctx: any) => {
-    const { decisionId, actionType, reason } = ctx || {};
-    logInfo('DecisionHook', `Rolled back ${actionType} for ${decisionId}. Reason: ${reason}`);
+  registerHook('decision.action.rolled_back', async (ctx: any) => {
+    const { decisionId, actionType, rolledBackAt } = ctx || {};
+    logInfo('DecisionHook', `Predictive decision ${decisionId} rolled back ${actionType} at ${rolledBackAt}`);
   }, { category: 'learning' });
 
-  registerHook('decision:no_action', async (ctx: any) => {
-    const { decisionId, reason } = ctx || {};
-    logInfo('DecisionHook', `No action taken for ${decisionId}. Reason: ${reason || 'No scenario met threshold'}`);
+  registerHook('decision.cycle.completed', async (ctx: any) => {
+    const { decisionId, outcome, scenarioCount, actionType } = ctx || {};
+    logInfo('DecisionHook', `Predictive decision ${decisionId} completed with outcome=${outcome}, scenarios=${scenarioCount}, action=${actionType ?? 'none'}`);
   }, { category: 'learning' });
 }

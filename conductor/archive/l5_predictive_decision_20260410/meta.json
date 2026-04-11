@@ -1,0 +1,36 @@
+{
+  "id": "l5_predictive_decision_20260410",
+  "name": "L5 PredictiveDecisionEngine - Jovo Szimulalasa Monte Carlo",
+  "title": "L5 PredictiveDecisionEngine - Jovo Szimulalasa Monte Carlo",
+  "status": "archived",
+  "priority": "high",
+  "createdAt": "2026-04-11T16:30:00.000Z",
+  "owner": "GitHub Copilot",
+  "progress": 100,
+  "tags": [
+    "l5",
+    "predictive-decision",
+    "monte-carlo",
+    "decision-engine",
+    "scheduler",
+    "rollback"
+  ],
+  "sourceDocument": "User-requested L5 queue continuation",
+  "phase": 4,
+  "updated": "2026-04-11",
+  "dependencies": [
+    "l5_memory_architecture_20260410",
+    "l5_hook_engine_20260410",
+    "l5_world_perception_20260410"
+  ],
+  "group": "ai",
+  "verified": true,
+  "verifiedAt": "2026-04-11",
+  "completedAt": "2026-04-11T17:00:00Z",
+  "archivedAt": "2026-04-11T17:00:00Z",
+  "archiveReason": "Predictive decision engine, decision executor, REST/CLI/dashboard/scheduler/hook surfaces, and focused regression coverage are complete. No follow-up track is required because the delivered scope is closed and future higher-order strategy work belongs in separate new tracks.",
+  "notes": [
+    "Lazy schema initialization removed import-time SQLite side effects from PredictiveDecisionEngine.",
+    "Focused predictive coverage now spans engine, executor, route, CLI, scheduler, dashboard API, and dashboard panel behavior."
+  ]
+}

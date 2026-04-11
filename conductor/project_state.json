@@ -1,13 +1,14 @@
 {
-  "lastUpdated": "2026-04-10T21:13:21.216Z",
+  "lastUpdated": "2026-04-11T14:55:39.377Z",
   "tracks": [
     {
       "id": "agent_instability_chaos_testing_20260410",
       "name": "Agent Instability Chaos Testing (Chaeos-env)",
-      "status": "active",
+      "status": "completed",
       "priority": "high",
-      "progress": 0,
+      "progress": 100,
       "created": "2026-04-10T12:00:00Z",
+      "completed": "2026-04-10T22:45:00Z",
       "assignee": "Brunella Orchestrator",
       "tags": [
         "testing",
@@ -46,10 +47,11 @@
     {
       "id": "agent_security_ipi_defense_20260410",
       "name": "Agent Security Sandbox (IPI Defense)",
-      "status": "active",
+      "status": "completed",
       "priority": "high",
-      "progress": 0,
+      "progress": 100,
       "created": "2026-04-10T12:00:00Z",
+      "completed": "2026-04-10T22:55:00Z",
       "assignee": "Brunella Orchestrator",
       "tags": [
         "security",
@@ -591,7 +593,7 @@
       "name": "Könyvelési Automatizálás Phase 3 — szamlazz.hu + WF-6..9 + NAV Live + IMAP",
       "status": "active",
       "priority": "high",
-      "progress": 0,
+      "progress": 15,
       "created": "2026-04-03",
       "assignee": "Pohánka Péter",
       "tags": [
@@ -615,115 +617,13 @@
       "_isArchived": false
     },
     {
-      "id": "l5_daily_financial_pulse_20260410",
-      "name": "L5 Napi Pénzügyi Pulzus — 08:00 Automatikus Briefing",
-      "status": "active",
-      "priority": "high",
-      "progress": 0,
-      "created": "2026-04-10T00:00:00.000Z",
-      "updated": "2026-04-10T00:00:00.000Z",
-      "assignee": "Claude",
-      "tags": [
-        "daily-briefing",
-        "cron",
-        "financial",
-        "tts",
-        "cash-flow",
-        "nav",
-        "l5",
-        "kkv"
-      ],
-      "dependencies": [
-        "l5_hook_engine_20260410",
-        "ai_agent_daily_briefing_20260408"
-      ],
-      "group": "business",
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\l5_daily_financial_pulse_20260410",
-      "_isArchived": false
-    },
-    {
-      "id": "l5_ethical_governance_20260410",
-      "name": "L5 Etikai & Governance Réteg — A Rendszer Lelkiismerete",
-      "status": "active",
-      "priority": "medium",
-      "progress": 0,
-      "created": "2026-04-10T00:00:00.000Z",
-      "updated": "2026-04-10T00:00:00.000Z",
-      "assignee": "Claude",
-      "tags": [
-        "ethics",
-        "governance",
-        "gdpr",
-        "audit-trail",
-        "kill-switch",
-        "compliance",
-        "l5",
-        "safety"
-      ],
-      "dependencies": [
-        "l5_hook_engine_20260410",
-        "l5_event_store_outbox_20260410"
-      ],
-      "group": "other",
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\l5_ethical_governance_20260410",
-      "_isArchived": false
-    },
-    {
-      "id": "l5_event_store_outbox_20260410",
-      "name": "L5 Event Store + Outbox — Garantált Memória & Üzenetküldés",
-      "status": "active",
-      "priority": "critical",
-      "progress": 0,
-      "created": "2026-04-10T00:00:00.000Z",
-      "updated": "2026-04-10T00:00:00.000Z",
-      "assignee": "Claude",
-      "tags": [
-        "event-sourcing",
-        "outbox",
-        "dlq",
-        "sqlite",
-        "audit-trail",
-        "l5",
-        "foundation"
-      ],
-      "dependencies": [
-        "l5_hook_engine_20260410"
-      ],
-      "group": "other",
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\l5_event_store_outbox_20260410",
-      "_isArchived": false
-    },
-    {
-      "id": "l5_hook_engine_20260410",
-      "name": "L5 Hook Engine — Az Autonóm Idegrendszer",
-      "status": "active",
-      "priority": "critical",
-      "progress": 0,
-      "created": "2026-04-10T00:00:00.000Z",
-      "updated": "2026-04-10T00:00:00.000Z",
-      "assignee": "Claude",
-      "tags": [
-        "hook-engine",
-        "event-driven",
-        "policy-pattern",
-        "circuit-breaker",
-        "dlq",
-        "l5",
-        "foundation"
-      ],
-      "dependencies": [],
-      "group": "brunella",
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\l5_hook_engine_20260410",
-      "_isArchived": false
-    },
-    {
       "id": "l5_invoice_zerotouchl_20260410",
       "name": "L5 Zero-Touch Számla Pipeline — Teljes Automatizáció",
       "status": "active",
       "priority": "high",
-      "progress": 0,
+      "progress": 25,
       "created": "2026-04-10T00:00:00.000Z",
-      "updated": "2026-04-10T00:00:00.000Z",
+      "updated": "2026-04-11",
       "assignee": "Claude",
       "tags": [
         "invoice",
@@ -746,161 +646,24 @@
       "_isArchived": false
     },
     {
-      "id": "l5_memory_architecture_20260410",
-      "name": "L5 4-Szintű Memória Architektúra — FourLayerMemory",
+      "id": "l5_multitenant_platform_20260410",
+      "name": "L5 Multi-Tenant KKV Platform",
       "status": "active",
       "priority": "high",
       "progress": 0,
-      "created": "2026-04-10T00:00:00.000Z",
-      "updated": "2026-04-10T00:00:00.000Z",
-      "assignee": "Claude",
+      "created": "2026-04-11T00:00:00.000Z",
+      "updated": "2026-04-11",
+      "assignee": "GitHub Copilot",
       "tags": [
-        "memory",
-        "lancedb",
-        "sqlite",
-        "golden-dataset",
-        "fine-tuning",
-        "rag",
-        "l5",
-        "learning"
-      ],
-      "dependencies": [
-        "l5_event_store_outbox_20260410",
-        "brunella_reflection_continual_learning_20260402"
-      ],
-      "group": "nova",
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\l5_memory_architecture_20260410",
-      "_isArchived": false
-    },
-    {
-      "id": "l5_multitenant_platform_20260410",
-      "name": "L5 Multi-Tenant KKV Platform — Több Szervezet Egyidejű Kiszolgálása",
-      "status": "active",
-      "priority": "low",
-      "progress": 0,
-      "created": "2026-04-10T00:00:00.000Z",
-      "updated": "2026-04-10T00:00:00.000Z",
-      "assignee": "Claude",
-      "tags": [
-        "multi-tenant",
+        "kkv",
         "platform",
-        "cloudflare-d1",
-        "isolation",
-        "saas",
-        "l5",
-        "productization"
+        "multi-tenant",
+        "architecture",
+        "tenant-isolation"
       ],
-      "dependencies": [
-        "l5_strategic_goal_engine_20260410",
-        "l5_ethical_governance_20260410",
-        "brunella_federation_phase5_20260402"
-      ],
+      "dependencies": [],
       "group": "business",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\l5_multitenant_platform_20260410",
-      "_isArchived": false
-    },
-    {
-      "id": "l5_predictive_decision_20260410",
-      "name": "L5 PredictiveDecisionEngine — Jövő Szimulálása Monte Carlo",
-      "status": "active",
-      "priority": "low",
-      "progress": 0,
-      "created": "2026-04-10T00:00:00.000Z",
-      "updated": "2026-04-10T00:00:00.000Z",
-      "assignee": "Claude",
-      "tags": [
-        "prediction",
-        "simulation",
-        "monte-carlo",
-        "decision-support",
-        "roi",
-        "l5"
-      ],
-      "dependencies": [
-        "l5_strategic_goal_engine_20260410",
-        "l5_world_perception_20260410",
-        "l5_memory_architecture_20260410"
-      ],
-      "group": "other",
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\l5_predictive_decision_20260410",
-      "_isArchived": false
-    },
-    {
-      "id": "l5_self_modification_20260410",
-      "name": "L5 SelfModificationEngine — Sandbox Önfejlesztés",
-      "status": "active",
-      "priority": "medium",
-      "progress": 0,
-      "created": "2026-04-10T00:00:00.000Z",
-      "updated": "2026-04-10T00:00:00.000Z",
-      "assignee": "Claude",
-      "tags": [
-        "self-improvement",
-        "sandbox",
-        "agent-metrics",
-        "human-review",
-        "toml",
-        "l5"
-      ],
-      "dependencies": [
-        "l5_memory_architecture_20260410",
-        "brunella_reflection_continual_learning_20260402"
-      ],
-      "group": "other",
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\l5_self_modification_20260410",
-      "_isArchived": false
-    },
-    {
-      "id": "l5_strategic_goal_engine_20260410",
-      "name": "L5 StrategicGoalEngine — Önálló Célmeghatározás",
-      "status": "active",
-      "priority": "medium",
-      "progress": 0,
-      "created": "2026-04-10T00:00:00.000Z",
-      "updated": "2026-04-10T00:00:00.000Z",
-      "assignee": "Claude",
-      "tags": [
-        "strategic-goals",
-        "autonomous",
-        "planning",
-        "orchestrator",
-        "l5",
-        "self-directing"
-      ],
-      "dependencies": [
-        "l5_world_perception_20260410",
-        "l5_memory_architecture_20260410",
-        "l5_daily_financial_pulse_20260410"
-      ],
-      "group": "brunella",
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\l5_strategic_goal_engine_20260410",
-      "_isArchived": false
-    },
-    {
-      "id": "l5_world_perception_20260410",
-      "name": "L5 WorldPerceptionLayer — Folyamatos Külső Világ Figyelés",
-      "status": "active",
-      "priority": "medium",
-      "progress": 0,
-      "created": "2026-04-10T00:00:00.000Z",
-      "updated": "2026-04-10T00:00:00.000Z",
-      "assignee": "Claude",
-      "tags": [
-        "perception",
-        "world-model",
-        "rss",
-        "mnb",
-        "nav",
-        "market-intel",
-        "cron",
-        "l5"
-      ],
-      "dependencies": [
-        "l5_hook_engine_20260410",
-        "l5_memory_architecture_20260410"
-      ],
-      "group": "other",
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\l5_world_perception_20260410",
       "_isArchived": false
     },
     {
@@ -1068,9 +831,9 @@
       "name": "Nova tudasbazis es interakcios workflow-k",
       "status": "active",
       "priority": "high",
-      "progress": 0,
+      "progress": 25,
       "created": "2026-04-04",
-      "updated": "2026-04-08",
+      "updated": "2026-04-11",
       "assignee": "GitHub Copilot",
       "tags": [
         "nova",
@@ -1316,10 +1079,11 @@
     {
       "id": "swarm_orchestration_chat_20260410",
       "name": "Swarm Orchestration Chat (ClawSwarm)",
-      "status": "active",
+      "status": "completed",
       "priority": "medium",
-      "progress": 0,
+      "progress": 100,
       "created": "2026-04-10T12:00:00Z",
+      "completed": "2026-04-10T23:05:00Z",
       "assignee": "Brunella Orchestrator",
       "tags": [
         "orchestration",
@@ -3673,6 +3437,124 @@
       "_isArchived": true
     },
     {
+      "id": "l5_hook_engine_20260410",
+      "name": "L5 Hook Engine - Esemenyvezérelt Reflex Rendszer",
+      "status": "archived",
+      "priority": "high",
+      "progress": 100,
+      "created": "2026-04-10T00:00:00.000Z",
+      "updated": "2026-04-11",
+      "completed": "2026-04-11T13:22:00Z",
+      "assignee": "GitHub Copilot",
+      "tags": [
+        "l5",
+        "hooks",
+        "event-driven",
+        "governance",
+        "observability"
+      ],
+      "dependencies": [],
+      "group": "other",
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\l5_hook_engine_20260410",
+      "_isArchived": true
+    },
+    {
+      "id": "l5_memory_architecture_20260410",
+      "name": "L5 Memory Architecture - Structured, Preference es Cognitive Memory Layer",
+      "status": "archived",
+      "priority": "high",
+      "progress": 100,
+      "created": "2026-04-11T15:56:00.000Z",
+      "updated": "2026-04-11",
+      "completed": "2026-04-11T15:58:00Z",
+      "assignee": "GitHub Copilot",
+      "tags": [
+        "l5",
+        "memory",
+        "structured-memory",
+        "preferences",
+        "cognitive-bridge"
+      ],
+      "dependencies": [],
+      "group": "other",
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\l5_memory_architecture_20260410",
+      "_isArchived": true
+    },
+    {
+      "id": "l5_predictive_decision_20260410",
+      "name": "L5 PredictiveDecisionEngine - Jovo Szimulalasa Monte Carlo",
+      "status": "archived",
+      "priority": "high",
+      "progress": 100,
+      "created": "2026-04-11T16:30:00.000Z",
+      "updated": "2026-04-11",
+      "completed": "2026-04-11T17:00:00Z",
+      "assignee": "GitHub Copilot",
+      "tags": [
+        "l5",
+        "predictive-decision",
+        "monte-carlo",
+        "decision-engine",
+        "scheduler",
+        "rollback"
+      ],
+      "dependencies": [
+        "l5_memory_architecture_20260410",
+        "l5_hook_engine_20260410",
+        "l5_world_perception_20260410"
+      ],
+      "group": "other",
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\l5_predictive_decision_20260410",
+      "_isArchived": true
+    },
+    {
+      "id": "l5_self_modification_20260410",
+      "name": "L5 SelfModificationEngine - Sandbox Onfejlesztes",
+      "status": "archived",
+      "priority": "high",
+      "progress": 100,
+      "created": "2026-04-10T00:00:00.000Z",
+      "updated": "2026-04-11",
+      "completed": "2026-04-11T13:15:00Z",
+      "assignee": "GitHub Copilot",
+      "tags": [
+        "l5",
+        "self-modification",
+        "dynamic-agent",
+        "sandbox",
+        "governance",
+        "weekly-cycle"
+      ],
+      "dependencies": [],
+      "group": "other",
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\l5_self_modification_20260410",
+      "_isArchived": true
+    },
+    {
+      "id": "l5_world_perception_20260410",
+      "name": "L5 WorldPerceptionLayer - Folyamatos Kulso Vilag Figyeles",
+      "status": "archived",
+      "priority": "high",
+      "progress": 100,
+      "created": "2026-04-11T13:25:00.000Z",
+      "updated": "2026-04-11",
+      "completed": "2026-04-11T13:40:00Z",
+      "assignee": "GitHub Copilot",
+      "tags": [
+        "l5",
+        "world-perception",
+        "intelligence",
+        "monitoring",
+        "signals"
+      ],
+      "dependencies": [
+        "l5_hook_engine_20260410"
+      ],
+      "group": "other",
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\l5_world_perception_20260410",
+      "_isArchived": true
+    },
+    {
       "id": "law_detective_20260223",
       "name": "law_detective_20260223",
       "status": "archived",
@@ -5217,10 +5099,10 @@
     }
   ],
   "stats": {
-    "total": 246,
-    "active": 30,
-    "completed": 21,
-    "archived": 193,
+    "total": 242,
+    "active": 18,
+    "completed": 24,
+    "archived": 198,
     "proposed": 2
   }
 }

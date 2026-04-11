@@ -6,6 +6,26 @@ User requested that the Copilot CLI automatically connect to a local Brunella MC
 
 ## History
 
+### 2026-04-11 17:00 - L5 predictive decision archive closure
+
+**Feladat:** A `l5_predictive_decision_20260410` track teljes lezárása: a kézzel helyreállított predictive decision slice végigvalidálása, a hiányzó regressziós tesztek befejezése, majd az archiválási döntés és conductor/FOSZAL előkészítése.
+
+**Érintett fájlok:** `src/core/predictiveDecisionEngine.ts`, `src/core/decisionExecutor.ts`, `src/core/advancedHooks.ts`, `src/core/hooks/builtinHookCatalog.ts`, `src/server/schedulers/scheduledTasksRunner.ts`, `src/dashboard/lib/navigation.tsx`, `test/predictiveDecisionEngine.test.ts`, `test/decisionExecutor.test.ts`, `test/predictiveDecisionRoute.test.ts`, `test/predictiveDecisionCommands.test.ts`, `test/scheduledTasksRunner_predictiveDecision.test.ts`, `test/scheduledTasksRunner_selfModification.test.ts`, `test/scheduledTasksRunner_worldPerception.test.ts`, `test/dashboard/lib/predictiveDecisionApi.test.ts`, `test/dashboard/components/PredictiveDecisionPanel.test.tsx`, `conductor/tracks/l5_predictive_decision_20260410/{meta.json,plan.md,spec.md}`, `.ai/copilot.md`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A predictive engine most már lazy schema initet használ, így importkor nem nyit SQLite sémát; a fókuszált engine/executor/route/CLI/scheduler/dashboard validáció zöld, ezért a track follow-up nélkül archiválható. A `npm run test:fast` futás közben két, ettől független CLI baseline regresszió maradt piros (`test/securityCommands.test.ts`, `test/swarmCommands.test.ts`), mert a jelenlegi `src/cli/securityCommands.ts` és `src/cli/swarmCommands.ts` nem azt a parancsstruktúrát adják, amit ezek a tesztek elvárnak.
+
+### 2026-04-11 13:00 - L5 invoice zero-touch track bootstrap
+
+**Feladat:** A hiányzó `l5_invoice_zerotouchl_20260410` track scaffoldjának létrehozása, valamint egy új `SzamlazzHuAgent` bevezetése a könyvelési dashboard zero-touch flow-jába.
+
+**Érintett fájlok:** `conductor/tracks/l5_invoice_zerotouchl_20260410/{meta.json,plan.md,spec.md}`, `src/agents/SzamlazzHuAgent.ts`, `src/agents/registry.json`, `src/dashboard/components/dashboard/BookkeepingWidget.tsx`, `test/SzamlazzHuAgent.test.ts`, `test/dashboard/components/BookkeepingWidget.test.tsx`, `.ai/copilot.md`
+
+**Státusz:** ⏳ Folyamatban
+
+**Megjegyzés:** A track most már fizikailag is létezik a conductor alatt, és a könyvelési UI egy új Számlázz.hu lépést kapott. A következő lépés a build/test validáció és az active track státuszok további finomhangolása a phase3/kognitiv vonalra.
+
 ### 2026-04-11 10:40 - External knowledge staged canonicalization MVP
 
 **Feladat:** A `fejlesztesvideo.md` alapján a Brunella rendszerbe egy biztonságos, staged external knowledge pipeline MVP beépítése web + YouTube ingesttel, governance review queue-val, canonical-only RAG indexeléssel, valamint a hozzá tartozó REST/MCP/CLI felületek és tesztek alapjainak létrehozása.
@@ -2474,8 +2494,8 @@ pm run test:dashboard → 200 passed | 0 failed | 20 test file ✅**
 **Feladat:** A push teszt cadence track utóellenőrzése és lezárása.
 **Érintett fájlok:** .github/workflows/phoenix-protocol.yml, conductor/archive/test_cadence_optimization_20260401/meta.json, conductor/archive/test_cadence_optimization_20260401/plan.md, conductor/tracks.md, conductor/project_state.json
 **Státusz:** ✅ Archiválva
-**Megjegyzés:** A Phoenix Protocol workflow még teljes npm test-et futtatott push/PR eseményre; ezt 
-pm run test:fast profilra állítottam, a napi teljes suite továbbra is a daily-full-tests.yml alatt maradt. 
+**Megjegyzés:** A Phoenix Protocol workflow még teljes npm test-et futtatott push/PR eseményre; ezt
+pm run test:fast profilra állítottam, a napi teljes suite továbbra is a daily-full-tests.yml alatt maradt.
 pm run test:fast validáció sikeres (364 fájl passed, 1 skipped / 2797 teszt passed, 39 skipped).
 ### 2026-04-10 21:14 - kkv_hr_leave_wait_resume archiválás
 **Feladat:** A HR leave wait/resume orchestration track archiválási verifikációja és lezárása.

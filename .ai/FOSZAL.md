@@ -1,6 +1,6 @@
 # FŐSZÁL - Egyesített Fejlesztési Napló
 
-**Generálva:** 2026-04-11 08:21
+**Generálva:** 2026-04-11 16:55
 **Script:** `scripts/sync_foszal.py`
 
 ---
@@ -29,6 +29,16 @@ start-full.bat
 ## Összesített Napló (Időrendben)
 
 ### 2026-04-11
+
+#### 17:00 - [Copilot] L5 predictive decision archive closure
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `src/core/predictiveDecisionEngine.ts`, `src/core/decisionExecutor.ts`, `src/core/advancedHooks.ts`, `src/core/hooks/builtinHookCatalog.ts`, `src/server/schedulers/scheduledTasksRunner.ts`, `src/dashboard/lib/navigation.tsx`, `test/predictiveDecisionEngine.test.ts`, `test/decisionExecutor.test.ts`, `test/predictiveDecisionRoute.test.ts`, `test/predictiveDecisionCommands.test.ts`, `test/scheduledTasksRunner_predictiveDecision.test.ts`, `test/scheduledTasksRunner_selfModification.test.ts`, `test/scheduledTasksRunner_worldPerception.test.ts`, `test/dashboard/lib/predictiveDecisionApi.test.ts`, `test/dashboard/components/PredictiveDecisionPanel.test.tsx`, `conductor/tracks/l5_predictive_decision_20260410/{meta.json,plan.md,spec.md}`, `.ai/copilot.md`
+
+#### 13:00 - [Copilot] L5 invoice zero-touch track bootstrap
+- **Agent:** Copilot
+- **Státusz:** ⏳ Folyamatban
+- **Érintett fájlok:** `conductor/tracks/l5_invoice_zerotouchl_20260410/{meta.json,plan.md,spec.md}`, `src/agents/SzamlazzHuAgent.ts`, `src/agents/registry.json`, `src/dashboard/components/dashboard/BookkeepingWidget.tsx`, `test/SzamlazzHuAgent.test.ts`, `test/dashboard/components/BookkeepingWidget.test.tsx`, `.ai/copilot.md`
 
 #### 10:40 - [Copilot] External knowledge staged canonicalization MVP
 - **Agent:** Copilot
@@ -1223,7 +1233,7 @@ start-full.bat
 | Claude | 89 | 2026-04-09 |
 | Gemini | 2 | 2026-04-08 |
 | Cursor | 0 | N/A |
-| Copilot | 122 | 2026-04-11 |
+| Copilot | 124 | 2026-04-11 |
 
 ---
 

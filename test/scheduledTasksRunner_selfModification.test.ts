@@ -1,13 +1,20 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-const mockRun = vi.fn();
-const mockGet = vi.fn();
-const mockAll = vi.fn();
-const mockPrepare = vi.fn(() => ({
-  run: mockRun,
-  get: mockGet,
-  all: mockAll,
-}));
+const dbHarness = vi.hoisted(() => {
+  const mockRun = vi.fn();
+  const mockGet = vi.fn();
+  const mockAll = vi.fn();
+  const mockPrepare = vi.fn(() => ({
+    run: mockRun,
+    get: mockGet,
+    all: mockAll,
+  }));
+
+  return {
+    mockRun,
+    mockPrepare,
+  };
+});
 
 const selfModHarness = vi.hoisted(() => ({
   runWeeklySelfImprovementCycle: vi.fn(),
@@ -19,7 +26,8 @@ const hookHarness = vi.hoisted(() => ({
 
 vi.mock('../src/utils/globalDb.js', () => ({
   getGlobalDb: vi.fn(() => ({
-    prepare: mockPrepare,
+    prepare: dbHarness.mockPrepare,
+    pragma: vi.fn(),
   })),
 }));
 
@@ -84,8 +92,8 @@ describe('ScheduledTasksRunner self-modification handler', () => {
   it('ensures the weekly self-improvement scheduled task', async () => {
     await (scheduledTasksRunner as any).ensureSelfImprovementTask();
 
-    expect(mockPrepare).toHaveBeenCalled();
-    expect(mockRun).toHaveBeenCalledWith(
+    expect(dbHarness.mockPrepare).toHaveBeenCalled();
+    expect(dbHarness.mockRun).toHaveBeenCalledWith(
       'weekly-self-improvement',
       'Weekly Self-Improvement Cycle',
       expect.stringContaining('weekly DynamicAgent self-modification cycle'),

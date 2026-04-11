@@ -6,8 +6,10 @@ import { agentManager } from '../../agents/AgentManager.js';
 import { PythonShell } from 'python-shell';
 import { JulesAutomationService } from '../../core/julesAutomationService.js';
 import { executeLearningLoopCycle } from '../../core/learningLoopService.js';
+import { runWeeklySelfImprovementCycle } from '../../core/selfModificationEngine.js';
 import { eventFabric, createSchedulerTaskOutcomeEnvelope } from '../../core/eventFabric.js';
 import { fireHookSafely } from '../../core/hookRegistry.js';
+import { runWorldPerceptionCycle } from '../../core/worldPerceptionLayer.js';
 import { executeDueCrmFollowUpActions } from '../services/crmFollowUpExecutionService.js';
 import {
   resolveSchedulerExportMonth,
@@ -73,6 +75,14 @@ export class ScheduledTasksRunner {
       derivedEvents.push('cron:weekly:monday');
     }
 
+    if (task.id === 'weekly-self-improvement') {
+      derivedEvents.push('cron:weekly:self-improve');
+    }
+
+    if (task.id === 'world-perception-sweep') {
+      derivedEvents.push('cron:daily:world-perception');
+    }
+
     for (const eventName of derivedEvents) {
       await fireHookSafely(eventName, {
         taskId: task.id,
@@ -96,6 +106,8 @@ export class ScheduledTasksRunner {
     await this.ensureWeeklyResearchTask();
     await this.ensureDailyAgentBriefingTask();
     await this.ensureCrmFollowUpDispatchTask();
+    await this.ensureSelfImprovementTask();
+    await this.ensureWorldPerceptionTask();
     await this.ensurePredictiveDecisionTask();
     await this.ensureHRTimesheetFollowUpTasks();
     await this.importJulesAutomations();
@@ -430,6 +442,100 @@ export class ScheduledTasksRunner {
       logInfo('ScheduledTasksRunner', 'Predictive decision task ensured.');
     } catch (error) {
       logError('ScheduledTasksRunner', `Failed to ensure predictive decision task: ${error}`);
+    }
+  }
+
+  private async ensureSelfImprovementTask() {
+    try {
+      const db = getGlobalDb();
+      const now = new Date().toISOString();
+      const metadata = {
+        successThreshold: 0.7,
+        durationThresholdMs: 15_000,
+        minRuns: 3,
+      };
+
+      db.prepare(`
+        INSERT INTO scheduled_tasks (
+          id,
+          title,
+          prompt,
+          cron_expression,
+          handler,
+          enabled,
+          metadata,
+          created_at,
+          updated_at
+        )
+        VALUES (?, ?, ?, ?, ?, 1, ?, ?, ?)
+        ON CONFLICT(id) DO UPDATE SET
+          title = excluded.title,
+          prompt = excluded.prompt,
+          cron_expression = excluded.cron_expression,
+          handler = excluded.handler,
+          enabled = excluded.enabled,
+          metadata = excluded.metadata,
+          updated_at = excluded.updated_at
+      `).run(
+        'weekly-self-improvement',
+        'Weekly Self-Improvement Cycle',
+        'Run the weekly DynamicAgent self-modification cycle and produce proposals for weak agents.',
+        '0 6 * * 1',
+        'self_modification_cycle',
+        JSON.stringify(metadata),
+        now,
+        now,
+      );
+
+      logInfo('ScheduledTasksRunner', 'Weekly self-improvement task ensured.');
+    } catch (error) {
+      logError('ScheduledTasksRunner', `Failed to ensure weekly self-improvement task: ${error}`);
+    }
+  }
+
+  private async ensureWorldPerceptionTask() {
+    try {
+      const db = getGlobalDb();
+      const now = new Date().toISOString();
+      const metadata = {
+        limit: 12,
+      };
+
+      db.prepare(`
+        INSERT INTO scheduled_tasks (
+          id,
+          title,
+          prompt,
+          cron_expression,
+          handler,
+          enabled,
+          metadata,
+          created_at,
+          updated_at
+        )
+        VALUES (?, ?, ?, ?, ?, 1, ?, ?, ?)
+        ON CONFLICT(id) DO UPDATE SET
+          title = excluded.title,
+          prompt = excluded.prompt,
+          cron_expression = excluded.cron_expression,
+          handler = excluded.handler,
+          enabled = excluded.enabled,
+          metadata = excluded.metadata,
+          updated_at = excluded.updated_at
+      `).run(
+        'world-perception-sweep',
+        'World Perception Sweep',
+        'Sweep recent knowledge cards and refresh world-perception signals for downstream operators.',
+        '0 */6 * * *',
+        'world_perception_cycle',
+        JSON.stringify(metadata),
+        now,
+        now,
+      );
+
+      logInfo('ScheduledTasksRunner', 'World perception task ensured.');
+    } catch (error) {
+      logError('ScheduledTasksRunner', `Failed to ensure world perception task: ${error}`);
     }
   }
 
@@ -808,6 +914,16 @@ export class ScheduledTasksRunner {
           durationMs: Date.now() - new Date(startTime).getTime(),
         });
         eventFabric.publish(envelope);
+      } else if (task.handler === 'self_modification_cycle') {
+        const selfMeta = this.parseTaskMetadata(task);
+        result = await runWeeklySelfImprovementCycle({
+          successThreshold: typeof selfMeta.successThreshold === 'number' ? selfMeta.successThreshold : undefined,
+          durationThresholdMs: typeof selfMeta.durationThresholdMs === 'number' ? selfMeta.durationThresholdMs : undefined,
+          minRuns: typeof selfMeta.minRuns === 'number' ? selfMeta.minRuns : undefined,
+        });
+      } else if (task.handler === 'world_perception_cycle') {
+        const worldMeta = this.parseTaskMetadata(task);
+        result = runWorldPerceptionCycle(typeof worldMeta.limit === 'number' ? worldMeta.limit : 12);
       } else if (task.handler === 'predictive_decision') {
         const engine = new PredictiveDecisionEngine();
         result = await engine.analyzeDecisionPoint('scheduler');
