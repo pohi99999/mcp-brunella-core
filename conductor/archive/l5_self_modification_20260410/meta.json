@@ -22,13 +22,18 @@
   "group": "ai",
   "verified": true,
   "verifiedAt": "2026-04-11",
+  "verified": true,
+  "verifiedAt": "2026-04-12",
   "completedAt": "2026-04-11T13:15:00Z",
   "archivedAt": "2026-04-11T13:15:00Z",
   "archiveReason": "SelfModificationEngine core, REST/CLI/dashboard surfaces, scheduler hooks, agent metrics capture, and focused regression coverage are complete. No follow-up track is required because approved proposals generate their own rollout tracks automatically.",
+  "track_id": "l5_self_modification_20260410",
+  "updatedAt": "2026-04-12T04:05:00.000Z",
+  "verificationNotes": "Audit 2026-04-12: src/core/selfModificationEngine.ts megtalálva. CLI (src/cli/selfModificationCommands.ts), route (src/server/routes/selfModification.ts), dashboard (src/dashboard/components/dashboard/SelfImprovementPanel.tsx + src/dashboard/lib/selfModificationApi.ts), scheduler integráció teljes. test/selfModificationEngine.test.ts, test/selfModificationRoute.test.ts, test/selfModificationCommands.test.ts, test/scheduledTasksRunner_selfModification.test.ts — mind PASS. npm run build CLEAN. Legitimate archived slice.",
   "dod": {
-    "tests_pass": false,
-    "build_clean": false,
-    "code_committed": false,
+    "tests_pass": true,
+    "build_clean": true,
+    "code_committed": true,
     "no_verify_used": false
   }
 }

@@ -33,10 +33,13 @@
     "Lazy schema initialization removed import-time SQLite side effects from PredictiveDecisionEngine.",
     "Focused predictive coverage now spans engine, executor, route, CLI, scheduler, dashboard API, and dashboard panel behavior."
   ],
+  "track_id": "l5_predictive_decision_20260410",
+  "updatedAt": "2026-04-12T04:05:00.000Z",
+  "verificationNotes": "Audit 2026-04-12: src/core/predictiveDecisionEngine.ts megtalálva. CLI (src/cli/predictiveDecisionCommands.ts), route (src/server/routes/predictiveDecision.ts), dashboard (src/dashboard/components/dashboard/PredictiveDecisionPanel.tsx + src/dashboard/lib/predictiveDecisionApi.ts), scheduler integráció teljes. test/predictiveDecisionEngine.test.ts, test/predictiveDecisionRoute.test.ts, test/predictiveDecisionCommands.test.ts, test/scheduledTasksRunner_predictiveDecision.test.ts — mind PASS. npm run build CLEAN. Legitimate archived slice.",
   "dod": {
-    "tests_pass": false,
-    "build_clean": false,
-    "code_committed": false,
+    "tests_pass": true,
+    "build_clean": true,
+    "code_committed": true,
     "no_verify_used": false
   }
 }

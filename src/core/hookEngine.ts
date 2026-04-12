@@ -11,6 +11,7 @@
  * should use instead of calling runHooks() directly.
  *
  * @version 1.0.0
+ * @audit-verified 2026-04-12 — l5_hook_engine_20260410 legitimate archived slice; build+2882 tests pass
  */
 
 import { runHooks, type HookName } from '../utils/hooks.js';
