@@ -1,5 +1,0 @@
-syntax = "proto3";
-
-package tensorflow.profiler;
-
-import public "plugin/xprof/protobuf/steps_db.proto";

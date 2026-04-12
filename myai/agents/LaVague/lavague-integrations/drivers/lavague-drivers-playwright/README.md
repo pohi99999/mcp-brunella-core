@@ -1,1 +1,0 @@
-# Playwright integration for lavague
