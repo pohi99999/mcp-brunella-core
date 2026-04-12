@@ -1,5 +1,13 @@
 ﻿# Copilot Session Notes
 
+### 2026-04-12 06:33 - KKV Finance pilot — initial commit
+
+**Feladat:** Invoice summarizer + unit tesztek hozzáadva. Branch: feat/kkv-finance-automation-20260404. Tesztek: 2/2 passed (vitest).
+
+**Érintett fájlok:** src/kkv/financeAutomation.ts, test/kkvFinanceAutomation.test.ts, tracks/kkv_finance_automation_20260404/meta.json
+
+**Következő lépések:** CLI parancsok implementálása, dashboard panel stub, integrációs tesztek, CI validáció. Feladat státusz: in_progress.
+
 ## Overview
 
 User requested that the Copilot CLI automatically connect to a local Brunella MCP server and that Brunella be started automatically when opening VS Code (Insiders) or launching the Copilot CLI. The approach: add a VS Code task configured to run on folder open and create a small wrapper (PowerShell + .bat) that ensures Brunella is running, waits for the MCP endpoint, and then launches the Copilot CLI with an optional repo-level MCP config.
@@ -2582,3 +2590,8 @@ pm run test:fast validáció sikeres (364 fájl passed, 1 skipped / 2797 teszt p
 **Érintett fájlok:** conductor/archive/kkv_hr_leave_wait_resume_20260407/meta.json, conductor/archive/kkv_hr_leave_wait_resume_20260407/plan.md, conductor/archive/kkv_hr_leave_wait_resume_20260407/spec.md, conductor/tracks.md, conductor/project_state.json
 **Státusz:** ✅ Archiválva
 **Megjegyzés:** A 	est/hrLeaveRoutes.test.ts fókuszált regresszió zöld (5/5), beleértve approve, reject és calendar-failure retry ágakat; follow-up track nem szükséges.
+### 2026-04-12 04:17 - Pilot indítása: kkv_finance_automation_20260404
+Feladat: Pilot start — scaffold és pilot note létrehozva; feature branch: feat/kkv-finance-automation-20260404
+Érintett fájlok: tracks/kkv_finance_automation_20260404/pilot.md, meta.json, .ai/copilot.md
+Delegálás: bas-lead-developer (implementáció), robust-test-writer (tesztek), frontend-design-review (dashboard), devops-infra-guardian (CI)
+Megjegyzés: Következő lépés: commit és PR.
