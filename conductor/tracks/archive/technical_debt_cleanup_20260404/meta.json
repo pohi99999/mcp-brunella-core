@@ -1,11 +1,12 @@
 {
   "id": "technical_debt_cleanup_20260404",
   "title": "Technical Debt Cleanup — TODO konverzió és elavult kód elimináció",
-  "status": "active",
+  "status": "COMPLETED",
   "priority": "medium",
   "createdAt": "2026-04-04",
+  "completedAt": "2026-04-14",
   "owner": "Gemini",
-  "progress": 80,
+  "progress": 100,
   "tags": [
     "tech-debt",
     "todo",
@@ -18,9 +19,9 @@
   "dependencies": [],
   "group": "brunella",
   "dod": {
-    "tests_pass": false,
-    "build_clean": false,
-    "code_committed": false,
+    "tests_pass": true,
+    "build_clean": true,
+    "code_committed": true,
     "no_verify_used": false
   }
 }
