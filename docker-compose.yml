@@ -15,6 +15,7 @@ services:
       - BRUNELLA_PYTHON_API_URL=http://ai-worker:8000
       - OLLAMA_BASE_URL=http://host.docker.internal:11434
       - BRUNELLA_WORKSPACE_ROOT=/app
+      - BRUNELLA_WEBHOOK_SECRET=${BRUNELLA_WEBHOOK_SECRET}
     volumes:
       - .:/app # Bind mount full workspace for development
       - /app/node_modules # Persistent node_modules inside container
@@ -51,6 +52,7 @@ services:
       - N8N_BASIC_AUTH_USER=${N8N_TEST_USER}
       - N8N_BASIC_AUTH_PASSWORD=${N8N_TEST_PASSWORD}
       - LEADS_SHEET_ID=${GOOGLE_SHEETS_ID}
+      - BRUNELLA_WEBHOOK_SECRET=${BRUNELLA_WEBHOOK_SECRET}
     volumes:
       - n8n_data:/home/node/.n8n
 

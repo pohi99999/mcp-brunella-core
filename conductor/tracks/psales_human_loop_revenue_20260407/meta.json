@@ -26,9 +26,9 @@
     ".worktrees/sel2.md"
   ],
   "blockerNotes": [
-    "Reopened on 2026-04-12 after forensic audit: the onboarding approval route stores and flips pending jobs but still does not dispatch the promised downstream pipeline after approval.",
-    "The checked-in n8n KKV and Brand workflows still send operator-facing actions before any explicit approval-safe gate.",
-    "Dedicated dashboard/test coverage for the onboarding-intake approval surface is missing, and secret wiring for BRUNELLA_WEBHOOK_SECRET is incomplete."
+    "The core repo-local intake gate was repaired on 2026-04-12: intake webhook auth is now secret-gated, approval queues a real agent task, and the checked-in n8n workflows no longer trigger outward-facing actions before approval.",
+    "The track remains open because phases 2, 4, 5, 6, and 7 are still pending or blocked business rollout work (Apify sourcing, market presence, questionnaire/CRM operations, package collateral, and pilot outreach).",
+    "Post-approval customer autoreply / Sheets persistence remains an operator-run or future automation follow-up, so the delivered repo-local slice is safe but not the whole revenue program."
   ],
   "goal": "Pohánka Péter Brunella-alapú üzletének bevételtermelő csatornáit kiépíteni: P-Sales Human-in-Loop safety pipeline, automatizált lead-gen (KKV + prémium brand szegmens), Apify integráció, n8n onboarding intake, LinkedIn/Upwork piaci megjelenés.",
   "targetSegments": [

@@ -17,6 +17,8 @@
 - `test/szamlazz_routes.test.ts`
 - `test/dashboard/components/BookkeepingWidget.test.tsx`
 - `test/integration/psales.strategy.integration.test.ts`
+- `test/onboardingIntakeRoutes.test.ts`
+- `src/dashboard/components/dashboard/PSalesStrategyPanel.test.tsx`
 
 ### Audit Outcome
 
@@ -24,7 +26,7 @@
 - `konyveles_phase3_readiness_20260405` -> `issues: []`
 - `n8n_psales_human_loop_20260404` -> `issues: []`
 - `n8n_bookkeeping_phase3_finalization_20260404` -> `issues: []`
-- `psales_human_loop_revenue_20260407` reopened as `in_progress` because the approval flow still stops at state changes, checked-in n8n flows still act before an approval-safe gate, and the intake surface still lacks full dashboard/test/secret wiring
+- `psales_human_loop_revenue_20260407` reopened as `in_progress`, then had its repo-local intake slice repaired: the webhook is now secret-gated, approval queues a real agent task, the dashboard exposes the pending queue, and the checked-in n8n JSON only performs internal notification before approval
 - Closed-track audit baseline improved from `172 / 225` to `167 / 224`
 
 ---

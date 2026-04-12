@@ -38,7 +38,6 @@
           "X-Brunella-Token": "={{$env.BRUNELLA_WEBHOOK_SECRET}}"
         },
         "body": {
-          "trigger": "={{$json.routing.agent_trigger}}",
           "client_name": "={{$json.body.cegnev}}",
           "contact_email": "={{$json.body.email}}",
           "industry": "={{$json.body.iparagban}}",
@@ -63,37 +62,6 @@
       "position": [950, 200]
     },
     {
-      "name": "📩 Auto-válasz Email — Ügyfélnek",
-      "type": "n8n-nodes-base.gmail",
-      "parameters": {
-        "to": "={{$json.body.email}}",
-        "subject": "Megkaptuk a kérdőívedet — Pohánka AI",
-        "html": true,
-        "message": "<p>Szia {{$json.body.kapcsolattarto_nev}}!</p><p>Köszönjük a kérdőív kitöltését. 24 órán belül személyesen megkeresünk egy rövid kickoff javaslattal.</p><p>Pohánka Péter</p>"
-      },
-      "position": [950, 400]
-    },
-    {
-      "name": "📊 Google Sheets — Lead Rögzítés",
-      "type": "n8n-nodes-base.googleSheets",
-      "parameters": {
-        "operation": "append",
-        "spreadsheetId": "={{$env.LEADS_SHEET_ID || $env.GOOGLE_SHEETS_ID}}",
-        "range": "KKV_Leads!A:Z",
-        "values": [
-          "={{new Date().toISOString()}}",
-          "={{$json.body.cegnev}}",
-          "={{$json.body.email}}",
-          "={{$json.body.iparagban}}",
-          "={{$json.body.legnagyobb_kihivas}}",
-          "={{$json.body.manualis_orak}}",
-          "={{$json.routing.recommended_package}}",
-          "PENDING_CALL"
-        ]
-      },
-      "position": [950, 600]
-    },
-    {
       "name": "✅ Webhook Response",
       "type": "n8n-nodes-base.respondToWebhook",
       "parameters": {
@@ -109,8 +77,6 @@
     "🤖 Brunella API — Agent Trigger": {
       "main": [[
         "📧 Értesítő Email — Péternek",
-        "📩 Auto-válasz Email — Ügyfélnek",
-        "📊 Google Sheets — Lead Rögzítés",
         "✅ Webhook Response"
       ]]
     }
@@ -118,6 +84,8 @@
   "_meta": {
     "brunella_endpoint": "POST /api/v1/webhook/onboarding-intake",
     "required_env_n8n": ["BRUNELLA_WEBHOOK_SECRET", "LEADS_SHEET_ID"],
+    "approval_safe": true,
+    "post_approval_actions": ["client_autoreply", "google_sheets_append"],
     "import_instructions": "n8n UI → Workflows → Import from JSON → paste this file",
     "source": ".worktrees/sel.md lines 1476-1600"
   }
