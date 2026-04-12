@@ -2,17 +2,17 @@ import { eventBus, BusEvent } from './eventBus.js';
 import { logInfo, logError } from '../utils/logger.js';
 import { agentManager } from '../agents/AgentManager.js';
 import { updateInvoiceStatus, getInvoice } from '../data/bookkeeping_db.js';
+import { agentHookEngine } from './agentHookEngine.js';
 
 /**
  * L5 Invoice Pipeline Orchestrator
- *
- * Manages the zero-touch flow by responding to events and coordinating agents.
  */
 export class InvoicePipeline {
   private static instance: InvoicePipeline;
 
   private constructor() {
     this.setupListeners();
+    this.setupHooks();
   }
 
   public static getInstance(): InvoicePipeline {
@@ -20,6 +20,19 @@ export class InvoicePipeline {
       InvoicePipeline.instance = new InvoicePipeline();
     }
     return InvoicePipeline.instance;
+  }
+
+  /**
+   * Register system hooks for event-driven triggers
+   */
+  private setupHooks() {
+    logInfo('InvoicePipeline', 'Registering L5 Invoice hooks...');
+
+    agentHookEngine.register('invoice:received', async (payload: any) => {
+      logInfo('InvoicePipeline', `Hook 'invoice:received' triggered. Starting automation...`);
+      // Trigger the agent directly for the received invoice
+      await agentManager.delegate('InvoiceAutomation', 'process all invoices from gmail');
+    }, { priority: 'standard' });
   }
 
   private setupListeners() {

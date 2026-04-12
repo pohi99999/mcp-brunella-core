@@ -1,0 +1,256 @@
+{
+  "name": "Brunella Bookkeeping Szamlazz Outgoing Live",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "szamlazz-outgoing",
+        "responseMode": "onReceived"
+      },
+      "id": "invoice-created-webhook",
+      "name": "Invoice Created Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        260,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const input = items[0]?.json ?? {};\nconst timestamp = new Date().toISOString();\n\nreturn [{\n  json: {\n    ...input,\n    source: 'n8n',\n    stage: 'szamlazz-outgoing',\n    timestamp,\n    invoice: input.invoice ?? input,\n    xmlPayload: input.xmlPayload ?? input.payload ?? '<invoice />',\n  },\n}];"
+      },
+      "id": "normalize-outgoing-invoice",
+      "name": "Normalize Outgoing Invoice Payload",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        520,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://www.szamlazz.hu/szamla/",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ action: 'szamla_create', invoice: $json.invoice, xmlPayload: $json.xmlPayload, timestamp: $json.timestamp }) }}",
+        "options": {}
+      },
+      "id": "szamlazz-request",
+      "name": "Create Invoice on Szamlazz.hu",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        780,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": false,
+        "values": {
+          "json": [
+            {
+              "name": "summary",
+              "value": "={{ { stage: 'szamlazz-outgoing', invoiceNumber: $json.invoice?.invoiceNumber ?? $json.invoice?.invoice_no ?? null, source: 'n8n' } }}"
+            },
+            {
+              "name": "result",
+              "value": "={{ $json.result ?? $json.data ?? $json }}"
+            },
+            {
+              "name": "exceptions",
+              "value": "={{ Array.isArray($json.exceptions) ? $json.exceptions : ($json.error ? [{ stage: 'szamlazz-outgoing', message: $json.error }] : []) }}"
+            }
+          ],
+          "boolean": [
+            {
+              "name": "isSuccess",
+              "value": "={{ $json.success === true || $json.status === 'success' || ($json.error ? false : true) }}"
+            }
+          ],
+          "string": [
+            {
+              "name": "source",
+              "value": "n8n"
+            },
+            {
+              "name": "timestamp",
+              "value": "={{ $now.toISO() }}"
+            }
+          ]
+        }
+      },
+      "id": "normalize-szamlazz-result",
+      "name": "Normalize Szamlazz Result",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 2.1,
+      "position": [
+        1040,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ $json.isSuccess }}",
+              "operation": "isTrue"
+            }
+          ]
+        }
+      },
+      "id": "szamlazz-success",
+      "name": "Szamlazz Success?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1300,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "method": "PATCH",
+        "url": "http://localhost:3000/api/v1/bookkeeping/status",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ summary: $json.summary, exceptions: $json.exceptions, timestamp: $json.timestamp, source: $json.source }) }}",
+        "options": {}
+      },
+      "id": "update-bookkeeping-status",
+      "name": "Update Bookkeeping Status",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1540,
+        220
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:5678/webhook/notify",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ summary: $json.summary, exceptions: $json.exceptions, timestamp: $json.timestamp, source: $json.source, stage: 'szamlazz-outgoing' }) }}",
+        "options": {}
+      },
+      "id": "notify-outgoing-invoice-exception",
+      "name": "Notify Outgoing Invoice Exception",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1540,
+        420
+      ]
+    }
+  ],
+  "connections": {
+    "Invoice Created Webhook": {
+      "main": [
+        {
+          "node": "Normalize Outgoing Invoice Payload",
+          "type": "main",
+          "index": 0
+        }
+      ]
+    },
+    "Normalize Outgoing Invoice Payload": {
+      "main": [
+        {
+          "node": "Create Invoice on Szamlazz.hu",
+          "type": "main",
+          "index": 0
+        }
+      ]
+    },
+    "Create Invoice on Szamlazz.hu": {
+      "main": [
+        {
+          "node": "Normalize Szamlazz Result",
+          "type": "main",
+          "index": 0
+        }
+      ]
+    },
+    "Normalize Szamlazz Result": {
+      "main": [
+        {
+          "node": "Szamlazz Success?",
+          "type": "main",
+          "index": 0
+        }
+      ]
+    },
+    "Szamlazz Success?": {
+      "main": [
+        {
+          "node": "Update Bookkeeping Status",
+          "type": "main",
+          "index": 0
+        },
+        {
+          "node": "Notify Outgoing Invoice Exception",
+          "type": "main",
+          "index": 0
+        }
+      ]
+    }
+  },
+  "settings": {},
+  "staticData": null,
+  "tags": [
+    {
+      "id": "bookkeeping",
+      "name": "bookkeeping"
+    },
+    {
+      "id": "n8n",
+      "name": "n8n"
+    },
+    {
+      "id": "szamlazz",
+      "name": "szamlazz"
+    }
+  ],
+  "pinData": {},
+  "versionId": "wf6-szamlazz-outgoing-live",
+  "meta": {
+    "project": "n8n_konyveles_pipeline_20260328",
+    "track": "konyveles_phase3_20260403",
+    "status": "live-ready",
+    "phase": "3a"
+  }
+}

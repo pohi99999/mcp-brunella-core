@@ -9,7 +9,7 @@
 import Database from 'better-sqlite3';
 import { randomUUID } from 'crypto';
 import { logInfo, logError } from './logger.js';
-import {
+import type {
   InventoryItem,
   InventoryBatch,
   InventoryMovement,
@@ -17,10 +17,10 @@ import {
   InventoryPurchaseOrder,
   MovementType,
   MovementStatus,
-  ValuationMethod
+  ValuationMethod,
 } from '../types/inventory.d.js';
 
-export {
+export type {
   InventoryItem,
   InventoryBatch,
   InventoryMovement,

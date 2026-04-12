@@ -1041,6 +1041,14 @@ export class AgentManager extends EventEmitter {
         timestamp: new Date().toISOString(),
       });
 
+      // Hook Engine notification
+      await agentHookEngine.fire('agent:task:failed', {
+        agentName,
+        error: lastError?.message || 'Unknown error',
+        task: instruction,
+        context
+      });
+
       // Attempt cross-agent failover (only if not already a failover attempt)
       if (!isFailover) {
         const fallbacks = failoverRegistry.getFallbacks(agentName);

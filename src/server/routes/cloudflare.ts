@@ -22,6 +22,7 @@ type WorkerDefinition = {
   id: string;
   name: string;
   url?: string;
+  customDomain?: string;
   kind: "public" | "internal";
 };
 
@@ -29,6 +30,7 @@ type WorkerAuditResult = {
   id: string;
   name: string;
   url?: string;
+  customDomain?: string;
   kind: "public" | "internal";
   status: "online" | "offline" | "unknown";
   latencyMs?: number;
@@ -69,12 +71,14 @@ function getCloudflareWorkersInventory(): WorkerDefinition[] {
       id: "cean-orchestrator",
       name: "cean-orchestrator",
       url: orchestratorUrl || "https://cean-orchestrator.iam-dd1.workers.dev",
+      customDomain: "api.bas.peterpohanka.com",
       kind: "public",
     },
     {
       id: "chat-sync",
       name: "chat-sync",
       url: chatSyncUrl || "https://bas-orchestrator.peterpohankapersonal.workers.dev",
+      customDomain: "brunella.peterpohanka.com",
       kind: "public",
     },
     {
@@ -110,48 +114,89 @@ function getCloudflareWorkersInventory(): WorkerDefinition[] {
   ];
 }
 
-async function checkWorkerHealth(url: string): Promise<{
+async function checkExternalWorkerHealth(domain: string): Promise<{
   status: "online" | "offline";
   latencyMs?: number;
   statusCode?: number;
   error?: string;
 }> {
-  const base = normalizeBaseUrl(url);
-  const candidates = [`${base}/health`, base];
-  const headers = getCloudflareAuthHeaders();
+  const url = `https://${domain}/ping`;
+  const start = Date.now();
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 8000);
 
-  let lastError = "Unknown error";
+  try {
+    const response = await fetch(url, {
+      method: "GET",
+      signal: controller.signal,
+    });
+    const latencyMs = Date.now() - start;
+    if (response.ok || response.status === 401 || response.status === 404 || response.status === 403) {
+      // 404/401 is still 'online' for a worker that might not have a /ping but is reachable
+      return { status: "online", latencyMs, statusCode: response.status };
+    }
+    return { status: "offline", statusCode: response.status, error: `External check: HTTP ${response.status}` };
+  } catch (e: unknown) {
+    return { status: "offline", error: ensureError(e).message };
+  } finally {
+    clearTimeout(timeoutId);
+  }
+}
 
-  for (const candidate of candidates) {
+async function checkWorkerHealth(
+  worker: WorkerDefinition,
+): Promise<WorkerAuditResult> {
+  const customDomain = worker.customDomain;
+  if (customDomain) {
+    const extHealth = await checkExternalWorkerHealth(customDomain);
+    return {
+      ...worker,
+      status: extHealth.status,
+      latencyMs: extHealth.latencyMs,
+      statusCode: extHealth.statusCode,
+      error: extHealth.error,
+    };
+  }
+
+  const baseUrl = normalizeBaseUrl(worker.url || "");
+  const endpoints = ["/ping", "/health", "/api/ping", "/api/v1/ping", "/"];
+  const authHeaders = getCloudflareAuthHeaders();
+
+  let lastError = "Worker unreachable";
+
+  for (const endpoint of endpoints) {
+    const url = `${baseUrl}${endpoint}`;
     const start = Date.now();
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 5000);
+    const timeoutId = setTimeout(() => controller.abort(), 8000);
 
     try {
-      const response = await fetch(candidate, {
+      const response = await fetch(url, {
         method: "GET",
-        headers,
+        headers: authHeaders,
         signal: controller.signal,
       });
       const latencyMs = Date.now() - start;
-      clearTimeout(timeoutId);
 
       if (response.ok || response.status === 401 || response.status === 403) {
         return {
+          ...worker,
           status: "online",
           latencyMs,
           statusCode: response.status,
-          error:
-            response.ok
-              ? undefined
-              : "Auth required (worker reachable, but protected)",
+          error: response.ok
+            ? undefined
+            : "Auth required (worker reachable, but protected)",
         };
       }
 
       lastError = `HTTP ${response.status}`;
     } catch (e: unknown) {
       const normalized = ensureError(e);
-      logDebug("CloudflareRoutes", `Worker status probe failed: ${normalized.message}`);
+      logDebug(
+        "CloudflareRoutes",
+        `Worker status probe failed: ${normalized.message}`,
+      );
       lastError = normalized.message;
     } finally {
       clearTimeout(timeoutId);
@@ -159,6 +204,7 @@ async function checkWorkerHealth(url: string): Promise<{
   }
 
   return {
+    ...worker,
     status: "offline",
     error: lastError,
   };
@@ -387,7 +433,7 @@ export function createCloudflareRoutes(): Router {
 
   /**
    * GET /api/cloudflare/agents
-   * Audit configured Cloudflare workers (inventory + live health)
+   * Audit configured Cloudflare workers (inventory + live health + external DNS)
    */
   router.get("/agents", async (_req, res) => {
     try {
@@ -403,11 +449,7 @@ export function createCloudflareRoutes(): Router {
             };
           }
 
-          const health = await checkWorkerHealth(worker.url);
-          return {
-            ...worker,
-            ...health,
-          };
+          return await checkWorkerHealth(worker);
         }),
       );
 

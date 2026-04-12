@@ -2,11 +2,29 @@
 
 **Agent:** Claude Code (Anthropic)
 **Fájl:** `.ai/claude.md`
-**Utolsó frissítés:** 2026-04-09
+**Utolsó frissítés:** 2026-04-12
 
 ---
 
 ## 📋 LEGUTÓBBI MUNKAMENET
+
+### 2026-04-12 - CLAUDE.md `/init` frissítés
+
+**Feladat:** `/init` parancs — CLAUDE.md elemzése és célzott fejlesztése
+
+**Elvégzett feladatok:**
+1. Méret adat pontosítva (95+ → 87 agent, registry.json alapján)
+2. `npm run start:stable`, `start:python:stable`, `sync:doc-stats`, `agent:health`, `mcp:sync/validate` dokumentálva
+3. `brunella-hu` CLI binary hozzáadva
+4. L5 Zero-Touch Invoice Pipeline architektúra megjegyzés hozzáadva
+5. Doc stats sync parancs megjegyezve
+
+**Érintett fájlok:** `CLAUDE.md`
+**Státusz:** ✅ Befejezve
+
+---
+
+## 📋 KORÁBBI MUNKAMENETEK
 
 ### 2026-04-12 14:00 - Git LFS bandwidth cleanup + SSRF biztonsági javítás
 

@@ -1,6 +1,6 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-04-12T18:00:00.375Z
+**Utolso frissites:** 2026-04-12T19:00:00.337Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
@@ -30,14 +30,7 @@
 
 ## Aktiv Szalak (Active) (15)
 
-### Könyvelés / üzleti automatizálás (8)
-
-- [~] **Hook Engine — agentHookEngine.ts alap implementáció** [HIGH]
-  - **ID:** `l5_hook_engine_foundation_20260412`
-  - **Progress:** 0%
-  - **Assignee:** Gemini
-  - **Updated:** 2026-04-12
-  - Mappa: ./tracks/l5_hook_engine_foundation_20260412/
+### Könyvelés / üzleti automatizálás (7)
 
 - [ ] **KKV uzleti automatizalas masterplan** [HIGH]
   - **ID:** `kkv_business_automation_20260408`
@@ -55,7 +48,7 @@
 
 - [ ] **Könyvelési Automatizálás Phase 3 — szamlazz.hu + WF-6..9 + NAV Live + IMAP** [HIGH]
   - **ID:** `konyveles_phase3_20260403`
-  - **Progress:** 18%
+  - **Progress:** 28%
   - **Assignee:** Pohánka Péter
   - Mappa: ./tracks/konyveles_phase3_20260403/
 

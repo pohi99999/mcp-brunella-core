@@ -26,6 +26,7 @@ import { EdgePanel } from "@/components/dashboard/EdgePanel";
 import { JulesPanel } from "@/components/dashboard/JulesPanel";
 import { MarketWatcherConfig } from "@/components/dashboard/MarketWatcherConfig";
 import { InvoiceSyncWidget } from "@/components/dashboard/InvoiceSyncWidget";
+import { InvoiceAutomationWidget } from "@/components/dashboard/InvoiceAutomationWidget";
 import { LeadMiningWidget } from "@/components/dashboard/LeadMiningWidget";
 import { TrackGenerator } from "@/components/dashboard/TrackGenerator";
 import { ConductorTracksMonitor } from "@/components/dashboard/ConductorTracksMonitor";
@@ -243,6 +244,7 @@ export function initializeNavigation ()
     { id: "campaign-studio", label: "Kampány Stúdió", icon: DollarSign, component: <CampaignStudio /> },
     { id: "innovation-bridge", label: "Innovation Bridge", icon: Lightbulb, component: <InnovationBridgeWidget /> },
     { id: "invoice-sync", label: "Számla Szinkron", icon: Receipt, component: <InvoiceSyncWidget /> },
+    { id: "invoice-automation", label: "Számla Automatizálás", icon: Receipt, component: <InvoiceAutomationWidget /> },
     { id: "bookkeeping", label: "Könyvelés", icon: BarChart3, component: <BookkeepingWidget /> },
     { id: "finance-reconciliation", label: "Pénzügyi Egyeztetés", icon: Receipt, component: <FinanceReconciliationPanel /> },
     { id: "kp-penztar", label: "Házipénztár", icon: Wallet, component: <HazipenztarWidget /> },
@@ -307,7 +309,7 @@ export function initializeNavigation ()
   navigationRegistry.registerGroup( { title: "Core Systems", icon: Layers, items: ["dashboard", "neural-map", "system-arch", "studio", "vscode", "process-control", "service-control"] } );
   navigationRegistry.registerGroup( { title: "AI & Agents", icon: Brain, items: ["chat", "paios", "copilot-orchestrator", "copilot-commander", "kernel-pipeline", "assistant-blueprint", "phoenix", "phoenix-flywheel", "zero-prompt-notifications", "ephemeral-agents", "learning-loop", "self-improvement", "predictive-decision", "world-perception", "federation", "management", "agent-diagnostics", "agent-registry-governance", "agent-factory", "decomposer", "incubator", "knowledge", "memory", "cognitive-memory", "user-preferences", "developer", "edge", "robotkez", "browser-copilot", "jules", "ai-agent-briefing"] } );
   navigationRegistry.registerGroup( { title: "Enterprise", icon: Briefcase, items: ["enterprise-suite", "digital-hr", "hr-timesheet", "hr-onboarding", "grant-hunter", "law-detective", "property-visionary", "property-sales", "psales-intake", "psales-research", "psales-strategy", "enterprise-analytics", "intelligence-monitor"] } );
-  navigationRegistry.registerGroup( { title: "Értékesítési Központ", icon: DollarSign, items: ["trojan-horse", "lead-monitor", "demo-factory", "showcase", "campaign-studio", "leads-master", "innovation-bridge", "invoice-sync", "bookkeeping", "finance-reconciliation", "kp-penztar", "lead-mining", "marketwatcher", "inventory"] } );
+  navigationRegistry.registerGroup( { title: "Értékesítési Központ", icon: DollarSign, items: ["trojan-horse", "lead-monitor", "demo-factory", "showcase", "campaign-studio", "leads-master", "innovation-bridge", "invoice-sync", "invoice-automation", "bookkeeping", "finance-reconciliation", "kp-penztar", "lead-mining", "marketwatcher", "inventory"] } );
   navigationRegistry.registerGroup( { title: "KKV Pack", icon: PackageSearch, items: ["kkv-pack"] } );
   navigationRegistry.registerGroup( { title: "Orchestration", icon: Rocket, items: ["cean", "cloudflare", "fleet_manager", "autonomy", "tasks", "workflow-engine", "swarm-panel", "tool-discovery", "tools-manager", "crawl4ai", "harvest-pipeline"] } );
   navigationRegistry.registerGroup( { title: PROJECT_MGMT_NAV_GROUP.title, icon: FileText, items: [...PROJECT_MGMT_NAV_GROUP.items] } );

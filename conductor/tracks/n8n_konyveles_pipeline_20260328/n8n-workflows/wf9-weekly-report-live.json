@@ -1,0 +1,145 @@
+{
+  "name": "Brunella Bookkeeping Weekly Report Live",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 168
+            }
+          ]
+        }
+      },
+      "id": "weekly-cron",
+      "name": "Cron Trigger (Weekly)",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [
+        260,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "http://localhost:3000/api/v1/bookkeeping/status",
+        "options": {}
+      },
+      "id": "get-bookkeeping-status",
+      "name": "Get Bookkeeping Status",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        520,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": false,
+        "values": {
+          "json": [
+            {
+              "name": "summary",
+              "value": "={{ { stage: 'weekly-report', status: $json.status ?? $json.data?.status ?? 'unknown', summary: $json.summary ?? $json.data?.summary ?? {}, missing: $json.missing ?? $json.data?.missing ?? [] } }}"
+            },
+            {
+              "name": "report",
+              "value": "={{ { status: $json.status ?? $json.data?.status ?? 'unknown', summary: $json.summary ?? $json.data?.summary ?? {}, missing: $json.missing ?? $json.data?.missing ?? [], checks: $json.checks ?? $json.data?.checks ?? [] } }}"
+            }
+          ],
+          "string": [
+            {
+              "name": "source",
+              "value": "n8n"
+            },
+            {
+              "name": "timestamp",
+              "value": "={{ $now.toISO() }}"
+            }
+          ]
+        }
+      },
+      "id": "format-weekly-report",
+      "name": "Format Weekly Report",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 2.1,
+      "position": [
+        780,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "no-reply@brunella.local",
+        "toEmail": "={{ $env.BOOKKEEPING_NOTIFY_EMAIL || 'konyveles@example.com' }}",
+        "subject": "={{ '[Brunella] Weekly bookkeeping report - ' + $now.toFormat('yyyy-LL-dd') }}",
+        "text": "={{ JSON.stringify({ summary: $json.summary, report: $json.report, timestamp: $json.timestamp, source: $json.source }, null, 2) }}",
+        "options": {}
+      },
+      "id": "send-weekly-report-email",
+      "name": "Send Weekly Report Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        1040,
+        320
+      ]
+    }
+  ],
+  "connections": {
+    "Cron Trigger (Weekly)": {
+      "main": [
+        {
+          "node": "Get Bookkeeping Status",
+          "type": "main",
+          "index": 0
+        }
+      ]
+    },
+    "Get Bookkeeping Status": {
+      "main": [
+        {
+          "node": "Format Weekly Report",
+          "type": "main",
+          "index": 0
+        }
+      ]
+    },
+    "Format Weekly Report": {
+      "main": [
+        {
+          "node": "Send Weekly Report Email",
+          "type": "main",
+          "index": 0
+        }
+      ]
+    }
+  },
+  "settings": {},
+  "staticData": null,
+  "tags": [
+    {
+      "id": "bookkeeping",
+      "name": "bookkeeping"
+    },
+    {
+      "id": "n8n",
+      "name": "n8n"
+    },
+    {
+      "id": "report",
+      "name": "report"
+    }
+  ],
+  "pinData": {},
+  "versionId": "wf9-weekly-report-live",
+  "meta": {
+    "project": "n8n_konyveles_pipeline_20260328",
+    "track": "konyveles_phase3_20260403",
+    "status": "live-ready",
+    "phase": "3c"
+  }
+}

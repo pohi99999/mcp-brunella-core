@@ -839,6 +839,55 @@ Példa: n8n_trigger_webhook({webhook_path: "brunella-task", data: {task: "analyz
 );
 
 // ─────────────────────────────────────────────
+// ESZKÖZ 13: P-Search Indexelés Triggerelése
+// ─────────────────────────────────────────────
+server.registerTool(
+  "n8n_trigger_p_search_index",
+  {
+    title: "P-Search Indexelés Trigger",
+    description: `Elindítja a P-Search (Cloudflare Vectorize) indexelési folyamatot az n8n-en keresztül.
+Extra és metaadatokat is küld a kutatási eredményről, amit a P-Search API feldolgoz.
+
+Args:
+  - id (string): Dokumentum azonosítója
+  - text (string): Indexelendő szöveg tartalom
+  - type (string): Dokumentum típusa (pl. 'research', 'article')
+  - metadata (object): További metaadatok (pl. source, tags)
+
+Returns:
+  A n8n pipeline válasza.`,
+    inputSchema: z.object({
+      id: z.string().min(1).describe("Dokumentum egyedi azonosítója (pl. 'paper-001')"),
+      text: z.string().min(1).describe("Az indexelendő szöveg tartalma"),
+      type: z.string().default("research").describe("Dokumentum típusa"),
+      metadata: z.record(z.unknown()).optional().describe("Választható metaadatok"),
+    }),
+  },
+  async (params) => {
+    try {
+      const config = getClientConfig();
+      // Az n8n-ben létrehozott 'p-search-indexing' webhook-ot hívjuk
+      const url = `${config.baseUrl}/webhook/p-search-indexing`;
+
+      const res = await axios.post(url, params, {
+        headers: { "Content-Type": "application/json" },
+        timeout: 30000,
+      });
+
+      return {
+        content: [{
+          type: "text",
+          text: `✅ P-Search Indexelés elindítva (${res.status})\nID: ${params.id}`,
+        }],
+        structuredContent: { status: res.status, id: params.id, data: res.data },
+      };
+    } catch (err) {
+      return { isError: true, content: [{ type: "text", text: handleApiError(err) }] };
+    }
+  }
+);
+
+// ─────────────────────────────────────────────
 // Szerver indítása
 // ─────────────────────────────────────────────
 async function main() {
