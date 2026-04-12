@@ -100,6 +100,7 @@ describe('Szamlázz routes', () => {
             },
             exceptions: [{ kind: 'existing', message: 'keep me' }],
         });
+        expect(sendSzamlazzInvoiceMock).toHaveBeenCalledWith('<xml>invoice</xml>');
 
         const stored = JSON.parse(await fs.readFile(statusPath, 'utf8')) as Record<string, unknown>;
         expect(stored).toMatchObject({
@@ -115,6 +116,40 @@ describe('Szamlázz routes', () => {
                 },
             },
         });
+    });
+
+    it('exposes the invoice create alias for the same Számlázz send flow', async () => {
+        sendSzamlazzInvoiceMock.mockResolvedValue({
+            success: true,
+            statusCode: 200,
+            contentType: 'text/xml; charset=utf-8',
+            documentType: 'text',
+            responseText: '<response>ok</response>',
+        });
+
+        const app = createApp();
+        const response = await request(app)
+            .post('/api/v1/invoice/create')
+            .send({
+                invoiceXml: '<xml>invoice-alias</xml>',
+                requestId: 'alias-req-1',
+                source: 'wf-6',
+            });
+
+        expect(response.status).toBe(200);
+        expect(response.body.success).toBe(true);
+        expect(response.body.result).toMatchObject({
+            success: true,
+            statusCode: 200,
+            documentType: 'text',
+        });
+        expect(response.body.snapshot.summary.lastInvoiceSend).toMatchObject({
+            success: true,
+            requestId: 'alias-req-1',
+            source: 'wf-6',
+            xmlLength: '<xml>invoice-alias</xml>'.length,
+        });
+        expect(sendSzamlazzInvoiceMock).toHaveBeenCalledWith('<xml>invoice-alias</xml>');
     });
 
     it('records failures through the invoice alias and preserves the existing bookkeeping snapshot history', async () => {
@@ -146,6 +181,7 @@ describe('Szamlázz routes', () => {
         });
         expect(response.body.snapshot.summary.lastInvoiceSendError).toBe('invalid XML');
         expect(response.body.snapshot.exceptions).toHaveLength(2);
+        expect(sendSzamlazzInvoiceMock).toHaveBeenCalledWith('<xml>broken</xml>');
 
         const stored = JSON.parse(await fs.readFile(statusPath, 'utf8')) as Record<string, unknown>;
         expect(stored).toMatchObject({

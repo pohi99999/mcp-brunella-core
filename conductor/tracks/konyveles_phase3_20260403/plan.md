@@ -127,7 +127,7 @@ Provide a Phase 3 skeleton that wires invoice ingestion (IMAP), basic refinement
 ### 3a.3 BAS oldal
 
 - [x] `SzamlazzHuAgent` trigger esemény hozzáadása (vagy meglévő InvoiceAutomation bővítése)
-- [ ] `POST /api/v1/invoice/create` endpoint ellenőrzése/létrehozása
+- [x] `POST /api/v1/invoice/create` endpoint ellenőrzése/létrehozása
 
 ### 3a.4 Teszt
 

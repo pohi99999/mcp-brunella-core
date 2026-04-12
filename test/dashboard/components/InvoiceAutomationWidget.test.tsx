@@ -5,19 +5,19 @@ import { InvoiceAutomationWidget } from "@/components/dashboard/InvoiceAutomatio
 import * as api from "@/lib/apiService";
 import { toast } from "sonner";
 
-vi.mock( "@/lib/apiService", () => ( {
+vi.mock("@/lib/apiService", () => ({
     executeAgent: vi.fn(),
-} ) );
+}));
 
-vi.mock( "sonner", () => ( {
+vi.mock("sonner", () => ({
     toast: {
         info: vi.fn(),
         success: vi.fn(),
         error: vi.fn(),
     },
-} ) );
+}));
 
-const mockedApi = vi.mocked( api );
+const mockedApi = vi.mocked(api);
 
 type ToastMock = {
     info: ReturnType<typeof vi.fn>;
@@ -27,135 +27,119 @@ type ToastMock = {
 
 const mockedToast = toast as unknown as ToastMock;
 
-describe( "InvoiceAutomationWidget", () =>
-{
-    const consoleErrorSpy = vi.spyOn( console, "error" ).mockImplementation( () => undefined );
+describe("InvoiceAutomationWidget", () => {
+    let consoleErrorSpy: ReturnType<typeof vi.spyOn>;
 
-    beforeEach( () =>
-    {
+    beforeEach(() => {
         vi.clearAllMocks();
-    } );
+        consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => undefined);
+    });
 
-    afterEach( () =>
-    {
-        consoleErrorSpy.mockClear();
-    } );
+    afterEach(() => {
+        consoleErrorSpy.mockRestore();
+    });
 
-    it( "shows success state and result metrics after invoice automation completes", async () =>
-    {
-        let resolveAgent!: ( value: {
+    it("shows success state and result metrics after invoice automation completes", async () => {
+        let resolveAgent!: (value: {
             success: boolean;
             message: string;
             data: {
                 processedCount: number;
                 failedCount: number;
             };
-        } ) => void;
+        }) => void;
 
         mockedApi.executeAgent.mockReturnValue(
-            new Promise( ( resolve ) =>
-            {
+            new Promise((resolve) => {
                 resolveAgent = resolve;
-            } ),
+            }),
         );
 
-        await act( async () =>
-        {
-            render( <InvoiceAutomationWidget /> );
-        } );
+        await act(async () => {
+            render(<InvoiceAutomationWidget />);
+        });
 
-        expect( screen.getByText( "IDLE" ) ).toBeInTheDocument();
-        expect( screen.getByRole( "button", { name: "Feldolgozás Indítása" } ) ).toBeEnabled();
+        expect(screen.getByText("IDLE")).toBeInTheDocument();
+        expect(screen.getByRole("button", { name: "Feldolgozás Indítása" })).toBeEnabled();
 
-        await act( async () =>
-        {
-            fireEvent.click( screen.getByRole( "button", { name: "Feldolgozás Indítása" } ) );
-        } );
+        await act(async () => {
+            fireEvent.click(screen.getByRole("button", { name: "Feldolgozás Indítása" }));
+        });
 
-        expect( mockedToast.info ).toHaveBeenCalledWith( "Számlák keresése és feldolgozása elindult..." );
-        expect( screen.getByText( "20%" ) ).toBeInTheDocument();
+        expect(mockedToast.info).toHaveBeenCalledWith("Számlák keresése és feldolgozása elindult...");
+        expect(screen.getByText("20%")).toBeInTheDocument();
 
-        await act( async () =>
-        {
-            resolveAgent( {
+        await act(async () => {
+            resolveAgent({
                 success: true,
                 message: "Invoice automation complete",
                 data: {
                     processedCount: 12,
                     failedCount: 3,
                 },
-            } );
-        } );
+            });
+        });
 
-        await waitFor( () =>
-        {
-            expect( screen.getByText( "SUCCESS" ) ).toBeInTheDocument();
-        } );
+        await waitFor(() => {
+            expect(screen.getByText("SUCCESS")).toBeInTheDocument();
+        });
 
-        expect( screen.getByText( "100%" ) ).toBeInTheDocument();
-        expect( screen.getByText( "Sikeres:" ) ).toBeInTheDocument();
-        expect( screen.getByText( "12" ) ).toBeInTheDocument();
-        expect( screen.getByText( "Sikertelen:" ) ).toBeInTheDocument();
-        expect( screen.getByText( "3" ) ).toBeInTheDocument();
-        expect( mockedToast.success ).toHaveBeenCalledWith( "Invoice automation complete" );
-        expect( mockedApi.executeAgent ).toHaveBeenCalledWith(
+        expect(screen.getByText("100%")).toBeInTheDocument();
+        expect(screen.getByText("Sikeres:")).toBeInTheDocument();
+        expect(screen.getByText("12")).toBeInTheDocument();
+        expect(screen.getByText("Sikertelen:")).toBeInTheDocument();
+        expect(screen.getByText("3")).toBeInTheDocument();
+        expect(mockedToast.success).toHaveBeenCalledWith("Invoice automation complete");
+        expect(mockedApi.executeAgent).toHaveBeenCalledWith(
             "InvoiceAutomation",
             "process all invoices from gmail",
         );
-    } );
+    });
 
-    it( "shows an error state when the agent call rejects", async () =>
-    {
-        mockedApi.executeAgent.mockRejectedValueOnce( new Error( "Network down" ) );
+    it("shows an error state when the agent call rejects", async () => {
+        mockedApi.executeAgent.mockRejectedValueOnce(new Error("Network down"));
 
-        await act( async () =>
-        {
-            render( <InvoiceAutomationWidget /> );
-        } );
+        await act(async () => {
+            render(<InvoiceAutomationWidget />);
+        });
 
-        await act( async () =>
-        {
-            fireEvent.click( screen.getByRole( "button", { name: "Feldolgozás Indítása" } ) );
-        } );
+        await act(async () => {
+            fireEvent.click(screen.getByRole("button", { name: "Feldolgozás Indítása" }));
+        });
 
-        expect( mockedToast.info ).toHaveBeenCalled();
+        expect(mockedToast.info).toHaveBeenCalled();
 
-        await waitFor( () =>
-        {
-            expect( screen.getByText( "ERROR" ) ).toBeInTheDocument();
-        } );
+        await waitFor(() => {
+            expect(screen.getByText("ERROR")).toBeInTheDocument();
+        });
 
-        expect( screen.getByText( "20%" ) ).toBeInTheDocument();
-        expect( mockedToast.error ).toHaveBeenCalledWith( "Hiba: Network down" );
-        expect( screen.queryByText( "Eredmény" ) ).not.toBeInTheDocument();
-    } );
+        expect(screen.getByText("20%")).toBeInTheDocument();
+        expect(mockedToast.error).toHaveBeenCalledWith("Hiba: Network down");
+        expect(screen.queryByText("Eredmény")).not.toBeInTheDocument();
+    });
 
-    it( "shows an error state when the agent returns success false", async () =>
-    {
-        mockedApi.executeAgent.mockResolvedValueOnce( {
+    it("shows an error state when the agent returns success false", async () => {
+        mockedApi.executeAgent.mockResolvedValueOnce({
             success: false,
             message: "Nincs elég adat a feldolgozáshoz",
-        } );
+        });
 
-        await act( async () =>
-        {
-            render( <InvoiceAutomationWidget /> );
-        } );
+        await act(async () => {
+            render(<InvoiceAutomationWidget />);
+        });
 
-        await act( async () =>
-        {
-            fireEvent.click( screen.getByRole( "button", { name: "Feldolgozás Indítása" } ) );
-        } );
+        await act(async () => {
+            fireEvent.click(screen.getByRole("button", { name: "Feldolgozás Indítása" }));
+        });
 
-        await waitFor( () =>
-        {
-            expect( screen.getByText( "ERROR" ) ).toBeInTheDocument();
-        } );
+        await waitFor(() => {
+            expect(screen.getByText("ERROR")).toBeInTheDocument();
+        });
 
-        expect( screen.getByText( "100%" ) ).toBeInTheDocument();
-        expect( mockedToast.error ).toHaveBeenCalledWith(
+        expect(screen.getByText("100%")).toBeInTheDocument();
+        expect(mockedToast.error).toHaveBeenCalledWith(
             "Hiba: Nincs elég adat a feldolgozáshoz",
         );
-        expect( screen.queryByText( "Eredmény" ) ).not.toBeInTheDocument();
-    } );
-} );
+        expect(screen.queryByText("Eredmény")).not.toBeInTheDocument();
+    });
+});
