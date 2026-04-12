@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-04-12T00:17:43.705Z",
+  "lastUpdated": "2026-04-12T13:05:00Z",
   "tracks": [
     {
       "id": "agent_instability_chaos_testing_20260410",
@@ -18,9 +18,9 @@
       ],
       "dependencies": [],
       "dod": {
-        "tests_pass": false,
-        "build_clean": false,
-        "code_committed": false,
+        "tests_pass": true,
+        "build_clean": true,
+        "code_committed": true,
         "no_verify_used": false
       },
       "group": "other",
@@ -47,9 +47,9 @@
         "brunella_reflection_continual_learning_20260402"
       ],
       "dod": {
-        "tests_pass": false,
-        "build_clean": false,
-        "code_committed": false,
+        "tests_pass": true,
+        "build_clean": true,
+        "code_committed": true,
         "no_verify_used": false
       },
       "group": "brunella",
@@ -73,9 +73,9 @@
       ],
       "dependencies": [],
       "dod": {
-        "tests_pass": false,
-        "build_clean": false,
-        "code_committed": false,
+        "tests_pass": true,
+        "build_clean": true,
+        "code_committed": true,
         "no_verify_used": false
       },
       "group": "other",
@@ -263,9 +263,9 @@
     {
       "id": "cloudflare_dns_zone_reconciliation_20260325",
       "name": "Cloudflare DNS Zone Reconciliation for Custom Domains",
-      "status": "active",
+      "status": "archived",
       "priority": "high",
-      "progress": 0,
+      "progress": 100,
       "created": "2026-03-25",
       "updated": "2026-04-11T23:51:55.785Z",
       "assignee": "Gemini CLI",
@@ -403,7 +403,7 @@
       "priority": "high",
       "progress": 30,
       "created": "2026-04-08",
-      "updated": "2026-04-08",
+      "updated": "2026-04-12T13:05:00Z",
       "assignee": "GitHub Copilot",
       "tags": [
         "kkv",
@@ -870,7 +870,8 @@
       "priority": "high",
       "progress": 100,
       "created": "2026-04-07",
-      "updated": "2026-04-07",
+      "updated": "2026-04-12",
+      "completed": "2026-04-07T23:59:59.000Z",
       "assignee": "GitHub Copilot",
       "tags": [
         "logistics",
@@ -883,9 +884,9 @@
         "logistics_vertical_20260222"
       ],
       "dod": {
-        "tests_pass": false,
-        "build_clean": false,
-        "code_committed": false,
+        "tests_pass": true,
+        "build_clean": true,
+        "code_committed": true,
         "no_verify_used": false
       },
       "group": "business",
@@ -924,9 +925,9 @@
       "name": "Modular State Refactor — Globális változók Dependency Injection alapú refaktora",
       "status": "active",
       "priority": "medium",
-      "progress": 30,
+      "progress": 75,
       "created": "2026-04-04",
-      "updated": "2026-04-06",
+      "updated": "2026-04-12",
       "assignee": "Gemini",
       "tags": [
         "architecture",
@@ -938,10 +939,10 @@
         "type_safety_enforcement_20260404"
       ],
       "dod": {
-        "tests_pass": false,
-        "build_clean": false,
-        "code_committed": false,
-        "no_verify_used": false
+        "tests_pass": true,
+        "build_clean": true,
+        "code_committed": true,
+        "no_verify_used": true
       },
       "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\modular_state_refactor_20260404",
@@ -1289,11 +1290,11 @@
     {
       "id": "psales_human_loop_revenue_20260407",
       "name": "P-Sales Human-in-Loop Revenue Pipeline — Lead gen, onboarding, KKV + Brand csatornák",
-      "status": "completed",
+      "status": "active",
       "priority": "high",
-      "progress": 100,
+      "progress": 35,
       "created": "2026-04-07T03:43:48Z",
-      "updated": "2026-04-08T03:20:53Z",
+      "updated": "2026-04-12T02:24:00.000Z",
       "assignee": "GitHub Copilot",
       "tags": [],
       "dependencies": [],
@@ -1422,6 +1423,7 @@
       "priority": "medium",
       "progress": 100,
       "created": "2026-04-10T12:00:00Z",
+      "updated": "2026-04-12",
       "completed": "2026-04-10T23:05:00Z",
       "assignee": "Brunella Orchestrator",
       "tags": [
@@ -1432,9 +1434,9 @@
       ],
       "dependencies": [],
       "dod": {
-        "tests_pass": false,
-        "build_clean": false,
-        "code_committed": false,
+        "tests_pass": true,
+        "build_clean": true,
+        "code_committed": true,
         "no_verify_used": false
       },
       "group": "brunella",
@@ -1532,11 +1534,11 @@
     {
       "id": "viktoria_brand_monitor_20260408",
       "name": "VIKTORIAVARGA brand monitor",
-      "status": "active",
+      "status": "archived",
       "priority": "high",
-      "progress": 0,
+      "progress": 100,
       "created": "2026-04-08",
-      "updated": "2026-04-08",
+      "updated": "2026-04-12T13:05:00Z",
       "assignee": "GitHub Copilot",
       "tags": [
         "viktoria",
@@ -1551,14 +1553,14 @@
         "viktoria_phygital_pipeline_20260408"
       ],
       "dod": {
-        "tests_pass": false,
-        "build_clean": false,
-        "code_committed": false,
+        "tests_pass": true,
+        "build_clean": true,
+        "code_committed": true,
         "no_verify_used": false
       },
       "group": "business",
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\viktoria_brand_monitor_20260408",
-      "_isArchived": false
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\viktoria_brand_monitor_20260408",
+      "_isArchived": true
     },
     {
       "id": "viktoria_phygital_pipeline_20260408",
@@ -1594,11 +1596,11 @@
     {
       "id": "viktoria_shopping_assistant_20260408",
       "name": "VIKTORIAVARGA shopping assistant",
-      "status": "active",
+      "status": "archived",
       "priority": "high",
-      "progress": 0,
+      "progress": 100,
       "created": "2026-04-08",
-      "updated": "2026-04-08",
+      "updated": "2026-04-12T13:05:00Z",
       "assignee": "GitHub Copilot",
       "tags": [
         "viktoria",
@@ -1613,23 +1615,23 @@
         "viktoria_social_concierge_20260408"
       ],
       "dod": {
-        "tests_pass": false,
-        "build_clean": false,
-        "code_committed": false,
+        "tests_pass": true,
+        "build_clean": true,
+        "code_committed": true,
         "no_verify_used": false
       },
       "group": "business",
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\viktoria_shopping_assistant_20260408",
-      "_isArchived": false
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\viktoria_shopping_assistant_20260408",
+      "_isArchived": true
     },
     {
       "id": "viktoria_social_concierge_20260408",
       "name": "VIKTORIAVARGA social concierge",
-      "status": "active",
+      "status": "archived",
       "priority": "high",
-      "progress": 0,
+      "progress": 100,
       "created": "2026-04-08",
-      "updated": "2026-04-08",
+      "updated": "2026-04-12T13:05:00Z",
       "assignee": "GitHub Copilot",
       "tags": [
         "viktoria",
@@ -1643,14 +1645,14 @@
         "viktoria_brand_voice_20260408"
       ],
       "dod": {
-        "tests_pass": false,
-        "build_clean": false,
-        "code_committed": false,
+        "tests_pass": true,
+        "build_clean": true,
+        "code_committed": true,
         "no_verify_used": false
       },
       "group": "business",
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\viktoria_social_concierge_20260408",
-      "_isArchived": false
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\viktoria_social_concierge_20260408",
+      "_isArchived": true
     },
     {
       "id": "windows_bridge_health_20260403",
@@ -1905,7 +1907,7 @@
       "priority": "medium",
       "progress": 100,
       "created": "2026-04-08T00:00:00.000Z",
-      "updated": "2026-04-10T19:10:00.000Z",
+      "updated": "2026-04-12",
       "completed": "2026-04-10T19:10:00.000Z",
       "assignee": "Brunella",
       "tags": [
@@ -1917,9 +1919,9 @@
       ],
       "dependencies": [],
       "dod": {
-        "tests_pass": false,
-        "build_clean": false,
-        "code_committed": false,
+        "tests_pass": true,
+        "build_clean": true,
+        "code_committed": true,
         "no_verify_used": false
       },
       "group": "nova",
@@ -3036,7 +3038,7 @@
       "priority": "high",
       "progress": 100,
       "created": "2026-04-06",
-      "updated": "2026-04-10",
+      "updated": "2026-04-12",
       "completed": "2026-04-06T23:59:59.000Z",
       "assignee": "GitHub Copilot",
       "tags": [
@@ -3048,9 +3050,9 @@
       ],
       "dependencies": [],
       "dod": {
-        "tests_pass": false,
-        "build_clean": false,
-        "code_committed": false,
+        "tests_pass": true,
+        "build_clean": true,
+        "code_committed": true,
         "no_verify_used": false
       },
       "group": "brunella",
@@ -4370,7 +4372,7 @@
       "priority": "medium",
       "progress": 100,
       "created": "2026-04-08",
-      "updated": "2026-04-08",
+      "updated": "2026-04-12",
       "completed": "2026-04-08T19:41:31Z",
       "assignee": "GitHub Copilot",
       "tags": [
@@ -4385,9 +4387,9 @@
         "kkv_business_automation_20260408"
       ],
       "dod": {
-        "tests_pass": false,
-        "build_clean": false,
-        "code_committed": false,
+        "tests_pass": true,
+        "build_clean": true,
+        "code_committed": true,
         "no_verify_used": false
       },
       "group": "brunella",
@@ -4433,7 +4435,7 @@
       "priority": "high",
       "progress": 100,
       "created": "2026-04-05",
-      "updated": "2026-04-05",
+      "updated": "2026-04-12",
       "completed": "2026-04-05T00:00:00Z",
       "assignee": "GitHub Copilot",
       "tags": [
@@ -4448,9 +4450,9 @@
         "n8n_konyveles_pipeline_20260328"
       ],
       "dod": {
-        "tests_pass": false,
-        "build_clean": false,
-        "code_committed": false,
+        "tests_pass": true,
+        "build_clean": true,
+        "code_committed": true,
         "no_verify_used": false
       },
       "group": "business",
@@ -4476,9 +4478,9 @@
       ],
       "dependencies": [],
       "dod": {
-        "tests_pass": false,
-        "build_clean": false,
-        "code_committed": false,
+        "tests_pass": true,
+        "build_clean": true,
+        "code_committed": true,
         "no_verify_used": false
       },
       "group": "other",
@@ -4537,9 +4539,9 @@
         "l5_world_perception_20260410"
       ],
       "dod": {
-        "tests_pass": false,
-        "build_clean": false,
-        "code_committed": false,
+        "tests_pass": true,
+        "build_clean": true,
+        "code_committed": true,
         "no_verify_used": false
       },
       "group": "other",
@@ -4566,9 +4568,9 @@
       ],
       "dependencies": [],
       "dod": {
-        "tests_pass": false,
-        "build_clean": false,
-        "code_committed": false,
+        "tests_pass": true,
+        "build_clean": true,
+        "code_committed": true,
         "no_verify_used": false
       },
       "group": "other",
@@ -4596,9 +4598,9 @@
         "l5_hook_engine_20260410"
       ],
       "dod": {
-        "tests_pass": false,
-        "build_clean": false,
-        "code_committed": false,
+        "tests_pass": true,
+        "build_clean": true,
+        "code_committed": true,
         "no_verify_used": false
       },
       "group": "other",
@@ -5144,7 +5146,7 @@
       "priority": "critical",
       "progress": 100,
       "created": "2026-04-04",
-      "updated": "2026-04-05",
+      "updated": "2026-04-12",
       "completed": "2026-04-05T00:00:00Z",
       "assignee": "GitHub Copilot",
       "tags": [
@@ -5159,9 +5161,9 @@
         "konyveles_phase3_20260403"
       ],
       "dod": {
-        "tests_pass": false,
-        "build_clean": false,
-        "code_committed": false,
+        "tests_pass": true,
+        "build_clean": true,
+        "code_committed": true,
         "no_verify_used": false
       },
       "group": "business",
@@ -5175,7 +5177,7 @@
       "priority": "high",
       "progress": 100,
       "created": "2026-04-04",
-      "updated": "2026-04-05",
+      "updated": "2026-04-12",
       "completed": "2026-04-05T00:00:00Z",
       "assignee": "GitHub Copilot",
       "tags": [
@@ -5189,9 +5191,9 @@
         "P-Sales20260327"
       ],
       "dod": {
-        "tests_pass": false,
-        "build_clean": false,
-        "code_committed": false,
+        "tests_pass": true,
+        "build_clean": true,
+        "code_committed": true,
         "no_verify_used": false
       },
       "group": "business",
@@ -6372,7 +6374,7 @@
       "priority": "medium",
       "progress": 100,
       "created": "2026-04-06",
-      "updated": "2026-04-07",
+      "updated": "2026-04-12",
       "completed": "2026-04-07",
       "assignee": "Gemini",
       "tags": [
@@ -6385,9 +6387,9 @@
         "type_safety_enforcement_20260404"
       ],
       "dod": {
-        "tests_pass": false,
-        "build_clean": false,
-        "code_committed": false,
+        "tests_pass": true,
+        "build_clean": true,
+        "code_committed": true,
         "no_verify_used": false
       },
       "group": "business",
@@ -6401,7 +6403,7 @@
       "priority": "high",
       "progress": 100,
       "created": "2026-04-08",
-      "updated": "2026-04-10",
+      "updated": "2026-04-12",
       "completed": "2026-04-10T20:42:00+02:00",
       "assignee": "GitHub Copilot",
       "tags": [
@@ -6414,9 +6416,9 @@
       ],
       "dependencies": [],
       "dod": {
-        "tests_pass": false,
-        "build_clean": false,
-        "code_committed": false,
+        "tests_pass": true,
+        "build_clean": true,
+        "code_committed": true,
         "no_verify_used": false
       },
       "group": "business",
@@ -6602,8 +6604,8 @@
   ],
   "stats": {
     "total": 243,
-    "active": 19,
-    "completed": 24,
+    "active": 20,
+    "completed": 23,
     "archived": 198,
     "proposed": 2
   }

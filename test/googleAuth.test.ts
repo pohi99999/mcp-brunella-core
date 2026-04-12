@@ -54,6 +54,10 @@ describe('googleAuth', () => {
   beforeEach(() => {
     vi.resetModules();
     vi.unstubAllEnvs();
+    // Ensure we start with a clean environment, isolated from real .env
+    vi.stubEnv('GOOGLE_WORKSPACE_CREDENTIALS_FILE', '');
+    vi.stubEnv('GOOGLE_WORKSPACE_TOKEN_FILE', '');
+    
     existsSyncMock.mockReset().mockReturnValue(false);
     mkdirMock.mockReset().mockResolvedValue(undefined);
     readFileMock.mockReset();

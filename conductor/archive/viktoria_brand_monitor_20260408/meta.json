@@ -2,12 +2,12 @@
   "id": "viktoria_brand_monitor_20260408",
   "name": "VIKTORIAVARGA brand monitor",
   "title": "VIKTORIAVARGA brand monitor",
-  "status": "active",
+  "status": "archived",
   "priority": "high",
   "created": "2026-04-08",
-  "updated": "2026-04-08",
+  "updated": "2026-04-12T13:05:00Z",
   "assignee": "GitHub Copilot",
-  "progress": 0,
+  "progress": 100,
   "tags": [
     "viktoria",
     "monitoring",
@@ -23,10 +23,13 @@
   "sourceDocument": "User request for VIKTORIAVARGA brand stack",
   "phase": 5,
   "group": "business",
+  "completedAt": "2026-04-12T13:05:00Z",
+  "archivedAt": "2026-04-12T13:05:00Z",
+  "archiveReason": "Manual scheduled-task trigger now rejects unsupported handlers and failure results; archived after validation.",
   "dod": {
-    "tests_pass": false,
-    "build_clean": false,
-    "code_committed": false,
+    "tests_pass": true,
+    "build_clean": true,
+    "code_committed": true,
     "no_verify_used": false
   }
 }

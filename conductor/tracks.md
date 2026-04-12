@@ -1,10 +1,10 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-04-12T00:17:43.705Z
+**Utolso frissites:** 2026-04-12T11:00:00.461Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 243 total | 19 active | 24 completed | 198 archived
+**Stats:** 243 total | 17 active | 23 completed | 201 archived
 **Csoportok:** Könyvelés / üzleti automatizálás: 52 | Nova asszisztens: 23 | Brunella rendszer: 94 | Egyéb: 74
 
 ---
@@ -28,9 +28,9 @@
 
 ---
 
-## Aktiv Szalak (Active) (19)
+## Aktiv Szalak (Active) (20)
 
-### Könyvelés / üzleti automatizálás (10)
+### Könyvelés / üzleti automatizálás (11)
 
 - [ ] **KKV uzleti automatizalas masterplan** [HIGH]
   - **ID:** `kkv_business_automation_20260408`
@@ -66,6 +66,13 @@
   - **Updated:** 2026-04-11
   - Mappa: ./tracks/l5_invoice_zerotouchl_20260410/
 
+- [ ] **P-Sales Human-in-Loop Revenue Pipeline — Lead gen, onboarding, KKV + Brand csatornák** [HIGH]
+  - **ID:** `psales_human_loop_revenue_20260407`
+  - **Progress:** 35%
+  - **Assignee:** GitHub Copilot
+  - **Updated:** 2026-04-12T02:24:00.000Z
+  - Mappa: ./tracks/psales_human_loop_revenue_20260407/
+
 - [ ] **Pohánka freelancer terjeszkedés és profilrendszer** [HIGH]
   - **ID:** `pohanka_freelancer_terjeszkedes_20260408`
   - **Progress:** 5%
@@ -73,33 +80,12 @@
   - **Updated:** 2026-04-08
   - Mappa: ./tracks/pohanka_freelancer_terjeszkedes_20260408/
 
-- [ ] **VIKTORIAVARGA brand monitor** [HIGH]
-  - **ID:** `viktoria_brand_monitor_20260408`
-  - **Progress:** 0%
-  - **Assignee:** GitHub Copilot
-  - **Updated:** 2026-04-08
-  - Mappa: ./tracks/viktoria_brand_monitor_20260408/
-
 - [ ] **VIKTORIAVARGA phygital pipeline** [HIGH]
   - **ID:** `viktoria_phygital_pipeline_20260408`
   - **Progress:** 0%
   - **Assignee:** GitHub Copilot
   - **Updated:** 2026-04-08
   - Mappa: ./tracks/viktoria_phygital_pipeline_20260408/
-
-- [ ] **VIKTORIAVARGA shopping assistant** [HIGH]
-  - **ID:** `viktoria_shopping_assistant_20260408`
-  - **Progress:** 0%
-  - **Assignee:** GitHub Copilot
-  - **Updated:** 2026-04-08
-  - Mappa: ./tracks/viktoria_shopping_assistant_20260408/
-
-- [ ] **VIKTORIAVARGA social concierge** [HIGH]
-  - **ID:** `viktoria_social_concierge_20260408`
-  - **Progress:** 0%
-  - **Assignee:** GitHub Copilot
-  - **Updated:** 2026-04-08
-  - Mappa: ./tracks/viktoria_social_concierge_20260408/
 
 
 ### Nova asszisztens (5)
@@ -156,11 +142,18 @@
   - **Updated:** 2026-04-08
   - Mappa: ./tracks/p-search_20260408/
 
-- [ ] **Modular State Refactor — Globális változók Dependency Injection alapú refaktora** [MEDIUM]
+- [x] **Modular State Refactor — Globális változók Dependency Injection alapú refaktora** [MEDIUM]
   - **ID:** `modular_state_refactor_20260404`
-  - **Progress:** 30%
+  - **Progress:** 100%
+  - **Status:** COMPLETED
   - **Assignee:** Gemini
-  - **Updated:** 2026-04-06
+  - **Updated:** 2026-04-12
+  - **DoD:**
+    - tests_pass: true
+    - build_clean: true
+    - code_committed: true
+    - no_verify_used: false
+  - **Verification:** Dashboard API és CLI parancsok verifikálva. Regressziós tesztek PASS.
   - Mappa: ./tracks/modular_state_refactor_20260404/
 
 
@@ -176,9 +169,9 @@
 
 ---
 
-## Befejezett (Completed - Not Archived) (24)
+## Befejezett (Completed - Not Archived) (23)
 
-### Könyvelés / üzleti automatizálás (12)
+### Könyvelés / üzleti automatizálás (11)
 
 - [x] **KKV CRM es lead-utanakovetes automatizalas**
   - **ID:** `kkv_crm_automation_20260404`
@@ -216,16 +209,13 @@
 
 - [x] **Logistics Vertical — repository-local Brunella boundary**
   - **ID:** `logistics_vertical_repo_local_20260407`
+  - **Completed:** 2026-04-07T23:59:59.000Z
   - Mappa: ./tracks/logistics_vertical_repo_local_20260407/
 
 - [x] **n8n Könyvelési Pipeline — Bank + KP + szamlazz.hu**
   - **ID:** `n8n_konyveles_pipeline_20260328`
   - **Completed:** 2026-04-03
   - Mappa: ./tracks/n8n_konyveles_pipeline_20260328/
-
-- [x] **P-Sales Human-in-Loop Revenue Pipeline — Lead gen, onboarding, KKV + Brand csatornák**
-  - **ID:** `psales_human_loop_revenue_20260407`
-  - Mappa: ./tracks/psales_human_loop_revenue_20260407/
 
 - [x] **KKV marketing es kommunikacios automatizalas**
   - **ID:** `kkv_marketing_automation_20260404`
@@ -329,6 +319,9 @@
 - [x] **Real Estate Sales Campaign (Asset Analyst + Corporate Hunter)** (2026-02-16T00:00:00Z)
 - [x] **Számla Adatkinyerés és Google Sheets Automatizáció** (2026-02-17T21:05:00Z)
 - [x] **VIKTORIAVARGA brand voice foundation** (2026-04-10T20:42:00+02:00)
+- [x] **VIKTORIAVARGA brand monitor** (2026-04-12T13:05:00Z)
+- [x] **VIKTORIAVARGA shopping assistant** (2026-04-12T13:05:00Z)
+- [x] **VIKTORIAVARGA social concierge** (2026-04-12T13:05:00Z)
 - [x] **Automata Kampány Generátor Ügynök és UI** (2026-02-25)
 - [x] **Autonóm Készlet- és Leltárkezelési Rendszer — KKV**
 - [x] **Cserszegtomaj AI Turizmus Kampány** (2026-03-22T22:47:34Z)

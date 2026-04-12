@@ -19,12 +19,8 @@
   - Hozzáadva: `testResultsService.ts` `getTestResultsDb()` getter.
 - [x] Unit tesztek frissítése (valódi izoláció tesztelése).
 
-### 4. Fázis: Verifikáció
-- [x] Teljes teszt suite futtatása (`npm run test:fast`).
-- [x] Memória-leak ellenőrzés (szolgáltatások leállítása után ne maradjon nyitott handle).
-
-## 🎨 Dashboard Integráció
-- [ ] A Dashboard API végpontok válaszidejének és stabilitásának ellenőrzése az új architektúra alatt.
-
-## 🖥️ CLI Integráció
-- [ ] CLI parancsok (pl. `memoria lista`) működésének ellenőrzése.
+## 🏁 4. Fázis: Verifikáció és Lezárás
+- [x] A Dashboard API végpontok válaszidejének és stabilitásának ellenőrzése az új architektúra alatt.
+- [x] CLI parancsok (pl. `memoria lista`) működésének ellenőrzése.
+- [x] Regressziós tesztek futtatása (`npm run test:fast`) — MIND PASS.
+- [x] Dokumentáció frissítése és a track lezárása.

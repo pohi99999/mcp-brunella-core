@@ -2,12 +2,12 @@
   "id": "viktoria_social_concierge_20260408",
   "name": "VIKTORIAVARGA social concierge",
   "title": "VIKTORIAVARGA social concierge",
-  "status": "active",
+  "status": "archived",
   "priority": "high",
   "created": "2026-04-08",
-  "updated": "2026-04-08",
+  "updated": "2026-04-12T13:05:00Z",
   "assignee": "GitHub Copilot",
-  "progress": 0,
+  "progress": 100,
   "tags": [
     "viktoria",
     "social",
@@ -22,10 +22,13 @@
   "sourceDocument": "User request for VIKTORIAVARGA brand stack",
   "phase": 2,
   "group": "business",
+  "completedAt": "2026-04-12T13:05:00Z",
+  "archivedAt": "2026-04-12T13:05:00Z",
+  "archiveReason": "Social concierge agent and tests delivered; archived after validation.",
   "dod": {
-    "tests_pass": false,
-    "build_clean": false,
-    "code_committed": false,
+    "tests_pass": true,
+    "build_clean": true,
+    "code_committed": true,
     "no_verify_used": false
   }
 }

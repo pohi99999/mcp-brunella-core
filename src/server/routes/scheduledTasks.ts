@@ -32,6 +32,21 @@ function normalizeMetadata(value: unknown): string {
   return '{}';
 }
 
+const manualTriggerHandlers = new Set([
+  'agent',
+  'scan-todos',
+  'python_script',
+  'crm_follow_up_dispatch',
+  'hr_timesheet_monthly_export',
+  'hr_timesheet_daily_alerts',
+  'jules_automation',
+  'learning_loop_cycle',
+  'self_modification_cycle',
+  'world_perception_cycle',
+  'predictive_decision',
+  'project_maintainer',
+]);
+
 export function createScheduledTasksRoutes(db: Database.Database): Router {
   const router = Router();
 
@@ -239,30 +254,35 @@ export function createScheduledTasksRoutes(db: Database.Database): Router {
         return res.status(404).json({ error: 'Task not found' });
       }
 
-      // Execute based on handler type
-      let result: unknown = {};
-      if (task.handler === 'scan-todos') {
-        // Trigger suggested tasks scan
-        const scanResult = await fetch('http://localhost:3000/api/v1/suggested-tasks/scan', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ source: 'scheduled', taskId: id }),
-        });
+      if (!manualTriggerHandlers.has(task.handler)) {
+        return res.status(422).json({ error: `Unsupported handler: ${task.handler}` });
+      }
 
-        result = await scanResult.json();
-      } else if (task.handler === 'hr_timesheet_monthly_export' || task.handler === 'hr_timesheet_daily_alerts') {
-        const { scheduledTasksRunner } = await import('../schedulers/scheduledTasksRunner.js');
-        result = await scheduledTasksRunner.executeTask({
-          id: task.id,
-          title: task.title,
-          prompt: task.prompt,
-          cron_expression: task.cron_expression,
-          handler: task.handler,
-          enabled: task.enabled,
-          metadata: task.metadata ?? null,
+      const { scheduledTasksRunner } = await import('../schedulers/scheduledTasksRunner.js');
+      const result = await scheduledTasksRunner.executeTask({
+        id: task.id,
+        title: task.title,
+        prompt: task.prompt,
+        cron_expression: task.cron_expression,
+        handler: task.handler,
+        enabled: task.enabled,
+        metadata: task.metadata ?? null,
+      });
+
+      const resultRecord = result && typeof result === 'object' ? result as Record<string, unknown> : null;
+      if (resultRecord && (resultRecord.success === false || resultRecord.status === 'failed')) {
+        const now = new Date().toISOString();
+        db.prepare(`
+          UPDATE scheduled_tasks
+          SET last_run_at = ?, last_status = ?, last_result = ?
+          WHERE id = ?
+        `).run(now, 'failed', JSON.stringify(result), id);
+
+        return res.status(500).json({
+          success: false,
+          error: 'Task execution failed',
+          result,
         });
-      } else {
-        result = { message: 'Unknown handler type' };
       }
 
       // Update last run

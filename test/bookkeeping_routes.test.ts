@@ -4,7 +4,7 @@ import os from 'os';
 import path from 'path';
 import request from 'supertest';
 import { beforeEach, afterEach, describe, expect, it, vi } from 'vitest';
-import { initDB, saveTransaction, createCashEntry } from '../src/data/bookkeeping_db.js';
+import { initDB, saveTransaction, createCashEntry, saveReconciliationEvent } from '../src/data/bookkeeping_db.js';
 import { createBookkeepingRoutes } from '../src/server/routes/bookkeeping.js';
 import type { BookkeepingTransaction } from '../src/types/bookkeeping.d.js';
 
@@ -56,6 +56,11 @@ const { readinessMock, readinessReport } = vi.hoisted(() => ({
     },
 }));
 
+const { notificationConfiguredMock, sendNotificationEmailMock } = vi.hoisted(() => ({
+    notificationConfiguredMock: vi.fn(),
+    sendNotificationEmailMock: vi.fn(),
+}));
+
 vi.mock('../src/utils/logger.js', () => ({
     logInfo: vi.fn(),
     logError: vi.fn(),
@@ -71,6 +76,11 @@ vi.mock('../src/utils/bookkeepingReadiness.js', () => ({
     buildBookkeepingReadinessReport: readinessMock,
 }));
 
+vi.mock('../src/utils/notificationService.js', () => ({
+    isNotificationEmailConfigured: notificationConfiguredMock,
+    sendNotificationEmail: sendNotificationEmailMock,
+}));
+
 describe('Bookkeeping routes', () => {
     let tempDir: string;
     let statusPath: string;
@@ -83,10 +93,14 @@ describe('Bookkeeping routes', () => {
         seedDatabase();
         delegateMock.mockReset();
         readinessMock.mockReset();
+        notificationConfiguredMock.mockReset();
+        sendNotificationEmailMock.mockReset();
         readinessMock.mockReturnValue(readinessReport);
         delegateMock.mockResolvedValue({
             status: 'delegated',
         });
+        notificationConfiguredMock.mockReturnValue(false);
+        sendNotificationEmailMock.mockResolvedValue({ sent: true, message: 'Email sent' });
     });
 
     afterEach(async () => {
@@ -331,6 +345,110 @@ describe('Bookkeeping routes', () => {
             KP_IN: 1,
             KP_OUT: 1,
         });
+    });
+
+    it('lists reconciliation events and exposes exception counts', async () => {
+        const app = createApp();
+
+        saveReconciliationEvent({
+            runId: 'run-a',
+            txId: 'bank_1',
+            invoiceId: 'INV-100',
+            outcome: 'MATCHED',
+            matchType: 'HARD_MATCH',
+            confidence: 99,
+            notes: 'Matched by invoice number',
+        });
+        saveReconciliationEvent({
+            runId: 'run-a',
+            txId: 'bank_2',
+            outcome: 'UNMATCHED',
+            confidence: 17,
+            notes: 'Needs manual review',
+        });
+        saveReconciliationEvent({
+            runId: 'run-b',
+            txId: 'nav_1',
+            invoiceId: 'INV-200',
+            outcome: 'ERROR',
+            notes: 'Upstream service timeout',
+        });
+
+        const response = await request(app)
+            .get('/api/v1/bookkeeping/reconciliation-events')
+            .query({ run_id: 'run-a', limit: 1 });
+
+        expect(response.status).toBe(200);
+        expect(response.body.success).toBe(true);
+        expect(response.body.total).toBe(1);
+        expect(response.body.exceptionCount).toBe(2);
+        expect(response.body.events).toHaveLength(1);
+        expect(response.body.events[0]).toMatchObject({
+            runId: 'run-a',
+            txId: 'bank_2',
+            outcome: 'UNMATCHED',
+            confidence: 17,
+        });
+    });
+
+    it('sends a summary email when the notification service is configured', async () => {
+        const app = createApp();
+        notificationConfiguredMock.mockReturnValue(true);
+
+        saveTransaction({
+            id: 'txn-unmatched',
+            source: 'EmailAgent',
+            data: {
+                reference: 'EMAIL-001',
+                amount: 12500,
+                partner: 'Kiemelt Partner',
+                date: '2026-03-30',
+            },
+            status: 'UNMATCHED',
+        });
+        saveTransaction({
+            id: 'txn-error',
+            source: 'NAV',
+            data: {
+                invoiceNumber: 'INV-999',
+                amount: 3200,
+            },
+            status: 'ERROR',
+        });
+
+        const response = await request(app).post('/api/v1/bookkeeping/summary-email');
+
+        expect(response.status).toBe(200);
+        expect(response.body).toEqual({
+            success: true,
+            message: 'Summary email sent',
+        });
+        expect(sendNotificationEmailMock).toHaveBeenCalledTimes(1);
+
+        const emailPayload = sendNotificationEmailMock.mock.calls[0]?.[0] as {
+            subject: string;
+            text: string;
+            html: string;
+        };
+
+        expect(emailPayload.subject).toContain('2 kivétel');
+        expect(emailPayload.text).toContain('Összesen 5 tranzakcióból 2 igényel kézi ellenőrzést.');
+        expect(emailPayload.html).toContain('Kiemelt Partner - 12500 HUF (UNMATCHED)');
+        expect(emailPayload.html).toContain('Ismeretlen - 3200 HUF (ERROR)');
+    });
+
+    it('rejects summary email delivery when the notification service is not configured', async () => {
+        const app = createApp();
+        notificationConfiguredMock.mockReturnValue(false);
+
+        const response = await request(app).post('/api/v1/bookkeeping/summary-email');
+
+        expect(response.status).toBe(503);
+        expect(response.body).toEqual({
+            success: false,
+            error: 'Email service not configured',
+        });
+        expect(sendNotificationEmailMock).not.toHaveBeenCalled();
     });
 
     it('updates transaction records and delegates reconciliation', async () => {

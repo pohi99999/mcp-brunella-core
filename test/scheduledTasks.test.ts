@@ -1,10 +1,20 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
+import express from "express";
+import request from "supertest";
 import { ScheduledTasksEngine } from "../src/core/scheduledTasksEngine.js";
+import { createScheduledTasksRoutes } from "../src/server/routes/scheduledTasks.js";
 
 // Mock dependencies
 vi.mock("../src/utils/logger.js", () => ({
   logInfo: vi.fn(),
   logError: vi.fn(),
+}));
+
+const executeTaskMock = vi.hoisted(() => vi.fn(async () => ({ success: true, message: "ok" })));
+vi.mock("../src/server/schedulers/scheduledTasksRunner.js", () => ({
+  scheduledTasksRunner: {
+    executeTask: executeTaskMock,
+  },
 }));
 
 // Mock node-cron
@@ -49,6 +59,7 @@ vi.mock("better-sqlite3", () => {
 describe("ScheduledTasksEngine Integráció", () => {
   let db: any;
   let engine: ScheduledTasksEngine;
+  let app: express.Express;
 
   beforeEach(async () => {
     vi.clearAllMocks();
@@ -68,6 +79,14 @@ describe("ScheduledTasksEngine Integráció", () => {
     // @ts-expect-error
     db = new Database(":memory:");
     engine = new ScheduledTasksEngine(db as any);
+
+    app = express();
+    app.use(express.json());
+    app.use((req, _res, next) => {
+      (req as any).scheduledTasksEngine = engine;
+      next();
+    });
+    app.use("/api/v1/scheduled-tasks", createScheduledTasksRoutes(db as any));
   });
 
   afterEach(() => {
@@ -130,6 +149,73 @@ describe("ScheduledTasksEngine Integráció", () => {
 
       // Check that the date is in the future
       expect(date.getTime()).toBeGreaterThan(Date.now());
+    });
+
+    it("should execute non-scan handlers through the scheduler runner", async () => {
+      mockPrepare.mockReturnValueOnce({
+        get: vi.fn().mockReturnValue({
+          id: "agent-task",
+          title: "Agent Task",
+          prompt: "prompt",
+          cron_expression: "0 * * * *",
+          handler: "agent",
+          enabled: 1,
+          metadata: null,
+        }),
+      });
+
+      const response = await request(app).post("/api/v1/scheduled-tasks/agent-task/trigger");
+      expect(response.status).toBe(200);
+      expect(response.body.success).toBe(true);
+      expect(executeTaskMock).toHaveBeenCalledTimes(1);
+      expect(executeTaskMock).toHaveBeenCalledWith(expect.objectContaining({
+        id: "agent-task",
+        handler: "agent",
+        title: "Agent Task",
+      }));
+    });
+
+    it("should reject unsupported handlers on manual trigger", async () => {
+      mockPrepare.mockReturnValueOnce({
+        get: vi.fn().mockReturnValue({
+          id: "unsupported-task",
+          title: "Unsupported Task",
+          prompt: "prompt",
+          cron_expression: "0 * * * *",
+          handler: "brand_monitor",
+          enabled: 1,
+          metadata: null,
+        }),
+      });
+
+      const response = await request(app).post("/api/v1/scheduled-tasks/unsupported-task/trigger");
+      expect(response.status).toBe(422);
+      expect(response.body.error).toContain("Unsupported handler");
+      expect(executeTaskMock).not.toHaveBeenCalled();
+    });
+
+    it("should return a non-success status when the runner reports failure", async () => {
+      executeTaskMock.mockResolvedValueOnce({ success: false, error: "runner failed" });
+      mockPrepare.mockReturnValueOnce({
+        get: vi.fn().mockReturnValue({
+          id: "failed-task",
+          title: "Failed Task",
+          prompt: "prompt",
+          cron_expression: "0 * * * *",
+          handler: "agent",
+          enabled: 1,
+          metadata: null,
+        }),
+      });
+
+      const response = await request(app).post("/api/v1/scheduled-tasks/failed-task/trigger");
+
+      expect(response.status).toBe(500);
+      expect(response.body).toEqual({
+        success: false,
+        error: "Task execution failed",
+        result: { success: false, error: "runner failed" },
+      });
     });
   });
 });

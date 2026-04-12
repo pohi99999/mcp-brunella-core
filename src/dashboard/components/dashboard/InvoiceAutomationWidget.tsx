@@ -1,49 +1,67 @@
-import { useMemo, useState } from "react";
+import { useState, type ReactNode } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { executeAgent } from "@/lib/apiService";
 import { toast } from "sonner";
-import { 
-  RefreshCcw, 
-  FileSpreadsheet, 
-  Mail, 
-  Search, 
-  FileCheck, 
-  CheckCircle2, 
-  HardDrive,
-  AlertTriangle 
-} from "lucide-react";
+import
+  {
+    RefreshCcw,
+    FileSpreadsheet,
+    Mail,
+    Search,
+    FileCheck,
+    CheckCircle2,
+    HardDrive,
+    AlertTriangle
+  } from "lucide-react";
 
 type ProcessStatus = "idle" | "running" | "success" | "error";
 
-export function InvoiceAutomationWidget() {
-  const [status, setStatus] = useState<ProcessStatus>("idle");
-  const [progress, setProgress] = useState(0);
-  const [result, setResult] = useState<any>(null);
+type InvoiceAutomationResult = {
+  processedCount?: number;
+  failedCount?: number;
+};
 
-  const handleProcess = async () => {
-    setStatus("running");
-    setProgress(20);
-    toast.info("Számlák keresése és feldolgozása elindult...");
-    
-    try {
+export function InvoiceAutomationWidget ()
+{
+  const [status, setStatus] = useState<ProcessStatus>( "idle" );
+  const [progress, setProgress] = useState( 0 );
+  const [result, setResult] = useState<InvoiceAutomationResult | null>( null );
+
+  const handleProcess = async () =>
+  {
+    setResult( null );
+    setStatus( "running" );
+    setProgress( 20 );
+    toast.info( "Számlák keresése és feldolgozása elindult..." );
+
+    try
+    {
       // Execute the new InvoiceAutomation agent
-      const res = await executeAgent("InvoiceAutomation", "process all invoices from gmail");
-      
-      setProgress(100);
-      if (res.success) {
-        setResult(res.data);
-        setStatus("success");
-        toast.success(res.message || "Feldolgozás sikeresen befejeződött.");
-      } else {
-        throw new Error(res.message || "Ismeretlen hiba az ügynök futtatása során.");
+      const res = await executeAgent( "InvoiceAutomation", "process all invoices from gmail" ) as {
+        success?: boolean;
+        message?: string;
+        data?: InvoiceAutomationResult;
+      };
+
+      setProgress( 100 );
+      if ( res.success )
+      {
+        setResult( res.data ?? null );
+        setStatus( "success" );
+        toast.success( res.message || "Feldolgozás sikeresen befejeződött." );
+      } else
+      {
+        throw new Error( res.message || "Ismeretlen hiba az ügynök futtatása során." );
       }
-    } catch (e: any) {
-      console.error("[InvoiceAutomation]", e.message);
-      setStatus("error");
-      toast.error(`Hiba: ${e.message}`);
+    } catch ( error: unknown )
+    {
+      const message = error instanceof Error ? error.message : String( error );
+      console.error( "[InvoiceAutomation]", message );
+      setStatus( "error" );
+      toast.error( `Hiba: ${ message }` );
     }
   };
 
@@ -60,7 +78,7 @@ export function InvoiceAutomationWidget() {
           </Badge>
         </CardTitle>
       </CardHeader>
-      
+
       <CardContent className="p-4 flex-1 flex flex-col justify-between space-y-6">
         <div className="space-y-4">
           <div className="flex items-center justify-between">
@@ -79,7 +97,7 @@ export function InvoiceAutomationWidget() {
           <div className="space-y-2">
             <div className="flex justify-between text-[10px] font-mono text-zinc-500 uppercase">
               <span>Feldolgozás</span>
-              <span>{Math.round(progress)}%</span>
+              <span>{Math.round( progress )}%</span>
             </div>
             <Progress value={progress} className="h-1 bg-white/[0.04]" />
           </div>
@@ -115,8 +133,8 @@ export function InvoiceAutomationWidget() {
             </div>
           )}
 
-          <Button 
-            onClick={handleProcess} 
+          <Button
+            onClick={handleProcess}
             disabled={status === "running"}
             className="w-full gap-2 bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 border border-blue-500/20 transition-all hover:scale-[1.01]"
           >
@@ -129,13 +147,13 @@ export function InvoiceAutomationWidget() {
   );
 }
 
-function StepIcon({ icon, label, active, done }: { icon: React.ReactNode, label: string, active: boolean, done: boolean }) {
+function StepIcon ( { icon, label, active, done }: { icon: ReactNode, label: string, active: boolean, done: boolean } )
+{
   return (
-    <div className={`p-2 rounded-lg border flex flex-col items-center gap-1 transition-all ${
-      done ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-400" : 
-      active ? "bg-blue-500/10 border-blue-500/20 text-blue-400 animate-pulse" : 
-      "bg-white/[0.02] border-white/[0.04] text-zinc-600"
-    }`}>
+    <div className={`p-2 rounded-lg border flex flex-col items-center gap-1 transition-all ${ done ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-400" :
+        active ? "bg-blue-500/10 border-blue-500/20 text-blue-400 animate-pulse" :
+          "bg-white/[0.02] border-white/[0.04] text-zinc-600"
+      }`}>
       {icon}
       <span className="text-[8px] uppercase font-bold">{label}</span>
     </div>
