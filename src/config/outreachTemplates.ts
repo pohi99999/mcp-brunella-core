@@ -31,11 +31,7 @@ export const outreachTemplates: OutreachTemplate[] = [
     platform: 'email',
     category: 'KKV',
     subject: 'AI automatizáció a {company} értékesítésében?',
-    body: 'Kedves {name}!
-
-A LinkedInen már kerestelek, de gondoltam itt is jelzem: a Brunella Agent System-mel segítünk a hozzátok hasonló magyar KKV-knak automatizálni a lead-generálást és az adminisztrációt. A cél, hogy a csapatod csak az érdemi tárgyalásokra fókuszáljon.
-
-Mikor lenne alkalmas egy 15 perces rövid demo?',
+    body: 'Kedves {name}!\n\nA LinkedInen már kerestelek, de gondoltam itt is jelzem: a Brunella Agent System-mel segítünk a hozzátok hasonló magyar KKV-knak automatizálni a lead-generálást és az adminisztrációt. A cél, hogy a csapatod csak az érdemi tárgyalásokra fókuszáljon.\n\nMikor lenne alkalmas egy 15 perces rövid demo?',
     variables: ['name', 'company']
   }
 ];

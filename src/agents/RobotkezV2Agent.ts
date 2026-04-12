@@ -162,7 +162,7 @@ export class RobotkezV2Agent extends BaseAgent {
     try {
       const response = await robotkezPro.verifyBrandSafety({
         brandMotto: 'Enjoy life in colours'
-      });
+      }) as any;
 
       logInfo(this.name, `Brand verification result: ${response.status}`);
       return response;

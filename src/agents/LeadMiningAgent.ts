@@ -1,5 +1,6 @@
 // src/agents/LeadMiningAgent.ts
 import { BaseAgent, AgentContext, AgentResult } from './BaseAgent.js';
+import { AgentResponse } from './types.js';
 import { globalPythonShell } from '../utils/pythonShell.js';
 import { logInfo, logError, logWarn } from '../utils/logger.js';
 import { validateEmail } from '../services/emailValidator.js';
@@ -27,7 +28,7 @@ export class LeadMiningAgent extends BaseAgent {
             // 1. Scrape leads (LinkedIn via Apify or Google Maps via local worker)
             if (query.toLowerCase().includes('linkedin') || leadType === 'Brand') {
                 logInfo(this.name, "Delegating to ApifyScrapingAgent for social/B2B leads");
-                const scrapeResult = await agentManager.delegate('ApifyScraping', `scrape ${query}`, { limit: 10 });
+                const scrapeResult = (await agentManager.delegate('ApifyScraping', `scrape ${query}`, { limit: 10 })) as AgentResponse;
                 if (scrapeResult.status === 'success' && Array.isArray(scrapeResult.data)) {
                     leads = scrapeResult.data;
                 }
@@ -64,11 +65,11 @@ asyncio.run(run())
                     const targetUrl = lead.website || lead.url;
                     if (targetUrl && targetUrl.startsWith('http')) {
                         logInfo(this.name, `Analyzing website: ${targetUrl}`);
-                        const analysisResult = await agentManager.delegate('Researcher', `Elemezd ezt a weboldalt: ${targetUrl}. Mi a fő értékajánlatuk és van-e friss hírük?`);
+                        const analysisResult = (await agentManager.delegate('Researcher', `Elemezd ezt a weboldalt: ${targetUrl}. Mi a fő értékajánlatuk és van-e friss hírük?`)) as AgentResponse;
                         webContext = analysisResult.status === 'success' ? String(analysisResult.data) : "";
                     }
 
-                    const ibResult = await agentManager.delegate('copywriter', `Készíts egy rövid, személyes megnyitó üzenetet (icebreaker) ehhez a céghez: ${lead.name || lead.company || 'Névtelen'}. Weboldal kontextus: ${webContext}. Relevancia: KKV automatizáció.`);
+                    const ibResult = (await agentManager.delegate('copywriter', `Készíts egy rövid, személyes megnyitó üzenetet (icebreaker) ehhez a céghez: ${lead.name || lead.company || 'Névtelen'}. Weboldal kontextus: ${webContext}. Relevancia: KKV automatizáció.`)) as AgentResponse;
                     icebreaker = ibResult.status === 'success' ? String(ibResult.data) : "";
                 } catch (e) {
                     logWarn(this.name, "Icebreaker delegation failed, skipping.");

@@ -2641,3 +2641,13 @@ Feladat: A Toura worktree visszaállítása, a belső Iszapfaló pályázatfigye
 Érintett fájlok: `.worktrees/toura/.000_PROJEKTEK/Iszap_Projekt_uj/conductor/tracks/iszapfalo-palyazat-ugynok/{meta.json,plan.md,spec.md}`, `conductor/tracks/toura_local_dev_20260408/meta.json`
 Státusz: ✅ Befejezve
 Megjegyzés: A Toura repo most ismét elérhető lokálisan, az Iszapfaló grant-track active állapotba került, és a setup fázis lezárható.
+
+### 2026-04-12 23:20 - Phase 3 live n8n activation
+
+**Feladat:** A WF-6/WF-8/WF-9 live bookkeeping workflowk létrehozása, aktiválása, a régi duplikátumok törlése és a temp API kulcsok takarítása a live n8n dev projectben.
+
+**Érintett fájlok:** `conductor/tracks/n8n_konyveles_pipeline_20260328/n8n-workflows/wf6-szamlazz-outgoing-live.json`, `conductor/tracks/n8n_konyveles_pipeline_20260328/n8n-workflows/wf8-nav-validation-live.json`, `conductor/tracks/n8n_konyveles_pipeline_20260328/n8n-workflows/wf9-weekly-report-live.json`, `test/phase3_workflows.test.ts`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A három live workflow most aktív a dev projectben, a stale inactive duplikátumok és a temporary API kulcsok törölve lettek.

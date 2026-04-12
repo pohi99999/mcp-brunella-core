@@ -30,7 +30,14 @@
 
 ## Aktiv Szalak (Active) (9)
 
-### Könyvelés / üzleti automatizálás (4)
+### Könyvelés / üzleti automatizálás (5)
+
+- [~] **Könyvelési Automatizálás L5 — Finomítás és Intelligens Hibakezelés** [HIGH]
+  - **ID:** `bookkeeping_l5_refinement_20260412`
+  - **Progress:** 0%
+  - **Assignee:** GitHub Copilot
+  - **Updated:** 2026-04-12
+  - Mappa: ./tracks/bookkeeping_l5_refinement_20260412/
 
 - [ ] **Kognitív Könyvelés és Multi-Ágens Egyeztetés — Bővítmény** [HIGH]
   - **ID:** `konyveles_kognitiv_bovites_20260330`

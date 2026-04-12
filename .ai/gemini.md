@@ -1,3 +1,9 @@
+### 2026-04-12 23:55 - Könyvelés Phase 3 Befejezés és L5 Finomítás Indítása
+**Feladat:** A Számlázz.hu és NAV v3.0 integrációk teljes technikai implementációja és verifikációja.
+**Érintett fájlok:** src/utils/navSigner.ts, src/utils/navRequestBuilder.ts, src/utils/navClient.ts, src/agents/NavAgent.ts, src/utils/szamlazzRequestBuilder.ts, src/utils/szamlazzClient.ts, src/agents/SzamlazzHuAgent.ts, src/server/routes/bookkeeping.ts, n8n/workflows/wf6_szamlazz_creation.json
+**Státusz:** ✅ Befejezve (Phase 3), ⏳ Folyamatban (L5 Refinement)
+**Megjegyzés:** A Számlázz.hu XML Agent integráció sikeresen tesztelve éles API kulccsal (számlaszám: E-TST-2026-1). A NAV v3.0 SHA3-512 aláíró modul elkészült. Új track nyitva az IMAP élesítésére és a hibakezelés finomítására.
+
 ### 2026-04-12 23:30 - P-Sales Human-in-Loop Pipeline (85%)
 **Feladat:** A P-Sales értékesítési folyamat technikai és marketing alapjainak lefektetése: Webhook intake, CRM Sheets szinkron és outreach sablonok.
 **Érintett fájlok:** src/server/routes/onboardingIntake.ts, src/server/web.ts, myai/clients/crm_sheets_client.py, src/agents/LeadMiningAgent.ts, n8n/workflows/psales_onboarding_intake.json, src/config/outreachTemplates.ts, tasks/p_sales_guide.md, tasks/linkedin_profile_texts.md, tasks/case_study_varga_viktoria.md, conductor/tracks.md
