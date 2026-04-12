@@ -1,14 +1,15 @@
 {
   "id": "psales_human_loop_revenue_20260407",
+  "track_id": "psales_human_loop_revenue_20260407",
   "title": "P-Sales Human-in-Loop Revenue Pipeline — Lead gen, onboarding, KKV + Brand csatornák",
   "type": "Business / Revenue Development",
   "priority": "HIGH",
-  "status": "completed",
-  "progress": 100,
+  "status": "in_progress",
+  "progress": 35,
   "owner": "copilot",
   "assignee": "GitHub Copilot",
   "createdAt": "2026-04-07T03:43:48Z",
-  "updatedAt": "2026-04-08T03:20:53Z",
+  "updatedAt": "2026-04-12T02:24:00.000Z",
   "coverageAnalysis": "conductor/tracks/psales_human_loop_revenue_20260407/coverage.md",
   "gapAnalysis": "conductor/tracks/psales_human_loop_revenue_20260407/gaps.md",
   "bugsFixed": [
@@ -23,6 +24,11 @@
   "sourceDocuments": [
     ".worktrees/sel.md",
     ".worktrees/sel2.md"
+  ],
+  "blockerNotes": [
+    "Reopened on 2026-04-12 after forensic audit: the onboarding approval route stores and flips pending jobs but still does not dispatch the promised downstream pipeline after approval.",
+    "The checked-in n8n KKV and Brand workflows still send operator-facing actions before any explicit approval-safe gate.",
+    "Dedicated dashboard/test coverage for the onboarding-intake approval surface is missing, and secret wiring for BRUNELLA_WEBHOOK_SECRET is incomplete."
   ],
   "goal": "Pohánka Péter Brunella-alapú üzletének bevételtermelő csatornáit kiépíteni: P-Sales Human-in-Loop safety pipeline, automatizált lead-gen (KKV + prémium brand szegmens), Apify integráció, n8n onboarding intake, LinkedIn/Upwork piaci megjelenés.",
   "targetSegments": [

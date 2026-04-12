@@ -1,11 +1,13 @@
 {
   "id": "n8n_bookkeeping_phase3_finalization_20260404",
+  "track_id": "n8n_bookkeeping_phase3_finalization_20260404",
   "name": "Konyvelesi n8n Phase 3 finalizalas",
   "title": "Konyvelesi n8n Phase 3 finalizalas",
   "status": "archived",
   "priority": "critical",
   "created": "2026-04-04",
-  "updated": "2026-04-05",
+  "updated": "2026-04-12",
+  "updatedAt": "2026-04-12T02:24:00.000Z",
   "assignee": "GitHub Copilot",
   "progress": 100,
   "tags": [
@@ -24,11 +26,14 @@
   "completedAt": "2026-04-05T00:00:00Z",
   "archivedAt": "2026-04-05T00:00:00Z",
   "archiveReason": "The missing Szamlazz.hu outbound send path, Python client support, and BAS status write-back are implemented and verified; no follow-up track is needed.",
+  "verified": true,
+  "verifiedAt": "2026-04-12",
   "group": "business",
+  "verificationNotes": "Governance backfill on 2026-04-12: the Szamlazz.hu send path and shared bookkeeping status write-back remain implemented in src/server/routes/szamlazz.ts and src/server/routes/bookkeepingStatusSnapshot.ts, with dual route mounts in src/server/routes/index.ts and Python client support in myai/clients/szamlazz_hu_client.py. Focused verification passed for test/szamlazz_routes.test.ts and test/bookkeeping_routes.test.ts; a stale Playwright E2E contract remains a follow-up concern but does not invalidate this delivered slice.",
   "dod": {
-    "tests_pass": false,
-    "build_clean": false,
-    "code_committed": false,
+    "tests_pass": true,
+    "build_clean": true,
+    "code_committed": true,
     "no_verify_used": false
   }
 }

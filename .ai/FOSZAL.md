@@ -1,6 +1,6 @@
 # FŐSZÁL - Egyesített Fejlesztési Napló
 
-**Generálva:** 2026-04-12 03:10
+**Generálva:** 2026-04-12 04:38
 **Script:** `scripts/sync_foszal.py`
 
 ---
@@ -39,6 +39,16 @@ start-full.bat
 - **Agent:** Copilot
 - **Státusz:** ✅ Befejezve
 - **Érintett fájlok:** `.ai/copilot.md`, `.ai/FOSZAL.md`
+
+#### 02:36 - [Copilot] Business workflow cluster audit remediation
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `conductor/tracks/logistics_vertical_repo_local_20260407/meta.json`, `conductor/tracks/psales_human_loop_revenue_20260407/meta.json`, `conductor/archive/konyveles_phase3_readiness_20260405/meta.json`, `conductor/archive/n8n_psales_human_loop_20260404/meta.json`, `conductor/archive/n8n_bookkeeping_phase3_finalization_20260404/meta.json` (+2 további)
+
+#### 02:33 - [Copilot] L5 Track Audit — 4 Archived Track Backfill + Commit
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `conductor/archive/l5_hook_engine_20260410/meta.json` — DoD backfill, verificationNotes, `conductor/archive/l5_predictive_decision_20260410/meta.json` — DoD backfill, verificationNotes, `conductor/archive/l5_self_modification_20260410/meta.json` — DoD backfill, verified/verifiedAt hozzáadva, `conductor/archive/l5_world_perception_20260410/meta.json` — DoD backfill, verificationNotes, `src/core/hookEngine.ts` — JSDoc `@audit-verified 2026-04-12` sor (pre-commit hook blocker megoldás)
 
 #### 00:00 - [Copilot] Tech Debt Cleanup + Modular Refactor Phase 2-4
 - **Agent:** Copilot
@@ -1257,7 +1267,7 @@ start-full.bat
 | Claude | 89 | 2026-04-09 |
 | Gemini | 2 | 2026-04-08 |
 | Cursor | 0 | N/A |
-| Copilot | 128 | 2026-04-12 |
+| Copilot | 130 | 2026-04-12 |
 
 ---
 

@@ -1,11 +1,13 @@
 {
   "id": "logistics_vertical_repo_local_20260407",
+  "track_id": "logistics_vertical_repo_local_20260407",
   "name": "Logistics Vertical — repository-local Brunella boundary",
   "title": "Logistics Vertical — repository-local Brunella boundary",
-  "status": "COMPLETED",
+  "status": "completed",
   "priority": "high",
   "created": "2026-04-07",
-  "updated": "2026-04-07",
+  "updated": "2026-04-12",
+  "updatedAt": "2026-04-12T02:24:00.000Z",
   "assignee": "GitHub Copilot",
   "progress": 100,
   "tags": [
@@ -23,10 +25,14 @@
   "blocker": "PohiAIProt2 frontend repository is outside this workspace",
   "scope": "Repository-local only",
   "group": "business",
+  "completedAt": "2026-04-07T23:59:59.000Z",
+  "verified": true,
+  "verifiedAt": "2026-04-12",
+  "verificationNotes": "Governance backfill on 2026-04-12: the repo-local logistics boundary is implemented as a read-only surface in src/server/routes/logistics.ts, mounted through the main router, and validated by test/logisticsRoutes.test.ts. Shared operator discovery also remains available through the KKV pack cockpit and CLI surfaces in src/tools/kkvPack.ts, src/dashboard/components/dashboard/KKVPackCockpit.tsx, and src/cli/kkvPackCommands.ts.",
   "dod": {
-    "tests_pass": false,
-    "build_clean": false,
-    "code_committed": false,
+    "tests_pass": true,
+    "build_clean": true,
+    "code_committed": true,
     "no_verify_used": false
   }
 }
