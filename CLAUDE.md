@@ -9,7 +9,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **Brunella Agent System (BAS)** — Hibrid Node.js/Python multi-agent rendszer, MCP protokoll.
 TypeScript ESM, Express 4, React 19, Ollama, Gemini, GitHub Models, FastAPI, Cloudflare Workers.
-Méret: 95+ agent, 53 MCP tool, 52 route fájl, ~55 dashboard panel, 6 SQLite DB, 5 LLM provider.
+Méret: 87 agent (`src/agents/registry.json`), 53 MCP tool, 96+ route fájl, 108 dashboard panel, 6 SQLite DB, 5 LLM provider.
+> Pontos számok: `npm run sync:doc-stats` generálja a `.ai/BOOTSTRAP.md`-be.
 
 ---
 
@@ -40,7 +41,15 @@ npm run dev:ui         # Vite Dashboard :5173
 dashboard.bat          # Teljes indítás + browser megnyitás :5173 (Windows)
 start-full.bat         # Teljes Windows indítás (Ollama + FastAPI + backend + dashboard)
 npm run build:stable   # TypeScript + dashboard build egyben
+npm run start:stable   # Produkciós indítás (node --max-old-space-size=1536)
+npm run start:python:stable  # Python FastAPI produkciós indítás (uv run uvicorn)
 npm run smoke          # Health check
+
+# Sync & Validate
+npm run sync:doc-stats # .ai/BOOTSTRAP.md statisztikák frissítése
+npm run agent:health   # Agent egészség ellenőrzés
+npm run mcp:sync       # MCP config szinkronizálás
+npm run mcp:validate   # MCP config validálás
 
 # Tesztelés — mikor mit:
 npm run test:fast                    # Commit/push előtt (~1-2 perc) — pre-push hook is futtatja
@@ -56,7 +65,8 @@ npm run lint
 npm run lint:fix
 
 # CLI
-brunella                             # Interaktív menü
+brunella                             # Interaktív menü (nyilak + enter)
+brunella-hu                          # Magyar nyelvű interaktív menü
 brunella conductor status            # Track státusz
 node scripts/copilot-route.js "feladat"  # Agent routing (confidence score)
 node scripts/copilot-dashboard.js agents execute <name> "<task>"
@@ -97,6 +107,8 @@ npm run sync:bootstrap               # .ai/BOOTSTRAP.md regenerálása
 **Dashboard és CLI párhuzamos felületek:** `src/dashboard/lib/navigation.tsx` a panel regisztráció. `src/dashboard/` ki van zárva a fő `tsconfig.json`-ból. Minden új feature-höz mindkét felület kötelező.
 
 **Python kettős interfész:** `myai/server.py` FastAPI `:8000` + OpenAI-kompatibilis `/models`. `myai/mcp_server.py` Python toolokat expo stdio/SSE via FastMCP.
+
+**L5 Zero-Touch Invoice Pipeline:** `src/server/routes/invoiceEvents.ts` + `src/agents/InvoicePipelineAgent.ts` — bejövő számla eseményeket automatikusan dolgoz fel (parse → match → book). Hook-alapú: `src/core/agentHookEngine.ts` vezérli.
 
 ### SQLite adatbázisok
 

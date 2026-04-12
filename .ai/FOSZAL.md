@@ -1,6 +1,6 @@
 # FŐSZÁL - Egyesített Fejlesztési Napló
 
-**Generálva:** 2026-04-12 17:12
+**Generálva:** 2026-04-12 20:35
 **Script:** `scripts/sync_foszal.py`
 
 ---
@@ -87,6 +87,11 @@ start-full.bat
 - **Agent:** Copilot
 - **Státusz:** ✅ Befejezve
 - **Érintett fájlok:** `conductor/archive/l5_hook_engine_20260410/meta.json` — DoD backfill, verificationNotes, `conductor/archive/l5_predictive_decision_20260410/meta.json` — DoD backfill, verificationNotes, `conductor/archive/l5_self_modification_20260410/meta.json` — DoD backfill, verified/verifiedAt hozzáadva, `conductor/archive/l5_world_perception_20260410/meta.json` — DoD backfill, verificationNotes, `src/core/hookEngine.ts` — JSDoc `@audit-verified 2026-04-12` sor (pre-commit hook blocker megoldás)
+
+#### 00:00 - [Claude] CLAUDE.md `/init` frissítés
+- **Agent:** Claude
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `CLAUDE.md`
 
 #### 00:00 - [Copilot] Tech Debt Cleanup + Modular Refactor Phase 2-4
 - **Agent:** Copilot
@@ -1302,7 +1307,7 @@ start-full.bat
 
 | Agent | Bejegyzések | Utolsó Aktivitás |
 |-------|-------------|------------------|
-| Claude | 90 | 2026-04-12 |
+| Claude | 91 | 2026-04-12 |
 | Gemini | 4 | 2026-04-08 |
 | Cursor | 0 | N/A |
 | Copilot | 135 | 2026-04-12 |
