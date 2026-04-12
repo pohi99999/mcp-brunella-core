@@ -39,7 +39,7 @@ export function createScheduledTasksRoutes(db: Database.Database): Router {
    * GET /api/v1/scheduled-tasks
    * List all scheduled tasks
    */
-  router.get('/', (req: Request, res: Response) => {
+  router.get('/', (req: any, res: any) => {
     try {
       const tasks = db
         .prepare('SELECT * FROM scheduled_tasks ORDER BY created_at DESC')
@@ -60,7 +60,7 @@ export function createScheduledTasksRoutes(db: Database.Database): Router {
    * GET /api/v1/scheduled-tasks/:id
    * Get a specific scheduled task
    */
-  router.get('/:id', (req: Request, res: Response) => {
+  router.get('/:id', (req: any, res: any) => {
     try {
       const task = db
         .prepare('SELECT * FROM scheduled_tasks WHERE id = ?')
@@ -81,7 +81,7 @@ export function createScheduledTasksRoutes(db: Database.Database): Router {
    * POST /api/v1/scheduled-tasks
    * Create a new scheduled task
    */
-  router.post('/', (req: Request, res: Response) => {
+  router.post('/', (req: any, res: any) => {
     try {
       const { title, prompt, cron_expression, handler, metadata } = req.body;
 
@@ -136,7 +136,7 @@ export function createScheduledTasksRoutes(db: Database.Database): Router {
    * PATCH /api/v1/scheduled-tasks/:id
    * Update a scheduled task
    */
-  router.patch('/:id', (req: Request, res: Response) => {
+  router.patch('/:id', (req: any, res: any) => {
     try {
       const { title, prompt, cron_expression, handler, enabled, metadata } = req.body;
       const { id } = req.params;
@@ -201,7 +201,7 @@ export function createScheduledTasksRoutes(db: Database.Database): Router {
    * DELETE /api/v1/scheduled-tasks/:id
    * Delete a scheduled task
    */
-  router.delete('/:id', (req: Request, res: Response) => {
+  router.delete('/:id', (req: any, res: any) => {
     try {
       const { id } = req.params;
 
@@ -227,7 +227,7 @@ export function createScheduledTasksRoutes(db: Database.Database): Router {
    * POST /api/v1/scheduled-tasks/:id/trigger
    * Manually trigger a scheduled task immediately
    */
-  router.post('/:id/trigger', async (req: Request, res: Response) => {
+  router.post('/:id/trigger', async (req: any, res: any) => {
     try {
       const { id } = req.params;
 

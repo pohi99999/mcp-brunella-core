@@ -23,7 +23,7 @@ export function createFleetRouter(db: Database) {
    * POST /api/fleet/create
    * Create a new worker fleet
    */
-  router.post('/create', (req: Request, res: Response) => {
+  router.post('/create', (req: any, res: any) => {
     try {
       const { name, environment = 'production', description = '' } = req.body;
 
@@ -62,7 +62,7 @@ export function createFleetRouter(db: Database) {
    * GET /api/fleet/list
    * List all fleets (including Brunella Agents as workers)
    */
-  router.get('/list', (req: Request, res: Response) => {
+  router.get('/list', (req: any, res: any) => {
     try {
       const stmt = db.prepare(`
         SELECT id, name, environment, status, description, created_at, updated_at
@@ -111,7 +111,7 @@ export function createFleetRouter(db: Database) {
    * GET /api/fleet/:id
    * Get fleet details with worker count
    */
-  router.get('/:id', (req: Request, res: Response) => {
+  router.get('/:id', (req: any, res: any) => {
     try {
       const { id } = req.params;
 
@@ -146,7 +146,7 @@ export function createFleetRouter(db: Database) {
    * PUT /api/fleet/:id
    * Update fleet (name, environment, status)
    */
-  router.put('/:id', (req: Request, res: Response) => {
+  router.put('/:id', (req: any, res: any) => {
     try {
       const { id } = req.params;
       const { name, environment, status, description } = req.body;
@@ -189,7 +189,7 @@ export function createFleetRouter(db: Database) {
    * DELETE /api/fleet/:id
    * Delete fleet and all associated workers
    */
-  router.delete('/:id', (req: Request, res: Response) => {
+  router.delete('/:id', (req: any, res: any) => {
     try {
       const { id } = req.params;
 

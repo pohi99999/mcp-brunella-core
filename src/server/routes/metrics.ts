@@ -22,7 +22,7 @@ export function createMetricsRouter(db: Database) {
    * GET /api/metrics/:workerId/latest
    * Get latest metrics for a worker
    */
-  router.get('/:workerId/latest', (req: Request, res: Response) => {
+  router.get('/:workerId/latest', (req: any, res: any) => {
     try {
       const { workerId } = req.params;
 
@@ -54,7 +54,7 @@ export function createMetricsRouter(db: Database) {
    * GET /api/metrics/:workerId/range?from=ISO&to=ISO
    * Get metrics in time range
    */
-  router.get('/:workerId/range', (req: Request, res: Response) => {
+  router.get('/:workerId/range', (req: any, res: any) => {
     try {
       const { workerId } = req.params;
       const { from, to, limit = 100 } = req.query;
@@ -87,7 +87,7 @@ export function createMetricsRouter(db: Database) {
    * GET /api/metrics/fleet/:fleetId/summary
    * Get aggregate metrics for entire fleet (with Brunella Agents support)
    */
-  router.get('/fleet/:fleetId/summary', (req: Request, res: Response) => {
+  router.get('/fleet/:fleetId/summary', (req: any, res: any) => {
     try {
       const { fleetId } = req.params;
 
@@ -156,7 +156,7 @@ export function createMetricsRouter(db: Database) {
    * POST /api/metrics/prometheus/scrape
    * Prometheus scrape endpoint - returns metrics in Prometheus text format
    */
-  router.post('/prometheus/scrape', (req: Request, res: Response) => {
+  router.post('/prometheus/scrape', (req: any, res: any) => {
     try {
       // Get all latest metrics (SQLite-compatible query)
       const stmt = db.prepare(`
@@ -245,7 +245,7 @@ export function createMetricsRouter(db: Database) {
    * POST /api/metrics/save
    * Save metrics to cache (internal endpoint, called by workers/orchestrator)
    */
-  router.post('/save', (req: Request, res: Response) => {
+  router.post('/save', (req: any, res: any) => {
     try {
       const {
         worker_id,

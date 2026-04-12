@@ -21,7 +21,7 @@ export function createCopilotOrchestratorRoutes(): Router {
   const router = Router();
 
   // ── GET /stats ── Aggregate statistics for dashboard header ──────
-  router.get('/stats', (_req: Request, res: Response) => {
+  router.get('/stats', (_req: any, res: any) => {
     try {
       res.json(copilotOrchestratorBridge.getStats());
     } catch (err: unknown) {
@@ -32,7 +32,7 @@ export function createCopilotOrchestratorRoutes(): Router {
   });
 
   // ── GET /steps ── Recent orchestration steps (flat timeline) ─────
-  router.get('/steps', (req: Request, res: Response) => {
+  router.get('/steps', (req: any, res: any) => {
     try {
       const limit = Math.min(Number(req.query.limit) || 50, 200);
       res.json(copilotOrchestratorBridge.getRecentSteps(limit));
@@ -44,7 +44,7 @@ export function createCopilotOrchestratorRoutes(): Router {
   });
 
   // ── GET /sessions/:id ── Single session detail ───────────────────
-  router.get('/sessions/:id', (req: Request, res: Response) => {
+  router.get('/sessions/:id', (req: any, res: any) => {
     try {
       const session = copilotOrchestratorBridge.getSession(String(req.params.id));
       if (!session) {
@@ -60,7 +60,7 @@ export function createCopilotOrchestratorRoutes(): Router {
   });
 
   // ── POST /sessions ── Start a new orchestration session ─────────
-  router.post('/sessions', (_req: Request, res: Response) => {
+  router.post('/sessions', (_req: any, res: any) => {
     try {
       const session = copilotOrchestratorBridge.startSession();
       logInfo(TAG, `New session: ${session.id}`);
@@ -73,7 +73,7 @@ export function createCopilotOrchestratorRoutes(): Router {
   });
 
   // ── PATCH /sessions/:id ── Complete or fail a session ───────────
-  router.patch('/sessions/:id', (req: Request, res: Response) => {
+  router.patch('/sessions/:id', (req: any, res: any) => {
     try {
       const { status, summary } = req.body as {
         status?: 'completed' | 'failed';
@@ -105,7 +105,7 @@ export function createCopilotOrchestratorRoutes(): Router {
 
   // ── POST /log ── Log a single orchestration step ─────────────────
   // This is the main endpoint called by the Copilot CLI agent.
-  router.post('/log', (req: Request, res: Response) => {
+  router.post('/log', (req: any, res: any) => {
     try {
       const { sessionId, step, status, detail, delegateTo, confidence, model } = req.body as {
         sessionId?: string;
@@ -142,7 +142,7 @@ export function createCopilotOrchestratorRoutes(): Router {
   });
 
   // ── PATCH /steps/:sessionId/:stepId ── Update existing step ─────
-  router.patch('/steps/:sessionId/:stepId', (req: Request, res: Response) => {
+  router.patch('/steps/:sessionId/:stepId', (req: any, res: any) => {
     try {
       const { status, detail, model } = req.body as {
         status?: OrchestratorStepStatus;

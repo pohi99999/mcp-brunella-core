@@ -14,7 +14,7 @@ export function createCopilotBridgeRoutes(): Router {
   const router = Router();
 
   // GET /api/copilot-bridge/stats — Bridge statistics
-  router.get('/stats', (_req: Request, res: Response) => {
+  router.get('/stats', (_req: any, res: any) => {
     try {
       const stats = copilotBridgeState.getStats();
       res.json(stats);
@@ -26,7 +26,7 @@ export function createCopilotBridgeRoutes(): Router {
   });
 
   // GET /api/copilot-bridge/commands — Recent commands list
-  router.get('/commands', (req: Request, res: Response) => {
+  router.get('/commands', (req: any, res: any) => {
     try {
       const limit = Math.min(Number(req.query.limit) || 50, 200);
       const commands = copilotBridgeState.getRecentCommands(limit);
@@ -39,7 +39,7 @@ export function createCopilotBridgeRoutes(): Router {
   });
 
   // POST /api/copilot-bridge/commands — Log a new command (used by CLI)
-  router.post('/commands', (req: Request, res: Response) => {
+  router.post('/commands', (req: any, res: any) => {
     try {
       const { domain, action, params, status } = req.body as {
         domain?: string;
@@ -70,7 +70,7 @@ export function createCopilotBridgeRoutes(): Router {
   });
 
   // PATCH /api/copilot-bridge/commands/:id — Update command status
-  router.patch('/commands/:id', (req: Request, res: Response) => {
+  router.patch('/commands/:id', (req: any, res: any) => {
     try {
       const id = String(req.params.id);
       const update = req.body as Partial<CopilotCommand>;
@@ -88,7 +88,7 @@ export function createCopilotBridgeRoutes(): Router {
   });
 
   // GET /api/copilot-bridge/dispatches — Recent agent dispatches
-  router.get('/dispatches', (req: Request, res: Response) => {
+  router.get('/dispatches', (req: any, res: any) => {
     try {
       const limit = Math.min(Number(req.query.limit) || 50, 200);
       const dispatches = copilotBridgeState.getRecentDispatches(limit);
@@ -101,7 +101,7 @@ export function createCopilotBridgeRoutes(): Router {
   });
 
   // POST /api/copilot-bridge/dispatches — Log an agent dispatch
-  router.post('/dispatches', (req: Request, res: Response) => {
+  router.post('/dispatches', (req: any, res: any) => {
     try {
       const { agentName, task, status } = req.body as {
         agentName?: string;
@@ -130,7 +130,7 @@ export function createCopilotBridgeRoutes(): Router {
   });
 
   // DELETE /api/copilot-bridge/clear — Clear all bridge state
-  router.delete('/clear', (_req: Request, res: Response) => {
+  router.delete('/clear', (_req: any, res: any) => {
     try {
       copilotBridgeState.clear();
       logInfo(TAG, 'Bridge state cleared');

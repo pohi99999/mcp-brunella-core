@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import type { Request, Response } from 'express';
+
 import { z } from 'zod';
 import { agentManager } from '../../agents/AgentManager.js';
 import type { FederatedAgent } from '../../agents/federation/FederatedAgentManager.js';
@@ -92,7 +92,7 @@ function mapFederatedAgentStatus(status: string): FederatedAgent['status'] {
   }
 }
 
-function buildLocalFederatedAgents(req: Request): FederatedAgent[] {
+function buildLocalFederatedAgents(req: any): FederatedAgent[] {
   const localPeerId = getLocalFederationPeerId();
   const host =
     process.env.BRUNELLA_API_URL?.trim().replace(/\/+$/, '') ||
@@ -136,7 +136,7 @@ export function createFederationRouter(): Router {
     return false;
   };
 
-  const executeFederatedCapability = async (req: Request, res: Response): Promise<void> => {
+  const executeFederatedCapability = async (req: any, res: any): Promise<void> => {
     try {
       const { capabilityName, payload, preferredPeerId, timeoutMs } = req.body as {
         capabilityName: string;

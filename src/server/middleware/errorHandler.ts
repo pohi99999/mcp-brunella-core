@@ -13,7 +13,7 @@
  * @version 1.0.0
  */
 
-import { Request, Response, NextFunction } from 'express';
+
 import { AppError } from '../../utils/AppError.js';
 import { ensureError } from '../../utils/ensureError.js';
 import { logError } from '../../utils/logger.js';
@@ -38,9 +38,9 @@ interface ErrorResponse {
  */
 export function globalErrorHandler(
   err: unknown,
-  req: Request,
-  res: Response,
-  next: NextFunction
+  req: any,
+  res: any,
+  next: any
 ): void {
   // AppError handling
   if (err instanceof AppError) {
@@ -94,9 +94,9 @@ export function globalErrorHandler(
  * ```
  */
 export function asyncHandler(
-  fn: (req: Request, res: Response, next: NextFunction) => Promise<unknown>
+  fn: (req: any, res: any, next: any) => Promise<unknown>
 ) {
-  return (req: Request, res: Response, next: NextFunction): void => {
+  return (req: any, res: any, next: any): void => {
     Promise.resolve(fn(req, res, next)).catch(next);
   };
 }

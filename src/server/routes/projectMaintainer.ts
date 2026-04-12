@@ -34,7 +34,7 @@ export function createProjectMaintainerRoutes(db: Database.Database): Router {
    * GET /api/v1/project-maintainer/reports
    * Returns up to 10 most recent reports (metadata + parsed JSON).
    */
-  router.get('/reports', (_req: Request, res: Response) => {
+  router.get('/reports', (_req: any, res: any) => {
     try {
       const rows = db.prepare(`
         SELECT id, generated_at, findings_count, suggestions_count,
@@ -67,7 +67,7 @@ export function createProjectMaintainerRoutes(db: Database.Database): Router {
    * GET /api/v1/project-maintainer/reports/latest
    * Returns the single most recent report.
    */
-  router.get('/reports/latest', (_req: Request, res: Response) => {
+  router.get('/reports/latest', (_req: any, res: any) => {
     try {
       const row = db.prepare(`
         SELECT id, generated_at, findings_count, suggestions_count,
@@ -104,7 +104,7 @@ export function createProjectMaintainerRoutes(db: Database.Database): Router {
    * Triggers an on-demand report scan and returns the result immediately.
    * supports { "dryRun": false } for active maintenance.
    */
-  router.post('/run', async (req: Request, res: Response) => {
+  router.post('/run', async (req: any, res: any) => {
     try {
       const body = req.body ?? {};
       const bodyStr = JSON.stringify(body);

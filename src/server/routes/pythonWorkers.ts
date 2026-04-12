@@ -38,7 +38,7 @@ function wrapError(error: unknown): PythonWorkerResult {
 export function createPythonWorkersRouter(): Router {
   const router = Router();
 
-  router.get('/status', async (_req: Request, res: Response) => {
+  router.get('/status', async (_req: any, res: any) => {
     res.json({
       status: 'success',
       workers: [
@@ -49,7 +49,7 @@ export function createPythonWorkersRouter(): Router {
     });
   });
 
-  router.post('/ocr', async (req: Request, res: Response) => {
+  router.post('/ocr', async (req: any, res: any) => {
     try {
       const payload = req.body || {};
       logInfo('PythonWorkers', 'OCR request received');
@@ -66,7 +66,7 @@ export function createPythonWorkersRouter(): Router {
     }
   });
 
-  router.post('/scraper', async (req: Request, res: Response) => {
+  router.post('/scraper', async (req: any, res: any) => {
     try {
       const payload = req.body || {};
       logInfo('PythonWorkers', 'Web scraper request received');
@@ -83,7 +83,7 @@ export function createPythonWorkersRouter(): Router {
     }
   });
 
-  router.post('/lancedb-batch', async (req: Request, res: Response) => {
+  router.post('/lancedb-batch', async (req: any, res: any) => {
     try {
       const payload = req.body || {};
       logInfo('PythonWorkers', 'LanceDB batch request received');
@@ -102,7 +102,7 @@ export function createPythonWorkersRouter(): Router {
 
   // --- Harvest Pipeline endpoints ---
 
-  router.get('/harvest-status', async (_req: Request, res: Response) => {
+  router.get('/harvest-status', async (_req: any, res: any) => {
     try {
       const root = process.cwd();
       const logFile = path.join(root, 'logs', 'harvest_pipeline.log');
@@ -145,7 +145,7 @@ export function createPythonWorkersRouter(): Router {
     }
   });
 
-  router.post('/harvest-run', (_req: Request, res: Response) => {
+  router.post('/harvest-run', (_req: any, res: any) => {
     try {
       logInfo('PythonWorkers', 'Harvest pipeline triggered via API');
       const root = process.cwd();

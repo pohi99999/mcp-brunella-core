@@ -136,7 +136,7 @@ export function createEnterpriseRouter(): Router {
    * GET /api/enterprise/modules
    * List all enterprise modules
    */
-  router.get('/modules', async (req: Request, res: Response) => {
+  router.get('/modules', async (req: any, res: any) => {
     try {
       logInfo('EnterpriseAPI', 'Fetching enterprise modules');
 
@@ -172,7 +172,7 @@ export function createEnterpriseRouter(): Router {
    * GET /api/enterprise/stats
    * Get module statistics
    */
-  router.get('/stats', async (req: Request, res: Response) => {
+  router.get('/stats', async (req: any, res: any) => {
     try {
       logInfo('EnterpriseAPI', 'Fetching enterprise stats');
 
@@ -213,7 +213,7 @@ export function createEnterpriseRouter(): Router {
    * POST /api/enterprise/execute
    * Execute task via enterprise orchestrator
    */
-  router.post('/execute', async (req: Request, res: Response) => {
+  router.post('/execute', async (req: any, res: any) => {
     try {
       const { task, context } = req.body;
 
@@ -250,7 +250,7 @@ export function createEnterpriseRouter(): Router {
    * GET /api/enterprise/history
    * Get execution history from task queue
    */
-  router.get('/history', async (req: Request, res: Response) => {
+  router.get('/history', async (req: any, res: any) => {
     try {
       logInfo('EnterpriseAPI', 'Fetching execution history');
 
@@ -304,7 +304,7 @@ export function createEnterpriseAnalyticsRouter(): Router {
    *  - limit: Max events (default: 100)
    *  - days: Days to look back (default: 7)
    */
-  router.get('/events', async (req: Request, res: Response) => {
+  router.get('/events', async (req: any, res: any) => {
     try {
       const { type, limit = 100, days = 7 } = req.query;
 
@@ -367,7 +367,7 @@ export function createEnterpriseAnalyticsRouter(): Router {
    * GET /api/enterprise/analytics/stats
    * Get enterprise analytics statistics from D1
    */
-  router.get('/stats', async (req: Request, res: Response) => {
+  router.get('/stats', async (req: any, res: any) => {
     try {
       logInfo('EnterpriseAnalytics', 'Fetching analytics stats from D1');
 
@@ -441,7 +441,7 @@ export function createEnterpriseAnalyticsRouter(): Router {
    * POST /api/enterprise/analytics/event
    * Create a new enterprise event in D1
    */
-  router.post('/event', async (req: Request, res: Response) => {
+  router.post('/event', async (req: any, res: any) => {
     try {
       const { type, payload, source_module, priority = 'MEDIUM' } = req.body;
 

@@ -19,7 +19,7 @@ function createReflectionRouter(): Router {
 
   // GET /api/v1/reflection/stats
   // Returns aggregate reflection statistics and SelfModel health.
-  router.get('/stats', (_req: Request, res: Response) => {
+  router.get('/stats', (_req: any, res: any) => {
     const stats = engine.getStats();
     const selfModel = engine.getSelfModelState();
     res.json({ ok: true, stats, selfModel });
@@ -27,21 +27,21 @@ function createReflectionRouter(): Router {
 
   // GET /api/v1/reflection/pain-points
   // Returns recurring failure patterns sorted by severity.
-  router.get('/pain-points', (_req: Request, res: Response) => {
+  router.get('/pain-points', (_req: any, res: any) => {
     const painPoints = engine.detectPainPoints();
     res.json({ ok: true, count: painPoints.length, painPoints });
   });
 
   // GET /api/v1/reflection/context
   // Returns the reflection context string used in orchestrator system prompts.
-  router.get('/context', (_req: Request, res: Response) => {
+  router.get('/context', (_req: any, res: any) => {
     const context = engine.getReflectionContext();
     res.json({ ok: true, context });
   });
 
   // GET /api/v1/reflection/insights
   // Returns MetaReasoner insights, optionally filtered by category.
-  router.get('/insights', (req: Request, res: Response) => {
+  router.get('/insights', (req: any, res: any) => {
     const category = req.query['category'] as 'pattern' | 'anomaly' | 'recommendation' | 'warning' | undefined;
     const insights = engine.getMetaInsights(category);
     res.json({ ok: true, count: insights.length, insights });
@@ -49,7 +49,7 @@ function createReflectionRouter(): Router {
 
   // POST /api/v1/reflection/reflect
   // Manually submit a task outcome for reflection.
-  router.post('/reflect', async (req: Request, res: Response) => {
+  router.post('/reflect', async (req: any, res: any) => {
     const outcome = req.body as TaskOutcome;
     if (!outcome?.agent || !outcome?.task || !outcome?.result) {
       res.status(400).json({ ok: false, error: 'Missing required fields: agent, task, result' });
@@ -62,7 +62,7 @@ function createReflectionRouter(): Router {
 
   // POST /api/v1/reflection/nightly-cycle
   // Manually triggers the nightly learning cycle (also runs automatically via ScheduledTasksRunner).
-  router.post('/nightly-cycle', async (_req: Request, res: Response) => {
+  router.post('/nightly-cycle', async (_req: any, res: any) => {
     logInfo(MODULE, 'Manual nightly cycle triggered via API');
     const result = await engine.runNightlyCycle();
     res.json({ ok: true, result });

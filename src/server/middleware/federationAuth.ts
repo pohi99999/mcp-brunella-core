@@ -37,11 +37,11 @@ function isLoopbackAddress(address: string | undefined): boolean {
   return normalized === '127.0.0.1' || normalized === '::1';
 }
 
-function getCanonicalRequestPath(req: Request): string {
+function getCanonicalRequestPath(req: any): string {
   return req.originalUrl.split('?')[0] || req.originalUrl || req.path;
 }
 
-function getCanonicalRequestBody(req: Request): unknown {
+function getCanonicalRequestBody(req: any): unknown {
   if (req.method === 'GET' || req.method === 'HEAD') {
     return undefined;
   }
@@ -49,7 +49,7 @@ function getCanonicalRequestBody(req: Request): unknown {
   return req.body;
 }
 
-export function allowLoopbackWithoutAuth(req: Request, _res: Response, next: NextFunction): void {
+export function allowLoopbackWithoutAuth(req: any, _res: any, next: any): void {
   if (isLoopbackAddress(req.socket.remoteAddress)) {
     next();
     return;
@@ -69,7 +69,7 @@ export function isHttpsEndpoint(endpoint: string): boolean {
   }
 }
 
-export function authFederationPeer(req: Request, res: Response, next: NextFunction): void {
+export function authFederationPeer(req: any, res: any, next: any): void {
   const peerId = req.header(FEDERATION_AUTH_HEADER.peerId);
   const keyId = req.header(FEDERATION_AUTH_HEADER.keyId) ?? undefined;
   const targetKeyId = req.header(FEDERATION_AUTH_HEADER.targetKeyId) ?? undefined;
@@ -139,7 +139,7 @@ export function authFederationPeer(req: Request, res: Response, next: NextFuncti
   next();
 }
 
-export function allowLoopbackOrSignedFederationPeer(req: Request, res: Response, next: NextFunction): void {
+export function allowLoopbackOrSignedFederationPeer(req: any, res: any, next: any): void {
   if (isLoopbackAddress(req.socket.remoteAddress)) {
     next();
     return;

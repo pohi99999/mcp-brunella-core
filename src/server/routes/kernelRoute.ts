@@ -38,7 +38,7 @@ export function createKernelRoutes(): Router {
   const router = Router();
 
   // ── POST /kernel/run ──────────────────────────────────────────────────────
-  router.post('/run', async (req: Request, res: Response) => {
+  router.post('/run', async (req: any, res: any) => {
     try {
       const {
         goal,
@@ -99,7 +99,7 @@ export function createKernelRoutes(): Router {
   });
 
   // ── GET /kernel/runs ──────────────────────────────────────────────────────
-  router.get('/runs', (_req: Request, res: Response) => {
+  router.get('/runs', (_req: any, res: any) => {
     try {
       const runs = runLedger.getAll().slice(-50).map((r) => ({
         runId: r.runId,
@@ -116,7 +116,7 @@ export function createKernelRoutes(): Router {
   });
 
   // ── GET /kernel/runs/:runId ───────────────────────────────────────────────
-  router.get('/runs/:runId', (req: Request, res: Response) => {
+  router.get('/runs/:runId', (req: any, res: any) => {
     const runId = String(req.params.runId);
     const record = runLedger.get(runId);
     if (!record) {
@@ -126,7 +126,7 @@ export function createKernelRoutes(): Router {
   });
 
   // ── GET /kernel/status ────────────────────────────────────────────────────
-  router.get('/status', (_req: Request, res: Response) => {
+  router.get('/status', (_req: any, res: any) => {
     const runs = runLedger.getAll();
     const running = runs.filter((r) => r.status === 'running').length;
     const succeeded = runs.filter((r) => r.status === 'success').length;

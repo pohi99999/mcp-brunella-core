@@ -39,7 +39,7 @@ function resolveAgentTrigger(body: IntakeBody): string {
 }
 
 /** Validate HMAC-style token from X-Brunella-Token header */
-function validateToken(req: Request): boolean {
+function validateToken(req: any): boolean {
   const secret = process.env.BRUNELLA_WEBHOOK_SECRET;
   if (!secret) {
     logWarn(ROUTE, 'BRUNELLA_WEBHOOK_SECRET nincs beállítva — token validáció kihagyva');
@@ -62,7 +62,7 @@ export function createOnboardingIntakeRoutes(): Router {
    * Body: { trigger?, client_name, contact_email, industry, pain_point, form_type, ...extra }
    * Returns: { status: 'ok', job_id, agent_trigger, message }
    */
-  router.post('/', async (req: Request, res: Response) => {
+  router.post('/', async (req: any, res: any) => {
     if (!validateToken(req)) {
       logWarn(ROUTE, 'Unauthorized intake request — invalid X-Brunella-Token');
       return res.status(401).json({ status: 'error', error: 'Unauthorized' });
@@ -122,7 +122,7 @@ export function createOnboardingIntakeRoutes(): Router {
    * GET /api/v1/webhook/onboarding-intake/pending
    * Dashboard lekérdezés — jóváhagyásra váró intake-ek listája
    */
-  router.get('/pending', async (_req: Request, res: Response) => {
+  router.get('/pending', async (_req: any, res: any) => {
     try {
       const { getBusinessJobs } = await import('../../utils/db.js');
       const jobs = await getBusinessJobs(50, 'onboarding_intake');
@@ -139,7 +139,7 @@ export function createOnboardingIntakeRoutes(): Router {
    * POST /api/v1/webhook/onboarding-intake/:jobId/approve
    * Jóváhagyás — az agent trigger ekkor indul el
    */
-  router.post('/:jobId/approve', async (req: Request, res: Response) => {
+  router.post('/:jobId/approve', async (req: any, res: any) => {
     if (!validateToken(req)) {
       return res.status(401).json({ status: 'error', error: 'Unauthorized' });
     }
@@ -159,7 +159,7 @@ export function createOnboardingIntakeRoutes(): Router {
    * POST /api/v1/webhook/onboarding-intake/:jobId/reject
    * Elutasítás
    */
-  router.post('/:jobId/reject', async (req: Request, res: Response) => {
+  router.post('/:jobId/reject', async (req: any, res: any) => {
     if (!validateToken(req)) {
       return res.status(401).json({ status: 'error', error: 'Unauthorized' });
     }

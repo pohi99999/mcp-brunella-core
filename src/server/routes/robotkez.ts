@@ -41,7 +41,7 @@ export function createRobotkezRoutes(): Router {
      * Body: { instruction: string }
      * Response: AgentResult (success, message, data)
      */
-    router.post('/chat', async (req: Request, res: Response) => {
+    router.post('/chat', async (req: any, res: any) => {
         try {
             const { instruction } = req.body;
 
@@ -103,7 +103,7 @@ export function createRobotkezRoutes(): Router {
      * Body: { instruction: string }
      * Response: { plan: ExecutionPlan }
      */
-    router.post('/plan', async (req: Request, res: Response) => {
+    router.post('/plan', async (req: any, res: any) => {
         try {
             const { instruction } = req.body;
 
@@ -144,7 +144,7 @@ export function createRobotkezRoutes(): Router {
      * - { action: 'click', selector: '.button' }
      * - { action: 'type', selector: 'input', text: 'hello' }
      */
-    router.post('/exec', async (req: Request, res: Response) => {
+    router.post('/exec', async (req: any, res: any) => {
         try {
             const { action, ...params } = req.body;
 
@@ -186,7 +186,7 @@ export function createRobotkezRoutes(): Router {
      *
      * Response: { agent, browser, tasks }
      */
-    router.get('/status', async (req: Request, res: Response) => {
+    router.get('/status', async (req: any, res: any) => {
         try {
             const tasks = backgroundTaskManager.getAllTasks();
             const runningTasks = tasks.filter(t => t.status === 'running');
@@ -232,7 +232,7 @@ export function createRobotkezRoutes(): Router {
      *
      * Response: { tasks: BackgroundTask[] }
      */
-    router.get('/tasks', async (req: Request, res: Response) => {
+    router.get('/tasks', async (req: any, res: any) => {
         try {
             const { status, limit } = req.query;
 
@@ -271,7 +271,7 @@ export function createRobotkezRoutes(): Router {
      *
      * Response: { task: BackgroundTask }
      */
-    router.get('/tasks/:id', async (req: Request, res: Response) => {
+    router.get('/tasks/:id', async (req: any, res: any) => {
         try {
             const id = req.params.id as string;
 
@@ -305,7 +305,7 @@ export function createRobotkezRoutes(): Router {
      *
      * Response: { cancelled: boolean }
      */
-    router.delete('/tasks/:id', async (req: Request, res: Response) => {
+    router.delete('/tasks/:id', async (req: any, res: any) => {
         try {
             const id = req.params.id as string;
 
@@ -340,7 +340,7 @@ export function createRobotkezRoutes(): Router {
      *
      * Response: PNG image (Content-Type: image/png)
      */
-    router.get('/screenshot', async (req: Request, res: Response) => {
+    router.get('/screenshot', async (req: any, res: any) => {
         try {
             const browserEngine = getRobotkezBrowserEngine();
             const screenshot = browserEngine.getLastScreenshot();
@@ -376,7 +376,7 @@ export function createRobotkezRoutes(): Router {
      *
      * Response: { status, screenshot_b64 }
      */
-    router.get('/computer/screenshot', async (_req: Request, res: Response) => {
+    router.get('/computer/screenshot', async (_req: any, res: any) => {
         try {
             const r = await fetch(`${PYTHON_API}/os/screenshot`);
             const data = await r.json() as Record<string, unknown>;
@@ -394,7 +394,7 @@ export function createRobotkezRoutes(): Router {
      *
      * Response: { width, height }
      */
-    router.get('/computer/screen-size', async (_req: Request, res: Response) => {
+    router.get('/computer/screen-size', async (_req: any, res: any) => {
         try {
             const r = await fetch(`${PYTHON_API}/os/screen-size`);
             const data = await r.json() as Record<string, unknown>;
@@ -412,7 +412,7 @@ export function createRobotkezRoutes(): Router {
      *
      * Body: { x: number, y: number, clicks?: number }
      */
-    router.post('/computer/click', async (req: Request, res: Response) => {
+    router.post('/computer/click', async (req: any, res: any) => {
         try {
             const { x, y, clicks = 1 } = req.body as { x: number; y: number; clicks?: number };
             if (x === undefined || y === undefined) {
@@ -438,7 +438,7 @@ export function createRobotkezRoutes(): Router {
      *
      * Body: { x_pct: number, y_pct: number, clicks?: number }  — értékek: 0.0–1.0
      */
-    router.post('/computer/click-pct', async (req: Request, res: Response) => {
+    router.post('/computer/click-pct', async (req: any, res: any) => {
         try {
             const { x_pct, y_pct, clicks = 1 } = req.body as { x_pct: number; y_pct: number; clicks?: number };
             if (x_pct === undefined || y_pct === undefined) {
@@ -464,7 +464,7 @@ export function createRobotkezRoutes(): Router {
      *
      * Body: { text: string, interval?: number }
      */
-    router.post('/computer/type', async (req: Request, res: Response) => {
+    router.post('/computer/type', async (req: any, res: any) => {
         try {
             const { text, interval } = req.body as { text: string; interval?: number };
             if (!text || typeof text !== 'string') {
@@ -492,7 +492,7 @@ export function createRobotkezRoutes(): Router {
      *
      * Body: { description: string }
      */
-    router.post('/computer/vision-click', async (req: Request, res: Response) => {
+    router.post('/computer/vision-click', async (req: any, res: any) => {
         try {
             const { description } = req.body as { description: string };
             if (!description || typeof description !== 'string') {
@@ -524,7 +524,7 @@ export function createRobotkezRoutes(): Router {
      *
      * Body: { type, attempt, step_index, action, success, error, ... }
      */
-    router.post('/step-event', async (req: Request, res: Response) => {
+    router.post('/step-event', async (req: any, res: any) => {
         try {
             const stepInfo = req.body as Record<string, unknown>;
             socketService.broadcastRobotkezStep(stepInfo);
@@ -543,7 +543,7 @@ export function createRobotkezRoutes(): Router {
      * Body: { task: string, max_retries?: number }
      * Response: { status, comet_result: { success, attempts, steps_completed, error }, step_log }
      */
-    router.post('/computer/auto', async (req: Request, res: Response) => {
+    router.post('/computer/auto', async (req: any, res: any) => {
         try {
             const { task, max_retries = 3 } = req.body as { task: string; max_retries?: number };
             if (!task || typeof task !== 'string') {
@@ -573,7 +573,7 @@ export function createRobotkezRoutes(): Router {
      *
      * Body: { mode?: 'basic' | 'workflows', hours?: number, retries?: number }
      */
-    router.post('/training/start', async (req: Request, res: Response) => {
+    router.post('/training/start', async (req: any, res: any) => {
         try {
             const { mode = 'basic', hours = 4, retries = 3 } = req.body as {
                 mode?: string; hours?: number; retries?: number;
@@ -600,7 +600,7 @@ export function createRobotkezRoutes(): Router {
      * GET /api/v1/robotkez/training/status
      * Visszaadja a futó tréning állapotát
      */
-    router.get('/training/status', async (_req: Request, res: Response) => {
+    router.get('/training/status', async (_req: any, res: any) => {
         try {
             const r = await fetch(`${ROBOTKEZ_PRO_API}/training/status`);
             const data = await r.json() as Record<string, unknown>;
@@ -615,7 +615,7 @@ export function createRobotkezRoutes(): Router {
      * POST /api/v1/robotkez/training/stop
      * Leállítja a futó tréninget
      */
-    router.post('/training/stop', async (_req: Request, res: Response) => {
+    router.post('/training/stop', async (_req: any, res: any) => {
         try {
             const r = await fetch(`${ROBOTKEZ_PRO_API}/training/stop`, { method: 'POST' });
             const data = await r.json() as Record<string, unknown>;
@@ -639,7 +639,7 @@ export function createRobotkezRoutes(): Router {
      * Body: { url: string }
      * Response: { success, report: DebugReport, markdown: string }
      */
-    router.post('/devtools/report', async (req: Request, res: Response) => {
+    router.post('/devtools/report', async (req: any, res: any) => {
         try {
             const { url } = req.body as { url?: string };
             if (!url || typeof url !== 'string') {
@@ -666,7 +666,7 @@ export function createRobotkezRoutes(): Router {
      * Body: { url: string, duration?: number }
      * Response: { success, requests, failedRequests }
      */
-    router.post('/devtools/network', async (req: Request, res: Response) => {
+    router.post('/devtools/network', async (req: any, res: any) => {
         try {
             const { url, duration } = req.body as { url?: string; duration?: number };
             if (!url || typeof url !== 'string') {
@@ -689,7 +689,7 @@ export function createRobotkezRoutes(): Router {
      * Body: { url: string, duration?: number }
      * Response: { success, errors, warnings }
      */
-    router.post('/devtools/console', async (req: Request, res: Response) => {
+    router.post('/devtools/console', async (req: any, res: any) => {
         try {
             const { url, duration } = req.body as { url?: string; duration?: number };
             if (!url || typeof url !== 'string') {
@@ -712,7 +712,7 @@ export function createRobotkezRoutes(): Router {
      * Body: { url: string }
      * Response: { success, metrics: PerformanceMetrics }
      */
-    router.post('/devtools/performance', async (req: Request, res: Response) => {
+    router.post('/devtools/performance', async (req: any, res: any) => {
         try {
             const { url } = req.body as { url?: string };
             if (!url || typeof url !== 'string') {

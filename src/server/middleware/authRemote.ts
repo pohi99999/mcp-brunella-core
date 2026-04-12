@@ -6,7 +6,7 @@
  * Attaches verified claims to req for downstream handlers.
  */
 
-import { Request, Response, NextFunction } from 'express';
+
 import { verifyRemoteToken, type TokenClaims } from '../../security/remoteAuth.js';
 
 declare global {
@@ -21,7 +21,7 @@ declare global {
 /**
  * Express middleware that rejects requests without a valid remote Bearer token.
  */
-export function authRemote(req: Request, res: Response, next: NextFunction): void {
+export function authRemote(req: any, res: any, next: any): void {
   const authHeader = req.headers['authorization'];
 
   if (!authHeader || !authHeader.startsWith('Bearer ')) {

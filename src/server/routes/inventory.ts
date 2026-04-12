@@ -58,7 +58,7 @@ export function createInventoryRoutes(): Router {
   const router = Router();
 
   // ── POST /items — Új termék felvétele ──────────────────────────────────────
-  router.post('/items', async (req: Request, res: Response) => {
+  router.post('/items', async (req: any, res: any) => {
     try {
       const { sku, name, unit, category, valuation_method, min_stock,
               reorder_point, safety_stock, lead_time_days, supplier_id, notes } = req.body as {
@@ -94,7 +94,7 @@ export function createInventoryRoutes(): Router {
   });
 
   // ── POST /receive — Bevételezés ────────────────────────────────────────────
-  router.post('/receive', async (req: Request, res: Response) => {
+  router.post('/receive', async (req: any, res: any) => {
     try {
       const { sku, quantity, unit_price, purchase_date, supplier_id, delivery_note_ref } = req.body as {
         sku: string; quantity: number; unit_price: number;
@@ -125,7 +125,7 @@ export function createInventoryRoutes(): Router {
   });
 
   // ── POST /issue — Kiadás ──────────────────────────────────────────────────
-  router.post('/issue', async (req: Request, res: Response) => {
+  router.post('/issue', async (req: any, res: any) => {
     try {
       const { sku, quantity, reference, counterparty } = req.body as {
         sku: string; quantity: number; reference?: string; counterparty?: string;
@@ -153,7 +153,7 @@ export function createInventoryRoutes(): Router {
   });
 
   // ── POST /transfer — Raktárközi mozgás ────────────────────────────────────
-  router.post('/transfer', async (req: Request, res: Response) => {
+  router.post('/transfer', async (req: any, res: any) => {
     try {
       const { sku, quantity, location_from, location_to, reference } = req.body as {
         sku: string; quantity: number; location_from: string;
@@ -185,7 +185,7 @@ export function createInventoryRoutes(): Router {
   });
 
   // ── POST /scrap — Selejtezés ───────────────────────────────────────────────
-  router.post('/scrap', async (req: Request, res: Response) => {
+  router.post('/scrap', async (req: any, res: any) => {
     try {
       const { sku, quantity, reference, notes } = req.body as {
         sku: string; quantity: number; reference?: string; notes?: string;
@@ -220,7 +220,7 @@ export function createInventoryRoutes(): Router {
   });
 
   // ── POST /stocktake — Fizikai leltárfelvétel ───────────────────────────────
-  router.post('/stocktake', async (req: Request, res: Response) => {
+  router.post('/stocktake', async (req: any, res: any) => {
     try {
       const { sku, physical_count, counted_by, location } = req.body as {
         sku: string; physical_count: number; counted_by?: string; location?: string;
@@ -266,7 +266,7 @@ export function createInventoryRoutes(): Router {
   });
 
   // ── GET /status — Aktuális készlet ────────────────────────────────────────
-  router.get('/status', async (req: Request, res: Response) => {
+  router.get('/status', async (req: any, res: any) => {
     try {
       const sku = req.query['sku'] as string | undefined;
       const result = await fifoAgent.status(sku);
@@ -278,7 +278,7 @@ export function createInventoryRoutes(): Router {
   });
 
   // ── GET /valuation — Értékelési összesítő ────────────────────────────────
-  router.get('/valuation', async (_req: Request, res: Response) => {
+  router.get('/valuation', async (_req: any, res: any) => {
     try {
       const rows = await getValuationSummary();
       const totalFifo = rows.reduce((s, r) => s + r.fifo_stock_value, 0);
@@ -301,7 +301,7 @@ export function createInventoryRoutes(): Router {
   });
 
   // ── GET /movements — Mozgási napló ────────────────────────────────────────
-  router.get('/movements', async (req: Request, res: Response) => {
+  router.get('/movements', async (req: any, res: any) => {
     try {
       const sku = req.query['sku'] as string | undefined;
       const limit = parseInt(req.query['limit'] as string ?? '100', 10);
@@ -322,7 +322,7 @@ export function createInventoryRoutes(): Router {
   });
 
   // ── GET /pending-orders — Jóváhagyásra váró PO-k ─────────────────────────
-  router.get('/pending-orders', async (_req: Request, res: Response) => {
+  router.get('/pending-orders', async (_req: any, res: any) => {
     try {
       const orders = await getPendingPurchaseOrders();
       res.json({ success: true, count: orders.length, orders });
@@ -333,7 +333,7 @@ export function createInventoryRoutes(): Router {
   });
 
   // ── GET /open-stocktakes — Nyitott leltáreltérések ────────────────────────
-  router.get('/open-stocktakes', async (_req: Request, res: Response) => {
+  router.get('/open-stocktakes', async (_req: any, res: any) => {
     try {
       const stocktakes = await getOpenStocktakes();
       res.json({ success: true, count: stocktakes.length, stocktakes });
@@ -344,7 +344,7 @@ export function createInventoryRoutes(): Router {
   });
 
   // ── POST /wac-refresh — WAC napi batch frissítés (n8n WF-INV-2) ──────────
-  router.post('/wac-refresh', async (_req: Request, res: Response) => {
+  router.post('/wac-refresh', async (_req: any, res: any) => {
     try {
       logInfo('InventoryRoute', 'WAC batch frissítés indítva (WF-INV-2)');
       const result = await wacAgent.refreshAllWac();
@@ -356,7 +356,7 @@ export function createInventoryRoutes(): Router {
   });
 
   // ── GET /forecast/:sku — Demand Forecast ─────────────────────────────────────
-  router.get('/forecast/:sku', async (req: Request, res: Response) => {
+  router.get('/forecast/:sku', async (req: any, res: any) => {
     try {
       const sku = normalizeRouteParam(req.params.sku);
       if (!sku) {
@@ -374,7 +374,7 @@ export function createInventoryRoutes(): Router {
   });
 
   // ── POST /safety-stock/:sku — Biztonsági Készlet Kalkuláció ──────────────
-  router.post('/safety-stock/:sku', async (req: Request, res: Response) => {
+  router.post('/safety-stock/:sku', async (req: any, res: any) => {
     try {
       const sku = normalizeRouteParam(req.params.sku);
       if (!sku) {
@@ -392,7 +392,7 @@ export function createInventoryRoutes(): Router {
   });
 
   // ── POST /generate-po/:sku — PO (Purchase Order) Generátor ──────────────────
-  router.post('/generate-po/:sku', async (req: Request, res: Response) => {
+  router.post('/generate-po/:sku', async (req: any, res: any) => {
     try {
       const sku = normalizeRouteParam(req.params.sku);
       if (!sku) {

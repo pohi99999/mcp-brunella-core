@@ -1,6 +1,6 @@
 // src/server/routes/anythingllmActions.ts
 import { Router } from 'express';
-import type { Request, Response, NextFunction } from 'express';
+
 import { agentManager } from '../../agents/AgentManager.js';
 import { getEnhancedPermissionManager } from '../../core/rbac/agentPermissions.js';
 import { approvalManager } from '../../utils/approvalManager.js';
@@ -73,7 +73,7 @@ export function getAuditBuffer(): ActionAuditRecord[] {
   return [...auditBuffer];
 }
 
-function getRole(req: Request): AnythingLLMRole {
+function getRole(req: any): AnythingLLMRole {
   const role = req.headers['x-brunella-role'];
   if (role === 'admin' || role === 'operator' || role === 'viewer') {
     return role;
@@ -92,7 +92,7 @@ function toResultMessage(raw: unknown): string {
     : ((raw as Record<string, unknown>)?.message as string | undefined) ?? JSON.stringify(raw);
 }
 
-function authMiddleware(req: Request, res: Response, next: NextFunction): void {
+function authMiddleware(req: any, res: any, next: any): void {
   const secret = process.env.BRUNELLA_ACTION_SECRET;
   if (!secret) { next(); return; }
   const provided = req.headers['x-brunella-secret'];
@@ -113,7 +113,7 @@ export function createAnythingLLMActionRoutes(): Router {
 
   router.use(authMiddleware);
 
-  router.post('/', async (req: Request, res: Response): Promise<void> => {
+  router.post('/', async (req: any, res: any): Promise<void> => {
     const { action, approvalId, payload } = req.body as ActionRequestBody;
 
     if (!action || !ACTION_MAP[action]) {
@@ -304,7 +304,7 @@ export function createAnythingLLMActionRoutes(): Router {
     }
   });
 
-  router.get('/audit', (_req: Request, res: Response): void => {
+  router.get('/audit', (_req: any, res: any): void => {
     res.json({ records: [...auditBuffer].reverse(), total: auditBuffer.length });
   });
 

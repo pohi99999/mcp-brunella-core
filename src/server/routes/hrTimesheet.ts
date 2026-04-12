@@ -43,7 +43,7 @@ export function createHRTimesheetRoutes(): Router {
    * GET /api/v1/hr/timesheet/status
    * Read-only snapshot of the current HR timesheet and culture state.
    */
-  router.get('/status', (_req: Request, res: Response) => {
+  router.get('/status', (_req: any, res: any) => {
     try {
       const snapshot = buildHRTimesheetStatusSnapshot(db);
       res.json({ success: true, snapshot, timestamp: snapshot.checkedAt });
@@ -58,7 +58,7 @@ export function createHRTimesheetRoutes(): Router {
    * POST /api/v1/hr/timesheet/submit
    * Submit or update a timesheet entry.
    */
-  router.post('/submit', async (req: Request, res: Response) => {
+  router.post('/submit', async (req: any, res: any) => {
     try {
       const data = TimesheetSchema.parse(req.body);
       logInfo('HTTP', `Received timesheet submission for ${data.employeeName} on ${data.date}`);
@@ -105,7 +105,7 @@ export function createHRTimesheetRoutes(): Router {
    * POST /api/v1/hr/timesheet/export/monthly
    * Generate the payroll-ready CSV export for a month.
    */
-  router.post('/export/monthly', async (req: Request, res: Response) => {
+  router.post('/export/monthly', async (req: any, res: any) => {
     try {
       const { month, format } = MonthlyExportSchema.parse(req.body ?? {});
       const exportResult = await runMonthlyPayrollExport({
@@ -136,7 +136,7 @@ export function createHRTimesheetRoutes(): Router {
    * POST /api/v1/hr/timesheet/alerts/daily
    * Generate birthday and anniversary alerts for a day.
    */
-  router.post('/alerts/daily', async (req: Request, res: Response) => {
+  router.post('/alerts/daily', async (req: any, res: any) => {
     try {
       const { date } = DailyAlertSchema.parse(req.body ?? {});
       const alertResult = await runDailyCultureAlerts({

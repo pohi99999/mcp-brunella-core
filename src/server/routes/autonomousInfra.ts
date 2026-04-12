@@ -24,7 +24,7 @@ export function createAutonomousInfraRouter(): Router {
     next();
   });
 
-  router.get('/state', (_req: Request, res: Response) => {
+  router.get('/state', (_req: any, res: any) => {
     try {
       return res.json({
         hyperKernel: hyperKernel.getState(),
@@ -61,7 +61,7 @@ export function createAutonomousInfraRouter(): Router {
     }
   });
 
-  router.post('/hyperkernel/cycle', (req: Request, res: Response) => {
+  router.post('/hyperkernel/cycle', (req: any, res: any) => {
     try {
       const reason = typeof req.body?.reason === 'string' && req.body.reason.trim().length > 0
         ? req.body.reason
@@ -75,7 +75,7 @@ export function createAutonomousInfraRouter(): Router {
     }
   });
 
-  router.post('/self-replication/plan', (req: Request, res: Response) => {
+  router.post('/self-replication/plan', (req: any, res: any) => {
     try {
       const { sourceNodeId, targetRegion, reason } = req.body ?? {};
       if (typeof sourceNodeId !== 'string' || typeof targetRegion !== 'string' || typeof reason !== 'string') {
@@ -92,7 +92,7 @@ export function createAutonomousInfraRouter(): Router {
     }
   });
 
-  router.post('/self-replication/plan/:planId/execute', (req: Request<{ planId: string }>, res: Response) => {
+  router.post('/self-replication/plan/:planId/execute', (req: any, res: any) => {
     try {
       const { planId } = req.params;
       selfReplication.approvePlan(planId, 'api');
@@ -108,7 +108,7 @@ export function createAutonomousInfraRouter(): Router {
     }
   });
 
-  router.post('/infra/resources', (req: Request, res: Response) => {
+  router.post('/infra/resources', (req: any, res: any) => {
     try {
       const resource = infraAI.upsertResource(req.body);
       return res.json(resource);
@@ -118,7 +118,7 @@ export function createAutonomousInfraRouter(): Router {
     }
   });
 
-  router.post('/infra/incidents', (req: Request, res: Response) => {
+  router.post('/infra/incidents', (req: any, res: any) => {
     try {
       const incident = infraAI.reportIncident(req.body);
       return res.json(incident);
@@ -128,7 +128,7 @@ export function createAutonomousInfraRouter(): Router {
     }
   });
 
-  router.post('/optimizer/snapshots', (req: Request, res: Response) => {
+  router.post('/optimizer/snapshots', (req: any, res: any) => {
     try {
       const snapshot = globalOptimizer.recordSnapshot(req.body);
       return res.json(snapshot);
@@ -138,7 +138,7 @@ export function createAutonomousInfraRouter(): Router {
     }
   });
 
-  router.post('/self-model/signals', (req: Request, res: Response) => {
+  router.post('/self-model/signals', (req: any, res: any) => {
     try {
       const signal = selfModel.ingestSignal(req.body);
       const state = selfModel.reflect();
@@ -149,7 +149,7 @@ export function createAutonomousInfraRouter(): Router {
     }
   });
 
-  router.post('/goals', (req: Request, res: Response) => {
+  router.post('/goals', (req: any, res: any) => {
     try {
       const goal = goalEngine.createGoal(req.body);
       return res.json(goal);

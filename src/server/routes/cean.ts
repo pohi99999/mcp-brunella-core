@@ -59,7 +59,7 @@ initializeTables();
  *   created_at: string (ISO-8601)
  * }
  */
-router.post('/cean/chat/save', (req: Request, res: Response): void => {
+router.post('/cean/chat/save', (req: any, res: any): void => {
   try {
     const { sessionId, role, content, taskId } = req.body;
 
@@ -126,7 +126,7 @@ router.post('/cean/chat/save', (req: Request, res: Response): void => {
  *   total: number
  * }
  */
-router.get('/cean/chat/history/:sessionId', (req: Request, res: Response): void => {
+router.get('/cean/chat/history/:sessionId', (req: any, res: any): void => {
   try {
     const { sessionId } = req.params;
     const { limit, offset } = req.query;
@@ -186,7 +186,7 @@ router.get('/cean/chat/history/:sessionId', (req: Request, res: Response): void 
  * DELETE /api/cean/chat/history/:sessionId
  * Clear all messages for a session
  */
-router.delete('/cean/chat/history/:sessionId', (req: Request, res: Response): void => {
+router.delete('/cean/chat/history/:sessionId', (req: any, res: any): void => {
   try {
     const { sessionId } = req.params;
 

@@ -55,7 +55,7 @@ export function createScalingRouter(db: Database) {
    * GET /api/scaling/policies
    * Get current scaling policies for all fleets
    */
-  router.get('/policies', (req: Request, res: Response) => {
+  router.get('/policies', (req: any, res: any) => {
     try {
       const { fleet_id } = req.query;
 
@@ -87,7 +87,7 @@ export function createScalingRouter(db: Database) {
    * PUT /api/scaling/policies
    * Update scaling policy
    */
-  router.put('/policies', (req: Request, res: Response) => {
+  router.put('/policies', (req: any, res: any) => {
     try {
       const { fleet_id, policy } = req.body;
 
@@ -130,7 +130,7 @@ export function createScalingRouter(db: Database) {
    * GET /api/scaling/history/:fleetId
    * Get scaling history for a fleet
    */
-  router.get('/history/:fleetId', (req: Request, res: Response) => {
+  router.get('/history/:fleetId', (req: any, res: any) => {
     try {
       const { fleetId } = req.params;
       const { limit = 50 } = req.query;
@@ -168,7 +168,7 @@ export function createScalingRouter(db: Database) {
    * Manually trigger scaling (dev/admin endpoint)
    * Body: { fleet_id, action: 'scale_up' | 'scale_down' }
    */
-  router.post('/trigger', (req: Request, res: Response) => {
+  router.post('/trigger', (req: any, res: any) => {
     try {
       const { fleet_id, action } = req.body;
 

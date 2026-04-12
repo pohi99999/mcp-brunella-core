@@ -17,11 +17,11 @@ function isEnginePreference(value: unknown): value is BrowserCopilotEnginePrefer
 export function createBrowserCopilotRoutes(): Router {
   const router = Router();
 
-  router.get('/session', async (_req: Request, res: Response) => {
+  router.get('/session', async (_req: any, res: any) => {
     res.json({ success: true, session: browserCopilotSessionService.getState() });
   });
 
-  router.post('/session/configure', async (req: Request, res: Response) => {
+  router.post('/session/configure', async (req: any, res: any) => {
     try {
       const { mode, enginePreference, overlayEnabled } = req.body as {
         mode?: unknown;
@@ -52,7 +52,7 @@ export function createBrowserCopilotRoutes(): Router {
     }
   });
 
-  router.post('/message', async (req: Request, res: Response) => {
+  router.post('/message', async (req: any, res: any) => {
     try {
       const { instruction } = req.body as { instruction?: unknown };
       if (typeof instruction !== 'string' || !instruction.trim()) {
@@ -69,7 +69,7 @@ export function createBrowserCopilotRoutes(): Router {
     }
   });
 
-  router.post('/confirm', async (_req: Request, res: Response) => {
+  router.post('/confirm', async (_req: any, res: any) => {
     try {
       const session = await browserCopilotSessionService.confirmPending();
       return res.json({ success: true, session });
@@ -80,7 +80,7 @@ export function createBrowserCopilotRoutes(): Router {
     }
   });
 
-  router.post('/pause', async (_req: Request, res: Response) => {
+  router.post('/pause', async (_req: any, res: any) => {
     try {
       const session = await browserCopilotSessionService.pause();
       return res.json({ success: true, session });
@@ -91,7 +91,7 @@ export function createBrowserCopilotRoutes(): Router {
     }
   });
 
-  router.post('/resume', async (_req: Request, res: Response) => {
+  router.post('/resume', async (_req: any, res: any) => {
     try {
       const session = await browserCopilotSessionService.resume();
       return res.json({ success: true, session });
@@ -102,7 +102,7 @@ export function createBrowserCopilotRoutes(): Router {
     }
   });
 
-  router.post('/reset', async (_req: Request, res: Response) => {
+  router.post('/reset', async (_req: any, res: any) => {
     try {
       const session = browserCopilotSessionService.reset();
       return res.json({ success: true, session });

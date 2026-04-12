@@ -20,7 +20,7 @@ const CACHE_DURATION = 5000; // 5 seconds
  * GET /metrics
  * Return metrics in Prometheus text format
  */
-router.get('/metrics', async (req, res: Response) => {
+router.get('/metrics', async (req, res: any) => {
   try {
     const now = Date.now();
 

@@ -10,7 +10,7 @@
  */
 
 import { Router } from 'express';
-import type { Request, Response } from 'express';
+
 import type Database from 'better-sqlite3';
 import {
   initBriefingSchema,
@@ -86,7 +86,7 @@ export function createBriefingRoutes(db: Database.Database): Router {
    * List the 10 most recent briefing report summaries.
    * Returns an empty array if no reports have been generated yet.
    */
-  router.get('/reports', (_req: Request, res: Response) => {
+  router.get('/reports', (_req: any, res: any) => {
     try {
       const rows = db
         .prepare(
@@ -111,7 +111,7 @@ export function createBriefingRoutes(db: Database.Database): Router {
    * Return the most recent complete BriefingReport.
    * Responds with 404 if no report has been generated yet.
    */
-  router.get('/reports/latest', (_req: Request, res: Response) => {
+  router.get('/reports/latest', (_req: any, res: any) => {
     try {
       const row = db
         .prepare(
@@ -146,7 +146,7 @@ export function createBriefingRoutes(db: Database.Database): Router {
    * Body parameters (all optional):
    * - `dryRun` {boolean | 'true' | 'false' | '1' | '0'} — do not persist result
    */
-  router.post('/run', async (req: Request, res: Response): Promise<void> => {
+  router.post('/run', async (req: any, res: any): Promise<void> => {
     // Parse dryRun robustly — accept boolean, string truthy, numeric 1/0
     const rawDryRun = req.body?.dryRun;
     const dryRun =

@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import type { Request, Response } from 'express';
+
 import type Database from 'better-sqlite3';
 
 import {
@@ -47,7 +47,7 @@ export function createExternalKnowledgeRoutes(db: Database.Database): Router {
   initExternalKnowledgeSchema(db);
   const router = Router();
 
-  router.post('/sources/web', async (req: Request, res: Response) => {
+  router.post('/sources/web', async (req: any, res: any) => {
     try {
       const source = await safeIngestWebSource(
         {
@@ -70,7 +70,7 @@ export function createExternalKnowledgeRoutes(db: Database.Database): Router {
     }
   });
 
-  router.post('/sources/youtube', async (req: Request, res: Response) => {
+  router.post('/sources/youtube', async (req: any, res: any) => {
     try {
       const source = await safeIngestYoutubeSource(
         {
@@ -93,7 +93,7 @@ export function createExternalKnowledgeRoutes(db: Database.Database): Router {
     }
   });
 
-  router.post('/cards', (req: Request, res: Response) => {
+  router.post('/cards', (req: any, res: any) => {
     try {
       const card = createKnowledgeCard(
         {
@@ -118,7 +118,7 @@ export function createExternalKnowledgeRoutes(db: Database.Database): Router {
     }
   });
 
-  router.get('/review-queue', (req: Request, res: Response) => {
+  router.get('/review-queue', (req: any, res: any) => {
     try {
       const limit = typeof req.query.limit === 'string' ? Number(req.query.limit) : undefined;
       const items = listGovernanceReviewQueue({ db, limit });
@@ -130,7 +130,7 @@ export function createExternalKnowledgeRoutes(db: Database.Database): Router {
     }
   });
 
-  router.post('/cards/:cardId/promote', async (req: Request, res: Response) => {
+  router.post('/cards/:cardId/promote', async (req: any, res: any) => {
     try {
       const cardId = Array.isArray(req.params.cardId) ? req.params.cardId[0] : req.params.cardId;
       const card = await promoteKnowledgeCard(cardId, {
@@ -147,7 +147,7 @@ export function createExternalKnowledgeRoutes(db: Database.Database): Router {
     }
   });
 
-  router.get('/search', async (req: Request, res: Response) => {
+  router.get('/search', async (req: any, res: any) => {
     try {
       const query = typeof req.query.query === 'string' ? req.query.query : '';
       const limit = typeof req.query.limit === 'string' ? Number(req.query.limit) : undefined;
@@ -161,7 +161,7 @@ export function createExternalKnowledgeRoutes(db: Database.Database): Router {
     }
   });
 
-  router.get('/health', (_req: Request, res: Response) => {
+  router.get('/health', (_req: any, res: any) => {
     logInfo(MODULE, 'GET /health');
     res.json({
       success: true,

@@ -32,7 +32,7 @@ if (!GITHUB_WEBHOOK_SECRET) {
 /**
  * Handle workflow_run events (when a workflow completes)
  */
-async function handleWorkflowRun(payload: unknown, res: Response): Promise<void> {
+async function handleWorkflowRun(payload: unknown, res: any): Promise<void> {
   const workflowPayload = payload as GitHubWorkflowRunPayload;
   const { action, workflow_run: workflowRun } = workflowPayload;
 
@@ -95,7 +95,7 @@ async function handleWorkflowRun(payload: unknown, res: Response): Promise<void>
 /**
  * Handle pull_request events
  */
-async function handlePullRequest(payload: unknown, res: Response): Promise<void> {
+async function handlePullRequest(payload: unknown, res: any): Promise<void> {
   const prPayload = payload as GitHubPullRequestPayload;
   const { action, pull_request: pullRequest } = prPayload;
 
@@ -141,7 +141,7 @@ async function handlePullRequest(payload: unknown, res: Response): Promise<void>
 /**
  * Handle check_run events (detailed workflow step results)
  */
-async function handleCheckRun(payload: unknown, res: Response): Promise<void> {
+async function handleCheckRun(payload: unknown, res: any): Promise<void> {
   const checkRunPayload = payload as GitHubCheckRunPayload;
   const { action, check_run: checkRun } = checkRunPayload;
 
@@ -200,7 +200,7 @@ async function handleCheckRun(payload: unknown, res: Response): Promise<void> {
 router.post(
   '/webhook',
   // Parse raw body for signature verification
-  (req: Request, res: Response, next) => {
+  (req: any, res: any, next) => {
     // Read raw body for signature verification
     let rawBodyData = '';
     req.setEncoding('utf8');
@@ -219,7 +219,7 @@ router.post(
       }
     });
   },
-  async (req: Request, res: Response) => {
+  async (req: any, res: any) => {
     setAgentStatus('GitHubWebhook', 'working', 'Processing webhook');
 
     try {
@@ -289,7 +289,7 @@ router.post(
 /**
  * Health check endpoint
  */
-router.get('/health', (req: Request, res: Response) => {
+router.get('/health', (req: any, res: any) => {
   res.status(200).json({
     status: 'ok',
     webhook_configured: !!GITHUB_WEBHOOK_SECRET,
