@@ -59,7 +59,7 @@ describe('Outreach & Revenue Acceleration Flow', () => {
         
         expect(result.status).toBe('success');
         expect(result.data.leads).toHaveLength(1);
-        expect(result.data.leads[0].emailStatus).toBe('valid');
-        expect(result.data.leads[0].icebreaker).toContain('Kedves');
+        expect(result.data.leads[0].email_status).toBe('valid');
+        expect(result.data.leads[0].icebreaker_text).toContain('Kedves');
     });
 });
