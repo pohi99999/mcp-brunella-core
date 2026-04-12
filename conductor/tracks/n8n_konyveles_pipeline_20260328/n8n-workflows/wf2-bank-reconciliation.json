@@ -3,11 +3,61 @@
   "nodes": [
     {
       "parameters": {
+        "triggerOn": "folder",
+        "path": "/app/data/bank-imports",
+        "events": [
+          "add",
+          "change"
+        ],
+        "options": {
+          "awaitWriteFinish": true,
+          "followSymlinks": true,
+          "ignored": "**/*.csv.example",
+          "ignoreInitial": true,
+          "depth": 1,
+          "usePolling": false,
+          "ignoreMode": "match"
+        }
+      },
+      "id": "bank-file-trigger",
+      "name": "Bank CSV Folder Watch",
+      "type": "n8n-nodes-base.localFileTrigger",
+      "typeVersion": 1,
+      "position": [260, 120]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:3000/api/v1/agents/BankAgent/execute",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ task: 'Import the watched bank CSV into bookkeeping', context: { source: 'n8n', trigger: 'local-file-trigger', event: $json.event, bankCsvPath: $json.path, timestamp: $now.toISO() } }) }}",
+        "options": {}
+      },
+      "id": "bank-csv-import",
+      "name": "Import Bank CSV via BAS Route",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [520, 120]
+    },
+    {
+      "parameters": {
         "rule": {
           "interval": [
             {
-              "field": "hours",
-              "hoursInterval": 24
+              "field": "days",
+              "daysInterval": 1,
+              "triggerAtHour": 8,
+              "triggerAtMinute": 0
             }
           ]
         }
@@ -86,6 +136,28 @@
     }
   ],
   "connections": {
+    "Bank CSV Folder Watch": {
+      "main": [
+        [
+          {
+            "node": "Import Bank CSV via BAS Route",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Import Bank CSV via BAS Route": {
+      "main": [
+        [
+          {
+            "node": "Fetch Bookkeeping Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
     "Every Day 08:00": {
       "main": [
         [

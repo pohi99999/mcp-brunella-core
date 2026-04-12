@@ -58,4 +58,62 @@ class VisionWorker:
             print(f"❌ VisionWorker error: {e}")
             return None
 
+    async def analyze_brand_safety(self, image_path: str, brand_motto: str) -> Dict[str, Any]:
+        """
+        Analyzes a screenshot for "Visual Brand Safety":
+        - Luxury aesthetic
+        - Vibrant colors (aligning with 'Enjoy life in colours')
+        - Layout integrity (no distortions)
+        """
+        if not self.api_key:
+            return {"status": "error", "message": "Missing Vision API key (GEMINI_API_KEY)"}
+
+        try:
+            with open(image_path, "rb") as f:
+                image_data = base64.b64encode(f.read()).decode("utf-8")
+
+            llm = ChatGoogleGenerativeAI(model=self.model_name, google_api_key=self.api_key)
+            
+            prompt = f"""
+            Analyze this luxury fashion webpage screenshot for "Visual Brand Safety". 
+            The brand motto is: "{brand_motto}".
+
+            Evaluate the following criteria:
+            1. **Luxury Aesthetic**: Does the layout, typography, and imagery reflect a premium, luxury feel?
+            2. **Vibrant Colors**: Are the colors vibrant and well-balanced? (Check alignment with: "Enjoy life in colours")
+            3. **Layout Integrity**: Is the layout consistent, with no distorted elements, overlapping text, or broken UI?
+
+            Return the result ONLY as a valid JSON object with the following structure:
+            {{
+                "status": "success" | "warning" | "danger",
+                "score": 0-100,
+                "luxury_aesthetic": {{ "rating": 0-10, "comment": "..." }},
+                "color_vibrancy": {{ "rating": 0-10, "comment": "..." }},
+                "layout_integrity": {{ "rating": 0-10, "comment": "..." }},
+                "brand_alignment": {{ "is_aligned": bool, "summary": "..." }},
+                "overall_verdict": "Clear concise summary"
+            }}
+            """
+
+            message = HumanMessage(
+                content=[
+                    {"type": "text", "text": prompt},
+                    {
+                        "type": "image_url",
+                        "image_url": {"url": f"data:image/png;base64,{image_data}"},
+                    },
+                ]
+            )
+
+            response = llm.invoke([message])
+            content = response.content.strip()
+            if "```json" in content:
+                content = content.split("```json")[1].split("```")[0].strip()
+            
+            return json.loads(content)
+
+        except Exception as e:
+            print(f"❌ Brand Safety Analysis error: {e}")
+            return {"status": "error", "message": str(e), "timestamp": "now"}
+
 vision_worker = VisionWorker()

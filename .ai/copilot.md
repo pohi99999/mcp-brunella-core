@@ -1,5 +1,15 @@
 # Copilot Session Notes
 
+### 2026-04-12 22:09 - Phase 3 bank CSV watch branch
+
+**Feladat:** A WF-2 bookkeeping workflow kaptott egy Local File Trigger ágat, ami a watched CSV-ket a BankAgent-en keresztül tölti be a bookkeeping DB-be, miközben a napi reconcile backup megmaradt.
+
+**Érintett fájlok:** `conductor/tracks/n8n_konyveles_pipeline_20260328/n8n-workflows/wf2-bank-reconciliation.json`, `test/phase3_workflows.test.ts`, `conductor/tracks/konyveles_phase3_20260403/{meta.json,plan.md}`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A bank-import watch most már contractteszttel rögzített, a daily backup 08:00-ra van állítva; a Phase 3 továbbra is nyitott a live IMAP/NAV credential és E2E hardening lépésekre.
+
 ### 2026-04-12 19:48 - Phase 3 invoice handoff contract lock
 
 **Feladat:** Az EmailAgent top-level invoice kimenetét és a WF-7 normalizálást lezártam, hogy a live IMAP intake ne essen vissza az array-only alakra.

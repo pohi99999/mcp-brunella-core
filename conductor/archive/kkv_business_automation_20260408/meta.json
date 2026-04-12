@@ -2,12 +2,20 @@
   "id": "kkv_business_automation_20260408",
   "name": "KKV uzleti automatizalas masterplan",
   "title": "KKV uzleti automatizalas masterplan",
-  "status": "active",
+  "status": "completed",
   "priority": "high",
   "created": "2026-04-08",
-  "updated": "2026-04-08",
+  "updated": "2026-04-12",
   "assignee": "GitHub Copilot",
-  "progress": 30,
+  "progress": 100,
+  "verificationNotes": "All agents (PettyCash, AccountingPipeline, InventoryPipeline, StocktakeReconciliation) implemented and verified. Masterplan CLI command and dashboard integration active. 100% completion reached.",
+  "completedAt": "2026-04-12",
+  "dod": {
+    "tests_pass": true,
+    "build_clean": true,
+    "code_committed": true,
+    "no_verify_used": false
+  },
   "tags": [
     "kkv",
     "business",

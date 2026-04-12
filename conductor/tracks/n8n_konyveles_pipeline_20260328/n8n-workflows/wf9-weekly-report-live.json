@@ -3,11 +3,12 @@
   "nodes": [
     {
       "parameters": {
-        "rule": {
-          "interval": [
+        "triggerTimes": {
+          "item": [
             {
-              "field": "hours",
-              "hoursInterval": 168
+              "mode": "everyX",
+              "value": 168,
+              "unit": "hours"
             }
           ]
         }
@@ -38,26 +39,33 @@
     },
     {
       "parameters": {
-        "keepOnlySet": false,
-        "values": {
-          "json": [
+        "mode": "manual",
+        "includeOtherFields": true,
+        "assignments": {
+          "assignments": [
             {
+              "id": "format-weekly-report-summary",
               "name": "summary",
-              "value": "={{ { stage: 'weekly-report', status: $json.status ?? $json.data?.status ?? 'unknown', summary: $json.summary ?? $json.data?.summary ?? {}, missing: $json.missing ?? $json.data?.missing ?? [] } }}"
+              "value": "={{ { stage: 'weekly-report', status: $json.status ?? $json.data?.status ?? 'unknown', summary: $json.summary ?? $json.data?.summary ?? {}, missing: $json.missing ?? $json.data?.missing ?? [] } }}",
+              "type": "object"
             },
             {
+              "id": "format-weekly-report-report",
               "name": "report",
-              "value": "={{ { status: $json.status ?? $json.data?.status ?? 'unknown', summary: $json.summary ?? $json.data?.summary ?? {}, missing: $json.missing ?? $json.data?.missing ?? [], checks: $json.checks ?? $json.data?.checks ?? [] } }}"
-            }
-          ],
-          "string": [
-            {
-              "name": "source",
-              "value": "n8n"
+              "value": "={{ { status: $json.status ?? $json.data?.status ?? 'unknown', summary: $json.summary ?? $json.data?.summary ?? {}, missing: $json.missing ?? $json.data?.missing ?? [], checks: $json.checks ?? $json.data?.checks ?? [] } }}",
+              "type": "object"
             },
             {
+              "id": "format-weekly-report-source",
+              "name": "source",
+              "value": "n8n",
+              "type": "string"
+            },
+            {
+              "id": "format-weekly-report-timestamp",
               "name": "timestamp",
-              "value": "={{ $now.toISO() }}"
+              "value": "={{ $now.toISO() }}",
+              "type": "string"
             }
           ]
         }
@@ -65,9 +73,23 @@
       "id": "format-weekly-report",
       "name": "Format Weekly Report",
       "type": "n8n-nodes-base.set",
-      "typeVersion": 2.1,
+      "typeVersion": 3.4,
       "position": [
         780,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const item = items[0]?.json ?? {};\nconst report = item.report ?? item.summary ?? {};\nconst summary = { ...(item.summary ?? {}), status: item.summary?.status ?? report.status ?? 'unknown' };\n\nreturn [{ json: { ...item, summary, report } }];"
+      },
+      "id": "temp-code-weekly",
+      "name": "Normalize Weekly Report",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1040,
         320
       ]
     },
@@ -110,11 +132,24 @@
     },
     "Format Weekly Report": {
       "main": [
-        {
-          "node": "Send Weekly Report Email",
-          "type": "main",
-          "index": 0
-        }
+        [
+          {
+            "node": "Normalize Weekly Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize Weekly Report": {
+      "main": [
+        [
+          {
+            "node": "Send Weekly Report Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     }
   },

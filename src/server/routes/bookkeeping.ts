@@ -282,6 +282,31 @@ export function createBookkeepingRoutes(): Router {
       }
       });
 
+      router.post('/invoices', async (req, res) => {
+        try {
+          const body: unknown = req.body;
+          if (!isRecord(body)) {
+            res.status(400).json({ success: false, error: 'Request body must be an object' });
+            return;
+          }
+
+          logInfo('BookkeepingRoutes', 'Triggering SzamlazzHuAgent for invoice creation');
+          const result = await agentManager.delegate('SzamlazzHuAgent', 'create invoice', body);
+
+          if (!isAgentSuccess(result)) {
+            const message = getAgentErrorMessage(result) || 'SzamlazzHuAgent failed';
+            res.status(502).json({ success: false, error: message, result });
+            return;
+          }
+
+          res.status(201).json({ success: true, result });
+        } catch (error: unknown) {
+          const message = error instanceof Error ? error.message : String(error);
+          logError('BookkeepingRoutes', `Invoice creation failed: ${message}`);
+          res.status(500).json({ success: false, error: message });
+        }
+      });
+
   router.get('/readiness', (_req, res) => {
     try {
       const readiness = buildBookkeepingReadinessReport();

@@ -951,6 +951,28 @@ class OSTypeRequest(BaseModel):
 class VisionFindRequest(BaseModel):
     description: str
 
+class BrandSafetyRequest(BaseModel):
+    brandMotto: str = "Enjoy life in colours"
+
+@app.post("/os/verify-brand-safety")
+async def verify_brand_safety(req: BrandSafetyRequest):
+    """
+    Performs Visual Brand Safety Verification using GPT-4o-vision/Gemini.
+    Analyzes luxury aesthetic, vibrant colors, and layout integrity.
+    """
+    if not HAS_ROBOTKEZ:
+        raise HTTPException(status_code=501, detail="OS automation deps not installed")
+    
+    # 1. Take fresh screenshot
+    shot_name = f"safety_check_{int(datetime.utcnow().timestamp())}.png"
+    shot_path = await os_worker.take_screenshot(shot_name)
+    
+    # 2. Analyze using vision_worker logic (extended for safety reports)
+    # Since vision_worker.get_coordinates is already implemented, we'll use a similar pattern here
+    report = await vision_worker.analyze_brand_safety(shot_path, req.brandMotto)
+    
+    return report
+
 @app.get("/os/screenshot")
 async def os_screenshot():
     """Captures OS screen and returns image."""

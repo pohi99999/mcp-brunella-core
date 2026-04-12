@@ -1,0 +1,136 @@
+{
+  "name": "WF-6: Számlázz.hu Automata Kiállítás",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "trigger-invoice-creation",
+        "options": {}
+      },
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        100,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:3000/api/v1/bookkeeping/invoices",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"customer\": {\n    \"name\": \"{{$node[\"Webhook Trigger\"].json[\"customer_name\"]}}\",\n    \"zip\": \"{{$node[\"Webhook Trigger\"].json[\"zip\"]}}\",\n    \"city\": \"{{$node[\"Webhook Trigger\"].json[\"city\"]}}\",\n    \"address\": \"{{$node[\"Webhook Trigger\"].json[\"address\"]}}\",\n    \"email\": \"{{$node[\"Webhook Trigger\"].json[\"email\"]}}\",\n    \"taxNumber\": \"{{$node[\"Webhook Trigger\"].json[\"tax_number\"]}}\"\n  },\n  \"details\": {\n    \"paymentMethod\": \"{{$node[\"Webhook Trigger\"].json[\"payment_method\"] || 'Átutalás'}}\",\n    \"currency\": \"{{$node[\"Webhook Trigger\"].json[\"currency\"] || 'HUF'}}\",\n    \"language\": \"hu\"\n  },\n  \"items\": [\n    {\n      \"name\": \"{{$node[\"Webhook Trigger\"].json[\"item_name\"]}}\",\n      \"quantity\": {{$node[\"Webhook Trigger\"].json[\"quantity\"] || 1}},\n      \"unit\": \"db\",\n      \"netUnitPrice\": {{$node[\"Webhook Trigger\"].json[\"net_price\"]}},\n      \"vatRate\": \"27\",\n      \"netAmount\": {{$node[\"Webhook Trigger\"].json[\"net_amount\"]}},\n      \"vatAmount\": {{$node[\"Webhook Trigger\"].json[\"vat_amount\"]}},\n      \"grossAmount\": {{$node[\"Webhook Trigger\"].json[\"gross_amount\"]}}\n    }\n  ]\n}",
+        "options": {}
+      },
+      "name": "Call BAS Invoice API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        400,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{$node[\"Call BAS Invoice API\"].json[\"success\"]}}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "name": "Is Success?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        650,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "chatId": "YOUR_CHAT_ID",
+        "text": "✅ Számla sikeresen kiállítva: {{$node[\"Call BAS Invoice API\"].json[\"result\"][\"data\"][\"invoiceNumber\"]}}",
+        "options": {}
+      },
+      "name": "Telegram Success",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        900,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "chatId": "YOUR_CHAT_ID",
+        "text": "❌ Számlázási hiba: {{$node[\"Call BAS Invoice API\"].json[\"error\"]}}",
+        "options": {}
+      },
+      "name": "Telegram Error",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        900,
+        400
+      ]
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Call BAS Invoice API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call BAS Invoice API": {
+      "main": [
+        [
+          {
+            "node": "Is Success?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Success?": {
+      "main": [
+        [
+          {
+            "node": "Telegram Success",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Telegram Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

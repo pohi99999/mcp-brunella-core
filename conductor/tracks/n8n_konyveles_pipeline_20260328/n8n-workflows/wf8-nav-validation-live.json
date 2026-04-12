@@ -59,46 +59,69 @@
     },
     {
       "parameters": {
-        "keepOnlySet": false,
-        "values": {
-          "json": [
+        "mode": "manual",
+        "includeOtherFields": true,
+        "assignments": {
+          "assignments": [
             {
+              "id": "summary",
               "name": "summary",
-              "value": "={{ { stage: 'nav-validation-live', navStatus: ($json.data?.nav_status ?? $json.data?.navStatus ?? $json.nav_status ?? $json.result?.nav_status ?? $json.result?.status ?? $json.status ?? 'OK'), source: 'n8n' } }}"
+              "value": "={{ { stage: 'temp-nav', source: 'n8n' } }}",
+              "type": "object"
             },
             {
+              "id": "result",
+              "name": "result",
+              "value": "={{ $json.result ?? $json.data ?? $json }}",
+              "type": "object"
+            },
+            {
+              "id": "exceptions",
               "name": "exceptions",
-              "value": "={{ ($json.data?.nav_status ?? $json.data?.navStatus ?? $json.nav_status ?? $json.result?.nav_status ?? $json.result?.status ?? $json.status ?? 'OK') === 'MISMATCH' ? [{ stage: 'nav-validation-live', message: 'NAV mismatch detected', discrepancies: $json.data?.discrepancies ?? [] }] : [] }}"
-            }
-          ],
-          "boolean": [
+              "value": "={{ Array.isArray($json.exceptions) ? $json.exceptions : [] }}",
+              "type": "array"
+            },
             {
-              "name": "hasMismatch",
-              "value": "={{ ($json.data?.nav_status ?? $json.data?.navStatus ?? $json.nav_status ?? $json.result?.nav_status ?? $json.result?.status ?? $json.status ?? 'OK') === 'MISMATCH' }}"
-            }
-          ],
-          "string": [
+              "id": "isSuccess",
+              "name": "isSuccess",
+              "value": "={{ true }}",
+              "type": "boolean"
+            },
             {
+              "id": "source",
               "name": "source",
-              "value": "n8n"
+              "value": "n8n",
+              "type": "string"
             },
             {
+              "id": "timestamp",
               "name": "timestamp",
-              "value": "={{ $now.toISO() }}"
-            },
-            {
-              "name": "navStatus",
-              "value": "={{ $json.data?.nav_status ?? $json.data?.navStatus ?? $json.nav_status ?? $json.result?.nav_status ?? $json.result?.status ?? $json.status ?? 'OK' }}"
+              "value": "={{ $now.toISO() }}",
+              "type": "string"
             }
           ]
         }
       },
-      "id": "normalize-nav-result",
-      "name": "Normalize NAV Result",
+      "id": "temp-set-safe-nav",
+      "name": "Normalize Temp Result",
       "type": "n8n-nodes-base.set",
-      "typeVersion": 2.1,
+      "typeVersion": 3.4,
       "position": [
         1040,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const item = items[0]?.json ?? {};\nconst navStatus = item.result?.nav_status ?? item.result?.navStatus ?? item.nav_status ?? item.navStatus ?? 'OK';\nconst hasMismatch = navStatus === 'MISMATCH';\n\nreturn [{\n  json: {\n    ...item,\n    navStatus,\n    hasMismatch,\n    summary: {\n      ...(item.summary ?? {}),\n      navStatus,\n    },\n  },\n}];"
+      },
+      "id": "temp-code-safe-nav-2",
+      "name": "Add NAV Status to Summary",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1300,
         320
       ]
     },
@@ -198,14 +221,43 @@
     },
     "Validate Invoice with NavAgent": {
       "main": [
-        {
-          "node": "Normalize NAV Result",
-          "type": "main",
-          "index": 0
-        }
+        [
+          {
+            "node": "Normalize Temp Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     },
-    "Normalize NAV Result": {
+    "Update Bookkeeping Status": {
+      "main": [
+        []
+      ]
+    },
+    "Mismatch?": {
+      "main": [
+        [
+          {
+            "node": "Notify NAV Mismatch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize Temp Result": {
+      "main": [
+        [
+          {
+            "node": "Add NAV Status to Summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add NAV Status to Summary": {
       "main": [
         [
           {
@@ -221,20 +273,6 @@
             "index": 0
           }
         ]
-      ]
-    },
-    "Update Bookkeeping Status": {
-      "main": [
-        []
-      ]
-    },
-    "Mismatch?": {
-      "main": [
-        {
-          "node": "Notify NAV Mismatch",
-          "type": "main",
-          "index": 0
-        }
       ]
     }
   },

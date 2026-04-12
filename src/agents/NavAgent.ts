@@ -1,7 +1,10 @@
 import { IAgent, AgentResponse } from './types.js';
-import { logInfo, logError, setAgentStatus } from '../utils/logger.js';
+import { logInfo, logError, logWarn, setAgentStatus } from '../utils/logger.js';
 import fs from 'fs/promises';
 import path from 'path';
+import { NavClient } from '../utils/navClient.js';
+import { calculatePasswordHash } from '../utils/navSigner.js';
+import { NavUserConfig } from '../utils/navRequestBuilder.js';
 
 type NavContext = Record<string, unknown>;
 
@@ -18,7 +21,7 @@ type NormalizedNavInvoice = {
 
 type NavValidationRecord = {
     invoice: NormalizedNavInvoice;
-    navStatus: 'OK' | 'MISMATCH' | 'LOCAL_ONLY';
+    navStatus: 'OK' | 'MISMATCH' | 'LOCAL_ONLY' | 'API_ERROR';
     discrepancies: string[];
     validatedAt: string;
 };
@@ -30,15 +33,43 @@ export class NavAgent implements IAgent {
     capabilities = ['nav_api_integration', 'xml_parsing', 'data_normalization'];
 
     private navDir = 'data/nav';
+    private client: NavClient | null = null;
+
+    private async getClient(): Promise<NavClient | null> {
+        if (this.client) return this.client;
+
+        const config: NavUserConfig = {
+            username: process.env.NAV_USERNAME || '',
+            passwordHash: calculatePasswordHash(process.env.NAV_PASSWORD || ''),
+            taxNumber: process.env.NAV_TAX_NUMBER || process.env.SZAMLAZZ_HU_TAX_NUMBER || '',
+            signatureKey: process.env.NAV_SIGNING_KEY || '',
+        };
+
+        if (!config.username || !process.env.NAV_PASSWORD || !config.signatureKey) {
+            logWarn(this.name, 'NAV API credentials missing in .env. Falling back to MOCK mode.');
+            return null;
+        }
+
+        const isTest = process.env.NAV_BASE_URL?.includes('test') ?? true;
+        this.client = new NavClient(config, isTest);
+        return this.client;
+    }
 
     async execute(task: string, context?: Record<string, unknown>): Promise<AgentResponse> {
         setAgentStatus(this.name, 'working', task.slice(0, 50));
 
         try {
             const normalizedTask = task.toLowerCase();
+            const client = await this.getClient();
 
             if (this.shouldFetch(normalizedTask)) {
-                return await this.queryNavApi();
+                if (!client) return await this.queryNavApiMock();
+                
+                const invoiceNumber = this.asString(context?.invoiceNumber || context?.id);
+                if (!invoiceNumber) throw new Error('Invoice number is required for NAV fetch.');
+                
+                const navData = await client.queryInvoiceData(invoiceNumber);
+                return await this.processNavResponse(navData);
             }
 
             if (this.shouldValidate(normalizedTask, context)) {
@@ -66,7 +97,39 @@ export class NavAgent implements IAgent {
         return task.includes('validate') || this.extractInvoice(context) !== null;
     }
 
-    private async queryNavApi(): Promise<AgentResponse> {
+    private async processNavResponse(navData: any): Promise<AgentResponse> {
+        // Extraction logic based on v3.0 XML structure
+        const invoiceData = navData?.invoiceData;
+        if (!invoiceData) {
+            return { status: 'error', error: 'No invoice data found in NAV response.' };
+        }
+
+        const normalizedJson = {
+            id: invoiceData.invoiceNumber,
+            source: 'nav',
+            partner: {
+                name: invoiceData.supplierName,
+                taxId: invoiceData.supplierTaxNumber,
+            },
+            amounts: {
+                net: invoiceData.netAmount,
+                vat: invoiceData.vatAmount,
+                gross: invoiceData.grossAmount,
+            },
+            currency: invoiceData.currency || 'HUF',
+            issueDate: invoiceData.issueDate,
+            navStatus: 'OK',
+        };
+
+        return {
+            status: 'success',
+            success: true,
+            message: `Successfully fetched invoice ${normalizedJson.id} from NAV API.`,
+            data: normalizedJson,
+        };
+    }
+
+    private async queryNavApiMock(): Promise<AgentResponse> {
         logInfo(this.name, 'Querying NAV Online Számla API (MOCKED)...');
 
         const mockNavData = {
@@ -94,19 +157,13 @@ export class NavAgent implements IAgent {
             },
             currency: mockNavData.currency,
             issueDate: mockNavData.issueDate,
-            rawXmlPath: path.join(this.navDir, `${mockNavData.invoiceNumber}.xml`),
             navStatus: 'OK',
         };
-
-        const filePath = path.join(this.navDir, `${mockNavData.invoiceNumber}.json`);
-        await fs.mkdir(this.navDir, { recursive: true });
-        await fs.writeFile(filePath, JSON.stringify(normalizedJson, null, 2));
-        logInfo(this.name, `Saved normalized NAV data to ${filePath}`);
 
         return {
             status: 'success',
             success: true,
-            message: `Fetched ${1} invoices from NAV.`,
+            message: `Fetched ${1} invoices from NAV (MOCK).`,
             data: {
                 count: 1,
                 invoices: [normalizedJson],

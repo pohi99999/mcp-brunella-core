@@ -11,40 +11,52 @@
       "name": "Exception Webhook",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2,
-      "position": [260, 320]
+      "position": [
+        260,
+        320
+      ]
     },
     {
       "parameters": {
-        "keepOnlySet": false,
-        "values": {
-          "json": [
+        "mode": "manual",
+        "includeOtherFields": true,
+        "assignments": {
+          "assignments": [
             {
+              "id": "normalize-exception-summary",
               "name": "summary",
-              "value": "={{ $json.summary ?? {} }}"
+              "value": "={{ $json.summary ?? {} }}",
+              "type": "object"
             },
             {
+              "id": "normalize-exception-exceptions",
               "name": "exceptions",
-              "value": "={{ Array.isArray($json.exceptions) ? $json.exceptions : [] }}"
-            }
-          ],
-          "boolean": [
+              "value": "={{ Array.isArray($json.exceptions) ? $json.exceptions : [] }}",
+              "type": "array"
+            },
             {
+              "id": "normalize-exception-hasExceptions",
               "name": "hasExceptions",
-              "value": "={{ Array.isArray($json.exceptions) && $json.exceptions.length > 0 }}"
-            }
-          ],
-          "string": [
+              "value": "={{ Array.isArray($json.exceptions) && $json.exceptions.length > 0 }}",
+              "type": "boolean"
+            },
             {
+              "id": "normalize-exception-source",
               "name": "source",
-              "value": "={{ $json.source ?? 'n8n' }}"
+              "value": "={{ $json.source ?? 'n8n' }}",
+              "type": "string"
             },
             {
+              "id": "normalize-exception-timestamp",
               "name": "timestamp",
-              "value": "={{ $json.timestamp ?? $now.toISO() }}"
+              "value": "={{ $json.timestamp ?? $now.toISO() }}",
+              "type": "string"
             },
             {
+              "id": "normalize-exception-stage",
               "name": "stage",
-              "value": "={{ $json.stage ?? 'exception-notify' }}"
+              "value": "={{ $json.stage ?? 'exception-notify' }}",
+              "type": "string"
             }
           ]
         }
@@ -52,8 +64,11 @@
       "id": "normalize-exception",
       "name": "Normalize Exception Payload",
       "type": "n8n-nodes-base.set",
-      "typeVersion": 2.1,
-      "position": [520, 320]
+      "typeVersion": 3.4,
+      "position": [
+        520,
+        320
+      ]
     },
     {
       "parameters": {
@@ -77,7 +92,10 @@
       "name": "Update Bookkeeping Status",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [780, 220]
+      "position": [
+        780,
+        220
+      ]
     },
     {
       "parameters": {
@@ -94,7 +112,10 @@
       "name": "Has Exceptions?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
-      "position": [780, 420]
+      "position": [
+        780,
+        420
+      ]
     },
     {
       "parameters": {
@@ -108,7 +129,10 @@
       "name": "Send Exception Email",
       "type": "n8n-nodes-base.emailSend",
       "typeVersion": 2.1,
-      "position": [1040, 420]
+      "position": [
+        1040,
+        420
+      ]
     }
   ],
   "connections": {

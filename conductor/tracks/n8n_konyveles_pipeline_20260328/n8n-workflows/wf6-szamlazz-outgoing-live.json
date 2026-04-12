@@ -59,46 +59,69 @@
     },
     {
       "parameters": {
-        "keepOnlySet": false,
-        "values": {
-          "json": [
+        "mode": "manual",
+        "includeOtherFields": true,
+        "assignments": {
+          "assignments": [
             {
+              "id": "summary",
               "name": "summary",
-              "value": "={{ { stage: 'szamlazz-outgoing', invoiceNumber: $json.invoice?.invoiceNumber ?? $json.invoice?.invoice_no ?? null, source: 'n8n' } }}"
+              "value": "={{ { stage: 'temp-szamlazz', source: 'n8n' } }}",
+              "type": "object"
             },
             {
+              "id": "result",
               "name": "result",
-              "value": "={{ $json.result ?? $json.data ?? $json }}"
+              "value": "={{ $json.result ?? $json.data ?? $json }}",
+              "type": "object"
             },
             {
+              "id": "exceptions",
               "name": "exceptions",
-              "value": "={{ Array.isArray($json.exceptions) ? $json.exceptions : ($json.error ? [{ stage: 'szamlazz-outgoing', message: $json.error }] : []) }}"
-            }
-          ],
-          "boolean": [
-            {
-              "name": "isSuccess",
-              "value": "={{ $json.success === true || $json.status === 'success' || ($json.error ? false : true) }}"
-            }
-          ],
-          "string": [
-            {
-              "name": "source",
-              "value": "n8n"
+              "value": "={{ Array.isArray($json.exceptions) ? $json.exceptions : ($json.error ? [{ stage: 'temp-szamlazz', message: $json.error }] : []) }}",
+              "type": "array"
             },
             {
+              "id": "isSuccess",
+              "name": "isSuccess",
+              "value": "={{ $json.success === true || $json.status === 'success' || ($json.error ? false : true) }}",
+              "type": "boolean"
+            },
+            {
+              "id": "source",
+              "name": "source",
+              "value": "n8n",
+              "type": "string"
+            },
+            {
+              "id": "timestamp",
               "name": "timestamp",
-              "value": "={{ $now.toISO() }}"
+              "value": "={{ $now.toISO() }}",
+              "type": "string"
             }
           ]
         }
       },
-      "id": "normalize-szamlazz-result",
-      "name": "Normalize Szamlazz Result",
+      "id": "temp-set-safe-full",
+      "name": "Normalize Temp Result",
       "type": "n8n-nodes-base.set",
-      "typeVersion": 2.1,
+      "typeVersion": 3.4,
       "position": [
         1040,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const item = items[0]?.json ?? {};\nconst invoiceNumber = item.result?.invoiceNumber ?? item.result?.invoice_no ?? item.invoice?.invoiceNumber ?? item.invoice?.invoice_no ?? null;\n\nreturn [{\n  json: {\n    ...item,\n    summary: {\n      ...(item.summary ?? {}),\n      invoiceNumber,\n    },\n  },\n}];"
+      },
+      "id": "temp-code-safe-full-2",
+      "name": "Add Invoice Number to Summary",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1300,
         320
       ]
     },
@@ -198,20 +221,13 @@
     },
     "Create Invoice via BAS Route": {
       "main": [
-        {
-          "node": "Normalize Szamlazz Result",
-          "type": "main",
-          "index": 0
-        }
-      ]
-    },
-    "Normalize Szamlazz Result": {
-      "main": [
-        {
-          "node": "Szamlazz Success?",
-          "type": "main",
-          "index": 0
-        }
+        [
+          {
+            "node": "Normalize Temp Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     },
     "Szamlazz Success?": {
@@ -226,6 +242,28 @@
           "type": "main",
           "index": 0
         }
+      ]
+    },
+    "Normalize Temp Result": {
+      "main": [
+        [
+          {
+            "node": "Add Invoice Number to Summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add Invoice Number to Summary": {
+      "main": [
+        [
+          {
+            "node": "Szamlazz Success?",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     }
   },

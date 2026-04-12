@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { agentHookEngine } from '../src/core/agentHookEngine.js';
+import { fireHook } from '../src/core/agentHookEngine.js';
 import { phoenixEventBus } from '../src/core/phoenixEventBus.js';
 import '../src/core/phoenixHookBridge.js'; // Import triggers registration
 
@@ -8,7 +8,7 @@ describe('PhoenixHookBridge', () => {
     const phoenixSpy = vi.fn();
     phoenixEventBus.subscribe('phoenix:agent_failed', phoenixSpy);
 
-    await agentHookEngine.fire('agent:task:failed', { 
+    await fireHook('agent:task:failed', { 
       agentName: 'TestAgent', 
       error: 'Simulated failure',
       task: 'test task'

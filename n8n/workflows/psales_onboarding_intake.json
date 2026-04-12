@@ -1,0 +1,122 @@
+{
+  "name": "P-Sales Onboarding Intake Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "onboarding-intake",
+        "options": {}
+      },
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        100,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$node[\"Webhook Trigger\"].json[\"form_type\"]}}",
+              "operation": "isNotEmpty"
+            }
+          ]
+        }
+      },
+      "name": "Validate Input",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        300,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:3000/api/v1/webhook/onboarding-intake",
+        "authentication": "headerAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Brunella-Token",
+              "value": "bas_wh_T4jyIMGwAugmWqJhRrZb6EYax358C01t_2026"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"client_name\": \"{{$node[\"Webhook Trigger\"].json[\"client_name\"] || $node[\"Webhook Trigger\"].json[\"brand_name\"]}}\",\n  \"email\": \"{{$node[\"Webhook Trigger\"].json[\"email\"] || $node[\"Webhook Trigger\"].json[\"contact_email\"]}}\",\n  \"industry\": \"{{$node[\"Webhook Trigger\"].json[\"industry\"]}}\",\n  \"pain_point\": \"{{$node[\"Webhook Trigger\"].json[\"pain_point\"]}}\",\n  \"form_type\": \"{{$node[\"Webhook Trigger\"].json[\"form_type\"]}}\",\n  \"manual_hours\": \"{{$node[\"Webhook Trigger\"].json[\"manual_hours\"]}}\"\n}",
+        "options": {}
+      },
+      "name": "Forward to Brunella",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        550,
+        300
+      ],
+      "credentials": {
+        "headerAuth": {
+          "id": "brunella-token",
+          "name": "Brunella Header Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "peter@pohankaestarsa.com",
+        "toEmail": "={{$node[\"Webhook Trigger\"].json[\"email\"] || $node[\"Webhook Trigger\"].json[\"contact_email\"]}}",
+        "subject": "Visszaigazolás: Brunella Onboarding folyamat elindult",
+        "html": "<h3>Kedves {{$node[\"Webhook Trigger\"].json[\"client_name\"]}}!</h3><p>Köszönjük a megkeresést. Az AI ágensünk megkezdte a folyamatok elemzését. Hamarosan jelentkezünk a javaslatokkal.</p>",
+        "options": {}
+      },
+      "name": "Confirmation Email",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 1,
+      "position": [
+        800,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Validate Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Input": {
+      "main": [
+        [
+          {
+            "node": "Forward to Brunella",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Forward to Brunella": {
+      "main": [
+        [
+          {
+            "node": "Confirmation Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

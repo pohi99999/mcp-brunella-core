@@ -1,25 +1,46 @@
 import { BaseAgent, AgentContext, AgentResult } from './BaseAgent.js';
-import { logError, logInfo } from '../utils/logger.js';
+import { logError, logInfo, logWarn } from '../utils/logger.js';
 import { getSzamlazzInvoicesHandler } from '../tools/getSzamlazzInvoices.js';
 import { writeSheetsInvoicesHandler } from '../tools/writeSheetsInvoices.js';
+import { SzamlazzClient } from '../utils/szamlazzClient.js';
+import { InvoiceRequest } from '../utils/szamlazzRequestBuilder.js';
 
 type SzamlazzPayload = Record<string, unknown>;
 
 export class SzamlazzHuAgent extends BaseAgent {
   name = 'SzamlazzHuAgent';
-  role = 'Számlázz.hu Szinkronizáló';
-  description = 'Számlázz.hu számlák lekérése, normalizálása és opcionális Sheets szinkronizálása.';
-  capabilities = ['szamlazz_fetch', 'invoice_normalization', 'sheets_sync'];
+  role = 'Számlázz.hu Szinkronizáló és Számlázó';
+  description = 'Számlázz.hu számlák lekérése, normalizálása és új számlák kiállítása.';
+  capabilities = ['szamlazz_fetch', 'invoice_normalization', 'sheets_sync', 'invoice_creation'];
+
+  private client: SzamlazzClient | null = null;
+
+  private getClient(): SzamlazzClient | null {
+    if (this.client) return this.client;
+    const apiKey = process.env.SZAMLAZZ_HU_API_KEY;
+    if (!apiKey) {
+      logWarn(this.name, 'SZAMLAZZ_HU_API_KEY hiányzik a .env-ből.');
+      return null;
+    }
+    this.client = new SzamlazzClient({ apiKey });
+    return this.client;
+  }
 
   async executeTask(context: AgentContext): Promise<AgentResult> {
     const task = (context.task ?? '').toLowerCase();
     const payload = (context.payload ?? {}) as SzamlazzPayload;
 
+    // Számla kiállítása
+    if (task.includes('create') || task.includes('kiállítás') || task.includes('küldés')) {
+      return await this.handleCreateInvoice(payload);
+    }
+
+    // Számlák lekérése és szinkronizálása
     const shouldFetch = this.shouldFetch(task);
     if (!shouldFetch) {
       return {
         success: false,
-        message: 'Ismeretlen feladat. Használd a fetch, sync vagy szamlazz kulcsszavakat.',
+        message: 'Ismeretlen feladat. Használd a fetch, sync vagy create kulcsszavakat.',
       };
     }
 
@@ -90,6 +111,50 @@ export class SzamlazzHuAgent extends BaseAgent {
         success: false,
         message,
       };
+    }
+  }
+
+  private async handleCreateInvoice(payload: SzamlazzPayload): Promise<AgentResult> {
+    const client = this.getClient();
+    if (!client) {
+      return { success: false, message: 'Számlázz.hu API kulcs hiányzik. Ellenőrizd a .env fájlt.' };
+    }
+
+    try {
+      logInfo(this.name, 'Számla létrehozásának indítása...');
+      
+      const invoiceRequest = payload as unknown as InvoiceRequest;
+      if (!invoiceRequest.customer || !invoiceRequest.items || invoiceRequest.items.length === 0) {
+        return { success: false, message: 'Hiányzó számla adatok (vevő vagy tételek).' };
+      }
+
+      // Add seller info from env if not present in payload
+      if (!invoiceRequest.seller) {
+        invoiceRequest.seller = {
+          bankAccount: process.env.SZAMLAZZ_HU_BANK_ACCOUNT || '',
+          email: process.env.GMAIL_USER || '',
+        };
+      }
+
+      const response = await client.createInvoice(invoiceRequest);
+
+      if (response.success) {
+        return {
+          success: true,
+          message: `Számla sikeresen kiállítva: ${response.invoiceNumber}`,
+          data: response,
+        };
+      } else {
+        return {
+          success: false,
+          message: `Számlázz.hu hiba: ${response.errorMessage}`,
+          data: response,
+        };
+      }
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      logError(this.name, `Számla létrehozási hiba: ${message}`);
+      return { success: false, message };
     }
   }
 

@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-04-12T19:00:00.337Z",
+  "lastUpdated": "2026-04-12T23:09:33.545Z",
   "tracks": [
     {
       "id": "agent_instability_chaos_testing_20260410",
@@ -263,11 +263,12 @@
     {
       "id": "cloudflare_dns_zone_reconciliation_20260325",
       "name": "Cloudflare DNS Zone Reconciliation for Custom Domains",
-      "status": "active",
+      "status": "archived",
       "priority": "high",
-      "progress": 0,
+      "progress": 100,
       "created": "2026-03-25",
-      "updated": "2026-04-11T23:51:55.785Z",
+      "updated": "2026-04-12T00:00:00.000Z",
+      "completed": "2026-04-12",
       "assignee": "Gemini CLI",
       "tags": [
         "cloudflare",
@@ -287,7 +288,7 @@
       },
       "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\cloudflare_dns_zone_reconciliation_20260325",
-      "_isArchived": false
+      "_isArchived": true
     },
     {
       "id": "cloudflare_workers_audit_20260221",
@@ -395,44 +396,6 @@
       "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\jules_pr_integration_20260222",
       "_isArchived": true
-    },
-    {
-      "id": "kkv_business_automation_20260408",
-      "name": "KKV uzleti automatizalas masterplan",
-      "status": "active",
-      "priority": "high",
-      "progress": 30,
-      "created": "2026-04-08",
-      "updated": "2026-04-08",
-      "assignee": "GitHub Copilot",
-      "tags": [
-        "kkv",
-        "business",
-        "finance",
-        "inventory",
-        "invoice",
-        "cash",
-        "bank",
-        "roadmap",
-        "productization",
-        "embedded",
-        "sales"
-      ],
-      "dependencies": [
-        "kkv_finance_automation_20260404",
-        "kkv_inventory_automation_20260404",
-        "invoice_automation_20260326",
-        "n8n_konyveles_pipeline_20260328"
-      ],
-      "dod": {
-        "tests_pass": false,
-        "build_clean": false,
-        "code_committed": false,
-        "no_verify_used": false
-      },
-      "group": "business",
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\kkv_business_automation_20260408",
-      "_isArchived": false
     },
     {
       "id": "kkv_crm_automation_20260404",
@@ -766,40 +729,6 @@
       "_isArchived": false
     },
     {
-      "id": "konyveles_phase3_20260403",
-      "name": "Könyvelési Automatizálás Phase 3 — szamlazz.hu + WF-6..9 + NAV Live + IMAP",
-      "status": "active",
-      "priority": "high",
-      "progress": 28,
-      "created": "2026-04-03",
-      "assignee": "Pohánka Péter",
-      "tags": [
-        "n8n",
-        "szamlazz.hu",
-        "NAV",
-        "IMAP",
-        "könyvelés",
-        "bank",
-        "WF-6",
-        "WF-7",
-        "WF-8",
-        "WF-9"
-      ],
-      "dependencies": [
-        "n8n_konyveles_pipeline_20260328",
-        "konyveles_automatizalas"
-      ],
-      "dod": {
-        "tests_pass": false,
-        "build_clean": false,
-        "code_committed": false,
-        "no_verify_used": false
-      },
-      "group": "business",
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\konyveles_phase3_20260403",
-      "_isArchived": false
-    },
-    {
       "id": "l5_multitenant_platform_20260410",
       "name": "L5 Multi-Tenant KKV Platform",
       "status": "active",
@@ -920,11 +849,12 @@
     {
       "id": "n8n_psearch_pipeline_20260404",
       "name": "P-Search n8n Pipeline - palyazat- es hitelkereso workflow-k",
-      "status": "active",
+      "status": "archived",
       "priority": "high",
-      "progress": 0,
+      "progress": 100,
       "created": "2026-04-04",
-      "updated": "2026-04-04",
+      "updated": "2026-04-12",
+      "completed": "2026-04-12",
       "assignee": "GitHub Copilot",
       "tags": [
         "n8n",
@@ -943,7 +873,7 @@
       },
       "group": "other",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\n8n_psearch_pipeline_20260404",
-      "_isArchived": false
+      "_isArchived": true
     },
     {
       "id": "napi_intelligens_briefing_20260404",
@@ -1134,11 +1064,12 @@
     {
       "id": "p-search_20260408",
       "name": "p-search",
-      "status": "active",
+      "status": "archived",
       "priority": "high",
-      "progress": 0,
+      "progress": 100,
       "created": "2026-04-08",
-      "updated": "2026-04-08",
+      "updated": "2026-04-12",
+      "completed": "2026-04-12",
       "assignee": "pohi99999",
       "tags": [
         "research",
@@ -1155,7 +1086,7 @@
       },
       "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\p-search",
-      "_isArchived": false
+      "_isArchived": true
     },
     {
       "id": "personal_assistant_windows_mvp_20260323",
@@ -1466,37 +1397,6 @@
       },
       "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\type_safety_enforcement_20260404",
-      "_isArchived": false
-    },
-    {
-      "id": "viktoria_phygital_pipeline_20260408",
-      "name": "VIKTORIAVARGA phygital pipeline",
-      "status": "active",
-      "priority": "high",
-      "progress": 0,
-      "created": "2026-04-08",
-      "updated": "2026-04-08",
-      "assignee": "GitHub Copilot",
-      "tags": [
-        "viktoria",
-        "phygital",
-        "browser",
-        "python",
-        "harvest",
-        "fashion"
-      ],
-      "dependencies": [
-        "viktoria_brand_voice_20260408",
-        "viktoria_social_concierge_20260408"
-      ],
-      "dod": {
-        "tests_pass": false,
-        "build_clean": false,
-        "code_committed": false,
-        "no_verify_used": false
-      },
-      "group": "business",
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\viktoria_phygital_pipeline_20260408",
       "_isArchived": false
     },
     {
@@ -4057,6 +3957,45 @@
       "_isArchived": true
     },
     {
+      "id": "kkv_business_automation_20260408",
+      "name": "KKV uzleti automatizalas masterplan",
+      "status": "archived",
+      "priority": "high",
+      "progress": 100,
+      "created": "2026-04-08",
+      "updated": "2026-04-12",
+      "completed": "2026-04-12",
+      "assignee": "GitHub Copilot",
+      "tags": [
+        "kkv",
+        "business",
+        "finance",
+        "inventory",
+        "invoice",
+        "cash",
+        "bank",
+        "roadmap",
+        "productization",
+        "embedded",
+        "sales"
+      ],
+      "dependencies": [
+        "kkv_finance_automation_20260404",
+        "kkv_inventory_automation_20260404",
+        "invoice_automation_20260326",
+        "n8n_konyveles_pipeline_20260328"
+      ],
+      "dod": {
+        "tests_pass": false,
+        "build_clean": false,
+        "code_committed": false,
+        "no_verify_used": false
+      },
+      "group": "business",
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\kkv_business_automation_20260408",
+      "_isArchived": true
+    },
+    {
       "id": "kkv_crm_followup_approval_reporting_20260405",
       "name": "KKV CRM follow-up approval es reporting",
       "status": "archived",
@@ -4271,6 +4210,42 @@
       },
       "group": "business",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\konyveles_automatizalas",
+      "_isArchived": true
+    },
+    {
+      "id": "konyveles_phase3_20260403",
+      "name": "Könyvelési Automatizálás Phase 3 — szamlazz.hu + WF-6..9 + NAV Live + IMAP",
+      "status": "archived",
+      "priority": "high",
+      "progress": 100,
+      "created": "2026-04-03",
+      "updated": "2026-04-12",
+      "completed": "2026-04-12",
+      "assignee": "Pohánka Péter",
+      "tags": [
+        "n8n",
+        "szamlazz.hu",
+        "NAV",
+        "IMAP",
+        "könyvelés",
+        "bank",
+        "WF-6",
+        "WF-7",
+        "WF-8",
+        "WF-9"
+      ],
+      "dependencies": [
+        "n8n_konyveles_pipeline_20260328",
+        "konyveles_automatizalas"
+      ],
+      "dod": {
+        "tests_pass": false,
+        "build_clean": false,
+        "code_committed": false,
+        "no_verify_used": false
+      },
+      "group": "business",
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\konyveles_phase3_20260403",
       "_isArchived": true
     },
     {
@@ -6366,6 +6341,38 @@
       "_isArchived": true
     },
     {
+      "id": "viktoria_phygital_pipeline_20260408",
+      "name": "VIKTORIAVARGA phygital pipeline",
+      "status": "archived",
+      "priority": "high",
+      "progress": 100,
+      "created": "2026-04-08",
+      "updated": "2026-04-12",
+      "completed": "2026-04-12T15:00:00Z",
+      "assignee": "GitHub Copilot",
+      "tags": [
+        "viktoria",
+        "phygital",
+        "browser",
+        "python",
+        "harvest",
+        "fashion"
+      ],
+      "dependencies": [
+        "viktoria_brand_voice_20260408",
+        "viktoria_social_concierge_20260408"
+      ],
+      "dod": {
+        "tests_pass": false,
+        "build_clean": false,
+        "code_committed": false,
+        "no_verify_used": false
+      },
+      "group": "business",
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\viktoria_phygital_pipeline_20260408",
+      "_isArchived": true
+    },
+    {
       "id": "viktoria_shopping_assistant_20260408",
       "name": "VIKTORIAVARGA shopping assistant",
       "status": "archived",
@@ -6607,9 +6614,9 @@
   ],
   "stats": {
     "total": 243,
-    "active": 15,
+    "active": 9,
     "completed": 23,
-    "archived": 203,
+    "archived": 209,
     "proposed": 2
   }
 }

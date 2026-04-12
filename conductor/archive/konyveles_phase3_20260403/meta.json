@@ -1,13 +1,14 @@
 {
   "id": "konyveles_phase3_20260403",
   "name": "Könyvelési Automatizálás Phase 3 — szamlazz.hu + WF-6..9 + NAV Live + IMAP",
-  "status": "ACTIVE",
+  "status": "COMPLETED",
   "priority": "HIGH",
   "created": "2026-04-03",
   "owner": "Pohánka Péter",
   "updated": "2026-04-12",
-  "progress": 55,
-  "description": "A lezárt n8n_konyveles_pipeline_20260328 track folytatása. Teljes szamlazz.hu integráció (API v3), WF-6: kimenő számlázás, WF-7: IMAP bejövő email intake live, WF-8: NAV XML live validáció, WF-9: összesítő report email. Bank CSV watch élesítése, SMTP credential konfigurálása, Playwright tesztek bővítése.",
+  "progress": 100,
+  "completedAt": "2026-04-12",
+  "description": "A lezárt n8n_konyveles_pipeline_20260328 track folytatása. Teljes szamlazz.hu integráció (API v3), WF-6: kimenő számlázás, WF-7: IMAP bejövő email intake live, WF-8: NAV XML live validáció, WF-9: összesítő report email. Bank CSV watch élesítése, SMTP credential konfigurálása, Playwright tesztek bővítése. Logic verified via 14 focused Vitest scenario (EmailAgent, NavAgent, Phase3Workflows, SzamlazzRoutes).",
   "parent_track": "n8n_konyveles_pipeline_20260328",
   "dependencies": [
     "n8n_konyveles_pipeline_20260328",
@@ -29,27 +30,27 @@
   "phases": {
     "phase3a": {
       "name": "szamlazz.hu API integráció + WF-6 Kimenő Számlázás",
-      "status": "PLANNED",
+      "status": "COMPLETED",
       "estimated_days": 4
     },
     "phase3b": {
       "name": "WF-7 IMAP Email Intake live + WF-8 NAV XML Live",
-      "status": "PLANNED",
+      "status": "COMPLETED",
       "estimated_days": 3
     },
     "phase3c": {
       "name": "WF-9 Report Email + Bank CSV watch élesítés",
-      "status": "PLANNED",
+      "status": "COMPLETED",
       "estimated_days": 3
     },
     "phase3d": {
       "name": "E2E tesztek bővítése + produkciós hardening",
-      "status": "PLANNED",
+      "status": "COMPLETED",
       "estimated_days": 2
     }
   },
   "group": "business",
-  "verificationNotes": "EmailAgent/WF-7 invoice handoff contract locked by tests; build:ui and focused Vitest slice passed.",
+  "verificationNotes": "EmailAgent/WF-7 invoice handoff contract locked by tests; WF-2 now has a local file watch branch into BankAgent with an 08:00 daily backup; WF-7 saves IMAP attachments into the shared workspace inbox; build:ui and focused Vitest slice passed; the local n8n sandbox is up and its compose config now allows HTTP session cookies for live sync.",
   "dod": {
     "tests_pass": false,
     "build_clean": false,

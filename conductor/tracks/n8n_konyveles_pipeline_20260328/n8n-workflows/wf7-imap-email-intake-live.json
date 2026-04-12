@@ -3,26 +3,20 @@
   "nodes": [
     {
       "parameters": {
-        "pollTimes": {
-          "item": [
-            {
-              "mode": "everyX",
-              "value": 5,
-              "unit": "minutes"
-            }
-          ]
-        },
-        "downloadAttachments": true,
-        "postProcessAction": "markSeen",
+        "mailbox": "INBOX",
+        "postProcessAction": "read",
+        "format": "resolved",
+        "dataPropertyAttachmentsPrefixName": "attachment_",
         "options": {
-          "onlyUnread": true,
-          "allowUnauthorizedCerts": false
+          "customEmailConfig": "[\"UNSEEN\"]",
+          "forceReconnect": 60,
+          "trackLastMessageId": true
         }
       },
       "id": "imap-intake",
       "name": "IMAP Email Intake (Live)",
       "type": "n8n-nodes-base.emailReadImap",
-      "typeVersion": 1.2,
+      "typeVersion": 2.1,
       "position": [
         260,
         320
@@ -45,7 +39,7 @@
     {
       "parameters": {
         "mode": "runOnceForAllItems",
-        "jsCode": "const fs = require('fs/promises');\nconst path = require('path');\n\nconst input = items[0] ?? {};\nconst json = input.json ?? {};\nconst binary = input.binary ?? {};\nconst inboxDir = path.join(process.cwd(), 'data', 'inbox');\nconst timestamp = new Date().toISOString().replace(/[:.]/g, '-');\nconst savedAttachmentPaths = [];\n\nawait fs.mkdir(inboxDir, { recursive: true });\n\nfor (const [key, file] of Object.entries(binary)) {\n  const rawFileName = String(file?.fileName ?? `${key}.bin`).trim() || `${key}.bin`;\n  const safeFileName = rawFileName.replace(/[\\\\/:*?\"<>|]/g, '_').slice(0, 160);\n  const destPath = path.join(inboxDir, `${timestamp}_${safeFileName}`);\n  if (file?.data) {\n    await fs.writeFile(destPath, Buffer.from(String(file.data), 'base64'));\n    savedAttachmentPaths.push(destPath);\n  }\n}\n\nif (savedAttachmentPaths.length === 0 && json.subject) {\n  const safeSubject = String(json.subject).replace(/[\\\\/:*?\"<>|]/g, '_').slice(0, 80);\n  const rawPath = path.join(inboxDir, `${timestamp}_${safeSubject}.eml`);\n  if (json.text || json.textPlain || json.textHtml) {\n    await fs.writeFile(rawPath, String(json.text ?? json.textPlain ?? json.textHtml));\n    savedAttachmentPaths.push(rawPath);\n  }\n}\n\nreturn [{\n  json: {\n    ...json,\n    savedAttachmentPaths,\n    attachmentCount: savedAttachmentPaths.length,\n    inboxDirectory: inboxDir,\n  },\n  binary: {},\n}];"
+        "jsCode": "const fs = require('fs/promises');\nconst path = require('path');\n\nconst input = items[0] ?? {};\nconst json = input.json ?? {};\nconst binary = input.binary ?? {};\nconst workspaceRoot = process.env.BRUNELLA_WORKSPACE_ROOT || process.cwd();\nconst inboxDir = path.join(workspaceRoot, 'data', 'inbox');\nconst timestamp = new Date().toISOString().replace(/[:.]/g, '-');\nconst savedAttachmentPaths = [];\n\nawait fs.mkdir(inboxDir, { recursive: true });\n\nfor (const [key, file] of Object.entries(binary)) {\n  const rawFileName = String(file?.fileName ?? `${key}.bin`).trim() || `${key}.bin`;\n  const safeFileName = rawFileName.replace(/[\\\\/:*?\"<>|]/g, '_').slice(0, 160);\n  const destPath = path.join(inboxDir, `${timestamp}_${safeFileName}`);\n  if (file?.data) {\n    await fs.writeFile(destPath, Buffer.from(String(file.data), 'base64'));\n    savedAttachmentPaths.push(destPath);\n  }\n}\n\nif (savedAttachmentPaths.length === 0 && json.subject) {\n  const safeSubject = String(json.subject).replace(/[\\\\/:*?\"<>|]/g, '_').slice(0, 80);\n  const rawPath = path.join(inboxDir, `${timestamp}_${safeSubject}.eml`);\n  if (json.text || json.textPlain || json.textHtml) {\n    await fs.writeFile(rawPath, String(json.text ?? json.textPlain ?? json.textHtml));\n    savedAttachmentPaths.push(rawPath);\n  }\n}\n\nreturn [{\n  json: {\n    ...json,\n    savedAttachmentPaths,\n    attachmentCount: savedAttachmentPaths.length,\n    inboxDirectory: inboxDir,\n  },\n  binary: {},\n}];"
       },
       "id": "save-attachments",
       "name": "Save Attachments to Inbox",
@@ -85,36 +79,45 @@
     },
     {
       "parameters": {
-        "keepOnlySet": false,
-        "values": {
-          "json": [
+        "mode": "manual",
+        "includeOtherFields": true,
+        "assignments": {
+          "assignments": [
             {
+              "id": "normalize-email-summary",
               "name": "summary",
-              "value": "={{ { stage: 'email-intake-live', source: 'imap', subject: $json.subject ?? null, savedAttachmentPaths: $json.savedAttachmentPaths ?? [] } }}"
+              "value": "={{ { stage: 'email-intake-live', source: 'imap', subject: $json.subject ?? null, savedAttachmentPaths: $json.savedAttachmentPaths ?? [] } }}",
+              "type": "object"
             },
             {
+              "id": "normalize-email-invoice",
               "name": "invoice",
-              "value": "={{ $json.data?.invoice ?? $json.data?.invoices?.[0] ?? $json.result ?? $json.data ?? $json.invoice ?? $json }}"
+              "value": "={{ $json.data?.invoice ?? $json.data?.invoices?.[0] ?? $json.result ?? $json.data ?? $json.invoice ?? $json }}",
+              "type": "object"
             },
             {
+              "id": "normalize-email-exceptions",
               "name": "exceptions",
-              "value": "={{ Array.isArray($json.exceptions) ? $json.exceptions : ($json.error ? [{ stage: 'email-intake-live', message: $json.error }] : []) }}"
-            }
-          ],
-          "boolean": [
-            {
-              "name": "isSuccess",
-              "value": "={{ $json.success === true || $json.status === 'success' || ($json.error ? false : true) }}"
-            }
-          ],
-          "string": [
-            {
-              "name": "source",
-              "value": "n8n"
+              "value": "={{ Array.isArray($json.exceptions) ? $json.exceptions : ($json.error ? [{ stage: 'email-intake-live', message: $json.error }] : []) }}",
+              "type": "array"
             },
             {
+              "id": "normalize-email-isSuccess",
+              "name": "isSuccess",
+              "value": "={{ $json.success === true || $json.status === 'success' || ($json.error ? false : true) }}",
+              "type": "boolean"
+            },
+            {
+              "id": "normalize-email-source",
+              "name": "source",
+              "value": "n8n",
+              "type": "string"
+            },
+            {
+              "id": "normalize-email-timestamp",
               "name": "timestamp",
-              "value": "={{ $now.toISO() }}"
+              "value": "={{ $now.toISO() }}",
+              "type": "string"
             }
           ]
         }
@@ -122,7 +125,7 @@
       "id": "normalize-email",
       "name": "Normalize EmailAgent Result",
       "type": "n8n-nodes-base.set",
-      "typeVersion": 2.1,
+      "typeVersion": 3.4,
       "position": [
         1300,
         320
@@ -150,24 +153,33 @@
     },
     {
       "parameters": {
-        "keepOnlySet": false,
-        "values": {
-          "json": [
+        "mode": "manual",
+        "includeOtherFields": true,
+        "assignments": {
+          "assignments": [
             {
+              "id": "email-success-record-status",
               "name": "status",
-              "value": "success"
+              "value": "success",
+              "type": "string"
             },
             {
+              "id": "email-success-record-summary",
               "name": "summary",
-              "value": "={{ $json.summary }}"
+              "value": "={{ $json.summary }}",
+              "type": "object"
             },
             {
+              "id": "email-success-record-invoice",
               "name": "invoice",
-              "value": "={{ $json.invoice }}"
+              "value": "={{ $json.invoice }}",
+              "type": "object"
             },
             {
+              "id": "email-success-record-savedAttachmentPaths",
               "name": "savedAttachmentPaths",
-              "value": "={{ $json.savedAttachmentPaths ?? [] }}"
+              "value": "={{ $json.savedAttachmentPaths ?? [] }}",
+              "type": "array"
             }
           ]
         }
@@ -175,7 +187,7 @@
       "id": "email-success-record",
       "name": "Record Intake Success",
       "type": "n8n-nodes-base.set",
-      "typeVersion": 2.1,
+      "typeVersion": 3.4,
       "position": [
         1780,
         220
@@ -210,16 +222,21 @@
     },
     {
       "parameters": {
-        "keepOnlySet": false,
-        "values": {
-          "json": [
+        "mode": "manual",
+        "includeOtherFields": true,
+        "assignments": {
+          "assignments": [
             {
+              "id": "invoice-skip-record-status",
               "name": "status",
-              "value": "skipped"
+              "value": "skipped",
+              "type": "string"
             },
             {
+              "id": "invoice-skip-record-reason",
               "name": "reason",
-              "value": "Invoice subject did not match"
+              "value": "Invoice subject did not match",
+              "type": "string"
             }
           ]
         }
@@ -227,7 +244,7 @@
       "id": "invoice-skip-record",
       "name": "Skip Non-Invoice Email",
       "type": "n8n-nodes-base.set",
-      "typeVersion": 2.1,
+      "typeVersion": 3.4,
       "position": [
         780,
         520

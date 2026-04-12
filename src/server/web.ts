@@ -362,8 +362,14 @@ async function deferredInit(
   }
 
   const { createV1Router } = await import("./routes/index.js");
+  const { webhookHooksRouter } = await import("./routes/webhookHooks.js");
+  const { createOnboardingIntakeRoutes } = await import("./routes/onboardingIntake.js");
   const v1Router = createV1Router();
+  const onboardingIntakeRouter = createOnboardingIntakeRoutes();
+
   app.use("/api/v1", v1Router);
+  app.use("/api/v1/webhook", webhookHooksRouter);
+  app.use("/api/v1/webhook/onboarding-intake", onboardingIntakeRouter);
   app.use("/api", v1Router);
 
   app.get("/metrics", async (_req, res) => {
@@ -396,18 +402,21 @@ async function deferredInit(
       { GrantHunter },
       { LawDetectiveAgent },
       { PropertyVisionaryAgent },
+      { ViktoriaPhygitalAgent },
     ] = await Promise.all([
       import("../agents/InnovationBridgeAgent.js"),
       import("../agents/DigitalHeadhunterAgent.js"),
       import("../agents/GrantHunter.js"),
       import("../agents/LawDetectiveAgent.js"),
       import("../agents/PropertyVisionaryAgent.js"),
+      import("../agents/ViktoriaPhygitalAgent.js"),
     ]);
     agentManager.registerAgent(new InnovationBridgeAgent());
     agentManager.registerAgent(new DigitalHeadhunterAgent());
     agentManager.registerAgent(new GrantHunter());
     agentManager.registerAgent(new LawDetectiveAgent());
     agentManager.registerAgent(new PropertyVisionaryAgent());
+    agentManager.registerAgent(new ViktoriaPhygitalAgent());
   } catch (e: unknown) {
     logError("Server", `Specialized agent registration failed: ${e instanceof Error ? e.message : String(e)}`);
   }
@@ -524,6 +533,14 @@ async function deferredInit(
     logInfo("Server", "L5 Invoice Pipeline initialized");
   } catch (e: unknown) {
     logWarn("Server", `Invoice Pipeline: ${e instanceof Error ? e.message : String(e)}`);
+  }
+
+  try {
+    const { initializeSdlcHooks } = await import("../core/sdlcHooks.js");
+    initializeSdlcHooks();
+    logInfo("Server", "SDLC Hooks initialized");
+  } catch (e: unknown) {
+    logWarn("Server", `SDLC Hooks: ${e instanceof Error ? e.message : String(e)}`);
   }
 
   logInfo("Server", "Phase 6 complete: Phoenix, ZeroPrompt, CEAN");

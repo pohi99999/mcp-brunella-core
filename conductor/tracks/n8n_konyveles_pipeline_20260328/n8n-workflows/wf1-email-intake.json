@@ -6,8 +6,11 @@
       "id": "imap-intake",
       "name": "IMAP Email Intake",
       "type": "n8n-nodes-base.emailReadImap",
-      "typeVersion": 1.2,
-      "position": [260, 320]
+      "typeVersion": 2.1,
+      "position": [
+        260,
+        320
+      ]
     },
     {
       "parameters": {
@@ -31,40 +34,52 @@
       "name": "Parse Invoice with EmailAgent",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [520, 320]
+      "position": [
+        520,
+        320
+      ]
     },
     {
       "parameters": {
-        "keepOnlySet": false,
-        "values": {
-          "json": [
+        "mode": "manual",
+        "includeOtherFields": true,
+        "assignments": {
+          "assignments": [
             {
+              "id": "normalize-email-summary",
               "name": "summary",
-              "value": "={{ { stage: 'email-intake', source: 'imap', subject: $node['IMAP Email Intake'].json.subject ?? null } }}"
+              "value": "={{ { stage: 'email-intake', source: 'imap', subject: $node['IMAP Email Intake'].json.subject ?? null } }}",
+              "type": "object"
             },
             {
+              "id": "normalize-email-invoice",
               "name": "invoice",
-              "value": "={{ $json.result ?? $json.data ?? $json.invoice ?? $json }}"
+              "value": "={{ $json.result ?? $json.data ?? $json.invoice ?? $json }}",
+              "type": "object"
             },
             {
+              "id": "normalize-email-exceptions",
               "name": "exceptions",
-              "value": "={{ Array.isArray($json.exceptions) ? $json.exceptions : ($json.error ? [{ stage: 'email-intake', message: $json.error }] : []) }}"
-            }
-          ],
-          "boolean": [
-            {
-              "name": "isSuccess",
-              "value": "={{ $json.success === true || $json.status === 'success' || ($json.error ? false : true) }}"
-            }
-          ],
-          "string": [
-            {
-              "name": "source",
-              "value": "n8n"
+              "value": "={{ Array.isArray($json.exceptions) ? $json.exceptions : ($json.error ? [{ stage: 'email-intake', message: $json.error }] : []) }}",
+              "type": "array"
             },
             {
+              "id": "normalize-email-isSuccess",
+              "name": "isSuccess",
+              "value": "={{ $json.success === true || $json.status === 'success' || ($json.error ? false : true) }}",
+              "type": "boolean"
+            },
+            {
+              "id": "normalize-email-source",
+              "name": "source",
+              "value": "n8n",
+              "type": "string"
+            },
+            {
+              "id": "normalize-email-timestamp",
               "name": "timestamp",
-              "value": "={{ $now.toISO() }}"
+              "value": "={{ $now.toISO() }}",
+              "type": "string"
             }
           ]
         }
@@ -72,8 +87,11 @@
       "id": "normalize-email",
       "name": "Normalize EmailAgent Result",
       "type": "n8n-nodes-base.set",
-      "typeVersion": 2.1,
-      "position": [780, 320]
+      "typeVersion": 3.4,
+      "position": [
+        780,
+        320
+      ]
     },
     {
       "parameters": {
@@ -90,7 +108,10 @@
       "name": "Email Parse Success?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
-      "position": [1040, 320]
+      "position": [
+        1040,
+        320
+      ]
     },
     {
       "parameters": {
@@ -114,7 +135,10 @@
       "name": "Trigger NAV Validation",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [1300, 220]
+      "position": [
+        1300,
+        220
+      ]
     },
     {
       "parameters": {
@@ -138,7 +162,10 @@
       "name": "Notify Intake Exception",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [1300, 420]
+      "position": [
+        1300,
+        420
+      ]
     }
   ],
   "connections": {

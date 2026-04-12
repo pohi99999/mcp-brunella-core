@@ -1,4 +1,4 @@
-import { agentHookEngine } from './agentHookEngine.js';
+import { registerHook, fireHook } from './agentHookEngine.js';
 import { phoenixEventBus } from './phoenixEventBus.js';
 import { logInfo } from '../utils/logger.js';
 
@@ -9,7 +9,7 @@ import { logInfo } from '../utils/logger.js';
 logInfo('PhoenixHookBridge', 'Initializing Phoenix-Hook Bridge...');
 
 // 1. Ügynök hiba esetén értesítjük a Phoenix-et
-agentHookEngine.register('agent:task:failed', async (payload: any) => {
+registerHook('agent:task:failed', async (payload: any) => {
   const { agentName, error, task } = payload;
   
   logInfo('PhoenixHookBridge', `Relaying failure for ${agentName} to Phoenix Event Bus.`);
@@ -21,11 +21,13 @@ agentHookEngine.register('agent:task:failed', async (payload: any) => {
     retriesExhausted: payload.retriesExhausted || 0,
     timestamp: new Date().toISOString()
   });
-}, { priority: 'critical' });
+});
 
 // 2. Rendszer helyreállás esetén hook trigger
 phoenixEventBus.subscribe('phoenix:recovery', (event) => {
-  agentHookEngine.fire('system:recovered', { 
+  fireHook('system:recovered', { 
+    agentName: 'Phoenix',
+    task: 'recovery',
     type: event.type, 
     timestamp: Date.now() 
   });

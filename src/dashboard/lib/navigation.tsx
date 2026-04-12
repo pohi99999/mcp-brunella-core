@@ -47,8 +47,7 @@ import { BrunellaStudio } from "@/components/dashboard/BrunellaStudio";
 import { CampaignStudio } from "@/components/dashboard/CampaignStudio";
 import { InnovationBridgeWidget } from "@/components/dashboard/InnovationBridgeWidget";
 import { DigitalHRWidget } from "@/components/dashboard/DigitalHRWidget";
-import { HROnboardingWidget } from "@/components/dashboard/HROnboardingWidget";
-import { GrantManager } from "@/components/GrantManager";
+import { HROnboardingWidget } from "@/components/dashboard/HROnboardingWidget"; import { ViktoriaPhygitalPanel } from "@/components/dashboard/ViktoriaPhygitalPanel"; import { GrantManager } from "@/components/GrantManager";
 import { LawDetectiveWidget } from "@/components/dashboard/LawDetectiveWidget";
 import { BookkeepingWidget } from "@/components/dashboard/BookkeepingWidget";
 import { HazipenztarWidget } from "@/components/dashboard/HazipenztarWidget";
@@ -259,6 +258,7 @@ export function initializeNavigation ()
     { id: "demo-factory", label: "Demo Gyár", icon: FlaskConical, component: <IncubatorPanel /> },
     { id: "showcase", label: "AI Showcase", icon: Sparkles, component: <ShowcasePage /> },
     { id: "jules", label: "Jules AI", icon: Zap, component: <JulesPanel /> },
+    { id: "viktoria-phygital", label: "Viktoria Phygital", icon: Sparkles, component: <ViktoriaPhygitalPanel /> },
     { id: "digital-hr", label: "Digital HR", icon: Briefcase, component: <DigitalHRWidget /> },
     { id: "hr-onboarding", label: "HR Onboarding", icon: Workflow, component: <HROnboardingWidget /> },
     { id: "grant-hunter", label: "Pályázatfigyelő", icon: Search, component: <GrantManager /> },
@@ -307,7 +307,7 @@ export function initializeNavigation ()
 
   // Register groups
   navigationRegistry.registerGroup( { title: "Core Systems", icon: Layers, items: ["dashboard", "neural-map", "system-arch", "studio", "vscode", "process-control", "service-control"] } );
-  navigationRegistry.registerGroup( { title: "AI & Agents", icon: Brain, items: ["chat", "paios", "copilot-orchestrator", "copilot-commander", "kernel-pipeline", "assistant-blueprint", "phoenix", "phoenix-flywheel", "zero-prompt-notifications", "ephemeral-agents", "learning-loop", "self-improvement", "predictive-decision", "world-perception", "federation", "management", "agent-diagnostics", "agent-registry-governance", "agent-factory", "decomposer", "incubator", "knowledge", "memory", "cognitive-memory", "user-preferences", "developer", "edge", "robotkez", "browser-copilot", "jules", "ai-agent-briefing"] } );
+  navigationRegistry.registerGroup( { title: "AI & Agents", icon: Brain, items: ["chat", "paios", "copilot-orchestrator", "copilot-commander", "kernel-pipeline", "assistant-blueprint", "phoenix", "phoenix-flywheel", "zero-prompt-notifications", "ephemeral-agents", "learning-loop", "self-improvement", "predictive-decision", "world-perception", "federation", "management", "agent-diagnostics", "agent-registry-governance", "agent-factory", "decomposer", "incubator", "knowledge", "memory", "cognitive-memory", "user-preferences", "developer", "edge", "robotkez", "browser-copilot", "jules", "viktoria-phygital", "ai-agent-briefing"] } );
   navigationRegistry.registerGroup( { title: "Enterprise", icon: Briefcase, items: ["enterprise-suite", "digital-hr", "hr-timesheet", "hr-onboarding", "grant-hunter", "law-detective", "property-visionary", "property-sales", "psales-intake", "psales-research", "psales-strategy", "enterprise-analytics", "intelligence-monitor"] } );
   navigationRegistry.registerGroup( { title: "Értékesítési Központ", icon: DollarSign, items: ["trojan-horse", "lead-monitor", "demo-factory", "showcase", "campaign-studio", "leads-master", "innovation-bridge", "invoice-sync", "invoice-automation", "bookkeeping", "finance-reconciliation", "kp-penztar", "lead-mining", "marketwatcher", "inventory"] } );
   navigationRegistry.registerGroup( { title: "KKV Pack", icon: PackageSearch, items: ["kkv-pack"] } );

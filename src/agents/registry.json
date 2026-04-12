@@ -99,6 +99,29 @@
       "priority": 1
     },
     {
+      "name": "ViktoriaPhygital",
+      "module": "./agents/ViktoriaPhygitalAgent.js",
+      "class": "ViktoriaPhygitalAgent",
+      "role": "Luxury Fashion Phygital Orchestrator",
+      "description": "High-end web-to-commerce pipeline híd VIKTORIAVARGA számára: brand alignment, vizuális biztonság és kétnyelvű extrakció.",
+      "triggers": [
+        "viktoria",
+        "phygital",
+        "fashion",
+        "luxury",
+        "colours"
+      ],
+      "capabilities": [
+        "lux_harvesting",
+        "visual_brand_safety",
+        "bilingual_extraction",
+        "phygital_bridge"
+      ],
+      "category": "lifestyle",
+      "status": "active",
+      "priority": 5
+    },
+    {
       "name": "CampaignGenerator",
       "title": "Campaign Generator",
       "description": "Teljes marketing kampányt generál: leadek, posztok, landing oldal és akcióterv.",

@@ -1,3 +1,15 @@
+### 2026-04-12 23:30 - P-Sales Human-in-Loop Pipeline (85%)
+**Feladat:** A P-Sales értékesítési folyamat technikai és marketing alapjainak lefektetése: Webhook intake, CRM Sheets szinkron és outreach sablonok.
+**Érintett fájlok:** src/server/routes/onboardingIntake.ts, src/server/web.ts, myai/clients/crm_sheets_client.py, src/agents/LeadMiningAgent.ts, n8n/workflows/psales_onboarding_intake.json, src/config/outreachTemplates.ts, tasks/p_sales_guide.md, tasks/linkedin_profile_texts.md, tasks/case_study_varga_viktoria.md, conductor/tracks.md
+**Státusz:** ⏳ Folyamatban (85%)
+**Megjegyzés:** A technikai motor (intake webhook, Apify scraper kiterjesztés, Python CRM Sheets kliens) és a marketing anyagok (LinkedIn szövegek, Case Study) készen állnak. A Human-in-Loop biztonsági kapu integrálva lett. A projekt az első éles pilot kampány indítására vár.
+
+### 2026-04-12 22:06 - Brunella Track Archivalás (Cloudflare DNS, P-Search)
+**Feladat:** Három befejezett track (Cloudflare DNS Zone Reconciliation, p-search, P-Search n8n Pipeline) archiválása az SDLC folyamat végén.
+**Érintett fájlok:** conductor/tracks.md, conductor/tracks/p-search/meta.json, conductor/tracks/cloudflare_dns_zone_reconciliation_20260325/meta.json, conductor/tracks/n8n_psearch_pipeline_20260404/meta.json, .ai/gemini.md
+**Státusz:** ✅ Befejezve
+**Megjegyzés:** A metaadatok frissítve 'archived' állapotra, a tracks.md manifest fájl takarítása és deduplikálása megtörtént. A változások a 'main' branch-re pusholva lettek.
+
 ### 2026-04-08 02:30 - Toura Helyi Fejlesztési Hub Beállítása
 **Feladat:** A Toura repository klónozása a .worktrees mappába, és egy központi conductor track létrehozása a helyi fejlesztés koordinálásához.
 **Érintett fájlok:** .worktrees/toura/, conductor/tracks/toura_local_dev_20260408/, conductor/tracks.md
@@ -21,3 +33,4 @@
 **Érintett fájlok:** src/core/eventBus.ts, src/server/schedulers/scheduledTasksRunner.ts, src/data/bookkeeping_db.ts, src/types/bookkeeping.d.ts, src/agents/InvoiceAutomationAgent.ts, src/core/invoicePipeline.ts, src/server/web.ts, src/dashboard/components/dashboard/InvoiceAutomationWidget.tsx, src/cli/invoiceCommands.ts, conductor/tracks/l5_invoice_zerotouchl_20260410/plan.md, conductor/tracks.md
 **Státusz:** ✅ Befejezve
 **Megjegyzés:** Megvalósult a legmagasabb szintű (L5) számlafeldolgozási automatizáció. A rendszer mostantól automatikusan figyeli a Gmail-t (30 percenként), elvégzi a Vision alapú kivonást, Drive mentést és Sheets rögzítést, majd eseményvezérelt módon (EventBus) átadja a folyamatot a NAV cross-check ágensnek. A Dashboard widget frissült egy élő history nézettel. A folyamat teljes mértékben idempotens és DB szinten nyomon követhető az új `invoices` táblában.
+

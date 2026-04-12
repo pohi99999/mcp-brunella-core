@@ -1,6 +1,6 @@
 # FŐSZÁL - Egyesített Fejlesztési Napló
 
-**Generálva:** 2026-04-12 20:35
+**Generálva:** 2026-04-12 23:36
 **Script:** `scripts/sync_foszal.py`
 
 ---
@@ -29,6 +29,26 @@ start-full.bat
 ## Összesített Napló (Időrendben)
 
 ### 2026-04-12
+
+#### 23:30 - [Gemini] P-Sales Human-in-Loop Pipeline (85%)
+- **Agent:** Gemini
+- **Státusz:** ⏳ Folyamatban
+- **Érintett fájlok:** src/server/routes/onboardingIntake.ts, src/server/web.ts, myai/clients/crm_sheets_client.py, src/agents/LeadMiningAgent.ts, n8n/workflows/psales_onboarding_intake.json, src/config/outreachTemplates.ts, tasks/p_sales_guide.md, tasks/linkedin_profile_texts.md, tasks/case_study_varga_viktoria.md, conductor/tracks.md
+
+#### 22:09 - [Copilot] Phase 3 bank CSV watch branch
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `conductor/tracks/n8n_konyveles_pipeline_20260328/n8n-workflows/wf2-bank-reconciliation.json`, `test/phase3_workflows.test.ts`, `conductor/tracks/konyveles_phase3_20260403/{meta.json,plan.md}`
+
+#### 22:06 - [Gemini] Brunella Track Archivalás (Cloudflare DNS, P-Search)
+- **Agent:** Gemini
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** conductor/tracks.md, conductor/tracks/p-search/meta.json, conductor/tracks/cloudflare_dns_zone_reconciliation_20260325/meta.json, conductor/tracks/n8n_psearch_pipeline_20260404/meta.json, .ai/gemini.md
+
+#### 19:48 - [Copilot] Phase 3 invoice handoff contract lock
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `src/agents/EmailAgent.ts`, `test/EmailAgent.test.ts`, `test/phase3_workflows.test.ts`, `conductor/tracks/n8n_konyveles_pipeline_20260328/n8n-workflows/wf7-imap-email-intake-live.json`, `conductor/tracks/n8n_konyveles_pipeline_20260328/n8n-workflows/wf8-nav-validation-live.json`, `conductor/tracks/n8n_konyveles_pipeline_20260328/n8n-workflows/wf9-weekly-report-live.json`, `conductor/tracks/konyveles_phase3_20260403/{meta.json,plan.md}`
 
 #### 15:08 - [Copilot] Nova knowledge workflows sync
 - **Agent:** Copilot
@@ -1308,9 +1328,9 @@ start-full.bat
 | Agent | Bejegyzések | Utolsó Aktivitás |
 |-------|-------------|------------------|
 | Claude | 91 | 2026-04-12 |
-| Gemini | 4 | 2026-04-08 |
+| Gemini | 6 | 2026-04-12 |
 | Cursor | 0 | N/A |
-| Copilot | 135 | 2026-04-12 |
+| Copilot | 137 | 2026-04-12 |
 
 ---
 

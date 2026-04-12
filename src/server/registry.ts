@@ -2,6 +2,7 @@ import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { logWarn } from "../utils/logger.js";
 import { wrapToolHandler } from "../core/toolRunCapture.js";
+import { wrapToolWithHooks } from "../core/mcpToolHook.js";
 import { initializeBuiltinHooks } from "../core/hooks/builtinHooks.js";
 import { buildAgentRegistryGovernanceSnapshot } from "./agentRegistryGovernance.js";
 import { buildDocsConfigSotSnapshot } from "../tools/docsConfigSot.js";
@@ -251,9 +252,13 @@ export async function registerAllTools(server: McpServer) {
       return await globalChaosInjector.injectChaos(name, () => handler(...args));
     };
 
-    const wrappedHandler = wrapToolHandler(name, chaosWrappedHandler as (...args: any[]) => any) as typeof handler;
+    // 1. Lifecycle & Golden Dataset Hooks
+    const hookedHandler = wrapToolWithHooks(name, chaosWrappedHandler);
 
-    // 1. Store handler for local execution
+    // 2. Original Tool Run Capture
+    const wrappedHandler = wrapToolHandler(name, hookedHandler as (...args: any[]) => any) as typeof handler;
+
+    // 3. Store handler for local execution
     registerToolHandler(name, wrappedHandler);
 
     // 2. Convert schema and store definition for agents

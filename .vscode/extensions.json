@@ -69,6 +69,9 @@
     "lekman.tts-code",
     "ms-pyright.pyright",
     "tcchan.gemini-code",
-    "cweijan.chat-copilot"
+    "cweijan.chat-copilot",
+    "ms-vscode.vscode-websearchforcopilot",
+    "supabase.vscode-supabase-extension",
+    "ritwickdey.liveserver"
   ]
 }

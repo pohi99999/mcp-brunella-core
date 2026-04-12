@@ -65,6 +65,14 @@ export class RobotkezProService {
     }
 
     /**
+     * Performs Visual Brand Safety Verification.
+     */
+    async verifyBrandSafety(options: { brandMotto: string }) {
+        logInfo("RobotkezPro", `Verifying brand safety: ${options.brandMotto}`);
+        return await this.call('/os/verify-brand-safety', options);
+    }
+
+    /**
      * Executes a series of actions (a plan).
      */
     async executePlan(actions: UIAction[], onProgress?: (msg: string) => void) {

@@ -150,6 +150,35 @@ export class RobotkezV2Agent extends BaseAgent {
     }
   }
 
+  /**
+   * Performs Visual Brand Safety Verification for luxury fashion.
+   * Checks for "vibrant colors", "luxury aesthetic", and no "distorted layout".
+   * Integrates with "Enjoy life in colours" brand motto.
+   */
+  async verifyVisualBrandSafety(): Promise<Record<string, unknown>> {
+    logInfo(this.name, 'Starting Visual Brand Safety Verification...');
+    setAgentStatus(this.name, 'working', 'Brand Safety Verification');
+
+    try {
+      const response = await robotkezPro.verifyBrandSafety({
+        brandMotto: 'Enjoy life in colours'
+      });
+
+      logInfo(this.name, `Brand verification result: ${response.status}`);
+      return response;
+    } catch (error: unknown) {
+      const err = ensureError(error);
+      logError(this.name, `Brand verification failed: ${err.message}`);
+      return {
+        status: 'error',
+        message: err.message,
+        timestamp: new Date().toISOString()
+      };
+    } finally {
+      setAgentStatus(this.name, 'idle');
+    }
+  }
+
   private generateSessionId(): string {
     return `session_${Date.now()}_${Math.random().toString(36).slice(2, 11)}`;
   }
@@ -231,8 +260,15 @@ export class RobotkezV2Agent extends BaseAgent {
           plan: [{ action: 'screenshot', description: 'Pillanatkép készítése a jelenlegi oldalról' }],
           estimatedDuration: 3000,
           backgroundEligible: false
-        };
-      }
+        };      } else if (taskLower.includes('brand safety') || taskLower.includes('vizuális ellenőrzés')) {
+        const safetyResult = await this.verifyVisualBrandSafety();
+        return {
+          success: safetyResult.status === 'success',
+          message: safetyResult.status === 'success' 
+            ? 'A vizuális brand biztonsági ellenőrzés sikeresen lefutott.' 
+            : `Hiba történt a vizuális brand biztonsági ellenőrzés során: ${safetyResult.message}`,
+          data: safetyResult
+        };      }
 
       if (!plan && !task) {
         plan = {

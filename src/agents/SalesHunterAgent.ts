@@ -26,6 +26,7 @@ import { agentManager } from './AgentManager.js';
 import type { LeadGenerationData, LeadRecord } from '../types/enterprise.js';
 import { createCrmFollowUpPlan, ingestCrmLead } from '../data/crm_db.js';
 import { normalizeCrmLead } from '../utils/crmLead.js';
+import { outreachTemplates, fillTemplate } from '../config/outreachTemplates.js';
 
 // ============================================================================
 // Types
@@ -481,38 +482,33 @@ export class SalesHunterAgent extends BaseAgent {
   }
 
   /**
-   * Create personalized email draft
+   * Create personalized email draft using outreach templates
    */
   private createEmailDraft(lead: LeadProfile, params: LeadGenerationData): EmailDraftResult {
-    const subject = `Együttműködési lehetőség - ${params.industry}`;
-    const keywords = params.keywords || [];
+    // Intelligent template selection
+    let templateId = 'email_kkv_followup_v1'; // default
+    if (lead.linkedinUrl) {
+      templateId = params.industry.toLowerCase().includes('brand') || params.industry.toLowerCase().includes('márka') 
+        ? 'linkedin_brand_connect_v1' 
+        : 'linkedin_kkv_connect_v1';
+    }
 
-    const body = `Tisztelt ${lead.decisionMaker}!
-
-Péter vagyok a [Cég neve] képviseletében és azért keresem Önt, mert a ${lead.companyName} kiemelkedő szakértelme felkeltette a figyelmünket a ${params.industry} területén.
-
-Tapasztalatunk alapján számos hasonló vállalkozás számára sikerült növekedést elérni a következő területeken:
-${keywords.map(kw => `  • ${kw}`).join('\n')}
-
-Szeretném megbeszélni, hogy milyen módon tudnánk együttműködni a ${lead.companyName} további fejlődése érdekében.
-
-Tudnánk rövid egyeztetést tartani a következő hetekben?
-
-Üdvözlettel,
-[Név]
-[Cég]
-
----
-LinkedIn profil alapján: ${lead.linkedinUrl}
-Relevancia pontszám: ${lead.score}/100`;
+    const template = outreachTemplates.find(t => t.id === templateId) || outreachTemplates[0];
+    
+    const body = fillTemplate(template, {
+      name: lead.decisionMaker.split(' ')[0], // First name only
+      company: lead.companyName,
+      industry: params.industry
+    });
 
     return {
       to: lead.contactInfo,
-      subject,
+      subject: template.subject ? fillTemplate({ ...template, body: template.subject } as any, { company: lead.companyName }) : `Együttműködés - ${lead.companyName}`,
       body,
       linkedinContext: lead.linkedinUrl,
     };
   }
+
 
   /**
    * Export leads to Google Sheets

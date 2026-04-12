@@ -24,9 +24,9 @@ try {
   const tracksRaw = fs.readFileSync(tracksPath, 'utf8');
   
   // Keressük az aktív trackeket ( [~] jelölés a BAS konvenció szerint)
-  const activeTracks = tracksRaw.match(/- [~] **Track:/g) || 
-                       tracksRaw.match(/## [~] Track:/g) ||
-                       tracksRaw.match(/- [~] **.+**/g); // Általánosabb illeszkedés
+  const activeTracks = tracksRaw.match(/- \[~\] \*\*Track:/g) || 
+                       tracksRaw.match(/## \[~\] Track:/g) ||
+                       tracksRaw.match(/- \[~\] \*\*.+\*\*/g); // Általánosabb illeszkedés
 
   if (!activeTracks || activeTracks.length === 0) {
     console.error('\n' + '!'.repeat(80));
