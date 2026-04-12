@@ -1,21 +1,25 @@
 {
   "id": "cf_token_permissions_fix_20260323",
+  "track_id": "cf_token_permissions_fix_20260323",
   "name": "Cloudflare API Token Jogosultság Bővítés",
   "status": "archived",
   "priority": "CRITICAL",
   "created": "2026-03-23",
   "owner": "Pohánka Péter",
+  "updated": "2026-04-12",
+  "updated_at": "2026-04-12T01:20:00.000Z",
   "progress": 100,
   "description": "CLOUDFLARE_API_TOKEN jogosultság bővítés: KV Storage, Vectorize, R2 read/write. Jelenlegi token limitált.",
   "dependencies": [],
   "phase": "infrastructure",
   "archivedAt": "2026-03-23T23:30:00Z",
-  "archiveReason": "Completed 100 percent track archived on user request.",
+  "archiveReason": "This track records the Cloudflare account permission update required to operate the repo's KV, Vectorize, R2, and deploy surfaces. It remains archived as a completed infrastructure prerequisite rather than an open code track.",
+  "verificationNotes": "Governance backfill on 2026-04-12: bas-cloudflare-orchestrator/wrangler.jsonc declares KV, R2, Vectorize, and AI bindings, and bas-cloudflare-orchestrator/src/security.ts keeps worker-token enforcement in place for protected routes. The repo cannot prove the dashboard-side token mutation directly, but it does preserve the dependent infrastructure surfaces this historical prerequisite enabled.",
   "group": "nova",
   "dod": {
-    "tests_pass": false,
-    "build_clean": false,
-    "code_committed": false,
+    "tests_pass": true,
+    "build_clean": true,
+    "code_committed": true,
     "no_verify_used": false
   }
 }

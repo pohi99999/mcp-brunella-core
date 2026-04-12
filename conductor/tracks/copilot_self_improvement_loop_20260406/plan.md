@@ -26,22 +26,22 @@ Copilot Plan agent (better next-task planning)  ← CLOSES THE LOOP
 
 ### Phase 1 — Structural files ✅
 - [x] Conductor track created (`copilot_self_improvement_loop_20260406`)
-- [ ] `.github/agents/bas-self-reflect.agent.md`
-- [ ] `.github/agents/bas-golden-dataset-enricher.agent.md`
-- [ ] `.github/agents/bas-pattern-scout.agent.md`
-- [ ] `mcp_servers.json` — `brunella-self-improve` entry
-- [ ] `.github/copilot-instructions.md` — Önellenőrzési protokoll section
+- [x] `.github/agents/bas-self-reflect.agent.md`
+- [x] `.github/agents/bas-golden-dataset-enricher.agent.md`
+- [x] `.github/agents/bas-pattern-scout.agent.md`
+- [x] `mcp_servers.json` — `brunella-self-improve` entry
+- [x] `.github/copilot-instructions.md` — Önellenőrzési protokoll section
 
 ### Phase 2 — TypeScript implementation
-- [ ] `src/core/copilotFeedbackChannel.ts` — new singleton bridge
-- [ ] `src/core/selfModel.ts` — add `ingestCopilotFeedback()` method
-- [ ] `src/core/autonomousInfraRuntime.ts` — export `copilotFeedbackChannel` singleton
+- [x] `src/core/copilotFeedbackChannel.ts` — new singleton bridge
+- [x] `src/core/selfModel.ts` — add `ingestCopilotFeedback()` method
+- [x] `src/core/autonomousInfraRuntime.ts` — export `copilotFeedbackChannel` singleton
 
 ### Phase 3 — Automation
-- [ ] `.github/workflows/self-improve.yml` — daily self-improve GitHub Actions
+- [x] `.github/workflows/self-improve.yml` — daily self-improve GitHub Actions
 
 ### Phase 4 — Tests
-- [ ] `test/copilotFeedbackChannel.test.ts` — unit tests
+- [x] `test/copilotFeedbackChannel.test.ts` — unit tests
 
 ## Acceptance Criteria
 

@@ -1,10 +1,15 @@
 {
   "id": "agent_security_ipi_defense_20260410",
+  "track_id": "agent_security_ipi_defense_20260410",
   "name": "Agent Security Sandbox (IPI Defense)",
-  "status": "COMPLETED",
+  "title": "Agent Security Sandbox (IPI Defense)",
+  "status": "completed",
   "priority": "HIGH",
   "created_at": "2026-04-10T12:00:00Z",
   "completed_at": "2026-04-10T22:55:00Z",
+  "completedAt": "2026-04-10T22:55:00Z",
+  "updated": "2026-04-12",
+  "updated_at": "2026-04-12T00:30:33.535Z",
   "owner": "Brunella Orchestrator",
   "tags": [
     "security",
@@ -13,6 +18,7 @@
     "benchmark"
   ],
   "progress": 100,
+  "verificationNotes": "Governance backfill on 2026-04-12: npm run build, npm run build:ui, and npm run test:fast all passed during the agent-hardening remediation wave. Targeted security validation also passed for test/ipi_security_benchmark.test.ts, test/securityCommands.test.ts, and test/security.test.ts. Evidence exists in src/core/llm_client.ts, src/server/routes/security.ts, src/cli/securityCommands.ts, src/cli/commands/security-hu.ts, src/dashboard/components/dashboard/SecurityPanel.tsx, src/dashboard/lib/apiService.ts, and src/dashboard/lib/navigation.tsx.",
   "phases": [
     {
       "name": "llm_client.ts Védelmi Réteg",
@@ -32,9 +38,9 @@
     }
   ],
   "dod": {
-    "tests_pass": false,
-    "build_clean": false,
-    "code_committed": false,
+    "tests_pass": true,
+    "build_clean": true,
+    "code_committed": true,
     "no_verify_used": false
   }
 }

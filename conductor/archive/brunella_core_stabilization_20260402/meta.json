@@ -1,11 +1,19 @@
 {
   "id": "brunella_core_stabilization_20260402",
+  "track_id": "brunella_core_stabilization_20260402",
   "title": "Brunella Core Stabilization",
-  "status": "completed",
+  "status": "archived",
   "priority": "critical",
   "createdAt": "2026-04-02",
+  "created_at": "2026-04-02",
   "owner": "GitHub Copilot",
   "progress": 100,
+  "updated": "2026-04-12",
+  "updated_at": "2026-04-12T01:05:00.000Z",
+  "completedAt": "2026-04-04",
+  "archivedAt": "2026-04-12T01:05:00.000Z",
+  "verificationNotes": "Governance backfill on 2026-04-12: the stable runtime contract, service preflight gate, and readiness/liveness rollout remain implemented in package.json, scripts/start-stable.mjs, scripts/service-preflight.mjs, and src/server/web.ts. The targeted Brunella stabilization validation suite passed for test/start_stable_contract.test.ts, test/service_preflight.test.ts, test/health_runtime_rollout.test.ts, and test/toolRegistry.test.ts.",
+  "archiveReason": "Historical foundation slice retained in archive after the stable-runtime contract, service preflight, and health endpoint rollout were delivered. Later Brunella work builds on this baseline, so the original stabilization slice is preserved as an archived historical record.",
   "tags": [
     "brunella",
     "stability",
@@ -18,14 +26,12 @@
   ],
   "sourceDocument": "User direction + architecture review 2026-04-02",
   "phase": 1,
-  "updated": "2026-04-04",
-  "completedAt": "2026-04-04",
   "dependencies": [],
   "group": "brunella",
   "dod": {
-    "tests_pass": false,
-    "build_clean": false,
-    "code_committed": false,
+    "tests_pass": true,
+    "build_clean": true,
+    "code_committed": true,
     "no_verify_used": false
   }
 }

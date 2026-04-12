@@ -1,12 +1,14 @@
 {
   "id": "ephemeral_agents_cleanup_audit_20260329",
+  "track_id": "ephemeral_agents_cleanup_audit_20260329",
   "name": "Ephemeral Agents — Cleanup és Audit",
-  "status": "ARCHIVED",
+  "status": "pending",
   "priority": "MEDIUM",
   "created": "2026-03-29",
-  "completed": "2026-03-29",
   "owner": "Pohánka Péter",
-  "progress": 100,
+  "progress": 0,
+  "updated": "2026-04-12",
+  "updatedAt": "2026-04-12T02:06:00.000Z",
   "description": "Az ephemeral ágensek lezárás utáni erőforrás-felszabadítása, artifact-archiválása és audit trail-je.",
   "dependencies": [
     "ephemeral_agents_ttl_budget_20260329"
@@ -33,6 +35,11 @@
     "A supervisor vagy dashboard képes rövid postmortem összefoglalót megjeleníteni"
   ],
   "group": "other",
+  "blockerNotes": [
+    "Reopened on 2026-04-12 after forensic audit: the promised postmortem query API is missing from src/server/routes/ephemeral.ts.",
+    "CLI and dashboard still target missing /api/v1/developer/ephemeral/... endpoints instead of a working operator contract.",
+    "Ephemeral postmortems remain in-memory only in src/core/ephemeralAudit.ts and are not persisted as promised by the track."
+  ],
   "dod": {
     "tests_pass": false,
     "build_clean": false,

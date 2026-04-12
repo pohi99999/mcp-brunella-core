@@ -34,6 +34,7 @@ import os
 import json
 import base64
 from typing import List
+from dotenv import load_dotenv
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from google_auth_oauthlib.flow import InstalledAppFlow
@@ -41,7 +42,14 @@ from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from myai.utils.google_credentials import resolve_google_workspace_oauth_paths
 
-SCOPES = ['https://www.googleapis.com/auth/gmail.readonly']
+load_dotenv()
+
+SCOPES = [
+    'https://www.googleapis.com/auth/gmail.readonly',
+    'https://www.googleapis.com/auth/calendar',
+    'https://www.googleapis.com/auth/drive',
+    'https://www.googleapis.com/auth/spreadsheets',
+]
 
 
 def authenticate_gmail():

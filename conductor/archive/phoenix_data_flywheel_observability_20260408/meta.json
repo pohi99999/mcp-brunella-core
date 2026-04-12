@@ -1,16 +1,20 @@
 {
   "id": "phoenix_data_flywheel_observability_20260408",
+  "track_id": "phoenix_data_flywheel_observability_20260408",
   "name": "Phoenix + Data Flywheel Observability & Self-Healing",
   "title": "Phoenix + Data Flywheel Observability & Self-Healing",
   "status": "archived",
   "priority": "high",
   "created": "2026-04-08",
-  "updated": "2026-04-10",
+  "updated": "2026-04-12",
+  "updatedAt": "2026-04-12T02:18:00.000Z",
   "assignee": "GitHub Copilot",
   "progress": 100,
   "completedAt": "2026-04-08T23:59:59.000Z",
   "archivedAt": "2026-04-10T19:16:00.000Z",
   "archiveReason": "Focused verification passed for phoenix insights, data flywheel metrics, and observability CLI coverage; the feature is fully wired and does not need a follow-up track before archival.",
+  "verified": true,
+  "verifiedAt": "2026-04-12",
   "tags": [
     "phoenix",
     "observability",
@@ -23,10 +27,11 @@
   "sourceDocument": "Brunella Agent System – rendszer-elemzés és optimalizálási javaslatok.md",
   "phase": 2,
   "group": "brunella",
+  "verificationNotes": "Governance backfill on 2026-04-12: Phoenix/flywheel metrics, combined insights snapshot, observability route, CLI status surface, and dashboard panels remain implemented in src/tools/dataFlywheelMetrics.ts, src/tools/phoenixInsights.ts, src/server/routes/observability.ts, src/cli/observabilityCommands.ts, and src/dashboard/components/dashboard/PhoenixFlywheelObservabilityPanel.tsx, with related legacy Phoenix panels still present in the dashboard codebase. Focused verification passed for npm run build, test/dataFlywheelMetrics.test.ts, test/phoenixInsights.test.ts, test/observabilityRoutes.test.ts, test/observabilityCommands.test.ts, and src/dashboard/components/dashboard/PhoenixFlywheelObservabilityPanel.test.tsx.",
   "dod": {
-    "tests_pass": false,
-    "build_clean": false,
-    "code_committed": false,
+    "tests_pass": true,
+    "build_clean": true,
+    "code_committed": true,
     "no_verify_used": false
   }
 }

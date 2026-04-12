@@ -1,11 +1,12 @@
 {
   "id": "kkv_inventory_automation_20260404",
+  "track_id": "kkv_inventory_automation_20260404",
   "name": "KKV keszlet es leltar automatizalas",
   "title": "KKV keszlet es leltar automatizalas",
   "status": "completed",
   "priority": "high",
   "created": "2026-04-04",
-  "updated": "2026-04-05",
+  "updated": "2026-04-12",
   "assignee": "GitHub Copilot",
   "progress": 100,
   "completedAt": "2026-04-05",
@@ -21,10 +22,11 @@
   "sourceDocument": "User-provided KKV n8n workflow pack",
   "phase": 1,
   "group": "business",
+  "verificationNotes": "Governance backfill on 2026-04-12: npm run build and npm run test:fast both passed during remediation, and the KKV inventory validation matrix confirmed reorder, stocktake, valuation, and pack integration coverage. Evidence exists in src/server/routes/inventory.ts, src/tools/kkvPack.ts, test/inventoryPhase2.test.ts, test/stocktakeReconciliation.test.ts, test/kkvPack.test.ts, and test/kkvPackRoutes.test.ts.",
   "dod": {
-    "tests_pass": false,
-    "build_clean": false,
-    "code_committed": false,
+    "tests_pass": true,
+    "build_clean": true,
+    "code_committed": true,
     "no_verify_used": false
   }
 }

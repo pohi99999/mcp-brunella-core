@@ -1,20 +1,25 @@
 {
   "id": "cf_hyperdrive_d1_20260323",
+  "track_id": "cf_hyperdrive_d1_20260323",
   "name": "Hyperdrive Connection Pooling D1 Teljesítményhez",
   "status": "archived",
   "priority": "LOW",
   "created": "2026-03-23",
   "owner": "Pohánka Péter",
+  "updated": "2026-04-12",
+  "updated_at": "2026-04-12T01:20:00.000Z",
   "progress": 100,
   "description": "Hyperdrive connection pooling D1 teljesítmény javításhoz. Opcionális - csak ha D1 query latency probléma jelentkezik.",
-  "archiveReason": "Hyperdrive is designed for external PostgreSQL/MySQL databases, not for Cloudflare D1. D1 is a native Cloudflare database that is already optimized for Workers and does not support Hyperdrive connection pooling.",
+  "archiveReason": "Hyperdrive is designed for external PostgreSQL/MySQL databases, not for Cloudflare D1. D1 is already a native Cloudflare database optimized for Workers, so this track closed as an explicit architecture decision and remains archived as not-needed.",
+  "archivedAt": "2026-04-12T01:20:00.000Z",
+  "verificationNotes": "Governance backfill on 2026-04-12: the archived decision remains consistent with conductor/archive/cf_hyperdrive_d1_20260323/spec.md and plan.md, and later optimization work continues to depend on this explicit not-needed decision rather than a missing implementation.",
   "dependencies": [],
   "phase": "optimization",
   "group": "other",
   "dod": {
-    "tests_pass": false,
-    "build_clean": false,
-    "code_committed": false,
+    "tests_pass": true,
+    "build_clean": true,
+    "code_committed": true,
     "no_verify_used": false
   }
 }

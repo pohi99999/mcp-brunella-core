@@ -1,14 +1,14 @@
 {
   "id": "kkv_project_task_automation_20260404",
+  "track_id": "kkv_project_task_automation_20260404",
   "name": "KKV projekt es feladat automatizalas",
   "title": "KKV projekt es feladat automatizalas",
-  "status": "completed",
+  "status": "pending",
   "priority": "medium",
   "created": "2026-04-04",
-  "updated": "2026-04-05",
+  "updated": "2026-04-12",
   "assignee": "GitHub Copilot",
-  "progress": 100,
-  "completedAt": "2026-04-05",
+  "progress": 0,
   "tags": [
     "kkv",
     "project",
@@ -21,6 +21,7 @@
   "sourceDocument": "User-provided KKV n8n workflow pack",
   "phase": 1,
   "group": "business",
+  "verificationNotes": "Reopened by governance remediation on 2026-04-12: forensic review found no validated repository evidence for the claimed Monday delegation, Friday AI report, or deadline-escalation automation flow.",
   "dod": {
     "tests_pass": false,
     "build_clean": false,

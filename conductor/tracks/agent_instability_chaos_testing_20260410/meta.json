@@ -1,10 +1,15 @@
 {
   "id": "agent_instability_chaos_testing_20260410",
+  "track_id": "agent_instability_chaos_testing_20260410",
   "name": "Agent Instability Chaos Testing (Chaeos-env)",
-  "status": "COMPLETED",
+  "title": "Agent Instability Chaos Testing (Chaeos-env)",
+  "status": "completed",
   "priority": "HIGH",
   "created_at": "2026-04-10T12:00:00Z",
   "completed_at": "2026-04-10T22:45:00Z",
+  "completedAt": "2026-04-10T22:45:00Z",
+  "updated": "2026-04-12",
+  "updated_at": "2026-04-12T00:30:33.535Z",
   "owner": "Brunella Orchestrator",
   "tags": [
     "testing",
@@ -13,6 +18,7 @@
     "chaos-engineering"
   ],
   "progress": 100,
+  "verificationNotes": "Governance completion on 2026-04-12: the missing /api/v1/chaos mount was added in src/server/routes/index.ts, targeted chaos coverage was added in test/chaos.test.ts, and npm run build, npm run build:ui, and npm run test:fast all passed after the fix. Evidence exists in src/utils/chaos_injector.ts, src/server/routes/chaos.ts, src/server/routes/index.ts, src/server/registry.ts, src/agents/EvaluatorAgent.ts, src/cli/chaosCommands.ts, src/dashboard/lib/apiService.ts, and src/dashboard/components/dashboard/MissionControlLayout.tsx.",
   "phases": [
     {
       "name": "Chaos Middleware Kialakítása",
@@ -32,9 +38,9 @@
     }
   ],
   "dod": {
-    "tests_pass": false,
-    "build_clean": false,
-    "code_committed": false,
+    "tests_pass": true,
+    "build_clean": true,
+    "code_committed": true,
     "no_verify_used": false
   }
 }

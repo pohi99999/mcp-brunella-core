@@ -1,18 +1,23 @@
 {
+  "id": "agent_memory_structured_20260323",
+  "track_id": "agent_memory_structured_20260323",
   "trackName": "agent_memory_structured_20260323",
   "type": "Core Enhancement",
   "priority": "HIGH",
   "status": "archived",
   "progress": 100,
   "created": "2026-03-23T01:30:00Z",
-  "updated": "2026-03-23T12:45:00Z",
+  "updated": "2026-04-12",
   "goal": "Strukturált agent memória: SQLite tábla sikeres/sikertelen futásoknak, automatikus minta-újrafelhasználás, memória TTL/expiration, relevancia scoring. Golden Dataset Bridge lokális kiterjesztés.",
   "assignee": "Copilot + Pohánka Péter",
   "createdAt": "2026-03-23T01:30:00Z",
-  "updatedAt": "2026-03-23T12:00:00Z",
+  "updatedAt": "2026-04-12T01:30:00.000Z",
   "completed": "2026-03-23T12:00:00Z",
   "archivedAt": "2026-03-23T12:45:00Z",
-  "archiveReason": "Structured memory track implemented, validated, and archived after conductor cleanup.",
+  "archiveReason": "The structured memory implementation remains real, but the later L5 memory architecture track formalized this already-existing subsystem as canonical conductor truth.",
+  "supersededByTracks": [
+    "l5_memory_architecture_20260410"
+  ],
   "phases": [
     {
       "name": "Phase 1: Structured Memory Store",

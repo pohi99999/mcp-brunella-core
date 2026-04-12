@@ -1,16 +1,18 @@
 {
   "id": "docs_config_sot_unification_20260408",
+  "track_id": "docs_config_sot_unification_20260408",
   "name": "Documentation/Config Single Source of Truth Unification",
   "title": "Documentation/Config Single Source of Truth Unification",
   "status": "archived",
   "priority": "high",
   "created": "2026-04-08",
-  "updated": "2026-04-08",
+  "updated": "2026-04-12",
+  "updatedAt": "2026-04-12T02:18:00.000Z",
   "assignee": "GitHub Copilot",
   "progress": 100,
   "completedAt": "2026-04-08T19:51:46Z",
   "verified": true,
-  "verifiedAt": "2026-04-08",
+  "verifiedAt": "2026-04-12",
   "archivedAt": "2026-04-08T19:51:46Z",
   "archiveReason": "Docs/config SOT implementation, CLI, dashboard, MCP, scripts, tests, and build verification are complete.",
   "tags": [
@@ -25,10 +27,11 @@
   "sourceDocument": "Brunella Agent System – rendszer-elemzés és optimalizálási javaslatok.md",
   "phase": 1,
   "group": "brunella",
+  "verificationNotes": "Governance backfill on 2026-04-12: the docs/config single-source snapshot, doc unifier, config guardian, routes, MCP tools, CLI, dashboard panels, and supporting sync scripts remain implemented in src/tools/docsConfigSot.ts, src/tools/docUnifier.ts, src/tools/configGuardian.ts, src/server/routes/docsConfig.ts, src/server/registry.ts, src/cli/docsConfigCommands.ts, src/dashboard/components/dashboard/DocsSotPanel.tsx, src/dashboard/components/dashboard/ConfigHealthPanel.tsx, scripts/sync_docs.ts, and scripts/update_master_context.ts. Focused verification passed for npm run build, test/docsConfigSot.test.ts, test/docUnifier.test.ts, and test/configGuardian.test.ts.",
   "dod": {
-    "tests_pass": false,
-    "build_clean": false,
-    "code_committed": false,
+    "tests_pass": true,
+    "build_clean": true,
+    "code_committed": true,
     "no_verify_used": false
   }
 }

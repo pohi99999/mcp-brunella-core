@@ -1,12 +1,14 @@
 {
   "id": "federated_mcp_negotiation_20260329",
+  "track_id": "federated_mcp_negotiation_20260329",
   "name": "Federated MCP — Negotiation Protocol",
-  "status": "COMPLETED",
+  "status": "pending",
   "priority": "MEDIUM",
   "created": "2026-03-29",
-  "completed": "2026-03-30",
   "owner": "Pohánka Péter",
-  "progress": 100,
+  "progress": 0,
+  "updated": "2026-04-12",
+  "updatedAt": "2026-04-12T01:45:00.000Z",
   "description": "Strukturált agent-agent tárgyalási protokoll ajánlat, ellenajánlat, korlátok és emberi approval checkpointok kezelésére.",
   "dependencies": [
     "federated_mcp_remote_routing_20260329"

@@ -7,6 +7,8 @@ const {
   oauthConstructorMock,
   setCredentialsMock,
   logWarnMock,
+  originalCredentialsFileEnv,
+  originalTokenFileEnv,
 } = vi.hoisted(() => {
   return {
     existsSyncMock: vi.fn<(path: string) => boolean>(),
@@ -15,8 +17,29 @@ const {
     oauthConstructorMock: vi.fn(),
     setCredentialsMock: vi.fn(),
     logWarnMock: vi.fn(),
+    originalCredentialsFileEnv: process.env.GOOGLE_WORKSPACE_CREDENTIALS_FILE,
+    originalTokenFileEnv: process.env.GOOGLE_WORKSPACE_TOKEN_FILE,
   };
 });
+
+function clearGoogleWorkspaceEnv(): void {
+  delete process.env.GOOGLE_WORKSPACE_CREDENTIALS_FILE;
+  delete process.env.GOOGLE_WORKSPACE_TOKEN_FILE;
+}
+
+function restoreGoogleWorkspaceEnv(): void {
+  if (originalCredentialsFileEnv === undefined) {
+    delete process.env.GOOGLE_WORKSPACE_CREDENTIALS_FILE;
+  } else {
+    process.env.GOOGLE_WORKSPACE_CREDENTIALS_FILE = originalCredentialsFileEnv;
+  }
+
+  if (originalTokenFileEnv === undefined) {
+    delete process.env.GOOGLE_WORKSPACE_TOKEN_FILE;
+  } else {
+    process.env.GOOGLE_WORKSPACE_TOKEN_FILE = originalTokenFileEnv;
+  }
+}
 
 vi.mock('fs', () => ({
   existsSync: existsSyncMock,
@@ -54,6 +77,7 @@ describe('googleAuth', () => {
   beforeEach(() => {
     vi.resetModules();
     vi.unstubAllEnvs();
+    clearGoogleWorkspaceEnv();
     existsSyncMock.mockReset().mockReturnValue(false);
     mkdirMock.mockReset().mockResolvedValue(undefined);
     readFileMock.mockReset();
@@ -64,6 +88,7 @@ describe('googleAuth', () => {
 
   afterEach(() => {
     vi.unstubAllEnvs();
+    restoreGoogleWorkspaceEnv();
   });
 
   it('uses credentials directory as the preferred workspace auth path', async () => {

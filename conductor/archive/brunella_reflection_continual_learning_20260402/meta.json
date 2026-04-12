@@ -1,31 +1,10 @@
 {
   "id": "brunella_reflection_continual_learning_20260402",
-  "title": "Brunella Reflection / Continual Learning Activation",
-  "status": "completed",
-  "priority": "high",
-  "createdAt": "2026-04-02",
-  "owner": "GitHub Copilot",
+  "name": "Brunella Reflection Continual Learning",
+  "assignee": "system",
+  "status": "archived",
   "progress": 100,
-  "tags": [
-    "brunella",
-    "reflection",
-    "continual-learning",
-    "memory",
-    "learning-loop",
-    "golden-dataset",
-    "self-improvement"
-  ],
-  "sourceDocument": "User direction + architecture review 2026-04-02",
-  "phase": 3,
-  "dependencies": [
-    "brunella_core_stabilization_20260402",
-    "brunella_identity_project_maintainer_20260402"
-  ],
-  "group": "brunella",
-  "dod": {
-    "tests_pass": false,
-    "build_clean": false,
-    "code_committed": false,
-    "no_verify_used": false
-  }
+  "created_at": "2026-04-02T00:00:00Z",
+  "updated": "2026-04-02T00:00:00Z",
+  "path": "./conductor/archive/brunella_reflection_continual_learning_20260402/"
 }

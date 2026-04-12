@@ -1,7 +1,7 @@
 # 🌌 BRUNELLA MASTER CONTEXT (Élő Rendszertérkép)
 
 **Verzió:** 2.4.0
-**Frissítve:** 2026-04-11
+**Frissítve:** 2026-04-12
 **Státusz:** ACTIVE (Élő rendszer)
 
 ---
@@ -21,7 +21,7 @@ A **Brunella Agent System (BAS)** egy hibrid, multi-agent AI ökoszisztéma, ame
 
 ## 2. 🤖 Az Ügynök Sereg (The Legion)
 
-A rendszer **82** regisztrált ügynökkel rendelkezik.
+A rendszer **87** regisztrált ügynökkel rendelkezik.
 
 ### 👑 Vezérkar (Core Leadership)
 | Ügynök | Szerep | Képességek |
@@ -56,6 +56,8 @@ A rendszer **82** regisztrált ügynökkel rendelkezik.
 | **ConflictMediator** | Organizational Conflict Resolution |  |
 | **copywriter** | undefined | social_media_generation, email_drafting, copywriting |
 | **viktoria-brand-voice** | undefined | brand-voice, caption-writing, email-drafting |
+| **social_concierge** | undefined | social_post_drafting, social_reply_drafting, dm_drafting |
+| **shopping_assistant** | undefined | shopping_guidance, availability_reply, order_support |
 | **DataScientist** | scientist |  |
 | **DependencyGraph** | Dependency Graph Analyzer |  |
 | **Developer** | undefined | code_generation, self_healing |
@@ -116,7 +118,10 @@ A rendszer **82** regisztrált ügynökkel rendelkezik.
 | **StocktakeReconciliationAgent** | undefined | inventory_reconciliation |
 | **StocktakeReportAgent** | undefined | inventory_reporting |
 | **InventoryAdjustmentAgent** | undefined | accounting_preparation |
+| **AccountingPipeline** | Könyvelési folyamat koordinátor | accounting-workflow-orchestration, pipeline-management |
+| **PettyCashAgent** | Házi pénztár kezelő | petty-cash-management, cash-flow-tracking, accounting-records |
 | **i18n_specialist** | undefined | i18n_architecture, string_extraction, locale_management |
+| **InventoryPipeline** | Készletgazdálkodási koordinátor | inventory-optimization-orchestration, replenishment-pipeline |
 | **DailyAgentBriefing** | undefined | github_search, web_crawl, llm_synthesis |
 
 

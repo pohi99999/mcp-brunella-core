@@ -1,15 +1,17 @@
 {
   "id": "kkv_hr_timesheet_culture_20260405",
+  "track_id": "kkv_hr_timesheet_culture_20260405",
   "name": "KKV HR timesheet es kultura automatizalas",
   "title": "KKV HR timesheet es kultura automatizalas",
   "status": "completed",
   "priority": "HIGH",
   "created": "2026-04-05",
-  "updated": "2026-04-08",
+  "updated": "2026-04-12",
   "owner": "GitHub Copilot",
   "assignee": "GitHub Copilot",
   "progress": 100,
   "completed": "2026-04-08",
+  "completedAt": "2026-04-08",
   "tags": [
     "kkv",
     "hr",
@@ -25,10 +27,11 @@
   "sourceDocument": "Derived from kkv_hr_automation_20260404",
   "phase": 3,
   "group": "business",
+  "verificationNotes": "Governance backfill on 2026-04-12: npm run build and npm run test:fast both passed during remediation, and the KKV HR validation matrix confirmed timesheet, reporting, and culture-trigger behavior. Evidence exists in src/server/services/hrTimesheetService.ts, src/server/routes/hrTimesheet.ts, test/hrTimesheetRoutes.test.ts, and test/hrTimesheetCommands.test.ts.",
   "dod": {
-    "tests_pass": false,
-    "build_clean": false,
-    "code_committed": false,
+    "tests_pass": true,
+    "build_clean": true,
+    "code_committed": true,
     "no_verify_used": false
   }
 }

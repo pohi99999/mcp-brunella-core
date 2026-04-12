@@ -1,18 +1,21 @@
 {
+  "id": "agent_orchestration_dag_20260323",
+  "track_id": "agent_orchestration_dag_20260323",
   "trackName": "agent_orchestration_dag_20260323",
   "type": "Core Enhancement",
   "priority": "HIGH",
   "status": "archived",
   "progress": 100,
   "created": "2026-03-23T01:30:00Z",
-  "updated": "2026-03-23T12:45:00Z",
+  "updated": "2026-04-12",
   "goal": "DAG-alapú workflow engine: párhuzamos agent végrehajtás, conditional branching, loop support, token/cost budget per flow, per-step timeout graceful degradation-nel.",
   "assignee": "Copilot + Pohánka Péter",
   "createdAt": "2026-03-23T01:30:00Z",
-  "updatedAt": "2026-03-23T12:00:00Z",
+  "updatedAt": "2026-04-12T01:30:00.000Z",
   "completed": "2026-03-23T12:00:00Z",
   "archivedAt": "2026-03-23T12:45:00Z",
-  "archiveReason": "DAG orchestration track implemented, validated, and archived after conductor cleanup.",
+  "archiveReason": "DAG orchestration was implemented, validated, and remains preserved as an archived historical infrastructure slice.",
+  "verificationNotes": "Governance backfill on 2026-04-12: the DAG workflow engine remains implemented in src/core/dagEngine.ts, src/agents/taskDecomposerCore.ts, src/agents/AgentManager.ts, src/server/routes/tasks.ts, src/cli/workflowCommands.ts, src/cli.ts, src/dashboard/components/dashboard/WorkflowPanel.tsx, and src/dashboard/lib/navigation.tsx. Focused validation passed for test/orchestration/dagEngine.test.ts and test/workflowCommands.test.ts.",
   "phases": [
     {
       "name": "Phase 1: DAG Engine Core",
@@ -73,9 +76,9 @@
   ],
   "group": "other",
   "dod": {
-    "tests_pass": false,
-    "build_clean": false,
-    "code_committed": false,
+    "tests_pass": true,
+    "build_clean": true,
+    "code_committed": true,
     "no_verify_used": false
   }
 }

@@ -1,12 +1,16 @@
 {
   "id": "federated_mcp_signed_manifests_20260329",
+  "track_id": "federated_mcp_signed_manifests_20260329",
   "name": "Federated MCP — Signed Capability Manifests",
-  "status": "COMPLETED",
+  "status": "archived",
   "priority": "HIGH",
   "created": "2026-03-29",
   "completed": "2026-03-30",
   "owner": "Pohánka Péter",
   "progress": 100,
+  "updated": "2026-04-12",
+  "updatedAt": "2026-04-12T01:45:00.000Z",
+  "archivedAt": "2026-03-30T23:30:00.000Z",
   "description": "Aláírt capability manifest séma és verifikáció a remote agentek/toolok képességeinek biztonságos publikálásához.",
   "dependencies": [
     "federated_mcp_trust_20260329"
@@ -31,6 +35,11 @@
     "A manifest verzió- és deprecációs adatai láthatók"
   ],
   "group": "brunella",
+  "archiveReason": "The signed manifest slice survives in the federation subsystem, but the validated canonical closure is the later Brunella Federation Phase 5 hardening track.",
+  "verificationNotes": "Governance review on 2026-04-12 confirmed the precursor manifest slice is still evidenced by src/core/federation/capabilityManifest.ts and src/server/routes/federation.ts. The canonical validated closure for this scope is brunella_federation_phase5_20260402.",
+  "supersededByTracks": [
+    "brunella_federation_phase5_20260402"
+  ],
   "dod": {
     "tests_pass": false,
     "build_clean": false,

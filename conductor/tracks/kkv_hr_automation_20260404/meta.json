@@ -1,17 +1,17 @@
 {
   "id": "kkv_hr_automation_20260404",
+  "track_id": "kkv_hr_automation_20260404",
   "name": "KKV HR es dolgozoi adminisztracio automatizalas",
   "title": "KKV HR es dolgozoi adminisztracio automatizalas",
-  "status": "completed",
+  "status": "archived",
   "priority": "high",
   "created": "2026-04-04",
-  "updated": "2026-04-05",
+  "updated": "2026-04-12",
   "assignee": "GitHub Copilot",
   "progress": 100,
   "completedAt": "2026-04-05T12:00:00Z",
-  "verified": true,
-  "verifiedAt": "2026-04-05",
-  "verificationNotes": "Completed: onboarding flows, leave requests, timesheet hooks. No separate follow-up track required at this time.",
+  "archivedAt": "2026-04-12T00:30:33.535Z",
+  "verificationNotes": "Governance remediation on 2026-04-12 reclassified this umbrella as a predecessor record. Canonical validated delivery now lives in the successor slices for onboarding, leave approvals/wait-resume, and timesheet culture/export work.",
   "tags": [
     "kkv",
     "hr",
@@ -24,6 +24,14 @@
   "sourceDocument": "User-provided KKV n8n workflow pack",
   "phase": 1,
   "group": "business",
+  "archiveReason": "This umbrella HR track was split into validated successor slices. The canonical onboarding, leave, and timesheet delivery now lives in successor tracks, so the parent is preserved as an archived predecessor only.",
+  "supersededByTracks": [
+    "kkv_hr_onboarding_provisioning_20260405",
+    "kkv_hr_leave_approvals_20260405",
+    "kkv_hr_leave_wait_resume_20260407",
+    "kkv_hr_timesheet_culture_20260405",
+    "kkv_hr_timesheet_export_and_alerts_20260407"
+  ],
   "dod": {
     "tests_pass": false,
     "build_clean": false,

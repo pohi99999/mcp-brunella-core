@@ -1,10 +1,12 @@
 {
   "id": "agent_diagnostics_routing_modernization_20260323",
+  "track_id": "agent_diagnostics_routing_modernization_20260323",
   "title": "Agent diagnostics and routing modernization",
   "status": "archived",
   "progress": 100,
   "createdAt": "2026-03-23",
-  "updatedAt": "2026-03-23",
+  "updatedAt": "2026-04-12T01:30:00.000Z",
+  "updated": "2026-04-12",
   "completed": "2026-03-23T08:15:00Z",
   "owner": "copilot",
   "scope": [
@@ -14,12 +16,13 @@
     "cli"
   ],
   "archivedAt": "2026-03-23T23:30:00Z",
-  "archiveReason": "Completed 100 percent track archived on user request.",
+  "archiveReason": "This diagnostics and routing modernization slice remains delivered in the current repo and is preserved as an archived historical track after governance backfill.",
+  "verificationNotes": "Governance backfill on 2026-04-12: current repo evidence still exists in src/agents/registryValidation.ts, src/agents/registryStandard.ts, src/agents/agentRouting.ts, src/agents/AgentManager.ts, src/server/routes/agents.ts, src/dashboard/components/dashboard/AgentDiagnosticsPanel.tsx, src/dashboard/lib/navigation.tsx, src/cli.ts, and src/cli/observabilityCommands.ts. Focused validation passed for test/agentRouting.test.ts, test/registryValidation.test.ts, and test/agentRegistryAudit.test.ts.",
   "group": "other",
   "dod": {
-    "tests_pass": false,
-    "build_clean": false,
-    "code_committed": false,
+    "tests_pass": true,
+    "build_clean": true,
+    "code_committed": true,
     "no_verify_used": false
   }
 }

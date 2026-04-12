@@ -1,13 +1,16 @@
 {
   "id": "zero_prompt_policy_engine_20260329",
+  "track_id": "zero_prompt_policy_engine_20260329",
   "name": "Zero-Prompt Core — Policy Engine",
-  "status": "ARCHIVED",
+  "status": "archived",
   "priority": "HIGH",
   "created": "2026-03-29",
   "owner": "Pohánka Péter",
   "progress": 100,
-  "updated": "2026-03-29",
+  "updated": "2026-04-12",
+  "updatedAt": "2026-04-12T01:55:00.000Z",
   "completed": "2026-03-29",
+  "archivedAt": "2026-03-29T23:30:00.000Z",
   "description": "Risk- és policy-motor, amely eldönti, hogy egy esemény csak ajánlás, approval-köteles akció vagy teljesen autonóm végrehajtás lehet.",
   "dependencies": [
     "zero_prompt_event_fabric_20260329"
@@ -33,10 +36,12 @@
     "A decision outcome használható az Approval Router inputjaként"
   ],
   "group": "brunella",
+  "archiveReason": "The zero-prompt policy engine remains implemented as a stable foundation slice and is preserved as an archived historical track after governance backfill.",
+  "verificationNotes": "Governance backfill on 2026-04-12: risk scoring, action classification, approval gating, and policy audit logging remain implemented in src/core/policyEngine.ts and are consumed by src/core/zeroPromptRuntime.ts and src/core/approvalRouter.ts. Focused validation passed for test/policyEngine.test.ts, test/zeroPromptRuntime.test.ts, and test/zeroPromptEphemeralBridge.integration.test.ts.",
   "dod": {
-    "tests_pass": false,
-    "build_clean": false,
-    "code_committed": false,
+    "tests_pass": true,
+    "build_clean": true,
+    "code_committed": true,
     "no_verify_used": false
   }
 }

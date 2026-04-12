@@ -1,16 +1,20 @@
 {
   "id": "mission_templates_test_cadence_devex_20260408",
+  "track_id": "mission_templates_test_cadence_devex_20260408",
   "name": "Mission Templates & Test Cadence DevEx Optimization",
   "title": "Mission Templates & Test Cadence DevEx Optimization",
   "status": "archived",
   "priority": "high",
   "created": "2026-04-08",
-  "updated": "2026-04-10",
+  "updated": "2026-04-12",
+  "updatedAt": "2026-04-12T02:18:00.000Z",
   "assignee": "GitHub Copilot",
   "progress": 100,
   "completedAt": "2026-04-08T23:59:59.000Z",
   "archivedAt": "2026-04-10T19:23:00.000Z",
   "archiveReason": "Mission templates, planner, test cadence advisor, DevEx API, CLI wiring, dashboard panels, and focused verification are all complete; no additional follow-up track is needed before archival.",
+  "verified": true,
+  "verifiedAt": "2026-04-12",
   "tags": [
     "mission",
     "devex",
@@ -25,10 +29,11 @@
   "sourceDocument": "Brunella Agent System – rendszer-elemzés és optimalizálási javaslatok.md",
   "phase": 3,
   "group": "brunella",
+  "verificationNotes": "Governance backfill on 2026-04-12: mission template loading, planner generation, cadence analysis, DevEx API, consolidated CLI surface, and dashboard panels remain implemented in src/tools/missionPlanner.ts, src/tools/testCadenceAdvisor.ts, src/server/routes/devex.ts, src/cli/devexCommands.ts, src/dashboard/components/dashboard/MissionPlannerPanel.tsx, and src/dashboard/components/dashboard/TestPlanPanel.tsx, with YAML mission templates under missions/. Focused verification passed for npm run build, test/missionPlanner.test.ts, test/testCadenceAdvisor.test.ts, test/devexRoutes.test.ts, src/dashboard/components/dashboard/MissionPlannerPanel.test.tsx, and src/dashboard/components/dashboard/TestPlanPanel.test.tsx.",
   "dod": {
-    "tests_pass": false,
-    "build_clean": false,
-    "code_committed": false,
+    "tests_pass": true,
+    "build_clean": true,
+    "code_committed": true,
     "no_verify_used": false
   }
 }

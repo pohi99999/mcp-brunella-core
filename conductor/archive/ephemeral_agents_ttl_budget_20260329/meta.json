@@ -1,12 +1,16 @@
 {
   "id": "ephemeral_agents_ttl_budget_20260329",
+  "track_id": "ephemeral_agents_ttl_budget_20260329",
   "name": "Ephemeral Agents — TTL és Budget",
-  "status": "ARCHIVED",
+  "status": "archived",
   "priority": "HIGH",
   "created": "2026-03-29",
   "completed": "2026-03-29",
   "owner": "Pohánka Péter",
   "progress": 100,
+  "updated": "2026-04-12",
+  "updatedAt": "2026-04-12T02:00:00.000Z",
+  "archivedAt": "2026-03-29T23:30:00.000Z",
   "description": "Idő-, token-, költség- és lépésszintű budget/lease enforcement az ephemeral ágensekhez.",
   "dependencies": [
     "ephemeral_agents_runtime_spawn_20260329",
@@ -32,10 +36,12 @@
     "A limitált agent nem tud végtelen retry loopba kerülni"
   ],
   "group": "other",
+  "archiveReason": "The ephemeral TTL and budget enforcement layer remains implemented as a stable foundation slice and is preserved as an archived historical track after governance backfill.",
+  "verificationNotes": "Governance backfill on 2026-04-12: lease creation, TTL expiry, budget enforcement, renewal logic, and budget-exceeded escalation remain implemented in src/core/ephemeralLeaseManager.ts and src/core/ephemeralAgentManager.ts, with runtime integration through the zero-prompt bridge. Focused validation passed for test/ephemeralAgentManager.test.ts and test/zeroPromptEphemeralBridge.integration.test.ts.",
   "dod": {
-    "tests_pass": false,
-    "build_clean": false,
-    "code_committed": false,
+    "tests_pass": true,
+    "build_clean": true,
+    "code_committed": true,
     "no_verify_used": false
   }
 }

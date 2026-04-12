@@ -1,14 +1,14 @@
 {
   "id": "kkv_marketing_automation_20260404",
+  "track_id": "kkv_marketing_automation_20260404",
   "name": "KKV marketing es kommunikacios automatizalas",
   "title": "KKV marketing es kommunikacios automatizalas",
-  "status": "completed",
+  "status": "pending",
   "priority": "medium",
   "created": "2026-04-04",
-  "updated": "2026-04-05",
+  "updated": "2026-04-12",
   "assignee": "GitHub Copilot",
-  "progress": 100,
-  "completedAt": "2026-04-05",
+  "progress": 0,
   "tags": [
     "kkv",
     "marketing",
@@ -21,6 +21,7 @@
   "sourceDocument": "User-provided KKV n8n workflow pack",
   "phase": 1,
   "group": "business",
+  "verificationNotes": "Reopened by governance remediation on 2026-04-12: forensic review found no validated repository evidence for the promised social posting, newsletter drafting, or approval/logging workflow.",
   "dod": {
     "tests_pass": false,
     "build_clean": false,

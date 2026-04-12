@@ -1,11 +1,13 @@
 {
   "id": "agent_registry_governance_20260408",
+  "track_id": "agent_registry_governance_20260408",
   "name": "Agent Registry Governance & Consolidation",
   "title": "Agent Registry Governance & Consolidation",
   "status": "archived",
   "priority": "high",
   "created": "2026-04-08",
-  "updated": "2026-04-08",
+  "updated": "2026-04-12",
+  "updatedAt": "2026-04-12T02:18:00.000Z",
   "assignee": "GitHub Copilot",
   "progress": 100,
   "tags": [
@@ -22,11 +24,14 @@
   "completedAt": "2026-04-08T15:01:55.3350365Z",
   "archivedAt": "2026-04-08T15:01:55.3350365Z",
   "archiveReason": "Agent registry governance implementation completed, verified, and archived after dashboard and test stabilization.",
+  "verified": true,
+  "verifiedAt": "2026-04-12",
   "group": "brunella",
+  "verificationNotes": "Governance backfill on 2026-04-12: the agent registry audit, recommendation, snapshot, route, MCP, CLI, and dashboard surfaces remain implemented in src/tools/agentRegistryAudit.ts, src/tools/agentRegistryRecommendations.ts, src/server/agentRegistryGovernance.ts, src/server/routes/agents.ts, src/server/registry.ts, src/cli/agentGovernanceCommands.ts, and src/dashboard/components/dashboard/AgentRegistryHealthPanel.tsx. Focused verification passed for npm run build, test/agentRegistryAudit.test.ts, src/dashboard/components/dashboard/AgentRegistryHealthPanel.test.tsx, and src/dashboard/components/dashboard/AgentRegistryCard.test.tsx.",
   "dod": {
-    "tests_pass": false,
-    "build_clean": false,
-    "code_committed": false,
+    "tests_pass": true,
+    "build_clean": true,
+    "code_committed": true,
     "no_verify_used": false
   }
 }

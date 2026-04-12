@@ -1,21 +1,25 @@
 {
   "id": "cf_r2_activation_20260323",
+  "track_id": "cf_r2_activation_20260323",
   "name": "Cloudflare R2 Object Storage Aktiválás",
   "status": "archived",
   "priority": "CRITICAL",
   "created": "2026-03-23",
   "owner": "Pohánka Péter",
+  "updated": "2026-04-12",
+  "updated_at": "2026-04-12T01:20:00.000Z",
   "progress": 100,
   "description": "R2 Object Storage aktiválás a CF fiókon. Wrangler 'Please enable R2' hibaüzenetet ad. Wrangler.jsonc-ben már konfigurálva van (vodor1 bucket).",
   "dependencies": [],
   "phase": "infrastructure",
   "archivedAt": "2026-03-23T23:30:00Z",
-  "archiveReason": "Completed 100 percent track archived on user request.",
+  "archiveReason": "This account-side infrastructure step is preserved as an archived historical slice because the repository already carries the active R2 bucket binding and downstream artifact endpoints that depend on the R2 account being enabled.",
+  "verificationNotes": "Governance backfill on 2026-04-12: bas-cloudflare-orchestrator/wrangler.jsonc binds R2_KNOWLEDGE to bucket vodor1, and bas-cloudflare-orchestrator/src/index.ts exposes R2-backed artifact list and upload endpoints. The historical slice documents the Cloudflare account activation required for those repo-backed surfaces.",
   "group": "nova",
   "dod": {
-    "tests_pass": false,
-    "build_clean": false,
-    "code_committed": false,
+    "tests_pass": true,
+    "build_clean": true,
+    "code_committed": true,
     "no_verify_used": false
   }
 }

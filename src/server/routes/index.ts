@@ -101,6 +101,7 @@ export function createV1Router(): Router {
   router.use("/llm", lazy(() => import("./llm.js"), "createLLMRoutes"));
   router.use("/anthropic", lazy(() => import("./anthropic.js"), "createAnthropicRoutes"));
   router.use("/business-jobs", lazy(() => import("./businessJobs.js"), "createBusinessJobsRoutes", defaultDatabaseManager));
+  router.use("/chaos", lazy(() => import("./chaos.js"), "createChaosRouter"));
   router.use("/security", lazy(() => import("./security.js"), "securityRouter"));
   router.use("/assistant", lazy(() => import("./assistant.js"), "createAssistantRoutes"));
   router.use("/copilot-bridge", lazy(() => import("./copilotBridge.js"), "createCopilotBridgeRoutes"));

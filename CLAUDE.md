@@ -9,7 +9,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **Brunella Agent System (BAS)** — Hibrid Node.js/Python multi-agent rendszer, MCP protokoll.
 TypeScript ESM, Express 4, React 19, Ollama, Gemini, GitHub Models, FastAPI, Cloudflare Workers.
-Méret: 95+ agent, 53 MCP tool, 52 route fájl, ~55 dashboard panel, 6 SQLite DB, 5 LLM provider.
+Méret: 95+ agent, 53 MCP tool, 96 route fájl, 110 route mount, 108 dashboard panel, 6 SQLite DB, 5 LLM provider.
 
 ---
 
@@ -68,6 +68,7 @@ uvicorn server:app --reload --port 8000
 # Szinkronizálás
 python scripts/sync_foszal.py        # .ai/FOSZAL.md frissítése munka után
 npm run sync:bootstrap               # .ai/BOOTSTRAP.md regenerálása
+npm run sync:doc-stats               # BOOTSTRAP.md + README stat blokk frissítése
 ```
 
 ---
@@ -97,6 +98,14 @@ npm run sync:bootstrap               # .ai/BOOTSTRAP.md regenerálása
 **Dashboard és CLI párhuzamos felületek:** `src/dashboard/lib/navigation.tsx` a panel regisztráció. `src/dashboard/` ki van zárva a fő `tsconfig.json`-ból. Minden új feature-höz mindkét felület kötelező.
 
 **Python kettős interfész:** `myai/server.py` FastAPI `:8000` + OpenAI-kompatibilis `/models`. `myai/mcp_server.py` Python toolokat expo stdio/SSE via FastMCP.
+
+**Enterprise Core Patterns:** `src/core/` tartalmaz 10 vállalati architektúra-mintát — Event Sourcing, Saga, Command/Query Bus, Outbox, Materialized Views, Business Policies, Ambient Context, Rate Limiter, Temporal Workflow, Self Diagnostics. Ezeket az `src/core/advancedHooks.ts` regisztrálja. Új üzleti logikánál ezekre építs, ne ad-hoc megoldásra.
+
+**External knowledge staged canonicalization:** Új web/YouTube tudás `src/server/services/externalKnowledgeService.ts`-en keresztül kerül be — `raw/screened` → `provisional` kártya → csak `canonical` kártyák indexelhetők RAG-ba (`knowledge_card:*` bejegyzésként). Route: `/api/v1/knowledge`, MCP: `src/tools/externalKnowledge.ts`. Nyers internetes tartalmat TILOS közvetlenül long-term memóriába küldeni.
+
+**`workspace-mcp-server` önálló child projekt:** Forrása `workspace-mcp-server/`-ban van, `uv`-vel kezelve. Brunella integrációja `mcp_servers.json` + `.vscode/mcp.json` — ne adj hozzá dashboard/CLI drótot ha a registry bejegyzések elegendők. `dashboard.bat` automatikusan elindítja ha `uv` elérhető.
+
+**Hook biztonság:** `fireHookSafely()` a default tool/scheduler/webhook workflow-kban — ne hasson ki az elsődleges folyamatra ha hook audit/DLQ/circuit-breaker tranziens hibát dob. `fireHook()` csak hook-management felületeken ahol a hiba látható kell maradjon. Hook metaadatok és builtin-ek: `src/core/hookRegistry.ts` + `src/core/hooks/*`.
 
 ### SQLite adatbázisok
 
@@ -318,12 +327,18 @@ Invoke Copilot Chat-ban `@<name>` prefixszel:
 | Root `AGENTS.md` | `cloudflare-docs` konvenciókat ír le — BAS-hoz irreleváns; mérvadó: `.github/copilot-instructions.md` |
 | Windows Unicode | Emoji → `[OK]` / `[AI]` Python logokban |
 | FastAPI nem indul | `cd myai && uv sync && uvicorn server:app --reload --port 8000` |
+| Federation init fail | `MANIFEST_SIGNING_SECRET` hiányzik vagy < 32 karakter — nincs default fallback |
+| deferredInit crash diagnosztika | `logs/node-server.log` (backend), `logs/phoenix.log` (Phoenix Protocol), `logs/agent_*.log` (per-agent), `logs/developer.log` (DeveloperAgent) |
 
 ## Google Hitelesítés (két szerződés)
 
 - **Service account:** `GOOGLE_CREDENTIALS_FILE` vagy `GOOGLE_SERVICE_ACCOUNT_JSON` → `credentials/google-service-account.json`
 - **Workspace OAuth:** `GOOGLE_WORKSPACE_CREDENTIALS_FILE` + `GOOGLE_WORKSPACE_TOKEN_FILE` → `credentials/`
 - Régi `config/` és gyökérszintű útvonalak csak legacy fallback — ne vezess be ilyet új kódban
+
+## Aider Integráció
+
+`.aider.conf.yml` a Brunella profilt `openai/gpt-5-mini` modellre + magyar commit/chat nyelvre konfigurálja. `.aiderignore` kizárja: `_KNOWLEDGE_BASE/`, `temp/`, `website_sources/`, `build/`, `node_modules/`, `logs/`, `test-results/`, `playwright-report/`, `.worktrees/`. A LiteLLM proxy (`litellm_config.yaml`) a `GITHUB_PAT`-ot olvassa GitHub Models-hez.
 
 ## Védett Fájlok — SOHA NE TÖRÖLD!
 

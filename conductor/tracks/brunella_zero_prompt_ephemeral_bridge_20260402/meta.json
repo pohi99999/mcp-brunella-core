@@ -1,11 +1,16 @@
 {
   "id": "brunella_zero_prompt_ephemeral_bridge_20260402",
+  "track_id": "brunella_zero_prompt_ephemeral_bridge_20260402",
   "title": "Brunella Zero-Prompt → Ephemeral Agent Bridge",
   "status": "completed",
   "priority": "high",
   "createdAt": "2026-04-02",
+  "created_at": "2026-04-02",
   "owner": "GitHub Copilot",
   "progress": 100,
+  "updated": "2026-04-12",
+  "updated_at": "2026-04-12T01:05:00.000Z",
+  "completedAt": "2026-04-02",
   "tags": [
     "brunella",
     "zero-prompt",
@@ -24,13 +29,13 @@
   ],
   "verified": true,
   "verifiedAt": "2026-04-02",
-  "verificationNotes": "Three-way policy routing implemented; 5/5 integration tests pass",
+  "verificationNotes": "Governance backfill on 2026-04-12: the zero-prompt bridge remains implemented in src/core/zeroPromptRuntime.ts and mounted in src/server/routes/index.ts. The targeted validation suite passed for test/zeroPromptEphemeralBridge.integration.test.ts, confirming safe auto-spawn, guarded approval flow, dangerous-event escalation, and bounded ephemeral agent budgets.",
   "testFile": "test/zeroPromptEphemeralBridge.integration.test.ts",
   "group": "brunella",
   "dod": {
-    "tests_pass": false,
-    "build_clean": false,
-    "code_committed": false,
+    "tests_pass": true,
+    "build_clean": true,
+    "code_committed": true,
     "no_verify_used": false
   }
 }

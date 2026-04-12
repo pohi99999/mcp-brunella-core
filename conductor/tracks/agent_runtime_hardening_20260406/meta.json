@@ -1,9 +1,14 @@
 {
   "id": "agent_runtime_hardening_20260406",
+  "track_id": "agent_runtime_hardening_20260406",
   "title": "Agent Runtime Hardening — ReAct, Working Memory, Tool Errors, Guardrails",
   "status": "completed",
-  "priority": "critical",
+  "priority": "CRITICAL",
   "createdAt": "2026-04-06T22:55:00.000Z",
+  "created_at": "2026-04-06T22:55:00.000Z",
+  "updated": "2026-04-12",
+  "updated_at": "2026-04-12T00:30:33.535Z",
+  "completedAt": "2026-04-06",
   "owner": "GitHub Copilot",
   "progress": 100,
   "phase": "reviewer",
@@ -19,6 +24,7 @@
     "orchestrator"
   ],
   "description": "A Brunella agent runtime megerősítése explicit ReAct scratchpad-del, strukturált working memory-val, osztályozott tool error kezeléssel és tartalom-szintű output guardrailssel.",
+  "verificationNotes": "Governance backfill on 2026-04-12: npm run build and npm run test:fast both passed after the remediation wave, and the targeted runtime-hardening suite passed for test/reactLoop.test.ts, test/workingMemory.test.ts, test/toolErrorClassifier.test.ts, test/guardrails/outputGuard.test.ts, and test/orchestratorReact.test.ts. Evidence exists in src/core/reactLoop.ts, src/core/workingMemory.ts, src/core/toolErrorClassifier.ts, src/core/outputGuard.ts, src/core/toolRunCapture.ts, src/agents/BaseAgent.ts, src/agents/OrchestratorAgent.ts, and src/core/universalOrchestratorService.ts.",
   "sdlc": {
     "enabled": true,
     "phases": {
@@ -62,9 +68,9 @@
   ],
   "group": "brunella",
   "dod": {
-    "tests_pass": false,
-    "build_clean": false,
-    "code_committed": false,
+    "tests_pass": true,
+    "build_clean": true,
+    "code_committed": true,
     "no_verify_used": false
   }
 }

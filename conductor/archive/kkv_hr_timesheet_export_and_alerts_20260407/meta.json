@@ -1,12 +1,14 @@
 {
   "id": "kkv_hr_timesheet_export_and_alerts_20260407",
+  "track_id": "kkv_hr_timesheet_export_and_alerts_20260407",
   "name": "KKV HR timesheet export and culture alerts",
   "title": "KKV HR timesheet export and culture alerts",
-  "status": "completed",
+  "status": "archived",
   "priority": "HIGH",
   "created": "2026-04-07",
-  "updated": "2026-04-07",
+  "updated": "2026-04-12",
   "completedAt": "2026-04-07",
+  "archivedAt": "2026-04-12T00:30:33.535Z",
   "owner": "GitHub Copilot",
   "assignee": "GitHub Copilot",
   "progress": 100,
@@ -26,10 +28,11 @@
   "sourceDocument": "Gap analysis from kkv_hr_timesheet_culture_20260405",
   "phase": 4,
   "group": "business",
+  "archiveReason": "Payroll export, scheduler alerts, and culture reminder gaps were delivered as a focused follow-up slice and are now kept as an archived historical record.",
   "dod": {
-    "tests_pass": false,
-    "build_clean": false,
-    "code_committed": false,
+    "tests_pass": true,
+    "build_clean": true,
+    "code_committed": true,
     "no_verify_used": false
   }
 }

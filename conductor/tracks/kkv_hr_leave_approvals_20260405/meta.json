@@ -1,14 +1,16 @@
 {
   "id": "kkv_hr_leave_approvals_20260405",
+  "track_id": "kkv_hr_leave_approvals_20260405",
   "name": "KKV HR leave approvals",
   "title": "KKV HR leave approvals",
-  "status": "COMPLETED",
+  "status": "completed",
   "priority": "HIGH",
   "created": "2026-04-05",
-  "updated": "2026-04-07",
+  "updated": "2026-04-12",
   "owner": "GitHub Copilot",
   "assignee": "GitHub Copilot",
   "progress": 100,
+  "completedAt": "2026-04-07",
   "tags": [
     "kkv",
     "hr",
@@ -23,10 +25,11 @@
   "sourceDocument": "Derived from kkv_hr_automation_20260404",
   "phase": 2,
   "group": "business",
+  "verificationNotes": "Governance backfill on 2026-04-12: npm run build and npm run test:fast both passed during remediation, and the KKV HR validation matrix confirmed the leave request, approval, and calendar synchronization flow. Evidence exists in src/server/routes/hrLeave.ts and test/hrLeaveRoutes.test.ts.",
   "dod": {
-    "tests_pass": false,
-    "build_clean": false,
-    "code_committed": false,
+    "tests_pass": true,
+    "build_clean": true,
+    "code_committed": true,
     "no_verify_used": false
   }
 }

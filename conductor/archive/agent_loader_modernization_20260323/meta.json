@@ -1,14 +1,19 @@
 {
   "id": "agent_loader_modernization_20260323",
+  "track_id": "agent_loader_modernization_20260323",
   "title": "Agent Loader Modernization",
   "status": "archived",
   "progress": 100,
   "priority": "high",
   "createdAt": "2026-03-23T00:00:00Z",
-  "updatedAt": "2026-03-23T08:00:00Z",
+  "updatedAt": "2026-04-12T01:30:00.000Z",
+  "updated": "2026-04-12",
   "completed": "2026-03-23T08:00:00Z",
   "archivedAt": "2026-03-23T23:30:00Z",
-  "archiveReason": "Completed 100 percent track archived on user request.",
+  "archiveReason": "The loader export-fallback work remains real, but it is now a narrower predecessor slice inside the broader agent diagnostics and routing modernization track.",
+  "supersededByTracks": [
+    "agent_diagnostics_routing_modernization_20260323"
+  ],
   "group": "other",
   "dod": {
     "tests_pass": false,

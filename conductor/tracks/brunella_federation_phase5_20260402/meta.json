@@ -1,9 +1,11 @@
 {
   "id": "brunella_federation_phase5_20260402",
+  "track_id": "brunella_federation_phase5_20260402",
   "title": "Brunella Federation — Phase 5 Execute Hardening",
   "status": "completed",
-  "priority": "medium",
+  "priority": "MEDIUM",
   "createdAt": "2026-04-02",
+  "created_at": "2026-04-02T00:00:00.000Z",
   "owner": "GitHub Copilot",
   "progress": 100,
   "tags": [
@@ -18,18 +20,20 @@
   "sourceDocument": "User direction + architecture review 2026-04-02",
   "phase": 5,
   "updated": "2026-04-03",
+  "updated_at": "2026-04-12T00:30:33.535Z",
+  "completedAt": "2026-04-03",
   "dependencies": [
     "brunella_core_stabilization_20260402",
     "brunella_identity_project_maintainer_20260402",
     "brunella_reflection_continual_learning_20260402",
     "brunella_zero_prompt_ephemeral_bridge_20260402"
   ],
-  "verificationNotes": "Federation execute, discovery, operator mutation routes, operator evidence surface, and manifest signing contract are fail-closed with runtime lifecycle evidence, revoke propagation invalidation, manifest route auth+validation, and focused federation/backend/dashboard validation green",
+  "verificationNotes": "Governance backfill on 2026-04-12: federation execute, discovery, operator mutation routes, operator evidence surface, and manifest signing contract are fail-closed with runtime lifecycle evidence, revoke propagation invalidation, manifest route auth+validation, and focused federation/backend/dashboard validation green. npm run build, npm run build:ui, npm run test:fast, and the targeted dashboard suite for test/dashboard/components/FederationCenter.test.tsx all passed. Evidence exists in src/server/routes/federation.ts, src/core/federation/trustRegistry.ts, src/core/federation/capabilityManifest.ts, src/cli/federationCommands.ts, and test/federationRoutes.test.ts.",
   "group": "brunella",
   "dod": {
-    "tests_pass": false,
-    "build_clean": false,
-    "code_committed": false,
+    "tests_pass": true,
+    "build_clean": true,
+    "code_committed": true,
     "no_verify_used": false
   }
 }

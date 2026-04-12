@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-04-12T00:17:43.705Z",
+  "lastUpdated": "2026-04-12T05:00:00.868Z",
   "tracks": [
     {
       "id": "agent_instability_chaos_testing_20260410",
@@ -8,6 +8,7 @@
       "priority": "high",
       "progress": 100,
       "created": "2026-04-10T12:00:00Z",
+      "updated": "2026-04-12",
       "completed": "2026-04-10T22:45:00Z",
       "assignee": "Brunella Orchestrator",
       "tags": [
@@ -18,9 +19,9 @@
       ],
       "dependencies": [],
       "dod": {
-        "tests_pass": false,
-        "build_clean": false,
-        "code_committed": false,
+        "tests_pass": true,
+        "build_clean": true,
+        "code_committed": true,
         "no_verify_used": false
       },
       "group": "other",
@@ -34,6 +35,8 @@
       "priority": "critical",
       "progress": 100,
       "created": "2026-04-06T22:55:00.000Z",
+      "updated": "2026-04-12",
+      "completed": "2026-04-06",
       "assignee": "GitHub Copilot",
       "tags": [
         "runtime",
@@ -47,9 +50,9 @@
         "brunella_reflection_continual_learning_20260402"
       ],
       "dod": {
-        "tests_pass": false,
-        "build_clean": false,
-        "code_committed": false,
+        "tests_pass": true,
+        "build_clean": true,
+        "code_committed": true,
         "no_verify_used": false
       },
       "group": "brunella",
@@ -63,6 +66,7 @@
       "priority": "high",
       "progress": 100,
       "created": "2026-04-10T12:00:00Z",
+      "updated": "2026-04-12",
       "completed": "2026-04-10T22:55:00Z",
       "assignee": "Brunella Orchestrator",
       "tags": [
@@ -73,9 +77,9 @@
       ],
       "dependencies": [],
       "dod": {
-        "tests_pass": false,
-        "build_clean": false,
-        "code_committed": false,
+        "tests_pass": true,
+        "build_clean": true,
+        "code_committed": true,
         "no_verify_used": false
       },
       "group": "other",
@@ -140,6 +144,7 @@
       "progress": 100,
       "created": "2026-04-02",
       "updated": "2026-04-03",
+      "completed": "2026-04-03",
       "assignee": "GitHub Copilot",
       "tags": [
         "brunella",
@@ -157,9 +162,9 @@
         "brunella_zero_prompt_ephemeral_bridge_20260402"
       ],
       "dod": {
-        "tests_pass": false,
-        "build_clean": false,
-        "code_committed": false,
+        "tests_pass": true,
+        "build_clean": true,
+        "code_committed": true,
         "no_verify_used": false
       },
       "group": "brunella",
@@ -173,6 +178,7 @@
       "priority": "high",
       "progress": 100,
       "created": "2026-04-02",
+      "updated": "2026-04-12",
       "completed": "2026-04-06",
       "assignee": "GitHub Copilot",
       "tags": [
@@ -188,9 +194,9 @@
         "brunella_core_stabilization_20260402"
       ],
       "dod": {
-        "tests_pass": false,
-        "build_clean": false,
-        "code_committed": false,
+        "tests_pass": true,
+        "build_clean": true,
+        "code_committed": true,
         "no_verify_used": false
       },
       "group": "brunella",
@@ -200,10 +206,12 @@
     {
       "id": "brunella_reflection_continual_learning_20260402",
       "name": "Brunella Reflection / Continual Learning Activation",
-      "status": "archived",
+      "status": "completed",
       "priority": "high",
       "progress": 100,
       "created": "2026-04-02",
+      "updated": "2026-04-12",
+      "completed": "2026-04-02",
       "assignee": "GitHub Copilot",
       "tags": [
         "brunella",
@@ -219,22 +227,24 @@
         "brunella_identity_project_maintainer_20260402"
       ],
       "dod": {
-        "tests_pass": false,
-        "build_clean": false,
-        "code_committed": false,
+        "tests_pass": true,
+        "build_clean": true,
+        "code_committed": true,
         "no_verify_used": false
       },
       "group": "brunella",
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\brunella_reflection_continual_learning_20260402",
-      "_isArchived": true
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\brunella_reflection_continual_learning_20260402",
+      "_isArchived": false
     },
     {
       "id": "brunella_zero_prompt_ephemeral_bridge_20260402",
       "name": "Brunella Zero-Prompt → Ephemeral Agent Bridge",
-      "status": "archived",
+      "status": "completed",
       "priority": "high",
       "progress": 100,
       "created": "2026-04-02",
+      "updated": "2026-04-12",
+      "completed": "2026-04-02",
       "assignee": "GitHub Copilot",
       "tags": [
         "brunella",
@@ -251,14 +261,121 @@
         "brunella_reflection_continual_learning_20260402"
       ],
       "dod": {
+        "tests_pass": true,
+        "build_clean": true,
+        "code_committed": true,
+        "no_verify_used": false
+      },
+      "group": "brunella",
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\brunella_zero_prompt_ephemeral_bridge_20260402",
+      "_isArchived": false
+    },
+    {
+      "id": "cf_analytics_engine_20260323",
+      "name": "Cloudflare Analytics Engine Egyedi Metrikák",
+      "status": "active",
+      "priority": "low",
+      "progress": 0,
+      "created": "2026-03-23",
+      "updated": "2026-04-12",
+      "assignee": "Pohánka Péter",
+      "tags": [],
+      "dependencies": [],
+      "dod": {
         "tests_pass": false,
         "build_clean": false,
         "code_committed": false,
         "no_verify_used": false
       },
       "group": "brunella",
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\brunella_zero_prompt_ephemeral_bridge_20260402",
-      "_isArchived": true
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\cf_analytics_engine_20260323",
+      "_isArchived": false
+    },
+    {
+      "id": "cf_queues_task_distribution_20260323",
+      "name": "Cloudflare Queues Aszinkron Task Elosztás",
+      "status": "active",
+      "priority": "high",
+      "progress": 0,
+      "created": "2026-03-23",
+      "updated": "2026-04-12",
+      "assignee": "Pohánka Péter",
+      "tags": [],
+      "dependencies": [],
+      "dod": {
+        "tests_pass": false,
+        "build_clean": false,
+        "code_committed": false,
+        "no_verify_used": false
+      },
+      "group": "nova",
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\cf_queues_task_distribution_20260323",
+      "_isArchived": false
+    },
+    {
+      "id": "cf_r2_artifact_storage_20260323",
+      "name": "R2 Alapú Agent Artifact Tárolás",
+      "status": "active",
+      "priority": "high",
+      "progress": 0,
+      "created": "2026-03-23",
+      "updated": "2026-04-12",
+      "assignee": "Pohánka Péter",
+      "tags": [],
+      "dependencies": [
+        "cf_r2_activation_20260323"
+      ],
+      "dod": {
+        "tests_pass": false,
+        "build_clean": false,
+        "code_committed": false,
+        "no_verify_used": false
+      },
+      "group": "nova",
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\cf_r2_artifact_storage_20260323",
+      "_isArchived": false
+    },
+    {
+      "id": "cf_workers_ai_models_20260323",
+      "name": "Workers AI Modell Paletta Bővítés",
+      "status": "active",
+      "priority": "medium",
+      "progress": 0,
+      "created": "2026-03-23",
+      "updated": "2026-04-12",
+      "assignee": "Pohánka Péter",
+      "tags": [],
+      "dependencies": [],
+      "dod": {
+        "tests_pass": false,
+        "build_clean": false,
+        "code_committed": false,
+        "no_verify_used": false
+      },
+      "group": "other",
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\cf_workers_ai_models_20260323",
+      "_isArchived": false
+    },
+    {
+      "id": "cf_workflows_orchestration_20260323",
+      "name": "Cloudflare Workflows Orkesztráció",
+      "status": "active",
+      "priority": "medium",
+      "progress": 0,
+      "created": "2026-03-23",
+      "updated": "2026-04-12",
+      "assignee": "Pohánka Péter",
+      "tags": [],
+      "dependencies": [],
+      "dod": {
+        "tests_pass": false,
+        "build_clean": false,
+        "code_committed": false,
+        "no_verify_used": false
+      },
+      "group": "brunella",
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\cf_workflows_orchestration_20260323",
+      "_isArchived": false
     },
     {
       "id": "cloudflare_dns_zone_reconciliation_20260325",
@@ -321,28 +438,23 @@
     {
       "id": "cloudflare_workers_migration_20260226",
       "name": "Cloudflare Workers Migration — 16 Agent Edge Orkesztrátor",
-      "status": "archived",
+      "status": "completed",
       "priority": "high",
-      "progress": 0,
+      "progress": 100,
       "created": "2026-02-26",
-      "assignee": "Pohánka Péter",
+      "updated": "2026-04-12",
+      "completed": "2026-04-04",
       "tags": [],
-      "dependencies": [
-        "Cloudflare account dd107933ac970dac857f27cee7a7ff46 (BAS_server) — MEGVAN",
-        "CLOUDFLARE_API_TOKEN — MEGVAN (.env-ben)",
-        "Browser Rendering API token — MEGVAN (siTRHomo1G_...)",
-        "wrangler CLI telepítve — ellenőrizd: npx wrangler --version",
-        "D1 binding: bas-metadata (1c4e7d00-7b09-4ddf-88b4-8df42e1123ab) — MEGVAN"
-      ],
+      "dependencies": [],
       "dod": {
-        "tests_pass": false,
-        "build_clean": false,
-        "code_committed": false,
+        "tests_pass": true,
+        "build_clean": true,
+        "code_committed": true,
         "no_verify_used": false
       },
       "group": "brunella",
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\cloudflare_workers_migration_20260226",
-      "_isArchived": true
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\cloudflare_workers_migration_20260226",
+      "_isArchived": false
     },
     {
       "id": "copilot_self_improvement_loop_20260406",
@@ -351,6 +463,7 @@
       "priority": "high",
       "progress": 100,
       "created": "2026-04-06T20:00:00.000Z",
+      "updated": "2026-04-12",
       "completed": "2026-04-06",
       "assignee": "GitHub Copilot",
       "tags": [
@@ -364,13 +477,69 @@
         "brunella_reflection_continual_learning_20260402"
       ],
       "dod": {
+        "tests_pass": true,
+        "build_clean": true,
+        "code_committed": true,
+        "no_verify_used": false
+      },
+      "group": "brunella",
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\copilot_self_improvement_loop_20260406",
+      "_isArchived": false
+    },
+    {
+      "id": "ephemeral_agents_cleanup_audit_20260329",
+      "name": "Ephemeral Agents — Cleanup és Audit",
+      "status": "active",
+      "priority": "medium",
+      "progress": 0,
+      "created": "2026-03-29",
+      "updated": "2026-04-12",
+      "assignee": "Pohánka Péter",
+      "tags": [
+        "ephemeral-agents",
+        "cleanup",
+        "audit",
+        "artifacts"
+      ],
+      "dependencies": [
+        "ephemeral_agents_ttl_budget_20260329"
+      ],
+      "dod": {
+        "tests_pass": false,
+        "build_clean": false,
+        "code_committed": false,
+        "no_verify_used": false
+      },
+      "group": "other",
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\ephemeral_agents_cleanup_audit_20260329",
+      "_isArchived": false
+    },
+    {
+      "id": "federated_mcp_negotiation_20260329",
+      "name": "Federated MCP — Negotiation Protocol",
+      "status": "active",
+      "priority": "medium",
+      "progress": 0,
+      "created": "2026-03-29",
+      "updated": "2026-04-12",
+      "assignee": "Pohánka Péter",
+      "tags": [
+        "federated-mcp",
+        "negotiation",
+        "approval",
+        "b2b-agents"
+      ],
+      "dependencies": [
+        "federated_mcp_remote_routing_20260329"
+      ],
+      "dod": {
         "tests_pass": false,
         "build_clean": false,
         "code_committed": false,
         "no_verify_used": false
       },
       "group": "brunella",
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\copilot_self_improvement_loop_20260406",
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\federated_mcp_negotiation_20260329",
       "_isArchived": false
     },
     {
@@ -437,11 +606,11 @@
     {
       "id": "kkv_crm_automation_20260404",
       "name": "KKV CRM es lead-utanakovetes automatizalas",
-      "status": "completed",
+      "status": "archived",
       "priority": "high",
       "progress": 100,
       "created": "2026-04-04",
-      "updated": "2026-04-08",
+      "updated": "2026-04-12",
       "completed": "2026-04-08T20:21:16Z",
       "assignee": "GitHub Copilot",
       "tags": [
@@ -461,7 +630,7 @@
       },
       "group": "business",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\kkv_crm_automation_20260404",
-      "_isArchived": false
+      "_isArchived": true
     },
     {
       "id": "kkv_crm_followup_routing_20260405",
@@ -496,12 +665,11 @@
     {
       "id": "kkv_customer_service_ai_20260404",
       "name": "KKV ugyfelszolgalati AI es ticketkezeles",
-      "status": "completed",
+      "status": "active",
       "priority": "high",
-      "progress": 100,
+      "progress": 0,
       "created": "2026-04-04",
-      "updated": "2026-04-05",
-      "completed": "2026-04-05T12:00:00Z",
+      "updated": "2026-04-12",
       "assignee": "GitHub Copilot",
       "tags": [
         "kkv",
@@ -525,12 +693,11 @@
     {
       "id": "kkv_finance_automation_20260404",
       "name": "KKV penzugyi emlekezteto es jovahagyasi automatizalas",
-      "status": "completed",
+      "status": "active",
       "priority": "high",
-      "progress": 100,
+      "progress": 0,
       "created": "2026-04-04",
-      "updated": "2026-04-05",
-      "completed": "2026-04-05T12:00:00Z",
+      "updated": "2026-04-12",
       "assignee": "GitHub Copilot",
       "tags": [
         "kkv",
@@ -554,11 +721,11 @@
     {
       "id": "kkv_hr_automation_20260404",
       "name": "KKV HR es dolgozoi adminisztracio automatizalas",
-      "status": "completed",
+      "status": "archived",
       "priority": "high",
       "progress": 100,
       "created": "2026-04-04",
-      "updated": "2026-04-05",
+      "updated": "2026-04-12",
       "completed": "2026-04-05T12:00:00Z",
       "assignee": "GitHub Copilot",
       "tags": [
@@ -578,7 +745,7 @@
       },
       "group": "business",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\kkv_hr_automation_20260404",
-      "_isArchived": false
+      "_isArchived": true
     },
     {
       "id": "kkv_hr_leave_approvals_20260405",
@@ -587,7 +754,8 @@
       "priority": "high",
       "progress": 100,
       "created": "2026-04-05",
-      "updated": "2026-04-07",
+      "updated": "2026-04-12",
+      "completed": "2026-04-07",
       "assignee": "GitHub Copilot",
       "tags": [
         "kkv",
@@ -601,9 +769,9 @@
         "kkv_hr_onboarding_provisioning_20260405"
       ],
       "dod": {
-        "tests_pass": false,
-        "build_clean": false,
-        "code_committed": false,
+        "tests_pass": true,
+        "build_clean": true,
+        "code_committed": true,
         "no_verify_used": false
       },
       "group": "business",
@@ -617,7 +785,7 @@
       "priority": "high",
       "progress": 100,
       "created": "2026-04-05",
-      "updated": "2026-04-08",
+      "updated": "2026-04-12",
       "completed": "2026-04-08",
       "assignee": "GitHub Copilot",
       "tags": [
@@ -633,9 +801,9 @@
         "kkv_hr_onboarding_provisioning_20260405"
       ],
       "dod": {
-        "tests_pass": false,
-        "build_clean": false,
-        "code_committed": false,
+        "tests_pass": true,
+        "build_clean": true,
+        "code_committed": true,
         "no_verify_used": false
       },
       "group": "business",
@@ -649,7 +817,7 @@
       "priority": "high",
       "progress": 100,
       "created": "2026-04-04",
-      "updated": "2026-04-05",
+      "updated": "2026-04-12",
       "completed": "2026-04-05",
       "assignee": "GitHub Copilot",
       "tags": [
@@ -662,9 +830,9 @@
       ],
       "dependencies": [],
       "dod": {
-        "tests_pass": false,
-        "build_clean": false,
-        "code_committed": false,
+        "tests_pass": true,
+        "build_clean": true,
+        "code_committed": true,
         "no_verify_used": false
       },
       "group": "business",
@@ -674,12 +842,11 @@
     {
       "id": "kkv_marketing_automation_20260404",
       "name": "KKV marketing es kommunikacios automatizalas",
-      "status": "completed",
+      "status": "active",
       "priority": "medium",
-      "progress": 100,
+      "progress": 0,
       "created": "2026-04-04",
-      "updated": "2026-04-05",
-      "completed": "2026-04-05",
+      "updated": "2026-04-12",
       "assignee": "GitHub Copilot",
       "tags": [
         "kkv",
@@ -703,12 +870,11 @@
     {
       "id": "kkv_project_task_automation_20260404",
       "name": "KKV projekt es feladat automatizalas",
-      "status": "completed",
+      "status": "active",
       "priority": "medium",
-      "progress": 100,
+      "progress": 0,
       "created": "2026-04-04",
-      "updated": "2026-04-05",
-      "completed": "2026-04-05",
+      "updated": "2026-04-12",
       "assignee": "GitHub Copilot",
       "tags": [
         "kkv",
@@ -870,7 +1036,8 @@
       "priority": "high",
       "progress": 100,
       "created": "2026-04-07",
-      "updated": "2026-04-07",
+      "updated": "2026-04-12",
+      "completed": "2026-04-07T23:59:59.000Z",
       "assignee": "GitHub Copilot",
       "tags": [
         "logistics",
@@ -883,9 +1050,9 @@
         "logistics_vertical_20260222"
       ],
       "dod": {
-        "tests_pass": false,
-        "build_clean": false,
-        "code_committed": false,
+        "tests_pass": true,
+        "build_clean": true,
+        "code_committed": true,
         "no_verify_used": false
       },
       "group": "business",
@@ -924,9 +1091,9 @@
       "name": "Modular State Refactor — Globális változók Dependency Injection alapú refaktora",
       "status": "active",
       "priority": "medium",
-      "progress": 30,
+      "progress": 75,
       "created": "2026-04-04",
-      "updated": "2026-04-06",
+      "updated": "2026-04-12",
       "assignee": "Gemini",
       "tags": [
         "architecture",
@@ -938,10 +1105,10 @@
         "type_safety_enforcement_20260404"
       ],
       "dod": {
-        "tests_pass": false,
-        "build_clean": false,
-        "code_committed": false,
-        "no_verify_used": false
+        "tests_pass": true,
+        "build_clean": true,
+        "code_committed": true,
+        "no_verify_used": true
       },
       "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\modular_state_refactor_20260404",
@@ -1289,11 +1456,11 @@
     {
       "id": "psales_human_loop_revenue_20260407",
       "name": "P-Sales Human-in-Loop Revenue Pipeline — Lead gen, onboarding, KKV + Brand csatornák",
-      "status": "completed",
+      "status": "active",
       "priority": "high",
-      "progress": 100,
+      "progress": 35,
       "created": "2026-04-07T03:43:48Z",
-      "updated": "2026-04-08T03:20:53Z",
+      "updated": "2026-04-12T02:24:00.000Z",
       "assignee": "GitHub Copilot",
       "tags": [],
       "dependencies": [],
@@ -1422,6 +1589,7 @@
       "priority": "medium",
       "progress": 100,
       "created": "2026-04-10T12:00:00Z",
+      "updated": "2026-04-12",
       "completed": "2026-04-10T23:05:00Z",
       "assignee": "Brunella Orchestrator",
       "tags": [
@@ -1432,9 +1600,9 @@
       ],
       "dependencies": [],
       "dod": {
-        "tests_pass": false,
-        "build_clean": false,
-        "code_committed": false,
+        "tests_pass": true,
+        "build_clean": true,
+        "code_committed": true,
         "no_verify_used": false
       },
       "group": "brunella",
@@ -1735,15 +1903,15 @@
       "priority": "medium",
       "progress": 100,
       "created": "2026-03-23",
-      "updated": "2026-03-23",
+      "updated": "2026-04-12",
       "completed": "2026-03-23T08:15:00Z",
       "assignee": "copilot",
       "tags": [],
       "dependencies": [],
       "dod": {
-        "tests_pass": false,
-        "build_clean": false,
-        "code_committed": false,
+        "tests_pass": true,
+        "build_clean": true,
+        "code_committed": true,
         "no_verify_used": false
       },
       "group": "other",
@@ -1757,7 +1925,7 @@
       "priority": "medium",
       "progress": 100,
       "created": "2026-03-25T00:00:00.000Z",
-      "updated": "2026-03-30T14:15:00.000Z",
+      "updated": "2026-04-12",
       "completed": "2026-03-30T15:30:00.000Z",
       "assignee": "Copilot",
       "tags": [
@@ -1768,9 +1936,9 @@
       ],
       "dependencies": [],
       "dod": {
-        "tests_pass": false,
-        "build_clean": false,
-        "code_committed": false,
+        "tests_pass": true,
+        "build_clean": true,
+        "code_committed": true,
         "no_verify_used": false
       },
       "group": "brunella",
@@ -1784,7 +1952,7 @@
       "priority": "high",
       "progress": 100,
       "created": "2026-03-23T00:00:00Z",
-      "updated": "2026-03-23T08:00:00Z",
+      "updated": "2026-04-12",
       "completed": "2026-03-23T08:00:00Z",
       "tags": [],
       "dependencies": [],
@@ -1805,7 +1973,7 @@
       "priority": "high",
       "progress": 100,
       "created": "2026-03-23T01:30:00Z",
-      "updated": "2026-03-23T12:45:00Z",
+      "updated": "2026-04-12",
       "completed": "2026-03-23T12:00:00Z",
       "assignee": "Copilot + Pohánka Péter",
       "tags": [],
@@ -1829,7 +1997,7 @@
       "priority": "high",
       "progress": 100,
       "created": "2026-03-23T01:30:00Z",
-      "updated": "2026-03-23T12:45:00Z",
+      "updated": "2026-04-12",
       "completed": "2026-03-23T12:00:00Z",
       "assignee": "Copilot + Pohánka Péter",
       "tags": [],
@@ -1837,9 +2005,9 @@
         "observability_opentelemetry_20260323"
       ],
       "dod": {
-        "tests_pass": false,
-        "build_clean": false,
-        "code_committed": false,
+        "tests_pass": true,
+        "build_clean": true,
+        "code_committed": true,
         "no_verify_used": false
       },
       "group": "other",
@@ -1853,7 +2021,7 @@
       "priority": "high",
       "progress": 100,
       "created": "2026-04-08",
-      "updated": "2026-04-08",
+      "updated": "2026-04-12",
       "completed": "2026-04-08T15:01:55.3350365Z",
       "assignee": "GitHub Copilot",
       "tags": [
@@ -1866,9 +2034,9 @@
       ],
       "dependencies": [],
       "dod": {
-        "tests_pass": false,
-        "build_clean": false,
-        "code_committed": false,
+        "tests_pass": true,
+        "build_clean": true,
+        "code_committed": true,
         "no_verify_used": false
       },
       "group": "brunella",
@@ -1905,7 +2073,7 @@
       "priority": "medium",
       "progress": 100,
       "created": "2026-04-08T00:00:00.000Z",
-      "updated": "2026-04-10T19:10:00.000Z",
+      "updated": "2026-04-12",
       "completed": "2026-04-10T19:10:00.000Z",
       "assignee": "Brunella",
       "tags": [
@@ -1917,9 +2085,9 @@
       ],
       "dependencies": [],
       "dod": {
-        "tests_pass": false,
-        "build_clean": false,
-        "code_committed": false,
+        "tests_pass": true,
+        "build_clean": true,
+        "code_committed": true,
         "no_verify_used": false
       },
       "group": "nova",
@@ -2166,7 +2334,7 @@
       "priority": "critical",
       "progress": 100,
       "created": "2026-04-02",
-      "updated": "2026-04-04",
+      "updated": "2026-04-12",
       "completed": "2026-04-04",
       "assignee": "GitHub Copilot",
       "tags": [
@@ -2181,9 +2349,9 @@
       ],
       "dependencies": [],
       "dod": {
-        "tests_pass": false,
-        "build_clean": false,
-        "code_committed": false,
+        "tests_pass": true,
+        "build_clean": true,
+        "code_committed": true,
         "no_verify_used": false
       },
       "group": "brunella",
@@ -2307,32 +2475,13 @@
       "_isArchived": true
     },
     {
-      "id": "cf_analytics_engine_20260323",
-      "name": "Cloudflare Analytics Engine Egyedi Metrikák",
-      "status": "archived",
-      "priority": "low",
-      "progress": 100,
-      "created": "2026-03-23",
-      "assignee": "Pohánka Péter",
-      "tags": [],
-      "dependencies": [],
-      "dod": {
-        "tests_pass": false,
-        "build_clean": false,
-        "code_committed": false,
-        "no_verify_used": false
-      },
-      "group": "brunella",
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\cf_analytics_engine_20260323",
-      "_isArchived": true
-    },
-    {
       "id": "cf_durable_object_migrations_20260323",
       "name": "Durable Object Migrations Konfiguráció",
       "status": "archived",
       "priority": "high",
       "progress": 100,
       "created": "2026-03-23",
+      "updated": "2026-04-12",
       "assignee": "Pohánka Péter",
       "tags": [],
       "dependencies": [],
@@ -2353,37 +2502,18 @@
       "priority": "low",
       "progress": 100,
       "created": "2026-03-23",
+      "updated": "2026-04-12",
       "assignee": "Pohánka Péter",
       "tags": [],
       "dependencies": [],
       "dod": {
-        "tests_pass": false,
-        "build_clean": false,
-        "code_committed": false,
+        "tests_pass": true,
+        "build_clean": true,
+        "code_committed": true,
         "no_verify_used": false
       },
       "group": "other",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\cf_hyperdrive_d1_20260323",
-      "_isArchived": true
-    },
-    {
-      "id": "cf_queues_task_distribution_20260323",
-      "name": "Cloudflare Queues Aszinkron Task Elosztás",
-      "status": "archived",
-      "priority": "high",
-      "progress": 100,
-      "created": "2026-03-23",
-      "assignee": "Pohánka Péter",
-      "tags": [],
-      "dependencies": [],
-      "dod": {
-        "tests_pass": false,
-        "build_clean": false,
-        "code_committed": false,
-        "no_verify_used": false
-      },
-      "group": "nova",
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\cf_queues_task_distribution_20260323",
       "_isArchived": true
     },
     {
@@ -2393,39 +2523,18 @@
       "priority": "critical",
       "progress": 100,
       "created": "2026-03-23",
+      "updated": "2026-04-12",
       "assignee": "Pohánka Péter",
       "tags": [],
       "dependencies": [],
       "dod": {
-        "tests_pass": false,
-        "build_clean": false,
-        "code_committed": false,
+        "tests_pass": true,
+        "build_clean": true,
+        "code_committed": true,
         "no_verify_used": false
       },
       "group": "nova",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\cf_r2_activation_20260323",
-      "_isArchived": true
-    },
-    {
-      "id": "cf_r2_artifact_storage_20260323",
-      "name": "R2 Alapú Agent Artifact Tárolás",
-      "status": "archived",
-      "priority": "high",
-      "progress": 100,
-      "created": "2026-03-23",
-      "assignee": "Pohánka Péter",
-      "tags": [],
-      "dependencies": [
-        "cf_r2_activation_20260323"
-      ],
-      "dod": {
-        "tests_pass": false,
-        "build_clean": false,
-        "code_committed": false,
-        "no_verify_used": false
-      },
-      "group": "nova",
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\cf_r2_artifact_storage_20260323",
       "_isArchived": true
     },
     {
@@ -2435,58 +2544,18 @@
       "priority": "critical",
       "progress": 100,
       "created": "2026-03-23",
+      "updated": "2026-04-12",
       "assignee": "Pohánka Péter",
       "tags": [],
       "dependencies": [],
       "dod": {
-        "tests_pass": false,
-        "build_clean": false,
-        "code_committed": false,
+        "tests_pass": true,
+        "build_clean": true,
+        "code_committed": true,
         "no_verify_used": false
       },
       "group": "nova",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\cf_token_permissions_fix_20260323",
-      "_isArchived": true
-    },
-    {
-      "id": "cf_workers_ai_models_20260323",
-      "name": "Workers AI Modell Paletta Bővítés",
-      "status": "archived",
-      "priority": "medium",
-      "progress": 100,
-      "created": "2026-03-23",
-      "assignee": "Pohánka Péter",
-      "tags": [],
-      "dependencies": [],
-      "dod": {
-        "tests_pass": false,
-        "build_clean": false,
-        "code_committed": false,
-        "no_verify_used": false
-      },
-      "group": "other",
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\cf_workers_ai_models_20260323",
-      "_isArchived": true
-    },
-    {
-      "id": "cf_workflows_orchestration_20260323",
-      "name": "Cloudflare Workflows Orkesztráció",
-      "status": "archived",
-      "priority": "medium",
-      "progress": 100,
-      "created": "2026-03-23",
-      "completed": "2026-03-24",
-      "assignee": "Pohánka Péter",
-      "tags": [],
-      "dependencies": [],
-      "dod": {
-        "tests_pass": false,
-        "build_clean": false,
-        "code_committed": false,
-        "no_verify_used": false
-      },
-      "group": "brunella",
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\cf_workflows_orchestration_20260323",
       "_isArchived": true
     },
     {
@@ -3036,7 +3105,7 @@
       "priority": "high",
       "progress": 100,
       "created": "2026-04-06",
-      "updated": "2026-04-10",
+      "updated": "2026-04-12",
       "completed": "2026-04-06T23:59:59.000Z",
       "assignee": "GitHub Copilot",
       "tags": [
@@ -3048,9 +3117,9 @@
       ],
       "dependencies": [],
       "dod": {
-        "tests_pass": false,
-        "build_clean": false,
-        "code_committed": false,
+        "tests_pass": true,
+        "build_clean": true,
+        "code_committed": true,
         "no_verify_used": false
       },
       "group": "brunella",
@@ -3260,7 +3329,7 @@
       "priority": "high",
       "progress": 100,
       "created": "2026-04-08",
-      "updated": "2026-04-08",
+      "updated": "2026-04-12",
       "completed": "2026-04-08T19:51:46Z",
       "assignee": "GitHub Copilot",
       "tags": [
@@ -3273,9 +3342,9 @@
       ],
       "dependencies": [],
       "dod": {
-        "tests_pass": false,
-        "build_clean": false,
-        "code_committed": false,
+        "tests_pass": true,
+        "build_clean": true,
+        "code_committed": true,
         "no_verify_used": false
       },
       "group": "brunella",
@@ -3363,40 +3432,13 @@
       "_isArchived": true
     },
     {
-      "id": "ephemeral_agents_cleanup_audit_20260329",
-      "name": "Ephemeral Agents — Cleanup és Audit",
-      "status": "archived",
-      "priority": "medium",
-      "progress": 100,
-      "created": "2026-03-29",
-      "completed": "2026-03-29",
-      "assignee": "Pohánka Péter",
-      "tags": [
-        "ephemeral-agents",
-        "cleanup",
-        "audit",
-        "artifacts"
-      ],
-      "dependencies": [
-        "ephemeral_agents_ttl_budget_20260329"
-      ],
-      "dod": {
-        "tests_pass": false,
-        "build_clean": false,
-        "code_committed": false,
-        "no_verify_used": false
-      },
-      "group": "other",
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\ephemeral_agents_cleanup_audit_20260329",
-      "_isArchived": true
-    },
-    {
       "id": "ephemeral_agents_limited_tools_20260329",
       "name": "Ephemeral Agents — Limited Tools",
       "status": "archived",
       "priority": "high",
       "progress": 100,
       "created": "2026-03-29",
+      "updated": "2026-04-12",
       "completed": "2026-03-29",
       "assignee": "Pohánka Péter",
       "tags": [
@@ -3409,9 +3451,9 @@
         "ephemeral_agents_runtime_spawn_20260329"
       ],
       "dod": {
-        "tests_pass": false,
-        "build_clean": false,
-        "code_committed": false,
+        "tests_pass": true,
+        "build_clean": true,
+        "code_committed": true,
         "no_verify_used": false
       },
       "group": "other",
@@ -3425,6 +3467,7 @@
       "priority": "high",
       "progress": 100,
       "created": "2026-03-29",
+      "updated": "2026-04-12",
       "completed": "2026-03-29",
       "assignee": "Pohánka Péter",
       "tags": [
@@ -3437,9 +3480,9 @@
         "zero_prompt_policy_engine_20260329"
       ],
       "dod": {
-        "tests_pass": false,
-        "build_clean": false,
-        "code_committed": false,
+        "tests_pass": true,
+        "build_clean": true,
+        "code_committed": true,
         "no_verify_used": false
       },
       "group": "other",
@@ -3453,6 +3496,7 @@
       "priority": "high",
       "progress": 100,
       "created": "2026-03-29",
+      "updated": "2026-04-12",
       "completed": "2026-03-29",
       "assignee": "Pohánka Péter",
       "tags": [
@@ -3466,9 +3510,9 @@
         "ephemeral_agents_limited_tools_20260329"
       ],
       "dod": {
-        "tests_pass": false,
-        "build_clean": false,
-        "code_committed": false,
+        "tests_pass": true,
+        "build_clean": true,
+        "code_committed": true,
         "no_verify_used": false
       },
       "group": "other",
@@ -3559,40 +3603,13 @@
       "_isArchived": true
     },
     {
-      "id": "federated_mcp_negotiation_20260329",
-      "name": "Federated MCP — Negotiation Protocol",
-      "status": "archived",
-      "priority": "medium",
-      "progress": 100,
-      "created": "2026-03-29",
-      "completed": "2026-03-30",
-      "assignee": "Pohánka Péter",
-      "tags": [
-        "federated-mcp",
-        "negotiation",
-        "approval",
-        "b2b-agents"
-      ],
-      "dependencies": [
-        "federated_mcp_remote_routing_20260329"
-      ],
-      "dod": {
-        "tests_pass": false,
-        "build_clean": false,
-        "code_committed": false,
-        "no_verify_used": false
-      },
-      "group": "brunella",
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\federated_mcp_negotiation_20260329",
-      "_isArchived": true
-    },
-    {
       "id": "federated_mcp_remote_routing_20260329",
       "name": "Federated MCP — Remote Capability Routing",
       "status": "archived",
       "priority": "high",
       "progress": 100,
       "created": "2026-03-29",
+      "updated": "2026-04-12",
       "completed": "2026-03-30",
       "assignee": "Pohánka Péter",
       "tags": [
@@ -3622,6 +3639,7 @@
       "priority": "high",
       "progress": 100,
       "created": "2026-03-29",
+      "updated": "2026-04-12",
       "completed": "2026-03-30",
       "assignee": "Pohánka Péter",
       "tags": [
@@ -3650,6 +3668,7 @@
       "priority": "high",
       "progress": 100,
       "created": "2026-03-29",
+      "updated": "2026-04-12",
       "completed": "2026-03-30",
       "assignee": "Pohánka Péter",
       "tags": [
@@ -4216,7 +4235,8 @@
       "priority": "high",
       "progress": 100,
       "created": "2026-04-05",
-      "updated": "2026-04-05",
+      "updated": "2026-04-12",
+      "completed": "2026-04-05",
       "assignee": "GitHub Copilot",
       "tags": [
         "kkv",
@@ -4230,9 +4250,9 @@
         "kkv_crm_followup_routing_20260405"
       ],
       "dod": {
-        "tests_pass": false,
-        "build_clean": false,
-        "code_committed": false,
+        "tests_pass": true,
+        "build_clean": true,
+        "code_committed": true,
         "no_verify_used": false
       },
       "group": "business",
@@ -4246,7 +4266,7 @@
       "priority": "high",
       "progress": 100,
       "created": "2026-04-05",
-      "updated": "2026-04-10",
+      "updated": "2026-04-12",
       "completed": "2026-04-05",
       "assignee": "GitHub Copilot",
       "tags": [
@@ -4259,9 +4279,9 @@
       ],
       "dependencies": [],
       "dod": {
-        "tests_pass": false,
-        "build_clean": false,
-        "code_committed": false,
+        "tests_pass": true,
+        "build_clean": true,
+        "code_committed": true,
         "no_verify_used": false
       },
       "group": "business",
@@ -4275,7 +4295,7 @@
       "priority": "high",
       "progress": 100,
       "created": "2026-04-07",
-      "updated": "2026-04-10",
+      "updated": "2026-04-12",
       "completed": "2026-04-07",
       "assignee": "GitHub Copilot",
       "tags": [
@@ -4291,9 +4311,9 @@
         "kkv_hr_leave_approvals_20260405"
       ],
       "dod": {
-        "tests_pass": false,
-        "build_clean": false,
-        "code_committed": false,
+        "tests_pass": true,
+        "build_clean": true,
+        "code_committed": true,
         "no_verify_used": false
       },
       "group": "business",
@@ -4307,7 +4327,7 @@
       "priority": "high",
       "progress": 100,
       "created": "2026-04-05",
-      "updated": "2026-04-05",
+      "updated": "2026-04-12",
       "completed": "2026-04-05T17:08:54.7826616Z",
       "assignee": "GitHub Copilot",
       "tags": [
@@ -4321,9 +4341,9 @@
       ],
       "dependencies": [],
       "dod": {
-        "tests_pass": false,
-        "build_clean": false,
-        "code_committed": false,
+        "tests_pass": true,
+        "build_clean": true,
+        "code_committed": true,
         "no_verify_used": false
       },
       "group": "business",
@@ -4337,7 +4357,7 @@
       "priority": "high",
       "progress": 100,
       "created": "2026-04-07",
-      "updated": "2026-04-07",
+      "updated": "2026-04-12",
       "completed": "2026-04-07",
       "assignee": "GitHub Copilot",
       "tags": [
@@ -4354,9 +4374,9 @@
         "kkv_hr_timesheet_culture_20260405"
       ],
       "dod": {
-        "tests_pass": false,
-        "build_clean": false,
-        "code_committed": false,
+        "tests_pass": true,
+        "build_clean": true,
+        "code_committed": true,
         "no_verify_used": false
       },
       "group": "business",
@@ -4370,7 +4390,7 @@
       "priority": "medium",
       "progress": 100,
       "created": "2026-04-08",
-      "updated": "2026-04-08",
+      "updated": "2026-04-12",
       "completed": "2026-04-08T19:41:31Z",
       "assignee": "GitHub Copilot",
       "tags": [
@@ -4385,9 +4405,9 @@
         "kkv_business_automation_20260408"
       ],
       "dod": {
-        "tests_pass": false,
-        "build_clean": false,
-        "code_committed": false,
+        "tests_pass": true,
+        "build_clean": true,
+        "code_committed": true,
         "no_verify_used": false
       },
       "group": "brunella",
@@ -4433,7 +4453,7 @@
       "priority": "high",
       "progress": 100,
       "created": "2026-04-05",
-      "updated": "2026-04-05",
+      "updated": "2026-04-12",
       "completed": "2026-04-05T00:00:00Z",
       "assignee": "GitHub Copilot",
       "tags": [
@@ -4448,9 +4468,9 @@
         "n8n_konyveles_pipeline_20260328"
       ],
       "dod": {
-        "tests_pass": false,
-        "build_clean": false,
-        "code_committed": false,
+        "tests_pass": true,
+        "build_clean": true,
+        "code_committed": true,
         "no_verify_used": false
       },
       "group": "business",
@@ -4476,9 +4496,9 @@
       ],
       "dependencies": [],
       "dod": {
-        "tests_pass": false,
-        "build_clean": false,
-        "code_committed": false,
+        "tests_pass": true,
+        "build_clean": true,
+        "code_committed": true,
         "no_verify_used": false
       },
       "group": "other",
@@ -4492,7 +4512,7 @@
       "priority": "high",
       "progress": 100,
       "created": "2026-04-11T15:56:00.000Z",
-      "updated": "2026-04-11",
+      "updated": "2026-04-12",
       "completed": "2026-04-11T15:58:00Z",
       "assignee": "GitHub Copilot",
       "tags": [
@@ -4504,9 +4524,9 @@
       ],
       "dependencies": [],
       "dod": {
-        "tests_pass": false,
-        "build_clean": false,
-        "code_committed": false,
+        "tests_pass": true,
+        "build_clean": true,
+        "code_committed": true,
         "no_verify_used": false
       },
       "group": "other",
@@ -4537,9 +4557,9 @@
         "l5_world_perception_20260410"
       ],
       "dod": {
-        "tests_pass": false,
-        "build_clean": false,
-        "code_committed": false,
+        "tests_pass": true,
+        "build_clean": true,
+        "code_committed": true,
         "no_verify_used": false
       },
       "group": "other",
@@ -4566,9 +4586,9 @@
       ],
       "dependencies": [],
       "dod": {
-        "tests_pass": false,
-        "build_clean": false,
-        "code_committed": false,
+        "tests_pass": true,
+        "build_clean": true,
+        "code_committed": true,
         "no_verify_used": false
       },
       "group": "other",
@@ -4596,9 +4616,9 @@
         "l5_hook_engine_20260410"
       ],
       "dod": {
-        "tests_pass": false,
-        "build_clean": false,
-        "code_committed": false,
+        "tests_pass": true,
+        "build_clean": true,
+        "code_committed": true,
         "no_verify_used": false
       },
       "group": "other",
@@ -5062,7 +5082,7 @@
       "priority": "high",
       "progress": 100,
       "created": "2026-04-08",
-      "updated": "2026-04-10",
+      "updated": "2026-04-12",
       "completed": "2026-04-08T23:59:59.000Z",
       "assignee": "GitHub Copilot",
       "tags": [
@@ -5077,9 +5097,9 @@
         "docs_config_sot_unification_20260408"
       ],
       "dod": {
-        "tests_pass": false,
-        "build_clean": false,
-        "code_committed": false,
+        "tests_pass": true,
+        "build_clean": true,
+        "code_committed": true,
         "no_verify_used": false
       },
       "group": "brunella",
@@ -5144,7 +5164,7 @@
       "priority": "critical",
       "progress": 100,
       "created": "2026-04-04",
-      "updated": "2026-04-05",
+      "updated": "2026-04-12",
       "completed": "2026-04-05T00:00:00Z",
       "assignee": "GitHub Copilot",
       "tags": [
@@ -5159,9 +5179,9 @@
         "konyveles_phase3_20260403"
       ],
       "dod": {
-        "tests_pass": false,
-        "build_clean": false,
-        "code_committed": false,
+        "tests_pass": true,
+        "build_clean": true,
+        "code_committed": true,
         "no_verify_used": false
       },
       "group": "business",
@@ -5175,7 +5195,7 @@
       "priority": "high",
       "progress": 100,
       "created": "2026-04-04",
-      "updated": "2026-04-05",
+      "updated": "2026-04-12",
       "completed": "2026-04-05T00:00:00Z",
       "assignee": "GitHub Copilot",
       "tags": [
@@ -5189,9 +5209,9 @@
         "P-Sales20260327"
       ],
       "dod": {
-        "tests_pass": false,
-        "build_clean": false,
-        "code_committed": false,
+        "tests_pass": true,
+        "build_clean": true,
+        "code_committed": true,
         "no_verify_used": false
       },
       "group": "business",
@@ -5436,7 +5456,7 @@
       "priority": "high",
       "progress": 100,
       "created": "2026-04-08",
-      "updated": "2026-04-10",
+      "updated": "2026-04-12",
       "completed": "2026-04-08T23:59:59.000Z",
       "assignee": "GitHub Copilot",
       "tags": [
@@ -5449,9 +5469,9 @@
       ],
       "dependencies": [],
       "dod": {
-        "tests_pass": false,
-        "build_clean": false,
-        "code_committed": false,
+        "tests_pass": true,
+        "build_clean": true,
+        "code_committed": true,
         "no_verify_used": false
       },
       "group": "brunella",
@@ -6372,7 +6392,7 @@
       "priority": "medium",
       "progress": 100,
       "created": "2026-04-06",
-      "updated": "2026-04-07",
+      "updated": "2026-04-12",
       "completed": "2026-04-07",
       "assignee": "Gemini",
       "tags": [
@@ -6385,9 +6405,9 @@
         "type_safety_enforcement_20260404"
       ],
       "dod": {
-        "tests_pass": false,
-        "build_clean": false,
-        "code_committed": false,
+        "tests_pass": true,
+        "build_clean": true,
+        "code_committed": true,
         "no_verify_used": false
       },
       "group": "business",
@@ -6401,7 +6421,7 @@
       "priority": "high",
       "progress": 100,
       "created": "2026-04-08",
-      "updated": "2026-04-10",
+      "updated": "2026-04-12",
       "completed": "2026-04-10T20:42:00+02:00",
       "assignee": "GitHub Copilot",
       "tags": [
@@ -6414,9 +6434,9 @@
       ],
       "dependencies": [],
       "dod": {
-        "tests_pass": false,
-        "build_clean": false,
-        "code_committed": false,
+        "tests_pass": true,
+        "build_clean": true,
+        "code_committed": true,
         "no_verify_used": false
       },
       "group": "business",
@@ -6458,7 +6478,7 @@
       "priority": "high",
       "progress": 100,
       "created": "2026-03-29",
-      "updated": "2026-03-29",
+      "updated": "2026-04-12",
       "completed": "2026-03-29",
       "assignee": "Pohánka Péter",
       "tags": [
@@ -6471,9 +6491,9 @@
         "zero_prompt_policy_engine_20260329"
       ],
       "dod": {
-        "tests_pass": false,
-        "build_clean": false,
-        "code_committed": false,
+        "tests_pass": true,
+        "build_clean": true,
+        "code_committed": true,
         "no_verify_used": false
       },
       "group": "brunella",
@@ -6487,7 +6507,7 @@
       "priority": "high",
       "progress": 100,
       "created": "2026-03-29",
-      "updated": "2026-03-29",
+      "updated": "2026-04-12",
       "completed": "2026-03-29",
       "assignee": "Pohánka Péter",
       "tags": [
@@ -6499,9 +6519,9 @@
       ],
       "dependencies": [],
       "dod": {
-        "tests_pass": false,
-        "build_clean": false,
-        "code_committed": false,
+        "tests_pass": true,
+        "build_clean": true,
+        "code_committed": true,
         "no_verify_used": false
       },
       "group": "brunella",
@@ -6515,7 +6535,7 @@
       "priority": "medium",
       "progress": 100,
       "created": "2026-03-29",
-      "updated": "2026-03-29",
+      "updated": "2026-04-12",
       "completed": "2026-03-29",
       "assignee": "Pohánka Péter",
       "tags": [
@@ -6530,9 +6550,9 @@
         "zero_prompt_signal_ingest_20260329"
       ],
       "dod": {
-        "tests_pass": false,
-        "build_clean": false,
-        "code_committed": false,
+        "tests_pass": true,
+        "build_clean": true,
+        "code_committed": true,
         "no_verify_used": false
       },
       "group": "brunella",
@@ -6546,7 +6566,7 @@
       "priority": "high",
       "progress": 100,
       "created": "2026-03-29",
-      "updated": "2026-03-29",
+      "updated": "2026-04-12",
       "completed": "2026-03-29",
       "assignee": "Pohánka Péter",
       "tags": [
@@ -6560,9 +6580,9 @@
         "zero_prompt_event_fabric_20260329"
       ],
       "dod": {
-        "tests_pass": false,
-        "build_clean": false,
-        "code_committed": false,
+        "tests_pass": true,
+        "build_clean": true,
+        "code_committed": true,
         "no_verify_used": false
       },
       "group": "brunella",
@@ -6576,7 +6596,7 @@
       "priority": "high",
       "progress": 100,
       "created": "2026-03-29",
-      "updated": "2026-03-29",
+      "updated": "2026-04-12",
       "completed": "2026-03-29",
       "assignee": "Pohánka Péter",
       "tags": [
@@ -6590,9 +6610,9 @@
         "zero_prompt_event_fabric_20260329"
       ],
       "dod": {
-        "tests_pass": false,
-        "build_clean": false,
-        "code_committed": false,
+        "tests_pass": true,
+        "build_clean": true,
+        "code_committed": true,
         "no_verify_used": false
       },
       "group": "brunella",
@@ -6602,9 +6622,9 @@
   ],
   "stats": {
     "total": 243,
-    "active": 19,
-    "completed": 24,
-    "archived": 198,
+    "active": 31,
+    "completed": 20,
+    "archived": 190,
     "proposed": 2
   }
 }

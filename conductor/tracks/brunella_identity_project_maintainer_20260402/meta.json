@@ -1,10 +1,14 @@
 {
   "id": "brunella_identity_project_maintainer_20260402",
+  "track_id": "brunella_identity_project_maintainer_20260402",
   "title": "Brunella Identity + Project Maintainer",
   "status": "completed",
-  "priority": "high",
+  "priority": "HIGH",
   "createdAt": "2026-04-02",
+  "created_at": "2026-04-02T00:00:00.000Z",
   "completedAt": "2026-04-06",
+  "updated": "2026-04-12",
+  "updated_at": "2026-04-12T00:30:33.535Z",
   "owner": "GitHub Copilot",
   "progress": 100,
   "tags": [
@@ -21,11 +25,12 @@
   "dependencies": [
     "brunella_core_stabilization_20260402"
   ],
+  "verificationNotes": "Governance backfill on 2026-04-12: npm run build, npm run build:ui, and npm run test:fast all passed, and the targeted dashboard suite for src/dashboard/components/dashboard/ProjectMaintainerPanel.test.tsx passed. Evidence exists in docs/BRUNELLA_IDENTITY.md, src/server/services/projectMaintainerService.ts, src/server/routes/projectMaintainer.ts, src/cli/projectMaintainerCommands.ts, src/server/schedulers/scheduledTasksRunner.ts, and src/dashboard/components/dashboard/ProjectMaintainerPanel.tsx.",
   "group": "brunella",
   "dod": {
-    "tests_pass": false,
-    "build_clean": false,
-    "code_committed": false,
+    "tests_pass": true,
+    "build_clean": true,
+    "code_committed": true,
     "no_verify_used": false
   }
 }
