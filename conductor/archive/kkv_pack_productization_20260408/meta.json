@@ -1,17 +1,21 @@
 {
   "id": "kkv_pack_productization_20260408",
+  "track_id": "kkv_pack_productization_20260408",
   "name": "KKV Pack Productization & Cockpit Definition",
   "title": "KKV Pack Productization & Cockpit Definition",
   "status": "archived",
   "priority": "medium",
   "created": "2026-04-08",
-  "updated": "2026-04-08",
+  "updated": "2026-04-12",
+  "updatedAt": "2026-04-12T03:12:00.000Z",
   "assignee": "GitHub Copilot",
   "progress": 100,
   "completedAt": "2026-04-08T19:41:31Z",
   "verified": true,
-  "verifiedAt": "2026-04-08",
-  "verificationNotes": "KKV cockpit test and build passed; no additional follow-up track was required.",
+  "verifiedAt": "2026-04-12",
+  "archivedAt": "2026-04-08T19:41:31Z",
+  "archiveReason": "The KKV pack layer is implemented as a repository-local productization cockpit with shared pack definitions, route/CLI access, and dashboard visualization; no separate follow-up track is required for this boundary slice.",
+  "verificationNotes": "Audit 2026-04-12: the pack snapshot and brief layer live in src/tools/kkvPack.ts plus the finance/inventory/logistics wrappers, with route exposure in src/server/routes/kkvPack.ts, dashboard coverage in src/dashboard/components/dashboard/KKVPackCockpit.tsx, and CLI support in src/cli/kkvPackCommands.ts. Focused validation passed for test/kkvPack.test.ts, test/kkvPackRoutes.test.ts, and test/dashboard/components/KKVPackCockpit.test.tsx alongside a clean npm run build.",
   "tags": [
     "kkv",
     "productization",
@@ -27,9 +31,9 @@
   "phase": 3,
   "group": "brunella",
   "dod": {
-    "tests_pass": false,
-    "build_clean": false,
-    "code_committed": false,
+    "tests_pass": true,
+    "build_clean": true,
+    "code_committed": true,
     "no_verify_used": false
   }
 }

@@ -25,6 +25,39 @@ interface CheckpointInfo {
   latestAt: string | null;
 }
 
+interface SwarmStatusMetrics {
+  tasksCompleted?: number;
+  tasksFailed?: number;
+  avgDurationMs?: number;
+}
+
+interface SwarmStatusColony {
+  colonyId: string;
+  name: string;
+  status: string;
+  agentCount: number;
+  leaderId: string | null;
+  metrics?: SwarmStatusMetrics;
+}
+
+interface SwarmStatusResponse {
+  colonies: SwarmStatusColony[];
+  total: number;
+}
+
+function mapColonySummary(colony: SwarmStatusColony): ColonySummary {
+  return {
+    swarmId: colony.colonyId,
+    name: colony.name,
+    status: colony.status,
+    agentCount: colony.agentCount,
+    leaderId: colony.leaderId,
+    tasksCompleted: colony.metrics?.tasksCompleted ?? 0,
+    tasksFailed: colony.metrics?.tasksFailed ?? 0,
+    avgDurationMs: colony.metrics?.avgDurationMs ?? 0,
+  };
+}
+
 export default function SwarmPanel() {
   const { t } = useTranslation();
   const [colonies, setColonies] = useState<ColonySummary[]>([]);        
@@ -39,8 +72,18 @@ export default function SwarmPanel() {
         fetch('/api/v1/swarm/status'),
         fetch('/api/v1/swarm/checkpoints/stats'),
       ]);
-      if (colRes.ok) setColonies(await colRes.json());
-      if (cpRes.ok) setCheckpoints(await cpRes.json());
+      if (colRes.ok) {
+        const payload = await colRes.json() as SwarmStatusResponse;
+        setColonies((payload.colonies ?? []).map(mapColonySummary));
+      } else {
+        setColonies([]);
+      }
+      if (cpRes.ok) {
+        const payload = await cpRes.json() as CheckpointInfo;
+        setCheckpoints(payload);
+      } else {
+        setCheckpoints(null);
+      }
       setError(null);
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Fetch failed');        

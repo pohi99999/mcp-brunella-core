@@ -1,10 +1,14 @@
 {
   "id": "swarm_orchestration_chat_20260410",
+  "track_id": "swarm_orchestration_chat_20260410",
   "name": "Swarm Orchestration Chat (ClawSwarm)",
-  "status": "COMPLETED",
+  "status": "completed",
   "priority": "MEDIUM",
   "created_at": "2026-04-10T12:00:00Z",
   "completed_at": "2026-04-10T23:05:00Z",
+  "completedAt": "2026-04-10T23:05:00Z",
+  "updated": "2026-04-12",
+  "updatedAt": "2026-04-12T03:12:00.000Z",
   "owner": "Brunella Orchestrator",
   "tags": [
     "orchestration",
@@ -31,10 +35,13 @@
       "status": "COMPLETED"
     }
   ],
+  "verified": true,
+  "verifiedAt": "2026-04-12",
+  "verificationNotes": "Audit remediation on 2026-04-12: the swarm orchestration slice is implemented through src/agents/swarm/SwarmManager.ts, src/server/routes/swarm.ts, src/cli/swarmCommands.ts, src/dashboard/components/AgentGraph.tsx, and src/dashboard/components/dashboard/SwarmPanel.tsx. This remediation also fixed the dashboard status/checkpoint payload mapping bug in SwarmPanel and added missing route + dashboard regressions in test/swarmRoutes.test.ts and src/dashboard/components/dashboard/SwarmPanel.test.tsx; focused validation passed for test/swarmRoutes.test.ts, test/swarmCommands.test.ts, test/swarmManager.test.ts, and src/dashboard/components/dashboard/SwarmPanel.test.tsx with a clean npm run build.",
   "dod": {
-    "tests_pass": false,
-    "build_clean": false,
-    "code_committed": false,
+    "tests_pass": true,
+    "build_clean": true,
+    "code_committed": true,
     "no_verify_used": false
   }
 }
