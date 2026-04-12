@@ -504,6 +504,12 @@ export class HybridMemory extends RagEngine {
 
 const memory = new HybridMemory();
 
+/**
+ * Module-level singleton RagEngine for backward-compatible function exports.
+ * Can be used for dependency injection in tests or alternate configurations.
+ */
+export const defaultRagEngine: HybridMemory = memory;
+
 /** Add content to the RAG index (path/id stored in metadata). */
 export async function addToIndex(
   pathOrId: string,

@@ -63,6 +63,12 @@ describe("pythonBridge Zod schemas", () => {
       const result = HarvestResultSchema.safeParse(data);
       expect(result.success).toBe(true);
     });
+
+    it("should validate harvest result with result payload from FastAPI", () => {
+      const data = { status: "ok", result: { finished: true } };
+      const result = HarvestResultSchema.safeParse(data);
+      expect(result.success).toBe(true);
+    });
   });
 
   describe("RefineResultSchema", () => {

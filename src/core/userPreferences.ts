@@ -62,12 +62,13 @@ function getDb(): Database.Database {
   const dbPath = path.join(dbDir, "brunella.db");
   db = new Database(dbPath);
   db.pragma("journal_mode = WAL");
-  initSchema();
+  initSchema(db);
   return db;
 }
 
-export function initSchema(): void {
-  const d = db!;
+export function initSchema(database?: Database.Database): void {
+  const d = database ?? db;
+  if (!d) throw new Error('userPreferences: database not initialized — call getDb() first');
   d.exec(`
     CREATE TABLE IF NOT EXISTS user_preferences (
       id INTEGER PRIMARY KEY AUTOINCREMENT,

@@ -1,6 +1,6 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-04-12T00:00:00.967Z
+**Utolso frissites:** 2026-04-12T00:17:43.705Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
@@ -366,7 +366,7 @@
 - [x] **Brunella Remote Layer — Fázis 6: Evolutionary Collective Intelligence** (2026-03-22)
 - [x] **Brunella Remote Layer — Fázis 7: Autonomous Superintelligent Infrastructure** (2026-03-22)
 - [x] **Cloudflare Full Optimization & Domain Rollout** (2026-03-25T16:19:39Z)
-- [x] **Engineering Precision Protocol v2 (EPP v2)** (2026-02-12)
+- [x] **Engineering Precision Protocol v2** (2026-04-12)
 - [x] **Jules Continuous AI Integration (JCAI)** (2026-02-17T15:00:00Z)
 - [x] **RobotkezV2 - Full Comet (Magyar Agentic Browser)** (2026-02-15T22:00:00Z)
 - [x] **Agent Registry Governance & Consolidation** (2026-04-08T15:01:55.3350365Z)
@@ -455,8 +455,8 @@
 - [x] **bas_orchestration_chain_20260221** (2026-02-21T23:55:00Z)
 - [x] **bas_security_sandbox_20260221** (2026-02-23T22:40:00Z)
 - [x] **chrome_acp_integration_20260323** (2026-03-23T12:55:00Z)
+- [x] **Cloudflare Workers audit** (2026-02-21T11:01:00.000Z)
 - [x] **cloudflare_browser_rendering_robotkez_20260221** (2026-02-21T15:45:00Z)
-- [x] **cloudflare_workers_audit_20260221** (2026-02-21T11:01:00Z)
 - [x] **dashboard_v3_command_center_20260219** (2026-02-23T05:00:00Z)
 - [x] **Data Flywheel & Incubator** (2026-02-05)
 - [x] **Durable Object Migrations Konfiguráció**
@@ -474,7 +474,7 @@
 - [x] **master_track_2_invoice_to_sheets_20260223** (2026-02-28T00:00:00Z)
 - [x] **master_track_3_market_watcher_20260223** (2026-02-28T00:00:00Z)
 - [x] **modular-command-center-dashboard-v3-20260219** (2026-02-23T23:55:00.000Z)
-- [x] **Node↔Python Bridge E2E Integráció Tesztek** (2026-04-12T00:00:00Z)
+- [x] **Node-Python bridge E2E** (2026-04-12T02:07:12.000Z)
 - [x] **observability_opentelemetry_20260323** (2026-03-23T03:15:00Z)
 - [x] **OpenTelemetry Agent Tracing** (2026-02-11T00:00:00Z)
 - [x] **paios_orchestrator_chat_20260223** (2026-02-23T16:50:00Z)

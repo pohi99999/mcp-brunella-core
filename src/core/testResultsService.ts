@@ -276,6 +276,11 @@ export function deleteOldTestRuns(daysOld: number = 30): number {
   }
 }
 
+/** Returns the current database instance, or null if not yet initialized. */
+export function getTestResultsDb(): Database.Database | null {
+  return db;
+}
+
 export function closeDb(): void {
   if (db) {
     try {

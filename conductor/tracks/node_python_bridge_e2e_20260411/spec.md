@@ -8,7 +8,7 @@ Ha a bridge elcsúszik, a RAG (`/rag/*`) és browser automation (`/comet/*`) cse
 ## Scope (in)
 
 - `src/utils/pythonBridge.ts` — Zod schema validáció az összes Python API válaszhoz
-- `myai/server.py` — FastAPI endpoint-ok: `/rag/search`, `/comet/execute`, `/comet/memory`, `/health`
+- `myai/server.py` — FastAPI endpoint-ok: `/rag/query`, `/comet/execute`, `/comet/memory`, `/health`
 - E2E tesztek: valós FastAPI szerver + Node.js bridge hívás (nem mock)
 - Schema mismatch detekció — mi történik ha a Python módosul de a Node Zod schema nem
 
@@ -21,7 +21,7 @@ Ha a bridge elcsúszik, a RAG (`/rag/*`) és browser automation (`/comet/*`) cse
 ## Elfogadási kritériumok
 
 1. `test/integration/pythonBridge.integration.test.ts` létezik és zöld
-2. Teszteli: `/rag/search`, `/comet/execute`, `/health` sikerút
+2. Teszteli: `/rag/query`, `/comet/execute`, `/health` sikerút
 3. Teszteli: schema mismatch → explicit warning emittálódik (nem silent fail)
 4. Teszteli: FastAPI nem elérhető → graceful degradation, nem crash
 5. CI pipeline-ba integrálva (opcionális: `npm run test:integration`)

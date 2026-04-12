@@ -32,6 +32,7 @@ export type CrawlResult = z.infer<typeof CrawlResultSchema>;
 export const HarvestResultSchema = z.object({
   status: z.string(),
   data: z.unknown().optional(),
+  result: z.unknown().optional(),
   error: z.string().optional(),
   steps_completed: z.number().optional(),
 });

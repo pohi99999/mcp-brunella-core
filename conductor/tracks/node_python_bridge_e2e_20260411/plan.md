@@ -1,5 +1,7 @@
 # Plan — Node↔Python Bridge E2E Tesztek
 
+> Governance note (2026-04-12): this track is archived as delivered after the live bridge harness was repaired and the FastAPI contract drift was backfilled into the Node schema/tests.
+
 ## Fázisok
 
 ### FÁZIS 1 — Infrastruktúra
@@ -9,7 +11,7 @@
 
 ### FÁZIS 2 — Sikerút tesztek
 - [ ] `/health` — Python subsystem health check válasz validáció
-- [ ] `/rag/search` — query küldés + válasz Zod validáció
+- [ ] `/rag/query` — query küldés + válasz Zod validáció
 - [ ] `/comet/execute` — scenario futtatás + result shape validáció
 - [ ] `/comet/memory` — memory clear + 30 napos default
 

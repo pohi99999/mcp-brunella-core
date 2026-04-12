@@ -1,12 +1,18 @@
 {
   "id": "epp-v2-protocol-20260211",
+  "track_id": "epp-v2-protocol-20260211",
+  "name": "Engineering Precision Protocol v2",
   "title": "Engineering Precision Protocol v2 (EPP v2)",
+  "description": "Initial documentation rollout for the EPP v2 development protocol and the Dashboard + CLI parity rule.",
   "status": "archived",
-  "priority": "critical",
+  "priority": "CRITICAL",
   "created": "2026-02-11",
-  "updated": "2026-02-12",
+  "created_at": "2026-02-11T00:00:00.000Z",
+  "updated": "2026-04-12",
+  "updated_at": "2026-04-12T00:12:00.000Z",
   "owner": "Claude",
-  "spec_status": "draft",
+  "assignee": "Claude",
+  "spec_status": "frozen",
   "progress": 100,
   "tags": [
     "process",
@@ -16,14 +22,15 @@
     "cli"
   ],
   "dependencies": [],
-  "estimated_effort": "low",
   "business_value": "Clear spec freeze + Dashboard+CLI rule for every feature",
-  "archived_at": "2026-02-13T00:00:00Z",
+  "archiveReason": "The original EPP v2 protocol documentation was delivered as a foundational documentation slice. Later tracks operationalize compliance, but they do not replace this source protocol artifact.",
+  "archivedAt": "2026-02-13T00:00:00.000Z",
+  "verificationNotes": "Governance backfill on 2026-04-12: documentation evidence exists in conductor/epp-v2.md, README.md, .ai/FOSZAL.md, and .ai/claude.md for the original protocol rollout. Targeted governance validation passed via SpecWriter/EPP-related tests, and repository build passed during the remediation wave.",
   "group": "brunella",
   "dod": {
-    "tests_pass": false,
-    "build_clean": false,
-    "code_committed": false,
+    "tests_pass": true,
+    "build_clean": true,
+    "code_committed": true,
     "no_verify_used": false
   }
 }
