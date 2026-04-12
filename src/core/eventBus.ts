@@ -29,7 +29,13 @@ export type EventType =
   | 'system.failover'
   | 'system.recovered'
   | 'phoenix.snapshot'
-  | 'phoenix.restored';
+  | 'phoenix.restored'
+  | 'invoice.received'
+  | 'invoice.logged'
+  | 'invoice.extracted'
+  | 'invoice.stored'
+  | 'invoice.completed'
+  | 'invoice.failed';
 
 export interface BusEvent {
   source: string;

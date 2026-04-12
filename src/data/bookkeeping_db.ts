@@ -10,6 +10,8 @@ import type {
   CashEntrySummary,
   CashEntrySource,
   CashEntryType,
+  Invoice,
+  InvoiceStatus,
   NavInvoiceData,
   ReconciliationEvent,
   ReconciliationEventInput,
@@ -104,8 +106,27 @@ function openDB(dbFilePath: string): Database {
       created_at TEXT NOT NULL DEFAULT (datetime('now'))
     );
 
+    CREATE TABLE IF NOT EXISTS invoices (
+      id TEXT PRIMARY KEY,
+      gmail_message_id TEXT UNIQUE,
+      partner_name TEXT,
+      invoice_number TEXT,
+      amount REAL,
+      currency TEXT,
+      date TEXT,
+      due_date TEXT,
+      drive_file_id TEXT,
+      sheets_row INTEGER,
+      status TEXT NOT NULL DEFAULT 'RECEIVED',
+      error_message TEXT,
+      created_at TEXT NOT NULL DEFAULT (datetime('now')),
+      updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+    );
+
     CREATE INDEX IF NOT EXISTS idx_recon_events_run_id ON reconciliation_events (run_id);
     CREATE INDEX IF NOT EXISTS idx_recon_events_tx_id  ON reconciliation_events (tx_id);
+    CREATE INDEX IF NOT EXISTS idx_invoices_gmail_id ON invoices (gmail_message_id);
+    CREATE INDEX IF NOT EXISTS idx_invoices_status ON invoices (status);
   `);
   dbPath = dbFilePath;
   return db;
@@ -117,6 +138,45 @@ function ensureDB(dbFilePath: string = dbPath ?? DEFAULT_DB_PATH): Database {
   }
 
   return openDB(dbFilePath);
+}
+
+interface InvoiceRow {
+  id: string;
+  gmail_message_id: string | null;
+  partner_name: string | null;
+  invoice_number: string | null;
+  amount: number | null;
+  currency: string | null;
+  date: string | null;
+  due_date: string | null;
+  drive_file_id: string | null;
+  sheets_row: number | null;
+  status: string;
+  error_message: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+type InvoiceUpsertInput = Pick<Invoice, 'id' | 'status'> &
+  Partial<Omit<Invoice, 'id' | 'status' | 'createdAt' | 'updatedAt'>>;
+
+function toInvoice(row: InvoiceRow): Invoice {
+  return {
+    id: row.id,
+    gmailMessageId: row.gmail_message_id ?? undefined,
+    partnerName: row.partner_name ?? undefined,
+    invoiceNumber: row.invoice_number ?? undefined,
+    amount: row.amount !== null ? Number(row.amount) : undefined,
+    currency: row.currency ?? undefined,
+    date: row.date ?? undefined,
+    dueDate: row.due_date ?? undefined,
+    driveFileId: row.drive_file_id ?? undefined,
+    sheetsRow: row.sheets_row !== null ? Number(row.sheets_row) : undefined,
+    status: row.status as InvoiceStatus,
+    errorMessage: row.error_message ?? undefined,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
+  };
 }
 
 function toTransaction(row: TransactionRow): BookkeepingTransaction {
@@ -518,5 +578,112 @@ export function getExceptionCount(): number {
   } catch (error) {
     logError('bookkeeping_db', 'Failed to get exception count:', error);
     return 0;
+  }
+}
+
+// ─── Invoices (L5 Pipeline) ───────────────────────────────────────────────────
+
+/**
+ * Saves or updates an invoice in the tracking table.
+ */
+export function saveInvoice(invoice: InvoiceUpsertInput): void {
+  try {
+    const database = ensureDB();
+    const now = new Date().toISOString();
+    const stmt = database.prepare(`
+      INSERT INTO invoices (
+        id, gmail_message_id, partner_name, invoice_number, amount, 
+        currency, date, due_date, drive_file_id, sheets_row, status, error_message, updated_at
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      ON CONFLICT(id) DO UPDATE SET
+        gmail_message_id = COALESCE(excluded.gmail_message_id, invoices.gmail_message_id),
+        partner_name = COALESCE(excluded.partner_name, invoices.partner_name),
+        invoice_number = COALESCE(excluded.invoice_number, invoices.invoice_number),
+        amount = COALESCE(excluded.amount, invoices.amount),
+        currency = COALESCE(excluded.currency, invoices.currency),
+        date = COALESCE(excluded.date, invoices.date),
+        due_date = COALESCE(excluded.due_date, invoices.due_date),
+        drive_file_id = COALESCE(excluded.drive_file_id, invoices.drive_file_id),
+        sheets_row = COALESCE(excluded.sheets_row, invoices.sheets_row),
+        status = excluded.status,
+        error_message = COALESCE(excluded.error_message, invoices.error_message),
+        updated_at = excluded.updated_at
+    `);
+
+    stmt.run(
+      invoice.id,
+      invoice.gmailMessageId ?? null,
+      invoice.partnerName ?? null,
+      invoice.invoiceNumber ?? null,
+      invoice.amount ?? null,
+      invoice.currency ?? null,
+      invoice.date ?? null,
+      invoice.dueDate ?? null,
+      invoice.driveFileId ?? null,
+      invoice.sheetsRow ?? null,
+      invoice.status,
+      invoice.errorMessage ?? null,
+      now
+    );
+  } catch (error) {
+    logError('bookkeeping_db', `Failed to save invoice: ${invoice.id}`, error);
+    throw error;
+  }
+}
+
+/**
+ * Gets an invoice by its ID.
+ */
+export function getInvoice(id: string): Invoice | null {
+  try {
+    const database = ensureDB();
+    const row = database.prepare('SELECT * FROM invoices WHERE id = ?').get(id) as InvoiceRow | undefined;
+    return row ? toInvoice(row) : null;
+  } catch (error) {
+    logError('bookkeeping_db', `Failed to get invoice: ${id}`, error);
+    throw error;
+  }
+}
+
+/**
+ * Gets an invoice by its Gmail message ID (for idempotency).
+ */
+export function getInvoiceByGmailId(gmailId: string): Invoice | null {
+  try {
+    const database = ensureDB();
+    const row = database.prepare('SELECT * FROM invoices WHERE gmail_message_id = ?').get(gmailId) as InvoiceRow | undefined;
+    return row ? toInvoice(row) : null;
+  } catch (error) {
+    logError('bookkeeping_db', `Failed to get invoice by gmail id: ${gmailId}`, error);
+    throw error;
+  }
+}
+
+/**
+ * Updates the status of an invoice.
+ */
+export function updateInvoiceStatus(id: string, status: InvoiceStatus, errorMessage?: string): void {
+  try {
+    const database = ensureDB();
+    const now = new Date().toISOString();
+    database.prepare('UPDATE invoices SET status = ?, error_message = ?, updated_at = ? WHERE id = ?')
+      .run(status, errorMessage ?? null, now, id);
+  } catch (error) {
+    logError('bookkeeping_db', `Failed to update invoice status: ${id}`, error);
+    throw error;
+  }
+}
+
+/**
+ * Returns all invoices, optionally limited.
+ */
+export function getAllInvoices(limit = 100): Invoice[] {
+  try {
+    const database = ensureDB();
+    const rows = database.prepare('SELECT * FROM invoices ORDER BY created_at DESC LIMIT ?').all(limit) as InvoiceRow[];
+    return rows.map(toInvoice);
+  } catch (error) {
+    logError('bookkeeping_db', 'Failed to get all invoices:', error);
+    throw error;
   }
 }

@@ -6,6 +6,14 @@ import { getBifrostGateway } from '../src/core/bifrost_gateway.js';
 vi.mock('../src/tools/unifiedWorkspace.js');
 vi.mock('../src/core/bifrost_gateway.js');
 vi.mock('../src/utils/logger.js');
+vi.mock('../src/data/bookkeeping_db.js', () => ({
+  getInvoiceByGmailId: vi.fn().mockReturnValue(null),
+  saveInvoice: vi.fn(),
+  updateInvoiceStatus: vi.fn(),
+}));
+vi.mock('../src/core/eventBus.js', () => ({
+  eventBus: { emit: vi.fn() },
+}));
 
 describe('InvoiceAutomationAgent', () => {
   let agent: InvoiceAutomationAgent;

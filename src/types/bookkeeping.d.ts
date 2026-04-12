@@ -120,3 +120,22 @@ export interface ReconciliationEventInput {
     confidence?: number;
     notes?: string;
 }
+
+export type InvoiceStatus = 'RECEIVED' | 'EXTRACTED' | 'STORED' | 'LOGGED' | 'COMPLETED' | 'FAILED';
+
+export interface Invoice {
+    id: string;
+    gmailMessageId?: string;
+    partnerName?: string;
+    invoiceNumber?: string;
+    amount?: number;
+    currency?: string;
+    date?: string;
+    dueDate?: string;
+    driveFileId?: string;
+    sheetsRow?: number;
+    status: InvoiceStatus;
+    errorMessage?: string;
+    createdAt: string;
+    updatedAt: string;
+}

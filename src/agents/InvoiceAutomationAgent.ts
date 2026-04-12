@@ -1,8 +1,15 @@
 import { BaseAgent, AgentContext, AgentResult } from './BaseAgent.js';
-import { logInfo, logError } from '../utils/logger.js';
+import { logInfo, logError, logWarn } from '../utils/logger.js';
 import { getWorkspaceClient } from '../tools/unifiedWorkspace.js';
 import { getBifrostGateway } from '../core/bifrost_gateway.js';
+import { eventBus } from '../core/eventBus.js';
+import { 
+  saveInvoice, 
+  getInvoiceByGmailId, 
+  updateInvoiceStatus 
+} from '../data/bookkeeping_db.js';
 import * as path from 'path';
+import * as crypto from 'node:crypto';
 
 /**
  * Extracted Invoice Data
@@ -16,14 +23,14 @@ interface ExtractedInvoice {
 }
 
 /**
- * InvoiceAutomationAgent - Automatizált Számlafeldolgozó
- * Feladata: Gmail -> Gemini Vision -> Drive & Sheets
+ * InvoiceAutomationAgent - Automatizált Számlafeldolgozó (L5 Zero-Touch)
+ * Feladata: Gmail -> Gemini Vision -> Drive & Sheets -> Event Pipeline
  */
 export class InvoiceAutomationAgent extends BaseAgent {
   name = 'InvoiceAutomation';
   role = 'Automated Invoice Processor';
-  description = 'Számlák automatikus feldolgozása: Gmail letöltés, Gemini Vision elemzés, Drive mentés és Sheets rögzítés.';
-  capabilities = ['gmail_read', 'vision_extraction', 'drive_organization', 'sheets_logging'];
+  description = 'Számlák automatikus feldolgozása L5 szinten: Gmail letöltés, Gemini Vision elemzés, Drive mentés és Sheets rögzítés eseményvezérelt módon.';
+  capabilities = ['gmail_read', 'vision_extraction', 'drive_organization', 'sheets_logging', 'event_driven'];
 
   async executeTask(context: AgentContext): Promise<AgentResult> {
     const task = context.task?.toLowerCase() || '';
@@ -48,7 +55,7 @@ export class InvoiceAutomationAgent extends BaseAgent {
    * Teljes munkafolyamat futtatása
    */
   private async runFullWorkflow(context: AgentContext): Promise<AgentResult> {
-    logInfo(this.name, 'Számlafeldolgozási munkafolyamat indítása...');
+    logInfo(this.name, 'L5 Számlafeldolgozási munkafolyamat indítása...');
 
     // 1. Gmail keresés - utolsó 10 releváns levél
     const query = 'has:attachment (filename:pdf OR filename:jpg OR filename:png) label:inbox "számla"';
@@ -65,6 +72,7 @@ export class InvoiceAutomationAgent extends BaseAgent {
 
     let processedCount = 0;
     let failedCount = 0;
+    let skippedCount = 0;
     const results = [];
 
     for (const msg of messages) {
@@ -74,50 +82,112 @@ export class InvoiceAutomationAgent extends BaseAgent {
         continue;
       }
 
-      logInfo(this.name, `Levél feldolgozása: ${messageId}`);
+      // Idempotencia ellenőrzés
+      const existing = getInvoiceByGmailId(messageId);
+      if (existing) {
+        logInfo(this.name, `Levél már feldolgozva (id: ${existing.id}), kihagyás.`);
+        skippedCount++;
+        continue;
+      }
+
+      const invoiceId = crypto.randomUUID(); // Generate unique ID for this invoice
+      logInfo(this.name, `Új levél feldolgozása (Job ID: ${invoiceId}): ${messageId}`);
+      
+      // Kezdeti rögzítés a DB-be
+      saveInvoice({
+        id: invoiceId,
+        gmailMessageId: messageId,
+        status: 'RECEIVED'
+      });
+
+      eventBus.emit({
+        source: this.name,
+        type: 'invoice.received',
+        payload: { invoiceId, gmailMessageId: messageId }
+      });
+
       const attachments = await workspace.getEmailAttachments(messageId);
       
       for (const att of attachments) {
         if (this.isInvoiceFile(att.filename)) {
           try {
+            // Fázis: Kivonás (Vision)
             const extraction = await this.processInvoiceFile(att.data, att.filename);
             
             if (extraction.success && extraction.data) {
-              const invoice = extraction.data as ExtractedInvoice;
+              const extractedData = extraction.data as ExtractedInvoice;
               
-              // 2. Drive mentés (Év/Hónap struktúra)
-              const driveFile = await this.saveToDrive(att.data, att.filename, invoice);
+              saveInvoice({
+                id: invoiceId,
+                partnerName: extractedData.vendorName,
+                invoiceNumber: extractedData.invoiceNumber,
+                amount: extractedData.amount,
+                currency: extractedData.currency,
+                date: extractedData.date,
+                status: 'EXTRACTED'
+              });
+
+              eventBus.emit({
+                source: this.name,
+                type: 'invoice.extracted',
+                payload: { invoiceId, data: extractedData }
+              });
+
+              // Fázis: Mentés Drive-ra
+              const driveFile = await this.saveToDrive(att.data, att.filename, extractedData);
               
-              // 3. Sheets rögzítés
-              await this.logToSheets(invoice, driveFile.webViewLink);
+              updateInvoiceStatus(invoiceId, 'STORED');
+              saveInvoice({ id: invoiceId, driveFileId: driveFile.fileId, status: 'STORED' });
+
+              eventBus.emit({
+                source: this.name,
+                type: 'invoice.stored',
+                payload: { invoiceId, driveFileId: driveFile.fileId }
+              });
+
+              // Fázis: Rögzítés Sheets-be
+              await this.logToSheets(extractedData, driveFile.webViewLink);
               
+              updateInvoiceStatus(invoiceId, 'COMPLETED');
+              eventBus.emit({
+                source: this.name,
+                type: 'invoice.completed',
+                payload: { invoiceId }
+              });
+
               processedCount++;
-              results.push({ filename: att.filename, status: 'success', vendor: invoice.vendorName, amount: invoice.amount });
+              results.push({ filename: att.filename, status: 'success', vendor: extractedData.vendorName, amount: extractedData.amount });
             } else {
               throw new Error(extraction.message);
             }
           } catch (err: any) {
-            logError(this.name, `Hiba a fájl feldolgozásakor (${att.filename}): ${err.message}`);
+            const errorMsg = err.message || String(err);
+            logError(this.name, `Hiba a fájl feldolgozásakor (${att.filename}): ${errorMsg}`);
+            
+            updateInvoiceStatus(invoiceId, 'FAILED', errorMsg);
+            eventBus.emit({
+              source: this.name,
+              type: 'invoice.failed',
+              payload: { invoiceId, error: errorMsg }
+            });
+
             // Hiba esetén megjelöljük a levelet egy speciális címkével
             try {
               await workspace.modifyEmail(messageId, { addLabelIds: ['Brunella-Manual-Check'] });
             } catch (labelErr) {
-              logError(this.name, `Nem sikerült a címkézés: ${labelErr}`);
+              logError(this.name, `Nem sikerült a hiba-címkézés: ${labelErr}`);
             }
             failedCount++;
-            results.push({ filename: att.filename, status: 'failed', reason: err.message });
+            results.push({ filename: att.filename, status: 'failed', reason: errorMsg });
           }
         }
       }
-      
-      // Sikeres feldolgozás után levehetjük az INBOX címkét (archiválás)
-      // await workspace.modifyEmail(messageId, { removeLabelIds: ['INBOX'] });
     }
 
     return {
       success: true,
-      message: `Feldolgozás kész. Sikeres: ${processedCount}, Sikertelen: ${failedCount}.`,
-      data: { results, processedCount, failedCount }
+      message: `L5 Feldolgozás kész. Sikeres: ${processedCount}, Sikertelen: ${failedCount}, Kihagyott: ${skippedCount}.`,
+      data: { results, processedCount, failedCount, skippedCount }
     };
   }
 
