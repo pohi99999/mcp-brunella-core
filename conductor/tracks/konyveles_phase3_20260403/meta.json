@@ -5,7 +5,7 @@
   "priority": "HIGH",
   "created": "2026-04-03",
   "owner": "Pohánka Péter",
-  "progress": 28,
+  "progress": 35,
   "description": "A lezárt n8n_konyveles_pipeline_20260328 track folytatása. Teljes szamlazz.hu integráció (API v3), WF-6: kimenő számlázás, WF-7: IMAP bejövő email intake live, WF-8: NAV XML live validáció, WF-9: összesítő report email. Bank CSV watch élesítése, SMTP credential konfigurálása, Playwright tesztek bővítése.",
   "parent_track": "n8n_konyveles_pipeline_20260328",
   "dependencies": [

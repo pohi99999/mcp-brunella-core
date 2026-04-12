@@ -45,6 +45,7 @@ import { formatResponse } from "../utils/responseFormatter.js";
 import { SwarmManager } from './swarm/SwarmManager.js';
 import { resolveAgentExport } from './agentLoader.js';
 import { selectAgentForInstruction } from "./agentRouting.js";
+import { agentHookEngine } from "../core/agentHookEngine.js";
 import { validateAndNormalizeRegistry, type RegistryValidationReport } from "./registryValidation.js";
 import { type AgentConfig, type RegistryConfig } from "./registryStandard.js";
 import { getSkill, SKILL_REGISTRY } from "../skills/index.js";
