@@ -2,8 +2,9 @@
   "id": "kkv_finance_automation_20260404",
   "name": "KKV pénzügyi emlékeztető és jóváhagyási automatizálás",
   "assignee": "GitHub Copilot",
-  "status": "active",
-  "progress": 0,
+  "status": "in_progress",
+  "progress": 1,
   "created_at": "2026-04-04T18:00:00Z",
+  "updated": "2026-04-12T04:17:07Z",
   "path": "./tracks/kkv_finance_automation_20260404/"
 }

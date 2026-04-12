@@ -2582,3 +2582,8 @@ pm run test:fast validáció sikeres (364 fájl passed, 1 skipped / 2797 teszt p
 **Érintett fájlok:** conductor/archive/kkv_hr_leave_wait_resume_20260407/meta.json, conductor/archive/kkv_hr_leave_wait_resume_20260407/plan.md, conductor/archive/kkv_hr_leave_wait_resume_20260407/spec.md, conductor/tracks.md, conductor/project_state.json
 **Státusz:** ✅ Archiválva
 **Megjegyzés:** A 	est/hrLeaveRoutes.test.ts fókuszált regresszió zöld (5/5), beleértve approve, reject és calendar-failure retry ágakat; follow-up track nem szükséges.
+### 2026-04-12 04:17 - Pilot indítása: kkv_finance_automation_20260404
+Feladat: Pilot start — scaffold és pilot note létrehozva; feature branch: feat/kkv-finance-automation-20260404
+Érintett fájlok: tracks/kkv_finance_automation_20260404/pilot.md, meta.json, .ai/copilot.md
+Delegálás: bas-lead-developer (implementáció), robust-test-writer (tesztek), frontend-design-review (dashboard), devops-infra-guardian (CI)
+Megjegyzés: Következő lépés: commit és PR.
