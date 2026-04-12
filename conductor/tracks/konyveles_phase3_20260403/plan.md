@@ -25,6 +25,11 @@ Provide a Phase 3 skeleton that wires invoice ingestion (IMAP), basic refinement
 - Implement real IMAP fetching, robust attachment parsing
 - Wire Szamlazz client to production endpoint and credential handling
 - Add integration tests that exercise the full pipeline
+
+## Current verified milestone
+- `EmailAgent` now emits top-level `invoice` plus `invoices`, and WF-7 normalizes `data?.invoice` / `data?.invoices?.[0]` for downstream NAV handoff.
+- Focused tests passed: `test/EmailAgent.test.ts`, `test/phase3_workflows.test.ts`, `test/NavAgent.test.ts`, `test/szamlazz_routes.test.ts`.
+- `npm run build:ui` is green; the track remains ACTIVE until live IMAP/NAV credential flow is fully verified.
 # Végrehajtási Terv: Könyvelési Automatizálás Phase 3
 
 **Track ID:** `konyveles_phase3_20260403`

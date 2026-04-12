@@ -42,10 +42,10 @@ import { getPendingFixes, updateFixStatus } from "../utils/fixQueue.js";
 import { SocketServiceClass } from "../server/SocketService.js"; // Import SocketServiceClass type
 import type { IAgent } from "./types.js";
 import { formatResponse } from "../utils/responseFormatter.js";
+import { fireHooks } from "../core/hookEngine.js";
 import { SwarmManager } from './swarm/SwarmManager.js';
 import { resolveAgentExport } from './agentLoader.js';
 import { selectAgentForInstruction } from "./agentRouting.js";
-import { agentHookEngine } from "../core/agentHookEngine.js";
 import { validateAndNormalizeRegistry, type RegistryValidationReport } from "./registryValidation.js";
 import { type AgentConfig, type RegistryConfig } from "./registryStandard.js";
 import { getSkill, SKILL_REGISTRY } from "../skills/index.js";
@@ -1043,7 +1043,7 @@ export class AgentManager extends EventEmitter {
       });
 
       // Hook Engine notification
-      await agentHookEngine.fire('agent:task:failed', {
+      await fireHooks('agent:task:failed', {
         agentName,
         error: lastError?.message || 'Unknown error',
         task: instruction,

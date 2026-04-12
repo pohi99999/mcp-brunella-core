@@ -1,0 +1,20 @@
+{
+  "track_id": "bas_hook_infrastructure_upgrade_20260412",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2026-04-12T19:40:00Z",
+  "updated_at": "2026-04-12T19:40:00Z",
+  "description": "BAS Hook Infrastruktúra — Agent Lifecycle, Git Guard & MCP Integration",
+  "sdlc": {
+    "enabled": true,
+    "current_phase": "architect",
+    "auto_advance": true,
+    "phases": {
+      "architect": { "status": "pending", "output": "phases/1-architect.md" },
+      "devops": { "status": "pending", "output": "phases/2-devops.md" },
+      "coder": { "status": "pending", "output": "phases/3-coder.md" },
+      "qa": { "status": "pending", "output": "phases/4-qa.md" },
+      "reviewer": { "status": "pending", "output": "phases/5-reviewer.md" }
+    }
+  }
+}

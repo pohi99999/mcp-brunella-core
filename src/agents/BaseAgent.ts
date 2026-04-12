@@ -17,6 +17,7 @@ import { checkPattern, getPatternReuseThreshold } from '../core/patternReuse.js'
 import { queryMemory as queryStructuredMemory, saveMemory as saveStructuredMemory, type StoredAgentMemory } from '../core/structuredMemory.js';
 import { guardAgentResponseOutput, guardAgentResultOutput } from '../core/outputGuard.js';
 import { fireHookSafely, isHookEnabled } from '../core/hookRegistry.js';
+import { fireHook as fireLifecycleHook } from '../core/agentHookEngine.js';
 import {
   attachWorkingMemoryObservation,
   appendWorkingMemoryMessage,
@@ -130,21 +131,31 @@ export abstract class BaseAgent implements IAgent {
       task,
       context,
       testMode,
+      startTs: Date.now()
     };
     const emitLifecycleHook = async (
-      hookName: 'BeforeAgent' | 'AfterAgent',
+      hookName: 'BeforeAgent' | 'AfterAgent' | 'agent:before' | 'agent:after' | 'agent:error',
       payload: Record<string, unknown>,
     ): Promise<void> => {
-      if (!isHookEnabled(hookName)) {
-        return;
+      // 1. Existing HookRegistry (Typed hooks)
+      if (hookName === 'BeforeAgent' || hookName === 'AfterAgent') {
+        if (isHookEnabled(hookName)) {
+          await fireHookSafely(hookName, payload, {
+            source: 'BaseAgent.execute',
+            logContext: `${this.name} lifecycle hook ${hookName}`,
+          });
+        }
       }
 
-      await fireHookSafely(hookName, payload, {
-        source: 'BaseAgent.execute',
-        logContext: `${this.name} lifecycle hook ${hookName}`,
+      // 2. New HookEngine (Generic lifecycle hooks)
+      await fireLifecycleHook(hookName, {
+        agentName: this.name,
+        task: String(payload.task || task),
+        ...payload
       });
     };
 
+    await emitLifecycleHook('agent:before', lifecycleContext);
     await emitLifecycleHook('BeforeAgent', lifecycleContext);
 
     if (!testMode) {
@@ -314,6 +325,11 @@ export abstract class BaseAgent implements IAgent {
         cached: false,
         response: guardedResponse,
       });
+      await emitLifecycleHook('agent:after', {
+        ...lifecycleContext,
+        result: guardedResponse,
+        durationMs: Date.now() - (lifecycleContext as any).startTs || 0
+      });
       return guardedResponse;
     } catch (error: unknown) {
       const normalized = ensureError(error);
@@ -331,6 +347,11 @@ export abstract class BaseAgent implements IAgent {
         cached: false,
         error: normalized.message,
         response,
+      });
+      await emitLifecycleHook('agent:error', {
+        ...lifecycleContext,
+        error: normalized,
+        response
       });
       return response;
     } finally {

@@ -119,7 +119,14 @@
   - Mappa: ./tracks/toura_local_dev_20260408/
 
 
-### Brunella rendszer (2)
+### Brunella rendszer (3)
+
+- [~] **BAS Hook Infrastruktúra — Agent Lifecycle, Git Guard & MCP Integration** [CRITICAL]
+  - **ID:** `bas_hook_infrastructure_upgrade_20260412`
+  - **Progress:** 0%
+  - **Assignee:** Gemini
+  - **Updated:** 2026-04-12
+  - Mappa: ./tracks/bas_hook_infrastructure_upgrade_20260412/
 
 - [ ] **Cloudflare DNS Zone Reconciliation for Custom Domains** [HIGH]
   - **ID:** `cloudflare_dns_zone_reconciliation_20260325`

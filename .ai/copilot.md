@@ -1,5 +1,15 @@
 # Copilot Session Notes
 
+### 2026-04-12 19:48 - Phase 3 invoice handoff contract lock
+
+**Feladat:** Az EmailAgent top-level invoice kimenetét és a WF-7 normalizálást lezártam, hogy a live IMAP intake ne essen vissza az array-only alakra.
+
+**Érintett fájlok:** `src/agents/EmailAgent.ts`, `test/EmailAgent.test.ts`, `test/phase3_workflows.test.ts`, `conductor/tracks/n8n_konyveles_pipeline_20260328/n8n-workflows/wf7-imap-email-intake-live.json`, `conductor/tracks/n8n_konyveles_pipeline_20260328/n8n-workflows/wf8-nav-validation-live.json`, `conductor/tracks/n8n_konyveles_pipeline_20260328/n8n-workflows/wf9-weekly-report-live.json`, `conductor/tracks/konyveles_phase3_20260403/{meta.json,plan.md}`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A fókuszált Vitest slice és a `npm run build:ui` zöld; a Phase 3 track továbbra is active marad, amíg a live IMAP/NAV credential lépések és a teljes end-to-end verifikáció nincs lezárva.
+
 ### 2026-04-12 15:08 - Nova knowledge workflows sync
 
 **Feladat:** A `nova_knowledge_workflows_20260404` conductor slice aktuális állapotának szinkronizálása. A track továbbra is active/25%, a conductor timestamps 2026-04-12-re frissítve, archive nélkül, mert a phase 2-4 feladatok még nyitottak.

@@ -62,17 +62,18 @@ export class EmailAgent implements IAgent {
             logError(this.name, `Failed to save invoice: ${err}`);
         }
 
+        const invoice = {
+            id: `INV-${Date.now()}`,
+            path: filePath,
+            partner: mockInvoice.partner,
+            date: mockInvoice.date,
+            amount: mockInvoice.amount
+        };
+
         return {
             count: 1,
-            invoices: [
-                {
-                    id: `INV-${Date.now()}`,
-                    path: filePath,
-                    partner: mockInvoice.partner,
-                    date: mockInvoice.date,
-                    amount: mockInvoice.amount
-                }
-            ]
+            invoice,
+            invoices: [invoice]
         };
     }
 }

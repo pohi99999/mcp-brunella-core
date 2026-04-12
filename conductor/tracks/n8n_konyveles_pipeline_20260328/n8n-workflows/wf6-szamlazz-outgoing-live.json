@@ -33,7 +33,7 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "https://www.szamlazz.hu/szamla/",
+        "url": "http://localhost:3000/api/v1/invoice/create",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -49,7 +49,7 @@
         "options": {}
       },
       "id": "szamlazz-request",
-      "name": "Create Invoice on Szamlazz.hu",
+      "name": "Create Invoice via BAS Route",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
@@ -190,13 +190,13 @@
     "Normalize Outgoing Invoice Payload": {
       "main": [
         {
-          "node": "Create Invoice on Szamlazz.hu",
+          "node": "Create Invoice via BAS Route",
           "type": "main",
           "index": 0
         }
       ]
     },
-    "Create Invoice on Szamlazz.hu": {
+    "Create Invoice via BAS Route": {
       "main": [
         {
           "node": "Normalize Szamlazz Result",

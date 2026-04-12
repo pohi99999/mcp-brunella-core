@@ -2,7 +2,7 @@ import { eventBus, BusEvent } from './eventBus.js';
 import { logInfo, logError } from '../utils/logger.js';
 import { agentManager } from '../agents/AgentManager.js';
 import { updateInvoiceStatus, getInvoice } from '../data/bookkeeping_db.js';
-import { agentHookEngine } from './agentHookEngine.js';
+import { registerHook } from '../utils/hooks.js';
 
 /**
  * L5 Invoice Pipeline Orchestrator
@@ -28,11 +28,12 @@ export class InvoicePipeline {
   private setupHooks() {
     logInfo('InvoicePipeline', 'Registering L5 Invoice hooks...');
 
-    agentHookEngine.register('invoice:received', async (payload: any) => {
-      logInfo('InvoicePipeline', `Hook 'invoice:received' triggered. Starting automation...`);
-      // Trigger the agent directly for the received invoice
-      await agentManager.delegate('InvoiceAutomation', 'process all invoices from gmail');
-    }, { priority: 'standard' });
+    // Note: builtinHooks.ts already registers a handler for 'invoice:received'.
+    // We can add supplemental logic here if needed, or rely on the built-in one.
+    // For now, we register a high-priority logging hook to track L5 flow.
+    registerHook('invoice:received', async (ctx: any) => {
+      logInfo('InvoicePipeline', `[L5] Hook 'invoice:received' detected. Pipeline tracking active.`);
+    }, { category: 'business', priority: 10 });
   }
 
   private setupListeners() {

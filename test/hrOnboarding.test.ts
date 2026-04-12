@@ -55,7 +55,13 @@ describe('HR onboarding dry-run helper', () => {
     }
   });
 
-  it('blocks the dry-run when the workspace integrations are missing', () => {
+  it('blocks the dry-run when the workspace integrations are missing', async () => {
+    // Explicitly point to non-existent files to ensure 'blocked' status
+    vi.stubEnv('GOOGLE_WORKSPACE_CREDENTIALS_FILE', '/tmp/non-existent-creds.json');
+    vi.stubEnv('GOOGLE_WORKSPACE_TOKEN_FILE', '/tmp/non-existent-token.json');
+    vi.stubEnv('SMTP_HOST', ''); // Disable email
+    vi.stubEnv('SLACK_WEBHOOK_URL', ''); // Disable slack
+
     const report = buildHROnboardingDryRunReport({
       employeeName: 'Kiss Anna',
       email: 'anna.kiss@example.com',
