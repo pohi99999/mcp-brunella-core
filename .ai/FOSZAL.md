@@ -1,6 +1,6 @@
 # FŐSZÁL - Egyesített Fejlesztési Napló
 
-**Generálva:** 2026-04-12 13:13
+**Generálva:** 2026-04-12 14:05
 **Script:** `scripts/sync_foszal.py`
 
 ---
@@ -39,6 +39,10 @@ start-full.bat
 - **Agent:** Copilot
 - **Státusz:** ✅ Befejezve
 - **Érintett fájlok:** `myai/agents/SocialConciergeAgent.toml`, `myai/agents/ShoppingAssistantAgent.toml`, `test/viktoriaSocialConciergeAgent.test.ts`, `test/viktoriaShoppingAssistantAgent.test.ts`, `test/viktoriaBrandVoiceAgent.test.ts`, `src/server/routes/scheduledTasks.ts`, `test/scheduledTasks.test.ts`, `test/jules_e2e_pipeline.test.ts`, `conductor/archive/viktoria_social_concierge_20260408/meta.json`, `conductor/archive/viktoria_shopping_assistant_20260408/meta.json`, `conductor/archive/viktoria_brand_monitor_20260408/meta.json`, `conductor/tracks.md`, `conductor/project_state.json`
+
+#### 11:58 - [Copilot] Toura track scaffold aktiválás
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
 
 #### 06:33 - [Copilot] KKV Finance pilot — initial commit
 - **Agent:** Copilot
@@ -1286,7 +1290,7 @@ start-full.bat
 | Claude | 89 | 2026-04-09 |
 | Gemini | 3 | 2026-04-08 |
 | Cursor | 0 | N/A |
-| Copilot | 133 | 2026-04-12 |
+| Copilot | 134 | 2026-04-12 |
 
 ---
 

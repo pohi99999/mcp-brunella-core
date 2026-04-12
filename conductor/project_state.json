@@ -296,7 +296,7 @@
       "priority": "high",
       "progress": 100,
       "created": "2026-02-21",
-      "updated": "2026-04-12",
+      "updated": "2026-04-08",
       "completed": "2026-02-21T11:01:00.000Z",
       "assignee": "DeveloperAgent + Claude",
       "tags": [
@@ -441,7 +441,7 @@
       "priority": "high",
       "progress": 100,
       "created": "2026-04-04",
-      "updated": "2026-04-08",
+      "updated": "2026-04-12",
       "completed": "2026-04-08T20:21:16Z",
       "assignee": "GitHub Copilot",
       "tags": [
@@ -770,7 +770,7 @@
       "name": "Könyvelési Automatizálás Phase 3 — szamlazz.hu + WF-6..9 + NAV Live + IMAP",
       "status": "active",
       "priority": "high",
-      "progress": 15,
+      "progress": 5,
       "created": "2026-04-03",
       "assignee": "Pohánka Péter",
       "tags": [
@@ -1070,7 +1070,7 @@
       "name": "Nova Irodai Asszisztens — helyi fejlesztési hub",
       "status": "active",
       "priority": "high",
-      "progress": 5,
+      "progress": 15,
       "created": "2026-04-08",
       "updated": "2026-04-08",
       "assignee": "Claude Code",
@@ -1481,9 +1481,9 @@
       "name": "Toura — Helyi Fejlesztési Hub",
       "status": "active",
       "priority": "high",
-      "progress": 5,
+      "progress": 15,
       "created": "2026-04-08",
-      "updated": "2026-04-08",
+      "updated": "2026-04-12",
       "assignee": "Gemini",
       "tags": [
         "toura",

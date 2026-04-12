@@ -5,9 +5,9 @@
   "status": "active",
   "priority": "high",
   "created": "2026-04-08",
-  "updated": "2026-04-08",
+  "updated": "2026-04-12",
   "assignee": "Gemini",
-  "progress": 5,
+  "progress": 15,
   "group": "nova",
   "tags": [
     "toura",
@@ -21,7 +21,7 @@
   "repo": {
     "remote": "https://github.com/pohi99999/toura.git",
     "localPath": ".worktrees/toura",
-    "note": "Külön git repo — NINCS brunella push-ban. .gitignore védi a .worktrees/ mappát."
+    "note": "Külön git repo — NINCS brunella push-ban. .gitignore védi a .worktrees/ mappát. A .worktrees/toura clone vissza lett állítva, és a belső Iszapfaló track scaffold active."
   },
   "stack": {
     "frontend": "Next.js (frontend/)",
@@ -40,7 +40,7 @@
     {
       "id": "setup",
       "name": "Fejlesztői környezet + skill/plugin beállítás",
-      "status": "in_progress"
+      "status": "completed"
     },
     {
       "id": "integration",

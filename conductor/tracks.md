@@ -48,7 +48,7 @@
 
 - [ ] **Könyvelési Automatizálás Phase 3 — szamlazz.hu + WF-6..9 + NAV Live + IMAP** [HIGH]
   - **ID:** `konyveles_phase3_20260403`
-  - **Progress:** 15%
+  - **Progress:** 5%
   - **Assignee:** Pohánka Péter
   - Mappa: ./tracks/konyveles_phase3_20260403/
 
@@ -75,7 +75,7 @@
 
 - [ ] **Pohánka freelancer terjeszkedés és profilrendszer** [HIGH]
   - **ID:** `pohanka_freelancer_terjeszkedes_20260408`
-  - **Progress:** 5%
+  - **Progress:** 15%
   - **Assignee:** GitHub Copilot
   - **Updated:** 2026-04-08
   - Mappa: ./tracks/pohanka_freelancer_terjeszkedes_20260408/
@@ -120,9 +120,9 @@
 
 - [ ] **Toura — Helyi Fejlesztési Hub** [HIGH]
   - **ID:** `toura_local_dev_20260408`
-  - **Progress:** 5%
+  - **Progress:** 15%
   - **Assignee:** Gemini
-  - **Updated:** 2026-04-08
+  - **Updated:** 2026-04-12
   - Mappa: ./tracks/toura_local_dev_20260408/
 
 

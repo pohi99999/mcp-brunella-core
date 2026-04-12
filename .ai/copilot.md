@@ -1,4 +1,4 @@
-﻿# Copilot Session Notes
+# Copilot Session Notes
 
 ### 2026-04-12 13:05 - VIKTORIAVARGA track closure pass
 
@@ -1961,6 +1961,7 @@ Files created/modified:
 - .vscode/tasks.json
   - Modified: the "🚀 START BRUNELLA CORE (Szerver Indítás)" task now includes:
     "runOptions": { "runOn": "folderOpen" }
+
   - Purpose: trigger the task when the workspace is opened in VS Code (user must approve automatic task run in VS Code workspace trust dialog).
 
 - scripts/copilot-with-brunella.ps1 (new)
@@ -2605,3 +2606,9 @@ Feladat: Pilot start — scaffold és pilot note létrehozva; feature branch: fe
 Érintett fájlok: tracks/kkv_finance_automation_20260404/pilot.md, meta.json, .ai/copilot.md
 Delegálás: bas-lead-developer (implementáció), robust-test-writer (tesztek), frontend-design-review (dashboard), devops-infra-guardian (CI)
 Megjegyzés: Következő lépés: commit és PR.
+
+### 2026-04-12 11:58 - Toura track scaffold aktiválás
+Feladat: A Toura worktree visszaállítása, a belső Iszapfaló pályázatfigyelő trackhez hiányzó `meta.json` és `plan.md` létrehozása, majd a Brunella hub track állapotának frissítése.
+Érintett fájlok: `.worktrees/toura/.000_PROJEKTEK/Iszap_Projekt_uj/conductor/tracks/iszapfalo-palyazat-ugynok/{meta.json,plan.md,spec.md}`, `conductor/tracks/toura_local_dev_20260408/meta.json`
+Státusz: ✅ Befejezve
+Megjegyzés: A Toura repo most ismét elérhető lokálisan, az Iszapfaló grant-track active állapotba került, és a setup fázis lezárható.
