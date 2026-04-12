@@ -1,6 +1,6 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-04-11T23:54:26.444Z
+**Utolso frissites:** 2026-04-12T00:00:00.967Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
@@ -317,7 +317,7 @@
 - [x] **Data Flywheel Logikája** (2026-02-21T14:20:00Z)
 - [x] **Hyper-Local Supply Chain** (2026-02-16T00:00:00Z)
 - [x] **KKV CRM follow-up approval es reporting** (2026-04-05)
-- [x] **KKV CRM follow-up es routing** (2026-04-05)
+- [x] **KKV CRM follow-up routing** (2026-04-11)
 - [x] **KKV CRM ingest alapok** (2026-04-05)
 - [x] **KKV HR leave wait/resume orchestration** (2026-04-07)
 - [x] **KKV HR onboarding es provisioning** (2026-04-05T17:08:54.7826616Z)

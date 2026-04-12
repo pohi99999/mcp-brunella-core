@@ -1,5 +1,7 @@
 # Plan: KKV CRM follow-up routing — végrehajtó terv
 
+> Governance note (2026-04-11): this routing slice is archived as delivered. The remaining approval/reporting expansion continues in `kkv_crm_followup_approval_reporting_20260405`.
+
 ## Rövid célleírás
 Automatizálni a CRM-ből érkező lead eseményekből a follow-up munkák létrehozását úgy, hogy a routing logika könnyen konfigurálható legyen, idempotens, biztonságos és monitorozott. Platform választás: n8n (rapid deploy) vagy belső orchestrator HTTP API (új endpoint), mindkettő támogatva.
 

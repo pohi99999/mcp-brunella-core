@@ -1,14 +1,17 @@
 {
   "id": "kkv_crm_followup_routing_20260405",
+  "track_id": "kkv_crm_followup_routing_20260405",
   "name": "KKV CRM follow-up routing",
   "title": "KKV CRM — Automatikus follow-up routing (lead → followup job)",
-  "status": "proposed",
+  "status": "archived",
   "priority": "HIGH",
   "created": "2026-04-05",
-  "updated": "2026-04-05",
-  "owner": "bas-automation-architect",
-  "assignee": "bas-automation-architect",
-  "progress": 0,
+  "created_at": "2026-04-05T00:00:00.000Z",
+  "updated": "2026-04-11",
+  "updated_at": "2026-04-11T23:51:55.785Z",
+  "owner": "GitHub Copilot",
+  "assignee": "GitHub Copilot",
+  "progress": 100,
   "tags": [
     "kkv",
     "crm",
@@ -21,12 +24,15 @@
     "kkv_crm_ingest_foundation_20260405"
   ],
   "sourceDocument": "Conceived from KKV CRM automation roadmap",
-  "phase": 1,
+  "archiveReason": "Routing slice completed; approval, pause/resume, summary, and reporting follow-up continued in separate track kkv_crm_followup_approval_reporting_20260405.",
+  "archivedAt": "2026-04-11T23:51:55.785Z",
+  "verificationNotes": "Governance backfill on 2026-04-11: npm run build passed, and targeted CRM follow-up tests passed for helpers, routes, execution, webhook, and integration surfaces. Implemented evidence exists in src/utils/crmFollowUp.ts, src/server/routes/crmFollowUp.ts, src/server/routes/kkvWebhook.ts, src/server/services/crmFollowUpExecutionService.ts, and matching tests.",
+  "phase": 3,
   "group": "business",
   "dod": {
-    "tests_pass": false,
-    "build_clean": false,
-    "code_committed": false,
+    "tests_pass": true,
+    "build_clean": true,
+    "code_committed": true,
     "no_verify_used": false
   }
 }

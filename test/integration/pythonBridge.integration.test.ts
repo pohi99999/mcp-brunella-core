@@ -17,9 +17,9 @@ import {
   HarvestExtractResultSchema,
   RefineResultSchema,
 } from '../../src/utils/pythonBridge.js';
-import { startPythonServer, stopPythonServer, PYTHON_TEST_PORT } from '../helpers/startPythonServer.js';
+import { startPythonServer, stopPythonServer, PYTHON_TEST_HOST, PYTHON_TEST_PORT } from '../helpers/startPythonServer.js';
 
-const BASE_URL = `http://localhost:${PYTHON_TEST_PORT}`;
+const BASE_URL = `http://${PYTHON_TEST_HOST}:${PYTHON_TEST_PORT}`;
 
 // ── Helyi sémák a bridge-n kívüli végpontokhoz ─────────────────────
 

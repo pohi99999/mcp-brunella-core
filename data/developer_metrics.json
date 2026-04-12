@@ -12,8 +12,8 @@
     "lastDurationMs": 0
   },
   "tasks": {
-    "total": 10,
-    "success": 9,
+    "total": 3,
+    "success": 2,
     "error": 1,
     "avgDurationMs": 0
   },
@@ -25,72 +25,23 @@
     {
       "type": "task",
       "status": "success",
-      "details": "dev-1775951651342-1",
+      "details": "dev-1775952077314-1",
       "durationMs": 0,
-      "timestamp": 1775951651345
+      "timestamp": 1775952077317
     },
     {
       "type": "task",
       "status": "success",
-      "details": "dev-1775951521865-1",
+      "details": "dev-1775952077313-1",
       "durationMs": 0,
-      "timestamp": 1775951521868
-    },
-    {
-      "type": "task",
-      "status": "success",
-      "details": "dev-1775951322409-1",
-      "durationMs": 0,
-      "timestamp": 1775951322413
-    },
-    {
-      "type": "task",
-      "status": "success",
-      "details": "dev-1775951057768-1",
-      "durationMs": 0,
-      "timestamp": 1775951057771
-    },
-    {
-      "type": "task",
-      "status": "success",
-      "details": "dev-1775950879358-1",
-      "durationMs": 1,
-      "timestamp": 1775950879362
-    },
-    {
-      "type": "task",
-      "status": "success",
-      "details": "dev-1775950419373-1",
-      "durationMs": 0,
-      "timestamp": 1775950419375
-    },
-    {
-      "type": "task",
-      "status": "success",
-      "details": "dev-1775950327162-1",
-      "durationMs": 0,
-      "timestamp": 1775950327166
-    },
-    {
-      "type": "task",
-      "status": "success",
-      "details": "dev-1775950325305-1",
-      "durationMs": 0,
-      "timestamp": 1775950325308
-    },
-    {
-      "type": "task",
-      "status": "success",
-      "details": "dev-1775950325304-1",
-      "durationMs": 0,
-      "timestamp": 1775950325308
+      "timestamp": 1775952077317
     },
     {
       "type": "task",
       "status": "error",
-      "details": "dev-1775950325303-1",
+      "details": "dev-1775952077311-1",
       "durationMs": 0,
-      "timestamp": 1775950325308
+      "timestamp": 1775952077316
     }
   ]
 }

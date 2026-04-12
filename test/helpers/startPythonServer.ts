@@ -12,11 +12,11 @@ import { setTimeout as sleep } from 'timers/promises';
 
 /** A Python FastAPI szerver portja — szándékosan különbözik a 8000-es dev portjától. */
 export const PYTHON_TEST_PORT = 8099;
+export const PYTHON_TEST_HOST = '127.0.0.1';
 
-const HEALTH_URL = `http://localhost:${PYTHON_TEST_PORT}/health`;
+const HEALTH_URL = `http://${PYTHON_TEST_HOST}:${PYTHON_TEST_PORT}/health`;
 const POLL_INTERVAL_MS = 500;
 const MAX_WAIT_MS = 15_000;
-
 let serverProcess: ChildProcess | null = null;
 
 /**
@@ -26,11 +26,11 @@ let serverProcess: ChildProcess | null = null;
 export async function startPythonServer(): Promise<void> {
   serverProcess = spawn(
     'uv',
-    ['run', 'uvicorn', 'server:app', '--port', String(PYTHON_TEST_PORT), '--app-dir', 'myai'],
+    ['run', 'uvicorn', 'server:app', '--host', PYTHON_TEST_HOST, '--port', String(PYTHON_TEST_PORT), '--app-dir', 'myai'],
     {
       cwd: process.cwd(),
       stdio: ['ignore', 'pipe', 'pipe'],
-      // shell: true szükséges Windows-on, hogy a PATH-ból megtalálja az 'uv' binárist
+      // Windows-on shell kell az uv feloldásához; a host fixen 127.0.0.1.
       shell: true,
     },
   );
