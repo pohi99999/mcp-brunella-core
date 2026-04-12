@@ -88,6 +88,7 @@ Local hooks are part of the workflow:
 
 ## Track closure Red Protocol
 
+- **Golden rule:** reality comes before metadata. Never close or archive a track only because the user asked for it, because another AI previously self-reported success, or because `meta.json` is easy to edit. Treat `progress: 100`, `completed`, and `archived` as valid only after repository evidence exists in code, routes, CLI, dashboard, tests, and build output.
 - Treat `meta.json` closure data as **evidence-bearing state**, not as a progress toggle.
 - Any track moved to `completed` or `archived` must carry a valid `dod` block with:
   - `tests_pass: true`

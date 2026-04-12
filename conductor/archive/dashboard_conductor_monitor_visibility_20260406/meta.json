@@ -1,11 +1,13 @@
 {
   "id": "dashboard_conductor_monitor_visibility_20260406",
+  "track_id": "dashboard_conductor_monitor_visibility_20260406",
   "name": "Dashboard conductor monitor láthatósági javítás",
   "title": "Dashboard conductor monitor láthatósági javítás",
   "status": "archived",
   "priority": "high",
   "created": "2026-04-06",
-  "updated": "2026-04-10",
+  "updated": "2026-04-12",
+  "updatedAt": "2026-04-12T03:27:00.000Z",
   "assignee": "GitHub Copilot",
   "progress": 100,
   "completedAt": "2026-04-06T23:59:59.000Z",
@@ -23,10 +25,13 @@
   "phase": 5,
   "description": "A meglévő ConductorTracksMonitor oldal külön menüpontként történő láthatóvá tétele, magyar címkézéssel és regressziós teszttel.",
   "group": "brunella",
+  "verified": true,
+  "verifiedAt": "2026-04-12",
+  "verificationNotes": "Audit 2026-04-12: the conductor monitor remains mounted as a dedicated dashboard navigation item in src/dashboard/lib/navigation.tsx, backed by the existing ConductorTracksMonitor surface in src/dashboard/components/dashboard/ConductorTracksMonitor.tsx. This remediation also made initializeNavigation() idempotent and strengthened src/dashboard/lib/navigation.contract.test.ts so it verifies runtime registry wiring, not just shared constants. Focused verification passed for npm run build, npm run build:ui, and npx vitest run --config vitest.dashboard.config.ts src/dashboard/lib/navigation.contract.test.ts.",
   "dod": {
-    "tests_pass": false,
-    "build_clean": false,
-    "code_committed": false,
+    "tests_pass": true,
+    "build_clean": true,
+    "code_committed": true,
     "no_verify_used": false
   }
 }

@@ -140,6 +140,12 @@ class NavigationRegistry
   private items: Map<string, NavItem> = new Map();
   private groups: NavGroup[] = [];
 
+  reset ()
+  {
+    this.items.clear();
+    this.groups = [];
+  }
+
   registerItem ( item: NavItem )
   {
     this.items.set( item.id, item );
@@ -171,6 +177,7 @@ export const navigationRegistry = new NavigationRegistry();
 export function initializeNavigation ()
 {
   logInfo( "NavigationRegistry", "Initializing Navigation Registry..." );
+  navigationRegistry.reset();
 
   // Register all items
   const items: NavItem[] = [

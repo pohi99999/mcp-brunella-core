@@ -123,6 +123,12 @@ tail -n 50 logs/phoenix.log   # Windows: type logs\phoenix.log | more
 
 `completed` vagy `archived` státusz **nem** lehet pusztán meta-frissítés eredménye. Minden lezárt track `meta.json` fájljában kötelező a `dod` blokk, és azt csak valós build + teszt + commit bizonyíték mellett szabad lezártra állítani:
 
+### 🟡 Arany szabály — előbb a valóság, utána a meta
+
+**Soha ne zárj le vagy archiválj tracket pusztán emberi utasításra, AI self-report alapján, vagy azért, mert a `meta.json` könnyen átírható.**  
+Előbb legyen meg a **valós repo-bizonyíték** (kód / route / CLI / dashboard / teszt / build), és csak utána írható be a lezárás a `meta.json`-ba.  
+Ha a valós implementáció és a meta állapot eltér, akkor a **kód az igazság**, nem a `progress: 100`.
+
 ```json
 "dod": {
   "tests_pass": true,
