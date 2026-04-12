@@ -1,5 +1,5 @@
 import { BaseAgent, AgentContext, AgentResult } from './BaseAgent.js';
-import { logInfo, logError, logWarn } from '../utils/logger.js';
+import { logInfo, logError } from '../utils/logger.js';
 import { getWorkspaceClient } from '../tools/unifiedWorkspace.js';
 import { getBifrostGateway } from '../core/bifrost_gateway.js';
 import { eventBus } from '../core/eventBus.js';
@@ -78,7 +78,7 @@ export class InvoiceAutomationAgent extends BaseAgent {
     for (const msg of messages) {
       const messageId = msg.id;
       if (!messageId) {
-        logWarn(this.name, 'Skipping Gmail message without id');
+        logInfo(this.name, 'Skipping Gmail message without id');
         continue;
       }
 

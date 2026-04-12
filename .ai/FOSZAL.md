@@ -1,6 +1,6 @@
 # FŐSZÁL - Egyesített Fejlesztési Napló
 
-**Generálva:** 2026-04-12 14:05
+**Generálva:** 2026-04-12 14:51
 **Script:** `scripts/sync_foszal.py`
 
 ---
@@ -29,6 +29,16 @@ start-full.bat
 ## Összesített Napló (Időrendben)
 
 ### 2026-04-12
+
+#### 14:50 - [Gemini] L5 Zero-Touch Invoice Pipeline Implementation
+- **Agent:** Gemini
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** src/core/eventBus.ts, src/server/schedulers/scheduledTasksRunner.ts, src/data/bookkeeping_db.ts, src/types/bookkeeping.d.ts, src/agents/InvoiceAutomationAgent.ts, src/core/invoicePipeline.ts, src/server/web.ts, src/dashboard/components/dashboard/InvoiceAutomationWidget.tsx, src/cli/invoiceCommands.ts, conductor/tracks/l5_invoice_zerotouchl_20260410/plan.md, conductor/tracks.md
+
+#### 14:00 - [Claude] Git LFS bandwidth cleanup + SSRF biztonsági javítás
+- **Agent:** Claude
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `.gitignore` (bővítve), `src/tools/browser.ts` (SSRF fix), `src/cli/kkvFinanceCommands.ts` (visszaállítva), `src/kkv/financeAutomation.ts` (visszaállítva)
 
 #### 13:15 - [Gemini] Modular State Refactor Verification & CLI Fix
 - **Agent:** Gemini
@@ -1287,8 +1297,8 @@ start-full.bat
 
 | Agent | Bejegyzések | Utolsó Aktivitás |
 |-------|-------------|------------------|
-| Claude | 89 | 2026-04-09 |
-| Gemini | 3 | 2026-04-08 |
+| Claude | 90 | 2026-04-12 |
+| Gemini | 4 | 2026-04-08 |
 | Cursor | 0 | N/A |
 | Copilot | 134 | 2026-04-12 |
 

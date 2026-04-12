@@ -518,6 +518,14 @@ async function deferredInit(
     logWarn("Server", `Pipeline runner: ${e instanceof Error ? e.message : String(e)}`);
   }
 
+  try {
+    const { initializeInvoicePipeline } = await import("../core/invoicePipeline.js");
+    initializeInvoicePipeline();
+    logInfo("Server", "L5 Invoice Pipeline initialized");
+  } catch (e: unknown) {
+    logWarn("Server", `Invoice Pipeline: ${e instanceof Error ? e.message : String(e)}`);
+  }
+
   logInfo("Server", "Phase 6 complete: Phoenix, ZeroPrompt, CEAN");
   setRuntimeStatus({ phase: "autonomy-ready" });
   await yieldToEventLoop();

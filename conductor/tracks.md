@@ -59,11 +59,18 @@
   - **Updated:** 2026-04-11
   - Mappa: ./tracks/l5_multitenant_platform_20260410/
 
-- [ ] **L5 Zero-Touch Számla Pipeline — Teljes Automatizáció** [HIGH]
+- [x] **L5 Zero-Touch Számla Pipeline — Teljes Automatizáció** [HIGH]
   - **ID:** `l5_invoice_zerotouchl_20260410`
-  - **Progress:** 25%
-  - **Assignee:** Claude
-  - **Updated:** 2026-04-11
+  - **Progress:** 100%
+  - **Status:** COMPLETED
+  - **Assignee:** Gemini
+  - **Updated:** 2026-04-12
+  - **DoD:**
+    - tests_pass: true
+    - build_clean: true
+    - code_committed: true
+    - no_verify_used: false
+  - **Verification:** L5 Zero-Touch pipeline implementálva. EventBus integráció, `invoices` tábla, automatizált Gmail polling és Dashboard history view kész.
   - Mappa: ./tracks/l5_invoice_zerotouchl_20260410/
 
 - [ ] **P-Sales Human-in-Loop Revenue Pipeline — Lead gen, onboarding, KKV + Brand csatornák** [HIGH]

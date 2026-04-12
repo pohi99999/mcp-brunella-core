@@ -46,6 +46,7 @@ import { registerTaskCommands } from "./cli/taskCommands.js";
 import { registerBrowserCopilotCommands } from "./cli/browserCopilotCommands.js";
 import { registerCrawl4aiCommands } from "./cli/crawl4aiCommands.js";
 import { registerBookkeepingCommands } from "./cli/bookkeepingCommands.js";
+import { registerPalyazatCommands } from "./cli/palyazatCommands.js";
 import { registerHROnboardingCommands } from "./cli/hrOnboardingCommands.js";
 import { registerPropertySalesCommands } from "./cli/propertySalesCommands.js";
 import { registerGuardrailsCommands, registerTelemetryCommands } from "./cli/guardrailsCommands.js";
@@ -1914,6 +1915,7 @@ registerBrowserCopilotCommands(program);
 // Register Crawl4AI & Memoria commands (Phase 3 — kutatas.md integráció)
 registerCrawl4aiCommands(program);
 registerBookkeepingCommands(program);
+registerPalyazatCommands(program);
 registerHROnboardingCommands(program);
 registerPropertySalesCommands(program);
 registerMemoriaCommands(program);

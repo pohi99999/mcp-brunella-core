@@ -3,6 +3,7 @@ import { agentManager } from '../../agents/AgentManager.js';
 import {
   createCashEntry,
   getAllTransactions,
+  getAllInvoices,
   getCashEntries,
   getCashEntry as getCashEntryById,
   getCashSummary,
@@ -262,12 +263,24 @@ export function createBookkeepingRoutes(): Router {
         readiness,
         timestamp: new Date().toISOString(),
       });
-    } catch (error: unknown) {
+      } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
-      logError('BookkeepingRoutes', `Failed to read bookkeeping status: ${message}`);
+      logError('BookkeepingRoutes', `Failed to get status: ${message}`);
       res.status(500).json({ success: false, error: message });
-    }
-  });
+      }
+      });
+
+      router.get('/invoices', (req, res) => {
+      try {
+      const limit = getPositiveInteger(req.query.limit, 50, 200);
+      const invoices = getAllInvoices(limit);
+      res.json({ success: true, invoices });
+      } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      logError('BookkeepingRoutes', `Failed to get invoices: ${message}`);
+      res.status(500).json({ success: false, error: message });
+      }
+      });
 
   router.get('/readiness', (_req, res) => {
     try {
