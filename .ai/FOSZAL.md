@@ -1,6 +1,6 @@
 # FŐSZÁL - Egyesített Fejlesztési Napló
 
-**Generálva:** 2026-04-12 01:28
+**Generálva:** 2026-04-12 02:43
 **Script:** `scripts/sync_foszal.py`
 
 ---
@@ -27,6 +27,15 @@ start-full.bat
 ---
 
 ## Összesített Napló (Időrendben)
+
+### 2026-04-12
+
+#### 00:00 - [Copilot] Tech Debt Cleanup + Modular Refactor Phase 2-4
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `src/utils/serviceRegistry.ts` (ÚJ), `src/core/userPreferences.ts`, `src/core/testResultsService.ts`, `src/rag.ts`, `.env.example`, `conductor/tracks/modular_state_refactor_20260404/meta.json`, `conductor/tracks/technical_debt_cleanup_20260404/meta.json`
+
+---
 
 ### 2026-04-11
 
@@ -1238,7 +1247,7 @@ start-full.bat
 | Claude | 89 | 2026-04-09 |
 | Gemini | 2 | 2026-04-08 |
 | Cursor | 0 | N/A |
-| Copilot | 125 | 2026-04-11 |
+| Copilot | 126 | 2026-04-12 |
 
 ---
 

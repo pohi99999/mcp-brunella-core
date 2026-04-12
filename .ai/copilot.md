@@ -6,6 +6,20 @@ User requested that the Copilot CLI automatically connect to a local Brunella MC
 
 ## History
 
+### 2026-04-12 - Tech Debt Cleanup + Modular Refactor Phase 2-4
+
+**Feladat:** 4 prioritásos tech debt feladat 100%-ra elvégzése:
+1. `technical_debt_cleanup_20260404` archiválása
+2. L5 hookRegistry/outbox/eventFabric jelenlét megerősítése
+3. `modular_state_refactor_20260404` Phase 2-4 implementálása (ServiceRegistry, DI refaktor)
+4. `trackingintegration` secrets dokumentálása (CEAN_API_KEY → .env.example)
+
+**Érintett fájlok:** `src/utils/serviceRegistry.ts` (ÚJ), `src/core/userPreferences.ts`, `src/core/testResultsService.ts`, `src/rag.ts`, `.env.example`, `conductor/tracks/modular_state_refactor_20260404/meta.json`, `conductor/tracks/technical_debt_cleanup_20260404/meta.json`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A ServiceRegistry singleton létrehozva (Phase 3c), 6 globális `let db` változó DI-kompatibilissé téve. Phase 5 (route-layer wiring) szándékosan deferred — `l5multitenantplatform20260410` indulásakor kell elvégezni. CEAN_API_KEY = Cloudflare D1 HTTP bridge kulcsa (CLOUDFLARE_WORKER_URL + CEAN_API_KEY). Build + 385 teszt PASS. Push: `a46c53d0c`.
+
 ### 2026-04-11 17:00 - L5 predictive decision archive closure
 
 **Feladat:** A `l5_predictive_decision_20260410` track teljes lezárása: a kézzel helyreállított predictive decision slice végigvalidálása, a hiányzó regressziós tesztek befejezése, majd az archiválási döntés és conductor/FOSZAL előkészítése.
