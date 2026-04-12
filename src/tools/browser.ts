@@ -98,6 +98,9 @@ export function registerBrowserTools(server: McpServer) {
       extraction_prompt: z.string().optional().describe("Custom extraction prompt"),
     },
     async ({ target_url, schema_source, extraction_prompt }) => {
+      if (!isUrlAllowed(target_url)) {
+        return mcpError("Access denied: Local or file URLs are not allowed.");
+      }
       try {
         const response = await fetch(`${PYTHON_API}/harvest/extract`, {
           method: 'POST',
