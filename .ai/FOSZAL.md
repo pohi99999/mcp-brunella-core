@@ -1,6 +1,6 @@
 # FŐSZÁL - Egyesített Fejlesztési Napló
 
-**Generálva:** 2026-04-12 14:51
+**Generálva:** 2026-04-12 17:12
 **Script:** `scripts/sync_foszal.py`
 
 ---
@@ -29,6 +29,11 @@ start-full.bat
 ## Összesített Napló (Időrendben)
 
 ### 2026-04-12
+
+#### 15:08 - [Copilot] Nova knowledge workflows sync
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `conductor/tracks/nova_knowledge_workflows_20260404/meta.json`, `conductor/project_state.json`, `conductor/tracks.md`
 
 #### 14:50 - [Gemini] L5 Zero-Touch Invoice Pipeline Implementation
 - **Agent:** Gemini
@@ -1300,7 +1305,7 @@ start-full.bat
 | Claude | 90 | 2026-04-12 |
 | Gemini | 4 | 2026-04-08 |
 | Cursor | 0 | N/A |
-| Copilot | 134 | 2026-04-12 |
+| Copilot | 135 | 2026-04-12 |
 
 ---
 

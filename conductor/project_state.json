@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-04-12T13:05:00Z",
+  "lastUpdated": "2026-04-12T16:00:00.443Z",
   "tracks": [
     {
       "id": "agent_instability_chaos_testing_20260410",
@@ -18,9 +18,9 @@
       ],
       "dependencies": [],
       "dod": {
-        "tests_pass": true,
-        "build_clean": true,
-        "code_committed": true,
+        "tests_pass": false,
+        "build_clean": false,
+        "code_committed": false,
         "no_verify_used": false
       },
       "group": "other",
@@ -47,9 +47,9 @@
         "brunella_reflection_continual_learning_20260402"
       ],
       "dod": {
-        "tests_pass": true,
-        "build_clean": true,
-        "code_committed": true,
+        "tests_pass": false,
+        "build_clean": false,
+        "code_committed": false,
         "no_verify_used": false
       },
       "group": "brunella",
@@ -73,9 +73,9 @@
       ],
       "dependencies": [],
       "dod": {
-        "tests_pass": true,
-        "build_clean": true,
-        "code_committed": true,
+        "tests_pass": false,
+        "build_clean": false,
+        "code_committed": false,
         "no_verify_used": false
       },
       "group": "other",
@@ -263,9 +263,9 @@
     {
       "id": "cloudflare_dns_zone_reconciliation_20260325",
       "name": "Cloudflare DNS Zone Reconciliation for Custom Domains",
-      "status": "archived",
+      "status": "active",
       "priority": "high",
-      "progress": 100,
+      "progress": 0,
       "created": "2026-03-25",
       "updated": "2026-04-11T23:51:55.785Z",
       "assignee": "Gemini CLI",
@@ -296,7 +296,7 @@
       "priority": "high",
       "progress": 100,
       "created": "2026-02-21",
-      "updated": "2026-04-08",
+      "updated": "2026-04-12",
       "completed": "2026-02-21T11:01:00.000Z",
       "assignee": "DeveloperAgent + Claude",
       "tags": [
@@ -403,7 +403,7 @@
       "priority": "high",
       "progress": 30,
       "created": "2026-04-08",
-      "updated": "2026-04-12T13:05:00Z",
+      "updated": "2026-04-08",
       "assignee": "GitHub Copilot",
       "tags": [
         "kkv",
@@ -441,7 +441,7 @@
       "priority": "high",
       "progress": 100,
       "created": "2026-04-04",
-      "updated": "2026-04-12",
+      "updated": "2026-04-08",
       "completed": "2026-04-08T20:21:16Z",
       "assignee": "GitHub Copilot",
       "tags": [
@@ -770,7 +770,7 @@
       "name": "Könyvelési Automatizálás Phase 3 — szamlazz.hu + WF-6..9 + NAV Live + IMAP",
       "status": "active",
       "priority": "high",
-      "progress": 5,
+      "progress": 18,
       "created": "2026-04-03",
       "assignee": "Pohánka Péter",
       "tags": [
@@ -797,41 +797,6 @@
       },
       "group": "business",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\konyveles_phase3_20260403",
-      "_isArchived": false
-    },
-    {
-      "id": "l5_invoice_zerotouchl_20260410",
-      "name": "L5 Zero-Touch Számla Pipeline — Teljes Automatizáció",
-      "status": "active",
-      "priority": "high",
-      "progress": 25,
-      "created": "2026-04-10T00:00:00.000Z",
-      "updated": "2026-04-11",
-      "assignee": "Claude",
-      "tags": [
-        "invoice",
-        "automation",
-        "ocr",
-        "nav",
-        "gmail",
-        "saga",
-        "zero-touch",
-        "l5",
-        "kkv"
-      ],
-      "dependencies": [
-        "l5_hook_engine_20260410",
-        "l5_event_store_outbox_20260410",
-        "invoice_automation_20260326"
-      ],
-      "dod": {
-        "tests_pass": false,
-        "build_clean": false,
-        "code_committed": false,
-        "no_verify_used": false
-      },
-      "group": "business",
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\l5_invoice_zerotouchl_20260410",
       "_isArchived": false
     },
     {
@@ -918,34 +883,6 @@
       },
       "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\mcp_sync_config_20260403",
-      "_isArchived": false
-    },
-    {
-      "id": "modular_state_refactor_20260404",
-      "name": "Modular State Refactor — Globális változók Dependency Injection alapú refaktora",
-      "status": "active",
-      "priority": "medium",
-      "progress": 75,
-      "created": "2026-04-04",
-      "updated": "2026-04-12",
-      "assignee": "Gemini",
-      "tags": [
-        "architecture",
-        "solid",
-        "di",
-        "database"
-      ],
-      "dependencies": [
-        "type_safety_enforcement_20260404"
-      ],
-      "dod": {
-        "tests_pass": true,
-        "build_clean": true,
-        "code_committed": true,
-        "no_verify_used": true
-      },
-      "group": "brunella",
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\modular_state_refactor_20260404",
       "_isArchived": false
     },
     {
@@ -1070,7 +1007,7 @@
       "name": "Nova Irodai Asszisztens — helyi fejlesztési hub",
       "status": "active",
       "priority": "high",
-      "progress": 15,
+      "progress": 5,
       "created": "2026-04-08",
       "updated": "2026-04-08",
       "assignee": "Claude Code",
@@ -1101,7 +1038,7 @@
       "priority": "high",
       "progress": 25,
       "created": "2026-04-04",
-      "updated": "2026-04-11",
+      "updated": "2026-04-12",
       "assignee": "GitHub Copilot",
       "tags": [
         "nova",
@@ -1532,37 +1469,6 @@
       "_isArchived": false
     },
     {
-      "id": "viktoria_brand_monitor_20260408",
-      "name": "VIKTORIAVARGA brand monitor",
-      "status": "archived",
-      "priority": "high",
-      "progress": 100,
-      "created": "2026-04-08",
-      "updated": "2026-04-12T13:05:00Z",
-      "assignee": "GitHub Copilot",
-      "tags": [
-        "viktoria",
-        "monitoring",
-        "market-intel",
-        "apify",
-        "scheduled-tasks",
-        "fashion"
-      ],
-      "dependencies": [
-        "viktoria_brand_voice_20260408",
-        "viktoria_phygital_pipeline_20260408"
-      ],
-      "dod": {
-        "tests_pass": true,
-        "build_clean": true,
-        "code_committed": true,
-        "no_verify_used": false
-      },
-      "group": "business",
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\viktoria_brand_monitor_20260408",
-      "_isArchived": true
-    },
-    {
       "id": "viktoria_phygital_pipeline_20260408",
       "name": "VIKTORIAVARGA phygital pipeline",
       "status": "active",
@@ -1592,67 +1498,6 @@
       "group": "business",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\viktoria_phygital_pipeline_20260408",
       "_isArchived": false
-    },
-    {
-      "id": "viktoria_shopping_assistant_20260408",
-      "name": "VIKTORIAVARGA shopping assistant",
-      "status": "archived",
-      "priority": "high",
-      "progress": 100,
-      "created": "2026-04-08",
-      "updated": "2026-04-12T13:05:00Z",
-      "assignee": "GitHub Copilot",
-      "tags": [
-        "viktoria",
-        "shopping",
-        "assistant",
-        "customer-service",
-        "brand-voice",
-        "fashion"
-      ],
-      "dependencies": [
-        "viktoria_brand_voice_20260408",
-        "viktoria_social_concierge_20260408"
-      ],
-      "dod": {
-        "tests_pass": true,
-        "build_clean": true,
-        "code_committed": true,
-        "no_verify_used": false
-      },
-      "group": "business",
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\viktoria_shopping_assistant_20260408",
-      "_isArchived": true
-    },
-    {
-      "id": "viktoria_social_concierge_20260408",
-      "name": "VIKTORIAVARGA social concierge",
-      "status": "archived",
-      "priority": "high",
-      "progress": 100,
-      "created": "2026-04-08",
-      "updated": "2026-04-12T13:05:00Z",
-      "assignee": "GitHub Copilot",
-      "tags": [
-        "viktoria",
-        "social",
-        "concierge",
-        "copywriting",
-        "community",
-        "fashion"
-      ],
-      "dependencies": [
-        "viktoria_brand_voice_20260408"
-      ],
-      "dod": {
-        "tests_pass": true,
-        "build_clean": true,
-        "code_committed": true,
-        "no_verify_used": false
-      },
-      "group": "business",
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\viktoria_social_concierge_20260408",
-      "_isArchived": true
     },
     {
       "id": "windows_bridge_health_20260403",
@@ -4488,6 +4333,41 @@
       "_isArchived": true
     },
     {
+      "id": "l5_invoice_zerotouchl_20260410",
+      "name": "L5 Zero-Touch Számla Pipeline — Teljes Automatizáció",
+      "status": "archived",
+      "priority": "high",
+      "progress": 100,
+      "created": "2026-04-10T00:00:00.000Z",
+      "updated": "2026-04-12",
+      "assignee": "Gemini",
+      "tags": [
+        "invoice",
+        "automation",
+        "ocr",
+        "nav",
+        "gmail",
+        "saga",
+        "zero-touch",
+        "l5",
+        "kkv"
+      ],
+      "dependencies": [
+        "l5_hook_engine_20260410",
+        "l5_event_store_outbox_20260410",
+        "invoice_automation_20260326"
+      ],
+      "dod": {
+        "tests_pass": true,
+        "build_clean": true,
+        "code_committed": true,
+        "no_verify_used": false
+      },
+      "group": "business",
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\l5_invoice_zerotouchl_20260410",
+      "_isArchived": true
+    },
+    {
       "id": "l5_memory_architecture_20260410",
       "name": "L5 Memory Architecture - Structured, Preference es Cognitive Memory Layer",
       "status": "archived",
@@ -5137,6 +5017,34 @@
       },
       "group": "other",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\modular-command-center-dashboard-v3-20260219",
+      "_isArchived": true
+    },
+    {
+      "id": "modular_state_refactor_20260404",
+      "name": "Modular State Refactor — Globális változók Dependency Injection alapú refaktora",
+      "status": "archived",
+      "priority": "medium",
+      "progress": 100,
+      "created": "2026-04-04",
+      "updated": "2026-04-12",
+      "assignee": "Gemini",
+      "tags": [
+        "architecture",
+        "solid",
+        "di",
+        "database"
+      ],
+      "dependencies": [
+        "type_safety_enforcement_20260404"
+      ],
+      "dod": {
+        "tests_pass": true,
+        "build_clean": true,
+        "code_committed": true,
+        "no_verify_used": true
+      },
+      "group": "brunella",
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\modular_state_refactor_20260404",
       "_isArchived": true
     },
     {
@@ -6397,6 +6305,38 @@
       "_isArchived": true
     },
     {
+      "id": "viktoria_brand_monitor_20260408",
+      "name": "VIKTORIAVARGA brand monitor",
+      "status": "archived",
+      "priority": "high",
+      "progress": 100,
+      "created": "2026-04-08",
+      "updated": "2026-04-12T13:05:00Z",
+      "completed": "2026-04-12T13:05:00Z",
+      "assignee": "GitHub Copilot",
+      "tags": [
+        "viktoria",
+        "monitoring",
+        "market-intel",
+        "apify",
+        "scheduled-tasks",
+        "fashion"
+      ],
+      "dependencies": [
+        "viktoria_brand_voice_20260408",
+        "viktoria_phygital_pipeline_20260408"
+      ],
+      "dod": {
+        "tests_pass": true,
+        "build_clean": true,
+        "code_committed": true,
+        "no_verify_used": false
+      },
+      "group": "business",
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\viktoria_brand_monitor_20260408",
+      "_isArchived": true
+    },
+    {
       "id": "viktoria_brand_voice_20260408",
       "name": "VIKTORIAVARGA brand voice foundation",
       "status": "archived",
@@ -6423,6 +6363,69 @@
       },
       "group": "business",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\viktoria_brand_voice_20260408",
+      "_isArchived": true
+    },
+    {
+      "id": "viktoria_shopping_assistant_20260408",
+      "name": "VIKTORIAVARGA shopping assistant",
+      "status": "archived",
+      "priority": "high",
+      "progress": 100,
+      "created": "2026-04-08",
+      "updated": "2026-04-12T13:05:00Z",
+      "completed": "2026-04-12T13:05:00Z",
+      "assignee": "GitHub Copilot",
+      "tags": [
+        "viktoria",
+        "shopping",
+        "assistant",
+        "customer-service",
+        "brand-voice",
+        "fashion"
+      ],
+      "dependencies": [
+        "viktoria_brand_voice_20260408",
+        "viktoria_social_concierge_20260408"
+      ],
+      "dod": {
+        "tests_pass": true,
+        "build_clean": true,
+        "code_committed": true,
+        "no_verify_used": false
+      },
+      "group": "business",
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\viktoria_shopping_assistant_20260408",
+      "_isArchived": true
+    },
+    {
+      "id": "viktoria_social_concierge_20260408",
+      "name": "VIKTORIAVARGA social concierge",
+      "status": "archived",
+      "priority": "high",
+      "progress": 100,
+      "created": "2026-04-08",
+      "updated": "2026-04-12T13:05:00Z",
+      "completed": "2026-04-12T13:05:00Z",
+      "assignee": "GitHub Copilot",
+      "tags": [
+        "viktoria",
+        "social",
+        "concierge",
+        "copywriting",
+        "community",
+        "fashion"
+      ],
+      "dependencies": [
+        "viktoria_brand_voice_20260408"
+      ],
+      "dod": {
+        "tests_pass": true,
+        "build_clean": true,
+        "code_committed": true,
+        "no_verify_used": false
+      },
+      "group": "business",
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\viktoria_social_concierge_20260408",
       "_isArchived": true
     },
     {
@@ -6604,9 +6607,9 @@
   ],
   "stats": {
     "total": 243,
-    "active": 20,
+    "active": 15,
     "completed": 23,
-    "archived": 198,
+    "archived": 203,
     "proposed": 2
   }
 }

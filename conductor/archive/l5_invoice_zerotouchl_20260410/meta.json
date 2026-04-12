@@ -1,0 +1,38 @@
+{
+  "id": "l5_invoice_zerotouchl_20260410",
+  "title": "L5 Zero-Touch Számla Pipeline — Teljes Automatizáció",
+  "status": "archived",
+  "priority": "high",
+  "createdAt": "2026-04-10T00:00:00.000Z",
+  "updated": "2026-04-12",
+  "archivedAt": "2026-04-12T13:55:00Z",
+  "archiveReason": "Track completed successfully. All L5 pipeline components (EventBus, Invoices table, Polling, UI) are verified and in production.",
+  "assignee": "Gemini",
+  "progress": 100,
+  "tags": [
+    "invoice",
+    "automation",
+    "ocr",
+    "nav",
+    "gmail",
+    "saga",
+    "zero-touch",
+    "l5",
+    "kkv"
+  ],
+  "sourceDocument": "User-requested L5 queue continuation",
+  "dependencies": [
+    "l5_hook_engine_20260410",
+    "l5_event_store_outbox_20260410",
+    "invoice_automation_20260326"
+  ],
+  "phase": 4,
+  "group": "business",
+  "dod": {
+    "tests_pass": true,
+    "build_clean": true,
+    "code_committed": true,
+    "no_verify_used": false
+  },
+  "verificationNotes": "L5 Zero-Touch pipeline implementálva. EventBus integráció, invoices tábla, automatizált Gmail polling és Dashboard history view kész. Az InvoiceAutomationAgent refaktorálva lett idempotens és eseményvezérelt működésre. A teljes folyamat a háttérben, emberi beavatkozás nélkül lefut."
+}

@@ -1,0 +1,30 @@
+{
+  "id": "modular_state_refactor_20260404",
+  "title": "Modular State Refactor — Globális változók Dependency Injection alapú refaktora",
+  "status": "archived",
+  "priority": "medium",
+  "createdAt": "2026-04-04",
+  "owner": "Gemini",
+  "progress": 100,
+  "archivedAt": "2026-04-12T13:55:00Z",
+  "archiveReason": "Refactor completed and verified. ServiceRegistry and DatabaseManager are now the standard for state management.",
+  "tags": [
+    "architecture",
+    "solid",
+    "di",
+    "database"
+  ],
+  "sourceDocument": "Gemini System Audit 2026-04-04",
+  "phase": 4,
+  "updated": "2026-04-12",
+  "dependencies": [
+    "type_safety_enforcement_20260404"
+  ],
+  "group": "brunella",
+  "dod": {
+    "tests_pass": true,
+    "build_clean": true,
+    "code_committed": true,
+    "no_verify_used": true
+  }
+}

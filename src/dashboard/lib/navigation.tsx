@@ -47,7 +47,7 @@ import { CampaignStudio } from "@/components/dashboard/CampaignStudio";
 import { InnovationBridgeWidget } from "@/components/dashboard/InnovationBridgeWidget";
 import { DigitalHRWidget } from "@/components/dashboard/DigitalHRWidget";
 import { HROnboardingWidget } from "@/components/dashboard/HROnboardingWidget";
-import { GrantHunterWidget } from "@/components/dashboard/GrantHunterWidget";
+import { GrantManager } from "@/components/GrantManager";
 import { LawDetectiveWidget } from "@/components/dashboard/LawDetectiveWidget";
 import { BookkeepingWidget } from "@/components/dashboard/BookkeepingWidget";
 import { HazipenztarWidget } from "@/components/dashboard/HazipenztarWidget";
@@ -259,7 +259,7 @@ export function initializeNavigation ()
     { id: "jules", label: "Jules AI", icon: Zap, component: <JulesPanel /> },
     { id: "digital-hr", label: "Digital HR", icon: Briefcase, component: <DigitalHRWidget /> },
     { id: "hr-onboarding", label: "HR Onboarding", icon: Workflow, component: <HROnboardingWidget /> },
-    { id: "grant-hunter", label: "Grant Hunter", icon: Search, component: <GrantHunterWidget /> },
+    { id: "grant-hunter", label: "Pályázatfigyelő", icon: Search, component: <GrantManager /> },
     { id: "law-detective", label: "Law Detective", icon: Shield, component: <LawDetectiveWidget /> },
     { id: "property-visionary", label: "Property Visionary", icon: Box, component: <PropertyVisionaryWidget /> },
     { id: "marketwatcher", label: "Market Watcher", icon: Activity, component: <MarketWatcherConfig /> },

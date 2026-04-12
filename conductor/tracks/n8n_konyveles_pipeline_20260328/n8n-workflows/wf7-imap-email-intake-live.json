@@ -1,0 +1,316 @@
+{
+  "name": "Brunella Bookkeeping IMAP Intake Live",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyX",
+              "value": 5,
+              "unit": "minutes"
+            }
+          ]
+        },
+        "downloadAttachments": true,
+        "postProcessAction": "markSeen",
+        "options": {
+          "onlyUnread": true,
+          "allowUnauthorizedCerts": false
+        }
+      },
+      "id": "imap-intake",
+      "name": "IMAP Email Intake (Live)",
+      "type": "n8n-nodes-base.emailReadImap",
+      "typeVersion": 1.2,
+      "position": [260, 320]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const input = items[0].json ?? {};\nconst subject = String(input.subject ?? input.textSubject ?? '').trim();\nconst matchesInvoice = /számla|invoice|szla/i.test(subject);\nconst timestamp = new Date().toISOString();\n\nif (!matchesInvoice) {\n  return [];\n}\n\nreturn [{\n  json: {\n    ...input,\n    subject,\n    source: 'imap-live',\n    trigger: 'n8n-imap',\n    isInvoiceSubject: true,\n    receivedAt: String(input.date ?? input.receivedAt ?? timestamp),\n    savedAttachmentPaths: [],\n    processedAt: timestamp,\n  },\n  binary: items[0].binary ?? {},\n}];"
+      },
+      "id": "invoice-filter",
+      "name": "Filter Invoice Subject",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [520, 320]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const fs = require('fs/promises');\nconst path = require('path');\n\nconst input = items[0] ?? {};\nconst json = input.json ?? {};\nconst binary = input.binary ?? {};\nconst inboxDir = path.join(process.cwd(), 'data', 'inbox');\nconst timestamp = new Date().toISOString().replace(/[:.]/g, '-');\nconst savedAttachmentPaths = [];\n\nawait fs.mkdir(inboxDir, { recursive: true });\n\nfor (const [key, file] of Object.entries(binary)) {\n  const rawFileName = String(file?.fileName ?? `${key}.bin`).trim() || `${key}.bin`;\n  const safeFileName = rawFileName.replace(/[\\\\/:*?\"<>|]/g, '_').slice(0, 160);\n  const destPath = path.join(inboxDir, `${timestamp}_${safeFileName}`);\n  if (file?.data) {\n    await fs.writeFile(destPath, Buffer.from(String(file.data), 'base64'));\n    savedAttachmentPaths.push(destPath);\n  }\n}\n\nif (savedAttachmentPaths.length === 0 && json.subject) {\n  const safeSubject = String(json.subject).replace(/[\\\\/:*?\"<>|]/g, '_').slice(0, 80);\n  const rawPath = path.join(inboxDir, `${timestamp}_${safeSubject}.eml`);\n  if (json.text || json.textPlain || json.textHtml) {\n    await fs.writeFile(rawPath, String(json.text ?? json.textPlain ?? json.textHtml));\n    savedAttachmentPaths.push(rawPath);\n  }\n}\n\nreturn [{\n  json: {\n    ...json,\n    savedAttachmentPaths,\n    attachmentCount: savedAttachmentPaths.length,\n    inboxDirectory: inboxDir,\n  },\n  binary: {},\n}];"
+      },
+      "id": "save-attachments",
+      "name": "Save Attachments to Inbox",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [780, 320]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:3000/api/v1/agents/EmailAgent/execute",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ task: 'Process invoice email and extract structured data', context: { source: 'n8n', trigger: 'imap-live', subject: $json.subject ?? null, from: $json.from ?? null, messageId: $json.messageId ?? $json.id ?? null, savedAttachmentPaths: $json.savedAttachmentPaths ?? [], attachmentCount: $json.attachmentCount ?? 0, timestamp: $json.processedAt ?? $now.toISO() } }) }}",
+        "options": {}
+      },
+      "id": "email-agent",
+      "name": "Parse Invoice with EmailAgent",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1040, 320]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": false,
+        "values": {
+          "json": [
+            {
+              "name": "summary",
+              "value": "={{ { stage: 'email-intake-live', source: 'imap', subject: $json.subject ?? null, savedAttachmentPaths: $json.savedAttachmentPaths ?? [] } }}"
+            },
+            {
+              "name": "invoice",
+              "value": "={{ $json.result ?? $json.data ?? $json.invoice ?? $json }}"
+            },
+            {
+              "name": "exceptions",
+              "value": "={{ Array.isArray($json.exceptions) ? $json.exceptions : ($json.error ? [{ stage: 'email-intake-live', message: $json.error }] : []) }}"
+            }
+          ],
+          "boolean": [
+            {
+              "name": "isSuccess",
+              "value": "={{ $json.success === true || $json.status === 'success' || ($json.error ? false : true) }}"
+            }
+          ],
+          "string": [
+            {
+              "name": "source",
+              "value": "n8n"
+            },
+            {
+              "name": "timestamp",
+              "value": "={{ $now.toISO() }}"
+            }
+          ]
+        }
+      },
+      "id": "normalize-email",
+      "name": "Normalize EmailAgent Result",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 2.1,
+      "position": [1300, 320]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ $json.isSuccess }}",
+              "operation": "isTrue"
+            }
+          ]
+        }
+      },
+      "id": "email-success",
+      "name": "Email Parse Success?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [1540, 320]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": false,
+        "values": {
+          "json": [
+            {
+              "name": "status",
+              "value": "success"
+            },
+            {
+              "name": "summary",
+              "value": "={{ $json.summary }}"
+            },
+            {
+              "name": "invoice",
+              "value": "={{ $json.invoice }}"
+            },
+            {
+              "name": "savedAttachmentPaths",
+              "value": "={{ $json.savedAttachmentPaths ?? [] }}"
+            }
+          ]
+        }
+      },
+      "id": "email-success-record",
+      "name": "Record Intake Success",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 2.1,
+      "position": [1780, 220]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": false,
+        "values": {
+          "json": [
+            {
+              "name": "status",
+              "value": "skipped"
+            },
+            {
+              "name": "reason",
+              "value": "Invoice subject did not match"
+            }
+          ]
+        }
+      },
+      "id": "invoice-skip-record",
+      "name": "Skip Non-Invoice Email",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 2.1,
+      "position": [780, 520]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:5678/webhook/notify",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ summary: $json.summary, exceptions: $json.exceptions, timestamp: $json.timestamp, source: $json.source, savedAttachmentPaths: $json.savedAttachmentPaths ?? [] }) }}",
+        "options": {}
+      },
+      "id": "notify-exception",
+      "name": "Notify Intake Exception",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1780, 420]
+    }
+  ],
+  "connections": {
+    "IMAP Email Intake (Live)": {
+      "main": [
+        [
+          {
+            "node": "Filter Invoice Subject",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter Invoice Subject": {
+      "main": [
+        [
+          {
+            "node": "Save Attachments to Inbox",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Skip Non-Invoice Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Attachments to Inbox": {
+      "main": [
+        [
+          {
+            "node": "Parse Invoice with EmailAgent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Invoice with EmailAgent": {
+      "main": [
+        [
+          {
+            "node": "Normalize EmailAgent Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize EmailAgent Result": {
+      "main": [
+        [
+          {
+            "node": "Email Parse Success?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Email Parse Success?": {
+      "main": [
+        [
+          {
+            "node": "Record Intake Success",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Notify Intake Exception",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {},
+  "staticData": null,
+  "tags": [
+    {
+      "id": "bookkeeping",
+      "name": "bookkeeping"
+    },
+    {
+      "id": "imap",
+      "name": "imap"
+    },
+    {
+      "id": "n8n",
+      "name": "n8n"
+    }
+  ],
+  "pinData": {},
+  "versionId": "wf7-imap-email-intake-live",
+  "meta": {
+    "project": "n8n_konyveles_pipeline_20260328",
+    "track": "konyveles_phase3_20260403",
+    "status": "live-ready",
+    "phase": "3b"
+  }
+}

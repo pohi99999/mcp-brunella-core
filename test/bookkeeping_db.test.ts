@@ -1,26 +1,36 @@
 // test/bookkeeping_db.test.ts
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import {
     createCashEntry,
+    getAllInvoices,
     getAllTransactions,
     getCashEntry,
     getCashEntries,
     getCashSummary,
     getExceptionCount,
+    getInvoice,
+    getInvoiceByGmailId,
     getPendingTransactions,
     getReconciliationEvents,
     getTransaction,
     initDB,
     saveReconciliationEvent,
+    saveInvoice,
     saveTransaction,
+    updateInvoiceStatus,
     updateCashEntry,
     updateTransaction,
 } from '../src/data/bookkeeping_db.js';
-import { BookkeepingTransaction } from '../src/types/bookkeeping.d.js';
+import { BookkeepingTransaction, Invoice } from '../src/types/bookkeeping.d.js';
 
 describe('Bookkeeping Database', () => {
     beforeEach(() => {
+        vi.useRealTimers();
         initDB(':memory:'); // Use in-memory SQLite for testing
+    });
+
+    afterEach(() => {
+        vi.useRealTimers();
     });
 
     it('should save and retrieve a transaction event', () => {
@@ -69,6 +79,128 @@ describe('Bookkeeping Database', () => {
         const allTxs = getAllTransactions();
         expect(allTxs).toEqual(expect.arrayContaining([tx1, tx2]));
         expect(allTxs.length).toBe(2);
+    });
+
+    it('should save, retrieve and upsert invoices with preserved creation timestamps', () => {
+        vi.useFakeTimers();
+
+        const firstTimestamp = new Date('2026-03-30T10:00:00.000Z');
+        const secondTimestamp = new Date('2026-03-30T10:15:00.000Z');
+        const invoice: Invoice = {
+            id: 'inv_001',
+            gmailMessageId: 'gmail-001',
+            partnerName: 'Alpha Kft.',
+            invoiceNumber: 'INV-2026-001',
+            amount: 12500,
+            currency: 'HUF',
+            date: '2026-03-30',
+            dueDate: '2026-04-15',
+            driveFileId: 'drive-001',
+            sheetsRow: 17,
+            status: 'RECEIVED',
+            createdAt: '',
+            updatedAt: '',
+        };
+
+        vi.setSystemTime(firstTimestamp);
+        saveInvoice(invoice);
+
+        const stored = getInvoice('inv_001');
+        expect(stored).not.toBeNull();
+        expect(stored).toMatchObject({
+            id: 'inv_001',
+            gmailMessageId: 'gmail-001',
+            partnerName: 'Alpha Kft.',
+            invoiceNumber: 'INV-2026-001',
+            amount: 12500,
+            currency: 'HUF',
+            date: '2026-03-30',
+            dueDate: '2026-04-15',
+            driveFileId: 'drive-001',
+            sheetsRow: 17,
+            status: 'RECEIVED',
+            updatedAt: firstTimestamp.toISOString(),
+        });
+        expect(stored?.createdAt).toEqual(expect.any(String));
+
+        vi.setSystemTime(secondTimestamp);
+        saveInvoice({
+            id: 'inv_001',
+            partnerName: 'Alpha Kft. Updated',
+            amount: 12600,
+            status: 'EXTRACTED',
+        });
+
+        const updated = getInvoice('inv_001');
+        expect(updated).not.toBeNull();
+        expect(updated).toMatchObject({
+            id: 'inv_001',
+            gmailMessageId: 'gmail-001',
+            partnerName: 'Alpha Kft. Updated',
+            invoiceNumber: 'INV-2026-001',
+            amount: 12600,
+            currency: 'HUF',
+            date: '2026-03-30',
+            dueDate: '2026-04-15',
+            driveFileId: 'drive-001',
+            sheetsRow: 17,
+            status: 'EXTRACTED',
+            updatedAt: secondTimestamp.toISOString(),
+        });
+        expect(updated?.createdAt).toBe(stored?.createdAt);
+    });
+
+    it('should retrieve invoices by Gmail message ID and return null for unknown IDs', () => {
+        saveInvoice({
+            id: 'inv_gmail_001',
+            gmailMessageId: 'gmail-msg-123',
+            partnerName: 'Beta Zrt.',
+            status: 'RECEIVED',
+        });
+
+        const byGmailId = getInvoiceByGmailId('gmail-msg-123');
+        expect(byGmailId).not.toBeNull();
+        expect(byGmailId).toMatchObject({
+            id: 'inv_gmail_001',
+            gmailMessageId: 'gmail-msg-123',
+            partnerName: 'Beta Zrt.',
+            status: 'RECEIVED',
+        });
+
+        expect(getInvoiceByGmailId('missing-gmail-id')).toBeNull();
+    });
+
+    it('should update invoice status and error message', () => {
+        saveInvoice({
+            id: 'inv_status_001',
+            gmailMessageId: 'gmail-msg-status',
+            status: 'EXTRACTED',
+        });
+
+        updateInvoiceStatus('inv_status_001', 'FAILED', 'Vision extraction failed');
+
+        expect(getInvoice('inv_status_001')).toMatchObject({
+            id: 'inv_status_001',
+            gmailMessageId: 'gmail-msg-status',
+            status: 'FAILED',
+            errorMessage: 'Vision extraction failed',
+        });
+    });
+
+    it('should return invoices ordered by newest creation date first', async () => {
+        saveInvoice({ id: 'inv_list_001', status: 'RECEIVED', partnerName: 'Earlier Kft.' });
+        await new Promise((resolve) => setTimeout(resolve, 1100));
+
+        saveInvoice({ id: 'inv_list_002', status: 'RECEIVED', partnerName: 'Middle Zrt.' });
+        await new Promise((resolve) => setTimeout(resolve, 1100));
+
+        saveInvoice({ id: 'inv_list_003', status: 'STORED', partnerName: 'Latest Bt.' });
+
+        const invoices = getAllInvoices();
+
+        expect(invoices).toHaveLength(3);
+        expect(invoices.map((invoice) => invoice.id)).toEqual(['inv_list_003', 'inv_list_002', 'inv_list_001']);
+        expect(invoices[0]).toMatchObject({ partnerName: 'Latest Bt.', status: 'STORED' });
     });
 
     it('should create, filter, update and summarize cash entries', () => {

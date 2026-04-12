@@ -131,17 +131,18 @@ export class GrantWatcherAgent extends BaseAgent {
     try {
       logInfo(this.name, 'Starting grant opportunity scan...');
 
+      // Parse task params before they are needed by the monitoring pipeline
+      const taskData = parseGrantTaskData(task, this.name);
+
       // Parse company profile
       const companyProfile = this.parseCompanyProfile(task);
       logInfo(this.name, `Scanning for TEÁOR: ${companyProfile.companyProfile.teaorCode}, ${companyProfile.companyProfile.employeeCount} employees`);
 
       // Execute monitoring pipeline
-      const result = await this.monitorGrants(companyProfile);
+      const result = await this.monitorGrants(companyProfile, taskData.projectDescription ?? '');
 
       logInfo(this.name, `✅ Grant scan complete: ${result.eligibleGrants.length}/${result.opportunities.length} eligible`);
 
-      // Parse task params to determine response type
-      const taskData = parseGrantTaskData(task, this.name);
 
       // Transform result to match test expectations
       const transformedResult = {
@@ -170,7 +171,8 @@ export class GrantWatcherAgent extends BaseAgent {
           companyName: taskData.companyName
         } : undefined,
         eligibleGrants: result.eligibleGrants.slice(0, 5),
-        stats: result.stats
+        stats: result.stats,
+        summaryDocUrl: result.summaryDocUrl
       };
 
       return {
@@ -199,12 +201,12 @@ export class GrantWatcherAgent extends BaseAgent {
   /**
    * Main grant monitoring pipeline
    */
-  private async monitorGrants(companyProfile: GrantEligibilityData): Promise<GrantWatcherResult> {
+  private async monitorGrants(companyProfile: GrantEligibilityData, projectDescription: string): Promise<GrantWatcherResult> {
     // Step 1: Scrape grant opportunities
     const opportunities = await this.scrapeGrantOpportunities();
 
     // Step 2: Match against company profile
-    const eligibleGrants = this.matchEligibility(opportunities, companyProfile);
+    const eligibleGrants = this.matchEligibility(opportunities, companyProfile, projectDescription);
 
     // Step 3: Generate summary document
     const summaryDocUrl = await this.generateSummaryDoc(eligibleGrants);
@@ -247,12 +249,60 @@ export class GrantWatcherAgent extends BaseAgent {
         fundingAmount: 50000000,
         currency: 'HUF',
         eligibility: {
-          teaorCodes: ['6201', '6202', '6209'], // IT services
+          teaorCodes: ['6201', '6202', '6209'],
           maxEmployees: 250,
           regions: ['Budapest', 'Pest'],
         },
         description: 'Digitális átállás támogatása kis- és középvállalkozások részére',
         publishedAt: '2026-02-15',
+      },
+      {
+        title: 'NKFIH - Környezettechnológiai és mederrehabilitációs K+F 2026',
+        source: 'magyar_kozlony',
+        sourceUrl: 'https://palyazat.gov.hu/kornyezettechnologia-2026',
+        deadline: '2026-06-30',
+        fundingAmount: 85000000,
+        currency: 'HUF',
+        eligibility: {
+          teaorCodes: ['7210', '7211', '7219'],
+          maxEmployees: 50,
+          regions: ['Pest', 'Budapest'],
+          industries: ['environment', 'water', 'circular economy'],
+        },
+        description: 'Iszapkezelési, mederdiagnosztikai és vízminőség-javító K+F projektek támogatása kisvállalkozásoknak.',
+        publishedAt: '2026-03-01',
+      },
+      {
+        title: 'LIFE - Vízminőség és körforgásos iszaphasznosítás',
+        source: 'eu_h2020',
+        sourceUrl: 'https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/opportunities/topic-details/life-2026-water',
+        deadline: '2026-07-15',
+        fundingAmount: 1800000,
+        currency: 'EUR',
+        eligibility: {
+          teaorCodes: ['7210'],
+          minEmployees: 1,
+          regions: ['Hungary', 'Pest'],
+          industries: ['environment', 'water', 'circular economy'],
+        },
+        description: 'Körforgásos gazdasági megoldások az iszap újrahasznosítására és a víztestek regenerációjára.',
+        publishedAt: '2026-03-05',
+      },
+      {
+        title: 'Pest Vármegye Zöld Innovációs Pilot',
+        source: 'other',
+        sourceUrl: 'https://palyazat.gov.hu/pest-zold-pilot',
+        deadline: '2026-05-20',
+        fundingAmount: 30000000,
+        currency: 'HUF',
+        eligibility: {
+          teaorCodes: ['7210'],
+          maxEmployees: 10,
+          regions: ['Pest'],
+          industries: ['environment', 'water'],
+        },
+        description: 'Kisvállalkozások környezetvédelmi pilot projektjei, különösen iszap- és vízminőség-javítás.',
+        publishedAt: '2026-03-10',
       },
       {
         title: 'Horizon Europe - Digital Europe Programme',
@@ -276,7 +326,7 @@ export class GrantWatcherAgent extends BaseAgent {
         fundingAmount: 100000000,
         currency: 'HUF',
         eligibility: {
-          teaorCodes: ['7211', '7219', '7220'], // R&D
+          teaorCodes: ['7211', '7219', '7220'],
           minEmployees: 5,
         },
         description: 'Tudományos kutatás-fejlesztés ösztönzése',
@@ -293,12 +343,13 @@ export class GrantWatcherAgent extends BaseAgent {
    */
   private matchEligibility(
     grants: GrantOpportunity[],
-    profile: GrantEligibilityData
+    profile: GrantEligibilityData,
+    projectDescription: string
   ): EligibilityMatch[] {
     const matches: EligibilityMatch[] = [];
 
     for (const grant of grants) {
-      const match = this.calculateMatch(grant, profile);
+      const match = this.calculateMatch(grant, profile, projectDescription);
       
       if (match.matchScore >= 50) { // Threshold: 50% match minimum
         matches.push(match);
@@ -314,7 +365,8 @@ export class GrantWatcherAgent extends BaseAgent {
    */
   private calculateMatch(
     grant: GrantOpportunity,
-    profile: GrantEligibilityData
+    profile: GrantEligibilityData,
+    projectDescription: string
   ): EligibilityMatch {
     let score = 0;
     const matchReasons: string[] = [];
@@ -357,6 +409,23 @@ export class GrantWatcherAgent extends BaseAgent {
       // Simplified industry matching
       score += 10;
       matchReasons.push('Ágazat releváns');
+    }
+
+    const projectKeywords = this.extractProjectKeywords(projectDescription);
+    if (projectKeywords.length > 0 && grant.eligibility.industries && grant.eligibility.industries.length > 0) {
+      const grantText = this.normalizeText([
+        grant.title,
+        grant.description,
+        ...grant.eligibility.industries,
+      ].join(' '));
+      const matchedKeywords = projectKeywords.filter((keyword) => grantText.includes(keyword));
+
+      if (matchedKeywords.length > 0) {
+        score += 10;
+        matchReasons.push(`Projekt kulcsszó egyezés: ${matchedKeywords.join(', ')}`);
+      } else {
+        warnings.push(`Projekt kulcsszavak nem erősítik ezt a grantot: ${projectKeywords.join(', ')}`);
+      }
     }
 
     return {
@@ -427,18 +496,40 @@ export class GrantWatcherAgent extends BaseAgent {
   // Helper Methods
   // ==========================================================================
 
+  private normalizeText(value: string): string {
+    return value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+  }
+
+  private extractProjectKeywords(projectDescription: string): string[] {
+    const normalized = this.normalizeText(projectDescription);
+    const keywords = [
+      'iszap',
+      'viz',
+      'meder',
+      'korforgas',
+      'kornyezet',
+      'zold',
+      'ujrahasznositas',
+      'hulladek',
+      'biologia',
+      'biotechnologia',
+    ];
+
+    return keywords.filter((keyword) => normalized.includes(keyword));
+  }
+
   /**
    * Parse company profile from task input
    */
   private parseCompanyProfile(task: string): GrantEligibilityData {
     try {
       const parsed = JSON.parse(task);
-      if (parsed.industry || parsed.location || parsed.companySize || parsed.revenue || parsed.companyProfile) {
+      if (parsed.industry || parsed.location || parsed.companySize || parsed.employeeCount || parsed.revenue || parsed.annualRevenue || parsed.companyProfile || parsed.teaorCode) {
         return {
           companyProfile: {
             teaorCode: parsed.teaorCode || '6201',
             employeeCount: parsed.companySize === 'SME' ? 25 : parsed.employeeCount || 50,
-            annualRevenue: parsed.revenue || 500000000,
+            annualRevenue: parsed.annualRevenue || parsed.revenue || 500000000,
             location: parsed.location || parsed.region || 'Budapest'
           }
         };

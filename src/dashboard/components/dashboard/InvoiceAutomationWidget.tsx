@@ -15,8 +15,7 @@ import
     CheckCircle2,
     HardDrive,
     AlertTriangle,
-    History,
-    ExternalLink
+    History
   } from "lucide-react";
 
 type ProcessStatus = "idle" | "running" | "success" | "error";
@@ -163,6 +162,25 @@ export function InvoiceAutomationWidget ()
                     </div>
                   </div>
                 ))}
+              </div>
+            </div>
+          )}
+
+          {result && (
+            <div className="p-3 rounded-xl bg-emerald-500/5 border border-emerald-500/10 space-y-3">
+              <div className="flex items-center gap-2 text-emerald-200">
+                <CheckCircle2 size={18} className="text-emerald-400" />
+                <p className="text-xs font-medium uppercase tracking-wider">Eredmény</p>
+              </div>
+              <div className="grid grid-cols-2 gap-2 text-[11px]">
+                <div className="rounded-lg bg-white/[0.02] border border-white/[0.04] p-2">
+                  <p className="text-[9px] uppercase font-mono text-zinc-500">Sikeres:</p>
+                  <p className="text-sm font-bold text-emerald-300">{result.processedCount ?? 0}</p>
+                </div>
+                <div className="rounded-lg bg-white/[0.02] border border-white/[0.04] p-2">
+                  <p className="text-[9px] uppercase font-mono text-zinc-500">Sikertelen:</p>
+                  <p className="text-sm font-bold text-rose-300">{result.failedCount ?? 0}</p>
+                </div>
               </div>
             </div>
           )}

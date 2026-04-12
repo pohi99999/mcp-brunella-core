@@ -135,7 +135,7 @@ A rendszer **82** regisztrált ügynökkel rendelkezik.
 *   **Libs:** Pandas, Playwright, LanceDB
 
 ### AI Models
-*   **Local:** Ollama (llama3.1:8b)
+*   **Local:** Ollama (gemma4:e4b)
 *   **Cloud:** Gemini 2.0 Flash, GPT-4o
 
 ---

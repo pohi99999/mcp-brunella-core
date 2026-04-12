@@ -49,8 +49,8 @@ In your new project, enable the following APIs:
 
 4. **Download Credentials**:
    - Click the **Download** icon (⬇️) next to your new OAuth 2.0 Client
-   - Save as: `f:\mcp-brunella-core\credentials\google-oauth2-credentials.json`
-   - Optional: set `GOOGLE_WORKSPACE_CREDENTIALS_FILE` if you want to use a different gitignored path
+   - Save as: `f:\mcp-brunella-core\credentials\google-oauth2-credentials.json` (or keep the downloaded `client_secret_*.json` filename and point `GOOGLE_WORKSPACE_CREDENTIALS_FILE` at it)
+   - Optional: set `GOOGLE_WORKSPACE_CREDENTIALS_FILE` / `GOOGLE_WORKSPACE_TOKEN_FILE` to your gitignored paths
 
 **Example credentials structure** (yours will have real values):
 ```json

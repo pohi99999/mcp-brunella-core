@@ -4,7 +4,7 @@ import os from 'os';
 import path from 'path';
 import request from 'supertest';
 import { beforeEach, afterEach, describe, expect, it, vi } from 'vitest';
-import { initDB, saveTransaction, createCashEntry, saveReconciliationEvent } from '../src/data/bookkeeping_db.js';
+import { initDB, saveTransaction, createCashEntry, saveReconciliationEvent, saveInvoice } from '../src/data/bookkeeping_db.js';
 import { createBookkeepingRoutes } from '../src/server/routes/bookkeeping.js';
 import type { BookkeepingTransaction } from '../src/types/bookkeeping.d.js';
 
@@ -325,6 +325,36 @@ describe('Bookkeeping routes', () => {
             syncedSheets: false,
             description: 'Frissitett bevetelek',
         });
+    });
+
+    it('lists invoices through the dedicated invoice endpoint', async () => {
+        saveInvoice({
+            id: 'inv-route-1',
+            gmailMessageId: 'gmail-route-1',
+            partnerName: 'Route Kft.',
+            invoiceNumber: 'INV-ROUTE-1',
+            status: 'RECEIVED',
+        });
+        saveInvoice({
+            id: 'inv-route-2',
+            gmailMessageId: 'gmail-route-2',
+            partnerName: 'Route Zrt.',
+            invoiceNumber: 'INV-ROUTE-2',
+            status: 'STORED',
+        });
+
+        const app = createApp();
+        const response = await request(app).get('/api/v1/bookkeeping/invoices').query({ limit: 10 });
+
+        expect(response.status).toBe(200);
+        expect(response.body.success).toBe(true);
+        expect(response.body.invoices).toHaveLength(2);
+        expect(response.body.invoices).toEqual(
+            expect.arrayContaining([
+                expect.objectContaining({ id: 'inv-route-1', gmailMessageId: 'gmail-route-1' }),
+                expect.objectContaining({ id: 'inv-route-2', gmailMessageId: 'gmail-route-2' }),
+            ]),
+        );
     });
 
     it('returns cash summaries from the dedicated summary endpoint', async () => {

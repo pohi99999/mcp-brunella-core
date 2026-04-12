@@ -1,10 +1,10 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-04-12T11:00:00.461Z
+**Utolso frissites:** 2026-04-12T18:00:00.375Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 243 total | 17 active | 23 completed | 201 archived
+**Stats:** 243 total | 15 active | 23 completed | 203 archived
 **Csoportok:** Könyvelés / üzleti automatizálás: 52 | Nova asszisztens: 23 | Brunella rendszer: 94 | Egyéb: 74
 
 ---
@@ -28,9 +28,16 @@
 
 ---
 
-## Aktiv Szalak (Active) (20)
+## Aktiv Szalak (Active) (15)
 
-### Könyvelés / üzleti automatizálás (11)
+### Könyvelés / üzleti automatizálás (8)
+
+- [~] **Hook Engine — agentHookEngine.ts alap implementáció** [HIGH]
+  - **ID:** `l5_hook_engine_foundation_20260412`
+  - **Progress:** 0%
+  - **Assignee:** Gemini
+  - **Updated:** 2026-04-12
+  - Mappa: ./tracks/l5_hook_engine_foundation_20260412/
 
 - [ ] **KKV uzleti automatizalas masterplan** [HIGH]
   - **ID:** `kkv_business_automation_20260408`
@@ -48,7 +55,7 @@
 
 - [ ] **Könyvelési Automatizálás Phase 3 — szamlazz.hu + WF-6..9 + NAV Live + IMAP** [HIGH]
   - **ID:** `konyveles_phase3_20260403`
-  - **Progress:** 5%
+  - **Progress:** 18%
   - **Assignee:** Pohánka Péter
   - Mappa: ./tracks/konyveles_phase3_20260403/
 
@@ -59,20 +66,6 @@
   - **Updated:** 2026-04-11
   - Mappa: ./tracks/l5_multitenant_platform_20260410/
 
-- [x] **L5 Zero-Touch Számla Pipeline — Teljes Automatizáció** [HIGH]
-  - **ID:** `l5_invoice_zerotouchl_20260410`
-  - **Progress:** 100%
-  - **Status:** COMPLETED
-  - **Assignee:** Gemini
-  - **Updated:** 2026-04-12
-  - **DoD:**
-    - tests_pass: true
-    - build_clean: true
-    - code_committed: true
-    - no_verify_used: false
-  - **Verification:** L5 Zero-Touch pipeline implementálva. EventBus integráció, `invoices` tábla, automatizált Gmail polling és Dashboard history view kész.
-  - Mappa: ./tracks/l5_invoice_zerotouchl_20260410/
-
 - [ ] **P-Sales Human-in-Loop Revenue Pipeline — Lead gen, onboarding, KKV + Brand csatornák** [HIGH]
   - **ID:** `psales_human_loop_revenue_20260407`
   - **Progress:** 35%
@@ -82,7 +75,7 @@
 
 - [ ] **Pohánka freelancer terjeszkedés és profilrendszer** [HIGH]
   - **ID:** `pohanka_freelancer_terjeszkedes_20260408`
-  - **Progress:** 15%
+  - **Progress:** 5%
   - **Assignee:** GitHub Copilot
   - **Updated:** 2026-04-08
   - Mappa: ./tracks/pohanka_freelancer_terjeszkedes_20260408/
@@ -122,7 +115,7 @@
   - **ID:** `nova_knowledge_workflows_20260404`
   - **Progress:** 25%
   - **Assignee:** GitHub Copilot
-  - **Updated:** 2026-04-11
+  - **Updated:** 2026-04-12
   - Mappa: ./tracks/nova_knowledge_workflows_20260404/
 
 - [ ] **Toura — Helyi Fejlesztési Hub** [HIGH]
@@ -133,7 +126,7 @@
   - Mappa: ./tracks/toura_local_dev_20260408/
 
 
-### Brunella rendszer (3)
+### Brunella rendszer (2)
 
 - [ ] **Cloudflare DNS Zone Reconciliation for Custom Domains** [HIGH]
   - **ID:** `cloudflare_dns_zone_reconciliation_20260325`
@@ -148,20 +141,6 @@
   - **Assignee:** pohi99999
   - **Updated:** 2026-04-08
   - Mappa: ./tracks/p-search_20260408/
-
-- [x] **Modular State Refactor — Globális változók Dependency Injection alapú refaktora** [MEDIUM]
-  - **ID:** `modular_state_refactor_20260404`
-  - **Progress:** 100%
-  - **Status:** COMPLETED
-  - **Assignee:** Gemini
-  - **Updated:** 2026-04-12
-  - **DoD:**
-    - tests_pass: true
-    - build_clean: true
-    - code_committed: true
-    - no_verify_used: false
-  - **Verification:** Dashboard API és CLI parancsok verifikálva. Regressziós tesztek PASS.
-  - Mappa: ./tracks/modular_state_refactor_20260404/
 
 
 ### Egyéb (1)
@@ -298,11 +277,11 @@
 
 ---
 
-## Archivalt (Archived) (198)
+## Archivalt (Archived) (203)
 
 > Archived tracks are hidden by default. View in `conductor/archive/`
 
-### Könyvelés / üzleti automatizálás (30)
+### Könyvelés / üzleti automatizálás (34)
 
 - [x] **Brunella teljes funkció- és tulajdonságmátrix dokumentáció** (2026-03-26)
 - [x] **Enterprise Suite Master - 14 Modulos Vállalati Irányító** (2026-02-17T21:15:00Z)
@@ -320,13 +299,14 @@
 - [x] **KKV HR onboarding es provisioning** (2026-04-05T17:08:54.7826616Z)
 - [x] **KKV HR timesheet export and culture alerts** (2026-04-07)
 - [x] **Konyvelesi Phase 0 readiness** (2026-04-05T00:00:00Z)
+- [x] **L5 Zero-Touch Számla Pipeline — Teljes Automatizáció** (2026-04-12)
 - [x] **Marketing Swarm - Automated Campaign Factory** (2026-02-17T23:30:00Z)
 - [x] **P-Sales human-in-loop n8n pipeline** (2026-04-05T00:00:00Z)
 - [x] **PohiAIPro Logistics Vertical — Brunella integráció**
 - [x] **Real Estate Sales Campaign (Asset Analyst + Corporate Hunter)** (2026-02-16T00:00:00Z)
 - [x] **Számla Adatkinyerés és Google Sheets Automatizáció** (2026-02-17T21:05:00Z)
-- [x] **VIKTORIAVARGA brand voice foundation** (2026-04-10T20:42:00+02:00)
 - [x] **VIKTORIAVARGA brand monitor** (2026-04-12T13:05:00Z)
+- [x] **VIKTORIAVARGA brand voice foundation** (2026-04-10T20:42:00+02:00)
 - [x] **VIKTORIAVARGA shopping assistant** (2026-04-12T13:05:00Z)
 - [x] **VIKTORIAVARGA social concierge** (2026-04-12T13:05:00Z)
 - [x] **Automata Kampány Generátor Ügynök és UI** (2026-02-25)
@@ -359,7 +339,7 @@
 - [x] **Innovation Bridge - Cross-Industry Knowledge Transfer** (2026-02-24T01:27:00Z)
 - [x] **Napi AI Agent Összefoglaló Pipeline** (2026-04-10T19:10:00.000Z)
 
-### Brunella rendszer (80)
+### Brunella rendszer (81)
 
 - [x] **BAS Átfogó Tesztprotokol** (2026-02-16T15:05:00Z)
 - [x] **Brunella Core Stabilization** (2026-04-04)
@@ -428,6 +408,7 @@
 - [x] **Jules Enterprise CI/CD & Security Suite** (2026-02-12T15:50:00Z)
 - [x] **KKV Pack Productization & Cockpit Definition** (2026-04-08T19:41:31Z)
 - [x] **Mobile responsiveness research** (2026-02-27)
+- [x] **Modular State Refactor — Globális változók Dependency Injection alapú refaktora** (2026-04-12)
 - [x] **Orchestrator Cognition Upgrade — Magyar társalgó + rendszerérzékelés** (2026-03-20)
 - [x] **Phoenix Protocol v2 - Öngyógyító Rendszer** (2026-02-16T16:20:00Z)
 - [x] **Pre-commit Hook Optimalizáció** (2026-03-30T15:30:00.000Z)

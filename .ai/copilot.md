@@ -1,5 +1,14 @@
 # Copilot Session Notes
 
+### 2026-04-12 15:08 - Nova knowledge workflows sync
+
+**Feladat:** A `nova_knowledge_workflows_20260404` conductor slice aktuális állapotának szinkronizálása. A track továbbra is active/25%, a conductor timestamps 2026-04-12-re frissítve, archive nélkül, mert a phase 2-4 feladatok még nyitottak.
+
+**Érintett fájlok:** `conductor/tracks/nova_knowledge_workflows_20260404/meta.json`, `conductor/project_state.json`, `conductor/tracks.md`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A track jelenleg aktív marad; a következő lépés a Nova gatekeeper folytatása.
 ### 2026-04-12 13:05 - VIKTORIAVARGA track closure pass
 
 **Feladat:** A social concierge, shopping assistant és brand monitor slice-ok befejezése/archiválása, plusz a scheduled-task manual trigger brand-monitor fix lezárása.

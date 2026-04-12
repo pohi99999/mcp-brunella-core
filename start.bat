@@ -24,7 +24,7 @@ echo  +======================================================================+
 echo.
 
 :: ============================================================================
-:: [1/7] OLLAMA (AI Motor — lokalis LLM: llama3.1:8b, qwen2.5-coder:7b)
+:: [1/7] OLLAMA (AI Motor — lokalis LLM: gemma4:e4b, qwen2.5-coder:7b)
 :: ============================================================================
 echo [1/7] Ollama ellenorzese (http://localhost:11434)...
 curl -s --max-time 3 http://localhost:11434/api/tags >nul 2>&1
@@ -37,7 +37,7 @@ if !ERRORLEVEL! EQU 0 (
         timeout /t 7 /nobreak >nul
         curl -s --max-time 3 http://localhost:11434/api/tags >nul 2>&1
         if !ERRORLEVEL! EQU 0 (
-            echo    [OK] Ollama elindult — llama3.1:8b + qwen2.5-coder:7b elerheto.
+            echo    [OK] Ollama elindult — gemma4:e4b + qwen2.5-coder:7b elerheto.
         ) else (
             echo    [!!] Ollama lassan indul — folytatjuk...
         )
@@ -170,7 +170,7 @@ echo.
 ::    - brunella-core  : node build/index.js  (53 MCP tool)
 ::    - filesystem     : @modelcontextprotocol/server-filesystem
 ::    - windows_bridge : python windows_bridge/wab_server.py
-::  LLM: GitHub Models gpt-4.1, fallback: Ollama qwen2.5-coder:7b / llama3.1:8b
+::  LLM: GitHub Models gpt-4.1, fallback: Ollama qwen2.5-coder:7b / gemma4:e4b
 :: ============================================================================
 echo [7/7] Copilot CLI inditasa mint PAIOS Orchestrator...
 timeout /t 3 /nobreak >nul
@@ -194,7 +194,7 @@ echo  ^|    filesystem      workspace hozzaferes                  ^| && ^
 echo  ^|    windows_bridge  PowerShell automation                 ^| && ^
 echo  ^|                                                           ^| && ^
 echo  ^|  LLM: GitHub Models gpt-4.1                              ^| && ^
-echo  ^|       Ollama fallback: llama3.1:8b / qwen2.5-coder:7b    ^| && ^
+echo  ^|       Ollama fallback: gemma4:e4b / qwen2.5-coder:7b    ^| && ^
 echo  ^|                                                           ^| && ^
 echo  ^|  Szerviz vegpontok:                                       ^| && ^
 echo  ^|    Dashboard  http://localhost:5173                       ^| && ^
@@ -223,7 +223,7 @@ echo   Szolgaltatasok:
 echo    Dashboard   : http://localhost:5173  (React + Vite)
 echo    Backend     : http://localhost:3000  (MCP + REST + ZeroPrompt + Ephemeral)
 echo    Python API  : http://localhost:8000  (FastAPI + Uvicorn + RAG + LanceDB)
-echo    Ollama      : http://localhost:11434 (llama3.1:8b + qwen2.5-coder:7b)
+echo    Ollama      : http://localhost:11434 (gemma4:e4b + qwen2.5-coder:7b)
 echo    AnythingLLM : http://localhost:3001  (GitHub Models gpt-4.1)
 echo.
 echo   MCP Szerverek (Copilot CLI PAIOS Orchestrator):

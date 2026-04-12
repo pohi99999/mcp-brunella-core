@@ -8,6 +8,44 @@
 
 ## 📋 LEGUTÓBBI MUNKAMENET
 
+### 2026-04-12 14:00 - Git LFS bandwidth cleanup + SSRF biztonsági javítás
+
+**Feladat:** Git LFS bandwidth megtelés (10 GB) — nem-lényeges fájlok eltávolítása a repo-ból
+
+**Elvégzett feladatok:**
+
+1. **44k fájl eltávolítva git trackingből:**
+   - `temp/` (123 fájl: screenshotok, logok, test artifactok)
+   - `browser-inspect/`, `tasks/screenshots/`, `tests/screenshots/`
+   - `archive/build-cache/`, `archive/old-projects/`
+   - Gyökér-szintű capcut-*.png, timeline-*.png (16 fájl)
+   - `myai/agents/a2a-go/` (42 000+ fájl: Google A2A-Go + TensorFlow minták)
+   - `myai/agents/LaVague/`, `myai/agents/adk-samples/`, `myai/agents/claude-agent-sdk-demos/`
+
+2. **.gitignore frissítve** — preventálja a visszakerülést
+
+3. **SSRF biztonsági javítás** (`src/tools/browser.ts`):
+   - `harvest_extract` MCP toolból hiányzott az `isUrlAllowed()` ellenőrzés
+   - localhost/private IP-k proxy-n keresztül is elérhetők lettek volna
+   - Javítva: `if (!isUrlAllowed(target_url)) return mcpError(...)`
+
+4. **KKV fájlok visszaállítva** — `src/cli/kkvFinanceCommands.ts` és `src/kkv/financeAutomation.ts` hiányoztak a main branchről
+
+**Érintett fájlok:**
+- `.gitignore` (bővítve)
+- `src/tools/browser.ts` (SSRF fix)
+- `src/cli/kkvFinanceCommands.ts` (visszaállítva)
+- `src/kkv/financeAutomation.ts` (visszaállítva)
+
+**Státusz:** ✅ Befejezve (push folyamatban)
+
+**Megjegyzés a következő ügynöknek:**
+- A 3rd-party agent minták (`a2a-go`, `LaVague`, `adk-samples`, `claude-agent-sdk-demos`) törölve lettek — nem hivatkoznak rájuk a core fájlok
+- A Husky pre-push hook automatikusan main-re vált néha — figyeld a `git branch`-et push előtt
+- Az LFS bandwidth csökkentéséhez a régi history is tartalmaz LFS objektumokat (BFG Repo Cleaner kellett volna a teljes tisztításhoz, de legalább a jövőbeli clone-ok nem töltik le ezeket)
+
+## 📋 LEGUTÓBBI MUNKAMENET
+
 ### 2026-04-09 12:00 - brunella-anythingllm-desktop-integration track teljes implementáció
 
 **Feladat:** A `brunella-anythingllm-desktop-integration` track aktiválása (proposed → active) és teljes TDD implementáció: POST endpoint, audit log, dashboard panel.

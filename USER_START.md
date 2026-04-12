@@ -65,7 +65,7 @@ Ha valamelyik komponenst újra kell indítanod, vagy látni akarod a részletes 
 A "nagy agy", ami a gépeden fut.
 
 - **Indítás:** `ollama serve` (Hagyd futni a háttérben!)
-- **Tesztelés:** `ollama run llama3.1:8b` (Vagy ami épp a modell).
+- **Tesztelés:** `ollama run gemma4:e4b` (Vagy ami épp a modell).
 
 ### 🐍 B. Python Backend (MyAI)
 

@@ -117,6 +117,23 @@ describe('GrantWatcherAgent', () => {
         expect(result.data.grants[0]).toHaveProperty('isEligible');
       }
     });
+
+    it('should find an environmental match for the Iszapfaló profile', async () => {
+      const task = JSON.stringify({
+        teaorCode: '7210',
+        employeeCount: 1,
+        annualRevenue: 165800000,
+        location: 'Pest',
+        projectDescription: 'Iszapkezelési és vízminőség-javító K+F pilot',
+      });
+
+      const result = await agent.execute(task);
+
+      expect(result.status).toBe('success');
+      expect(result.data.eligibleGrants.length).toBeGreaterThan(0);
+      expect(result.data.eligibleGrants[0].grant.title).toContain('Környezettechnológiai');
+      expect(result.data.eligibleGrants[0].matchScore).toBeGreaterThanOrEqual(80);
+    });
   });
 
   describe('Error Handling', () => {

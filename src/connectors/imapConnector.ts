@@ -4,6 +4,8 @@ import path from 'path';
 import { logInfo, logError } from '../utils/logger.js';
 import { simpleParser } from 'mailparser';
 
+const DEFAULT_IMAP_DEST_DIR = path.join(process.cwd(), 'data', 'inbox');
+
 export type ImapConfig = {
   host: string;
   port?: number;
@@ -16,7 +18,7 @@ export type ImapConfig = {
 };
 
 export async function fetchEmailsAsEml(cfg: ImapConfig): Promise<Array<{ filename: string; path: string; uid?: number; subject?: string }>> {
-  const destDir = cfg.destDir || path.join(process.cwd(), 'data', 'invoices');
+  const destDir = cfg.destDir || DEFAULT_IMAP_DEST_DIR;
   await fs.mkdirp(destDir);
   const client = new ImapFlow({
     host: cfg.host,
@@ -70,7 +72,7 @@ export async function fetchEmailsAsEml(cfg: ImapConfig): Promise<Array<{ filenam
 }
 
 export async function fetchAndExtractAttachments(cfg: ImapConfig): Promise<Array<{ filename: string; path: string; uid?: number; subject?: string; contentType?: string; size?: number }>> {
-  const destDir = cfg.destDir || path.join(process.cwd(), 'data', 'invoices');
+  const destDir = cfg.destDir || DEFAULT_IMAP_DEST_DIR;
   await fs.mkdirp(destDir);
   const client = new ImapFlow({
     host: cfg.host,
@@ -108,16 +110,14 @@ export async function fetchAndExtractAttachments(cfg: ImapConfig): Promise<Array
             logInfo('imapConnector', `Saved attachment for uid=${message.uid} -> ${destPath}`);
             idx++;
           }
-        } else {
+        } else if (message.source) {
           // fallback: if no attachments, save the raw message
-          if (message.source) {
-            const safeSubj = subject.replace(/[\\/:*?"<>|]/g, '_').slice(0, 80);
-            const emlName = `${message.uid}_${safeSubj}.eml`;
-            const emlPath = path.join(destDir, emlName);
-            await fs.writeFile(emlPath, message.source as Buffer);
-            saved.push({ filename: emlName, path: emlPath, uid: message.uid, subject });
-            logInfo('imapConnector', `Saved raw EML uid=${message.uid} -> ${emlPath}`);
-          }
+          const safeSubj = subject.replace(/[\\/:*?"<>|]/g, '_').slice(0, 80);
+          const emlName = `${message.uid}_${safeSubj}.eml`;
+          const emlPath = path.join(destDir, emlName);
+          await fs.writeFile(emlPath, message.source as Buffer);
+          saved.push({ filename: emlName, path: emlPath, uid: message.uid, subject });
+          logInfo('imapConnector', `Saved raw EML uid=${message.uid} -> ${emlPath}`);
         }
 
         if (cfg.markSeen) {
