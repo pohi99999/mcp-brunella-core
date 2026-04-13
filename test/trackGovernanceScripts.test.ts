@@ -74,13 +74,19 @@ function initRepo(repoRoot: string): void {
 
 describe('track governance scripts', () => {
   let tempDir: string;
+  let originalGitEnv: NodeJS.ProcessEnv;
 
   beforeEach(() => {
     tempDir = mkdtempSync(path.join(tmpdir(), 'track-governance-'));
+    originalGitEnv = { ...process.env };
+    for (const key of ['GIT_DIR', 'GIT_WORK_TREE', 'GIT_INDEX_FILE', 'GIT_PREFIX', 'GIT_COMMON_DIR']) {
+      delete process.env[key];
+    }
   });
 
   afterEach(() => {
     process.chdir(mainRepoRoot);
+    process.env = originalGitEnv;
     rmSync(tempDir, { recursive: true, force: true });
   });
 
