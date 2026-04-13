@@ -2,6 +2,7 @@
 
 ## Core Infrastruktúra
 - **Szerver:** MCP Brunella Core (Node.js 24+, TypeScript) - Moduláris, Dependency Injection alapú architektúra.
+- **Globális Hálózat:** Planet Mesh absztrakció, Edge Colonies (Peremhálózat), Singularity Kernel integráció.
 - **Automatizálási Platform:** n8n (API-val vezérelve), Langflow (Docker alapú vizuális ágens tervező).
 - **Runtime:** Hibrid Node.js & Perzisztens Python Shell.
 - **Szolgáltatáskezelés:** Központosított `ServiceRegistry` a modulok közötti tiszta csatolásért és életciklus-kezelésért.

@@ -18,3 +18,5 @@ A BAS nem csupán egy szoftver, hanem egy proaktív digitális idegrendszer és 
 6. **Inventory Automata:** Készletgazdálkodási ágens-lánc, amely kezeli a FIFO/WAC értékelést, a biztonsági készleteket és az automatizált beszerzési rendeléseket.
 7. **Mission Control:** Modern, Bento-stílusú operátori cockpit a rendszer állapotának, az ágensek tevékenységének és az üzleti automatizációs folyamatok (Finance/Inventory) valós idejű monitorozására.
 8. **Service Launcher:** Egységesített indító felület a kritikus automatizációs komponensek (n8n, Langflow) kezelésére.
+9. **Planet Mesh & Singularity Kernel:** Autonóm operációs rendszer és globális routing réteg, amely összefogja a regionálisan elosztott ügynököket és a lokális peremhálózatokon (Edge Colonies) futó mikro-ügynökségeket.
+10. **Emergent Layer & Knowledge Superstructure:** Kollektív intelligencia rendszer, amely önálló absztrakcióra, meta-evolúciós fejlődésre és a tudásgráf feletti szemantikus következtetésekre képes.
