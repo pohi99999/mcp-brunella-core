@@ -4,6 +4,7 @@
 
 import { Logger } from "./logger.js";
 import type { RuntimeTelemetry } from "./runtimeTelemetry.js";
+import { getCognitiveMetricsSnapshot } from "./metrics.js";
 
 const healthLogger = new Logger("health.log");
 
@@ -62,6 +63,7 @@ export interface HealthResponse {
   timestamp: string;
   requestId?: string;
   runtime?: RuntimeTelemetry;
+  cognitive?: ReturnType<typeof getCognitiveMetricsSnapshot>;
   services: {
     ollama: HealthServiceResult;
     anythingllm: HealthServiceResult;
@@ -287,6 +289,7 @@ export function buildHealthResponse(
     status,
     timestamp: new Date().toISOString(),
     requestId,
+    cognitive: getCognitiveMetricsSnapshot(),
     services: { ollama, anythingllm, agents, mcp, python, n8n, langflow, wab, cloudflare },
   };
 }

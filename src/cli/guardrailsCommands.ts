@@ -34,6 +34,14 @@ interface TelemetryStats {
   totalInputTokens?: number;
   totalOutputTokens?: number;
   tokensByModel?: Record<string, TelemetryModelUsage>;
+  cognitive?: {
+    lastLlmInteraction: {
+      latencyMs: number;
+      provider: string;
+      timestamp: number;
+    };
+    memoryCache: Record<string, { hits: number; misses: number; hitRate: number }>;
+  };
 }
 
 interface TelemetryTrace {
@@ -109,9 +117,13 @@ export function registerTelemetryCommands(program: Command): void {
 
   telemetry
     .command("stats")
-    .description("Telemetria összesítő — spanek, tokenek")
+    .description("Telemetria összesítő — spanek, tokenek, kognitív állapot")
     .action(async () => {
       try {
+        // Fetch common health to get cognitive metrics
+        const healthRes = await fetch(`${API_BASE}/api/health`);
+        const healthData = await healthRes.json() as any;
+
         const res = await fetch(`${API_BASE}/api/v1/telemetry/stats`);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const stats = await res.json() as TelemetryStats;
@@ -121,6 +133,20 @@ export function registerTelemetryCommands(program: Command): void {
         writeLine(`  Befejezett Spanek:  ${chalk.green(stats.completedSpans)}`);
         writeLine(`  Input Tokenek:      ${chalk.cyan(stats.totalInputTokens?.toLocaleString() || '0')}`);
         writeLine(`  Output Tokenek:     ${chalk.cyan(stats.totalOutputTokens?.toLocaleString() || '0')}`);
+
+        if (healthData.cognitive) {
+          const cog = healthData.cognitive;
+          writeLine(chalk.bold("\n🧠 Kognitív Állapot:"));
+          writeLine(`  Utolsó LLM Válaszidő: ${chalk.yellow(`${cog.lastLlmInteraction.latencyMs}ms`)} (${cog.lastLlmInteraction.provider})`);
+          
+          if (cog.memoryCache && Object.keys(cog.memoryCache).length > 0) {
+            writeLine(chalk.bold("\n  Memória Cache (Agent):"));
+            for (const [agent, m] of Object.entries(cog.memoryCache) as any) {
+              const rate = (m.hitRate * 100).toFixed(1);
+              writeLine(`    ${chalk.gray(agent.padEnd(20))}: ${chalk.green(`${rate}% hits`)} (${m.hits}/${m.hits + m.misses})`);
+            }
+          }
+        }
 
         if (stats.tokensByModel && Object.keys(stats.tokensByModel).length > 0) {
           writeLine(chalk.bold("\n  Token Használat Modell Szerint:"));

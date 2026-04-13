@@ -27,6 +27,7 @@ export function SystemHealthCard ()
     { id: "python", name: "Python Service", status: "checking" },
     { id: "cloudflare", name: "Cloudflare", status: "checking" },
   ] );
+  const [cognitive, setCognitive] = useState<any>(null);
   const [lastCheck, setLastCheck] = useState<string>( "" );
   const [isChecking, setIsChecking] = useState( false );
   const [loading, setLoading] = useState<Record<string, boolean>>( {} );
@@ -37,6 +38,7 @@ export function SystemHealthCard ()
     try
     {
       const health = await api.checkHealth();
+      setCognitive(health.cognitive);
       const so = ( s: { status?: string } | string ) =>
         ( typeof s === "object" ? s.status : s ) ?? "unhealthy";
       const ok = ( s: { status?: string } | string ) => so( s ) === "healthy";
@@ -257,6 +259,30 @@ export function SystemHealthCard ()
               </div>
             );
           } ) }
+        </div>
+      </div>
+
+      <div className="px-5 py-3 border-t border-white/[0.03] bg-white/[0.01]">
+        <div className="flex items-center justify-between">
+          <span className="text-[8px] font-bold text-zinc-600 uppercase tracking-widest font-mono">
+            Last Sequence
+          </span>
+          <span className="text-[9px] text-zinc-500 font-mono">
+            { lastCheck || "READY" }
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+}
+         { cognitive.lastLlmInteraction.latencyMs }ms
+                </span>
+              </div>
+              <p className="text-[8px] text-zinc-500 font-mono mt-1 uppercase text-right">
+                Provider: { cognitive.lastLlmInteraction.provider }
+              </p>
+            </div>
+          ) }
         </div>
       </div>
 

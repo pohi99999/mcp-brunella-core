@@ -120,15 +120,28 @@ export function recordAgentExecution(
   agentExecutionTime.observe(labels, Math.max(durationMs, 0) / 1000);
 }
 
+const lastLlmInteraction = {
+  latencyMs: 0,
+  provider: "none",
+  timestamp: 0,
+};
+
 export function recordLlmUsageAndCost(params: {
   provider: string;
   model: string;
   prompt: string;
   completion: string;
+  latencyMs?: number;
 }): void {
-  const { provider, model, prompt, completion } = params;
+  const { provider, model, prompt, completion, latencyMs } = params;
   const inputTokens = estimateTokens(prompt);
   const outputTokens = estimateTokens(completion);
+
+  if (latencyMs) {
+    lastLlmInteraction.latencyMs = latencyMs;
+    lastLlmInteraction.provider = provider;
+    lastLlmInteraction.timestamp = Date.now();
+  }
 
   llmTokensTotal.inc({ provider, model, direction: "input" }, inputTokens);
   llmTokensTotal.inc({ provider, model, direction: "output" }, outputTokens);
@@ -142,6 +155,14 @@ export function recordLlmUsageAndCost(params: {
   }
 }
 
+export function getCognitiveMetricsSnapshot() {
+  return {
+    lastLlmInteraction,
+    memoryCache: getMemoryCacheMetricsSnapshot(),
+  };
+}
+
+
 export function recordMemoryCacheHit(agentName: string): void {
   memoryCacheHitsTotal.inc({ agent_name: agentName });
   memoryCacheHitSnapshot.set(agentName, (memoryCacheHitSnapshot.get(agentName) ?? 0) + 1);
@@ -153,26 +174,28 @@ export function recordMemoryCacheMiss(agentName: string): void {
 }
 
 export function getMemoryCacheMetricsSnapshot(): Record<string, { hits: number; misses: number; hitRate: number }> {
+  const hitKeys = Array.from(memoryCacheHitSnapshot.keys());
+  const missKeys = Array.from(memoryCacheMissSnapshot.keys());
   const agents = new Set<string>([
-    ...memoryCacheHitSnapshot.keys(),
-    ...memoryCacheMissSnapshot.keys(),
+    ...hitKeys,
+    ...missKeys,
   ]);
 
-  return Object.fromEntries(
-    [...agents].map((agentName) => {
-      const hits = memoryCacheHitSnapshot.get(agentName) ?? 0;
-      const misses = memoryCacheMissSnapshot.get(agentName) ?? 0;
-      const total = hits + misses;
-      return [
-        agentName,
-        {
-          hits,
-          misses,
-          hitRate: total > 0 ? hits / total : 0,
-        },
-      ];
-    }),
-  );
+  const result: Record<string, { hits: number; misses: number; hitRate: number }> = {};
+  const agentArray = Array.from(agents);
+  
+  for (const agentName of agentArray) {
+    const hits = memoryCacheHitSnapshot.get(agentName) ?? 0;
+    const misses = memoryCacheMissSnapshot.get(agentName) ?? 0;
+    const total = hits + misses;
+    result[agentName] = {
+      hits,
+      misses,
+      hitRate: total > 0 ? hits / total : 0,
+    };
+  }
+
+  return result;
 }
 
 export function getPrometheusMetrics(): Promise<string> {
