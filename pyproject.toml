@@ -16,7 +16,7 @@ dependencies = [
     "langchain-google-genai>=2.0.0",
     "langgraph>=0.2.0",
     # Vector DB
-    "lancedb>=0.27.0",
+    "lancedb>=0.30.2",
     "pyarrow>=23.0.0",
     "chromadb>=0.6.0",
     # Browser automation
