@@ -9,9 +9,15 @@
 
 ---
 
-## Tervezett Szalak (Proposed) (2)
+## Tervezett Szalak (Proposed) (3)
 
-### Brunella rendszer (2)
+### Brunella rendszer (3)
+
+- [ ] **Brunella Remote Layer — Fázis 8: Planet-Scale Supersystem** [CRITICAL]
+  - **ID:** `remote_layer_phase8_planetary_supersystem_20260322`
+  - **Progress:** 0%
+  - **Assignee:** GitHub Copilot
+  - Mappa: ./tracks/remote_layer_phase8_planetary_supersystem_20260322/
 
 - [ ] **Brunella Remote Layer — Fázis 9: Emergent Superintelligence** [CRITICAL]
   - **ID:** `remote_layer_phase9_emergent_superintelligence_20260322`
@@ -34,9 +40,9 @@
 
 - [ ] **Kognitív Könyvelés és Multi-Ágens Egyeztetés — Bővítmény** [HIGH]
   - **ID:** `konyveles_kognitiv_bovites_20260330`
-  - **Progress:** 0%
+  - **Progress:** 35%
   - **Assignee:** Pohánka Péter
-  - **Updated:** 2026-04-03
+  - **Updated:** 2026-04-13
   - Mappa: ./tracks/konyveles_kognitiv_bovites_20260330/
 
 - [ ] **Könyvelési Automatizálás L5 — Finomítás és Intelligens Hibakezelés** [HIGH]
@@ -118,21 +124,7 @@
 
 ---
 
-## Befejezett (Completed - Not Archived) (25)
-
-### Brunella rendszer (2)
-
-- [x] **Alaprendszer Stabilitás és Telemetria Bővítése**
-  - **ID:** `alaprendszer_stabilitas_telemetria_20260413`
-  - **Completed:** 2026-04-13
-  - Mappa: ./tracks/alaprendszer_stabilitas_telemetria_20260413/
-  - **dod:** {"tests_pass":true,"build_clean":true,"code_committed":true,"no_verify_used":false}
-
-- [x] **Brunella Remote Layer — Fázis 8: Planet-Scale Supersystem** [CRITICAL]
-  - **ID:** `remote_layer_phase8_planetary_supersystem_20260322`
-  - **Completed:** 2026-04-13
-  - Mappa: ./tracks/remote_layer_phase8_planetary_supersystem_20260322/
-  - **dod:** {"tests_pass":true,"build_clean":true,"code_committed":true,"no_verify_used":false}
+## Befejezett (Completed - Not Archived) (23)
 
 ### Könyvelés / üzleti automatizálás (11)
 
