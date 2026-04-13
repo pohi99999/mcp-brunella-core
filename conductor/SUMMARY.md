@@ -1,6 +1,6 @@
 # 🎮 Conductor (Project Management) - SUMMARY
 
-**Utolsó frissítés:** 2026-03-28T01:35:09.617Z
+**Utolsó frissítés:** 2026-04-12T23:27:25.963Z
 **Generátor:** ProjectConductorAgent
 
 Ez a mappa tartalmazza a Brunella projekt specifikáció-vezérelt fejlesztési keretrendszerének dokumentációit.
@@ -17,8 +17,8 @@ Ez a mappa tartalmazza a Brunella projekt specifikáció-vezérelt fejlesztési 
 - `product-guidelines.md`: Stílus és minőségi irányelvek
 
 ## 📊 Jelenlegi Állapot
-- **Aktív track-ek:** 5
-- **Lezárt track-ek:** 4
+- **Aktív track-ek:** 12
+- **Lezárt track-ek:** 23
 - **Egészségi állapot:** unknown
 
 ---

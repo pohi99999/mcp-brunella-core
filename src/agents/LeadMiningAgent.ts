@@ -62,14 +62,14 @@ asyncio.run(run())
                 let webContext = "";
                 try {
                     // Deep analysis of the website if URL exists
-                    const targetUrl = lead.website || lead.url;
+                    const targetUrl = (lead as any).website || (lead as any).url;
                     if (targetUrl && targetUrl.startsWith('http')) {
                         logInfo(this.name, `Analyzing website: ${targetUrl}`);
-                        const analysisResult = (await agentManager.delegate('Researcher', `Elemezd ezt a weboldalt: ${targetUrl}. Mi a fő értékajánlatuk és van-e friss hírük?`)) as AgentResponse;
+                        const analysisResult = (await agentManager.delegate('Researcher', `Elemezd ezt a weboldalt: ${targetUrl}. Mi a fő értékajánlatuk és van-e friss hírük?`)) as any;
                         webContext = analysisResult.status === 'success' ? String(analysisResult.data) : "";
                     }
 
-                    const ibResult = (await agentManager.delegate('copywriter', `Készíts egy rövid, személyes megnyitó üzenetet (icebreaker) ehhez a céghez: ${lead.name || lead.company || 'Névtelen'}. Weboldal kontextus: ${webContext}. Relevancia: KKV automatizáció.`)) as AgentResponse;
+                    const ibResult = (await agentManager.delegate('copywriter', `Készíts egy rövid, személyes megnyitó üzenetet (icebreaker) ehhez a céghez: ${(lead as any).name || (lead as any).company || 'Névtelen'}. Weboldal kontextus: ${webContext}. Relevancia: KKV automatizáció.`)) as any;
                     icebreaker = ibResult.status === 'success' ? String(ibResult.data) : "";
                 } catch (e) {
                     logWarn(this.name, "Icebreaker delegation failed, skipping.");
@@ -78,7 +78,7 @@ asyncio.run(run())
 
                 // Email validation (if email exists)
                 let emailStatus = 'unknown';
-                const contactEmail = lead.email || lead.contact_email;
+                const contactEmail = (lead as any).email || (lead as any).contact_email;
                 if (contactEmail) {
                     emailStatus = await validateEmail(contactEmail);
                 }
@@ -86,7 +86,7 @@ asyncio.run(run())
                 const leadData = {
                     id: crypto.randomUUID(),
                     job_id: jobId,
-                    company_name: lead.name || lead.company || 'Névtelen',
+                    company_name: (lead as any).name || (lead as any).company || 'Névtelen',
                     contact_email: contactEmail,
                     email_status: emailStatus,
                     icebreaker_text: icebreaker,

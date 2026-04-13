@@ -1,11 +1,11 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-04-12T23:09:33.545Z
+**Utolso frissites:** 2026-04-13T00:00:00.431Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 243 total | 9 active | 23 completed | 209 archived
-**Csoportok:** Könyvelés / üzleti automatizálás: 52 | Nova asszisztens: 23 | Brunella rendszer: 94 | Egyéb: 74
+**Stats:** 244 total | 10 active | 23 completed | 209 archived
+**Csoportok:** Könyvelés / üzleti automatizálás: 53 | Nova asszisztens: 23 | Brunella rendszer: 94 | Egyéb: 74
 
 ---
 
@@ -28,16 +28,9 @@
 
 ---
 
-## Aktiv Szalak (Active) (9)
+## Aktiv Szalak (Active) (10)
 
 ### Könyvelés / üzleti automatizálás (5)
-
-- [~] **Könyvelési Automatizálás L5 — Finomítás és Intelligens Hibakezelés** [HIGH]
-  - **ID:** `bookkeeping_l5_refinement_20260412`
-  - **Progress:** 0%
-  - **Assignee:** GitHub Copilot
-  - **Updated:** 2026-04-12
-  - Mappa: ./tracks/bookkeeping_l5_refinement_20260412/
 
 - [ ] **Kognitív Könyvelés és Multi-Ágens Egyeztetés — Bővítmény** [HIGH]
   - **ID:** `konyveles_kognitiv_bovites_20260330`
@@ -46,6 +39,13 @@
   - **Updated:** 2026-04-03
   - Mappa: ./tracks/konyveles_kognitiv_bovites_20260330/
 
+- [ ] **Könyvelési Automatizálás L5 — Finomítás és Intelligens Hibakezelés** [HIGH]
+  - **ID:** `bookkeeping_l5_refinement_20260412`
+  - **Progress:** 0%
+  - **Assignee:** GitHub Copilot
+  - **Updated:** 2026-04-12
+  - Mappa: ./tracks/bookkeeping_l5_refinement_20260412/
+
 - [ ] **L5 Multi-Tenant KKV Platform** [HIGH]
   - **ID:** `l5_multitenant_platform_20260410`
   - **Progress:** 0%
@@ -53,7 +53,7 @@
   - **Updated:** 2026-04-11
   - Mappa: ./tracks/l5_multitenant_platform_20260410/
 
-- [ ] **P-Sales Human-in-Loop Revenue Pipeline — Lead gen, onboarding, KKV + Brand csatornák** [HIGH]
+- [~] **P-Sales Human-in-Loop Revenue Pipeline — Lead gen, onboarding, KKV + Brand csatornák** [HIGH]
   - **ID:** `psales_human_loop_revenue_20260407`
   - **Progress:** 35%
   - **Assignee:** GitHub Copilot

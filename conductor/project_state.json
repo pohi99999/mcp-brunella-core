@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-04-12T23:09:33.545Z",
+  "lastUpdated": "2026-04-13T00:00:00.431Z",
   "tracks": [
     {
       "id": "agent_instability_chaos_testing_20260410",
@@ -130,6 +130,33 @@
       },
       "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\autogen_github_models_pilot_20260401",
+      "_isArchived": false
+    },
+    {
+      "id": "bookkeeping_l5_refinement_20260412",
+      "name": "Könyvelési Automatizálás L5 — Finomítás és Intelligens Hibakezelés",
+      "status": "active",
+      "priority": "high",
+      "progress": 0,
+      "created": "2026-04-12",
+      "updated": "2026-04-12",
+      "assignee": "GitHub Copilot",
+      "tags": [
+        "L5",
+        "refinement",
+        "IMAP",
+        "n8n",
+        "monitoring"
+      ],
+      "dependencies": [],
+      "dod": {
+        "tests_pass": false,
+        "build_clean": false,
+        "code_committed": false,
+        "no_verify_used": false
+      },
+      "group": "business",
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\bookkeeping_l5_refinement_20260412",
       "_isArchived": false
     },
     {
@@ -6613,8 +6640,8 @@
     }
   ],
   "stats": {
-    "total": 243,
-    "active": 9,
+    "total": 244,
+    "active": 10,
     "completed": 23,
     "archived": 209,
     "proposed": 2

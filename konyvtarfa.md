@@ -1,6 +1,6 @@
 # Projekt Könyvtárfa
 
-**Generálva:** 2026-03-28T01:35:09.615Z
+**Generálva:** 2026-04-12T23:27:25.814Z
 **Generátor:** ProjectConductorAgent
 
 ---
@@ -10,9 +10,16 @@
 │   ├── 0001-living-documentation-system.md
 │   ├── 0002-embedding-standard-mxbai-with-legacy-fallback.md
 │   └── README.md
+├── after-click.md
+├── after_enter.png
+├── agentic-workflow/
+│   ├── mega-orchestrator.sh
+│   ├── QUICK_START.md
+│   ├── start-agent.sh
+│   └── start-all.sh
+├── AGENTS.md
 ├── AIDER.md
-├── analyze.js
-├── AnythingLLM
+├── andrewbutson.github-copilot-llm-gateway-1.0.0.vsix
 ├── aranyfolyam.md
 ├── archive/
 │   ├── build-cache/
@@ -50,7 +57,6 @@
 │   │   └── files/
 │   └── test-artifacts/
 │   │   └── playwright-report/
-├── audit-results.json
 ├── bas-cloudflare-orchestrator/
 │   ├── client/
 │   │   └── bas_client.py
@@ -76,7 +82,8 @@
 │   ├── migrations/
 │   │   ├── 0001_chat_sync.sql
 │   │   ├── 0001_initial_schema.sql
-│   │   └── 0002_task_analytics.sql
+│   │   ├── 0002_task_analytics.sql
+│   │   └── 0003_worker_management.sql
 │   ├── n8n/
 │   │   ├── bas-task-handler-workflow.json
 │   │   └── bas-task-handler.json
@@ -93,28 +100,174 @@
 │   │   ├── index.ts
 │   │   ├── queueHandler.ts
 │   │   ├── r2Artifacts.ts
-│   │   └── swarmCoordinator.ts
+│   │   ├── security.ts
+│   │   ├── swarmCoordinator.ts
+│   │   └── utils/
 │   ├── TEST_RESULTS.md
 │   ├── tsconfig.json
 │   ├── VECTORIZE_POC.md
+│   ├── workers/
+│   │   └── agents/
 │   └── wrangler.jsonc
 ├── BEVETEL_AKCIO.md
 ├── bin/
 │   └── cloudflared.exe
 ├── BOOTSTRAP.md
 ├── BOVITMENY.md
-├── Brunella
-├── Brunella.jpg
+├── browser-inspect/
+│   ├── after-login-attempt-workflows.png
+│   ├── after-login-attempt.png
+│   ├── auth-or-login-screen.png
+│   ├── auth-screen-before-login.png
+│   ├── login-screen-workflows.png
+│   ├── workflows-list-after-login.png
+│   └── workflows-list.png
 ├── Brunella.md
 ├── BRUNELLA_MASTER_CONTEXT.md
 ├── BRUNELLA_START.bat
-├── build-errors.txt
-├── build-output.log
-├── build-result.txt
-├── capture-tests.cjs
-├── capture-tests2.cjs
-├── check_schema.py
+├── capcut-access-blocked.png
+├── capcut-after-drag-test2.png
+├── capcut-after-zoom-out.png
+├── capcut-bounded-verification.png
+├── capcut-console-errors.txt
+├── capcut-current-state.png
+├── capcut-edit-session-snapshot.md
+├── capcut-page-snapshot.md
+├── capcut-project-verification.png
+├── capcut-resized.png
+├── capcut-snapshot-deep.md
+├── capcut-snapshot.md
+├── capcut-timeline-start.png
+├── capcut-verification.png
+├── capcut_bounded_verification.png
+├── capcut_verification_devtools.png
+├── CHANGELOG.md
 ├── CLAUDE.md
+├── CLI-Anything/
+│   ├── adguardhome/
+│   │   └── agent-harness/
+│   ├── anygen/
+│   │   └── agent-harness/
+│   ├── assets/
+│   │   ├── architecture.png
+│   │   ├── cli-typing.gif
+│   │   ├── icon.png
+│   │   └── teaser.png
+│   ├── audacity/
+│   │   └── agent-harness/
+│   ├── blender/
+│   │   └── agent-harness/
+│   ├── browser/
+│   │   └── agent-harness/
+│   ├── cli-anything-plugin/
+│   │   ├── commands/
+│   │   ├── guides/
+│   │   ├── HARNESS.md
+│   │   ├── LICENSE
+│   │   ├── PUBLISHING.md
+│   │   ├── QUICKSTART.md
+│   │   ├── README.md
+│   │   ├── repl_skin.py
+│   │   ├── scripts/
+│   │   ├── skill_generator.py
+│   │   ├── templates/
+│   │   ├── tests/
+│   │   └── verify-plugin.sh
+│   ├── cli-hub-meta-skill/
+│   │   └── SKILL.md
+│   ├── cloudcompare/
+│   │   └── agent-harness/
+│   ├── codex-skill/
+│   │   ├── agents/
+│   │   ├── scripts/
+│   │   └── SKILL.md
+│   ├── comfyui/
+│   │   └── agent-harness/
+│   ├── CONTRIBUTING.md
+│   ├── dify-workflow/
+│   │   └── agent-harness/
+│   ├── docs/
+│   │   └── hub/
+│   ├── drawio/
+│   │   └── agent-harness/
+│   ├── exa/
+│   │   └── agent-harness/
+│   ├── examples/
+│   │   ├── drawio/
+│   │   ├── README.md
+│   │   ├── slay_the_spire_ii/
+│   │   └── videocaptioner/
+│   ├── freecad/
+│   │   └── agent-harness/
+│   ├── gimp/
+│   │   └── agent-harness/
+│   ├── godot/
+│   │   └── agent-harness/
+│   ├── inkscape/
+│   │   └── agent-harness/
+│   ├── intelwatch/
+│   │   └── agent-harness/
+│   ├── iterm2/
+│   │   └── agent-harness/
+│   ├── kdenlive/
+│   │   └── agent-harness/
+│   ├── krita/
+│   │   └── agent-harness/
+│   ├── libreoffice/
+│   │   └── agent-harness/
+│   ├── LICENSE
+│   ├── mermaid/
+│   │   └── agent-harness/
+│   ├── mubu/
+│   │   └── agent-harness/
+│   ├── musescore/
+│   │   └── agent-harness/
+│   ├── notebooklm/
+│   │   └── agent-harness/
+│   ├── novita/
+│   │   └── agent-harness/
+│   ├── obs-studio/
+│   │   └── agent-harness/
+│   ├── ollama/
+│   │   └── agent-harness/
+│   ├── openclaw-skill/
+│   │   └── SKILL.md
+│   ├── opencode-commands/
+│   │   ├── cli-anything-list.md
+│   │   ├── cli-anything-refine.md
+│   │   ├── cli-anything-test.md
+│   │   ├── cli-anything-validate.md
+│   │   └── cli-anything.md
+│   ├── openscreen/
+│   │   └── agent-harness/
+│   ├── qoder-plugin/
+│   │   └── setup-qodercli.sh
+│   ├── README.md
+│   ├── README_CN.md
+│   ├── README_JA.md
+│   ├── registry.json
+│   ├── renderdoc/
+│   │   └── agent-harness/
+│   ├── rms/
+│   │   └── agent-harness/
+│   ├── SECURITY.md
+│   ├── shotcut/
+│   │   └── agent-harness/
+│   ├── sketch/
+│   │   └── agent-harness/
+│   ├── skill_generation/
+│   │   └── tests/
+│   ├── slay_the_spire_ii/
+│   │   ├── agent-harness/
+│   │   └── README.md
+│   ├── videocaptioner/
+│   │   └── agent-harness/
+│   ├── wiremock/
+│   │   └── agent-harness/
+│   ├── zoom/
+│   │   └── agent-harness/
+│   └── zotero/
+│   │   └── agent-harness/
 ├── cloudflare/
 │   ├── migrations/
 │   │   └── 0000_schema.sql
@@ -124,6 +277,7 @@
 │   │   ├── edge-coordinator.ts
 │   │   ├── index.ts
 │   │   ├── lead-intelligence.ts
+│   │   ├── lib/
 │   │   ├── types.ts
 │   │   └── workflows/
 │   ├── tsconfig.json
@@ -131,24 +285,35 @@
 │   └── wrangler.lead-intelligence.jsonc
 ├── cloudflare.md
 ├── cloudflareversup.md
+├── compile-errors.txt
 ├── conductor/
 │   ├── archive/
 │   │   ├── 006_trojan-horse-campaign/
 │   │   ├── agent_architect_upgrade_20260205/
 │   │   ├── agent_diagnostics_routing_modernization_20260323/
+│   │   ├── agent_health_matrix_20260325/
 │   │   ├── agent_loader_modernization_20260323/
 │   │   ├── agent_memory_structured_20260323/
 │   │   ├── agent_orchestration_dag_20260323/
+│   │   ├── agent_registry_governance_20260408/
 │   │   ├── aider_integration_20260222/
+│   │   ├── ai_agent_daily_briefing_20260408/
 │   │   ├── ai_recommendation_system_20260216/
 │   │   ├── apify_deep_scraping_agent_20260223/
 │   │   ├── basic-test-task-structure-20260219/
 │   │   ├── bas_comprehensive_test_protocol_20260210/
 │   │   ├── bas_enterprise_suite/
+│   │   ├── bas_hook_infrastructure_upgrade_20260412/
 │   │   ├── bas_orchestration_chain_20260221/
 │   │   ├── bas_security_sandbox_20260221/
+│   │   ├── bootstrap_single_source_20260325/
 │   │   ├── browser_use_harvester_20260131/
+│   │   ├── brunella-anythingllm-desktop-integration/
 │   │   ├── brunella_cli_init_20260120/
+│   │   ├── brunella_core_stabilization_20260402/
+│   │   ├── brunella_function_matrix_20260325/
+│   │   ├── brunella_reflection_continual_learning_20260402/
+│   │   ├── brunella_zero_prompt_ephemeral_bridge_20260402/
 │   │   ├── campaign-generator-agent-20260225/
 │   │   ├── cean_operations_center_ui_20260215/
 │   │   ├── cean_phase2_c_prometheus_20250216/
@@ -169,11 +334,13 @@
 │   │   ├── cloudflare_browser_rendering_robotkez_20260221/
 │   │   ├── cloudflare_d1_kv_storage_20260221_archived_20260222/
 │   │   ├── cloudflare_edge_agents_network_20260215/
+│   │   ├── cloudflare_edge_browser_orchestration_20260404/
 │   │   ├── cloudflare_edge_integration_20260202/
 │   │   ├── cloudflare_full_optimization_20260325/
+│   │   ├── cloudflare_token_separation_20260403/
 │   │   ├── cloudflare_vectorize_rag_20260221/
 │   │   ├── cloudflare_workers_ai_20260221/
-│   │   ├── cloudflare_workers_audit_20260221/
+│   │   ├── cloudflare_workers_migration_20260226/
 │   │   ├── codex_chat_refactor_20260212/
 │   │   ├── code_quality_improvements_20260210/
 │   │   ├── CONDUCTOR_MANIFEST_backup_20260204.md
@@ -184,17 +351,35 @@
 │   │   ├── dashboard-integration_20260120/
 │   │   ├── dashboard-stabilization-20260225/
 │   │   ├── dashboard-todo-widget-20260211/
+│   │   ├── dashboard_cockpit_redesign_20260401/
+│   │   ├── dashboard_conductor_monitor_visibility_20260406/
 │   │   ├── dashboard_test_suite_20260210/
 │   │   ├── dashboard_v2_robotkez_control_20260208/
 │   │   ├── dashboard_v3_command_center_20260219/
 │   │   ├── data_flywheel_incubator_20260205/
+│   │   ├── deep_market_research_20260227/
 │   │   ├── developer_agent_2_0_20260206/
+│   │   ├── developer_live_studio_research_20260301/
+│   │   ├── docs_config_sot_unification_20260408/
+│   │   ├── doc_code_auto_sync_20260325/
+│   │   ├── e2b_sandbox_crawl4ai_20260325/
 │   │   ├── enterprise_suite_master_20260216/
+│   │   ├── ephemeral_agents_cleanup_audit_20260329/
+│   │   ├── ephemeral_agents_limited_tools_20260329/
+│   │   ├── ephemeral_agents_runtime_spawn_20260329/
+│   │   ├── ephemeral_agents_ttl_budget_20260329/
 │   │   ├── epp-v2-protocol-20260211/
+│   │   ├── error_handling_implementation_20260404/
+│   │   ├── error_handling_standard_20260404/
 │   │   ├── ev_hunter_ai_research_20260202/
+│   │   ├── federated_mcp_negotiation_20260329/
+│   │   ├── federated_mcp_remote_routing_20260329/
+│   │   ├── federated_mcp_signed_manifests_20260329/
+│   │   ├── federated_mcp_trust_20260329/
 │   │   ├── financial-auditor-agent-20260214/
 │   │   ├── functional-integrity-fix-20260225/
 │   │   ├── gemini_git_agent_20260212/
+│   │   ├── goldeninteligencia20260327/
 │   │   ├── gold_protocol/
 │   │   ├── green_lightning_20260212/
 │   │   ├── guardrails_evaluation_20260323/
@@ -204,16 +389,41 @@
 │   │   ├── industrial_machine_hunter_20260216/
 │   │   ├── innovation_bridge_20260212/
 │   │   ├── innovation_bridge_20260225/
+│   │   ├── inventory_automation_20260330/
 │   │   ├── invoice-e2e-testing-20260217/
 │   │   ├── invoice-to-sheets-automation-20260214/
+│   │   ├── invoice_automation_20260326/
 │   │   ├── iron_clad_backend_20260212/
 │   │   ├── jules-async-test-automation-20260211/
 │   │   ├── jules-qa-integration_20260120/
 │   │   ├── jules_continuous_ai_integration_20260215/
 │   │   ├── jules_enterprise_cicd_20260212/
+│   │   ├── jules_pr_integration_20260222/
+│   │   ├── kkv_business_automation_20260408/
+│   │   ├── kkv_crm_followup_approval_reporting_20260405/
+│   │   ├── kkv_crm_ingest_foundation_20260405/
+│   │   ├── kkv_hr_leave_wait_resume_20260407/
+│   │   ├── kkv_hr_onboarding_provisioning_20260405/
+│   │   ├── kkv_hr_timesheet_export_and_alerts_20260407/
+│   │   ├── kkv_pack_productization_20260408/
+│   │   ├── konyveles_automatizalas/
+│   │   ├── konyveles_phase3_20260403/
+│   │   ├── konyveles_phase3_readiness_20260405/
+│   │   ├── l5_hook_engine_20260410/
+│   │   ├── l5_invoice_zerotouchl_20260410/
+│   │   ├── l5_memory_architecture_20260410/
+│   │   ├── l5_predictive_decision_20260410/
+│   │   ├── l5_self_modification_20260410/
+│   │   ├── l5_world_perception_20260410/
 │   │   ├── law_detective_20260223/
+│   │   ├── learning_loop_curated_golden_dataset_20260329/
+│   │   ├── learning_loop_eval_harness_20260329/
+│   │   ├── learning_loop_nightly_trainer_20260329/
+│   │   ├── learning_loop_reflex_model_registry_20260329/
 │   │   ├── living_documentation_system_20260213/
 │   │   ├── local_test_scheduler_20260215/
+│   │   ├── logging_refactor_20260404/
+│   │   ├── logistics_vertical_20260222/
 │   │   ├── magyar-cli-menu-system-20260211/
 │   │   ├── marketing_swarm_20260216/
 │   │   ├── master_track_1_lead_mining_20260223/
@@ -222,7 +432,12 @@
 │   │   ├── mcp_ollama_integration_20260218/
 │   │   ├── mcp_tool_discovery_20260323/
 │   │   ├── micro_csr_automator_20260212/
+│   │   ├── mission_templates_test_cadence_devex_20260408/
+│   │   ├── mobile_responsiveness_research_20260227/
 │   │   ├── modular-command-center-dashboard-v3-20260219/
+│   │   ├── modular_state_refactor_20260404/
+│   │   ├── n8n_bookkeeping_phase3_finalization_20260404/
+│   │   ├── n8n_psales_human_loop_20260404/
 │   │   ├── observability_opentelemetry_20260323/
 │   │   ├── onboarding-knowledge-manager-20260214/
 │   │   ├── orchestrator_chat_upgrade_20260320/
@@ -230,70 +445,138 @@
 │   │   ├── orchestrator_safe_autopilot_20260320/
 │   │   ├── orchestrator_state_machine_20260321/
 │   │   ├── otel_agent_tracing_20260211/
+│   │   ├── owl_agent_coordinator_20260321/
 │   │   ├── paios_model_selector_ui_20260223/
 │   │   ├── paios_orchestrator_chat_20260223/
 │   │   ├── paios_phoenix_events_panel_20260223/
 │   │   ├── paios_unified_config_20260223/
 │   │   ├── personal_assistant_windows_mvp_20260323/
+│   │   ├── phoenix_data_flywheel_observability_20260408/
 │   │   ├── phoenix_protocol_v2_20260205/
+│   │   ├── precommit_hook_optimization_20260325/
 │   │   ├── readme_bootstrap_health_fixes_20260324/
 │   │   ├── real_estate_sales_campaign_20260216/
+│   │   ├── remote_layer_phase1_foundation_20260322/
 │   │   ├── remote_layer_phase2_discovery_auth_20260322/
 │   │   ├── remote_layer_phase3_mobile_voice_20260322/
 │   │   ├── remote_layer_phase4_distributed_mesh_20260322/
 │   │   ├── remote_layer_phase5_adaptive_swarms_20260322/
 │   │   ├── remote_layer_phase6_collective_evolution_20260322/
 │   │   ├── remote_layer_phase7_superintelligent_infra_20260322/
+│   │   ├── revenue_acceleration_20260227/
 │   │   ├── robotkezv2-full-comet-20260215/
+│   │   ├── robotkez_browser_chat_research_20260301/
+│   │   ├── robotkez_comet_upgrade_20260222/
 │   │   ├── robotkez_n8n_sandbox_edzesterv/
 │   │   ├── robotkez_stabilization_20260212/
 │   │   ├── sandbox_security_hardening_20260323/
 │   │   ├── self_healing_core_20260213/
+│   │   ├── service_launcher_20260401/
 │   │   ├── software_genesis_protocol_20260216/
 │   │   ├── spec-writer-agent-20260211/
+│   │   ├── startup_smoke_test_20260325/
 │   │   ├── swarm_intelligence_v2_20260323/
+│   │   ├── system_audit_epp_v2_compliance_20260331/
+│   │   ├── system_wide_zero_mock_20260301/
 │   │   ├── task-decomposer-agent-20260211/
+│   │   ├── technical_debt_cleanup_20260404/
 │   │   ├── test-20260211/
 │   │   ├── test-feature-20260211/
 │   │   ├── test-track-12345678/
 │   │   ├── test-track-20260211/
+│   │   ├── test_cadence_optimization_20260401/
+│   │   ├── test_infrastructure_stabilization_20260325/
 │   │   ├── test_stabilization_20260221/
 │   │   ├── TR-20260212-TECH-HAR/
-│   │   └── tracks_backup_20260209/
+│   │   ├── tracks_backup_20260209/
+│   │   ├── trojan-horse-campaign-20260224/
+│   │   ├── type_safety_followup_browser_wrangler_20260406/
+│   │   ├── viktoria_brand_monitor_20260408/
+│   │   ├── viktoria_brand_voice_20260408/
+│   │   ├── viktoria_phygital_pipeline_20260408/
+│   │   ├── viktoria_shopping_assistant_20260408/
+│   │   ├── viktoria_social_concierge_20260408/
+│   │   ├── vscode_auto_build_20260403/
+│   │   ├── zero_prompt_approval_router_20260329/
+│   │   ├── zero_prompt_event_fabric_20260329/
+│   │   ├── zero_prompt_notification_channels_20260329/
+│   │   ├── zero_prompt_policy_engine_20260329/
+│   │   └── zero_prompt_signal_ingest_20260329/
 │   ├── BAS_ARCHITECTURE_v2.md
 │   ├── CHANGELOG.md
 │   ├── epp-v2.md
 │   ├── index.md
 │   ├── meta-schema.json
+│   ├── metadata.json
 │   ├── product-guidelines.md
 │   ├── product.md
 │   ├── project_state.json
 │   ├── SUMMARY.md
 │   ├── tech-stack.md
+│   ├── tmp/
 │   ├── tracks/
 │   │   ├── agent_health_matrix_20260325/
+│   │   ├── agent_instability_chaos_testing_20260410/
+│   │   ├── agent_runtime_hardening_20260406/
+│   │   ├── agent_security_ipi_defense_20260410/
+│   │   ├── apify_deep_scraping_agent_20260223/
+│   │   ├── archive/
+│   │   ├── autogen_github_models_pilot_20260401/
+│   │   ├── bookkeeping_l5_refinement_20260412/
 │   │   ├── bootstrap_single_source_20260325/
-│   │   ├── brunella_function_matrix_20260325/
+│   │   ├── brunella_federation_phase5_20260402/
+│   │   ├── brunella_identity_project_maintainer_20260402/
+│   │   ├── brunella_reflection_continual_learning_20260402/
+│   │   ├── brunella_zero_prompt_ephemeral_bridge_20260402/
 │   │   ├── cloudflare_dns_zone_reconciliation_20260325/
+│   │   ├── cloudflare_workers_audit_20260221/
 │   │   ├── cloudflare_workers_migration_20260226/
+│   │   ├── copilot_self_improvement_loop_20260406/
 │   │   ├── doc_code_auto_sync_20260325/
-│   │   ├── e2b_sandbox_crawl4ai_20260325/
 │   │   ├── invoice_automation_20260326/
 │   │   ├── jules_pr_integration_20260222/
-│   │   ├── konyveles_automatizalas/
-│   │   ├── logistics_vertical_20260222/
+│   │   ├── kkv_crm_automation_20260404/
+│   │   ├── kkv_crm_followup_routing_20260405/
+│   │   ├── kkv_customer_service_ai_20260404/
+│   │   ├── kkv_finance_automation_20260404/
+│   │   ├── kkv_hr_automation_20260404/
+│   │   ├── kkv_hr_leave_approvals_20260405/
+│   │   ├── kkv_hr_timesheet_culture_20260405/
+│   │   ├── kkv_inventory_automation_20260404/
+│   │   ├── kkv_marketing_automation_20260404/
+│   │   ├── kkv_project_task_automation_20260404/
+│   │   ├── konyveles_kognitiv_bovites_20260330/
+│   │   ├── l5_multitenant_platform_20260410/
+│   │   ├── logistics_vertical_repo_local_20260407/
+│   │   ├── mcp_sync_config_20260403/
+│   │   ├── n8n_konyveles_pipeline_20260328/
+│   │   ├── n8n_psearch_pipeline_20260404/
+│   │   ├── napi_intelligens_briefing_20260404/
+│   │   ├── node_python_bridge_e2e_20260411/
+│   │   ├── nova_assiss_local_dev_20260408/
+│   │   ├── nova_knowledge_workflows_20260404/
+│   │   ├── nova_multiagent_gatekeeper_20260404/
 │   │   ├── owl_agent_coordinator_20260321/
 │   │   ├── P-Sales20260327/
+│   │   ├── p-search/
 │   │   ├── personal_assistant_windows_mvp_20260323/
+│   │   ├── pohanka_freelancer_terjeszkedes_20260408/
 │   │   ├── precommit_hook_optimization_20260325/
+│   │   ├── psales_human_loop_revenue_20260407/
 │   │   ├── readme_bootstrap_health_fixes_20260324/
-│   │   ├── remote_layer_phase1_foundation_20260322/
 │   │   ├── remote_layer_phase8_planetary_supersystem_20260322/
 │   │   ├── remote_layer_phase9_emergent_superintelligence_20260322/
 │   │   ├── robotkez_comet_upgrade_20260222/
 │   │   ├── startup_smoke_test_20260325/
-│   │   └── test_infrastructure_stabilization_20260325/
+│   │   ├── swarm_orchestration_chat_20260410/
+│   │   ├── system_audit_epp_v2_compliance_20260331/
+│   │   ├── system_wide_zero_mock_20260301/
+│   │   ├── test_infrastructure_stabilization_20260325/
+│   │   ├── toura_local_dev_20260408/
+│   │   ├── type_safety_enforcement_20260404/
+│   │   └── windows_bridge_health_20260403/
 │   ├── tracks.md
+│   ├── tracks_sync_README.md
 │   └── workflow.md
 ├── config/
 │   ├── copilot-agents.json
@@ -301,44 +584,46 @@
 │   ├── grants_2026.json
 │   ├── mcp_servers.json
 │   ├── outreach_accounts.json
+│   ├── runtime-threshold-contract.env
 │   ├── safe_zones.json
 │   └── security/
 │   │   └── network-policy.json
+├── context_menu.png
 ├── CONTRIBUTING.md
-├── coverage/
-│   ├── base.css
-│   ├── block-navigation.js
-│   ├── clover.xml
-│   ├── coverage-final.json
-│   ├── favicon.png
-│   ├── index.html
-│   ├── prettify.css
-│   ├── prettify.js
-│   ├── scripts/
-│   │   ├── health_check.ts.html
-│   │   └── index.html
-│   ├── sort-arrow-sprite.png
-│   ├── sorter.js
-│   └── src/
-│   │   ├── agents/
-│   │   ├── cli/
-│   │   ├── config/
-│   │   ├── core/
-│   │   ├── server/
-│   │   ├── tools/
-│   │   └── utils/
 ├── credentials/
-│   └── credentials.json
-├── credentials-page.png
+│   ├── client_secret_175738030631-b69neq7vs05l0fktqm3vsrf3g3kspgpo.apps.googleusercontent.com.json
+│   ├── client_secret_175738030631-qeg02fr9jsi29ujll15m370hbf7nla5b.apps.googleusercontent.com.json
+│   ├── client_secret_2_474384282405-nqp3hkupj1rbmc7ujev94a4cqcp1rlm4.apps.googleusercontent.com.json
+│   ├── client_secret_2_796506690710-8h43m9q1jakt4r3dg1d8oh8k2nmc2c3j.apps.googleusercontent.com.json
+│   ├── client_secret_474384282405-nqp3hkupj1rbmc7ujev94a4cqcp1rlm4.apps.googleusercontent.com.json
+│   ├── client_secret_671372537404-due1t0o24brilra337vt5q0dirbolkm8.apps.googleusercontent.com.json
+│   ├── client_secret_796506690710-eo4nu6pq6uleh1psnjsor6e3frc3o6k5.apps.googleusercontent.com.json
+│   ├── credentials.json
+│   ├── google-token.json
+│   └── VIKTORIAVARGA × AI — Stratégiai ajánlat v3.pdf
+├── csharp-mcp-server/
+│   ├── CsharpMcpServer.sln
+│   ├── launch.ps1
+│   ├── NuGet.Config
+│   ├── README.md
+│   └── src/
+│   │   └── CsharpMcpServer/
 ├── cypress.config.ts
+├── dashboard-snapshot.md
+├── dashboard.bat
 ├── data/
+│   ├── accounting-kb/
+│   │   └── README.md
 │   ├── audit.db
 │   ├── audit.db-shm
 │   ├── audit.db-wal
+│   ├── bank-imports/
+│   │   └── OTP_export_sample.csv.example
 │   ├── bookkeeping.db
 │   ├── brunella.db
 │   ├── brunella.db-shm
 │   ├── brunella.db-wal
+│   ├── brunella.db.bak
 │   ├── brunella_lancedb/
 │   │   ├── memory.lance/
 │   │   ├── memory_v2_mxbai.lance/
@@ -353,31 +638,56 @@
 │   ├── checkpoints.db
 │   ├── checkpoints.db-shm
 │   ├── checkpoints.db-wal
+│   ├── comet_memory.db
+│   ├── crm.db
 │   ├── developer_metrics.json
 │   ├── developer_metrics.json.corrupt.1773943625230
 │   ├── developer_metrics.json.corrupt.1773943625231
 │   ├── developer_metrics.json.corrupt.1773944374601
 │   ├── developer_metrics.json.corrupt.1773951532107
 │   ├── developer_metrics.json.corrupt.1773952005906
+│   ├── event_fabric_history.jsonl
 │   ├── ev_hunter_results.json
+│   ├── extracted/
+│   │   └── sample_invoice.json
 │   ├── fix_queue.json
+│   ├── hr-timesheet/
+│   │   └── exports/
 │   ├── internal_needs.json
+│   ├── inventory.db
+│   ├── inventory.db-shm
+│   ├── inventory.db-wal
 │   ├── invoice_templates/
 │   │   └── invoice_schema.py
 │   ├── konyveles/
 │   │   └── match_results.json
+│   ├── learning-loop/
+│   │   ├── artifacts/
+│   │   ├── evals/
+│   │   └── snapshots/
+│   ├── migrations/
+│   │   ├── inventory_001_initial.sql
+│   │   ├── inventory_002_movement_status.sql
+│   │   └── kkv_crm_001_create_tables.sql
+│   ├── reconciled/
+│   │   └── sample_bank_tx.json
+│   ├── remote_sessions.db
 │   ├── robotkez_memory.json
+│   ├── runtime-drift-history.json
 │   ├── schema.sql
-│   ├── screenshots/
 │   ├── tasks.db
 │   └── training/
 │   │   └── golden_dataset.jsonl
 ├── docker-compose.prod.yml
 ├── docker-compose.yml
 ├── Dockerfile.node
+├── Dockerfile.p-sales-standalone
+├── Dockerfile.p-sales-standalone.dockerignore
 ├── Dockerfile.python
 ├── docs/
 │   ├── ## Chat Customization Diagnostics.md
+│   ├── 001_Jelentés/
+│   │   └── 2026-03-30.md
 │   ├── 01.2_Pohi AI Pro_hu.pdf
 │   ├── 08_AIRTABLE_SCHEMA_ERROR_FIX.md
 │   ├── 09_LIVE_N8N_AIRTABLE_SCHEMA_PATCH.ps1
@@ -432,8 +742,15 @@
 │   ├── 8.jpg
 │   ├── 9.jpg
 │   ├── agents/
+│   │   ├── AIResearchWeeklyAgent.md
+│   │   ├── ApifyScrapingAgent.md
 │   │   ├── ArchitectAgent.md
+│   │   ├── BankAgent.md
+│   │   ├── CampaignGeneratorAgent.md
+│   │   ├── ChromeDevToolsAgent.md
+│   │   ├── CometBrowserAgent.md
 │   │   ├── ConflictMediatorAgent.md
+│   │   ├── CriticAgent.md
 │   │   ├── DataScientistAgent.md
 │   │   ├── DependencyGraphAgent.md
 │   │   ├── DeveloperAgent.md
@@ -442,6 +759,7 @@
 │   │   ├── DocsIntelligenceAgent.md
 │   │   ├── DynamicAgent.md
 │   │   ├── EdgeProxyAgent.md
+│   │   ├── EmailAgent.md
 │   │   ├── EmailTriageAgent.md
 │   │   ├── EnterpriseOrchestratorAgent.md
 │   │   ├── EvaluatorAgent.md
@@ -449,13 +767,19 @@
 │   │   ├── GitHubModelsAgent.md
 │   │   ├── GrantWatcherAgent.md
 │   │   ├── HeadHunterAgent.md
+│   │   ├── InnovationBridgeAgent.md
+│   │   ├── InvoiceAutomationAgent.md
 │   │   ├── KnowledgeBaseBuilderAgent.md
+│   │   ├── LawDetectiveAgent.md
 │   │   ├── LeadMiningAgent.md
 │   │   ├── LintFixerAgent.md
 │   │   ├── LocalCSRAgent.md
 │   │   ├── LogisticsDispatcherAgent.md
 │   │   ├── MarketingAgent.md
+│   │   ├── MarketingDirectorAgent.md
 │   │   ├── MarketIntelAgent.md
+│   │   ├── MatchingAgent.md
+│   │   ├── NavAgent.md
 │   │   ├── NurturerAgent.md
 │   │   ├── OrchestratorAgent.md
 │   │   ├── PricingAgent.md
@@ -463,6 +787,7 @@
 │   │   ├── ProcurementAgent.md
 │   │   ├── ProjectConductorAgent.md
 │   │   ├── PropertyAnalystAgent.md
+│   │   ├── PropertyVisionaryAgent.md
 │   │   ├── PythonAgent.md
 │   │   ├── README_COVERAGE.md
 │   │   ├── ResearcherAgent.md
@@ -470,6 +795,7 @@
 │   │   ├── RobotkezV2Agent.md
 │   │   ├── SalesAgent.md
 │   │   ├── SalesHunterAgent.md
+│   │   ├── SheetsSyncAgent.md
 │   │   ├── SpecWriterAgent.md
 │   │   ├── TaskDecomposerAgent.md
 │   │   ├── UXDesignerAgent.md
@@ -486,6 +812,8 @@
 │   │   └── iszapfalo_heti_kontextus_workflow_blueprint.json
 │   ├── browser-automation/
 │   │   └── PUPPETEER_VS_PLAYWRIGHT_VS_BROWSER_USE.md
+│   ├── Brunella.pdf
+│   ├── BRUNELLA_IDENTITY.md
 │   ├── CEAN_ALERTING_RUNBOOK.md
 │   ├── CEAN_API_KEY_SETUP_GUIDE.md
 │   ├── CEAN_COST_ANALYSIS.md
@@ -538,9 +866,11 @@
 │   │   ├── Multi‑Agent Orchestration Mode (v1.1).md
 │   │   └── PAIOS 1.0 – Péter AI Operating System.md
 │   ├── cloudflare/
+│   │   ├── BROWSER_ORCHESTRATION.md
 │   │   ├── DIAGRAM.txt
 │   │   ├── INFRASTRUCTURE.md
-│   │   └── README.md
+│   │   ├── README.md
+│   │   └── TOKEN_SETUP.md
 │   ├── cloudflare-tunnel-setup.md
 │   ├── CLOUDFLARE_INTEGRATION.md
 │   ├── COMPLETED_PROJECTS.md
@@ -553,6 +883,7 @@
 │   │   ├── Géppark nyilvántartó_rendszer.jpg
 │   │   ├── hangvezérelt rendszer_munkaügyi_nyilvántartó_kieg.jpg
 │   │   ├── heti összefoglaló elemzés.jpg
+│   │   ├── Iszap2/
 │   │   ├── Jules/
 │   │   ├── kategórizáló.jpg
 │   │   ├── Munkaügyi_nyilvántartó_rendszer_AI_vezérelt.jpg
@@ -562,6 +893,7 @@
 │   ├── examples/
 │   │   └── Heti_Kontextus_teszt.md
 │   ├── EXECUTIVE_SUMMARY_2026_02_18.md
+│   ├── EXTERNAL_KNOWLEDGE_PIPELINE_MVP.md
 │   ├── GEMINI.md
 │   ├── github/
 │   │   └── GITHUB_CHEAT_SHEET.md
@@ -601,6 +933,7 @@
 │   ├── jules_session_8716822409536279237/
 │   │   └── myai/
 │   ├── Képernyőkép 2026-02-28 155422.jpg
+│   ├── learnings_sqlite_mocking.md
 │   ├── LOCAL_WINDOWS_ASSISTANT_BLUEPRINT.md
 │   ├── MAGYAR_NLP_TASK_ROUTING.md
 │   ├── MCP_DEPLOYMENT_GUIDE.md
@@ -647,6 +980,8 @@
 │   │   └── langflow_prompt_template.md
 │   ├── PROJECT_ARCHITECTURE_DIAGRAM.md
 │   ├── PROJECT_STRUCTURE.md
+│   ├── projektek.docx
+│   ├── projektek.pdf
 │   ├── PROJEKT_DIAGRAM_2026-02-13.md
 │   ├── REPO_CLEANUP_SUMMARY.md
 │   ├── robotkezv2-dev-guide.md
@@ -1709,49 +2044,315 @@
 │   ├── VECTORIZE_CLEANUP_SCHEDULE.md
 │   ├── VECTORIZE_RAG_COMPLETE_SUMMARY.md
 │   ├── VS_CODE_INSIDERS_SETUP.md
+│   ├── workflows/
+│   │   ├── agent-lifecycle-and-mcp.md
+│   │   ├── agent-to-mcp-tool-invocation.md
+│   │   ├── api-endpoint-to-db.md
+│   │   ├── ci-cd-release-pipeline.md
+│   │   ├── developer-dev-loop.md
+│   │   ├── diagrams/
+│   │   └── google-workspace-capabilities.md
 │   ├── _ARCHIVE_SESSION_COMPLETION_REPORT.md
 │   └── _AUDIT/
 │   │   └── 2026.03.11.md
 ├── eslint.config.js
-├── extract_cookies.py
+├── Eszköz És Adat központ.lnk
+├── fastmcp.json
 ├── files/
 │   ├── ice_edits.json
 │   ├── silver_path_memories.json
-│   └── smart_edits.json
-├── fix2.py
-├── fix_script.py
+│   ├── smart_edits.json
+│   └── VIKTORIAVARGA_AI_VIDEO_PRODUCTION_GUIDE.md
+├── fix_cloudflare.js
 ├── funkcio.md
 ├── GEMINI.md
+├── generate_kepessegek_run.cjs
 ├── github-sync.bat
+├── github.copilot-chat-0.43.2026040705.vsix
+├── GitHubNode.vsix
+├── HANDOFF.md
 ├── inditas.bat
 ├── Inditsd_Brunellat.bat
 ├── Inditsd_Brunellat_Stabil.bat
 ├── konyvtarfa.md
-├── last_action.jpg
 ├── LICENSE
-├── list_tables.py
 ├── litellm_config.yaml
 ├── logs/
 │   ├── archive/
+│   │   ├── after-delete-08.png
+│   │   ├── after_signin.txt
+│   │   ├── agent-health-output.json
+│   │   ├── analyze.js
+│   │   ├── AnythingLLM
+│   │   ├── audit-results.json
+│   │   ├── BAS_Rendszerleírás.md
+│   │   ├── Brunella
+│   │   ├── Brunella.jpg
+│   │   ├── build-audit.txt
+│   │   ├── build-errors.txt
+│   │   ├── build-final-phase1.txt
+│   │   ├── build-log.txt
+│   │   ├── build-output-phase1.txt
+│   │   ├── build-output.log
+│   │   ├── build-output.txt
+│   │   ├── build-phase1-narrow.txt
+│   │   ├── build-result.txt
+│   │   ├── build_raw.txt
+│   │   ├── capcut-after-clearing-clips.png
+│   │   ├── capcut-after-clip-select-test.png
+│   │   ├── capcut-after-end-key.png
+│   │   ├── capcut-after-gap-close-attempt.png
+│   │   ├── capcut-after-home-key.png
+│   │   ├── capcut-after-micro-nudge.png
+│   │   ├── capcut-after-scene01-drag-test.png
+│   │   ├── capcut-after-scene01-drop-retry.png
+│   │   ├── capcut-after-scene01-drop.png
+│   │   ├── capcut-after-scene02-attempt.png
+│   │   ├── capcut-after-scrollleft-zero.png
+│   │   ├── capcut-after-video-reset-attempt.png
+│   │   ├── capcut-all-subtitles-done.png
+│   │   ├── capcut-audio-tab.png
+│   │   ├── capcut-before-gap-close.png
+│   │   ├── capcut-before-micro-nudge.png
+│   │   ├── capcut-before-scene02-append.png
+│   │   ├── capcut-before-scene03-append.png
+│   │   ├── capcut-current-snapshot.md
+│   │   ├── capcut-current-state.png
+│   │   ├── capcut-end-scroll.png
+│   │   ├── capcut-fresh-assembly-start.png
+│   │   ├── capcut-music-search.png
+│   │   ├── capcut-music-search2.png
+│   │   ├── capcut-post-delete-check.png
+│   │   ├── capcut-post-scene03-drop.png
+│   │   ├── capcut-pre-scene03-drop.png
+│   │   ├── capcut-recheck.png
+│   │   ├── capcut-reopened-project.png
+│   │   ├── capcut-scrollleft0.png
+│   │   ├── capcut-scrollleft900.png
+│   │   ├── capcut-toolbar-zoomed.png
+│   │   ├── capture-tests.cjs
+│   │   ├── capture-tests2.cjs
+│   │   ├── check-api.cjs
+│   │   ├── check-mobile-imgs.js
+│   │   ├── check-mobile-imgs.mjs
+│   │   ├── checkpoint.py
+│   │   ├── check_hash.py
+│   │   ├── check_n8n_users.py
+│   │   ├── check_n8n_workflows.py
+│   │   ├── check_schema.py
+│   │   ├── check_settings.py
+│   │   ├── clip1-selected.png
+│   │   ├── cmd1-status.txt
+│   │   ├── cmd2-add.txt
+│   │   ├── cmd3-commit.txt
+│   │   ├── cmd4-push.txt
+│   │   ├── content10.txt
+│   │   ├── content11.txt
+│   │   ├── content2.txt
+│   │   ├── content3.txt
+│   │   ├── content4.txt
+│   │   ├── content5.txt
+│   │   ├── content6.txt
+│   │   ├── content7.txt
+│   │   ├── content8.txt
+│   │   ├── content9.txt
+│   │   ├── content_active_trigger.txt
+│   │   ├── content_check.txt
+│   │   ├── content_cred4.txt
+│   │   ├── content_cred4_detail.txt
+│   │   ├── content_cred4_details.txt
+│   │   ├── content_creds.txt
+│   │   ├── content_creds2.txt
+│   │   ├── content_state.txt
+│   │   ├── content_wf06.txt
+│   │   ├── content_wf06b.txt
+│   │   ├── content_wf06c.txt
+│   │   ├── cred4_s2.txt
+│   │   ├── cred4_state.txt
+│   │   ├── crm_detail.txt
+│   │   ├── curl_out.txt
+│   │   ├── current_state.txt
+│   │   ├── dashboard.bat
+│   │   ├── debug-ui-build.txt
+│   │   ├── debug1893.txt
+│   │   ├── debug1893_canvas.txt
+│   │   ├── debug1898.txt
+│   │   ├── debug_after_unpin.txt
+│   │   ├── debug_view.txt
+│   │   ├── delete-step2.png
+│   │   ├── diag-localhost
+│   │   ├── diag-stderr.txt
+│   │   ├── diag-stdout.txt
+│   │   ├── ecosystem.config.cjs
+│   │   ├── error_handling_batch2_final_verification.txt
+│   │   ├── ERROR_HANDLING_BATCH2_SUMMARY.md
+│   │   ├── error_handling_batch2_summary.txt
+│   │   ├── ERROR_HANDLING_REFACTOR_BATCH1.md
+│   │   ├── eslint_report.json
+│   │   ├── exec1893.txt
+│   │   ├── exec1898.txt
+│   │   ├── exec_api.txt
+│   │   ├── exec_detail.txt
+│   │   ├── extract_cookies.py
+│   │   ├── fastapi-server.log
+│   │   ├── fix2.py
+│   │   ├── fix_script.py
+│   │   ├── gallery-mobile-check.png
+│   │   ├── git-log-out.txt
+│   │   ├── git-log-out2.txt
+│   │   ├── git-push-out.txt
+│   │   ├── google_signin.txt
+│   │   ├── inspect_final.py
+│   │   ├── inspect_logout.py
+│   │   ├── inspect_logout2.py
+│   │   ├── inspect_logout3.py
+│   │   ├── inspect_logout4.py
+│   │   ├── inspect_logout5.py
+│   │   ├── inspect_n8n.py
+│   │   ├── last_action.jpg
+│   │   ├── list_tables.py
+│   │   ├── logs/
+│   │   ├── n8n-current-state.png
+│   │   ├── n8n-signin-after-attempt.png
+│   │   ├── n8n-signin.png
+│   │   ├── n8n_wf1_updated.png
+│   │   ├── n8n_wf2_updated.png
+│   │   ├── node-server-direct-err.log
+│   │   ├── node-server-direct.log
+│   │   ├── node-server-err.log
+│   │   ├── node-server.log
+│   │   ├── node-server2-err.log
+│   │   ├── node-server2.log
+│   │   ├── node-server_tail.txt
+│   │   ├── npm-test-failures-extract-extended.log
+│   │   ├── npm-test-failures-extract.log
+│   │   ├── npm-test-output.log
+│   │   ├── npm-test.log
+│   │   ├── nul
+│   │   ├── Ollama
+│   │   ├── PROJEKT_DIAGRAM2.md
+│   │   ├── r1.txt
+│   │   ├── r10.txt
+│   │   ├── r11.txt
+│   │   ├── r12.txt
+│   │   ├── r13.txt
+│   │   ├── r2.txt
+│   │   ├── r3.txt
+│   │   ├── r4.txt
+│   │   ├── r5.txt
+│   │   ├── r6.txt
+│   │   ├── r7.txt
+│   │   ├── r8.txt
+│   │   ├── r9.txt
+│   │   ├── read-test.txt
+│   │   ├── REFACTOR_ANALYSIS_BATCH1.md
+│   │   ├── requirements.txt
+│   │   ├── rerun_test_dashboard.log
+│   │   ├── rerun_test_ui.log
+│   │   ├── restore.json
+│   │   ├── run-tests.cjs
+│   │   ├── scene1-image-result.png
+│   │   ├── server_output.log
+│   │   ├── show_tasks_db_tables.py
+│   │   ├── signin.txt
+│   │   ├── signin2.txt
+│   │   ├── state_now.txt
+│   │   ├── test-crawl4ai-help.txt
+│   │   ├── test-fast-clean.txt
+│   │   ├── test-fast-log.txt
+│   │   ├── test-fast-output.txt
+│   │   ├── test-fast-result.txt
+│   │   ├── test-full-output.txt
+│   │   ├── test-health.cjs
+│   │   ├── test-json-results.json
+│   │   ├── test-json-stderr.txt
+│   │   ├── test-out4.txt
+│   │   ├── test-output.txt
+│   │   ├── test-results-latest.json
+│   │   ├── test-results.txt
+│   │   ├── test-results2.txt
+│   │   ├── test_output.txt
+│   │   ├── test_run_out.txt
+│   │   ├── timeline-start.png
+│   │   ├── todo_ops.py
+│   │   ├── todo_ops.sql
+│   │   ├── TRACK_all.md
+│   │   ├── tsc-agentmanager-afterfix.txt
+│   │   ├── tsc-agentmanager-errors.txt
+│   │   ├── tsc-errors.txt
+│   │   ├── tsc-output.txt
+│   │   ├── tsc_final.txt
+│   │   ├── tsc_final_v2.txt
+│   │   ├── tsc_final_v3.txt
+│   │   ├── tsc_full_output.txt
+│   │   ├── tsc_output.txt
+│   │   ├── type-scan-any.json
+│   │   ├── vite-err.log
+│   │   ├── vite-server.log
+│   │   ├── vitest-rerun-output.txt
+│   │   ├── vv_hu_luxury_mix_endcardTEMP_MPY_wvf_snd.mp4
+│   │   ├── wf06_exec.txt
+│   │   ├── _query_wf.py
 │   │   └── ~6,2.zip
 │   ├── brunella.db
+│   ├── csharp-mcp-warmup.log
 │   ├── dashboard.log
 │   ├── harvester.log
 │   ├── harvest_pipeline.log
 │   ├── health.log
 │   ├── http.log
 │   ├── knowledge_integrator.log
+│   ├── maintenance/
+│   │   ├── maintenance-2026-04-06.md
+│   │   ├── maintenance-2026-04-07.md
+│   │   └── maintenance-2026-04-11.md
+│   ├── node-server-err.log
+│   ├── node-server-fresh.log
+│   ├── node-server.log
+│   ├── node-server3-err.log
+│   ├── node-server3.log
 │   ├── node_backend.log
+│   ├── ollama.log
 │   ├── orchestrator.log
+│   ├── pm2-backend-0.log
+│   ├── pm2-backend-err-0.log
+│   ├── pm2-backend-out-0.log
+│   ├── python/
+│   │   ├── robotkez_tests/
+│   │   └── screenshots/
+│   ├── python-fastapi.log
 │   ├── python_backend.log
 │   ├── python_backend_err.log
 │   ├── startup.log
 │   ├── targeted-vitest.log
+│   ├── vite-ui.log
 │   └── web_ui.log
+├── mappings/
+│   ├── bank_fields.csv
+│   └── invoice_fields.csv
+├── mcp-brunella-core/
+│   ├── error-state-2026-03-29T03-03-27.251Z.png
+│   ├── workflow-editor.png
+│   ├── workflow-heti-kontekstus.png
+│   ├── workflows-brunella-intake-canvas.png
+│   ├── workflows-debug.png
+│   ├── workflows-error.png
+│   ├── workflows-list-1774752167774.png
+│   ├── workflows-list-live.png
+│   ├── workflows-list-logout-check.png
+│   └── workflows-list.png
 ├── mcp-brunella-core.code-workspace
 ├── mcp-brunella-core.sln
 ├── mcp_servers.json
 ├── MEGALLAPITAS.md
+├── missions/
+│   ├── api-route.yaml
+│   ├── cli-ops.yaml
+│   ├── dashboard-panel.yaml
+│   ├── docs-config.yaml
+│   └── track-bootstrap.yaml
+├── ms-dotnettools.vscode-dotnet-modernize-1.0.1017.vsix
+├── ms-python.pylint-2025.2.0.vsix
 ├── myai/
 │   ├── agents/
 │   │   ├── a2a-go/
@@ -1778,6 +2379,7 @@
 │   │   ├── frameworks/
 │   │   ├── GEMINI_ENTERPRISE_ALTERNATIVES.md
 │   │   ├── google-adk-box-agent/
+│   │   ├── i18n_specialist.toml
 │   │   ├── INTEGRACIOS_UTMUTATO.md
 │   │   ├── LaVague/
 │   │   ├── lint_fixer.toml
@@ -1789,13 +2391,17 @@
 │   │   ├── README.md
 │   │   ├── ready-agents/
 │   │   ├── robotkez_v2_hybrid.py
+│   │   ├── ShoppingAssistantAgent.toml
+│   │   ├── SocialConciergeAgent.toml
 │   │   ├── STARTED_APPS.md
 │   │   ├── tech_harvester.py
 │   │   ├── TECH_HARVESTER_README.md
 │   │   ├── tools/
+│   │   ├── ViktoriaBrandVoice.toml
 │   │   └── workers/
 │   ├── backend/
 │   │   ├── app.py
+│   │   ├── autogen_adapter.py
 │   │   ├── config.py
 │   │   ├── interpreter_adapter.py
 │   │   ├── langgraph_orchestrator.py
@@ -1809,6 +2415,7 @@
 │   ├── chromadb_adapter.py
 │   ├── cli.py
 │   ├── clients/
+│   │   ├── crm_sheets_client.py
 │   │   ├── enhanced_invoice_client.py
 │   │   ├── gmail_invoice_client.py
 │   │   ├── gmail_invoice_fallback.py
@@ -1843,6 +2450,7 @@
 │   ├── examples/
 │   │   ├── rag_golden_dataset_walkthrough.ipynb
 │   │   └── README.md
+│   ├── fastapi-server.log
 │   ├── gmail_invoice_fetcher.py
 │   ├── incubator/
 │   │   ├── Modelfile.template
@@ -1854,9 +2462,14 @@
 │   │   ├── README.md
 │   │   └── requirements.txt
 │   ├── mcp_server.py
+│   ├── myai_pip_install.txt
+│   ├── myai_python_version.txt
+│   ├── n8n/
+│   │   └── workflows/
 │   ├── prompts/
 │   │   └── ev_hunter_prompt.md
 │   ├── pydantic_models.py
+│   ├── pytest.ini
 │   ├── rag.py
 │   ├── refiner/
 │   │   ├── invoice_refiner.py
@@ -1868,6 +2481,8 @@
 │   │   ├── product_valuation.py
 │   │   └── __init__.py
 │   ├── refiner_logic.py
+│   ├── refine_endpoints/
+│   │   └── psearch_refine.py
 │   ├── requirements.txt
 │   ├── robotkez/
 │   │   ├── browser.py
@@ -1877,7 +2492,7 @@
 │   │   ├── main.py
 │   │   ├── requirements.txt
 │   │   └── training_suite.py
-│   ├── sandbox_env/
+│   ├── runtime_security.py
 │   ├── scenarios/
 │   │   ├── harvester_extraction_example.json
 │   │   ├── job_posting_schema.json
@@ -1892,6 +2507,7 @@
 │   │   └── ROBOTKEZ_N8N_TRAINING_PLAN.md
 │   ├── schemas/
 │   │   ├── invoice.py
+│   │   ├── viktoria_product.py
 │   │   └── __init__.py
 │   ├── schemas.py
 │   ├── screenshot.png
@@ -1904,7 +2520,9 @@
 │   │   ├── corporate_hunter.py
 │   │   └── ev_hunter.py
 │   ├── tests/
+│   │   ├── conftest.py
 │   │   ├── test_agent.py
+│   │   ├── test_autogen_adapter.py
 │   │   ├── test_browser_worker.py
 │   │   ├── test_cli.py
 │   │   ├── test_cma_worker.py
@@ -1917,16 +2535,22 @@
 │   │   ├── test_iron_clad_langgraph_phase3.py
 │   │   ├── test_iron_clad_opendevin_adapter.py
 │   │   ├── test_iron_clad_provider.py
+│   │   ├── test_learning_loop_training.py
 │   │   ├── test_llm.py
 │   │   ├── test_machine_hunter.py
+│   │   ├── test_mcp_autogen_tool.py
 │   │   ├── test_mcp_bridge.py
+│   │   ├── test_mcp_server_security.py
+│   │   ├── test_mcp_server_tools.py
 │   │   ├── test_media_factory.py
 │   │   ├── test_project.py
 │   │   ├── test_rag_embeddings.py
 │   │   ├── test_robotkez_comet.py
+│   │   ├── test_runtime_security.py
 │   │   ├── test_sandbox.py
 │   │   ├── test_structure.py
 │   │   ├── test_supply_matcher.py
+│   │   ├── test_tech_harvester.py
 │   │   ├── test_tools.py
 │   │   ├── test_trend_analyst.py
 │   │   ├── test_vision_worker.py
@@ -1941,10 +2565,17 @@
 │   │   ├── knowledge_integrator.py
 │   │   ├── mcp_bridge.py
 │   │   └── __init__.py
+│   ├── training/
+│   │   ├── dataset_curator.py
+│   │   ├── eval_harness.py
+│   │   ├── eval_scenarios/
+│   │   ├── nightly_trainer.py
+│   │   └── __init__.py
 │   ├── upload_trojan_to_sheets.py
 │   ├── utils/
 │   │   ├── dataset_manager.py
 │   │   ├── dependency_detector.py
+│   │   ├── google_credentials.py
 │   │   ├── lancedb_invoice_helper.py
 │   │   ├── page.py
 │   │   ├── parser.py
@@ -1976,10 +2607,30 @@
 │   └── __init__.py
 ├── n8n/
 │   └── workflows/
-│   │   └── market_watcher_report.json
-├── n8n-current-state.png
-├── n8n-signin-after-attempt.png
-├── n8n-signin.png
+│   │   ├── market_watcher_report.json
+│   │   ├── PHPApiAgent-2.12.2-45b314f016f05704ce48bd1fe7140446.zip
+│   │   ├── psales_onboarding_intake.json
+│   │   └── wf6_szamlazz_creation.json
+├── n8n-mcp-server/
+│   ├── dist/
+│   │   ├── index.d.ts
+│   │   ├── index.d.ts.map
+│   │   ├── index.js
+│   │   ├── index.js.map
+│   │   ├── services/
+│   │   ├── types.d.ts
+│   │   ├── types.d.ts.map
+│   │   ├── types.js
+│   │   └── types.js.map
+│   ├── evaluation.xml
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── README.md
+│   ├── src/
+│   │   ├── index.ts
+│   │   ├── services/
+│   │   └── types.ts
+│   └── tsconfig.json
 ├── n8n-workflows-list.md
 ├── n8nv2/
 │   ├── AGENTS.md
@@ -2028,6 +2679,7 @@
 │   │   ├── v-code-diff.patch
 │   │   ├── vue-tsc@2.2.8.patch
 │   │   └── z-vue-scan.patch
+│   ├── pnpm-10.32.1.tgz
 │   ├── pnpm-lock.yaml
 │   ├── pnpm-workspace.yaml
 │   ├── README.md
@@ -2054,11 +2706,8 @@
 │   ├── tsconfig.json
 │   ├── turbo.json
 │   └── vitest.workspace.ts
-├── npm-test-failures-extract-extended.log
-├── npm-test-failures-extract.log
-├── npm-test-output.log
-├── nul
-├── Ollama
+├── netdata-x64.msi
+├── nginx.p-sales.conf
 ├── open-interpreter/
 │   ├── Dockerfile
 │   ├── docs/
@@ -2123,6 +2772,9 @@
 │   │   ├── config.test.yaml
 │   │   ├── core/
 │   │   └── test_interpreter.py
+├── ops_migration_request.md
+├── out/
+│   └── tools.json
 ├── package-lock.json
 ├── package.json
 ├── paios.config.yaml
@@ -2130,256 +2782,54 @@
 ├── plans/
 │   └── master-track-finalization-hu.md
 ├── playwright-report/
-│   ├── data/
-│   │   ├── 00faeb4829a43a1106a69eb82e2aa83089fa709f.png
-│   │   ├── 023f5e30af8c9ff8acd0f94bf2fee57747ddac41.webm
-│   │   ├── 02d11f3ba19fae31cc5cf4a7adef38417d3ffcaa.webm
-│   │   ├── 04167d13fc2fb721964be1b14bf6aa2123e0448c.webm
-│   │   ├── 07f537eacb57d095056b2aae0b26ce0740091aa2.webm
-│   │   ├── 0957f2e4e9c1922fbc80fdbb1e81caed6c8fe2fa.webm
-│   │   ├── 0d615187cec46dc58c2dc361b2bdef459adc3eb0.webm
-│   │   ├── 0e052addba008c32675092677f5e37ceea1cd046.webm
-│   │   ├── 0fd92ac2b4e26432893f509061b776f2ff56fa11.png
-│   │   ├── 105893a9d22c9b7149f9b8f7cd94bb36e5350846.webm
-│   │   ├── 157a8ad298010c593689e4fddfde7470c46dbb67.webm
-│   │   ├── 158309ffc8f39e73ed2f9d10a9ab29a73e0f691a.png
-│   │   ├── 167918dfae9f61b94cb44b69d64e4e2f121fb5d3.webm
-│   │   ├── 18734ccd39361f3c237090210455f3b828299f3e.webm
-│   │   ├── 1947fb1af218fee420dae46f21586de380afd4b2.md
-│   │   ├── 1a4483f70eeec31037b2385e73d2c772e0ffafdc.webm
-│   │   ├── 1d1e61357cd44c1ec7d2a38a110ef2e47b1d29e5.webm
-│   │   ├── 2172a9230edc440bbb188a3daad9b2ae441f777b.webm
-│   │   ├── 21f539bf62601c4f13d893f539220f705324e7fc.webm
-│   │   ├── 2321dc0ee73c56bbc41d67be01aa787501d816c9.png
-│   │   ├── 237aa6a1019c1d29472ba055a5005a390de6a3dc.webm
-│   │   ├── 261b02bd0768c575add7f3c4a777be7204b3d4e9.png
-│   │   ├── 2852394cb2ff7408fe7104683e361610305b53a5.webm
-│   │   ├── 2882491624558bd5b129ecf530b113aff499c5e8.webm
-│   │   ├── 298fc6968a70cfd3b436f1632c930ac4ea860430.webm
-│   │   ├── 2a65db286464c041c9f12a1d360fff0c3104f643.png
-│   │   ├── 2ab3866fa002950871cce176c8f16f4922ed9854.webm
-│   │   ├── 2beaf38ab2ff965f006804568c9172556ef2aa24.png
-│   │   ├── 2bfd7cc1dfdfcae886e46fda3e0be4af822e801c.webm
-│   │   ├── 2f2eb7167f03bec960d00732e7484711457b14e7.webm
-│   │   ├── 2f6926f74d873ded5c8197a4e271cacaded40941.webm
-│   │   ├── 2fe54b89a5a15e0cb7835d7e2ad03e02f6f3045e.webm
-│   │   ├── 30b13b3a8c37b3c7e0c2b41b5d13793fc6d8757f.md
-│   │   ├── 30f15c58c0d6b4af4ff30f774c82ed48de4709a4.png
-│   │   ├── 311a1e2dfa8f6eae4b5a2b975b0c33d6f15457ce.webm
-│   │   ├── 31754841dda88211020d28f238b987d61eebfe47.webm
-│   │   ├── 3371b83690ebd28d1e09499b4725256396120b67.webm
-│   │   ├── 36549e7c9bbd480f1b180ddc93563d1816f89666.png
-│   │   ├── 382410cb82f77827562bf66ecb39f817e0da99ea.png
-│   │   ├── 3935146827860d63447ea94f58bfa416fee13129.png
-│   │   ├── 3950fe421ae310c064444a93bb9c5092c781f1b8.webm
-│   │   ├── 3b0f8cea6b6ac6614e7822c6965d0bbf45780be5.webm
-│   │   ├── 3b5558b1470686f09222aa68d18dae43c938bf2b.png
-│   │   ├── 3c072b873fd6019503fd66171c3d6e758e59df43.png
-│   │   ├── 3cf37cb1478fd217492e1075ba8d7d1931b6b968.png
-│   │   ├── 3d45950573d69169c4487438d2d2866e3ff3580c.webm
-│   │   ├── 3daa9d792312137f02c40cb340977659d919b9f6.webm
-│   │   ├── 3ef0cfdc7d6963b25be4f78544f1e664c4ac7a57.webm
-│   │   ├── 41f2d16e5f16d545591bff38e16b957c4923ea8d.webm
-│   │   ├── 4309997ccd96ec02387cafeceadab0b34c848cc1.png
-│   │   ├── 44824f6db20409137a04937ea8ce0459c9c50389.webm
-│   │   ├── 44dfb3264e4908d9c922440b334d85f6f88bc99c.webm
-│   │   ├── 45697e8cda1113142d69d234c405b1bc81d39837.webm
-│   │   ├── 468b8f3c82609f46af1c3782d7f8dfa65740fc20.webm
-│   │   ├── 478f014bbcb3c99fc33c07834778c12cdef3b3cd.webm
-│   │   ├── 4b3d139c1c7cb9869eebef0dea4f25b02f0c212f.png
-│   │   ├── 4b4b8d76443bf8999144df3437dae4489af8b102.png
-│   │   ├── 4d50757dc6aad78e3b2cced7e99e9066cef02567.webm
-│   │   ├── 4ed74eb5c52425ac831c56fd66b71e2a57198f9c.png
-│   │   ├── 4fcc307265616dd3db8368881206fda47d5fea67.png
-│   │   ├── 50215af758d280375a74f3ba17507049ed1f19ac.md
-│   │   ├── 507bde7754105a166260a5114ca62341dba0b7c9.png
-│   │   ├── 50ba91565eec72e9218548918da23e14accc00e3.webm
-│   │   ├── 50cd0d71b224cc24ce76ec6f9a9e4473555a40fb.webm
-│   │   ├── 539c873127e18bce7bae8ffa1cb4a0dc386b82a3.webm
-│   │   ├── 53c40a84ded23f875cdc1e59f6bd93d48a446a0a.md
-│   │   ├── 54a0cac73c16f8bed79d8c2c952d16ee56c6ac74.md
-│   │   ├── 55c8a0b3b411d2de06788d24761b8607c396a117.webm
-│   │   ├── 56002da61b048802e9a14e64e39461388e6914d6.webm
-│   │   ├── 561cbd6e20de0069257bd98eda990c63e24621a5.webm
-│   │   ├── 569f100bcdc1db560d2bd34efb71fe3d4ea003e6.webm
-│   │   ├── 58413cf8eb643c1d457fea139911244e230140c8.webm
-│   │   ├── 586ea471aebed8f87104309c4747fa0c80950908.webm
-│   │   ├── 588d963200f9df731769d30383b36fe101e0e0ef.webm
-│   │   ├── 58b0b75ab3380066a449cc123937aafcecc0bc4c.webm
-│   │   ├── 5a4bf30d8b80bce46a70d6de59a2bdf67ca256ab.webm
-│   │   ├── 5bfbcf9af0061aac8dde72f2fe203f9349024d7a.png
-│   │   ├── 5c8e0739c1e2a20690a28fddacea15fdc4b586e5.png
-│   │   ├── 5dcaf8ec7a6736f5f7843e25e1362493249058cd.webm
-│   │   ├── 5ecb0143dd117f03f9bda41d97d509c557926fc8.webm
-│   │   ├── 5f7cac17696d07f4097c7f5e5c2bd26c26ccb285.webm
-│   │   ├── 6061a3112302d53de8648273b916b30dc6ed5e35.webm
-│   │   ├── 61eb51d2d31b391bdfac6f00233dfdaf1b14aee0.webm
-│   │   ├── 624edf99b492f089a3af0cb1242a6432a8956c08.webm
-│   │   ├── 627bf37c3467987f62f1c9bb450c0bbb114e048b.webm
-│   │   ├── 66c6216bbb80ffe42c8a8e64522dffb1095cd07b.png
-│   │   ├── 677767ae64b66015c30ca937779e5c2b87111d30.webm
-│   │   ├── 6a38a5568bf6cd88720c92918f7f1ae77510ca65.webm
-│   │   ├── 6b197d4dc096380e619136c7957dd9943f8fbb25.webm
-│   │   ├── 6bc8cc53ff149ad92204c5c91d3c8d269ff7ef05.png
-│   │   ├── 6caf69b0f641be652598378720adeb4f28e89853.png
-│   │   ├── 6cc9ee687c64195cbfa4e5750f6209ccaa328150.webm
-│   │   ├── 6fed77a835d2079d5730edc10d825f9d05d4d12c.webm
-│   │   ├── 702858682345c8b6807013897e9af471b54031f3.webm
-│   │   ├── 710499006e2acb684af0e7a19e2b228a46611668.png
-│   │   ├── 71c1cfd9059589b9a5a0e616c6c1e113b17bd307.png
-│   │   ├── 72da0db232300b74ccb650d3e71a24e164b41a24.webm
-│   │   ├── 747f445162ef25bc61c352bc6b7ed068fcabafcd.webm
-│   │   ├── 7503b8c161c340cd7dd114f708305fc34f94f4c9.webm
-│   │   ├── 77ef59275adc53448fed6dbb55b90a9454af1aee.webm
-│   │   ├── 783e5f0418c1839f77fbcff841bbb1231c8b6c5a.webm
-│   │   ├── 787e468ccba07691f2f369c67784f413597c6146.png
-│   │   ├── 789f26d999e51dd47bfa01270b481dfb38020398.webm
-│   │   ├── 7962b5f9156f55cf2ec7b1afe085fd3dd6737fc8.webm
-│   │   ├── 7a33d5db6370b6de345e990751aa1f1da65ad675.png
-│   │   ├── 7aac4a3641ae88d09a86f379b39651b6a40f1594.webm
-│   │   ├── 7b47581ea8bc787fe2e1d44bdaed2bfde632042b.webm
-│   │   ├── 7c1375472e462ee9e4bde8d090d8f8113c105cf6.png
-│   │   ├── 7e5ff79b693d51f4dc031fb070095588977e8f00.webm
-│   │   ├── 7eb926805fbe35004918fe7d89967e931159b273.png
-│   │   ├── 81672871c0f2ae9c499eb58c1debe7f7705d08be.webm
-│   │   ├── 818843610596459bbe6afed400df741cf2afebaf.png
-│   │   ├── 8479bde85d5a165dde788cec6ebcc0b6a94e5ad0.png
-│   │   ├── 861cda5f3511b91b0256f5867e8ddd5470508aa2.webm
-│   │   ├── 8621715f0c2fc18985a82602944dec80991c6fe7.webm
-│   │   ├── 865d80fe7b999e647c09f3adaaf0dabf740048fe.webm
-│   │   ├── 89eb140a16422498f639d1d3c5728e404edc1194.webm
-│   │   ├── 8b572d17abb7c86ef3824ed6017c8a9de7bb0fb4.webm
-│   │   ├── 8c48191bab6028a5a9dddbc17b3584cddb7fd7c5.webm
-│   │   ├── 8eb1574e23c236a000ec5ac1af69c62a6c6c0653.webm
-│   │   ├── 902b04ad820767caa838d1475273e346f90d5ced.webm
-│   │   ├── 9255c927e5a53154332eb8709c1d4697aeeb4590.webm
-│   │   ├── 93bbe30a44ab29a3a437ffe5969bcb8e1a97e353.webm
-│   │   ├── 95369bd3e2315ad8764cc3322850c775b38363c9.webm
-│   │   ├── 9599b440310c66022358f41afbc48a105e2e2527.png
-│   │   ├── 96ef5470aa97e9d8288cfd46b510d00812b0fa7c.webm
-│   │   ├── 973e371717f258cb165115f79cd376e0da0e09e7.webm
-│   │   ├── 97db6600ca0884652e589cb8421d3eb6502e90f0.webm
-│   │   ├── 98d377c7116f4f6005f65af0bf5d191dd1ede701.webm
-│   │   ├── 99c2bb4164b9e692c2c30517e6877f5b70f27c74.webm
-│   │   ├── 9a54bd17435be68afd912ab62ff45b4772cb49f0.png
-│   │   ├── 9b963b5877f8e3017d8b2930ed015e9c7ce8cfcc.webm
-│   │   ├── 9bc52302fb6e4297c18e91d314d7c4b84564fafc.webm
-│   │   ├── 9d4bf9a3e0f9e12ad9c4f71fb2571304caaefc33.webm
-│   │   ├── 9f3912fb7bbf9a56f7ca3c570af0977b87fe6071.webm
-│   │   ├── a01930b4e333ea85545ae3ab05097b53256aa231.webm
-│   │   ├── a085e38f7fa69b8bb0f8dcb80c31c1825491620f.webm
-│   │   ├── a2d17ff00e04fbd249205f26b03e91ac74eee136.webm
-│   │   ├── a3033d2236bba1a60d2aaa9d2f8b17ddcf00bdc3.webm
-│   │   ├── a405f39c1e2244bf90efe0d0531c4974fd9743d3.webm
-│   │   ├── a6ea9978852a6a4b5d1d32855e6cdddc120d85c2.webm
-│   │   ├── a7bb19b6c80e2ceffd072c06e2207153ac37b63c.png
-│   │   ├── a8c96d0f3b10f64b2ea125d9f8f6e463a0284a93.png
-│   │   ├── ab08fc25671e23eea87c337cdcf5d2adeeff2e58.webm
-│   │   ├── ad87b448ddb2ecfb06e6338cc6e3de46821cff56.webm
-│   │   ├── ae9093d1b601bc5281a55f3e3e05a93021dd4ca5.png
-│   │   ├── af351bc5b2e6afabcad607e65829b0dd5ebdbce0.webm
-│   │   ├── b1dada5e1898d6eaf8210d5ebd1df8ca5db893b4.webm
-│   │   ├── b2e65bc641d7919dcf76d5393a02a4658d1c60f9.webm
-│   │   ├── b6607d52a0b548f9942e5d0e141d04a7f58df12e.webm
-│   │   ├── b8e0bce7fbf646873fb27e435c6338daaed49963.webm
-│   │   ├── b977fbfad85d1ee683786b09bf11de3bb68af641.webm
-│   │   ├── b9c2197da1d882889239250bb06611fa9ffae10c.webm
-│   │   ├── ba11869f9ba8282ac9efda97218ced1cf16d8070.webm
-│   │   ├── bb4c75857787c2adeb64fb62d583b642b6f45c53.webm
-│   │   ├── bc802a31f45e78fa2ef32c30886b8ace8acf2bf2.png
-│   │   ├── be2a374fbb4ab46081346ff4cdf055053b027d22.png
-│   │   ├── c4687e7850e49aabaa4dfe748600006f1d1bf4d9.png
-│   │   ├── c4a3b0221fd342acaed496b35d6bd75d5a85b0d1.webm
-│   │   ├── c552555b4c6cfaf40196434ad83b9ff03e33681e.webm
-│   │   ├── c92ee814e2c373704ac71171483ee3d01c936353.webm
-│   │   ├── c9bc675d5d32628848ffc804e04dd93aad87f4b3.webm
-│   │   ├── c9cc65e07ea705612659217d07f6da8940a755ff.webm
-│   │   ├── cb88ca92a8e639feb5aa1685c9429e6af792bb9e.webm
-│   │   ├── cc775f6ec38f46a874fc9970b91fd407ad18602a.webm
-│   │   ├── cca3e24c6a407d508944bedeb16d27ecf7bb04ba.png
-│   │   ├── cdf4b8a827044c853cff6bf5dc7c3d5fa6c51869.md
-│   │   ├── cf27fd39e7f1a82d8cd0f90639bac05a1e838f45.webm
-│   │   ├── d04c09d08cf5ecd9d00a86f56d333d7b393fbd5f.webm
-│   │   ├── d0f2e39495232e618371080dba279987bcffc918.webm
-│   │   ├── d1284d8ff026119e54c193987cca49f77d14167a.webm
-│   │   ├── d152e8436b1b79480a9fd82d8d3b57a674957635.webm
-│   │   ├── d18121ea2b160c4809a852df9d48ea5fa988caac.webm
-│   │   ├── d62ad99c0d6745fcfb841cc27cb70a1a0d95bba7.webm
-│   │   ├── d7ae5961680a93ea20cf4feaf8d7609131a1ac4c.webm
-│   │   ├── d8b120ef53dc5806cd23c196d469dd916ce03201.webm
-│   │   ├── d9fd106cf14dcf04ba535f5cf173efa9aa0f8e25.webm
-│   │   ├── dbbdf7c47e3c1eaac4d66bf5f273f6dfe7cbb0f1.png
-│   │   ├── debc883d116e7c0c896085a1e07e8611d515c4df.png
-│   │   ├── e54c932207589013ffe5718d131a3fa8a8419f06.md
-│   │   ├── e5fa20170086ab937838333cc3ed33606737e1cd.webm
-│   │   ├── e7daf44eccedf1447674d3577ca975f1186436e0.webm
-│   │   ├── e8c2db7f245843f62cf3a38127f6e60234c2430b.webm
-│   │   ├── e8c34059ed80184ad0822d773a5f4f416a3255a4.webm
-│   │   ├── e960845e82debdc74bc1d640485fe4a355c797f6.webm
-│   │   ├── ea1cf2db554a4d2f98abf315dee20fca73c4e6fd.webm
-│   │   ├── eb66ba05522b7d3c6f271aeb0615c55b2e752268.webm
-│   │   ├── eb8e726bca76b0baa39ea9030123ba6f7a1dd1cb.png
-│   │   ├── ed46d7a4e126cf38a39ae1998fc336e511f08966.webm
-│   │   ├── ed4b8f37e7c1f278c4daa4743830c03082ddaa9e.webm
-│   │   ├── ed8bc22c2f0f0b7dbe0360a026ab6eb2983f4a7e.webm
-│   │   ├── edbc7093ba92df5fc4d610f5b317be4447a56d35.webm
-│   │   ├── eea128a828d33027f27e7015ab891efd77ddaf1b.webm
-│   │   ├── ef5549b14ae97fe486873ed1ecc5e67e80d7486e.png
-│   │   ├── f116e65b33fd7c220992af14133c2446abe0110d.png
-│   │   ├── f48b977d356144cdf73cbc35d5058b375b97c986.webm
-│   │   ├── f4ade417799360fdf51d39df9e731d3918e129f4.webm
-│   │   ├── f4c3ad3fac75bf667f295fac805184e30c657ab8.webm
-│   │   ├── f52b89a8560af09f24d6d239e48508603757de83.webm
-│   │   ├── f614c341c59523fe694808ad6f7fd87907cd88b0.webm
-│   │   ├── f7971a77d41b6bd503c3d013b3316e93f4d6cd9e.webm
-│   │   ├── f98449b15d57ec01609160824b32da7b8968f0ef.md
-│   │   ├── fe7d26586a6e4045260bd43bd00177dea2bbd028.webm
-│   │   └── ff2b8009719566910776c4c6a7611023fa4bb381.md
-│   ├── index.html
-│   └── trace/
-│   │   ├── assets/
-│   │   ├── codeMirrorModule.DYBRYzYX.css
-│   │   ├── codicon.DCmgc-ay.ttf
-│   │   ├── defaultSettingsView.7ch9cixO.css
-│   │   ├── index.BDwrLSGN.js
-│   │   ├── index.BVu7tZDe.css
-│   │   ├── index.html
-│   │   ├── manifest.webmanifest
-│   │   ├── playwright-logo.svg
-│   │   ├── snapshot.html
-│   │   ├── sw.bundle.js
-│   │   ├── uiMode.Btcz36p_.css
-│   │   ├── uiMode.CQJ9SCIQ.js
-│   │   ├── uiMode.html
-│   │   └── xtermModule.DYP7pi_n.css
+│   ├── brunella-live/
+│   │   ├── 01-homepage-loaded.png
+│   │   ├── 02-after-hydration.png
+│   │   ├── 03-before-click.png
+│   │   ├── 04-after-click.png
+│   │   ├── 05-chat-panel-open.png
+│   │   ├── 06-message-typed.png
+│   │   ├── 07-message-sent.png
+│   │   └── 08-response-received.png
+│   └── index.html
 ├── playwright.config.ts
 ├── pnpm-lock.yaml
 ├── PROJEKT_DIAGRAM.md
+├── pr_fix_allow_pending_approval_state.md
 ├── public/
-│   └── index.html
+│   ├── index.html
+│   ├── manifest.json
+│   ├── p-sales-icon.svg
+│   ├── p-sales-sw.js
+│   └── p-sales.webmanifest
 ├── pyproject.toml
 ├── README.md
+├── RENDSZER.md
 ├── RENDSZER_DIAGRAM.md
-├── requirements.txt
-├── restore.json
-├── run-tests.cjs
+├── scene.md
 ├── schemas/
 │   ├── audit.sql
 │   ├── checkpoint.sql
 │   ├── settings.schema.json
 │   └── telemetry.sql
 ├── scripts/
+│   ├── 20260407_allow_pending_approval_state.sql
+│   ├── agent_health_check.ts
 │   ├── ai-chat-log.js
 │   ├── analyze_and_fix_02.py
+│   ├── auditCompletedTracks.mjs
 │   ├── audit_workspace.ts
 │   ├── bas_start_session.ps1
 │   ├── cean-phase2a-setup.ps1
+│   ├── check-active-track.mjs
+│   ├── check-wf5.py
 │   ├── check_tasks.js
 │   ├── cleanup-root.bat
 │   ├── cleanup_old_vectors.ts
 │   ├── cloudflare_check_workers.py
 │   ├── compare_registries.js
 │   ├── conductor_diagnostics.mjs
+│   ├── continual-learning-init.mjs
 │   ├── copilot-dashboard.js
 │   ├── copilot-dispatch.ps1
 │   ├── copilot-mcp-config.json
@@ -2397,6 +2847,8 @@
 │   │   ├── commit_testing.bat
 │   │   ├── pull_model.js
 │   │   └── test_ollama.js
+│   ├── export_registered_tools.mjs
+│   ├── export_tracks_to_sheet.js
 │   ├── find_missing_agents.js
 │   ├── fire_test_invoice_sync.ts
 │   ├── fix_n8n_credentials.mjs
@@ -2407,15 +2859,20 @@
 │   ├── git_sync.ps1
 │   ├── gmail_iszapfalo_extract.py
 │   ├── gmail_iszapfalo_extract.py.bak
+│   ├── google_workspace/
+│   │   └── oauth_demo/
 │   ├── health_check.js
 │   ├── health_check.ts
+│   ├── hook-proof.mjs
 │   ├── init_lancedb.py
+│   ├── inspect_dom.js
 │   ├── jules-sync.bat
 │   ├── jules_api_client.py
 │   ├── jules_check.mjs
 │   ├── jules_cli_wrapper.py
 │   ├── JULES_SYNC_README.md
 │   ├── jules_sync_watchdog.py
+│   ├── kill-brunella-ghosts.bat
 │   ├── konyveles_discovery_run.js
 │   ├── launchers/
 │   │   ├── launch_anythingllm_console.bat
@@ -2424,12 +2881,19 @@
 │   │   ├── launch_ollama_console.bat
 │   │   ├── launch_python_api_console.bat
 │   │   └── launch_windows_bridge_console.bat
+│   ├── launch_p_sales_pilot.ts
+│   ├── lib/
+│   │   └── trackAudit.mjs
 │   ├── log_rotate.bat
 │   ├── migrate-embeddings.ts
 │   ├── migrate_lancedb_to_vectorize.ts
+│   ├── migrations/
+│   │   └── 20260407_allow_pending_approval_state.sql
 │   ├── Modelfile.nightly
 │   ├── monitor_loop.py
 │   ├── monitor_workflows.sh
+│   ├── n8n-playwright-automation.cjs
+│   ├── n8n-playwright-automation.js
 │   ├── nightly_train.ps1
 │   ├── patch_gmail.py
 │   ├── pre-commit-docs.cjs
@@ -2440,12 +2904,17 @@
 │   ├── robotkez_test_level1.py
 │   ├── robotkez_test_level2_n8n.py
 │   ├── robotkez_test_level3_monitoring.py
+│   ├── rotate-cloudflare-secrets.ts
 │   ├── rotate_api_keys.ps1
+│   ├── run-integration-tests.mjs
+│   ├── run-stable-with-contract.cjs
 │   ├── run.cmd
+│   ├── runtime-threshold-contract.cjs
 │   ├── run_2026_campaign.ts
 │   ├── run_ev_hunter.ps1
 │   ├── run_jules_self_heal.mjs
 │   ├── security_check.mjs
+│   ├── service-preflight.mjs
 │   ├── setup-d1-advanced.ps1
 │   ├── setup-d1-ascii.ps1
 │   ├── setup-d1-auto.ps1
@@ -2462,8 +2931,10 @@
 │   ├── spec-freeze-check.cjs
 │   ├── start-chrome-acp.bat
 │   ├── start-chrome-acp.ps1
+│   ├── start-chrome-debug.bat
 │   ├── start-litellm.bat
 │   ├── start-litellm.sh
+│   ├── start-stable.mjs
 │   ├── startup_smoke_test.ts
 │   ├── start_architect.ps1
 │   ├── start_brunella.ps1
@@ -2471,13 +2942,22 @@
 │   ├── start_default.ps1
 │   ├── start_remote.ps1
 │   ├── start_server_debug.ps1
+│   ├── supervisors/
+│   │   ├── linux/
+│   │   └── windows/
+│   ├── sync/
+│   │   └── precommit-track-guard.mts
 │   ├── sync-agent.js
 │   ├── sync.bat
 │   ├── sync.ps1
 │   ├── sync.sh
+│   ├── sync_bootstrap.ts
 │   ├── sync_conductor.py
+│   ├── sync_docs.ts
+│   ├── sync_doc_stats.ts
 │   ├── sync_foszal.py
 │   ├── sync_gemini_app.ps1
+│   ├── sync_mcp_config.js
 │   ├── SYNC_README.md
 │   ├── test-workflow.yaml
 │   ├── test_bridge.ts
@@ -2491,23 +2971,258 @@
 │   ├── test_webhook_e2e.ts
 │   ├── trigger_golden_run.ts
 │   ├── trigger_golden_run_property.ts
+│   ├── update-wf5-sheets.ps1
 │   ├── update_master_context.ts
 │   ├── update_ollama_model.bat
+│   ├── validate-track-dod.mjs
+│   ├── validate_mcp_config.js
+│   ├── vv_html_to_pdf.mjs
 │   └── watch-changes.js
 ├── SECURITY.md
-├── server_output.log
-├── show_tasks_db_tables.py
+├── skills/
+│   ├── cloud-solution-architect/
+│   │   ├── references/
+│   │   └── SKILL.md
+│   ├── continual-learning/
+│   │   └── SKILL.md
+│   ├── copilot-sdk/
+│   │   ├── references/
+│   │   └── SKILL.md
+│   ├── entra-agent-id/
+│   │   ├── references/
+│   │   └── SKILL.md
+│   ├── frontend-design-review/
+│   │   ├── references/
+│   │   └── SKILL.md
+│   ├── github-issue-creator/
+│   │   ├── references/
+│   │   └── SKILL.md
+│   ├── gws-admin-reports/
+│   │   └── SKILL.md
+│   ├── gws-calendar/
+│   │   └── SKILL.md
+│   ├── gws-calendar-agenda/
+│   │   └── SKILL.md
+│   ├── gws-calendar-insert/
+│   │   └── SKILL.md
+│   ├── gws-chat/
+│   │   └── SKILL.md
+│   ├── gws-chat-send/
+│   │   └── SKILL.md
+│   ├── gws-classroom/
+│   │   └── SKILL.md
+│   ├── gws-docs/
+│   │   └── SKILL.md
+│   ├── gws-docs-write/
+│   │   └── SKILL.md
+│   ├── gws-drive/
+│   │   └── SKILL.md
+│   ├── gws-drive-upload/
+│   │   └── SKILL.md
+│   ├── gws-events/
+│   │   └── SKILL.md
+│   ├── gws-events-renew/
+│   │   └── SKILL.md
+│   ├── gws-events-subscribe/
+│   │   └── SKILL.md
+│   ├── gws-forms/
+│   │   └── SKILL.md
+│   ├── gws-gmail/
+│   │   └── SKILL.md
+│   ├── gws-gmail-forward/
+│   │   └── SKILL.md
+│   ├── gws-gmail-read/
+│   │   └── SKILL.md
+│   ├── gws-gmail-reply/
+│   │   └── SKILL.md
+│   ├── gws-gmail-reply-all/
+│   │   └── SKILL.md
+│   ├── gws-gmail-send/
+│   │   └── SKILL.md
+│   ├── gws-gmail-triage/
+│   │   └── SKILL.md
+│   ├── gws-gmail-watch/
+│   │   └── SKILL.md
+│   ├── gws-keep/
+│   │   └── SKILL.md
+│   ├── gws-meet/
+│   │   └── SKILL.md
+│   ├── gws-modelarmor/
+│   │   └── SKILL.md
+│   ├── gws-modelarmor-create-template/
+│   │   └── SKILL.md
+│   ├── gws-modelarmor-sanitize-prompt/
+│   │   └── SKILL.md
+│   ├── gws-modelarmor-sanitize-response/
+│   │   └── SKILL.md
+│   ├── gws-people/
+│   │   └── SKILL.md
+│   ├── gws-script/
+│   │   └── SKILL.md
+│   ├── gws-script-push/
+│   │   └── SKILL.md
+│   ├── gws-shared/
+│   │   └── SKILL.md
+│   ├── gws-sheets/
+│   │   └── SKILL.md
+│   ├── gws-sheets-append/
+│   │   └── SKILL.md
+│   ├── gws-sheets-read/
+│   │   └── SKILL.md
+│   ├── gws-slides/
+│   │   └── SKILL.md
+│   ├── gws-tasks/
+│   │   └── SKILL.md
+│   ├── gws-workflow/
+│   │   └── SKILL.md
+│   ├── gws-workflow-email-to-task/
+│   │   └── SKILL.md
+│   ├── gws-workflow-file-announce/
+│   │   └── SKILL.md
+│   ├── gws-workflow-meeting-prep/
+│   │   └── SKILL.md
+│   ├── gws-workflow-standup-report/
+│   │   └── SKILL.md
+│   ├── gws-workflow-weekly-digest/
+│   │   └── SKILL.md
+│   ├── mcp-builder/
+│   │   ├── reference/
+│   │   ├── references/
+│   │   ├── scripts/
+│   │   └── SKILL.md
+│   ├── microsoft-docs/
+│   │   └── SKILL.md
+│   ├── persona-content-creator/
+│   │   └── SKILL.md
+│   ├── persona-customer-support/
+│   │   └── SKILL.md
+│   ├── persona-event-coordinator/
+│   │   └── SKILL.md
+│   ├── persona-exec-assistant/
+│   │   └── SKILL.md
+│   ├── persona-hr-coordinator/
+│   │   └── SKILL.md
+│   ├── persona-it-admin/
+│   │   └── SKILL.md
+│   ├── persona-project-manager/
+│   │   └── SKILL.md
+│   ├── persona-researcher/
+│   │   └── SKILL.md
+│   ├── persona-sales-ops/
+│   │   └── SKILL.md
+│   ├── persona-team-lead/
+│   │   └── SKILL.md
+│   ├── podcast-generation/
+│   │   ├── references/
+│   │   ├── scripts/
+│   │   └── SKILL.md
+│   ├── recipe-backup-sheet-as-csv/
+│   │   └── SKILL.md
+│   ├── recipe-batch-invite-to-event/
+│   │   └── SKILL.md
+│   ├── recipe-block-focus-time/
+│   │   └── SKILL.md
+│   ├── recipe-bulk-download-folder/
+│   │   └── SKILL.md
+│   ├── recipe-collect-form-responses/
+│   │   └── SKILL.md
+│   ├── recipe-compare-sheet-tabs/
+│   │   └── SKILL.md
+│   ├── recipe-copy-sheet-for-new-month/
+│   │   └── SKILL.md
+│   ├── recipe-create-classroom-course/
+│   │   └── SKILL.md
+│   ├── recipe-create-doc-from-template/
+│   │   └── SKILL.md
+│   ├── recipe-create-events-from-sheet/
+│   │   └── SKILL.md
+│   ├── recipe-create-expense-tracker/
+│   │   └── SKILL.md
+│   ├── recipe-create-feedback-form/
+│   │   └── SKILL.md
+│   ├── recipe-create-gmail-filter/
+│   │   └── SKILL.md
+│   ├── recipe-create-meet-space/
+│   │   └── SKILL.md
+│   ├── recipe-create-presentation/
+│   │   └── SKILL.md
+│   ├── recipe-create-shared-drive/
+│   │   └── SKILL.md
+│   ├── recipe-create-task-list/
+│   │   └── SKILL.md
+│   ├── recipe-create-vacation-responder/
+│   │   └── SKILL.md
+│   ├── recipe-draft-email-from-doc/
+│   │   └── SKILL.md
+│   ├── recipe-email-drive-link/
+│   │   └── SKILL.md
+│   ├── recipe-find-free-time/
+│   │   └── SKILL.md
+│   ├── recipe-find-large-files/
+│   │   └── SKILL.md
+│   ├── recipe-forward-labeled-emails/
+│   │   └── SKILL.md
+│   ├── recipe-generate-report-from-sheet/
+│   │   └── SKILL.md
+│   ├── recipe-label-and-archive-emails/
+│   │   └── SKILL.md
+│   ├── recipe-log-deal-update/
+│   │   └── SKILL.md
+│   ├── recipe-organize-drive-folder/
+│   │   └── SKILL.md
+│   ├── recipe-plan-weekly-schedule/
+│   │   └── SKILL.md
+│   ├── recipe-post-mortem-setup/
+│   │   └── SKILL.md
+│   ├── recipe-reschedule-meeting/
+│   │   └── SKILL.md
+│   ├── recipe-review-meet-participants/
+│   │   └── SKILL.md
+│   ├── recipe-review-overdue-tasks/
+│   │   └── SKILL.md
+│   ├── recipe-save-email-attachments/
+│   │   └── SKILL.md
+│   ├── recipe-save-email-to-doc/
+│   │   └── SKILL.md
+│   ├── recipe-schedule-recurring-event/
+│   │   └── SKILL.md
+│   ├── recipe-send-team-announcement/
+│   │   └── SKILL.md
+│   ├── recipe-share-doc-and-notify/
+│   │   └── SKILL.md
+│   ├── recipe-share-event-materials/
+│   │   └── SKILL.md
+│   ├── recipe-share-folder-with-team/
+│   │   └── SKILL.md
+│   ├── recipe-sync-contacts-to-sheet/
+│   │   └── SKILL.md
+│   ├── recipe-watch-drive-changes/
+│   │   └── SKILL.md
+│   ├── skill-creator/
+│   │   ├── references/
+│   │   ├── scripts/
+│   │   └── SKILL.md
+│   └── using-superpowers/
+│   │   ├── references/
+│   │   └── SKILL.md
+├── skills-lock.json
 ├── src/
 │   ├── agents/
+│   │   ├── AccountingPipelineAgent.ts
+│   │   ├── AdvancedMatchingAgent.ts
 │   │   ├── AgentArchitect.ts
 │   │   ├── agentLoader.ts
 │   │   ├── AgentManager.ts
 │   │   ├── agentRouting.ts
+│   │   ├── AIResearchWeeklyAgent.ts
+│   │   ├── AnomalyDetectionAgent.ts
 │   │   ├── ApifyScrapingAgent.ts
 │   │   ├── ArchitectAgent.ts
 │   │   ├── BankAgent.ts
 │   │   ├── BaseAgent.ts
+│   │   ├── BrunellaProjectManagerAgent.ts
 │   │   ├── CampaignGeneratorAgent.ts
+│   │   ├── CashFlowPredictionAgent.ts
 │   │   ├── ChromeDevToolsAgent.ts
 │   │   ├── cloudflare/
 │   │   ├── codeReview.ts
@@ -2517,7 +3232,9 @@
 │   │   ├── contextBuilder.ts
 │   │   ├── coverageAnalysis.ts
 │   │   ├── CriticAgent.ts
+│   │   ├── DailyAgentBriefingAgent.ts
 │   │   ├── DataScientistAgent.ts
+│   │   ├── DemandForecastAgent.ts
 │   │   ├── DependencyGraphAgent.ts
 │   │   ├── DeveloperAgent.ts
 │   │   ├── developerPipeline.ts
@@ -2544,7 +3261,14 @@
 │   │   ├── GrantWatcherAgent.ts
 │   │   ├── HeadHunterAgent.ts
 │   │   ├── InnovationBridgeAgent.ts
+│   │   ├── IntakeSurveyAgent.ts
+│   │   ├── InventoryAdjustmentAgent.ts
+│   │   ├── InventoryFifoAgent.ts
+│   │   ├── InventoryPipelineAgent.ts
+│   │   ├── InventoryWacAgent.ts
 │   │   ├── InvoiceAutomationAgent.ts
+│   │   ├── issueFixLoop.ts
+│   │   ├── KKVCrmAgent.ts
 │   │   ├── KnowledgeBaseBuilderAgent.ts
 │   │   ├── KnowledgeBuilder.ts
 │   │   ├── LawDetectiveAgent.ts
@@ -2561,22 +3285,32 @@
 │   │   ├── MatchingAgent.ts
 │   │   ├── middleware/
 │   │   ├── NavAgent.ts
+│   │   ├── NavCrossCheckAgent.ts
 │   │   ├── NurturerAgent.ts
+│   │   ├── OCRAgent.ts
 │   │   ├── OrchestratorAgent.ts
 │   │   ├── permissions.ts
+│   │   ├── PettyCashAgent.ts
 │   │   ├── PricingAgent.ts
 │   │   ├── ProactiveClaimsAgent.ts
 │   │   ├── ProcurementAgent.ts
 │   │   ├── ProjectConductorAgent.ts
+│   │   ├── ProjectMaintainerAgent.ts
 │   │   ├── PropertyAnalystAgent.ts
+│   │   ├── PropertyResearchAgent.ts
 │   │   ├── PropertyVisionaryAgent.ts
+│   │   ├── PurchaseOrderAgent.ts
 │   │   ├── PythonAgent.ts
+│   │   ├── ReconciliationCommunicationAgent.ts
+│   │   ├── ReconciliationExceptionAgent.ts
+│   │   ├── ReconciliationIngestionAgent.ts
 │   │   ├── registry.json
 │   │   ├── registryStandard.ts
 │   │   ├── registryValidation.ts
 │   │   ├── ResearcherAgent.ts
 │   │   ├── RobotkezAgent.ts
 │   │   ├── RobotkezV2Agent.ts
+│   │   ├── SafetyStockAgent.ts
 │   │   ├── SalesAgent.ts
 │   │   ├── SalesHunterAgent.ts
 │   │   ├── schemas/
@@ -2585,17 +3319,25 @@
 │   │   ├── SheetsSyncAgent.ts
 │   │   ├── specStatus.ts
 │   │   ├── SpecWriterAgent.ts
+│   │   ├── StocktakeReconciliationAgent.ts
+│   │   ├── StocktakeReportAgent.ts
+│   │   ├── StrategyPlannerAgent.ts
 │   │   ├── swarm/
+│   │   ├── SzamlazzHuAgent.ts
 │   │   ├── TaskDecomposerAgent.ts
 │   │   ├── taskDecomposerCore.ts
 │   │   ├── taskQueue.ts
 │   │   ├── types.ts
 │   │   ├── UXDesignerAgent.ts
+│   │   ├── ViktoriaPhygitalAgent.ts
 │   │   └── VoiceAgent.ts
 │   ├── analytics.ts
 │   ├── cli/
+│   │   ├── agentGovernanceCommands.ts
 │   │   ├── bookkeepingCommands.ts
+│   │   ├── briefingCommands.ts
 │   │   ├── browserCopilotCommands.ts
+│   │   ├── chaosCommands.ts
 │   │   ├── chromeAcpCommands.ts
 │   │   ├── commands/
 │   │   ├── conductorCommands.ts
@@ -2603,21 +3345,42 @@
 │   │   ├── dashboardCommands.test.ts
 │   │   ├── dashboardCommands.ts
 │   │   ├── devCommands.ts
+│   │   ├── devexCommands.ts
+│   │   ├── docsConfigCommands.ts
 │   │   ├── edgeCommands.ts
+│   │   ├── externalKnowledgeCommands.ts
+│   │   ├── federationCommands.ts
 │   │   ├── goldCommands.ts
 │   │   ├── guardrailsCommands.ts
+│   │   ├── hookCommands.ts
+│   │   ├── hooksCommands.ts
+│   │   ├── hrCommands.ts
+│   │   ├── hrOnboardingCommands.ts
+│   │   ├── hrTimesheetCommands.ts
+│   │   ├── intelligenceCommands.ts
+│   │   ├── inventoryCommands.ts
 │   │   ├── invoiceCommands.ts
 │   │   ├── invoiceSync.ts
+│   │   ├── kkvFinanceCommands.ts
+│   │   ├── kkvPackCommands.ts
 │   │   ├── leadCommands.ts
+│   │   ├── learningLoopCommands.ts
 │   │   ├── marketCommands.ts
 │   │   ├── memoriaCommands.ts
 │   │   ├── memoryCommands.ts
 │   │   ├── observabilityCommands.ts
+│   │   ├── palyazatCommands.ts
+│   │   ├── predictiveDecisionCommands.ts
 │   │   ├── progressCommands.ts
+│   │   ├── projectMaintainerCommands.ts
 │   │   ├── propertySalesCommands.ts
+│   │   ├── reflectionCommands.ts
+│   │   ├── remediationCommands.ts
 │   │   ├── robotkezCommands.ts
 │   │   ├── scheduledTasksCommands.ts
+│   │   ├── sdlcCommands.ts
 │   │   ├── securityCommands.ts
+│   │   ├── selfModificationCommands.ts
 │   │   ├── suggestedTasksCommands.ts
 │   │   ├── swarmCommands.ts
 │   │   ├── taskCommands.ts
@@ -2625,7 +3388,8 @@
 │   │   ├── toolDiscoveryCommands.ts
 │   │   ├── tracksCommands.ts
 │   │   ├── workflowCommands.ts
-│   │   └── workspaceCommands.ts
+│   │   ├── workspaceCommands.ts
+│   │   └── worldPerceptionCommands.ts
 │   ├── cli-edge.ts
 │   ├── cli-hu.ts
 │   ├── cli-jules-interactive.ts
@@ -2633,7 +3397,9 @@
 │   ├── clients/
 │   │   └── navClient.ts
 │   ├── config/
+│   │   ├── developerProfile.ts
 │   │   ├── index.ts
+│   │   ├── outreachTemplates.ts
 │   │   ├── paiosConfig.ts
 │   │   └── schema.ts
 │   ├── connectors/
@@ -2641,72 +3407,146 @@
 │   │   └── imapConnector.ts
 │   ├── core/
 │   │   ├── adaptiveFlow.ts
+│   │   ├── advancedHooks.ts
+│   │   ├── agentCoordinator.ts
+│   │   ├── agentHookEngine.ts
+│   │   ├── agentPerformanceTracker.ts
+│   │   ├── agentRateLimiter.ts
 │   │   ├── agentStateMachine.ts
+│   │   ├── ambientContext.ts
+│   │   ├── approvalRouter.ts
 │   │   ├── assistantBlueprint.ts
 │   │   ├── auditLog.ts
 │   │   ├── autonomousInfraRuntime.ts
+│   │   ├── autonomyRuntimeStore.ts
 │   │   ├── bifrost_gateway.ts
+│   │   ├── businessPolicies.ts
+│   │   ├── ceanAutoDeploy.ts
 │   │   ├── ceanFallback.ts
 │   │   ├── checkpoint.ts
 │   │   ├── codebaseIndexer.ts
 │   │   ├── collectiveMind.ts
+│   │   ├── commandBus.ts
+│   │   ├── conductor.ts
+│   │   ├── contextFusion.ts
 │   │   ├── copilotBridgeState.ts
 │   │   ├── copilotCognitiveBridge.ts
+│   │   ├── copilotFeedbackChannel.ts
+│   │   ├── copilotOrchestratorBridge.ts
+│   │   ├── criticQuickReview.ts
+│   │   ├── crmFollowUpDelivery.ts
 │   │   ├── dagEngine.ts
+│   │   ├── deadlockDetector.ts
+│   │   ├── decisionExecutor.ts
+│   │   ├── decisionTypes.ts
 │   │   ├── deviceOrchestrator.ts
 │   │   ├── dynamicToolRegistry.ts
 │   │   ├── edgeHealthMonitor.ts
 │   │   ├── edgeRouter.ts
+│   │   ├── ephemeralAgentExecutor.ts
+│   │   ├── ephemeralAgentManager.ts
+│   │   ├── ephemeralAudit.ts
+│   │   ├── ephemeralLeaseManager.ts
+│   │   ├── ephemeralSandbox.ts
+│   │   ├── ephemeralScopedToolRegistry.ts
+│   │   ├── ethicalConstraintLayer.ts
 │   │   ├── eventBus.ts
+│   │   ├── eventFabric.ts
+│   │   ├── eventStore.ts
 │   │   ├── failoverRegistry.ts
+│   │   ├── federation/
 │   │   ├── geneticFlow.ts
 │   │   ├── githubAPIClient.ts
+│   │   ├── githubPollingService.ts
+│   │   ├── githubRemediationRuntime.ts
+│   │   ├── githubWebhookIngress.ts
 │   │   ├── gitRecovery.ts
 │   │   ├── globalOptimizer.ts
 │   │   ├── goalEngine.ts
 │   │   ├── goldenDatasetBridge.ts
 │   │   ├── graphRagEngine.ts
+│   │   ├── guardrail.ts
 │   │   ├── hashUtils.ts
+│   │   ├── hookAuditTrail.ts
+│   │   ├── hookCircuitBreaker.ts
+│   │   ├── hookDlq.ts
+│   │   ├── hookEngine.ts
+│   │   ├── hookRegistry.ts
+│   │   ├── hooks/
+│   │   ├── intelligenceMonitor.ts
 │   │   ├── intentAnalyzer.ts
+│   │   ├── intentRouter.ts
+│   │   ├── invoicePipeline.ts
 │   │   ├── julesAutomationService.ts
 │   │   ├── julesConfigParser.ts
 │   │   ├── julesIntegration.ts
 │   │   ├── julesMock.ts
+│   │   ├── kernelEventBus.ts
+│   │   ├── kernelTypes.ts
 │   │   ├── knowledgeGraph.ts
+│   │   ├── learningLoopService.ts
 │   │   ├── llm_client.ts
+│   │   ├── materializedViewEngine.ts
 │   │   ├── mcpDiscovery.ts
 │   │   ├── MCPRouter.ts
+│   │   ├── mcpToolHook.ts
+│   │   ├── memoryArchitecture.ts
 │   │   ├── metaReasoner.ts
 │   │   ├── mobileClientBootstrap.ts
 │   │   ├── modelRouter.ts
+│   │   ├── notificationChannels.ts
 │   │   ├── offlineSync.ts
 │   │   ├── ollama_mcp_client.ts
+│   │   ├── organizationalSelfModel.ts
+│   │   ├── outboxProcessor.ts
+│   │   ├── outputGuard.ts
 │   │   ├── paiosRemoteIntegration.ts
 │   │   ├── patternReuse.ts
 │   │   ├── phoenixEventBus.ts
+│   │   ├── phoenixHookBridge.ts
 │   │   ├── phoenixReplication.ts
+│   │   ├── planner.ts
+│   │   ├── policyEngine.ts
+│   │   ├── predictiveDecisionEngine.ts
 │   │   ├── predictiveIntelligence.ts
 │   │   ├── predictiveRouter.ts
 │   │   ├── processMonitor.ts
 │   │   ├── prometheus.ts
+│   │   ├── queryBus.ts
 │   │   ├── rbac/
+│   │   ├── reactLoop.ts
 │   │   ├── reflectionEngine.ts
+│   │   ├── reflexModelRegistry.ts
+│   │   ├── remediationRuntime.types.ts
+│   │   ├── remediationStrategy.ts
 │   │   ├── remoteEventBridge.ts
 │   │   ├── remoteFileAccess.ts
 │   │   ├── RemoteSessionManager.ts
 │   │   ├── remoteSessionStore.ts
 │   │   ├── retryStrategy.ts
+│   │   ├── safeCommandPolicy.ts
+│   │   ├── sagaOrchestrator.ts
 │   │   ├── sandbox/
+│   │   ├── sandboxManager.ts
 │   │   ├── scheduledTasksEngine.ts
+│   │   ├── sdlcHooks.ts
+│   │   ├── sdlcPipeline.ts
 │   │   ├── securityEventsMonitor.ts
+│   │   ├── selfDiagnostics.ts
 │   │   ├── selfModel.ts
+│   │   ├── selfModificationEngine.ts
 │   │   ├── sharedCognition.ts
 │   │   ├── slackNotifications.ts
+│   │   ├── strategicGoalEngine.ts
 │   │   ├── structuredMemory.ts
 │   │   ├── suggestedTasksScanner.ts
 │   │   ├── swarm/
+│   │   ├── SwarmChatManager.ts
+│   │   ├── temporalWorkflow.ts
 │   │   ├── testResultsService.ts
 │   │   ├── toolComposition.ts
+│   │   ├── toolErrorClassifier.ts
+│   │   ├── toolExecutor.ts
 │   │   ├── toolRegistry.ts
 │   │   ├── toolRunCapture.ts
 │   │   ├── types/
@@ -2715,7 +3555,11 @@
 │   │   ├── userPreferences.ts
 │   │   ├── voicePipeline.ts
 │   │   ├── workerThreadPool.ts
-│   │   └── worker_thread_executor.ts
+│   │   ├── worker_thread_executor.ts
+│   │   ├── workingMemory.ts
+│   │   ├── worldPerceptionLayer.ts
+│   │   ├── zeroPromptEdgeMirrorSummary.ts
+│   │   └── zeroPromptRuntime.ts
 │   ├── dashboard/
 │   │   ├── App.tsx
 │   │   ├── assets/
@@ -2726,6 +3570,7 @@
 │   │   ├── data/
 │   │   ├── ErrorFallback.tsx
 │   │   ├── hooks/
+│   │   ├── i18n/
 │   │   ├── index.css
 │   │   ├── index.html
 │   │   ├── lib/
@@ -2746,7 +3591,9 @@
 │   │   └── vite.config.ts
 │   ├── data/
 │   │   ├── bookkeeping_db.ts
+│   │   ├── crm_db.ts
 │   │   ├── pSalesTrack.ts
+│   │   ├── psales_db.ts
 │   │   ├── triz_matrix.json
 │   │   └── triz_principles.json
 │   ├── database/
@@ -2763,6 +3610,12 @@
 │   ├── kernel/
 │   │   ├── BrunellaKernel.ts
 │   │   └── HyperKernel.ts
+│   ├── kkv/
+│   │   └── financeAutomation.ts
+│   ├── lib/
+│   │   ├── apiService.ts
+│   │   ├── grantFlow.ts
+│   │   └── utils.ts
 │   ├── matching/
 │   │   └── matcher.ts
 │   ├── mesh/
@@ -2780,8 +3633,10 @@
 │   │   └── systemPrompt/
 │   ├── p-sales-standalone/
 │   │   ├── App.tsx
+│   │   ├── auth/
 │   │   ├── index.html
-│   │   └── main.tsx
+│   │   ├── main.tsx
+│   │   └── tenant.config.ts
 │   ├── pipeline/
 │   │   ├── alertDispatcher.ts
 │   │   ├── llmPipeline.ts
@@ -2790,11 +3645,14 @@
 │   │   └── enterpriseApi.ts
 │   ├── security/
 │   │   ├── e2b_sandbox_manager.ts
+│   │   ├── federationPeerAuth.ts
+│   │   ├── federationPeerProof.ts
 │   │   ├── index.ts
 │   │   ├── redactor.ts
 │   │   ├── remoteAuth.ts
 │   │   └── safe_zone_validator.ts
 │   ├── server/
+│   │   ├── agentRegistryGovernance.ts
 │   │   ├── auditRoutes.ts
 │   │   ├── cron.ts
 │   │   ├── guardrailsRoutes.ts
@@ -2808,12 +3666,15 @@
 │   │   ├── routerRoutes.ts
 │   │   ├── routes/
 │   │   ├── schedulers/
+│   │   ├── services/
 │   │   ├── SocketService.ts
 │   │   ├── specRoutes.ts
 │   │   ├── swagger.ts
 │   │   ├── SystemController.ts
+│   │   ├── szamlazzBridge.ts
 │   │   ├── telemetryRoutes.ts
 │   │   ├── ToolManager.ts
+│   │   ├── toolRegistry.ts
 │   │   ├── tracksRoutes.ts
 │   │   ├── web.ts
 │   │   └── websocket.ts
@@ -2823,7 +3684,11 @@
 │   ├── services/
 │   │   ├── anthropicClient.ts
 │   │   ├── BrowserCopilotSessionService.ts
+│   │   ├── brunellaProjectManagerFoszal.ts
+│   │   ├── brunellaProjectManagerRag.ts
+│   │   ├── brunellaProjectManagerStatus.ts
 │   │   ├── emailValidator.ts
+│   │   ├── fastApiService.ts
 │   │   ├── fleetService.ts
 │   │   ├── metricsArchiveService.ts
 │   │   ├── metricsService.ts
@@ -2831,17 +3696,41 @@
 │   │   ├── outreachService.ts
 │   │   ├── RobotkezProService.ts
 │   │   ├── scalingService.ts
-│   │   └── trackStateManager.ts
+│   │   ├── trackStateManager.ts
+│   │   ├── trackStatusSnapshot.ts
+│   │   └── ViktoriaRefinementService.ts
+│   ├── skills/
+│   │   ├── ContentWriterSkill.ts
+│   │   ├── FinanceReportSkill.ts
+│   │   ├── index.ts
+│   │   ├── LeadHunterSkill.ts
+│   │   ├── MarketWatchSkill.ts
+│   │   ├── NegotiationSkill.ts
+│   │   ├── skill-helpers.ts
+│   │   ├── skill-registry.ts
+│   │   ├── skill.interface.ts
+│   │   └── WorkflowTriggerSkill.ts
 │   ├── SUMMARY.md
 │   ├── tools/
+│   │   ├── agentRegistryAudit.ts
+│   │   ├── agentRegistryRecommendations.ts
 │   │   ├── anythingllm.ts
 │   │   ├── browser.ts
 │   │   ├── browserBridge.ts
+│   │   ├── brunellaPmStatus.ts
 │   │   ├── claudeTool.ts
+│   │   ├── configGuardian.ts
 │   │   ├── copilotCliTool.ts
 │   │   ├── crawl4aiTool.ts
+│   │   ├── crm_create_lead.ts
+│   │   ├── dataFlywheelMetrics.ts
 │   │   ├── deploymentAnalyzer.ts
+│   │   ├── devExTypes.ts
+│   │   ├── docsConfigSot.ts
+│   │   ├── docUnifier.ts
+│   │   ├── ephemeralAgentControl.ts
 │   │   ├── evHunterTool.ts
+│   │   ├── externalKnowledge.ts
 │   │   ├── geminiTool.ts
 │   │   ├── getAiRecommendation.ts
 │   │   ├── getSzamlazzInvoices.ts
@@ -2851,15 +3740,25 @@
 │   │   ├── googleWorkspace.ts
 │   │   ├── interpreter.ts
 │   │   ├── julesCliTool.ts
+│   │   ├── kkvFinancePack.ts
+│   │   ├── kkvInventoryPack.ts
+│   │   ├── kkvLogisticsPack.ts
+│   │   ├── kkvPack.ts
 │   │   ├── knowledge.ts
+│   │   ├── learningLoopTools.ts
 │   │   ├── memoryTool.ts
+│   │   ├── missionPlanner.ts
 │   │   ├── monitor.ts
 │   │   ├── n8n.ts
 │   │   ├── negotiationEngine.ts
+│   │   ├── observabilityTools.ts
 │   │   ├── ollamaTool.ts
 │   │   ├── persistentBrowserTools.ts
+│   │   ├── phoenixInsights.ts
 │   │   ├── swarmTools.ts
 │   │   ├── system.ts
+│   │   ├── taskManagement.ts
+│   │   ├── testCadenceAdvisor.ts
 │   │   ├── testSchedulerTool.ts
 │   │   ├── toolPermissions.ts
 │   │   ├── unifiedGoogleWorkspaceTool.ts
@@ -2873,29 +3772,43 @@
 │   │   ├── deploymentErrors.ts
 │   │   ├── enterprise.ts
 │   │   ├── github.ts
+│   │   ├── hrTimesheetStatus.ts
+│   │   ├── inventory.d.ts
 │   │   ├── llm.ts
-│   │   └── property.ts
+│   │   ├── property.ts
+│   │   └── trackStatus.ts
 │   ├── utils/
+│   │   ├── accountingKbIngest.ts
 │   │   ├── activityFeed.ts
 │   │   ├── agentTracer.ts
 │   │   ├── aiGateway.ts
+│   │   ├── aiHelpers.ts
 │   │   ├── AppError.ts
 │   │   ├── approvalManager.ts
 │   │   ├── backgroundTaskManager.ts
+│   │   ├── bookkeepingReadiness.ts
+│   │   ├── browserEndpoint.ts
 │   │   ├── browserEngine.ts
 │   │   ├── browserRendering.ts
 │   │   ├── BrunellaRemoteClient.ts
+│   │   ├── businessAutomationStatus.ts
+│   │   ├── chaos_injector.ts
 │   │   ├── checkpoint.ts
 │   │   ├── cliConfig.ts
+│   │   ├── cliOutput.ts
 │   │   ├── cloudflareBrowser.ts
 │   │   ├── cloudflareClient.ts
 │   │   ├── cloudflareConfig.ts
 │   │   ├── cloud_storage.ts
+│   │   ├── crmFollowUp.ts
+│   │   ├── crmLead.ts
 │   │   ├── d1Adapter.ts
 │   │   ├── dagSort.ts
+│   │   ├── databaseManager.ts
 │   │   ├── db.ts
 │   │   ├── degradationPolicy.ts
 │   │   ├── developerMetrics.ts
+│   │   ├── ensureError.ts
 │   │   ├── exec.ts
 │   │   ├── fixQueue.ts
 │   │   ├── fsInspector.ts
@@ -2905,34 +3818,58 @@
 │   │   ├── health_check.ts
 │   │   ├── heartbeatMonitor.ts
 │   │   ├── hooks.ts
+│   │   ├── hrOnboarding.ts
+│   │   ├── hrOnboardingDryRun.ts
+│   │   ├── inventoryDb.ts
 │   │   ├── kvCache.ts
 │   │   ├── lancedb_client.ts
 │   │   ├── llmPlanner.ts
 │   │   ├── logger.ts
 │   │   ├── mcpClient.ts
 │   │   ├── mcpClientManager.ts
+│   │   ├── mcpResponse.ts
 │   │   ├── memoryContext.ts
 │   │   ├── metrics.ts
+│   │   ├── n8nClient.ts
+│   │   ├── navClient.ts
+│   │   ├── navRequestBuilder.ts
+│   │   ├── navSigner.ts
 │   │   ├── notificationService.ts
 │   │   ├── otelTracing.ts
 │   │   ├── persistentBrowser.ts
+│   │   ├── prebuiltTools.ts
+│   │   ├── processUtils.ts
 │   │   ├── pythonBridge.ts
 │   │   ├── pythonShell.ts
+│   │   ├── pythonUtils.ts
 │   │   ├── rag.ts
+│   │   ├── reportWriter.ts
 │   │   ├── responseFormatter.ts
+│   │   ├── runtimeDriftMonitor.ts
+│   │   ├── runtimeTelemetry.ts
+│   │   ├── runtimeThresholdRollout.ts
 │   │   ├── serverManager.ts
+│   │   ├── serviceRegistry.ts
 │   │   ├── skillsLoader.ts
 │   │   ├── StudioRunner.ts
 │   │   ├── syncService.ts
 │   │   ├── systemHealth.ts
+│   │   ├── szamlazzClient.ts
+│   │   ├── szamlazzRequestBuilder.ts
+│   │   ├── tasksDatabaseManager.ts
 │   │   ├── tasksDb.ts
 │   │   ├── telemetry.ts
+│   │   ├── trackDod.ts
+│   │   ├── trackGroups.ts
 │   │   ├── trackTodoParser.ts
 │   │   ├── tts.ts
 │   │   ├── validateSecrets.ts
 │   │   ├── vectorize.ts
-│   │   └── wranglerHelper.ts
-│   └── vendor.d.ts
+│   │   ├── wranglerHelper.ts
+│   │   └── zeroPromptEdgeMirrorService.ts
+│   ├── vendor.d.ts
+│   └── workers/
+│   │   └── selfModificationSandboxWorker.ts
 ├── src-tauri/
 │   ├── build.rs
 │   ├── Cargo.lock
@@ -2955,9 +3892,32 @@
 ├── start-full-system.bat
 ├── start-full.bat
 ├── start-vscode-web.bat
+├── start-with-copilot.bat
 ├── start.bat
 ├── tailwind.config.js
 ├── tasks/
+│   ├── all_credentials.json
+│   ├── all_workflows.json
+│   ├── audit_credentials.json
+│   ├── automation_capture.mjs
+│   ├── automation_complete.mjs
+│   ├── automation_final.mjs
+│   ├── automation_full.mjs
+│   ├── automation_results.json
+│   ├── automation_results2.json
+│   ├── automation_targeted.mjs
+│   ├── automation_v3.mjs
+│   ├── automation_v5.mjs
+│   ├── automation_v6.mjs
+│   ├── automation_v7.mjs
+│   ├── automation_v8.mjs
+│   ├── automation_v9.mjs
+│   ├── case_study_varga_viktoria.md
+│   ├── debug_api_auth.mjs
+│   ├── debug_credentials.mjs
+│   ├── debug_decrypt.py
+│   ├── debug_quick.mjs
+│   ├── decrypt_cookies.py
 │   ├── deep-market-research-2026/
 │   │   ├── ACT.md
 │   │   ├── PLAN.md
@@ -2966,14 +3926,27 @@
 │   │   └── TODO.md
 │   ├── developer-live-studio/
 │   │   └── RESEARCH.md
+│   ├── extract_n8n_cookie.py
+│   ├── final_results.json
+│   ├── get_n8n_cookie.py
+│   ├── inspect_form.mjs
+│   ├── intercept_n8n.mjs
+│   ├── linkedin_profile_texts.md
 │   ├── mobile-responsiveness/
 │   │   └── RESEARCH.md
+│   ├── n8n_api_explore.mjs
+│   ├── n8n_cookies_decrypted.json
+│   ├── n8n_credentials.json
+│   ├── n8n_data.json
+│   ├── n8n_requests.json
+│   ├── n8n_workflows.json
 │   ├── orchestrator-cognitive-upgrade/
 │   │   ├── ACT.md
 │   │   ├── PLAN.md
 │   │   ├── RESEARCH.md
 │   │   ├── TEST.md
 │   │   └── TODO.md
+│   ├── p_sales_guide.md
 │   ├── revenue-acceleration/
 │   │   ├── ACT.md
 │   │   ├── PLAN.md
@@ -2989,24 +3962,90 @@
 │   │   ├── RESEARCH.md
 │   │   ├── TEST.md
 │   │   └── TODO.md
-│   └── system-wide-zero-mock/
+│   ├── screenshots/
+│   │   ├── 00_dashboard.png
+│   │   ├── 00_loaded.png
+│   │   ├── 00_workflows.png
+│   │   ├── 01_credentials.png
+│   │   ├── 01_workflows_list.png
+│   │   ├── after_enter.png
+│   │   ├── chrome_profile_test.png
+│   │   ├── credentials_page.png
+│   │   ├── fatal_error.png
+│   │   ├── filled_form.png
+│   │   ├── final2_t1.png
+│   │   ├── final2_t2.png
+│   │   ├── login_failed_info_at_iszapfalo_hu.png
+│   │   ├── login_failed_iszapfalo_at_gmail_com.png
+│   │   ├── login_failed_iszapfalo_at_iszapfalo_hu.png
+│   │   ├── page_inspect.png
+│   │   ├── profile_test.png
+│   │   ├── s1_loginform.png
+│   │   ├── s2_filled.png
+│   │   ├── s3_after_submit.png
+│   │   ├── t1_gmail_credential.png
+│   │   ├── t2_gmail.png
+│   │   ├── t2_gmail_attempt.png
+│   │   ├── t2_gmail_labels.png
+│   │   ├── t2_gmail_no_create_btn.png
+│   │   ├── t2_gmail_settings.png
+│   │   ├── t2_gmail_start.png
+│   │   ├── t4_creds_list.png
+│   │   ├── test_error.png
+│   │   ├── test_filled.png
+│   │   ├── test_signin.png
+│   │   ├── v7_00_workflows.png
+│   │   ├── v7_t1_gmail.png
+│   │   ├── v7_t2_gmail.png
+│   │   ├── v7_t2_gmail_chooser.png
+│   │   ├── v8_t1_gmail_cred.png
+│   │   └── v8_t2_gmail.png
+│   ├── system-wide-zero-mock/
 │   │   ├── ACT.md
 │   │   ├── PLAN.md
 │   │   ├── TEST.md
 │   │   └── TODO.md
+│   ├── test_api_request.mjs
+│   ├── test_copied_profile.mjs
+│   ├── test_login.mjs
+│   ├── todo1_gmail_oauth.js
+│   ├── todo1_gmail_oauth.mjs
+│   ├── todo_all.mjs
+│   ├── todo_main_v2.mjs
+│   ├── try_logins.mjs
+│   ├── try_logins_v2.mjs
+│   └── use_chrome_profile.mjs
 ├── task_complete.ps1
 ├── temp/
+│   ├── audit-footer.png
 │   ├── audit-results.json
+│   ├── audit-section10-next.png
+│   ├── audit-section2-intro.png
+│   ├── audit-section3-concept.png
+│   ├── audit-section4-heritage.png
+│   ├── audit-section5-experience.png
+│   ├── audit-section6-gallery.png
+│   ├── audit-section7-exclusivity.png
+│   ├── audit-section9-partners.png
+│   ├── autogen_rebuild.log
+│   ├── autogen_rebuild2.log
+│   ├── autogen_rebuild3.log
+│   ├── autogen_rebuild4.log
+│   ├── autogen_rebuild5.log
 │   ├── betutipus.jpg
 │   ├── cdp_auth_test.cjs
 │   ├── cdp_check_state.cjs
 │   ├── cdp_get_workflow.cjs
 │   ├── cdp_navigate_wf06.cjs
 │   ├── cdp_test.cjs
+│   ├── final-login-failure.png
 │   ├── harvest_results/
+│   │   ├── error_GitHub Trending AI_20260328_224959.png
 │   │   ├── error_HuggingFace Daily Papers_20260325_044318.png
 │   │   ├── error_HuggingFace Daily Papers_20260325_153029.png
 │   │   ├── error_HuggingFace Daily Papers_20260326_011512.png
+│   │   ├── error_HuggingFace Daily Papers_20260330_052449.png
+│   │   ├── error_HuggingFace Daily Papers_20260330_121305.png
 │   │   ├── harvest_results_20260320_214524.json
 │   │   ├── harvest_results_20260323_084522.json
 │   │   ├── harvest_results_20260325_022829.json
@@ -3015,15 +4054,43 @@
 │   │   ├── harvest_results_20260326_011513.json
 │   │   ├── harvest_results_20260326_072511.json
 │   │   ├── harvest_results_20260326_123811.json
-│   │   └── harvest_results_20260326_181123.json
+│   │   ├── harvest_results_20260326_181123.json
+│   │   ├── harvest_results_20260404_011233.json
+│   │   ├── harvest_results_20260406_033128.json
+│   │   └── harvest_results_20260408_005610.json
 │   ├── hatter.jpg
+│   ├── initial_state.png
 │   ├── javitas2.md
 │   ├── javítás.md
+│   ├── le/
+│   │   ├── a szerzetes,helyett.avif
+│   │   ├── le1.jpg
+│   │   └── le2.jpg
+│   ├── loader-debug/
+│   │   └── runtime-threshold-contract.env
+│   ├── local-workflows.png
+│   ├── login-nav.png
+│   ├── login-try-dev-localhost.png
+│   ├── lumen-check-hero.png
+│   ├── lumen-desktop-audit-hero.png
+│   ├── lumen-desktop-current.png
+│   ├── lumen-desktop-full.png
+│   ├── lumen-desktop-hero-v2.png
+│   ├── lumen-desktop-refined.png
+│   ├── lumen-desktop-snapshot.md
 │   ├── lumen-ertesites-btn.png
 │   ├── lumen-fine-tune-full.jpg
 │   ├── lumen-fine-tune-hero.jpg
+│   ├── lumen-full-desktop.png
 │   ├── lumen-full-italic-check.jpg
+│   ├── lumen-full-mobile.png
+│   ├── lumen-fullpage.png
+│   ├── lumen-fullpage2.png
+│   ├── lumen-gallery-loaded.png
+│   ├── lumen-gallery.png
 │   ├── lumen-helyi-btn.png
+│   ├── lumen-hero-current.png
+│   ├── lumen-hero-top.png
 │   ├── lumen-italic-check.jpg
 │   ├── Lumen-landing/
 │   │   ├── AGENTS.md
@@ -3067,6 +4134,119 @@
 │   ├── lumen-lighter-mid1.jpg
 │   ├── lumen-lighter-mid2.jpg
 │   ├── lumen-lighter-very-bottom.jpg
+│   ├── lumen-live-01-hero.png
+│   ├── lumen-live-02-intro.png
+│   ├── lumen-live-03-story.png
+│   ├── lumen-live-04-heritage.png
+│   ├── lumen-live-05-auth.png
+│   ├── lumen-live-06-gallery.png
+│   ├── lumen-live-07-exclusivity.png
+│   ├── lumen-live-08-footer.png
+│   ├── lumen-live-exclusivity.png
+│   ├── lumen-live-footer.png
+│   ├── lumen-live-gallery-scroll.png
+│   ├── lumen-live-gallery.png
+│   ├── lumen-live-hero.png
+│   ├── lumen-local-full.png
+│   ├── lumen-mobil-gallery.png
+│   ├── lumen-mobil-gallery2.png
+│   ├── lumen-mobil-gallery3.png
+│   ├── lumen-mobil-hero.png
+│   ├── lumen-mobil-szerzetes.png
+│   ├── lumen-mobile-audit-fixed.png
+│   ├── lumen-mobile-audit.png
+│   ├── lumen-mobile-gallery.png
+│   ├── lumen-mobile-hero-fixed.png
+│   ├── lumen-mobile-hero-tightened.png
+│   ├── lumen-mobile-hero-v2.png
+│   ├── lumen-mobile-hero-v3.png
+│   ├── lumen-mobile-hero.png
+│   ├── lumen-scroll-0.png
+│   ├── lumen-scroll-1.png
+│   ├── lumen-scroll-10.png
+│   ├── lumen-scroll-11.png
+│   ├── lumen-scroll-12.png
+│   ├── lumen-scroll-13.png
+│   ├── lumen-scroll-2.png
+│   ├── lumen-scroll-3.png
+│   ├── lumen-scroll-4.png
+│   ├── lumen-scroll-5.png
+│   ├── lumen-scroll-6.png
+│   ├── lumen-scroll-7.png
+│   ├── lumen-scroll-8.png
+│   ├── lumen-scroll-9.png
+│   ├── lumen-scroll-900.png
+│   ├── lumen-section-concept.png
+│   ├── lumen-section-exclusivity.png
+│   ├── lumen-section-experience.png
+│   ├── lumen-section-footer.png
+│   ├── lumen-section-gallery.png
+│   ├── lumen-section-heritage.png
+│   ├── lumen-section-hero.png
+│   ├── lumen-section-intro.png
+│   ├── lumen-section-next-release.png
+│   ├── lumen-section-partners.png
+│   ├── lumen-section5.png
+│   ├── lumen-top-now.png
+│   ├── lumen4/
+│   │   ├── backups/
+│   │   ├── ezt levenni2(mobilnézetben).jpg.bak
+│   │   ├── ezt_levenni(mobilnézetben).jpg.bak
+│   │   ├── keres_uj.md
+│   │   ├── keres_uj.md.bak
+│   │   ├── levett_kepek_helyett2(mobil).jpg
+│   │   ├── levett_kepek_helyett2(mobil).jpg.bak
+│   │   ├── levett_kepek_helyett_fel(mobil).jpg
+│   │   ├── levett_kepek_helyett_fel(mobil).jpg.bak
+│   │   ├── PATCH_instructions.txt
+│   │   └── public/
+│   ├── Lumenv3/
+│   │   ├── 10.jpg
+│   │   ├── 6.jpg
+│   │   ├── 7.jpg
+│   │   ├── 8.jpg
+│   │   ├── 9.jpg
+│   │   ├── javitas3.md
+│   │   ├── kezdoprompt.md
+│   │   ├── L_betü.jpg
+│   │   ├── qr_code_helyett.jpg
+│   │   ├── szerzetes_új.jpg
+│   │   ├── szölöfürt_új.jpg
+│   │   └── utasitas.md
+│   ├── lumen_remote/
+│   │   ├── AGENTS.md
+│   │   ├── app/
+│   │   ├── audit-err.txt
+│   │   ├── audit-full.txt
+│   │   ├── audit-out.txt
+│   │   ├── audit-pass.txt
+│   │   ├── audit-results.txt
+│   │   ├── audit-screenshots/
+│   │   ├── audit-stderr.txt
+│   │   ├── audit-stdout.txt
+│   │   ├── build-log.txt
+│   │   ├── build-log2.txt
+│   │   ├── build-log3.txt
+│   │   ├── build-output.txt
+│   │   ├── build-stderr2.txt
+│   │   ├── build-stdout2.txt
+│   │   ├── CLAUDE.md
+│   │   ├── components/
+│   │   ├── eslint.config.mjs
+│   │   ├── lib/
+│   │   ├── next-env.d.ts
+│   │   ├── next.config.ts
+│   │   ├── package-lock.json
+│   │   ├── package.json
+│   │   ├── playwright.config.ts
+│   │   ├── postcss.config.mjs
+│   │   ├── public/
+│   │   ├── README.md
+│   │   ├── test-audit.spec.ts
+│   │   ├── test-output.txt
+│   │   ├── test-results/
+│   │   ├── THE_WHISPER_PROMPT.md
+│   │   └── tsconfig.json
 │   ├── my_websitev2/
 │   │   ├── adaptiveAnimation.html
 │   │   ├── Ads.txt
@@ -3120,6 +4300,26 @@
 │   │   ├── Weboldal_V5_Gemini_CLI_Utasitas.md
 │   │   ├── WORLDQUANT_MODERNIZATION.md
 │   │   └── __tests__/
+│   ├── n8n-after-dev-login-attempt.png
+│   ├── n8n-after-login.png
+│   ├── n8n-after-logout-attempt.png
+│   ├── n8n-login-correct.png
+│   ├── n8n-login-screen.png
+│   ├── n8n-readonly-login-failed.png
+│   ├── n8n-readonly-login-view.png
+│   ├── n8n-root.png
+│   ├── n8n-step1-landing.png
+│   ├── n8n-step3-login.png
+│   ├── n8n-step4-workflows.png
+│   ├── n8n-step6-signout.png
+│   ├── n8n-verify-brunella-bookkeeping-email-intake-scaffold.png
+│   ├── n8n-verify-brunella-bookkeeping-exception-notify-scaffold.png
+│   ├── n8n-verify-brunella-bookkeeping-nav-validation-scaffold.png
+│   ├── n8n-verify-brunella-bookkeeping-reconciliation-scaffold.png
+│   ├── n8n-verify-login-screen.png
+│   ├── n8n-verify-workflows-list.png
+│   ├── n8n-workflows-list-1440x900.png
+│   ├── n8n-workflows-list-logged-in.png
 │   ├── n8n_login_attempt.png
 │   ├── n8n_page.png
 │   ├── picn/
@@ -3128,15 +4328,61 @@
 │   │   ├── 3.jpg
 │   │   ├── 4.jpg
 │   │   └── kérés.md
+│   ├── playwright-browser/
+│   │   ├── step1-landing.png
+│   │   ├── step3-postlogin.png
+│   │   ├── step4-workflows.png
+│   │   └── step6-logout.png
+│   ├── playwright-browser-2/
+│   │   ├── step1-landing.png
+│   │   ├── step3-postlogin.png
+│   │   ├── step4-workflows.png
+│   │   └── step6-logout.png
+│   ├── playwright-evidence/
+│   │   ├── 1-landing.png
+│   │   └── 3-post-login.png
+│   ├── playwright-evidence-2/
+│   │   └── workflows.png
+│   ├── playwright-final-clean/
+│   │   ├── step1-landing.png
+│   │   ├── step3-post-login.png
+│   │   └── step4-workflows.png
+│   ├── playwright-final-run/
+│   │   ├── step1-landing.png
+│   │   ├── step3-post-login.png
+│   │   └── step4-workflows.png
+│   ├── playwright-final2/
+│   │   ├── editor.png
+│   │   └── workflows.png
+│   ├── playwright-full-flow/
+│   │   ├── 1-landing.png
+│   │   ├── 3-post-login.png
+│   │   ├── 4-workflows.png
+│   │   ├── 5-workflow-editor.png
+│   │   └── 6-signout.png
+│   ├── playwright-signout/
+│   │   └── step6-signout.png
+│   ├── post_attempt_state.png
+│   ├── step1-current-browser.png
+│   ├── step2-after-login.png
+│   ├── step3-workflows.png
+│   ├── step5-signout.png
 │   ├── website-audit.cjs
-│   └── website-audit.js
+│   ├── website-audit.js
+│   └── workspace-auth.log
 ├── test/
 │   ├── ## Chat Customization Diagnostics.md
 │   ├── activity_feed.test.js
 │   ├── activity_feed.test.ts
+│   ├── agentCoordinator.test.ts
+│   ├── agentHookEngine.test.ts
 │   ├── agentLoader.test.ts
+│   ├── agentManagerInitialization.test.ts
+│   ├── agentRegistryAudit.test.ts
 │   ├── agentRouting.test.ts
 │   ├── agents/
+│   │   ├── AIResearchWeeklyAgent.test.ts
+│   │   ├── EdgeProxyAgent.test.ts
 │   │   ├── LeadMiningAgent.test.ts
 │   │   ├── MachineHunter.test.ts
 │   │   ├── MarketIntelAgent.test.ts
@@ -3149,22 +4395,40 @@
 │   ├── agent_template.test.ts
 │   ├── aiGateway.test.js
 │   ├── aiGateway.test.ts
+│   ├── anythingllmActions.test.ts
 │   ├── apifyScrapingAgent.test.ts
 │   ├── api_v1.test.js
 │   ├── api_v1.test.ts
+│   ├── approvalRouter.test.ts
 │   ├── approval_manager.test.js
 │   ├── approval_manager.test.ts
 │   ├── auditLog.test.js
 │   ├── auditLog.test.ts
+│   ├── audit_permissions.test.ts
 │   ├── backgroundTaskManager.test.js
 │   ├── backgroundTaskManager.test.ts
 │   ├── BankAgent.test.ts
+│   ├── baseAgent.failopen.test.ts
 │   ├── bifrost_gateway.test.js
 │   ├── bifrost_gateway.test.ts
+│   ├── bookkeepingReadiness.test.ts
 │   ├── bookkeeping_db.test.ts
+│   ├── bookkeeping_routes.test.ts
+│   ├── briefingService.test.ts
+│   ├── browserCopilotCommands.test.ts
 │   ├── browserCopilotSessionService.test.ts
+│   ├── browserTools.test.ts
 │   ├── browser_rendering.test.js
 │   ├── browser_rendering.test.ts
+│   ├── brunellaPmStatus.test.ts
+│   ├── BrunellaProjectManagerAgent.test.ts
+│   ├── brunellaProjectManagerHelpers.test.ts
+│   ├── brunellaProjectManagerStatus.readonly.test.ts
+│   ├── brunellaProjectManagerStatus.test.ts
+│   ├── build-errors.txt
+│   ├── build-result.txt
+│   ├── builtinHooks.test.ts
+│   ├── businessJobsRoutes.test.ts
 │   ├── CampaignGeneratorAgent.test.ts
 │   ├── cean-alerting.test.js
 │   ├── cean-alerting.test.ts
@@ -3175,46 +4439,72 @@
 │   ├── checkpoint.test.ts
 │   ├── checkpointRetention.test.js
 │   ├── checkpointRetention.test.ts
+│   ├── chromeAcpCommands.test.ts
 │   ├── chromeDevToolsAgent.test.ts
 │   ├── cli-e2e.vitest.ts
+│   ├── cli-hu.skills.test.ts
 │   ├── cli-phase3-e2e.vitest.ts
 │   ├── cli.e2e.test.ts
 │   ├── cli_config.test.js
 │   ├── cli_config.test.ts
 │   ├── cloudflareBrowser.test.ts
+│   ├── cloudflareClient.test.ts
+│   ├── cloudflareConfig.test.ts
 │   ├── cloudflare_integration.test.js
 │   ├── cloudflare_integration.test.ts
 │   ├── cloudflare_routes.test.js
 │   ├── cloudflare_routes.test.ts
+│   ├── cloudflare_worker_security.test.ts
+│   ├── cloudflare_worker_zero_prompt_mirror.test.ts
 │   ├── codebaseIndexer.test.js
 │   ├── codebaseIndexer.test.ts
 │   ├── code_review.test.js
 │   ├── code_review.test.ts
 │   ├── code_scaffold.test.js
 │   ├── code_scaffold.test.ts
+│   ├── conductorCommands.test.ts
+│   ├── conductorTracksMonitorRoute.test.ts
+│   ├── configGuardian.test.ts
 │   ├── configSchema.test.js
 │   ├── configSchema.test.ts
 │   ├── conflictMediatorAgent.test.js
 │   ├── conflictMediatorAgent.test.ts
+│   ├── contextFusion.test.ts
 │   ├── context_builder.test.js
 │   ├── context_builder.test.ts
 │   ├── copilotBridge.test.ts
 │   ├── copilotCognitiveBridge.test.ts
+│   ├── copilotFeedbackChannel.test.ts
 │   ├── core_tools.test.js
 │   ├── core_tools.test.ts
 │   ├── coverage_analysis.test.js
 │   ├── coverage_analysis.test.ts
 │   ├── crawl4ai.test.ts
+│   ├── crawl4aiCommands.test.ts
+│   ├── crmDb.test.ts
+│   ├── crmFollowUp.test.ts
+│   ├── crmFollowUpExecution.test.ts
+│   ├── crmFollowUpRoutes.test.ts
+│   ├── crmLead.test.ts
 │   ├── dagSort.test.ts
 │   ├── dashboard/
 │   │   ├── components/
+│   │   ├── grantManager.test.tsx
+│   │   ├── KKVFinancePanel.test.tsx
+│   │   ├── lib/
 │   │   ├── mocks/
 │   │   ├── setup.js
 │   │   └── setup.ts
+│   ├── dashboardCommands.test.ts
 │   ├── dashboard_chat_lib.test.js
 │   ├── dashboard_chat_lib.test.ts
+│   ├── databaseManager.test.ts
+│   ├── dataFlywheelMetrics.test.ts
 │   ├── data_refiner.test.js
 │   ├── data_refiner.test.ts
+│   ├── db_pr_tracking.test.ts
+│   ├── deadlockDetector.test.ts
+│   ├── decisionExecutor.test.ts
 │   ├── degradationPolicy.test.js
 │   ├── degradationPolicy.test.ts
 │   ├── delegation_chain.test.js
@@ -3225,10 +4515,15 @@
 │   ├── DeveloperAgent.test.ts
 │   ├── developer_pipeline.test.js
 │   ├── developer_pipeline.test.ts
+│   ├── devexRoutes.test.ts
 │   ├── dev_commands.test.js
 │   ├── dev_commands.test.ts
 │   ├── digitalHeadhunterAgent.test.js
 │   ├── digitalHeadhunterAgent.test.ts
+│   ├── dockerComposeProdHardening.test.ts
+│   ├── docsConfigFixture.ts
+│   ├── docsConfigSot.test.ts
+│   ├── docUnifier.test.ts
 │   ├── e2b_sandbox_manager.test.js
 │   ├── e2b_sandbox_manager.test.ts
 │   ├── e2e/
@@ -3236,14 +4531,17 @@
 │   │   ├── action-triggering.spec.ts
 │   │   ├── dashboard-comprehensive.spec.js
 │   │   ├── dashboard-comprehensive.spec.ts
+│   │   ├── dashboard-layout-e2e.spec.ts
 │   │   ├── dashboard-v3-integrity.spec.ts
 │   │   ├── dashboard-widgets.spec.ts
 │   │   ├── dashboard_audit.spec.ts
 │   │   ├── error-handling.spec.js
 │   │   ├── error-handling.spec.ts
 │   │   ├── functional_integrity.spec.ts
+│   │   ├── mission-control-shell.spec.ts
 │   │   ├── mission-control.spec.js
 │   │   ├── mission-control.spec.ts
+│   │   ├── n8n-konyveles-wf5.spec.ts
 │   │   ├── navigation.spec.js
 │   │   ├── navigation.spec.ts
 │   │   ├── smoke-v3.spec.ts
@@ -3257,19 +4555,41 @@
 │   ├── EdgeProxyAgent.test.ts
 │   ├── edge_health_monitor.test.js
 │   ├── edge_health_monitor.test.ts
+│   ├── EmailAgent.test.ts
 │   ├── emailTriageAgent.test.js
 │   ├── emailTriageAgent.test.ts
+│   ├── ensureError.test.ts
 │   ├── enterpriseOrchestrator.test.js
 │   ├── enterpriseOrchestrator.test.ts
 │   ├── enterpriseOrchestratorAgent.test.js
 │   ├── enterpriseOrchestratorAgent.test.ts
+│   ├── ephemeralAgentManager.test.ts
+│   ├── ephemeralAudit.test.ts
+│   ├── ephemeralSandbox.test.ts
+│   ├── ephemeralScopedToolRegistry.test.ts
+│   ├── EvaluatorAgent.test.ts
 │   ├── eventBus.test.ts
+│   ├── eventFabric.test.ts
 │   ├── evHunterTool.test.js
 │   ├── evHunterTool.test.ts
 │   ├── ev_hunter_research.test.js
 │   ├── ev_hunter_research.test.ts
+│   ├── externalKnowledgeCommands.test.ts
+│   ├── externalKnowledgeRoutes.test.ts
+│   ├── externalKnowledgeService.test.ts
+│   ├── externalKnowledgeTool.test.ts
 │   ├── failover_registry.test.js
 │   ├── failover_registry.test.ts
+│   ├── fastapi_restart.test.ts
+│   ├── federation/
+│   │   ├── capabilityManifest.test.ts
+│   │   ├── federatedGateway.test.ts
+│   │   ├── federationPeerAuth.test.ts
+│   │   ├── federationReplayGuard.test.ts
+│   │   ├── negotiationProtocol.test.ts
+│   │   └── trustRegistry.test.ts
+│   ├── federationCommands.test.ts
+│   ├── federationRoutes.test.ts
 │   ├── FinanceGuardian_Duplicates.test.ts
 │   ├── FinanceGuardian_Gmail.test.ts
 │   ├── FinanceGuardian_Sheets.test.ts
@@ -3277,27 +4597,51 @@
 │   ├── financialGuardAgent.test.ts
 │   ├── fleetService.test.js
 │   ├── fleetService.test.ts
+│   ├── GenesisOrchestrator.test.ts
+│   ├── GitHubModelsAgent.test.ts
 │   ├── git_integration.test.js
 │   ├── git_integration.test.ts
 │   ├── gmail_invoice_client_test.py
+│   ├── gmail_invoice_fetcher_test.py
+│   ├── goldCommands.test.ts
 │   ├── golden-dataset-tools.vitest.ts
+│   ├── goldenDatasetBridge.curated.test.ts
 │   ├── goldenDatasetBridge.test.js
 │   ├── goldenDatasetBridge.test.ts
+│   ├── googleAuth.test.ts
+│   ├── google_credentials_helper_test.py
 │   ├── google_sheets_client_phase4_test.py
 │   ├── grantWatcherAgent.test.js
 │   ├── grantWatcherAgent.test.ts
 │   ├── grant_outreach.test.ts
 │   ├── guardrails/
 │   │   ├── confidenceScoring.test.ts
+│   │   ├── outputGuard.test.ts
 │   │   ├── redaction.test.ts
 │   │   └── schemaValidation.test.ts
+│   ├── guardrailsCommands.test.ts
 │   ├── harvestRoutes.test.ts
 │   ├── health_check.test.js
 │   ├── health_check.test.ts
+│   ├── health_runtime_rollout.test.ts
 │   ├── heartbeatMonitor.test.js
 │   ├── heartbeatMonitor.test.ts
+│   ├── helpers/
+│   │   └── startPythonServer.ts
+│   ├── hookInfrastructure.test.ts
+│   ├── hookRegistry.test.ts
 │   ├── hooks.test.js
 │   ├── hooks.test.ts
+│   ├── hooksCommands.test.ts
+│   ├── hooksRoutes.test.ts
+│   ├── hrLeaveRoutes.test.ts
+│   ├── hrOnboarding.test.ts
+│   ├── hrOnboardingCommand.test.ts
+│   ├── hrOnboardingCommands.test.ts
+│   ├── hrOnboardingRoutes.test.ts
+│   ├── hrTimesheetCommands.test.ts
+│   ├── hrTimesheetRoutes.test.ts
+│   ├── imapConnector.test.ts
 │   ├── incubator_test.py
 │   ├── innovationBridgeAgent.test.ts
 │   ├── innovation_bridge_core.test.ts
@@ -3305,27 +4649,50 @@
 │   ├── innovation_bridge_swarm.test.ts
 │   ├── input_sanitization.test.js
 │   ├── input_sanitization.test.ts
+│   ├── intakeSurveyAgent.test.ts
+│   ├── integration/
+│   │   ├── crm.ingest.integration.test.ts
+│   │   ├── psales.strategy.integration.test.ts
+│   │   └── pythonBridge.integration.test.ts
+│   ├── intelligenceCommands.test.ts
+│   ├── inventoryFifo.test.ts
+│   ├── inventoryPhase2.test.ts
+│   ├── inventoryWac.test.ts
 │   ├── InvoiceAutomationAgent.test.ts
 │   ├── invoice_automation_e2e_test.py
 │   ├── invoice_enhanced.test.py
 │   ├── invoice_refiner_test.py
+│   ├── ipi_security_benchmark.test.ts
 │   ├── ironCladBackend.test.js
 │   ├── ironCladBackend.test.ts
+│   ├── issueFixLoop.test.ts
 │   ├── jcai-e2e-test.js
 │   ├── jcai-e2e-test.ts
 │   ├── jcai-phase3-verification.test.js
 │   ├── jcai-phase3-verification.test.ts
 │   ├── jcai-webhook-manual-test.js
 │   ├── jcai-webhook-manual-test.ts
+│   ├── jules_core_client.test.ts
 │   ├── jules_e2e_pipeline.test.js
 │   ├── jules_e2e_pipeline.test.ts
 │   ├── jules_workflow_routes.test.js
 │   ├── jules_workflow_routes.test.ts
+│   ├── kkvCrmRoutes.test.ts
+│   ├── kkvFinanceAutomation.test.ts
+│   ├── kkvFinanceCommands.test.ts
+│   ├── kkvPack.test.ts
+│   ├── kkvPackRoutes.test.ts
+│   ├── kkvWebhook.test.ts
 │   ├── knowledgeBaseBuilderAgent.test.js
 │   ├── knowledgeBaseBuilderAgent.test.ts
+│   ├── lancedb_client.test.ts
 │   ├── lawDetectiveAgent.test.ts
+│   ├── leadCommands.test.ts
+│   ├── learningLoopRoutes.test.ts
+│   ├── learningLoopScheduler.test.ts
 │   ├── lint_fixer.test.js
 │   ├── lint_fixer.test.ts
+│   ├── linuxRuntimeThresholdLoader.test.ts
 │   ├── llmPlanner.test.js
 │   ├── llmPlanner.test.ts
 │   ├── llm_client.test.js
@@ -3336,18 +4703,29 @@
 │   ├── localCSRAgent.test.ts
 │   ├── logisticsDispatcherAgent.test.js
 │   ├── logisticsDispatcherAgent.test.ts
+│   ├── logisticsRoutes.test.ts
+│   ├── marketCommands.test.ts
+│   ├── MarketingDirectorAgent.test.ts
 │   ├── marketing_swarm_integration_test.py
 │   ├── marketIntelAgent.test.js
 │   ├── marketIntelAgent.test.ts
 │   ├── MatchingAgent.test.ts
+│   ├── MatchingAgent_MultiMatch.test.ts
 │   ├── mcp/
 │   │   ├── dynamicToolRegistry.test.ts
 │   │   └── toolComposition.test.ts
 │   ├── mcp-brunella-core.code-workspace
+│   ├── mcpClient.test.ts
+│   ├── mcpClientManager.test.ts
+│   ├── mcpDiscovery.test.ts
+│   ├── mcpProcessManager.test.ts
+│   ├── mcpResponse.test.ts
+│   ├── mcp_routes.test.ts
 │   ├── mcp_server.test.js
 │   ├── mcp_server.test.ts
 │   ├── memory/
 │   │   └── structuredMemory.test.ts
+│   ├── memoryCommands.test.ts
 │   ├── memoryRoutes.golden.test.js
 │   ├── memoryRoutes.golden.test.ts
 │   ├── memory_context.test.js
@@ -3358,18 +4736,30 @@
 │   ├── metricsService.test.ts
 │   ├── middleware.test.js
 │   ├── middleware.test.ts
+│   ├── middlewareAuth.test.ts
+│   ├── missionPlanner.test.ts
 │   ├── modelRouter.test.js
 │   ├── modelRouter.test.ts
 │   ├── monitor.test.js
 │   ├── monitor.test.ts
 │   ├── monitor.vitest.js
 │   ├── monitor.vitest.ts
+│   ├── n8n-cookies.txt
+│   ├── n8n-session.txt
+│   ├── n8nClient.test.ts
 │   ├── n8n_automation.test.js
 │   ├── n8n_automation.test.ts
+│   ├── NavAgent.test.ts
+│   ├── notificationChannels.test.ts
 │   ├── notificationService.test.js
 │   ├── notificationService.test.ts
+│   ├── npm-test-exit.txt
+│   ├── npm-test-output.txt
 │   ├── observability/
 │   │   └── telemetry.test.ts
+│   ├── observabilityCommands.test.ts
+│   ├── observabilityRoutes.test.ts
+│   ├── onboardingIntakeRoutes.test.ts
 │   ├── orchestration/
 │   │   └── dagEngine.test.ts
 │   ├── orchestratorChain.test.ts
@@ -3378,6 +4768,7 @@
 │   ├── paiosConfig.test.ts
 │   ├── paiosOrchestrator.integration.test.ts
 │   ├── paiosOrchestrator.test.ts
+│   ├── palyazatCommands.test.ts
 │   ├── persistentBrowser.test.js
 │   ├── persistentBrowser.test.ts
 │   ├── phase1_remote_foundation.test.ts
@@ -3387,6 +4778,7 @@
 │   ├── phase3_integration.test.js
 │   ├── phase3_integration.test.ts
 │   ├── phase3_mobile_voice_paios.test.ts
+│   ├── phase3_workflows.test.ts
 │   ├── phase42-costopt.test.js
 │   ├── phase42-costopt.test.ts
 │   ├── phase43-e2e.test.js
@@ -3403,6 +4795,8 @@
 │   ├── phase6-integration.test.ts
 │   ├── phase6_evolution.test.ts
 │   ├── phase7_superintelligent_infra.test.ts
+│   ├── phoenixHookBridge.test.ts
+│   ├── phoenixInsights.test.ts
 │   ├── phoenixRecoveryLogic.test.js
 │   ├── phoenixRecoveryLogic.test.ts
 │   ├── phoenix_event_bus.test.js
@@ -3410,25 +4804,52 @@
 │   ├── phoenix_protocol_test.py
 │   ├── phoenix_recovery.test.js
 │   ├── phoenix_recovery.test.ts
+│   ├── policyEngine.test.ts
+│   ├── predictiveDecisionCommands.test.ts
+│   ├── predictiveDecisionEngine.test.ts
+│   ├── predictiveDecisionRoute.test.ts
 │   ├── procurementAgent.test.js
 │   ├── procurementAgent.test.ts
+│   ├── progressCommands.test.ts
+│   ├── projectMaintainerCommands.test.ts
+│   ├── projectMaintainerRoutes.test.ts
+│   ├── projectMaintainerService.test.ts
 │   ├── project_conductor_living_docs.test.js
 │   ├── project_conductor_living_docs.test.ts
 │   ├── prometheus_metrics.test.js
 │   ├── prometheus_metrics.test.ts
+│   ├── propertyResearchAgent.test.ts
+│   ├── psalesAuth.test.ts
+│   ├── pytest_target_output.txt
 │   ├── pythonBridge.test.ts
 │   ├── python_mcp_server.test.js
 │   ├── python_mcp_server.test.ts
+│   ├── python_server_security.test.ts
 │   ├── python_shell.test.js
 │   ├── python_shell.test.ts
+│   ├── rag-engine.test.ts
 │   ├── rag.test.js
 │   ├── rag.test.ts
+│   ├── ragRoutes.test.ts
 │   ├── rbac/
 │   │   └── agentPermissions.test.ts
+│   ├── reactLoop.test.ts
+│   ├── ReconciliationCommunicationAgent.test.ts
+│   ├── ReconciliationExceptionAgent.test.ts
+│   ├── ReconciliationIngestionAgent.test.ts
 │   ├── refiners/
 │   │   ├── test_invoice_parser.py
 │   │   └── test_product_valuation.py
+│   ├── reflectionCommands.test.ts
+│   ├── reflectionContinualLearning.integration.test.ts
+│   ├── reflexModelRegistry.test.ts
+│   ├── registryAgents.test.ts
 │   ├── registryValidation.test.ts
+│   ├── remediationLearningLoop.test.ts
+│   ├── remediationStrategy.test.ts
+│   ├── remote_routes.test.ts
+│   ├── requirements.txt
+│   ├── ResearcherAgent.test.ts
 │   ├── responseFormatter.test.js
 │   ├── responseFormatter.test.ts
 │   ├── retryStrategy.test.js
@@ -3449,6 +4870,10 @@
 │   ├── robotkez_v2_integration.test.ts
 │   ├── routes_developer.test.js
 │   ├── routes_developer.test.ts
+│   ├── runtimeDriftMonitor.test.ts
+│   ├── runtimeThresholdContract.test.ts
+│   ├── runtimeThresholdRollout.test.ts
+│   ├── safeCommandPolicy.test.ts
 │   ├── safe_zone_validator.test.js
 │   ├── safe_zone_validator.test.ts
 │   ├── salesHunterAgent.test.js
@@ -3458,15 +4883,26 @@
 │   │   └── wasmSandbox.test.ts
 │   ├── scalingService.test.js
 │   ├── scalingService.test.ts
-│   ├── scheduledTasks.test.js
 │   ├── scheduledTasks.test.ts
+│   ├── scheduledTasksCommands.test.ts
+│   ├── scheduledTasksRunner_predictiveDecision.test.ts
+│   ├── scheduledTasksRunner_projectMaintainer.test.ts
+│   ├── scheduledTasksRunner_selfModification.test.ts
+│   ├── scheduledTasksRunner_worldPerception.test.ts
+│   ├── sdlcPipeline.test.ts
 │   ├── security.test.ts
+│   ├── securityCommands.test.ts
+│   ├── selfModificationCommands.test.ts
+│   ├── selfModificationEngine.test.ts
+│   ├── selfModificationRoute.test.ts
+│   ├── service_preflight.test.ts
 │   ├── setup-ui.ts
 │   ├── setup.js
 │   ├── setup.ts
 │   ├── SheetsSyncAgent.test.ts
 │   ├── skills_loader.test.js
 │   ├── skills_loader.test.ts
+│   ├── skills_registry.test.ts
 │   ├── smoke-phase3.vitest.ts
 │   ├── smoke-phase4.vitest.ts
 │   ├── smoke-websocket.vitest.ts
@@ -3478,8 +4914,11 @@
 │   ├── specStatus.test.ts
 │   ├── SpecWriterAgent.test.js
 │   ├── SpecWriterAgent.test.ts
+│   ├── start_stable_contract.test.ts
 │   ├── state_restoration.test.js
 │   ├── state_restoration.test.ts
+│   ├── stocktakeReconciliation.test.ts
+│   ├── strategyPlannerAgent.test.ts
 │   ├── structured_output.test.js
 │   ├── structured_output.test.ts
 │   ├── suggestedTasks.test.js
@@ -3490,49 +4929,111 @@
 │   │   ├── colonyPersistence.test.ts
 │   │   ├── dynamicResizer.test.ts
 │   │   └── votingProtocol.test.ts
+│   ├── swarmCommands.test.ts
 │   ├── swarmManager.test.ts
 │   ├── swarmRoutes.test.ts
 │   ├── swarmTools.test.ts
 │   ├── swarm_coordinator.test.js
 │   ├── swarm_coordinator.test.ts
 │   ├── swarm_smoke.test.ts
+│   ├── sync_bootstrap.test.ts
+│   ├── sync_doc_stats.test.ts
+│   ├── SzamlazzHuAgent.test.ts
 │   ├── szamlazz_hu_client_test.py
+│   ├── szamlazz_routes.test.ts
+│   ├── taskCommands.test.ts
+│   ├── taskDecomposerCommands.test.ts
 │   ├── taskDecomposerCore.test.js
 │   ├── taskDecomposerCore.test.ts
+│   ├── tasksDatabaseManager.test.ts
 │   ├── task_queue.test.js
 │   ├── task_queue.test.ts
 │   ├── telemetry.test.js
 │   ├── telemetry.test.ts
+│   ├── test-crawl4ai-help.txt
+│   ├── test-fast-clean.txt
+│   ├── test-fast-output.txt
+│   ├── test-fast-result.txt
+│   ├── test-full-output.txt
+│   ├── test-json-stderr.txt
+│   ├── test-out4.txt
+│   ├── test-output.txt
+│   ├── test-results.txt
+│   ├── test-results2.txt
+│   ├── testCadenceAdvisor.test.ts
 │   ├── testD1Adapter.ts
+│   ├── testSchedulerRoutes.test.ts
+│   ├── test_output.txt
+│   ├── test_run_out.txt
 │   ├── test_vectorize.ts
+│   ├── toolDiscoveryCommands.test.ts
+│   ├── toolErrorClassifier.test.ts
 │   ├── toolRegistry.test.ts
+│   ├── toolRunCapture.test.ts
+│   ├── tools/
+│   │   └── testSchedulerTool.test.ts
+│   ├── toolsRoutesAuth.test.ts
+│   ├── trackGovernanceScripts.test.ts
+│   ├── trackStateManagerHooks.test.ts
 │   ├── tracks_todos_routes.test.js
 │   ├── tracks_todos_routes.test.ts
 │   ├── trackTodoParser.test.js
 │   ├── trackTodoParser.test.ts
 │   ├── triz_data.test.ts
+│   ├── tsc-agentmanager-afterfix.txt
+│   ├── tsc-agentmanager-errors.txt
+│   ├── tsc-output.txt
 │   ├── unifiedWorkspace.test.js
 │   ├── unifiedWorkspace.test.ts
+│   ├── unit/
+│   │   ├── crmCreateLeadTool.test.ts
+│   │   ├── enterpriseCore.test.ts
+│   │   └── kkvCrm.service.test.ts
+│   ├── universalOrchestratorService.test.ts
 │   ├── userPreferences.test.ts
+│   ├── utils/
+│   │   └── reportWriter.test.ts
+│   ├── verify_permissions_calls.test.ts
+│   ├── viktoriaBrandVoiceAgent.test.ts
+│   ├── viktoriaShoppingAssistantAgent.test.ts
+│   ├── viktoriaSocialConciergeAgent.test.ts
+│   ├── vitest-rerun-output.txt
+│   ├── vitest_output.txt
 │   ├── webhooks.test.js
 │   ├── webhooks.test.ts
 │   ├── workers/
 │   │   ├── test_google_maps_scraper.py
 │   │   ├── test_icebreaker_generator.py
 │   │   └── test_market_scraper.py
-│   └── workerThreadPool.test.ts
-├── test-crawl4ai-help.txt
-├── test-fast-clean.txt
-├── test-fast-output.txt
-├── test-fast-result.txt
-├── test-full-output.txt
-├── test-json-results.json
-├── test-json-stderr.txt
-├── test-out4.txt
-├── test-output.txt
+│   ├── workerThreadPool.test.ts
+│   ├── workflowCommands.test.ts
+│   ├── workingMemory.test.ts
+│   ├── workspace_mcp_server.test.ts
+│   ├── worldPerceptionCommands.test.ts
+│   ├── worldPerceptionLayer.test.ts
+│   ├── worldPerceptionRoute.test.ts
+│   ├── zeroPromptEphemeralBridge.integration.test.ts
+│   ├── zeroPromptRoutes.test.ts
+│   ├── zeroPromptRuntime.test.ts
+│   ├── _n8n_original_hash.txt
+│   ├── __auth_cookie.txt
+│   └── __auth_cookie2.txt
+├── test-fast.log
 ├── test-results/
-├── test-results.txt
-├── test-results2.txt
+│   ├── brunella-live-01---Brunell-84ff8-omb-megjelenik-a-weboldalon-chromium/
+│   │   ├── test-finished-1.png
+│   │   ├── trace.zip
+│   │   └── video.webm
+│   ├── brunella-live-02---Chat-gomb-kattintás-panel-megnyílik-chromium/
+│   │   ├── test-finished-1.png
+│   │   ├── trace.zip
+│   │   └── video.webm
+│   ├── brunella-live-03---Üzenet-küldés-és-válasz-ellenőrzés-chromium/
+│   │   ├── test-finished-1.png
+│   │   ├── trace.zip
+│   │   └── video.webm
+│   ├── track-audit-latest.json
+│   └── track-audit.json
 ├── testing/
 │   ├── cypress/
 │   │   └── support/
@@ -3553,27 +5054,68 @@
 │   │   ├── 2. Kereszt-Iparági Tudás-Híd Kereső (Cross-Industry Innovation Bridge)/
 │   │   └── 3. A Mikro-Helyi CSR Automata (The Neighborhood Watchman)/
 │   └── TEST_BOOK.md
-├── test_output.txt
+├── tests/
+│   ├── python/
+│   │   └── test_szamlazz_client.py
+│   └── screenshots/
+│   │   ├── blog.png
+│   │   ├── footer.png
+│   │   ├── header.png
+│   │   ├── hero.png
+│   │   ├── home-full.png
+│   │   ├── kapcsolat.png
+│   │   ├── mobile-menu-closed.png
+│   │   ├── mobile-menu-open.png
+│   │   ├── rolunk.png
+│   │   ├── szolgaltatasok.png
+│   │   └── termekek.png
+├── test_apify_agent.ts
+├── test_fullout.txt
+├── test_psales_chain.ts
 ├── TEST_RESULTS.md
-├── test_run_out.txt
-├── todo_ops.py
-├── todo_ops.sql
+├── test_szamlazz_integration.ts
+├── test_viktoria_agent_direct.js
+├── timeline_cleared.png
+├── timeline_start.png
+├── timeline_view.png
 ├── Toolskeszlet.md
-├── tsc-agentmanager-afterfix.txt
-├── tsc-agentmanager-errors.txt
-├── tsc-output.txt
+├── tracks/
+│   ├── error_handling_implementation_20260404.md
+│   ├── kkv_crm_automation_20260404/
+│   │   ├── CI-TRIAGE.md
+│   │   ├── implementation/
+│   │   ├── meta.json
+│   │   ├── n8n-workflows/
+│   │   ├── plan.md
+│   │   ├── PR.md
+│   │   ├── spec.md
+│   │   ├── src/
+│   │   └── tests/
+│   ├── kkv_customer_service_ai_20260404/
+│   │   ├── meta.json
+│   │   ├── plan.md
+│   │   └── spec.md
+│   ├── kkv_finance_automation_20260404/
+│   │   ├── meta.json
+│   │   ├── plan.md
+│   │   └── spec.md
+│   └── kkv_hr_automation_20260404/
+│   │   ├── meta.json
+│   │   ├── plan.md
+│   │   └── spec.md
 ├── tsconfig.json
 ├── tsconfig.ui.json
+├── tsc_errors.log
+├── tsc_output.txt
 ├── USER_START.md
 ├── uv.lock
 ├── vite.config.ts
 ├── vite.overlay.config.ts
 ├── vite.p-sales.config.ts
-├── vitest-rerun-output.txt
 ├── vitest.config.ts
 ├── vitest.dashboard.config.ts
+├── vitest.integration.config.ts
 ├── vitest.ui.config.ts
-├── vitest_output.txt
 ├── website_sources/
 │   ├── adaptiveAnimation.html
 │   ├── Ads.txt
@@ -3648,6 +5190,10 @@
 │   ├── package-lock.json
 │   ├── package.json
 │   ├── parallax.html
+│   ├── playwright-report/
+│   │   ├── data/
+│   │   └── index.html
+│   ├── playwright.config.ts
 │   ├── pohanka.company (DNS Records).csv
 │   ├── postcss.config.mjs
 │   ├── ppp.jpg
@@ -3657,17 +5203,23 @@
 │   │   ├── 1.jpg
 │   │   ├── 2.jpg
 │   │   ├── 3.jpg
+│   │   ├── aaronia.jpg
 │   │   ├── about.mp4
 │   │   ├── blog.mp4
+│   │   ├── cimbi.jpg
 │   │   ├── contact.mp4
 │   │   ├── desktop.ini
+│   │   ├── edmund.jpg
 │   │   ├── home.mp4
 │   │   ├── images/
+│   │   ├── lumen.jpg
+│   │   ├── manifest.json
 │   │   ├── portfolio.mp4
 │   │   ├── products.mp4
 │   │   ├── robots.txt
 │   │   ├── services.mp4
-│   │   └── sitemap.xml
+│   │   ├── sitemap.xml
+│   │   └── sw.js
 │   ├── push.log
 │   ├── qrcode_drive.google.com.png
 │   ├── QUICK_REFERENCE.md
@@ -3677,6 +5229,13 @@
 │   │   └── desktop.ini
 │   ├── scrollAnimations.js
 │   ├── tailwind.config.ts
+│   ├── test-results/
+│   │   └── p0-p2-design-upgrades-P0–P-2041b-rvices-→-Testimonials-→-FAQ-chromium/
+│   ├── tests/
+│   │   ├── design-check.spec.ts
+│   │   ├── p0-p2-design-upgrades.spec.ts
+│   │   ├── priority-matrix-full.spec.ts
+│   │   └── screenshots/
 │   ├── tsconfig.json
 │   ├── tsconfig.tsbuildinfo
 │   ├── vite.config.js
@@ -3695,6 +5254,7 @@
 │   │   ├── test_core.py
 │   │   ├── test_logging.py
 │   │   └── __init__.py
+│   ├── wab_health.py
 │   └── wab_server.py
 ├── worker/
 │   └── bas-browser-orchestrator/
@@ -3709,7 +5269,16 @@
 │   │   └── index.ts
 │   └── cean-router/
 │   │   └── index.ts
-├── workflow-heti-kontekstus.png
+├── workspace-mcp-server/
+│   ├── pyproject.toml
+│   ├── README.md
+│   ├── server.py
+│   ├── src/
+│   │   ├── workspace_mcp_server/
+│   │   └── workspace_mcp_server.egg-info/
+│   ├── tests/
+│   │   └── test_utils.py
+│   └── uv.lock
 ├── _archive/
 │   ├── Böngésző vezérlés/
 │   │   ├── Böngésző vezérlés.7z
@@ -3728,6 +5297,10 @@
 │   │   ├── JELENTES.md
 │   │   └── REPORT_REVISION_20260130.md
 ├── _br_temp/
+│   ├── 01_gmail_start.png
+│   ├── 02_gmail_email_entered.png
+│   ├── 03_gmail_2FA_screen.png
+│   ├── 03_gmail_after_password.png
 │   ├── 04_after_airtable_fix_snapshot.md
 │   ├── 04_after_airtable_fix_unsaved.md
 │   ├── 04_debug1612_airtable_node.md
@@ -3744,27 +5317,50 @@
 │   ├── 06_exec1610_retry_check.md
 │   ├── 06_login_snapshot_fresh.md
 │   ├── 06_login_state_after_reload.md
+│   ├── 10_n8n_signin.png
+│   ├── 11_n8n_after_login.png
+│   ├── 12_n8n_credentials.png
+│   ├── 13_n8n_workflows.png
+│   ├── 14_n8n_executions.png
 │   ├── activate_workflows.py
 │   ├── after_04_node_execute.md
 │   ├── after_close_node_04.md
+│   ├── all_creds_found.json
 │   ├── analyze_munkado.py
 │   ├── analyze_munkado2.py
+│   ├── api_post_response.txt
 │   ├── ATADASI_UTMUTATO.md
+│   ├── automation_results.json
 │   ├── batch_debug.cmd
 │   ├── bootstrap_fix_build.log
 │   ├── bootstrap_fix_smoke.log
 │   ├── bootstrap_fix_test.log
+│   ├── browser_tasks.py
+│   ├── check_labels.py
 │   ├── check_nodes.py
+│   ├── check_wf07_structure.py
 │   ├── commit_fix_backup/
 │   │   ├── src/
 │   │   └── test/
 │   ├── copilot_bridge/
 │   ├── creds.json
 │   ├── current_page_fix_attempt.md
+│   ├── debug_n8n.py
 │   ├── error_mon.json
+│   ├── exec06.json
+│   ├── exec06_stats.json
+│   ├── exec1909_detail.json
+│   ├── exec1910.json
+│   ├── FATAL.png
 │   ├── fix_02.py
+│   ├── fix_egyeb_label.py
+│   ├── fix_iszapfalo_final.py
+│   ├── fix_iszapfalo_v2.py
+│   ├── fix_iszapfalo_v3.py
+│   ├── fix_iszapfalo_v4.py
 │   ├── fix_json_local.py
 │   ├── fix_munkado_and_activate.py
+│   ├── fix_wf06.ps1
 │   ├── generate_heti_kontextus.py
 │   ├── geppark.json
 │   ├── get_airtable_schema.py
@@ -3814,25 +5410,101 @@
 │   ├── live_snapshot_06_exec1610_retrycheck.md
 │   ├── live_snapshot_1610.md
 │   ├── live_snapshot_1610_open_node.md
+│   ├── minimal-3333.js
+│   ├── minimal-server.js
 │   ├── munkado_current.json
 │   ├── munkado_FIXED.json
+│   ├── n8n-auto.cjs
+│   ├── n8n-v2.cjs
+│   ├── n8n-v3-cookie.cjs
+│   ├── n8n_00_landing.png
+│   ├── n8n_01_form.png
+│   ├── n8n_01_initial.png
+│   ├── n8n_01_signin_page.png
 │   ├── n8n_01_start.png
+│   ├── n8n_02_filled.png
+│   ├── n8n_02_setup_filled.png
+│   ├── n8n_03_after_next.png
+│   ├── n8n_03_after_submit.png
+│   ├── n8n_03_post_login.png
+│   ├── n8n_04_after_second_attempt.png
+│   ├── n8n_04_login_filled.png
+│   ├── n8n_04_workflows.png
+│   ├── n8n_06_after_modal_dismiss.png
+│   ├── n8n_07_workflow_list.png
+│   ├── n8n_08_final.png
+│   ├── n8n_A1_setup.png
+│   ├── n8n_all_combos.py
 │   ├── n8n_api_import.py
+│   ├── n8n_api_key.txt
+│   ├── n8n_audit.cjs
+│   ├── n8n_audit_v2.cjs
+│   ├── n8n_audit_v3.cjs
 │   ├── n8n_auto_fix.py
+│   ├── n8n_BLOCKER_final.png
+│   ├── n8n_BLOCKER_owner.png
 │   ├── n8n_check.py
+│   ├── n8n_correct_filled.png
+│   ├── n8n_correct_login.py
+│   ├── n8n_create_apikey.py
+│   ├── n8n_create_apikey2.py
+│   ├── n8n_create_apikey3.py
+│   ├── n8n_create_apikey4.py
 │   ├── n8n_credentials_page.png
+│   ├── n8n_CREDS.png
 │   ├── n8n_debug_1610.txt
 │   ├── n8n_debug_1610_after_click.txt
 │   ├── n8n_debug_1611.txt
+│   ├── n8n_ERR.png
+│   ├── n8n_error.png
+│   ├── n8n_error2.png
+│   ├── n8n_EXECUTIONS.png
+│   ├── n8n_fetch2.py
+│   ├── n8n_fetch_test.py
+│   ├── n8n_final.py
+│   ├── n8n_fix.py
 │   ├── n8n_full_deploy.py
+│   ├── n8n_get_apikey.py
+│   ├── n8n_get_apikey2.py
+│   ├── n8n_get_apikey3.py
 │   ├── n8n_get_live_workflow.mjs
 │   ├── n8n_interact.py
+│   ├── n8n_intercept_key.py
+│   ├── n8n_key_v2.py
+│   ├── n8n_key_v3.py
+│   ├── n8n_L1_signin.png
+│   ├── n8n_L2_filled.png
+│   ├── n8n_L3_post_login.png
 │   ├── n8n_list_live_credentials.mjs
 │   ├── n8n_list_live_workflows.mjs
+│   ├── n8n_LOGGEDIN.png
+│   ├── n8n_login_filled_a.png
+│   ├── n8n_login_filled_b.png
+│   ├── n8n_login_filled_c.png
+│   ├── n8n_login_filled_d.png
+│   ├── n8n_login_filled_e.png
+│   ├── n8n_login_filled_f.png
 │   ├── n8n_login_form.png
+│   ├── n8n_post_login_a.png
+│   ├── n8n_post_login_b.png
+│   ├── n8n_post_login_c.png
+│   ├── n8n_post_login_d.png
+│   ├── n8n_post_login_e.png
+│   ├── n8n_post_login_f.png
 │   ├── n8n_rest_get_workflow.mjs
 │   ├── n8n_rest_list_credentials.mjs
+│   ├── n8n_signin.png
+│   ├── n8n_signin2.png
+│   ├── n8n_try_combos.py
+│   ├── n8n_v2.py
+│   ├── n8n_v2_after_login.png
+│   ├── n8n_workflows.json
+│   ├── n8n_WORKFLOWS.png
 │   ├── okos_ajanlo.json
+│   ├── playwright-screenshots/
+│   │   ├── 02-initial.png
+│   │   ├── 04-login-screen.png
+│   │   └── 07-after-login-attempt.png
 │   ├── pohi_muvek_structure.txt
 │   ├── pohi_wf1.json
 │   ├── pohi_wf2.json
@@ -3845,15 +5517,83 @@
 │   ├── registry_pre.json
 │   ├── registry_pre_ujjaszuletes.json
 │   ├── root_workflows.txt
+│   ├── run_automation.py
+│   ├── screenshots/
+│   │   ├── 01_gmail_start.png
+│   │   ├── 01_login_form.png
+│   │   ├── 02_gmail_email_entered.png
+│   │   ├── 02_login_filled.png
+│   │   ├── 03_gmail_password_error.png
+│   │   ├── 04_gmail_state_check.png
+│   │   ├── 04_settings_api.png
+│   │   ├── 05_api_created.png
+│   │   ├── 05_modal.png
+│   │   ├── 10_n8n_signin.png
+│   │   ├── 13_n8n_credentials.png
+│   │   ├── 14_n8n_workflows.png
+│   │   ├── 15_n8n_executions.png
+│   │   ├── 16_n8n_workflows_for_import.png
+│   │   ├── 99_final_state.png
+│   │   ├── after_create.png
+│   │   ├── after_save.png
+│   │   ├── after_save2.png
+│   │   ├── api_before.png
+│   │   ├── api_clean.png
+│   │   ├── api_list.png
+│   │   ├── api_page_start.png
+│   │   ├── api_v3_after.png
+│   │   ├── api_v3_before.png
+│   │   ├── api_v3_filled.png
+│   │   ├── final_after_save.png
+│   │   ├── modal_before_label.png
+│   │   ├── modal_label_filled.png
+│   │   ├── n8n_01_signin.png
+│   │   ├── n8n_02_filled.png
+│   │   ├── n8n_03_after_login.png
+│   │   ├── n8n_04_api_settings.png
+│   │   ├── n8n_05_api_after_create.png
+│   │   ├── n8n_06_final.png
+│   │   ├── n8n_login_error_1.png
+│   │   └── n8n_login_error_2.png
 │   ├── show_creds.py
+│   ├── step1_initial.png
+│   ├── step2_creds_filled.png
+│   ├── step3_after_login.png
+│   ├── step4_workflow_list.png
+│   ├── step5_wf1_canvas.png
+│   ├── step5_wf1_canvas_fitted.png
+│   ├── szamlazz_agent_docs/
+│   │   └── szamlaagent/
 │   ├── test_input.json
 │   ├── updated_07_workflow_payload.json
 │   ├── update_heti_kontextus_workflow.mjs
 │   ├── vitest_results.txt
 │   ├── wake_n8n.py
+│   ├── wf06_code.json
+│   ├── wf06_detail.json
+│   ├── wf07_detail.json
+│   ├── wf07_trigger.json
+│   ├── wf_01_landing.png
+│   ├── wf_02_login_filled.png
+│   ├── wf_03_post_login.png
+│   ├── wf_04_after_dismiss.png
+│   ├── wf_05_workflow_list.png
+│   ├── wf_2h3vw6VUvsBIg6iJ.json
+│   ├── wf_8VqluKFPj0pkCRKR.json
+│   ├── wf_a5AMwLqoaQvo5hzr.json
+│   ├── wf_CAEaN0ryx5POpVSv.json
+│   ├── wf_FATAL_ERR.png
+│   ├── wf_g1W73bdF75DeBdG7.json
+│   ├── wf_hLop0AeEKH6NyUaj.json
+│   ├── wf_JxSqN7xp1k9R2dqG.json
+│   ├── wf_LGvkbQNUm44UEoMi.json
+│   ├── wf_list.json
+│   ├── wf_MFg5V5Xz0QvDNEzE.json
+│   ├── wf_SxWeeyrNe6TQ71zf.json
+│   ├── wf_ZeNCF1ZIg35bxkPl.json
 │   ├── workflow_current.json
 │   └── workflow_now.json
-└── _KNOWLEDGE_BASE/
+├── _KNOWLEDGE_BASE/
 │   ├── 1_reports_and_outputs/
 │   │   └── reports/
 │   ├── 2_knowledge_base/
@@ -3943,6 +5683,7 @@
 │   ├── GEMINI.md
 │   ├── gemini_cli_setup.ps1
 │   ├── genie3worldmodel2025.bib
+│   ├── Github_Copilot_SDK_agent.md
 │   ├── gitignore
 │   ├── Google Gmail API, a Google Drive API,.docx
 │   ├── google_integration_state.md
@@ -3969,6 +5710,7 @@
 │   ├── memory.md
 │   ├── memport.md
 │   ├── mentor_script.py
+│   ├── Multi-Agent Rendszer.md
 │   ├── multi-file.md
 │   ├── multiplier_simulation.py
 │   ├── multi_agent_reliability_protocol.md
@@ -4093,6 +5835,7 @@
 │   └── _model_cards/
 │   │   ├── Gemini_Pro_2.5_model_card.pdf
 │   │   └── Gemini_Pro_2.5_model_card_melygondolkodás.pdf
+└── __workflows_api.json
 
 ```
 
