@@ -12,7 +12,7 @@ dependencies = [
     # MCP
     "fastmcp>=2.14.3",
     # LLM
-    "langchain>=0.3.0",
+    "langchain>=1.2.15",
     "langchain-google-genai>=2.0.0",
     "langgraph>=0.2.0",
     # Vector DB
