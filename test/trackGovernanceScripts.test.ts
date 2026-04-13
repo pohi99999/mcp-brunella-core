@@ -12,6 +12,14 @@ import {
 const mainRepoRoot = process.cwd();
 const hookProofScript = path.join(mainRepoRoot, 'scripts', 'hook-proof.mjs');
 
+function cleanGitEnv(): NodeJS.ProcessEnv {
+  const env = { ...process.env };
+  for (const key of ['GIT_DIR', 'GIT_WORK_TREE', 'GIT_INDEX_FILE', 'GIT_PREFIX', 'GIT_COMMON_DIR']) {
+    delete env[key];
+  }
+  return env;
+}
+
 function writeText(repoRoot: string, relativePath: string, content: string): void {
   const absolutePath = path.join(repoRoot, relativePath);
   mkdirSync(path.dirname(absolutePath), { recursive: true });
@@ -27,6 +35,7 @@ function runGit(repoRoot: string, command: string): string {
     cwd: repoRoot,
     encoding: 'utf-8',
     stdio: ['ignore', 'pipe', 'pipe'],
+    env: cleanGitEnv(),
   }).trim();
 }
 
@@ -35,6 +44,7 @@ function runNode(repoRoot: string, scriptPath: string, args: string[]): string {
     cwd: repoRoot,
     encoding: 'utf-8',
     stdio: ['ignore', 'pipe', 'pipe'],
+    env: cleanGitEnv(),
   }).trim();
 }
 
