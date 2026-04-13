@@ -1,4 +1,6 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { mkdir, rm, writeFile } from 'fs/promises';
+import path from 'path';
 import { validateEmail } from '../src/services/emailValidator.js';
 import { outreachService } from '../src/services/outreachService.js';
 import { LeadMiningAgent } from '../src/agents/LeadMiningAgent.js';
@@ -35,7 +37,31 @@ vi.mock('dns/promises', () => ({
 }));
 
 describe('Outreach & Revenue Acceleration Flow', () => {
-    
+    const outreachConfigPath = path.join(process.cwd(), 'config', 'outreach_accounts.json');
+
+    beforeEach(async () => {
+        await mkdir(path.dirname(outreachConfigPath), { recursive: true });
+        await writeFile(outreachConfigPath, JSON.stringify({
+            accounts: [
+                {
+                    id: 'acct-1',
+                    user: 'sender@example.com',
+                    pass: 'secret',
+                    host: 'smtp.example.com',
+                    port: 587,
+                    daily_limit: 25,
+                    sent_today: 3,
+                    last_sent_at: null
+                }
+            ],
+            global_settings: {}
+        }, null, 2));
+    });
+
+    afterEach(async () => {
+        await rm(outreachConfigPath, { force: true });
+    });
+
     it('should validate emails correctly', async () => {
         const result = await validateEmail('test@gmail.com');
         expect(result).toBe('valid');
@@ -47,8 +73,12 @@ describe('Outreach & Revenue Acceleration Flow', () => {
     it('should rotate outreach accounts', async () => {
         // This requires the config file to be present, which we created in Task 2.4
         const account = await outreachService.getNextAccount();
-        expect(account).toBeDefined();
-        expect(account?.sent_today).toBeLessThan(account?.daily_limit || 1);
+        expect(account).toEqual(expect.objectContaining({
+            user: 'sender@example.com',
+            sent_today: 3,
+            daily_limit: 25
+        }));
+        expect(account!.sent_today).toBeLessThan(account!.daily_limit || 1);
     });
 
     it('should generate leads with icebreakers and validation', async () => {

@@ -17,6 +17,12 @@ import { innovateCommand } from './cli/commands/innovate-hu.js';
 import { hrOnboardingCommand } from './cli/commands/hr-onboarding-hu.js';
 import { agentManager } from './agents/AgentManager.js';
 import { getSkill, listSkills } from './skills/index.js';
+import { studioFullPipeline, studioInit, studioProbe } from './cli/studioRuntime.js';
+import { generateAudioPlan } from './tools/audioPlanTool.js';
+import { ingestMediaDirectory } from './tools/mediaAnalysisTool.js';
+import { runQcChecks } from './tools/qcTool.js';
+import { renderTimelinePlan } from './tools/renderPresetTool.js';
+import { generateTimelinePlan } from './tools/timelinePlanTool.js';
 import { writeLine } from './utils/cliOutput.js';
 
 marked.setOptions({ renderer: new TerminalRenderer() });
@@ -93,6 +99,87 @@ export async function runSkillCommand(args: string[]): Promise<boolean> {
     return false;
 }
 
+function parseFlagArgs(tokens: string[]): { positionals: string[]; flags: Record<string, string | boolean> } {
+    const positionals: string[] = [];
+    const flags: Record<string, string | boolean> = {};
+    for (let index = 0; index < tokens.length; index += 1) {
+        const token = tokens[index];
+        if (token.startsWith('--')) {
+            const key = token.slice(2);
+            const next = tokens[index + 1];
+            if (!next || next.startsWith('--')) {
+                flags[key] = true;
+            } else {
+                flags[key] = next;
+                index += 1;
+            }
+            continue;
+        }
+        positionals.push(token);
+    }
+    return { positionals, flags };
+}
+
+function csvFlags(value: string | boolean | undefined): string[] | undefined {
+    if (typeof value !== 'string') return undefined;
+    return value.split(',').map((item) => item.trim()).filter(Boolean);
+}
+
+export async function runStudioCommand(args: string[]): Promise<boolean> {
+    const [subcommand, action, ...rest] = args;
+    if (subcommand !== 'studio') {
+        return false;
+    }
+
+    const { positionals, flags } = parseFlagArgs(rest);
+    if (action === 'probe') {
+        writeLine(JSON.stringify(await studioProbe(), null, 2));
+        return true;
+    }
+    if (action === 'init') {
+        const projectName = positionals[0] || (typeof flags.project === 'string' ? flags.project : 'studio-project');
+        writeLine(JSON.stringify(await studioInit(projectName), null, 2));
+        return true;
+    }
+    if (action === 'ingest') {
+        const inputDir = typeof flags['input-dir'] === 'string' ? flags['input-dir'] : undefined;
+        if (!inputDir) throw new Error('Hasznalat: brunella-hu studio ingest --input-dir <path>');
+        writeLine(JSON.stringify(await ingestMediaDirectory({ inputDir, projectName: typeof flags['project-name'] === 'string' ? flags['project-name'] : undefined, generateProxies: flags['generate-proxies'] === true }), null, 2));
+        return true;
+    }
+    if (action === 'rough-cut') {
+        writeLine(JSON.stringify(await generateTimelinePlan({ inputDir: typeof flags['input-dir'] === 'string' ? flags['input-dir'] : undefined, manifestPath: typeof flags['manifest-path'] === 'string' ? flags['manifest-path'] : undefined, projectName: typeof flags['project-name'] === 'string' ? flags['project-name'] : undefined, style: typeof flags.style === 'string' ? flags.style as never : undefined, targetDurationSec: typeof flags['target-duration'] === 'string' ? Number(flags['target-duration']) : undefined, musicTrackPath: typeof flags['music-track'] === 'string' ? flags['music-track'] : undefined }), null, 2));
+        return true;
+    }
+    if (action === 'audio-plan') {
+        const timelinePlanPath = typeof flags['timeline-plan'] === 'string' ? flags['timeline-plan'] : undefined;
+        const musicTrackPath = typeof flags['music-track'] === 'string' ? flags['music-track'] : undefined;
+        if (!timelinePlanPath || !musicTrackPath) throw new Error('Hasznalat: brunella-hu studio audio-plan --timeline-plan <file> --music-track <file>');
+        writeLine(JSON.stringify(await generateAudioPlan({ timelinePlanPath, musicTrackPath, projectName: typeof flags['project-name'] === 'string' ? flags['project-name'] : undefined, style: typeof flags.style === 'string' ? flags.style as never : undefined }), null, 2));
+        return true;
+    }
+    if (action === 'render') {
+        const projectName = typeof flags['project-name'] === 'string' ? flags['project-name'] : undefined;
+        const timelinePlanPath = typeof flags['timeline-plan'] === 'string' ? flags['timeline-plan'] : undefined;
+        if (!projectName || !timelinePlanPath) throw new Error('Hasznalat: brunella-hu studio render --project-name <nev> --timeline-plan <file>');
+        writeLine(JSON.stringify(await renderTimelinePlan({ projectName, timelinePlanPath, musicTrackPath: typeof flags['music-track'] === 'string' ? flags['music-track'] : undefined, presets: csvFlags(flags.presets) as never }), null, 2));
+        return true;
+    }
+    if (action === 'qc') {
+        const filePath = typeof flags.file === 'string' ? flags.file : undefined;
+        if (!filePath) throw new Error('Hasznalat: brunella-hu studio qc --file <render>');
+        writeLine(JSON.stringify(await runQcChecks({ filePath, expectedDurationSec: typeof flags['expected-duration'] === 'string' ? Number(flags['expected-duration']) : undefined, expectedWidth: typeof flags['expected-width'] === 'string' ? Number(flags['expected-width']) : undefined, expectedHeight: typeof flags['expected-height'] === 'string' ? Number(flags['expected-height']) : undefined }), null, 2));
+        return true;
+    }
+    if (action === 'full' || action === 'full-pipeline') {
+        const inputDir = typeof flags['input-dir'] === 'string' ? flags['input-dir'] : undefined;
+        if (!inputDir) throw new Error('Hasznalat: brunella-hu studio full --input-dir <path>');
+        writeLine(JSON.stringify(await studioFullPipeline({ inputDir, projectName: typeof flags['project-name'] === 'string' ? flags['project-name'] : undefined, style: typeof flags.style === 'string' ? flags.style as never : undefined, targetDurationSec: typeof flags['target-duration'] === 'string' ? Number(flags['target-duration']) : undefined, musicTrackPath: typeof flags['music-track'] === 'string' ? flags['music-track'] : undefined, presets: csvFlags(flags.presets) as never, generateProxies: flags['generate-proxies'] === true }), null, 2));
+        return true;
+    }
+    throw new Error(`Ismeretlen studio parancs: ${action || ''}`);
+}
+
 export async function pause() {
     await inquirer.prompt([{
         type: 'input',
@@ -116,8 +203,12 @@ export async function getTrackNames(): Promise<string[]> {
 async function start() {
     try {
         if (argv.length > 0) {
-            const handled = await runSkillCommand(argv);
-            if (handled) {
+            const skillHandled = await runSkillCommand(argv);
+            if (skillHandled) {
+                return;
+            }
+            const studioHandled = await runStudioCommand(argv);
+            if (studioHandled) {
                 return;
             }
         }

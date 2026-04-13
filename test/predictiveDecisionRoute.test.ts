@@ -136,7 +136,7 @@ describe('PredictiveDecision route', () => {
 
     expect(response.status).toBe(400);
     expect(response.body.success).toBe(false);
-    expect(response.body.error).toContain('greater than or equal to 6');
+    expect(response.body.error).toMatch(/greater than or equal to 6|>=6/);
   });
 
   it('returns 404 when a decision is missing', async () => {

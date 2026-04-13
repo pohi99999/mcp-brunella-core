@@ -4,7 +4,8 @@ export type BrunellaSkillCategory =
   | 'marketing'
   | 'devops'
   | 'research'
-  | 'logistics';
+  | 'logistics'
+  | 'studio';
 
 export interface BrunellaSkillValidationResult {
   valid: boolean;

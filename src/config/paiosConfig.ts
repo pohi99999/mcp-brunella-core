@@ -146,8 +146,8 @@ export function loadPaiosConfig(configPath = 'paios.config.yaml'): PAIOSConfig {
     return cachedConfig;
   } catch (error) {
     if (error instanceof z.ZodError) {
-      logError('PAIOS Config', `Validation failed: ${JSON.stringify(error.errors)}`);
-      throw new Error(`PAIOS config validation failed: ${error.errors.map(e => e.message).join(', ')}`);
+      logError('PAIOS Config', `Validation failed: ${JSON.stringify(error.issues)}`);
+      throw new Error(`PAIOS config validation failed: ${error.issues.map((issue) => issue.message).join(', ')}`);
     }
     throw error;
   }

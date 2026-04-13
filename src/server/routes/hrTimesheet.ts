@@ -88,7 +88,7 @@ export function createHRTimesheetRoutes(): Router {
       });
     } catch (error: unknown) {
       if (error instanceof z.ZodError) {
-        res.status(400).json({ success: false, error: 'Validation failed', details: error.errors });
+        res.status(400).json({ success: false, error: 'Validation failed', details: error.issues });
         return;
       }
 
@@ -120,7 +120,7 @@ export function createHRTimesheetRoutes(): Router {
       });
     } catch (error: unknown) {
       if (error instanceof z.ZodError) {
-        res.status(400).json({ success: false, error: 'Validation failed', details: error.errors });
+        res.status(400).json({ success: false, error: 'Validation failed', details: error.issues });
         return;
       }
 
@@ -150,7 +150,7 @@ export function createHRTimesheetRoutes(): Router {
       });
     } catch (error: unknown) {
       if (error instanceof z.ZodError) {
-        res.status(400).json({ success: false, error: 'Validation failed', details: error.errors });
+        res.status(400).json({ success: false, error: 'Validation failed', details: error.issues });
         return;
       }
 

@@ -1,17 +1,17 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-04-13T00:00:00.431Z
+**Utolso frissites:** 2026-04-13T07:58:00.000Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 244 total | 10 active | 23 completed | 209 archived
-**Csoportok:** Könyvelés / üzleti automatizálás: 53 | Nova asszisztens: 23 | Brunella rendszer: 94 | Egyéb: 74
+**Stats:** 246 total | 11 active | 23 completed | 209 archived
+**Csoportok:** Könyvelés / üzleti automatizálás: 53 | Nova asszisztens: 23 | Brunella rendszer: 96 | Egyéb: 74
 
 ---
 
-## Tervezett Szalak (Proposed) (2)
+## Tervezett Szalak (Proposed) (3)
 
-### Brunella rendszer (2)
+### Brunella rendszer (3)
 
 - [ ] **Brunella Remote Layer — Fázis 8: Planet-Scale Supersystem** [CRITICAL]
   - **ID:** `remote_layer_phase8_planetary_supersystem_20260322`
@@ -25,10 +25,16 @@
   - **Assignee:** GitHub Copilot
   - Mappa: ./tracks/remote_layer_phase9_emergent_superintelligence_20260322/
 
+- [ ] **Brunella Studio Agent v2** [HIGH]
+  - **ID:** `brunella-studio-agent-v2_20260414`
+  - **Progress:** 0%
+  - **Assignee:** GitHub Copilot
+  - Mappa: ./tracks/brunella-studio-agent-v2_20260414/
+
 
 ---
 
-## Aktiv Szalak (Active) (10)
+## Aktiv Szalak (Active) (11)
 
 ### Könyvelés / üzleti automatizálás (5)
 
@@ -67,6 +73,15 @@
   - **Updated:** 2026-04-08
   - Mappa: ./tracks/pohanka_freelancer_terjeszkedes_20260408/
 
+
+### Brunella rendszer (1)
+
+- [~] **Brunella Studio Agent** [HIGH]
+  - **ID:** `brunella-studio-agent-video_20260413`
+  - **Progress:** 95%
+  - **Assignee:** GitHub Copilot
+  - **Updated:** 2026-04-13T07:58:00.000Z
+  - Mappa: ./tracks/brunella-studio-agent-video_20260413/
 
 ### Nova asszisztens (5)
 
@@ -108,7 +123,7 @@
 
 ---
 
-## Befejezett (Completed - Not Archived) (23)
+## Befejezett (Completed - Not Archived) (24)
 
 ### Könyvelés / üzleti automatizálás (11)
 

@@ -1,0 +1,20 @@
+{
+  "id": "brunella-studio-agent-v2_20260414",
+  "track_id": "brunella-studio-agent-v2_20260414",
+  "name": "Brunella Studio Agent v2",
+  "title": "Brunella Studio Agent phase 2 enhancements",
+  "description": "Follow-up track for reviewer loop, webhook automation, music intelligence, dashboard UX, and advanced finishing capabilities.",
+  "status": "proposed",
+  "priority": "HIGH",
+  "created": "2026-04-13",
+  "created_at": "2026-04-13T07:18:00.000Z",
+  "updated": "2026-04-13",
+  "updated_at": "2026-04-13T07:18:00.000Z",
+  "owner": "GitHub Copilot",
+  "assignee": "GitHub Copilot",
+  "progress": 0,
+  "tags": ["studio", "v2", "review", "webhook", "music-intelligence"],
+  "sourceDocument": "Deferred second sprint scope after Brunella Studio first-version delivery",
+  "mappa": "./tracks/brunella-studio-agent-v2_20260414/",
+  "sdlc": { "enabled": true, "phase": "proposed" }
+}

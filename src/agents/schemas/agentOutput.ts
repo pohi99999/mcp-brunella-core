@@ -18,9 +18,9 @@ export const AgentResponseSchema = z.object({
     targetAgent: z.string(),
     reason: z.string(),
     instruction: z.string(),
-    contextUpdates: z.record(z.unknown()).optional(),
+    contextUpdates: z.record(z.string(), z.unknown()).optional(),
   }).optional(),
-  metadata: z.record(z.unknown()).optional(),
+  metadata: z.record(z.string(), z.unknown()).optional(),
   confidence: z.number().min(0).max(1).optional(),
 });
 
@@ -35,11 +35,11 @@ export const AgentResultSchema = z.object({
     targetAgent: z.string(),
     reason: z.string(),
     instruction: z.string(),
-    contextUpdates: z.record(z.unknown()).optional(),
+    contextUpdates: z.record(z.string(), z.unknown()).optional(),
   }).optional(),
   thoughts: z.string().optional(),
   contextUsed: z.array(z.string()).optional(),
-  metadata: z.record(z.unknown()).optional(),
+  metadata: z.record(z.string(), z.unknown()).optional(),
 });
 
 export type ValidatedAgentResponse = z.infer<typeof AgentResponseSchema>;

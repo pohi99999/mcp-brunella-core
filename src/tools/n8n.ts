@@ -13,7 +13,7 @@ export function registerN8nTools(server: McpServer) {
         "Indít egy n8n munkafolyamatot a megadott adatokkal.",
         {
             workflowId: z.string().describe("Az n8n munkafolyamat egyedi azonosítója vagy slug-ja"),
-            data: z.record(z.any()).optional().describe("A munkafolyamatnak átadandó JSON adatok")
+            data: z.record(z.string(), z.any()).optional().describe("A munkafolyamatnak átadandó JSON adatok")
         },
         async ({ workflowId, data }) => {
             const baseUrl = process.env.N8N_BASE_URL || 'https://n8n-latest-fulv.onrender.com';

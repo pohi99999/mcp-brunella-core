@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-04-13T00:00:00.431Z",
+  "lastUpdated": "2026-04-13T07:58:00.000Z",
   "tracks": [
     {
       "id": "agent_instability_chaos_testing_20260410",
@@ -157,6 +157,61 @@
       },
       "group": "business",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\bookkeeping_l5_refinement_20260412",
+      "_isArchived": false
+    },
+    {
+      "id": "brunella-studio-agent-v2_20260414",
+      "name": "Brunella Studio Agent v2",
+      "status": "proposed",
+      "priority": "high",
+      "progress": 0,
+      "created": "2026-04-13",
+      "updated": "2026-04-13",
+      "assignee": "GitHub Copilot",
+      "tags": [
+        "studio",
+        "v2",
+        "review",
+        "webhook",
+        "music-intelligence"
+      ],
+      "dependencies": [],
+      "dod": {
+        "tests_pass": false,
+        "build_clean": false,
+        "code_committed": false,
+        "no_verify_used": false
+      },
+      "group": "brunella",
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\brunella-studio-agent-v2_20260414",
+      "_isArchived": false
+    },
+    {
+      "id": "brunella-studio-agent-video_20260413",
+      "name": "Brunella Studio Agent",
+      "status": "in-progress",
+      "priority": "high",
+      "progress": 95,
+      "created": "2026-04-13",
+      "updated": "2026-04-13",
+      "assignee": "GitHub Copilot",
+      "tags": [
+        "studio",
+        "video",
+        "ffmpeg",
+        "davinci-resolve",
+        "fashion",
+        "qc"
+      ],
+      "dependencies": [],
+      "dod": {
+        "tests_pass": true,
+        "build_clean": true,
+        "code_committed": false,
+        "no_verify_used": false
+      },
+      "group": "brunella",
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\brunella-studio-agent-video_20260413",
       "_isArchived": false
     },
     {
@@ -6640,10 +6695,10 @@
     }
   ],
   "stats": {
-    "total": 244,
-    "active": 10,
+    "total": 246,
+    "active": 11,
     "completed": 23,
     "archived": 209,
-    "proposed": 2
+    "proposed": 3
   }
 }

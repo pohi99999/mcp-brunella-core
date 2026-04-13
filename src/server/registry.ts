@@ -56,20 +56,32 @@ function isPlainZodShape(value: unknown): value is Record<string, z.ZodTypeAny> 
   return entries.length === 0 || entries.every((entry) => isZodSchemaLike(entry));
 }
 
-function unwrapZodType(schema: z.ZodTypeAny): z.ZodTypeAny {
-  if (schema instanceof z.ZodOptional || schema instanceof z.ZodNullable) {
-    return unwrapZodType(schema.unwrap());
+function unwrapZodType(schema: unknown): z.ZodTypeAny {
+  if (!isZodSchemaLike(schema)) {
+    return z.string();
   }
 
-  if (schema instanceof z.ZodDefault) {
-    return unwrapZodType(schema._def.innerType);
+  const typedSchema = schema as z.ZodTypeAny & {
+    unwrap?: () => unknown;
+    _def?: {
+      innerType?: unknown;
+      schema?: unknown;
+    };
+  };
+
+  if (typeof typedSchema.unwrap === "function") {
+    return unwrapZodType(typedSchema.unwrap());
   }
 
-  if (schema instanceof z.ZodEffects) {
-    return unwrapZodType(schema._def.schema);
+  if (typedSchema._def?.innerType) {
+    return unwrapZodType(typedSchema._def.innerType);
   }
 
-  return schema;
+  if (typedSchema._def?.schema) {
+    return unwrapZodType(typedSchema._def.schema);
+  }
+
+  return typedSchema;
 }
 
 function basicObjectJsonSchema(
@@ -176,15 +188,6 @@ export function normalizeToolInputSchema(
 
   if (parameters instanceof z.ZodObject) {
     return basicObjectJsonSchema(parameters.shape);
-  }
-
-  if (zodToJsonSchema && isPlainZodShape(parameters)) {
-    return sanitizeJsonSchema(
-      zodToJsonSchema(z.object(parameters), {
-        target: "openApi3",
-        $refStrategy: "none",
-      }),
-    );
   }
 
   if (isPlainZodShape(parameters)) {
@@ -331,6 +334,14 @@ export async function registerAllTools(server: McpServer) {
     const { registerEvHunterTools } = await import("../tools/evHunterTool.js");
     const { registerBrunellaPmStatusTool } = await import("../tools/brunellaPmStatus.js");
     const { registerExternalKnowledgeTools } = await import("../tools/externalKnowledge.js");
+    const { registerHeygenTools } = await import("../tools/heygen.js");
+    const { registerStudioFfmpegTools } = await import("../tools/ffmpegTool.js");
+    const { registerMediaAnalysisTools } = await import("../tools/mediaAnalysisTool.js");
+    const { registerTimelinePlanTools } = await import("../tools/timelinePlanTool.js");
+    const { registerAudioPlanTools } = await import("../tools/audioPlanTool.js");
+    const { registerRenderPresetTools } = await import("../tools/renderPresetTool.js");
+    const { registerResolveBridgeTools } = await import("../tools/resolveBridgeTool.js");
+    const { registerQcTools } = await import("../tools/qcTool.js");
 
     registerWorkspaceTools(server);
     registerKnowledgeTools(server);
@@ -352,6 +363,14 @@ export async function registerAllTools(server: McpServer) {
     registerEvHunterTools(server);
     registerBrunellaPmStatusTool(server);
     registerExternalKnowledgeTools(server);
+    registerHeygenTools(server);
+    registerStudioFfmpegTools(server);
+    registerMediaAnalysisTools(server);
+    registerTimelinePlanTools(server);
+    registerAudioPlanTools(server);
+    registerRenderPresetTools(server);
+    registerResolveBridgeTools(server);
+    registerQcTools(server);
 
     // AI Recommendation tool (Track: ai_recommendation_system_20260216)
     const { registerAiRecommendationTool } = await import("../tools/getAiRecommendation.js");
@@ -646,7 +665,7 @@ export async function registerAllTools(server: McpServer) {
       "write_sheets_invoices",
       writeSheetsInvoicesTool.description,
       {
-        invoices: z.array(z.record(z.any())).optional(),
+        invoices: z.array(z.record(z.string(), z.any())).optional(),
         append: z.boolean().optional(),
         include_line_items: z.boolean().optional(),
         clear_first: z.boolean().optional(),

@@ -4,6 +4,10 @@ import { ContentWriterSkill } from "./ContentWriterSkill.js";
 import { MarketWatchSkill } from "./MarketWatchSkill.js";
 import { WorkflowTriggerSkill } from "./WorkflowTriggerSkill.js";
 import { NegotiationSkill } from "./NegotiationSkill.js";
+import { StudioOrchestrationSkill } from "./StudioOrchestrationSkill.js";
+import { RoughCutSkill } from "./RoughCutSkill.js";
+import { AudioPostSkill } from "./AudioPostSkill.js";
+import { DeliverySkill } from "./DeliverySkill.js";
 import { matchesSkillName, normalizeSkillName } from "./skill-helpers.js";
 import type { BrunellaSkill } from "./skill.interface.js";
 
@@ -16,6 +20,10 @@ export const SKILL_REGISTRY: Record<string, BrunellaSkill> = {
   [normalizeSkillName(MarketWatchSkill.name)]: MarketWatchSkill,
   [normalizeSkillName(WorkflowTriggerSkill.name)]: WorkflowTriggerSkill,
   [normalizeSkillName(NegotiationSkill.name)]: NegotiationSkill,
+  [normalizeSkillName(StudioOrchestrationSkill.name)]: StudioOrchestrationSkill,
+  [normalizeSkillName(RoughCutSkill.name)]: RoughCutSkill,
+  [normalizeSkillName(AudioPostSkill.name)]: AudioPostSkill,
+  [normalizeSkillName(DeliverySkill.name)]: DeliverySkill,
 };
 
 export function getSkill(name: string): BrunellaSkill | undefined {

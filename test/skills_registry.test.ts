@@ -42,10 +42,10 @@ vi.mock('../src/tools/negotiationEngine.js', () => ({
 }));
 
 describe('skills registry', () => {
-  it('exposes the six requested skills', async () => {
+  it('exposes the registered skills including the studio set', async () => {
     const { listSkills, getSkill, SKILL_REGISTRY } = await import('../src/skills/index.js');
 
-    expect(listSkills()).toHaveLength(6);
+    expect(listSkills()).toHaveLength(10);
     expect(new Set(Object.keys(SKILL_REGISTRY))).toEqual(new Set([
       'lead-hunter',
       'finance-report',
@@ -53,6 +53,10 @@ describe('skills registry', () => {
       'market-watch',
       'workflow-trigger',
       'negotiation',
+      'studio-orchestration',
+      'rough-cut',
+      'audio-post',
+      'delivery',
     ]));
     expect(getSkill('finance-report')).toBeDefined();
     expect(getSkill('missing-skill')).toBeUndefined();

@@ -68,6 +68,8 @@ import { registerKkvFinanceCommands } from "./cli/kkvFinanceCommands.js";
 import { registerProjectMaintainerCommands } from "./cli/projectMaintainerCommands.js";
 import { registerBriefingCommands } from "./cli/briefingCommands.js";
 import { registerExternalKnowledgeCommands } from "./cli/externalKnowledgeCommands.js";
+import { registerHeygenCommands } from "./cli/heygenCommands.js";
+import { registerStudioCommands } from "./cli/studioCommands.js";
 import { registerChaosCommands } from "./cli/chaosCommands.js";
 import { registerWorkflowCommands } from "./cli/workflowCommands.js";
 import { registerSwarmCommands } from "./cli/swarmCommands.js";
@@ -1935,6 +1937,8 @@ registerKkvFinanceCommands(program);
 registerProjectMaintainerCommands(program);
 registerBriefingCommands(program);
 registerExternalKnowledgeCommands(program);
+registerHeygenCommands(program);
+registerStudioCommands(program);
 registerChaosCommands(program);
 registerHookCommands(program);
 

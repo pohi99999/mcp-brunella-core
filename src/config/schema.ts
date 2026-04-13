@@ -85,8 +85,8 @@ function parseConfig(): Config {
     });
   } catch (error) {
     if (error instanceof z.ZodError) {
-      const formattedErrors = error.errors.map(
-        (e) => `  - ${e.path.join('.')}: ${e.message}`
+      const formattedErrors = error.issues.map(
+        (issue) => `  - ${issue.path.join('.')}: ${issue.message}`
       ).join('\n');
 
       throw new Error(

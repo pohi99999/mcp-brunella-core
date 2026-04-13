@@ -65,7 +65,7 @@ describe('llm_client', () => {
             const result = await generateResponse('test prompt', 'gemini');
 
             expect(mockGenerateContent).toHaveBeenCalledWith(expect.objectContaining({
-                model: process.env.GEMINI_MODEL || 'gemini-2.0-flash',
+                model: process.env.GEMINI_MODEL || 'gemini-2.5-flash',
             }));
             expect(result).toBe('Gemini response');
         });

@@ -2,6 +2,7 @@ import { defineConfig } from 'vitest/config';
 import path from 'path';
 
 const configuredRetry = Number.parseInt(process.env.VITEST_RETRY ?? '0', 10);
+const configuredHeapMb = Number.parseInt(process.env.VITEST_MAX_OLD_SPACE_SIZE ?? '6144', 10);
 
 export default defineConfig({
   test: {
@@ -16,7 +17,7 @@ export default defineConfig({
     pool: 'forks',
     poolOptions: {
       forks: {
-        execArgv: ['--max-old-space-size=4096'],
+        execArgv: [`--max-old-space-size=${configuredHeapMb}`],
         maxForks: 1,
         minForks: 1,
       },

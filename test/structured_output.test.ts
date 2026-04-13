@@ -5,7 +5,7 @@ import { z } from "zod";
 const AgentResultSchema = z.object({
   status: z.enum(["success", "error", "delegated"]),
   message: z.string().optional(),
-  data: z.record(z.unknown()).optional(),
+  data: z.record(z.string(), z.unknown()).optional(),
   error: z.string().optional(),
 });
 

@@ -1745,6 +1745,103 @@
         "research",
         "scheduler"
       ]
+    },
+    {
+      "name": "StudioSupervisor",
+      "title": "Studio Supervisor Agent",
+      "description": "Teljes Brunella Studio promo pipeline orchestracio ingesttol a QC-ig.",
+      "class": "StudioSupervisorAgent",
+      "module": "./agents/StudioSupervisorAgent.js",
+      "capabilities": [
+        "studio_orchestration",
+        "promo_pipeline",
+        "resolve_handoff",
+        "qc_supervision"
+      ],
+      "triggers": [
+        "studio",
+        "promo video",
+        "rough cut",
+        "fashion promo"
+      ],
+      "category": "creative",
+      "status": "active",
+      "priority": 9
+    },
+    {
+      "name": "MediaIngest",
+      "title": "Media Ingest Agent",
+      "description": "Media ingest, metadata normalizalas, binning es optional proxy generalas.",
+      "class": "MediaIngestAgent",
+      "module": "./agents/MediaIngestAgent.js",
+      "capabilities": [
+        "studio_ingest",
+        "media_analysis",
+        "proxy_generation"
+      ],
+      "category": "creative",
+      "status": "active",
+      "priority": 8
+    },
+    {
+      "name": "StoryCut",
+      "title": "Story Cut Agent",
+      "description": "Deterministic rough-cut es promo segment terv generalas.",
+      "class": "StoryCutAgent",
+      "module": "./agents/StoryCutAgent.js",
+      "capabilities": [
+        "rough_cut_planning",
+        "segment_assembly",
+        "timeline_markers"
+      ],
+      "category": "creative",
+      "status": "active",
+      "priority": 8
+    },
+    {
+      "name": "AudioMix",
+      "title": "Audio Mix Agent",
+      "description": "Beat map, ducking terv es zenei cue planning fashion promo videokhoz.",
+      "class": "AudioMixAgent",
+      "module": "./agents/AudioMixAgent.js",
+      "capabilities": [
+        "audio_plan",
+        "ducking",
+        "music_cue_planning"
+      ],
+      "category": "creative",
+      "status": "active",
+      "priority": 7
+    },
+    {
+      "name": "ColorPrep",
+      "title": "Color Prep Agent",
+      "description": "DaVinci Resolve finishing handoff, marker es render queue elokeszites.",
+      "class": "ColorPrepAgent",
+      "module": "./agents/ColorPrepAgent.js",
+      "capabilities": [
+        "resolve_prep",
+        "color_finishing_handoff",
+        "render_queue_planning"
+      ],
+      "category": "creative",
+      "status": "active",
+      "priority": 7
+    },
+    {
+      "name": "QcRender",
+      "title": "QC Render Agent",
+      "description": "FFmpeg baseline render es delivery QC heuristics futtatasa.",
+      "class": "QcRenderAgent",
+      "module": "./agents/QcRenderAgent.js",
+      "capabilities": [
+        "ffmpeg_render",
+        "studio_qc",
+        "delivery_validation"
+      ],
+      "category": "creative",
+      "status": "active",
+      "priority": 8
     }
   ]
 }

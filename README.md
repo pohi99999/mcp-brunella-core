@@ -91,6 +91,23 @@ A `README.md` a master dokumentum (~1100 sor). NE olvasd be egészben indulásko
 > Ezt a blokkot a `npm run sync:doc-stats` generálja.
 <!-- DOC_STATS_END -->
 
+## Brunella Studio Agent
+
+A BAS most tartalmaz egy dedikált video post-production alrendszert fashion promo workflow-khoz.
+
+Fő komponensek:
+- `brunella studio probe` — FFmpeg + Resolve readiness
+- `brunella studio ingest` — media manifest és binning
+- `brunella studio rough-cut` — deterministic timeline plan
+- `brunella studio audio-plan` — beat/ducking/cue terv
+- `brunella studio render` — FFmpeg baseline deliverables
+- `brunella studio qc` — render QC report
+- `brunella studio full-pipeline` — end-to-end futtatás
+
+Dokumentáció:
+- `docs/brunella-studio-agent.md`
+- `docs/davinci-resolve-setup.md`
+
 ### 3. Rendszer Validáció & Teszt Protokoll (Munka ELŐTT - KÖTELEZŐ!)
 
 ```bash

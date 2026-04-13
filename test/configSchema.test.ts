@@ -39,13 +39,13 @@ describe('Config Validation (P5)', () => {
     it('should validate URL format for ollamaBaseUrl', () => {
       expect(() =>
         ConfigSchema.parse({ ollamaBaseUrl: 'not-a-url' })
-      ).toThrow(/Invalid url/);
+      ).toThrow(/Invalid URL/);
     });
 
     it('should validate URL format for pythonBaseUrl', () => {
       expect(() =>
         ConfigSchema.parse({ pythonBaseUrl: 'invalid' })
-      ).toThrow(/Invalid url/);
+      ).toThrow(/Invalid URL/);
     });
 
     it('should enforce nodeEnv enum', () => {
@@ -99,8 +99,8 @@ describe('Config Validation (P5)', () => {
       } catch (e) {
         expect(e).toBeInstanceOf(z.ZodError);
         const zodError = e as z.ZodError;
-        expect(zodError.errors[0].path).toContain('ollamaBaseUrl');
-        expect(zodError.errors[0].message).toContain('url');
+        expect(zodError.issues[0].path).toContain('ollamaBaseUrl');
+        expect(zodError.issues[0].message).toContain('URL');
       }
     });
 
@@ -111,7 +111,7 @@ describe('Config Validation (P5)', () => {
       } catch (e) {
         expect(e).toBeInstanceOf(z.ZodError);
         const zodError = e as z.ZodError;
-        expect(zodError.errors[0].path).toContain('nodeEnv');
+        expect(zodError.issues[0].path).toContain('nodeEnv');
       }
     });
   });

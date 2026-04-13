@@ -2651,3 +2651,23 @@ Megjegyzés: A Toura repo most ismét elérhető lokálisan, az Iszapfaló grant
 **Státusz:** ✅ Befejezve
 
 **Megjegyzés:** A három live workflow most aktív a dev projectben, a stale inactive duplikátumok és a temporary API kulcsok törölve lettek.
+
+### 2026-04-13 07:22 - Brunella Studio dashboard cockpit
+
+**Feladat:** A Brunella Studio video post-production első köre után a dashboard felületet átalakítani valódi studio cockpitra, hogy a probe, ingest, rough-cut, audio-plan, render és QC lépések külön, áttekinthető helyet kapjanak; mellé célzott UI tesztet és warningmentes e2e lefedést adni.
+
+**Érintett fájlok:** `src/dashboard/components/dashboard/BrunellaStudio.tsx`, `src/dashboard/components/dashboard/BrunellaStudio.test.tsx`, `test/studio/e2e.test.ts`, `.ai/copilot.md`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A régi app-builder jellegű studio panel helyett most a video pipeline-hoz illeszkedő, preset- és command-preview alapú dashboard működik; a célzott dashboard teszt és a studio e2e zöld, a Vitest timeout deprecáció megszüntetve.
+
+### 2026-04-13 09:30 - Studio baseline recovery and clean commit prep
+
+**Feladat:** A studio cockpit és a videós alrendszer commitját blokkoló repo baseline hibák célzott helyreállítása egy leválasztott clean worktree-ben, hogy a build és a fast-suite ismét zöld legyen `--no-verify` nélkül.
+
+**Érintett fájlok:** `package.json`, `package-lock.json`, `vitest.config.ts`, `src/server/registry.ts`, `src/config/{schema.ts,paiosConfig.ts}`, `src/tools/{n8n.ts,taskManagement.ts,heygen.ts}`, `src/agents/schemas/agentOutput.ts`, `src/server/routes/hrTimesheet.ts`, `src/cli/heygenCommands.ts`, `src/server/services/heygenService.ts`, `test/{configSchema.test.ts,llm_client.test.ts,llm_provider.test.ts,outreach_flow.test.ts,predictiveDecisionRoute.test.ts,structured_output.test.ts,toolRegistry.test.ts}`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A buildet az `express-serve-static-core` típusütközés, több Zod v4 inkompatibilitás és hiányzó HeyGen wiring törte; ezek javítása után a clean worktree-ben a `npm run build` és a teljes `npm run test:fast` is zöld lett, így a studio változások governance-kompatibilisen commitolhatók.
