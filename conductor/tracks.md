@@ -13,7 +13,7 @@
 
 ### Brunella rendszer (3)
 
-- [ ] **Brunella Remote Layer — Fázis 8: Planet-Scale Supersystem** [CRITICAL]
+- [x] **Brunella Remote Layer — Fázis 8: Planet-Scale Supersystem** [CRITICAL]
   - **ID:** `remote_layer_phase8_planetary_supersystem_20260322`
   - **Progress:** 0%
   - **Assignee:** GitHub Copilot
