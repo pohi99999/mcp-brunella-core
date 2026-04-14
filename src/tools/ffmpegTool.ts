@@ -69,7 +69,7 @@ export async function probeFfmpegRuntime(): Promise<{ ffmpegAvailable: boolean; 
     ffmpegVersion = result.stdout.split(/\r?\n/)[0]?.trim();
     ffmpegAvailable = true;
   } catch {
-    // Availability stays false when the binary is missing or not runnable.
+    ffmpegAvailable = false;
   }
 
   try {
@@ -77,7 +77,7 @@ export async function probeFfmpegRuntime(): Promise<{ ffmpegAvailable: boolean; 
     ffprobeVersion = result.stdout.split(/\r?\n/)[0]?.trim();
     ffprobeAvailable = true;
   } catch {
-    // Availability stays false when the binary is missing or not runnable.
+    ffprobeAvailable = false;
   }
 
   return { ffmpegAvailable, ffprobeAvailable, ffmpegVersion, ffprobeVersion };

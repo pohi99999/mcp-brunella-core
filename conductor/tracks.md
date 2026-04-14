@@ -1,6 +1,6 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-04-13T07:58:00.000Z
+**Utolso frissites:** 2026-04-14T23:54:50.084Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
@@ -59,7 +59,7 @@
   - **Updated:** 2026-04-11
   - Mappa: ./tracks/l5_multitenant_platform_20260410/
 
-- [~] **P-Sales Human-in-Loop Revenue Pipeline — Lead gen, onboarding, KKV + Brand csatornák** [HIGH]
+- [ ] **P-Sales Human-in-Loop Revenue Pipeline — Lead gen, onboarding, KKV + Brand csatornák** [HIGH]
   - **ID:** `psales_human_loop_revenue_20260407`
   - **Progress:** 35%
   - **Assignee:** GitHub Copilot
@@ -73,15 +73,6 @@
   - **Updated:** 2026-04-08
   - Mappa: ./tracks/pohanka_freelancer_terjeszkedes_20260408/
 
-
-### Brunella rendszer (1)
-
-- [~] **Brunella Studio Agent** [HIGH]
-  - **ID:** `brunella-studio-agent-video_20260413`
-  - **Progress:** 95%
-  - **Assignee:** GitHub Copilot
-  - **Updated:** 2026-04-13T07:58:00.000Z
-  - Mappa: ./tracks/brunella-studio-agent-video_20260413/
 
 ### Nova asszisztens (5)
 
@@ -121,9 +112,19 @@
   - Mappa: ./tracks/toura_local_dev_20260408/
 
 
+### Brunella rendszer (1)
+
+- [ ] **Brunella Studio Agent** [HIGH]
+  - **ID:** `brunella-studio-agent-video_20260413`
+  - **Progress:** 95%
+  - **Assignee:** GitHub Copilot
+  - **Updated:** 2026-04-13
+  - Mappa: ./tracks/brunella-studio-agent-video_20260413/
+
+
 ---
 
-## Befejezett (Completed - Not Archived) (24)
+## Befejezett (Completed - Not Archived) (23)
 
 ### Könyvelés / üzleti automatizálás (11)
 
