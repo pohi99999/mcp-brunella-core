@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-04-13T07:58:00.000Z",
+  "lastUpdated": "2026-04-14T23:54:50.084Z",
   "tracks": [
     {
       "id": "agent_instability_chaos_testing_20260410",
@@ -189,7 +189,7 @@
     {
       "id": "brunella-studio-agent-video_20260413",
       "name": "Brunella Studio Agent",
-      "status": "in-progress",
+      "status": "active",
       "priority": "high",
       "progress": 95,
       "created": "2026-04-13",
