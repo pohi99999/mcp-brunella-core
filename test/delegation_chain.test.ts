@@ -28,6 +28,7 @@ vi.mock("../src/utils/logger.js", () => {
 vi.mock("../src/utils/tasksDb.js", () => ({
   saveTask: vi.fn(async () => Math.floor(Math.random() * 1000)),
   updateTaskStatus: vi.fn(async () => {}),
+  loadQueuedTasksForHydration: vi.fn(async () => []),
 }));
 
 describe("Delegation Chain Integration", () => {

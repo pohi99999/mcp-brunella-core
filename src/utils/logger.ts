@@ -38,13 +38,13 @@ export interface AgentStatusEvent {
 
 export const logEmitter = new EventEmitter();
 
-function emitLog(level: LogLevel, message: string, details?: unknown, agent?: string) {
+function emitLog(level: LogLevel, message: string, details?: unknown, agent?: unknown) {
   const event: LogEvent = { 
     timestamp: getTimestamp(), 
     level, 
     message, 
-    source: agent || message, 
-    agent, 
+    source: typeof agent === 'string' && agent.trim() ? agent : message,
+    agent: typeof agent === 'string' ? agent : undefined,
     details 
   };
   try {
@@ -55,28 +55,28 @@ function emitLog(level: LogLevel, message: string, details?: unknown, agent?: st
   }
 }
 
-export function logError(message: string, details?: unknown, agent?: string) {
+export function logError(message: string, details?: unknown, agent?: unknown) {
   if (LOG_LEVELS.error <= LOG_LEVELS[CURRENT_LOG_LEVEL]) {
     console.error(`[${getTimestamp()}] [ERROR]`, message, details || '');
     emitLog('error', String(message), details, agent);
   }
 }
 
-export function logWarn(message: string, details?: unknown, agent?: string) {
+export function logWarn(message: string, details?: unknown, agent?: unknown) {
   if (LOG_LEVELS.warn <= LOG_LEVELS[CURRENT_LOG_LEVEL]) {
     console.warn(`[${getTimestamp()}] [WARN]`, message, details || '');
     emitLog('warn', String(message), details, agent);
   }
 }
 
-export function logInfo(message: string, details?: unknown, agent?: string) {
+export function logInfo(message: string, details?: unknown, agent?: unknown) {
   if (LOG_LEVELS.info <= LOG_LEVELS[CURRENT_LOG_LEVEL]) {
     console.info(`[${getTimestamp()}] [INFO]`, message, details || '');
     emitLog('info', String(message), details, agent);
   }
 }
 
-export function logDebug(message: string, details?: unknown, agent?: string) {
+export function logDebug(message: string, details?: unknown, agent?: unknown) {
   if (LOG_LEVELS.debug <= LOG_LEVELS[CURRENT_LOG_LEVEL]) {
     console.debug(`[${getTimestamp()}] [DEBUG]`, message, details || '');
     emitLog('debug', String(message), details, agent);

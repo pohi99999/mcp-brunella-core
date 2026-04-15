@@ -1,10 +1,10 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-04-14T23:54:50.084Z
+**Utolso frissites:** 2026-04-15T01:00:00.220Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 246 total | 11 active | 23 completed | 209 archived
+**Stats:** 246 total | 9 active | 24 completed | 210 archived
 **Csoportok:** Könyvelés / üzleti automatizálás: 53 | Nova asszisztens: 23 | Brunella rendszer: 96 | Egyéb: 74
 
 ---
@@ -34,30 +34,23 @@
 
 ---
 
-## Aktiv Szalak (Active) (11)
+## Aktiv Szalak (Active) (9)
 
-### Könyvelés / üzleti automatizálás (5)
+### Könyvelés / üzleti automatizálás (4)
 
 - [ ] **Kognitív Könyvelés és Multi-Ágens Egyeztetés — Bővítmény** [HIGH]
   - **ID:** `konyveles_kognitiv_bovites_20260330`
-  - **Progress:** 35%
+  - **Progress:** 0%
   - **Assignee:** Pohánka Péter
-  - **Updated:** 2026-04-13
+  - **Updated:** 2026-04-03
   - Mappa: ./tracks/konyveles_kognitiv_bovites_20260330/
 
-- [ ] **Könyvelési Automatizálás L5 — Finomítás és Intelligens Hibakezelés** [HIGH]
+- [~] **Könyvelési Automatizálás L5 — Finomítás és Intelligens Hibakezelés** [HIGH]
   - **ID:** `bookkeeping_l5_refinement_20260412`
   - **Progress:** 0%
   - **Assignee:** GitHub Copilot
   - **Updated:** 2026-04-12
   - Mappa: ./tracks/bookkeeping_l5_refinement_20260412/
-
-- [ ] **L5 Multi-Tenant KKV Platform** [HIGH]
-  - **ID:** `l5_multitenant_platform_20260410`
-  - **Progress:** 0%
-  - **Assignee:** GitHub Copilot
-  - **Updated:** 2026-04-11
-  - Mappa: ./tracks/l5_multitenant_platform_20260410/
 
 - [ ] **P-Sales Human-in-Loop Revenue Pipeline — Lead gen, onboarding, KKV + Brand csatornák** [HIGH]
   - **ID:** `psales_human_loop_revenue_20260407`
@@ -112,19 +105,9 @@
   - Mappa: ./tracks/toura_local_dev_20260408/
 
 
-### Brunella rendszer (1)
-
-- [ ] **Brunella Studio Agent** [HIGH]
-  - **ID:** `brunella-studio-agent-video_20260413`
-  - **Progress:** 95%
-  - **Assignee:** GitHub Copilot
-  - **Updated:** 2026-04-13
-  - Mappa: ./tracks/brunella-studio-agent-video_20260413/
-
-
 ---
 
-## Befejezett (Completed - Not Archived) (23)
+## Befejezett (Completed - Not Archived) (24)
 
 ### Könyvelés / üzleti automatizálás (11)
 
@@ -183,7 +166,7 @@
   - Mappa: ./tracks/kkv_project_task_automation_20260404/
 
 
-### Brunella rendszer (9)
+### Brunella rendszer (10)
 
 - [x] **Agent Runtime Hardening — ReAct, Working Memory, Tool Errors, Guardrails**
   - **ID:** `agent_runtime_hardening_20260406`
@@ -198,6 +181,11 @@
   - **ID:** `brunella_identity_project_maintainer_20260402`
   - **Completed:** 2026-04-06
   - Mappa: ./tracks/brunella_identity_project_maintainer_20260402/
+
+- [x] **Brunella Studio Agent**
+  - **ID:** `brunella-studio-agent-video_20260413`
+  - **Completed:** 2026-04-15T00:48:00.000Z
+  - Mappa: ./tracks/brunella-studio-agent-video_20260413/
 
 - [x] **Copilot CLI Self-Improvement Loop — Gödel-Agent Integration**
   - **ID:** `copilot_self_improvement_loop_20260406`
@@ -246,11 +234,11 @@
 
 ---
 
-## Archivalt (Archived) (209)
+## Archivalt (Archived) (210)
 
 > Archived tracks are hidden by default. View in `conductor/archive/`
 
-### Könyvelés / üzleti automatizálás (37)
+### Könyvelés / üzleti automatizálás (38)
 
 - [x] **Brunella teljes funkció- és tulajdonságmátrix dokumentáció** (2026-03-26)
 - [x] **Enterprise Suite Master - 14 Modulos Vállalati Irányító** (2026-02-17T21:15:00Z)
@@ -270,6 +258,7 @@
 - [x] **KKV uzleti automatizalas masterplan** (2026-04-12)
 - [x] **Konyvelesi Phase 0 readiness** (2026-04-05T00:00:00Z)
 - [x] **Könyvelési Automatizálás Phase 3 — szamlazz.hu + WF-6..9 + NAV Live + IMAP** (2026-04-12)
+- [x] **L5 Multi-Tenant KKV Platform** (2026-04-15T00:48:00.000Z)
 - [x] **L5 Zero-Touch Számla Pipeline — Teljes Automatizáció** (2026-04-12)
 - [x] **Marketing Swarm - Automated Campaign Factory** (2026-02-17T23:30:00Z)
 - [x] **P-Sales human-in-loop n8n pipeline** (2026-04-05T00:00:00Z)

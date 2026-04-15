@@ -20,6 +20,7 @@ export type AuditResult = 'ALLOWED' | 'DENIED';
 export interface AuditEntry {
   id?: number;
   timestamp: string;
+  tenantId: string;
   agentName: string;
   action: string;
   resource: string;
@@ -30,6 +31,7 @@ export interface AuditEntry {
 interface AuditLogRow {
   id: number;
   timestamp: string;
+  tenant_id: string;
   agent_name: string;
   action: string;
   resource: string;
@@ -62,6 +64,7 @@ function mapAuditRow(row: AuditLogRow): AuditEntry {
   return {
     id: row.id,
     timestamp: row.timestamp,
+    tenantId: row.tenant_id,
     agentName: row.agent_name,
     action: row.action,
     resource: row.resource,
@@ -125,6 +128,7 @@ async function getDb(): Promise<Database.Database | null> {
     CREATE TABLE IF NOT EXISTS audit_log (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       timestamp TEXT NOT NULL DEFAULT (datetime('now')),
+      tenant_id TEXT NOT NULL DEFAULT 'system',
       agent_name TEXT NOT NULL,
       action TEXT NOT NULL,
       resource TEXT,
@@ -133,6 +137,7 @@ async function getDb(): Promise<Database.Database | null> {
       created_at TEXT NOT NULL DEFAULT (datetime('now'))
     );
     CREATE INDEX IF NOT EXISTS idx_audit_agent ON audit_log(agent_name);
+    CREATE INDEX IF NOT EXISTS idx_audit_tenant ON audit_log(tenant_id);
     CREATE INDEX IF NOT EXISTS idx_audit_result ON audit_log(result);
     CREATE INDEX IF NOT EXISTS idx_audit_timestamp ON audit_log(timestamp);
   `);
@@ -166,10 +171,12 @@ export async function record(
   agentName: string,
   action: string,
   resource: string,
-  reason?: string
+  reason?: string,
+  tenantId = 'system'
 ): Promise<void> {
   const entry: AuditEntry = {
     timestamp: new Date().toISOString(),
+    tenantId,
     agentName,
     action,
     resource,
@@ -194,9 +201,9 @@ export async function record(
     if (!database) return;
 
     const stmt = database.prepare(
-      'INSERT INTO audit_log (timestamp, agent_name, action, resource, result, reason) VALUES (?, ?, ?, ?, ?, ?)'
+      'INSERT INTO audit_log (timestamp, tenant_id, agent_name, action, resource, result, reason) VALUES (?, ?, ?, ?, ?, ?, ?)'
     );
-    stmt.run(entry.timestamp, entry.agentName, entry.action, entry.resource, entry.result, entry.reason || null);
+    stmt.run(entry.timestamp, entry.tenantId, entry.agentName, entry.action, entry.resource, entry.result, entry.reason || null);
   } catch (error: unknown) {
     const msg = error instanceof Error ? error.message : String(error);
     logError('AuditLog', `SQLite insert failed: ${msg}`);
@@ -207,19 +214,25 @@ export async function record(
  * Get paginated audit log entries (newest first).
  * Reads from SQLite (fallback to in-memory buffer if DB unavailable).
  */
-export async function getAuditLog(limit = 50, offset = 0): Promise<AuditEntry[]> {
+export async function getAuditLog(limit = 50, offset = 0, tenantId?: string): Promise<AuditEntry[]> {
   try {
     const database = await getDb();
     if (!database) {
       // Fallback to in-memory buffer
-      const sorted = [...auditBuffer].reverse();
+      const sorted = [...auditBuffer]
+        .filter((entry) => !tenantId || entry.tenantId === tenantId)
+        .reverse();
       return sorted.slice(offset, offset + limit);
     }
 
-    const stmt = database.prepare(
-      'SELECT id, timestamp, agent_name, action, resource, result, reason FROM audit_log ORDER BY id DESC LIMIT ? OFFSET ?'
-    );
-    const rows = stmt.all(limit, offset) as AuditLogRow[];
+    const stmt = tenantId
+      ? database.prepare(
+          'SELECT id, timestamp, tenant_id, agent_name, action, resource, result, reason FROM audit_log WHERE tenant_id = ? ORDER BY id DESC LIMIT ? OFFSET ?'
+        )
+      : database.prepare(
+          'SELECT id, timestamp, tenant_id, agent_name, action, resource, result, reason FROM audit_log ORDER BY id DESC LIMIT ? OFFSET ?'
+        );
+    const rows = tenantId ? stmt.all(tenantId, limit, offset) as AuditLogRow[] : stmt.all(limit, offset) as AuditLogRow[];
     return rows.map(mapAuditRow);
   } catch (error: unknown) {
     const msg = error instanceof Error ? error.message : String(error);
@@ -233,26 +246,30 @@ export async function getAuditLog(limit = 50, offset = 0): Promise<AuditEntry[]>
 /**
  * Get only DENIED entries (newest first).
  */
-export async function getDeniedEntries(limit = 50): Promise<AuditEntry[]> {
+export async function getDeniedEntries(limit = 50, tenantId?: string): Promise<AuditEntry[]> {
   try {
     const database = await getDb();
     if (!database) {
       return [...auditBuffer]
-        .filter((e) => e.result === 'DENIED')
+        .filter((e) => e.result === 'DENIED' && (!tenantId || e.tenantId === tenantId))
         .reverse()
         .slice(0, limit);
     }
 
-    const stmt = database.prepare(
-      'SELECT id, timestamp, agent_name, action, resource, result, reason FROM audit_log WHERE result = ? ORDER BY id DESC LIMIT ?'
-    );
-    const rows = stmt.all('DENIED', limit) as AuditLogRow[];
+    const stmt = tenantId
+      ? database.prepare(
+          'SELECT id, timestamp, tenant_id, agent_name, action, resource, result, reason FROM audit_log WHERE result = ? AND tenant_id = ? ORDER BY id DESC LIMIT ?'
+        )
+      : database.prepare(
+          'SELECT id, timestamp, tenant_id, agent_name, action, resource, result, reason FROM audit_log WHERE result = ? ORDER BY id DESC LIMIT ?'
+        );
+    const rows = tenantId ? stmt.all('DENIED', tenantId, limit) as AuditLogRow[] : stmt.all('DENIED', limit) as AuditLogRow[];
     return rows.map(mapAuditRow);
   } catch (error: unknown) {
     const msg = error instanceof Error ? error.message : String(error);
     logError('AuditLog', `SQLite denied query failed: ${msg}`);
     return [...auditBuffer]
-      .filter((e) => e.result === 'DENIED')
+      .filter((e) => e.result === 'DENIED' && (!tenantId || e.tenantId === tenantId))
       .reverse()
       .slice(0, limit);
   }
@@ -261,7 +278,7 @@ export async function getDeniedEntries(limit = 50): Promise<AuditEntry[]> {
 /**
  * Get audit log statistics.
  */
-export async function getAuditStats(): Promise<{
+export async function getAuditStats(tenantId?: string): Promise<{
   totalEntries: number;
   allowedCount: number;
   deniedCount: number;
@@ -274,8 +291,9 @@ export async function getAuditStats(): Promise<{
       const byAgent: Record<string, { allowed: number; denied: number }> = {};
       let allowedCount = 0;
       let deniedCount = 0;
+      const filtered = auditBuffer.filter((entry) => !tenantId || entry.tenantId === tenantId);
 
-      for (const entry of auditBuffer) {
+      for (const entry of filtered) {
         if (entry.result === 'ALLOWED') allowedCount++;
         else deniedCount++;
 
@@ -287,7 +305,7 @@ export async function getAuditStats(): Promise<{
       }
 
       return {
-        totalEntries: auditBuffer.length,
+        totalEntries: filtered.length,
         allowedCount,
         deniedCount,
         byAgent,
@@ -295,15 +313,28 @@ export async function getAuditStats(): Promise<{
     }
 
     // SQLite aggregation
-    const totalRow = database.prepare('SELECT COUNT(*) as count FROM audit_log').get() as CountRow | undefined;
-    const allowedRow = database.prepare('SELECT COUNT(*) as count FROM audit_log WHERE result = ?').get('ALLOWED') as CountRow | undefined;
-    const deniedRow = database.prepare('SELECT COUNT(*) as count FROM audit_log WHERE result = ?').get('DENIED') as CountRow | undefined;
+    const totalRow = tenantId
+      ? database.prepare('SELECT COUNT(*) as count FROM audit_log WHERE tenant_id = ?').get(tenantId) as CountRow | undefined
+      : database.prepare('SELECT COUNT(*) as count FROM audit_log').get() as CountRow | undefined;
+    const allowedRow = tenantId
+      ? database.prepare('SELECT COUNT(*) as count FROM audit_log WHERE result = ? AND tenant_id = ?').get('ALLOWED', tenantId) as CountRow | undefined
+      : database.prepare('SELECT COUNT(*) as count FROM audit_log WHERE result = ?').get('ALLOWED') as CountRow | undefined;
+    const deniedRow = tenantId
+      ? database.prepare('SELECT COUNT(*) as count FROM audit_log WHERE result = ? AND tenant_id = ?').get('DENIED', tenantId) as CountRow | undefined
+      : database.prepare('SELECT COUNT(*) as count FROM audit_log WHERE result = ?').get('DENIED') as CountRow | undefined;
 
-    const agentRows = database.prepare(`
-      SELECT agent_name, result, COUNT(*) as count
+    const agentRows = tenantId
+      ? database.prepare(`
+      SELECT tenant_id, agent_name, result, COUNT(*) as count
       FROM audit_log
-      GROUP BY agent_name, result
-    `).all() as AgentCountRow[];
+      WHERE tenant_id = ?
+      GROUP BY tenant_id, agent_name, result
+    `).all(tenantId) as Array<AgentCountRow & { tenant_id: string }>
+      : database.prepare(`
+      SELECT tenant_id, agent_name, result, COUNT(*) as count
+      FROM audit_log
+      GROUP BY tenant_id, agent_name, result
+    `).all() as Array<AgentCountRow & { tenant_id: string }>;
 
     const byAgent: Record<string, { allowed: number; denied: number }> = {};
     for (const row of agentRows) {
@@ -328,8 +359,9 @@ export async function getAuditStats(): Promise<{
     const byAgent: Record<string, { allowed: number; denied: number }> = {};
     let allowedCount = 0;
     let deniedCount = 0;
+    const filtered = auditBuffer.filter((entry) => !tenantId || entry.tenantId === tenantId);
 
-    for (const entry of auditBuffer) {
+    for (const entry of filtered) {
       if (entry.result === 'ALLOWED') allowedCount++;
       else deniedCount++;
 
@@ -341,7 +373,7 @@ export async function getAuditStats(): Promise<{
     }
 
     return {
-      totalEntries: auditBuffer.length,
+      totalEntries: filtered.length,
       allowedCount,
       deniedCount,
       byAgent,
@@ -413,13 +445,25 @@ export function stopCleanupSchedule(): void {
  * Clear all audit entries (for testing).
  * Also clears SQLite database.
  */
-export async function clearAuditLog(): Promise<void> {
-  auditBuffer.length = 0;
+export async function clearAuditLog(tenantId?: string): Promise<void> {
+  if (tenantId) {
+    for (let index = auditBuffer.length - 1; index >= 0; index--) {
+      if (auditBuffer[index]?.tenantId === tenantId) {
+        auditBuffer.splice(index, 1);
+      }
+    }
+  } else {
+    auditBuffer.length = 0;
+  }
 
   try {
     const database = await getDb();
     if (database) {
-      database.prepare('DELETE FROM audit_log').run();
+      if (tenantId) {
+        database.prepare('DELETE FROM audit_log WHERE tenant_id = ?').run(tenantId);
+      } else {
+        database.prepare('DELETE FROM audit_log').run();
+      }
     }
   } catch (error: unknown) {
     const msg = error instanceof Error ? error.message : String(error);

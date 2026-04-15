@@ -1,5 +1,15 @@
 # Copilot Session Notes
 
+### 2026-04-15 02:35 - Tenant audit and CEAN isolation fix
+
+**Feladat:** A tenant-aware audit log és CEAN chat history regressziók javítása, majd a build és célzott tenant tesztek zöldre vitele.
+
+**Érintett fájlok:** `src/core/auditLog.ts`, `src/server/routes/cean.ts`, `src/utils/logger.ts`, `test/auditLogTenant.test.ts`, `test/ceanRoutes.test.ts`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A tenant-szűrés most már működik az audit logban és a CEAN chat history-ban is. A gyökér ok a CEAN pagination parse hibája volt (`String(undefined)` -> `NaN`), ezt normalizált limit/offset feldolgozásra cseréltem. A `npm run build` és a célzott tenant Vitest slice zöld.
+
 ### 2026-04-12 22:09 - Phase 3 bank CSV watch branch
 
 **Feladat:** A WF-2 bookkeeping workflow kaptott egy Local File Trigger ágat, ami a watched CSV-ket a BankAgent-en keresztül tölti be a bookkeeping DB-be, miközben a napi reconcile backup megmaradt.

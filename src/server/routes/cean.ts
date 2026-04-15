@@ -9,6 +9,7 @@ import { Router, Request, Response } from 'express';
 import Database from 'better-sqlite3';
 import { v4 as uuidv4 } from 'uuid';
 import { logInfo, logError } from '../../utils/logger.js';
+import { normalizeTenantContext } from '../../core/tenantRegistry.js';
 
 const router = Router();
 const db = new Database(process.env.DATABASE_PATH || 'data/cean.db');
@@ -19,6 +20,7 @@ function initializeTables() {
     db.exec(`
       CREATE TABLE IF NOT EXISTS cean_chat_history (
         id TEXT PRIMARY KEY,
+        tenant_id TEXT NOT NULL DEFAULT 'system',
         session_id TEXT NOT NULL,
         role TEXT NOT NULL,
         content TEXT NOT NULL,
@@ -27,6 +29,7 @@ function initializeTables() {
         created_at TEXT NOT NULL
       );
       
+      CREATE INDEX IF NOT EXISTS idx_tenant_id ON cean_chat_history(tenant_id);
       CREATE INDEX IF NOT EXISTS idx_session_id ON cean_chat_history(session_id);
       CREATE INDEX IF NOT EXISTS idx_role ON cean_chat_history(role);
       CREATE INDEX IF NOT EXISTS idx_created_at ON cean_chat_history(created_at);
@@ -39,6 +42,10 @@ function initializeTables() {
 }
 
 initializeTables();
+
+function getTenantId(req: Request): string {
+  return normalizeTenantContext(req.header('X-Tenant-ID') || undefined);
+}
 
 /**
  * POST /api/cean/chat/save
@@ -61,6 +68,7 @@ initializeTables();
  */
 router.post('/cean/chat/save', (req: Request, res: Response): void => {
   try {
+    const tenantId = getTenantId(req);
     const { sessionId, role, content, taskId } = req.body;
 
     // Validation
@@ -84,16 +92,17 @@ router.post('/cean/chat/save', (req: Request, res: Response): void => {
 
     const stmt = db.prepare(`
       INSERT INTO cean_chat_history 
-      (id, session_id, role, content, task_id, timestamp, created_at)
-      VALUES (?, ?, ?, ?, ?, ?, ?)
+      (id, tenant_id, session_id, role, content, task_id, timestamp, created_at)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     `);
 
-    stmt.run(id, sessionId, role, content, taskId || null, timestamp, created_at);
+    stmt.run(id, tenantId, sessionId, role, content, taskId || null, timestamp, created_at);
 
     logInfo('CEAN Routes', `Chat message saved: ${role} - ${content.slice(0, 50)}...`);
 
     res.json({
       id,
+      tenantId,
       timestamp,
       created_at,
     });
@@ -128,30 +137,30 @@ router.post('/cean/chat/save', (req: Request, res: Response): void => {
  */
 router.get('/cean/chat/history/:sessionId', (req: Request, res: Response): void => {
   try {
+    const tenantId = getTenantId(req);
     const { sessionId } = req.params;
     const { limit, offset } = req.query;
 
     // Parse and validate pagination
-    let limitNum = parseInt(String(limit) || '100', 10);
-    let offsetNum = parseInt(String(offset) || '0', 10);
+    const parsedLimit = typeof limit === 'string' ? parseInt(limit, 10) : 100;
+    const parsedOffset = typeof offset === 'string' ? parseInt(offset, 10) : 0;
+    let limitNum = Number.isFinite(parsedLimit) ? parsedLimit : 100;
+    let offsetNum = Number.isFinite(parsedOffset) ? parsedOffset : 0;
 
     if (limitNum > 500) limitNum = 500;
     if (limitNum < 1) limitNum = 1;
     if (offsetNum < 0) offsetNum = 0;
 
-    const countStmt = db.prepare('SELECT COUNT(*) as count FROM cean_chat_history WHERE session_id = ?');
-    const { count: total } = countStmt.get(sessionId) as { count: number };
-
     const stmt = db.prepare(`
-      SELECT id, role, content, task_id, timestamp, created_at
+      SELECT id, tenant_id, role, content, task_id, timestamp, created_at
       FROM cean_chat_history
       WHERE session_id = ?
       ORDER BY created_at ASC
-      LIMIT ? OFFSET ?
     `);
 
-    const messages = stmt.all(sessionId, limitNum, offsetNum) as Array<{
+    const allMessages = stmt.all(sessionId) as Array<{
       id: string;
+      tenant_id: string;
       role: string;
       content: string;
       task_id: string | null;
@@ -159,12 +168,18 @@ router.get('/cean/chat/history/:sessionId', (req: Request, res: Response): void 
       created_at: string;
     }>;
 
+    const scopedMessages = allMessages.filter((msg) => msg.tenant_id === tenantId);
+    const messages = scopedMessages.slice(offsetNum, offsetNum + limitNum);
+    const total = scopedMessages.length;
+
     logInfo('CEAN Routes', `Chat history loaded: ${sessionId} (${messages.length}/${total} messages)`);
 
     res.json({
       sessionId,
+      tenantId,
       messages: messages.map((msg) => ({
         id: msg.id,
+        tenantId: msg.tenant_id,
         role: msg.role,
         content: msg.content,
         taskId: msg.task_id,
@@ -188,15 +203,23 @@ router.get('/cean/chat/history/:sessionId', (req: Request, res: Response): void 
  */
 router.delete('/cean/chat/history/:sessionId', (req: Request, res: Response): void => {
   try {
+    const tenantId = getTenantId(req);
     const { sessionId } = req.params;
 
-    const stmt = db.prepare('DELETE FROM cean_chat_history WHERE session_id = ?');
-    const result = stmt.run(sessionId);
+    const rows = db.prepare(
+      'SELECT id, tenant_id FROM cean_chat_history WHERE session_id = ? ORDER BY created_at ASC'
+    ).all(sessionId) as Array<{ id: string; tenant_id: string }>;
+    const idsToDelete = rows.filter((row) => row.tenant_id === tenantId).map((row) => row.id);
+
+    const result = idsToDelete.length > 0
+      ? db.prepare(`DELETE FROM cean_chat_history WHERE id IN (${idsToDelete.map(() => '?').join(', ')})`).run(...idsToDelete)
+      : { changes: 0 };
 
     logInfo('CEAN Routes', `Chat history cleared: ${sessionId} (${result.changes} messages deleted)`);
 
     res.json({
       sessionId,
+      tenantId,
       deleted: result.changes,
     });
   } catch (e: unknown) {

@@ -1,6 +1,6 @@
 # FŐSZÁL - Egyesített Fejlesztési Napló
 
-**Generálva:** 2026-04-13 09:31
+**Generálva:** 2026-04-15 02:36
 **Script:** `scripts/sync_foszal.py`
 
 ---
@@ -27,6 +27,15 @@ start-full.bat
 ---
 
 ## Összesített Napló (Időrendben)
+
+### 2026-04-15
+
+#### 02:35 - [Copilot] Tenant audit and CEAN isolation fix
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `src/core/auditLog.ts`, `src/server/routes/cean.ts`, `src/utils/logger.ts`, `test/auditLogTenant.test.ts`, `test/ceanRoutes.test.ts`
+
+---
 
 ### 2026-04-13
 
@@ -1359,7 +1368,7 @@ start-full.bat
 | Claude | 91 | 2026-04-12 |
 | Gemini | 8 | 2026-04-13 |
 | Cursor | 0 | N/A |
-| Copilot | 140 | 2026-04-12 |
+| Copilot | 141 | 2026-04-15 |
 
 ---
 
