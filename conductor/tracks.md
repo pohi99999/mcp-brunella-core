@@ -1,17 +1,17 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-04-15T01:00:00.220Z
+**Utolso frissites:** 2026-04-15T20:00:00.667Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 246 total | 9 active | 24 completed | 210 archived
+**Stats:** 246 total | 10 active | 24 completed | 210 archived
 **Csoportok:** Könyvelés / üzleti automatizálás: 53 | Nova asszisztens: 23 | Brunella rendszer: 96 | Egyéb: 74
 
 ---
 
-## Tervezett Szalak (Proposed) (3)
+## Tervezett Szalak (Proposed) (2)
 
-### Brunella rendszer (3)
+### Brunella rendszer (2)
 
 - [ ] **Brunella Remote Layer — Fázis 8: Planet-Scale Supersystem** [CRITICAL]
   - **ID:** `remote_layer_phase8_planetary_supersystem_20260322`
@@ -25,16 +25,10 @@
   - **Assignee:** GitHub Copilot
   - Mappa: ./tracks/remote_layer_phase9_emergent_superintelligence_20260322/
 
-- [ ] **Brunella Studio Agent v2** [HIGH]
-  - **ID:** `brunella-studio-agent-v2_20260414`
-  - **Progress:** 0%
-  - **Assignee:** GitHub Copilot
-  - Mappa: ./tracks/brunella-studio-agent-v2_20260414/
-
 
 ---
 
-## Aktiv Szalak (Active) (9)
+## Aktiv Szalak (Active) (10)
 
 ### Könyvelés / üzleti automatizálás (4)
 
@@ -45,7 +39,7 @@
   - **Updated:** 2026-04-03
   - Mappa: ./tracks/konyveles_kognitiv_bovites_20260330/
 
-- [~] **Könyvelési Automatizálás L5 — Finomítás és Intelligens Hibakezelés** [HIGH]
+- [ ] **Könyvelési Automatizálás L5 — Finomítás és Intelligens Hibakezelés** [HIGH]
   - **ID:** `bookkeeping_l5_refinement_20260412`
   - **Progress:** 0%
   - **Assignee:** GitHub Copilot
@@ -54,9 +48,9 @@
 
 - [ ] **P-Sales Human-in-Loop Revenue Pipeline — Lead gen, onboarding, KKV + Brand csatornák** [HIGH]
   - **ID:** `psales_human_loop_revenue_20260407`
-  - **Progress:** 35%
+  - **Progress:** 40%
   - **Assignee:** GitHub Copilot
-  - **Updated:** 2026-04-12T02:24:00.000Z
+  - **Updated:** 2026-04-15T02:35:00.000Z
   - Mappa: ./tracks/psales_human_loop_revenue_20260407/
 
 - [ ] **Pohánka freelancer terjeszkedés és profilrendszer** [HIGH]
@@ -103,6 +97,16 @@
   - **Assignee:** Gemini
   - **Updated:** 2026-04-12
   - Mappa: ./tracks/toura_local_dev_20260408/
+
+
+### Brunella rendszer (1)
+
+- [~] **Brunella Studio Agent v2** [HIGH]
+  - **ID:** `brunella-studio-agent-v2_20260414`
+  - **Progress:** 70%
+  - **Assignee:** GitHub Copilot
+  - **Updated:** 2026-04-15
+  - Mappa: ./tracks/brunella-studio-agent-v2_20260414/
 
 
 ---

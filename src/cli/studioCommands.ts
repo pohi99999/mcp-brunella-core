@@ -1,7 +1,7 @@
 import type { Command } from 'commander';
 import chalk from 'chalk';
 
-import { studioFullPipeline, studioInit, studioProbe } from './studioRuntime.js';
+import { reviewStudioRun, studioFullPipeline, studioInit, studioPipelineReportPath, studioProbe } from './studioRuntime.js';
 import { generateAudioPlan } from '../tools/audioPlanTool.js';
 import { ingestMediaDirectory } from '../tools/mediaAnalysisTool.js';
 import { runQcChecks } from '../tools/qcTool.js';
@@ -94,6 +94,21 @@ export function registerStudioCommands(program: Command): void {
     .option('--expected-height <px>', 'Expected height')
     .action(async (options: { file: string; expectedDuration?: string; expectedWidth?: string; expectedHeight?: string }) => {
       printJson('Studio QC', await runQcChecks({ filePath: options.file, expectedDurationSec: options.expectedDuration ? Number(options.expectedDuration) : undefined, expectedWidth: options.expectedWidth ? Number(options.expectedWidth) : undefined, expectedHeight: options.expectedHeight ? Number(options.expectedHeight) : undefined }));
+    });
+
+  studio
+    .command('review')
+    .description('Reviews a Studio pipeline report, music intelligence, and rerun guidance')
+    .option('--report-path <path>', 'Pipeline report JSON path')
+    .option('--project-name <name>', 'Studio project name for the default pipeline report path')
+    .option('--rerun-command <command>', 'Override rerun command shown in the review output')
+    .option('--callback-url <url>', 'Webhook callback URL for the review payload')
+    .action(async (options: { reportPath?: string; projectName?: string; rerunCommand?: string; callbackUrl?: string }) => {
+      const pipelineReportPath = options.reportPath ?? (options.projectName ? studioPipelineReportPath(options.projectName) : undefined);
+      if (!pipelineReportPath) {
+        throw new Error('Hasznalat: brunella studio review --report-path <path> vagy --project-name <name>');
+      }
+      printJson('Studio review', await reviewStudioRun({ pipelineReportPath, rerunCommand: options.rerunCommand, callbackUrl: options.callbackUrl }));
     });
 
   studio

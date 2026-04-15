@@ -219,14 +219,35 @@ function createSessionId(): string {
 
 function selectPreferredSpeechVoice(voices: SpeechSynthesisVoice[], preferredVoice: VoiceOption): SpeechSynthesisVoice | undefined {
     const normalizedPreferredVoice = preferredVoice.toLowerCase();
-    const femaleHints = ['female', 'woman', 'samantha', 'zira', 'eva', 'anna', 'katja', 'julia', 'victoria'];
+    // Extended female hints — Windows, macOS, common TTS names
+    const femaleHints = ['female', 'woman', 'samantha', 'zira', 'eva', 'anna', 'katja', 'julia', 'victoria', 'nova', 'shimmer', 'zsuzsanna', 'agnes', 'ágnes', 'ildiko', 'ildikó'];
+    const maleHints = ['male', 'man', 'szabolcs', 'daniel', 'dániel', 'onyx', 'echo', 'fable'];
     const preferredLocaleVoices = voices.filter((voice) => voice.lang.toLowerCase().startsWith('hu'));
 
-    return voices.find((voice) => voice.name.toLowerCase().includes(normalizedPreferredVoice))
-        ?? preferredLocaleVoices.find((voice) => femaleHints.some((hint) => voice.name.toLowerCase().includes(hint)))
-        ?? preferredLocaleVoices[0]
-        ?? voices.find((voice) => femaleHints.some((hint) => voice.name.toLowerCase().includes(hint)))
-        ?? voices[0];
+    // 1. Exact name match (e.g. browser has a "nova" voice)
+    const exactMatch = voices.find((voice) => voice.name.toLowerCase().includes(normalizedPreferredVoice));
+    if (exactMatch) return exactMatch;
+
+    // 2. Hungarian female voice
+    const huFemale = preferredLocaleVoices.find((voice) =>
+        femaleHints.some((hint) => voice.name.toLowerCase().includes(hint))
+    );
+    if (huFemale) return huFemale;
+
+    // 3. Hungarian voice that is NOT male (skip Szabolcs etc.)
+    const huNonMale = preferredLocaleVoices.find((voice) =>
+        !maleHints.some((hint) => voice.name.toLowerCase().includes(hint))
+    );
+    if (huNonMale) return huNonMale;
+
+    // 4. Any female voice
+    const anyFemale = voices.find((voice) =>
+        femaleHints.some((hint) => voice.name.toLowerCase().includes(hint))
+    );
+    if (anyFemale) return anyFemale;
+
+    // 5. Last resort: first available (better than silence)
+    return voices[0];
 }
 
 export function PAIOSOrchestratorChat() {

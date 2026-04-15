@@ -2,11 +2,43 @@
 
 **Agent:** Claude Code (Anthropic)
 **Fájl:** `.ai/claude.md`
-**Utolsó frissítés:** 2026-04-12
+**Utolsó frissítés:** 2026-04-15
 
 ---
 
 ## 📋 LEGUTÓBBI MUNKAMENET
+
+### 2026-04-15 - PAIOS TTS hang javítás (nova female voice)
+
+**Feladat:** PAIOS chat felületen férfi hang szólt — nova hang beállítása ellenére a browser speechSynthesis fallback (Szabolcs) vette át.
+
+**Gyökérok:**
+1. `src/utils/tts.ts` csak `OPENAI_API_KEY`-t olvasott, de `.env`-ben van dedikált `OPENAI_TTS_API_KEY` is → TTS API hívás sikertelen lehetett
+2. `PAIOSOrchestratorChat.tsx` `selectPreferredSpeechVoice()` fallback: `preferredLocaleVoices[0]` = "Microsoft Szabolcs" (férfi hang Windows-on)
+
+**Javítások:**
+1. `src/utils/tts.ts`: `process.env.OPENAI_TTS_API_KEY || process.env.OPENAI_API_KEY` — dedikált TTS kulcs elsőbbsége
+2. `PAIOSOrchestratorChat.tsx`: `selectPreferredSpeechVoice()` átírva — hungarian female → non-male → any female → voices[0] fallback lánc; `femaleHints` bővítve magyar nevekkel (zsuzsanna, agnes, ildiko stb.); `maleHints` (szabolcs, daniel) kizárva
+
+**Érintett fájlok:** `src/utils/tts.ts`, `src/dashboard/components/dashboard/PAIOSOrchestratorChat.tsx`
+**Build:** ✅ 0 hiba
+**Státusz:** ✅ Befejezve
+
+### 2026-04-15 - CLAUDE.md `/init` célzott fejlesztés
+
+**Feladat:** `/init` parancs — CLAUDE.md elemzése és célzott fejlesztése README.md + copilot-instructions.md alapján
+
+**Elvégzett feladatok:**
+1. Statisztikák pontosítva: 87→88 agent, 96+→97+ route, 108→110 dashboard panel
+2. `src/core/hookRegistry.ts` hook rendszer architechtúra megjegyzés hozzáadva (hiányzott)
+3. `.github/instructions/test-conventions.instructions.md` hivatkozás hozzáadva TypeScript konvenciókhoz
+4. `.github/instructions/python-conventions.instructions.md` hivatkozás hozzáadva Python konvenciókhoz
+5. Brunella Studio alrendszer dokumentálva (`out/studio/`, `temp/studio/`)
+
+**Érintett fájlok:** `CLAUDE.md`, `.ai/CLAUDE.md`
+**Státusz:** ✅ Befejezve
+
+---
 
 ### 2026-04-12 - CLAUDE.md `/init` frissítés
 

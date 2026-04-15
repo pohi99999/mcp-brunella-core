@@ -14,7 +14,7 @@ export const StudioOrchestrationSkill: BrunellaSkill = {
   version: '1.0.0',
   category: 'studio',
   tools: ['studio_media_ingest_directory', 'studio_timeline_plan', 'studio_audio_plan', 'studio_render_execute', 'studio_qc_run'],
-  agents: ['StudioSupervisor', 'MediaIngest', 'StoryCut', 'AudioMix', 'ColorPrep', 'QcRender'],
+  agents: ['StudioSupervisor', 'MediaIngest', 'StoryCut', 'AudioMix', 'ColorPrep', 'QcRender', 'StudioReviewer'],
   validate(params: SkillParams): boolean {
     return validateStudioOrchestrationSkill(params).valid;
   },

@@ -2681,3 +2681,34 @@ Megjegyzés: A Toura repo most ismét elérhető lokálisan, az Iszapfaló grant
 **Státusz:** ✅ Befejezve
 
 **Megjegyzés:** A buildet az `express-serve-static-core` típusütközés, több Zod v4 inkompatibilitás és hiányzó HeyGen wiring törte; ezek javítása után a clean worktree-ben a `npm run build` és a teljes `npm run test:fast` is zöld lett, így a studio változások governance-kompatibilisen commitolhatók.
+
+### 2026-04-15 04:15 - Brunella Studio v2 reviewer slice
+**Feladat:** A Studio v2 reviewer-loop core, a CLI `studio review` parancs, a dashboard review stage és a hozzájuk tartozó determinisztikus review tesztek bekötése.
+**Érintett fájlok:** src/cli/studioRuntime.ts, src/cli/studioCommands.ts, src/agents/StudioReviewerAgent.ts, src/agents/StudioSupervisorAgent.ts, src/agents/registry.json, src/schemas/studioSchemas.ts, src/dashboard/components/dashboard/BrunellaStudio.tsx, src/dashboard/components/dashboard/BrunellaStudio.test.tsx, src/skills/StudioOrchestrationSkill.ts, test/studio/review.test.ts, test/studio/reviewCommand.test.ts
+**Státusz:** ✅ Befejezve
+**Megjegyzés:** A célzott dashboard és reviewer tesztek zöldek voltak, majd a teljes `npm run test:fast` is zöldre futott; a Studio v2 reviewer slice most teljesen igazolt.
+
+### 2026-04-15 14:31 - Brunella Studio v2 webhook callback slice
+**Feladat:** Az opcionális Studio review callback URL, a webhook payload delivery, valamint a CLI és dashboard callback vezérlők bekötése.
+**Érintett fájlok:** src/cli/studioRuntime.ts, src/cli/studioCommands.ts, src/agents/StudioReviewerAgent.ts, src/schemas/studioSchemas.ts, src/dashboard/components/dashboard/BrunellaStudio.tsx, src/dashboard/components/dashboard/BrunellaStudio.test.tsx, test/studio/review.test.ts, test/studio/reviewCommand.test.ts, test/outreach_flow.test.ts, conductor/tracks/brunella-studio-agent-v2_20260414/plan.md
+**Státusz:** ✅ Befejezve
+**Megjegyzés:** A callback payload structured review JSON-t küld webhookra, a CLI és dashboard preview mutatja a callback URL-t, és a related fast/build gate green.
+### 2026-04-15 19:40 - Brunella Studio v2 music intelligence slice
+
+**Feladat:** A Studio reviewer a zenei intelligenciával bővítése: beat density, ducking, LUFS és timeline-duration heuristics, plus CLI/dashboard copy frissítése és célzott teszt.
+
+**Érintett fájlok:** `src/cli/studioRuntime.ts`, `src/cli/studioCommands.ts`, `src/agents/StudioReviewerAgent.ts`, `src/agents/registry.json`, `src/dashboard/components/dashboard/BrunellaStudio.tsx`, `test/studio/review.test.ts`, `conductor/tracks/brunella-studio-agent-v2_20260414/plan.md`, `conductor/tracks/brunella-studio-agent-v2_20260414/meta.json`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** Az audio-plan heuristics most strukturált review findingokká válnak, a fast suite zöld, a track pedig továbbra is aktív marad a későbbi hardening/more finish work miatt.
+
+### 2026-04-15 19:55 - Brunella Studio v2 reviewer signals slice
+
+**Feladat:** A Studio dashboardra egy külön reviewer-signals kártya hozzáadása, hogy a music intelligence, callback delivery és trust signals láthatóvá váljanak.
+
+**Érintett fájlok:** `src/dashboard/components/dashboard/BrunellaStudio.tsx`, `src/dashboard/components/dashboard/BrunellaStudio.test.tsx`, `conductor/tracks/brunella-studio-agent-v2_20260414/plan.md`, `conductor/tracks/brunella-studio-agent-v2_20260414/meta.json`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A reviewer-szintű dashboard panel most külön mutatja a zenei intelligenciát és a webhook review hangsúlyokat; a build és a fast suite zöld.

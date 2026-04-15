@@ -1,7 +1,7 @@
 # 🌌 BRUNELLA MASTER CONTEXT (Élő Rendszertérkép)
 
 **Verzió:** 2.4.0
-**Frissítve:** 2026-04-11
+**Frissítve:** 2026-04-15
 **Státusz:** ACTIVE (Élő rendszer)
 
 ---
@@ -21,7 +21,7 @@ A **Brunella Agent System (BAS)** egy hibrid, multi-agent AI ökoszisztéma, ame
 
 ## 2. 🤖 Az Ügynök Sereg (The Legion)
 
-A rendszer **82** regisztrált ügynökkel rendelkezik.
+A rendszer **94** regisztrált ügynökkel rendelkezik.
 
 ### 👑 Vezérkar (Core Leadership)
 | Ügynök | Szerep | Képességek |
@@ -46,6 +46,7 @@ A rendszer **82** regisztrált ügynökkel rendelkezik.
 | **ApifyScraping** | Research & Intelligence — Deep Web Scraper |  |
 | **Architect** | architect |  |
 | **ChromeDevTools** | Web Debug & Performance Analyst |  |
+| **ViktoriaPhygital** | Luxury Fashion Phygital Orchestrator | lux_harvesting, visual_brand_safety, bilingual_extraction |
 | **CampaignGenerator** | undefined |  |
 | **MarketingDirector** | undefined |  |
 | **BrunellaProjectManager** | undefined | project_status, track_snapshot, foszal_summary |
@@ -56,6 +57,8 @@ A rendszer **82** regisztrált ügynökkel rendelkezik.
 | **ConflictMediator** | Organizational Conflict Resolution |  |
 | **copywriter** | undefined | social_media_generation, email_drafting, copywriting |
 | **viktoria-brand-voice** | undefined | brand-voice, caption-writing, email-drafting |
+| **social_concierge** | undefined | social_post_drafting, social_reply_drafting, dm_drafting |
+| **shopping_assistant** | undefined | shopping_guidance, availability_reply, order_support |
 | **DataScientist** | scientist |  |
 | **DependencyGraph** | Dependency Graph Analyzer |  |
 | **Developer** | undefined | code_generation, self_healing |
@@ -116,8 +119,17 @@ A rendszer **82** regisztrált ügynökkel rendelkezik.
 | **StocktakeReconciliationAgent** | undefined | inventory_reconciliation |
 | **StocktakeReportAgent** | undefined | inventory_reporting |
 | **InventoryAdjustmentAgent** | undefined | accounting_preparation |
+| **AccountingPipeline** | Könyvelési folyamat koordinátor | accounting-workflow-orchestration, pipeline-management |
+| **PettyCashAgent** | Házi pénztár kezelő | petty-cash-management, cash-flow-tracking, accounting-records |
 | **i18n_specialist** | undefined | i18n_architecture, string_extraction, locale_management |
+| **InventoryPipeline** | Készletgazdálkodási koordinátor | inventory-optimization-orchestration, replenishment-pipeline |
 | **DailyAgentBriefing** | undefined | github_search, web_crawl, llm_synthesis |
+| **StudioSupervisor** | undefined | studio_orchestration, promo_pipeline, resolve_handoff |
+| **MediaIngest** | undefined | studio_ingest, media_analysis, proxy_generation |
+| **StoryCut** | undefined | rough_cut_planning, segment_assembly, timeline_markers |
+| **AudioMix** | undefined | audio_plan, ducking, music_cue_planning |
+| **ColorPrep** | undefined | resolve_prep, color_finishing_handoff, render_queue_planning |
+| **QcRender** | undefined | ffmpeg_render, studio_qc, delivery_validation |
 
 
 ---
@@ -135,7 +147,7 @@ A rendszer **82** regisztrált ügynökkel rendelkezik.
 *   **Libs:** Pandas, Playwright, LanceDB
 
 ### AI Models
-*   **Local:** Ollama (gemma4:e4b)
+*   **Local:** Ollama (llama3.1:8b)
 *   **Cloud:** Gemini 2.0 Flash, GPT-4o
 
 ---

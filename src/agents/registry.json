@@ -1842,6 +1842,23 @@
       "category": "creative",
       "status": "active",
       "priority": 8
+    },
+    {
+      "name": "StudioReviewer",
+      "title": "Studio Reviewer Agent",
+      "description": "Studio pipeline report review, music intelligence, rerun decision, and webhook-friendly feedback output.",
+      "class": "StudioReviewerAgent",
+      "module": "./agents/StudioReviewerAgent.js",
+      "capabilities": [
+        "studio_review",
+        "render_feedback",
+        "rerun_decision",
+        "webhook_review",
+        "music_intelligence"
+      ],
+      "category": "creative",
+      "status": "active",
+      "priority": 8
     }
   ]
 }

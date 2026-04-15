@@ -111,7 +111,7 @@ export function createBusinessJobsRoutes(dbManager: DatabaseManager = defaultDat
 
             // Trigger the agent asynchronously
             if (type === 'lead_mining') {
-                agentManager.queueTask(`Bányássz lead-eket: ${query}`, 'lead_mining', { jobId });
+                agentManager.queueTask(`Bányássz lead-eket: ${query}`, 'lead_mining', { jobId, metadata });
             } else if (type === 'invoice_sync') {
                 agentManager.queueTask(`Szinkronizáld a számlákat: ${query}`, 'FinanceGuardian', { jobId, taskType: 'full_sync' });
             } else if (type === 'innovation_bridge') {

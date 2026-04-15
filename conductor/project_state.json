@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-04-13T07:58:00.000Z",
+  "lastUpdated": "2026-04-15T20:00:00.667Z",
   "tracks": [
     {
       "id": "agent_instability_chaos_testing_20260410",
@@ -162,11 +162,11 @@
     {
       "id": "brunella-studio-agent-v2_20260414",
       "name": "Brunella Studio Agent v2",
-      "status": "proposed",
+      "status": "active",
       "priority": "high",
-      "progress": 0,
+      "progress": 70,
       "created": "2026-04-13",
-      "updated": "2026-04-13",
+      "updated": "2026-04-15",
       "assignee": "GitHub Copilot",
       "tags": [
         "studio",
@@ -189,11 +189,12 @@
     {
       "id": "brunella-studio-agent-video_20260413",
       "name": "Brunella Studio Agent",
-      "status": "in-progress",
+      "status": "completed",
       "priority": "high",
-      "progress": 95,
+      "progress": 100,
       "created": "2026-04-13",
-      "updated": "2026-04-13",
+      "updated": "2026-04-15",
+      "completed": "2026-04-15T00:48:00.000Z",
       "assignee": "GitHub Copilot",
       "tags": [
         "studio",
@@ -207,7 +208,7 @@
       "dod": {
         "tests_pass": true,
         "build_clean": true,
-        "code_committed": false,
+        "code_committed": true,
         "no_verify_used": false
       },
       "group": "brunella",
@@ -813,11 +814,12 @@
     {
       "id": "l5_multitenant_platform_20260410",
       "name": "L5 Multi-Tenant KKV Platform",
-      "status": "active",
+      "status": "archived",
       "priority": "high",
-      "progress": 0,
+      "progress": 100,
       "created": "2026-04-11T00:00:00.000Z",
-      "updated": "2026-04-11",
+      "updated": "2026-04-15",
+      "completed": "2026-04-15T00:48:00.000Z",
       "assignee": "GitHub Copilot",
       "tags": [
         "kkv",
@@ -830,14 +832,14 @@
         "modular_state_refactor_20260404"
       ],
       "dod": {
-        "tests_pass": false,
-        "build_clean": false,
-        "code_committed": false,
+        "tests_pass": true,
+        "build_clean": true,
+        "code_committed": true,
         "no_verify_used": false
       },
       "group": "business",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\l5_multitenant_platform_20260410",
-      "_isArchived": false
+      "_isArchived": true
     },
     {
       "id": "logistics_vertical_repo_local_20260407",
@@ -1242,9 +1244,9 @@
       "name": "P-Sales Human-in-Loop Revenue Pipeline — Lead gen, onboarding, KKV + Brand csatornák",
       "status": "active",
       "priority": "high",
-      "progress": 35,
+      "progress": 40,
       "created": "2026-04-07T03:43:48Z",
-      "updated": "2026-04-12T02:24:00.000Z",
+      "updated": "2026-04-15T02:35:00.000Z",
       "assignee": "GitHub Copilot",
       "tags": [],
       "dependencies": [],
@@ -6696,9 +6698,9 @@
   ],
   "stats": {
     "total": 246,
-    "active": 11,
-    "completed": 23,
-    "archived": 209,
-    "proposed": 3
+    "active": 10,
+    "completed": 24,
+    "archived": 210,
+    "proposed": 2
   }
 }

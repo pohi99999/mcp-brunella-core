@@ -3,8 +3,9 @@ import os from 'node:os';
 import path from 'node:path';
 import express from 'express';
 import request from 'supertest';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { DatabaseManager } from '../src/utils/db.js';
+import { agentManager } from '../src/agents/AgentManager.js';
 import { createBusinessJobsRoutes } from '../src/server/routes/businessJobs.js';
 
 describe('business jobs routes', () => {
@@ -51,5 +52,37 @@ describe('business jobs routes', () => {
       company_name: 'Injected Industries',
       job_id: 'job-1',
     }));
+  });
+
+  it('forwards lead mining metadata into the queued task context', async () => {
+    const queueTaskSpy = vi.spyOn(agentManager, 'queueTask').mockResolvedValue(undefined as never);
+
+    const response = await request(app)
+      .post('/api/v1/business-jobs')
+      .send({
+        type: 'lead_mining',
+        query: 'fogorvos Budapest',
+        metadata: {
+          limit: 7,
+          leadType: 'Brand',
+        },
+      });
+    const body = response.body as { success: boolean; jobId: string };
+
+    expect(response.status).toBe(200);
+    expect(body.success).toBe(true);
+    expect(body.jobId).toBeTruthy();
+    expect(queueTaskSpy).toHaveBeenCalledWith(
+      expect.stringContaining('Bányássz lead-eket'),
+      'lead_mining',
+      expect.objectContaining({
+        jobId: body.jobId,
+        metadata: {
+          limit: 7,
+          leadType: 'Brand',
+        },
+      }),
+    );
+    queueTaskSpy.mockRestore();
   });
 });

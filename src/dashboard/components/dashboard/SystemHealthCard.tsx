@@ -27,7 +27,7 @@ export function SystemHealthCard ()
     { id: "python", name: "Python Service", status: "checking" },
     { id: "cloudflare", name: "Cloudflare", status: "checking" },
   ] );
-  const [cognitive, setCognitive] = useState<any>(null);
+  const [cognitive, setCognitive] = useState<any>( null );
   const [lastCheck, setLastCheck] = useState<string>( "" );
   const [isChecking, setIsChecking] = useState( false );
   const [loading, setLoading] = useState<Record<string, boolean>>( {} );
@@ -38,7 +38,7 @@ export function SystemHealthCard ()
     try
     {
       const health = await api.checkHealth();
-      setCognitive(health.cognitive);
+      setCognitive( health.cognitive );
       const so = ( s: { status?: string } | string ) =>
         ( typeof s === "object" ? s.status : s ) ?? "unhealthy";
       const ok = ( s: { status?: string } | string ) => so( s ) === "healthy";
@@ -188,8 +188,8 @@ export function SystemHealthCard ()
         <div className="flex items-center gap-3">
           <div className="p-1.5 rounded-md bg-white/[0.03] border border-white/[0.05]">
             <RotateCw
-              size={ 14 }
-              className={ isChecking ? "animate-spin text-cyan-400" : "text-zinc-500" }
+              size={14}
+              className={isChecking ? "animate-spin text-cyan-400" : "text-zinc-500"}
             />
           </div>
           <div>
@@ -204,14 +204,14 @@ export function SystemHealthCard ()
         <div className="px-2 py-0.5 rounded bg-zinc-900 border border-white/[0.06] flex items-center gap-2">
           <span className="text-[9px] font-bold text-zinc-400 font-mono">NODE_OK</span>
           <span className="text-[10px] font-bold text-emerald-400 font-mono">
-            { healthyCount }/{ totalCount }
+            {healthyCount}/{totalCount}
           </span>
         </div>
       </div>
 
       <div className="flex-1 overflow-y-auto custom-scrollbar">
         <div className="grid grid-cols-1 divide-y divide-white/[0.03]">
-          { services.map( ( service ) =>
+          {services.map( ( service ) =>
           {
             const isHealthy = service.status === "healthy";
             const canToggle =
@@ -221,44 +221,44 @@ export function SystemHealthCard ()
 
             return (
               <div
-                key={ service.id }
+                key={service.id}
                 className="flex items-center justify-between px-5 py-3.5 hover:bg-white/[0.02] transition-colors group"
               >
                 <div className="flex items-center gap-3.5 min-w-0">
                   <div className="shrink-0">
-                    { getStatusIcon( service.status ) }
+                    {getStatusIcon( service.status )}
                   </div>
                   <div className="min-w-0">
                     <p className="font-bold text-[11px] text-zinc-200 uppercase tracking-wide group-hover:text-white transition-colors">
-                      { service.name }
+                      {service.name}
                     </p>
                     <p className="text-[10px] text-zinc-500 font-mono mt-0.5 truncate max-w-[200px]">
-                      { service.message || "NOMINAL" }
+                      {service.message || "NOMINAL"}
                     </p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3 shrink-0">
-                  { canToggle && (
+                  {canToggle && (
                     <Switch
-                      checked={ isHealthy }
-                      disabled={ loading[service.id] || isChecking }
-                      onCheckedChange={ () =>
+                      checked={isHealthy}
+                      disabled={loading[service.id] || isChecking}
+                      onCheckedChange={() =>
                         handleToggle( service.id, isHealthy )
                       }
                       className="scale-[0.65] data-[state=checked]:bg-emerald-500/50"
                     />
-                  ) }
-                  { !canToggle && (
+                  )}
+                  {!canToggle && (
                     <div className="px-1.5 py-0.5 rounded-[2px] bg-white/[0.03] border border-white/[0.05]">
                       <span className="text-[8px] font-bold text-zinc-600 uppercase tracking-tighter">
                         Kernel
                       </span>
                     </div>
-                  ) }
+                  )}
                 </div>
               </div>
             );
-          } ) }
+          } )}
         </div>
       </div>
 
@@ -268,31 +268,7 @@ export function SystemHealthCard ()
             Last Sequence
           </span>
           <span className="text-[9px] text-zinc-500 font-mono">
-            { lastCheck || "READY" }
-          </span>
-        </div>
-      </div>
-    </div>
-  );
-}
-         { cognitive.lastLlmInteraction.latencyMs }ms
-                </span>
-              </div>
-              <p className="text-[8px] text-zinc-500 font-mono mt-1 uppercase text-right">
-                Provider: { cognitive.lastLlmInteraction.provider }
-              </p>
-            </div>
-          ) }
-        </div>
-      </div>
-
-      <div className="px-5 py-3 border-t border-white/[0.03] bg-white/[0.01]">
-        <div className="flex items-center justify-between">
-          <span className="text-[8px] font-bold text-zinc-600 uppercase tracking-widest font-mono">
-            Last Sequence
-          </span>
-          <span className="text-[9px] text-zinc-500 font-mono">
-            { lastCheck || "READY" }
+            {lastCheck || "READY"}
           </span>
         </div>
       </div>

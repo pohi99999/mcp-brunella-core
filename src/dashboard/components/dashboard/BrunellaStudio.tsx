@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Progress } from '@/components/ui/progress';
 import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { CheckCircle2, Clapperboard, Disc3, FileOutput, FolderInput, Palette, ShieldCheck, Waves } from 'lucide-react';
+import { CheckCircle2, Clapperboard, Disc3, FileOutput, FolderInput, MessageSquare, Palette, ShieldCheck, Waves } from 'lucide-react';
 
 const STAGES = [
   {
@@ -57,10 +57,38 @@ const STAGES = [
     accent: 'text-lime-300',
     description: 'Black-frame, stream, duration, aspect-ratio es peak heuristics.',
   },
+  {
+    id: 'review',
+    title: '7. Reviewer',
+    subtitle: 'Feedback + rerun decision',
+    icon: MessageSquare,
+    accent: 'text-sky-300',
+    description: 'Pipeline report scoring, music intelligence, rerun guidance, and webhook-friendly review output.',
+  },
 ] as const;
 
 const STYLE_OPTIONS = ['elegant', 'energetic', 'cinematic', 'luxury-minimal'] as const;
 const PRESET_OPTIONS = ['master-16x9', 'reel-9x16', 'social-1x1', 'teaser-short'] as const;
+const REVIEW_SIGNALS = [
+  {
+    title: 'Music intelligence',
+    detail: 'beat density, ducking, LUFS, timeline fit',
+    icon: Waves,
+    accent: 'text-cyan-300',
+  },
+  {
+    title: 'Callback delivery',
+    detail: 'structured webhook payloads + status codes',
+    icon: MessageSquare,
+    accent: 'text-fuchsia-300',
+  },
+  {
+    title: 'Trust signal',
+    detail: 'score, rerun command, explicit review status',
+    icon: ShieldCheck,
+    accent: 'text-emerald-300',
+  },
+] as const;
 
 type StudioStageId = (typeof STAGES)[number]['id'] | 'full';
 
@@ -72,6 +100,7 @@ export function BrunellaStudio() {
   const [projectName, setProjectName] = useState('vv-fashion');
   const [inputDir, setInputDir] = useState('F:\\media\\vv-promo');
   const [musicTrack, setMusicTrack] = useState('F:\\media\\vv-promo\\music.mp3');
+  const [callbackUrl, setCallbackUrl] = useState('');
   const [style, setStyle] = useState<(typeof STYLE_OPTIONS)[number]>('elegant');
   const [preset, setPreset] = useState<(typeof PRESET_OPTIONS)[number]>('master-16x9');
   const [selectedStage, setSelectedStage] = useState<StudioStageId>('full');
@@ -87,8 +116,11 @@ export function BrunellaStudio() {
     'audio-plan': `brunella studio audio-plan --timeline-plan ${manifestDir}\\timeline-plan.json --music-track ${musicTrack} --project-name ${safeProjectName} --style ${style}`,
     render: `brunella studio render --project-name ${safeProjectName} --timeline-plan ${manifestDir}\\timeline-plan.json --music-track ${musicTrack} --presets ${preset}`,
     qc: `brunella studio qc --file ${outputRoot}\\${safeProjectName}-${preset}.mp4`,
+    review: callbackUrl.trim().length > 0
+      ? `brunella studio review --report-path ${manifestDir}\\pipeline-report.json --project-name ${safeProjectName} --callback-url ${callbackUrl}`
+      : `brunella studio review --report-path ${manifestDir}\\pipeline-report.json --project-name ${safeProjectName}`,
     full: `brunella studio full-pipeline --input-dir ${inputDir} --project-name ${safeProjectName} --music-track ${musicTrack} --style ${style} --presets ${preset}`,
-  }), [inputDir, manifestDir, musicTrack, outputRoot, preset, safeProjectName, style]);
+  }), [callbackUrl, inputDir, manifestDir, musicTrack, outputRoot, preset, safeProjectName, style]);
 
   const selectedCommand = selectedStage === 'full' ? commands.full : commands[selectedStage];
 
@@ -150,6 +182,10 @@ export function BrunellaStudio() {
               <label className="text-xs font-medium uppercase tracking-[0.18em] text-zinc-500">Music track</label>
               <Input value={musicTrack} onChange={(event) => setMusicTrack(event.target.value)} aria-label="Studio music track" className="border-white/10 bg-white/[0.03] text-white" />
             </div>
+            <div className="space-y-2">
+              <label className="text-xs font-medium uppercase tracking-[0.18em] text-zinc-500">Callback URL</label>
+              <Input value={callbackUrl} onChange={(event) => setCallbackUrl(event.target.value)} aria-label="Studio callback URL" placeholder="https://example.com/webhooks/studio-review" className="border-white/10 bg-white/[0.03] text-white" />
+            </div>
 
             <Separator className="bg-white/10" />
 
@@ -209,7 +245,7 @@ export function BrunellaStudio() {
                 <div className="min-w-[180px]">
                   <div className="mb-2 flex items-center justify-between text-xs uppercase tracking-[0.18em] text-zinc-500">
                     <span>Coverage footprint</span>
-                    <span>6/6</span>
+                    <span>7/7</span>
                   </div>
                   <Progress value={100} aria-label="Studio pipeline coverage" />
                 </div>
@@ -239,6 +275,36 @@ export function BrunellaStudio() {
                     </div>
                     <p className="mt-4 text-sm leading-6 text-zinc-300">{stage.description}</p>
                   </button>
+                );
+              })}
+            </CardContent>
+          </Card>
+
+          <Card className="border-cyan-400/15 bg-cyan-400/[0.04] shadow-[0_18px_60px_-36px_rgba(34,211,238,0.38)]">
+            <CardHeader className="space-y-3">
+              <div className="flex items-center justify-between gap-4">
+                <div>
+                  <CardTitle className="text-white">Reviewer signals</CardTitle>
+                  <CardDescription>Az uj music intelligence slice es a webhook review output most lathato, kulon panelben jelenik meg.</CardDescription>
+                </div>
+                <Badge className="border-cyan-400/20 bg-cyan-400/10 text-cyan-200">Studio v2</Badge>
+              </div>
+            </CardHeader>
+            <CardContent className="grid gap-3 md:grid-cols-3">
+              {REVIEW_SIGNALS.map((signal) => {
+                const Icon = signal.icon;
+                return (
+                  <div key={signal.title} className="rounded-2xl border border-white/10 bg-black/20 p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
+                    <div className="flex items-start gap-3">
+                      <div className={`inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-white/[0.05] ${signal.accent}`}>
+                        <Icon className="h-5 w-5" />
+                      </div>
+                      <div className="space-y-1">
+                        <div className="text-sm font-semibold text-white">{signal.title}</div>
+                        <div className="text-sm leading-6 text-zinc-300">{signal.detail}</div>
+                      </div>
+                    </div>
+                  </div>
                 );
               })}
             </CardContent>
@@ -336,10 +402,10 @@ export function BrunellaStudio() {
                     </div>
                     <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
                       <div className="font-medium text-white">Studio backend / e2e</div>
-                      <div className="mt-2 text-zinc-400">test/studio/ffmpegTool.test.ts, resolveBridgeTool.test.ts, e2e.test.ts</div>
+                      <div className="mt-2 text-zinc-400">test/studio/ffmpegTool.test.ts, test/studio/resolveBridgeTool.test.ts, test/studio/review.test.ts, test/studio/e2e.test.ts</div>
                     </div>
                   </div>
-                  <pre className="overflow-x-auto rounded-3xl border border-white/10 bg-black/40 p-4 text-sm text-zinc-100" data-testid="studio-test-command">npx vitest run src/dashboard/components/dashboard/BrunellaStudio.test.tsx test/studio/ffmpegTool.test.ts test/studio/resolveBridgeTool.test.ts test/studio/e2e.test.ts</pre>
+                  <pre className="overflow-x-auto rounded-3xl border border-white/10 bg-black/40 p-4 text-sm text-zinc-100" data-testid="studio-test-command">npx vitest run src/dashboard/components/dashboard/BrunellaStudio.test.tsx test/studio/ffmpegTool.test.ts test/studio/resolveBridgeTool.test.ts test/studio/review.test.ts test/studio/e2e.test.ts</pre>
                 </CardContent>
               </Card>
             </TabsContent>

@@ -4,6 +4,7 @@ import { AudioMixAgent } from './AudioMixAgent.js';
 import { ColorPrepAgent } from './ColorPrepAgent.js';
 import { MediaIngestAgent } from './MediaIngestAgent.js';
 import { QcRenderAgent } from './QcRenderAgent.js';
+import { StudioReviewerAgent } from './StudioReviewerAgent.js';
 import { StoryCutAgent } from './StoryCutAgent.js';
 
 function payloadOf(context: AgentContext): Record<string, unknown> {
@@ -13,14 +14,15 @@ function payloadOf(context: AgentContext): Record<string, unknown> {
 export class StudioSupervisorAgent extends BaseAgent {
   name = 'StudioSupervisor';
   role = 'Brunella Studio orchestration supervisor';
-  description = 'Coordinates ingest, story cut, audio planning, Resolve prep, render, and QC for fashion promo pipelines.';
-  capabilities = ['studio-orchestration', 'promo-pipeline', 'resolve-handoff', 'qc-supervision'];
+  description = 'Coordinates ingest, story cut, audio planning, Resolve prep, render, QC, and review feedback for fashion promo pipelines.';
+  capabilities = ['studio-orchestration', 'promo-pipeline', 'resolve-handoff', 'qc-supervision', 'review-feedback'];
 
   private readonly mediaIngestAgent = new MediaIngestAgent();
   private readonly storyCutAgent = new StoryCutAgent();
   private readonly audioMixAgent = new AudioMixAgent();
   private readonly colorPrepAgent = new ColorPrepAgent();
   private readonly qcRenderAgent = new QcRenderAgent();
+  private readonly reviewerAgent = new StudioReviewerAgent();
 
   async executeTask(context: AgentContext): Promise<AgentResult> {
     const payload = payloadOf(context);
@@ -45,6 +47,9 @@ export class StudioSupervisorAgent extends BaseAgent {
     }
     if (task.includes('qc') || task.includes('render') || payload.phase === 'delivery') {
       return this.qcRenderAgent.executeTask(context);
+    }
+    if (task.includes('review') || payload.phase === 'review') {
+      return this.reviewerAgent.executeTask(context);
     }
 
     const inputDir = typeof payload.inputDir === 'string' ? payload.inputDir : undefined;

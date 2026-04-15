@@ -217,3 +217,36 @@ export const StudioProbeReportSchema = z.object({
   warnings: z.array(z.string()).default([]),
 });
 export type StudioProbeReport = z.infer<typeof StudioProbeReportSchema>;
+
+export const StudioReviewFindingSchema = z.object({
+  source: z.enum(['pipeline', 'timeline', 'audio', 'render', 'qc']),
+  severity: z.enum(['info', 'warning', 'error']),
+  code: z.string(),
+  message: z.string(),
+  details: z.record(z.string(), z.unknown()).optional(),
+});
+export type StudioReviewFinding = z.infer<typeof StudioReviewFindingSchema>;
+
+export const StudioReviewResultSchema = z.object({
+  reviewId: z.string(),
+  projectName: z.string(),
+  pipelineReportPath: z.string(),
+  reviewedAt: z.string(),
+  status: z.enum(['approved', 'needs-rerun', 'blocked']),
+  score: z.number().min(0).max(100),
+  summary: z.string(),
+  findings: z.array(StudioReviewFindingSchema),
+  recommendations: z.array(z.string()),
+  rerunCommand: z.string().optional(),
+});
+export type StudioReviewResult = z.infer<typeof StudioReviewResultSchema>;
+
+export const StudioReviewCallbackDeliverySchema = z.object({
+  callbackUrl: z.string(),
+  eventType: z.literal('studio.review.completed'),
+  reviewId: z.string(),
+  projectName: z.string(),
+  deliveredAt: z.string(),
+  statusCode: z.number().int().optional(),
+});
+export type StudioReviewCallbackDelivery = z.infer<typeof StudioReviewCallbackDeliverySchema>;

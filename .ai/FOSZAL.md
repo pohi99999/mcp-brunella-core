@@ -1,6 +1,6 @@
 # FŐSZÁL - Egyesített Fejlesztési Napló
 
-**Generálva:** 2026-04-15 02:36
+**Generálva:** 2026-04-15 21:56
 **Script:** `scripts/sync_foszal.py`
 
 ---
@@ -30,10 +30,40 @@ start-full.bat
 
 ### 2026-04-15
 
+#### 19:55 - [Copilot] Brunella Studio v2 reviewer signals slice
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `src/dashboard/components/dashboard/BrunellaStudio.tsx`, `src/dashboard/components/dashboard/BrunellaStudio.test.tsx`, `conductor/tracks/brunella-studio-agent-v2_20260414/plan.md`, `conductor/tracks/brunella-studio-agent-v2_20260414/meta.json`
+
+#### 19:40 - [Copilot] Brunella Studio v2 music intelligence slice
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `src/cli/studioRuntime.ts`, `src/cli/studioCommands.ts`, `src/agents/StudioReviewerAgent.ts`, `src/agents/registry.json`, `src/dashboard/components/dashboard/BrunellaStudio.tsx`, `test/studio/review.test.ts`, `conductor/tracks/brunella-studio-agent-v2_20260414/plan.md`, `conductor/tracks/brunella-studio-agent-v2_20260414/meta.json`
+
+#### 14:31 - [Copilot] Brunella Studio v2 webhook callback slice
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** src/cli/studioRuntime.ts, src/cli/studioCommands.ts, src/agents/StudioReviewerAgent.ts, src/schemas/studioSchemas.ts, src/dashboard/components/dashboard/BrunellaStudio.tsx, src/dashboard/components/dashboard/BrunellaStudio.test.tsx, test/studio/review.test.ts, test/studio/reviewCommand.test.ts, test/outreach_flow.test.ts, conductor/tracks/brunella-studio-agent-v2_20260414/plan.md
+
+#### 04:15 - [Copilot] Brunella Studio v2 reviewer slice
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** src/cli/studioRuntime.ts, src/cli/studioCommands.ts, src/agents/StudioReviewerAgent.ts, src/agents/StudioSupervisorAgent.ts, src/agents/registry.json, src/schemas/studioSchemas.ts, src/dashboard/components/dashboard/BrunellaStudio.tsx, src/dashboard/components/dashboard/BrunellaStudio.test.tsx, src/skills/StudioOrchestrationSkill.ts, test/studio/review.test.ts, test/studio/reviewCommand.test.ts
+
 #### 02:35 - [Copilot] Tenant audit and CEAN isolation fix
 - **Agent:** Copilot
 - **Státusz:** ✅ Befejezve
 - **Érintett fájlok:** `src/core/auditLog.ts`, `src/server/routes/cean.ts`, `src/utils/logger.ts`, `test/auditLogTenant.test.ts`, `test/ceanRoutes.test.ts`
+
+#### 00:00 - [Claude] PAIOS TTS hang javítás (nova female voice)
+- **Agent:** Claude
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `src/utils/tts.ts`, `src/dashboard/components/dashboard/PAIOSOrchestratorChat.tsx`
+
+#### 00:00 - [Claude] CLAUDE.md `/init` célzott fejlesztés
+- **Agent:** Claude
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `CLAUDE.md`, `.ai/CLAUDE.md`
 
 ---
 
@@ -1365,10 +1395,10 @@ start-full.bat
 
 | Agent | Bejegyzések | Utolsó Aktivitás |
 |-------|-------------|------------------|
-| Claude | 91 | 2026-04-12 |
+| Claude | 93 | 2026-04-15 |
 | Gemini | 8 | 2026-04-13 |
 | Cursor | 0 | N/A |
-| Copilot | 141 | 2026-04-15 |
+| Copilot | 145 | 2026-04-15 |
 
 ---
 

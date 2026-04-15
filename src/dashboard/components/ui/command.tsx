@@ -2,7 +2,7 @@
 
 import { ComponentProps } from "react"
 import { Command as CommandPrimitive } from "cmdk"
-import SearchIcon from "lucide-react/icons/search"
+import { Search as SearchIcon } from "lucide-react"
 import { useTranslation } from "react-i18next"
 
 import { cn } from "@/lib/utils"

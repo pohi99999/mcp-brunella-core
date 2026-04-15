@@ -35,10 +35,11 @@ export async function textToSpeech(
 ): Promise<Blob> {
   const { voice, model, speed } = { ...DEFAULT_OPTIONS, ...options };
 
-  const openaiApiKey = process.env.OPENAI_API_KEY;
+  // Prefer dedicated TTS key if configured, fall back to general OpenAI key
+  const openaiApiKey = process.env.OPENAI_TTS_API_KEY || process.env.OPENAI_API_KEY;
 
   if (!openaiApiKey) {
-    throw new Error('OpenAI API key not configured (OPENAI_API_KEY)');
+    throw new Error('OpenAI API key not configured (OPENAI_TTS_API_KEY or OPENAI_API_KEY)');
   }
 
   if (!text || text.trim().length === 0) {

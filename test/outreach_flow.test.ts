@@ -6,6 +6,7 @@ import { outreachService } from '../src/services/outreachService.js';
 import { LeadMiningAgent } from '../src/agents/LeadMiningAgent.js';
 import { globalPythonShell } from '../src/utils/pythonShell.js';
 import { agentManager } from '../src/agents/AgentManager.js';
+import { socketService } from '../src/server/SocketService.js';
 
 vi.mock('../src/utils/pythonShell.js', () => ({
     globalPythonShell: {
@@ -27,7 +28,14 @@ vi.mock('../src/utils/rag.js', () => ({
 
 vi.mock('../src/utils/db.js', () => ({
     saveBusinessJob: vi.fn().mockResolvedValue('job-123'),
-    saveBusinessLead: vi.fn().mockResolvedValue('lead-123')
+    saveBusinessLead: vi.fn().mockResolvedValue('lead-123'),
+    updateBusinessJobStatus: vi.fn().mockResolvedValue(undefined),
+}));
+
+vi.mock('../src/server/SocketService.js', () => ({
+    socketService: {
+        emit: vi.fn(),
+    },
 }));
 
 vi.mock('dns/promises', () => ({
@@ -85,9 +93,11 @@ describe('Outreach & Revenue Acceleration Flow', () => {
         const agent = new LeadMiningAgent();
         
         // Mock Python output for scraping (if still using it)
-        (globalPythonShell.run as any).mockResolvedValue(JSON.stringify([
-            { name: 'Test Clinic', website: 'https://testclinic.hu', email: 'info@testclinic.hu' }
-        ]));
+        (globalPythonShell.run as any)
+            .mockResolvedValueOnce(JSON.stringify([
+                { name: 'Test Clinic', website: 'https://testclinic.hu', email: 'info@testclinic.hu' }
+            ]))
+            .mockResolvedValueOnce('1');
         
         // Mock AgentManager delegation
         (agentManager.delegate as any).mockImplementation((agentName: string) => {
@@ -106,11 +116,15 @@ describe('Outreach & Revenue Acceleration Flow', () => {
             return Promise.resolve({ status: 'error', message: 'Unknown agent' });
         });
 
-        const result = await agent.execute('fogorvos Budapest');
+        const result = await agent.execute('fogorvos Budapest', { jobId: 'job-123' } as never);
         
         expect(result.status).toBe('success');
         expect(result.data.leads).toHaveLength(1);
         expect(result.data.leads[0].email_status).toBe('valid');
+        expect(socketService.emit).toHaveBeenCalledWith('business_job:updated', expect.objectContaining({
+            jobId: 'job-123',
+            status: 'completed'
+        }));
         // Icebreaker might be empty due to delegation failure in restricted test envs
         if (result.data.leads[0].icebreaker_text) {
             expect(result.data.leads[0].icebreaker_text).toBeDefined();

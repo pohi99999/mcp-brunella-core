@@ -1,7 +1,7 @@
 import { ComponentProps } from "react"
 import { Slot } from "@radix-ui/react-slot"
-import ChevronRight from "lucide-react/icons/chevron-right"
-import MoreHorizontal from "lucide-react/icons/more-horizontal"
+import { ChevronRight } from "lucide-react"
+import { MoreHorizontal } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 

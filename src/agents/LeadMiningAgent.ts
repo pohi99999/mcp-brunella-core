@@ -4,9 +4,10 @@ import { AgentResponse } from './types.js';
 import { globalPythonShell } from '../utils/pythonShell.js';
 import { logInfo, logError, logWarn } from '../utils/logger.js';
 import { validateEmail } from '../services/emailValidator.js';
-import { saveBusinessLead, saveBusinessJob } from '../utils/db.js';
+import { saveBusinessLead, saveBusinessJob, updateBusinessJobStatus } from '../utils/db.js';
 import { agentManager } from './AgentManager.js';
 import crypto from 'crypto';
+import { socketService } from '../server/SocketService.js';
 
 export class LeadMiningAgent extends BaseAgent {
     name = "lead_mining";
@@ -15,22 +16,32 @@ export class LeadMiningAgent extends BaseAgent {
     capabilities = ["lead_generation", "web_scraping", "icebreaker_generation", "email_validation", "sheets_sync"];
 
     async executeTask(context: AgentContext): Promise<AgentResult> {
-        const query = context.task || "ügyvezető Zala megye 10-100 fő";
-        const leadType = (context.data as any)?.leadType || 'KKV';
+        const contextRecord = context as Record<string, unknown>;
+        const query = typeof context.task === 'string' && context.task.trim().length > 0 ? context.task.trim() : "ügyvezető Zala megye 10-100 fő";
+        const metadata = contextRecord.metadata && typeof contextRecord.metadata === 'object' ? (contextRecord.metadata as Record<string, unknown>) : {};
+        const leadType = String(metadata.leadType ?? contextRecord.leadType ?? 'KKV');
+        const limitValue = Number(metadata.limit ?? contextRecord.limit ?? 10);
+        const limit = Number.isFinite(limitValue) && limitValue > 0 ? Math.floor(limitValue) : 10;
+        const requestedJobId = typeof contextRecord.jobId === 'string' && contextRecord.jobId.trim().length > 0 ? contextRecord.jobId.trim() : '';
+        const jobId = requestedJobId || crypto.randomUUID();
         logInfo(this.name, `Starting lead mining for: ${query} (Type: ${leadType})`);
 
         try {
-            const jobId = crypto.randomUUID();
-            await saveBusinessJob({ id: jobId, type: 'lead_mining', query });
+            if (!requestedJobId) {
+                await saveBusinessJob({ id: jobId, type: 'lead_mining', query, status: 'running', metadata: JSON.stringify({ leadType, limit }) });
+            }
+
+            await updateBusinessJobStatus(jobId, 'running');
+            socketService.emit('business_job:updated', { jobId, type: 'lead_mining', status: 'running', query, leadType, limit });
 
             let leads: any[] = [];
 
             // 1. Scrape leads (LinkedIn via Apify or Google Maps via local worker)
-            if (query.toLowerCase().includes('linkedin') || leadType === 'Brand') {
+            if (query.toLowerCase().includes('linkedin') || leadType.toLowerCase() === 'brand') {
                 logInfo(this.name, "Delegating to ApifyScrapingAgent for social/B2B leads");
-                const scrapeResult = (await agentManager.delegate('ApifyScraping', `scrape ${query}`, { limit: 10 })) as AgentResponse;
+                const scrapeResult = (await agentManager.delegate('ApifyScraping', `LinkedIn lead scraping for ${query}`, { capability: 'linkedin', query, limit, leadType })) as AgentResponse;
                 if (scrapeResult.status === 'success' && Array.isArray(scrapeResult.data)) {
-                    leads = scrapeResult.data;
+                    leads = scrapeResult.data.slice(0, limit);
                 }
             } else {
                 // Local Google Maps scraper fallback
@@ -41,7 +52,7 @@ import json
 import asyncio
 
 async def run():
-    results = await scrape_businesses("${query}", limit=5)
+    results = await scrape_businesses("${query}", limit=${limit})
     print(json.dumps(results))
 
 asyncio.run(run())
@@ -113,14 +124,23 @@ print(count)
 
             logInfo(this.name, `Generated, saved and synced ${enrichedLeads.length} leads (Sheets: ${syncCount}).`);
 
+            const resultPayload = { jobId, query, leadType, limit, leads: enrichedLeads, syncCount };
+            await updateBusinessJobStatus(jobId, 'completed', JSON.stringify(resultPayload));
+            socketService.emit('business_job:updated', { type: 'lead_mining', status: 'completed', ...resultPayload });
+
             return {
                 success: true,
                 message: `Sikeresen legeneráltam, validáltam és Google Sheets-be szinkronizáltam ${enrichedLeads.length} leadet.`,
-                data: { jobId, leads: enrichedLeads, syncCount }
+                data: resultPayload
             };
 
         } catch (error) {
             logError(this.name, `Lead mining failed: ${error}`);
+            if (jobId) {
+                const failureMessage = error instanceof Error ? error.message : String(error);
+                await updateBusinessJobStatus(jobId, 'failed', JSON.stringify({ jobId, query, leadType, limit, error: failureMessage }));
+                socketService.emit('business_job:updated', { jobId, type: 'lead_mining', status: 'failed', error: failureMessage });
+            }
             return { success: false, message: `Hiba a lead mining során: ${error}` };
         }
     }

@@ -5,11 +5,11 @@
   "type": "Business / Revenue Development",
   "priority": "HIGH",
   "status": "in_progress",
-  "progress": 35,
+  "progress": 40,
   "owner": "copilot",
   "assignee": "GitHub Copilot",
   "createdAt": "2026-04-07T03:43:48Z",
-  "updatedAt": "2026-04-12T02:24:00.000Z",
+  "updatedAt": "2026-04-15T02:35:00.000Z",
   "coverageAnalysis": "conductor/tracks/psales_human_loop_revenue_20260407/coverage.md",
   "gapAnalysis": "conductor/tracks/psales_human_loop_revenue_20260407/gaps.md",
   "bugsFixed": [
@@ -28,7 +28,8 @@
   "blockerNotes": [
     "The core repo-local intake gate was repaired on 2026-04-12: intake webhook auth is now secret-gated, approval queues a real agent task, and the checked-in n8n workflows no longer trigger outward-facing actions before approval.",
     "The track remains open because phases 2, 4, 5, 6, and 7 are still pending or blocked business rollout work (Apify sourcing, market presence, questionnaire/CRM operations, package collateral, and pilot outreach).",
-    "Post-approval customer autoreply / Sheets persistence remains an operator-run or future automation follow-up, so the delivered repo-local slice is safe but not the whole revenue program."
+    "Post-approval customer autoreply / Sheets persistence remains an operator-run or future automation follow-up, so the delivered repo-local slice is safe but not the whole revenue program.",
+    "2026-04-15: SalesPipelineWidget now reads live pipeline stats and lead rows, the focused dashboard test file passes, and npm run build is green after fixing dashboard UI lucide import issues."
   ],
   "goal": "Pohánka Péter Brunella-alapú üzletének bevételtermelő csatornáit kiépíteni: P-Sales Human-in-Loop safety pipeline, automatizált lead-gen (KKV + prémium brand szegmens), Apify integráció, n8n onboarding intake, LinkedIn/Upwork piaci megjelenés.",
   "targetSegments": [

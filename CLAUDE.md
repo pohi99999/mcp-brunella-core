@@ -9,7 +9,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **Brunella Agent System (BAS)** — Hibrid Node.js/Python multi-agent rendszer, MCP protokoll.
 TypeScript ESM, Express 4, React 19, Ollama, Gemini, GitHub Models, FastAPI, Cloudflare Workers.
-Méret: 87 agent (`src/agents/registry.json`), 53 MCP tool, 96+ route fájl, 108 dashboard panel, 6 SQLite DB, 5 LLM provider.
+Méret: 88 agent (`src/agents/registry.json`), 53 MCP tool, 97+ route fájl, 110 dashboard panel, 6 SQLite DB, 5 LLM provider.
 > Pontos számok: `npm run sync:doc-stats` generálja a `.ai/BOOTSTRAP.md`-be.
 
 ---
@@ -27,6 +27,8 @@ Olvasd el sorrendben:
 4. `.ai/claude.md` — te mit csináltál legutóbb
 
 Ha BUILD FAIL vagy TESZT FAIL → javítsd először, ne kezdj fejlesztésbe.
+
+Ha konkrét tracken dolgozol: olvasd el `conductor/tracks/<id>/meta.json`, `plan.md` és `spec.md` fájlokat is (ha léteznek).
 
 ---
 
@@ -59,6 +61,7 @@ npm run test:dashboard               # Dashboard-specifikus konfig (vitest.dashb
 npm run test:ui                      # UI-specifikus konfig (vitest.ui.config.ts)
 npm run test:e2e                     # Playwright e2e
 cd myai && pytest tests/             # Python tesztek
+cd myai && pytest tests/test_foo.py  # Egy Python tesztfájl
 
 # Lint
 npm run lint
@@ -104,11 +107,15 @@ npm run sync:bootstrap               # .ai/BOOTSTRAP.md regenerálása
 
 **CopilotFeedbackChannel singleton:** Az exportált `copilotFeedbackChannel` az `autonomousInfraRuntime.ts`-ből az egyetlen híd. Ne hozz létre `new CopilotFeedbackChannel()`-t máshol — árva példány lesz, amelyet HyperKernel nem lát. Signalokat csak `copilotFeedbackChannel.ingest()`-en keresztül küldj.
 
+**Hook rendszer:** `src/core/hookRegistry.ts` + `src/core/hooks/*` — cross-service automáció (pl. invoice trigger, agent lifecycle). Új hook-ot itt regisztrálj, ne szórj szét a route-okban.
+
 **Dashboard és CLI párhuzamos felületek:** `src/dashboard/lib/navigation.tsx` a panel regisztráció. `src/dashboard/` ki van zárva a fő `tsconfig.json`-ból. Minden új feature-höz mindkét felület kötelező.
 
 **Python kettős interfész:** `myai/server.py` FastAPI `:8000` + OpenAI-kompatibilis `/models`. `myai/mcp_server.py` Python toolokat expo stdio/SSE via FastMCP.
 
 **L5 Zero-Touch Invoice Pipeline:** `src/server/routes/invoiceEvents.ts` + `src/agents/InvoicePipelineAgent.ts` — bejövő számla eseményeket automatikusan dolgoz fel (parse → match → book). Hook-alapú: `src/core/agentHookEngine.ts` vezérli.
+
+**Brunella Studio alrendszer:** Video post-production pipeline fashion promo workflow-khoz. CLI: `brunella studio probe|ingest`. Build kimenet: `out/studio/`, temp fájlok: `temp/studio/` (mindkettő gitignored).
 
 ### SQLite adatbázisok
 
@@ -131,12 +138,14 @@ npm run sync:bootstrap               # .ai/BOOTSTRAP.md regenerálása
 - `console.log` TILOS — agent kódban: `logInfo/logError/setAgentStatus`; szerveren: `new Logger('feature.log')`
 - IAgent implementálásnál `setAgentStatus(this.name, 'idle')` legyen `finally`-ban — `BaseAgent` ezt automatikusan kezeli
 - Vitest (NEM Jest): `vi.fn()`, `vi.mock()`, `vi.spyOn()`; `fileParallelism: false`, 15s timeout
+- Teszt konvenciók részletesen: `.github/instructions/test-conventions.instructions.md`
 
 **Python:**
 - Pydantic modellek kötelezők (`myai/pydantic_models.py`) — ne nyers dict
 - Windows logban emoji TILOS — `[OK]` / `[AI]` ASCII alternatívák (UnicodeEncodeError!)
 - LanceDB opcionális: `try: import lancedb; HAS_LANCEDB = True except: HAS_LANCEDB = False`
 - FastMCP ≥2.14.3, Python ≥3.12, uv csomagkezelő
+- Python konvenciók részletesen: `.github/instructions/python-conventions.instructions.md`
 
 **CLI UX:** Magyar nyelvű, menüvezérelt — Inquirer + Chalk + Boxen + Ora; ne sima text prompt
 
