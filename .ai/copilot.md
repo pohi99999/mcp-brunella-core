@@ -1,5 +1,35 @@
 # Copilot Session Notes
 
+## 2026-04-16 23:10 - Copilot onboarding asset pack sync
+
+**Feladat:** A Brunella Copilot onboarding asset pack teljes szinkronizálása: a policy réteg, a repo-szintű agentek, a prompt template-ek, az AI docs index, az operating model és az MCP integrációs útmutató egységesítése, valamint a legacy aliasok és feature-scope tisztázása.
+
+**Érintett fájlok:** `.github/copilot-instructions.md`, `AGENTS.md`, `.github/agents/brunella-orchestrator.agent.md`, `.github/agents/brunella-architect.agent.md`, `.github/agents/brunella-architect.md`, `.github/agents/brunella-implementer.agent.md`, `.github/agents/brunella-implementer.md`, `.github/agents/brunella-reviewer.agent.md`, `.github/agents/brunella-reviewer.md`, `.github/prompts/brunella-feature.prompt.md`, `.github/prompts/brunella-agent.prompt.md`, `.github/prompts/brunella-skill.prompt.md`, `.github/prompts/new-feature.prompt.md`, `docs/ai/README.md`, `docs/ai/brunella-copilot-operating-model.md`, `docs/ai/brunella-mcp-integration.md`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A `README.md` marad a master guide és az Explore alapkontextus része, de ebben a passzban nem módosítottam külön. A `docs/ai/README.md` most már kanonikus sorrendet és asset-mappot ad, az operating model külön kimondja a user-facing feature vs. belső refaktor különbséget, a `new-feature.prompt.md` legacy alias lett, és a `my-agent.agent.md` legacy mirror-jelölést kapott a docs indexben. A következő lépés a focused git commit/push origin/main-ra, úgy hogy a többi, folyamatban lévő working tree módosítást nem érintjük.
+
+## 2026-04-16 22:48 - Copilot onboarding hardening follow-up
+
+**Feladat:** A Brunella Copilot onboarding dokumentációs rétegének utólagos rendbetétele: a self-improvement loop leírásának visszaigazítása, a delivery lead agent láthatóvá tétele, a README alapkontextusba emelése, a prompt/agent asset map kiegészítése, a feature-scope tisztázása, és a legacy feature prompt aliasolása.
+
+**Érintett fájlok:** `.github/copilot-instructions.md`, `.github/agents/brunella-orchestrator.agent.md`, `docs/ai/README.md`, `docs/ai/brunella-copilot-operating-model.md`, `.github/prompts/new-feature.prompt.md`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A self-improvement loop most már a tényleges `bas-self-reflect` / `bas-golden-dataset-enricher` / `bas-pattern-scout` triádra és a `copilotFeedbackChannel` singletonra hivatkozik. A `docs/ai/README.md` most már tartalmazza a kanonikus sorrendet, a repo-level agent/prompt térképet, a legacy alias megjegyzést és a `my-agent.agent.md` legacy mirror jelölését is. A `docs/ai/brunella-copilot-operating-model.md` most külön kimondja, hogy a feature csak user-facing contract change esetén igényel szélesebb felszínt. A `new-feature.prompt.md` visszakerült legacy aliasként a `brunella-feature.prompt.md` mögé.
+
+## 2026-04-16 22:14 - Copilot docs index onboarding sync
+
+**Feladat:** Létrehoztam a `docs/ai/README.md` navigációs indexet, és szinkronizáltam a Copilot onboarding hivatkozásokat a README, AGENTS, és Copilot instrukciók között.
+
+**Érintett fájlok:** `docs/ai/README.md`, `README.md`, `AGENTS.md`, `.github/copilot-instructions.md`, `.github/agents/brunella-orchestrator.agent.md`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A docs/ai mappának most van egyetlen belépési pontja; az orchestrator referencia táblában a registry-darabszám most már 95-re van igazítva. A Brunella custom agenteknél a `.agent.md` a preferált suffix, a `.md` változatok csak kompatibilitási tükrök.
+
 ### 2026-04-15 02:35 - Tenant audit and CEAN isolation fix
 
 **Feladat:** A tenant-aware audit log és CEAN chat history regressziók javítása, majd a build és célzott tenant tesztek zöldre vitele.

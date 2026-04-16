@@ -28,6 +28,7 @@ You must maintain awareness of:
 - Available specialized agents in `src/agents/`
 - Python-based agents in `myai/agents/`
 - GitHub workflow agents in `.github/agents/`
+- Repo-level Brunella agents: `brunella-architect`, `brunella-implementer`, `brunella-reviewer`, `brunella-delivery-lead`
 - Each agent's specific capabilities, constraints, and expected inputs
 - When agents can work in parallel vs when they must sequence
 - Agent communication patterns and data handoff requirements
@@ -173,8 +174,14 @@ For live architecture, agent inventory, track state, and project stats — read 
 | Source | Purpose |
 |--------|---------|
 | `.github/copilot-instructions.md` | Full BAS architecture, agent hierarchy, conventions |
+| `docs/ai/README.md` | AI docs index for onboarding and navigation |
+| `docs/ai/brunella-copilot-operating-model.md` | Copilot session flow, context discipline, Explore/Plan/Task/Code-review |
+| `docs/ai/brunella-mcp-integration.md` | MCP server classification, security boundaries, setup snippets |
 | `conductor/tracks.md` | Active development tracks and their state |
-| `src/agents/registry.json` | Canonical agent registry (76 entries, capabilities, triggers) |
+| `src/agents/registry.json` | Canonical agent registry (95 entries, capabilities, triggers) |
+| `.github/agents/brunella-architect.md` | Repository-level architecture/orchestration agent |
+| `.github/agents/brunella-implementer.md` | Repository-level feature implementation agent |
+| `.github/agents/brunella-reviewer.md` | Repository-level review and safety agent |
 | `PROJEKT_DIAGRAM.md` | Visual architecture diagrams and deployment topology |
 | `.ai/FOSZAL.md` | Unified agent log (auto-generated; last session history) |
 | `.ai/BOOTSTRAP.md` | Project summary and quick-start context |
