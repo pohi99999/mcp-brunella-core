@@ -1,5 +1,15 @@
 # Copilot Session Notes
 
+## 2026-04-16 23:55 - doc-stats newline normalization fix
+
+**Feladat:** A `scripts/sync_doc_stats.ts` összehasonlítását normalizáltam, hogy a Windows worktree CRLF/LF eltérései ne okozzanak hamis README stat driftet a pre-push hookban.
+
+**Érintett fájlok:** `scripts/sync_doc_stats.ts`, `.ai/copilot.md`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A `README.md` doc-stats blokkja tartalmilag rendben van; a tartós driftet a raw string összehasonlítás és az EOL-különbség okozta. A fix célja, hogy a hook ugyanazt a kanonikus stat blokkot lássa akkor is, ha a worktree sorvégei Windows alatt eltérnek.
+
 ## 2026-04-16 23:50 - Brunella dashboard skill catalog rollout
 
 **Feladat:** A Brunella dashboard fő funkcióihoz specializált Copilot skill-eket hoztam létre, beleértve a `/paios` és `/Brunella_Studio` vezérlőutakat, valamint a hozzájuk tartozó skill-katalógust és onboarding-docs szinkront.

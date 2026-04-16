@@ -38,7 +38,10 @@ const MANAGED_BLOCK_START = '<!-- DOC_STATS_START -->';
 const MANAGED_BLOCK_END = '<!-- DOC_STATS_END -->';
 
 function readText(filePath: string): string {
-  return fs.readFileSync(filePath, 'utf8').replace(/^\uFEFF/, '');
+  return fs.readFileSync(filePath, 'utf8')
+    .replace(/^\uFEFF/, '')
+    .replace(/\r\n/g, '\n')
+    .replace(/\r/g, '\n');
 }
 
 function listTypeScriptFiles(dirPath: string): string[] {
