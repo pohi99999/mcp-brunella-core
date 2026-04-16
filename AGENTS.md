@@ -15,6 +15,7 @@ Brunella Agent System is a modular multi-agent operating system that combines:
 - MCP tool routing and discovery
 - CLI and dashboard user surfaces
 - conductor tracks for scoped work and closure evidence
+- repo-level Copilot skills in `.agents/skills/` (with `.claude/skills/` kept as a compatibility mirror)
 
 Brunella is not a single assistant. It is a coordinated system of agents, skills, prompts, tools, and workflows.
 
@@ -54,7 +55,7 @@ Brunella is not a single assistant. It is a coordinated system of agents, skills
 | Need | Create | Notes |
 | --- | --- | --- |
 | New workflow with state and coordination | Agent | Use explicit input/output/failure contracts |
-| Thin reusable behavior over existing tools | Skill/plugin | Make it discoverable and testable |
+| Thin reusable behavior over existing tools | Skill/plugin | Put it in `.agents/skills/<skill-name>/SKILL.md`, make it discoverable and testable, and update `docs/ai/brunella-skill-catalog.md` |
 | New transport or external system boundary | MCP adapter | Define timeout, retry, logging, and secrets handling |
 | New UI/admin surface | Dashboard/CLI layer | Register it where users actually interact |
 
@@ -64,7 +65,7 @@ Brunella is not a single assistant. It is a coordinated system of agents, skills
 - If you add an integration, define retries, timeouts, and error handling.
 - If you touch shared surfaces, update tests and docs.
 - If you touch an agent, keep the registry and prompt/template in sync.
-- If you touch a skill, update discovery and registry files.
+- If you touch a skill, update `.agents/skills/<skill-name>/SKILL.md`, discovery docs, and the skill catalog.
 - If you touch MCP config, keep `mcp_servers.json` declarative.
 - Do not rely on `console.log`; use structured logging.
 - Do not use `any` when `unknown` plus a guard is enough.

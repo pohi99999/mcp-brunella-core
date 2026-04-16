@@ -1,5 +1,15 @@
 # Copilot Session Notes
 
+## 2026-04-16 23:50 - Brunella dashboard skill catalog rollout
+
+**Feladat:** A Brunella dashboard fő funkcióihoz specializált Copilot skill-eket hoztam létre, beleértve a `/paios` és `/Brunella_Studio` vezérlőutakat, valamint a hozzájuk tartozó skill-katalógust és onboarding-docs szinkront.
+
+**Érintett fájlok:** `.agents/skills/paios/SKILL.md`, `.agents/skills/brunella-studio/SKILL.md`, `.agents/skills/mission-control-ops/SKILL.md`, `.agents/skills/ai-agent-governance/SKILL.md`, `.agents/skills/knowledge-memory-intelligence/SKILL.md`, `.agents/skills/track-lifecycle-quality/SKILL.md`, `.agents/skills/edge-fleet-automation/SKILL.md`, `.agents/skills/enterprise-services/SKILL.md`, `.agents/skills/revenue-finance-ops/SKILL.md`, `.agents/skills/system-observability-admin/SKILL.md`, `docs/ai/brunella-skill-catalog.md`, `docs/ai/README.md`, `docs/ai/brunella-mcp-integration.md`, `.github/copilot-instructions.md`, `AGENTS.md`, `.github/prompts/brunella-skill.prompt.md`, `README.md`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A repo-level Copilot skill library most már az `.agents/skills/` könyvtárban van dokumentálva és katalogizálva; a Brunella onboarding docs explicit módon erre a source of truth-re mutatnak. A változás kizárólag a releváns skill/docs réteget érinti, a futó working tree többi módosítását nem bolygattam.
+
 ## 2026-04-16 23:10 - Copilot onboarding asset pack sync
 
 **Feladat:** A Brunella Copilot onboarding asset pack teljes szinkronizálása: a policy réteg, a repo-szintű agentek, a prompt template-ek, az AI docs index, az operating model és az MCP integrációs útmutató egységesítése, valamint a legacy aliasok és feature-scope tisztázása.

@@ -10,6 +10,12 @@ This document defines how Brunella should use MCP servers and tools in a safe, d
 - Log every tool path with enough detail to debug failures without exposing secrets.
 - Prefer small, explicit tool sets for a given task.
 
+## Skill boundary
+
+- Use a Copilot skill when the user-facing behavior is a thin wrapper over an existing Brunella dashboard surface, CLI command, or MCP tool.
+- Use an MCP adapter when the task needs a new transport, process, or credential boundary.
+- Keep the skill and adapter documents aligned if both layers exist for the same capability.
+
 ## Tool classes
 
 ### Required

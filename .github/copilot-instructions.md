@@ -21,7 +21,7 @@ Use `README.md` as the human-facing master guide. This file is the always-on Cop
 - Brunella is a modular multi-agent system, not a monolithic assistant.
 - `src/` is the Node.js/TypeScript control plane: Express routes, MCP server, CLI, dashboard backend, orchestration, hooks, and registries.
 - `myai/` is the Python subsystem: FastAPI, FastMCP, browser/RAG/ML helpers.
-- `src/agents/registry.json` is the canonical TypeScript agent registry; `myai/agents/*.toml` are dynamic agents; `src/skills/` holds runtime skills.
+- `src/agents/registry.json` is the canonical TypeScript agent registry; `myai/agents/*.toml` are dynamic agents; `src/skills/` holds runtime skills/plugins; `.agents/skills/` holds the repo-level Copilot skill library; `.claude/skills/` mirrors it for compatibility.
 - `.github/agents/` contains repo-level Copilot agents; `.github/prompts/` contains reusable prompt templates.
 - `conductor/` owns track state, DoD evidence, and closure history.
 - `mcp_servers.json` is the declarative MCP startup manifest.
@@ -30,7 +30,7 @@ Use `README.md` as the human-facing master guide. This file is the always-on Cop
 - `src/server/routes/index.ts` is the central lazy-loaded HTTP mount table.
 - `src/server/registry.ts` captures MCP tool handlers and schemas.
 - `src/dashboard/lib/navigation.tsx` and `src/cli.ts` are parallel user-facing surfaces.
-- `docs/ai/README.md` is the human-readable AI docs index; `docs/ai/` holds the operating-model and MCP integration guides.
+- `docs/ai/README.md` is the human-readable AI docs index; `docs/ai/brunella-skill-catalog.md` maps dashboard surfaces to skills; `docs/ai/` holds the operating-model and MCP integration guides.
 - Repo-level Brunella agents: `brunella-architect`, `brunella-implementer`, `brunella-reviewer`, `brunella-delivery-lead`.
 
 ## Self-improvement loop agents

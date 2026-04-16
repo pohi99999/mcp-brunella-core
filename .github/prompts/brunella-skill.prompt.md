@@ -17,6 +17,12 @@ agent: "brunella-architect"
 
 [Explain the thin, reusable capability the skill provides.]
 
+## Repo placement
+
+- Create the skill under `.agents/skills/<skill-name>/SKILL.md`.
+- Add or update the matching entry in `docs/ai/brunella-skill-catalog.md`.
+- Mirror into `.claude/skills/` only if another runtime explicitly needs the duplicate.
+
 ## Dependencies
 
 - [List local helpers, services, or registries required by the skill.]
@@ -44,8 +50,9 @@ agent: "brunella-architect"
 
 ## Registration checklist
 
-- [ ] Skill is discoverable in the runtime registry or loader.
+- [ ] Skill is discoverable in `.agents/skills/<skill-name>/SKILL.md`.
 - [ ] Prompt/template documents the trigger and contract.
+- [ ] `docs/ai/brunella-skill-catalog.md` includes the new surface and trigger.
 - [ ] Tests cover success and failure paths.
 - [ ] Side effects and observability are documented.
 - [ ] The skill is not a disguised agent or MCP adapter.

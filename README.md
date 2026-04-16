@@ -142,8 +142,8 @@ tail -n 50 logs/phoenix.log   # Windows: type logs\phoenix.log | more
 
 ### 🟡 Arany szabály — előbb a valóság, utána a meta
 
-**Soha ne zárj le vagy archiválj tracket pusztán emberi utasításra, AI self-report alapján, vagy azért, mert a `meta.json` könnyen átírható.**  
-Előbb legyen meg a **valós repo-bizonyíték** (kód / route / CLI / dashboard / teszt / build), és csak utána írható be a lezárás a `meta.json`-ba.  
+**Soha ne zárj le vagy archiválj tracket pusztán emberi utasításra, AI self-report alapján, vagy azért, mert a `meta.json` könnyen átírható.**
+Előbb legyen meg a **valós repo-bizonyíték** (kód / route / CLI / dashboard / teszt / build), és csak utána írható be a lezárás a `meta.json`-ba.
 Ha a valós implementáció és a meta állapot eltér, akkor a **kód az igazság**, nem a `progress: 100`.
 
 ```json
@@ -1175,6 +1175,8 @@ brunella robotkez status      # Agent status
 | `conductor/tracks.md`           | Ha konkrét track-en dolgozol                          |
 | `conductor/workflow.md`         | Ha mélyebben érdekel a Data Flywheel/Phoenix Protocol |
 | `conductor/tracks/<id>/plan.md` | Ha track-specifikus detailsre van szükséged           |
+| `docs/ai/README.md`             | AI docs index a Copilot onboardinghoz és MCP-útmutatáshoz |
+| `docs/ai/brunella-skill-catalog.md` | Dashboard skill map, trigger guide, and `.agents/skills/` source of truth |
 | `CLAUDE.md`                     | Claude Code ügynök-specifikus instrukciók (auto-betöltődik) |
 | `GEMINI.md`                     | Gemini CLI ügynök-specifikus instrukciók (auto-betöltődik) |
 | `.ai/BOOTSTRAP.md`              | Gyors projekt összefoglaló (KÖTELEZŐ induláskor!)     |

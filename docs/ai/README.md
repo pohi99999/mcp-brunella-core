@@ -12,8 +12,10 @@ If the docs conflict, read them in this order of authority:
 2. `.github/copilot-instructions.md` — always-on Copilot contract
 3. `AGENTS.md` — repo bootstrap and handoff rules
 4. `docs/ai/README.md` — navigation index and asset map
-5. `docs/ai/*.md` — operational guidance
-6. `.github/agents/*.agent.md` / `.github/prompts/*.prompt.md` — execution templates and personas
+5. `docs/ai/brunella-skill-catalog.md` — dashboard surface to skill map and canonical `.agents/skills/` source of truth
+6. `docs/ai/*.md` — operational guidance
+7. `.github/agents/*.agent.md` / `.github/prompts/*.prompt.md` — execution templates and personas
+8. `.agents/skills/*.md` — repo-level Copilot skills; `.claude/skills/*.md` is a compatibility mirror
 
 ## Start here
 
@@ -49,6 +51,23 @@ If the docs conflict, read them in this order of authority:
 | [`.github/prompts/brunella-agent.prompt.md`](../../.github/prompts/brunella-agent.prompt.md) | Template for creating a new Brunella agent |
 | [`.github/prompts/brunella-skill.prompt.md`](../../.github/prompts/brunella-skill.prompt.md) | Template for creating a new Brunella skill / plugin |
 | [`.github/prompts/new-feature.prompt.md`](../../.github/prompts/new-feature.prompt.md) | Legacy EPP v2 feature alias; prefer `brunella-feature.prompt.md` for new work |
+
+## Skill catalog
+
+Brunella Copilot skills live in `.agents/skills/<skill-name>/SKILL.md`. The catalog below maps those skills to the major dashboard surfaces so future onboarding stays aligned with the actual UI.
+
+| File | Purpose |
+| --- | --- |
+| [`.agents/skills/paios/SKILL.md`](../../.agents/skills/paios/SKILL.md) | `/paios` and PAIOS orchestrator chat surface |
+| [`.agents/skills/brunella-studio/SKILL.md`](../../.agents/skills/brunella-studio/SKILL.md) | `Brunella Studio` video / post-production workflow |
+| [`.agents/skills/mission-control-ops/SKILL.md`](../../.agents/skills/mission-control-ops/SKILL.md) | Mission Control, system health, process and service operations |
+| [`.agents/skills/ai-agent-governance/SKILL.md`](../../.agents/skills/ai-agent-governance/SKILL.md) | AI & Agents governance, registry, kernels, self-improvement |
+| [`.agents/skills/knowledge-memory-intelligence/SKILL.md`](../../.agents/skills/knowledge-memory-intelligence/SKILL.md) | Knowledge, memory, preferences, and vector intelligence surfaces |
+| [`.agents/skills/track-lifecycle-quality/SKILL.md`](../../.agents/skills/track-lifecycle-quality/SKILL.md) | Track generator, conductor monitor, and closure quality flow |
+| [`.agents/skills/edge-fleet-automation/SKILL.md`](../../.agents/skills/edge-fleet-automation/SKILL.md) | CEAN, Cloudflare, swarm, workflow, and edge fleet automation |
+| [`.agents/skills/enterprise-services/SKILL.md`](../../.agents/skills/enterprise-services/SKILL.md) | Enterprise suite, HR, onboarding, grants, law, property ops |
+| [`.agents/skills/revenue-finance-ops/SKILL.md`](../../.agents/skills/revenue-finance-ops/SKILL.md) | Sales, campaigns, invoice, bookkeeping, and reconciliation flows |
+| [`.agents/skills/system-observability-admin/SKILL.md`](../../.agents/skills/system-observability-admin/SKILL.md) | Telemetry, logs, traces, admin, model router, and scheduled tasks |
 
 ## Compatibility note
 
