@@ -735,6 +735,23 @@ export class AgentManager extends EventEmitter {
       task.context,
     );
 
+    // Extract taskId and start polling
+    if (result && typeof result === 'object' && 'data' in result) {
+      const data = result.data as any;
+      const edgeTask = data?.task;
+      if (edgeTask && edgeTask.taskId) {
+        this.pollExternalTask(
+          edgeTask.taskId,
+          "EdgeProxy",
+          async () => {
+            const statusRes = await (this.edgeProxy as any).getTaskStatus(edgeTask.taskId);
+            if (!statusRes) return { status: 'unknown' };
+            return { status: statusRes.status, result: statusRes.result, error: statusRes.error };
+          }
+        );
+      }
+    }
+
     return normalizeTaskResult(result, "Edge execution completed", true);
   }
 
@@ -957,6 +974,12 @@ export class AgentManager extends EventEmitter {
       });
       setAgentStatus(agentName, "idle", instruction);
       this.socketService.broadcastChatter(agentName, `Feladat sikeresen elvégezve: ${instruction.slice(0, 50)}...`, "System");
+
+      this.socketService.broadcastDebug(`Agent Result: ${agentName}`, {
+        instruction: instruction.slice(0, 100),
+        success: true,
+        resultPreview: JSON.stringify(result).slice(0, 1000),
+      });
 
       // RULE-PH1: checkpoint on success
       await saveCheckpoint(
@@ -1479,6 +1502,79 @@ export class AgentManager extends EventEmitter {
       runtimeByAgent,
     );
     return decision.agentName ?? this.registry.defaultAgent;
+  }
+
+  // --------------------------------------------------------------------------
+  // EXTERNAL TASK POLLING (Fire-and-Forget)
+  // --------------------------------------------------------------------------
+
+  /**
+   * Background polling for external tasks (Fire-and-Forget)
+   * 
+   * @param taskId - The ID of the external task
+   * @param agentName - The name of the agent or service (e.g., "EdgeProxy", "n8n")
+   * @param checkStatusFn - Function that returns the current status of the task
+   * @param options - Polling options (timeoutMs, pollIntervalMs)
+   */
+  public pollExternalTask(
+    taskId: string,
+    agentName: string,
+    checkStatusFn: () => Promise<{ status: string; result?: unknown; error?: string }>,
+    options: { timeoutMs?: number; pollIntervalMs?: number } = {}
+  ): void {
+    const timeoutMs = options.timeoutMs || 5 * 60 * 1000; // 5 minutes default
+    const pollIntervalMs = options.pollIntervalMs || 5000; // 5 seconds default
+    const startTime = Date.now();
+
+    logInfo("AgentManager", `Started background polling for external task ${taskId} (${agentName})`);
+
+    const poll = async () => {
+      try {
+        if (Date.now() - startTime > timeoutMs) {
+          logWarn("AgentManager", `External task ${taskId} timed out after ${timeoutMs}ms`);
+          phoenixEventBus.publish('task:timeout', {
+            taskId,
+            agentName,
+            timestamp: new Date().toISOString()
+          });
+          return;
+        }
+
+        const statusResult = await checkStatusFn();
+        const status = statusResult.status.toLowerCase();
+
+        if (status === 'completed' || status === 'success' || status === 'done') {
+          logInfo("AgentManager", `External task ${taskId} completed successfully`);
+          phoenixEventBus.publish('task:completed', {
+            taskId,
+            agentName,
+            result: statusResult.result,
+            timestamp: new Date().toISOString()
+          });
+          return;
+        } else if (status === 'error' || status === 'failed') {
+          logError("AgentManager", `External task ${taskId} failed: ${statusResult.error}`);
+          phoenixEventBus.publish('task:failed', {
+            taskId,
+            agentName,
+            error: statusResult.error,
+            timestamp: new Date().toISOString()
+          });
+          return;
+        }
+
+        // Still pending/running, schedule next poll
+        setTimeout(poll, pollIntervalMs);
+      } catch (error: unknown) {
+        const err = ensureError(error);
+        logError("AgentManager", `Error polling external task ${taskId}: ${err.message}`);
+        // Retry until timeout
+        setTimeout(poll, pollIntervalMs);
+      }
+    };
+
+    // Start polling
+    setTimeout(poll, pollIntervalMs);
   }
 
   // --------------------------------------------------------------------------

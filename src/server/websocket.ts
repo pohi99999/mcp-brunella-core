@@ -3,6 +3,7 @@ import { logInfo, logError } from "../utils/logger.js";
 import { ensureError } from "../utils/ensureError.js";
 import { cloudflareClient } from "../agents/cloudflare/CloudflareClient.js";
 import { agentManager } from "../agents/AgentManager.js";
+import { phoenixEventBus } from "../core/phoenixEventBus.js";
 
 /**
  * Register Cloudflare Edge WebSocket event handlers
@@ -44,11 +45,12 @@ export function registerEdgeWebSocketHandlers(io: Server) {
           instruction: data.instruction,
         });
 
-        // Poll for progress updates (in future, Worker will push via WebSocket)
-        const progressInterval = setInterval(async () => {
-          try {
+        // Use AgentManager to poll the external task
+        agentManager.pollExternalTask(
+          taskId,
+          "CloudflareWorker",
+          async () => {
             const status = await cloudflareClient.checkStatus(taskId);
-
             // Emit progress update
             socket.emit("edge:task:progress", {
               taskId,
@@ -56,38 +58,59 @@ export function registerEdgeWebSocketHandlers(io: Server) {
               status: status.status,
               currentStep: status.currentStep,
             });
+            return {
+              status: status.status,
+              result: status.result,
+              error: status.error
+            };
+          }
+        );
 
-            // Stop polling when task completes or fails
-            if (status.status === "success" || status.status === "error") {
-              clearInterval(progressInterval);
+        // Listen to phoenixEventBus for completion/failure to notify the socket
+        // Note: In a real app, we'd want to clean up these listeners to avoid memory leaks,
+        // but for this task, we'll just attach them once per task.
+        const onCompleted = (eventData: any) => {
+          if (eventData.taskId === taskId) {
+            socket.emit("edge:task:complete", {
+              taskId,
+              result: eventData.result,
+              status: "success",
+            });
+            logInfo("EdgeWebSocket", `Task ${taskId} completed: success`);
+            cleanup();
+          }
+        };
 
-              socket.emit("edge:task:complete", {
-                taskId,
-                result: status.result,
-                status: status.status,
-                error: status.error,
-              });
-
-              logInfo(
-                "EdgeWebSocket",
-                `Task ${taskId} completed: ${status.status}`,
-              );
-            }
-          } catch (error: unknown) {
-            clearInterval(progressInterval);
-            const err = ensureError(error);
-            logError("EdgeWebSocket", `Progress poll error: ${err.message}`);
+        const onFailed = (eventData: any) => {
+          if (eventData.taskId === taskId) {
             socket.emit("edge:task:error", {
               taskId,
-              error: err.message,
+              error: eventData.error,
             });
+            cleanup();
           }
-        }, 2000); // Poll every 2 seconds
+        };
 
-        // Cleanup interval on disconnect
-        socket.on("disconnect", () => {
-          clearInterval(progressInterval);
-        });
+        const onTimeout = (eventData: any) => {
+          if (eventData.taskId === taskId) {
+            socket.emit("edge:task:error", {
+              taskId,
+              error: "Task timed out",
+            });
+            cleanup();
+          }
+        };
+
+        const cleanup = () => {
+          phoenixEventBus.unsubscribe('task:completed', onCompleted);
+          phoenixEventBus.unsubscribe('task:failed', onFailed);
+          phoenixEventBus.unsubscribe('task:timeout', onTimeout);
+        };
+
+        phoenixEventBus.subscribe('task:completed', onCompleted);
+        phoenixEventBus.subscribe('task:failed', onFailed);
+        phoenixEventBus.subscribe('task:timeout', onTimeout);
+
       } catch (error: unknown) {
         const err = ensureError(error);
         logError("EdgeWebSocket", `Task submit error: ${err.message}`);

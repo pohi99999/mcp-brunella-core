@@ -1,0 +1,109 @@
+{
+  "projectName": "studio-e2e",
+  "inputDir": "C:\\Users\\pohi9\\AppData\\Local\\Temp\\brunella-studio-e2e-Z6Vkdz\\input",
+  "createdAt": "2026-04-16T18:05:30.169Z",
+  "runtime": {
+    "ffmpegAvailable": true,
+    "ffprobeAvailable": true,
+    "ffmpegVersion": "ffmpeg version 8.1-full_build-www.gyan.dev Copyright (c) 2000-2026 the FFmpeg developers",
+    "ffprobeVersion": "ffprobe version 8.1-full_build-www.gyan.dev Copyright (c) 2007-2026 the FFmpeg developers"
+  },
+  "assets": [
+    {
+      "id": "detail-texture",
+      "path": "C:\\Users\\pohi9\\AppData\\Local\\Temp\\brunella-studio-e2e-Z6Vkdz\\input\\detail-texture.mp4",
+      "fileName": "detail-texture.mp4",
+      "type": "video",
+      "sizeBytes": 4333,
+      "durationSec": 2,
+      "width": 1280,
+      "height": 720,
+      "fps": 25,
+      "hasVideo": true,
+      "hasAudio": false,
+      "videoCodec": "h264",
+      "bitrate": 17332,
+      "tags": [
+        "video",
+        "micro-shot",
+        "detail"
+      ],
+      "warnings": [],
+      "fingerprint": "f854cbff01084d0bdf75fc2571dedc1731947587",
+      "qualityScore": 77,
+      "bin": "details"
+    },
+    {
+      "id": "music",
+      "path": "C:\\Users\\pohi9\\AppData\\Local\\Temp\\brunella-studio-e2e-Z6Vkdz\\input\\music.mp3",
+      "fileName": "music.mp3",
+      "type": "audio",
+      "sizeBytes": 96566,
+      "durationSec": 12,
+      "hasVideo": false,
+      "hasAudio": true,
+      "audioChannels": 1,
+      "sampleRate": 44100,
+      "audioCodec": "mp3",
+      "bitrate": 64377,
+      "tags": [
+        "audio",
+        "hero"
+      ],
+      "warnings": [],
+      "fingerprint": "486334bfd2eca39fc058ddcdb6e55bb27e3b1600",
+      "qualityScore": 48,
+      "bin": "hero"
+    },
+    {
+      "id": "opening-look",
+      "path": "C:\\Users\\pohi9\\AppData\\Local\\Temp\\brunella-studio-e2e-Z6Vkdz\\input\\opening-look.mp4",
+      "fileName": "opening-look.mp4",
+      "type": "video",
+      "sizeBytes": 4333,
+      "durationSec": 2,
+      "width": 1280,
+      "height": 720,
+      "fps": 25,
+      "hasVideo": true,
+      "hasAudio": false,
+      "videoCodec": "h264",
+      "bitrate": 17332,
+      "tags": [
+        "video",
+        "micro-shot",
+        "opening"
+      ],
+      "warnings": [],
+      "fingerprint": "29edcdd5693c40ad8265a7a6adce983a2db58e65",
+      "qualityScore": 79,
+      "bin": "hero"
+    },
+    {
+      "id": "utolso-end",
+      "path": "C:\\Users\\pohi9\\AppData\\Local\\Temp\\brunella-studio-e2e-Z6Vkdz\\input\\utolso-end.mp4",
+      "fileName": "utolso-end.mp4",
+      "type": "video",
+      "sizeBytes": 4332,
+      "durationSec": 2,
+      "width": 1280,
+      "height": 720,
+      "fps": 25,
+      "hasVideo": true,
+      "hasAudio": false,
+      "videoCodec": "h264",
+      "bitrate": 17328,
+      "tags": [
+        "video",
+        "micro-shot",
+        "ending"
+      ],
+      "warnings": [],
+      "fingerprint": "70265a157983c64675cf51dcf9509bdcec2e563b",
+      "qualityScore": 77,
+      "bin": "ending"
+    }
+  ],
+  "duplicates": [],
+  "proxyPaths": []
+}

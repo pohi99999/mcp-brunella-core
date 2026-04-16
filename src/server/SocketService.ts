@@ -43,6 +43,15 @@ export class SocketServiceClass {
     });
   }
 
+  broadcastDebug(message: string, context?: any): void {
+    if (!this.io) return;
+    this.io.emit('system:debug', {
+      message,
+      context,
+      timestamp: Date.now()
+    });
+  }
+
   isReady(): boolean {
     return this.io !== null;
   }

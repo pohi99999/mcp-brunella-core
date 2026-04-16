@@ -27,6 +27,9 @@ vi.mock('../src/core/universalOrchestratorService.js', () => ({
 vi.mock('../src/server/SocketService.js', () => ({
   socketService: {
     emit: mockEmit,
+    broadcastDebug: vi.fn(),
+    broadcastLog: vi.fn(),
+    updateAgentStatus: vi.fn(),
   },
 }));
 

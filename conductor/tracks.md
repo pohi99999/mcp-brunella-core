@@ -1,6 +1,6 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-04-15T20:00:00.667Z
+**Utolso frissites:** 2026-04-16T18:00:00.261Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
@@ -99,9 +99,16 @@
   - Mappa: ./tracks/toura_local_dev_20260408/
 
 
-### Brunella rendszer (1)
+### Brunella rendszer (2)
 
-- [~] **Brunella Studio Agent v2** [HIGH]
+- [~] **PAIOS Orchestrator Integration & Intelligence Audit** [HIGH]
+  - **ID:** `paios_integration_audit_20260415`
+  - **Progress:** 95%
+  - **Assignee:** Gemini
+  - **Updated:** 2026-04-16
+  - Mappa: ./tracks/paios_integration_audit_20260415/
+
+- [ ] **Brunella Studio Agent v2** [HIGH]
   - **ID:** `brunella-studio-agent-v2_20260414`
   - **Progress:** 70%
   - **Assignee:** GitHub Copilot

@@ -285,6 +285,8 @@ export function PAIOSOrchestratorChat() {
 
     const [isListening, setIsListening] = useState(false);
     const [isSpeaking, setIsSpeaking] = useState(false);
+    const [showDebug, setShowDebug] = useState(false);
+    const [debugLogs, setDebugLogs] = useState<Array<{ message: string, context?: any, timestamp: number }>>([]);
     const [expandedMeta, setExpandedMeta] = useState<Record<number, boolean>>({});
     const audioRef = useRef<HTMLAudioElement | null>(null);
 
@@ -441,6 +443,8 @@ export function PAIOSOrchestratorChat() {
         }
     }, [messages]);
 
+    const [liveChatter, setLiveChatter] = useState<string>('');
+
     useEffect(() => {
         if (!socket) return;
 
@@ -463,12 +467,33 @@ export function PAIOSOrchestratorChat() {
             });
         };
 
+        const handleAgentChatter = (data: { sender: string, message: string }) => {
+            setLiveChatter(`[${data.sender}] ${data.message}`);
+        };
+
+        const handleSystemLog = (data: { message: string, type: string, source?: string }) => {
+             if (data.type === 'error') {
+                 // Csak akkor mutatjuk ha az orchestrator gondolkodik, silent fallback-hez
+                 setLiveChatter(`⚠️ ${data.source ? `[${data.source}] ` : ''}${data.message}`);
+             }
+        };
+
+        const handleSystemDebug = (data: { message: string, context?: any, timestamp: number }) => {
+            setDebugLogs((prev) => [data, ...prev].slice(0, 100));
+        };
+
         socket.on('paios:tasks_created', handleTasksCreated);
+        socket.on('agent:chatter', handleAgentChatter);
+        socket.on('system:log', handleSystemLog);
+        socket.on('system:debug', handleSystemDebug);
+
         return () => {
             socket.off('paios:tasks_created', handleTasksCreated);
+            socket.off('agent:chatter', handleAgentChatter);
+            socket.off('system:log', handleSystemLog);
+            socket.off('system:debug', handleSystemDebug);
         };
     }, [socket]);
-
     const startNewSession = () => {
         const newSessionId = createSessionId();
         setSessionId(newSessionId);
@@ -583,6 +608,16 @@ export function PAIOSOrchestratorChat() {
                     </CardTitle>
                     <div className="flex flex-wrap items-center gap-1 justify-end">
                         <Button
+                            variant={ showDebug ? 'default' : 'outline' }
+                            size="sm"
+                            className="gap-1 h-7"
+                            title="Debug csatorna"
+                            onClick={ () => setShowDebug(!showDebug) }
+                        >
+                            <Zap className={ `w-3 h-3 ${showDebug ? 'text-white' : 'text-yellow-500'}` } />
+                            <span className="hidden sm:inline text-xs">Debug</span>
+                        </Button>
+                        <Button
                             variant="outline"
                             size="sm"
                             className="gap-1 h-7"
@@ -637,213 +672,251 @@ export function PAIOSOrchestratorChat() {
                 </div>
             </CardHeader>
 
-            <CardContent className="flex-1 flex flex-col p-0 overflow-hidden min-h-0">
-                <div ref={ chatContainerRef } className="flex-1 overflow-y-auto p-3 scroll-smooth">
-                    <div className="space-y-3">
-                        { messages.length === 0 && (
-                            <div className="text-center text-zinc-500 py-16">
-                                <Brain className="w-10 h-10 mx-auto mb-3 opacity-30" />
-                                <p className="text-sm font-medium">Adj egy feladatot magyarul...</p>
-                                <p className="text-xs mt-1 opacity-60">Példa: "Készíts egy új API endpointot TDD-vel"</p>
-                            </div>
-                        ) }
+            <CardContent className="flex-1 flex flex-row p-0 overflow-hidden min-h-0">
+                <div className="flex-1 flex flex-col min-w-0">
+                    <div ref={ chatContainerRef } className="flex-1 overflow-y-auto p-3 scroll-smooth">
+                        <div className="space-y-3">
+                            { messages.length === 0 && (
+                                <div className="text-center text-zinc-500 py-16">
+                                    <Brain className="w-10 h-10 mx-auto mb-3 opacity-30" />
+                                    <p className="text-sm font-medium">Adj egy feladatot magyarul...</p>
+                                    <p className="text-xs mt-1 opacity-60">Példa: "Készíts egy új API endpointot TDD-vel"</p>
+                                </div>
+                            ) }
 
-                        { messages.map((msg, idx) => (
-                            <div key={ idx } className={ `flex gap-3 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}` }>
-                                { msg.role === 'assistant' && (
-                                    <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center flex-shrink-0">
-                                        <Bot className="w-4 h-4 text-white" />
-                                    </div>
-                                ) }
-
-                                <div
-                                    className={ `max-w-[80%] rounded-lg p-3 ${msg.role === 'user'
-                                        ? 'bg-primary text-primary-foreground'
-                                        : msg.error
-                                            ? 'bg-red-100 dark:bg-red-950 border border-red-300 dark:border-red-800'
-                                            : 'bg-muted'
-                                        }` }
-                                >
-                                    { msg.role === 'user' ? (
-                                        <p className="text-sm whitespace-pre-wrap">{ msg.content }</p>
-                                    ) : (
-                                        <div
-                                            className="text-sm prose prose-sm dark:prose-invert prose-p:my-1 prose-headings:my-2 prose-ul:my-1 prose-ol:my-1 prose-li:my-0.5 max-w-none [&_hr]:my-2"
-                                            dangerouslySetInnerHTML={ { __html: renderMarkdown(msg.content) } }
-                                        />
-                                    ) }
-
+                            { messages.map((msg, idx) => (
+                                <div key={ idx } className={ `flex gap-3 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}` }>
                                     { msg.role === 'assistant' && (
-                                        <div className="mt-2 flex flex-wrap items-center gap-1 text-xs opacity-75">
-                                            { msg.provider && <Badge variant="outline" className="text-[10px]">{ msg.provider }</Badge> }
-                                            { msg.model && <Badge variant="outline" className="text-[10px]">{ msg.model }</Badge> }
-                                            { typeof msg.thinkingMs === 'number' && <span>⏱️ { msg.thinkingMs } ms</span> }
+                                        <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center flex-shrink-0">
+                                            <Bot className="w-4 h-4 text-white" />
                                         </div>
                                     ) }
 
-                                    { msg.role === 'assistant' && msg.approvalRequired && msg.approvalId && (
-                                        <div className="mt-2 flex flex-wrap gap-1 border-t pt-2">
-                                            <Button
-                                                variant="default"
-                                                size="sm"
-                                                className="h-6 px-2 text-[10px]"
-                                                onClick={ () => void sendMessage(`jóváhagyom ${msg.approvalId}`) }
-                                            >
-                                                ✅ Jóváhagyom { msg.approvalId }
-                                            </Button>
-                                            <Button
-                                                variant="outline"
-                                                size="sm"
-                                                className="h-6 px-2 text-[10px]"
-                                                onClick={ () => void sendMessage('elutasítom') }
-                                            >
-                                                ❌ Elutasítom
-                                            </Button>
-                                        </div>
-                                    ) }
+                                    <div
+                                        className={ `max-w-[80%] rounded-lg p-3 ${msg.role === 'user'
+                                            ? 'bg-primary text-primary-foreground'
+                                            : msg.error
+                                                ? 'bg-red-100 dark:bg-red-950 border border-red-300 dark:border-red-800'
+                                                : 'bg-muted'
+                                            }` }
+                                    >
+                                        { msg.role === 'user' ? (
+                                            <p className="text-sm whitespace-pre-wrap">{ msg.content }</p>
+                                        ) : (
+                                            <div
+                                                className="text-sm prose prose-sm dark:prose-invert prose-p:my-1 prose-headings:my-2 prose-ul:my-1 prose-ol:my-1 prose-li:my-0.5 max-w-none [&_hr]:my-2"
+                                                dangerouslySetInnerHTML={ { __html: renderMarkdown(msg.content) } }
+                                            />
+                                        ) }
 
-                                    { msg.role === 'assistant' && msg.suggestions && msg.suggestions.length > 0 && (
-                                        <div className="mt-2 flex flex-wrap gap-1">
-                                            { msg.suggestions.slice(0, 4).map((suggestion, suggestionIndex) => (
+                                        { msg.role === 'assistant' && (
+                                            <div className="mt-2 flex flex-wrap items-center gap-1 text-xs opacity-75">
+                                                { msg.provider && <Badge variant="outline" className="text-[10px]">{ msg.provider }</Badge> }
+                                                { msg.model && <Badge variant="outline" className="text-[10px]">{ msg.model }</Badge> }
+                                                { typeof msg.thinkingMs === 'number' && <span>⏱️ { msg.thinkingMs } ms</span> }
+                                            </div>
+                                        ) }
+
+                                        { msg.role === 'assistant' && msg.approvalRequired && msg.approvalId && (
+                                            <div className="mt-2 flex flex-wrap gap-1 border-t pt-2">
                                                 <Button
-                                                    key={ `${idx}-suggestion-${suggestionIndex}` }
+                                                    variant="default"
+                                                    size="sm"
+                                                    className="h-6 px-2 text-[10px]"
+                                                    onClick={ () => void sendMessage(`jóváhagyom ${msg.approvalId}`) }
+                                                >
+                                                    ✅ Jóváhagyom { msg.approvalId }
+                                                </Button>
+                                                <Button
                                                     variant="outline"
                                                     size="sm"
                                                     className="h-6 px-2 text-[10px]"
-                                                    onClick={ () => void sendMessage(suggestion) }
+                                                    onClick={ () => void sendMessage('elutasítom') }
                                                 >
-                                                    { suggestion }
+                                                    ❌ Elutasítom
                                                 </Button>
-                                            )) }
-                                        </div>
-                                    ) }
+                                            </div>
+                                        ) }
 
-                                    { /* Összecsukható részletek (timeline, plan, tasks) */ }
-                                    { msg.role === 'assistant' && (msg.missionTimeline?.length || msg.plan?.length || msg.taskIds?.length || msg.runbookHint || msg.actionsTriggered?.length) && (
-                                        <div className="mt-2 border-t pt-1">
-                                            <button
-                                                onClick={ () => setExpandedMeta((prev) => ({ ...prev, [idx]: !prev[idx] })) }
-                                                className="flex items-center gap-1 text-[10px] text-zinc-400 hover:text-zinc-200 transition-colors"
-                                            >
-                                                { expandedMeta[idx] ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" /> }
-                                                Részletek
-                                                { msg.runbookHint && <span className="opacity-60 ml-1">| 📚 { msg.runbookHint }</span> }
-                                            </button>
+                                        { msg.role === 'assistant' && msg.suggestions && msg.suggestions.length > 0 && (
+                                            <div className="mt-2 flex flex-wrap gap-1">
+                                                { msg.suggestions.slice(0, 4).map((suggestion, suggestionIndex) => (
+                                                    <Button
+                                                        key={ `${idx}-suggestion-${suggestionIndex}` }
+                                                        variant="outline"
+                                                        size="sm"
+                                                        className="h-6 px-2 text-[10px]"
+                                                        onClick={ () => void sendMessage(suggestion) }
+                                                    >
+                                                        { suggestion }
+                                                    </Button>
+                                                )) }
+                                            </div>
+                                        ) }
 
-                                            { expandedMeta[idx] && (
-                                                <div className="mt-1 space-y-1 text-xs animate-in slide-in-from-top-1 duration-200">
-                                                    { msg.fallbackUsed && (
-                                                        <p className="opacity-80">
-                                                            ♻️ Fallback{ msg.fallbackReason ? ` (${msg.fallbackReason})` : '' }
-                                                        </p>
-                                                    ) }
+                                        { /* Összecsukható részletek (timeline, plan, tasks) */ }
+                                        { msg.role === 'assistant' && (msg.missionTimeline?.length || msg.plan?.length || msg.taskIds?.length || msg.runbookHint || msg.actionsTriggered?.length) && (
+                                            <div className="mt-2 border-t pt-1">
+                                                <button
+                                                    onClick={ () => setExpandedMeta((prev) => ({ ...prev, [idx]: !prev[idx] })) }
+                                                    className="flex items-center gap-1 text-[10px] text-zinc-400 hover:text-zinc-200 transition-colors"
+                                                >
+                                                    { expandedMeta[idx] ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" /> }
+                                                    Részletek
+                                                    { msg.runbookHint && <span className="opacity-60 ml-1">| 📚 { msg.runbookHint }</span> }
+                                                </button>
 
-                                                    { msg.missionTimeline && msg.missionTimeline.length > 0 && (
-                                                        <div className="space-y-0.5">
-                                                            <p className="font-semibold opacity-75">🧭 Mission Timeline</p>
-                                                            { msg.missionTimeline.slice(-8).map((entry, timelineIndex) => (
-                                                                <div key={ `${idx}-timeline-${timelineIndex}` } className="flex items-start gap-2">
-                                                                    <Badge variant="outline" className="text-[10px] shrink-0">{ entry.phase }</Badge>
-                                                                    <span className="opacity-80">[{ entry.status }] { entry.detail }</span>
-                                                                </div>
-                                                            )) }
-                                                        </div>
-                                                    ) }
+                                                { expandedMeta[idx] && (
+                                                    <div className="mt-1 space-y-1 text-xs animate-in slide-in-from-top-1 duration-200">
+                                                        { msg.fallbackUsed && (
+                                                            <p className="opacity-80">
+                                                                ♻️ Fallback{ msg.fallbackReason ? ` (${msg.fallbackReason})` : '' }
+                                                            </p>
+                                                        ) }
 
-                                                    { msg.plan && msg.plan.length > 0 && (
-                                                        <div className="space-y-1">
-                                                            <p className="font-semibold opacity-70">📋 Execution Plan</p>
-                                                            { msg.plan.map((step, i) => (
-                                                                <div key={ i } className="flex items-start gap-2">
-                                                                    <Badge variant="outline" className="shrink-0">{ step.phase }</Badge>
-                                                                    <div className="flex-1">
-                                                                        <span className="font-medium">{ step.agent }</span>
-                                                                        <span className="opacity-70"> → { step.task }</span>
+                                                        { msg.missionTimeline && msg.missionTimeline.length > 0 && (
+                                                            <div className="space-y-0.5">
+                                                                <p className="font-semibold opacity-75">🧭 Mission Timeline</p>
+                                                                { msg.missionTimeline.slice(-8).map((entry, timelineIndex) => (
+                                                                    <div key={ `${idx}-timeline-${timelineIndex}` } className="flex items-start gap-2">
+                                                                        <Badge variant="outline" className="text-[10px] shrink-0">{ entry.phase }</Badge>
+                                                                        <span className="opacity-80">[{ entry.status }] { entry.detail }</span>
                                                                     </div>
-                                                                </div>
-                                                            )) }
-                                                        </div>
-                                                    ) }
+                                                                )) }
+                                                            </div>
+                                                        ) }
 
-                                                    { msg.taskIds && msg.taskIds.length > 0 && (
-                                                        <div className="flex flex-wrap gap-1">
-                                                            <span className="opacity-70">🎯 Tasks:</span>
-                                                            { msg.taskIds.map((id) => (
-                                                                <Badge key={ id } variant="secondary" className="text-xs">#{ id }</Badge>
-                                                            )) }
-                                                        </div>
-                                                    ) }
+                                                        { msg.plan && msg.plan.length > 0 && (
+                                                            <div className="space-y-1">
+                                                                <p className="font-semibold opacity-70">📋 Execution Plan</p>
+                                                                { msg.plan.map((step, i) => (
+                                                                    <div key={ i } className="flex items-start gap-2">
+                                                                        <Badge variant="outline" className="shrink-0">{ step.phase }</Badge>
+                                                                        <div className="flex-1">
+                                                                            <span className="font-medium">{ step.agent }</span>
+                                                                            <span className="opacity-70"> → { step.task }</span>
+                                                                        </div>
+                                                                    </div>
+                                                                )) }
+                                                            </div>
+                                                        ) }
 
-                                                    { msg.actionsTriggered && msg.actionsTriggered.length > 0 && (
-                                                        <div className="space-y-0.5">
-                                                            <p className="opacity-70">🤖 Delegált műveletek:</p>
-                                                            { msg.actionsTriggered.map((action) => (
-                                                                <div key={ `${action.agent}-${action.taskId}` } className="flex items-center justify-between gap-2">
-                                                                    <span className="truncate">
-                                                                        <strong>{ action.agent }</strong>: { action.task }
-                                                                    </span>
-                                                                    <Badge variant="secondary" className="text-[10px]">#{ action.taskId }</Badge>
-                                                                </div>
-                                                            )) }
-                                                        </div>
-                                                    ) }
-                                                </div>
-                                            ) }
+                                                        { msg.taskIds && msg.taskIds.length > 0 && (
+                                                            <div className="flex flex-wrap gap-1">
+                                                                <span className="opacity-70">🎯 Tasks:</span>
+                                                                { msg.taskIds.map((id) => (
+                                                                    <Badge key={ id } variant="secondary" className="text-xs">#{ id }</Badge>
+                                                                )) }
+                                                            </div>
+                                                        ) }
+
+                                                        { msg.actionsTriggered && msg.actionsTriggered.length > 0 && (
+                                                            <div className="space-y-0.5">
+                                                                <p className="opacity-70">🤖 Delegált műveletek:</p>
+                                                                { msg.actionsTriggered.map((action) => (
+                                                                    <div key={ `${action.agent}-${action.taskId}` } className="flex items-center justify-between gap-2">
+                                                                        <span className="truncate">
+                                                                            <strong>{ action.agent }</strong>: { action.task }
+                                                                        </span>
+                                                                        <Badge variant="secondary" className="text-[10px]">#{ action.taskId }</Badge>
+                                                                    </div>
+                                                                )) }
+                                                            </div>
+                                                        ) }
+                                                    </div>
+                                                ) }
+                                            </div>
+                                        ) }
+
+                                        <p className="text-xs opacity-50 mt-2">
+                                            { new Date(msg.timestamp).toLocaleTimeString('hu-HU') }
+                                        </p>
+                                    </div>
+
+                                    { msg.role === 'user' && (
+                                        <div className="w-8 h-8 rounded-full bg-gray-700 dark:bg-gray-600 flex items-center justify-center flex-shrink-0">
+                                            <User className="w-4 h-4 text-white" />
                                         </div>
                                     ) }
-
-                                    <p className="text-xs opacity-50 mt-2">
-                                        { new Date(msg.timestamp).toLocaleTimeString('hu-HU') }
-                                    </p>
                                 </div>
+                            )) }
+                            <div ref={ scrollRef } />
+                        </div>
+                    </div>
 
-                                { msg.role === 'user' && (
-                                    <div className="w-8 h-8 rounded-full bg-gray-700 dark:bg-gray-600 flex items-center justify-center flex-shrink-0">
-                                        <User className="w-4 h-4 text-white" />
-                                    </div>
+                    <div className="border-t p-3 bg-background shrink-0">
+                        <div className="flex gap-2 items-end">
+                            <Textarea
+                                value={ input }
+                                onChange={ (e) => setInput(e.target.value) }
+                                onKeyDown={ (e) => {
+                                    if (e.key === 'Enter' && !e.shiftKey) {
+                                        e.preventDefault();
+                                        void sendMessage();
+                                    }
+                                } }
+                                placeholder="Írd be a feladatot magyarul... (Enter = küldés)"
+                                className="resize-none min-h-[44px] max-h-[120px] text-sm"
+                                disabled={ isLoading }
+                            />
+                            <Button
+                                onClick={ startListening }
+                                variant="outline"
+                                size="icon"
+                                className={ `shrink-0 h-9 w-9 transition-all duration-300 ${isListening ? 'bg-red-500/20 text-red-500 border-red-500/50 animate-pulse' : ''}` }
+                                title="Hangutasítás (Magyar)"
+                            >
+                                { isSpeaking ? (
+                                    <Volume2 className="w-4 h-4 animate-bounce text-primary" />
+                                ) : (
+                                    <Mic className={ `w-4 h-4 ${isListening ? 'text-red-500' : ''}` } />
+                                ) }
+                            </Button>
+                            <Button onClick={ () => void sendMessage() } disabled={ !input.trim() || isLoading } className="shrink-0 h-9 w-9" size="icon">
+                                { isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" /> }
+                            </Button>
+                        </div>
+                        { isLoading && (
+                            <div className="mt-1 flex flex-col gap-1">
+                                <p className="text-xs text-zinc-500 animate-pulse">⏳ Orchestrator gondolkodik...</p>
+                                { liveChatter && (
+                                    <p className="text-[10px] text-zinc-400 bg-zinc-100 dark:bg-zinc-800/50 px-2 py-1 rounded w-fit max-w-full truncate">
+                                        { liveChatter }
+                                    </p>
                                 ) }
                             </div>
-                        )) }
-                        <div ref={ scrollRef } />
+                        ) }
                     </div>
                 </div>
 
-                <div className="border-t p-3 bg-background shrink-0">
-                    <div className="flex gap-2 items-end">
-                        <Textarea
-                            value={ input }
-                            onChange={ (e) => setInput(e.target.value) }
-                            onKeyDown={ (e) => {
-                                if (e.key === 'Enter' && !e.shiftKey) {
-                                    e.preventDefault();
-                                    void sendMessage();
-                                }
-                            } }
-                            placeholder="Írd be a feladatot magyarul... (Enter = küldés)"
-                            className="resize-none min-h-[44px] max-h-[120px] text-sm"
-                            disabled={ isLoading }
-                        />
-                        <Button
-                            onClick={ startListening }
-                            variant="outline"
-                            size="icon"
-                            className={ `shrink-0 h-9 w-9 transition-all duration-300 ${isListening ? 'bg-red-500/20 text-red-500 border-red-500/50 animate-pulse' : ''}` }
-                            title="Hangutasítás (Magyar)"
-                        >
-                            { isSpeaking ? (
-                                <Volume2 className="w-4 h-4 animate-bounce text-primary" />
-                            ) : (
-                                <Mic className={ `w-4 h-4 ${isListening ? 'text-red-500' : ''}` } />
+                { showDebug && (
+                    <div className="w-80 border-l bg-zinc-50 dark:bg-zinc-900/50 flex flex-col min-h-0 animate-in slide-in-from-right duration-300">
+                        <div className="p-2 border-b flex items-center justify-between bg-zinc-100 dark:bg-zinc-800">
+                            <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-500">Invisible Debug Channel</span>
+                            <Button variant="ghost" size="icon" className="h-5 w-5" onClick={ () => setShowDebug(false) }>
+                                <ChevronUp className="w-3 h-3 rotate-90" />
+                            </Button>
+                        </div>
+                        <div className="flex-1 overflow-y-auto p-2 space-y-2 font-mono text-[10px]">
+                            { debugLogs.length === 0 && (
+                                <p className="text-center text-zinc-400 mt-10 italic">Nincs debug adat...</p>
                             ) }
-                        </Button>
-                        <Button onClick={ () => void sendMessage() } disabled={ !input.trim() || isLoading } className="shrink-0 h-9 w-9" size="icon">
-                            { isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" /> }
-                        </Button>
+                            { debugLogs.map((log, i) => (
+                                <div key={ i } className="p-2 rounded border bg-background shadow-sm">
+                                    <div className="flex justify-between opacity-50 mb-1 text-[9px]">
+                                        <span>{ new Date(log.timestamp).toLocaleTimeString() }</span>
+                                    </div>
+                                    <div className="font-bold text-blue-500 mb-1 break-words">{ log.message }</div>
+                                    { log.context && (
+                                        <pre className="overflow-x-auto whitespace-pre-wrap break-all bg-zinc-100 dark:bg-zinc-800 p-1.5 rounded border text-[9px] leading-tight">
+                                            { JSON.stringify(log.context, null, 2) }
+                                        </pre>
+                                    ) }
+                                </div>
+                            )) }
+                        </div>
                     </div>
-                    { isLoading && (
-                        <p className="text-xs text-zinc-500 mt-1 animate-pulse">⏳ Orchestrator gondolkodik...</p>
-                    ) }
-                </div>
+                ) }
             </CardContent>
         </Card>
     );

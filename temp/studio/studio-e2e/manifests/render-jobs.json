@@ -1,0 +1,48 @@
+[
+  {
+    "id": "a4d216d0-f994-494f-8ae9-874a2d8610e7",
+    "preset": {
+      "name": "master-16x9",
+      "label": "16:9 Master Promo",
+      "width": 1920,
+      "height": 1080,
+      "fps": 25,
+      "videoCodec": "libx264",
+      "audioCodec": "aac",
+      "videoBitrate": "16M",
+      "audioBitrate": "320k",
+      "container": "mp4",
+      "description": "Primary horizontal delivery for web and presentations."
+    },
+    "timelineName": "studio-e2e-master-16x9",
+    "outputPath": "F:\\mcp-brunella-core\\out\\studio\\studio-e2e\\studio-e2e-master-16x9.mp4",
+    "expectedDurationSec": 72,
+    "status": "completed",
+    "resolveOperations": [
+      {
+        "command": "queue_render",
+        "payload": {
+          "timelineName": "studio-e2e-master-16x9",
+          "outputPath": "F:\\mcp-brunella-core\\out\\studio\\studio-e2e\\studio-e2e-master-16x9.mp4",
+          "presetName": "master-16x9",
+          "preset": {
+            "name": "master-16x9",
+            "label": "16:9 Master Promo",
+            "width": 1920,
+            "height": 1080,
+            "fps": 25,
+            "videoCodec": "libx264",
+            "audioCodec": "aac",
+            "videoBitrate": "16M",
+            "audioBitrate": "320k",
+            "container": "mp4",
+            "description": "Primary horizontal delivery for web and presentations."
+          }
+        }
+      }
+    ],
+    "notes": [
+      "Primary horizontal delivery for web and presentations."
+    ]
+  }
+]

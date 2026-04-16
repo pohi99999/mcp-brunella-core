@@ -43,6 +43,13 @@ router.post('/chat', async (req, res) => {
       `Chat request (${effectiveProvider}${effectiveModel ? `/${effectiveModel}` : ''}): "${message.slice(0, 80)}..."`
     );
 
+    socketService.broadcastDebug('PAIOS Chat Request', {
+      message,
+      provider: effectiveProvider,
+      model: effectiveModel,
+      sessionId: req.body?.sessionId,
+    });
+
     const service = getUniversalOrchestratorService();
     const universalResult = await service.process({
       message,
@@ -51,6 +58,8 @@ router.post('/chat', async (req, res) => {
       conversationHistory: conversationHistory ?? [],
       sessionId: typeof req.body?.sessionId === 'string' ? req.body.sessionId : undefined,
     });
+
+    socketService.broadcastDebug('PAIOS Orchestrator Result', universalResult);
 
     const taskIds = universalResult.actionsTriggered.map((action) => action.taskId);
 

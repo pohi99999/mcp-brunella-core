@@ -2,6 +2,7 @@ import { getBifrostGateway, type ProviderType } from './bifrost_gateway.js';
 import { getFallbackToolDefinitions, getToolRegistry } from './toolRegistry.js';
 import { agentManager } from '../agents/AgentManager.js';
 import { logInfo, logError, logWarn } from '../utils/logger.js';
+import { searchRAG } from '../utils/rag.js';
 import { GraphRagEngine } from './graphRagEngine.js';
 import { ReflectionEngine } from './reflectionEngine.js';
 import { PredictiveIntelligence } from './predictiveIntelligence.js';
@@ -115,27 +116,29 @@ const PROVIDER_MAP: Record<string, ProviderType> = {
 };
 
 const MAGYAR_SYSTEM_PROMPT = (toolList: string, agentCapabilities: string): string => `\
-Te vagy **Brunella**, a BAS (Brunella Agent System) mesterséges intelligencia asszisztense és orkesztrátora.
+Te vagy **Brunella**, a BAS (Brunella Agent System) mesterséges intelligencia asszisztense és központi orkesztrátora.
 
 SZEMÉLYISÉG:
 - Folyékonyan, természetesen és professzionálisan kommunikálsz magyarul.
-- Intelligens, proaktív és segítőkész vagy — mint egy tapasztalt fejlesztő kolléga.
-- Képes vagy gondolkodni, elemezni, magyarázni, tanácsot adni, ÉS feladatokat delegálni.
-- Válaszaid informatívak, strukturáltak és közvetlenek — nem robotikusak.
+- Intelligens, proaktív és segítőkész vagy — mint egy tapasztalt technikai vezető (Tech Lead).
+- Képes vagy gondolkodni, elemezni, magyarázni, tanácsot adni, ÉS komplex feladatokat delegálni.
+- Válaszaid informatívak, strukturáltak és közvetlenek — kerüld a robotikus fordulatokat.
 
-KÉPESSÉGEID:
-1) **Beszélgetés**: Válaszolhatsz kérdésekre, elmagyarázhatsz koncepciókat, tanácsot adhatsz.
-2) **Rendszer felügyelet**: Lekérdezheted a rendszer állapotát, futó feladatokat, agent státuszokat.
-3) **Feladat delegálás**: Ügynököknek delegálhatsz feladatokat a rendelkezésre álló eszközökkel.
-4) **Probléma megoldás**: Diagnosztizálhatsz hibákat, javasolhatsz megoldásokat, elindíthatsz javításokat.
-5) **Tervezés**: Segíthetsz feladatok megtervezésében, lebontásában és priorizálásában.
+KÉPESSÉGEID ÉS INTEGRÁCIÓID:
+1) **Beszélgetés & Tanácsadás**: Válaszolhatsz kérdésekre, elmagyarázhatsz koncepciókat, tanácsot adhatsz fejlesztési vagy üzleti kérdésekben.
+2) **Rendszer Felügyelet**: Lekérdezheted a rendszer állapotát, futó feladatokat, agent státuszokat és logokat.
+3) **Feladat Delegálás (Multi-Agent Swarm)**: Ügynököknek delegálhatsz feladatokat. Több mint 50 specializált ügynök áll rendelkezésedre.
+4) **n8n Workflow Integráció**: Képes vagy n8n munkafolyamatokat indítani és kezelni az automatizáláshoz (megfelelő ügynökön vagy eszközön keresztül).
+5) **Cloudflare Edge**: Kezelheted a Cloudflare Workers és Edge infrastruktúrát (delegate_CloudflareWorker_* eszközökkel).
+6) **Probléma Megoldás & Öngyógyítás**: Diagnosztizálhatsz hibákat, javasolhatsz megoldásokat, és elindíthatod a Phoenix Protocol öngyógyító folyamatait.
+7) **Esemény-Vezérelt Reaktív Architektúra**: Minden műveleted eseményeket generál, amelyek szinkronban vannak a frontenddel.
 
 MŰKÖDÉS:
-- Ha a felhasználó kérdést tesz fel → válaszolj közvetlenül és értelmesen.
-- Ha a felhasználó feladatot ad → elemezd, szükség esetén delegáld a megfelelő ügynöknek.
-- Ha rendszerinformációra van szükség → használd az eszközöket (get_system_status, list_active_tasks, stb.).
-- Ha bizonytalan vagy → kérdezz vissza, ne találj ki dolgokat.
-- Komplex feladatoknál bontsd le lépésekre és delegáld a megfelelő ügynököknek.
+- Ha a felhasználó kérdést tesz fel → válaszolj közvetlenül, szakmai mélységgel.
+- Ha a felhasználó feladatot ad → elemezd a komplexitást, bontsd le lépésekre, és delegáld a legmegfelelőbb ügynököknek vagy workflow-knak.
+- Ha rendszerinformációra van szükség → használd az eszközöket (get_system_status, list_active_tasks, get_agent_logs, stb.).
+- Ha bizonytalan vagy → kérdezz vissza, ne találj ki nem létező képességeket.
+- Mindig adj visszajelzést a folyamatban lévő háttérműveletekről.
 
 RENDELKEZÉSRE ÁLLÓ ESZKÖZÖK:
 ${toolList}
@@ -144,10 +147,11 @@ ${toolList}
 ${agentCapabilities}
 
 SZABÁLYOK:
-- Mindig magyarul válaszolj.
-- Ne szimulálj végrehajtást — ha delegálsz, az valódi feladat indítás.
-- High-risk műveleteknél (deploy, törlés, config módosítás) kérj megerősítést.
-- Ha egy ügynök nem elérhető, ajánlj alternatívát vagy kézi megoldást.
+- **Kizárólag magyarul válaszolj.**
+- Ne szimulálj végrehajtást — ha delegálsz, az valódi feladatot indít a rendszerben.
+- High-risk műveleteknél (deploy, törlés, kritikus config módosítás) kötelezően kérj megerősítést.
+- Ha egy ügynök nem elérhető vagy hibázik, ajánlj alternatívát vagy eszkalálj.
+- Használj Markdown formázást a válaszaidban a jobb olvashatóság érdekében.
 `;
 
 function buildRuntimeContext(): string {
@@ -220,13 +224,13 @@ function buildAgentCapabilities(): string {
         capabilityMap['Kutatás & Tudás'].push(agent.name);
       } else if (/qa|evaluat|test/.test(name)) {
         capabilityMap['Tesztelés & Minőség'].push(agent.name);
-      } else if (/devops|ops|deploy|cloudflare|edge/.test(name)) {
+      } else if (/devops|ops|deploy|cloudflare|edge|wrangler/.test(name)) {
         capabilityMap['DevOps & Infrastruktúra'].push(agent.name);
       } else if (/sales|marketing|pricing|campaign|nurture|grant|finance|procurement/.test(name)) {
         capabilityMap['Üzlet & Értékesítés'].push(agent.name);
       } else if (/email|voice|copywrite|document/.test(name)) {
         capabilityMap['Kommunikáció'].push(agent.name);
-      } else if (/robot|chrome|apify|scraping/.test(name)) {
+      } else if (/robot|chrome|apify|scraping|n8n|workflow/.test(name)) {
         capabilityMap['Automatizálás'].push(agent.name);
       } else {
         capabilityMap['Egyéb'].push(agent.name);
@@ -350,7 +354,8 @@ export class UniversalOrchestratorService {
     const graphContext = this.getGraphRagContext(lastUserMsg);
     const reflectionContext = this.getReflectionContext();
     const predictiveContext = this.getPredictiveContext();
-    const advancedContext = [graphContext, reflectionContext, predictiveContext].filter(Boolean).join('\n');
+    const semanticContext = await this.getSemanticRetrievalContext(lastUserMsg);
+    const advancedContext = [graphContext, reflectionContext, predictiveContext, semanticContext].filter(Boolean).join('\n');
 
     const systemPrompt = `${MAGYAR_SYSTEM_PROMPT(toolList, agentCapabilities)}\n\n${runtimeContext}\n\n${this.buildSessionContext(session)}${advancedContext ? `\n\n${advancedContext}` : ''}`;
 
@@ -964,7 +969,7 @@ export class UniversalOrchestratorService {
   }
 
   private detectSystemCheckIntent(message: string): boolean {
-    return /(rendszerellenőrz|rendszer ellenőrz|system check|health check|diagnosztik|ellenőrizd a rendszert)/i.test(message);
+    return /(rendszerellenőrz|rendszer ellenőrz|system check|health check|diagnosztik|ellenőrizd a rendszert|n8n státusz|cloudflare státusz)/i.test(message);
   }
 
   private detectErrorRecoveryIntent(message: string): boolean {
@@ -1577,6 +1582,25 @@ export class UniversalOrchestratorService {
   }
 
   // ─── Advanced Intelligence Helpers ─────────────────────────────────────────
+
+  /** Get semantic retrieval context from local documents (fast RAG) */
+  private async getSemanticRetrievalContext(userMessage: string): Promise<string> {
+    try {
+      // Fast pre-retrieval from local vector DB (LanceDB)
+      const results = await searchRAG(userMessage, 5);
+      if (results.length === 0) return '';
+
+      const contextParts = results.map(r => {
+        const source = r.path ? ` [Forrás: ${r.path}]` : '';
+        return `- ${r.text.slice(0, 400)}${source}`;
+      });
+
+      return `\n📚 Releváns helyi tudásbázis találatok:\n${contextParts.join('\n')}`;
+    } catch (err) {
+      logWarn('UniversalOrchestratorService', `Semantic retrieval error: ${err instanceof Error ? err.message : String(err)}`);
+      return '';
+    }
+  }
 
   /** Get GraphRAG context for system prompt enrichment (safe, never throws) */
   private getGraphRagContext(userMessage: string): string {

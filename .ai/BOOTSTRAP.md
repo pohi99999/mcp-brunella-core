@@ -46,7 +46,7 @@
 │  ├─ Express API (port 3000)                         │
 │  ├─ Socket.IO (WebSocket)                           │
 │  ├─ MCP Server (StdioServerTransport)               │
-│  └─ 94 AI Agents (IAgent interface)                 │
+│  └─ 95 AI Agents (IAgent interface)                 │
 │                                                      │
 │  PYTHON SUBSYSTEM (FastAPI)                         │
 │  ├─ FastAPI server (port 8000)                      │
@@ -81,12 +81,12 @@
 <!-- DOC_STATS_START -->
 ## 📊 Auto-generated projekt statisztikák
 
-- Agent registry entries: **94**
+- Agent registry entries: **95**
 - Route modulok a `src/server/routes/` alatt: **99**
 - Aktív route mountok a központi routerben: **110**
 - MCP tool fájlok a `src/tools/` alatt: **61**
 - Detektált MCP tool definíciók / regisztrációk: **4**
-- CLI parancs deklarációk: **319**
+- CLI parancs deklarációk: **320**
 - Dashboard navigációs panelek: **110**
 
 > Ezt a blokkot a `npm run sync:doc-stats` generálja.
@@ -95,7 +95,7 @@
 ## 📂 HOL VANNAK A FONTOS DOLGOK?
 
 ### Kód
-- `src/agents/` - 94 AI ügynök (OrchestratorAgent, DeveloperAgent, stb.)
+- `src/agents/` - 95 AI ügynök (OrchestratorAgent, DeveloperAgent, stb.)
 - `src/server/` - Backend API + MCP registry (99 route fájl)
 - `src/core/` - Model Router, Bifrost Gateway, Observability, Phoenix Protocol
 - `src/dashboard/` - React UI komponensek (Radix UI + Tailwind v4)
