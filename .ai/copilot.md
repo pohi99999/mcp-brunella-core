@@ -1,5 +1,15 @@
 # Copilot Session Notes
 
+### 2026-04-16 23:40 - Maestro prompt integration
+
+**Feladat:** A Maestro-style Copilot promptot repo-szintű prompt assetbe tettem, a Copilot instrukciókhoz pointert adtam, és a workspace gateway endpointot is bekötöttem, hogy a Gemini/LiteLLM útvonal konfigurálható legyen.
+
+**Érintett fájlok:** `.github/prompts/brunella-maestro.prompt.md`, `.github/copilot-instructions.md`, `.vscode/settings.json`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A repo-local bekötés most a prompt asset + instrukciós pointer + workspace endpoint hármassal lefedett; a tényleges gateway futtatása továbbra is a helyi proxy/VSIX aktiválásától függ.
+
 ### 2026-04-16 23:03 - MCP baseline + cloud-agent sync
 
 **Feladat:** A közös MCP baseline összehangolása a local manifest, a VS Code manifest és a cloud-agent manifest között, majd a dokumentáció frissítése és a main branchre való előkészítés.
@@ -2772,4 +2782,7 @@ Megjegyzés: A Toura repo most ismét elérhető lokálisan, az Iszapfaló grant
 **Státusz:** ✅ Befejezve
 
 **Megjegyzés:** A reviewer-szintű dashboard panel most külön mutatja a zenei intelligenciát és a webhook review hangsúlyokat; a build és a fast suite zöld.
+
+
+
 

@@ -97,6 +97,9 @@ Use `README.md` as the human-facing master guide. This file is the always-on Cop
 - **Task**: implement one bounded slice with tests and docs.
 - **Code-review**: inspect the diff for security, regressions, coupling, observability, and maintainability before commit.
 - Use Hungarian for user-facing replies when the user writes Hungarian or explicitly asks for it.
+- For Maestro-style orchestration tasks, load `.github/prompts/brunella-maestro.prompt.md` or route through `copilot-cli-orchestrator`.
+- If `copilot-llm-gateway` is available, pair it with `litellm_config.yaml` and the repo `.env` values to route Gemini traffic through the local LiteLLM proxy.
+- Treat the gateway as optional; if it is not active, stay on native Copilot and do not assume Gemini routing.
 
 Keep sessions small:
 
@@ -136,3 +139,5 @@ Keep sessions small:
 - Re-read the relevant files instead of relying on stale memory.
 - Do not edit generated files directly when a generator exists.
 - If FOSZAL needs updating, update `.ai/copilot.md` and re-run `python scripts/sync_foszal.py`.
+
+
