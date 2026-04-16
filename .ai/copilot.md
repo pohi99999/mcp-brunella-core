@@ -1,5 +1,15 @@
 # Copilot Session Notes
 
+### 2026-04-16 23:03 - MCP baseline + cloud-agent sync
+
+**Feladat:** A közös MCP baseline összehangolása a local manifest, a VS Code manifest és a cloud-agent manifest között, majd a dokumentáció frissítése és a main branchre való előkészítés.
+
+**Érintett fájlok:** `mcp_servers.json`, `.github/copilot-instructions.md`, `docs/ai/brunella-mcp-integration.md`, `.github/copilot/cloud-agent-mcp-settings.json`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A `fetch`, `filesystem`, `memory` és `sequential-thinking` alap eszközök most már a közös baseline részei; a cloud-agent oldalon is bekerült a `filesystem` + `memory` pár, a manifest-validáció pedig zöld maradt.
+
 ## 2026-04-16 23:55 - doc-stats newline normalization fix
 
 **Feladat:** A `scripts/sync_doc_stats.ts` összehasonlítását normalizáltam, hogy a Windows worktree CRLF/LF eltérései ne okozzanak hamis README stat driftet a pre-push hookban.
@@ -2762,3 +2772,4 @@ Megjegyzés: A Toura repo most ismét elérhető lokálisan, az Iszapfaló grant
 **Státusz:** ✅ Befejezve
 
 **Megjegyzés:** A reviewer-szintű dashboard panel most külön mutatja a zenei intelligenciát és a webhook review hangsúlyokat; a build és a fast suite zöld.
+

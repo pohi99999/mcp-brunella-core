@@ -24,6 +24,7 @@ These should be treated as the default base set for Brunella AI work:
 
 - `brunella-core` — the local Brunella MCP process itself
 - `filesystem` — workspace and user-home file access
+- `fetch` — web content retrieval for docs and reference lookups
 - `memory` — lightweight local memory store
 - `sequential-thinking` — structured reasoning helper
 
@@ -119,6 +120,22 @@ Use the same shapes as `mcp_servers.json`. These are the recommended default ent
   "requiredEnv": [],
   "connectRetries": 0,
   "retryDelayMs": 1000
+}
+```
+
+```json
+{
+  "name": "fetch",
+  "transport": "stdio",
+  "command": "npx",
+  "args": ["-y", "@modelcontextprotocol/server-fetch"],
+  "description": "Fetch MCP server - web content retrieval",
+  "autoStart": true,
+  "required": false,
+  "disabled": false,
+  "requiredEnv": [],
+  "connectRetries": 1,
+  "retryDelayMs": 1500
 }
 ```
 

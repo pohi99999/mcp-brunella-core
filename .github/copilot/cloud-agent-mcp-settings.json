@@ -3,8 +3,12 @@
     "brunella-core": {
       "type": "local",
       "command": "node",
-      "args": ["./build/index.js"],
-      "tools": ["*"],
+      "args": [
+        "./build/index.js"
+      ],
+      "tools": [
+        "*"
+      ],
       "env": {
         "BRUNELLA_SKIP_SECRETS_CHECK": "1",
         "WEB_UI_ENABLED": "0",
@@ -17,19 +21,53 @@
     "brunella-remote": {
       "type": "http",
       "url": "https://Brunella-Agents-System-Server.fastmcp.app/mcp",
-      "tools": ["*"]
+      "tools": [
+        "*"
+      ]
+    },
+    "filesystem": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "C:\\",
+        "C:\\Users\\pohi9",
+        "F:\\mcp-brunella-core"
+      ]
     },
     "fetch": {
       "type": "local",
       "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-fetch"],
-      "tools": ["*"]
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-fetch"
+      ],
+      "tools": [
+        "*"
+      ]
+    },
+    "memory": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-memory"
+      ],
+      "env": {
+        "MEMORY_FILE_PATH": "data/mcp_memory.json"
+      }
     },
     "sequential-thinking": {
       "type": "local",
       "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"],
-      "tools": ["*"]
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-sequential-thinking"
+      ],
+      "tools": [
+        "*"
+      ]
     }
   }
 }

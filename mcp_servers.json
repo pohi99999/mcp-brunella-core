@@ -43,6 +43,22 @@
     "retryDelayMs": 1000
   },
   {
+    "name": "fetch",
+    "transport": "stdio",
+    "command": "npx",
+    "args": [
+      "-y",
+      "@modelcontextprotocol/server-fetch"
+    ],
+    "description": "Fetch MCP server - web content retrieval",
+    "autoStart": true,
+    "required": false,
+    "disabled": false,
+    "requiredEnv": [],
+    "connectRetries": 1,
+    "retryDelayMs": 1500
+  },
+  {
     "name": "csharp-mcp-server",
     "transport": "stdio",
     "command": "powershell.exe",
@@ -77,7 +93,7 @@
       "--workspace-root",
       "${WORKSPACE_ROOT}"
     ],
-    "description": "Workspace MCP server - Brunella workspace introspection, keresés és review prompt",
+    "description": "Workspace MCP server - Brunella workspace introspection, keres\u00e9s \u00e9s review prompt",
     "autoStart": true,
     "required": false,
     "disabled": false,
@@ -188,7 +204,7 @@
     "args": [
       "windows_bridge/wab_server.py"
     ],
-    "description": "Windows Automation Bridge - natív Windows automatizalas",
+    "description": "Windows Automation Bridge - nat\u00edv Windows automatizalas",
     "autoStart": true,
     "required": false,
     "disabled": false,
@@ -223,7 +239,7 @@
     "args": [
       "--version"
     ],
-    "description": "Helyfoglaló a jovobeli VS Code MCP integraciohoz; alapbol tiltva",
+    "description": "Helyfoglal\u00f3 a jovobeli VS Code MCP integraciohoz; alapbol tiltva",
     "autoStart": false,
     "required": false,
     "disabled": true,
@@ -239,7 +255,7 @@
       "-e",
       "console.log('copilot-mcp placeholder')"
     ],
-    "description": "Helyfoglaló a jovobeli Copilot MCP integraciohoz; alapbol tiltva",
+    "description": "Helyfoglal\u00f3 a jovobeli Copilot MCP integraciohoz; alapbol tiltva",
     "autoStart": false,
     "required": false,
     "disabled": true,
@@ -255,7 +271,7 @@
       "-e",
       "const { execSync } = require('child_process'); try { const r = execSync('npx brunella conductor health --json', { encoding: 'utf8' }); console.log(JSON.stringify({ type: 'health-report', data: JSON.parse(r) })); } catch(e) { console.log(JSON.stringify({ type: 'error', message: e.message })); }"
     ],
-    "description": "Brunella önfejlesztő MCP belépési pont — conductor health elemzés, Copilot CLI Plan ágensnek adja át az eredményt. Ütemezés: .github/workflows/self-improve.yml (napi 09:00 UTC). On-demand: npx brunella conductor health --json | gh copilot 'Analyze and create improvement tasks'",
+    "description": "Brunella \u00f6nfejleszt\u0151 MCP bel\u00e9p\u00e9si pont \u2014 conductor health elemz\u00e9s, Copilot CLI Plan \u00e1gensnek adja \u00e1t az eredm\u00e9nyt. \u00dctemez\u00e9s: .github/workflows/self-improve.yml (napi 09:00 UTC). On-demand: npx brunella conductor health --json | gh copilot 'Analyze and create improvement tasks'",
     "autoStart": false,
     "required": false,
     "disabled": true,

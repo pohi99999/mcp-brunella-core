@@ -16,22 +16,40 @@ Use `README.md` as the human-facing master guide. This file is the always-on Cop
    - `conductor/tracks/<id>/spec.md` when present
 4. If a more specific instruction file exists under `.github/instructions/`, follow it for that file set.
 
-## Brunella at a glance
+## High-level architecture
 
 - Brunella is a modular multi-agent system, not a monolithic assistant.
 - `src/` is the Node.js/TypeScript control plane: Express routes, MCP server, CLI, dashboard backend, orchestration, hooks, and registries.
+- `src/index.ts` boots the web server first and defers heavy initialization so `/ping` stays fast.
+- `src/server/routes/index.ts` is the lazy-loaded HTTP mount table; register new routes there, not in `web.ts`.
+- `src/server/registry.ts` patches `server.tool()` so MCP tools keep both their handlers and JSON schemas.
 - `myai/` is the Python subsystem: FastAPI, FastMCP, browser/RAG/ML helpers.
+- `myai/server.py` exposes the HTTP API and model endpoints; `myai/mcp_server.py` exposes Python tools over FastMCP.
 - `src/agents/registry.json` is the canonical TypeScript agent registry; `myai/agents/*.toml` are dynamic agents; `src/skills/` holds runtime skills/plugins; `.agents/skills/` holds the repo-level Copilot skill library; `.claude/skills/` mirrors it for compatibility.
 - `.github/agents/` contains repo-level Copilot agents; `.github/prompts/` contains reusable prompt templates.
 - `conductor/` owns track state, DoD evidence, and closure history.
 - `mcp_servers.json` is the declarative MCP startup manifest.
+- Default baseline MCP tools are `brunella-core`, `filesystem`, `memory`, `sequential-thinking`, and `fetch`.
 - `src/core/autonomousInfraRuntime.ts` owns the `copilotFeedbackChannel` singleton; do not create a second instance.
 - `src/core/conductor.ts` owns the 8-stage kernel pipeline.
-- `src/server/routes/index.ts` is the central lazy-loaded HTTP mount table.
-- `src/server/registry.ts` captures MCP tool handlers and schemas.
 - `src/dashboard/lib/navigation.tsx` and `src/cli.ts` are parallel user-facing surfaces.
 - `docs/ai/README.md` is the human-readable AI docs index; `docs/ai/brunella-skill-catalog.md` maps dashboard surfaces to skills; `docs/ai/` holds the operating-model and MCP integration guides.
 - Repo-level Brunella agents: `brunella-architect`, `brunella-implementer`, `brunella-reviewer`, `brunella-delivery-lead`.
+
+## Build, test, and lint
+
+- `npm run build`: TypeScript build plus registry/TRIZ asset copy.
+- `npm run build:stable`: full Node + dashboard build.
+- `npm run test:fast`: fast pre-push suite.
+- `npm test`: full build + Vitest suite.
+- `npx vitest run test/foo.test.ts`: single Vitest file.
+- `npm run test:dashboard`: dashboard-specific Vitest config.
+- `npm run test:ui`: UI-specific Vitest config.
+- `npm run test:e2e`: Playwright end-to-end suite.
+- `npm run lint` / `npm run lint:fix`: repo ESLint.
+- `cd myai && uv sync`: Python dependency sync.
+- `cd myai && pytest tests/`: Python suite.
+- `cd myai && pytest tests/test_<name>.py`: single Python test file.
 
 ## Self-improvement loop agents
 
@@ -78,6 +96,7 @@ Use `README.md` as the human-facing master guide. This file is the always-on Cop
 - **Plan**: decide the layer, scope, contracts, risks, and validation path before editing.
 - **Task**: implement one bounded slice with tests and docs.
 - **Code-review**: inspect the diff for security, regressions, coupling, observability, and maintainability before commit.
+- Use Hungarian for user-facing replies when the user writes Hungarian or explicitly asks for it.
 
 Keep sessions small:
 
