@@ -25,31 +25,32 @@ class FakeD1Database {
 
   prepare(sql: string) {
     const normalized = sql.replace(/\s+/g, " ").trim();
-    const self = this;
+    const queries = this.queries;
+    const results = this.results;
     return {
       bind(...params: unknown[]): StatementResult<any> {
         return {
           async first() {
-            self.queries.push(normalized);
-            const data = self.results.get(normalized);
+            queries.push(normalized);
+            const data = results.get(normalized);
             return Array.isArray(data) ? data[0] : (data || null);
           },
           async all() {
-            self.queries.push(normalized);
-            return { results: self.results.get(normalized) || [] };
+            queries.push(normalized);
+            return { results: results.get(normalized) || [] };
           },
           async run() {
-            self.queries.push(normalized);
+            queries.push(normalized);
             return { success: true };
           }
         };
       },
       async all() {
-        self.queries.push(normalized);
-        return { results: self.results.get(normalized) || [] };
+        queries.push(normalized);
+        return { results: results.get(normalized) || [] };
       },
       async run() {
-        self.queries.push(normalized);
+        queries.push(normalized);
         return { success: true };
       }
     };
@@ -177,7 +178,7 @@ describe("Cloudflare Orchestrator Core Endpoints", () => {
 
     it("returns 500 if AI run fails", async () => {
       aiRunMock.mockRejectedValueOnce(new Error("AI failure"));
-      
+
       const res = await worker.fetch(
         new Request("https://worker.bas/ai/generate", {
           method: "POST",

@@ -1,92 +1,54 @@
-# AGENTS.md
+<!-- Purpose: Unified agent registry and coordination rules for all AI agents working on Brunella. -->
 
-> Architecture reference: `README.md`
-> Copilot operating contract: `.github/copilot-instructions.md`
-> AI docs index: `docs/ai/README.md`
-> AI operating model: `docs/ai/brunella-copilot-operating-model.md`
-> MCP integration guide: `docs/ai/brunella-mcp-integration.md`
+# Brunella Agent Registry
 
-## What Brunella is
+**Last Updated:** 2026-04-17
+**Version:** 2.x
 
-Brunella Agent System is a modular multi-agent operating system that combines:
+## ⚡ FIRST READ THIS
 
-- Node.js/TypeScript orchestration in `src/`
-- Python AI services in `myai/`
-- MCP tool routing and discovery
-- CLI and dashboard user surfaces
-- conductor tracks for scoped work and closure evidence
-- repo-level Copilot skills in `.agents/skills/` (with `.claude/skills/` kept as a compatibility mirror)
+Every AI agent working on this repo MUST:
 
-Brunella is not a single assistant. It is a coordinated system of agents, skills, prompts, tools, and workflows.
+1. Read `BRUNELLA_MASTER_CONTEXT.md` first (system overview)
+2. Read `HANDOFF.md` second (current state, active tasks)
+3. Read `AGENT_MEMORY.md` third (accumulated knowledge)
+4. Update `HANDOFF.md` BEFORE ending any session
 
-## Bootstrap
+## Active Agents
 
-1. Sync first: `scripts/sync.bat`, `./scripts/sync.ps1`, or `bash scripts/sync.sh`
-2. Read, in order:
-   - `.ai/BOOTSTRAP.md`
-   - `conductor/tracks.md`
-   - `.ai/FOSZAL.md`
-   - `.ai/copilot.md`
-3. If an active track exists, read its `meta.json`, `plan.md`, and `spec.md`.
-4. Confirm the affected layer before editing anything.
+| Agent ID | Role | Entry Config | Memory Location |
+| --- | --- | --- | --- |
+| brunella-core | MCP Server Core | `src/index.ts` | `_KNOWLEDGE_BASE/` |
+| brunella-orchestrator | Top-level multi-agent coordinator | `.github/agents/brunella-orchestrator.agent.md` | `_KNOWLEDGE_BASE/agent-outputs/brunella-orchestrator/` |
+| brunella-architect | Architecture and boundary decisions | `.github/agents/brunella-architect.agent.md` | `_KNOWLEDGE_BASE/agent-outputs/brunella-architect/` |
+| brunella-implementer | Feature implementation | `.github/agents/brunella-implementer.agent.md` | `_KNOWLEDGE_BASE/agent-outputs/brunella-implementer/` |
+| brunella-reviewer | Safety, regression, maintainability review | `.github/agents/brunella-reviewer.agent.md` | `_KNOWLEDGE_BASE/agent-outputs/brunella-reviewer/` |
+| brunella-delivery-lead | Planning, release sequencing, closure | `.github/agents/brunella-delivery-lead.agent.md` | `_KNOWLEDGE_BASE/agent-outputs/brunella-delivery-lead/` |
+| bas-lead-developer | End-to-end BAS feature delivery | `.github/agents/bas-lead-developer.agent.md` | `_KNOWLEDGE_BASE/agent-outputs/bas-lead-developer/` |
+| robust-test-writer | Focused unit/integration test authoring | `.github/agents/robust-test-writer.agent.md` | `_KNOWLEDGE_BASE/agent-outputs/robust-test-writer/` |
+| bas-self-reflect | Post-track reflection and backlog synthesis | `.github/agents/bas-self-reflect.agent.md` | `_KNOWLEDGE_BASE/agent-outputs/bas-self-reflect/` |
 
-## Agent philosophy
+> `.agents/` currently contains the shared skill library (`.agents/skills/`) rather than standalone agent definitions. The authoritative active custom-agent set is under `.github/agents/`, while runtime agents are registered in `src/agents/registry.json`.
 
-- Prefer small composable agents.
-- Prefer explicit contracts: input, output, failure.
-- Prefer observable tool paths.
-- Prefer configuration-driven registration over hardcoded branching.
-- Keep prompt assets separate from runtime code.
-- Avoid hidden side effects.
-- Choose the narrowest layer that solves the task.
+## Agent Communication Protocol
 
-## Roles
+- Agents communicate via MCP tools defined in `mcp_servers.json`
+- Shared memory is in `_KNOWLEDGE_BASE/` (NOT in individual `.claude/`, `.copilot-memory/` etc.)
+- Each agent MUST write results to `_KNOWLEDGE_BASE/agent-outputs/[agent-id]/`
 
-| Role | What it does | When to use |
-| --- | --- | --- |
-| Planner | Scope, boundaries, dependencies, rollout | Before code |
-| Researcher | Read files, search code, summarize facts | Discovery only |
-| Executor | Implement a bounded slice, update tests/docs | Code changes |
-| Reviewer | Block risky or drifting changes | Before commit/merge |
-| Orchestrator | Coordinate multiple roles and keep scope tight | Multi-step tasks |
+## Tool Registry
 
-## When to create what
+See `mcp_servers.json` for the authoritative list of available MCP tools.
 
-| Need | Create | Notes |
-| --- | --- | --- |
-| New workflow with state and coordination | Agent | Use explicit input/output/failure contracts |
-| Thin reusable behavior over existing tools | Skill/plugin | Put it in `.agents/skills/<skill-name>/SKILL.md`, make it discoverable and testable, and update `docs/ai/brunella-skill-catalog.md` |
-| New transport or external system boundary | MCP adapter | Define timeout, retry, logging, and secrets handling |
-| New UI/admin surface | Dashboard/CLI layer | Register it where users actually interact |
+## DO NOT CREATE NEW AGENT MEMORY IN
 
-## Non-negotiable rules
+- `.claude/` (Claude-specific, not shared)
+- `.copilot-memory/` (Copilot-specific, not shared)
+- `.augment/` (Augment-specific, not shared)
+- `.bob/`, `.cortex/`, `.pi/` etc.
 
-- If you add a tool call path, make it observable.
-- If you add an integration, define retries, timeouts, and error handling.
-- If you touch shared surfaces, update tests and docs.
-- If you touch an agent, keep the registry and prompt/template in sync.
-- If you touch a skill, update `.agents/skills/<skill-name>/SKILL.md`, discovery docs, and the skill catalog.
-- If you touch MCP config, keep `mcp_servers.json` declarative.
-- Do not rely on `console.log`; use structured logging.
-- Do not use `any` when `unknown` plus a guard is enough.
-- Do not add new hidden globals or side effects.
+## ALWAYS WRITE SHARED MEMORY TO
 
-## Validation
-
-- `npm run build`
-- `npm run test:fast`
-- `npm test` when the change is broad or track closure is involved
-- `npm run build:ui` for dashboard changes
-- `cd myai && uv sync && pytest tests/` for Python changes
-- Ask for a reviewer pass if the change is risky or cross-cutting
-
-## Handoff
-
-Always report:
-
-- what changed
-- why it changed
-- files touched
-- validation run
-- known limitations
-- next step
+- `_KNOWLEDGE_BASE/` — vector store and documents
+- `HANDOFF.md` — session state
+- `AGENT_MEMORY.md` — accumulated facts and decisions

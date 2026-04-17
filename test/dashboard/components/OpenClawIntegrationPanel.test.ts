@@ -1,11 +1,13 @@
+// @vitest-environment jsdom
+import '@testing-library/jest-dom/vitest';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { cleanup, render, screen, waitFor } from '@testing-library/react';
-import { createElement, type ReactNode } from 'react';
-import { OpenClawIntegrationPanel } from '@/components/dashboard/OpenClawIntegrationPanel';
+import { createElement } from 'react';
+import { OpenClawIntegrationPanel } from '../../../src/dashboard/components/dashboard/OpenClawIntegrationPanel.js';
 import type { OpenClawRuntimeSnapshot } from '../../../src/integrations/openclaw/index.js';
 
-vi.mock( '@/components/ui/scroll-area', () => ( {
-    ScrollArea: ( { children }: { children: ReactNode } ) => createElement( 'div', { 'data-testid': 'scroll-area' }, children ),
+vi.mock( '../../../src/dashboard/components/ui/scroll-area.js', () => ( {
+    ScrollArea: ( { children }: { children: unknown } ) => createElement( 'div', { 'data-testid': 'scroll-area' }, children ),
 } ) );
 
 const originalFetch = globalThis.fetch;

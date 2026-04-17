@@ -52,6 +52,13 @@ scripts\sync.bat --build --test  # Sync + build + test (teljes ellenőrzés)
 4. .ai/<te_neved>.md              # Te mit csináltál legutóbb (claude/gemini/copilot/cursor)
 ```
 
+**Új root dokumentumok (2026-04 cleanup):**
+
+- `RUNTIMES.md` — multi-runtime belépési pontok és elsődleges futtatási modell
+- `AGENTS.md` — egységes agent registry és memória-protokoll
+- `AGENT_MEMORY.md` — közös append-only tudásnapló
+- `HANDOFF.md` — session- és állapotátadási protokoll
+
 > Ez a 4 fájl elegendő a kontextushoz. Ha van folyamatban lévő feladatod, innen kiderül.
 
 **🟡 FÁZIS 2 — FELADAT-SPECIFIKUS (csak ami releváns)**

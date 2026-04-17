@@ -1,0 +1,42 @@
+# Purpose: CI workflow that validates build and master test suite on push and pull request.
+name: Build & Test Check
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build TypeScript
+        run: npm run build
+
+      - name: Run master test suite
+        run: npm run test:master
+        timeout-minutes: 10
+
+      - name: Health check
+        run: npm run health || echo "Health check skipped (requires running server)"
+        continue-on-error: true
+
+      - name: Check for uncommitted tmp files
+        run: |
+          if git status --porcelain | grep -E '\.tmp-|\.build_errors|\.tsc_errors'; then
+            echo "ERROR: Temporary files detected in working tree!"
+            exit 1
+          fi
