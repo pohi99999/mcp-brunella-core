@@ -130,4 +130,54 @@ describe("CFDispatcher", () => {
     expect(result).toEqual({ success: true, message: "local fallback" });
     expect(mockedPostTaskToWorker).toHaveBeenCalled();
   });
+
+  it("prefers local model requests over other cloudflare signals", () => {
+    const decision = shouldDelegate(
+      buildBrunellaTaskMeta("builder-agent", "Draft the implementation", {
+        taskMeta: {
+          requiresLocalModel: true,
+          involvesLLM: true,
+          requiresExternalAPI: true,
+        },
+      }),
+    );
+
+    expect(decision.delegate).toBe(false);
+    expect(decision.target).toBe("local");
+  });
+
+  it("selects the best matching worker for external API work", () => {
+    const orchestratorDecision = shouldDelegate({
+      type: "Call the external API",
+      agentName: "cean-orchestrator",
+      requiresExternalAPI: true,
+    });
+    const llmDecision = shouldDelegate({
+      type: "Call the external API",
+      agentName: "llm-agent",
+      requiresExternalAPI: true,
+    });
+
+    expect(orchestratorDecision.delegate).toBe(true);
+    expect(orchestratorDecision.target).toBe("cf_worker");
+    expect(orchestratorDecision.workerId).toBe("cean-orchestrator");
+    expect(llmDecision.delegate).toBe(true);
+    expect(llmDecision.target).toBe("cf_ai_gateway");
+    expect(llmDecision.workerId).toBe("llm-chat-app-template");
+  });
+
+  it("prefers cf_worker over lookup routing when external API is also required", () => {
+    const decision = shouldDelegate(
+      buildBrunellaTaskMeta("research-agent", "Lookup external records", {
+        taskMeta: {
+          isDataLookup: true,
+          requiresExternalAPI: true,
+          estimatedDurationMs: 50,
+        },
+      }),
+    );
+
+    expect(decision.target).toBe("cf_worker");
+    expect(decision.workerId).toBe("agents-api");
+  });
 });

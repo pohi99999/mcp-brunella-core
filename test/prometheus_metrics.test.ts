@@ -3,6 +3,7 @@ import {
   getPrometheusMetrics,
   initMetrics,
   recordAgentExecution,
+  recordCloudflareDispatchOutcome,
   recordHttpRequest,
   recordLlmUsageAndCost,
   resetPrometheusMetricsForTests,
@@ -46,5 +47,15 @@ describe("prometheus metrics", () => {
     expect(output).toContain('provider="github"');
     expect(output).toContain('model="gpt-4o"');
     expect(output).toContain("llm_cost_usd_total");
+  });
+
+  it("records Cloudflare dispatch outcomes and latency", async () => {
+    recordCloudflareDispatchOutcome("cf_queue", "cf", 275);
+
+    const output = await getPrometheusMetrics();
+    expect(output).toContain("bas_cloudflare_dispatch_decisions_total");
+    expect(output).toContain('target="cf_queue"');
+    expect(output).toContain('outcome="cf"');
+    expect(output).toContain("bas_cloudflare_dispatch_latency_seconds");
   });
 });
