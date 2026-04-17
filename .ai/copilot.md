@@ -10,12 +10,24 @@
 **Státusz:** ✅ Befejezve
 **Megjegyzés:** A workflow prompt már a megfelelő Brunella-ügynökökre delegál, az orchestrator agent külön OpenClaw-scenáriót kapott, és elkészült az első belső docs oldal. A runtime integrációs scaffold a következő lépés.
 
+### 2026-04-17 03:05 - OpenClaw runtime scaffold + dashboard/API bridge
+**Feladat:** OpenClaw runtime contracts, config, policy, gateway, dispatcher, safe snapshot runtime, API status/preview routes, dashboard panel és CLI helper handlerek hozzáadása, valamint a hozzájuk tartozó tesztek.
+**Érintett fájlok:** src/integrations/openclaw/contracts.ts, src/integrations/openclaw/config.ts, src/integrations/openclaw/errors.ts, src/integrations/openclaw/policyTranslator.ts, src/integrations/openclaw/gatewayAdapter.ts, src/integrations/openclaw/dispatcher.ts, src/integrations/openclaw/index.ts, src/server/routes/openclaw.ts, src/server/routes/index.ts, src/dashboard/components/dashboard/OpenClawIntegrationPanel.tsx, src/dashboard/components/dashboard/OpenClawIntegrationPanel.test.tsx, src/dashboard/lib/navigation.tsx, src/cli/openclawCommands.ts, test/openclaw/openclawConfig.test.ts, test/openclaw/openclawPolicy.test.ts, test/openclaw/openclawGatewayAdapter.test.ts, test/openclaw/openclawDispatcher.test.ts, test/openclaw/openclawRuntime.test.ts
+**Státusz:** ⏳ Folyamatban
+**Megjegyzés:** A core runtime már összeállt, a status/preview route és a dashboard nézet is megvan. A main CLI entrypoint még ellenőrzésre vár, de a framework-agnosztikus CLI handlerek elkészültek, így a kötés később kis diff-fel megtehető.
+
 ### 2026-04-17 01:51 - Mai változások dokumentálása
 **Feladat:** A mai munkát összegyűjtöttem a releváns dokumentumokba, beleértve a `.ai/copilot.md` session logot, majd előkészítettem a végleges commitot és push-t.
 **Érintett fájlok:** .ai/copilot.md, .ai/FOSZAL.md, plan.md, test/CFDispatchMiddleware.test.ts, test/cloudflareHelpers.test.ts, test/cloudflare_dispatch_smart.test.ts, test/cloudflare_worker_security.test.ts, test/prometheus_metrics.test.ts, src/cloudflare/CFDispatcher.test.ts, package.json, package-lock.json
 **Státusz:** ✅ Befejezve
 **Megjegyzés:** A célzott Cloudflare dispatch tesztcsomag zöld, a build is zöld, és a mustache dev dependency bekerült, hogy az @cloudflare/ai import a worker tesztben betölthető legyen.
 
+
+### 2026-04-17 16:45 - YouTube embed áthelyezve Pillér 02 → Pillér 03
+**Feladat:** A YouTube videó beágyazást áthelyeztük a VIKTORIAVARGA prémium HTML prezentációban a Pillér 02-ből a Pillér 03-ba, a leíró bekezdések és a „Mérhető hatás" benefit-box közé. Új, középre igazított, nagyobb (680px, 280px magas thumbnail) stílust (`video-preview-hero`) hoztunk létre. A videó szövege lecserélve: „egy kis ízelítő, amit Neked készítettünk kedv csinálónak, ilyen és hasonló promóciós anyagokat készítünk a fantasztikus kollekcióidról". A thumbnail `hqdefault.jpg`-re javítva. Az `openYTModal()` lightbox a változtatás után is működőképes.
+**Érintett fájlok:** .worktrees/009_Varga_Viktória_prez/_VV/ajanlat_premium_v3_standalone.html
+**Státusz:** ✅ Befejezve
+**Megjegyzés:** A `.worktrees` gitignored, HTML szerkesztés lokális. Új CSS class: `.video-preview-hero`, bekerült az inline `<style>` blokkba. P2-ből törölve a video-preview div, P3-ban a benefit-box előtt pozicionálva.
 
 ### 2026-04-17 15:30 - Premium HTML prezentáció layout szélességjavítás
 **Feladat:** A `ajanlat_premium_v3_standalone.html` fájlban kritikus HTML div nesting hibát javítottam: a `.section` div (max-width: 860px) nem volt lezárva az overview-grid előtt, ami minden pillér-, social- és többi szekciót 860px-es szélességre kényszerített.
