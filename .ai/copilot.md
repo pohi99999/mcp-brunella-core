@@ -57,3 +57,9 @@
 **Érintett fájlok:** myai/tools/build_agent_news.py, myai/tools/daily_agent_report_builder.py, myai/tools/daily_agent_report_pipeline.py, src/agents/DailyAgentBriefingAgent.ts, src/server/services/briefingService.ts, src/server/registry.ts, src/server/schedulers/scheduledTasksRunner.ts, src/server/routes/briefing.ts, src/agents/registry.json, src/cli/briefingCommands.ts, src/dashboard/components/dashboard/AIAgentBriefingPanel.tsx, src/dashboard/lib/apiService.ts, docs/ai/brunella-skill-catalog.md
 **Státusz:** ✅ Befejezve
 **Megjegyzés:** A változások a `docs/002-Napi-AI-Agent-Jelentes-YYYY-MM-DD.md` formátumra állítják a riportot, és a `daily_agent_report` MCP tool + `daily-agent-brief` CLI útvonal is megjelent.
+
+### 2026-04-17 19:20 - Pre-push hook könnyítés
+**Feladat:** A túl hosszú helyi push-ciklust lerövidítettem: a pre-push hookból kivettem a `npm run test:fast` blokkoló futást, így maradt a hook-proof és a docs stats ellenőrzés, a teljes suite pedig CI-ben fut tovább.
+**Érintett fájlok:** .husky/pre-push
+**Státusz:** ✅ Befejezve
+**Megjegyzés:** A push ismét gyors lett, a `main` már megkapta a könnyített hook commitot is.
