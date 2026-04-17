@@ -82,12 +82,12 @@
 ## 📊 Auto-generated projekt statisztikák
 
 - Agent registry entries: **95**
-- Route modulok a `src/server/routes/` alatt: **99**
-- Aktív route mountok a központi routerben: **110**
+- Route modulok a `src/server/routes/` alatt: **100**
+- Aktív route mountok a központi routerben: **111**
 - MCP tool fájlok a `src/tools/` alatt: **61**
 - Detektált MCP tool definíciók / regisztrációk: **4**
-- CLI parancs deklarációk: **320**
-- Dashboard navigációs panelek: **110**
+- CLI parancs deklarációk: **323**
+- Dashboard navigációs panelek: **111**
 
 > Ezt a blokkot a `npm run sync:doc-stats` generálja.
 <!-- DOC_STATS_END -->
@@ -96,7 +96,7 @@
 
 ### Kód
 - `src/agents/` - 95 AI ügynök (OrchestratorAgent, DeveloperAgent, stb.)
-- `src/server/` - Backend API + MCP registry (99 route fájl)
+- `src/server/` - Backend API + MCP registry (100 route fájl)
 - `src/core/` - Model Router, Bifrost Gateway, Observability, Phoenix Protocol
 - `src/dashboard/` - React UI komponensek (Radix UI + Tailwind v4)
 - `src/tools/` - MCP tool definíciók
