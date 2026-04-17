@@ -1,6 +1,6 @@
 # FŐSZÁL - Egyesített Fejlesztési Napló
 
-**Generálva:** 2026-04-15 21:56
+**Generálva:** 2026-04-17 02:07
 **Script:** `scripts/sync_foszal.py`
 
 ---
@@ -27,6 +27,46 @@ start-full.bat
 ---
 
 ## Összesített Napló (Időrendben)
+
+### 2026-04-17
+
+#### 00:07 - [Copilot] Chrome agent profile setup
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `setup-agent-chrome.ps1`, `setup-agent-chrome.bat`, `launch-agent-chrome.ps1`, `launch-agent-chrome.bat`, `README-agent-chrome.txt`
+
+---
+
+### 2026-04-16
+
+#### 23:40 - [Copilot] Maestro prompt integration
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `.github/prompts/brunella-maestro.prompt.md`, `.github/copilot-instructions.md`, `.vscode/settings.json`
+
+#### 23:03 - [Copilot] MCP baseline + cloud-agent sync
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `mcp_servers.json`, `.github/copilot-instructions.md`, `docs/ai/brunella-mcp-integration.md`, `.github/copilot/cloud-agent-mcp-settings.json`
+
+#### 20:29 - [Gemini] Push & Sync Complete
+- **Agent:** Gemini
+- **Státusz:** ⏳ Folyamatban
+
+#### 19:48 - [Gemini] System Integration & Intelligence Audit Complete
+- **Agent:** Gemini
+- **Státusz:** ⏳ Folyamatban
+
+#### 18:13 - [Gemini] PAIOS Orchestrator & UI Reactive Sync
+- **Agent:** Gemini
+- **Státusz:** ⏳ Folyamatban
+
+#### 00:00 - [Claude] GitHub Copilot CLI MCP migráció ✅
+- **Agent:** Claude
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `C:\Users\pohi9\.copilot\mcp-config.json` (átírva — 19 szerver)
+
+---
 
 ### 2026-04-15
 
@@ -1395,10 +1435,10 @@ start-full.bat
 
 | Agent | Bejegyzések | Utolsó Aktivitás |
 |-------|-------------|------------------|
-| Claude | 93 | 2026-04-15 |
-| Gemini | 8 | 2026-04-13 |
+| Claude | 94 | 2026-04-16 |
+| Gemini | 11 | 2026-04-13 |
 | Cursor | 0 | N/A |
-| Copilot | 145 | 2026-04-15 |
+| Copilot | 148 | 2026-04-17 |
 
 ---
 

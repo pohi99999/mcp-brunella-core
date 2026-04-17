@@ -1,5 +1,15 @@
 # Copilot Session Notes
 
+### 2026-04-17 00:07 - Chrome agent profile setup
+
+**Feladat:** Windows-alapú, külön Chrome-agent profilt hoztam létre külön user-data-dir mellett, a setup/launch szkriptekkel és desktop shortcut-tal.
+
+**Érintett fájlok:** `setup-agent-chrome.ps1`, `setup-agent-chrome.bat`, `launch-agent-chrome.ps1`, `launch-agent-chrome.bat`, `README-agent-chrome.txt`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A külön Chrome példány első belépése a `peterpohankapersonal@gmail.com` fiókhoz van kötve; a setup lefutott és a desktop shortcut elkészült.
+
 ### 2026-04-16 23:40 - Maestro prompt integration
 
 **Feladat:** A Maestro-style Copilot promptot repo-szintű prompt assetbe tettem, a Copilot instrukciókhoz pointert adtam, és a workspace gateway endpointot is bekötöttem, hogy a Gemini/LiteLLM útvonal konfigurálható legyen.
