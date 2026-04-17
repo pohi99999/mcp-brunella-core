@@ -69,6 +69,7 @@ export class ScheduledTasksRunner {
 
     if (task.id === 'daily-ai-agent-briefing') {
       derivedEvents.push('cron:daily:briefing');
+      derivedEvents.push('cron:daily:agent-report');
     }
 
     if (task.id === 'weekly-ai-research') {
@@ -235,9 +236,14 @@ export class ScheduledTasksRunner {
 
       const metadata: WeeklyResearchTaskMetadata = {
         agentName: 'DailyAgentBriefing',
-        reportTitle: 'Napi AI Agent Összefoglaló',
-        reportType: 'daily_agent_briefing',
-        reportOutputDir: 'docs/001_Jelentés/briefing',
+        reportTitle: 'Napi AI Agent Jelentés',
+        reportType: 'daily_agent_report',
+        outputDir: 'docs',
+        tempDir: 'temp',
+        harvestDir: 'temp/harvest_results',
+        reportPrefix: '002-Napi-AI-Agent-Jelentes',
+        harvestMode: 'playwright',
+        configPath: 'myai/config/sources.json',
         lookbackDays: 1,
         githubQueries: [
           'AI agent framework release',
@@ -260,12 +266,12 @@ export class ScheduledTasksRunner {
           'Agentic workflow minták',
           'AI agent memory és tervezés',
         ],
-        tags: ['daily', 'ai-agents', 'briefing', 'research'],
+        tags: ['daily', 'ai-agents', 'report', 'research'],
         maxGitHubResults: 5,
         maxExcerptLength: 3000,
       };
 
-      const prompt = 'Napi AI agent összefoglaló generálása és Brunella architektúra relevanciák feltérképezése';
+      const prompt = 'Napi AI agent jelentés generálása és Brunella architektúra relevanciák feltérképezése';
 
       db.prepare(`
         INSERT INTO scheduled_tasks (

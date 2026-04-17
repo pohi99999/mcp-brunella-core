@@ -1,6 +1,6 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-04-17T10:00:00.255Z
+**Utolso frissites:** 2026-04-17T15:00:00.569Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
@@ -104,7 +104,7 @@
   - Mappa: ./tracks/paios_integration_audit_20260415/
 
 
-### Brunella rendszer (1)
+### Brunella rendszer (2)
 
 - [ ] **Brunella Studio Agent v2** [HIGH]
   - **ID:** `brunella-studio-agent-v2_20260414`
@@ -113,6 +113,12 @@
   - **Updated:** 2026-04-15
   - Mappa: ./tracks/brunella-studio-agent-v2_20260414/
 
+- [~] **Napi AI Agent Jelentes Pipeline** [HIGH]
+  - **ID:** `daily_agent_report_pipeline_20260417`
+  - **Progress:** 90%
+  - **Assignee:** GitHub Copilot
+  - **Updated:** 2026-04-17
+  - Mappa: ./tracks/daily_agent_report_pipeline_20260417/
 
 ---
 

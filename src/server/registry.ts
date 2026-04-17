@@ -595,6 +595,85 @@ export async function registerAllTools(server: McpServer) {
       agentExecuteHandler,
     );
 
+    const dailyAgentReportHandler = async ({
+      date,
+      mode,
+      configPath,
+      outputDir,
+      tempDir,
+      harvestDir,
+      reportPrefix,
+      dryRun,
+    }: {
+      date?: string;
+      mode?: string;
+      configPath?: string;
+      outputDir?: string;
+      tempDir?: string;
+      harvestDir?: string;
+      reportPrefix?: string;
+      dryRun?: boolean;
+    }) => {
+      try {
+        const { runDailyAgentBriefing } = await import("./services/briefingService.js");
+
+        const report = await runDailyAgentBriefing({
+          triggeredBy: "mcp",
+          dryRun: dryRun ?? false,
+          reportDate: date,
+          harvestMode: mode,
+          configPath,
+          outputDir,
+          tempDir,
+          harvestDir,
+          reportPrefix,
+        });
+
+        return {
+          content: [
+            {
+              type: "text" as const,
+              text: JSON.stringify(
+                {
+                  success: true,
+                  report,
+                },
+                null,
+                2,
+              ),
+            },
+          ],
+        };
+      } catch (error: unknown) {
+        const err = ensureError(error);
+        return {
+          isError: true,
+          content: [
+            {
+              type: "text" as const,
+              text: `Daily agent report failed: ${err.message}`,
+            },
+          ],
+        };
+      }
+    };
+
+    server.tool(
+      "daily_agent_report",
+      "Generates the daily AI agent report from Tech-Harvester output.",
+      {
+        date: z.string().optional(),
+        mode: z.string().optional(),
+        configPath: z.string().optional(),
+        outputDir: z.string().optional(),
+        tempDir: z.string().optional(),
+        harvestDir: z.string().optional(),
+        reportPrefix: z.string().optional(),
+        dryRun: z.boolean().optional(),
+      },
+      dailyAgentReportHandler,
+    );
+
     // Register Test Scheduler Tools
     const testSchedulerRunMcpHandler = async (args: any) => {
       const result = await testSchedulerRunHandler(args);

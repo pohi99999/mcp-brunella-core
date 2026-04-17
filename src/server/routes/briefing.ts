@@ -166,13 +166,13 @@ export function createBriefingRoutes(db: Database.Database): Router {
 
       res.json({
         success: true,
-        message: `Napi AI agent összefoglaló elkészült: ${report.reportDate}`,
+        message: `Napi AI agent jelentés elkészült: ${report.reportDate}`,
         report,
       });
     } catch (error: unknown) {
       logError(MODULE, `POST /run failed: ${error}`);
       res.status(500).json({
-        error: 'A briefing futtatás sikertelen',
+        error: 'A jelentés futtatása sikertelen',
         details: String(error),
       });
     }

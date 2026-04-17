@@ -173,7 +173,7 @@ export function AIAgentBriefingPanel() {
     try {
       const result = await runBriefingReport(false);
       if (result.success) {
-        setRunMessage(`✅ Összefoglaló elkészült (${result.reportDate ?? 'ismeretlen dátum'})`);
+        setRunMessage(`✅ Riport elkészült (${result.reportDate ?? 'ismeretlen dátum'})`);
         await loadReport();
       } else {
         setError(`Futtatási hiba: ${result.error ?? 'ismeretlen hiba'}`);
@@ -193,7 +193,7 @@ export function AIAgentBriefingPanel() {
       <div className="flex items-center justify-between px-4 py-3 border-b border-slate-700 shrink-0">
         <div className="flex items-center gap-2">
           <Brain className="h-5 w-5 text-violet-400" />
-          <h2 className="text-sm font-semibold text-slate-100">Napi AI Agent Összefoglaló</h2>
+          <h2 className="text-sm font-semibold text-slate-100">Napi AI Agent Jelentés</h2>
         </div>
         <div className="flex items-center gap-2">
           <button
@@ -214,7 +214,7 @@ export function AIAgentBriefingPanel() {
             ) : (
               <Brain className="h-3.5 w-3.5" />
             )}
-            {running ? 'Generálás...' : 'Futtatás most'}
+            {running ? 'Generálás...' : 'Riport futtatása'}
           </button>
         </div>
       </div>
@@ -238,8 +238,8 @@ export function AIAgentBriefingPanel() {
         {!loading && !report && !error && (
           <div className="flex flex-col items-center justify-center h-32 text-slate-500 text-sm gap-2">
             <Brain className="h-8 w-8 text-slate-600" />
-            <span>Még nincs elérhető napi összefoglaló.</span>
-            <span className="text-xs text-slate-600">Kattints a "Futtatás most" gombra az első riport generálásához.</span>
+            <span>Még nincs elérhető napi jelentés.</span>
+            <span className="text-xs text-slate-600">Kattints a "Riport futtatása" gombra az első jelentés generálásához.</span>
           </div>
         )}
 
@@ -255,6 +255,10 @@ export function AIAgentBriefingPanel() {
                 <MetaRow label="Generálva" value={formatDate(report.generatedAt)} />
                 <MetaRow label="Riport dátuma" value={report.reportDate} />
                 <MetaRow label="Cikkek száma" value={`${report.itemsCount} forrás`} />
+                {report.pipelineStatus && <MetaRow label="Pipeline státusz" value={report.pipelineStatus} />}
+                {report.markdownPath && <MetaRow label="Markdown fájl" value={report.markdownPath} />}
+                {report.agentNewsPath && <MetaRow label="agent_news JSON" value={report.agentNewsPath} />}
+                {report.harvestPath && <MetaRow label="Harvest JSON" value={report.harvestPath} />}
                 <MetaRow
                   label="Brunella rétegek"
                   value={

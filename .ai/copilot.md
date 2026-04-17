@@ -52,3 +52,8 @@
 **Érintett fájlok:** .claude/skills/*, .gemini/skills/*, .ai/copilot.md, C:\Users\pohi9\.copilot\session-state\bbfe6ead-573d-458f-a0c2-acf1c1c58519\plan.md
 **Státusz:** ✅ Befejezve
 **Megjegyzés:** A Copilot mirror most hiánytalan a Brunella core skilljeihez képest; a Gemini mirror helyi kényelmi szinkron, mert nem találtam bizonyított hivatalos skills loader path-ot.
+### 2026-04-17 18:02 - Napi AI agent report pipeline
+**Feladat:** Elkészítettem a Tech-Harvester alapú napi AI agent jelentés pipeline-t: agent_news JSON építés, dated Markdown report generálás, backend MCP/CLI/dashboard wiring, és a scheduler/meta mezők átvezetése.
+**Érintett fájlok:** myai/tools/build_agent_news.py, myai/tools/daily_agent_report_builder.py, myai/tools/daily_agent_report_pipeline.py, src/agents/DailyAgentBriefingAgent.ts, src/server/services/briefingService.ts, src/server/registry.ts, src/server/schedulers/scheduledTasksRunner.ts, src/server/routes/briefing.ts, src/agents/registry.json, src/cli/briefingCommands.ts, src/dashboard/components/dashboard/AIAgentBriefingPanel.tsx, src/dashboard/lib/apiService.ts, docs/ai/brunella-skill-catalog.md
+**Státusz:** ✅ Befejezve
+**Megjegyzés:** A változások a `docs/002-Napi-AI-Agent-Jelentes-YYYY-MM-DD.md` formátumra állítják a riportot, és a `daily_agent_report` MCP tool + `daily-agent-brief` CLI útvonal is megjelent.

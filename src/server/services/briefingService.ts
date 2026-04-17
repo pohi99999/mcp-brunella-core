@@ -38,6 +38,8 @@ export interface BriefingItem {
   url?: string;
   /** Optional publication timestamp */
   publishedAt?: string;
+  /** Optional classifier carried over from agent news */
+  category?: string;
   /** Backwards-compatible single layer alias */
   brunellaLayer?: string;
 }
@@ -51,6 +53,12 @@ export interface BriefingReport {
   items: BriefingItem[];
   /** Raw markdown content of the briefing */
   markdownPath: string;
+  /** JSON path for normalized agent news */
+  agentNewsPath?: string;
+  /** Raw harvest JSON path */
+  harvestPath?: string;
+  /** Pipeline status emitted by the agent */
+  pipelineStatus?: string;
   /** Whether an LLM was used for synthesis */
   usedLLM: boolean;
   dryRun: boolean;
@@ -156,20 +164,34 @@ export function persistBriefingReport(
 export async function runDailyAgentBriefing(options: {
   triggeredBy?: string;
   dryRun?: boolean;
+  reportDate?: string;
+  harvestMode?: string;
+  configPath?: string;
+  outputDir?: string;
+  tempDir?: string;
+  harvestDir?: string;
+  reportPrefix?: string;
   db?: Database.Database;
 } = {}): Promise<BriefingReport> {
   const { triggeredBy = 'api', dryRun = false } = options;
   const db = options.db ?? getGlobalDb();
 
-  logInfo(MODULE, `🤖 Napi AI Agent Összefoglaló indítása (triggeredBy=${triggeredBy}, dryRun=${dryRun})`);
+  logInfo(MODULE, `🤖 Napi AI Agent Jelentés indítása (triggeredBy=${triggeredBy}, dryRun=${dryRun})`);
 
   // Directly instantiate and execute the agent
   const agent = new DailyAgentBriefingAgent();
 
   const agentResult = await agent.executeTask({
-    prompt: 'Napi AI agent összefoglaló generálása',
+    prompt: 'Napi AI agent jelentés generálása',
     context: {
       triggeredBy,
+      reportDate: options.reportDate,
+      harvestMode: options.harvestMode,
+      configPath: options.configPath,
+      outputDir: options.outputDir,
+      tempDir: options.tempDir,
+      harvestDir: options.harvestDir,
+      reportPrefix: options.reportPrefix,
     },
   });
 
@@ -181,6 +203,9 @@ export async function runDailyAgentBriefing(options: {
   const resultData = (agentResult.data ?? {}) as {
     reportPath?: string;
     reportDate?: string;
+    agentNewsPath?: string;
+    harvestPath?: string;
+    pipelineStatus?: string;
     githubSignalsCount?: number;
     pageSignalsCount?: number;
     briefingItemsCount?: number;
@@ -200,6 +225,9 @@ export async function runDailyAgentBriefing(options: {
     reportDate,
     items,
     markdownPath,
+    agentNewsPath: resultData.agentNewsPath,
+    harvestPath: resultData.harvestPath,
+    pipelineStatus: resultData.pipelineStatus,
     usedLLM,
     dryRun,
   };
@@ -210,6 +238,6 @@ export async function runDailyAgentBriefing(options: {
     logInfo(MODULE, 'Dry-run mód: a riport NEM kerül az adatbázisba');
   }
 
-  logInfo(MODULE, `✅ Napi összefoglaló kész: ${reportDate}`);
+  logInfo(MODULE, `✅ Napi AI agent jelentés kész: ${reportDate}`);
   return report;
 }
