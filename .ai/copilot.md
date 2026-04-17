@@ -23,6 +23,12 @@
 **Megjegyzés:** A célzott Cloudflare dispatch tesztcsomag zöld, a build is zöld, és a mustache dev dependency bekerült, hogy az @cloudflare/ai import a worker tesztben betölthető legyen.
 
 
+### 2026-04-17 17:10 - Pillér kártya 3+2 elrendezés + YouTube hiba javítás
+**Feladat:** (1) Az overview pillér kártyákat 5-ből 3+2 elrendezésre állítottuk (3 kártya első sorban, 2 kártya középre igazítva alatta). CSS grid: `repeat(6, 1fr)` + `span 2` minden kártyánál + `nth-child(4/5)` pozicionálással. (2) A YouTube Error 153 hibát javítottuk: a `file://` protokollon az iframe embed nem működik, ezért `openYTModal()` mostantól `window.open()` segítségével nyitja meg a videót új lapon YouTube-on. A play-hint szöveg is frissítve: "▶ Megnyitás YouTube-on".
+**Érintett fájlok:** .worktrees/009_Varga_Viktória_prez/_VV/ajanlat_premium_v3_standalone.html
+**Státusz:** ✅ Befejezve
+**Megjegyzés:** A kártyák most: [01][02][03] / _[04][05]_ középre igazítva. YouTube: `window.open('https://www.youtube.com/watch?v=1c2cSEEmm-0', '_blank')` — 100%-ban működőképes minden helyi megnyitásnál.
+
 ### 2026-04-17 16:45 - YouTube embed áthelyezve Pillér 02 → Pillér 03
 **Feladat:** A YouTube videó beágyazást áthelyeztük a VIKTORIAVARGA prémium HTML prezentációban a Pillér 02-ből a Pillér 03-ba, a leíró bekezdések és a „Mérhető hatás" benefit-box közé. Új, középre igazított, nagyobb (680px, 280px magas thumbnail) stílust (`video-preview-hero`) hoztunk létre. A videó szövege lecserélve: „egy kis ízelítő, amit Neked készítettünk kedv csinálónak, ilyen és hasonló promóciós anyagokat készítünk a fantasztikus kollekcióidról". A thumbnail `hqdefault.jpg`-re javítva. Az `openYTModal()` lightbox a változtatás után is működőképes.
 **Érintett fájlok:** .worktrees/009_Varga_Viktória_prez/_VV/ajanlat_premium_v3_standalone.html
