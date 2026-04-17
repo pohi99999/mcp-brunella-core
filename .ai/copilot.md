@@ -46,3 +46,9 @@
 **Érintett fájlok:** .worktrees/009_Varga_Viktória_prez/_VV/ajanlat_premium_v3_standalone.html
 **Státusz:** ✅ Befejezve
 **Megjegyzés:** A deck sorrendje most a kért logikát követi: intro → pillérek → 1. pillér → közösségi baseline → további pillérek.
+
+### 2026-04-17 09:10 - Skill mirror sync
+**Feladat:** A Brunella canonical skill katalógusának hiányzó core skilljeit feltöltöttem a Copilot CLI mirrorbe, majd létrehoztam egy helyi Gemini skills mirror-t is a canonical tartalomra mutató junctionokkal.
+**Érintett fájlok:** .claude/skills/*, .gemini/skills/*, .ai/copilot.md, C:\Users\pohi9\.copilot\session-state\bbfe6ead-573d-458f-a0c2-acf1c1c58519\plan.md
+**Státusz:** ✅ Befejezve
+**Megjegyzés:** A Copilot mirror most hiánytalan a Brunella core skilljeihez képest; a Gemini mirror helyi kényelmi szinkron, mert nem találtam bizonyított hivatalos skills loader path-ot.

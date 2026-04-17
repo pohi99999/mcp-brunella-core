@@ -1,6 +1,6 @@
 # FŐSZÁL - Egyesített Fejlesztési Napló
 
-**Generálva:** 2026-04-17 03:52
+**Generálva:** 2026-04-17 11:09
 **Script:** `scripts/sync_foszal.py`
 
 ---
@@ -29,6 +29,41 @@ start-full.bat
 ## Összesített Napló (Időrendben)
 
 ### 2026-04-17
+
+#### 17:10 - [Copilot] Pillér kártya 3+2 elrendezés + YouTube hiba javítás
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** .worktrees/009_Varga_Viktória_prez/_VV/ajanlat_premium_v3_standalone.html
+
+#### 16:45 - [Copilot] YouTube embed áthelyezve Pillér 02 → Pillér 03
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** .worktrees/009_Varga_Viktória_prez/_VV/ajanlat_premium_v3_standalone.html
+
+#### 15:30 - [Copilot] Premium HTML prezentáció layout szélességjavítás
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** .worktrees/009_Varga_Viktória_prez/_VV/ajanlat_premium_v3_standalone.html
+
+#### 09:10 - [Copilot] Skill mirror sync
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** .claude/skills/*, .gemini/skills/*, .ai/copilot.md, C:\Users\pohi9\.copilot\session-state\bbfe6ead-573d-458f-a0c2-acf1c1c58519\plan.md
+
+#### 03:10 - [Copilot] Premium ajánlat deck rendezés
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** .worktrees/009_Varga_Viktória_prez/_VV/ajanlat_premium_v3_standalone.html
+
+#### 03:05 - [Copilot] OpenClaw runtime scaffold + dashboard/API bridge
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** src/integrations/openclaw/contracts.ts, src/integrations/openclaw/config.ts, src/integrations/openclaw/errors.ts, src/integrations/openclaw/policyTranslator.ts, src/integrations/openclaw/gatewayAdapter.ts, src/integrations/openclaw/dispatcher.ts, src/integrations/openclaw/index.ts, src/server/routes/openclaw.ts, src/server/routes/index.ts, src/dashboard/components/dashboard/OpenClawIntegrationPanel.tsx, src/dashboard/components/dashboard/OpenClawIntegrationPanel.test.tsx, src/dashboard/lib/navigation.tsx, src/cli/openclawCommands.ts, test/openclaw/openclawConfig.test.ts, test/openclaw/openclawPolicy.test.ts, test/openclaw/openclawGatewayAdapter.test.ts, test/openclaw/openclawDispatcher.test.ts, test/openclaw/openclawRuntime.test.ts
+
+#### 02:15 - [Copilot] OpenClaw integration workflow bootstrap
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** .github/prompts/openclaw-integration.prompt.md, .github/agents/brunella-orchestrator.agent.md, docs/openclaw-integration.md
 
 #### 01:51 - [Copilot] Mai változások dokumentálása
 - **Agent:** Copilot
@@ -686,7 +721,7 @@ start-full.bat
 | Claude | 94 | 2026-04-16 |
 | Gemini | 11 | 2026-04-13 |
 | Cursor | 0 | N/A |
-| Copilot | 2 | 2026-04-17 |
+| Copilot | 9 | 2026-04-17 |
 
 ---
 
