@@ -147,3 +147,17 @@ npm run tail
 # Lokális API logok
 # A konzolban láthatók a FastAPI logok
 ```
+
+## 🧠 Smart dispatch
+
+A `/dispatch-smart` endpoint a `taskMeta` alapján a megfelelő Cloudflare szolgáltatásra delegál:
+
+- `cf_ai_gateway` - Workers AI / LLM kérések
+- `cf_queue` - aszinkron vagy hosszú futású feladatok
+- `cf_kv` - gyors kulcs-érték lookup
+- `cf_d1` - strukturált lekérdezések
+- `cf_vectorize` - embedding / semantic search
+- `cf_worker` - célzott worker delegálás
+- `local` - helyi végrehajtás
+
+Az AI proxy a közvetlen Workers bindinget használja, ha elérhető, és szükség esetén a `@cloudflare/ai` fallbacket is támogatja.

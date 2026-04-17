@@ -169,6 +169,20 @@ function selectRoutingWorker(target: CFDispatchTarget, task: BrunellaTaskMeta): 
   return undefined;
 }
 
+async function runWorkersAi(
+  env: Env,
+  model: string,
+  input: Record<string, unknown>,
+): Promise<unknown> {
+  const binding = env.AI as { run?: (model: string, input: Record<string, unknown>) => Promise<unknown> };
+  if (typeof binding.run === "function") {
+    return binding.run(model, input);
+  }
+
+  const ai = new Ai(env.AI);
+  return ai.run(model as never, input as never);
+}
+
 function shouldDelegate(task: BrunellaTaskMeta): CFDispatchDecision {
   const text = `${lower(task.agentName)} ${lower(task.type)} ${getPayloadText(task)}`;
   const estimatedDurationMs = inferEstimatedDurationMs(task, text);
@@ -380,10 +394,10 @@ async function dispatchSmartDecision(
   }
 
   if (decision.target === "cf_ai_gateway") {
-    const ai = new Ai(env.AI);
     const model = pickString(payload.model, env.FAST_MODEL, env.DEFAULT_CODE_MODEL) || env.FAST_MODEL;
     const prompt = pickString(payload.prompt, payload.instruction, payload.message, taskMeta.type) || taskMeta.type;
-    const aiResult = await ai.run(model as never, { prompt } as never);
+    const options = isRecord(payload.options) ? payload.options : {};
+    const aiResult = await runWorkersAi(env, model, { prompt, ...options });
     return { requestId, result: aiResult };
   }
 
@@ -463,7 +477,7 @@ export default {
     // --- DISPATCH: Route task to specific agent worker ---
     if (path === "/dispatch" && request.method === "POST") {
       const body = await request.json() as any;
-      const { agent, task, context, requestId } = body;
+      let { agent, task, context, requestId } = body;
 
       if (!agent || !task) {
         return Response.json({ error: "agent and task required" }, { status: 400, headers: corsHeaders });
@@ -673,6 +687,57 @@ export default {
         "INSERT INTO chat_messages (role, content, model, timestamp) VALUES (?, ?, ?, ?)"
       ).bind(msg.role, msg.content, msg.model || "unknown", msg.timestamp || new Date().toISOString()).run();
       return Response.json({ success: true }, { headers: corsHeaders });
+    }
+
+    // --- AI GATEWAY PROXY ---
+    if (path === "/ai/generate" && request.method === "POST") {
+      const body = await request.json() as Record<string, unknown>;
+      const model = pickString(body.model, env.FAST_MODEL, env.DEFAULT_CODE_MODEL) || env.FAST_MODEL;
+      const prompt = pickString(body.prompt, body.instruction) || "";
+
+      if (!prompt) {
+        return Response.json({ error: "prompt is required" }, { status: 400, headers: corsHeaders });
+      }
+
+      try {
+        const options = isRecord(body.options) ? body.options : {};
+        const result = await runWorkersAi(env, model, { prompt, ...options });
+        return Response.json({ model, result }, { headers: corsHeaders });
+      } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : String(error);
+        return Response.json({ error: message }, { status: 500, headers: corsHeaders });
+      }
+    }
+
+    // --- KKV DATA API ---
+    if (path === "/kkv/clients") {
+      if (request.method === "GET") {
+        const result = await env.D1_METADATA.prepare("SELECT * FROM clients ORDER BY name ASC").all();
+        return Response.json(result.results, { headers: corsHeaders });
+      }
+      if (request.method === "POST") {
+        const body = await request.json() as any;
+        const id = body.id || crypto.randomUUID();
+        await env.D1_METADATA.prepare(
+          "INSERT INTO clients (id, name, tax_number, email, address) VALUES (?, ?, ?, ?, ?)"
+        ).bind(id, body.name, body.tax_number || null, body.email || null, body.address || null).run();
+        return Response.json({ success: true, id }, { status: 201, headers: corsHeaders });
+      }
+    }
+
+    if (path === "/kkv/invoices") {
+      if (request.method === "GET") {
+        const result = await env.D1_METADATA.prepare("SELECT * FROM invoices ORDER BY created_at DESC").all();
+        return Response.json(result.results, { headers: corsHeaders });
+      }
+      if (request.method === "POST") {
+        const body = await request.json() as any;
+        const id = body.id || crypto.randomUUID();
+        await env.D1_METADATA.prepare(
+          "INSERT INTO invoices (id, client_id, invoice_number, amount, currency, status, due_date) VALUES (?, ?, ?, ?, ?, ?, ?)"
+        ).bind(id, body.client_id, body.invoice_number || null, body.amount, body.currency || "HUF", body.status || "draft", body.due_date || null).run();
+        return Response.json({ success: true, id }, { status: 201, headers: corsHeaders });
+      }
     }
 
     // --- STATIC ASSETS ---
