@@ -1718,30 +1718,29 @@
     },
     {
       "name": "DailyAgentBriefing",
-      "description": "Napi AI agent ökoszisztéma összefoglaló — minden nap 11:00-kor GitHub + web crawl alapján strukturált magyar riportot generál, Brunella architektúra rétegekre leképezve (cortex, memoria, corpus, nexus, fabrica, interface, conductor).",
+      "description": "Napi AI agent jelentés — minden nap 11:00-kor a Tech-Harvester kimenetéből agent_news JSON-t és a docs/002-Napi-AI-Agent-Jelentes-YYYY-MM-DD.md riportot generál, Brunella szempontból kategorizálva (framework, standard, enterprise, research).",
       "file": "DailyAgentBriefingAgent.ts",
       "module": "./agents/DailyAgentBriefingAgent.js",
       "class": "DailyAgentBriefingAgent",
       "capabilities": [
-        "github_search",
-        "web_crawl",
-        "llm_synthesis",
+        "tech_harvester",
+        "agent_news",
         "markdown_report",
         "scheduled_briefing"
       ],
       "triggers": [
         "napi briefing",
-        "ai agent összefoglaló",
+        "ai agent jelentés",
         "daily briefing",
-        "agent briefing",
-        "naponta"
+        "agent report",
+        "tech harvester"
       ],
       "category": "research",
       "status": "active",
       "tags": [
         "daily",
         "ai-agents",
-        "briefing",
+        "report",
         "research",
         "scheduler"
       ]

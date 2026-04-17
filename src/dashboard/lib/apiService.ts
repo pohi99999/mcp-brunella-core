@@ -3892,6 +3892,7 @@ export interface BriefingItem {
   adoptionStatus?: 'adopt' | 'prototype' | 'watch';
   adoptionNote?: string;
   publishedAt?: string;
+  category?: string;
 }
 
 export interface BriefingReport {
@@ -3902,6 +3903,9 @@ export interface BriefingReport {
   items: BriefingItem[];
   brunellaLayersCount: number;
   markdownPath?: string;
+  agentNewsPath?: string;
+  harvestPath?: string;
+  pipelineStatus?: string;
   dryRun: boolean;
 }
 
@@ -3912,6 +3916,8 @@ export interface BriefingReportSummary {
   itemsCount: number;
   brunellaLayersCount: number;
   triggeredBy: string;
+  pipelineStatus?: string;
+  markdownPath?: string;
 }
 
 export interface BriefingLatestReportResponse {
@@ -3921,6 +3927,8 @@ export interface BriefingLatestReportResponse {
   itemsCount: number;
   brunellaLayersCount: number;
   triggeredBy: string;
+  pipelineStatus?: string;
+  markdownPath?: string;
   report: BriefingReport;
 }
 
@@ -3980,6 +3988,8 @@ function normalizeBriefingLatestReportResponse(
     itemsCount: response.itemsCount ?? report.items.length,
     brunellaLayersCount: response.brunellaLayersCount ?? report.brunellaLayersCount,
     triggeredBy: response.triggeredBy ?? report.triggeredBy,
+    pipelineStatus: response.pipelineStatus ?? report.pipelineStatus,
+    markdownPath: response.markdownPath ?? report.markdownPath,
     report,
   };
 }

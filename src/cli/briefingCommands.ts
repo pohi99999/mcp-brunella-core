@@ -26,14 +26,17 @@ const MODULE = 'BriefingCommands';
  */
 function printBriefingReport(report: BriefingReport): void {
   console.log('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-  console.log('  Napi AI Agent Összefoglaló');
+  console.log('  Napi AI Agent Jelentés');
   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
   console.log(`  Riport dátuma    : ${report.reportDate}`);
   console.log(`  Generálva        : ${report.generatedAt}`);
   console.log(`  Indította        : ${report.triggeredBy}`);
   console.log(`  Elemek száma     : ${report.items.length}`);
+  console.log(`  Pipeline állapot : ${report.pipelineStatus ?? 'ismeretlen'}`);
+  console.log(`  Markdown fájl    : ${report.markdownPath ?? 'n/a'}`);
+  console.log(`  agent_news JSON  : ${report.agentNewsPath ?? 'n/a'}`);
+  console.log(`  Harvest JSON     : ${report.harvestPath ?? 'n/a'}`);
   console.log(`  LLM összefoglaló : ${report.usedLLM ? '✅ igen' : '⚠️  nem (fallback)'}`);
-  console.log(`  Markdown fájl    : ${report.markdownPath}`);
   if (report.dryRun) {
     console.log('  ⚠️  Dry-run mód: nem került mentésre');
   }
@@ -50,7 +53,11 @@ function printBriefingReport(report: BriefingReport): void {
 export function registerBriefingCommands(program: Command): void {
   const briefing = program
     .command('briefing')
-    .description('Napi AI Agent Összefoglaló parancsok');
+    .description('Napi AI Agent Jelentés parancsok');
+
+  const dailyAgentBrief = program
+    .command('daily-agent-brief')
+    .description('Napi AI Agent Jelentés azonnali futtatása');
 
   // ── briefing riport ────────────────────────────────────────────────────────
   briefing
@@ -70,7 +77,7 @@ export function registerBriefingCommands(program: Command): void {
           .get() as { report_json: string } | undefined;
 
         if (!row) {
-          console.log('\n⚠️  Még nem készült briefing riport. Futtasd: brunella briefing futtat\n');
+          console.log('\n⚠️  Még nem készült napi jelentés. Futtasd: brunella daily-agent-brief\n');
           return;
         }
 
@@ -86,7 +93,7 @@ export function registerBriefingCommands(program: Command): void {
   // ── briefing futtat ────────────────────────────────────────────────────────
   briefing
     .command('futtat')
-    .description('Napi AI agent briefing azonnali futtatása')
+    .description('Napi AI agent jelentés azonnali futtatása')
     .option('--dry-run', 'Ne mentse az adatbázisba az eredményt')
     .option('--verbose', 'Részletes kimenet')
     .action(async (opts: { dryRun?: boolean; verbose?: boolean }) => {
@@ -99,7 +106,7 @@ export function registerBriefingCommands(program: Command): void {
         logInfo(MODULE, `Briefing futtatása (dryRun=${dryRun})...`);
       }
 
-      console.log('\n🤖 Napi AI Agent Összefoglaló futtatása...\n');
+      console.log('\n🤖 Napi AI Agent Jelentés futtatása...\n');
 
       try {
         const report = await runDailyAgentBriefing({
@@ -109,10 +116,41 @@ export function registerBriefingCommands(program: Command): void {
         });
 
         printBriefingReport(report);
-        console.log('✅ Összefoglaló sikeresen elkészült.\n');
+        console.log('✅ Jelentés sikeresen elkészült.\n');
       } catch (error: unknown) {
         logError(MODULE, `futtat hiba: ${error}`);
-        console.error('\n❌ Briefing futtatás sikertelen:', String(error), '\n');
+        console.error('\n❌ Jelentés futtatás sikertelen:', String(error), '\n');
+        process.exit(1);
+      }
+    });
+
+  dailyAgentBrief
+    .option('--dry-run', 'Ne mentse az adatbázisba az eredményt')
+    .option('--verbose', 'Részletes kimenet')
+    .action(async (opts: { dryRun?: boolean; verbose?: boolean }) => {
+      const db = getGlobalDb();
+      initBriefingSchema(db);
+
+      const dryRun = opts.dryRun ?? false;
+
+      if (opts.verbose) {
+        logInfo(MODULE, `DailyAgentBrief futtatása (dryRun=${dryRun})...`);
+      }
+
+      console.log('\n🤖 Napi AI Agent Jelentés futtatása...\n');
+
+      try {
+        const report = await runDailyAgentBriefing({
+          triggeredBy: 'cli',
+          dryRun,
+          db,
+        });
+
+        printBriefingReport(report);
+        console.log('✅ Jelentés sikeresen elkészült.\n');
+      } catch (error: unknown) {
+        logError(MODULE, `daily-agent-brief hiba: ${error}`);
+        console.error('\n❌ Jelentés futtatás sikertelen:', String(error), '\n');
         process.exit(1);
       }
     });

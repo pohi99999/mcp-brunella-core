@@ -21,6 +21,7 @@ If the docs conflict, read them in this order of authority:
 
 - [Brunella Copilot Operating Model](./brunella-copilot-operating-model.md) — Copilot session flow, context discipline, and Explore/Plan/Task/Code-review.
 - [Brunella MCP Integration](./brunella-mcp-integration.md) — MCP server classes, security boundaries, timeouts, retries, and logging.
+- Daily AI Agent Report pipeline — `daily-agent-brief` CLI, `daily_agent_report` MCP tool, and the `Napi AI Agent Jelentés` dashboard surface.
 
 ## Related onboarding files
 
