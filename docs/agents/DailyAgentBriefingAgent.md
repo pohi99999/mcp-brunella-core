@@ -10,7 +10,9 @@ Napi, ismétlődő kutató-felderítő ügynök, amely GitHub Search API és web
 
 ## Capabilities
 
-- _No explicit capabilities listed yet._
+- Daily AI-agent market scan with GitHub Search API and web crawl inputs
+- Brunella layer mapping for Cortex / Memoria / Nexus / Fabrica / Interface / Conductor
+- Deterministic adoption tagging for research signals: `adopt`, `prototype`, `watch`
 
 ## Inputs / Outputs
 
@@ -27,3 +29,4 @@ Napi, ismétlődő kutató-felderítő ügynök, amely GitHub Search API és web
 - [ ] Add real-world usage examples
 - [ ] Add failure modes and recovery notes
 - [ ] Add integration touchpoints
+- [ ] Add a worked example for `skill-optimizer`, `zt-agentshield`, and `Chaeos-env`

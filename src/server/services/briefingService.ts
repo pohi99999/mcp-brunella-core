@@ -30,6 +30,10 @@ export interface BriefingItem {
   relevance: string;
   /** Brunella architecture layers this item maps to */
   brunellaLayers: string[];
+  /** Optional adoption decision for Brunella */
+  adoptionStatus?: 'adopt' | 'prototype' | 'watch';
+  /** Short rationale for the adoption decision */
+  adoptionNote?: string;
   /** Optional canonical URL */
   url?: string;
   /** Optional publication timestamp */

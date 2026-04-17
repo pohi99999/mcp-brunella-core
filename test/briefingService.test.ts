@@ -47,6 +47,8 @@ const MOCK_BRIEFING_REPORT: BriefingReport = {
       excerpt: 'Az új verzió bemutatja az ágens memória modul javításait és az újratervezett tool-calling API-t.',
       relevance: 'Memoria réteg érintett.',
       brunellaLayers: ['memoria', 'cortex'],
+      adoptionStatus: 'prototype',
+      adoptionNote: 'Érdemes prototípusra emelni, mert az agent guidance és tool-calling réteghez kapcsolódik.',
       publishedAt: '2026-04-07T10:00:00.000Z',
     },
   ],
@@ -165,6 +167,8 @@ describe('briefingService — persistBriefingReport', () => {
     expect(parsed.items).toHaveLength(1);
     expect(parsed.items[0].title).toBe('LangChain 0.3 kiadás');
     expect(parsed.items[0].brunellaLayers).toEqual(['memoria', 'cortex']);
+    expect(parsed.items[0].adoptionStatus).toBe('prototype');
+    expect(parsed.items[0].adoptionNote).toContain('tool-calling');
   });
 
   it('calling persistBriefingReport twice with different IDs inserts two rows', () => {

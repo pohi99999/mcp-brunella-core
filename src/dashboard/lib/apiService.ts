@@ -3889,6 +3889,8 @@ export interface BriefingItem {
   relevance: string;
   brunellaLayers?: string[];
   brunellaLayer?: string;
+  adoptionStatus?: 'adopt' | 'prototype' | 'watch';
+  adoptionNote?: string;
   publishedAt?: string;
 }
 

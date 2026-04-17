@@ -23,6 +23,8 @@ const MOCK_ITEM: apiService.BriefingItem = {
   excerpt: 'Az új verzió bemutatja az ágens memória modul javításait és az újratervezett tool-calling API-t.',
   relevance: 'Közvetlen kapcsolat a Brunella Memoria és Cortex rétegekkel.',
   brunellaLayers: ['memoria', 'cortex'],
+  adoptionStatus: 'prototype',
+  adoptionNote: 'Érdemes prototípusra emelni, mert az agent guidance és tool-calling réteghez kapcsolódik.',
   publishedAt: '2026-04-07T10:00:00.000Z',
 };
 
@@ -93,8 +95,10 @@ describe('AIAgentBriefingPanel', () => {
     expect(screen.getByText(/Brunella Memoria és Cortex/)).toBeInTheDocument();
 
     // Layer badges
+    expect(screen.getByText('prototype')).toBeInTheDocument();
     expect(screen.getByText('memoria')).toBeInTheDocument();
     expect(screen.getByText('cortex')).toBeInTheDocument();
+    expect(screen.getByText(/Érdemes prototípusra emelni/)).toBeInTheDocument();
   });
 
   it('shows a run button and triggers briefing on click', async () => {

@@ -11,7 +11,7 @@
  */
 
 import React, { useEffect, useState } from 'react';
-import { Brain, RefreshCw, ExternalLink, Info, CheckCircle, Layers } from 'lucide-react';
+import { Brain, RefreshCw, ExternalLink, Info, CheckCircle, Layers, Sparkles } from 'lucide-react';
 import {
   getLatestBriefingReport,
   runBriefingReport,
@@ -32,11 +32,27 @@ const LAYER_COLORS: Record<string, string> = {
   conductor: 'bg-rose-700 text-rose-100',
 };
 
+const ADOPTION_COLORS: Record<string, string> = {
+  adopt: 'bg-emerald-700 text-emerald-100',
+  prototype: 'bg-amber-700 text-amber-100',
+  watch: 'bg-slate-700 text-slate-100',
+};
+
 function layerBadge(layer: string): React.ReactNode {
   const cls = LAYER_COLORS[layer.toLowerCase()] ?? 'bg-slate-600 text-slate-100';
   return (
     <span key={layer} className={`inline-block text-[10px] font-semibold px-1.5 py-0.5 rounded mr-1 ${cls}`}>
       {layer}
+    </span>
+  );
+}
+
+function adoptionBadge(status: string): React.ReactNode {
+  const cls = ADOPTION_COLORS[status.toLowerCase()] ?? 'bg-slate-600 text-slate-100';
+  return (
+    <span className={`inline-flex items-center gap-1 text-[10px] font-semibold px-1.5 py-0.5 rounded mr-1 ${cls}`}>
+      <Sparkles className="h-3 w-3" />
+      {status}
     </span>
   );
 }
@@ -90,10 +106,16 @@ function BriefingItemCard({ item }: { item: BriefingItem }) {
       )}
 
       {/* Brunella layer badges */}
-      {item.brunellaLayers && item.brunellaLayers.length > 0 && (
-        <div className="flex flex-wrap gap-0.5 mt-1">
-          {item.brunellaLayers.map((l) => layerBadge(l))}
-        </div>
+      <div className="flex flex-wrap gap-0.5 mt-1">
+        {item.adoptionStatus && adoptionBadge(item.adoptionStatus)}
+        {item.brunellaLayers && item.brunellaLayers.length > 0 && item.brunellaLayers.map((l) => layerBadge(l))}
+      </div>
+
+      {item.adoptionNote && (
+        <p className="text-xs text-slate-400 mt-1.5">
+          <Sparkles className="inline h-3 w-3 mr-1 text-violet-400" />
+          {item.adoptionNote}
+        </p>
       )}
     </li>
   );

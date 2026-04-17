@@ -1,11 +1,11 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-04-16T18:00:00.261Z
+**Utolso frissites:** 2026-04-17T00:00:00.290Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 246 total | 10 active | 24 completed | 210 archived
-**Csoportok:** Könyvelés / üzleti automatizálás: 53 | Nova asszisztens: 23 | Brunella rendszer: 96 | Egyéb: 74
+**Stats:** 247 total | 11 active | 24 completed | 210 archived
+**Csoportok:** Könyvelés / üzleti automatizálás: 53 | Nova asszisztens: 24 | Brunella rendszer: 96 | Egyéb: 74
 
 ---
 
@@ -28,7 +28,7 @@
 
 ---
 
-## Aktiv Szalak (Active) (10)
+## Aktiv Szalak (Active) (11)
 
 ### Könyvelés / üzleti automatizálás (4)
 
@@ -61,7 +61,7 @@
   - Mappa: ./tracks/pohanka_freelancer_terjeszkedes_20260408/
 
 
-### Nova asszisztens (5)
+### Nova asszisztens (6)
 
 - [ ] **Napi intelligens reggeli briefing ugynok** [HIGH]
   - **ID:** `napi_intelligens_briefing_20260404`
@@ -98,15 +98,13 @@
   - **Updated:** 2026-04-12
   - Mappa: ./tracks/toura_local_dev_20260408/
 
-
-### Brunella rendszer (2)
-
-- [~] **PAIOS Orchestrator Integration & Intelligence Audit** [HIGH]
+- [~] **PAIOS Integration Audit** [MEDIUM]
   - **ID:** `paios_integration_audit_20260415`
-  - **Progress:** 95%
-  - **Assignee:** Gemini
-  - **Updated:** 2026-04-16
+  - **Progress:** 0%
   - Mappa: ./tracks/paios_integration_audit_20260415/
+
+
+### Brunella rendszer (1)
 
 - [ ] **Brunella Studio Agent v2** [HIGH]
   - **ID:** `brunella-studio-agent-v2_20260414`

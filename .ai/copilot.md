@@ -1,5 +1,15 @@
 # Copilot Session Notes
 
+### 2026-04-17 00:24 - AI briefing research adoption
+
+**Feladat:** A napi AI agent kutatási összefoglaló legértékesebb elemeit beépítettem a Brunella briefing pipeline-ba: adopt / prototype / watch besorolás, dashboard badge-ek, és frissített briefing query set.
+
+**Érintett fájlok:** `src/agents/DailyAgentBriefingAgent.ts`, `src/server/services/briefingService.ts`, `src/dashboard/lib/apiService.ts`, `src/dashboard/components/dashboard/AIAgentBriefingPanel.tsx`, `test/briefingService.test.ts`, `src/dashboard/components/dashboard/AIAgentBriefingPanel.test.tsx`, `docs/agents/DailyAgentBriefingAgent.md`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A leginkább hasznos elemek: `skill-optimizer` (adopt), `zt-agentshield`, `Chaeos-env`, `solace-agent-mesh`, `Auto-Review-ClaudeMCP` (prototype), és az `ai-agent-pulse` / `polis` / `multi-agent-shogun` / `agentic-reasoning-lab` vonal (watch). A briefing panel most már ezt is mutatja.
+
 ### 2026-04-17 00:07 - Chrome agent profile setup
 
 **Feladat:** Windows-alapú, külön Chrome-agent profilt hoztam létre külön user-data-dir mellett, a setup/launch szkriptekkel és desktop shortcut-tal.

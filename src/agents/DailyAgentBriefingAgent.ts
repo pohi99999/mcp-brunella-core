@@ -74,8 +74,18 @@ interface BriefingItem {
   excerpt: string;
   relevance: string;
   brunellaLayers: string[];
+  adoptionStatus?: AdoptionStatus;
+  adoptionNote?: string;
   url?: string;
   publishedAt?: string;
+}
+
+/** Recommended Brunella adoption level for a research signal */
+type AdoptionStatus = 'adopt' | 'prototype' | 'watch';
+
+interface AdoptionAssessment {
+  status: AdoptionStatus;
+  note: string;
 }
 
 /** Combined signal fed to the LLM summary builder */
@@ -158,6 +168,59 @@ function inferBrunellaLayers(text: string): string[] {
   return layers.size > 0 ? Array.from(layers) : ['cortex'];
 }
 
+function assessBrunellaAdoption(signal: GitHubSignal): AdoptionAssessment {
+  const fingerprint = [
+    signal.title,
+    signal.fullName,
+    signal.description,
+    signal.query,
+    signal.topics.join(' '),
+  ].join(' ').toLowerCase();
+
+  if (/(skill[- ]optimizer|tool guidance|guidance benchmark)/i.test(fingerprint)) {
+    return {
+      status: 'adopt',
+      note: 'Közvetlenül hasznos a skill / MCP útmutatók és tool-használat benchmarkolására.',
+    };
+  }
+
+  if (/(zt[- ]agentshield|chaeos-env|solace-agent-mesh|auto-review-claudemcp)/i.test(fingerprint)) {
+    return {
+      status: 'prototype',
+      note: 'Jó prototípus-jelölt: execution-boundary védelem, fault injection, event-driven orchestration vagy PR-review automatizálás.',
+    };
+  }
+
+  if (/(ai-agent-pulse|polis|multi-agent-shogun|agentic-reasoning-lab|agentic-ai-systems|neuroops|aura-cli)/i.test(fingerprint)) {
+    return {
+      status: 'watch',
+      note: 'Érdemes figyelni, de jelenleg inkább referencia és inspiráció a Brunella számára.',
+    };
+  }
+
+  return {
+    status: 'watch',
+    note: 'Általános piaci jelzés; most nincs közvetlen beépítési út.',
+  };
+}
+
+function buildAdoptionBlock(githubSignals: GitHubSignal[]): string {
+  const notes = githubSignals
+    .map((signal) => ({ signal, adoption: assessBrunellaAdoption(signal) }))
+    .filter(({ adoption }) => adoption.status !== 'watch');
+
+  if (notes.length === 0) {
+    return '';
+  }
+
+  const lines = ['## Brunella adoption shortlist', ''];
+  for (const { signal, adoption } of notes) {
+    lines.push(`- **${signal.title}** — ${adoption.status.toUpperCase()}: ${adoption.note}`);
+  }
+  lines.push('');
+  return lines.join('\n');
+}
+
 function buildBriefingItems(
   githubSignals: GitHubSignal[],
   pageSignals: WebPageSignal[],
@@ -166,6 +229,7 @@ function buildBriefingItems(
     const layers = inferBrunellaLayers(
       [signal.title, signal.fullName, signal.description, signal.query, signal.topics.join(' ')].join(' '),
     );
+    const adoption = assessBrunellaAdoption(signal);
 
     return {
       title: signal.title || signal.fullName,
@@ -176,6 +240,8 @@ function buildBriefingItems(
         signal.topics.length > 0 ? signal.topics.join(', ') : 'nincs topic'
       }`,
       brunellaLayers: uniqueStrings(layers),
+      adoptionStatus: adoption.status,
+      adoptionNote: adoption.note,
       publishedAt: signal.updatedAt || undefined,
     };
   });
@@ -222,6 +288,11 @@ function parseConfig(context: AgentContext): DailyBriefingConfig {
       'multi-agent system orchestration',
       'LLM tool use agent benchmark',
       'agent memory planning reasoning',
+      'event-driven multi-agent orchestration',
+      'tool use security agent',
+      'LLM agent fault injection',
+      'SDK CLI MCP guidance optimization',
+      'code review GitHub PR agent',
     ]),
 
     sourcePages: Array.isArray(merged.sourcePages)
@@ -240,6 +311,9 @@ function parseConfig(context: AgentContext): DailyBriefingConfig {
       'LLM tool use és reasoning előrelépések',
       'Agentic workflow minták',
       'AI agent memory és tervezés',
+      'Tool security és execution boundary',
+      'Guidance quality és skill optimalizálás',
+      'Fault injection és benchmark',
     ]),
 
     tags: asStringArray(merged.tags, ['daily', 'ai-agents', 'briefing', 'research']),
@@ -381,6 +455,11 @@ function buildFallbackMarkdown(
     }
   }
 
+  const adoptionBlock = buildAdoptionBlock(signals.github);
+  if (adoptionBlock) {
+    lines.push(adoptionBlock.trim(), '');
+  }
+
   lines.push('## Forrásoldal kivonatok', '');
   for (const page of signals.pages) {
     if (!page.excerpt) continue;
@@ -428,6 +507,9 @@ Az alábbi nyers adatokat gyűjtöttem:
 ## GitHub találatok
 ${githubBlock || '(nincs adat)'}
 
+## Brunella adoption shortlist
+${buildAdoptionBlock(signals.github) || '(nincs azonnali átültetési jel)'}
+
 ## Forrásoldal kivonatok
 ${pagesBlock || '(nincs adat)'}
 
@@ -444,7 +526,8 @@ Készíts strukturált, magyar nyelvű napi összefoglalót az alábbi formátum
    - fabrica (agent factory)
    - interface (UI/dashboard)
    - conductor (orchestráció, ütemezés)
-4. **Ajánlott következő lépések** Brunella számára (max 3 pont)
+4. **Brunella adoption notes** — a legértékesebb elemeket címkézd adopt / prototype / watch szerint, és mondd meg röviden, miért.
+5. **Ajánlott következő lépések** Brunella számára (max 3 pont)
 
 Légy tömör, informatív, és mindig hivatkozz az eredeti forrásokra ahol lehetséges.
   `.trim();
