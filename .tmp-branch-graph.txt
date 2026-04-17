@@ -1,5 +1,0 @@
-< ce72bd0a6 (HEAD) chore: save local developer metrics before merge
-< 651ae50df fix(ci): resolve missing TS definitions and parameter types
-< bbccaed88 fix(ci): add --legacy-peer-deps to npm install in workflows
-< 10b27f107 fix(ci): replace npm ci with npm install --no-frozen-lockfile in workflows
-< 1d35b0bab fix(java): throw exception in JsonEventMatcher and JsonSchemaExist on JsonProcessingException
