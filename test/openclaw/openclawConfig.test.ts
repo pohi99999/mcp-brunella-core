@@ -53,4 +53,59 @@ describe('OpenClaw config loading', () => {
     expect(snapshot.baseUrl).toBe('https://openclaw.example.com');
     expect(snapshot.message).toContain('OpenClaw is configured');
   });
+
+  it('falls back to the default disabled snapshot when env is empty', () => {
+    const config = loadOpenClawConfig({});
+    const snapshot = createOpenClawStatusSnapshot(config);
+
+    expect(config.enabled).toBe(false);
+    expect(config.baseUrl).toBeNull();
+    expect(config.timeoutMs).toBe(10_000);
+    expect(config.retryCount).toBe(2);
+    expect(config.retryDelayMs).toBe(250);
+    expect(config.defaultTrustZone).toBe('amber');
+    expect(config.approvalThreshold).toBe('amber');
+    expect(config.allowedAgents).toEqual([]);
+    expect(config.allowedToolPresets).toEqual([]);
+    expect(config.agentAllowlists).toEqual({});
+    expect(config.redaction).toEqual({
+      enabled: true,
+      mask: '[REDACTED]',
+      sensitiveKeys: ['authorization', 'apiKey', 'api_key', 'token', 'secret', 'password', 'bearer'],
+    });
+
+    expect(snapshot.state).toBe('unconfigured');
+    expect(snapshot.configured).toBe(false);
+    expect(snapshot.reachable).toBe(false);
+    expect(snapshot.baseUrl).toBeNull();
+    expect(snapshot.defaultTrustZone).toBe('amber');
+    expect(snapshot.approvalThreshold).toBe('amber');
+    expect(snapshot.enabledExecutors).toEqual([]);
+    expect(snapshot.redactionEnabled).toBe(true);
+  });
+
+  it('falls back safely for malformed and blank env values', () => {
+    const blankConfig = loadOpenClawConfig({
+      env: {
+        OPENCLAW_BASE_URL: '   ',
+        OPENCLAW_ENABLED: 'maybe',
+        OPENCLAW_AGENT_ALLOWLISTS: '[]',
+      },
+    });
+
+    expect(blankConfig.baseUrl).toBeNull();
+    expect(blankConfig.enabled).toBe(false);
+    expect(blankConfig.agentAllowlists).toEqual({});
+
+    const malformedConfig = loadOpenClawConfig({
+      env: {
+        OPENCLAW_BASE_URL: 'not-a-url',
+        OPENCLAW_AGENT_ALLOWLISTS: '{not json}',
+      },
+    });
+
+    expect(malformedConfig.baseUrl).toBeNull();
+    expect(malformedConfig.enabled).toBe(false);
+    expect(malformedConfig.agentAllowlists).toEqual({});
+  });
 });

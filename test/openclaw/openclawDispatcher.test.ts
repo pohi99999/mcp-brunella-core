@@ -10,10 +10,17 @@ import {
   OpenClawGoalPacketSchema,
   OpenClawStatusSnapshotSchema,
   OpenClawTaskDispatcher,
+  buildEvidenceFromGatewayResponse,
 } from '../../src/integrations/openclaw/index.js';
 
-function buildConfig() {
-  return OpenClawConfigSchema.parse({
+function buildConfig(overrides: Record<string, unknown> = {}) {
+  const baseRedaction = {
+    enabled: true,
+    mask: '[REDACTED]',
+    sensitiveKeys: ['token', 'password'],
+  };
+
+  const config = {
     baseUrl: 'https://openclaw.example.com',
     apiKey: 'secret-token',
     timeoutMs: 5_000,
@@ -25,12 +32,14 @@ function buildConfig() {
     allowedAgents: ['research-agent', 'exec-agent'],
     allowedToolPresets: ['read-only'],
     agentAllowlists: {},
+    ...overrides,
     redaction: {
-      enabled: true,
-      mask: '[REDACTED]',
-      sensitiveKeys: ['token', 'password'],
+      ...baseRedaction,
+      ...(overrides.redaction as Record<string, unknown> | undefined),
     },
-  });
+  };
+
+  return OpenClawConfigSchema.parse(config);
 }
 
 function buildGoal() {
@@ -83,6 +92,129 @@ function buildGatewayResponse() {
   });
 }
 
+function buildMixedEvidenceGatewayResponse() {
+  return OpenClawGatewayResponseSchema.parse({
+    runId: 'run-2',
+    status: 'completed',
+    output: {
+      sources: [
+        'https://example.com/one',
+        {
+          id: 'source-2',
+          url: 'https://example.com/two',
+          label: 'Two',
+          note: 'secondary',
+        },
+      ],
+      artifacts: [
+        'dist/output.txt',
+        {
+          id: 'artifact-2',
+          path: 'dist/bundle.js',
+          kind: 'bundle',
+          checksum: 'abc123',
+          note: 'compiled output',
+        },
+      ],
+      logs: [
+        'string log entry',
+        {
+          id: 'log-2',
+          level: 'warn',
+          message: 'structured log entry',
+          timestamp: '2026-04-17T00:05:00.000Z',
+          source: 'pipeline',
+          metadata: {
+            step: 1,
+          },
+        },
+      ],
+      diffs: [
+        'src/index.ts',
+        {
+          id: 'diff-2',
+          path: 'src/other.ts',
+          changeType: 'added',
+          summary: 'new file',
+          patch: '@@ -0,0 +1 @@',
+        },
+      ],
+      testResults: [
+        'vitest smoke',
+        {
+          id: 'test-2',
+          name: 'jest',
+          passed: false,
+          summary: 'failed',
+          details: 'oops',
+          durationMs: 12,
+        },
+      ],
+      confidence: 0.5,
+    },
+    warnings: [],
+    receivedAt: '2026-04-17T00:05:00.000Z',
+  });
+}
+
+function buildPassthroughGatewayResponse() {
+  return OpenClawGatewayResponseSchema.parse({
+    runId: 'run-3',
+    status: 'completed',
+    output: {
+      message: 'unused because evidence is already present',
+    },
+    evidence: {
+      id: 'evidence-3',
+      goalId: 'goal-1',
+      executionId: 'exec-1',
+      sources: [
+        {
+          id: 'source-3',
+          url: 'https://example.com/passthrough',
+        },
+      ],
+      artifacts: [],
+      logs: [],
+      diffs: [],
+      testResults: [],
+      confidence: 0.75,
+      capturedAt: '2026-04-17T00:06:00.000Z',
+      redactionApplied: false,
+      metadata: {
+        source: 'gateway',
+      },
+    },
+    warnings: ['passthrough'],
+    receivedAt: '2026-04-17T00:06:00.000Z',
+  });
+}
+
+function buildCircularGatewayResponse() {
+  const circular = {
+    label: 'circular',
+  } as Record<string, unknown>;
+  circular.self = circular;
+
+  return OpenClawGatewayResponseSchema.parse({
+    runId: 'run-4',
+    status: 'completed',
+    output: circular,
+    warnings: [],
+    receivedAt: '2026-04-17T00:07:00.000Z',
+  });
+}
+
+function buildEmptyStringGatewayResponse() {
+  return OpenClawGatewayResponseSchema.parse({
+    runId: 'run-5',
+    status: 'completed',
+    output: '',
+    warnings: [],
+    receivedAt: '2026-04-17T00:08:00.000Z',
+  });
+}
+
 function buildGatewayMock() {
   return {
     dispatch: vi.fn(async () => buildGatewayResponse()),
@@ -127,6 +259,61 @@ describe('OpenClaw task dispatcher', () => {
     expect(result.evidence?.diffs).toHaveLength(1);
     expect(result.evidence?.testResults).toHaveLength(1);
     expect(OpenClawDispatchResultSchema.parse(result).status).toBe('success');
+  });
+
+  it('normalizes mixed evidence payloads from the gateway response', () => {
+    const request = {
+      goal: buildGoal(),
+      execution: buildExecution(),
+    };
+
+    const evidence = buildEvidenceFromGatewayResponse(request, buildMixedEvidenceGatewayResponse(), false);
+
+    expect(evidence.sources).toHaveLength(2);
+    expect(evidence.artifacts).toHaveLength(2);
+    expect(evidence.logs).toHaveLength(2);
+    expect(evidence.diffs).toHaveLength(2);
+    expect(evidence.testResults).toHaveLength(2);
+    expect(evidence.confidence).toBe(0.5);
+    expect(evidence.metadata?.gatewayStatus).toBe('completed');
+  });
+
+  it('preserves evidence already returned by the gateway', () => {
+    const request = {
+      goal: buildGoal(),
+      execution: buildExecution(),
+    };
+
+    const evidence = buildEvidenceFromGatewayResponse(request, buildPassthroughGatewayResponse(), true);
+
+    expect(evidence.id).toBe('evidence-3');
+    expect(evidence.redactionApplied).toBe(true);
+    expect(evidence.metadata).toMatchObject({
+      gatewayStatus: 'completed',
+      source: 'gateway',
+    });
+    expect(evidence.sources).toHaveLength(1);
+  });
+
+  it('falls back to stringified output when the gateway payload is circular', () => {
+    const request = {
+      goal: buildGoal(),
+      execution: buildExecution(),
+    };
+
+    const evidence = buildEvidenceFromGatewayResponse(request, buildCircularGatewayResponse(), false);
+
+    expect(evidence.logs).toHaveLength(1);
+    expect(evidence.logs[0]?.message).toBe('[object Object]');
+  });
+
+  it('throws when the fallback stringified log message would be empty', () => {
+    const request = {
+      goal: buildGoal(),
+      execution: buildExecution(),
+    };
+
+    expect(() => buildEvidenceFromGatewayResponse(request, buildEmptyStringGatewayResponse(), false)).toThrow();
   });
 
   it('requests approval for amber tasks before dispatching', async () => {
@@ -194,6 +381,26 @@ describe('OpenClaw task dispatcher', () => {
     expect(result.message).toContain('not now');
   });
 
+  it('blocks dry-run requests before gateway dispatch when they are not eligible', async () => {
+    const gateway = buildGatewayMock();
+    const dispatcher = new OpenClawTaskDispatcher({
+      config: buildConfig({
+        allowedAgents: ['exec-agent'],
+      }),
+      gateway,
+      logger: undefined,
+    });
+
+    const result = await dispatcher.preview({
+      goal: buildGoal(),
+      execution: buildExecution(),
+    });
+
+    expect(result.status).toBe('blocked');
+    expect(result.approvalState).toBe('skipped');
+    expect(gateway.dispatch).not.toHaveBeenCalled();
+  });
+
   it('marks secret-bearing payloads as redacted', async () => {
     const dispatcher = new OpenClawTaskDispatcher({
       config: buildConfig(),
@@ -214,5 +421,167 @@ describe('OpenClaw task dispatcher', () => {
     });
 
     expect(result.redactionApplied).toBe(true);
+  });
+
+  it('returns a dry-run preview without dispatching to the gateway', async () => {
+    const gateway = buildGatewayMock();
+    const dispatcher = new OpenClawTaskDispatcher({
+      config: buildConfig(),
+      gateway,
+      logger: undefined,
+    });
+
+    const result = await dispatcher.preview({
+      goal: buildGoal(),
+      execution: buildExecution(),
+    });
+
+    expect(result.status).toBe('dry_run');
+    expect(result.approvalState).toBe('not_required');
+    expect(result.redactionApplied).toBe(false);
+    expect(gateway.dispatch).toHaveBeenCalledTimes(1);
+    const [dispatchRequest] = gateway.dispatch.mock.calls[0] as unknown as [
+      { dryRun?: boolean }
+    ];
+    expect(dispatchRequest).toMatchObject({
+      dryRun: true,
+    });
+  });
+
+  it('marks dry-run gateway failures as failed results', async () => {
+    const gateway = {
+      ...buildGatewayMock(),
+      dispatch: vi.fn(async () => {
+        throw new Error('dry-run gateway exploded');
+      }),
+    };
+
+    const dispatcher = new OpenClawTaskDispatcher({
+      config: buildConfig(),
+      gateway: gateway as never,
+      logger: undefined,
+    });
+
+    const result = await dispatcher.preview({
+      goal: buildGoal(),
+      execution: buildExecution(),
+    });
+
+    expect(result.status).toBe('failed');
+    expect(result.approvalState).toBe('skipped');
+    expect(result.message).toBe('OpenClaw dispatch failed');
+    expect(result.error).toContain('dry-run gateway exploded');
+  });
+
+  it('blocks non-eligible requests before gateway dispatch', async () => {
+    const gateway = buildGatewayMock();
+    const dispatcher = new OpenClawTaskDispatcher({
+      config: buildConfig({
+        allowedAgents: ['exec-agent'],
+      }),
+      gateway,
+      logger: undefined,
+    });
+
+    const result = await dispatcher.dispatch({
+      goal: buildGoal(),
+      execution: buildExecution(),
+    });
+
+    expect(result.status).toBe('blocked');
+    expect(result.approvalState).toBe('skipped');
+    expect(gateway.dispatch).not.toHaveBeenCalled();
+  });
+
+  it('blocks amber requests when no approval service is configured', async () => {
+    const gateway = buildGatewayMock();
+    const dispatcher = new OpenClawTaskDispatcher({
+      config: buildConfig(),
+      gateway,
+      logger: undefined,
+    });
+
+    const result = await dispatcher.dispatch({
+      goal: buildGoal(),
+      execution: buildExecution({
+        executionMode: 'constrained_write',
+        toolScope: ['write_file'],
+      }),
+    });
+
+    expect(result.status).toBe('blocked');
+    expect(result.approvalState).toBe('pending');
+    expect(result.message).toContain('approval service is not configured');
+    expect(gateway.dispatch).not.toHaveBeenCalled();
+  });
+
+  it('fails when the approval service rejects the request', async () => {
+    const gateway = buildGatewayMock();
+    const approvalService = {
+      requestApproval: vi.fn(async () => {
+        throw new Error('approval service unavailable');
+      }),
+    };
+
+    const dispatcher = new OpenClawTaskDispatcher({
+      config: buildConfig({
+        approvalThreshold: 'amber',
+      }),
+      gateway,
+      approvalService: approvalService as never,
+      logger: undefined,
+    });
+
+    const result = await dispatcher.dispatch({
+      goal: buildGoal(),
+      execution: buildExecution({
+        executionMode: 'constrained_write',
+        toolScope: ['write_file'],
+      }),
+    });
+
+    expect(result.status).toBe('failed');
+    expect(result.approvalState).toBe('pending');
+    expect(gateway.dispatch).not.toHaveBeenCalled();
+    expect(approvalService.requestApproval).toHaveBeenCalledTimes(1);
+  });
+
+  it('fails when the gateway rejects an approved request', async () => {
+    const gateway = {
+      ...buildGatewayMock(),
+      dispatch: vi.fn(async () => {
+        throw new Error('approved gateway exploded');
+      }),
+    };
+
+    const approvalService = {
+      requestApproval: vi.fn(async (_request: OpenClawApprovalRequest): Promise<OpenClawApprovalDecision> => ({
+        approved: true,
+        reviewer: 'human-reviewer',
+        reason: 'approved',
+        decidedAt: '2026-04-17T00:01:00.000Z',
+      })),
+    };
+
+    const dispatcher = new OpenClawTaskDispatcher({
+      config: buildConfig(),
+      gateway: gateway as never,
+      approvalService,
+      logger: undefined,
+    });
+
+    const result = await dispatcher.dispatch({
+      goal: buildGoal(),
+      execution: buildExecution({
+        executionMode: 'constrained_write',
+        toolScope: ['write_file'],
+      }),
+    });
+
+    expect(result.status).toBe('failed');
+    expect(result.approvalState).toBe('approved');
+    expect(result.message).toBe('OpenClaw dispatch failed');
+    expect(result.error).toContain('approved gateway exploded');
+    expect(approvalService.requestApproval).toHaveBeenCalledTimes(1);
   });
 });

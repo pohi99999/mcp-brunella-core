@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-04-16T18:00:00.261Z",
+  "lastUpdated": "2026-04-17T10:00:00.255Z",
   "tracks": [
     {
       "id": "agent_instability_chaos_testing_20260410",
@@ -1171,6 +1171,30 @@
       "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\p-search",
       "_isArchived": true
+    },
+    {
+      "id": "paios_integration_audit_20260415",
+      "name": "PAIOS Integration Audit",
+      "status": "active",
+      "priority": "medium",
+      "progress": 0,
+      "tags": [
+        "paios",
+        "orchestrator",
+        "rag",
+        "n8n",
+        "cloudflare"
+      ],
+      "dependencies": [],
+      "dod": {
+        "tests_pass": false,
+        "build_clean": false,
+        "code_committed": false,
+        "no_verify_used": false
+      },
+      "group": "nova",
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\paios_integration_audit_20260415",
+      "_isArchived": false
     },
     {
       "id": "personal_assistant_windows_mvp_20260323",
@@ -6697,8 +6721,8 @@
     }
   ],
   "stats": {
-    "total": 246,
-    "active": 10,
+    "total": 247,
+    "active": 11,
     "completed": 24,
     "archived": 210,
     "proposed": 2

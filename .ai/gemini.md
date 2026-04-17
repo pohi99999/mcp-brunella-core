@@ -60,3 +60,9 @@
 **Státusz:** ? Befejezve
 **Megjegyzés:** A rendszer mostantól nem blokkol a hosszú n8n hívásoknál, azonnal tud válaszolni dokumentum-alapú kérdésekre a chaten, és a fejlesztõk számára egy új élõ Debug panel érhetõ el. A code_reviewer javaslatait (típusbiztonság) beépítettük. A polling perzisztencia jövõbeli track javaslat.
 \
+\
+### 2026-04-16 20:29 - Push & Sync Complete
+**Feladat:** GitHub feltöltés és fõág (main) frissítése az összes audit és integrációs fejlesztéssel.
+**Státusz:** ? Befejezve
+**Megjegyzés:** Minden változás élesítve a GitHubon. Git LFS szinkronizálva. Tesztek PASS.
+\

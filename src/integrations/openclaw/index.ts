@@ -1,9 +1,16 @@
 export * from './config.js';
 export * from './contracts.js';
-export * from './dispatcher.js';
 export * from './errors.js';
 export * from './gatewayAdapter.js';
 export * from './policyTranslator.js';
+export {
+  OpenClawTaskDispatcher,
+  buildEvidenceFromGatewayResponse,
+} from './dispatcher.js';
+export type {
+  OpenClawApprovalService,
+  OpenClawTaskDispatcherOptions,
+} from './dispatcher.js';
 
 import { Logger } from '../../utils/logger.js';
 import { createOpenClawStatusSnapshot, loadOpenClawConfig, snapshotOpenClawConfig, type OpenClawConfigLoaderOptions } from './config.js';

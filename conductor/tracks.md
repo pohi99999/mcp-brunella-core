@@ -1,6 +1,6 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-04-17T04:00:00.166Z
+**Utolso frissites:** 2026-04-17T10:00:00.255Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
@@ -105,13 +105,6 @@
 
 
 ### Brunella rendszer (1)
-
-- [~] **OpenClaw Brunella Integration** [HIGH]
-  - **ID:** `openclaw_brunella_integration_20260417`
-  - **Progress:** 95%
-  - **Assignee:** GitHub Copilot
-  - **Updated:** 2026-04-17
-  - Mappa: ./tracks/openclaw_brunella_integration_20260417/
 
 - [ ] **Brunella Studio Agent v2** [HIGH]
   - **ID:** `brunella-studio-agent-v2_20260414`

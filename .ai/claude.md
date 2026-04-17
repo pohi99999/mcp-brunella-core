@@ -2,11 +2,34 @@
 
 **Agent:** Claude Code (Anthropic)
 **Fájl:** `.ai/claude.md`
-**Utolsó frissítés:** 2026-04-15
+**Utolsó frissítés:** 2026-04-16
 
 ---
 
 ## 📋 LEGUTÓBBI MUNKAMENET
+
+### 2026-04-16 - GitHub Copilot CLI MCP migráció ✅
+
+**Feladat:** `~/.copilot/mcp-config.json` létrehozása/frissítése — a `.vscode/mcp.json` összes szerverének migrálása GitHub Copilot CLI formátumba.
+
+**Elvégzett feladatok:**
+1. **Migráció elemzése** — `https://docs.github.com/en/copilot/reference/copilot-cli-reference/cli-command-reference#migrating-from-vscodemcpjson` vizsgálata
+2. **Különbségek azonosítva (5 fő eltérés):**
+   - `${input:XXX}` placeholderek NEM támogatottak — `.env` értékekre cserélve
+   - Minden szerverhez `"tools": ["*"]` kötelező
+   - `gallery`, `disabled`, `description`, `platforms`, `inputs` mezők eltávolítva
+   - `sqlite` szerver kihagyva (disabled volt)
+   - `sourcegraph` kihagyva (nem feloldható `{sourcegraph_hostname}` placeholder)
+3. **`C:\Users\pohi9\.copilot\mcp-config.json` teljes újraírás** — 19 szerver, mind `"tools": ["*"]`-gal:
+   - Titkos kulcsok hardcodeolva ahol elérhetők a `.env`-ből (CONTEXT7_API_KEY, Cloudflare tokenek)
+   - `BRUNELLA_API_KEY`, `GITHUB_PAT` mint `${VAR}` referenciák maradtak
+   - Fabric/Kusto mezők `${VAR}` formában (nem szerepelnek `.env`-ben)
+   - Abszolút Windows útvonalak a helyi stdio szerverekhez
+
+**Érintett fájlok:** `C:\Users\pohi9\.copilot\mcp-config.json` (átírva — 19 szerver)
+**Státusz:** ✅ Befejezve
+
+---
 
 ### 2026-04-15 - PAIOS TTS hang javítás (nova female voice)
 

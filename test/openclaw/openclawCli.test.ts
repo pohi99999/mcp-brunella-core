@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { createOpenClawCliHandlers } from '../../src/cli/openclawCommands.js';
+import { createOpenClawCliHandlers, formatOpenClawCliPayload } from '../../src/cli/openclawCommands.js';
 
 const originalBaseUrl = process.env.OPENCLAW_BASE_URL;
 
@@ -14,6 +14,18 @@ afterEach(() => {
 });
 
 describe('OpenClaw CLI handlers', () => {
+  it('formats CLI payloads as pretty JSON', () => {
+    const payload = formatOpenClawCliPayload({
+      ok: true,
+      result: {
+        status: 'dry_run',
+      },
+    });
+
+    expect(payload).toContain('"status": "dry_run"');
+    expect(payload).toContain('"ok": true');
+  });
+
   it('returns a status payload and a dry-run preview payload', async () => {
     process.env.OPENCLAW_BASE_URL = 'https://openclaw.example.com';
 
@@ -65,5 +77,24 @@ describe('OpenClaw CLI handlers', () => {
     expect((statusPayload.health as { state?: string } | undefined)?.state).toBe('ready');
     expect(previewPayload.ok).toBe(true);
     expect((previewPayload.result as { status?: string } | undefined)?.status).toBe('dry_run');
+  });
+
+  it('returns a status error when runtime bootstrap fails', async () => {
+    process.env.OPENCLAW_BASE_URL = 'https://openclaw.example.com';
+    vi.stubGlobal('fetch', undefined);
+
+    const handlers = createOpenClawCliHandlers();
+    const statusPayload = await handlers.status();
+
+    expect(statusPayload.ok).toBe(false);
+    expect(statusPayload.error).toContain('fetch');
+  });
+
+  it('returns a preview error when the request payload is invalid', async () => {
+    const handlers = createOpenClawCliHandlers();
+    const previewPayload = await handlers.preview('{}');
+
+    expect(previewPayload.ok).toBe(false);
+    expect(previewPayload.error).toContain('Invalid');
   });
 });

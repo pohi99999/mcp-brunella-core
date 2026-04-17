@@ -72,7 +72,7 @@ def parse_agent_log(agent_name: str, file_path: Path) -> List[LogEntry]:
     if not file_path.exists():
         return entries
 
-    content = file_path.read_text(encoding="utf-8")
+    content = file_path.read_text(encoding="utf-8", errors="replace")
 
     # Regex a bejegyzések keresésére
     # Formátum: ### YYYY-MM-DD HH:MM - Cím  VAGY  ### YYYY-MM-DD - Cím
