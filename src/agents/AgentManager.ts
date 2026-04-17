@@ -50,6 +50,8 @@ import { validateAndNormalizeRegistry, type RegistryValidationReport } from "./r
 import { type AgentConfig, type RegistryConfig } from "./registryStandard.js";
 import { getSkill, SKILL_REGISTRY } from "../skills/index.js";
 import { getOrchestrationConcurrencyConfig, getOrchestrationConcurrencyLimit } from "../config/paiosConfig.js";
+import { buildBrunellaTaskMeta } from "../cloudflare/CFDispatcher.js";
+import { withCFDispatch } from "../cloudflare/CFDispatchMiddleware.js";
 
 interface EdgeConfig {
   enabled: boolean;
@@ -926,7 +928,15 @@ export class AgentManager extends EventEmitter {
           if (taskId) this.activeExecutions.set(taskId, controller);
 
           try {
-            const res = await agent.execute(instruction, { ...context, signal: controller.signal });
+            const cfTaskMeta = buildBrunellaTaskMeta(
+              agentName,
+              instruction,
+              isRecord(context) ? context : {},
+            );
+            const res = await withCFDispatch(
+              cfTaskMeta,
+              () => agent.execute(instruction, { ...context, signal: controller.signal }),
+            );
 
             // Result normalizálás (status -> success mapping)
             if (isRecord(res)) {

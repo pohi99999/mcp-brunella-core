@@ -18,6 +18,7 @@ const WORKER_ROUTE_POLICIES: WorkerRoutePolicy[] = [
   { path: /^\/$/, methods: ["GET"], access: "public" },
   { path: /^\/health$/, methods: ["GET"], access: "public" },
   { path: /^\/dispatch$/, methods: ["POST"], access: "protected" },
+  { path: /^\/dispatch-smart$/, methods: ["POST"], access: "protected" },
   { path: /^\/workers$/, methods: ["GET"], access: "protected" },
   { path: /^\/routing$/, methods: ["GET"], access: "protected" },
   { path: /^\/task$/, methods: ["POST"], access: "protected" },

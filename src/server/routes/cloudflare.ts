@@ -3,6 +3,12 @@ import { agentManager } from "../../agents/AgentManager.js";
 import { cloudflareClient } from "../../utils/cloudflareClient.js";
 import { resolveBrowserCopilotEndpoint } from "../../utils/browserEndpoint.js";
 import { getCloudflareAuthHeaders } from "../../utils/cloudflareConfig.js";
+import {
+  getCloudflareWorkersInventory as sharedGetCloudflareWorkersInventory,
+  postTaskToWorker as sharedPostTaskToWorker,
+  type WorkerDefinition,
+  type WorkerTaskProxyResponse,
+} from "../../cloudflare/cloudflareHelpers.js";
 import { ensureError } from "../../utils/ensureError.js";
 import { logDebug } from "../../utils/logger.js";
 
@@ -18,14 +24,6 @@ type CloudflareChatProxyResponse = {
   endpoint?: string;
 };
 
-type WorkerDefinition = {
-  id: string;
-  name: string;
-  url?: string;
-  customDomain?: string;
-  kind: "public" | "internal";
-};
-
 type WorkerAuditResult = {
   id: string;
   name: string;
@@ -35,15 +33,6 @@ type WorkerAuditResult = {
   status: "online" | "offline" | "unknown";
   latencyMs?: number;
   statusCode?: number;
-  error?: string;
-};
-
-type WorkerTaskProxyResponse = {
-  success: boolean;
-  workerId: string;
-  workerName: string;
-  endpoint?: string;
-  result?: unknown;
   error?: string;
 };
 
@@ -62,56 +51,15 @@ function normalizeBaseUrl(url: string): string {
 }
 
 function getCloudflareWorkersInventory(): WorkerDefinition[] {
-  const orchestratorUrl = process.env.CLOUDFLARE_D1_WORKER_URL || process.env.CLOUDFLARE_WORKER_URL;
-  const chatUrl = process.env.CLOUDFLARE_CHAT_URL;
-  const chatSyncUrl = process.env.CLOUDFLARE_CHAT_SYNC_URL;
+  return sharedGetCloudflareWorkersInventory();
+}
 
-  return [
-    {
-      id: "cean-orchestrator",
-      name: "cean-orchestrator",
-      url: orchestratorUrl || "https://cean-orchestrator.iam-dd1.workers.dev",
-      customDomain: "api.bas.peterpohanka.com",
-      kind: "public",
-    },
-    {
-      id: "chat-sync",
-      name: "chat-sync",
-      url: chatSyncUrl || "https://bas-orchestrator.peterpohankapersonal.workers.dev",
-      customDomain: "brunella.peterpohanka.com",
-      kind: "public",
-    },
-    {
-      id: "brunella-cf",
-      name: "brunella-cf",
-      url: process.env.CF_WORKER_BRUNELLA_CF_URL || "https://brunella-cf.iam-dd1.workers.dev",
-      kind: "public",
-    },
-    {
-      id: "agents-api",
-      name: "agents-api",
-      url: process.env.CF_WORKER_AGENTS_API_URL,
-      kind: "internal",
-    },
-    {
-      id: "saas-admin",
-      name: "saas-admin",
-      url: process.env.CF_WORKER_SAAS_ADMIN_URL,
-      kind: "internal",
-    },
-    {
-      id: "llm-chat-app-template",
-      name: "llm-chat-app-template",
-      url: chatUrl || "https://llm-chat-app-template.iam-dd1.workers.dev",
-      kind: "public",
-    },
-    {
-      id: "throbbing-fire",
-      name: "throbbing-fire",
-      url: process.env.CF_WORKER_THROBBING_FIRE_URL,
-      kind: "internal",
-    },
-  ];
+async function postTaskToWorker(
+  worker: WorkerDefinition,
+  instruction: string,
+  context: Record<string, unknown>,
+): Promise<WorkerTaskProxyResponse> {
+  return sharedPostTaskToWorker(worker, instruction, context);
 }
 
 async function checkExternalWorkerHealth(domain: string): Promise<{
@@ -206,80 +154,6 @@ async function checkWorkerHealth(
   return {
     ...worker,
     status: "offline",
-    error: lastError,
-  };
-}
-
-async function postTaskToWorker(
-  worker: WorkerDefinition,
-  instruction: string,
-  context: Record<string, unknown>,
-): Promise<WorkerTaskProxyResponse> {
-  if (!worker.url) {
-    return {
-      success: false,
-      workerId: worker.id,
-      workerName: worker.name,
-      error: "Worker URL is not configured",
-    };
-  }
-
-  const base = normalizeBaseUrl(worker.url);
-  const endpoints = ["/task", "/api/task", "/api/v1/task", "/"];
-  const authHeaders = getCloudflareAuthHeaders();
-  const payload = {
-    instruction,
-    task: instruction,
-    context,
-  };
-
-  let lastError = "Worker task proxy failed";
-
-  for (const endpoint of endpoints) {
-    const url = `${base}${endpoint}`;
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 60000);
-
-    try {
-      const response = await fetch(url, {
-        method: "POST",
-        headers: authHeaders,
-        body: JSON.stringify(payload),
-        signal: controller.signal,
-      });
-
-      const text = await response.text();
-      let parsed: unknown = text;
-      try {
-        parsed = text ? (JSON.parse(text) as unknown) : "";
-      } catch (error: unknown) {
-        logDebug("CloudflareRoutes", `Worker response JSON parse skipped: ${ensureError(error).message}`);
-      }
-
-      if (response.ok) {
-        return {
-          success: true,
-          workerId: worker.id,
-          workerName: worker.name,
-          endpoint,
-          result: parsed,
-        };
-      }
-
-      lastError = `HTTP ${response.status}${text ? `: ${text.slice(0, 180)}` : ""}`;
-    } catch (e: unknown) {
-      const normalized = ensureError(e);
-      logDebug("CloudflareRoutes", `Worker task proxy failed at ${endpoint}: ${normalized.message}`);
-      lastError = normalized.message;
-    } finally {
-      clearTimeout(timeoutId);
-    }
-  }
-
-  return {
-    success: false,
-    workerId: worker.id,
-    workerName: worker.name,
     error: lastError,
   };
 }

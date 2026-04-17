@@ -46,6 +46,367 @@ interface Env extends WorkerSecurityEnv {
   R2_PREFIX: string;
 }
 
+type CFDispatchTarget =
+  | "cf_worker"
+  | "cf_queue"
+  | "cf_kv"
+  | "cf_d1"
+  | "cf_ai_gateway"
+  | "cf_vectorize"
+  | "local";
+
+interface CFDispatchDecision {
+  delegate: boolean;
+  target: CFDispatchTarget;
+  workerId?: string;
+  reason: string;
+  estimatedLatencyMs?: number;
+}
+
+interface BrunellaTaskMeta {
+  type: string;
+  requiresLocalModel?: boolean;
+  isAsync?: boolean;
+  requiresExternalAPI?: boolean;
+  involvesLLM?: boolean;
+  isDataLookup?: boolean;
+  isVectorSearch?: boolean;
+  estimatedDurationMs?: number;
+  agentName?: string;
+  payload?: Record<string, unknown>;
+}
+
+interface DispatchLogEntry {
+  agentName: string;
+  taskType: string;
+  target: string;
+  reason: string;
+  success: number;
+  latencyMs: number;
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null;
+}
+
+function pickString(...values: unknown[]): string | undefined {
+  for (const value of values) {
+    if (typeof value === "string" && value.trim()) {
+      return value.trim();
+    }
+  }
+
+  return undefined;
+}
+
+function pickBoolean(value: unknown): boolean | undefined {
+  return typeof value === "boolean" ? value : undefined;
+}
+
+function pickNumber(value: unknown): number | undefined {
+  return typeof value === "number" && Number.isFinite(value) ? value : undefined;
+}
+
+function lower(value: string | undefined): string {
+  return (value || "").toLowerCase();
+}
+
+function getPayloadText(task: BrunellaTaskMeta): string {
+  const payload = task.payload ? JSON.stringify(task.payload) : "";
+  return [task.agentName, task.type, payload].filter(Boolean).join(" ").toLowerCase();
+}
+
+function inferEstimatedDurationMs(task: BrunellaTaskMeta, payloadText: string): number {
+  const explicit = pickNumber(task.estimatedDurationMs);
+  if (explicit !== undefined) return explicit;
+  if (pickBoolean(task.isAsync) === true) return 6000;
+  if (pickBoolean(task.isVectorSearch) === true) return 120;
+  if (pickBoolean(task.isDataLookup) === true) {
+    return /complex|join|report|aggregate|history|range|timeline/.test(payloadText) ? 250 : 75;
+  }
+  if (pickBoolean(task.involvesLLM) === true) return 1200;
+  if (pickBoolean(task.requiresExternalAPI) === true) return 500;
+  if (/research|harvest|extract|api|fetch|lookup|search|vector|embedding|queue|batch/.test(payloadText)) {
+    return 500;
+  }
+  return 250;
+}
+
+function parseTaskMeta(value: unknown): BrunellaTaskMeta {
+  const record = isRecord(value) ? value : {};
+  const payload = isRecord(record.payload) ? (record.payload as Record<string, unknown>) : record;
+  return {
+    type: pickString(record.type) || "general",
+    requiresLocalModel: pickBoolean(record.requiresLocalModel),
+    isAsync: pickBoolean(record.isAsync),
+    requiresExternalAPI: pickBoolean(record.requiresExternalAPI),
+    involvesLLM: pickBoolean(record.involvesLLM),
+    isDataLookup: pickBoolean(record.isDataLookup),
+    isVectorSearch: pickBoolean(record.isVectorSearch),
+    estimatedDurationMs: pickNumber(record.estimatedDurationMs),
+    agentName: pickString(record.agentName),
+    payload,
+  };
+}
+
+function selectRoutingWorker(target: CFDispatchTarget, task: BrunellaTaskMeta): string | undefined {
+  const agent = lower(task.agentName);
+  const text = `${agent} ${lower(task.type)} ${getPayloadText(task)}`;
+
+  if (target === "cf_worker") {
+    if (/research|harvest|extract|browser|api/.test(text)) return "ResearcherAgent";
+    if (/orchestrate|dispatch|swarm|conductor|workflow/.test(text)) return "ProjectConductorAgent";
+    if (/build|builder|code|implement|developer/.test(text)) return "DeveloperAgent";
+    return "ResearcherAgent";
+  }
+
+  if (target === "cf_queue") return "ProjectConductorAgent";
+  if (target === "cf_kv") return "KnowledgeBaseBuilderAgent";
+  if (target === "cf_d1") return "DataScientistAgent";
+  if (target === "cf_ai_gateway") return "ResearcherAgent";
+  if (target === "cf_vectorize") return "KnowledgeBaseBuilderAgent";
+
+  return undefined;
+}
+
+function shouldDelegate(task: BrunellaTaskMeta): CFDispatchDecision {
+  const text = `${lower(task.agentName)} ${lower(task.type)} ${getPayloadText(task)}`;
+  const estimatedDurationMs = inferEstimatedDurationMs(task, text);
+
+  if (task.requiresLocalModel === true) {
+    return { delegate: false, target: "local", reason: "requiresLocalModel=true", estimatedLatencyMs: estimatedDurationMs };
+  }
+
+  if (task.isVectorSearch === true || /vector|embedding|semantic|rag|similarity|nearest/.test(text)) {
+    return {
+      delegate: true,
+      target: "cf_vectorize",
+      workerId: selectRoutingWorker("cf_vectorize", task),
+      reason: "vector search delegated to Cloudflare Vectorize",
+      estimatedLatencyMs: 120,
+    };
+  }
+
+  if (task.involvesLLM === true || /llm|prompt|chat|reason|summar|generate|model|embedding/.test(text)) {
+    return {
+      delegate: true,
+      target: "cf_ai_gateway",
+      workerId: selectRoutingWorker("cf_ai_gateway", task),
+      reason: "LLM request proxied through Cloudflare AI",
+      estimatedLatencyMs: 900,
+    };
+  }
+
+  if (task.isDataLookup === true) {
+    if (estimatedDurationMs < 100) {
+      return {
+        delegate: true,
+        target: "cf_kv",
+        workerId: selectRoutingWorker("cf_kv", task),
+        reason: "fast data lookup routed to Cloudflare KV",
+        estimatedLatencyMs: 40,
+      };
+    }
+
+    return {
+      delegate: true,
+      target: "cf_d1",
+      workerId: selectRoutingWorker("cf_d1", task),
+      reason: "structured lookup routed to Cloudflare D1",
+      estimatedLatencyMs: 120,
+    };
+  }
+
+  if (task.isAsync === true || estimatedDurationMs > 5000) {
+    return {
+      delegate: true,
+      target: "cf_queue",
+      workerId: selectRoutingWorker("cf_queue", task),
+      reason: "async or long-running task routed to Cloudflare Queues",
+      estimatedLatencyMs: 300,
+    };
+  }
+
+  if (task.requiresExternalAPI === true) {
+    return {
+      delegate: true,
+      target: "cf_worker",
+      workerId: selectRoutingWorker("cf_worker", task),
+      reason: "external API work delegated to the best matching Cloudflare Worker",
+      estimatedLatencyMs: 250,
+    };
+  }
+
+  return { delegate: false, target: "local", reason: "no Cloudflare rule matched", estimatedLatencyMs: estimatedDurationMs };
+}
+
+async function ensureDispatchLogTable(env: Env): Promise<void> {
+  await env.D1_METADATA.prepare(
+    `CREATE TABLE IF NOT EXISTS dispatch_log (
+      id TEXT PRIMARY KEY,
+      agent_name TEXT,
+      task_type TEXT,
+      target TEXT,
+      reason TEXT,
+      success INTEGER,
+      latency_ms INTEGER,
+      created_at TEXT DEFAULT (datetime('now'))
+    )`,
+  ).run();
+}
+
+async function logDispatchDecision(env: Env, entry: DispatchLogEntry): Promise<void> {
+  await ensureDispatchLogTable(env);
+  const id = crypto.randomUUID ? crypto.randomUUID() : `dispatch_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+  await env.D1_METADATA.prepare(
+    `INSERT INTO dispatch_log (id, agent_name, task_type, target, reason, success, latency_ms, created_at)
+     VALUES (?, ?, ?, ?, ?, ?, ?, datetime('now'))`,
+  ).bind(
+    id,
+    entry.agentName,
+    entry.taskType,
+    entry.target,
+    entry.reason,
+    entry.success,
+    entry.latencyMs,
+  ).run();
+}
+
+async function dispatchWorkerTask(
+  env: Env,
+  agent: string,
+  task: string,
+  context: Record<string, unknown>,
+  requestId: string,
+): Promise<Record<string, unknown>> {
+  const routing = await env.D1_METADATA.prepare(
+    "SELECT worker_url FROM worker_routing WHERE agent_name = ? AND is_healthy = 1",
+  ).bind(agent).first<{ worker_url: string }>();
+
+  if (!routing) {
+    return { requestId, status: "fallback", error: `No healthy worker found for agent: ${agent}` };
+  }
+
+  await env.D1_METADATA.prepare(
+    "INSERT INTO worker_tasks (id, agent_name, worker_url, task, context, status) VALUES (?, ?, ?, ?, ?, 'running')",
+  ).bind(requestId, agent, routing.worker_url, task, JSON.stringify(context || {})).run();
+
+  try {
+    const workerAuthToken = env.BAS_API_KEY || env.CEAN_API_KEY || env.CLOUDFLARE_API_TOKEN;
+    const workerHeaders: Record<string, string> = { "Content-Type": "application/json" };
+    if (workerAuthToken) {
+      workerHeaders["X-BAS-API-Key"] = workerAuthToken;
+    }
+
+    const workerResponse = await fetch(`${routing.worker_url}/execute`, {
+      method: "POST",
+      headers: workerHeaders,
+      body: JSON.stringify({ agent, task, context, requestId }),
+    });
+
+    const result = await workerResponse.json() as unknown;
+
+    await env.D1_METADATA.prepare(
+      "UPDATE worker_tasks SET status = 'completed', result = ?, completed_at = CURRENT_TIMESTAMP WHERE id = ?",
+    ).bind(JSON.stringify(result), requestId).run();
+
+    return { requestId, status: "completed", workerUrl: routing.worker_url, result };
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : String(error);
+    await env.D1_METADATA.prepare(
+      "UPDATE worker_tasks SET status = 'failed', error = ?, completed_at = CURRENT_TIMESTAMP WHERE id = ?",
+    ).bind(message, requestId).run();
+    return { requestId, status: "failed", error: message };
+  }
+}
+
+async function dispatchSmartDecision(
+  env: Env,
+  decision: CFDispatchDecision,
+  taskMeta: BrunellaTaskMeta,
+  payload: Record<string, unknown>,
+  requestId: string,
+): Promise<Record<string, unknown>> {
+  if (decision.target === "local") {
+    return { requestId, status: "local", result: { delegated: false, reason: decision.reason } };
+  }
+
+  if (decision.target === "cf_worker") {
+    const agent = decision.workerId || taskMeta.agentName || taskMeta.type;
+    const task = pickString(payload.instruction, payload.task, payload.message) || taskMeta.type;
+    const context = isRecord(payload.context) ? payload.context : payload;
+    return await dispatchWorkerTask(env, agent, task, context, requestId);
+  }
+
+  if (decision.target === "cf_queue") {
+    const instruction = pickString(payload.instruction, payload.task, payload.message) || taskMeta.type;
+    const queuedTaskId = `task_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+    await enqueueTask(env.TASK_QUEUE, {
+      taskId: queuedTaskId,
+      instruction,
+      type: taskMeta.type || "general",
+      priority: "normal",
+      metadata: { taskMeta, payload },
+      createdAt: new Date().toISOString(),
+    });
+    return { requestId, queued: true, taskId: queuedTaskId, result: { taskId: queuedTaskId, status: "queued" } };
+  }
+
+  if (decision.target === "cf_kv") {
+    const key = pickString(payload.key, payload.lookupKey, payload.id, taskMeta.agentName, taskMeta.type) || requestId;
+    if (Object.prototype.hasOwnProperty.call(payload, "value")) {
+      const value = payload.value;
+      await env.BAS_TASKS.put(key, typeof value === "string" ? value : JSON.stringify(value));
+      return { requestId, result: { key, stored: true } };
+    }
+
+    const value = await env.BAS_TASKS.get(key);
+    return { requestId, result: { key, value } };
+  }
+
+  if (decision.target === "cf_d1") {
+    const sql = pickString(payload.sql, payload.query, payload.statement);
+    if (!sql) {
+      return { requestId, error: "sql/query/statement required for cf_d1" };
+    }
+
+    const statement = env.D1_METADATA.prepare(sql);
+    const params = Array.isArray(payload.params) ? payload.params : [];
+    const lowerSql = sql.trim().toLowerCase();
+    const result = lowerSql.startsWith("select") || lowerSql.startsWith("with") || lowerSql.startsWith("pragma")
+      ? await statement.bind(...params).all()
+      : await statement.bind(...params).run();
+    return { requestId, result };
+  }
+
+  if (decision.target === "cf_ai_gateway") {
+    const ai = new Ai(env.AI);
+    const model = pickString(payload.model, env.FAST_MODEL, env.DEFAULT_CODE_MODEL) || env.FAST_MODEL;
+    const prompt = pickString(payload.prompt, payload.instruction, payload.message, taskMeta.type) || taskMeta.type;
+    const aiResult = await ai.run(model as never, { prompt } as never);
+    return { requestId, result: aiResult };
+  }
+
+  if (decision.target === "cf_vectorize") {
+    const vector = Array.isArray(payload.vector)
+      ? payload.vector
+      : Array.isArray(payload.embedding)
+        ? payload.embedding
+        : null;
+    if (!vector) {
+      return { requestId, error: "vector or embedding array required for cf_vectorize" };
+    }
+
+    const index = taskMeta.agentName && /cean|memory/i.test(taskMeta.agentName)
+      ? env.VECTORIZE_CEAN
+      : env.VECTORIZE_MEMORY;
+    const result = await index.query(vector as number[], { topK: 5 });
+    return { requestId, result };
+  }
+
+  return { requestId, error: `Unsupported dispatch target: ${decision.target}` };
+}
+
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
@@ -65,10 +426,44 @@ export default {
       );
     }
 
+    // --- SMART DISPATCH: classify task, log decision, then execute ---
+    if (path === "/dispatch-smart" && request.method === "POST") {
+      const body = await request.json() as Record<string, unknown>;
+      const taskMeta = parseTaskMeta(body.taskMeta);
+      const payload = isRecord(body.payload) ? body.payload : {};
+      const decision = shouldDelegate(taskMeta);
+      const requestId = pickString(body.requestId) || `req_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+      const startedAt = Date.now();
+
+      try {
+        const result = await dispatchSmartDecision(env, decision, taskMeta, payload, requestId);
+        await logDispatchDecision(env, {
+          agentName: taskMeta.agentName || "unknown",
+          taskType: taskMeta.type,
+          target: decision.target,
+          reason: decision.reason,
+          success: result.error ? 0 : 1,
+          latencyMs: Date.now() - startedAt,
+        });
+        return Response.json({ decision, ...result }, { headers: corsHeaders });
+      } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : String(error);
+        await logDispatchDecision(env, {
+          agentName: taskMeta.agentName || "unknown",
+          taskType: taskMeta.type,
+          target: decision.target,
+          reason: `${decision.reason} | error: ${message}`,
+          success: 0,
+          latencyMs: Date.now() - startedAt,
+        });
+        return Response.json({ decision, error: message }, { status: 500, headers: corsHeaders });
+      }
+    }
+
     // --- DISPATCH: Route task to specific agent worker ---
     if (path === "/dispatch" && request.method === "POST") {
       const body = await request.json() as any;
-      let { agent, task, context, requestId } = body;
+      const { agent, task, context, requestId } = body;
 
       if (!agent || !task) {
         return Response.json({ error: "agent and task required" }, { status: 400, headers: corsHeaders });

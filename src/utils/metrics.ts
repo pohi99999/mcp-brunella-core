@@ -74,6 +74,21 @@ export const memoryCacheMissesTotal = new Counter({
   registers: [registry],
 });
 
+export const cloudflareDispatchDecisionsTotal = new Counter({
+  name: "bas_cloudflare_dispatch_decisions_total",
+  help: "Cloudflare dispatch decisions by target and outcome",
+  labelNames: ["target", "outcome"] as const,
+  registers: [registry],
+});
+
+export const cloudflareDispatchLatency = new Histogram({
+  name: "bas_cloudflare_dispatch_latency_seconds",
+  help: "Cloudflare dispatch latency by target",
+  labelNames: ["target", "outcome"] as const,
+  buckets: [0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1, 2, 5, 10, 30, 60, 90],
+  registers: [registry],
+});
+
 const memoryCacheHitSnapshot = new Map<string, number>();
 const memoryCacheMissSnapshot = new Map<string, number>();
 
@@ -171,6 +186,17 @@ export function recordMemoryCacheHit(agentName: string): void {
 export function recordMemoryCacheMiss(agentName: string): void {
   memoryCacheMissesTotal.inc({ agent_name: agentName });
   memoryCacheMissSnapshot.set(agentName, (memoryCacheMissSnapshot.get(agentName) ?? 0) + 1);
+}
+
+export function recordCloudflareDispatchOutcome(
+  target: string,
+  outcome: "cf" | "local" | "fallback",
+  latencyMs?: number,
+): void {
+  cloudflareDispatchDecisionsTotal.inc({ target, outcome });
+  if (typeof latencyMs === "number" && Number.isFinite(latencyMs)) {
+    cloudflareDispatchLatency.observe({ target, outcome }, Math.max(latencyMs, 0) / 1000);
+  }
 }
 
 export function getMemoryCacheMetricsSnapshot(): Record<string, { hits: number; misses: number; hitRate: number }> {
