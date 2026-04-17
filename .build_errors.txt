@@ -1,1 +1,0 @@
-src/agents/AgentManager.ts(1045,13): error TS2304: Cannot find name 'fireHooks'.
