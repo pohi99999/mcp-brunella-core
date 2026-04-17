@@ -108,6 +108,7 @@ export function createV1Router(): Router {
   router.use("/kernel", lazy(() => import("./kernelRoute.js"), "createKernelRoutes"));
   router.use("/cognitive", lazy(() => import("./cognitiveBridge.js"), "createCognitiveBridgeRoutes"));
   router.use("/workflow", lazy(() => import("./workflow.js"), "createWorkflowRoutes"));
+  router.use("/openclaw", lazy(() => import("./openclaw.js"), "createOpenClawRoutes"));
   router.use("/knowledge", lazy(() => import("./externalKnowledge.js"), "createExternalKnowledgeRoutes", db));
   router.use("/remote", lazy(() => import("./remote.js"), "createRemoteRoutes"));
   router.use("/autonomous-infra", lazy(() => import("./autonomousInfra.js"), "createAutonomousInfraRouter"));

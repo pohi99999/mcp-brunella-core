@@ -76,6 +76,7 @@ import { registerSwarmCommands } from "./cli/swarmCommands.js";
 import { registerToolDiscoveryCommands } from "./cli/toolDiscoveryCommands.js";
 import { registerSecurityCommands } from "./cli/securityCommands.js";
 import { registerChromeAcpCommands } from "./cli/chromeAcpCommands.js";
+import { createOpenClawCliHandlers, formatOpenClawCliPayload } from "./cli/openclawCommands.js";
 import { validateAndNormalizeRegistry } from "./agents/registryValidation.js";
 import { getAssistantBlueprint, type AssistantBlueprint, type AssistantReadinessStatus } from "./core/assistantBlueprint.js";
 import { getPrebuiltToolCatalog, mergeToolLists, type ToolLike } from "./utils/prebuiltTools.js";
@@ -84,6 +85,7 @@ import { writeLine } from './utils/cliOutput.js';
 marked.setOptions({ renderer: new TerminalRenderer() });
 
 const program = new Command();
+const openClawHandlers = createOpenClawCliHandlers();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const CLI_MCP_CONNECT_TIMEOUT_MS = Number(process.env.BRUNELLA_MCP_CONNECT_TIMEOUT_MS || "30000");
@@ -567,7 +569,7 @@ program
         console.error(chalk.red("Error: Task or --file option is required."));
         process.exit(1);
       }
-      
+
       let context: Record<string, unknown> = {};
 
       if (opts.context) {
@@ -1901,6 +1903,33 @@ registerMarketCommands(program);
 registerWorkspaceCommands(program);
 dashboardCommand(program);
 
+const openClawCommand = program
+  .command("openclaw")
+  .description("Inspect and preview the OpenClaw integration");
+
+openClawCommand
+  .command("status")
+  .description("Show the OpenClaw runtime status snapshot")
+  .action(async () => {
+    const payload = await openClawHandlers.status();
+    writeLine(formatOpenClawCliPayload(payload));
+    if (!payload.ok) {
+      process.exitCode = 1;
+    }
+  });
+
+openClawCommand
+  .command("preview")
+  .requiredOption("--request <json>", "OpenClaw task request JSON")
+  .description("Preview an OpenClaw task request")
+  .action(async (options: { request: string }) => {
+    const payload = await openClawHandlers.preview(options.request);
+    writeLine(formatOpenClawCliPayload(payload));
+    if (!payload.ok) {
+      process.exitCode = 1;
+    }
+  });
+
 // Register Guardrails & Telemetry commands (Track #1 + #2)
 registerGuardrailsCommands(program);
 registerTelemetryCommands(program);
@@ -2009,7 +2038,7 @@ testsCmd
       writeLine(`Schedule: ${chalk.cyan(data.schedule)}`);
       writeLine(`Enabled:  ${data.enabled ? chalk.green("✓") : chalk.red("✗")}`);
       writeLine(`Active:   ${data.active ? chalk.green("✓") : chalk.red("✗")}`);
-      
+
       if (data.stats) {
         writeLine(chalk.bold("\n📈 Statistics (7 days)\n"));
         writeLine(`  Pass Rate:       ${chalk.green(data.stats.sevenDayPassRate)}`);
@@ -2084,9 +2113,9 @@ testsCmd
       // Fetch results via HTTP (CLI-friendly)
       const response = await fetch(`${baseUrl}/api/tests/results?limit=${limit}`);
       spinner.stop();
-      
+
       if (!response.ok) throw new Error("Failed to fetch results");
-      
+
       const data = (await response.json()) as { data?: Array<WorkflowRunRecord> };
       writeLine(chalk.bold(`\n🧪 Recent Test Runs (Last ${limit})\n`));
 

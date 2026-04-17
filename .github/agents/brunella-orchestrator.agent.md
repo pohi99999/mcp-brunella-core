@@ -112,6 +112,16 @@ When delegating a task:
 5. Verify resolution
 6. Report findings and solution
 
+**OpenClaw Integration Workflow** (e.g., "Integrate OpenClaw into Brunella"):
+1. Load `.github/prompts/openclaw-integration.prompt.md` as the canonical workflow prompt.
+2. Delegate boundary and file-map decisions to `brunella-architect`.
+3. Delegate sequencing, scope control, and release gating to `brunella-delivery-lead`.
+4. Delegate scaffold, policy, adapter, dispatcher, and wiring to `brunella-implementer`.
+5. Delegate deterministic coverage for the new integration surfaces to `robust-test-writer`.
+6. Delegate security, coupling, regression, and observability review to `brunella-reviewer`.
+7. Update `.ai/copilot.md` and relevant documentation with the final handoff notes.
+8. Validate build, tests, and any CLI/dashboard entry points before calling the task complete.
+
 # Edge Case Handling
 
 **Ambiguous task requests**:

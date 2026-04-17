@@ -66,6 +66,7 @@ import { AgentDiagnosticsPanel } from "@/components/dashboard/AgentDiagnosticsPa
 import { AgentRegistryHealthPanel } from "@/components/dashboard/AgentRegistryHealthPanel";
 import { DocsSotPanel } from "@/components/dashboard/DocsSotPanel";
 import { ConfigHealthPanel } from "@/components/dashboard/ConfigHealthPanel";
+import { OpenClawIntegrationPanel } from "@/components/dashboard/OpenClawIntegrationPanel";
 import { PhoenixFlywheelObservabilityPanel } from "@/components/dashboard/PhoenixFlywheelObservabilityPanel";
 import { HookMonitorPanel } from "@/components/dashboard/HookMonitorPanel";
 import { MissionPlannerPanel } from "@/components/dashboard/MissionPlannerPanel";
@@ -204,6 +205,7 @@ export function initializeNavigation ()
     { id: "agent-registry-governance", label: "Registry Governance", icon: ClipboardList, component: <AgentRegistryHealthPanel /> },
     { id: "docs-config-sot", label: "Docs / Config SOT", icon: FileText, component: <DocsSotPanel /> },
     { id: "config-health", label: "Config Health", icon: Shield, component: <ConfigHealthPanel /> },
+    { id: "openclaw-bridge", label: "OpenClaw Bridge", icon: Shield, component: <OpenClawIntegrationPanel /> },
     { id: "mission-devex", label: "Mission Planner", icon: Workflow, component: <MissionPlannerPanel /> },
     { id: "test-cadence-devex", label: "Test Cadence", icon: Gauge, component: <TestPlanPanel /> },
     { id: "decomposer", label: "Decompose", icon: Layers, component: <TaskDecomposerPanel /> },
@@ -267,6 +269,7 @@ export function initializeNavigation ()
     { id: "marketwatcher", label: "Market Watcher", icon: Activity, component: <MarketWatcherConfig /> },
     { id: "settings", label: "System Config", icon: Settings, component: <SettingsPanel /> },
     { id: "guardrails", label: "Guardrails", icon: ShieldAlert, component: <GuardrailsPanel /> },
+    { id: "openclaw-bridge", label: "OpenClaw Bridge", icon: Shield, component: <OpenClawIntegrationPanel /> },
     { id: "telemetry", label: "Telemetria", icon: Gauge, component: <TelemetryPanel /> },
     { id: "chrome-acp", label: "Chrome ACP", icon: Code2, component: <EmbeddedWorkflow title="Chrome ACP Browser" url="http://localhost:9315" icon={<Code2 size={20} />} allowSameOrigin={true} /> },
     { id: "n8n", label: "n8n Automation", icon: Workflow, component: <EmbeddedWorkflow title="n8n Automation" url="http://localhost:5678" icon={<Workflow size={20} />} /> },
@@ -312,6 +315,7 @@ export function initializeNavigation ()
   navigationRegistry.registerGroup( { title: "Értékesítési Központ", icon: DollarSign, items: ["trojan-horse", "lead-monitor", "demo-factory", "showcase", "campaign-studio", "leads-master", "innovation-bridge", "invoice-sync", "invoice-automation", "bookkeeping", "finance-reconciliation", "kp-penztar", "lead-mining", "marketwatcher", "inventory"] } );
   navigationRegistry.registerGroup( { title: "KKV Pack", icon: PackageSearch, items: ["kkv-pack"] } );
   navigationRegistry.registerGroup( { title: "Orchestration", icon: Rocket, items: ["cean", "cloudflare", "fleet_manager", "autonomy", "tasks", "workflow-engine", "swarm-panel", "tool-discovery", "tools-manager", "crawl4ai", "harvest-pipeline"] } );
+  navigationRegistry.registerGroup( { title: "Orchestration", icon: Rocket, items: ["cean", "cloudflare", "fleet_manager", "autonomy", "tasks", "workflow-engine", "swarm-panel", "tool-discovery", "tools-manager", "crawl4ai", "harvest-pipeline", "openclaw-bridge"] } );
   navigationRegistry.registerGroup( { title: PROJECT_MGMT_NAV_GROUP.title, icon: FileText, items: [...PROJECT_MGMT_NAV_GROUP.items] } );
   navigationRegistry.registerGroup( { title: "System", icon: Settings, items: ["python-workers", "files", "guardrails", "telemetry", "llm-observability", "security-panel", "chrome-acp", "settings", "n8n", "langflow", "remote-console", "admin-check", "trace-viewer", "log-viewer", "audit-log", "hook-monitor", "model-router", "scheduled-tasks", "vector-stats"] } );
 

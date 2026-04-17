@@ -13,8 +13,8 @@
 ### 2026-04-17 03:05 - OpenClaw runtime scaffold + dashboard/API bridge
 **Feladat:** OpenClaw runtime contracts, config, policy, gateway, dispatcher, safe snapshot runtime, API status/preview routes, dashboard panel és CLI helper handlerek hozzáadása, valamint a hozzájuk tartozó tesztek.
 **Érintett fájlok:** src/integrations/openclaw/contracts.ts, src/integrations/openclaw/config.ts, src/integrations/openclaw/errors.ts, src/integrations/openclaw/policyTranslator.ts, src/integrations/openclaw/gatewayAdapter.ts, src/integrations/openclaw/dispatcher.ts, src/integrations/openclaw/index.ts, src/server/routes/openclaw.ts, src/server/routes/index.ts, src/dashboard/components/dashboard/OpenClawIntegrationPanel.tsx, src/dashboard/components/dashboard/OpenClawIntegrationPanel.test.tsx, src/dashboard/lib/navigation.tsx, src/cli/openclawCommands.ts, test/openclaw/openclawConfig.test.ts, test/openclaw/openclawPolicy.test.ts, test/openclaw/openclawGatewayAdapter.test.ts, test/openclaw/openclawDispatcher.test.ts, test/openclaw/openclawRuntime.test.ts
-**Státusz:** ⏳ Folyamatban
-**Megjegyzés:** A core runtime már összeállt, a status/preview route és a dashboard nézet is megvan. A main CLI entrypoint még ellenőrzésre vár, de a framework-agnosztikus CLI handlerek elkészültek, így a kötés később kis diff-fel megtehető.
+**Státusz:** ✅ Befejezve
+**Megjegyzés:** A core runtime, a status/preview route, a dashboard nézet és a CLI bekötés is elkészült. A validáció zöld: `npx vitest run test/openclaw/*.test.ts` sikeres, `npm run build:ui` sikeres, `npm run build` sikeres.
 
 ### 2026-04-17 01:51 - Mai változások dokumentálása
 **Feladat:** A mai munkát összegyűjtöttem a releváns dokumentumokba, beleértve a `.ai/copilot.md` session logot, majd előkészítettem a végleges commitot és push-t.
