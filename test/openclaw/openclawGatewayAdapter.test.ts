@@ -303,7 +303,7 @@ describe('OpenClaw gateway adapter', () => {
     const adapter = new HttpOpenClawGatewayAdapter(buildConfig({
       baseUrl: 'https://openclaw.example.com',
       retryCount: 1,
-      retryDelayMs: 1,
+      retryDelayMs: 0,
     }), {
       fetchImpl: fetchMock as unknown as typeof fetch,
     });

@@ -324,5 +324,31 @@ describe('OpenClaw policy translation', () => {
     expect(mapApprovalStateToDispatchStatus('denied', true)).toBe('blocked');
     expect(mapApprovalStateToDispatchStatus('skipped', true)).toBe('dry_run');
     expect(mapApprovalStateToDispatchStatus('pending', false)).toBe('blocked');
+    expect(mapApprovalStateToDispatchStatus('not_required' as never, false)).toBe('failed');
+  });
+
+  it('falls back to goal metadata when execution correlation and track ids are missing', () => {
+    const goal = {
+      ...buildGoal(),
+      trackId: 'track-goal-only',
+      correlationId: 'goal-correlation-only',
+    };
+    const execution = {
+      ...buildExecution(),
+      trackId: undefined,
+      correlationId: undefined,
+    };
+
+    const decision = classifyOpenClawPolicy({
+      goal: goal as never,
+      execution: execution as never,
+    }, buildConfig());
+
+    const approvalRequest = buildOpenClawApprovalRequest({
+      goal: goal as never,
+      execution: execution as never,
+    }, decision);
+
+    expect(approvalRequest.correlationId).toBe(goal.correlationId);
   });
 });

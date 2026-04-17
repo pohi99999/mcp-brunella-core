@@ -108,4 +108,22 @@ describe('OpenClaw config loading', () => {
     expect(malformedConfig.enabled).toBe(false);
     expect(malformedConfig.agentAllowlists).toEqual({});
   });
+
+  it('parses explicit token refs and invalid timeout fields without breaking defaults', () => {
+    const config = loadOpenClawConfig({
+      env: {
+        OPENCLAW_API_KEY_REF: 'kv://openclaw/api-key',
+        OPENCLAW_TOKEN_REF: 'kv://openclaw/token',
+        OPENCLAW_TIMEOUT_MS: 'not-a-number',
+        OPENCLAW_RETRY_COUNT: '',
+        OPENCLAW_RETRY_DELAY_MS: 'NaN',
+      },
+    });
+
+    expect(config.apiKeyRef).toBe('kv://openclaw/api-key');
+    expect(config.tokenRef).toBe('kv://openclaw/token');
+    expect(config.timeoutMs).toBeGreaterThan(0);
+    expect(config.retryCount).toBeGreaterThanOrEqual(0);
+    expect(config.retryDelayMs).toBeGreaterThanOrEqual(0);
+  });
 });

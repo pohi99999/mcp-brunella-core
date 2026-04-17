@@ -100,7 +100,6 @@ function buildMixedEvidenceGatewayResponse() {
       sources: [
         'https://example.com/one',
         {
-          id: 'source-2',
           url: 'https://example.com/two',
           label: 'Two',
           note: 'secondary',
@@ -109,7 +108,6 @@ function buildMixedEvidenceGatewayResponse() {
       artifacts: [
         'dist/output.txt',
         {
-          id: 'artifact-2',
           path: 'dist/bundle.js',
           kind: 'bundle',
           checksum: 'abc123',
@@ -119,7 +117,6 @@ function buildMixedEvidenceGatewayResponse() {
       logs: [
         'string log entry',
         {
-          id: 'log-2',
           level: 'warn',
           message: 'structured log entry',
           timestamp: '2026-04-17T00:05:00.000Z',
@@ -132,7 +129,6 @@ function buildMixedEvidenceGatewayResponse() {
       diffs: [
         'src/index.ts',
         {
-          id: 'diff-2',
           path: 'src/other.ts',
           changeType: 'added',
           summary: 'new file',
@@ -142,7 +138,6 @@ function buildMixedEvidenceGatewayResponse() {
       testResults: [
         'vitest smoke',
         {
-          id: 'test-2',
           name: 'jest',
           passed: false,
           summary: 'failed',
@@ -154,6 +149,57 @@ function buildMixedEvidenceGatewayResponse() {
     },
     warnings: [],
     receivedAt: '2026-04-17T00:05:00.000Z',
+  });
+}
+
+function buildIdentifiedEvidenceGatewayResponse() {
+  return OpenClawGatewayResponseSchema.parse({
+    runId: 'run-6',
+    status: 'completed',
+    output: {
+      sources: [
+        {
+          id: 'source-identified',
+          url: 'https://example.com/source',
+          label: 'Source',
+        },
+      ],
+      artifacts: [
+        {
+          id: 'artifact-identified',
+          path: 'dist/identified.txt',
+          kind: 'file',
+          checksum: 'def456',
+        },
+      ],
+      logs: [
+        {
+          id: 'log-identified',
+          level: 'debug',
+          message: 'identified log entry',
+          timestamp: '2026-04-17T00:09:00.000Z',
+        },
+      ],
+      diffs: [
+        {
+          id: 'diff-identified',
+          path: 'src/identified.ts',
+          changeType: 'modified',
+          summary: 'identified diff',
+        },
+      ],
+      testResults: [
+        {
+          id: 'test-identified',
+          name: 'identified suite',
+          passed: true,
+          summary: 'ok',
+        },
+      ],
+      confidence: 0.8,
+    },
+    warnings: [],
+    receivedAt: '2026-04-17T00:09:00.000Z',
   });
 }
 
@@ -261,6 +307,32 @@ describe('OpenClaw task dispatcher', () => {
     expect(OpenClawDispatchResultSchema.parse(result).status).toBe('success');
   });
 
+  it('fails when a directly dispatchable green task is rejected by the gateway', async () => {
+    const gateway = {
+      ...buildGatewayMock(),
+      dispatch: vi.fn(async () => {
+        throw new Error('direct dispatch exploded');
+      }),
+    };
+
+    const dispatcher = new OpenClawTaskDispatcher({
+      config: buildConfig(),
+      gateway: gateway as never,
+      logger: undefined,
+    });
+
+    const result = await dispatcher.dispatch({
+      goal: buildGoal(),
+      execution: buildExecution(),
+    });
+
+    expect(result.status).toBe('failed');
+    expect(result.approvalState).toBe('not_required');
+    expect(result.message).toBe('OpenClaw dispatch failed');
+    expect(result.error).toContain('direct dispatch exploded');
+    expect(gateway.dispatch).toHaveBeenCalledTimes(1);
+  });
+
   it('normalizes mixed evidence payloads from the gateway response', () => {
     const request = {
       goal: buildGoal(),
@@ -276,6 +348,21 @@ describe('OpenClaw task dispatcher', () => {
     expect(evidence.testResults).toHaveLength(2);
     expect(evidence.confidence).toBe(0.5);
     expect(evidence.metadata?.gatewayStatus).toBe('completed');
+  });
+
+  it('preserves explicit ids when the gateway payload already provides them', () => {
+    const request = {
+      goal: buildGoal(),
+      execution: buildExecution(),
+    };
+
+    const evidence = buildEvidenceFromGatewayResponse(request, buildIdentifiedEvidenceGatewayResponse(), false);
+
+    expect(evidence.sources[0]?.id).toBe('source-identified');
+    expect(evidence.artifacts[0]?.id).toBe('artifact-identified');
+    expect(evidence.logs[0]?.id).toBe('log-identified');
+    expect(evidence.diffs[0]?.id).toBe('diff-identified');
+    expect(evidence.testResults[0]?.id).toBe('test-identified');
   });
 
   it('preserves evidence already returned by the gateway', () => {
@@ -342,6 +429,40 @@ describe('OpenClaw task dispatcher', () => {
       }),
     });
 
+    expect(approvalService.requestApproval).toHaveBeenCalledTimes(1);
+    expect(gateway.dispatch).toHaveBeenCalledTimes(1);
+    expect(result.status).toBe('success');
+    expect(result.approvalState).toBe('approved');
+    expect(result.approvedBy).toBe('human-reviewer');
+  });
+
+  it('requests approval for green tasks that explicitly require approval', async () => {
+    const gateway = buildGatewayMock();
+    const approvalService = {
+      requestApproval: vi.fn(async (_request: OpenClawApprovalRequest): Promise<OpenClawApprovalDecision> => ({
+        approved: true,
+        reviewer: 'human-reviewer',
+        reason: 'explicit approval required',
+        decidedAt: '2026-04-17T00:02:00.000Z',
+      })),
+    };
+
+    const dispatcher = new OpenClawTaskDispatcher({
+      config: buildConfig(),
+      gateway,
+      approvalService,
+      logger: undefined,
+    });
+
+    const result = await dispatcher.dispatch({
+      goal: buildGoal(),
+      execution: buildExecution({
+        requiresApproval: true,
+      }),
+    });
+
+    expect(result.policy.trustZone).toBe('green');
+    expect(result.policy.requiresApproval).toBe(true);
     expect(approvalService.requestApproval).toHaveBeenCalledTimes(1);
     expect(gateway.dispatch).toHaveBeenCalledTimes(1);
     expect(result.status).toBe('success');
