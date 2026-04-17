@@ -6,7 +6,6 @@
  * Analytics: Agent telemetry via BAS_ANALYTICS
  */
 
-import { Ai } from "@cloudflare/ai";
 import { safeJsonParse, applyPromptArmor } from './utils/aiHelpers.js';
 export { SwarmCoordinator } from "./swarmCoordinator.js";
 import { handleQueueBatch, enqueueTask, type TaskMessage } from "./queueHandler.js";
@@ -380,10 +379,14 @@ async function dispatchSmartDecision(
   }
 
   if (decision.target === "cf_ai_gateway") {
-    const ai = new Ai(env.AI);
+    const binding = env.AI as { run?: (model: string, input: Record<string, unknown>) => Promise<unknown> };
+    if (typeof binding.run !== "function") {
+      throw new Error("Cloudflare AI binding does not expose run()");
+    }
+
     const model = pickString(payload.model, env.FAST_MODEL, env.DEFAULT_CODE_MODEL) || env.FAST_MODEL;
     const prompt = pickString(payload.prompt, payload.instruction, payload.message, taskMeta.type) || taskMeta.type;
-    const aiResult = await ai.run(model as never, { prompt } as never);
+    const aiResult = await binding.run(model, { prompt });
     return { requestId, result: aiResult };
   }
 
