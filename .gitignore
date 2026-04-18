@@ -208,3 +208,9 @@ archive/test-artifacts/
 
 # CLI-Anything (üres, generált fájl)
 CLI-Anything
+
+# gemini-cli settings
+.gemini/
+
+# GitHub App credentials
+gha-creds-*.json
