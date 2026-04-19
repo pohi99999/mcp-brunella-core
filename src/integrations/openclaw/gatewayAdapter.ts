@@ -1,4 +1,3 @@
-import { randomUUID } from 'crypto';
 import { Logger } from '../../utils/logger.js';
 import { OpenClawConfig, OpenClawGatewayRequest, OpenClawGatewayRequestSchema, OpenClawGatewayResponse, OpenClawGatewayResponseSchema, OpenClawStatusSnapshot, OpenClawStatusSnapshotSchema } from './contracts.js';
 import { OpenClawConfigError, OpenClawError, OpenClawGatewayError, OpenClawUnconfiguredError, normalizeOpenClawError } from './errors.js';
