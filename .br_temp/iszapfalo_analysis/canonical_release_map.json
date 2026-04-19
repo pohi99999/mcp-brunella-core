@@ -1,0 +1,1400 @@
+[
+  {
+    "canonicalKey": "airtable_calendar_feladat",
+    "chosen": {
+      "path": "2. ezeket a workflow-at már mi csináltuk vagy javítottuk az Iszapfalónak betötés!\\IMPORT_READY_PACK_2026_03_13 n8n workflow\\03_airtable_google_calendar_feladat_keszito.json",
+      "size": 38788,
+      "name": "Airtable - Google Calendar feladat készítő",
+      "nodeCount": 6,
+      "nodeTypesTop": [
+        [
+          "n8n-nodes-base.gmailTrigger",
+          1
+        ],
+        [
+          "@n8n/n8n-nodes-langchain.anthropic",
+          1
+        ],
+        [
+          "n8n-nodes-base.airtable",
+          1
+        ],
+        [
+          "n8n-nodes-base.switch",
+          1
+        ],
+        [
+          "n8n-nodes-base.code",
+          1
+        ],
+        [
+          "n8n-nodes-base.googleCalendar",
+          1
+        ]
+      ],
+      "triggers": [
+        "n8n-nodes-base.gmailTrigger"
+      ],
+      "credentials": [
+        "airtableTokenApi",
+        "anthropicApi",
+        "googleCalendarOAuth2Api"
+      ]
+    },
+    "alternatives": [
+      {
+        "path": "2. ezeket a workflow-at már mi csináltuk vagy javítottuk az Iszapfalónak betötés!\\IMPLEMENTED_2026_03_13 n8n workflow\\Airtable - Google Calendar feladat készítő.json",
+        "size": 38788,
+        "name": "Airtable - Google Calendar feladat készítő",
+        "nodeCount": 6,
+        "nodeTypesTop": [
+          [
+            "n8n-nodes-base.gmailTrigger",
+            1
+          ],
+          [
+            "@n8n/n8n-nodes-langchain.anthropic",
+            1
+          ],
+          [
+            "n8n-nodes-base.airtable",
+            1
+          ],
+          [
+            "n8n-nodes-base.switch",
+            1
+          ],
+          [
+            "n8n-nodes-base.code",
+            1
+          ],
+          [
+            "n8n-nodes-base.googleCalendar",
+            1
+          ]
+        ],
+        "triggers": [
+          "n8n-nodes-base.gmailTrigger"
+        ],
+        "credentials": [
+          "airtableTokenApi",
+          "anthropicApi",
+          "googleCalendarOAuth2Api"
+        ]
+      },
+      {
+        "path": "1. Legfontosabb, megrendelő leírása nekünk ez az SOS, és ezekhez tartozó workflow-k\\Airtable - Google Calendar feladat készítő.json",
+        "size": 38938,
+        "name": "Airtable - Google Calendar feladat készítő",
+        "nodeCount": 6,
+        "nodeTypesTop": [
+          [
+            "n8n-nodes-base.gmailTrigger",
+            1
+          ],
+          [
+            "@n8n/n8n-nodes-langchain.anthropic",
+            1
+          ],
+          [
+            "n8n-nodes-base.airtable",
+            1
+          ],
+          [
+            "n8n-nodes-base.switch",
+            1
+          ],
+          [
+            "n8n-nodes-base.code",
+            1
+          ],
+          [
+            "n8n-nodes-base.googleCalendar",
+            1
+          ]
+        ],
+        "triggers": [
+          "n8n-nodes-base.gmailTrigger"
+        ],
+        "credentials": [
+          "airtableTokenApi",
+          "anthropicApi",
+          "gmailOAuth2",
+          "googleCalendarOAuth2Api"
+        ]
+      }
+    ],
+    "sourceRank": 1
+  },
+  {
+    "canonicalKey": "calendar_airtable_szinkron",
+    "chosen": {
+      "path": "2. ezeket a workflow-at már mi csináltuk vagy javítottuk az Iszapfalónak betötés!\\IMPORT_READY_PACK_2026_03_13 n8n workflow\\04_google_calendar_airtable_szinkron.json",
+      "size": 6744,
+      "name": "Iszapfaló - Google Calendar → Airtable Szinkron",
+      "nodeCount": 6,
+      "nodeTypesTop": [
+        [
+          "n8n-nodes-base.airtable",
+          2
+        ],
+        [
+          "n8n-nodes-base.googleCalendarTrigger",
+          1
+        ],
+        [
+          "n8n-nodes-base.if",
+          1
+        ],
+        [
+          "n8n-nodes-base.code",
+          1
+        ],
+        [
+          "n8n-nodes-base.telegram",
+          1
+        ]
+      ],
+      "triggers": [
+        "n8n-nodes-base.googleCalendarTrigger"
+      ],
+      "credentials": [
+        "airtableTokenApi",
+        "googleCalendarOAuth2Api"
+      ]
+    },
+    "alternatives": [
+      {
+        "path": "2. ezeket a workflow-at már mi csináltuk vagy javítottuk az Iszapfalónak betötés!\\IMPLEMENTED_2026_03_13 n8n workflow\\Iszapfaló - Google Calendar → Airtable Szinkron.json",
+        "size": 6744,
+        "name": "Iszapfaló - Google Calendar → Airtable Szinkron",
+        "nodeCount": 6,
+        "nodeTypesTop": [
+          [
+            "n8n-nodes-base.airtable",
+            2
+          ],
+          [
+            "n8n-nodes-base.googleCalendarTrigger",
+            1
+          ],
+          [
+            "n8n-nodes-base.if",
+            1
+          ],
+          [
+            "n8n-nodes-base.code",
+            1
+          ],
+          [
+            "n8n-nodes-base.telegram",
+            1
+          ]
+        ],
+        "triggers": [
+          "n8n-nodes-base.googleCalendarTrigger"
+        ],
+        "credentials": [
+          "airtableTokenApi",
+          "googleCalendarOAuth2Api"
+        ]
+      }
+    ],
+    "sourceRank": 1
+  },
+  {
+    "canonicalKey": "feladat_status_telegram",
+    "chosen": {
+      "path": "2. ezeket a workflow-at már mi csináltuk vagy javítottuk az Iszapfalónak betötés!\\IMPORT_READY_PACK_2026_03_13 n8n workflow\\01_feladat_status_telegram_chat.json",
+      "size": 27920,
+      "name": "Feladatok státuszállítás telegram chat",
+      "nodeCount": 20,
+      "nodeTypesTop": [
+        [
+          "n8n-nodes-base.code",
+          3
+        ],
+        [
+          "n8n-nodes-base.stickyNote",
+          3
+        ],
+        [
+          "n8n-nodes-base.airtableTool",
+          2
+        ],
+        [
+          "n8n-nodes-base.gmail",
+          1
+        ],
+        [
+          "n8n-nodes-base.googleDrive",
+          1
+        ],
+        [
+          "n8n-nodes-base.airtable",
+          1
+        ],
+        [
+          "@n8n/n8n-nodes-langchain.anthropic",
+          1
+        ],
+        [
+          "n8n-nodes-base.limit",
+          1
+        ],
+        [
+          "n8n-nodes-base.scheduleTrigger",
+          1
+        ],
+        [
+          "n8n-nodes-base.if",
+          1
+        ],
+        [
+          "n8n-nodes-base.telegramTrigger",
+          1
+        ],
+        [
+          "@n8n/n8n-nodes-langchain.agent",
+          1
+        ]
+      ],
+      "triggers": [
+        "n8n-nodes-base.scheduleTrigger",
+        "n8n-nodes-base.telegramTrigger"
+      ],
+      "credentials": [
+        "airtableTokenApi",
+        "anthropicApi"
+      ]
+    },
+    "alternatives": [
+      {
+        "path": "2. ezeket a workflow-at már mi csináltuk vagy javítottuk az Iszapfalónak betötés!\\IMPLEMENTED_2026_03_13 n8n workflow\\Feladatok státuszállítás telegram chat.json",
+        "size": 27920,
+        "name": "Feladatok státuszállítás telegram chat",
+        "nodeCount": 20,
+        "nodeTypesTop": [
+          [
+            "n8n-nodes-base.code",
+            3
+          ],
+          [
+            "n8n-nodes-base.stickyNote",
+            3
+          ],
+          [
+            "n8n-nodes-base.airtableTool",
+            2
+          ],
+          [
+            "n8n-nodes-base.gmail",
+            1
+          ],
+          [
+            "n8n-nodes-base.googleDrive",
+            1
+          ],
+          [
+            "n8n-nodes-base.airtable",
+            1
+          ],
+          [
+            "@n8n/n8n-nodes-langchain.anthropic",
+            1
+          ],
+          [
+            "n8n-nodes-base.limit",
+            1
+          ],
+          [
+            "n8n-nodes-base.scheduleTrigger",
+            1
+          ],
+          [
+            "n8n-nodes-base.if",
+            1
+          ],
+          [
+            "n8n-nodes-base.telegramTrigger",
+            1
+          ],
+          [
+            "@n8n/n8n-nodes-langchain.agent",
+            1
+          ]
+        ],
+        "triggers": [
+          "n8n-nodes-base.scheduleTrigger",
+          "n8n-nodes-base.telegramTrigger"
+        ],
+        "credentials": [
+          "airtableTokenApi",
+          "anthropicApi"
+        ]
+      },
+      {
+        "path": "1. Legfontosabb, megrendelő leírása nekünk ez az SOS, és ezekhez tartozó workflow-k\\Feladatok státuszállítás telegram chat.json",
+        "size": 14200,
+        "name": "Feladatok státuszállítás telegram chat",
+        "nodeCount": 7,
+        "nodeTypesTop": [
+          [
+            "n8n-nodes-base.airtableTool",
+            2
+          ],
+          [
+            "n8n-nodes-base.telegramTrigger",
+            1
+          ],
+          [
+            "@n8n/n8n-nodes-langchain.agent",
+            1
+          ],
+          [
+            "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+            1
+          ],
+          [
+            "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+            1
+          ],
+          [
+            "n8n-nodes-base.telegram",
+            1
+          ]
+        ],
+        "triggers": [
+          "n8n-nodes-base.telegramTrigger"
+        ],
+        "credentials": [
+          "airtableTokenApi",
+          "anthropicApi",
+          "telegramApi"
+        ]
+      }
+    ],
+    "sourceRank": 1
+  },
+  {
+    "canonicalKey": "iszapfaló - ai agent asszisztens v2",
+    "chosen": {
+      "path": "2. ezeket a workflow-at már mi csináltuk vagy javítottuk az Iszapfalónak betötés!\\IMPORT_READY_PACK_2026_03_13 n8n workflow\\02_ai_agent_asszisztens_v2_javitott.json",
+      "size": 17985,
+      "name": "Iszapfaló - AI Agent Asszisztens (v2 - Javított)",
+      "nodeCount": 10,
+      "nodeTypesTop": [
+        [
+          "n8n-nodes-base.airtableTool",
+          4
+        ],
+        [
+          "n8n-nodes-base.telegramTrigger",
+          1
+        ],
+        [
+          "@n8n/n8n-nodes-langchain.agent",
+          1
+        ],
+        [
+          "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+          1
+        ],
+        [
+          "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+          1
+        ],
+        [
+          "n8n-nodes-base.googleCalendarTool",
+          1
+        ],
+        [
+          "n8n-nodes-base.telegram",
+          1
+        ]
+      ],
+      "triggers": [
+        "n8n-nodes-base.telegramTrigger"
+      ],
+      "credentials": [
+        "airtableTokenApi",
+        "anthropicApi",
+        "googleCalendarOAuth2Api",
+        "telegramApi"
+      ]
+    },
+    "alternatives": [],
+    "sourceRank": 1
+  },
+  {
+    "canonicalKey": "iszapfaló - heti emlékeztető",
+    "chosen": {
+      "path": "2. ezeket a workflow-at már mi csináltuk vagy javítottuk az Iszapfalónak betötés!\\IMPORT_READY_PACK_2026_03_13 n8n workflow\\05_heti_emlekezteto_csutortok_1600.json",
+      "size": 6642,
+      "name": "Iszapfaló - Heti Emlékeztető (Csütörtök 16:00)",
+      "nodeCount": 6,
+      "nodeTypesTop": [
+        [
+          "n8n-nodes-base.airtable",
+          2
+        ],
+        [
+          "n8n-nodes-base.code",
+          2
+        ],
+        [
+          "n8n-nodes-base.cron",
+          1
+        ],
+        [
+          "n8n-nodes-base.telegram",
+          1
+        ]
+      ],
+      "triggers": [
+        "n8n-nodes-base.cron"
+      ],
+      "credentials": [
+        "airtableTokenApi"
+      ]
+    },
+    "alternatives": [],
+    "sourceRank": 1
+  },
+  {
+    "canonicalKey": "iszapfaló - telegram parancsok",
+    "chosen": {
+      "path": "2. ezeket a workflow-at már mi csináltuk vagy javítottuk az Iszapfalónak betötés!\\IMPORT_READY_PACK_2026_03_13 n8n workflow\\06_telegram_parancsok_statusz_het.json",
+      "size": 9855,
+      "name": "Iszapfaló - Telegram Parancsok (/statusz, /het)",
+      "nodeCount": 8,
+      "nodeTypesTop": [
+        [
+          "n8n-nodes-base.airtable",
+          2
+        ],
+        [
+          "n8n-nodes-base.code",
+          2
+        ],
+        [
+          "n8n-nodes-base.telegram",
+          2
+        ],
+        [
+          "n8n-nodes-base.telegramTrigger",
+          1
+        ],
+        [
+          "n8n-nodes-base.switch",
+          1
+        ]
+      ],
+      "triggers": [
+        "n8n-nodes-base.telegramTrigger"
+      ],
+      "credentials": [
+        "airtableTokenApi",
+        "telegramApi"
+      ]
+    },
+    "alternatives": [],
+    "sourceRank": 1
+  },
+  {
+    "canonicalKey": "kimeno_ajanlatok_dokumentumok",
+    "chosen": {
+      "path": "2. ezeket a workflow-at már mi csináltuk vagy javítottuk az Iszapfalónak betötés!\\IMPORT_READY_PACK_2026_03_13 n8n workflow\\08_kimeno_ajanlatok_dokumentumok.json",
+      "size": 5509,
+      "name": "Kimenő ajánlatok/dokumentumok",
+      "nodeCount": 8,
+      "nodeTypesTop": [
+        [
+          "n8n-nodes-base.code",
+          3
+        ],
+        [
+          "n8n-nodes-base.gmailTrigger",
+          1
+        ],
+        [
+          "n8n-nodes-base.extractFromFile",
+          1
+        ],
+        [
+          "n8n-nodes-base.manualTrigger",
+          1
+        ],
+        [
+          "n8n-nodes-base.gmail",
+          1
+        ],
+        [
+          "n8n-nodes-base.stickyNote",
+          1
+        ]
+      ],
+      "triggers": [
+        "n8n-nodes-base.gmailTrigger",
+        "n8n-nodes-base.manualTrigger"
+      ],
+      "credentials": []
+    },
+    "alternatives": [
+      {
+        "path": "2. ezeket a workflow-at már mi csináltuk vagy javítottuk az Iszapfalónak betötés!\\IMPLEMENTED_2026_03_13 n8n workflow\\Kimenő ajánlatok_dokumentumok.json",
+        "size": 5509,
+        "name": "Kimenő ajánlatok/dokumentumok",
+        "nodeCount": 8,
+        "nodeTypesTop": [
+          [
+            "n8n-nodes-base.code",
+            3
+          ],
+          [
+            "n8n-nodes-base.gmailTrigger",
+            1
+          ],
+          [
+            "n8n-nodes-base.extractFromFile",
+            1
+          ],
+          [
+            "n8n-nodes-base.manualTrigger",
+            1
+          ],
+          [
+            "n8n-nodes-base.gmail",
+            1
+          ],
+          [
+            "n8n-nodes-base.stickyNote",
+            1
+          ]
+        ],
+        "triggers": [
+          "n8n-nodes-base.gmailTrigger",
+          "n8n-nodes-base.manualTrigger"
+        ],
+        "credentials": []
+      },
+      {
+        "path": "1. Legfontosabb, megrendelő leírása nekünk ez az SOS, és ezekhez tartozó workflow-k\\Kimenő ajánlatok_dokumentumok.json",
+        "size": 5914,
+        "name": "Kimenő ajánlatok/dokumentumok",
+        "nodeCount": 8,
+        "nodeTypesTop": [
+          [
+            "n8n-nodes-base.code",
+            3
+          ],
+          [
+            "n8n-nodes-base.gmailTrigger",
+            1
+          ],
+          [
+            "n8n-nodes-base.extractFromFile",
+            1
+          ],
+          [
+            "n8n-nodes-base.manualTrigger",
+            1
+          ],
+          [
+            "n8n-nodes-base.gmail",
+            1
+          ],
+          [
+            "n8n-nodes-base.stickyNote",
+            1
+          ]
+        ],
+        "triggers": [
+          "n8n-nodes-base.gmailTrigger",
+          "n8n-nodes-base.manualTrigger"
+        ],
+        "credentials": [
+          "gmailOAuth2"
+        ]
+      }
+    ],
+    "sourceRank": 1
+  },
+  {
+    "canonicalKey": "telegram hangvezérlés - teljes rendszer",
+    "chosen": {
+      "path": "2. ezeket a workflow-at már mi csináltuk vagy javítottuk az Iszapfalónak betötés!\\IMPORT_READY_PACK_2026_03_13 n8n workflow\\07_telegram_hangvezerles_teljes_rendszer.json",
+      "size": 13045,
+      "name": "Telegram Hangvezérlés - Teljes Rendszer",
+      "nodeCount": 9,
+      "nodeTypesTop": [
+        [
+          "n8n-nodes-base.openai",
+          2
+        ],
+        [
+          "n8n-nodes-base.telegramTrigger",
+          1
+        ],
+        [
+          "n8n-nodes-base.httpRequest",
+          1
+        ],
+        [
+          "@n8n/n8n-nodes-langchain.agent",
+          1
+        ],
+        [
+          "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+          1
+        ],
+        [
+          "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+          1
+        ],
+        [
+          "n8n-nodes-base.telegram",
+          1
+        ],
+        [
+          "n8n-nodes-base.airtable",
+          1
+        ]
+      ],
+      "triggers": [
+        "n8n-nodes-base.telegramTrigger"
+      ],
+      "credentials": [
+        "airtableTokenApi",
+        "anthropicApi"
+      ]
+    },
+    "alternatives": [
+      {
+        "path": "2. ezeket a workflow-at már mi csináltuk vagy javítottuk az Iszapfalónak betötés!\\IMPLEMENTED_2026_03_13 n8n workflow\\Telegram Hangvezérlés - Teljes Rendszer.json",
+        "size": 13045,
+        "name": "Telegram Hangvezérlés - Teljes Rendszer",
+        "nodeCount": 9,
+        "nodeTypesTop": [
+          [
+            "n8n-nodes-base.openai",
+            2
+          ],
+          [
+            "n8n-nodes-base.telegramTrigger",
+            1
+          ],
+          [
+            "n8n-nodes-base.httpRequest",
+            1
+          ],
+          [
+            "@n8n/n8n-nodes-langchain.agent",
+            1
+          ],
+          [
+            "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+            1
+          ],
+          [
+            "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+            1
+          ],
+          [
+            "n8n-nodes-base.telegram",
+            1
+          ],
+          [
+            "n8n-nodes-base.airtable",
+            1
+          ]
+        ],
+        "triggers": [
+          "n8n-nodes-base.telegramTrigger"
+        ],
+        "credentials": [
+          "airtableTokenApi",
+          "anthropicApi"
+        ]
+      }
+    ],
+    "sourceRank": 1
+  },
+  {
+    "canonicalKey": "ai_agent_asszisztens_v2",
+    "chosen": {
+      "path": "2. ezeket a workflow-at már mi csináltuk vagy javítottuk az Iszapfalónak betötés!\\IMPLEMENTED_2026_03_13 n8n workflow\\Iszapfaló - AI Agent Asszisztens (v2 - Javított).json",
+      "size": 17985,
+      "name": "Iszapfaló - AI Agent Asszisztens (v2 - Javított)",
+      "nodeCount": 10,
+      "nodeTypesTop": [
+        [
+          "n8n-nodes-base.airtableTool",
+          4
+        ],
+        [
+          "n8n-nodes-base.telegramTrigger",
+          1
+        ],
+        [
+          "@n8n/n8n-nodes-langchain.agent",
+          1
+        ],
+        [
+          "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+          1
+        ],
+        [
+          "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+          1
+        ],
+        [
+          "n8n-nodes-base.googleCalendarTool",
+          1
+        ],
+        [
+          "n8n-nodes-base.telegram",
+          1
+        ]
+      ],
+      "triggers": [
+        "n8n-nodes-base.telegramTrigger"
+      ],
+      "credentials": [
+        "airtableTokenApi",
+        "anthropicApi",
+        "googleCalendarOAuth2Api",
+        "telegramApi"
+      ]
+    },
+    "alternatives": [
+      {
+        "path": "IMPORTRA_KESZ\\Iszapfalo - AI Agent Asszisztens (v2 - Javitott).json",
+        "size": 42139,
+        "name": null,
+        "nodeCount": 10,
+        "nodeTypesTop": [
+          [
+            "n8n-nodes-base.airtableTool",
+            4
+          ],
+          [
+            "n8n-nodes-base.telegramTrigger",
+            1
+          ],
+          [
+            "@n8n/n8n-nodes-langchain.agent",
+            1
+          ],
+          [
+            "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+            1
+          ],
+          [
+            "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+            1
+          ],
+          [
+            "n8n-nodes-base.googleCalendarTool",
+            1
+          ],
+          [
+            "n8n-nodes-base.telegram",
+            1
+          ]
+        ],
+        "triggers": [
+          "n8n-nodes-base.telegramTrigger"
+        ],
+        "credentials": [
+          "airtableTokenApi",
+          "anthropicApi",
+          "googleCalendarOAuth2Api",
+          "telegramApi"
+        ]
+      }
+    ],
+    "sourceRank": 2
+  },
+  {
+    "canonicalKey": "heti_emlekezteto",
+    "chosen": {
+      "path": "2. ezeket a workflow-at már mi csináltuk vagy javítottuk az Iszapfalónak betötés!\\IMPLEMENTED_2026_03_13 n8n workflow\\Iszapfaló - Heti Emlékeztető (Csütörtök 16_00).json",
+      "size": 6642,
+      "name": "Iszapfaló - Heti Emlékeztető (Csütörtök 16:00)",
+      "nodeCount": 6,
+      "nodeTypesTop": [
+        [
+          "n8n-nodes-base.airtable",
+          2
+        ],
+        [
+          "n8n-nodes-base.code",
+          2
+        ],
+        [
+          "n8n-nodes-base.cron",
+          1
+        ],
+        [
+          "n8n-nodes-base.telegram",
+          1
+        ]
+      ],
+      "triggers": [
+        "n8n-nodes-base.cron"
+      ],
+      "credentials": [
+        "airtableTokenApi"
+      ]
+    },
+    "alternatives": [
+      {
+        "path": "IMPORTRA_KESZ\\Iszapfalo - Heti Emlekeztetö (Csütörtök 16.00).json",
+        "size": 14209,
+        "name": null,
+        "nodeCount": 6,
+        "nodeTypesTop": [
+          [
+            "n8n-nodes-base.airtable",
+            2
+          ],
+          [
+            "n8n-nodes-base.code",
+            2
+          ],
+          [
+            "n8n-nodes-base.cron",
+            1
+          ],
+          [
+            "n8n-nodes-base.telegram",
+            1
+          ]
+        ],
+        "triggers": [
+          "n8n-nodes-base.cron"
+        ],
+        "credentials": [
+          "airtableTokenApi",
+          "telegramApi"
+        ]
+      }
+    ],
+    "sourceRank": 2
+  },
+  {
+    "canonicalKey": "telegram_parancsok",
+    "chosen": {
+      "path": "2. ezeket a workflow-at már mi csináltuk vagy javítottuk az Iszapfalónak betötés!\\IMPLEMENTED_2026_03_13 n8n workflow\\Iszapfaló - Telegram Parancsok (_statusz, _het).json",
+      "size": 9855,
+      "name": "Iszapfaló - Telegram Parancsok (/statusz, /het)",
+      "nodeCount": 8,
+      "nodeTypesTop": [
+        [
+          "n8n-nodes-base.airtable",
+          2
+        ],
+        [
+          "n8n-nodes-base.code",
+          2
+        ],
+        [
+          "n8n-nodes-base.telegram",
+          2
+        ],
+        [
+          "n8n-nodes-base.telegramTrigger",
+          1
+        ],
+        [
+          "n8n-nodes-base.switch",
+          1
+        ]
+      ],
+      "triggers": [
+        "n8n-nodes-base.telegramTrigger"
+      ],
+      "credentials": [
+        "airtableTokenApi",
+        "telegramApi"
+      ]
+    },
+    "alternatives": [
+      {
+        "path": "IMPORTRA_KESZ\\Iszapfalo - Telegram Parancsok (statusz, het).json",
+        "size": 23272,
+        "name": null,
+        "nodeCount": 8,
+        "nodeTypesTop": [
+          [
+            "n8n-nodes-base.airtable",
+            2
+          ],
+          [
+            "n8n-nodes-base.code",
+            2
+          ],
+          [
+            "n8n-nodes-base.telegram",
+            2
+          ],
+          [
+            "n8n-nodes-base.telegramTrigger",
+            1
+          ],
+          [
+            "n8n-nodes-base.switch",
+            1
+          ]
+        ],
+        "triggers": [
+          "n8n-nodes-base.telegramTrigger"
+        ],
+        "credentials": [
+          "airtableTokenApi",
+          "telegramApi"
+        ]
+      }
+    ],
+    "sourceRank": 2
+  },
+  {
+    "canonicalKey": "error_monitoring_logging",
+    "chosen": {
+      "path": "IMPORTRA_KESZ\\Iszapfalo - Error Monitoring es Logging.json",
+      "size": 48374,
+      "name": null,
+      "nodeCount": 23,
+      "nodeTypesTop": [
+        [
+          "n8n-nodes-base.airtable",
+          5
+        ],
+        [
+          "n8n-nodes-base.telegram",
+          4
+        ],
+        [
+          "n8n-nodes-base.code",
+          2
+        ],
+        [
+          "n8n-nodes-base.telegramTrigger",
+          1
+        ],
+        [
+          "n8n-nodes-base.set",
+          1
+        ],
+        [
+          "n8n-nodes-base.function",
+          1
+        ],
+        [
+          "n8n-nodes-base.switch",
+          1
+        ],
+        [
+          "@n8n/n8n-nodes-langchain.chatTrigger",
+          1
+        ],
+        [
+          "@n8n/n8n-nodes-langchain.chainLlm",
+          1
+        ],
+        [
+          "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+          1
+        ],
+        [
+          "n8n-nodes-base.googleCalendar",
+          1
+        ],
+        [
+          "n8n-nodes-base.webhook",
+          1
+        ]
+      ],
+      "triggers": [
+        "@n8n/n8n-nodes-langchain.chatTrigger",
+        "n8n-nodes-base.cron",
+        "n8n-nodes-base.respondToWebhook",
+        "n8n-nodes-base.telegramTrigger",
+        "n8n-nodes-base.webhook"
+      ],
+      "credentials": [
+        "airtableTokenApi",
+        "anthropicApi",
+        "googleCalendarOAuth2Api",
+        "telegramApi"
+      ]
+    },
+    "alternatives": [],
+    "sourceRank": 3
+  },
+  {
+    "canonicalKey": "geppark_karbantartas",
+    "chosen": {
+      "path": "IMPORTRA_KESZ\\Iszapfalo - Geppark Karbantartas (All-in-One).json",
+      "size": 15919,
+      "name": null,
+      "nodeCount": 7,
+      "nodeTypesTop": [
+        [
+          "n8n-nodes-base.webhook",
+          1
+        ],
+        [
+          "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+          1
+        ],
+        [
+          "@n8n/n8n-nodes-langchain.agent",
+          1
+        ],
+        [
+          "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+          1
+        ],
+        [
+          "n8n-nodes-base.code",
+          1
+        ],
+        [
+          "n8n-nodes-base.telegram",
+          1
+        ],
+        [
+          "@n8n/n8n-nodes-langchain.toolCode",
+          1
+        ]
+      ],
+      "triggers": [
+        "n8n-nodes-base.webhook"
+      ],
+      "credentials": [
+        "openAiApi",
+        "telegramApi"
+      ]
+    },
+    "alternatives": [],
+    "sourceRank": 3
+  },
+  {
+    "canonicalKey": "gmail_kategorizalo",
+    "chosen": {
+      "path": "IMPORTRA_KESZ\\Gmail kategorizáló.json",
+      "size": 95046,
+      "name": null,
+      "nodeCount": 40,
+      "nodeTypesTop": [
+        [
+          "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+          7
+        ],
+        [
+          "n8n-nodes-base.gmail",
+          5
+        ],
+        [
+          "n8n-nodes-base.stickyNote",
+          4
+        ],
+        [
+          "n8n-nodes-base.telegram",
+          3
+        ],
+        [
+          "@n8n/n8n-nodes-langchain.agent",
+          3
+        ],
+        [
+          "@n8n/n8n-nodes-langchain.guardrails",
+          2
+        ],
+        [
+          "@n8n/n8n-nodes-langchain.outputParserStructured",
+          2
+        ],
+        [
+          "n8n-nodes-base.splitOut",
+          2
+        ],
+        [
+          "n8n-nodes-base.gmailTool",
+          2
+        ],
+        [
+          "n8n-nodes-base.code",
+          2
+        ],
+        [
+          "n8n-nodes-base.merge",
+          2
+        ],
+        [
+          "n8n-nodes-base.set",
+          2
+        ]
+      ],
+      "triggers": [
+        "n8n-nodes-base.gmailTrigger",
+        "n8n-nodes-base.manualTrigger"
+      ],
+      "credentials": []
+    },
+    "alternatives": [
+      {
+        "path": "1. Legfontosabb, megrendelő leírása nekünk ez az SOS, és ezekhez tartozó workflow-k\\Gmail kategorizáló.json",
+        "size": 62151,
+        "name": "Gmail kategorizáló",
+        "nodeCount": 38,
+        "nodeTypesTop": [
+          [
+            "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+            5
+          ],
+          [
+            "n8n-nodes-base.gmail",
+            5
+          ],
+          [
+            "n8n-nodes-base.stickyNote",
+            4
+          ],
+          [
+            "n8n-nodes-base.telegram",
+            3
+          ],
+          [
+            "@n8n/n8n-nodes-langchain.agent",
+            3
+          ],
+          [
+            "@n8n/n8n-nodes-langchain.guardrails",
+            2
+          ],
+          [
+            "@n8n/n8n-nodes-langchain.outputParserStructured",
+            2
+          ],
+          [
+            "n8n-nodes-base.splitOut",
+            2
+          ],
+          [
+            "n8n-nodes-base.gmailTool",
+            2
+          ],
+          [
+            "n8n-nodes-base.code",
+            2
+          ],
+          [
+            "n8n-nodes-base.merge",
+            2
+          ],
+          [
+            "n8n-nodes-base.set",
+            2
+          ]
+        ],
+        "triggers": [
+          "n8n-nodes-base.gmailTrigger",
+          "n8n-nodes-base.manualTrigger"
+        ],
+        "credentials": [
+          "airtableTokenApi",
+          "anthropicApi",
+          "gmailOAuth2",
+          "telegramApi"
+        ]
+      }
+    ],
+    "sourceRank": 3
+  },
+  {
+    "canonicalKey": "workflow",
+    "chosen": {
+      "path": "IMPORTRA_KESZ\\workflow.json",
+      "size": 42139,
+      "name": null,
+      "nodeCount": 10,
+      "nodeTypesTop": [
+        [
+          "n8n-nodes-base.airtableTool",
+          4
+        ],
+        [
+          "n8n-nodes-base.telegramTrigger",
+          1
+        ],
+        [
+          "@n8n/n8n-nodes-langchain.agent",
+          1
+        ],
+        [
+          "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+          1
+        ],
+        [
+          "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+          1
+        ],
+        [
+          "n8n-nodes-base.googleCalendarTool",
+          1
+        ],
+        [
+          "n8n-nodes-base.telegram",
+          1
+        ]
+      ],
+      "triggers": [
+        "n8n-nodes-base.telegramTrigger"
+      ],
+      "credentials": [
+        "airtableTokenApi",
+        "anthropicApi",
+        "googleCalendarOAuth2Api",
+        "telegramApi"
+      ]
+    },
+    "alternatives": [],
+    "sourceRank": 3
+  },
+  {
+    "canonicalKey": "gmail - airtable kimenő ajánlat összeköttetés",
+    "chosen": {
+      "path": "1. Legfontosabb, megrendelő leírása nekünk ez az SOS, és ezekhez tartozó workflow-k\\Gmail - Airtable kimenő ajánlat összeköttetés.json",
+      "size": 14791,
+      "name": "Gmail - Airtable kimenő ajánlat összeköttetés",
+      "nodeCount": 13,
+      "nodeTypesTop": [
+        [
+          "n8n-nodes-base.code",
+          3
+        ],
+        [
+          "n8n-nodes-base.stickyNote",
+          3
+        ],
+        [
+          "n8n-nodes-base.gmail",
+          1
+        ],
+        [
+          "n8n-nodes-base.googleDrive",
+          1
+        ],
+        [
+          "n8n-nodes-base.airtable",
+          1
+        ],
+        [
+          "@n8n/n8n-nodes-langchain.anthropic",
+          1
+        ],
+        [
+          "n8n-nodes-base.limit",
+          1
+        ],
+        [
+          "n8n-nodes-base.scheduleTrigger",
+          1
+        ],
+        [
+          "n8n-nodes-base.if",
+          1
+        ]
+      ],
+      "triggers": [
+        "n8n-nodes-base.scheduleTrigger"
+      ],
+      "credentials": [
+        "airtableTokenApi",
+        "anthropicApi",
+        "gmailOAuth2",
+        "googleDriveOAuth2Api"
+      ]
+    },
+    "alternatives": [],
+    "sourceRank": 4
+  },
+  {
+    "canonicalKey": "ai_agent_workflow_proto",
+    "chosen": {
+      "path": "2. ezeket a workflow-at már mi csináltuk vagy javítottuk az Iszapfalónak betötés!\\mi csináltuk workflow\\pohi-workflows\\ztb2UOnE25b5aLQu-AI_Agent_workflow.json",
+      "size": 6870,
+      "name": "AI Agent workflow",
+      "nodeCount": 12,
+      "nodeTypesTop": [
+        [
+          "n8n-nodes-base.stickyNote",
+          4
+        ],
+        [
+          "n8n-nodes-base.rssFeedReadTool",
+          2
+        ],
+        [
+          "n8n-nodes-base.scheduleTrigger",
+          1
+        ],
+        [
+          "n8n-nodes-base.set",
+          1
+        ],
+        [
+          "n8n-nodes-base.manualTrigger",
+          1
+        ],
+        [
+          "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+          1
+        ],
+        [
+          "@n8n/n8n-nodes-langchain.agent",
+          1
+        ],
+        [
+          "n8n-nodes-base.gmail",
+          1
+        ]
+      ],
+      "triggers": [
+        "n8n-nodes-base.manualTrigger",
+        "n8n-nodes-base.scheduleTrigger"
+      ],
+      "credentials": [
+        "openAiApi"
+      ]
+    },
+    "alternatives": [],
+    "sourceRank": 5
+  },
+  {
+    "canonicalKey": "misc_workflow_proto",
+    "chosen": {
+      "path": "2. ezeket a workflow-at már mi csináltuk vagy javítottuk az Iszapfalónak betötés!\\mi csináltuk workflow\\pohi-workflows\\I_p5deBtbiA0eU6PMBDZY-My_workflow.json",
+      "size": 794,
+      "name": "My workflow",
+      "nodeCount": 1,
+      "nodeTypesTop": [
+        [
+          "n8n-nodes-base.telegramTrigger",
+          1
+        ]
+      ],
+      "triggers": [
+        "n8n-nodes-base.telegramTrigger"
+      ],
+      "credentials": [
+        "telegramApi"
+      ]
+    },
+    "alternatives": [],
+    "sourceRank": 5
+  }
+]

@@ -1,0 +1,1508 @@
+- generic [ref=e4]:
+  - generic [ref=e9]:
+    - generic [ref=e10]:
+      - generic [ref=e11]:
+        - generic [ref=e14]:
+          - link "Personal" [ref=e16] [cursor=pointer]:
+            - /url: /projects/johLSwPlUades2LG
+            - generic [ref=e18]:
+              - generic "Personal" [ref=e19]:
+                - img [ref=e20]
+              - generic [ref=e24]: Personal
+          - generic [ref=e25]: /
+          - generic "06 - ISZ Gmail Categorizel" [ref=e26]:
+            - generic [ref=e28] [cursor=pointer]: 06 - ISZ Gmail Categorizel
+        - generic [ref=e29]:
+          - generic [ref=e30]: + Add tag
+          - button "Edit workflow description" [ref=e33] [cursor=pointer]:
+            - img [ref=e35]
+        - generic [ref=e39]:
+          - generic [ref=e41] [cursor=pointer]:
+            - generic: 0 / 3
+          - generic [ref=e43]:
+            - generic [ref=e45]: Active
+            - generic "Deactivate workflow" [ref=e46]:
+              - switch [checked]
+          - button "Share" [ref=e50] [cursor=pointer]
+          - generic [ref=e51]:
+            - generic [ref=e53]: Saved
+            - link [ref=e54] [cursor=pointer]:
+              - /url: /workflow/LGvkbQNUm44UEoMi/history
+              - button [ref=e55]:
+                - img [ref=e57]
+          - button [ref=e64] [cursor=pointer]:
+            - img [ref=e66]
+      - iframe [ref=e74]:
+        - generic [ref=f74e2]:
+          - link "Star n8n-io/n8n on GitHub" [ref=f74e3] [cursor=pointer]:
+            - /url: https://github.com/n8n-io/n8n
+            - img [ref=f74e4]
+            - generic [ref=f74e6]: Star
+          - link "180047 stargazers on GitHub" [ref=f74e7] [cursor=pointer]:
+            - /url: https://github.com/n8n-io/n8n/stargazers
+            - text: 180,047
+    - radiogroup [ref=e76]:
+      - radio "Editor" [ref=e77]:
+        - generic [ref=e78] [cursor=pointer]: Editor
+      - radio "Executions" [checked] [ref=e79]:
+        - generic [ref=e80] [cursor=pointer]: Executions
+      - radio "Evaluations" [ref=e81]:
+        - generic [ref=e82] [cursor=pointer]: Evaluations
+  - generic [ref=e84]:
+    - img [ref=e86] [cursor=pointer]
+    - generic [ref=e88]:
+      - img [ref=e90]
+      - menubar [ref=e92]:
+        - menuitem [ref=e93]:
+          - button [ref=e95] [cursor=pointer]:
+            - img [ref=e97]
+    - generic [ref=e101]:
+      - generic [ref=e102]:
+        - generic [ref=e103]:
+          - menuitem [ref=e105] [cursor=pointer]:
+            - img [ref=e107]
+          - menuitem [ref=e112] [cursor=pointer]:
+            - img [ref=e114]
+          - menuitem [ref=e119] [cursor=pointer]:
+            - img [ref=e121]
+        - button [disabled] [ref=e124]:
+          - img [ref=e126]
+      - generic [ref=e129]:
+        - menuitem [ref=e131] [cursor=pointer]:
+          - img [ref=e133]
+        - menuitem [ref=e139] [cursor=pointer]:
+          - img [ref=e141]
+        - menuitem [ref=e146] [cursor=pointer]:
+          - img [ref=e148]
+    - generic [ref=e154] [cursor=pointer]:
+      - img [ref=e155]
+      - generic [ref=e160]: JP
+  - generic [ref=e161]:
+    - generic [ref=e162]:
+      - generic [ref=e163]:
+        - heading "Executions" [level=2] [ref=e164]
+        - generic [ref=e165]:
+          - generic [ref=e166]: No active executions
+          - img [ref=e167]
+      - generic [ref=e171]:
+        - generic [ref=e172] [cursor=pointer]:
+          - generic [ref=e173]:
+            - checkbox "Auto refresh" [checked]
+          - generic [ref=e175]: Auto refresh
+        - button [ref=e177] [cursor=pointer]:
+          - img [ref=e179]
+      - generic [ref=e181]:
+        - 'link "Mar 19, 21:30:28 Error in 33ms Retry of execution #1608" [ref=e183] [cursor=pointer]':
+          - /url: /workflow/LGvkbQNUm44UEoMi/executions/1610
+          - generic [ref=e184]:
+            - generic [ref=e185]: Mar 19, 21:30:28
+            - generic [ref=e186]:
+              - generic [ref=e187]: Error
+              - generic [ref=e188]: in 33ms
+            - generic [ref=e190]: "Retry of execution #1608"
+          - button [ref=e194]:
+            - img [ref=e196]
+        - link "Mar 19, 20:04:59 Error in 42ms" [ref=e201] [cursor=pointer]:
+          - /url: /workflow/LGvkbQNUm44UEoMi/executions/1609
+          - generic [ref=e202]:
+            - generic [ref=e203]: Mar 19, 20:04:59
+            - generic [ref=e204]:
+              - generic [ref=e205]: Error
+              - generic [ref=e206]: in 42ms
+          - button [ref=e210]:
+            - img [ref=e212]
+        - link "Mar 19, 19:22:37 Error in 40ms" [ref=e217] [cursor=pointer]:
+          - /url: /workflow/LGvkbQNUm44UEoMi/executions/1608
+          - generic [ref=e218]:
+            - generic [ref=e219]: Mar 19, 19:22:37
+            - generic [ref=e220]:
+              - generic [ref=e221]: Error
+              - generic [ref=e222]: in 40ms
+          - button [ref=e226]:
+            - img [ref=e228]
+        - link "Mar 19, 17:48:38 Error in 35ms" [ref=e233] [cursor=pointer]:
+          - /url: /workflow/LGvkbQNUm44UEoMi/executions/1607
+          - generic [ref=e234]:
+            - generic [ref=e235]: Mar 19, 17:48:38
+            - generic [ref=e236]:
+              - generic [ref=e237]: Error
+              - generic [ref=e238]: in 35ms
+          - button [ref=e242]:
+            - img [ref=e244]
+        - link "Mar 19, 17:17:31 Succeeded in 600ms" [ref=e249] [cursor=pointer]:
+          - /url: /workflow/LGvkbQNUm44UEoMi/executions/1606
+          - generic [ref=e250]:
+            - generic [ref=e251]: Mar 19, 17:17:31
+            - generic [ref=e252]:
+              - generic [ref=e253]: Succeeded
+              - generic [ref=e254]: in 600ms
+          - img [ref=e256]
+        - link "Mar 19, 17:16:37 Error in 35ms" [ref=e259] [cursor=pointer]:
+          - /url: /workflow/LGvkbQNUm44UEoMi/executions/1605
+          - generic [ref=e260]:
+            - generic [ref=e261]: Mar 19, 17:16:37
+            - generic [ref=e262]:
+              - generic [ref=e263]: Error
+              - generic [ref=e264]: in 35ms
+          - button [ref=e268]:
+            - img [ref=e270]
+        - link "Mar 19, 17:05:40 Error in 59ms" [ref=e275] [cursor=pointer]:
+          - /url: /workflow/LGvkbQNUm44UEoMi/executions/1604
+          - generic [ref=e276]:
+            - generic [ref=e277]: Mar 19, 17:05:40
+            - generic [ref=e278]:
+              - generic [ref=e279]: Error
+              - generic [ref=e280]: in 59ms
+          - button [ref=e284]:
+            - img [ref=e286]
+        - link "Mar 19, 15:27:33 Error in 39ms" [ref=e291] [cursor=pointer]:
+          - /url: /workflow/LGvkbQNUm44UEoMi/executions/1600
+          - generic [ref=e292]:
+            - generic [ref=e293]: Mar 19, 15:27:33
+            - generic [ref=e294]:
+              - generic [ref=e295]: Error
+              - generic [ref=e296]: in 39ms
+          - generic [ref=e297]:
+            - button [ref=e300]:
+              - img [ref=e302]
+            - img [ref=e306]
+        - link "Mar 19, 15:09:28 Error in 44ms" [ref=e309] [cursor=pointer]:
+          - /url: /workflow/LGvkbQNUm44UEoMi/executions/1599
+          - generic [ref=e310]:
+            - generic [ref=e311]: Mar 19, 15:09:28
+            - generic [ref=e312]:
+              - generic [ref=e313]: Error
+              - generic [ref=e314]: in 44ms
+          - generic [ref=e315]:
+            - button [ref=e318]:
+              - img [ref=e320]
+            - img [ref=e324]
+        - link "Mar 19, 14:44:29 Error in 37ms" [ref=e327] [cursor=pointer]:
+          - /url: /workflow/LGvkbQNUm44UEoMi/executions/1597
+          - generic [ref=e328]:
+            - generic [ref=e329]: Mar 19, 14:44:29
+            - generic [ref=e330]:
+              - generic [ref=e331]: Error
+              - generic [ref=e332]: in 37ms
+          - generic [ref=e333]:
+            - button [ref=e336]:
+              - img [ref=e338]
+            - img [ref=e342]
+        - link "Mar 19, 14:31:07 Error in 109ms" [ref=e345] [cursor=pointer]:
+          - /url: /workflow/LGvkbQNUm44UEoMi/executions/1596
+          - generic [ref=e346]:
+            - generic [ref=e347]: Mar 19, 14:31:07
+            - generic [ref=e348]:
+              - generic [ref=e349]: Error
+              - generic [ref=e350]: in 109ms
+          - generic [ref=e351]:
+            - button [ref=e354]:
+              - img [ref=e356]
+            - img [ref=e360]
+        - link "Mar 19, 14:18:55 Error in 34ms" [ref=e363] [cursor=pointer]:
+          - /url: /workflow/LGvkbQNUm44UEoMi/executions/1595
+          - generic [ref=e364]:
+            - generic [ref=e365]: Mar 19, 14:18:55
+            - generic [ref=e366]:
+              - generic [ref=e367]: Error
+              - generic [ref=e368]: in 34ms
+          - generic [ref=e369]:
+            - button [ref=e372]:
+              - img [ref=e374]
+            - img [ref=e378]
+        - link "Mar 19, 14:18:03 Error in 40ms" [ref=e381] [cursor=pointer]:
+          - /url: /workflow/LGvkbQNUm44UEoMi/executions/1594
+          - generic [ref=e382]:
+            - generic [ref=e383]: Mar 19, 14:18:03
+            - generic [ref=e384]:
+              - generic [ref=e385]: Error
+              - generic [ref=e386]: in 40ms
+          - generic [ref=e387]:
+            - button [ref=e390]:
+              - img [ref=e392]
+            - img [ref=e396]
+        - link "Mar 19, 14:14:07 Error in 49ms" [ref=e399] [cursor=pointer]:
+          - /url: /workflow/LGvkbQNUm44UEoMi/executions/1593
+          - generic [ref=e400]:
+            - generic [ref=e401]: Mar 19, 14:14:07
+            - generic [ref=e402]:
+              - generic [ref=e403]: Error
+              - generic [ref=e404]: in 49ms
+          - generic [ref=e405]:
+            - button [ref=e408]:
+              - img [ref=e410]
+            - img [ref=e414]
+        - link "Mar 19, 14:13:33 Error in 39ms" [ref=e417] [cursor=pointer]:
+          - /url: /workflow/LGvkbQNUm44UEoMi/executions/1592
+          - generic [ref=e418]:
+            - generic [ref=e419]: Mar 19, 14:13:33
+            - generic [ref=e420]:
+              - generic [ref=e421]: Error
+              - generic [ref=e422]: in 39ms
+          - generic [ref=e423]:
+            - button [ref=e426]:
+              - img [ref=e428]
+            - img [ref=e432]
+        - link "Mar 19, 14:11:56 Error in 31ms" [ref=e435] [cursor=pointer]:
+          - /url: /workflow/LGvkbQNUm44UEoMi/executions/1591
+          - generic [ref=e436]:
+            - generic [ref=e437]: Mar 19, 14:11:56
+            - generic [ref=e438]:
+              - generic [ref=e439]: Error
+              - generic [ref=e440]: in 31ms
+          - generic [ref=e441]:
+            - button [ref=e444]:
+              - img [ref=e446]
+            - img [ref=e450]
+        - link "Mar 19, 06:45:03 Error in 34ms" [ref=e453] [cursor=pointer]:
+          - /url: /workflow/LGvkbQNUm44UEoMi/executions/1582
+          - generic [ref=e454]:
+            - generic [ref=e455]: Mar 19, 06:45:03
+            - generic [ref=e456]:
+              - generic [ref=e457]: Error
+              - generic [ref=e458]: in 34ms
+          - generic [ref=e459]:
+            - button [ref=e462]:
+              - img [ref=e464]
+            - img [ref=e468]
+      - generic [ref=e472] [cursor=pointer]:
+        - generic [ref=e473]: Which executions is this workflow saving?
+        - img [ref=e474]
+    - generic [ref=e477]:
+      - generic:
+        - generic [ref=e478]:
+          - generic [ref=e480]: Mar 19, 21:30:28
+          - generic [ref=e481]:
+            - generic [ref=e482]: Error
+            - generic [ref=e483]: in 33ms | ID#1610
+          - generic [ref=e485]:
+            - text: Retry of execution
+            - link "#1608" [ref=e486] [cursor=pointer]:
+              - /url: /workflow/LGvkbQNUm44UEoMi/executions/1608
+        - generic [ref=e487]:
+          - link "Debug in editor" [ref=e488] [cursor=pointer]:
+            - /url: /workflow/LGvkbQNUm44UEoMi/debug/1610
+            - button "Debug in editor" [ref=e489]:
+              - generic [ref=e490]: Debug in editor
+          - button [ref=e492]:
+            - button "Retry execution" [ref=e493] [cursor=pointer]:
+              - img [ref=e495]
+          - button "Delete this execution" [ref=e499] [cursor=pointer]:
+            - img [ref=e501]
+      - iframe [active] [ref=e504]:
+        - generic [ref=f75e4]:
+          - generic [ref=f75e5]:
+            - generic [ref=f75e10]:
+              - generic [ref=f75e12]:
+                - generic:
+                  - img
+                  - img:
+                    - group "Edge from a360f952-5596-4405-880d-c93655d216f7 to 66be658a-765e-4369-b0a0-c92310b777a5":
+                      - img
+                  - img:
+                    - group "Edge from a360f952-5596-4405-880d-c93655d216f7 to 87791f24-560b-4080-8f8f-e2f017aa7de6" [ref=f75e13] [cursor=pointer]:
+                      - img
+                  - img:
+                    - group "Edge from a360f952-5596-4405-880d-c93655d216f7 to f8adfa32-d4ca-412b-b57e-28759461cf8e" [ref=f75e17] [cursor=pointer]:
+                      - img
+                  - img:
+                    - group "Edge from 66be658a-765e-4369-b0a0-c92310b777a5 to d4b8c373-54b0-49f3-8064-347fed7d4c2d" [ref=f75e21] [cursor=pointer]:
+                      - img
+                  - img:
+                    - group "Edge from 66be658a-765e-4369-b0a0-c92310b777a5 to 75c8ede7-dcaf-4369-8a3c-d72971868826" [ref=f75e25] [cursor=pointer]:
+                      - img
+                  - img:
+                    - group "Edge from c34afa46-bff3-4a75-915c-a162e07a5313 to d4b8c373-54b0-49f3-8064-347fed7d4c2d" [ref=f75e31] [cursor=pointer]:
+                      - img
+                  - img:
+                    - group "Edge from 042db97e-8080-4f6b-8d31-472aa6fc9128 to d4b8c373-54b0-49f3-8064-347fed7d4c2d" [ref=f75e35] [cursor=pointer]:
+                      - img
+                  - img:
+                    - group "Edge from 1eb6efbd-1202-4107-b8e3-ded9ed6d2632 to c5130696-2e22-4d69-8a72-55ec3faddd1f":
+                      - img
+                  - img:
+                    - group "Edge from c5130696-2e22-4d69-8a72-55ec3faddd1f to 7cf99dd4-4e2e-4178-90cf-257675f87ca5":
+                      - img
+                  - img:
+                    - group "Edge from 33307427-e426-4016-a822-b20b4bc80679 to d4b8c373-54b0-49f3-8064-347fed7d4c2d" [ref=f75e39] [cursor=pointer]:
+                      - img
+                  - img:
+                    - group "Edge from 7cf99dd4-4e2e-4178-90cf-257675f87ca5 to fde17154-8626-473e-ab67-f40e053d6266" [ref=f75e43] [cursor=pointer]:
+                      - img
+                  - img:
+                    - group "Edge from d38000a4-2c55-483c-99aa-7b394fd900a0 to 66be658a-765e-4369-b0a0-c92310b777a5" [ref=f75e47] [cursor=pointer]:
+                      - img
+                  - img:
+                    - group "Edge from fde17154-8626-473e-ab67-f40e053d6266 to 2887a62d-3916-4d62-8bb0-d67946a8b145":
+                      - img
+                  - img:
+                    - group "Edge from 87791f24-560b-4080-8f8f-e2f017aa7de6 to fde17154-8626-473e-ab67-f40e053d6266" [ref=f75e51] [cursor=pointer]:
+                      - img
+                  - img:
+                    - group "Edge from 76cf599c-4cbc-4c6e-9ed7-fe98ab93b534 to c36c8088-7f79-4c0c-b25c-436a950c005e":
+                      - img
+                  - img:
+                    - group "Edge from d6138b04-8d0b-4c25-b140-4c2eac4b482f to 76cf599c-4cbc-4c6e-9ed7-fe98ab93b534" [ref=f75e55] [cursor=pointer]:
+                      - img
+                  - img:
+                    - group "Edge from d6138b04-8d0b-4c25-b140-4c2eac4b482f to 41bdb7c4-3634-4849-961b-5db4fa873d1b" [ref=f75e59] [cursor=pointer]:
+                      - img
+                  - img:
+                    - group "Edge from ec083c16-8841-47d0-8278-96572a755ebb to 76cf599c-4cbc-4c6e-9ed7-fe98ab93b534" [ref=f75e65] [cursor=pointer]:
+                      - img
+                  - img:
+                    - group "Edge from 25a76f49-a683-4ef4-8406-5e8197aade55 to 76cf599c-4cbc-4c6e-9ed7-fe98ab93b534" [ref=f75e69] [cursor=pointer]:
+                      - img
+                  - img:
+                    - group "Edge from c36c8088-7f79-4c0c-b25c-436a950c005e to 63b6eb40-8c26-4ed0-a8c0-e41df6e86788":
+                      - img
+                  - img:
+                    - group "Edge from 63b6eb40-8c26-4ed0-a8c0-e41df6e86788 to d2b4c0e7-e2e1-4f7f-83eb-592230f8f7cb":
+                      - img
+                  - img:
+                    - group "Edge from d6fc2636-6f40-4311-92f5-7575a7c80efd to 76cf599c-4cbc-4c6e-9ed7-fe98ab93b534" [ref=f75e73] [cursor=pointer]:
+                      - img
+                  - img:
+                    - group "Edge from d2b4c0e7-e2e1-4f7f-83eb-592230f8f7cb to aa1783f2-f71e-48e6-ab00-f81fbf29ace7" [ref=f75e77] [cursor=pointer]:
+                      - img
+                  - img:
+                    - group "Edge from b177b0e4-b393-4d0f-a85e-033456f9ee67 to d6138b04-8d0b-4c25-b140-4c2eac4b482f" [ref=f75e81] [cursor=pointer]:
+                      - img
+                  - img:
+                    - group "Edge from aa1783f2-f71e-48e6-ab00-f81fbf29ace7 to cdaa5e53-984d-4a6c-bd05-5815486303ad":
+                      - img
+                  - img:
+                    - group "Edge from d78c27a7-1cb7-411b-a33d-190491ea9e09 to aa1783f2-f71e-48e6-ab00-f81fbf29ace7" [ref=f75e85] [cursor=pointer]:
+                      - img
+                  - img:
+                    - group "Edge from 5606faa1-75fc-4c12-a744-aa0cdbbdc21d to 75628a65-1b9a-4637-8831-2b26367c7c1a":
+                      - img
+                  - img:
+                    - group "Edge from 75628a65-1b9a-4637-8831-2b26367c7c1a to d6138b04-8d0b-4c25-b140-4c2eac4b482f":
+                      - img
+                  - img:
+                    - group "Edge from 75628a65-1b9a-4637-8831-2b26367c7c1a to d78c27a7-1cb7-411b-a33d-190491ea9e09" [ref=f75e89] [cursor=pointer]:
+                      - img
+                  - img:
+                    - group "Edge from 46c5cb74-b6f8-4379-8786-1c45efdf6fb6 to f8adfa32-d4ca-412b-b57e-28759461cf8e" [ref=f75e93] [cursor=pointer]:
+                      - img
+                  - img:
+                    - group "Edge from b2598cab-00f7-4163-9ac7-9c2172b441a3 to f8adfa32-d4ca-412b-b57e-28759461cf8e":
+                      - img
+                  - img:
+                    - group "Edge from d4b8c373-54b0-49f3-8064-347fed7d4c2d to 1eb6efbd-1202-4107-b8e3-ded9ed6d2632":
+                      - img
+                  - img:
+                    - group "Edge from 73abb451-98f7-4a2f-a260-32ef1a960f9a to f8adfa32-d4ca-412b-b57e-28759461cf8e" [ref=f75e97] [cursor=pointer]:
+                      - img
+                  - img:
+                    - group "Edge from e3e9d1f4-7d30-4960-abbd-ec60929d5669 to dbf1b00a-5040-4e90-8b30-f827ac7bd484":
+                      - img
+                  - img:
+                    - group "Edge from e3e9d1f4-7d30-4960-abbd-ec60929d5669 to 088a981f-1fcf-4d03-b5fb-d237cd27b75b" [ref=f75e101] [cursor=pointer]:
+                      - img
+                  - img:
+                    - group "Edge from e3e9d1f4-7d30-4960-abbd-ec60929d5669 to 136b6451-394a-4a00-9e3b-d598055006d3" [ref=f75e105] [cursor=pointer]:
+                      - img
+                  - img:
+                    - group "Edge from a1b647fa-414b-4bd1-8324-f72f938a0c41 to bedd2bd1-de15-4d28-ba2e-cf7b994608cb" [ref=f75e109] [cursor=pointer]:
+                      - img
+                  - img:
+                    - group "Edge from b4887051-b12a-475e-b925-8247b42abb3f to bedd2bd1-de15-4d28-ba2e-cf7b994608cb" [ref=f75e113] [cursor=pointer]:
+                      - img
+                  - img:
+                    - group "Edge from 4c5b9422-4c2b-411a-ad28-0ab9392f6ef0 to dc5e86bf-1d8a-4b4d-827f-dc97dfe170eb":
+                      - img
+                  - img:
+                    - group "Edge from dc5e86bf-1d8a-4b4d-827f-dc97dfe170eb to ab3da609-0089-4b1a-903d-76b3f7839349":
+                      - img
+                  - img:
+                    - group "Edge from 9b689a50-a888-4976-8fd8-9d4a99045e06 to bedd2bd1-de15-4d28-ba2e-cf7b994608cb" [ref=f75e117] [cursor=pointer]:
+                      - img
+                  - img:
+                    - group "Edge from ab3da609-0089-4b1a-903d-76b3f7839349 to 31e66c67-bf08-4de4-9e48-8709cbcc7b3f" [ref=f75e121] [cursor=pointer]:
+                      - img
+                  - img:
+                    - group "Edge from 973fd4d6-b380-4a2d-9712-0dfc516655b6 to dbf1b00a-5040-4e90-8b30-f827ac7bd484" [ref=f75e125] [cursor=pointer]:
+                      - img
+                  - img:
+                    - group "Edge from 088a981f-1fcf-4d03-b5fb-d237cd27b75b to 31e66c67-bf08-4de4-9e48-8709cbcc7b3f" [ref=f75e129] [cursor=pointer]:
+                      - img
+                  - img:
+                    - group "Edge from 4ef996c7-1760-4d03-9906-c4d2c3046b81 to 99c48470-fc38-4499-97aa-91de995ebeac":
+                      - img
+                  - img:
+                    - group "Edge from 6bf97cd9-56bf-4647-9ea2-2ae4e639a3c4 to 4ef996c7-1760-4d03-9906-c4d2c3046b81" [ref=f75e133] [cursor=pointer]:
+                      - img
+                  - img:
+                    - group "Edge from 8b838ab3-4ed6-4144-a0d7-a0725675b252 to 4ef996c7-1760-4d03-9906-c4d2c3046b81" [ref=f75e137] [cursor=pointer]:
+                      - img
+                  - img:
+                    - group "Edge from 99c48470-fc38-4499-97aa-91de995ebeac to 6a6b3559-e370-4240-a8b3-f940bfe3e949":
+                      - img
+                  - img:
+                    - group "Edge from 6a6b3559-e370-4240-a8b3-f940bfe3e949 to 4445701f-5fb1-434d-a4a5-201d890704fc":
+                      - img
+                  - img:
+                    - group "Edge from 5d3b6867-b7b2-48b5-bf52-b9a964d625b9 to 4ef996c7-1760-4d03-9906-c4d2c3046b81" [ref=f75e141] [cursor=pointer]:
+                      - img
+                  - img:
+                    - group "Edge from 4445701f-5fb1-434d-a4a5-201d890704fc to d445bc97-b98b-460f-83f9-ab87134e2e53" [ref=f75e145] [cursor=pointer]:
+                      - img
+                  - img:
+                    - group "Edge from 5ab00ee4-c859-4250-bd51-4861d67e9559 to 6c25def2-b5db-490e-bc4e-1dbd2e2879fa" [ref=f75e149] [cursor=pointer]:
+                      - img
+                  - img:
+                    - group "Edge from f533da95-ecd3-4911-922b-6c7ffe7e4952 to d445bc97-b98b-460f-83f9-ab87134e2e53" [ref=f75e153] [cursor=pointer]:
+                      - img
+                  - img:
+                    - group "Edge from 4b88e56e-09af-4a7a-adf5-9558d44553ca to 6c25def2-b5db-490e-bc4e-1dbd2e2879fa":
+                      - img
+                  - img:
+                    - group "Edge from 4b88e56e-09af-4a7a-adf5-9558d44553ca to f533da95-ecd3-4911-922b-6c7ffe7e4952" [ref=f75e157] [cursor=pointer]:
+                      - img
+                  - img:
+                    - group "Edge from 40582040-787c-4968-88aa-356ba1abb3f8 to 136b6451-394a-4a00-9e3b-d598055006d3" [ref=f75e161] [cursor=pointer]:
+                      - img
+                  - img:
+                    - group "Edge from 121df201-c0f7-4be8-b273-3ece64554387 to 136b6451-394a-4a00-9e3b-d598055006d3":
+                      - img
+                  - img:
+                    - group "Edge from bedd2bd1-de15-4d28-ba2e-cf7b994608cb to 4c5b9422-4c2b-411a-ad28-0ab9392f6ef0":
+                      - img
+                  - img:
+                    - group "Edge from 4b07c84a-439f-4431-9553-e6a852f2d17d to 136b6451-394a-4a00-9e3b-d598055006d3" [ref=f75e165] [cursor=pointer]:
+                      - img
+                  - img:
+                    - group "Edge from dbf1b00a-5040-4e90-8b30-f827ac7bd484 to bedd2bd1-de15-4d28-ba2e-cf7b994608cb" [ref=f75e169] [cursor=pointer]:
+                      - img
+                  - img:
+                    - group "Edge from dbf1b00a-5040-4e90-8b30-f827ac7bd484 to 4b9b41e9-25e7-4a20-b275-f5069223c39b" [ref=f75e173] [cursor=pointer]:
+                      - img
+                  - img:
+                    - group "Edge from 31e66c67-bf08-4de4-9e48-8709cbcc7b3f to 919bfca7-eb62-478d-bc72-21571a571d99":
+                      - img
+                  - img:
+                    - group "Edge from 6c25def2-b5db-490e-bc4e-1dbd2e2879fa to 4ef996c7-1760-4d03-9906-c4d2c3046b81" [ref=f75e179] [cursor=pointer]:
+                      - img
+                  - img:
+                    - group "Edge from 6c25def2-b5db-490e-bc4e-1dbd2e2879fa to 1b626516-6b22-4515-bbc1-10522bf8184d" [ref=f75e183] [cursor=pointer]:
+                      - img
+                  - img:
+                    - group "Edge from d445bc97-b98b-460f-83f9-ab87134e2e53 to a3446005-1a00-4cce-83d5-8168406b6e64":
+                      - img
+                  - generic:
+                    - generic:
+                      - generic: 1 item
+                    - generic:
+                      - generic: 1 item
+                    - generic:
+                      - generic: 1 item
+                  - generic:
+                    - group [ref=f75e189] [cursor=pointer]:
+                      - generic [ref=f75e190]:
+                        - button [ref=f75e192]:
+                          - img [ref=f75e194]
+                        - generic [ref=f75e196]:
+                          - generic [ref=f75e199]:
+                            - img
+                          - generic:
+                            - generic: Gmail_Trigger
+                            - generic: Gmail Trigger
+                          - img [ref=f75e201]
+                        - generic:
+                          - generic:
+                            - generic:
+                              - img
+                    - group [ref=f75e203] [cursor=pointer]:
+                      - generic [ref=f75e204]:
+                        - generic:
+                          - generic:
+                            - generic: Pass
+                        - generic:
+                          - generic:
+                            - generic: Fail
+                        - generic:
+                          - generic:
+                            - generic: Chat Model*
+                        - button [ref=f75e206]:
+                          - img [ref=f75e208]
+                        - generic [ref=f75e210]:
+                          - generic [ref=f75e213]:
+                            - img
+                          - generic:
+                            - generic: Guardrails
+                            - generic: Check Text for Violations
+                    - group [ref=f75e214] [cursor=pointer]:
+                      - generic [ref=f75e215]:
+                        - button [ref=f75e217]:
+                          - img [ref=f75e219]
+                        - generic [ref=f75e221]:
+                          - generic [ref=f75e224]:
+                            - img
+                          - generic:
+                            - generic: Send_a_text_message
+                            - generic: "sendMessage: message"
+                    - group [ref=f75e225] [cursor=pointer]:
+                      - generic [ref=f75e226]:
+                        - generic:
+                          - generic:
+                            - generic: Model
+                        - button [ref=f75e228]:
+                          - img [ref=f75e230]
+                        - generic [ref=f75e232]:
+                          - generic [ref=f75e235]:
+                            - img
+                          - generic:
+                            - generic: Anthropic_Chat_Model1
+                    - group [ref=f75e236] [cursor=pointer]:
+                      - generic [ref=f75e237]:
+                        - generic:
+                          - generic:
+                            - generic: Output Parser
+                        - button [ref=f75e239]:
+                          - img [ref=f75e241]
+                        - generic [ref=f75e243]:
+                          - generic [ref=f75e246]:
+                            - img
+                          - generic:
+                            - generic: Structured_Output_Parser
+                    - group [ref=f75e247] [cursor=pointer]:
+                      - generic [ref=f75e248]:
+                        - button [ref=f75e250]:
+                          - img [ref=f75e252]
+                        - generic [ref=f75e254]:
+                          - generic [ref=f75e257]:
+                            - img
+                          - generic:
+                            - generic: Split_Out
+                    - group [ref=f75e258] [cursor=pointer]:
+                      - generic [ref=f75e259]:
+                        - button [ref=f75e261]:
+                          - img [ref=f75e263]
+                        - generic [ref=f75e265]:
+                          - generic [ref=f75e268]:
+                            - img
+                          - generic:
+                            - generic: Get_many_labels
+                            - generic: "getAll: label"
+                    - group [ref=f75e269] [cursor=pointer]:
+                      - generic [ref=f75e270]:
+                        - button [ref=f75e272]:
+                          - img [ref=f75e274]
+                        - generic [ref=f75e276]:
+                          - generic [ref=f75e279]:
+                            - img
+                          - generic:
+                            - generic: Cmkk
+                            - generic: "getAll: label"
+                    - group [ref=f75e280] [cursor=pointer]:
+                      - generic [ref=f75e281]:
+                        - button [ref=f75e283]:
+                          - img [ref=f75e285]
+                        - generic [ref=f75e287]:
+                          - generic [ref=f75e290]:
+                            - img
+                          - generic:
+                            - generic: Code_in_JavaScript
+                    - group [ref=f75e291] [cursor=pointer]:
+                      - generic [ref=f75e292]:
+                        - generic:
+                          - generic:
+                            - generic: Model
+                        - button [ref=f75e294]:
+                          - img [ref=f75e296]
+                        - generic [ref=f75e298]:
+                          - generic [ref=f75e301]:
+                            - img
+                          - generic:
+                            - generic: Anthropic_Chat_Model3
+                    - group [ref=f75e302] [cursor=pointer]:
+                      - generic [ref=f75e303]:
+                        - button [ref=f75e305]:
+                          - img [ref=f75e307]
+                        - generic [ref=f75e309]:
+                          - generic [ref=f75e312]:
+                            - img
+                          - generic:
+                            - generic: Add_label_to_message
+                            - generic: "addLabels: message"
+                    - group [ref=f75e313] [cursor=pointer]:
+                      - generic [ref=f75e314]:
+                        - generic:
+                          - generic:
+                            - generic: Input 1
+                        - generic:
+                          - generic:
+                            - generic: Input 2
+                        - button [ref=f75e316]:
+                          - img [ref=f75e318]
+                        - generic [ref=f75e320]:
+                          - generic [ref=f75e323]:
+                            - img
+                          - generic:
+                            - generic: Merge
+                            - generic: combine
+                    - group [ref=f75e324] [cursor=pointer]:
+                      - generic [ref=f75e325]:
+                        - button [ref=f75e327]:
+                          - img [ref=f75e329]
+                        - generic [ref=f75e331]:
+                          - generic [ref=f75e334]:
+                            - img
+                          - generic:
+                            - generic: Edit_Fields
+                            - generic: manual
+                    - group [ref=f75e335] [cursor=pointer]:
+                      - generic [ref=f75e336]:
+                        - generic:
+                          - generic:
+                            - generic: Chat Model*
+                        - generic:
+                          - generic:
+                            - generic: Memory
+                            - img
+                        - generic:
+                          - generic:
+                            - generic: Tool
+                            - img
+                        - generic:
+                          - generic:
+                            - generic: Output Parser
+                        - button [ref=f75e338]:
+                          - img [ref=f75e340]
+                        - generic [ref=f75e342]:
+                          - generic [ref=f75e345]:
+                            - img
+                          - generic:
+                            - generic: AI_Agent1
+                    - group [ref=f75e346] [cursor=pointer]:
+                      - generic [ref=f75e347]:
+                        - generic:
+                          - generic:
+                            - generic: Pass
+                        - generic:
+                          - generic:
+                            - generic: Fail
+                        - generic:
+                          - generic:
+                            - generic: Chat Model*
+                        - button [ref=f75e349]:
+                          - img [ref=f75e351]
+                        - generic [ref=f75e353]:
+                          - generic [ref=f75e356]:
+                            - img
+                          - generic:
+                            - generic: Guardrails1
+                            - generic: Check Text for Violations
+                    - group [ref=f75e357] [cursor=pointer]:
+                      - generic [ref=f75e358]:
+                        - button [ref=f75e360]:
+                          - img [ref=f75e362]
+                        - generic [ref=f75e364]:
+                          - generic [ref=f75e367]:
+                            - img
+                          - generic:
+                            - generic: Send_a_text_message1
+                            - generic: "sendMessage: message"
+                    - group [ref=f75e368] [cursor=pointer]:
+                      - generic [ref=f75e369]:
+                        - generic:
+                          - generic:
+                            - generic: Model
+                        - button [ref=f75e371]:
+                          - img [ref=f75e373]
+                        - generic [ref=f75e375]:
+                          - generic [ref=f75e378]:
+                            - img
+                          - generic:
+                            - generic: Anthropic_Chat_Model
+                    - group [ref=f75e379] [cursor=pointer]:
+                      - generic [ref=f75e380]:
+                        - generic:
+                          - generic:
+                            - generic: Output Parser
+                        - button [ref=f75e382]:
+                          - img [ref=f75e384]
+                        - generic [ref=f75e386]:
+                          - generic [ref=f75e389]:
+                            - img
+                          - generic:
+                            - generic: Structured_Output_Parser1
+                    - group [ref=f75e390] [cursor=pointer]:
+                      - generic [ref=f75e391]:
+                        - button [ref=f75e393]:
+                          - img [ref=f75e395]
+                        - generic [ref=f75e397]:
+                          - generic [ref=f75e400]:
+                            - img
+                          - generic:
+                            - generic: Split_Out1
+                    - group [ref=f75e401] [cursor=pointer]:
+                      - generic [ref=f75e402]:
+                        - button [ref=f75e404]:
+                          - img [ref=f75e406]
+                        - generic [ref=f75e408]:
+                          - generic [ref=f75e411]:
+                            - img
+                          - generic:
+                            - generic: Get_many_labels1
+                            - generic: "getAll: label"
+                    - group [ref=f75e412] [cursor=pointer]:
+                      - generic [ref=f75e413]:
+                        - button [ref=f75e415]:
+                          - img [ref=f75e417]
+                        - generic [ref=f75e419]:
+                          - generic [ref=f75e422]:
+                            - img
+                          - generic:
+                            - generic: Cmkk1
+                            - generic: "getAll: label"
+                    - group [ref=f75e423] [cursor=pointer]:
+                      - generic [ref=f75e424]:
+                        - button [ref=f75e426]:
+                          - img [ref=f75e428]
+                        - generic [ref=f75e430]:
+                          - generic [ref=f75e433]:
+                            - img
+                          - generic:
+                            - generic: Code_in_JavaScript1
+                    - group [ref=f75e434] [cursor=pointer]:
+                      - generic [ref=f75e435]:
+                        - generic:
+                          - generic:
+                            - generic: Model
+                        - button [ref=f75e437]:
+                          - img [ref=f75e439]
+                        - generic [ref=f75e441]:
+                          - generic [ref=f75e444]:
+                            - img
+                          - generic:
+                            - generic: Anthropic_Chat_Model4
+                    - group [ref=f75e445] [cursor=pointer]:
+                      - generic [ref=f75e446]:
+                        - button [ref=f75e448]:
+                          - img [ref=f75e450]
+                        - generic [ref=f75e452]:
+                          - generic [ref=f75e455]:
+                            - img
+                          - generic:
+                            - generic: Add_label_to_message1
+                            - generic: "addLabels: message"
+                    - group [ref=f75e456] [cursor=pointer]:
+                      - generic [ref=f75e457]:
+                        - generic:
+                          - generic:
+                            - generic: Input 1
+                        - generic:
+                          - generic:
+                            - generic: Input 2
+                        - button [ref=f75e459]:
+                          - img [ref=f75e461]
+                        - generic [ref=f75e463]:
+                          - generic [ref=f75e466]:
+                            - img
+                          - generic:
+                            - generic: Merge1
+                            - generic: combine
+                    - group [ref=f75e467] [cursor=pointer]:
+                      - generic [ref=f75e468]:
+                        - button [ref=f75e470]:
+                          - img [ref=f75e472]
+                        - generic [ref=f75e474]:
+                          - generic [ref=f75e477]:
+                            - img
+                          - generic:
+                            - generic: Edit_Fields1
+                            - generic: manual
+                    - group [ref=f75e478] [cursor=pointer]:
+                      - generic [ref=f75e479]:
+                        - button [ref=f75e481]:
+                          - img [ref=f75e483]
+                        - generic [ref=f75e485]:
+                          - generic [ref=f75e488]:
+                            - img
+                          - generic:
+                            - generic: When_clicking_Execute_workflow
+                        - generic:
+                          - generic:
+                            - generic:
+                              - img
+                    - group [ref=f75e489] [cursor=pointer]:
+                      - generic [ref=f75e490]:
+                        - button [ref=f75e492]:
+                          - img [ref=f75e494]
+                        - generic [ref=f75e496]:
+                          - generic [ref=f75e499]:
+                            - img
+                          - generic:
+                            - generic: Get_many_messages
+                            - generic: "getAll: message"
+                    - group [ref=f75e500] [cursor=pointer]:
+                      - generic [ref=f75e501]:
+                        - button [ref=f75e503]:
+                          - img [ref=f75e505]
+                        - generic [ref=f75e507]:
+                          - generic [ref=f75e510]:
+                            - img
+                          - generic:
+                            - generic: Create_a_record_in_Airtable
+                            - generic: "create: record"
+                    - group [ref=f75e511] [cursor=pointer]:
+                      - generic [ref=f75e512]:
+                        - button [ref=f75e514]:
+                          - img [ref=f75e516]
+                        - generic [ref=f75e518]:
+                          - generic [ref=f75e521]:
+                            - img
+                          - generic:
+                            - generic: Search_records_in_Airtable
+                            - generic: "search: record"
+                    - group [ref=f75e522] [cursor=pointer]:
+                      - generic [ref=f75e523]:
+                        - button [ref=f75e525]:
+                          - img [ref=f75e527]
+                        - generic [ref=f75e529]:
+                          - generic [ref=f75e532]:
+                            - img
+                          - generic:
+                            - generic: Send_a_text_message2
+                            - generic: "sendMessage: message"
+                    - group [ref=f75e533] [cursor=pointer]:
+                      - generic [ref=f75e534]:
+                        - generic:
+                          - generic:
+                            - generic: Chat Model*
+                        - generic:
+                          - generic:
+                            - generic: Memory
+                            - img
+                        - generic:
+                          - generic:
+                            - generic: Tool
+                            - img
+                        - button [ref=f75e536]:
+                          - img [ref=f75e538]
+                        - generic [ref=f75e540]:
+                          - generic [ref=f75e543]:
+                            - img
+                          - generic:
+                            - generic: CRM_agent
+                          - img [ref=f75e545]
+                    - group [ref=f75e547] [cursor=pointer]:
+                      - generic [ref=f75e548]:
+                        - generic:
+                          - generic:
+                            - generic: Chat Model*
+                        - generic:
+                          - generic:
+                            - generic: Memory
+                            - img
+                        - generic:
+                          - generic:
+                            - generic: Tool
+                            - img
+                        - generic:
+                          - generic:
+                            - generic: Output Parser
+                        - button [ref=f75e550]:
+                          - img [ref=f75e552]
+                        - generic [ref=f75e554]:
+                          - generic [ref=f75e557]:
+                            - img
+                          - generic:
+                            - generic: E-mail_kategorizl
+                    - group [ref=f75e558] [cursor=pointer]:
+                      - generic [ref=f75e559]:
+                        - generic:
+                          - generic:
+                            - generic: Model
+                        - button [ref=f75e561]:
+                          - img [ref=f75e563]
+                        - generic [ref=f75e565]:
+                          - generic [ref=f75e568]:
+                            - img
+                          - generic:
+                            - generic: Anthropic_Chat_Model2
+                          - img [ref=f75e570]
+                    - group [ref=f75e572] [cursor=pointer]:
+                      - generic [ref=f75e573]:
+                        - button [ref=f75e575]:
+                          - img [ref=f75e577]
+                        - heading "Adatvédelmi rendszer, ha olyan e-mailt észlel, ami külső támadást tartalmaz, akkor telegrammon keresztül értesít" [level=3] [ref=f75e583]
+                    - group [ref=f75e584] [cursor=pointer]:
+                      - generic [ref=f75e585]:
+                        - button [ref=f75e587]:
+                          - img [ref=f75e589]
+                        - heading "E-mail kategóriák lekérése és a megfelelő kategória kiválasztása" [level=3] [ref=f75e595]
+                    - group [ref=f75e596] [cursor=pointer]:
+                      - generic [ref=f75e597]:
+                        - button [ref=f75e599]:
+                          - img [ref=f75e601]
+                        - heading "Labelek hozzáadása" [level=3] [ref=f75e607]
+                    - group [ref=f75e608] [cursor=pointer]:
+                      - generic [ref=f75e609]:
+                        - button [ref=f75e611]:
+                          - img [ref=f75e613]
+                        - heading "Airtable CRM rendszer, megnézi, hogy bent van-e az a partner a rendszerünkben, ha nincs, akkor hozzáadja az infóit a partnerek fülhöz" [level=3] [ref=f75e619]
+                    - group [ref=f75e620] [cursor=pointer]:
+                      - generic [ref=f75e621]:
+                        - generic:
+                          - generic:
+                            - generic: Model
+                        - button [ref=f75e623]:
+                          - img [ref=f75e625]
+                        - generic [ref=f75e627]:
+                          - generic [ref=f75e630]:
+                            - img
+                          - generic:
+                            - generic: Anthropic_Chat_Model_Parser_1
+                    - group [ref=f75e631] [cursor=pointer]:
+                      - generic [ref=f75e632]:
+                        - generic:
+                          - generic:
+                            - generic: Model
+                        - button [ref=f75e634]:
+                          - img [ref=f75e636]
+                        - generic [ref=f75e638]:
+                          - generic [ref=f75e641]:
+                            - img
+                          - generic:
+                            - generic: Anthropic_Chat_Model_Parser_2
+                    - group [ref=f75e642] [cursor=pointer]:
+                      - generic [ref=f75e643]:
+                        - button [ref=f75e645]:
+                          - img [ref=f75e647]
+                        - generic [ref=f75e649]:
+                          - generic [ref=f75e652]:
+                            - img
+                          - generic:
+                            - generic: Gmail Trigger
+                            - generic: Gmail Trigger
+                          - img [ref=f75e654]
+                        - generic:
+                          - generic:
+                            - generic:
+                              - img
+                    - group [ref=f75e656] [cursor=pointer]:
+                      - generic [ref=f75e657]:
+                        - button [ref=f75e659]:
+                          - img [ref=f75e661]
+                        - generic [ref=f75e663]:
+                          - generic [ref=f75e666]:
+                            - img
+                          - generic:
+                            - generic: Send a text message
+                            - generic: "sendMessage: message"
+                    - group [ref=f75e667] [cursor=pointer]:
+                      - generic [ref=f75e668]:
+                        - generic:
+                          - generic:
+                            - generic: Model
+                        - button [ref=f75e670]:
+                          - img [ref=f75e672]
+                        - generic [ref=f75e674]:
+                          - generic [ref=f75e677]:
+                            - img
+                          - generic:
+                            - generic: Anthropic Chat Model1
+                    - group [ref=f75e678] [cursor=pointer]:
+                      - generic [ref=f75e679]:
+                        - generic:
+                          - generic:
+                            - generic: Output Parser
+                        - button [ref=f75e681]:
+                          - img [ref=f75e683]
+                        - generic [ref=f75e685]:
+                          - generic [ref=f75e688]:
+                            - img
+                          - generic:
+                            - generic: Structured Output Parser
+                    - group [ref=f75e689] [cursor=pointer]:
+                      - generic [ref=f75e690]:
+                        - button [ref=f75e692]:
+                          - img [ref=f75e694]
+                        - generic [ref=f75e696]:
+                          - generic [ref=f75e699]:
+                            - img
+                          - generic:
+                            - generic: Split Out
+                    - group [ref=f75e700] [cursor=pointer]:
+                      - generic [ref=f75e701]:
+                        - button [ref=f75e703]:
+                          - img [ref=f75e705]
+                        - generic [ref=f75e707]:
+                          - generic [ref=f75e710]:
+                            - img
+                          - generic:
+                            - generic: Get many labels
+                            - generic: "getAll: label"
+                          - img [ref=f75e712]
+                    - group [ref=f75e714] [cursor=pointer]:
+                      - generic [ref=f75e715]:
+                        - button [ref=f75e717]:
+                          - img [ref=f75e719]
+                        - generic [ref=f75e721]:
+                          - generic [ref=f75e724]:
+                            - img
+                          - generic:
+                            - generic: Címkék
+                            - generic: "getAll: label"
+                          - img [ref=f75e726]
+                    - group [ref=f75e728] [cursor=pointer]:
+                      - generic [ref=f75e729]:
+                        - button [ref=f75e731]:
+                          - img [ref=f75e733]
+                        - generic [ref=f75e735]:
+                          - generic [ref=f75e738]:
+                            - img
+                          - generic:
+                            - generic: Code in JavaScript
+                    - group [ref=f75e739] [cursor=pointer]:
+                      - generic [ref=f75e740]:
+                        - generic:
+                          - generic:
+                            - generic: Model
+                        - button [ref=f75e742]:
+                          - img [ref=f75e744]
+                        - generic [ref=f75e746]:
+                          - generic [ref=f75e749]:
+                            - img
+                          - generic:
+                            - generic: Anthropic Chat Model3
+                    - group [ref=f75e750] [cursor=pointer]:
+                      - generic [ref=f75e751]:
+                        - button [ref=f75e753]:
+                          - img [ref=f75e755]
+                        - generic [ref=f75e757]:
+                          - generic [ref=f75e760]:
+                            - img
+                          - generic:
+                            - generic: Add label to message
+                            - generic: "addLabels: message"
+                          - img [ref=f75e762]
+                    - group [ref=f75e764] [cursor=pointer]:
+                      - generic [ref=f75e765]:
+                        - button [ref=f75e767]:
+                          - img [ref=f75e769]
+                        - generic [ref=f75e771]:
+                          - generic [ref=f75e774]:
+                            - img
+                          - generic:
+                            - generic: Edit Fields
+                            - generic: manual
+                    - group [ref=f75e775] [cursor=pointer]:
+                      - generic [ref=f75e776]:
+                        - generic:
+                          - generic:
+                            - generic: Chat Model*
+                        - generic:
+                          - generic:
+                            - generic: Memory
+                            - img
+                        - generic:
+                          - generic:
+                            - generic: Tool
+                            - img
+                        - generic:
+                          - generic:
+                            - generic: Output Parser
+                        - button [ref=f75e778]:
+                          - img [ref=f75e780]
+                        - generic [ref=f75e782]:
+                          - generic [ref=f75e785]:
+                            - img
+                          - generic:
+                            - generic: AI Agent1
+                    - group [ref=f75e786] [cursor=pointer]:
+                      - generic [ref=f75e787]:
+                        - button [ref=f75e789]:
+                          - img [ref=f75e791]
+                        - generic [ref=f75e793]:
+                          - generic [ref=f75e796]:
+                            - img
+                          - generic:
+                            - generic: Send a text message1
+                            - generic: "sendMessage: message"
+                    - group [ref=f75e797] [cursor=pointer]:
+                      - generic [ref=f75e798]:
+                        - generic:
+                          - generic:
+                            - generic: Model
+                        - button [ref=f75e800]:
+                          - img [ref=f75e802]
+                        - generic [ref=f75e804]:
+                          - generic [ref=f75e807]:
+                            - img
+                          - generic:
+                            - generic: Anthropic Chat Model
+                    - group [ref=f75e808] [cursor=pointer]:
+                      - generic [ref=f75e809]:
+                        - generic:
+                          - generic:
+                            - generic: Output Parser
+                        - button [ref=f75e811]:
+                          - img [ref=f75e813]
+                        - generic [ref=f75e815]:
+                          - generic [ref=f75e818]:
+                            - img
+                          - generic:
+                            - generic: Structured Output Parser1
+                    - group [ref=f75e819] [cursor=pointer]:
+                      - generic [ref=f75e820]:
+                        - button [ref=f75e822]:
+                          - img [ref=f75e824]
+                        - generic [ref=f75e826]:
+                          - generic [ref=f75e829]:
+                            - img
+                          - generic:
+                            - generic: Split Out1
+                    - group [ref=f75e830] [cursor=pointer]:
+                      - generic [ref=f75e831]:
+                        - button [ref=f75e833]:
+                          - img [ref=f75e835]
+                        - generic [ref=f75e837]:
+                          - generic [ref=f75e840]:
+                            - img
+                          - generic:
+                            - generic: Get many labels1
+                            - generic: "getAll: label"
+                          - img [ref=f75e842]
+                    - group [ref=f75e844] [cursor=pointer]:
+                      - generic [ref=f75e845]:
+                        - button [ref=f75e847]:
+                          - img [ref=f75e849]
+                        - generic [ref=f75e851]:
+                          - generic [ref=f75e854]:
+                            - img
+                          - generic:
+                            - generic: Címkék1
+                            - generic: "getAll: label"
+                          - img [ref=f75e856]
+                    - group [ref=f75e858] [cursor=pointer]:
+                      - generic [ref=f75e859]:
+                        - button [ref=f75e861]:
+                          - img [ref=f75e863]
+                        - generic [ref=f75e865]:
+                          - generic [ref=f75e868]:
+                            - img
+                          - generic:
+                            - generic: Code in JavaScript1
+                    - group [ref=f75e869] [cursor=pointer]:
+                      - generic [ref=f75e870]:
+                        - generic:
+                          - generic:
+                            - generic: Model
+                        - button [ref=f75e872]:
+                          - img [ref=f75e874]
+                        - generic [ref=f75e876]:
+                          - generic [ref=f75e879]:
+                            - img
+                          - generic:
+                            - generic: Anthropic Chat Model4
+                    - group [ref=f75e880] [cursor=pointer]:
+                      - generic [ref=f75e881]:
+                        - button [ref=f75e883]:
+                          - img [ref=f75e885]
+                        - generic [ref=f75e887]:
+                          - generic [ref=f75e890]:
+                            - img
+                          - generic:
+                            - generic: Add label to message1
+                            - generic: "addLabels: message"
+                          - img [ref=f75e892]
+                    - group [ref=f75e894] [cursor=pointer]:
+                      - generic [ref=f75e895]:
+                        - button [ref=f75e897]:
+                          - img [ref=f75e899]
+                        - generic [ref=f75e901]:
+                          - generic [ref=f75e904]:
+                            - img
+                          - generic:
+                            - generic: Edit Fields1
+                            - generic: manual
+                    - group [ref=f75e905] [cursor=pointer]:
+                      - generic [ref=f75e906]:
+                        - button [ref=f75e908]:
+                          - img [ref=f75e910]
+                        - generic [ref=f75e912]:
+                          - generic [ref=f75e915]:
+                            - img
+                          - generic:
+                            - generic: Get many messages
+                            - generic: "getAll: message"
+                          - img [ref=f75e917]
+                    - group [ref=f75e919] [cursor=pointer]:
+                      - generic [ref=f75e920]:
+                        - button [ref=f75e922]:
+                          - img [ref=f75e924]
+                        - generic [ref=f75e926]:
+                          - generic [ref=f75e929]:
+                            - img
+                          - generic:
+                            - generic: Create a record in Airtable
+                            - generic: "create: record"
+                    - group [ref=f75e930] [cursor=pointer]:
+                      - generic [ref=f75e931]:
+                        - button [ref=f75e933]:
+                          - img [ref=f75e935]
+                        - generic [ref=f75e937]:
+                          - generic [ref=f75e940]:
+                            - img
+                          - generic:
+                            - generic: Search records in Airtable
+                            - generic: "search: record"
+                    - group [ref=f75e941] [cursor=pointer]:
+                      - generic [ref=f75e942]:
+                        - button [ref=f75e944]:
+                          - img [ref=f75e946]
+                        - generic [ref=f75e948]:
+                          - generic [ref=f75e951]:
+                            - img
+                          - generic:
+                            - generic: Send a text message2
+                            - generic: "sendMessage: message"
+                    - group [ref=f75e952] [cursor=pointer]:
+                      - generic [ref=f75e953]:
+                        - generic:
+                          - generic:
+                            - generic: Chat Model*
+                        - generic:
+                          - generic:
+                            - generic: Memory
+                            - img
+                        - generic:
+                          - generic:
+                            - generic: Tool
+                            - img
+                        - button [ref=f75e955]:
+                          - img [ref=f75e957]
+                        - generic [ref=f75e959]:
+                          - generic [ref=f75e962]:
+                            - img
+                          - generic:
+                            - generic: CRM agent
+                    - group [ref=f75e963] [cursor=pointer]:
+                      - generic [ref=f75e964]:
+                        - generic:
+                          - generic:
+                            - generic: Chat Model*
+                        - generic:
+                          - generic:
+                            - generic: Memory
+                            - img
+                        - generic:
+                          - generic:
+                            - generic: Tool
+                            - img
+                        - generic:
+                          - generic:
+                            - generic: Output Parser
+                        - button [ref=f75e966]:
+                          - img [ref=f75e968]
+                        - generic [ref=f75e970]:
+                          - generic [ref=f75e973]:
+                            - img
+                          - generic:
+                            - generic: E-mail kategorizáló
+                    - group [ref=f75e974] [cursor=pointer]:
+                      - generic [ref=f75e975]:
+                        - generic:
+                          - generic:
+                            - generic: Model
+                        - button [ref=f75e977]:
+                          - img [ref=f75e979]
+                        - generic [ref=f75e981]:
+                          - generic [ref=f75e984]:
+                            - img
+                          - generic:
+                            - generic: Anthropic Chat Model2
+                    - group [ref=f75e985] [cursor=pointer]:
+                      - generic [ref=f75e986]:
+                        - button [ref=f75e988]:
+                          - img [ref=f75e990]
+                        - heading "Adatvédelmi rendszer, ha olyan e-mailt észlel, ami külső támadást tartalmaz, akkor telegrammon keresztül értesít" [level=3] [ref=f75e996]
+                    - group [ref=f75e997] [cursor=pointer]:
+                      - generic [ref=f75e998]:
+                        - button [ref=f75e1000]:
+                          - img [ref=f75e1002]
+                        - heading "E-mail kategóriák lekérése és a megfelelő kategória kiválasztása" [level=3] [ref=f75e1008]
+                    - group [ref=f75e1009] [cursor=pointer]:
+                      - generic [ref=f75e1010]:
+                        - button [ref=f75e1012]:
+                          - img [ref=f75e1014]
+                        - heading "Labelek hozzáadása" [level=3] [ref=f75e1020]
+                    - group [ref=f75e1021] [cursor=pointer]:
+                      - generic [ref=f75e1022]:
+                        - button [ref=f75e1024]:
+                          - img [ref=f75e1026]
+                        - heading "Airtable CRM rendszer, megnézi, hogy bent van-e az a partner a rendszerünkben, ha nincs, akkor hozzáadja az infóit a partnerek fülhöz" [level=3] [ref=f75e1032]
+                    - group [ref=f75e1033] [cursor=pointer]:
+                      - generic [ref=f75e1034]:
+                        - generic:
+                          - generic:
+                            - generic: Model
+                        - button [ref=f75e1036]:
+                          - img [ref=f75e1038]
+                        - generic [ref=f75e1040]:
+                          - generic [ref=f75e1043]:
+                            - img
+                          - generic:
+                            - generic: Anthropic Chat Model Parser 1
+                    - group [ref=f75e1044] [cursor=pointer]:
+                      - generic [ref=f75e1045]:
+                        - generic:
+                          - generic:
+                            - generic: Model
+                        - button [ref=f75e1047]:
+                          - img [ref=f75e1049]
+                        - generic [ref=f75e1051]:
+                          - generic [ref=f75e1054]:
+                            - img
+                          - generic:
+                            - generic: Anthropic Chat Model Parser 2
+                    - group [ref=f75e1055] [cursor=pointer]:
+                      - generic [ref=f75e1056]:
+                        - generic:
+                          - generic:
+                            - generic: Pass
+                        - generic:
+                          - generic:
+                            - generic: Fail
+                        - generic:
+                          - generic:
+                            - generic: Chat Model*
+                        - button [ref=f75e1058]:
+                          - img [ref=f75e1060]
+                        - generic [ref=f75e1062]:
+                          - generic [ref=f75e1065]:
+                            - img
+                          - generic:
+                            - generic: Guardrails2
+                            - generic: Check Text for Violations
+                    - group [ref=f75e1066] [cursor=pointer]:
+                      - generic [ref=f75e1067]:
+                        - generic:
+                          - generic:
+                            - generic: Input 1
+                        - generic:
+                          - generic:
+                            - generic: Input 2
+                        - button [ref=f75e1069]:
+                          - img [ref=f75e1071]
+                        - generic [ref=f75e1073]:
+                          - generic [ref=f75e1076]:
+                            - img
+                          - generic:
+                            - generic: Merge2
+                            - generic: combine
+                    - group [ref=f75e1077] [cursor=pointer]:
+                      - generic [ref=f75e1078]:
+                        - generic:
+                          - generic:
+                            - generic: Pass
+                        - generic:
+                          - generic:
+                            - generic: Fail
+                        - generic:
+                          - generic:
+                            - generic: Chat Model*
+                        - button [ref=f75e1080]:
+                          - img [ref=f75e1082]
+                        - generic [ref=f75e1084]:
+                          - generic [ref=f75e1087]:
+                            - img
+                          - generic:
+                            - generic: Guardrails3
+                            - generic: Check Text for Violations
+                    - group [ref=f75e1088] [cursor=pointer]:
+                      - generic [ref=f75e1089]:
+                        - generic:
+                          - generic:
+                            - generic: Input 1
+                        - generic:
+                          - generic:
+                            - generic: Input 2
+                        - button [ref=f75e1091]:
+                          - img [ref=f75e1093]
+                        - generic [ref=f75e1095]:
+                          - generic [ref=f75e1098]:
+                            - img
+                          - generic:
+                            - generic: Merge3
+                            - generic: combine
+              - img [ref=f75e1099]
+              - img [ref=f75e1100]
+              - generic [ref=f75e1102]:
+                - button [ref=f75e1103] [cursor=pointer]:
+                  - img [ref=f75e1105]
+                - button [ref=f75e1107] [cursor=pointer]:
+                  - img [ref=f75e1109]
+                - button [ref=f75e1113] [cursor=pointer]:
+                  - img [ref=f75e1115]
+                - button [ref=f75e1119] [cursor=pointer]:
+                  - img [ref=f75e1121]
+            - generic [ref=f75e1131]:
+              - generic [ref=f75e1134]:
+                - banner [ref=f75e1135] [cursor=pointer]:
+                  - generic [ref=f75e1136]: Logs
+                - generic [ref=f75e1137]:
+                  - generic [ref=f75e1139]: Error in 33ms
+                  - tree [ref=f75e1141]:
+                    - treeitem "Gmail_Trigger" [ref=f75e1142] [cursor=pointer]:
+                      - generic [ref=f75e1146]:
+                        - img
+                      - generic [ref=f75e1147]: Gmail_Trigger
+                    - treeitem "CRM_agent Toggle row" [expanded] [active] [selected] [ref=f75e1148] [cursor=pointer]:
+                      - generic [ref=f75e1152]:
+                        - img
+                      - generic [ref=f75e1153]: CRM_agent
+                      - img [ref=f75e1154]
+                      - button "Toggle row" [ref=f75e1156]:
+                        - img [ref=f75e1158]
+                    - treeitem "Anthropic_Chat_Model2" [ref=f75e1160] [cursor=pointer]:
+                      - generic [ref=f75e1165]:
+                        - img
+                      - generic [ref=f75e1166]: Anthropic_Chat_Model2
+                      - img [ref=f75e1167]
+              - generic [ref=f75e1169]:
+                - banner [ref=f75e1170] [cursor=pointer]:
+                  - generic [ref=f75e1172]:
+                    - generic [ref=f75e1175]:
+                      - img
+                    - generic [ref=f75e1176]: CRM_agent
+                    - generic [ref=f75e1178]: Error in 5ms
+                  - generic [ref=f75e1179]:
+                    - generic [ref=f75e1180]:
+                      - button "Input" [ref=f75e1181]
+                      - button "Output" [ref=f75e1182]
+                    - generic [ref=f75e1183]:
+                      - button [ref=f75e1186]:
+                        - img [ref=f75e1188]
+                      - button "Collapse panel" [ref=f75e1193]:
+                        - img [ref=f75e1195]
+                - generic [ref=f75e1198]:
+                  - generic [ref=f75e1199]:
+                    - generic [ref=f75e1201]: Output
+                    - generic [ref=f75e1202]: 1 item
+                  - generic [ref=f75e1205]:
+                    - generic [ref=f75e1206]:
+                      - generic [ref=f75e1208]: Error in sub-node ‘Anthropic_Chat_Model2’
+                      - button "Open errored node" [ref=f75e1210] [cursor=pointer]:
+                        - img [ref=f75e1212]
+                        - generic [ref=f75e1214]: Open errored node
+                    - generic [ref=f75e1215]:
+                      - generic [ref=f75e1216]:
+                        - paragraph [ref=f75e1217]: Error details
+                        - button [ref=f75e1219] [cursor=pointer]:
+                          - img [ref=f75e1221]
+                      - group [ref=f75e1227]:
+                        - generic "Other info" [ref=f75e1228] [cursor=pointer]:
+                          - img [ref=f75e1229]
+                          - text: Other info
+          - alert [ref=f75e1231]:
+            - img [ref=f75e1233]
+            - generic [ref=f75e1235]:
+              - heading "Error in sub-node ‘Anthropic_Chat_Model2‘" [level=2] [ref=f75e1236]
+              - generic [ref=f75e1238]: Open node
+              - img [ref=f75e1240] [cursor=pointer]

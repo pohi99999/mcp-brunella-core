@@ -1,0 +1,256 @@
+- generic [ref=e21]:
+  - region "Notifications alt+T"
+  - generic [ref=e22]:
+    - button "Keresés... ⌘ K" [ref=e24]:
+      - img [ref=e25]
+      - generic [ref=e28]: Keresés...
+      - generic:
+        - generic: ⌘
+        - text: K
+    - generic [ref=e29]:
+      - heading "Command Palette" [level=2] [ref=e30]
+      - paragraph [ref=e31]: Search for a command to run...
+    - banner [ref=e32]:
+      - generic [ref=e33]:
+        - generic [ref=e34]:
+          - img [ref=e36]
+          - generic [ref=e38]:
+            - generic [ref=e39]: Brunella
+            - generic [ref=e40]: CORTEX v2.3
+        - navigation [ref=e42]:
+          - button "LAYOUT DEFAULT_DASHBOARD" [ref=e43]:
+            - generic [ref=e44]: LAYOUT
+            - generic [ref=e45]: DEFAULT_DASHBOARD
+            - img
+          - link "Gmail" [ref=e47] [cursor=pointer]:
+            - /url: https://mail.google.com/mail/u/0/
+            - img
+          - link "GitHub" [ref=e48] [cursor=pointer]:
+            - /url: https://github.com/pohi99999
+            - img
+          - link "Calendar" [ref=e49] [cursor=pointer]:
+            - /url: https://calendar.google.com/calendar/u/0/r
+            - img
+          - link "Drive" [ref=e50] [cursor=pointer]:
+            - /url: https://drive.google.com/drive/my-drive
+            - img
+          - link "Gemini" [ref=e51] [cursor=pointer]:
+            - /url: https://gemini.google.com/u/0/gem/c9db4e33647c
+            - img
+      - generic [ref=e52]:
+        - generic [ref=e55]: HEALTHY
+        - button "Toggle theme" [ref=e56]:
+          - img
+          - img
+          - generic [ref=e57]: Toggle theme
+    - generic [ref=e58]:
+      - complementary [ref=e60]:
+        - generic [ref=e61]:
+          - generic [ref=e62]:
+            - generic [ref=e63]: Navigáció
+            - img [ref=e64]
+          - generic [ref=e69]:
+            - generic [ref=e70]:
+              - heading "Core Systems" [level=3] [ref=e71]:
+                - button "Core Systems" [expanded] [ref=e72]:
+                  - generic [ref=e73]:
+                    - img [ref=e74]
+                    - generic [ref=e78]: Core Systems
+                  - img
+              - region "Core Systems" [ref=e79]:
+                - generic [ref=e80]:
+                  - button "Mission Control" [ref=e81]:
+                    - img [ref=e83]
+                    - generic [ref=e88]: Mission Control
+                  - button "Neural Map" [ref=e90]:
+                    - img [ref=e92]
+                    - generic [ref=e97]: Neural Map
+                  - button "Architecture" [ref=e98]:
+                    - img [ref=e100]
+                    - generic [ref=e104]: Architecture
+                  - button "Brunella Studio" [ref=e105]:
+                    - img [ref=e107]
+                    - generic [ref=e113]: Brunella Studio
+                  - button "VSCode Stream" [ref=e114]:
+                    - img [ref=e116]
+                    - generic [ref=e120]: VSCode Stream
+            - generic [ref=e121]:
+              - heading "AI & Agents" [level=3] [ref=e122]:
+                - button "AI & Agents" [expanded] [ref=e123]:
+                  - generic [ref=e124]:
+                    - img [ref=e125]
+                    - generic [ref=e135]: AI & Agents
+                  - img
+              - region "AI & Agents" [ref=e136]:
+                - generic [ref=e137]:
+                  - button "Neural Chat" [ref=e138]:
+                    - img [ref=e140]
+                    - generic [ref=e142]: Neural Chat
+                  - button "PAIOS Orchestrator" [ref=e143]:
+                    - img [ref=e145]
+                    - generic [ref=e155]: PAIOS Orchestrator
+                  - button "Copilot Commander" [ref=e156]:
+                    - img [ref=e158]
+                    - generic [ref=e160]: Copilot Commander
+                  - button "Personal Assistant" [ref=e161]:
+                    - img [ref=e163]
+                    - generic [ref=e165]: Personal Assistant
+                  - button "Phoenix Events" [ref=e166]:
+                    - img [ref=e168]
+                    - generic [ref=e170]: Phoenix Events
+                  - button "Approval Notifications" [active] [ref=e171]:
+                    - img [ref=e173]
+                    - generic [ref=e176]: Approval Notifications
+                  - button "Ephemeral Agents" [ref=e177]:
+                    - img [ref=e179]
+                    - generic [ref=e181]: Ephemeral Agents
+                  - button "Learning Loop" [ref=e182]:
+                    - img [ref=e184]
+                    - generic [ref=e194]: Learning Loop
+                  - button "Federated MCP" [ref=e195]:
+                    - img [ref=e197]
+                    - generic [ref=e200]: Federated MCP
+                  - button "Agent Roster" [ref=e201]:
+                    - img [ref=e203]
+                    - generic [ref=e205]: Agent Roster
+                  - button "Agent Diagnostics" [ref=e206]:
+                    - img [ref=e208]
+                    - generic [ref=e211]: Agent Diagnostics
+                  - button "Decompose" [ref=e212]:
+                    - img [ref=e214]
+                    - generic [ref=e218]: Decompose
+                  - button "Incubator" [ref=e219]:
+                    - img [ref=e221]
+                    - generic [ref=e223]: Incubator
+                  - button "Neural Knowledge" [ref=e224]:
+                    - img [ref=e226]
+                    - generic [ref=e236]: Neural Knowledge
+                  - button "Agent Memory" [ref=e237]:
+                    - img [ref=e239]
+                    - generic [ref=e243]: Agent Memory
+                  - button "Felhasználói Memória" [ref=e244]:
+                    - img [ref=e246]
+                    - generic [ref=e250]: Felhasználói Memória
+                  - button "Developer" [ref=e251]:
+                    - img [ref=e253]
+                    - generic [ref=e257]: Developer
+                  - button "Edge" [ref=e258]:
+                    - img [ref=e260]
+                    - generic [ref=e262]: Edge
+                  - button "Robotkéz" [ref=e263]:
+                    - img [ref=e265]
+                    - generic [ref=e267]: Robotkéz
+                  - button "Browser Copilot" [ref=e268]:
+                    - img [ref=e270]
+                    - generic [ref=e272]: Browser Copilot
+                  - button "Jules AI" [ref=e273]:
+                    - img [ref=e275]
+                    - generic [ref=e277]: Jules AI
+            - heading "Enterprise" [level=3] [ref=e279]:
+              - button "Enterprise" [ref=e280]:
+                - generic [ref=e281]:
+                  - img [ref=e282]
+                  - generic [ref=e285]: Enterprise
+                - img
+            - heading "Értékesítési Központ" [level=3] [ref=e287]:
+              - button "Értékesítési Központ" [ref=e288]:
+                - generic [ref=e289]:
+                  - img [ref=e290]
+                  - generic [ref=e292]: Értékesítési Központ
+                - img
+            - heading "Orchestration" [level=3] [ref=e294]:
+              - button "Orchestration" [ref=e295]:
+                - generic [ref=e296]:
+                  - img [ref=e297]
+                  - generic [ref=e302]: Orchestration
+                - img
+            - heading "Project Mgmt" [level=3] [ref=e304]:
+              - button "Project Mgmt" [ref=e305]:
+                - generic [ref=e306]:
+                  - img [ref=e307]
+                  - generic [ref=e310]: Project Mgmt
+                - img
+            - heading "System" [level=3] [ref=e312]:
+              - button "System" [ref=e313]:
+                - generic [ref=e314]:
+                  - img [ref=e315]
+                  - generic [ref=e318]: System
+                - img
+          - generic [ref=e319]:
+            - generic [ref=e320]:
+              - img [ref=e322]
+              - generic [ref=e324]:
+                - generic [ref=e325]: Master Admin
+                - generic [ref=e326]: AUTHORIZED
+            - button "Disconnect" [ref=e327]:
+              - generic [ref=e328]: DISCONNECT
+              - img [ref=e329]
+      - generic [ref=e332]:
+        - main [ref=e333]:
+          - generic [ref=e1181]:
+            - generic [ref=e1183]:
+              - generic [ref=e1184]:
+                - img [ref=e1185]
+                - text: Zero-Prompt Értesítések
+              - generic [ref=e1188]:
+                - generic [ref=e1189]: ÉLŐ
+                - button "Frissítés" [ref=e1190]:
+                  - img
+                  - text: Frissítés
+            - generic [ref=e1191]:
+              - generic [ref=e1192]:
+                - generic [ref=e1193]:
+                  - paragraph [ref=e1194]: Pending
+                  - paragraph [ref=e1195]: "0"
+                - generic [ref=e1196]:
+                  - paragraph [ref=e1197]: Kézbesítve
+                  - paragraph [ref=e1198]: "0"
+                - generic [ref=e1199]:
+                  - paragraph [ref=e1200]: Hiba
+                  - paragraph [ref=e1201]: "0"
+                - generic [ref=e1202]:
+                  - paragraph [ref=e1203]: Skip
+                  - paragraph [ref=e1204]: "0"
+              - generic [ref=e1205]:
+                - generic [ref=e1206]:
+                  - img [ref=e1207]
+                  - text: Elérhető csatornák
+                - generic [ref=e1210]:
+                  - generic [ref=e1211]: EMAIL OFF
+                  - generic [ref=e1212]: SLACK OFF
+                  - generic [ref=e1213]: DISCORD OFF
+                - generic [ref=e1214]:
+                  - paragraph [ref=e1215]: Aktív jelzési policy
+                  - generic [ref=e1216]:
+                    - generic [ref=e1217]:
+                      - generic [ref=e1218]:
+                        - generic [ref=e1219]: EMAIL
+                        - generic [ref=e1220]: Aktív
+                      - generic [ref=e1221]:
+                        - generic [ref=e1222]: approval_requested
+                        - generic [ref=e1223]: approval_resolved
+                        - generic [ref=e1224]: approval_expired
+                    - generic [ref=e1225]:
+                      - generic [ref=e1226]:
+                        - generic [ref=e1227]: SLACK
+                        - generic [ref=e1228]: Aktív
+                      - generic [ref=e1229]:
+                        - generic [ref=e1230]: approval_requested
+                        - generic [ref=e1231]: approval_resolved
+                        - generic [ref=e1232]: approval_expired
+                    - generic [ref=e1233]:
+                      - generic [ref=e1234]:
+                        - generic [ref=e1235]: DISCORD
+                        - generic [ref=e1236]: Aktív
+                      - generic [ref=e1237]:
+                        - generic [ref=e1238]: approval_requested
+                        - generic [ref=e1239]: approval_resolved
+                        - generic [ref=e1240]: approval_expired
+              - generic [ref=e1241]:
+                - generic [ref=e1242]:
+                  - paragraph [ref=e1243]: Legutóbbi kézbesítések
+                  - generic [ref=e1244]: 0 esemény
+                - paragraph [ref=e1246]: Még nincs kézbesítési esemény.
+        - contentinfo [ref=e1173]:
+          - button "Expand terminal" [ref=e1174]:
+            - generic [ref=e1176]: SHOW LOG

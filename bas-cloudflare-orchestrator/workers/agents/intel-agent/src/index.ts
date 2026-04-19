@@ -49,7 +49,7 @@ async function handleMarketIntel(task: string, context: any, requestId: string, 
   const analysisPrompt = `Analyze the current market trends for the following request: ${task}. 
   Provide a JSON summary with price estimates and competitor insights.`;
   
-  const aiResponse = await env.AI.run("@cf/meta/llama-3.1-8b-instruct", {
+  const aiResponse = await env.AI.run("@cf/google/gemma-4-26b-a4b-it", {
     prompt: analysisPrompt
   });
 

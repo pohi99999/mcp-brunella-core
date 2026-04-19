@@ -97,7 +97,7 @@
     "N8N_WEBHOOK_URL": "http://localhost:5678/webhook/bas-task",
     "BROWSER_USE_ENDPOINT": "http://localhost:8000/api/task",
     "DEFAULT_CODE_MODEL": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
-    "FALLBACK_CODE_MODEL": "@cf/meta/llama-3.1-8b-instruct",
+    "FALLBACK_CODE_MODEL": "@cf/google/gemma-4-26b-a4b-it",
     "REASONING_MODEL": "@cf/deepseek/deepseek-r1-distill-qwen-32b",
     "FAST_MODEL": "@cf/microsoft/phi-4",
     "STABLE_GEMMA_MODEL": "@cf/google/gemma-4-26b-a4b-it",

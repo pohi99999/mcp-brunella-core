@@ -6,7 +6,6 @@
  * Analytics: Agent telemetry via BAS_ANALYTICS
  */
 
-import { Ai } from "@cloudflare/ai";
 import { safeJsonParse, applyPromptArmor } from './utils/aiHelpers.js';
 export { SwarmCoordinator } from "./swarmCoordinator.js";
 import { handleQueueBatch, enqueueTask, type TaskMessage } from "./queueHandler.js";
@@ -37,6 +36,9 @@ interface Env extends WorkerSecurityEnv {
 
   // Analytics Engine
   BAS_ANALYTICS: AnalyticsEngineDataset;
+
+  // Rate Limiting
+  AI_RATE_LIMITER: any;
 
   // Workers AI model config
   DEFAULT_CODE_MODEL: string;
@@ -175,12 +177,11 @@ async function runWorkersAi(
   input: Record<string, unknown>,
 ): Promise<unknown> {
   const binding = env.AI as { run?: (model: string, input: Record<string, unknown>) => Promise<unknown> };
-  if (typeof binding.run === "function") {
-    return binding.run(model, input);
+  if (typeof binding.run !== "function") {
+    throw new Error("Cloudflare AI binding does not expose run()");
   }
 
-  const ai = new Ai(env.AI);
-  return ai.run(model as never, input as never);
+  return binding.run(model, input);
 }
 
 function shouldDelegate(task: BrunellaTaskMeta): CFDispatchDecision {
@@ -477,7 +478,10 @@ export default {
     // --- DISPATCH: Route task to specific agent worker ---
     if (path === "/dispatch" && request.method === "POST") {
       const body = await request.json() as any;
-      let { agent, task, context, requestId } = body;
+      const agent = body.agent;
+      let task = body.task;
+      const context = body.context;
+      const requestId = body.requestId;
 
       if (!agent || !task) {
         return Response.json({ error: "agent and task required" }, { status: 400, headers: corsHeaders });
@@ -694,18 +698,42 @@ export default {
       const body = await request.json() as Record<string, unknown>;
       const model = pickString(body.model, env.FAST_MODEL, env.DEFAULT_CODE_MODEL) || env.FAST_MODEL;
       const prompt = pickString(body.prompt, body.instruction) || "";
+      const requestId = pickString(body.requestId) || `ai_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+      const startedAt = Date.now();
 
       if (!prompt) {
         return Response.json({ error: "prompt is required" }, { status: 400, headers: corsHeaders });
       }
 
+      // Rate Limiting check
+      if (env.AI_RATE_LIMITER) {
+        const limiter = env.AI_RATE_LIMITER as { limit: (options: { key: string }) => Promise<{ success: boolean }> };
+        const { success } = await limiter.limit({ key: model });
+        if (!success) {
+          return Response.json({ error: "Rate limit exceeded for model: " + model, requestId }, { status: 429, headers: corsHeaders });
+        }
+      }
+
       try {
         const options = isRecord(body.options) ? body.options : {};
         const result = await runWorkersAi(env, model, { prompt, ...options });
-        return Response.json({ model, result }, { headers: corsHeaders });
+        const latency = Date.now() - startedAt;
+
+        // Log to D1 (fire and forget for now, but we await to ensure integrity during phase 2)
+        await env.D1_METADATA.prepare(
+          "INSERT INTO ai_calls (id, model, prompt, response, latency_ms, status) VALUES (?, ?, ?, ?, ?, 'success')"
+        ).bind(requestId, model, prompt.slice(0, 1000), JSON.stringify(result).slice(0, 2000), latency).run();
+
+        return Response.json({ model, result, requestId }, { headers: corsHeaders });
       } catch (error: unknown) {
         const message = error instanceof Error ? error.message : String(error);
-        return Response.json({ error: message }, { status: 500, headers: corsHeaders });
+        const latency = Date.now() - startedAt;
+        
+        await env.D1_METADATA.prepare(
+          "INSERT INTO ai_calls (id, model, prompt, error, latency_ms, status) VALUES (?, ?, ?, ?, ?, 'failed')"
+        ).bind(requestId, model, prompt.slice(0, 1000), message, latency).run();
+
+        return Response.json({ error: message, requestId }, { status: 500, headers: corsHeaders });
       }
     }
 

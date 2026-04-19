@@ -1,0 +1,149 @@
+38938	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\Airtable - Google Calendar feladat készítő.json
+14200	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\Feladatok státuszállítás telegram chat.json
+14791	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\Gmail - Airtable kimenő ajánlat összeköttetés.json
+62151	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\Gmail kategorizáló.json
+5914	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\Kimenő ajánlatok_dokumentumok.json
+38788	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\IMPLEMENTED_2026_03_13\Airtable - Google Calendar feladat készítő.json
+27920	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\IMPLEMENTED_2026_03_13\Feladatok státuszállítás telegram chat.json
+17985	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\IMPLEMENTED_2026_03_13\Iszapfaló - AI Agent Asszisztens (v2 - Javított).json
+6744	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\IMPLEMENTED_2026_03_13\Iszapfaló - Google Calendar → Airtable Szinkron.json
+6642	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\IMPLEMENTED_2026_03_13\Iszapfaló - Heti Emlékeztető (Csütörtök 16_00).json
+9855	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\IMPLEMENTED_2026_03_13\Iszapfaló - Telegram Parancsok (_statusz, _het).json
+5509	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\IMPLEMENTED_2026_03_13\Kimenő ajánlatok_dokumentumok.json
+13045	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\IMPLEMENTED_2026_03_13\Telegram Hangvezérlés - Teljes Rendszer.json
+27920	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\IMPORT_READY_PACK_2026_03_13\01_feladat_status_telegram_chat.json
+17985	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\IMPORT_READY_PACK_2026_03_13\02_ai_agent_asszisztens_v2_javitott.json
+38788	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\IMPORT_READY_PACK_2026_03_13\03_airtable_google_calendar_feladat_keszito.json
+6744	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\IMPORT_READY_PACK_2026_03_13\04_google_calendar_airtable_szinkron.json
+6642	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\IMPORT_READY_PACK_2026_03_13\05_heti_emlekezteto_csutortok_1600.json
+9855	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\IMPORT_READY_PACK_2026_03_13\06_telegram_parancsok_statusz_het.json
+13045	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\IMPORT_READY_PACK_2026_03_13\07_telegram_hangvezerles_teljes_rendszer.json
+5509	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\IMPORT_READY_PACK_2026_03_13\08_kimeno_ajanlatok_dokumentumok.json
+38938	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\eredeti n8n folyamataink\2025_11_26-kezdés\Airtable - Google Calendar feladat készítő.json
+14200	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\eredeti n8n folyamataink\2025_11_26-kezdés\Feladatok státuszállítás telegram chat.json
+14791	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\eredeti n8n folyamataink\2025_11_26-kezdés\Gmail - Airtable kimenő ajánlat összeköttetés.json
+62151	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\eredeti n8n folyamataink\2025_11_26-kezdés\Gmail kategorizáló.json
+5914	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\eredeti n8n folyamataink\2025_11_26-kezdés\Kimenő ajánlatok_dokumentumok.json
+48	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\Archivum\.cursor\worktrees.json
+10724	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\Archivum\00_Archive\Iszap_v15.json
+796	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\Archivum\00_Archive\00_Management\ISZAPFALO.project.json
+38938	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\Archivum\00_Archive\02_Development\01_Workflows\Airtable - Google Calendar feladat készítő.json
+14200	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\Archivum\00_Archive\02_Development\01_Workflows\Feladatok státuszállítás telegram chat.json
+7911	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\Archivum\00_Archive\02_Development\01_Workflows\final_master.json
+14791	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\Archivum\00_Archive\02_Development\01_Workflows\Gmail - Airtable kimenő ajánlat összeköttetés.json
+62151	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\Archivum\00_Archive\02_Development\01_Workflows\Gmail kategorizáló.json
+13135	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\Archivum\00_Archive\02_Development\01_Workflows\Hang-Asszisztens-Teljes-Rendszer.json
+4653	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\Archivum\00_Archive\02_Development\01_Workflows\iszapfalo_n8n_v10_SIMPLE.json
+11384	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\Archivum\00_Archive\02_Development\01_Workflows\iszapfalo_n8n_v11_FINAL_FIXED.json
+11500	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\Archivum\00_Archive\02_Development\01_Workflows\iszapfalo_n8n_v11_PHASE2.json
+5780	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\Archivum\00_Archive\02_Development\01_Workflows\iszapfalo_n8n_v2_MUNKAK_integracio.json
+7729	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\Archivum\00_Archive\02_Development\01_Workflows\iszapfalo_n8n_v3_FULL_INTEGRATION.json
+9700	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\Archivum\00_Archive\02_Development\01_Workflows\iszapfalo_n8n_v4_FINAL.json
+9519	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\Archivum\00_Archive\02_Development\01_Workflows\iszapfalo_n8n_v4_REPAIRED.json
+9082	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\Archivum\00_Archive\02_Development\01_Workflows\iszapfalo_n8n_v5_RECOVERY.json
+9119	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\Archivum\00_Archive\02_Development\01_Workflows\iszapfalo_n8n_v6_CLAUDE.json
+9046	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\Archivum\00_Archive\02_Development\01_Workflows\iszapfalo_n8n_v7_FIXED.json
+9118	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\Archivum\00_Archive\02_Development\01_Workflows\iszapfalo_n8n_v8_FINAL.json
+10772	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\Archivum\00_Archive\02_Development\01_Workflows\iszapfalo_n8n_v9_PYTHON.json
+5914	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\Archivum\00_Archive\02_Development\01_Workflows\Kimenő ajánlatok_dokumentumok.json
+4435	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\Archivum\00_Archive\02_Development\01_Workflows\MASTER_VEGLEGES_V2.json
+5713	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\Archivum\00_Archive\02_Development\01_Workflows\MASTER_VEGLEGES.json
+4062	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\Archivum\00_Archive\02_Development\01_Workflows\PHASE_1_CLAUDE_READY.json
+21766	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\Archivum\00_Archive\02_Development\01_Workflows\Telegram-Airtable-Bovitett.json
+8319	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\Archivum\00_Archive\02_Development\01_Workflows\Telegram-Hangvezerlés-Teljes.json
+309	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\Archivum\00_Archive\02_Development\01_Workflows\test_final.json
+104	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\Archivum\00_Archive\02_Development\01_Workflows\test_simple.json
+259	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\Archivum\00_Archive\02_Development\01_Workflows\test_v11.json
+10403	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\Archivum\00_Archive\02_Development\01_Workflows\update_payload.json
+5237	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\Archivum\00_Archive\02_Development\01_Workflows\VEGLEGES_JAVITAS.json
+8492	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\Archivum\01_alapdokumentáció_Források\2iszapfalo_workflow.json
+20418	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\Archivum\01_alapdokumentáció_Források\iszapfalo_n8n_teljes_workflow.json
+38938	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\Archivum\03_Development\01_Workflows\Airtable - Google Calendar feladat készítő.json
+14200	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\Archivum\03_Development\01_Workflows\Feladatok státuszállítás telegram chat.json
+7911	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\Archivum\03_Development\01_Workflows\final_master.json
+14791	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\Archivum\03_Development\01_Workflows\Gmail - Airtable kimenő ajánlat összeköttetés.json
+62151	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\Archivum\03_Development\01_Workflows\Gmail kategorizáló.json
+13135	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\Archivum\03_Development\01_Workflows\Hang-Asszisztens-Teljes-Rendszer.json
+9561	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\Archivum\03_Development\01_Workflows\iszapfalo_Error_Monitoring.json
+6650	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\Archivum\03_Development\01_Workflows\iszapfalo_Google_Calendar_Webhook_Sync.json
+6498	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\Archivum\03_Development\01_Workflows\iszapfalo_Heti_Emlékeztető.json
+4653	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\Archivum\03_Development\01_Workflows\iszapfalo_n8n_v10_SIMPLE.json
+11384	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\Archivum\03_Development\01_Workflows\iszapfalo_n8n_v11_FINAL_FIXED.json
+11500	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\Archivum\03_Development\01_Workflows\iszapfalo_n8n_v11_PHASE2.json
+13655	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\Archivum\03_Development\01_Workflows\iszapfalo_n8n_v12_IMPROVED.json
+5780	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\Archivum\03_Development\01_Workflows\iszapfalo_n8n_v2_MUNKAK_integracio.json
+7729	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\Archivum\03_Development\01_Workflows\iszapfalo_n8n_v3_FULL_INTEGRATION.json
+9700	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\Archivum\03_Development\01_Workflows\iszapfalo_n8n_v4_FINAL.json
+9519	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\Archivum\03_Development\01_Workflows\iszapfalo_n8n_v4_REPAIRED.json
+9082	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\Archivum\03_Development\01_Workflows\iszapfalo_n8n_v5_RECOVERY.json
+9119	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\Archivum\03_Development\01_Workflows\iszapfalo_n8n_v6_CLAUDE.json
+9046	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\Archivum\03_Development\01_Workflows\iszapfalo_n8n_v7_FIXED.json
+9118	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\Archivum\03_Development\01_Workflows\iszapfalo_n8n_v8_FINAL.json
+10772	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\Archivum\03_Development\01_Workflows\iszapfalo_n8n_v9_PYTHON.json
+9959	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\Archivum\03_Development\01_Workflows\iszapfalo_Telegram_Commands.json
+5914	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\Archivum\03_Development\01_Workflows\Kimenő ajánlatok_dokumentumok.json
+4435	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\Archivum\03_Development\01_Workflows\MASTER_VEGLEGES_V2.json
+5713	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\Archivum\03_Development\01_Workflows\MASTER_VEGLEGES.json
+4062	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\Archivum\03_Development\01_Workflows\PHASE_1_CLAUDE_READY.json
+21766	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\Archivum\03_Development\01_Workflows\Telegram-Airtable-Bovitett.json
+8319	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\Archivum\03_Development\01_Workflows\Telegram-Hangvezerlés-Teljes.json
+309	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\Archivum\03_Development\01_Workflows\test_final.json
+104	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\Archivum\03_Development\01_Workflows\test_simple.json
+259	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\Archivum\03_Development\01_Workflows\test_v11.json
+10403	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\Archivum\03_Development\01_Workflows\update_payload.json
+5237	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\Archivum\03_Development\01_Workflows\VEGLEGES_JAVITAS.json
+38938	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\Archivum\03_Development\01_Workflows\ok\Airtable - Google Calendar feladat készítő.json
+62151	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\Archivum\03_Development\01_Workflows\ok\Gmail kategorizáló.json
+17641	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\Archivum\03_Development\01_Workflows\ok\iszapfalo_AI_Agent_v2_FINAL.json
+9561	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\Archivum\03_Development\01_Workflows\ok\iszapfalo_Error_Monitoring.json
+6650	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\Archivum\03_Development\01_Workflows\ok\iszapfalo_Google_Calendar_Webhook_Sync.json
+6498	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\Archivum\03_Development\01_Workflows\ok\iszapfalo_Heti_Emlékeztető.json
+11500	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\Archivum\03_Development\01_Workflows\ok\iszapfalo_n8n_v11_PHASE2.json
+13655	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\Archivum\03_Development\01_Workflows\ok\iszapfalo_n8n_v12_IMPROVED.json
+9959	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\Archivum\03_Development\01_Workflows\ok\iszapfalo_Telegram_Commands.json
+38788	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\JSON\Airtable - Google Calendar feladat készítő.json
+27920	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\JSON\Feladatok státuszállítás telegram chat.json
+59501	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\JSON\Gmail kategorizáló.json
+17985	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\JSON\Iszapfaló - AI Agent Asszisztens (v2 - Javított).json
+6744	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\JSON\Iszapfaló - Google Calendar → Airtable Szinkron.json
+6642	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\JSON\Iszapfaló - Heti Emlékeztető (Csütörtök 16_00).json
+9855	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\JSON\Iszapfaló - Telegram Parancsok (_statusz, _het).json
+5509	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\JSON\Kimenő ajánlatok_dokumentumok.json
+13045	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\JSON\Telegram Hangvezérlés - Teljes Rendszer.json
+8222	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\OLD\2iszapfalo_workflow.json
+59501	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\OLD\Gmail kategorizáló.json
+16655	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\OLD\Iszapfaló - AI Agent Asszisztens (v2 - Javított).json
+20488	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\OLD\Iszapfaló - Error Monitoring és Logging.json
+6482	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\OLD\Iszapfaló - Google Calendar → Airtable Szinkron.json
+6246	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\OLD\Iszapfaló - Heti Emlékeztető (Csütörtök 16_00).json
+9518	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\OLD\Iszapfaló - Telegram Parancsok (_statusz, _het).json
+20359	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\OLD\iszapfalo_n8n_teljes_workflow.json
+5509	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\OLD\Kimenő ajánlatok_dokumentumok.json
+13045	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\OLD\Telegram Hangvezérlés - Teljes Rendszer.json
+4462	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\OLD\AI Folyamatfigyelés-20260221T151407Z-1-001\Claude code\ekr_search_log_AKTIV.json
+3725	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\OLD\AI Folyamatfigyelés-20260221T151407Z-1-001\Claude code\ekr_search_log.json
+4605	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\OLD\AI Folyamatfigyelés-20260221T151407Z-1-001\Claude code\ekr_search_results_aktiv_2026-01-28.json
+99	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\OLD\AI Folyamatfigyelés-20260221T151407Z-1-001\Claude code\.claude\settings.local.json
+518	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\OLD\AI Folyamatfigyelés-20260221T151407Z-1-001\Claude code\Csabi ügynöke\.claude\settings.local.json
+8222	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\OLD\AI Folyamatfigyelés-20260221T151407Z-1-001\MUNKAIDŐ nyílvántartó nrendszer\Manus\2iszapfalo_workflow.json
+20359	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\OLD\AI Folyamatfigyelés-20260221T151407Z-1-001\MUNKAIDŐ nyílvántartó nrendszer\Manus\iszapfalo_n8n_teljes_workflow.json
+38938	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\OLD\AI Folyamatfigyelés-20260221T151407Z-1-001\n8n workflow\Üzemelő folyamataink\2025_11_26-kezdés\Airtable - Google Calendar feladat készítő.json
+14200	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\OLD\AI Folyamatfigyelés-20260221T151407Z-1-001\n8n workflow\Üzemelő folyamataink\2025_11_26-kezdés\Feladatok státuszállítás telegram chat.json
+14791	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\OLD\AI Folyamatfigyelés-20260221T151407Z-1-001\n8n workflow\Üzemelő folyamataink\2025_11_26-kezdés\Gmail - Airtable kimenő ajánlat összeköttetés.json
+62151	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\OLD\AI Folyamatfigyelés-20260221T151407Z-1-001\n8n workflow\Üzemelő folyamataink\2025_11_26-kezdés\Gmail kategorizáló.json
+5914	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\OLD\AI Folyamatfigyelés-20260221T151407Z-1-001\n8n workflow\Üzemelő folyamataink\2025_11_26-kezdés\Kimenő ajánlatok_dokumentumok.json
+21766	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\OLD\AI Folyamatfigyelés-20260221T151407Z-1-001\n8n workflow\Üzemelő folyamataink\251220-bővítések\Telegram-Airtable-Bovitett.json
+13135	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\OLD\AI Folyamatfigyelés-20260221T151407Z-1-001\n8n workflow\Üzemelő folyamataink\251220-bővítések\Hang alapú aszisztens\Hang-Asszisztens-Teljes-Rendszer.json
+8319	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\OLD\AI Folyamatfigyelés-20260221T151407Z-1-001\n8n workflow\Üzemelő folyamataink\251220-bővítések\Hangvezérlés\Telegram-Hangvezerlés-Teljes.json
+13135	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\OLD\AI Folyamatfigyelés-20260221T151407Z-1-001\Pohi Művek\Üzemelő folyamataink\251220-bővítések\Hang alapú aszisztens\Hang-Asszisztens-Teljes-Rendszer.json
+8319	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\kiegy\Iszapfaló_nyilvántartó_rendszer\OLD\AI Folyamatfigyelés-20260221T151407Z-1-001\Pohi Művek\Üzemelő folyamataink\251220-bővítések\Hangvezérlés\Telegram-Hangvezerlés-Teljes.json
+25290	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\Pohi Munkaidő json-ok\Iszapfalo - AI Agent Asszisztens (v2 - Javitott).json
+24760	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\Pohi Munkaidő json-ok\Iszapfalo - Error Monitoring es Logging.json
+16196	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\Pohi Munkaidő json-ok\Iszapfalo - Geppark Karbantartas (All-in-One).json
+6164	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\Pohi Munkaidő json-ok\Iszapfalo - Google Calendar Airtable Szinkron.json
+6740	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\Pohi Munkaidő json-ok\Iszapfalo - Heti Emlekeztetö (Csütörtök 16.00).json
+5298	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\Pohi Munkaidő json-ok\Iszapfalo - Okos Ajanlato Asszisztens.json
+10170	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\Pohi Munkaidő json-ok\Iszapfalo - Telegram Hangvezerles.json
+14757	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\Pohi Munkaidő json-ok\Iszapfalo - Telegram Parancsok (statusz, het).json
+794	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\pohi-workflows\I_p5deBtbiA0eU6PMBDZY-My_workflow.json
+6870	F:\mcp-brunella-core\docs\Egyéb\Iszapfull_nyilvan\POHI MŰVEK - megosztott mappa\pohi-workflows\ztb2UOnE25b5aLQu-AI_Agent_workflow.json

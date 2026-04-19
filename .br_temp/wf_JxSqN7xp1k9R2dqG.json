@@ -1,0 +1,659 @@
+{
+  "updatedAt": "2026-03-26T05:54:36.676Z",
+  "createdAt": "2026-03-18T22:55:56.313Z",
+  "id": "JxSqN7xp1k9R2dqG",
+  "name": "03 - Telegram parancsok",
+  "description": null,
+  "active": true,
+  "isArchived": true,
+  "nodes": [
+    {
+      "parameters": {
+        "updates": "={{ [\"message\"] }}",
+        "additionalFields": {}
+      },
+      "name": "Telegram Trigger",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1,
+      "position": [
+        -608,
+        48
+      ],
+      "id": "f76752b1-8e1a-47ce-b0d3-504d17073e9d",
+      "webhookId": "1cee30cf-bea2-4a01-9f64-652fe282f42e",
+      "credentials": {
+        "telegramApi": {
+          "id": "XkjqRpMaHKDFOO3C",
+          "name": "ISZ_Telegram_Prod"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 1
+                },
+                "conditions": [
+                  {
+                    "id": "condition-1",
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "/statusz",
+                    "operator": {
+                      "type": "string",
+                      "operation": "startsWith"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 1
+                },
+                "conditions": [
+                  {
+                    "id": "condition-1",
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "/het",
+                    "operator": {
+                      "type": "string",
+                      "operation": "startsWith"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Parancs Router",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3,
+      "position": [
+        -416,
+        48
+      ],
+      "id": "245fa62b-1ee1-45ce-8bbc-e842a9e34f02"
+    },
+    {
+      "parameters": {
+        "authentication": "airtableTokenApi",
+        "operation": "list",
+        "application": {
+          "__rl": true,
+          "mode": "id",
+          "value": "appU3xQMuAmpmmCEy"
+        },
+        "table": "MunkaidĹ‘ NyilvĂˇntartĂˇs",
+        "additionalOptions": {
+          "filterByFormula": "IS_SAME({Dátum}, TODAY(), 'day')"
+        }
+      },
+      "name": "Airtable - Mai MunkaidĹ‘",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 1,
+      "position": [
+        -208,
+        -64
+      ],
+      "id": "f513706a-f948-46f3-acfe-589a84d4c714",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "xzTM1nLU5Iaomt9x",
+          "name": "ISZ_Airtable_PAT_v3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Mai munkaidĹ‘ Ă¶sszesĂ­tĹ‘ szĂˇmĂ­tĂˇs\nconst records = $input.all();\nconst chatId = $('Telegram Trigger').item.json.message.chat.id;\nconst firstName = $('Telegram Trigger').item.json.message.chat.first_name || 'DolgozĂł';\n\nlet totalRecords = records.length;\nlet message = `đź“Š **${firstName} - Mai munkaidĹ‘ stĂˇtusz:**\\n\\n`;\n\nif (totalRecords === 0) {\n  message += 'âťŚ Ma mĂ©g nincs rĂ¶gzĂ­tett munkaidĹ‘.\\n\\n';\n  message += 'đź’ˇ KĂĽldj egy ĂĽzenetet, pĂ©ldĂˇul:\\n';\n  message += 'â€˘ \"Ma 8 ĂłrĂˇt dolgoztam\"\\n';\n  message += 'â€˘ \"Kezdtem 9:00\"';\n} else {\n  message += `âś… **${totalRecords}** bejegyzĂ©s rĂ¶gzĂ­tve ma.\\n\\n`;\n  \n  records.forEach((record, index) => {\n    const datum = record.json.DĂˇtum || 'N/A';\n    const megjegyzes = record.json.MegjegyzĂ©s || 'Nincs megjegyzĂ©s';\n    message += `${index + 1}. ${megjegyzes}\\n`;\n  });\n}\n\nreturn [{\n  json: {\n    message: message,\n    chatId: chatId,\n    totalRecords: totalRecords\n  }\n}];"
+      },
+      "name": "StĂˇtusz SzĂˇmĂ­tĂˇs",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        0,
+        -64
+      ],
+      "id": "97f4073a-4753-4c23-a0d2-7522f411f00e"
+    },
+    {
+      "parameters": {
+        "authentication": "airtableTokenApi",
+        "operation": "list",
+        "application": {
+          "__rl": true,
+          "mode": "id",
+          "value": "appU3xQMuAmpmmCEy"
+        },
+        "table": "MunkaidĹ‘ NyilvĂˇntartĂˇs",
+        "additionalOptions": {
+          "filterByFormula": "IS_AFTER({Dátum}, DATEADD(TODAY(), -7, 'days'))"
+        }
+      },
+      "name": "Airtable - Heti MunkaidĹ‘",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 1,
+      "position": [
+        -208,
+        144
+      ],
+      "id": "2fb98598-6c0a-4f83-8737-9df35fc89050",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "xzTM1nLU5Iaomt9x",
+          "name": "ISZ_Airtable_PAT_v3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Heti munkaidĹ‘ Ă¶sszesĂ­tĹ‘ szĂˇmĂ­tĂˇs\nconst records = $input.all();\nconst chatId = $('Telegram Trigger').item.json.message.chat.id;\nconst firstName = $('Telegram Trigger').item.json.message.chat.first_name || 'DolgozĂł';\n\nlet totalRecords = records.length;\nlet message = `đź“… **${firstName} - Heti munkaidĹ‘ Ă¶sszesĂ­tĹ‘:**\\n\\n`;\n\nif (totalRecords === 0) {\n  message += 'âťŚ Az elmĂşlt 7 napban nincs rĂ¶gzĂ­tett munkaidĹ‘.\\n';\n} else {\n  message += `âś… **${totalRecords}** bejegyzĂ©s az elmĂşlt 7 napban.\\n\\n`;\n  \n  // DĂˇtum szerint csoportosĂ­tĂˇs\n  const byDate = {};\n  records.forEach(record => {\n    const date = record.json.DĂˇtum || 'Ismeretlen';\n    if (!byDate[date]) {\n      byDate[date] = [];\n    }\n    byDate[date].push(record.json.MegjegyzĂ©s || 'Nincs megjegyzĂ©s');\n  });\n  \n  // DĂˇtum szerint rendezĂ©s\n  const sortedDates = Object.keys(byDate).sort().reverse();\n  \n  sortedDates.forEach(date => {\n    message += `\\nđź“† **${date}**\\n`;\n    byDate[date].forEach((megjegyzes, index) => {\n      message += `  ${index + 1}. ${megjegyzes}\\n`;\n    });\n  });\n}\n\nmessage += '\\nđź’ˇ HasznĂˇld a /statusz parancsot a mai stĂˇtuszhoz.';\n\nreturn [{\n  json: {\n    message: message,\n    chatId: chatId,\n    totalRecords: totalRecords\n  }\n}];"
+      },
+      "name": "Heti Ă–sszesĂ­tĹ‘ SzĂˇmĂ­tĂˇs",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        0,
+        144
+      ],
+      "id": "3f97be80-a79e-43b5-b89f-c093deb521b3"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.chatId }}",
+        "text": "={{ $json.message }}",
+        "additionalFields": {
+          "parse_mode": "Markdown"
+        }
+      },
+      "name": "Telegram - StĂˇtusz VĂˇlasz",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        192,
+        -64
+      ],
+      "id": "613e1158-803e-4527-982a-2b6afa4ff947",
+      "webhookId": "ce9e9147-1586-4344-9956-f0639ac1cda9",
+      "credentials": {
+        "telegramApi": {
+          "id": "XkjqRpMaHKDFOO3C",
+          "name": "ISZ_Telegram_Prod"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.chatId }}",
+        "text": "={{ $json.message }}",
+        "additionalFields": {
+          "parse_mode": "Markdown"
+        }
+      },
+      "name": "Telegram - Heti VĂˇlasz",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        192,
+        144
+      ],
+      "id": "66782f13-e6d3-4a21-a62b-ab7376646145",
+      "webhookId": "91b387c5-93f1-4a69-bffa-0c9bbac41b32",
+      "credentials": {
+        "telegramApi": {
+          "id": "XkjqRpMaHKDFOO3C",
+          "name": "ISZ_Telegram_Prod"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Parancs Router",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parancs Router": {
+      "main": [
+        [
+          {
+            "node": "Airtable - Mai MunkaidĹ‘",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Airtable - Heti MunkaidĹ‘",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Airtable - Mai MunkaidĹ‘": {
+      "main": [
+        [
+          {
+            "node": "StĂˇtusz SzĂˇmĂ­tĂˇs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "StĂˇtusz SzĂˇmĂ­tĂˇs": {
+      "main": [
+        [
+          {
+            "node": "Telegram - StĂˇtusz VĂˇlasz",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Airtable - Heti MunkaidĹ‘": {
+      "main": [
+        [
+          {
+            "node": "Heti Ă–sszesĂ­tĹ‘ SzĂˇmĂ­tĂˇs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Heti Ă–sszesĂ­tĹ‘ SzĂˇmĂ­tĂˇs": {
+      "main": [
+        [
+          {
+            "node": "Telegram - Heti VĂˇlasz",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {},
+  "versionId": "8f591a12-f437-465e-a779-6fea449f4da4",
+  "activeVersionId": "8f591a12-f437-465e-a779-6fea449f4da4",
+  "versionCounter": 15,
+  "triggerCount": 1,
+  "shared": [
+    {
+      "updatedAt": "2026-03-18T22:55:56.315Z",
+      "createdAt": "2026-03-18T22:55:56.315Z",
+      "role": "workflow:owner",
+      "workflowId": "JxSqN7xp1k9R2dqG",
+      "projectId": "johLSwPlUades2LG",
+      "project": {
+        "updatedAt": "2026-01-03T00:33:46.337Z",
+        "createdAt": "2026-01-02T11:12:48.559Z",
+        "id": "johLSwPlUades2LG",
+        "name": "József Péter Pohánka <peterpohankapersonal@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "projectRelations": [
+          {
+            "updatedAt": "2026-01-02T11:12:48.561Z",
+            "createdAt": "2026-01-02T11:12:48.561Z",
+            "userId": "de33e76d-7bbf-4de8-9867-d4646a43eff4",
+            "projectId": "johLSwPlUades2LG",
+            "user": {
+              "updatedAt": "2026-04-01T07:33:51.000Z",
+              "createdAt": "2026-01-02T11:12:48.556Z",
+              "id": "de33e76d-7bbf-4de8-9867-d4646a43eff4",
+              "email": "peterpohankapersonal@gmail.com",
+              "firstName": "József Péter",
+              "lastName": "Pohánka",
+              "personalizationAnswers": null,
+              "settings": {
+                "userClaimedAiCredits": true,
+                "easyAIWorkflowOnboarded": true,
+                "firstSuccessfulWorkflowId": "Xo0yXlQ7oI7iOFbN",
+                "userActivated": true,
+                "userActivatedAt": 1774243654482
+              },
+              "disabled": false,
+              "mfaEnabled": false,
+              "lastActiveAt": "2026-03-31",
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": [],
+  "activeVersion": {
+    "updatedAt": "2026-03-26T05:54:36.678Z",
+    "createdAt": "2026-03-26T05:54:36.678Z",
+    "versionId": "8f591a12-f437-465e-a779-6fea449f4da4",
+    "workflowId": "JxSqN7xp1k9R2dqG",
+    "nodes": [
+      {
+        "parameters": {
+          "updates": "={{ [\"message\"] }}",
+          "additionalFields": {}
+        },
+        "name": "Telegram Trigger",
+        "type": "n8n-nodes-base.telegramTrigger",
+        "typeVersion": 1,
+        "position": [
+          -608,
+          48
+        ],
+        "id": "f76752b1-8e1a-47ce-b0d3-504d17073e9d",
+        "webhookId": "1cee30cf-bea2-4a01-9f64-652fe282f42e",
+        "credentials": {
+          "telegramApi": {
+            "id": "XkjqRpMaHKDFOO3C",
+            "name": "ISZ_Telegram_Prod"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "rules": {
+            "values": [
+              {
+                "conditions": {
+                  "options": {
+                    "caseSensitive": true,
+                    "leftValue": "",
+                    "typeValidation": "strict",
+                    "version": 1
+                  },
+                  "conditions": [
+                    {
+                      "id": "condition-1",
+                      "leftValue": "={{ $json.message.text }}",
+                      "rightValue": "/statusz",
+                      "operator": {
+                        "type": "string",
+                        "operation": "startsWith"
+                      }
+                    }
+                  ],
+                  "combinator": "and"
+                }
+              },
+              {
+                "conditions": {
+                  "options": {
+                    "caseSensitive": true,
+                    "leftValue": "",
+                    "typeValidation": "strict",
+                    "version": 1
+                  },
+                  "conditions": [
+                    {
+                      "id": "condition-1",
+                      "leftValue": "={{ $json.message.text }}",
+                      "rightValue": "/het",
+                      "operator": {
+                        "type": "string",
+                        "operation": "startsWith"
+                      }
+                    }
+                  ],
+                  "combinator": "and"
+                }
+              }
+            ]
+          },
+          "options": {}
+        },
+        "name": "Parancs Router",
+        "type": "n8n-nodes-base.switch",
+        "typeVersion": 3,
+        "position": [
+          -416,
+          48
+        ],
+        "id": "245fa62b-1ee1-45ce-8bbc-e842a9e34f02"
+      },
+      {
+        "parameters": {
+          "authentication": "airtableTokenApi",
+          "operation": "list",
+          "application": {
+            "__rl": true,
+            "mode": "id",
+            "value": "appU3xQMuAmpmmCEy"
+          },
+          "table": "MunkaidĹ‘ NyilvĂˇntartĂˇs",
+          "additionalOptions": {
+            "filterByFormula": "IS_SAME({Dátum}, TODAY(), 'day')"
+          }
+        },
+        "name": "Airtable - Mai MunkaidĹ‘",
+        "type": "n8n-nodes-base.airtable",
+        "typeVersion": 1,
+        "position": [
+          -208,
+          -64
+        ],
+        "id": "f513706a-f948-46f3-acfe-589a84d4c714",
+        "credentials": {
+          "airtableTokenApi": {
+            "id": "xzTM1nLU5Iaomt9x",
+            "name": "ISZ_Airtable_PAT_v3"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "jsCode": "// Mai munkaidĹ‘ Ă¶sszesĂ­tĹ‘ szĂˇmĂ­tĂˇs\nconst records = $input.all();\nconst chatId = $('Telegram Trigger').item.json.message.chat.id;\nconst firstName = $('Telegram Trigger').item.json.message.chat.first_name || 'DolgozĂł';\n\nlet totalRecords = records.length;\nlet message = `đź“Š **${firstName} - Mai munkaidĹ‘ stĂˇtusz:**\\n\\n`;\n\nif (totalRecords === 0) {\n  message += 'âťŚ Ma mĂ©g nincs rĂ¶gzĂ­tett munkaidĹ‘.\\n\\n';\n  message += 'đź’ˇ KĂĽldj egy ĂĽzenetet, pĂ©ldĂˇul:\\n';\n  message += 'â€˘ \"Ma 8 ĂłrĂˇt dolgoztam\"\\n';\n  message += 'â€˘ \"Kezdtem 9:00\"';\n} else {\n  message += `âś… **${totalRecords}** bejegyzĂ©s rĂ¶gzĂ­tve ma.\\n\\n`;\n  \n  records.forEach((record, index) => {\n    const datum = record.json.DĂˇtum || 'N/A';\n    const megjegyzes = record.json.MegjegyzĂ©s || 'Nincs megjegyzĂ©s';\n    message += `${index + 1}. ${megjegyzes}\\n`;\n  });\n}\n\nreturn [{\n  json: {\n    message: message,\n    chatId: chatId,\n    totalRecords: totalRecords\n  }\n}];"
+        },
+        "name": "StĂˇtusz SzĂˇmĂ­tĂˇs",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          0,
+          -64
+        ],
+        "id": "97f4073a-4753-4c23-a0d2-7522f411f00e"
+      },
+      {
+        "parameters": {
+          "authentication": "airtableTokenApi",
+          "operation": "list",
+          "application": {
+            "__rl": true,
+            "mode": "id",
+            "value": "appU3xQMuAmpmmCEy"
+          },
+          "table": "MunkaidĹ‘ NyilvĂˇntartĂˇs",
+          "additionalOptions": {
+            "filterByFormula": "IS_AFTER({Dátum}, DATEADD(TODAY(), -7, 'days'))"
+          }
+        },
+        "name": "Airtable - Heti MunkaidĹ‘",
+        "type": "n8n-nodes-base.airtable",
+        "typeVersion": 1,
+        "position": [
+          -208,
+          144
+        ],
+        "id": "2fb98598-6c0a-4f83-8737-9df35fc89050",
+        "credentials": {
+          "airtableTokenApi": {
+            "id": "xzTM1nLU5Iaomt9x",
+            "name": "ISZ_Airtable_PAT_v3"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "jsCode": "// Heti munkaidĹ‘ Ă¶sszesĂ­tĹ‘ szĂˇmĂ­tĂˇs\nconst records = $input.all();\nconst chatId = $('Telegram Trigger').item.json.message.chat.id;\nconst firstName = $('Telegram Trigger').item.json.message.chat.first_name || 'DolgozĂł';\n\nlet totalRecords = records.length;\nlet message = `đź“… **${firstName} - Heti munkaidĹ‘ Ă¶sszesĂ­tĹ‘:**\\n\\n`;\n\nif (totalRecords === 0) {\n  message += 'âťŚ Az elmĂşlt 7 napban nincs rĂ¶gzĂ­tett munkaidĹ‘.\\n';\n} else {\n  message += `âś… **${totalRecords}** bejegyzĂ©s az elmĂşlt 7 napban.\\n\\n`;\n  \n  // DĂˇtum szerint csoportosĂ­tĂˇs\n  const byDate = {};\n  records.forEach(record => {\n    const date = record.json.DĂˇtum || 'Ismeretlen';\n    if (!byDate[date]) {\n      byDate[date] = [];\n    }\n    byDate[date].push(record.json.MegjegyzĂ©s || 'Nincs megjegyzĂ©s');\n  });\n  \n  // DĂˇtum szerint rendezĂ©s\n  const sortedDates = Object.keys(byDate).sort().reverse();\n  \n  sortedDates.forEach(date => {\n    message += `\\nđź“† **${date}**\\n`;\n    byDate[date].forEach((megjegyzes, index) => {\n      message += `  ${index + 1}. ${megjegyzes}\\n`;\n    });\n  });\n}\n\nmessage += '\\nđź’ˇ HasznĂˇld a /statusz parancsot a mai stĂˇtuszhoz.';\n\nreturn [{\n  json: {\n    message: message,\n    chatId: chatId,\n    totalRecords: totalRecords\n  }\n}];"
+        },
+        "name": "Heti Ă–sszesĂ­tĹ‘ SzĂˇmĂ­tĂˇs",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          0,
+          144
+        ],
+        "id": "3f97be80-a79e-43b5-b89f-c093deb521b3"
+      },
+      {
+        "parameters": {
+          "chatId": "={{ $json.chatId }}",
+          "text": "={{ $json.message }}",
+          "additionalFields": {
+            "parse_mode": "Markdown"
+          }
+        },
+        "name": "Telegram - StĂˇtusz VĂˇlasz",
+        "type": "n8n-nodes-base.telegram",
+        "typeVersion": 1,
+        "position": [
+          192,
+          -64
+        ],
+        "id": "613e1158-803e-4527-982a-2b6afa4ff947",
+        "webhookId": "ce9e9147-1586-4344-9956-f0639ac1cda9",
+        "credentials": {
+          "telegramApi": {
+            "id": "XkjqRpMaHKDFOO3C",
+            "name": "ISZ_Telegram_Prod"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "chatId": "={{ $json.chatId }}",
+          "text": "={{ $json.message }}",
+          "additionalFields": {
+            "parse_mode": "Markdown"
+          }
+        },
+        "name": "Telegram - Heti VĂˇlasz",
+        "type": "n8n-nodes-base.telegram",
+        "typeVersion": 1,
+        "position": [
+          192,
+          144
+        ],
+        "id": "66782f13-e6d3-4a21-a62b-ab7376646145",
+        "webhookId": "91b387c5-93f1-4a69-bffa-0c9bbac41b32",
+        "credentials": {
+          "telegramApi": {
+            "id": "XkjqRpMaHKDFOO3C",
+            "name": "ISZ_Telegram_Prod"
+          }
+        }
+      }
+    ],
+    "connections": {
+      "Telegram Trigger": {
+        "main": [
+          [
+            {
+              "node": "Parancs Router",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Parancs Router": {
+        "main": [
+          [
+            {
+              "node": "Airtable - Mai MunkaidĹ‘",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Airtable - Heti MunkaidĹ‘",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Airtable - Mai MunkaidĹ‘": {
+        "main": [
+          [
+            {
+              "node": "StĂˇtusz SzĂˇmĂ­tĂˇs",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "StĂˇtusz SzĂˇmĂ­tĂˇs": {
+        "main": [
+          [
+            {
+              "node": "Telegram - StĂˇtusz VĂˇlasz",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Airtable - Heti MunkaidĹ‘": {
+        "main": [
+          [
+            {
+              "node": "Heti Ă–sszesĂ­tĹ‘ SzĂˇmĂ­tĂˇs",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Heti Ă–sszesĂ­tĹ‘ SzĂˇmĂ­tĂˇs": {
+        "main": [
+          [
+            {
+              "node": "Telegram - Heti VĂˇlasz",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "József Péter Pohánka",
+    "name": null,
+    "description": null
+  }
+}

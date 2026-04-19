@@ -34,7 +34,7 @@ export default {
         const prompt = `You are the ${agent}. Process the following financial request: ${task}.
         Check for anomalies or extract key invoice data.`;
         
-        const aiResponse = await env.AI.run("@cf/meta/llama-3.1-8b-instruct", {
+        const aiResponse = await env.AI.run("@cf/google/gemma-4-26b-a4b-it", {
           prompt
         });
 

@@ -1,6 +1,6 @@
 # FŐSZÁL - Egyesített Fejlesztési Napló
 
-**Generálva:** 2026-04-17 15:48
+**Generálva:** 2026-04-18 03:33
 **Script:** `scripts/sync_foszal.py`
 
 ---
@@ -28,52 +28,21 @@ start-full.bat
 
 ## Összesített Napló (Időrendben)
 
+### 2026-04-18
+
+#### 03:30 - [Copilot] Google Workspace bridge for AnythingLLM
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** src/server/routes/anythingllmActions.ts, src/server/workspaceActions.ts, src/tools/unifiedWorkspace.ts, src/tools/googleWorkspace.ts, test/anythingllmActions.test.ts, C:\Users\pohi9\.copilot\session-state\4d87f0dd-225d-4e93-bcf7-53695a268f98\plan.md
+
+---
+
 ### 2026-04-17
 
-#### 17:10 - [Copilot] Pillér kártya 3+2 elrendezés + YouTube hiba javítás
-- **Agent:** Copilot
+#### 00:00 - [Claude] Bérszemfejtő dashboard dokumentáció tisztítás
+- **Agent:** Claude
 - **Státusz:** ✅ Befejezve
-- **Érintett fájlok:** .worktrees/009_Varga_Viktória_prez/_VV/ajanlat_premium_v3_standalone.html
-
-#### 16:45 - [Copilot] YouTube embed áthelyezve Pillér 02 → Pillér 03
-- **Agent:** Copilot
-- **Státusz:** ✅ Befejezve
-- **Érintett fájlok:** .worktrees/009_Varga_Viktória_prez/_VV/ajanlat_premium_v3_standalone.html
-
-#### 15:30 - [Copilot] Premium HTML prezentáció layout szélességjavítás
-- **Agent:** Copilot
-- **Státusz:** ✅ Befejezve
-- **Érintett fájlok:** .worktrees/009_Varga_Viktória_prez/_VV/ajanlat_premium_v3_standalone.html
-
-#### 09:10 - [Copilot] Skill mirror sync
-- **Agent:** Copilot
-- **Státusz:** ✅ Befejezve
-- **Érintett fájlok:** .claude/skills/*, .gemini/skills/*, .ai/copilot.md, C:\Users\pohi9\.copilot\session-state\bbfe6ead-573d-458f-a0c2-acf1c1c58519\plan.md
-
-#### 03:10 - [Copilot] Premium ajánlat deck rendezés
-- **Agent:** Copilot
-- **Státusz:** ✅ Befejezve
-- **Érintett fájlok:** .worktrees/009_Varga_Viktória_prez/_VV/ajanlat_premium_v3_standalone.html
-
-#### 03:05 - [Copilot] OpenClaw runtime scaffold + dashboard/API bridge
-- **Agent:** Copilot
-- **Státusz:** ✅ Befejezve
-- **Érintett fájlok:** src/integrations/openclaw/contracts.ts, src/integrations/openclaw/config.ts, src/integrations/openclaw/errors.ts, src/integrations/openclaw/policyTranslator.ts, src/integrations/openclaw/gatewayAdapter.ts, src/integrations/openclaw/dispatcher.ts, src/integrations/openclaw/index.ts, src/server/routes/openclaw.ts, src/server/routes/index.ts, src/dashboard/components/dashboard/OpenClawIntegrationPanel.tsx, src/dashboard/components/dashboard/OpenClawIntegrationPanel.test.tsx, src/dashboard/lib/navigation.tsx, src/cli/openclawCommands.ts, test/openclaw/openclawConfig.test.ts, test/openclaw/openclawPolicy.test.ts, test/openclaw/openclawGatewayAdapter.test.ts, test/openclaw/openclawDispatcher.test.ts, test/openclaw/openclawRuntime.test.ts
-
-#### 02:15 - [Copilot] OpenClaw integration workflow bootstrap
-- **Agent:** Copilot
-- **Státusz:** ✅ Befejezve
-- **Érintett fájlok:** .github/prompts/openclaw-integration.prompt.md, .github/agents/brunella-orchestrator.agent.md, docs/openclaw-integration.md
-
-#### 01:51 - [Copilot] Mai változások dokumentálása
-- **Agent:** Copilot
-- **Státusz:** ✅ Befejezve
-- **Érintett fájlok:** .ai/copilot.md, .ai/FOSZAL.md, plan.md, test/CFDispatchMiddleware.test.ts, test/cloudflareHelpers.test.ts, test/cloudflare_dispatch_smart.test.ts, test/cloudflare_worker_security.test.ts, test/prometheus_metrics.test.ts, src/cloudflare/CFDispatcher.test.ts, package.json, package-lock.json
-
-#### 01:13 - [Copilot] Cloudflare active dispatch layer
-- **Agent:** Copilot
-- **Státusz:** ⏳ Folyamatban
-- **Érintett fájlok:** src/cloudflare/CFDispatcher.ts, src/cloudflare/CFDispatchMiddleware.ts, src/cloudflare/CFDispatcher.test.ts, src/server/routes/cloudflare.ts, src/agents/AgentManager.ts, src/utils/metrics.ts, bas-cloudflare-orchestrator/src/index.ts, bas-cloudflare-orchestrator/src/security.ts, bas-cloudflare-orchestrator/migrations/0004_dispatch_log.sql, cloudflare/CF_DISPATCH_GUIDE.md, test/CFDispatcher.test.ts
+- **Érintett fájlok:** Z:\Workspace\ber,es munkaugy\dashboard_data_mapping.md, Z:\Workspace\ber,es munkaugy\PAYROLL_SYSTEM_HANDOVER.md, F:\mcp-brunella-core\HANDOFF.md
 
 ---
 
@@ -718,10 +687,10 @@ start-full.bat
 
 | Agent | Bejegyzések | Utolsó Aktivitás |
 |-------|-------------|------------------|
-| Claude | 94 | 2026-04-16 |
+| Claude | 95 | 2026-04-16 |
 | Gemini | 11 | 2026-04-13 |
 | Cursor | 0 | N/A |
-| Copilot | 9 | 2026-04-17 |
+| Copilot | 1 | 2026-04-18 |
 
 ---
 

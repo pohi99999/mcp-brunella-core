@@ -55,6 +55,7 @@ import { FinanceReconciliationPanel } from "@/components/dashboard/FinanceReconc
 import { PropertyVisionaryWidget } from "@/components/dashboard/PropertyVisionaryWidget";
 import { PropertySalesWidget } from "@/components/dashboard/PropertySalesWidget";
 import { LeadsMasterMonitor } from "@/components/dashboard/LeadsMasterMonitor";
+import { PayrollDashboard } from "@/components/payroll/PayrollDashboard";
 import { TrojanHorseCommandCenter } from "@/components/dashboard/TrojanHorseCommandCenter";
 import { AutonomousInfraPanel } from "@/components/dashboard/AutonomousInfraPanel";
 import { ShowcasePage } from "@/pages/ShowcasePage";
@@ -241,6 +242,7 @@ export function initializeNavigation ()
     // { id: "projects", label: "Projektek", icon: FolderOpen, component: <ProjectExplorer /> },
     { id: "enterprise-suite", label: "Enterprise Suite", icon: Briefcase, component: <EnterpriseSuitePanel /> },
     { id: "hr-timesheet", label: "HR Timesheet", icon: ClipboardList, component: <HRTimesheetStatusPanel /> },
+    { id: "payroll", label: "Bérszemfejtő", icon: DollarSign, component: <PayrollDashboard /> },
     { id: "studio", label: "Brunella Studio", icon: Palette, component: <BrunellaStudio /> },
     { id: "campaign-studio", label: "Kampány Stúdió", icon: DollarSign, component: <CampaignStudio /> },
     { id: "innovation-bridge", label: "Innovation Bridge", icon: Lightbulb, component: <InnovationBridgeWidget /> },
@@ -310,7 +312,7 @@ export function initializeNavigation ()
   // Register groups
   navigationRegistry.registerGroup( { title: "Core Systems", icon: Layers, items: ["dashboard", "neural-map", "system-arch", "studio", "vscode", "process-control", "service-control"] } );
   navigationRegistry.registerGroup( { title: "AI & Agents", icon: Brain, items: ["chat", "paios", "copilot-orchestrator", "copilot-commander", "kernel-pipeline", "assistant-blueprint", "phoenix", "phoenix-flywheel", "zero-prompt-notifications", "ephemeral-agents", "learning-loop", "self-improvement", "predictive-decision", "world-perception", "federation", "management", "agent-diagnostics", "agent-registry-governance", "agent-factory", "decomposer", "incubator", "knowledge", "memory", "cognitive-memory", "user-preferences", "developer", "edge", "robotkez", "browser-copilot", "jules", "viktoria-phygital", "ai-agent-briefing"] } );
-  navigationRegistry.registerGroup( { title: "Enterprise", icon: Briefcase, items: ["enterprise-suite", "digital-hr", "hr-timesheet", "hr-onboarding", "grant-hunter", "law-detective", "property-visionary", "property-sales", "psales-intake", "psales-research", "psales-strategy", "enterprise-analytics", "intelligence-monitor"] } );
+  navigationRegistry.registerGroup( { title: "Enterprise", icon: Briefcase, items: ["enterprise-suite", "digital-hr", "payroll", "hr-timesheet", "hr-onboarding", "grant-hunter", "law-detective", "property-visionary", "property-sales", "psales-intake", "psales-research", "psales-strategy", "enterprise-analytics", "intelligence-monitor"] } );
   navigationRegistry.registerGroup( { title: "Értékesítési Központ", icon: DollarSign, items: ["trojan-horse", "lead-monitor", "demo-factory", "showcase", "campaign-studio", "leads-master", "innovation-bridge", "invoice-sync", "invoice-automation", "bookkeeping", "finance-reconciliation", "kp-penztar", "lead-mining", "marketwatcher", "inventory"] } );
   navigationRegistry.registerGroup( { title: "KKV Pack", icon: PackageSearch, items: ["kkv-pack"] } );
   navigationRegistry.registerGroup( { title: "Orchestration", icon: Rocket, items: ["cean", "cloudflare", "fleet_manager", "autonomy", "tasks", "workflow-engine", "swarm-panel", "tool-discovery", "tools-manager", "crawl4ai", "harvest-pipeline"] } );

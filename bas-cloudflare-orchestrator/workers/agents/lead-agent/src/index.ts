@@ -51,7 +51,7 @@ async function handleLeadMining(task: string, context: any, requestId: string, e
   // 2. Use Workers AI for icebreaker generation
   
   const icebreakerPrompt = `Generate a creative B2B icebreaker for: ${task}`;
-  const aiResponse = await env.AI.run("@cf/meta/llama-3.1-8b-instruct", {
+  const aiResponse = await env.AI.run("@cf/google/gemma-4-26b-a4b-it", {
     prompt: icebreakerPrompt
   });
 

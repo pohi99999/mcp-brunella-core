@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-04-17T10:00:00.255Z",
+  "lastUpdated": "2026-04-18T23:00:00.422Z",
   "tracks": [
     {
       "id": "agent_instability_chaos_testing_20260410",
@@ -455,6 +455,33 @@
       },
       "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\copilot_self_improvement_loop_20260406",
+      "_isArchived": false
+    },
+    {
+      "id": "daily_agent_report_pipeline_20260417",
+      "name": "Napi AI Agent Jelentes Pipeline",
+      "status": "active",
+      "priority": "high",
+      "progress": 90,
+      "created": "2026-04-17",
+      "updated": "2026-04-17",
+      "assignee": "GitHub Copilot",
+      "tags": [
+        "daily",
+        "ai-agents",
+        "report",
+        "scheduler",
+        "tech-harvester"
+      ],
+      "dependencies": [],
+      "dod": {
+        "tests_pass": false,
+        "build_clean": false,
+        "code_committed": false,
+        "no_verify_used": false
+      },
+      "group": "brunella",
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\daily_agent_report_pipeline_20260417",
       "_isArchived": false
     },
     {
@@ -1194,6 +1221,34 @@
       },
       "group": "nova",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\paios_integration_audit_20260415",
+      "_isArchived": false
+    },
+    {
+      "id": "payroll_telegram_sheets_20260417",
+      "name": "Bérszemfejtő — Telegram, n8n, Sheets & Neon Dashboard",
+      "status": "completed",
+      "priority": "high",
+      "progress": 100,
+      "created": "2026-04-17T18:00:00Z",
+      "updated": "2026-04-17T20:15:00Z",
+      "completed": "2026-04-17T20:15:00Z",
+      "assignee": "PAIOS Orchestrator",
+      "tags": [
+        "HR",
+        "Payroll",
+        "n8n",
+        "React",
+        "Telegram"
+      ],
+      "dependencies": [],
+      "dod": {
+        "tests_pass": true,
+        "build_clean": true,
+        "code_committed": true,
+        "no_verify_used": false
+      },
+      "group": "business",
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\payroll_telegram_sheets_20260417",
       "_isArchived": false
     },
     {
@@ -6721,9 +6776,9 @@
     }
   ],
   "stats": {
-    "total": 247,
-    "active": 11,
-    "completed": 24,
+    "total": 249,
+    "active": 12,
+    "completed": 25,
     "archived": 210,
     "proposed": 2
   }

@@ -47,7 +47,7 @@ async function handleGrantTasks(agent: string, task: string, context: any, reque
   const prompt = `You are the ${agent}. Analyze the following grant related request: ${task}.
   Identify key eligibility criteria and matching sectors.`;
   
-  const aiResponse = await env.AI.run("@cf/meta/llama-3.1-8b-instruct", {
+  const aiResponse = await env.AI.run("@cf/google/gemma-4-26b-a4b-it", {
     prompt
   });
 

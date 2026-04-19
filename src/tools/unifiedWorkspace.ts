@@ -28,7 +28,17 @@ export interface EmailDraft {
   to: string;
   subject: string;
   body: string;
+  cc?: string[];
   attachments?: string[];
+}
+
+export interface EmailMessageSummary {
+  id: string;
+  threadId: string;
+  from: string;
+  subject: string;
+  snippet: string;
+  date: string;
 }
 
 export interface SheetOperation {
@@ -253,6 +263,8 @@ export class UnifiedWorkspaceClient {
 
   private calendar: ReturnType<typeof google.calendar> | undefined;
 
+  private chat: ReturnType<typeof google.chat> | undefined;
+
   constructor(private config: WorkspaceConfig) {}
 
   /**
@@ -276,6 +288,7 @@ export class UnifiedWorkspaceClient {
       this.sheets = google.sheets({ version: 'v4', auth: this.auth });
       this.drive = google.drive({ version: 'v3', auth: this.auth });
       this.calendar = google.calendar({ version: 'v3', auth: this.auth });
+      this.chat = google.chat({ version: 'v1', auth: this.auth });
 
       logInfo('UnifiedWorkspace', '✅ Google Workspace initialized successfully');
     } catch (error: unknown) {
@@ -333,6 +346,18 @@ export class UnifiedWorkspaceClient {
     return this.calendar;
   }
 
+  private async getChatClient(): Promise<ReturnType<typeof google.chat>> {
+    if (!this.chat) {
+      await this.initialize();
+    }
+
+    if (!this.chat) {
+      throw new Error('Chat client is not initialized');
+    }
+
+    return this.chat;
+  }
+
   // ========================================================================
   // Gmail Operations
   // ========================================================================
@@ -368,6 +393,33 @@ export class UnifiedWorkspaceClient {
   }
 
   /**
+   * Send email immediately
+   */
+  async sendEmail(draft: EmailDraft): Promise<{ messageId: string; url: string }> {
+    try {
+      const gmail = await this.getGmailClient();
+      logInfo('UnifiedWorkspace', `Sending email to: ${draft.to}`);
+
+      const message = this.createEmailMessage(draft);
+      const response = await gmail.users.messages.send({
+        userId: 'me',
+        requestBody: {
+          raw: Buffer.from(message).toString('base64url'),
+        },
+      });
+
+      const messageId = response.data.id!;
+      const url = `https://mail.google.com/mail/u/0/#sent/${messageId}`;
+      logInfo('UnifiedWorkspace', `✅ Email sent: ${messageId}`);
+      return { messageId, url };
+    } catch (error: unknown) {
+      const errorMsg = error instanceof Error ? error.message : String(error);
+      logError('UnifiedWorkspace', `Failed to send email: ${errorMsg}`);
+      throw error;
+    }
+  }
+
+  /**
    * Search emails by query
    */
   async searchEmails(query: string, maxResults: number = 10): Promise<unknown[]> {
@@ -385,6 +437,54 @@ export class UnifiedWorkspaceClient {
     } catch (error: unknown) {
       const errorMsg = error instanceof Error ? error.message : String(error);
       logError('UnifiedWorkspace', `Email search failed: ${errorMsg}`);
+      return [];
+    }
+  }
+
+  async listEmailMessages(query: string, maxResults: number = 10): Promise<EmailMessageSummary[]> {
+    try {
+      const gmail = await this.getGmailClient();
+      logInfo('UnifiedWorkspace', `Listing email messages: "${query}"`);
+
+      const response = await gmail.users.messages.list({
+        userId: 'me',
+        q: query,
+        maxResults,
+      });
+
+      const summaries = response.data.messages || [];
+      const messages: EmailMessageSummary[] = [];
+
+      for (const summary of summaries) {
+        if (!summary.id) {
+          continue;
+        }
+
+        const detail = await gmail.users.messages.get({
+          userId: 'me',
+          id: summary.id,
+        });
+
+        const headers = detail.data.payload?.headers ?? [];
+        const getHeader = (name: string): string => {
+          const header = headers.find(item => item.name === name);
+          return header?.value ?? '';
+        };
+
+        messages.push({
+          id: summary.id,
+          threadId: summary.threadId ?? '',
+          from: getHeader('From'),
+          subject: getHeader('Subject'),
+          snippet: detail.data.snippet ?? '',
+          date: getHeader('Date'),
+        });
+      }
+
+      return messages;
+    } catch (error: unknown) {
+      const errorMsg = error instanceof Error ? error.message : String(error);
+      logError('UnifiedWorkspace', `Email listing failed: ${errorMsg}`);
       return [];
     }
   }
@@ -780,6 +880,77 @@ export class UnifiedWorkspaceClient {
     }
   }
 
+  async listCalendarEvents(maxResults: number = 10, timeMin: string = new Date().toISOString(), calendarId: string = 'primary'): Promise<unknown[]> {
+    try {
+      const calendar = await this.getCalendarClient();
+      const response = await calendar.events.list({
+        calendarId,
+        timeMin,
+        maxResults,
+        singleEvents: true,
+        orderBy: 'startTime',
+      });
+
+      return response.data.items || [];
+    } catch (error: unknown) {
+      const errorMsg = error instanceof Error ? error.message : String(error);
+      logError('UnifiedWorkspace', `Failed to list calendar events: ${errorMsg}`);
+      return [];
+    }
+  }
+
+  async listChatSpaces(maxResults: number = 10): Promise<unknown[]> {
+    try {
+      const chat = await this.getChatClient();
+      const response = await chat.spaces.list({
+        pageSize: maxResults,
+      });
+
+      return response.data.spaces || [];
+    } catch (error: unknown) {
+      const errorMsg = error instanceof Error ? error.message : String(error);
+      logError('UnifiedWorkspace', `Failed to list chat spaces: ${errorMsg}`);
+      return [];
+    }
+  }
+
+  async listChatMessages(spaceName: string, maxResults: number = 10): Promise<unknown[]> {
+    try {
+      const chat = await this.getChatClient();
+      const response = await chat.spaces.messages.list({
+        parent: spaceName,
+        pageSize: maxResults,
+      });
+
+      return response.data.messages || [];
+    } catch (error: unknown) {
+      const errorMsg = error instanceof Error ? error.message : String(error);
+      logError('UnifiedWorkspace', `Failed to list chat messages: ${errorMsg}`);
+      return [];
+    }
+  }
+
+  async sendChatMessage(spaceName: string, text: string): Promise<{ messageId: string; threadId?: string }> {
+    try {
+      const chat = await this.getChatClient();
+      const response = await chat.spaces.messages.create({
+        parent: spaceName,
+        requestBody: {
+          text,
+        },
+      });
+
+      return {
+        messageId: response.data.name ?? '',
+        threadId: response.data.thread?.name ?? undefined,
+      };
+    } catch (error: unknown) {
+      const errorMsg = error instanceof Error ? error.message : String(error);
+      logError('UnifiedWorkspace', `Failed to send chat message: ${errorMsg}`);
+      throw error;
+    }
+  }
+
   // ========================================================================
   // Helper Methods
   // ========================================================================
@@ -792,6 +963,9 @@ export class UnifiedWorkspaceClient {
     let message = '';
 
     message += `To: ${draft.to}\r\n`;
+    if (draft.cc && draft.cc.length > 0) {
+      message += `Cc: ${draft.cc.join(', ')}\r\n`;
+    }
     message += `Subject: ${draft.subject}\r\n`;
     message += `MIME-Version: 1.0\r\n`;
     message += `Content-Type: multipart/mixed; boundary="${boundary}"\r\n\r\n`;

@@ -157,6 +157,34 @@ class RAGService:
             "chunks": len(chunks)
         }
 
+    async def ingest_text(self, text: str, source: str, metadata: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+        """
+        Ingest raw text into the Knowledge Base.
+        Used for synchronizing edge data (Cloudflare) to local RAG.
+        """
+        logger.info(f"Ingesting text from source: {source}")
+        
+        db = await self._get_db()
+        table = await self._ensure_table(db)
+        
+        vector = await self._generate_embedding(text)
+        
+        record = {
+            "vector": vector,
+            "text": text,
+            "source": source,
+            "page_num": 0,
+            "metadata": json.dumps(metadata or {})
+        }
+        
+        await table.add([record])
+        
+        return {
+            "status": "success",
+            "source": source,
+            "text_length": len(text)
+        }
+
     async def search(self, query: str, limit: int = 5) -> List[Dict[str, Any]]:
         """
         Search the Knowledge Base for relevant context.

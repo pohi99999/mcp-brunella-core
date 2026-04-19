@@ -933,6 +933,14 @@ export class ScheduledTasksRunner {
       } else if (task.handler === 'predictive_decision') {
         const engine = new PredictiveDecisionEngine();
         result = await engine.analyzeDecisionPoint('scheduler');
+      } else if (task.handler === 'reflection_cycle') {
+        const { ReflectionEngine } = await import('../../core/reflectionEngine.js');
+        result = await ReflectionEngine.getInstance().runNightlyCycle();
+      } else if (task.handler === 'brand_monitor' || task.handler === 'robotkezv2_car_hunter') {
+        // Map specialized handlers to agent delegation
+        const agentName = task.handler === 'brand_monitor' ? 'viktoria-brand-voice' : 'RobotkezV2';
+        logInfo('ScheduledTasksRunner', `Mapping specialized handler ${task.handler} to agent: ${agentName}`);
+        result = await agentManager.delegate(agentName, task.prompt, taskContext);
       } else if (task.handler === 'project_maintainer') {
         const { runProjectMaintainerReport } = await import('../services/projectMaintainerService.js');
         const { ReflectionEngine } = await import('../../core/reflectionEngine.js');

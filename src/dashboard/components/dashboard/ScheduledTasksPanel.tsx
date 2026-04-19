@@ -170,7 +170,7 @@ export function ScheduledTasksPanel() {
                   <Input
                     value={newTask.handler}
                     onChange={(e) => setNewTask({ ...newTask, handler: e.target.value })}
-                    placeholder="agent vagy scan-todos"
+                    placeholder="pl. agent, reflection_cycle, brand_monitor, scan-todos"
                   />
                 </div>
                 <Button onClick={handleCreate}>Ütemezés mentése</Button>

@@ -72,3 +72,9 @@
 **Last successful build:** 2026-04-17
 **Last test run result:** `npm run test:fast` failed on 2026-04-17 pre-push due 2 failing tests
 **Open GitHub Issues:** Check repository issues tab / conductor backlog
+
+## 2026-04-17 - Bérszemfejtő dashboard dokumentáció frissítése
+
+- Frissítettem a `Z:\Workspace\ber,es munkaugy\dashboard_data_mapping.md` fájlt, hogy az önálló React dashboard adatfolyamát, route-jait és komponens-struktúráját írja le.
+- Frissítettem a `Z:\Workspace\ber,es munkaugy\PAYROLL_SYSTEM_HANDOVER.md` fájlt, hogy a dashboardot külön frontend alkalmazásként kezelje, saját routinggal és data-fetch réteggel.
+- A dokumentációban eltávolítottam a Brunella-panelre és belső lazy-route-ra utaló részeket.

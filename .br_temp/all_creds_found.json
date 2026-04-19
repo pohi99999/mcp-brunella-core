@@ -1,0 +1,38 @@
+{
+  "ISZ_Telegram_Prod": {
+    "id": "XkjqRpMaHKDFOO3C",
+    "type": "telegramApi"
+  },
+  "ISZ_Anthropic_Prod": {
+    "id": "odOgwQzht6VFn3Gw",
+    "type": "anthropicApi"
+  },
+  "ISZ_Airtable_PAT_v3": {
+    "id": "xzTM1nLU5Iaomt9x",
+    "type": "airtableTokenApi"
+  },
+  "Gmail account 4": {
+    "id": "9yx6t71JVnl0hDva",
+    "type": "gmailOAuth2"
+  },
+  "iszapfalo": {
+    "id": "rvmMqY8aMOU4tgNq",
+    "type": "gmailOAuth2"
+  },
+  "Anthropic account": {
+    "id": "LYnF9jhIVY7mxdTz",
+    "type": "anthropicApi"
+  },
+  "Airtable Personal Access Token account": {
+    "id": "c0DCvOcS3pwQNv2V",
+    "type": "airtableTokenApi"
+  },
+  "Google Calendar account": {
+    "id": "fDiccKxQl21yWB16",
+    "type": "googleCalendarOAuth2Api"
+  },
+  "ISZ_Airtable_Prod": {
+    "id": "OLUAFTjZT0aSEj6H",
+    "type": "airtableTokenApi"
+  }
+}

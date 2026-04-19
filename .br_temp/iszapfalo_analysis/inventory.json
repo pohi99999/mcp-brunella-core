@@ -1,0 +1,1915 @@
+{
+  "Gemini_cli": {
+    "root": "C:\\Users\\pohi9\\OneDrive\\Desktop\\Gemini_cli",
+    "fileCount": 310,
+    "extensions": {
+      ".txt": 300,
+      ".json": 10
+    },
+    "files": [
+      {
+        "relativePath": "checkpoint-isz7777.json",
+        "size": 667597,
+        "ext": ".json"
+      },
+      {
+        "relativePath": "checkpoint-isz9.json",
+        "size": 133725,
+        "ext": ".json"
+      },
+      {
+        "relativePath": "checkpoint-ppp999.json",
+        "size": 692575,
+        "ext": ".json"
+      },
+      {
+        "relativePath": "logs.json",
+        "size": 1072405,
+        "ext": ".json"
+      },
+      {
+        "relativePath": "session-2026-03-14T23-21-14e62a33.json",
+        "size": 27810,
+        "ext": ".json"
+      },
+      {
+        "relativePath": "session-2026-03-14T23-40-14e62a33.json",
+        "size": 17726098,
+        "ext": ".json"
+      },
+      {
+        "relativePath": "session-2026-03-15T06-49-88282bf9.json",
+        "size": 2585650,
+        "ext": ".json"
+      },
+      {
+        "relativePath": "session-2026-03-16T04-06-112b0cea.json",
+        "size": 5887,
+        "ext": ".json"
+      },
+      {
+        "relativePath": "session-2026-03-16T04-09-1e6fdf2d.json",
+        "size": 30050,
+        "ext": ".json"
+      },
+      {
+        "relativePath": "session-2026-03-16T04-10-1e6fdf2d.json",
+        "size": 19738,
+        "ext": ".json"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\grep_search_grep_search_1773557882803_0_vu0hx.txt",
+        "size": 18786,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\list_directory_list_directory_1773536670526_0_2u0ln.txt",
+        "size": 450,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\list_directory_list_directory_1773536670526_0_bz7dd.txt",
+        "size": 450,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\list_directory_list_directory_1773536670526_0_komnwh.txt",
+        "size": 450,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\list_directory_list_directory_1773536670526_0_q7ve5e.txt",
+        "size": 450,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_interpreter_run_python_mcp_brunella-core_interpreter_run_python_1773557833055_0_1orcbg.txt",
+        "size": 61,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_interpreter_run_python_mcp_brunella-core_interpreter_run_python_1773557833055_0_5lvvff.txt",
+        "size": 61,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_interpreter_run_python_mcp_brunella-core_interpreter_run_python_1773557833055_0_9p28dn.txt",
+        "size": 61,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_interpreter_run_python_mcp_brunella-core_interpreter_run_python_1773557841004_0_d5ucy.txt",
+        "size": 61,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_interpreter_run_python_mcp_brunella-core_interpreter_run_python_1773557841004_0_py1dj8.txt",
+        "size": 61,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_interpreter_run_python_mcp_brunella-core_interpreter_run_python_1773557841004_0_rkb8dj.txt",
+        "size": 61,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_interpreter_run_python_mcp_brunella-core_interpreter_run_python_1773557903245_0_pmgg9e.txt",
+        "size": 4993,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_interpreter_run_python_mcp_brunella-core_interpreter_run_python_1773557928514_0_t4782.txt",
+        "size": 210,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_interpreter_run_python_mcp_brunella-core_interpreter_run_python_1773557928514_0_w036rw.txt",
+        "size": 210,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_click_mcp_brunella-core_pb_click_1773557746688_0_5qqgk.txt",
+        "size": 69,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_click_mcp_brunella-core_pb_click_1773557746688_0_hemy8k.txt",
+        "size": 69,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_click_mcp_brunella-core_pb_click_1773557746688_0_x6wae.txt",
+        "size": 69,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_click_mcp_brunella-core_pb_click_1773557746688_0_xu7x6g.txt",
+        "size": 69,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_click_mcp_brunella-core_pb_click_1773557811030_0_g25og.txt",
+        "size": 69,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_click_mcp_brunella-core_pb_click_1773557811030_0_gqjqq.txt",
+        "size": 69,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_click_mcp_brunella-core_pb_click_1773557811030_0_piaxsb.txt",
+        "size": 69,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_click_mcp_brunella-core_pb_click_1773557978803_0_kmz3p.txt",
+        "size": 69,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_click_mcp_brunella-core_pb_click_1773557978803_0_sd9ce8.txt",
+        "size": 69,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_click_mcp_brunella-core_pb_click_1773558076814_0_85b9sib.txt",
+        "size": 69,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_click_mcp_brunella-core_pb_click_1773558076814_0_lgjn6c.txt",
+        "size": 69,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_click_mcp_brunella-core_pb_click_1773561033949_0_yws8zp.txt",
+        "size": 472,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_click_mcp_brunella-core_pb_click_1773561060095_0_3kha6.txt",
+        "size": 460,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_click_mcp_brunella-core_pb_click_1773561074405_0_0shp7v.txt",
+        "size": 48,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_content_1773557690679_0.txt",
+        "size": 77188,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_content_1773557783549_0.txt",
+        "size": 77188,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_content_1773557823370_0.txt",
+        "size": 78779,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_content_1773558105206_0.txt",
+        "size": 191883,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_content_1773561052126_0.txt",
+        "size": 191910,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_content_1773561104438_0.txt",
+        "size": 442392,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_content_1773561134569_0.txt",
+        "size": 93681,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_content_1773561171992_0.txt",
+        "size": 113680,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_content_1773561214406_0.txt",
+        "size": 99438,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_content_1773561415151_0.txt",
+        "size": 99438,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_content_mcp_brunella-core_pb_content_1773557690679_0_strbtl.txt",
+        "size": 41722,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_content_mcp_brunella-core_pb_content_1773557768214_0_gt3soy.txt",
+        "size": 17479,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_content_mcp_brunella-core_pb_content_1773557783549_0_ypvq0c.txt",
+        "size": 41722,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_content_mcp_brunella-core_pb_content_1773557823370_0_4ni71o.txt",
+        "size": 41782,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_content_mcp_brunella-core_pb_content_1773558105206_0_tvrjau.txt",
+        "size": 42812,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_content_mcp_brunella-core_pb_content_1773561052126_0_7irz3m.txt",
+        "size": 42812,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_content_mcp_brunella-core_pb_content_1773561104438_0_3zhe8h.txt",
+        "size": 42607,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_extract_mcp_brunella-core_pb_extract_1773557940468_0_12vdbj.txt",
+        "size": 104,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_extract_mcp_brunella-core_pb_extract_1773557940468_0_cqivy.txt",
+        "size": 104,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_launch_mcp_brunella-core_pb_launch_1773557657051_0_gn7ad.txt",
+        "size": 34,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_launch_mcp_brunella-core_pb_launch_1773557657051_0_p1w2eb.txt",
+        "size": 34,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_launch_mcp_brunella-core_pb_launch_1773557657051_0_rwzd1.txt",
+        "size": 34,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_launch_mcp_brunella-core_pb_launch_1773557657051_0_xi2s4s.txt",
+        "size": 34,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_navigate_mcp_brunella-core_pb_navigate_1773557667549_0_1iq7sd.txt",
+        "size": 107,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_navigate_mcp_brunella-core_pb_navigate_1773557667549_0_57xuzf.txt",
+        "size": 107,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_navigate_mcp_brunella-core_pb_navigate_1773557667549_0_gmi19r.txt",
+        "size": 107,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_navigate_mcp_brunella-core_pb_navigate_1773557667549_0_unfams.txt",
+        "size": 107,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_navigate_mcp_brunella-core_pb_navigate_1773557684593_0_8jih1c.txt",
+        "size": 63,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_navigate_mcp_brunella-core_pb_navigate_1773557684593_0_esxre.txt",
+        "size": 63,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_navigate_mcp_brunella-core_pb_navigate_1773557684593_0_qxidd.txt",
+        "size": 63,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_navigate_mcp_brunella-core_pb_navigate_1773557684593_0_wg9mfwj.txt",
+        "size": 63,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_navigate_mcp_brunella-core_pb_navigate_1773557759691_0_kg4s5b.txt",
+        "size": 107,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_navigate_mcp_brunella-core_pb_navigate_1773557759691_0_kqfcpw.txt",
+        "size": 107,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_navigate_mcp_brunella-core_pb_navigate_1773557759691_0_muzuz8.txt",
+        "size": 107,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_navigate_mcp_brunella-core_pb_navigate_1773557759691_0_ydahhn.txt",
+        "size": 107,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_navigate_mcp_brunella-core_pb_navigate_1773557776079_0_00nbkd.txt",
+        "size": 72,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_navigate_mcp_brunella-core_pb_navigate_1773557776079_0_iyoo5e.txt",
+        "size": 72,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_navigate_mcp_brunella-core_pb_navigate_1773557776079_0_j8imjh.txt",
+        "size": 72,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_navigate_mcp_brunella-core_pb_navigate_1773558049298_0_iqegjg.txt",
+        "size": 74,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_navigate_mcp_brunella-core_pb_navigate_1773558049298_0_ul7roh.txt",
+        "size": 74,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_screenshot_mcp_brunella-core_pb_screenshot_1773557699192_0_je6msh.txt",
+        "size": 52,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_screenshot_mcp_brunella-core_pb_screenshot_1773557699192_0_l2dt5l.txt",
+        "size": 52,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_screenshot_mcp_brunella-core_pb_screenshot_1773557699192_0_t8onhs.txt",
+        "size": 52,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_screenshot_mcp_brunella-core_pb_screenshot_1773557699192_0_y7ovjw.txt",
+        "size": 52,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_screenshot_mcp_brunella-core_pb_screenshot_1773557791178_0_2o7z8d.txt",
+        "size": 52,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_screenshot_mcp_brunella-core_pb_screenshot_1773557791178_0_5ftk7b.txt",
+        "size": 52,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_screenshot_mcp_brunella-core_pb_screenshot_1773557791178_0_6jsurg.txt",
+        "size": 52,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_screenshot_mcp_brunella-core_pb_screenshot_1773561096200_0_v5clds.txt",
+        "size": 52,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_type_mcp_brunella-core_pb_type_1773557729941_0_12qvw.txt",
+        "size": 63,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_type_mcp_brunella-core_pb_type_1773557729941_0_3up3aj.txt",
+        "size": 63,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_type_mcp_brunella-core_pb_type_1773557729941_0_55moj8.txt",
+        "size": 63,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_type_mcp_brunella-core_pb_type_1773557729941_0_qtf4f8.txt",
+        "size": 63,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_type_mcp_brunella-core_pb_type_1773557740780_0_cn984v.txt",
+        "size": 53,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_type_mcp_brunella-core_pb_type_1773557740780_0_fpxk3.txt",
+        "size": 53,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_type_mcp_brunella-core_pb_type_1773557740780_0_kwq4lt.txt",
+        "size": 53,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_type_mcp_brunella-core_pb_type_1773557740780_0_ubds09.txt",
+        "size": 53,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_type_mcp_brunella-core_pb_type_1773557798728_0_hsv5g.txt",
+        "size": 63,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_type_mcp_brunella-core_pb_type_1773557798728_0_kq29sv.txt",
+        "size": 63,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_type_mcp_brunella-core_pb_type_1773557798728_0_rqhwg.txt",
+        "size": 63,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_type_mcp_brunella-core_pb_type_1773557804878_0_aijsz4.txt",
+        "size": 53,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_type_mcp_brunella-core_pb_type_1773557804878_0_ar9iqn.txt",
+        "size": 53,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_type_mcp_brunella-core_pb_type_1773557804878_0_udfuq9.txt",
+        "size": 53,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_type_mcp_brunella-core_pb_type_1773557966292_0_3gplyf.txt",
+        "size": 63,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_type_mcp_brunella-core_pb_type_1773557966292_0_tcznot.txt",
+        "size": 63,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_type_mcp_brunella-core_pb_type_1773557972566_0_vlay9p.txt",
+        "size": 53,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_type_mcp_brunella-core_pb_type_1773557972566_0_vlvlbt.txt",
+        "size": 53,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_type_mcp_brunella-core_pb_type_1773558064133_0_2uvetq.txt",
+        "size": 63,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_type_mcp_brunella-core_pb_type_1773558064133_0_r7csc.txt",
+        "size": 63,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_type_mcp_brunella-core_pb_type_1773558070260_0_p4oia6l.txt",
+        "size": 53,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_type_mcp_brunella-core_pb_type_1773558070260_0_yfv7n9.txt",
+        "size": 53,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_wait_mcp_brunella-core_pb_wait_1773557753070_0_aqx0dl.txt",
+        "size": 57,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_wait_mcp_brunella-core_pb_wait_1773557753070_0_j61slu.txt",
+        "size": 57,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_wait_mcp_brunella-core_pb_wait_1773557753070_0_p35znr.txt",
+        "size": 57,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_wait_mcp_brunella-core_pb_wait_1773557753070_0_xdq43a.txt",
+        "size": 57,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_wait_mcp_brunella-core_pb_wait_1773557817325_0_9bi484.txt",
+        "size": 57,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_wait_mcp_brunella-core_pb_wait_1773557817325_0_ddmyie.txt",
+        "size": 57,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_wait_mcp_brunella-core_pb_wait_1773557817325_0_gj8eoh.txt",
+        "size": 57,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_wait_mcp_brunella-core_pb_wait_1773557989370_0_nrz1lp.txt",
+        "size": 496,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_wait_mcp_brunella-core_pb_wait_1773557989370_0_wgpsfq.txt",
+        "size": 496,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_wait_mcp_brunella-core_pb_wait_1773558085539_0_0zgank.txt",
+        "size": 510,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_wait_mcp_brunella-core_pb_wait_1773558085539_0_ygsd7k.txt",
+        "size": 510,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_brunella-core_pb_wait_mcp_brunella-core_pb_wait_1773561080339_0_g88mhs.txt",
+        "size": 490,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_chrome-devtools_list_pages_mcp_chrome-devtools_list_pages_1773557614359_0_e8hdxi.txt",
+        "size": 600,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_chrome-devtools_list_pages_mcp_chrome-devtools_list_pages_1773557614359_0_foyys5.txt",
+        "size": 600,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_chrome-devtools_list_pages_mcp_chrome-devtools_list_pages_1773557614359_0_i5qou.txt",
+        "size": 600,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_chrome-devtools_list_pages_mcp_chrome-devtools_list_pages_1773557614359_0_ksq055.txt",
+        "size": 600,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_chrome-devtools_new_page_mcp_chrome-devtools_new_page_1773557622789_0_07v0uc.txt",
+        "size": 680,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_chrome-devtools_new_page_mcp_chrome-devtools_new_page_1773557622789_0_574t28.txt",
+        "size": 680,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_chrome-devtools_new_page_mcp_chrome-devtools_new_page_1773557622789_0_qzebhz.txt",
+        "size": 680,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\mcp_chrome-devtools_new_page_mcp_chrome-devtools_new_page_1773557622789_0_sa2g5h.txt",
+        "size": 680,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\read_file_read_file_1773557721882_0_7seztq.txt",
+        "size": 11184,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\read_file_read_file_1773557892769_0_1o3eu.txt",
+        "size": 1400,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\run_shell_command_run_shell_command_1773531825858_0_03k9vg.txt",
+        "size": 337,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\run_shell_command_run_shell_command_1773531825858_0_29v36.txt",
+        "size": 337,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\run_shell_command_run_shell_command_1773531825858_0_8n91bp.txt",
+        "size": 337,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\run_shell_command_run_shell_command_1773531825858_0_ezhcxr.txt",
+        "size": 337,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\run_shell_command_run_shell_command_1773531836362_0_cpxw8k.txt",
+        "size": 41704,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\run_shell_command_run_shell_command_1773536681009_0_2hjmjf.txt",
+        "size": 474,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\run_shell_command_run_shell_command_1773536681009_0_cpr7sn.txt",
+        "size": 474,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\run_shell_command_run_shell_command_1773536681009_0_mxcfjq.txt",
+        "size": 474,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\run_shell_command_run_shell_command_1773536681009_0_vj33md.txt",
+        "size": 474,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\run_shell_command_run_shell_command_1773536697726_0_5bnol.txt",
+        "size": 551,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\run_shell_command_run_shell_command_1773536697726_0_hz2d8r.txt",
+        "size": 551,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\run_shell_command_run_shell_command_1773536697726_0_i1jz8i.txt",
+        "size": 551,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\run_shell_command_run_shell_command_1773536697726_0_jkqxtk.txt",
+        "size": 551,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\run_shell_command_run_shell_command_1773536714008_0_0oq2wb.txt",
+        "size": 18573,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\run_shell_command_run_shell_command_1773536840076_0_1to6n.txt",
+        "size": 58,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\run_shell_command_run_shell_command_1773536840076_0_4haxn.txt",
+        "size": 58,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\run_shell_command_run_shell_command_1773536840076_0_bc2r79.txt",
+        "size": 58,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\run_shell_command_run_shell_command_1773536840076_0_zrmbcw.txt",
+        "size": 58,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\run_shell_command_run_shell_command_1773557630078_0_luybpc.txt",
+        "size": 639,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\run_shell_command_run_shell_command_1773557630078_0_n9w4oc.txt",
+        "size": 639,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\run_shell_command_run_shell_command_1773557630078_0_q38nnv.txt",
+        "size": 639,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\run_shell_command_run_shell_command_1773557630078_0_wcsf5p.txt",
+        "size": 639,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\run_shell_command_run_shell_command_1773557641190_0_jpo7bh.txt",
+        "size": 14769,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\run_shell_command_run_shell_command_1773557709915_0_bqey75.txt",
+        "size": 265,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\run_shell_command_run_shell_command_1773557709915_0_jcout.txt",
+        "size": 265,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\run_shell_command_run_shell_command_1773557709915_0_uxlt7b.txt",
+        "size": 265,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\run_shell_command_run_shell_command_1773557709915_0_wvyqn.txt",
+        "size": 265,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\run_shell_command_run_shell_command_1773557852024_0_2rtk0qv.txt",
+        "size": 875,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\run_shell_command_run_shell_command_1773557852024_0_bewfx7.txt",
+        "size": 875,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\run_shell_command_run_shell_command_1773557852024_0_pz3rnj.txt",
+        "size": 875,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\run_shell_command_run_shell_command_1773557863096_0_lur7ps.txt",
+        "size": 129,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\run_shell_command_run_shell_command_1773557863096_0_ml4iso.txt",
+        "size": 129,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\run_shell_command_run_shell_command_1773557863096_0_utzoz6.txt",
+        "size": 129,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\run_shell_command_run_shell_command_1773557872739_0_sf0yy8.txt",
+        "size": 3419,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\run_shell_command_run_shell_command_1773557916223_0_9gv0h.txt",
+        "size": 29363,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\run_shell_command_run_shell_command_1773557916223_0_io3awk.txt",
+        "size": 29363,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\run_shell_command_run_shell_command_1773557916223_0_vbmc6w.txt",
+        "size": 29363,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\run_shell_command_run_shell_command_1773558020125_0_4x0nyd.txt",
+        "size": 60,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\run_shell_command_run_shell_command_1773558020125_0_kkgdcs.txt",
+        "size": 60,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\run_shell_command_run_shell_command_1773558751167_0_5nbo31i.txt",
+        "size": 229,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\run_shell_command_run_shell_command_1773558751167_0_awmxni.txt",
+        "size": 229,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\run_shell_command_run_shell_command_1773558765577_0_q35n26.txt",
+        "size": 15658,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\run_shell_command_run_shell_command_1773560972202_0_wpeklf.txt",
+        "size": 312,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\run_shell_command_run_shell_command_1773560972202_0_xvaqtg.txt",
+        "size": 312,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\run_shell_command_run_shell_command_1773561002072_0_c33ctf.txt",
+        "size": 28215,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\run_shell_command_run_shell_command_1773561002072_0_o0gena.txt",
+        "size": 28215,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\run_shell_command_run_shell_command_1773561017238_0_yc8pc.txt",
+        "size": 309,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\web_fetch_web_fetch_1773536749574_0_9i4auh.txt",
+        "size": 215,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\web_fetch_web_fetch_1773536749574_0_k2ead.txt",
+        "size": 215,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\web_fetch_web_fetch_1773536749574_0_yhg0c.txt",
+        "size": 215,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\web_fetch_web_fetch_1773536749574_0_zcdjqf.txt",
+        "size": 215,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\write_todos_write_todos_1773560956165_0_te5urv.txt",
+        "size": 789,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\write_todos_write_todos_1773560956165_0_vboyuq.txt",
+        "size": 789,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\write_todos_write_todos_1773560994395_0_dxk23e.txt",
+        "size": 791,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-88282bf9-b688-432e-90b9-678c9b03fa2b\\write_todos_write_todos_1773560994395_0_tbud3.txt",
+        "size": 791,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\browser_action_browser_action_1773551717821_0_1df3vg.txt",
+        "size": 459,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\browser_action_browser_action_1773551717821_0_mui9d.txt",
+        "size": 459,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\click_click_1773552434838_0_0sjlz.txt",
+        "size": 53,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\click_click_1773552434838_0_61emcp.txt",
+        "size": 53,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\click_click_1773552666396_0_twa6kh.txt",
+        "size": 53,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\click_click_1773552723758_0_kqgz2f.txt",
+        "size": 53,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\click_click_1773552734582_0_ddk202.txt",
+        "size": 53,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\click_click_1773552759206_0_60ocpm.txt",
+        "size": 53,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\click_click_1773552792237_0_1bs76f.txt",
+        "size": 424,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\click_click_1773553295390_0_pkk41.txt",
+        "size": 424,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\click_click_1773553885915_0_z8gc68.txt",
+        "size": 384,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\click_click_1773553964852_0_ksmzsl.txt",
+        "size": 53,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\click_click_1773553997398_0_92joxo.txt",
+        "size": 53,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\click_click_1773554058327_0_xa0bcg.txt",
+        "size": 53,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\evaluate_script_evaluate_script_1773552509399_0_6p0sch.txt",
+        "size": 70,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\evaluate_script_evaluate_script_1773552509399_0_tyth9p.txt",
+        "size": 70,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\evaluate_script_evaluate_script_1773552519203_0_sbgeg.txt",
+        "size": 117,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\evaluate_script_evaluate_script_1773552519203_0_yzh7eb.txt",
+        "size": 117,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\evaluate_script_evaluate_script_1773552528620_0_3wmff.txt",
+        "size": 68,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\evaluate_script_evaluate_script_1773552528620_0_shcd9e.txt",
+        "size": 68,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\evaluate_script_evaluate_script_1773552538070_0_i3qh0b.txt",
+        "size": 1623,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\evaluate_script_evaluate_script_1773552549458_0_445eel.txt",
+        "size": 95,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\evaluate_script_evaluate_script_1773552549458_0_tvx0bd.txt",
+        "size": 95,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\evaluate_script_evaluate_script_1773552560047_0_a3bvvh.txt",
+        "size": 58324,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\evaluate_script_evaluate_script_1773552636948_0_qvf2rb.txt",
+        "size": 84,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\evaluate_script_evaluate_script_1773552712813_0_6488b5.txt",
+        "size": 81,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\evaluate_script_evaluate_script_1773552823680_0_afuu6.txt",
+        "size": 81,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\evaluate_script_evaluate_script_1773552899417_0_zxtqr.txt",
+        "size": 113,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\evaluate_script_evaluate_script_1773552928074_0_gzuo7u.txt",
+        "size": 67,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\evaluate_script_evaluate_script_1773552940560_0_cgy5ysr.txt",
+        "size": 82,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\evaluate_script_evaluate_script_1773553079938_0_3vjzf4.txt",
+        "size": 120,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\evaluate_script_evaluate_script_1773553126946_0_mf0p1.txt",
+        "size": 87,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\evaluate_script_evaluate_script_1773553163964_0_2ac8jni.txt",
+        "size": 88,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\evaluate_script_evaluate_script_1773553316876_0_x3mi2h.txt",
+        "size": 81,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\evaluate_script_evaluate_script_1773553356712_0_944lm7.txt",
+        "size": 120,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\evaluate_script_evaluate_script_1773553860243_0_iqpwwa.txt",
+        "size": 116,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\list_directory_list_directory_1773536670526_0_02rdj2c.txt",
+        "size": 450,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\list_directory_list_directory_1773536670526_0_yqhwc6.txt",
+        "size": 450,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\list_pages_list_pages_1773552392827_0_8xu9hr.txt",
+        "size": 53,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\list_pages_list_pages_1773552392827_0_xcakyc.txt",
+        "size": 53,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\list_pages_list_pages_1773553920509_0_bj28yh.txt",
+        "size": 481,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\navigate_page_navigate_page_1773552402022_0_8d3mbo.txt",
+        "size": 134,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\navigate_page_navigate_page_1773552402022_0_ula7io.txt",
+        "size": 134,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\navigate_page_navigate_page_1773553225246_0_b2gw08.txt",
+        "size": 442,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\navigate_page_navigate_page_1773553934926_0_6lj3u.txt",
+        "size": 580,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\new_page_new_page_1773553148276_0_f0rmph.txt",
+        "size": 376,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\pb_launch_pb_launch_1773551107774_0_4xkqc.txt",
+        "size": 292,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\pb_launch_pb_launch_1773551107774_0_ljeljs.txt",
+        "size": 292,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\press_key_press_key_1773552770207_0_6bfuw.txt",
+        "size": 53,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\press_key_press_key_1773552988303_0_bsando.txt",
+        "size": 53,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\press_key_press_key_1773553190955_0_clj7q.txt",
+        "size": 53,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\read_file_read_file_1773553113845_0_dcmb2f.txt",
+        "size": 474,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\run_shell_command_1773531836362_0.txt",
+        "size": 73796,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\run_shell_command_1773555771885_0.txt",
+        "size": 576278,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\run_shell_command_run_shell_command_1773531825858_0_8qp7tr.txt",
+        "size": 337,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\run_shell_command_run_shell_command_1773531825858_0_dw704.txt",
+        "size": 337,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\run_shell_command_run_shell_command_1773531836362_0_c13b8.txt",
+        "size": 41704,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\run_shell_command_run_shell_command_1773536681009_0_tx6ow.txt",
+        "size": 474,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\run_shell_command_run_shell_command_1773536681009_0_wjgvzl.txt",
+        "size": 474,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\run_shell_command_run_shell_command_1773536697726_0_5809pi.txt",
+        "size": 551,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\run_shell_command_run_shell_command_1773536697726_0_u0jle6.txt",
+        "size": 551,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\run_shell_command_run_shell_command_1773536714008_0_qutqv8.txt",
+        "size": 18573,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\run_shell_command_run_shell_command_1773536840076_0_ndtiqt.txt",
+        "size": 58,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\run_shell_command_run_shell_command_1773536840076_0_uebtqj.txt",
+        "size": 58,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\run_shell_command_run_shell_command_1773550883321_0_ux4yt.txt",
+        "size": 639,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\run_shell_command_run_shell_command_1773550883321_0_xh6em.txt",
+        "size": 639,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\run_shell_command_run_shell_command_1773550905938_0_dcu5eo.txt",
+        "size": 317,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\run_shell_command_run_shell_command_1773550905938_0_kl0b0w.txt",
+        "size": 317,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\run_shell_command_run_shell_command_1773550934412_0_5sgbsj.txt",
+        "size": 501,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\run_shell_command_run_shell_command_1773550934412_0_892lnx.txt",
+        "size": 501,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\run_shell_command_run_shell_command_1773550952208_0_8w9r6b.txt",
+        "size": 57,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\run_shell_command_run_shell_command_1773550952208_0_m558z.txt",
+        "size": 57,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\run_shell_command_run_shell_command_1773550967022_0_yvq5d1.txt",
+        "size": 1810,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\run_shell_command_run_shell_command_1773550992290_0_40gswo.txt",
+        "size": 76,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\run_shell_command_run_shell_command_1773550992290_0_cpqak4n.txt",
+        "size": 76,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\run_shell_command_run_shell_command_1773551060293_0_46zuj9.txt",
+        "size": 312,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\run_shell_command_run_shell_command_1773551060293_0_clyt1q.txt",
+        "size": 312,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\run_shell_command_run_shell_command_1773552353197_0_d0wu3r.txt",
+        "size": 702,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\run_shell_command_run_shell_command_1773552366179_0_46t14.txt",
+        "size": 96,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\run_shell_command_run_shell_command_1773552366179_0_7r4t7n.txt",
+        "size": 96,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\run_shell_command_run_shell_command_1773552480067_0_fzi0mj.txt",
+        "size": 652,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\run_shell_command_run_shell_command_1773552480067_0_spp2hw.txt",
+        "size": 652,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\run_shell_command_run_shell_command_1773552492825_0_d6mum8.txt",
+        "size": 104,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\run_shell_command_run_shell_command_1773552492825_0_is585.txt",
+        "size": 104,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\run_shell_command_run_shell_command_1773552573278_0_et3e6b.txt",
+        "size": 75,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\run_shell_command_run_shell_command_1773552594654_0_h7znc3.txt",
+        "size": 479,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\run_shell_command_run_shell_command_1773552614709_0_b4a9e.txt",
+        "size": 83,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\run_shell_command_run_shell_command_1773552648935_0_7d179k.txt",
+        "size": 73,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\run_shell_command_run_shell_command_1773552849265_0_430pe.txt",
+        "size": 58,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\run_shell_command_run_shell_command_1773552875780_0_pic86p.txt",
+        "size": 96,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\run_shell_command_run_shell_command_1773552912635_0_w8vfj.txt",
+        "size": 59,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\run_shell_command_run_shell_command_1773553058987_0_hcwpqi.txt",
+        "size": 82,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\run_shell_command_run_shell_command_1773553094635_0_j1zqbn.txt",
+        "size": 68,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\run_shell_command_run_shell_command_1773553385102_0_vttn8x.txt",
+        "size": 553,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\select_page_select_page_1773553177728_0_ybyvtj.txt",
+        "size": 376,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\take_screenshot_take_screenshot_1773552410000_0_qx4a9a.txt",
+        "size": 153,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\take_screenshot_take_screenshot_1773552410000_0_xg6ozm.txt",
+        "size": 153,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\take_screenshot_take_screenshot_1773552448807_0_kxuzzl.txt",
+        "size": 153,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\take_screenshot_take_screenshot_1773552448807_0_oyc9xj.txt",
+        "size": 153,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\take_screenshot_take_screenshot_1773552683805_0_fl5xif.txt",
+        "size": 153,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\take_screenshot_take_screenshot_1773552779306_0_q25lt.txt",
+        "size": 153,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\take_screenshot_take_screenshot_1773552835133_0_o12pn.txt",
+        "size": 153,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\take_screenshot_take_screenshot_1773552974330_0_st7nmb.txt",
+        "size": 153,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\take_screenshot_take_screenshot_1773553000721_0_q1bg7a.txt",
+        "size": 153,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\take_screenshot_take_screenshot_1773553206933_0_jdwfej.txt",
+        "size": 153,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\take_screenshot_take_screenshot_1773553334956_0_tyui2j.txt",
+        "size": 153,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\take_screenshot_take_screenshot_1773554073937_0_qb6ej.txt",
+        "size": 153,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\take_snapshot_take_snapshot_1773552424461_0_646gwh.txt",
+        "size": 9559,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\take_snapshot_take_snapshot_1773552471357_0_lt8cl.txt",
+        "size": 28099,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\take_snapshot_take_snapshot_1773552695321_0_s9za3h.txt",
+        "size": 3472,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\take_snapshot_take_snapshot_1773552746382_0_tha6pm.txt",
+        "size": 3862,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\take_snapshot_take_snapshot_1773552808827_0_grxo7k.txt",
+        "size": 27955,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\take_snapshot_take_snapshot_1773552951815_0_uibam.txt",
+        "size": 3019,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\take_snapshot_take_snapshot_1773553240847_0_pyxgks.txt",
+        "size": 604,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\take_snapshot_take_snapshot_1773553277785_0_oa10t6.txt",
+        "size": 28100,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\take_snapshot_take_snapshot_1773553900385_0_s4r8eo.txt",
+        "size": 794,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\take_snapshot_take_snapshot_1773553950075_0_qmfyvf.txt",
+        "size": 3012,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\take_snapshot_take_snapshot_1773553981820_0_j6vty.txt",
+        "size": 3412,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\take_snapshot_take_snapshot_1773554014658_0_j3miq.txt",
+        "size": 3483,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\take_snapshot_take_snapshot_1773554044234_0_g6alp.txt",
+        "size": 3525,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\take_snapshot_take_snapshot_1773554107146_0_t7l19.txt",
+        "size": 29162,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\type_text_type_text_1773554030086_0_fbepk9.txt",
+        "size": 65,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\upload_file_upload_file_1773552963300_0_ez7vqk.txt",
+        "size": 138,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\web_fetch_web_fetch_1773536749574_0_m27xmg.txt",
+        "size": 215,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "session-d5c3407b-a143-4d97-aa47-529dd9f9918a\\web_fetch_web_fetch_1773536749574_0_o90dj.txt",
+        "size": 215,
+        "ext": ".txt"
+      }
+    ]
+  },
+  "Iszapfaló_Projekt_FO": {
+    "root": "C:\\Users\\pohi9\\OneDrive\\Desktop\\Iszapfaló_Projekt_FO",
+    "fileCount": 68,
+    "extensions": {
+      ".json": 39,
+      ".md": 17,
+      ".pdf": 7,
+      ".py": 3,
+      ".txt": 2
+    },
+    "files": [
+      {
+        "relativePath": "1. Ez a Minimum elvárt amit  meg kell oldanunk elöször.md",
+        "size": 10229,
+        "ext": ".md"
+      },
+      {
+        "relativePath": "1. Legfontosabb, megrendelő leírása nekünk ez az SOS, és ezekhez tartozó workflow-k\\Airtable - Google Calendar feladat készítő.json",
+        "size": 38938,
+        "ext": ".json"
+      },
+      {
+        "relativePath": "1. Legfontosabb, megrendelő leírása nekünk ez az SOS, és ezekhez tartozó workflow-k\\Feladatok státuszállítás telegram chat.json",
+        "size": 14200,
+        "ext": ".json"
+      },
+      {
+        "relativePath": "1. Legfontosabb, megrendelő leírása nekünk ez az SOS, és ezekhez tartozó workflow-k\\Gmail - Airtable kimenő ajánlat összeköttetés.json",
+        "size": 14791,
+        "ext": ".json"
+      },
+      {
+        "relativePath": "1. Legfontosabb, megrendelő leírása nekünk ez az SOS, és ezekhez tartozó workflow-k\\Gmail kategorizáló.json",
+        "size": 62151,
+        "ext": ".json"
+      },
+      {
+        "relativePath": "1. Legfontosabb, megrendelő leírása nekünk ez az SOS, és ezekhez tartozó workflow-k\\Kimenő ajánlatok_dokumentumok.json",
+        "size": 5914,
+        "ext": ".json"
+      },
+      {
+        "relativePath": "1. Legfontosabb, megrendelő leírása nekünk ez az SOS, és ezekhez tartozó workflow-k\\n8n_Automatizacios_Rendszer_v2_Reszletes.md",
+        "size": 9711,
+        "ext": ".md"
+      },
+      {
+        "relativePath": "2. ezeket a workflow-at már mi csináltuk vagy javítottuk az Iszapfalónak betötés!\\IMPLEMENTED_2026_03_13 n8n workflow\\Airtable - Google Calendar feladat készítő.json",
+        "size": 38788,
+        "ext": ".json"
+      },
+      {
+        "relativePath": "2. ezeket a workflow-at már mi csináltuk vagy javítottuk az Iszapfalónak betötés!\\IMPLEMENTED_2026_03_13 n8n workflow\\Feladatok státuszállítás telegram chat.json",
+        "size": 27920,
+        "ext": ".json"
+      },
+      {
+        "relativePath": "2. ezeket a workflow-at már mi csináltuk vagy javítottuk az Iszapfalónak betötés!\\IMPLEMENTED_2026_03_13 n8n workflow\\Iszapfaló - AI Agent Asszisztens (v2 - Javított).json",
+        "size": 17985,
+        "ext": ".json"
+      },
+      {
+        "relativePath": "2. ezeket a workflow-at már mi csináltuk vagy javítottuk az Iszapfalónak betötés!\\IMPLEMENTED_2026_03_13 n8n workflow\\Iszapfaló - Google Calendar → Airtable Szinkron.json",
+        "size": 6744,
+        "ext": ".json"
+      },
+      {
+        "relativePath": "2. ezeket a workflow-at már mi csináltuk vagy javítottuk az Iszapfalónak betötés!\\IMPLEMENTED_2026_03_13 n8n workflow\\Iszapfaló - Heti Emlékeztető (Csütörtök 16_00).json",
+        "size": 6642,
+        "ext": ".json"
+      },
+      {
+        "relativePath": "2. ezeket a workflow-at már mi csináltuk vagy javítottuk az Iszapfalónak betötés!\\IMPLEMENTED_2026_03_13 n8n workflow\\Iszapfaló - Telegram Parancsok (_statusz, _het).json",
+        "size": 9855,
+        "ext": ".json"
+      },
+      {
+        "relativePath": "2. ezeket a workflow-at már mi csináltuk vagy javítottuk az Iszapfalónak betötés!\\IMPLEMENTED_2026_03_13 n8n workflow\\Kimenő ajánlatok_dokumentumok.json",
+        "size": 5509,
+        "ext": ".json"
+      },
+      {
+        "relativePath": "2. ezeket a workflow-at már mi csináltuk vagy javítottuk az Iszapfalónak betötés!\\IMPLEMENTED_2026_03_13 n8n workflow\\Telegram Hangvezérlés - Teljes Rendszer.json",
+        "size": 13045,
+        "ext": ".json"
+      },
+      {
+        "relativePath": "2. ezeket a workflow-at már mi csináltuk vagy javítottuk az Iszapfalónak betötés!\\IMPORT_READY_PACK_2026_03_13 n8n workflow\\01_feladat_status_telegram_chat.json",
+        "size": 27920,
+        "ext": ".json"
+      },
+      {
+        "relativePath": "2. ezeket a workflow-at már mi csináltuk vagy javítottuk az Iszapfalónak betötés!\\IMPORT_READY_PACK_2026_03_13 n8n workflow\\02_ai_agent_asszisztens_v2_javitott.json",
+        "size": 17985,
+        "ext": ".json"
+      },
+      {
+        "relativePath": "2. ezeket a workflow-at már mi csináltuk vagy javítottuk az Iszapfalónak betötés!\\IMPORT_READY_PACK_2026_03_13 n8n workflow\\03_airtable_google_calendar_feladat_keszito.json",
+        "size": 38788,
+        "ext": ".json"
+      },
+      {
+        "relativePath": "2. ezeket a workflow-at már mi csináltuk vagy javítottuk az Iszapfalónak betötés!\\IMPORT_READY_PACK_2026_03_13 n8n workflow\\04_google_calendar_airtable_szinkron.json",
+        "size": 6744,
+        "ext": ".json"
+      },
+      {
+        "relativePath": "2. ezeket a workflow-at már mi csináltuk vagy javítottuk az Iszapfalónak betötés!\\IMPORT_READY_PACK_2026_03_13 n8n workflow\\05_heti_emlekezteto_csutortok_1600.json",
+        "size": 6642,
+        "ext": ".json"
+      },
+      {
+        "relativePath": "2. ezeket a workflow-at már mi csináltuk vagy javítottuk az Iszapfalónak betötés!\\IMPORT_READY_PACK_2026_03_13 n8n workflow\\06_telegram_parancsok_statusz_het.json",
+        "size": 9855,
+        "ext": ".json"
+      },
+      {
+        "relativePath": "2. ezeket a workflow-at már mi csináltuk vagy javítottuk az Iszapfalónak betötés!\\IMPORT_READY_PACK_2026_03_13 n8n workflow\\07_telegram_hangvezerles_teljes_rendszer.json",
+        "size": 13045,
+        "ext": ".json"
+      },
+      {
+        "relativePath": "2. ezeket a workflow-at már mi csináltuk vagy javítottuk az Iszapfalónak betötés!\\IMPORT_READY_PACK_2026_03_13 n8n workflow\\08_kimeno_ajanlatok_dokumentumok.json",
+        "size": 5509,
+        "ext": ".json"
+      },
+      {
+        "relativePath": "2. ezeket a workflow-at már mi csináltuk vagy javítottuk az Iszapfalónak betötés!\\IMPORT_READY_PACK_2026_03_13 n8n workflow\\MANIFEST.md",
+        "size": 2763,
+        "ext": ".md"
+      },
+      {
+        "relativePath": "2. ezeket a workflow-at már mi csináltuk vagy javítottuk az Iszapfalónak betötés!\\Iszapfalo - AI Agent Asszisztens (v2 - Javitott).json",
+        "size": 25290,
+        "ext": ".json"
+      },
+      {
+        "relativePath": "2. ezeket a workflow-at már mi csináltuk vagy javítottuk az Iszapfalónak betötés!\\Iszapfalo - Error Monitoring es Logging.json",
+        "size": 24760,
+        "ext": ".json"
+      },
+      {
+        "relativePath": "2. ezeket a workflow-at már mi csináltuk vagy javítottuk az Iszapfalónak betötés!\\Iszapfalo - Geppark Karbantartas (All-in-One).json",
+        "size": 16196,
+        "ext": ".json"
+      },
+      {
+        "relativePath": "2. ezeket a workflow-at már mi csináltuk vagy javítottuk az Iszapfalónak betötés!\\Iszapfalo - Google Calendar Airtable Szinkron.json",
+        "size": 6164,
+        "ext": ".json"
+      },
+      {
+        "relativePath": "2. ezeket a workflow-at már mi csináltuk vagy javítottuk az Iszapfalónak betötés!\\Iszapfalo - Heti Emlekeztetö (Csütörtök 16.00).json",
+        "size": 6740,
+        "ext": ".json"
+      },
+      {
+        "relativePath": "2. ezeket a workflow-at már mi csináltuk vagy javítottuk az Iszapfalónak betötés!\\Iszapfalo - Okos Ajanlato Asszisztens.json",
+        "size": 5298,
+        "ext": ".json"
+      },
+      {
+        "relativePath": "2. ezeket a workflow-at már mi csináltuk vagy javítottuk az Iszapfalónak betötés!\\Iszapfalo - Telegram Hangvezerles.json",
+        "size": 10170,
+        "ext": ".json"
+      },
+      {
+        "relativePath": "2. ezeket a workflow-at már mi csináltuk vagy javítottuk az Iszapfalónak betötés!\\Iszapfalo - Telegram Parancsok (statusz, het).json",
+        "size": 14757,
+        "ext": ".json"
+      },
+      {
+        "relativePath": "2. ezeket a workflow-at már mi csináltuk vagy javítottuk az Iszapfalónak betötés!\\mi csináltuk workflow\\pohi-workflows\\I_p5deBtbiA0eU6PMBDZY-My_workflow.json",
+        "size": 794,
+        "ext": ".json"
+      },
+      {
+        "relativePath": "2. ezeket a workflow-at már mi csináltuk vagy javítottuk az Iszapfalónak betötés!\\mi csináltuk workflow\\pohi-workflows\\ztb2UOnE25b5aLQu-AI_Agent_workflow.json",
+        "size": 6870,
+        "ext": ".json"
+      },
+      {
+        "relativePath": "2. ezeket a workflow-at már mi csináltuk vagy javítottuk az Iszapfalónak betötés!\\Összefoglaló(mi küldük az Iszapfaló Kft-nek kiegészítés a fő rendszerhez.md",
+        "size": 10197,
+        "ext": ".md"
+      },
+      {
+        "relativePath": "EZT_Olvasd be elsőként!! Az Iszapfaló projekt előtörténete összefoglalva enélkül nem fogod tudni a projek felépítésének tervét.md",
+        "size": 15766,
+        "ext": ".md"
+      },
+      {
+        "relativePath": "heti_kontextus_generator.py",
+        "size": 3267,
+        "ext": ".py"
+      },
+      {
+        "relativePath": "IMPORTRA_KESZ\\b64.txt",
+        "size": 253454,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "IMPORTRA_KESZ\\cors_server.py",
+        "size": 462,
+        "ext": ".py"
+      },
+      {
+        "relativePath": "IMPORTRA_KESZ\\Gmail kategorizáló.json",
+        "size": 95046,
+        "ext": ".json"
+      },
+      {
+        "relativePath": "IMPORTRA_KESZ\\Iszapfalo - AI Agent Asszisztens (v2 - Javitott).json",
+        "size": 42139,
+        "ext": ".json"
+      },
+      {
+        "relativePath": "IMPORTRA_KESZ\\Iszapfalo - Error Monitoring es Logging.json",
+        "size": 48374,
+        "ext": ".json"
+      },
+      {
+        "relativePath": "IMPORTRA_KESZ\\Iszapfalo - Geppark Karbantartas (All-in-One).json",
+        "size": 15919,
+        "ext": ".json"
+      },
+      {
+        "relativePath": "IMPORTRA_KESZ\\Iszapfalo - Heti Emlekeztetö (Csütörtök 16.00).json",
+        "size": 14209,
+        "ext": ".json"
+      },
+      {
+        "relativePath": "IMPORTRA_KESZ\\Iszapfalo - Telegram Parancsok (statusz, het).json",
+        "size": 23272,
+        "ext": ".json"
+      },
+      {
+        "relativePath": "IMPORTRA_KESZ\\upload.py",
+        "size": 469,
+        "ext": ".py"
+      },
+      {
+        "relativePath": "IMPORTRA_KESZ\\workflow.json",
+        "size": 42139,
+        "ext": ".json"
+      },
+      {
+        "relativePath": "Manus AI, Claude AI plan (értékelni, ha jó megcsinálni betötni\\Iszapfalo_Intelligens_Asszisztens_Vizió_2026_PLAN.md",
+        "size": 12897,
+        "ext": ".md"
+      },
+      {
+        "relativePath": "Manus AI, Claude AI plan (értékelni, ha jó megcsinálni betötni\\Iszapfaló_Kft._Hibrid_Folyamat-automatizálási_Rendszer_Fejlesztési_Terv.md",
+        "size": 15859,
+        "ext": ".md"
+      },
+      {
+        "relativePath": "meta.json",
+        "size": 328,
+        "ext": ".json"
+      },
+      {
+        "relativePath": "Munkagépeink (Iszapfaló_KFT munkagépei)\\Truxor Gépkönyv\\KAP 1 TRUXOR 5000 Förord ce_HU.md",
+        "size": 2027,
+        "ext": ".md"
+      },
+      {
+        "relativePath": "Munkagépeink (Iszapfaló_KFT munkagépei)\\Truxor Gépkönyv\\KAP 1 TRUXOR 5000 Förord ce_HU.pdf",
+        "size": 851445,
+        "ext": ".pdf"
+      },
+      {
+        "relativePath": "Munkagépeink (Iszapfaló_KFT munkagépei)\\Truxor Gépkönyv\\KAP 2 TRUXOR 5000  Praktik_HU.md",
+        "size": 2216,
+        "ext": ".md"
+      },
+      {
+        "relativePath": "Munkagépeink (Iszapfaló_KFT munkagépei)\\Truxor Gépkönyv\\KAP 2 TRUXOR 5000  Praktik_HU.pdf",
+        "size": 4319554,
+        "ext": ".pdf"
+      },
+      {
+        "relativePath": "Munkagépeink (Iszapfaló_KFT munkagépei)\\Truxor Gépkönyv\\KAP 3 TRUXOR 5000 Service_HU.md",
+        "size": 2160,
+        "ext": ".md"
+      },
+      {
+        "relativePath": "Munkagépeink (Iszapfaló_KFT munkagépei)\\Truxor Gépkönyv\\KAP 3 TRUXOR 5000 Service_HU.pdf",
+        "size": 3776059,
+        "ext": ".pdf"
+      },
+      {
+        "relativePath": "Munkagépeink (Iszapfaló_KFT munkagépei)\\Truxor Gépkönyv\\KAP 4 TRUXOR 5000 Teknisk info_HU.md",
+        "size": 1643,
+        "ext": ".md"
+      },
+      {
+        "relativePath": "Munkagépeink (Iszapfaló_KFT munkagépei)\\Truxor Gépkönyv\\KAP 4 TRUXOR 5000 Teknisk info_HU.pdf",
+        "size": 927194,
+        "ext": ".pdf"
+      },
+      {
+        "relativePath": "Munkagépeink (Iszapfaló_KFT munkagépei)\\Truxor Gépkönyv\\KAP 5 TRUXOR 5000 Sparepartlist.md",
+        "size": 3509,
+        "ext": ".md"
+      },
+      {
+        "relativePath": "Munkagépeink (Iszapfaló_KFT munkagépei)\\Truxor Gépkönyv\\KAP 5 TRUXOR 5000 Sparepartlist.pdf",
+        "size": 6114554,
+        "ext": ".pdf"
+      },
+      {
+        "relativePath": "Munkagépeink (Iszapfaló_KFT munkagépei)\\Watermaster Gépkönyv\\Watermaster Classic II No. 80, 82, 83.md",
+        "size": 2206,
+        "ext": ".md"
+      },
+      {
+        "relativePath": "Munkagépeink (Iszapfaló_KFT munkagépei)\\Watermaster Gépkönyv\\Watermaster Classic II No. 80, 82, 83.pdf",
+        "size": 4355262,
+        "ext": ".pdf"
+      },
+      {
+        "relativePath": "Munkagépeink (Iszapfaló_KFT munkagépei)\\Watermaster Gépkönyv\\WM Manual Classic II.md",
+        "size": 1857,
+        "ext": ".md"
+      },
+      {
+        "relativePath": "Munkagépeink (Iszapfaló_KFT munkagépei)\\Watermaster Gépkönyv\\WM Manual Classic II.pdf",
+        "size": 2947957,
+        "ext": ".pdf"
+      },
+      {
+        "relativePath": "osszefoglalo.md",
+        "size": 3115,
+        "ext": ".md"
+      },
+      {
+        "relativePath": "plan.md",
+        "size": 1724,
+        "ext": ".md"
+      },
+      {
+        "relativePath": "requirements_vision.txt",
+        "size": 13,
+        "ext": ".txt"
+      },
+      {
+        "relativePath": "spec.md",
+        "size": 2089,
+        "ext": ".md"
+      }
+    ]
+  }
+}

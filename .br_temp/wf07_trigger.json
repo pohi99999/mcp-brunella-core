@@ -1,0 +1,21 @@
+{
+  "parameters": {
+    "triggerTimes": {
+      "item": [
+        {
+          "mode": "everyDay",
+          "hour": 7,
+          "minute": 0
+        }
+      ]
+    }
+  },
+  "name": "Cron Trigger - Naponta 07:00",
+  "type": "n8n-nodes-base.cron",
+  "typeVersion": 1,
+  "position": [
+    80,
+    220
+  ],
+  "id": "a4b6e2c1-4207-4ec6-9363-000000000001"
+}

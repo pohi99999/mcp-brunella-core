@@ -1,0 +1,2104 @@
+{
+  "iszapfalo": {
+    "docFiles": [
+      {
+        "path": "1. Ez a Minimum elvárt amit  meg kell oldanunk elöször.md",
+        "size": 10229,
+        "type": ".md",
+        "lineCount": 321,
+        "headings": [],
+        "keywordHits": {
+          "airtable": 23,
+          "n8n": 8,
+          "workflow": 13,
+          "telegram": 18,
+          "calendar": 5,
+          "error": 2,
+          "claude": 1,
+          "gemini": 0,
+          "manus": 1,
+          "projekt": 0,
+          "késés": 0,
+          "munkaidő": 11
+        },
+        "preview": "Iszapfaló Kft.\n\nFejlesztési Brief — Pohánka Péter részére\n\nn8n automatizációs rendszer: stabilizáció + munkaidő integráció\n\nMegrendelő\tKovásznai-Szász Gergely, Iszapfaló Kft.\n\nFejlesztő\tPohánka Péter / Brunella AI\n\nDátum\t2026. március 11.\n\nJelleg\tStabilizáció + meglévő modulok integrációja\n\nHatókör\tNEM új rendszer — meglévők megjavítása és összekapcsolása\n\n \n\n1\\. Összefoglalás és kontextus\n\nKedves Pohi,\n\n\n\nMegkaptuk és átnéztük az összes fejlesztési anyagodat (Brunella AI workflow-k, integrációs dokumentáció). Nagyon jó munkát végeztél — látszik, hogy gondosan tervezted meg a rendszer architektúrát és a modulok logikáját.\n\n\n\nMost arra kérünk, hogy ne új dolgokat építs, hanem a meglévőket hozd rendbe és kapcsold össze. Van egy működő alaprendszerünk, és van egy csomó kész modulod — a feladat, hogy ezek egymás mellett, egy egységes rendszerként működjenek.\n\n\n\nA brief szelleme — 3 mondatban:\n\n1\\. Az alap automatizációk (Gmail, Telegram státusz, Airtable) legyenek stabilan működők.\n\n2\\. A munkaidő-nyilvántartó Telegram bot kerüljön éles rendszerbe — ez a legfontosabb új funkció.\n\n3\\. Semmi más extra — csak ami már kész, az működjön jól.\n\n\n\n1.1. Jelenlegi rendszer — amit tudni kell\n\nAz "
+      },
+      {
+        "path": "1. Legfontosabb, megrendelő leírása nekünk ez az SOS, és ezekhez tartozó workflow-k\\n8n_Automatizacios_Rendszer_v2_Reszletes.md",
+        "size": 9711,
+        "type": ".md",
+        "lineCount": 359,
+        "headings": [],
+        "keywordHits": {
+          "airtable": 18,
+          "n8n": 4,
+          "workflow": 9,
+          "telegram": 16,
+          "calendar": 3,
+          "error": 1,
+          "claude": 3,
+          "gemini": 0,
+          "manus": 0,
+          "projekt": 10,
+          "késés": 1,
+          "munkaidő": 0
+        },
+        "preview": "n8n Automatizációs Rendszer\n\nMunka Összefoglaló\n\n\n\nMit csináltunk ma?\n\nEgy komplex, AI-alapú folyamatfigyelő rendszert építettünk n8n-ben, ami automatizálja az Iszapfaló Kft. üzleti folyamatait.\n\n\n\nElkészült Workflow-k\n\n1\\. Kimenő Ajánlatok Automatikus Feldolgozása\n\nWorkflow neve: \"Gmail - Airtable kimenő ajánlat összeköttetés\"\n\n\n\nMit csinál?\n\n•\tAutomatikusan fut (Schedule Trigger - beállítható időközönként)\n\n•\tFigyeli a kimenő emaileket (Gmail SENT mappa)\n\n•\tCsak a csatolmányos emailekkel foglalkozik\n\n•\tAI (Claude Sonnet 4) elemzi a PDF ajánlatokat és kinyeri:\n\n\\- Megrendelő neve\n\n\\- Dátum\n\n\\- Műszaki összefoglaló\n\n\\- Nettó ár\n\n•\tAirtable-be menti az adatokat\n\n•\tGoogle Drive-ra feltölti a dokumentumot\n\n•\tHibakezelés: Ellenőrzi, hogy az AI helyesen dolgozott-e\n\nEredmény: Minden kimenő ajánlatról automatikusan nyilvántartás készül!\n\n\n\n2\\. Telegram Chatbot Feladatkezeléshez\n\nWorkflow neve: \"Feladatok státuszállítás telegram chat\"\n\n\n\nMit csinál?\n\n•\tTelegram üzeneteket fogad\n\n•\tAI Agent (Claude Sonnet 4.5) értelmezi, mit szeretnél\n\n•\tKeres az Airtable folyamatok között\n\n•\tFrissíti a státuszokat, leírásokat\n\n•\tVisszajelez Telegramban a művelet eredményéről\n\n•\tMemóriával rendelkezik - em"
+      },
+      {
+        "path": "2. ezeket a workflow-at már mi csináltuk vagy javítottuk az Iszapfalónak betötés!\\IMPORT_READY_PACK_2026_03_13 n8n workflow\\MANIFEST.md",
+        "size": 2763,
+        "type": ".md",
+        "lineCount": 53,
+        "headings": [
+          "# IMPORT READY PACK 2026-03-13",
+          "## Recommended import order"
+        ],
+        "keywordHits": {
+          "airtable": 6,
+          "n8n": 0,
+          "workflow": 0,
+          "telegram": 8,
+          "calendar": 6,
+          "error": 0,
+          "claude": 0,
+          "gemini": 0,
+          "manus": 0,
+          "projekt": 0,
+          "késés": 0,
+          "munkaidő": 0
+        },
+        "preview": "# IMPORT READY PACK 2026-03-13\n\n* 01\\_feladat\\_status\\_telegram\\_chat.json\n\n  * source: F:\\\\mcp-brunella-core\\\\docs\\\\Egyéb\\\\Iszapfull\\_nyilvan\\\\IMPLEMENTED\\_2026\\_03\\_13\\\\Feladatok státuszállítás telegram chat.json\n  * size: 27920 bytes\n  * sha256: 81025B597E1E4A8478111CE4F41BD18FABC752BBC302F73E97FFD3321E16B9F7\n* 02\\_ai\\_agent\\_asszisztens\\_v2\\_javitott.json\n\n  * source: F:\\\\mcp-brunella-core\\\\docs\\\\Egyéb\\\\Iszapfull\\_nyilvan\\\\IMPLEMENTED\\_2026\\_03\\_13\\\\Iszapfaló - AI Agent Asszisztens (v2 - Javított).json\n  * size: 17985 bytes\n  * sha256: 3D29D6E29AD8C4B0C5488F9176FE85ABE8CEC72CC914536B5FDE6B494CB8D1FB\n* 03\\_airtable\\_google\\_calendar\\_feladat\\_keszito.json\n\n  * source: F:\\\\mcp-brunella-core\\\\docs\\\\Egyéb\\\\Iszapfull\\_nyilvan\\\\IMPLEMENTED\\_2026\\_03\\_13\\\\Airtable - Google Calendar feladat készítő.json\n  * size: 38788 bytes\n  * sha256: F092FEF76C70CA1887CD9FADBAEDB1D6B1889F97F659A0DDD0AA5BEAD1F85016\n* 04\\_google\\_calendar\\_airtable\\_szinkron.json\n\n  * source: F:\\\\mcp-brunella-core\\\\docs\\\\Egyéb\\\\Iszapfull\\_nyilvan\\\\IMPLEMENTED\\_2026\\_03\\_13\\\\Iszapfaló - Google Calendar → Airtable Szinkron.json\n  * size: 6744 bytes\n  * sha256: E184F0B3AACEAD3BCD1A5706DD570C6817FD601C0F4C82127786942C556D"
+      },
+      {
+        "path": "2. ezeket a workflow-at már mi csináltuk vagy javítottuk az Iszapfalónak betötés!\\Iszapfalo - AI Agent Asszisztens (v2 - Javitott).json",
+        "size": 25290,
+        "type": ".json",
+        "lineCount": null,
+        "headings": [],
+        "keywordHits": {},
+        "preview": "{\"data\": {\"updatedAt\": \"2026-02-27T19:30:52.291Z\", \"createdAt\": \"2026-01-25T17:02:05.635Z\", \"id\": \"8p6vZo4envfPie6S1IC8A\", \"name\": \"Iszapfaló - AI Agent Asszisztens (v2 - Javított)\", \"description\": null, \"active\": true, \"isArchived\": false, \"nodes\": [{\"parameters\": {\"updates\": [\"message\"], \"additionalFields\": {}}, \"type\": \"n8n-nodes-base.telegramTrigger\", \"typeVersion\": 1.1, \"position\": [192, 16], \"id\": \"5c20451b-03a0-4732-917b-20315f9c9c4b\", \"name\": \"Telegram Üzenet\", \"webhookId\": \"5145a80b-3b5b-467d-a773-0460b9d58f74\", \"credentials\": {\"telegramApi\": {\"id\": \"lEp8aDHGJcOoUhAT\", \"name\": \"Telegram account 4\"}}}, {\"parameters\": {\"options\": {\"systemMessage\": \"Te vagy az Iszapfaló Kft. intelligens belső asszisztense. A feladatod, hogy a beérkező Telegram üzeneteket értelmezd és a megfelelő eszközökkel (Tools) rögzítsd az információkat.\\n\\nFONTOS SZABÁLYOK:\\n\\n1. MUNKAIDŐ RÖGZÍTÉS:\\n- Ha a dolgozó jelzi, hogy kezdett, végzett, érkezett, távozott vagy ledolgozott X órát.\\n- Példák: \\\"8 óra\\\", \\\"kezdtem\\\", \\\"itt vagyok\\\", \\\"ma 10 órát dolgoztam\\\", \\\"munka vége 16:30\\\"\\n- Használd a 'Munkaido_Rogzites' eszközt.\\n- Dátum: Ha nincs megadva, használd a mai dátumot (YYYY-MM-DD formátumban).\\n- "
+      },
+      {
+        "path": "2. ezeket a workflow-at már mi csináltuk vagy javítottuk az Iszapfalónak betötés!\\Iszapfalo - Error Monitoring es Logging.json",
+        "size": 24760,
+        "type": ".json",
+        "lineCount": null,
+        "headings": [],
+        "keywordHits": {},
+        "preview": "{\"data\": {\"updatedAt\": \"2026-02-27T19:57:43.592Z\", \"createdAt\": \"2026-01-18T18:19:26.187Z\", \"id\": \"EtFz9Kg-BmAJ1gRPibY5_\", \"name\": \"Iszapfaló - Error Monitoring és Logging\", \"description\": null, \"active\": true, \"isArchived\": false, \"nodes\": [{\"parameters\": {\"updates\": [\"message\"], \"additionalFields\": {}}, \"name\": \"Telegram Trigger\", \"type\": \"n8n-nodes-base.telegramTrigger\", \"typeVersion\": 1, \"position\": [-1168, 112], \"id\": \"b714e862-df04-488b-96bf-471c68836b92\", \"webhookId\": \"f0b2127f-7261-4757-866f-362500c1423c\", \"credentials\": {\"telegramApi\": {\"id\": \"lEp8aDHGJcOoUhAT\", \"name\": \"Telegram account 4\"}}}, {\"parameters\": {\"options\": {}}, \"name\": \"Adat Előkészítés\", \"type\": \"n8n-nodes-base.set\", \"typeVersion\": 1, \"position\": [-944, 112], \"id\": \"b39790ae-7951-4637-98c9-6769a9f12547\"}, {\"parameters\": {\"functionCode\": \"const raw = $node['AI Agy (Claude)'].json.content;\\nlet payload;\\n\\ntry {\\n  const cleanRaw = raw.replace(/```json/g, '').replace(/```/g, '').trim();\\n  payload = JSON.parse(cleanRaw);\\n} catch (e) {\\n  payload = {\\n    kategoria: 'EGYEB',\\n    valasz_uzenet: 'Sajnos nem sikerült feldolgozni az üzenetet. Kérlek próbáld újra pontosabban.',\\n    adatok: {}\\n  };\\n}\\n\\nreturn "
+      },
+      {
+        "path": "2. ezeket a workflow-at már mi csináltuk vagy javítottuk az Iszapfalónak betötés!\\Iszapfalo - Geppark Karbantartas (All-in-One).json",
+        "size": 16196,
+        "type": ".json",
+        "lineCount": null,
+        "headings": [],
+        "keywordHits": {},
+        "preview": "{\"data\": {\"updatedAt\": \"2026-02-27T18:59:31.057Z\", \"createdAt\": \"2026-02-27T04:44:22.761Z\", \"id\": \"rB5aiuyyU_DLgDQMqxgzx\", \"name\": \"Iszapfaló - Prediktív Karbantartás (All-in-One n8n)\", \"description\": null, \"active\": true, \"isArchived\": false, \"nodes\": [{\"parameters\": {\"httpMethod\": \"POST\", \"path\": \"geppark-figyelo-v2\", \"responseMode\": \"lastNode\", \"options\": {}}, \"id\": \"76b69764-23c3-407e-82f3-5842b7cc1e64\", \"name\": \"Webhook\", \"type\": \"n8n-nodes-base.webhook\", \"typeVersion\": 1, \"position\": [-192, -144], \"webhookId\": \"088e6a16-22d4-4af4-817a-46c7918f2055\"}, {\"parameters\": {\"model\": \"=gpt-4o-mini\", \"options\": {\"temperature\": 0.2}}, \"id\": \"398bfaf5-98f2-4d46-bbff-a06b087edf94\", \"name\": \"OpenAI Chat Model\", \"type\": \"@n8n/n8n-nodes-langchain.lmChatOpenAi\", \"typeVersion\": 1, \"position\": [64, 16], \"credentials\": {\"openAiApi\": {\"id\": \"hmyV9zPPx1toAlz6\", \"name\": \"OpenAi account 3\"}}}, {\"parameters\": {\"text\": \"=Te egy Prediktív Karbantartási AI Asszisztens vagy az Iszapfaló Kft-nél.\\nElemezd a munkatárstól kapott hibaüzenetet: \\\"{{ $json.body.message }}\\\"\\n\\nHasználd a tudásbázisod (Gépkönyv) az elemzéshez! Keresd meg a hibajelenséget, határozd meg a kategóriát, a sürgősséget, a javasolt lép"
+      },
+      {
+        "path": "2. ezeket a workflow-at már mi csináltuk vagy javítottuk az Iszapfalónak betötés!\\Iszapfalo - Google Calendar Airtable Szinkron.json",
+        "size": 6164,
+        "type": ".json",
+        "lineCount": null,
+        "headings": [],
+        "keywordHits": {},
+        "preview": "{\"data\": {\"updatedAt\": \"2026-02-27T19:58:37.000Z\", \"createdAt\": \"2026-01-25T13:44:16.199Z\", \"id\": \"jvlzg6daJWKA-YMmClZ8a\", \"name\": \"Iszapfaló - Google Calendar → Airtable Szinkron\", \"description\": null, \"active\": false, \"isArchived\": false, \"nodes\": [{\"parameters\": {\"pollTimes\": {\"item\": [{\"mode\": \"everyMinute\"}]}, \"calendarId\": {\"__rl\": true, \"value\": \"iam@peterpohanka.com\", \"mode\": \"list\", \"cachedResultName\": \"iam@peterpohanka.com\"}, \"triggerOn\": \"eventCreated\", \"options\": {}}, \"name\": \"Google Calendar Trigger\", \"type\": \"n8n-nodes-base.googleCalendarTrigger\", \"typeVersion\": 1, \"position\": [0, 0], \"webhookId\": \"google-calendar-webhook-id\", \"id\": \"ff1706a2-76de-488e-b07a-adb848e1e078\", \"credentials\": {\"googleCalendarOAuth2Api\": {\"id\": \"T7rdOEVKDmnSjlCl\", \"name\": \"Google Calendar account\"}}}, {\"parameters\": {\"conditions\": {\"options\": {\"caseSensitive\": false, \"leftValue\": \"\", \"typeValidation\": \"strict\"}, \"conditions\": [{\"id\": \"condition-1\", \"leftValue\": \"={{ $json.summary.toLowerCase() }}\", \"rightValue\": \"szabadság\", \"operator\": {\"type\": \"string\", \"operation\": \"contains\"}}, {\"id\": \"condition-2\", \"leftValue\": \"={{ $json.summary.toLowerCase() }}\", \"rightValue\": \"szabadnap\", \"operator\":"
+      },
+      {
+        "path": "2. ezeket a workflow-at már mi csináltuk vagy javítottuk az Iszapfalónak betötés!\\Iszapfalo - Heti Emlekeztetö (Csütörtök 16.00).json",
+        "size": 6740,
+        "type": ".json",
+        "lineCount": null,
+        "headings": [],
+        "keywordHits": {},
+        "preview": "{\"data\": {\"updatedAt\": \"2026-02-27T19:48:56.828Z\", \"createdAt\": \"2026-01-25T03:59:34.379Z\", \"id\": \"BqeIu4mBQAjbSVUxMiwdN\", \"name\": \"Iszapfaló - Heti Emlékeztető (Csütörtök 16:00)\", \"description\": null, \"active\": false, \"isArchived\": false, \"nodes\": [{\"parameters\": {\"triggerTimes\": {\"item\": [{\"mode\": \"everyWeek\", \"hour\": 16, \"minute\": 0, \"weekday\": 4}]}}, \"name\": \"Cron Trigger\", \"type\": \"n8n-nodes-base.cron\", \"typeVersion\": 1, \"position\": [0, 0], \"id\": \"ce484ad8-654a-4809-a74c-5adcd2dba710\"}, {\"parameters\": {\"authentication\": \"airtableTokenApi\", \"operation\": \"list\", \"application\": {\"__rl\": true, \"mode\": \"id\", \"value\": \"appByeASBkMYnktx8\"}, \"table\": \"Munkatársak\", \"additionalOptions\": {}}, \"name\": \"Airtable - Munkatársak Lista\", \"type\": \"n8n-nodes-base.airtable\", \"typeVersion\": 1, \"position\": [208, 0], \"id\": \"8ad0c9f5-dd39-4a3e-a559-b581892d5d0f\", \"credentials\": {\"airtableTokenApi\": {\"id\": \"t3s4iIzriLpZ6Fm2\", \"name\": \"Airtable Personal Access Token account\"}}}, {\"parameters\": {\"jsCode\": \"// Munkatársak listájának feldolgozása és munkaidő ellenőrzés\\nconst employees = $input.all();\\nconst today = new Date();\\nconst weekStart = new Date(today);\\nweekStart.setDate(today.getDate() - (tod"
+      },
+      {
+        "path": "2. ezeket a workflow-at már mi csináltuk vagy javítottuk az Iszapfalónak betötés!\\Iszapfalo - Okos Ajanlato Asszisztens.json",
+        "size": 5298,
+        "type": ".json",
+        "lineCount": null,
+        "headings": [],
+        "keywordHits": {},
+        "preview": "{\"data\": {\"updatedAt\": \"2026-02-27T19:46:50.430Z\", \"createdAt\": \"2026-02-27T19:46:50.430Z\", \"id\": \"2OD30EyzBAdbMmLa\", \"name\": \"Iszapfalo - Okos Ajanlato Asszisztens\", \"description\": null, \"active\": false, \"isArchived\": false, \"nodes\": [{\"id\": \"node_webhook\", \"name\": \"Webhook - Ajanlatkerest fogad\", \"type\": \"n8n-nodes-base.webhook\", \"typeVersion\": 2, \"position\": [200, 300], \"webhookId\": \"okos-ajanlatado-v2\", \"parameters\": {\"path\": \"okos-ajanlatado-v2\", \"httpMethod\": \"POST\", \"responseMode\": \"lastNode\"}}, {\"id\": \"node_agent\", \"name\": \"Ajanlato AI Agent\", \"type\": \"@n8n/n8n-nodes-langchain.agent\", \"typeVersion\": 1.7, \"position\": [460, 300], \"parameters\": {\"systemMessage\": \"Te az Iszapfalo Kft. okos ajanlatkeszito asszisztense vagy. A felhasznalo leirja a munkat (pl. to nadvagas 5000 m2, 30 km-re Erdtol), es neked reszletes arajanlatot kell keszitened. Mindig hasznald az Arlista_Tudasbazis eszkozt az arak lekerdezeshez. Az ajánlatban szerepeljen: szukseges gepe(ke)t, becsult munkanapok szama, gepkoltseg, szemelyzeti dij, kiszallasi dij, esetleges felar, es a vegosszeg. Legy professzionalis, pontos es ugyfelbarát. Magyar nyelven valaszolj.\", \"options\": {}}}, {\"id\": \"node_llm\", \"name\": \"Op"
+      },
+      {
+        "path": "2. ezeket a workflow-at már mi csináltuk vagy javítottuk az Iszapfalónak betötés!\\Iszapfalo - Telegram Hangvezerles.json",
+        "size": 10170,
+        "type": ".json",
+        "lineCount": null,
+        "headings": [],
+        "keywordHits": {},
+        "preview": "{\"data\": {\"updatedAt\": \"2026-02-27T19:57:45.899Z\", \"createdAt\": \"2026-01-25T04:07:26.706Z\", \"id\": \"a1F4hiiermPcSL0PE_t_P\", \"name\": \"Telegram Hangvezérlés - Teljes Rendszer\", \"description\": null, \"active\": false, \"isArchived\": false, \"nodes\": [{\"parameters\": {\"updates\": [\"message\"], \"additionalFields\": {}}, \"type\": \"n8n-nodes-base.telegramTrigger\", \"typeVersion\": 1.2, \"position\": [-176, -144], \"id\": \"17eb6adc-c608-4004-926d-516a1bb982eb\", \"name\": \"Telegram Trigger - Hangüzenet\", \"webhookId\": \"telegram-voice-webhook\", \"credentials\": {\"telegramApi\": {\"id\": \"lEp8aDHGJcOoUhAT\", \"name\": \"Telegram account 4\"}}}, {\"parameters\": {\"url\": \"={{ $json.message.voice.file_path || '' }}\", \"options\": {}}, \"type\": \"n8n-nodes-base.httpRequest\", \"typeVersion\": 4.2, \"position\": [32, -144], \"id\": \"ca86610d-bf51-4b4a-bdb3-6f89bca34e12\", \"name\": \"Hangfájl Letöltése\"}, {\"parameters\": {}, \"type\": \"n8n-nodes-base.openai\", \"typeVersion\": 1, \"position\": [224, -144], \"id\": \"da9559ea-6209-45bd-8a0e-a17849c0f6ff\", \"name\": \"Speech-to-Text (Whisper)\", \"credentials\": {\"openAiApi\": {\"id\": \"iv4njAa5h0In856r\", \"name\": \"OpenAi account\"}}}, {\"parameters\": {\"promptType\": \"define\", \"text\": \"=Az üzenet amit fel kell dolgozn"
+      },
+      {
+        "path": "2. ezeket a workflow-at már mi csináltuk vagy javítottuk az Iszapfalónak betötés!\\Iszapfalo - Telegram Parancsok (statusz, het).json",
+        "size": 14757,
+        "type": ".json",
+        "lineCount": null,
+        "headings": [],
+        "keywordHits": {},
+        "preview": "{\"data\": {\"updatedAt\": \"2026-02-27T19:31:40.876Z\", \"createdAt\": \"2026-01-25T04:00:23.791Z\", \"id\": \"azFT1wXGadC9BMG4lmLGD\", \"name\": \"Iszapfaló - Telegram Parancsok (/statusz, /het)\", \"description\": null, \"active\": true, \"isArchived\": false, \"nodes\": [{\"parameters\": {\"updates\": \"={{ [\\\"message\\\"] }}\", \"additionalFields\": {}}, \"name\": \"Telegram Trigger\", \"type\": \"n8n-nodes-base.telegramTrigger\", \"typeVersion\": 1, \"position\": [-400, 112], \"id\": \"ed1c5523-682a-49dc-bcd4-94fa5b21308e\", \"webhookId\": \"1cee30cf-bea2-4a01-9f64-652fe282f42e\", \"credentials\": {\"telegramApi\": {\"id\": \"lEp8aDHGJcOoUhAT\", \"name\": \"Telegram account 4\"}}}, {\"parameters\": {\"rules\": {\"values\": [{\"conditions\": {\"options\": {\"caseSensitive\": true, \"leftValue\": \"\", \"typeValidation\": \"strict\", \"version\": 1}, \"conditions\": [{\"id\": \"condition-1\", \"leftValue\": \"={{ $json.message.text }}\", \"rightValue\": \"/statusz\", \"operator\": {\"type\": \"string\", \"operation\": \"startsWith\"}}], \"combinator\": \"and\"}}, {\"conditions\": {\"options\": {\"caseSensitive\": true, \"leftValue\": \"\", \"typeValidation\": \"strict\", \"version\": 1}, \"conditions\": [{\"id\": \"condition-1\", \"leftValue\": \"={{ $json.message.text }}\", \"rightValue\": \"/het\", \"operator\": {\"type\": \""
+      },
+      {
+        "path": "2. ezeket a workflow-at már mi csináltuk vagy javítottuk az Iszapfalónak betötés!\\Összefoglaló(mi küldük az Iszapfaló Kft-nek kiegészítés a fő rendszerhez.md",
+        "size": 10197,
+        "type": ".md",
+        "lineCount": 217,
+        "headings": [],
+        "keywordHits": {
+          "airtable": 26,
+          "n8n": 21,
+          "workflow": 16,
+          "telegram": 32,
+          "calendar": 10,
+          "error": 0,
+          "claude": 2,
+          "gemini": 0,
+          "manus": 0,
+          "projekt": 1,
+          "késés": 0,
+          "munkaidő": 9
+        },
+        "preview": "\nIszapfaló Kft. – n8n Rendszermigrációs és Integrációs Útmutató\n\nVerzió: 2.0\n\nDátum: 2026-02-27\n\nKészítette: Pohánka Péter / Brunella AI\n\nStátusz: Tesztelésre kész-----Bevezetés és Hatókör\n\nJelen dokumentum célja, hogy részletesen bemutassa az újonnan fejlesztett modulok integrálását a meglévő Iszapfaló Kft. munkaidő-nyilvántartó rendszerébe. Az ismertetett workflow-kat az Iszapfaló dedikált n8n instance-ába szükséges importálni és konfigurálni.-----Meglévő Rendszer Áttekintése\n\nAz Iszapfaló Kft. n8n-alapú rendszere egy fő workflow-t tartalmaz:Iszapfaló – AI Agent Asszisztens (v2 – Frissített)\n\nFunkciók:\n●\tTelegram-on fogadja a munkatársak bejelentéseit.\n●\tClaude AI (Anthropic) értelmezi az üzeneteket.\n●\tAutomatikusan rögzíti Airtable-be a következőket:\n○\tMunkaidő kezdete/vége\n○\tFeladatok és megbízások\n○\tKöltségek (üzemanyag, alkatrész)\n○\tSzabadságok\n\nAirtable táblák:\nTábla neve\tTartalom / Adattípus\nMunkaidő Nyilvantartas\tBejelentések, ledolgozott órák\nMUNKAK\tFeladatok, megbízások\nKOLTSEGEK\tÜzemanyag, alkatrész, egyéb kiadások\nSZABADSAGOK\tSzabadságkérelmek\n-----Új Modulok Integrálása1. Géppark Karbantartás AI Diagnosztika\n\nWebhook: POST /geppark-figyelo-v2\n\nFunkció: A gépállapot-fi"
+      },
+      {
+        "path": "EZT_Olvasd be elsőként!! Az Iszapfaló projekt előtörténete összefoglalva enélkül nem fogod tudni a projek felépítésének tervét.md",
+        "size": 15766,
+        "type": ".md",
+        "lineCount": 329,
+        "headings": [
+          "# Ki Mit Mikor"
+        ],
+        "keywordHits": {
+          "airtable": 30,
+          "n8n": 12,
+          "workflow": 7,
+          "telegram": 8,
+          "calendar": 0,
+          "error": 2,
+          "claude": 15,
+          "gemini": 0,
+          "manus": 1,
+          "projekt": 21,
+          "késés": 16,
+          "munkaidő": 15
+        },
+        "preview": "Inbox\nSummarise this email\n\nGergely Kovásznai Szász\nAttachments\nWed 11 Mar, 22:06 (3 days ago)\nto me\n\nIt looks like this message is in Hungarian\nMeghívtalak egy megosztott mappába, beleraktam néhány dolgot, ez a linkje:\nhttps://drive.google.com/drive/folders/1RiRjS8HSzHottu681-CDn3xz6KosIhcQ?usp=sharing\n\nÉs készítettem egy víziót a claude-val, ami talán segíthet - mellékelem\n\nRemélem nem kérek őrült nagy dolgot. nekem igazán most csak az a fontos hogy a meglévő dolgaim menjenek és tudjuk hozzátenni a munkaidős dolgot. a többi csak hab, bár finom lenne!\n\nBár ez hiányzik nagyon most nekem:\nHeti Kontextus Csomag, ami akár napi is lehetne, hogy jobban tudjak tervezni az adatokból\nÉs a rendszer hiányossága volt eddig, hogy a kimenő leveleinket nem figyelte, tehát az airtabléeba nem kerül bele, hogy pl \"a sitara projekthez kiment az árajánlat amit kért\" ez fasz lenne nagyon ha működne. mailcímek alapján összeköti a feladatokat és a folyamatokat jobban mint eddig.\n\nElőre is köszönöm!\n\nÜdvözlettel:\nKovásznai-Szász Gergely\nügyvezető igazgató\n\nTel.: +36202287484\ne-mail: kovasznai.gergely@gmail.com\nkovasznai.gergely@iszapfalo.hu\niszapfalo@gmail.com\nWeb: www.iszapfalo.hu , email 2: ez a link a"
+      },
+      {
+        "path": "heti_kontextus_generator.py",
+        "size": 3267,
+        "type": ".py",
+        "lineCount": 88,
+        "headings": [
+          "# Configuration"
+        ],
+        "keywordHits": {
+          "airtable": 4,
+          "n8n": 0,
+          "workflow": 0,
+          "telegram": 0,
+          "calendar": 0,
+          "error": 0,
+          "claude": 0,
+          "gemini": 0,
+          "manus": 0,
+          "projekt": 1,
+          "késés": 2,
+          "munkaidő": 2
+        },
+        "preview": "﻿import requests\nimport json\nimport os\nfrom datetime import datetime, timedelta\n\n# Configuration\nAIRTABLE_KEY = 'patOVCOi3JeisHwOW.cd711ffb54eb7fd4a846f1ae591775487670a6323f299d2f088af386b2b5af6d'\nBASE_ID = 'appU3xQMuAmpmmCEy'\nHEADERS = {'Authorization': f'Bearer {AIRTABLE_KEY}'}\n\ndef get_records(table_name):\n    url = f'https://api.airtable.com/v0/{BASE_ID}/{table_name}'\n    params = {'view': 'Grid view'}\n    all_records = []\n    while True:\n        r = requests.get(url, headers=HEADERS, params=params)\n        data = r.json()\n        all_records.extend(data.get('records', []))\n        offset = data.get('offset')\n        if not offset:\n            break\n        params['offset'] = offset\n    return all_records\n\ndef generate_report():\n    print(\"Gathering data from Airtable...\")\n    \n    folyamatok = get_records('Folyamatok')\n    feladatok = get_records('Feladatok')\n    munkatarsak = get_records('Munkatársak')\n    munkaido = get_records('Munkaidő Nyilvántartás')\n    szabadsagok = get_records('Szabadságok')\n    \n    report = f\"# Iszapfaló Kft. - Heti Vezetői Kontextus Csomag\\n\"\n    report += f\"Dátum: {datetime.now().strftime('%Y-%m-%d %H:%M')}\\n\\n\"\n    \n    report += \"## 1. Aktív Foly"
+      },
+      {
+        "path": "IMPORTRA_KESZ\\b64.txt",
+        "size": 253454,
+        "type": ".txt",
+        "lineCount": 3,
+        "headings": [],
+        "keywordHits": {
+          "airtable": 0,
+          "n8n": 0,
+          "workflow": 0,
+          "telegram": 0,
+          "calendar": 0,
+          "error": 0,
+          "claude": 0,
+          "gemini": 0,
+          "manus": 0,
+          "projekt": 0,
+          "késés": 0,
+          "munkaidő": 0
+        },
+        "preview": "˙ţe\u0000w\u00000\u0000K\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000J\u0000u\u0000b\u00002\u0000R\u0000l\u0000c\u0000y\u0000I\u00006\u0000I\u0000C\u0000B\u0000b\u0000D\u0000Q\u0000o\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000B\u00007\u0000D\u0000Q\u0000o\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000n\u0000B\u0000h\u0000c\u0000m\u0000F\u0000t\u0000Z\u0000X\u0000R\u0000l\u0000c\u0000n\u0000M\u0000i\u0000O\u0000i\u0000A\u0000g\u0000e\u0000w\u00000\u0000K\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000i\u0000c\u0000G\u00009\u0000s\u0000b\u0000F\u0000R\u0000p\u0000b\u0000W\u0000V\u0000z\u0000I\u0000j\u0000o\u0000g\u0000I\u0000H\u0000s\u0000N\u0000C\u0000i\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000m\u0000l\u00000\u0000Z\u0000W\u00000\u0000i\u0000O\u0000i\u0000A\u0000g\u0000W\u0000w\u00000\u0000K\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000e\u0000w\u00000\u0000K\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000J\u0000t\u0000b\u00002\u0000R\u0000l\u0000I\u0000j\u0000o\u0000g\u0000I\u0000C\u0000J\u0000l\u0000d\u0000m\u0000V\u0000y\u0000e\u0000U\u00001\u0000p\u0000b\u0000n\u0000V\u00000\u0000Z\u0000S\u0000I\u0000N\u0000C\u0000i\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000g\u0000I\u0000C\u0000A\u0000"
+      },
+      {
+        "path": "IMPORTRA_KESZ\\cors_server.py",
+        "size": 462,
+        "type": ".py",
+        "lineCount": 12,
+        "headings": [],
+        "keywordHits": {
+          "airtable": 0,
+          "n8n": 0,
+          "workflow": 0,
+          "telegram": 0,
+          "calendar": 0,
+          "error": 0,
+          "claude": 0,
+          "gemini": 0,
+          "manus": 0,
+          "projekt": 0,
+          "késés": 0,
+          "munkaidő": 0
+        },
+        "preview": "﻿import http.server\nimport socketserver\n\nclass CORSRequestHandler(http.server.SimpleHTTPRequestHandler):\n    def end_headers(self):\n        self.send_header('Access-Control-Allow-Origin', '*')\n        self.send_header('Access-Control-Allow-Methods', 'GET, OPTIONS')\n        self.send_header('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type')\n        super().end_headers()\n\nsocketserver.TCPServer(('', 8082), CORSRequestHandler).serve_forever()\n"
+      },
+      {
+        "path": "IMPORTRA_KESZ\\upload.py",
+        "size": 469,
+        "type": ".py",
+        "lineCount": 13,
+        "headings": [],
+        "keywordHits": {
+          "airtable": 0,
+          "n8n": 0,
+          "workflow": 0,
+          "telegram": 0,
+          "calendar": 0,
+          "error": 0,
+          "claude": 0,
+          "gemini": 0,
+          "manus": 0,
+          "projekt": 1,
+          "késés": 0,
+          "munkaidő": 0
+        },
+        "preview": "﻿import urllib.request\nimport urllib.parse\nimport json\n\ntry:\n    with open(\"C:\\\\Users\\\\pohi9\\\\OneDrive\\\\Desktop\\\\Iszapfaló_Projekt_FO\\\\IMPORTRA_KESZ\\\\Iszapfalo - AI Agent Asszisztens (v2 - Javitott).json\", \"rb\") as f:\n        data = f.read()\n    req = urllib.request.Request(\"https://hastebin.com/documents\", data=data)\n    res = urllib.request.urlopen(req)\n    print(\"https://hastebin.com/raw/\" + json.loads(res.read())['key'])\nexcept Exception as e:\n    print(e)\n"
+      },
+      {
+        "path": "Manus AI, Claude AI plan (értékelni, ha jó megcsinálni betötni\\Iszapfalo_Intelligens_Asszisztens_Vizió_2026_PLAN.md",
+        "size": 12897,
+        "type": ".md",
+        "lineCount": 409,
+        "headings": [],
+        "keywordHits": {
+          "airtable": 25,
+          "n8n": 12,
+          "workflow": 7,
+          "telegram": 8,
+          "calendar": 0,
+          "error": 2,
+          "claude": 13,
+          "gemini": 0,
+          "manus": 1,
+          "projekt": 19,
+          "késés": 16,
+          "munkaidő": 14
+        },
+        "preview": "1\n\n\n\nIszapfaló Kft.\n\nIntelligens Asszisztens Rendszer\n\nFejlesztési vízió — Hogyan legyen Claude a rendszer agya?\n\nDátum\t2026. március 11.\n\nKészítette\tClaude AI (Anthropic)\n\nCél\tStratégiai architektúra-vízió\n\nAlapelv\tMeglévőkre építeni — nem újraírni\n\n \n\n1\\. A kérdés, amit feltettél — és a valódi válasz\n\nAzt kérdezted: hogyan tudnád kihasználni azt a rengeteg adatot, amit a rendszer gyűjt? Hogyan kaphatnál tőlem pontos munkarend-javaslatokat, projekt-áttekintőt, prioritás-elemzést?\n\n\n\nAz őszinte válasz: a rendszered adatai már most kiemelkedőek. Megvan az összes szükséges információ. Ami hiányzik, az egyetlen dolog:\n\n\n\nÉn (Claude) nem látom az adataidat — csak te látod.\n\nHa az adatok eljutnak hozzám, azonnal képes vagyok velük dolgozni.\n\n\n\nEz a dokumentum azt mutatja meg, hogyan lehet ezt a hidat megépíteni — minimális fejlesztéssel, a meglévő rendszerre alapozva.\n\n\n\n1.1. Mit láttam az Airtable-ben — élőben, most\n\nMielőtt ezt a dokumentumot elkészítettem, belenéztem az Airtable-be. Íme, mit találtam:\n\n\n\nTábla\tRekordok száma\tKulcsmezők\n\nFolyamatok\t36 projekt\tStátusz, Késés napokban, Ár, Felelős, Feladatok száma\n\nFeladatok\t367 feladat\tFeladat neve, Prioritás, Státusz, Folyamat kapcsol"
+      },
+      {
+        "path": "Manus AI, Claude AI plan (értékelni, ha jó megcsinálni betötni\\Iszapfaló_Kft._Hibrid_Folyamat-automatizálási_Rendszer_Fejlesztési_Terv.md",
+        "size": 15859,
+        "type": ".md",
+        "lineCount": 473,
+        "headings": [],
+        "keywordHits": {
+          "airtable": 13,
+          "n8n": 28,
+          "workflow": 5,
+          "telegram": 11,
+          "calendar": 3,
+          "error": 0,
+          "claude": 1,
+          "gemini": 0,
+          "manus": 16,
+          "projekt": 10,
+          "késés": 0,
+          "munkaidő": 19
+        },
+        "preview": "Iszapfaló Kft. Hibrid Folyamat-automatizálási Rendszer: Fejlesztési Terv\n\nDátum: 2026. március 9. Készítette: Manus AI\n\n\n\n1\\. Bevezetés\n\nJelen dokumentum egy átdolgozott, teljes körű rendszertervet vázol fel az Iszapfaló Kft. számára, amely egy hibrid modellt valósít meg. A rendszer ötvözi az n8n platformot a nagy gyakoriságú, rutin feladatok elvégzésére, és a Manus AI-t a komplex, intelligenciát igénylő felügyeleti és elemzési funkciókra. A terv részletesen kitér a munkaidorendszer.docx dokumentumban specifikált új Munkaidő és Költség Nyilvántartó Rendszer integrálására, valamint megoldást javasol a meglévő n8n\\_gmail\\_kategorizer.json munkafolyamat hibáira.\n\n\n\nA cél egy költséghatékony, stabil és intelligens rendszer létrehozása, amely minimalizálja a manuális adminisztrációt és proaktívan támogatja a cég operatív működését.\n\n\n\n2\\. Helyzetértékelés\n\nAz előzetes elemzés során a következő kulcsfontosságú megállapítások születtek:\n\n\n\n•\tAirtable Bázis: A \"Folyamatfigyelő Rendszer\" (appU3xQMuAmpmmCEy) bázis jól strukturált, de nem tartalmazza a munkaidő és költség nyilvántartásához szükséges táblákat. Ezeket létre kell hozni a munkaidorendszer.docx specifikációi alapján.\n\n•\tGoogle Dri"
+      },
+      {
+        "path": "meta.json",
+        "size": 328,
+        "type": ".json",
+        "lineCount": null,
+        "headings": [],
+        "keywordHits": {},
+        "preview": "{\"name\": \"iszapfalo-stabilizacio\", \"status\": \"ACTIVE\", \"description\": \"Iszapfalo n8n automatizacios rendszer stabilizacioja es munkaido integracioja (Live Data Alapjan)\", \"priority\": \"high\", \"created_at\": \"2026-03-15\", \"assigned_agent\": \"Orchestrator\", \"tags\": [\"n8n\", \"airtable\", \"telegram\", \"automation\"]}"
+      },
+      {
+        "path": "Munkagépeink (Iszapfaló_KFT munkagépei)\\Truxor Gépkönyv\\KAP 1 TRUXOR 5000 Förord ce_HU.md",
+        "size": 2027,
+        "type": ".md",
+        "lineCount": 95,
+        "headings": [],
+        "keywordHits": {
+          "airtable": 0,
+          "n8n": 0,
+          "workflow": 0,
+          "telegram": 0,
+          "calendar": 0,
+          "error": 0,
+          "claude": 0,
+          "gemini": 0,
+          "manus": 0,
+          "projekt": 0,
+          "késés": 0,
+          "munkaidő": 0
+        },
+        "preview": "ELŐSZÓ - Truxor DM 5000\n\n\n\n1\\. RÉSZ (CE)\n\n\n\nKiadás: 09-03-07\n\n\n\nKöszönjük, hogy a Dorotea Mekaniska AB termékét választotta!\n\n\n\nBEVEZETÉS\n\n\n\nA gép használata előtt figyelmesen olvassa végig a gépkönyvet! A könyv több részre van osztva, és a gép használata előtt minden részt el kell olvasnia és meg kell értenie. A gépkönyv a gép része és a felhasználó rendelkezésére kell bocsátani.\n\n\n\nA képek és a szövegek tanáccsal szolgálnak a gép kezelésére és a biztonsági információkra vonatkozóan.\n\n\n\nA GÉP FELHASZNÁLÁSI TERÜLETE\n\n\n\nA Truxor eszközhordozóként működik az általunk szolgáltatott különböző adapterekhez. A Truxor egy kétéltű gép, amelyet kizárólag vízben gazdag környezetben való használatra terveztek, pl. lápokban, mocsarakban és vízi utakon (a Praxis fül alatt olvashat többet).\n\n\n\nA gépet nem szabad közutakon vezetni. A Truxorra csak eredeti vagy a Dorotea Mekaniska AB által jóváhagyott adaptereket lehet szerelni.\n\n\n\nSzínjelek a dokumentumban:\n\n\n\nCE\n\n\n\nPraxis\n\n\n\nSzerviz\n\n\n\nMűszaki infó\n\n\n\nPótalkatrészek\n\n\n\nFONTOS: Ez a könyv a szerzői jog védelme alatt áll.\n\n\n\nBIZTONSÁGI ELŐÍRÁSOK\n\n\n\nSzervizelést csak egyenes talajon leparkolt gépeken szabad végezni.\n\n\n\nHa egy gépet akkor kell szerv"
+      },
+      {
+        "path": "Munkagépeink (Iszapfaló_KFT munkagépei)\\Truxor Gépkönyv\\KAP 2 TRUXOR 5000  Praktik_HU.md",
+        "size": 2216,
+        "type": ".md",
+        "lineCount": 121,
+        "headings": [],
+        "keywordHits": {
+          "airtable": 0,
+          "n8n": 0,
+          "workflow": 0,
+          "telegram": 0,
+          "calendar": 0,
+          "error": 0,
+          "claude": 0,
+          "gemini": 0,
+          "manus": 0,
+          "projekt": 0,
+          "késés": 0,
+          "munkaidő": 0
+        },
+        "preview": "PRAXIS (Gyakorlat) - Truxor DM 5000\n\n\n\n2\\. RÉSZ\n\n\n\nKiadás: 09-03-07\n\n\n\nMŰSZERFAL ÉS KEZELŐSZERVEK\n\n\n\nA jobboldali panel a dízelmotorról és a működtető rendszerről tájékoztat.\n\n\n\nJobb oldali műszerfal elemei:\n\n\n\nGázszabályozó kar\n\n\n\nMűszerfal az indításhoz és leállításhoz\n\n\n\nMotorhőmérséklet jelző\n\n\n\nTartálymérő (Üzemanyagszint)\n\n\n\nBiztosítéktábla\n\n\n\nLánctalp sebesség szabályozás (0-100%)\n\n\n\nFordulatszámmérő\n\n\n\nMegszakítók: lámpákhoz, székmelegítőhöz, pontonszivattyúkhoz, irányjelzőkhöz/jelekhez és vészleállítóhoz.\n\n\n\nA panel funkcionális leírása\n\n\n\nInformáció a biztosítékok helyzetéről\n\n\n\nFigyelmeztető lámpák: Olajnyomáshoz, töltőmotor hőmérséklethez és terhelési időmérőhöz. A műszernek beépített biztonsági szabályozója van, ezért a motor automatikusan leáll, ha túlmelegszik vagy ha esik az olajnyomás.\n\n\n\nFONTOS: A gép használatakor a vészleállító vezetéket hozzá kell erősíteni a vezetőhöz.\n\n\n\nA bal műszerfal fontos információkat nyújt a hidraulikus rendszerről.\n\n\n\nEMELÉS ÉS VONTATÁS\n\n\n\nA gép emelése\n\n\n\nAz emelést minősített emelőszíjakkal vagy láncokkal kell elvégezni, amelyek elég erősek az emeléshez. Amikor kotróegységes gépek kerülnek csatlakoztatásra, kapcsolja hozzá az elülső"
+      },
+      {
+        "path": "Munkagépeink (Iszapfaló_KFT munkagépei)\\Truxor Gépkönyv\\KAP 3 TRUXOR 5000 Service_HU.md",
+        "size": 2160,
+        "type": ".md",
+        "lineCount": 95,
+        "headings": [],
+        "keywordHits": {
+          "airtable": 0,
+          "n8n": 0,
+          "workflow": 0,
+          "telegram": 0,
+          "calendar": 0,
+          "error": 0,
+          "claude": 0,
+          "gemini": 0,
+          "manus": 0,
+          "projekt": 0,
+          "késés": 0,
+          "munkaidő": 0
+        },
+        "preview": "SZERVIZ - Truxor DM 5000 / DM 4700 B\n\n\n\n3\\. RÉSZ\n\n\n\nKiadás: 09-03-07\n\n\n\nNAPI SZERVIZ ÉS ELLENŐRZÉS\n\n\n\n1\\. Motorolaj\n\n\n\nEllenőrizze a dízelmotor olajszintjét. Az olajpálcának a közép és a maximum jelzés között kell lennie.\n\n\n\nFigyelem: Az alacsony olajszint károsíthatja a motort, különösen akkor, amikor a gépet meredek lejtőkön használják. Lásd a műszaki adatokat és a motor gyártójának ajánlásait.\n\n\n\n2\\. Hűtőfolyadék\n\n\n\nEllenőrizze a fagyálló folyadék szintjét a hűtőrendszerben.\n\n\n\nVeszély: Ne nyissa fel a vízhűtő fedelét, amikor a motor forró; égésveszély áll fenn!\n\n\n\nHideg motor esetén: a folyadék szintjének kb. 30-40 mm-rel a vízhűtő felső széle alatt kell lennie.\n\n\n\nForró motor esetén: kb. 10-20 mm-rel a felső szél alatt.\n\n\n\n3\\. Hidraulikaolaj\n\n\n\nHideg hidraulikaolaj esetében: az olajszintnek a minimális és maximális szint között kell lennie.\n\n\n\nMeleg hidraulikaolaj esetében: az olajszint nem haladhatja meg a maximum jelzést.\n\n\n\nELEKTROMOS RENDSZER ÉS VEZÉRLÉS\n\n\n\nA gép hidraulikus rendszerét egy elektromos rendszer szabályozza. Amikor a botkormány különböző funkciói aktiválásra kerülnek, egy 0-6 V-os elektromos áram jut el a gép elektronikus vezérlőeszközéhez a vezető ülése mögö"
+      },
+      {
+        "path": "Munkagépeink (Iszapfaló_KFT munkagépei)\\Truxor Gépkönyv\\KAP 4 TRUXOR 5000 Teknisk info_HU.md",
+        "size": 1643,
+        "type": ".md",
+        "lineCount": 155,
+        "headings": [],
+        "keywordHits": {
+          "airtable": 0,
+          "n8n": 0,
+          "workflow": 0,
+          "telegram": 0,
+          "calendar": 0,
+          "error": 0,
+          "claude": 0,
+          "gemini": 0,
+          "manus": 0,
+          "projekt": 0,
+          "késés": 0,
+          "munkaidő": 0
+        },
+        "preview": "MŰSZAKI INFORMÁCIÓK - Truxor DM 5000\n\n\n\n4\\. RÉSZ\n\n\n\nKiadás: 09-03-07\n\n\n\nA GÉP FELÉPÍTÉSE (Főbb egységek)\n\n\n\nVezető ülés\n\n\n\nBotkormány, lánctalp\n\n\n\nBotkormány, emelőkar\n\n\n\nFogantyú\n\n\n\nHidraulikusan szabályozott emelőkar\n\n\n\nKönnyű csatlakozó adaptereknek\n\n\n\nHidraulikus súlyeloszlás\n\n\n\nLeeresztő szivattyú elvezetőcső\n\n\n\nPonton lefolyószelepek\n\n\n\nSzállítókonzol gyűjtővillának\n\n\n\nKinyitható fülke\n\n\n\nBeépített dízeltartály\n\n\n\nHidraulikaolaj szint ellenőrző\n\n\n\nSzerszámdoboz a motorteremhez\n\n\n\nVízvonal jelzése\n\n\n\nSzellőző beömlőnyílás a hűtőrendszerhez\n\n\n\nSúlyeloszlás\n\n\n\nEmelés\n\n\n\nDöntés\n\n\n\nHidraulikus kiegészítő 1 (Olajáramlás szabályozás 0-100%)\n\n\n\nHidraulikus kiegészítő 2\n\n\n\nHidraulikus kiegészítő 3\n\n\n\nSZERSZÁMOK ÉS KARBANTARTÁSI ADATOK\n\n\n\nA szállítmányba foglalt szerszámok:\n\n\n\n1 = 2 db Torx csavarhúzó (T25, T30)\n\n\n\n2 = Állítható csavarkulcs\n\n\n\n3 = Húzófogantyú, hosszabbító, hüvely (hajtóláncok beállítására)\n\n\n\n4 = Kombinált kulcsok (8, 10, 13, 16, 17, 18 mm)\n\n\n\n5 = Fogók\n\n\n\n6 = Torx csavarkulcs készlet\n\n\n\n7 = Hatszögű (Imbusz) csavarkulcsok (4, 5, 6, 8 mm)\n\n\n\n8 = Sasszegek rugótányéros nádvágó gépcsoporthoz (3090, ESM 2100)\n\n\n\nNyomaték beállítások (Lánctalp):\n\n\n\nM6 lánctalp csavar (Tor"
+      },
+      {
+        "path": "Munkagépeink (Iszapfaló_KFT munkagépei)\\Truxor Gépkönyv\\KAP 5 TRUXOR 5000 Sparepartlist.md",
+        "size": 3509,
+        "type": ".md",
+        "lineCount": 783,
+        "headings": [],
+        "keywordHits": {
+          "airtable": 0,
+          "n8n": 0,
+          "workflow": 0,
+          "telegram": 0,
+          "calendar": 0,
+          "error": 0,
+          "claude": 0,
+          "gemini": 0,
+          "manus": 0,
+          "projekt": 0,
+          "késés": 0,
+          "munkaidő": 0
+        },
+        "preview": "ALKATRÉSZLISTA (SPARE PARTS) - Truxor DM 5000\n\n\n\n5\\. RÉSZ (KAP 5)\n\n\n\nKiadás: 09-07-08\n\n\n\nSledge unit (Szán egység) - Tartalomjegyzék (1. oldal)\n\n\n\nPozíció (Pos)\n\n\n\nMennyiség (Qty)\n\n\n\nOldalszám (Page)\n\n\n\nLeírás (Description)\n\n\n\nMegjegyzés (Note)\n\n\n\n1\n\n\n\n1\n\n\n\n3\n\n\n\nEngine with accessories (Motor és tartozékai)\n\n\n\n21\n\n\n\n2\n\n\n\n1\n\n\n\n4\n\n\n\nMuffler with accessories (Kipufogó és tartozékai)\n\n\n\n\n\n\n\n3\n\n\n\n1\n\n\n\n5\n\n\n\nCooler with accessories (Hűtő és tartozékai)\n\n\n\n\n\n\n\n4\n\n\n\n1\n\n\n\n6\n\n\n\nHyd.pump with accessories (Hidr. szivattyú és tart.)\n\n\n\n\n\n\n\n5\n\n\n\n1\n\n\n\n7\n\n\n\nWinsch with accessories (Csörlő és tartozékai)\n\n\n\n\n\n\n\n6\n\n\n\n1\n\n\n\n8\n\n\n\nHyd.tank big with accessories (Nagy hidr. tartály)\n\n\n\n\n\n\n\n7\n\n\n\n1\n\n\n\n9\n\n\n\nHyd.tank small with accessories (Kis hidr. tartály)\n\n\n\n\n\n\n\n8\n\n\n\n1\n\n\n\n10\n\n\n\nFueltank with accessories (Üzemanyagtartály)\n\n\n\n\n\n\n\n9\n\n\n\n1\n\n\n\n11\n\n\n\nWeightdistribution with accessories (Súlyelosztó)\n\n\n\n\n\n\n\n10\n\n\n\n1\n\n\n\n12\n\n\n\nBattery box with accessories (Akkumulátordoboz)\n\n\n\n\n\n\n\n11\n\n\n\n1\n\n\n\n13\n\n\n\nHoodbracket with accessories (Motorháztető tartó)\n\n\n\n\n\n\n\n12\n\n\n\n1\n\n\n\n14\n\n\n\nHoodframes with accessories (Motorháztető keret)\n\n\n\n\n\n\n\n13\n\n\n\n1\n\n\n\n15\n\n\n\nInletframe with accessories (Bemeneti keret)\n\n\n\n\n\n\n\n14\n\n\n\n1\n\n\n\n16\n\n\n\nSidepl"
+      },
+      {
+        "path": "Munkagépeink (Iszapfaló_KFT munkagépei)\\Watermaster Gépkönyv\\Watermaster Classic II No. 80, 82, 83.md",
+        "size": 2206,
+        "type": ".md",
+        "lineCount": 295,
+        "headings": [],
+        "keywordHits": {
+          "airtable": 0,
+          "n8n": 0,
+          "workflow": 0,
+          "telegram": 0,
+          "calendar": 0,
+          "error": 0,
+          "claude": 0,
+          "gemini": 0,
+          "manus": 0,
+          "projekt": 0,
+          "késés": 0,
+          "munkaidő": 0
+        },
+        "preview": "VARAOSAT / PARTS MANUAL - Watermaster Classic II\n\n\n\nKatalógus / Catalogue de Pièces Détachées\n\n\n\nGyártó (Produced by):\n\nAQUAMEC OY\n\nP.O. BOX 260, FIN-27801 SÄKYLÄ, FINLAND\n\nTel. +358 2 8397 4500, Fax. +358 2 8397 4522\n\nE-mail: watermaster@aquamec.fi\n\n\n\nVaraosakirjan Käyttäjälle / To the user of the parts manual\n\n\n\nEz a varaosakirja (alkatrész-kézikönyv) tartalmazza a Vesimestarin (Watermaster) pótalkatrészeit. A dízelmotor alkatrészeivel kapcsolatban a mellékelt VOLVO PENTA alkatrészlistára hivatkozunk.\n\n\n\nRendelés (Order):\n\nAmikor pótalkatrészt rendel, mindig adja meg a gép gyártási számát és az ebben a könyvben található alkatrészszámot (Part No.). Ezzel biztosíthatja a pótalkatrészek gyors és hibátlan szállítását.\n\nMegjegyzés: Tömlők rendelésekor az alkatrészszámot a tömlő csatlakozóira pecsételt számból ellenőrizheti.\n\n\n\nF4: Air conditioning / Ilmastointilaite (Légkondicionáló) - 147. oldal\n\n\n\nPozíció\n\n\n\nCikkszám (Part No.)\n\n\n\nLeírás (Description)\n\n\n\nMennyiség (Pcs)\n\n\n\n1\n\n\n\n7350291\n\n\n\nAC compressor assembly (Klímakompresszor egység)\n\n\n\n1\n\n\n\n2\n\n\n\n7350290\n\n\n\nAC compressor rack (Klímakompresszor tartó)\n\n\n\n1\n\n\n\n3\n\n\n\n2898832\n\n\n\ncompressor dks-15ch (488-4501)\n\n\n\n1\n\n\n\n4\n\n\n\n7566960\n\n\n\n"
+      },
+      {
+        "path": "Munkagépeink (Iszapfaló_KFT munkagépei)\\Watermaster Gépkönyv\\WM Manual Classic II.md",
+        "size": 1857,
+        "type": ".md",
+        "lineCount": 105,
+        "headings": [],
+        "keywordHits": {
+          "airtable": 0,
+          "n8n": 0,
+          "workflow": 0,
+          "telegram": 0,
+          "calendar": 0,
+          "error": 0,
+          "claude": 0,
+          "gemini": 0,
+          "manus": 0,
+          "projekt": 0,
+          "késés": 0,
+          "munkaidő": 0
+        },
+        "preview": "WATERMASTER MANUAL - Classic II\n\n\n\nMultipurpose dredger (Többcélú kotróhajó)\n\n\n\nA kézikönyv referenciaszáma: 7651223\n\nKiadás: 4\n\nDátum: 19.06.2002\n\n\n\nGyártó:\n\nAquamec Ltd\n\nP.O.BOX 260, FIN-27801 Säkylä, Finland\n\n\n\nA gép üzembe helyezése előtt figyelmesen olvassa el ezt a kézikönyvet, és mindig tartsa magánál a gépben. Ezen utasítások betartása hosszabb, hibamentes és hatékony működést biztosít.\n\n\n\nCONTENTS OF THE MANUAL (Tartalomjegyzék)\n\n\n\nGENERAL (Általános részek)\n\n\n\nPART A: Operator manual (Kezelői kézikönyv)\n\n\n\nPART B: Lubrication manual (Kenési kézikönyv)\n\n\n\nPART C: Maintenance manual (Karbantartási kézikönyv, beleértve a motorkézikönyvet)\n\n\n\nPART D: Specification manual (Specifikációs kézikönyv)\n\n\n\nPART E: Structure and function of the machine (A gép felépítése és működése)\n\n\n\n(N.B. A pótalkatrészlista egy külön dokumentum.)\n\n\n\nPART F: Workshop manual (Műhelykézikönyv)\n\nEz a rész elsősorban a szerződéses szervizműhelyek számára készült. Az információk különálló szervizközleményekből és javítási utasításokból állnak.\n\n\n\nRészletes tartalom\n\n\n\nA. OPERATOR MANUAL (Kezelői Kézikönyv)\n\n\n\nA.1 MAIN PARTS (Főbb alkatrészek)\n\n\n\nA.2 LOCATION OF DIFFERENT SERIAL NUMBERS (Sorozatszámok h"
+      },
+      {
+        "path": "osszefoglalo.md",
+        "size": 3115,
+        "type": ".md",
+        "lineCount": 49,
+        "headings": [
+          "## 1. Elvégzett Feladatok (A Brief Alapján)",
+          "### ✅ Workflow Javítások",
+          "### ✅ Airtable Adatbázis Struktúra",
+          "## 2. Vízió 2026 (Új Funkció)",
+          "## 3. Hogyan adható át Gergőéknek? (Átadási Útmutató)",
+          "## 4. Tesztelési Útmutató (Próbáld ki most!)"
+        ],
+        "keywordHits": {
+          "airtable": 3,
+          "n8n": 4,
+          "workflow": 4,
+          "telegram": 7,
+          "calendar": 0,
+          "error": 2,
+          "claude": 2,
+          "gemini": 0,
+          "manus": 0,
+          "projekt": 1,
+          "késés": 0,
+          "munkaidő": 3
+        },
+        "preview": "﻿# Összefoglaló - Iszapfaló Rendszer Stabilizáció és Vízió 2026\n\n**Dátum:** 2026. március 15.\n**Készítette:** Brunella AI / Pohánka Péter\n\n## 1. Elvégzett Feladatok (A Brief Alapján)\n\nMinden kritikus hiba elhárításra került, a rendszer jelenleg stabil és éles üzemre kész az n8n felületén (https://n8n-latest-fulv.onrender.com).\n\n### ✅ Workflow Javítások\n- **Gmail Kategorizáló:** Megjavítva. Az AI Agent node-okba bekötöttem az Anthropic (Claude 3.5) modelleket. A korábbi 52%-os hibaarány megszűnt.\n- **Error Monitoring:** SOS infrastruktúra kiépítve. Minden workflow hibája naplózásra kerül az Airtable-be, és azonnali Telegram riasztást küld.\n- **AI Agent Asszisztens v2:** Élesítve. Képes Telegramról munkaidőt, költséget és feladatot rögzíteni.\n- **Telegram /statusz és /het:** Javítva. Mostantól pontos dátumszűréssel (MA és ELMÚLT 7 NAP) adják vissza az adatokat.\n- **Géppark Karbantartás:** Frissítve az éles Base ID-ra és aktiválva.\n- **Heti Emlékeztető:** Aktiválva (minden csütörtök 16:00).\n\n### ✅ Airtable Adatbázis Struktúra\nLétrehoztam a hiányzó táblákat az  ppU3xQMuAmpmmCEy bázisban:\n- **ERROR_LOG**: Rendszerhibák követése.\n- **KOLTSEGEK**: Pénzügyi kiadások (Összeg, Típus, Leírás,"
+      },
+      {
+        "path": "plan.md",
+        "size": 1724,
+        "type": ".md",
+        "lineCount": 30,
+        "headings": [
+          "## Phase 1: Infrastruktúra és Monitoring (SOS)",
+          "## Phase 2: Kritikus Javítások",
+          "## Phase 3: Adatbázis Előkészítés",
+          "## Phase 4: AI Agent & Munkaidő Modulok",
+          "## Phase 5: Új Funkciók és Finomhangolás"
+        ],
+        "keywordHits": {
+          "airtable": 2,
+          "n8n": 1,
+          "workflow": 3,
+          "telegram": 4,
+          "calendar": 0,
+          "error": 1,
+          "claude": 0,
+          "gemini": 0,
+          "manus": 0,
+          "projekt": 0,
+          "késés": 0,
+          "munkaidő": 1
+        },
+        "preview": "﻿# Fejlesztési Terv (Plan) - Iszapfaló Stabilizáció\n\n## Phase 1: Infrastruktúra és Monitoring (SOS)\n- [ ] 1.1. Iszapfalo - Error Monitoring es Logging.json importálása az n8n-be.\n- [ ] 1.2. Base ID csere (\u0007ppU3xQMuAmpmmCEy) és Credentials beállítása (Telegram, Airtable).\n- [ ] 1.3. Workflow aktiválása.\n\n## Phase 2: Kritikus Javítások\n- [ ] 2.1. \"Gmail kategorizáló\" workflow megnyitása.\n- [ ] 2.2. Anthropic Chat Model node-ok bekötése az \"E-mail kategorizáló\" és \"AI Agent1\" node-ok Structural Output Parser sub-node-jaihoz.\n- [ ] 2.3. Tesztelés manuális triggereléssel.\n\n## Phase 3: Adatbázis Előkészítés\n- [ ] 3.1. MUNKAK tábla létrehozása (Feladat neve, Leírás, Státusz, Határidő, Felelős).\n- [ ] 3.2. KOLTSEGEK tábla létrehozása (Összeg, Típus, Leírás, Dátum, Pénznem).\n- [ ] 3.3. Munkatársak táblában a Telegram Chat ID mező ellenőrzése.\n\n## Phase 4: AI Agent & Munkaidő Modulok\n- [ ] 4.1. Iszapfalo - AI Agent Asszisztens (v2 - Javitott).json importálása.\n- [ ] 4.2. JSON-ban Base ID csere és Credentials bekötés.\n- [ ] 4.3. Telegram tesztelés (\"Kezdem a munkát\", \"5000 Ft üzemanyag\").\n- [ ] 4.4. Iszapfalo - Telegram Parancsok (/statusz, /het).json importálása és javítása a dátum szűrőkkel"
+      },
+      {
+        "path": "requirements_vision.txt",
+        "size": 13,
+        "type": ".txt",
+        "lineCount": 2,
+        "headings": [],
+        "keywordHits": {
+          "airtable": 0,
+          "n8n": 0,
+          "workflow": 0,
+          "telegram": 0,
+          "calendar": 0,
+          "error": 0,
+          "claude": 0,
+          "gemini": 0,
+          "manus": 0,
+          "projekt": 0,
+          "késés": 0,
+          "munkaidő": 0
+        },
+        "preview": "﻿requests\n"
+      },
+      {
+        "path": "spec.md",
+        "size": 2089,
+        "type": ".md",
+        "lineCount": 34,
+        "headings": [
+          "## 1. Célkitűzés",
+          "## 2. Rendszer Architektúra",
+          "## 3. Airtable Adatbázis Struktúra (LIVE Felmérés Alapján)",
+          "## 4. Prioritási Sorrend"
+        ],
+        "keywordHits": {
+          "airtable": 3,
+          "n8n": 3,
+          "workflow": 0,
+          "telegram": 4,
+          "calendar": 1,
+          "error": 1,
+          "claude": 1,
+          "gemini": 0,
+          "manus": 0,
+          "projekt": 2,
+          "késés": 1,
+          "munkaidő": 4
+        },
+        "preview": "﻿# Iszapfaló Rendszer - Specifikáció (LIVE V2)\n\n## 1. Célkitűzés\nAz Iszapfaló Kft. meglévő n8n automatizációs rendszereinek stabilizálása, a hibák elhárítása és a munkaidő-nyilvántartó modulok integrálása az éles környezetbe (\u0007ppU3xQMuAmpmmCEy Airtable Base).\n\n## 2. Rendszer Architektúra\n- **Adatréteg:** Airtable (Base ID: \u0007ppU3xQMuAmpmmCEy)\n- **Automatizációs réteg:** n8n (https://iszapfalo.app.n8n.cloud)\n- **Interfész:** Telegram Bot, Gmail, Google Calendar\n- **AI Rendszer:** Claude (Anthropic API)\n\n## 3. Airtable Adatbázis Struktúra (LIVE Felmérés Alapján)\nA fő adatbázis jelenlegi állapota:\n- **Folyamatok**: Projektek adatai (Státusz, Kezdési dátum, Határidő, Kiajánlott Ár, Megvalósulási Költség, Haszon, Késés napokban).\n- **Feladatok**: Konkrét teendők (Státusz, Prioritás, Határidő, Kapcsolat a Folyamathoz).\n- **Munkatársak**: Dolgozók adatai (Név, Beosztás, Telegram Chat ID, Leterheltség %).\n- **Munkaidő Nyilvántartás**: Munkaidő rögzítés (Dátum, Ledolgozott Órák, Projekt, Költségek, Költség Típusa, Megjegyzés).\n- **Szabadságok**: Távollétek (Kezdő Dátum, Befejezés Dátuma, Státusz).\n- **Telegram Napló**: Bot interakciók archiválása.\n- **Kimenő árajánlatok**: Ajánlat pipeline k"
+      }
+    ],
+    "workflowFiles": [
+      {
+        "path": "1. Legfontosabb, megrendelő leírása nekünk ez az SOS, és ezekhez tartozó workflow-k\\Airtable - Google Calendar feladat készítő.json",
+        "size": 38938,
+        "name": "Airtable - Google Calendar feladat készítő",
+        "nodeCount": 6,
+        "nodeTypesTop": [
+          [
+            "n8n-nodes-base.gmailTrigger",
+            1
+          ],
+          [
+            "@n8n/n8n-nodes-langchain.anthropic",
+            1
+          ],
+          [
+            "n8n-nodes-base.airtable",
+            1
+          ],
+          [
+            "n8n-nodes-base.switch",
+            1
+          ],
+          [
+            "n8n-nodes-base.code",
+            1
+          ],
+          [
+            "n8n-nodes-base.googleCalendar",
+            1
+          ]
+        ],
+        "triggers": [
+          "n8n-nodes-base.gmailTrigger"
+        ],
+        "credentials": [
+          "airtableTokenApi",
+          "anthropicApi",
+          "gmailOAuth2",
+          "googleCalendarOAuth2Api"
+        ]
+      },
+      {
+        "path": "1. Legfontosabb, megrendelő leírása nekünk ez az SOS, és ezekhez tartozó workflow-k\\Feladatok státuszállítás telegram chat.json",
+        "size": 14200,
+        "name": "Feladatok státuszállítás telegram chat",
+        "nodeCount": 7,
+        "nodeTypesTop": [
+          [
+            "n8n-nodes-base.airtableTool",
+            2
+          ],
+          [
+            "n8n-nodes-base.telegramTrigger",
+            1
+          ],
+          [
+            "@n8n/n8n-nodes-langchain.agent",
+            1
+          ],
+          [
+            "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+            1
+          ],
+          [
+            "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+            1
+          ],
+          [
+            "n8n-nodes-base.telegram",
+            1
+          ]
+        ],
+        "triggers": [
+          "n8n-nodes-base.telegramTrigger"
+        ],
+        "credentials": [
+          "airtableTokenApi",
+          "anthropicApi",
+          "telegramApi"
+        ]
+      },
+      {
+        "path": "1. Legfontosabb, megrendelő leírása nekünk ez az SOS, és ezekhez tartozó workflow-k\\Gmail - Airtable kimenő ajánlat összeköttetés.json",
+        "size": 14791,
+        "name": "Gmail - Airtable kimenő ajánlat összeköttetés",
+        "nodeCount": 13,
+        "nodeTypesTop": [
+          [
+            "n8n-nodes-base.code",
+            3
+          ],
+          [
+            "n8n-nodes-base.stickyNote",
+            3
+          ],
+          [
+            "n8n-nodes-base.gmail",
+            1
+          ],
+          [
+            "n8n-nodes-base.googleDrive",
+            1
+          ],
+          [
+            "n8n-nodes-base.airtable",
+            1
+          ],
+          [
+            "@n8n/n8n-nodes-langchain.anthropic",
+            1
+          ],
+          [
+            "n8n-nodes-base.limit",
+            1
+          ],
+          [
+            "n8n-nodes-base.scheduleTrigger",
+            1
+          ],
+          [
+            "n8n-nodes-base.if",
+            1
+          ]
+        ],
+        "triggers": [
+          "n8n-nodes-base.scheduleTrigger"
+        ],
+        "credentials": [
+          "airtableTokenApi",
+          "anthropicApi",
+          "gmailOAuth2",
+          "googleDriveOAuth2Api"
+        ]
+      },
+      {
+        "path": "1. Legfontosabb, megrendelő leírása nekünk ez az SOS, és ezekhez tartozó workflow-k\\Gmail kategorizáló.json",
+        "size": 62151,
+        "name": "Gmail kategorizáló",
+        "nodeCount": 38,
+        "nodeTypesTop": [
+          [
+            "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+            5
+          ],
+          [
+            "n8n-nodes-base.gmail",
+            5
+          ],
+          [
+            "n8n-nodes-base.stickyNote",
+            4
+          ],
+          [
+            "n8n-nodes-base.telegram",
+            3
+          ],
+          [
+            "@n8n/n8n-nodes-langchain.agent",
+            3
+          ],
+          [
+            "@n8n/n8n-nodes-langchain.guardrails",
+            2
+          ],
+          [
+            "@n8n/n8n-nodes-langchain.outputParserStructured",
+            2
+          ],
+          [
+            "n8n-nodes-base.splitOut",
+            2
+          ],
+          [
+            "n8n-nodes-base.gmailTool",
+            2
+          ],
+          [
+            "n8n-nodes-base.code",
+            2
+          ],
+          [
+            "n8n-nodes-base.merge",
+            2
+          ],
+          [
+            "n8n-nodes-base.set",
+            2
+          ]
+        ],
+        "triggers": [
+          "n8n-nodes-base.gmailTrigger",
+          "n8n-nodes-base.manualTrigger"
+        ],
+        "credentials": [
+          "airtableTokenApi",
+          "anthropicApi",
+          "gmailOAuth2",
+          "telegramApi"
+        ]
+      },
+      {
+        "path": "1. Legfontosabb, megrendelő leírása nekünk ez az SOS, és ezekhez tartozó workflow-k\\Kimenő ajánlatok_dokumentumok.json",
+        "size": 5914,
+        "name": "Kimenő ajánlatok/dokumentumok",
+        "nodeCount": 8,
+        "nodeTypesTop": [
+          [
+            "n8n-nodes-base.code",
+            3
+          ],
+          [
+            "n8n-nodes-base.gmailTrigger",
+            1
+          ],
+          [
+            "n8n-nodes-base.extractFromFile",
+            1
+          ],
+          [
+            "n8n-nodes-base.manualTrigger",
+            1
+          ],
+          [
+            "n8n-nodes-base.gmail",
+            1
+          ],
+          [
+            "n8n-nodes-base.stickyNote",
+            1
+          ]
+        ],
+        "triggers": [
+          "n8n-nodes-base.gmailTrigger",
+          "n8n-nodes-base.manualTrigger"
+        ],
+        "credentials": [
+          "gmailOAuth2"
+        ]
+      },
+      {
+        "path": "2. ezeket a workflow-at már mi csináltuk vagy javítottuk az Iszapfalónak betötés!\\IMPLEMENTED_2026_03_13 n8n workflow\\Airtable - Google Calendar feladat készítő.json",
+        "size": 38788,
+        "name": "Airtable - Google Calendar feladat készítő",
+        "nodeCount": 6,
+        "nodeTypesTop": [
+          [
+            "n8n-nodes-base.gmailTrigger",
+            1
+          ],
+          [
+            "@n8n/n8n-nodes-langchain.anthropic",
+            1
+          ],
+          [
+            "n8n-nodes-base.airtable",
+            1
+          ],
+          [
+            "n8n-nodes-base.switch",
+            1
+          ],
+          [
+            "n8n-nodes-base.code",
+            1
+          ],
+          [
+            "n8n-nodes-base.googleCalendar",
+            1
+          ]
+        ],
+        "triggers": [
+          "n8n-nodes-base.gmailTrigger"
+        ],
+        "credentials": [
+          "airtableTokenApi",
+          "anthropicApi",
+          "googleCalendarOAuth2Api"
+        ]
+      },
+      {
+        "path": "2. ezeket a workflow-at már mi csináltuk vagy javítottuk az Iszapfalónak betötés!\\IMPLEMENTED_2026_03_13 n8n workflow\\Feladatok státuszállítás telegram chat.json",
+        "size": 27920,
+        "name": "Feladatok státuszállítás telegram chat",
+        "nodeCount": 20,
+        "nodeTypesTop": [
+          [
+            "n8n-nodes-base.code",
+            3
+          ],
+          [
+            "n8n-nodes-base.stickyNote",
+            3
+          ],
+          [
+            "n8n-nodes-base.airtableTool",
+            2
+          ],
+          [
+            "n8n-nodes-base.gmail",
+            1
+          ],
+          [
+            "n8n-nodes-base.googleDrive",
+            1
+          ],
+          [
+            "n8n-nodes-base.airtable",
+            1
+          ],
+          [
+            "@n8n/n8n-nodes-langchain.anthropic",
+            1
+          ],
+          [
+            "n8n-nodes-base.limit",
+            1
+          ],
+          [
+            "n8n-nodes-base.scheduleTrigger",
+            1
+          ],
+          [
+            "n8n-nodes-base.if",
+            1
+          ],
+          [
+            "n8n-nodes-base.telegramTrigger",
+            1
+          ],
+          [
+            "@n8n/n8n-nodes-langchain.agent",
+            1
+          ]
+        ],
+        "triggers": [
+          "n8n-nodes-base.scheduleTrigger",
+          "n8n-nodes-base.telegramTrigger"
+        ],
+        "credentials": [
+          "airtableTokenApi",
+          "anthropicApi"
+        ]
+      },
+      {
+        "path": "2. ezeket a workflow-at már mi csináltuk vagy javítottuk az Iszapfalónak betötés!\\IMPLEMENTED_2026_03_13 n8n workflow\\Iszapfaló - AI Agent Asszisztens (v2 - Javított).json",
+        "size": 17985,
+        "name": "Iszapfaló - AI Agent Asszisztens (v2 - Javított)",
+        "nodeCount": 10,
+        "nodeTypesTop": [
+          [
+            "n8n-nodes-base.airtableTool",
+            4
+          ],
+          [
+            "n8n-nodes-base.telegramTrigger",
+            1
+          ],
+          [
+            "@n8n/n8n-nodes-langchain.agent",
+            1
+          ],
+          [
+            "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+            1
+          ],
+          [
+            "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+            1
+          ],
+          [
+            "n8n-nodes-base.googleCalendarTool",
+            1
+          ],
+          [
+            "n8n-nodes-base.telegram",
+            1
+          ]
+        ],
+        "triggers": [
+          "n8n-nodes-base.telegramTrigger"
+        ],
+        "credentials": [
+          "airtableTokenApi",
+          "anthropicApi",
+          "googleCalendarOAuth2Api",
+          "telegramApi"
+        ]
+      },
+      {
+        "path": "2. ezeket a workflow-at már mi csináltuk vagy javítottuk az Iszapfalónak betötés!\\IMPLEMENTED_2026_03_13 n8n workflow\\Iszapfaló - Google Calendar → Airtable Szinkron.json",
+        "size": 6744,
+        "name": "Iszapfaló - Google Calendar → Airtable Szinkron",
+        "nodeCount": 6,
+        "nodeTypesTop": [
+          [
+            "n8n-nodes-base.airtable",
+            2
+          ],
+          [
+            "n8n-nodes-base.googleCalendarTrigger",
+            1
+          ],
+          [
+            "n8n-nodes-base.if",
+            1
+          ],
+          [
+            "n8n-nodes-base.code",
+            1
+          ],
+          [
+            "n8n-nodes-base.telegram",
+            1
+          ]
+        ],
+        "triggers": [
+          "n8n-nodes-base.googleCalendarTrigger"
+        ],
+        "credentials": [
+          "airtableTokenApi",
+          "googleCalendarOAuth2Api"
+        ]
+      },
+      {
+        "path": "2. ezeket a workflow-at már mi csináltuk vagy javítottuk az Iszapfalónak betötés!\\IMPLEMENTED_2026_03_13 n8n workflow\\Iszapfaló - Heti Emlékeztető (Csütörtök 16_00).json",
+        "size": 6642,
+        "name": "Iszapfaló - Heti Emlékeztető (Csütörtök 16:00)",
+        "nodeCount": 6,
+        "nodeTypesTop": [
+          [
+            "n8n-nodes-base.airtable",
+            2
+          ],
+          [
+            "n8n-nodes-base.code",
+            2
+          ],
+          [
+            "n8n-nodes-base.cron",
+            1
+          ],
+          [
+            "n8n-nodes-base.telegram",
+            1
+          ]
+        ],
+        "triggers": [
+          "n8n-nodes-base.cron"
+        ],
+        "credentials": [
+          "airtableTokenApi"
+        ]
+      },
+      {
+        "path": "2. ezeket a workflow-at már mi csináltuk vagy javítottuk az Iszapfalónak betötés!\\IMPLEMENTED_2026_03_13 n8n workflow\\Iszapfaló - Telegram Parancsok (_statusz, _het).json",
+        "size": 9855,
+        "name": "Iszapfaló - Telegram Parancsok (/statusz, /het)",
+        "nodeCount": 8,
+        "nodeTypesTop": [
+          [
+            "n8n-nodes-base.airtable",
+            2
+          ],
+          [
+            "n8n-nodes-base.code",
+            2
+          ],
+          [
+            "n8n-nodes-base.telegram",
+            2
+          ],
+          [
+            "n8n-nodes-base.telegramTrigger",
+            1
+          ],
+          [
+            "n8n-nodes-base.switch",
+            1
+          ]
+        ],
+        "triggers": [
+          "n8n-nodes-base.telegramTrigger"
+        ],
+        "credentials": [
+          "airtableTokenApi",
+          "telegramApi"
+        ]
+      },
+      {
+        "path": "2. ezeket a workflow-at már mi csináltuk vagy javítottuk az Iszapfalónak betötés!\\IMPLEMENTED_2026_03_13 n8n workflow\\Kimenő ajánlatok_dokumentumok.json",
+        "size": 5509,
+        "name": "Kimenő ajánlatok/dokumentumok",
+        "nodeCount": 8,
+        "nodeTypesTop": [
+          [
+            "n8n-nodes-base.code",
+            3
+          ],
+          [
+            "n8n-nodes-base.gmailTrigger",
+            1
+          ],
+          [
+            "n8n-nodes-base.extractFromFile",
+            1
+          ],
+          [
+            "n8n-nodes-base.manualTrigger",
+            1
+          ],
+          [
+            "n8n-nodes-base.gmail",
+            1
+          ],
+          [
+            "n8n-nodes-base.stickyNote",
+            1
+          ]
+        ],
+        "triggers": [
+          "n8n-nodes-base.gmailTrigger",
+          "n8n-nodes-base.manualTrigger"
+        ],
+        "credentials": []
+      },
+      {
+        "path": "2. ezeket a workflow-at már mi csináltuk vagy javítottuk az Iszapfalónak betötés!\\IMPLEMENTED_2026_03_13 n8n workflow\\Telegram Hangvezérlés - Teljes Rendszer.json",
+        "size": 13045,
+        "name": "Telegram Hangvezérlés - Teljes Rendszer",
+        "nodeCount": 9,
+        "nodeTypesTop": [
+          [
+            "n8n-nodes-base.openai",
+            2
+          ],
+          [
+            "n8n-nodes-base.telegramTrigger",
+            1
+          ],
+          [
+            "n8n-nodes-base.httpRequest",
+            1
+          ],
+          [
+            "@n8n/n8n-nodes-langchain.agent",
+            1
+          ],
+          [
+            "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+            1
+          ],
+          [
+            "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+            1
+          ],
+          [
+            "n8n-nodes-base.telegram",
+            1
+          ],
+          [
+            "n8n-nodes-base.airtable",
+            1
+          ]
+        ],
+        "triggers": [
+          "n8n-nodes-base.telegramTrigger"
+        ],
+        "credentials": [
+          "airtableTokenApi",
+          "anthropicApi"
+        ]
+      },
+      {
+        "path": "2. ezeket a workflow-at már mi csináltuk vagy javítottuk az Iszapfalónak betötés!\\IMPORT_READY_PACK_2026_03_13 n8n workflow\\01_feladat_status_telegram_chat.json",
+        "size": 27920,
+        "name": "Feladatok státuszállítás telegram chat",
+        "nodeCount": 20,
+        "nodeTypesTop": [
+          [
+            "n8n-nodes-base.code",
+            3
+          ],
+          [
+            "n8n-nodes-base.stickyNote",
+            3
+          ],
+          [
+            "n8n-nodes-base.airtableTool",
+            2
+          ],
+          [
+            "n8n-nodes-base.gmail",
+            1
+          ],
+          [
+            "n8n-nodes-base.googleDrive",
+            1
+          ],
+          [
+            "n8n-nodes-base.airtable",
+            1
+          ],
+          [
+            "@n8n/n8n-nodes-langchain.anthropic",
+            1
+          ],
+          [
+            "n8n-nodes-base.limit",
+            1
+          ],
+          [
+            "n8n-nodes-base.scheduleTrigger",
+            1
+          ],
+          [
+            "n8n-nodes-base.if",
+            1
+          ],
+          [
+            "n8n-nodes-base.telegramTrigger",
+            1
+          ],
+          [
+            "@n8n/n8n-nodes-langchain.agent",
+            1
+          ]
+        ],
+        "triggers": [
+          "n8n-nodes-base.scheduleTrigger",
+          "n8n-nodes-base.telegramTrigger"
+        ],
+        "credentials": [
+          "airtableTokenApi",
+          "anthropicApi"
+        ]
+      },
+      {
+        "path": "2. ezeket a workflow-at már mi csináltuk vagy javítottuk az Iszapfalónak betötés!\\IMPORT_READY_PACK_2026_03_13 n8n workflow\\02_ai_agent_asszisztens_v2_javitott.json",
+        "size": 17985,
+        "name": "Iszapfaló - AI Agent Asszisztens (v2 - Javított)",
+        "nodeCount": 10,
+        "nodeTypesTop": [
+          [
+            "n8n-nodes-base.airtableTool",
+            4
+          ],
+          [
+            "n8n-nodes-base.telegramTrigger",
+            1
+          ],
+          [
+            "@n8n/n8n-nodes-langchain.agent",
+            1
+          ],
+          [
+            "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+            1
+          ],
+          [
+            "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+            1
+          ],
+          [
+            "n8n-nodes-base.googleCalendarTool",
+            1
+          ],
+          [
+            "n8n-nodes-base.telegram",
+            1
+          ]
+        ],
+        "triggers": [
+          "n8n-nodes-base.telegramTrigger"
+        ],
+        "credentials": [
+          "airtableTokenApi",
+          "anthropicApi",
+          "googleCalendarOAuth2Api",
+          "telegramApi"
+        ]
+      },
+      {
+        "path": "2. ezeket a workflow-at már mi csináltuk vagy javítottuk az Iszapfalónak betötés!\\IMPORT_READY_PACK_2026_03_13 n8n workflow\\03_airtable_google_calendar_feladat_keszito.json",
+        "size": 38788,
+        "name": "Airtable - Google Calendar feladat készítő",
+        "nodeCount": 6,
+        "nodeTypesTop": [
+          [
+            "n8n-nodes-base.gmailTrigger",
+            1
+          ],
+          [
+            "@n8n/n8n-nodes-langchain.anthropic",
+            1
+          ],
+          [
+            "n8n-nodes-base.airtable",
+            1
+          ],
+          [
+            "n8n-nodes-base.switch",
+            1
+          ],
+          [
+            "n8n-nodes-base.code",
+            1
+          ],
+          [
+            "n8n-nodes-base.googleCalendar",
+            1
+          ]
+        ],
+        "triggers": [
+          "n8n-nodes-base.gmailTrigger"
+        ],
+        "credentials": [
+          "airtableTokenApi",
+          "anthropicApi",
+          "googleCalendarOAuth2Api"
+        ]
+      },
+      {
+        "path": "2. ezeket a workflow-at már mi csináltuk vagy javítottuk az Iszapfalónak betötés!\\IMPORT_READY_PACK_2026_03_13 n8n workflow\\04_google_calendar_airtable_szinkron.json",
+        "size": 6744,
+        "name": "Iszapfaló - Google Calendar → Airtable Szinkron",
+        "nodeCount": 6,
+        "nodeTypesTop": [
+          [
+            "n8n-nodes-base.airtable",
+            2
+          ],
+          [
+            "n8n-nodes-base.googleCalendarTrigger",
+            1
+          ],
+          [
+            "n8n-nodes-base.if",
+            1
+          ],
+          [
+            "n8n-nodes-base.code",
+            1
+          ],
+          [
+            "n8n-nodes-base.telegram",
+            1
+          ]
+        ],
+        "triggers": [
+          "n8n-nodes-base.googleCalendarTrigger"
+        ],
+        "credentials": [
+          "airtableTokenApi",
+          "googleCalendarOAuth2Api"
+        ]
+      },
+      {
+        "path": "2. ezeket a workflow-at már mi csináltuk vagy javítottuk az Iszapfalónak betötés!\\IMPORT_READY_PACK_2026_03_13 n8n workflow\\05_heti_emlekezteto_csutortok_1600.json",
+        "size": 6642,
+        "name": "Iszapfaló - Heti Emlékeztető (Csütörtök 16:00)",
+        "nodeCount": 6,
+        "nodeTypesTop": [
+          [
+            "n8n-nodes-base.airtable",
+            2
+          ],
+          [
+            "n8n-nodes-base.code",
+            2
+          ],
+          [
+            "n8n-nodes-base.cron",
+            1
+          ],
+          [
+            "n8n-nodes-base.telegram",
+            1
+          ]
+        ],
+        "triggers": [
+          "n8n-nodes-base.cron"
+        ],
+        "credentials": [
+          "airtableTokenApi"
+        ]
+      },
+      {
+        "path": "2. ezeket a workflow-at már mi csináltuk vagy javítottuk az Iszapfalónak betötés!\\IMPORT_READY_PACK_2026_03_13 n8n workflow\\06_telegram_parancsok_statusz_het.json",
+        "size": 9855,
+        "name": "Iszapfaló - Telegram Parancsok (/statusz, /het)",
+        "nodeCount": 8,
+        "nodeTypesTop": [
+          [
+            "n8n-nodes-base.airtable",
+            2
+          ],
+          [
+            "n8n-nodes-base.code",
+            2
+          ],
+          [
+            "n8n-nodes-base.telegram",
+            2
+          ],
+          [
+            "n8n-nodes-base.telegramTrigger",
+            1
+          ],
+          [
+            "n8n-nodes-base.switch",
+            1
+          ]
+        ],
+        "triggers": [
+          "n8n-nodes-base.telegramTrigger"
+        ],
+        "credentials": [
+          "airtableTokenApi",
+          "telegramApi"
+        ]
+      },
+      {
+        "path": "2. ezeket a workflow-at már mi csináltuk vagy javítottuk az Iszapfalónak betötés!\\IMPORT_READY_PACK_2026_03_13 n8n workflow\\07_telegram_hangvezerles_teljes_rendszer.json",
+        "size": 13045,
+        "name": "Telegram Hangvezérlés - Teljes Rendszer",
+        "nodeCount": 9,
+        "nodeTypesTop": [
+          [
+            "n8n-nodes-base.openai",
+            2
+          ],
+          [
+            "n8n-nodes-base.telegramTrigger",
+            1
+          ],
+          [
+            "n8n-nodes-base.httpRequest",
+            1
+          ],
+          [
+            "@n8n/n8n-nodes-langchain.agent",
+            1
+          ],
+          [
+            "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+            1
+          ],
+          [
+            "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+            1
+          ],
+          [
+            "n8n-nodes-base.telegram",
+            1
+          ],
+          [
+            "n8n-nodes-base.airtable",
+            1
+          ]
+        ],
+        "triggers": [
+          "n8n-nodes-base.telegramTrigger"
+        ],
+        "credentials": [
+          "airtableTokenApi",
+          "anthropicApi"
+        ]
+      },
+      {
+        "path": "2. ezeket a workflow-at már mi csináltuk vagy javítottuk az Iszapfalónak betötés!\\IMPORT_READY_PACK_2026_03_13 n8n workflow\\08_kimeno_ajanlatok_dokumentumok.json",
+        "size": 5509,
+        "name": "Kimenő ajánlatok/dokumentumok",
+        "nodeCount": 8,
+        "nodeTypesTop": [
+          [
+            "n8n-nodes-base.code",
+            3
+          ],
+          [
+            "n8n-nodes-base.gmailTrigger",
+            1
+          ],
+          [
+            "n8n-nodes-base.extractFromFile",
+            1
+          ],
+          [
+            "n8n-nodes-base.manualTrigger",
+            1
+          ],
+          [
+            "n8n-nodes-base.gmail",
+            1
+          ],
+          [
+            "n8n-nodes-base.stickyNote",
+            1
+          ]
+        ],
+        "triggers": [
+          "n8n-nodes-base.gmailTrigger",
+          "n8n-nodes-base.manualTrigger"
+        ],
+        "credentials": []
+      },
+      {
+        "path": "2. ezeket a workflow-at már mi csináltuk vagy javítottuk az Iszapfalónak betötés!\\mi csináltuk workflow\\pohi-workflows\\I_p5deBtbiA0eU6PMBDZY-My_workflow.json",
+        "size": 794,
+        "name": "My workflow",
+        "nodeCount": 1,
+        "nodeTypesTop": [
+          [
+            "n8n-nodes-base.telegramTrigger",
+            1
+          ]
+        ],
+        "triggers": [
+          "n8n-nodes-base.telegramTrigger"
+        ],
+        "credentials": [
+          "telegramApi"
+        ]
+      },
+      {
+        "path": "2. ezeket a workflow-at már mi csináltuk vagy javítottuk az Iszapfalónak betötés!\\mi csináltuk workflow\\pohi-workflows\\ztb2UOnE25b5aLQu-AI_Agent_workflow.json",
+        "size": 6870,
+        "name": "AI Agent workflow",
+        "nodeCount": 12,
+        "nodeTypesTop": [
+          [
+            "n8n-nodes-base.stickyNote",
+            4
+          ],
+          [
+            "n8n-nodes-base.rssFeedReadTool",
+            2
+          ],
+          [
+            "n8n-nodes-base.scheduleTrigger",
+            1
+          ],
+          [
+            "n8n-nodes-base.set",
+            1
+          ],
+          [
+            "n8n-nodes-base.manualTrigger",
+            1
+          ],
+          [
+            "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+            1
+          ],
+          [
+            "@n8n/n8n-nodes-langchain.agent",
+            1
+          ],
+          [
+            "n8n-nodes-base.gmail",
+            1
+          ]
+        ],
+        "triggers": [
+          "n8n-nodes-base.manualTrigger",
+          "n8n-nodes-base.scheduleTrigger"
+        ],
+        "credentials": [
+          "openAiApi"
+        ]
+      },
+      {
+        "path": "IMPORTRA_KESZ\\Gmail kategorizáló.json",
+        "size": 95046,
+        "name": null,
+        "nodeCount": 40,
+        "nodeTypesTop": [
+          [
+            "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+            7
+          ],
+          [
+            "n8n-nodes-base.gmail",
+            5
+          ],
+          [
+            "n8n-nodes-base.stickyNote",
+            4
+          ],
+          [
+            "n8n-nodes-base.telegram",
+            3
+          ],
+          [
+            "@n8n/n8n-nodes-langchain.agent",
+            3
+          ],
+          [
+            "@n8n/n8n-nodes-langchain.guardrails",
+            2
+          ],
+          [
+            "@n8n/n8n-nodes-langchain.outputParserStructured",
+            2
+          ],
+          [
+            "n8n-nodes-base.splitOut",
+            2
+          ],
+          [
+            "n8n-nodes-base.gmailTool",
+            2
+          ],
+          [
+            "n8n-nodes-base.code",
+            2
+          ],
+          [
+            "n8n-nodes-base.merge",
+            2
+          ],
+          [
+            "n8n-nodes-base.set",
+            2
+          ]
+        ],
+        "triggers": [
+          "n8n-nodes-base.gmailTrigger",
+          "n8n-nodes-base.manualTrigger"
+        ],
+        "credentials": []
+      },
+      {
+        "path": "IMPORTRA_KESZ\\Iszapfalo - AI Agent Asszisztens (v2 - Javitott).json",
+        "size": 42139,
+        "name": null,
+        "nodeCount": 10,
+        "nodeTypesTop": [
+          [
+            "n8n-nodes-base.airtableTool",
+            4
+          ],
+          [
+            "n8n-nodes-base.telegramTrigger",
+            1
+          ],
+          [
+            "@n8n/n8n-nodes-langchain.agent",
+            1
+          ],
+          [
+            "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+            1
+          ],
+          [
+            "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+            1
+          ],
+          [
+            "n8n-nodes-base.googleCalendarTool",
+            1
+          ],
+          [
+            "n8n-nodes-base.telegram",
+            1
+          ]
+        ],
+        "triggers": [
+          "n8n-nodes-base.telegramTrigger"
+        ],
+        "credentials": [
+          "airtableTokenApi",
+          "anthropicApi",
+          "googleCalendarOAuth2Api",
+          "telegramApi"
+        ]
+      },
+      {
+        "path": "IMPORTRA_KESZ\\Iszapfalo - Error Monitoring es Logging.json",
+        "size": 48374,
+        "name": null,
+        "nodeCount": 23,
+        "nodeTypesTop": [
+          [
+            "n8n-nodes-base.airtable",
+            5
+          ],
+          [
+            "n8n-nodes-base.telegram",
+            4
+          ],
+          [
+            "n8n-nodes-base.code",
+            2
+          ],
+          [
+            "n8n-nodes-base.telegramTrigger",
+            1
+          ],
+          [
+            "n8n-nodes-base.set",
+            1
+          ],
+          [
+            "n8n-nodes-base.function",
+            1
+          ],
+          [
+            "n8n-nodes-base.switch",
+            1
+          ],
+          [
+            "@n8n/n8n-nodes-langchain.chatTrigger",
+            1
+          ],
+          [
+            "@n8n/n8n-nodes-langchain.chainLlm",
+            1
+          ],
+          [
+            "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+            1
+          ],
+          [
+            "n8n-nodes-base.googleCalendar",
+            1
+          ],
+          [
+            "n8n-nodes-base.webhook",
+            1
+          ]
+        ],
+        "triggers": [
+          "@n8n/n8n-nodes-langchain.chatTrigger",
+          "n8n-nodes-base.cron",
+          "n8n-nodes-base.respondToWebhook",
+          "n8n-nodes-base.telegramTrigger",
+          "n8n-nodes-base.webhook"
+        ],
+        "credentials": [
+          "airtableTokenApi",
+          "anthropicApi",
+          "googleCalendarOAuth2Api",
+          "telegramApi"
+        ]
+      },
+      {
+        "path": "IMPORTRA_KESZ\\Iszapfalo - Geppark Karbantartas (All-in-One).json",
+        "size": 15919,
+        "name": null,
+        "nodeCount": 7,
+        "nodeTypesTop": [
+          [
+            "n8n-nodes-base.webhook",
+            1
+          ],
+          [
+            "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+            1
+          ],
+          [
+            "@n8n/n8n-nodes-langchain.agent",
+            1
+          ],
+          [
+            "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+            1
+          ],
+          [
+            "n8n-nodes-base.code",
+            1
+          ],
+          [
+            "n8n-nodes-base.telegram",
+            1
+          ],
+          [
+            "@n8n/n8n-nodes-langchain.toolCode",
+            1
+          ]
+        ],
+        "triggers": [
+          "n8n-nodes-base.webhook"
+        ],
+        "credentials": [
+          "openAiApi",
+          "telegramApi"
+        ]
+      },
+      {
+        "path": "IMPORTRA_KESZ\\Iszapfalo - Heti Emlekeztetö (Csütörtök 16.00).json",
+        "size": 14209,
+        "name": null,
+        "nodeCount": 6,
+        "nodeTypesTop": [
+          [
+            "n8n-nodes-base.airtable",
+            2
+          ],
+          [
+            "n8n-nodes-base.code",
+            2
+          ],
+          [
+            "n8n-nodes-base.cron",
+            1
+          ],
+          [
+            "n8n-nodes-base.telegram",
+            1
+          ]
+        ],
+        "triggers": [
+          "n8n-nodes-base.cron"
+        ],
+        "credentials": [
+          "airtableTokenApi",
+          "telegramApi"
+        ]
+      },
+      {
+        "path": "IMPORTRA_KESZ\\Iszapfalo - Telegram Parancsok (statusz, het).json",
+        "size": 23272,
+        "name": null,
+        "nodeCount": 8,
+        "nodeTypesTop": [
+          [
+            "n8n-nodes-base.airtable",
+            2
+          ],
+          [
+            "n8n-nodes-base.code",
+            2
+          ],
+          [
+            "n8n-nodes-base.telegram",
+            2
+          ],
+          [
+            "n8n-nodes-base.telegramTrigger",
+            1
+          ],
+          [
+            "n8n-nodes-base.switch",
+            1
+          ]
+        ],
+        "triggers": [
+          "n8n-nodes-base.telegramTrigger"
+        ],
+        "credentials": [
+          "airtableTokenApi",
+          "telegramApi"
+        ]
+      },
+      {
+        "path": "IMPORTRA_KESZ\\workflow.json",
+        "size": 42139,
+        "name": null,
+        "nodeCount": 10,
+        "nodeTypesTop": [
+          [
+            "n8n-nodes-base.airtableTool",
+            4
+          ],
+          [
+            "n8n-nodes-base.telegramTrigger",
+            1
+          ],
+          [
+            "@n8n/n8n-nodes-langchain.agent",
+            1
+          ],
+          [
+            "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+            1
+          ],
+          [
+            "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+            1
+          ],
+          [
+            "n8n-nodes-base.googleCalendarTool",
+            1
+          ],
+          [
+            "n8n-nodes-base.telegram",
+            1
+          ]
+        ],
+        "triggers": [
+          "n8n-nodes-base.telegramTrigger"
+        ],
+        "credentials": [
+          "airtableTokenApi",
+          "anthropicApi",
+          "googleCalendarOAuth2Api",
+          "telegramApi"
+        ]
+      }
+    ],
+    "counts": {
+      "docFiles": 31,
+      "workflowFiles": 30
+    }
+  },
+  "gemini_cli": {
+    "jsonFiles": [
+      {
+        "path": "checkpoint-isz7777.json",
+        "size": 667597,
+        "topType": "dict",
+        "topKeys": [
+          "history",
+          "authType"
+        ],
+        "listSizes": {
+          "history": 265
+        }
+      },
+      {
+        "path": "checkpoint-isz9.json",
+        "size": 133725,
+        "topType": "dict",
+        "topKeys": [
+          "history",
+          "authType"
+        ],
+        "listSizes": {
+          "history": 26
+        }
+      },
+      {
+        "path": "checkpoint-ppp999.json",
+        "size": 692575,
+        "topType": "dict",
+        "topKeys": [
+          "history",
+          "authType"
+        ],
+        "listSizes": {
+          "history": 283
+        }
+      },
+      {
+        "path": "logs.json",
+        "size": 1072405,
+        "topType": "list",
+        "listLen": 741,
+        "itemKeysSample": [
+          "sessionId",
+          "messageId",
+          "type",
+          "message",
+          "timestamp"
+        ]
+      },
+      {
+        "path": "session-2026-03-14T23-21-14e62a33.json",
+        "size": 27810,
+        "topType": "dict",
+        "topKeys": [
+          "sessionId",
+          "projectHash",
+          "startTime",
+          "lastUpdated",
+          "messages",
+          "kind"
+        ],
+        "listSizes": {
+          "messages": 86
+        }
+      },
+      {
+        "path": "session-2026-03-14T23-40-14e62a33.json",
+        "size": 17726098,
+        "topType": "dict",
+        "topKeys": [
+          "sessionId",
+          "projectHash",
+          "startTime",
+          "lastUpdated",
+          "messages",
+          "kind"
+        ],
+        "listSizes": {
+          "messages": 925
+        }
+      },
+      {
+        "path": "session-2026-03-15T06-49-88282bf9.json",
+        "size": 2585650,
+        "topType": "dict",
+        "topKeys": [
+          "sessionId",
+          "projectHash",
+          "startTime",
+          "lastUpdated",
+          "messages",
+          "kind"
+        ],
+        "listSizes": {
+          "messages": 643
+        }
+      },
+      {
+        "path": "session-2026-03-16T04-06-112b0cea.json",
+        "size": 5887,
+        "topType": "dict",
+        "topKeys": [
+          "sessionId",
+          "projectHash",
+          "startTime",
+          "lastUpdated",
+          "messages",
+          "kind"
+        ],
+        "listSizes": {
+          "messages": 12
+        }
+      },
+      {
+        "path": "session-2026-03-16T04-09-1e6fdf2d.json",
+        "size": 30050,
+        "topType": "dict",
+        "topKeys": [
+          "sessionId",
+          "projectHash",
+          "startTime",
+          "lastUpdated",
+          "messages",
+          "kind"
+        ],
+        "listSizes": {
+          "messages": 92
+        }
+      },
+      {
+        "path": "session-2026-03-16T04-10-1e6fdf2d.json",
+        "size": 19738,
+        "topType": "dict",
+        "topKeys": [
+          "sessionId",
+          "projectHash",
+          "startTime",
+          "lastUpdated",
+          "messages",
+          "kind"
+        ],
+        "listSizes": {
+          "messages": 54
+        }
+      }
+    ],
+    "txtToolCategoryCount": {
+      "mcp": 113,
+      "run": 89,
+      "take": 26,
+      "evaluate": 22,
+      "click": 12,
+      "list": 9,
+      "web": 6,
+      "write": 4,
+      "navigate": 4,
+      "read": 3,
+      "press": 3,
+      "browser": 2,
+      "pb": 2,
+      "grep": 1,
+      "new": 1,
+      "select": 1,
+      "type": 1,
+      "upload": 1
+    },
+    "txtToolCategoryBytes": {
+      "mcp": 1755560,
+      "run": 975298,
+      "take": 149894,
+      "evaluate": 61767,
+      "grep": 18786,
+      "read": 13058,
+      "list": 3287,
+      "write": 3160,
+      "click": 1709,
+      "web": 1290,
+      "navigate": 1290,
+      "browser": 918,
+      "pb": 584,
+      "new": 376,
+      "select": 376,
+      "press": 159,
+      "upload": 138,
+      "type": 65
+    },
+    "keywordHitsAcrossTxt": {
+      "n8n": 2173,
+      "workflow": 983,
+      "airtable": 795,
+      "error": 606,
+      "telegram": 464,
+      "claude": 223,
+      "projekt": 196,
+      "calendar": 140,
+      "munkaidő": 75,
+      "gemini": 51,
+      "manus": 50,
+      "késés": 2
+    }
+  }
+}

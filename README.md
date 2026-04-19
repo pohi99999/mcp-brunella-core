@@ -93,7 +93,22 @@ A `README.md` a master dokumentum (~1100 sor). NE olvasd be egészben indulásko
 - MCP tool fájlok a `src/tools/` alatt: **61**
 - Detektált MCP tool definíciók / regisztrációk: **4**
 - CLI parancs deklarációk: **323**
-- Dashboard navigációs panelek: **111**
+- **Dashboard navigációs panelek:** 111
+
+---
+
+## ☁️ Cloudflare Edge Integration (L2)
+
+The system includes a deep integration with Cloudflare services for high-scale agent operations:
+
+- **AI Gateway:** Centralized LLM logging, rate limiting, and cost tracking.
+- **Agent API Gateway:** Unified entry point for cross-worker agent dispatching.
+- **D1 Database:** Persistent storage for Small/Medium Business (KKV) data (Invoices, Clients).
+- **Durable Objects:** Persistent session state management for multi-agent swarm handoffs.
+- **Queues:** Async task distribution for the Data Flywheel (Tech-Harvest).
+- **RAG Sync:** Automated edge-to-local synchronization into local LanceDB.
+
+---
 
 > Ezt a blokkot a `npm run sync:doc-stats` generálja.
 <!-- DOC_STATS_END -->

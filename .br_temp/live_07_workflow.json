@@ -1,0 +1,330 @@
+{
+  "updatedAt": "2026-03-26T04:59:54.933Z",
+  "createdAt": "2026-03-26T04:31:25.02Z",
+  "id": "SxWeeyrNe6TQ71zf",
+  "name": "07 - ISZ Heti Kontextus Csomag",
+  "description": null,
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "triggerTimes": {
+          "item": [
+            {
+              "mode": "everyWeek",
+              "hour": 7,
+              "minute": 0,
+              "weekday": 1
+            }
+          ]
+        }
+      },
+      "name": "Cron Trigger - Hétfő 07:00",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [
+        80,
+        220
+      ],
+      "id": "a4b6e2c1-4207-4ec6-9363-000000000001"
+    },
+    {
+      "parameters": {
+        "authentication": "airtableTokenApi",
+        "operation": "list",
+        "application": {
+          "__rl": true,
+          "mode": "id",
+          "value": "appU3xQMuAmpmmCEy"
+        },
+        "table": "Folyamatok",
+        "additionalOptions": {}
+      },
+      "name": "Airtable - Folyamatok lekérdezés",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 1,
+      "alwaysOutputData": true,
+      "position": [
+        320,
+        220
+      ],
+      "id": "a4b6e2c1-4207-4ec6-9363-000000000002",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "xzTM1nLU5Iaomt9x",
+          "name": "ISZ_Airtable_PAT_v3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "airtableTokenApi",
+        "operation": "list",
+        "application": {
+          "__rl": true,
+          "mode": "id",
+          "value": "appU3xQMuAmpmmCEy"
+        },
+        "table": "Feladatok",
+        "additionalOptions": {}
+      },
+      "name": "Airtable - Feladatok lekérdezés",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 1,
+      "alwaysOutputData": true,
+      "position": [
+        580,
+        220
+      ],
+      "id": "a4b6e2c1-4207-4ec6-9363-000000000003",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "xzTM1nLU5Iaomt9x",
+          "name": "ISZ_Airtable_PAT_v3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "airtableTokenApi",
+        "operation": "list",
+        "application": {
+          "__rl": true,
+          "mode": "id",
+          "value": "appU3xQMuAmpmmCEy"
+        },
+        "table": "Munkatársak",
+        "additionalOptions": {}
+      },
+      "name": "Airtable - Munkatársak lekérdezés",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 1,
+      "alwaysOutputData": true,
+      "position": [
+        840,
+        220
+      ],
+      "id": "a4b6e2c1-4207-4ec6-9363-000000000004",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "xzTM1nLU5Iaomt9x",
+          "name": "ISZ_Airtable_PAT_v3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "airtableTokenApi",
+        "operation": "list",
+        "application": {
+          "__rl": true,
+          "mode": "id",
+          "value": "appU3xQMuAmpmmCEy"
+        },
+        "table": "Szabadságok",
+        "additionalOptions": {}
+      },
+      "name": "Airtable - Szabadságok lekérdezés",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 1,
+      "alwaysOutputData": true,
+      "position": [
+        1100,
+        220
+      ],
+      "id": "a4b6e2c1-4207-4ec6-9363-000000000005",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "xzTM1nLU5Iaomt9x",
+          "name": "ISZ_Airtable_PAT_v3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "airtableTokenApi",
+        "operation": "list",
+        "application": {
+          "__rl": true,
+          "mode": "id",
+          "value": "appU3xQMuAmpmmCEy"
+        },
+        "table": "Munkaidő Nyilvántartás",
+        "additionalOptions": {}
+      },
+      "name": "Airtable - Munkaidő Nyilvántartás",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 1,
+      "alwaysOutputData": true,
+      "position": [
+        1360,
+        220
+      ],
+      "id": "a4b6e2c1-4207-4ec6-9363-000000000006",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "xzTM1nLU5Iaomt9x",
+          "name": "ISZ_Airtable_PAT_v3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// n8n Code node — Iszapfaló Heti Kontextus Csomag\r\n// Cél: több Airtable node outputjából egy Claude-kompatibilis Markdown riportot készíteni.\r\n// Ajánlott workflow node-nevek:\r\n// - Airtable - Folyamatok lekérdezés\r\n// - Airtable - Feladatok lekérdezés\r\n// - Airtable - Munkatársak lekérdezés\r\n// - Airtable - Szabadságok lekérdezés\r\n// - Airtable - Munkaidő Nyilvántartás   (opcionális)\r\n//\r\n// Output:\r\n// - json.markdown: kész riport szöveg\r\n// - json.fileName: Google Drive-ba feltölthető fájlnév\r\n// - binary.report: markdown fájl bináris tartalma\r\n//\r\n// Következő node javaslat:\r\n// Google Drive Upload -> Binary Property: report\r\n\r\nconst NODE_NAMES = {\r\n  projects: 'Airtable - Folyamatok lekérdezés',\r\n  tasks: 'Airtable - Feladatok lekérdezés',\r\n  staff: 'Airtable - Munkatársak lekérdezés',\r\n  vacations: 'Airtable - Szabadságok lekérdezés',\r\n  timesheet: 'Airtable - Munkaidő Nyilvántartás',\r\n};\r\n\r\nfunction safeAll(nodeName) {\r\n  try {\r\n    return $(nodeName).all().map((item) => item.json ?? {});\r\n  } catch {\r\n    return [];\r\n  }\r\n}\r\n\r\nfunction pick(record, keys, fallback = '') {\r\n  for (const key of keys) {\r\n    const value = record?.[key];\r\n    if (value !== undefined && value !== null && value !== '') {\r\n      return value;\r\n    }\r\n  }\r\n  return fallback;\r\n}\r\n\r\nfunction asNumber(value, fallback = 0) {\r\n  if (typeof value === 'number' && Number.isFinite(value)) return value;\r\n  if (typeof value === 'string') {\r\n    const normalized = value.replace(',', '.').replace(/[^0-9.-]/g, '');\r\n    const parsed = Number(normalized);\r\n    if (Number.isFinite(parsed)) return parsed;\r\n  }\r\n  return fallback;\r\n}\r\n\r\nfunction formatDate(date) {\r\n  return date.toISOString().slice(0, 10);\r\n}\r\n\r\nfunction formatHungarianDate(value) {\r\n  if (!value) return '-';\r\n  const d = new Date(value);\r\n  if (Number.isNaN(d.getTime())) return String(value);\r\n  return d.toISOString().slice(0, 10);\r\n}\r\n\r\nfunction formatCurrency(value) {\r\n  const amount = asNumber(value, 0);\r\n  return new Intl.NumberFormat('hu-HU').format(amount);\r\n}\r\n\r\nfunction escapePipe(value) {\r\n  return String(value ?? '-').replace(/\\|/g, '\\\\|').replace(/\\n/g, ' ');\r\n}\r\n\r\nfunction normalizeProject(project) {\r\n  return {\r\n    name: pick(project, ['Folyamat neve', 'Projekt', 'Name', 'Név'], 'Ismeretlen projekt'),\r\n    status: pick(project, ['Státusz', 'Status'], 'Ismeretlen'),\r\n    delayDays: asNumber(pick(project, ['Késés napokban', 'Késés', 'DelayDays'], 0), 0),\r\n    owner: pick(project, ['Felelős', 'Tulajdonos', 'Owner'], 'Nincs megadva'),\r\n    deadline: pick(project, ['Határidő', 'Deadline'], ''),\r\n    openTasks: asNumber(pick(project, ['Feladatok száma', 'Nyitott feladatok száma', 'OpenTasks'], 0), 0),\r\n    price: asNumber(pick(project, ['Kiajánlott Ár', 'Ár', 'Price'], 0), 0),\r\n    reason: pick(project, ['Késés oka', 'Blokkoló ok', 'Megjegyzés'], ''),\r\n  };\r\n}\r\n\r\nfunction normalizeTask(task) {\r\n  return {\r\n    name: pick(task, ['Feladat neve', 'Feladat', 'Task', 'Name'], 'Névtelen feladat'),\r\n    priority: pick(task, ['Prioritás', 'Priority'], 'Nincs megadva'),\r\n    status: pick(task, ['Státusz', 'Status'], 'Ismeretlen'),\r\n    owner: pick(task, ['Felelős', 'Assignee', 'Tulajdonos'], 'Nincs megadva'),\r\n    project: pick(task, ['Folyamat kapcsolat', 'Projekt', 'Kapcsolódó folyamat'], 'Nincs projekt'),\r\n    deadline: pick(task, ['Határidő', 'Deadline'], ''),\r\n  };\r\n}\r\n\r\nfunction normalizeStaff(person) {\r\n  return {\r\n    name: pick(person, ['Név', 'Name'], 'Ismeretlen munkatárs'),\r\n    role: pick(person, ['Beosztás', 'Role'], 'Nincs megadva'),\r\n    workload: asNumber(pick(person, ['Feladat leterheltség (%)', 'Leterheltség %', 'Workload'], 0), 0),\r\n    chatId: pick(person, ['Telegram Chat ID', 'Chat ID'], ''),\r\n    relatedProjects: pick(person, ['Kapcsolódó folyamatok', 'Projects'], ''),\r\n  };\r\n}\r\n\r\nfunction normalizeVacation(vacation) {\r\n  return {\r\n    name: pick(vacation, ['Munkatárs neve', 'Munkatárs', 'Név', 'Name'], 'Ismeretlen'),\r\n    start: pick(vacation, ['Szabadság kezdete', 'Kezdés', 'Start', 'Start Date'], ''),\r\n    end: pick(vacation, ['Szabadság vége', 'Vége', 'End', 'End Date'], ''),\r\n    type: pick(vacation, ['Típus', 'Type'], 'Szabadság'),\r\n  };\r\n}\r\n\r\nfunction normalizeTimeEntry(entry) {\r\n  return {\r\n    name: pick(entry, ['Munkatárs', 'Név', 'Name'], 'Ismeretlen'),\r\n    hours: asNumber(pick(entry, ['Ledolgozott órák', 'Óraszám', 'Hours'], 0), 0),\r\n    project: pick(entry, ['Projekt', 'Fő projekt', 'Kapcsolódó folyamat'], '-'),\r\n    date: pick(entry, ['Dátum', 'Date'], ''),\r\n  };\r\n}\r\n\r\nfunction tableRow(cells) {\r\n  return `| ${cells.map(escapePipe).join(' | ')} |`;\r\n}\r\n\r\nfunction bulletList(items, emptyText = '- Nincs adat') {\r\n  if (!items.length) return emptyText;\r\n  return items.map((item) => `- ${item}`).join('\\n');\r\n}\r\n\r\nconst now = new Date();\r\nconst day = now.getDay();\r\nconst diffToMonday = day === 0 ? -6 : 1 - day;\r\nconst periodStart = new Date(now);\r\nperiodStart.setDate(now.getDate() + diffToMonday);\r\nconst periodEnd = new Date(periodStart);\r\nperiodEnd.setDate(periodStart.getDate() + 6);\r\n\r\nconst rawProjects = safeAll(NODE_NAMES.projects);\r\nconst rawTasks = safeAll(NODE_NAMES.tasks);\r\nconst rawStaff = safeAll(NODE_NAMES.staff);\r\nconst rawVacations = safeAll(NODE_NAMES.vacations);\r\nconst rawTimesheet = safeAll(NODE_NAMES.timesheet);\r\n\r\nconst projects = rawProjects.map(normalizeProject);\r\nconst tasks = rawTasks.map(normalizeTask);\r\nconst staff = rawStaff.map(normalizeStaff);\r\nconst vacations = rawVacations.map(normalizeVacation);\r\nconst timesheet = rawTimesheet.map(normalizeTimeEntry);\r\n\r\nconst delayedProjects = [...projects]\r\n  .filter((project) => project.delayDays > 0)\r\n  .sort((a, b) => b.delayDays - a.delayDays);\r\n\r\nconst criticalProjects = delayedProjects.filter((project) => project.delayDays >= 30);\r\nconst billingWaiting = projects.filter((project) =>\r\n  ['Számlázásra vár', 'Billing Pending', 'Billing'].includes(project.status),\r\n);\r\nconst blockedProjects = projects.filter((project) =>\r\n  !project.owner || project.owner === 'Nincs megadva' || Boolean(project.reason),\r\n);\r\n\r\nconst prioritizedTasks = [...tasks]\r\n  .filter((task) => ['Magas', 'High'].includes(task.priority))\r\n  .filter((task) => ['Új', 'Folyamatban', 'New', 'In Progress'].includes(task.status))\r\n  .sort((a, b) => {\r\n    const dateA = a.deadline ? new Date(a.deadline).getTime() : Number.MAX_SAFE_INTEGER;\r\n    const dateB = b.deadline ? new Date(b.deadline).getTime() : Number.MAX_SAFE_INTEGER;\r\n    return dateA - dateB;\r\n  });\r\n\r\nconst vacationsByName = new Map();\r\nfor (const vacation of vacations) {\r\n  const label = `${formatHungarianDate(vacation.start)} → ${formatHungarianDate(vacation.end)} (${vacation.type})`;\r\n  const current = vacationsByName.get(vacation.name) ?? [];\r\n  current.push(label);\r\n  vacationsByName.set(vacation.name, current);\r\n}\r\n\r\nconst timesheetByName = new Map();\r\nfor (const entry of timesheet) {\r\n  const current = timesheetByName.get(entry.name) ?? { hours: 0, projectHours: new Map() };\r\n  current.hours += entry.hours;\r\n  current.projectHours.set(entry.project, (current.projectHours.get(entry.project) ?? 0) + entry.hours);\r\n  timesheetByName.set(entry.name, current);\r\n}\r\n\r\nconst activeProjectsTable = projects.length\r\n  ? projects\r\n      .sort((a, b) => b.delayDays - a.delayDays)\r\n      .map((project) => tableRow([\r\n        project.name,\r\n        project.status,\r\n        project.delayDays,\r\n        project.owner,\r\n        project.openTasks,\r\n        formatHungarianDate(project.deadline),\r\n      ]))\r\n      .join('\\n')\r\n  : tableRow(['Nincs adat', '-', '-', '-', '-', '-']);\r\n\r\nconst highPriorityTasksTable = prioritizedTasks.length\r\n  ? prioritizedTasks\r\n      .map((task) => tableRow([\r\n        task.name,\r\n        task.owner,\r\n        task.project,\r\n        task.status,\r\n        formatHungarianDate(task.deadline),\r\n      ]))\r\n      .join('\\n')\r\n  : tableRow(['Nincs magas prioritású feladat', '-', '-', '-', '-']);\r\n\r\nconst staffAvailabilityTable = staff.length\r\n  ? staff\r\n      .sort((a, b) => b.workload - a.workload)\r\n      .map((person) => {\r\n        const vacationsLabel = (vacationsByName.get(person.name) ?? []).join(', ') || 'Nem';\r\n        const notes = [\r\n          person.chatId ? `Telegram: ${person.chatId}` : 'Telegram: hiányzik',\r\n          person.relatedProjects ? `Kapcsolódó projektek: ${person.relatedProjects}` : '',\r\n        ].filter(Boolean).join(' | ');\r\n\r\n        return tableRow([\r\n          person.name,\r\n          person.role,\r\n          person.workload,\r\n          vacationsLabel,\r\n          notes || '-',\r\n        ]);\r\n      })\r\n      .join('\\n')\r\n  : tableRow(['Nincs adat', '-', '-', '-', '-']);\r\n\r\nconst weeklyHoursTable = timesheet.length\r\n  ? Array.from(timesheetByName.entries())\r\n      .map(([name, summary]) => {\r\n        let mainProject = '-';\r\n        let maxHours = -1;\r\n        for (const [project, hours] of summary.projectHours.entries()) {\r\n          if (hours > maxHours) {\r\n            maxHours = hours;\r\n            mainProject = project;\r\n          }\r\n        }\r\n        return { name, hours: summary.hours, mainProject };\r\n      })\r\n      .sort((a, b) => b.hours - a.hours)\r\n      .map((entry) => tableRow([entry.name, entry.hours.toFixed(1), entry.mainProject]))\r\n      .join('\\n')\r\n  : tableRow(['Még nincs munkaidő adat', '0', '-']);\r\n\r\nconst pipelineTotal = projects.reduce((sum, project) => sum + project.price, 0);\r\nconst totalWeeklyHours = Array.from(timesheetByName.values()).reduce((sum, entry) => sum + entry.hours, 0);\r\n\r\nconst markdown = [\r\n  '# Heti Kontextus Csomag',\r\n  '',\r\n  `**Dátum:** ${formatDate(now)}  `,\r\n  `**Időszak:** ${formatDate(periodStart)} → ${formatDate(periodEnd)}  `,\r\n  '**Forrás:** Airtable + n8n  ',\r\n  '**Cél:** Heti vezetői és operatív kontextus Claude számára  ',\r\n  '',\r\n  '---',\r\n  '',\r\n  '## 1. Vezetői összkép',\r\n  '',\r\n  `- Aktív projektek száma: **${projects.length}**`,\r\n  `- Késésben lévő projektek száma: **${delayedProjects.length}**`,\r\n  `- Magas prioritású nyitott feladatok száma: **${prioritizedTasks.length}**`,\r\n  `- Szabadságon lévő munkatársak: **${vacationsByName.size}**`,\r\n  `- Előző heti összes munkaidő: **${totalWeeklyHours.toFixed(1)} óra**`,\r\n  `- Ajánlati / projekt pipeline becsült összértéke: **${formatCurrency(pipelineTotal)} Ft**`,\r\n  '',\r\n  '---',\r\n  '',\r\n  '## 2. Aktív projektek',\r\n  '',\r\n  '| Projekt | Státusz | Késés (nap) | Felelős | Nyitott feladat | Határidő |',\r\n  '| --- | --- | ---: | --- | ---: | --- |',\r\n  activeProjectsTable,\r\n  '',\r\n  '---',\r\n  '',\r\n  '## 3. Kritikus projektek',\r\n  '',\r\n  '### 30+ napos késések',\r\n  bulletList(\r\n    criticalProjects.map((project) => `${project.name} — ${project.delayDays} nap késés — Felelős: ${project.owner}`),\r\n    '- Nincs 30 napnál nagyobb késés',\r\n  ),\r\n  '',\r\n  '### Számlázásra váró / pénzügyileg sürgős elemek',\r\n  bulletList(\r\n    billingWaiting.map((project) => `${project.name} — státusz: ${project.status} — érték: ${formatCurrency(project.price)} Ft`),\r\n    '- Nincs ilyen projekt',\r\n  ),\r\n  '',\r\n  '### Gazdátlan vagy blokkolt projektek',\r\n  bulletList(\r\n    blockedProjects.map((project) => {\r\n      const suffix = project.reason ? ` — ok: ${project.reason}` : '';\r\n      return `${project.name} — felelős: ${project.owner || 'hiányzik'}${suffix}`;\r\n    }),\r\n    '- Nincs blokkolt vagy gazdátlan projekt',\r\n  ),\r\n  '',\r\n  '---',\r\n  '',\r\n  '## 4. Magas prioritású feladatok',\r\n  '',\r\n  '| Feladat | Felelős | Projekt | Státusz | Határidő |',\r\n  '| --- | --- | --- | --- | --- |',\r\n  highPriorityTasksTable,\r\n  '',\r\n  '---',\r\n  '',\r\n  '## 5. Munkatárs elérhetőség',\r\n  '',\r\n  '| Név | Beosztás | Leterheltség % | Szabadság | Megjegyzés |',\r\n  '| --- | --- | ---: | --- | --- |',\r\n  staffAvailabilityTable,\r\n  '',\r\n  '---',\r\n  '',\r\n  '## 6. Előző heti munkaidő',\r\n  '',\r\n  '| Név | Óraszám | Fő projekt |',\r\n  '| --- | ---: | --- |',\r\n  weeklyHoursTable,\r\n  '',\r\n  '---',\r\n  '',\r\n  '## 7. Pénzügyi pipeline',\r\n  '',\r\n  `- Ajánlati / projekt pipeline összértéke: **${formatCurrency(pipelineTotal)} Ft**`,\r\n  bulletList(\r\n    projects\r\n      .filter((project) => project.price > 0)\r\n      .sort((a, b) => b.price - a.price)\r\n      .slice(0, 5)\r\n      .map((project) => `${project.name} — ${formatCurrency(project.price)} Ft — státusz: ${project.status}`),\r\n    '- Nincs ár/érték adat',\r\n  ),\r\n  '',\r\n  '---',\r\n  '',\r\n  '## 8. Claude számára ajánlott kérdések',\r\n  '',\r\n  '- Milyen legyen a jövő heti munkarend?',\r\n  '- Melyik projektekre kell most fókuszálni?',\r\n  '- Ki túlterhelt, és ki vállalhat még feladatot?',\r\n  '- Hol vannak a legsürgősebb pénzügyi prioritások?',\r\n  '- Mi legyen a jövő hét top 3 vezetői fókusza?',\r\n].join('\\n');\r\n\r\nconst fileName = `Heti_Kontextus_${formatDate(now).replace(/-/g, '')}.md`;\r\nconst binaryData = Buffer.from(markdown, 'utf8').toString('base64');\r\n\r\nreturn [\r\n  {\r\n    json: {\r\n      fileName,\r\n      markdown,\r\n      reportDate: formatDate(now),\r\n      periodStart: formatDate(periodStart),\r\n      periodEnd: formatDate(periodEnd),\r\n      stats: {\r\n        activeProjects: projects.length,\r\n        delayedProjects: delayedProjects.length,\r\n        highPriorityTasks: prioritizedTasks.length,\r\n        staffOnVacation: vacationsByName.size,\r\n        totalWeeklyHours,\r\n        pipelineTotal,\r\n      },\r\n    },\r\n    binary: {\r\n      report: {\r\n        data: binaryData,\r\n        mimeType: 'text/markdown',\r\n        fileName,\r\n        fileExtension: 'md',\r\n      },\r\n    },\r\n  },\r\n];\r\n"
+      },
+      "name": "Code - Heti Kontextus Generátor",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1640,
+        220
+      ],
+      "id": "a4b6e2c1-4207-4ec6-9363-000000000007"
+    },
+    {
+      "parameters": {
+        "content": "A heti markdown riport generálása live-ban működik.\n\nGoogle Drive feltöltés jelenleg nincs bekötve, mert a projektben nem látható / nem megosztott a workflow számára használható Google Drive credential. Ha egy Drive credential megjelenik ezen a Credentials oldalon, a Code node binary.report kimenete azonnal ráköthető egy Upload file node-ra.",
+        "height": 260,
+        "width": 420,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1640,
+        20
+      ],
+      "id": "a4b6e2c1-4207-4ec6-9363-000000000008",
+      "name": "Sticky Note - Drive blokk"
+    }
+  ],
+  "connections": {
+    "Cron Trigger - Hétfő 07:00": {
+      "main": [
+        [
+          {
+            "node": "Airtable - Folyamatok lekérdezés",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Airtable - Folyamatok lekérdezés": {
+      "main": [
+        [
+          {
+            "node": "Airtable - Feladatok lekérdezés",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Airtable - Feladatok lekérdezés": {
+      "main": [
+        [
+          {
+            "node": "Airtable - Munkatársak lekérdezés",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Airtable - Munkatársak lekérdezés": {
+      "main": [
+        [
+          {
+            "node": "Airtable - Szabadságok lekérdezés",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Airtable - Szabadságok lekérdezés": {
+      "main": [
+        [
+          {
+            "node": "Airtable - Munkaidő Nyilvántartás",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Airtable - Munkaidő Nyilvántartás": {
+      "main": [
+        [
+          {
+            "node": "Code - Heti Kontextus Generátor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {},
+  "versionId": "060c195a-d018-46d9-8326-6b30725a0410",
+  "activeVersionId": null,
+  "versionCounter": 6,
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2026-03-26T04:31:25.023Z",
+      "createdAt": "2026-03-26T04:31:25.023Z",
+      "role": "workflow:owner",
+      "workflowId": "SxWeeyrNe6TQ71zf",
+      "projectId": "johLSwPlUades2LG",
+      "project": {
+        "updatedAt": "2026-01-03T00:33:46.337Z",
+        "createdAt": "2026-01-02T11:12:48.559Z",
+        "id": "johLSwPlUades2LG",
+        "name": "József Péter Pohánka <peterpohankapersonal@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "projectRelations": [
+          {
+            "updatedAt": "2026-01-02T11:12:48.561Z",
+            "createdAt": "2026-01-02T11:12:48.561Z",
+            "userId": "de33e76d-7bbf-4de8-9867-d4646a43eff4",
+            "projectId": "johLSwPlUades2LG",
+            "user": {
+              "updatedAt": "2026-03-26T04:01:19Z",
+              "createdAt": "2026-01-02T11:12:48.556Z",
+              "id": "de33e76d-7bbf-4de8-9867-d4646a43eff4",
+              "email": "peterpohankapersonal@gmail.com",
+              "firstName": "József Péter",
+              "lastName": "Pohánka",
+              "personalizationAnswers": null,
+              "settings": {
+                "userClaimedAiCredits": true,
+                "easyAIWorkflowOnboarded": true,
+                "firstSuccessfulWorkflowId": "Xo0yXlQ7oI7iOFbN",
+                "userActivated": true,
+                "userActivatedAt": 1774243654482
+              },
+              "disabled": false,
+              "mfaEnabled": false,
+              "lastActiveAt": "2026-03-25",
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": [],
+  "activeVersion": null
+}

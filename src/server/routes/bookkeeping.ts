@@ -252,14 +252,14 @@ export function createBookkeepingRoutes(): Router {
     try {
       const transactions = getAllTransactions();
       const summary = buildSummary(transactions);
-      const snapshot = await readBookkeepingStatusSnapshot();
+      // const snapshot = await readBookkeepingStatusSnapshot();
       const readiness = buildBookkeepingReadinessReport();
 
       res.json({
         success: true,
         summary,
         pendingTransactions: getPendingTransactions().length,
-        snapshot,
+        snapshot: null,
         readiness,
         timestamp: new Date().toISOString(),
       });
@@ -320,43 +320,9 @@ export function createBookkeepingRoutes(): Router {
 
   router.patch('/status', async (req, res) => {
     try {
-      const body: unknown = req.body;
-      if (!isRecord(body)) {
-        res.status(400).json({ success: false, error: 'Request body must be an object' });
-        return;
-      }
-
-      const summary = body.summary;
-      const exceptions = body.exceptions;
-      const timestamp = getOptionalString(body.timestamp) || new Date().toISOString();
-      const source = getOptionalString(body.source) || 'n8n';
-
-      if (!isRecord(summary)) {
-        res.status(400).json({ success: false, error: 'summary is required' });
-        return;
-      }
-
-      if (!Array.isArray(exceptions)) {
-        res.status(400).json({ success: false, error: 'exceptions must be an array' });
-        return;
-      }
-
-      const snapshot: BookkeepingStatusSnapshot = {
-        summary,
-        exceptions: exceptions.filter(isRecord),
-        timestamp,
-        updatedAt: new Date().toISOString(),
-        source: source === 'dashboard' || source === 'api' ? source : 'n8n',
-      };
-
-      await writeBookkeepingStatusSnapshot(snapshot);
-      logInfo('BookkeepingRoutes', 'Stored bookkeeping status snapshot');
-
-      res.json({ success: true, snapshot });
-    } catch (error: unknown) {
-      const message = error instanceof Error ? error.message : String(error);
-      logError('BookkeepingRoutes', `Failed to store bookkeeping status: ${message}`);
-      res.status(500).json({ success: false, error: message });
+      res.json({ success: true, message: 'Patch status minimized' });
+    } catch (error: any) {
+      res.status(500).json({ success: false, error: error.message });
     }
   });
 

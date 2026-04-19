@@ -1,0 +1,331 @@
+{
+  "updatedAt": "2026-03-18T22:53:03.000Z",
+  "createdAt": "2026-03-18T22:50:02.407Z",
+  "id": "MFg5V5Xz0QvDNEzE",
+  "name": "00 - ISZ Error Monitoring (FINAL)",
+  "description": null,
+  "active": true,
+  "isArchived": true,
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "error-log",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "name": "Webhook - Error Log",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        -208,
+        112
+      ],
+      "id": "9d176206-4ae7-494d-bca2-6b4948c869c5",
+      "webhookId": "6d9f4b02-31fd-4bd0-aa66-388b53ec9720"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"status\": \"received\", \"timestamp\": $now.toISO() } }}",
+        "options": {}
+      },
+      "name": "Webhook Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "81023430-2714-43a9-bfeb-f3498a2bc67a"
+    },
+    {
+      "parameters": {
+        "jsCode": "const errorData = $input.item.json;\nreturn [{\n  json: {\n    timestamp: new Date().toISOString(),\n    workflow_id: errorData.workflow_id || 'unknown',\n    error_message: errorData.error_message || 'Unknown error',\n    severity: errorData.severity || 'error'\n  }\n}];"
+      },
+      "name": "Error Formázás",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        0,
+        208
+      ],
+      "id": "03d1aab9-72b6-4e4d-bc63-843e57829f8a"
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "application": {
+          "__rl": true,
+          "mode": "id",
+          "value": "appU3xQMuAmpmmCEy"
+        },
+        "table": "ERROR_LOG"
+      },
+      "name": "Airtable - Error Log",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 1,
+      "position": [
+        208,
+        208
+      ],
+      "id": "cb34d403-b31d-4fe7-8933-13bed79ca447"
+    },
+    {
+      "parameters": {
+        "chatId": "7544590867",
+        "text": "🚨 **HIBA ÉSZLELVE**\n\n{{ $json.error_message }}",
+        "additionalFields": {}
+      },
+      "name": "Telegram - Hiba Értesítés",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        400,
+        208
+      ],
+      "id": "80d3bfa3-530c-4276-b1d5-bd82e1564aad",
+      "webhookId": "797d162d-461b-4bce-a953-f5c1511da947",
+      "credentials": {
+        "telegramApi": {
+          "id": "XkjqRpMaHKDFOO3C",
+          "name": "ISZ_Telegram_Prod"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Webhook - Error Log": {
+      "main": [
+        [
+          {
+            "node": "Webhook Response",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Error Formázás",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Error Formázás": {
+      "main": [
+        [
+          {
+            "node": "Airtable - Error Log",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Airtable - Error Log": {
+      "main": [
+        [
+          {
+            "node": "Telegram - Hiba Értesítés",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {},
+  "versionId": "da00d471-890a-4705-b5cb-97de42061a68",
+  "activeVersionId": "da00d471-890a-4705-b5cb-97de42061a68",
+  "versionCounter": 11,
+  "triggerCount": 1,
+  "shared": [
+    {
+      "updatedAt": "2026-03-18T22:50:02.409Z",
+      "createdAt": "2026-03-18T22:50:02.409Z",
+      "role": "workflow:owner",
+      "workflowId": "MFg5V5Xz0QvDNEzE",
+      "projectId": "johLSwPlUades2LG",
+      "project": {
+        "updatedAt": "2026-01-03T00:33:46.337Z",
+        "createdAt": "2026-01-02T11:12:48.559Z",
+        "id": "johLSwPlUades2LG",
+        "name": "József Péter Pohánka <peterpohankapersonal@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "projectRelations": [
+          {
+            "updatedAt": "2026-01-02T11:12:48.561Z",
+            "createdAt": "2026-01-02T11:12:48.561Z",
+            "userId": "de33e76d-7bbf-4de8-9867-d4646a43eff4",
+            "projectId": "johLSwPlUades2LG",
+            "user": {
+              "updatedAt": "2026-04-01T07:33:51.000Z",
+              "createdAt": "2026-01-02T11:12:48.556Z",
+              "id": "de33e76d-7bbf-4de8-9867-d4646a43eff4",
+              "email": "peterpohankapersonal@gmail.com",
+              "firstName": "József Péter",
+              "lastName": "Pohánka",
+              "personalizationAnswers": null,
+              "settings": {
+                "userClaimedAiCredits": true,
+                "easyAIWorkflowOnboarded": true,
+                "firstSuccessfulWorkflowId": "Xo0yXlQ7oI7iOFbN",
+                "userActivated": true,
+                "userActivatedAt": 1774243654482
+              },
+              "disabled": false,
+              "mfaEnabled": false,
+              "lastActiveAt": "2026-03-31",
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": [],
+  "activeVersion": {
+    "updatedAt": "2026-03-18T22:53:04.016Z",
+    "createdAt": "2026-03-18T22:53:04.016Z",
+    "versionId": "da00d471-890a-4705-b5cb-97de42061a68",
+    "workflowId": "MFg5V5Xz0QvDNEzE",
+    "nodes": [
+      {
+        "parameters": {
+          "httpMethod": "POST",
+          "path": "error-log",
+          "responseMode": "responseNode",
+          "options": {}
+        },
+        "name": "Webhook - Error Log",
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 1,
+        "position": [
+          -208,
+          112
+        ],
+        "id": "9d176206-4ae7-494d-bca2-6b4948c869c5",
+        "webhookId": "6d9f4b02-31fd-4bd0-aa66-388b53ec9720"
+      },
+      {
+        "parameters": {
+          "respondWith": "json",
+          "responseBody": "={{ { \"status\": \"received\", \"timestamp\": $now.toISO() } }}",
+          "options": {}
+        },
+        "name": "Webhook Response",
+        "type": "n8n-nodes-base.respondToWebhook",
+        "typeVersion": 1,
+        "position": [
+          0,
+          0
+        ],
+        "id": "81023430-2714-43a9-bfeb-f3498a2bc67a"
+      },
+      {
+        "parameters": {
+          "jsCode": "const errorData = $input.item.json;\nreturn [{\n  json: {\n    timestamp: new Date().toISOString(),\n    workflow_id: errorData.workflow_id || 'unknown',\n    error_message: errorData.error_message || 'Unknown error',\n    severity: errorData.severity || 'error'\n  }\n}];"
+        },
+        "name": "Error Formázás",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          0,
+          208
+        ],
+        "id": "03d1aab9-72b6-4e4d-bc63-843e57829f8a"
+      },
+      {
+        "parameters": {
+          "operation": "create",
+          "application": {
+            "__rl": true,
+            "mode": "id",
+            "value": "appU3xQMuAmpmmCEy"
+          },
+          "table": "ERROR_LOG"
+        },
+        "name": "Airtable - Error Log",
+        "type": "n8n-nodes-base.airtable",
+        "typeVersion": 1,
+        "position": [
+          208,
+          208
+        ],
+        "id": "cb34d403-b31d-4fe7-8933-13bed79ca447"
+      },
+      {
+        "parameters": {
+          "chatId": "7544590867",
+          "text": "🚨 **HIBA ÉSZLELVE**\n\n{{ $json.error_message }}",
+          "additionalFields": {}
+        },
+        "name": "Telegram - Hiba Értesítés",
+        "type": "n8n-nodes-base.telegram",
+        "typeVersion": 1,
+        "position": [
+          400,
+          208
+        ],
+        "id": "80d3bfa3-530c-4276-b1d5-bd82e1564aad",
+        "webhookId": "797d162d-461b-4bce-a953-f5c1511da947",
+        "credentials": {
+          "telegramApi": {
+            "id": "XkjqRpMaHKDFOO3C",
+            "name": "ISZ_Telegram_Prod"
+          }
+        }
+      }
+    ],
+    "connections": {
+      "Webhook - Error Log": {
+        "main": [
+          [
+            {
+              "node": "Webhook Response",
+              "type": "main",
+              "index": 0
+            },
+            {
+              "node": "Error Formázás",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Error Formázás": {
+        "main": [
+          [
+            {
+              "node": "Airtable - Error Log",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Airtable - Error Log": {
+        "main": [
+          [
+            {
+              "node": "Telegram - Hiba Értesítés",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "József Péter Pohánka",
+    "name": null,
+    "description": null
+  }
+}

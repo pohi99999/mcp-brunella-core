@@ -1,0 +1,946 @@
+{
+  "version": 1,
+  "agents": [
+    {
+      "name": "orchestrator",
+      "title": "Orchestrator",
+      "description": "Koordinalja a feladatokat es delegalja az agentekhez.",
+      "class": "OrchestratorAgent",
+      "module": "./agents/OrchestratorAgent.js",
+      "capabilities": ["planning", "routing", "delegation"],
+      "tools": ["agent_list", "agent_delegate"],
+      "category": "core",
+      "status": "planned",
+      "tags": ["coordination", "workflow"]
+    },
+    {
+      "name": "enterprise_orchestrator",
+      "title": "Enterprise Orchestrator",
+      "description": "Koordinalja a 18 BAS Enterprise Suite modul v├ęgrehajt├ís├ít priorit├ís alap├║ routing-gal.",
+      "class": "EnterpriseOrchestratorAgent",
+      "module": "./agents/EnterpriseOrchestratorAgent.js",
+      "capabilities": [
+        "enterprise_event_parsing",
+        "priority_assignment",
+        "module_routing",
+        "execution_monitoring",
+        "approval_management"
+      ],
+      "tools": [],
+      "category": "enterprise",
+      "status": "active",
+      "tags": ["enterprise", "coordination", "multi-module", "erp"],
+      "priority": 9,
+      "notes": "Central coordinator for BAS Enterprise Suite - routes to 18 specialized modules"
+    },
+    {
+      "name": "researcher",
+      "title": "Research Agent",
+      "description": "Keres a tudasbazisban, majd osszefoglalja a relevans informaciokat.",
+      "class": "ResearcherAgent",
+      "module": "./agents/ResearcherAgent.js",
+      "capabilities": ["rag_search", "summarization"],
+      "tools": ["knowledge_semantic_search", "knowledge_search"],
+      "notes": "RAG-alapu tudaskereses es gyors kivonatolas.",
+      "category": "knowledge",
+      "status": "active",
+      "tags": ["rag", "summaries"]
+    },
+    {
+      "name": "task_decomposer",
+      "title": "Task Decomposer",
+      "description": "Komplex feladatok dekompoz├şci├│ja mikro-taskokra (preview-only, DAG).",
+      "class": "TaskDecomposerAgent",
+      "module": "./agents/TaskDecomposerAgent.js",
+      "capabilities": ["task_decomposition", "dag", "preview"],
+      "tools": [],
+      "notes": "Iteration 1: csak preview (nem futtat toolokat).",
+      "category": "engineering",
+      "status": "active",
+      "tags": ["orchestration", "dag", "planning"],
+      "autoStart": false
+    },
+    {
+      "name": "developer",
+      "title": "Developer Agent",
+      "description": "Kodol es javit a self-healing pipeline segitsegevel.",
+      "class": "DeveloperAgent",
+      "module": "./agents/DeveloperAgent.js",
+      "capabilities": ["code_generation", "self_healing"],
+      "tools": ["pipeline_self_healing_gen"],
+      "notes": "Ollama + sandbox ellenorzesen fut at.",
+      "category": "engineering",
+      "status": "active",
+      "tags": ["code", "pipeline"]
+    },
+    {
+      "name": "qa",
+      "title": "QA Agent",
+      "description": "Funkcionalis tesztek, gyors validacio, smoke es regresszio ellenorzesek.",
+      "class": "EvaluatorAgent",
+      "module": "./agents/EvaluatorAgent.js",
+      "capabilities": ["test_execution", "validation"],
+      "tools": [
+        "interpreter_run_node",
+        "interpreter_run_python",
+        "system_run_command"
+      ],
+      "category": "quality",
+      "status": "planned",
+      "tags": ["testing", "qa"]
+    },
+    {
+      "name": "evaluator",
+      "title": "Evaluator Agent",
+      "description": "Rendszer auditor, health check es belso tesztfuttato.",
+      "class": "EvaluatorAgent",
+      "module": "./agents/EvaluatorAgent.js",
+      "capabilities": ["audit_system", "run_tests", "check_health"],
+      "tools": ["system_run_command", "monitor_get_metrics"],
+      "category": "quality",
+      "status": "active",
+      "tags": ["audit", "health"]
+    },
+    {
+      "name": "documenter",
+      "title": "Documentation Agent",
+      "description": "Dokumentacio frissites, release jegyzetek, hasznalati mintak.",
+      "class": "DocsIntelligenceAgent",
+      "module": "./agents/DocsIntelligenceAgent.js",
+      "capabilities": ["docs", "summarization"],
+      "tools": ["workspace_read_file", "knowledge_read_context"],
+      "category": "product",
+      "status": "planned",
+      "tags": ["docs", "communication"]
+    },
+    {
+      "name": "ops",
+      "title": "Ops Agent",
+      "description": "Rendszer allapot es tool logok felugyelete, gyors diagnosztika.",
+      "class": "EvaluatorAgent",
+      "module": "./agents/EvaluatorAgent.js",
+      "capabilities": ["monitoring", "diagnostics"],
+      "tools": [
+        "system_run_command",
+        "workspace_list_directory",
+        "monitor_get_metrics",
+        "monitor_tail_logs"
+      ],
+      "category": "operations",
+      "status": "active",
+      "tags": ["ops", "health"]
+    },
+    {
+      "name": "project_organizer",
+      "title": "Project Organizer",
+      "description": "Rendszerezi a projektet, mapp├ínk├ęnti tartalomjegyz├ęket k├ęsz├şt ├ęs friss├şti a k├Ânyvt├írt├ęrk├ępet.",
+      "class": "DynamicAgent",
+      "module": "./agents/DynamicAgent.js",
+      "config": {
+        "tomlPath": "myai/agents/project_organizer.toml"
+      },
+      "capabilities": ["organization", "documentation", "cleanup"],
+      "tools": [
+        "workspace_list_directory",
+        "workspace_read_file",
+        "knowledge_read_context"
+      ],
+      "category": "operations",
+      "status": "active",
+      "tags": ["cleanup", "structure"]
+    },
+    {
+      "name": "agent_architect",
+      "title": "Agent Architect",
+      "description": "├Üj ├╝gyn├Âk├Âket tervez, gener├ílja a promptjaikat, f├╝gg┼Ĺs├ęgeiket ├ęs konfigur├íci├│jukat a le├şr├ís alapj├ín.",
+      "class": "DynamicAgent",
+      "module": "./agents/DynamicAgent.js",
+      "config": {
+        "tomlPath": "myai/agents/agent_architect.toml"
+      },
+      "capabilities": ["prompt_engineering", "agent_design", "configuration"],
+      "tools": [
+        "workspace_read_file",
+        "knowledge_read_context",
+        "system_run_command"
+      ],
+      "category": "engineering",
+      "status": "active",
+      "tags": ["design", "meta"]
+    },
+    {
+      "name": "integrator",
+      "title": "Integration Agent",
+      "description": "Kulso rendszerek, AnythingLLM es tudaskeszlet osszekotese.",
+      "class": "OrchestratorAgent",
+      "module": "./agents/OrchestratorAgent.js",
+      "capabilities": ["integration", "knowledge_sync"],
+      "tools": [
+        "anythingllm_list_workspaces",
+        "anythingllm_chat",
+        "knowledge_index_file"
+      ],
+      "category": "integration",
+      "status": "planned",
+      "tags": ["anythingllm", "sync"]
+    },
+    {
+      "name": "lint_fixer",
+      "title": "Lint Fixer Agent",
+      "description": "Mikro-ugynok ESLint es TypeScript hibak automatikus javitasara.",
+      "class": "LintFixerAgent",
+      "module": "./agents/LintFixerAgent.js",
+      "capabilities": [
+        "lint_check",
+        "auto_fix",
+        "suggest_fix",
+        "type_check",
+        "batch_fix"
+      ],
+      "tools": [
+        "system_run_command",
+        "workspace_read_file",
+        "workspace_write_file"
+      ],
+      "category": "maintenance",
+      "status": "active",
+      "tags": [
+        "lint",
+        "eslint",
+        "typescript",
+        "micro-agent",
+        "maintenance-swarm"
+      ],
+      "model": "qwen2.5-coder-7b"
+    },
+    {
+      "name": "robotkez",
+      "title": "Robotk├ęz Agent",
+      "description": "B├Âng├ęsz┼Ĺ alap├║ automatiz├íci├│ ├ęs interakci├│.",
+      "class": "RobotkezAgent",
+      "module": "./agents/RobotkezAgent.js",
+      "capabilities": [
+        "browser_automation",
+        "ui_interaction",
+        "screenshots",
+        "web_scraping"
+      ],
+      "triggers": [
+        "robotk├ęz",
+        "b├Âng├ęsz┼Ĺ",
+        "kattints",
+        "t├Âlts ki",
+        "keress r├í",
+        "nyisd meg"
+      ],
+      "category": "automation",
+      "status": "active",
+      "tags": ["browser", "playwright", "automation"],
+      "priority": 2
+    },
+    {
+      "name": "robotkezv2",
+      "title": "RobotkezV2 Agent",
+      "description": "Magyar nyelv┼▒ agentic browser (Comet-style) - Perplexity Comet-szer┼▒ intelligens b├Âng├ęsz┼Ĺ",
+      "class": "RobotkezV2Agent",
+      "module": "./agents/RobotkezV2Agent.js",
+      "capabilities": [
+        "agentic_browsing",
+        "multi_step_automation",
+        "context_awareness",
+        "magyar_nyelv",
+        "tool_orchestration"
+      ],
+      "triggers": [
+        "robotk├ęz",
+        "b├Âng├ęsz┼Ĺ",
+        "navig├ílj",
+        "keress r├í",
+        "kattints",
+        "t├Âlts ki",
+        "rendelj",
+        "keresd meg",
+        "├şrj be",
+        "g├ępelj",
+        "k├ęperny┼Ĺk├ęp"
+      ],
+      "category": "automation",
+      "status": "active",
+      "tags": ["browser", "comet", "agentic", "magyar", "automation"],
+      "priority": 3
+    },
+    {
+      "name": "voice",
+      "title": "Voice Agent",
+      "description": "Hangutas├şt├ísok ├ęs multimod├ílis interakci├│k specialist├íja.",
+      "class": "VoiceAgent",
+      "module": "./agents/VoiceAgent.js",
+      "capabilities": [
+        "voice_command_refinement",
+        "multimodal_context_analysis"
+      ],
+      "triggers": ["hang", "voice", "audio", "screenshot"],
+      "category": "interface",
+      "status": "active",
+      "tags": ["voice", "multimodal", "auralia"],
+      "autoStart": true,
+      "priority": 1
+    },
+    {
+      "name": "ProjectConductor",
+      "title": "Project Conductor",
+      "description": "Projekt menedzsment, dokument├íci├│ szinkroniz├íl├ís ├ęs track k├Âvet├ęs.",
+      "class": "ProjectConductorAgent",
+      "module": "./agents/ProjectConductorAgent.js",
+      "capabilities": [
+        "project_management",
+        "documentation_sync",
+        "track_management"
+      ],
+      "triggers": ["conductor", "status", "track", "sync"],
+      "category": "management",
+      "status": "active",
+      "tags": ["management", "conductor"],
+      "priority": 10
+    },
+    {
+      "name": "copywriter",
+      "title": "ÔťŹ´ŞĆ Copywriter",
+      "description": "Szoci├ílis m├ędia ├ęs email copywriting specialista - kreat├şv tartalom gener├íl├ísa m├írkavocal-ban",
+      "class": "DynamicAgent",
+      "module": "./agents/DynamicAgent.js",
+      "config": {
+        "tomlPath": "myai/agents/CopywriterAgent.toml"
+      },
+      "capabilities": [
+        "social_media_generation",
+        "email_drafting",
+        "copywriting",
+        "slogan_creation"
+      ],
+      "triggers": ["copywriter", "copywriting", "content", "post"],
+      "category": "marketing",
+      "status": "active",
+      "tags": ["marketing", "content", "copywriting"],
+      "priority": 4
+    },
+    {
+      "name": "marketing_director",
+      "title": "­čÄ» Marketing Director",
+      "description": "Marketing kamp├íny orchestrator - trendkutat├ís, copywriting szervez├ęs, m├ędia assembly ├ęs kamp├ínya v├ęgrehajt├ís",
+      "class": "DynamicAgent",
+      "module": "./agents/DynamicAgent.js",
+      "config": {
+        "tomlPath": "myai/agents/MarketingDirectorAgent.toml"
+      },
+      "capabilities": [
+        "campaign_orchestration",
+        "content_assembly",
+        "trend_analysis_coordination",
+        "budget_estimation"
+      ],
+      "triggers": ["marketing", "campaign", "director", "coordin├íci├│s"],
+      "category": "marketing",
+      "status": "active",
+      "tags": ["marketing", "campaign", "orchestration"],
+      "priority": 4
+    },
+    {
+      "name": "SpecWriter",
+      "title": "SpecWriter Agent",
+      "description": "Automatikus track gener├íl├ís EPP v2 protokoll szerint. 3-stage LLM pipeline: requirement extraction Ôćĺ track generation Ôćĺ validation.",
+      "class": "SpecWriterAgent",
+      "module": "./agents/SpecWriterAgent.js",
+      "capabilities": [
+        "track_generation",
+        "epp_v2_compliance",
+        "requirement_extraction",
+        "todo_breakdown"
+      ],
+      "triggers": ["track", "generate", "spec", "├Âtlet", "idea"],
+      "category": "engineering",
+      "status": "active",
+      "tags": ["tracks", "epp-v2", "automation"],
+      "priority": 5,
+      "model": "qwen2.5-coder:latest"
+    },
+    {
+      "name": "github_models",
+      "title": "GitHub Models Agent",
+      "description": "Premium AI ├╝gyn├Âk GitHub Models API (GPT-4o) haszn├ílat├íval. Orkesztr├íl├ís, k├│dgener├íl├ís ├ęs komplex reasoning feladatokra.",
+      "class": "GitHubModelsAgent",
+      "module": "./agents/GitHubModelsAgent.js",
+      "capabilities": [
+        "code_generation",
+        "code_review",
+        "architecture_design",
+        "orchestration",
+        "reasoning"
+      ],
+      "triggers": ["gpt", "github", "premium", "orchestrate"],
+      "category": "core",
+      "status": "active",
+      "tags": ["premium", "gpt-4o", "orchestration"],
+      "priority": 9,
+      "model": "gpt-4o"
+    },
+    {
+      "name": "sales",
+      "title": "Sales Agent",
+      "description": "Automata ├ërt├ękes├şt┼Ĺ G├ęp - Lead generation, CRM integration, email drafting",
+      "class": "SalesAgent",
+      "module": "./agents/SalesAgent.js",
+      "capabilities": [
+        "lead_generation",
+        "crm_integration",
+        "email_drafting",
+        "market_research",
+        "sheets_export"
+      ],
+      "triggers": ["├ęrt├ękes├şt├ęs", "sales", "leads", "lead generation"],
+      "category": "enterprise",
+      "status": "active",
+      "tags": ["sales", "crm", "automation", "enterprise"],
+      "priority": 6,
+      "enterpriseModuleId": "sales"
+    },
+    {
+      "name": "sales_hunter",
+      "title": "Sales Hunter Agent",
+      "description": "Phase 2 - LinkedIn-based lead discovery with email drafting, scoring, and Sheets export",
+      "class": "SalesHunterAgent",
+      "module": "./agents/SalesHunterAgent.js",
+      "capabilities": [
+        "linkedin_scraping",
+        "lead_scoring",
+        "email_draft_generation",
+        "crm_export",
+        "decision_maker_identification"
+      ],
+      "triggers": ["sales hunter", "lead discovery", "linkedin", "lead scraping"],
+      "category": "enterprise",
+      "status": "active",
+      "tags": ["sales", "linkedin", "automation", "phase2", "bas-suite"],
+      "priority": 7,
+      "enterpriseModuleId": "sales",
+      "notes": "Rate limited: max 50 LinkedIn profiles/hour. Requires human approval for email sending."
+    },
+    {
+      "name": "market_intel",
+      "title": "Market Intelligence Agent",
+      "description": "Phase 2 - Competitor price monitoring, trend analysis, and automated alerting",
+      "class": "MarketIntelAgent",
+      "module": "./agents/MarketIntelAgent.js",
+      "capabilities": [
+        "competitor_scraping",
+        "price_extraction",
+        "trend_analysis",
+        "price_alerts",
+        "lancedb_storage",
+        "chart_generation"
+      ],
+      "triggers": ["market intel", "price tracking", "competitor monitoring", "price analysis"],
+      "category": "enterprise",
+      "status": "active",
+      "tags": ["intelligence", "pricing", "competitor-analysis", "phase2", "bas-suite"],
+      "priority": 7,
+      "enterpriseModuleId": "intelligence",
+      "notes": "Alerts when competitor prices drop >10%. Stores historical data in LanceDB."
+    },
+    {
+      "name": "procurement",
+      "title": "Procurement Agent (Auto-Negotiator)",
+      "description": "Phase 2 - Automated supplier negotiation with market price analysis and validated email drafting",
+      "class": "ProcurementAgent",
+      "module": "./agents/ProcurementAgent.js",
+      "capabilities": [
+        "supplier_price_analysis",
+        "market_comparison",
+        "negotiation_strategy_selection",
+        "email_draft_generation",
+        "source_validation",
+        "fact_checking"
+      ],
+      "triggers": ["procurement", "negotiate", "supplier pricing", "price negotiation"],
+      "category": "enterprise",
+      "status": "active",
+      "tags": ["procurement", "negotiation", "finance", "phase2", "bas-suite"],
+      "priority": 7,
+      "enterpriseModuleId": "finance",
+      "notes": "CRITICAL: All price claims must include source citations. Requires human review before sending."
+    },
+    {
+      "name": "pricing",
+      "title": "Pricing Agent",
+      "description": "Dinamikus ├üraz├│ & Piaci H├şrszerz┼Ĺ - Market intelligence, competitive analysis, pricing recommendations",
+      "class": "PricingAgent",
+      "module": "./agents/PricingAgent.js",
+      "capabilities": [
+        "market_analysis",
+        "competitor_tracking",
+      "title": "Pricing Agent",
+      "description": "Dinamikus ├üraz├│ & Piaci H├şrszerz┼Ĺ - Market intelligence, competitive analysis, pricing recommendations",
+      "class": "PricingAgent",
+      "module": "./agents/PricingAgent.js",
+      "capabilities": [
+        "market_analysis",
+        "competitor_tracking",
+        "price_optimization",
+        "trend_forecasting",
+        "sentiment_analysis"
+      ],
+      "triggers": ["├íraz├ís", "pricing", "market", "intelligence"],
+      "category": "enterprise",
+      "status": "active",
+      "tags": ["pricing", "market-intel", "automation", "enterprise"],
+      "priority": 6,
+      "enterpriseModuleId": "sales"
+    },
+    {
+      "name": "finance_guardian",
+      "title": "Finance Guardian",
+      "description": "P├ęnz├╝gyi ┼Érszem - Invoice OCR, anomaly detection, financial trend analysis",
+      "class": "FinanceGuardian",
+      "module": "./agents/FinanceGuardian.js",
+      "capabilities": [
+        "invoice_processing",
+        "ocr_extraction",
+        "anomaly_detection",
+        "trend_analysis",
+        "cost_optimization"
+      ],
+      "triggers": ["finance", "sz├ímla", "invoice", "anomaly"],
+      "category": "enterprise",
+      "status": "active",
+      "tags": ["finance", "invoice", "ocr", "automation", "enterprise"],
+      "priority": 6,
+      "enterpriseModuleId": "finance"
+    },
+    {
+      "name": "financial_guard",
+      "title": "Financial Guard Agent",
+      "description": "Phase 3 - Automated invoice OCR processing with duplicate detection, anomaly alerts, and Sheets export",
+      "class": "FinancialGuardAgent",
+      "module": "./agents/FinancialGuardAgent.js",
+      "capabilities": [
+        "invoice_ocr",
+        "pdf_processing",
+        "duplicate_detection",
+        "anomaly_detection",
+        "sheets_export",
+        "alert_generation"
+      ],
+      "triggers": ["financial guard", "invoice processing", "invoice ocr", "sz├ímla feldolgoz├ís"],
+      "category": "enterprise",
+      "status": "active",
+      "tags": ["finance", "invoice", "ocr", "automation", "phase3", "bas-suite"],
+      "priority": 8,
+      "enterpriseModuleId": "finance",
+      "notes": "Flags anomalies when amount >2x vendor average. Requires Python OCR worker (Tesseract/Vision)."
+    },
+    {
+      "name": "email_triage",
+      "title": "Email Triage Agent",
+      "description": "Phase 3 - Automated email classification with priority detection and smart auto-responses",
+      "class": "EmailTriageAgent",
+      "module": "./agents/EmailTriageAgent.js",
+      "capabilities": [
+        "email_classification",
+        "priority_detection",
+        "auto_response",
+        "spam_filtering",
+        "sender_history_tracking"
+      ],
+      "triggers": ["email triage", "inbox automation", "email sorting", "irodavezet┼Ĺ"],
+      "category": "enterprise",
+      "status": "active",
+      "tags": ["email", "automation", "triage", "phase3", "bas-suite"],
+      "priority": 8,
+      "enterpriseModuleId": "admin",
+      "notes": "Uses template-based auto-responses from data/email_templates/. Tracks sender reputation."
+    },
+    {
+      "name": "grant_watcher",
+      "title": "Grant Watcher Agent",
+      "description": "Phase 3 - Automated grant/tender monitoring with TE├üOR-based eligibility matching",
+      "class": "GrantWatcherAgent",
+      "module": "./agents/GrantWatcherAgent.js",
+      "capabilities": [
+        "grant_scraping",
+        "eligibility_matching",
+        "teaor_filtering",
+        "deadline_tracking",
+        "document_generation"
+      ],
+      "triggers": ["grant watcher", "p├íly├ízatfigyel┼Ĺ", "tender monitoring", "palyazat"],
+      "category": "enterprise",
+      "status": "active",
+      "tags": ["grants", "tenders", "monitoring", "phase3", "bas-suite"],
+      "priority": 7,
+      "enterpriseModuleId": "admin",
+      "notes": "Scrapes Magyar K├Âzl├Âny + EU portals. Requires company TE├üOR code in input."
+    },
+    {
+      "name": "digital_headhunter",
+      "title": "Digital Headhunter Agent",
+      "description": "Phase 4 - CV screening with LinkedIn integration and bias-free candidate scoring",
+      "class": "DigitalHeadhunterAgent",
+      "module": "./agents/DigitalHeadhunterAgent.js",
+      "capabilities": [
+        "cv_parsing",
+        "linkedin_scraping",
+        "skill_matching",
+        "bias_free_scoring",
+        "interview_scheduling"
+      ],
+      "triggers": ["headhunter", "cv screening", "recruitment", "toborzas"],
+      "category": "enterprise",
+      "status": "active",
+      "tags": ["hr", "recruitment", "screening", "phase4", "bas-suite"],
+      "priority": 6,
+      "enterpriseModuleId": "hr",
+      "notes": "Uses Python OCR for CV parsing. LinkedIn scraping via RobotkezV2."
+    },
+    {
+      "name": "local_csr",
+      "title": "Local CSR Agent",
+      "description": "Phase 4 - Carbon footprint tracking and ESG reporting with local charity discovery",
+      "class": "LocalCSRAgent",
+      "module": "./agents/LocalCSRAgent.js",
+      "capabilities": [
+        "carbon_footprint_tracking",
+        "esg_reporting",
+        "charity_discovery",
+        "impact_measurement",
+        "compliance_monitoring"
+      ],
+      "triggers": ["csr", "sustainability", "carbon", "esg", "fenntarthatosag"],
+      "category": "enterprise",
+      "status": "active",
+      "tags": ["csr", "sustainability", "esg", "phase4", "bas-suite"],
+      "priority": 5,
+      "enterpriseModuleId": "csr",
+      "notes": "Calculates CO2 footprint using Hungarian grid factors. Compliance with EU Taxonomy."
+    },
+    {
+      "name": "logistics_dispatcher",
+      "title": "Logistics Dispatcher Agent",
+      "description": "Phase 5 - Multi-carrier shipment tracking with delay prediction and complaint generation",
+      "class": "LogisticsDispatcherAgent",
+      "module": "./agents/LogisticsDispatcherAgent.js",
+      "capabilities": [
+        "shipment_tracking",
+        "delay_prediction",
+        "complaint_generation",
+        "customer_notification",
+        "route_optimization"
+      ],
+      "triggers": ["logistics", "shipment", "tracking", "szallitmany"],
+      "category": "enterprise",
+      "status": "active",
+      "tags": ["logistics", "tracking", "delivery", "phase5", "bas-suite"],
+      "priority": 7,
+      "enterpriseModuleId": "logistics",
+      "notes": "Supports GLS, DPD, Magyar Posta. Uses RobotkezV2 for carrier scraping."
+    },
+    {
+      "name": "knowledge_base_builder",
+      "title": "Knowledge Base Builder Agent",
+      "description": "Phase 5 - Automated FAQ extraction and wiki generation from Slack/Email with LanceDB RAG",
+      "class": "KnowledgeBaseBuilderAgent",
+      "module": "./agents/KnowledgeBaseBuilderAgent.js",
+      "capabilities": [
+        "message_analysis",
+        "faq_extraction",
+        "wiki_generation",
+        "embedding_storage",
+        "auto_categorization"
+      ],
+      "triggers": ["knowledge base", "wiki", "faq", "tud├ísb├ízis"],
+      "category": "enterprise",
+      "status": "active",
+      "tags": ["knowledge", "wiki", "documentation", "phase5", "bas-suite"],
+      "priority": 6,
+      "enterpriseModuleId": "knowledge",
+      "notes": "Integrates with Slack API and Gmail. Stores embeddings in LanceDB for semantic search."
+    },
+    {
+      "name": "digital_office_manager",
+      "title": "Digital Office Manager",
+      "description": "Digit├ílis Irodavezet┼Ĺ - Email triage, inbox automation, smart labeling",
+      "class": "DigitalOfficeManager",
+      "module": "./agents/DigitalOfficeManager.js",
+      "capabilities": [
+        "email_triage",
+        "automation_rules",
+        "priority_scoring",
+        "smart_labeling",
+        "workflow_automation"
+      ],
+      "triggers": ["email", "inbox", "triage", "automation"],
+      "category": "enterprise",
+      "status": "active",
+      "tags": ["email", "gmail", "automation", "enterprise"],
+      "priority": 6,
+      "enterpriseModuleId": "finance"
+    },
+    {
+      "name": "grant_hunter",
+      "title": "Grant Hunter",
+      "description": "P├íly├ízatfigyel┼Ĺ - Identifies grant opportunities, assesses eligibility, tracks deadlines",
+      "class": "GrantHunter",
+      "module": "./agents/GrantHunter.js",
+      "capabilities": [
+        "grant_matching",
+        "eligibility_assessment",
+        "compliance_checking",
+        "deadline_tracking",
+        "portfolio_analysis"
+      ],
+      "triggers": ["grant", "funding", "p├íly├ízat", "eligibility"],
+      "category": "enterprise",
+      "status": "active",
+      "tags": ["grants", "funding", "compliance", "automation", "enterprise"],
+      "priority": 6,
+      "enterpriseModuleId": "finance"
+    },
+    {
+      "name": "property_analyst",
+      "title": "Property Analyst",
+      "description": "Ingatlanfot├│k ├ęs dokumentumok elemz├ęse, ├ęrt├ękbecsl├ęs ├ęs piaci trendek kinyer├ęse Vision technol├│gi├íval.",
+      "class": "PropertyAnalystAgent",
+      "module": "./agents/PropertyAnalystAgent.js",
+      "capabilities": ["vision", "ocr", "property_analysis", "valuation"],
+      "triggers": ["ingatlan", "property", "h├íz", "lak├ís", "├ęrt├ękbecsl├ęs"],
+      "category": "knowledge",
+      "status": "active",
+      "tags": ["vision", "real-estate", "analysis"],
+      "priority": 4
+    },
+    {
+      "name": "trend_analyst",
+      "title": "Trend Analyst",
+      "description": "Marketing kutat├ís ├ęs piaci trendek elemz├ęse a b├Âng├ęsz┼Ĺ seg├şts├ęg├ęvel. Kulcsszavak, vizu├ílis st├şlusok ├ęs versenyt├írsak k├Âvet├ęse.",
+      "class": "RobotkezV2Agent",
+      "module": "./agents/RobotkezV2Agent.js",
+      "capabilities": ["market_research", "competitor_analysis", "trend_tracking"],
+      "triggers": ["trend", "piackutat├ís", "marketing", "versenyt├írs"],
+      "category": "automation",
+      "status": "active",
+      "tags": ["marketing", "research", "browser"],
+      "priority": 4
+    },
+    {
+      "name": "headhunter",
+      "title": "HeadHunter Agent",
+      "description": "Digit├ílis Fejvad├ísz - CV feldolgoz├ís, jel├Âlt sz┼▒r├ęs, interj├║k├ęrd├ęsek gener├íl├ísa",
+      "class": "HeadHunterAgent",
+      "module": "./agents/HeadHunterAgent.js",
+      "capabilities": [
+        "cv_parsing",
+        "candidate_matching",
+        "interview_questions",
+        "skill_gap_analysis",
+        "talent_pool_management"
+      ],
+      "triggers": ["fejvad├ísz", "headhunter", "cv", "jel├Âlt", "interj├║"],
+      "category": "enterprise",
+      "status": "active",
+      "tags": ["hr", "recruitment", "automation", "enterprise"],
+      "priority": 7,
+      "enterpriseModuleId": "hr"
+    },
+    {
+      "name": "conflict_mediator",
+      "title": "Conflict Mediator Agent",
+      "description": "Kreat├şv S├║rl├│d├ís Medi├ítor - Email hangulatelemz├ęs, konfliktusfelold├ís, szervezeti l├ęgk├Âr monitoroz├ísa",
+      "class": "ConflictMediatorAgent",
+      "module": "./agents/ConflictMediatorAgent.js",
+      "capabilities": [
+        "sentiment_analysis",
+        "conflict_detection",
+        "emotion_recognition",
+        "mediation_suggestions",
+        "team_health_monitoring",
+        "escalation_risk_assessment"
+      ],
+      "triggers": ["medi├ítor", "mediator", "conflict", "sentiment", "hangulat"],
+      "category": "enterprise",
+      "status": "active",
+      "tags": ["hr", "sentiment", "nlp", "automation", "enterprise"],
+      "priority": 7,
+      "enterpriseModuleId": "hr"
+    },
+    {
+      "name": "local_csr_bot",
+      "title": "Local CSR Bot",
+      "description": "Helyi CSR & Szab├ílyoz├ís Seg├ęd - Szab├ílyoz├ís megfelel┼Ĺs├ęg, k├Âz├Âss├ęgi fejleszt├ęs, fenntarthat├│s├íg tan├ícsad├ís",
+      "class": "LocalCSRBot",
+      "module": "./agents/LocalCSRBot.js",
+      "capabilities": [
+        "regulatory_compliance_checking",
+        "csr_initiative_recommendation",
+        "sustainability_reporting",
+        "community_needs_assessment",
+        "partnership_identification",
+        "esg_goal_tracking"
+      ],
+      "triggers": ["csr", "sustainability", "regulation", "szab├ílyoz├ís", "k├Âz├Âss├ęg"],
+      "category": "enterprise",
+      "status": "active",
+      "tags": ["hr", "csr", "sustainability", "automation", "enterprise"],
+      "priority": 7,
+      "enterpriseModuleId": "hr"
+    },
+    {
+      "name": "sentiment_analyzer",
+      "title": "Sentiment Analysis Module",
+      "description": "Advanced NLP Hangulatelemz├ęs - ├ërzelmek anal├şzise, kulcsfontoss├íg├║ kifejez├ęsek kinyer├ęse, entit├ís felismer├ęs",
+      "class": "SentimentAnalysisModule",
+      "module": "./agents/SentimentAnalysisModule.js",
+      "capabilities": [
+        "sentiment_analysis",
+        "emotion_detection",
+        "key_phrase_extraction",
+        "entity_recognition",
+        "language_detection",
+        "urgency_assessment",
+        "batch_processing"
+      ],
+      "triggers": ["sentiment", "emotion", "nlp", "analysis", "├ęrzelem"],
+      "category": "enterprise",
+      "status": "active",
+      "tags": ["nlp", "sentiment", "emotions", "automation", "enterprise"],
+      "priority": 7,
+      "enterpriseModuleId": "hr"
+    },
+    {
+      "name": "logistics_dispatcher",
+      "title": "Logistics Dispatcher",
+      "description": "Logisztikai Diszp├ęcser - Sz├íll├ştm├íny k├Âvet├ęs, sz├íll├şt├ísi ├║tvonalak optimiz├íl├ísa, proakt├şv ├ęrtes├şt├ęsek",
+      "class": "LogisticsDispatcher",
+      "module": "./agents/LogisticsDispatcher.js",
+      "capabilities": [
+        "tracking_extraction",
+        "route_optimization",
+        "proactive_notifications",
+        "carrier_coordination",
+        "delivery_scheduling"
+      ],
+      "triggers": ["logisztika", "logistics", "tracking", "sz├íll├ştm├íny", "├║tvonal"],
+      "category": "enterprise",
+      "status": "active",
+      "tags": ["logistics", "supply_chain", "automation", "enterprise"],
+      "priority": 8,
+      "enterpriseModuleId": "logistics"
+    },
+    {
+      "name": "knowledge_builder",
+      "title": "Knowledge Builder",
+      "description": "Tud├íst├ír ├ëp├şt┼Ĺ - Dokument├íci├│ kezel├ęs, wiki oldalak, tud├ísgr├íf, keres├ęs ├ęs kategoriz├íl├ís",
+      "class": "KnowledgeBuilder",
+      "module": "./agents/KnowledgeBuilder.js",
+      "capabilities": [
+        "document_creation",
+        "wiki_management",
+        "knowledge_graph",
+        "content_search",
+        "category_organization",
+        "version_control",
+        "feedback_aggregation"
+      ],
+      "triggers": ["knowledge", "wiki", "documentation", "doc", "tud├ís", "oktat├ís"],
+      "category": "enterprise",
+      "status": "active",
+      "tags": ["knowledge", "wiki", "documentation", "enterprise"],
+      "priority": 8,
+      "enterpriseModuleId": "wiki"
+    },
+    {
+      "name": "proactive_claims",
+      "title": "Proactive Claims Agent",
+      "description": "Proakt├şv Biztos├şt├ísi ├ťgyek Kezel┼Ĺ - Biztos├şt├ísi ├╝gyek feldolgoz├ísa, kock├ízatfelm├ęr├ęs, csal├ísok felder├şt├ęse",
+      "class": "ProactiveClaimsAgent",
+      "module": "./agents/ProactiveClaimsAgent.js",
+      "capabilities": [
+        "claims_processing",
+        "risk_assessment",
+        "fraud_detection",
+        "document_analysis",
+        "proactive_intervention",
+        "settlement_recommendations",
+        "compliance_check"
+      ],
+      "triggers": ["insurance", "claims", "biztos├şt├ís", "├╝gy", "fraud", "fraud_detection"],
+      "category": "enterprise",
+      "status": "active",
+      "tags": ["insurance", "risk", "fraud", "claims", "automation", "enterprise"],
+      "priority": 8,
+      "enterpriseModuleId": "insurance"
+    },
+    {
+      "name": "Nurturer",
+      "title": "Nurturer Agent",
+      "description": "Ingatlan hirdet├ęsek ├ęs marketing kamp├ínyok automatikus gener├íl├ísa az elemz├ęsek alapj├ín.",
+      "class": "NurturerAgent",
+      "module": "./agents/NurturerAgent.js",
+      "capabilities": ["copywriting", "campaign_planning", "lead_nurturing"],
+      "triggers": ["kamp├íny", "hirdet├ęs", "campaign", "listing", "marketing"],
+      "category": "marketing",
+      "status": "active",
+      "tags": ["real-estate", "marketing", "copywriting"],
+      "priority": 5
+    },
+    {
+      "name": "GenesisOrchestrator",
+      "title": "Genesis Orchestrator",
+      "description": "A szoftver genesis protokoll automatikus vez├ęnyl├ęse a feladatsor alapj├ín.",
+      "class": "GenesisOrchestrator",
+      "module": "./agents/GenesisOrchestrator.js",
+      "capabilities": ["task_orchestration", "parallel_execution", "genesis_protocol"],
+      "triggers": ["genesis", "futtasd", "orchestrate", "genesis run"],
+      "category": "engineering",
+      "status": "active",
+      "tags": ["genesis", "automation", "orchestration"],
+      "priority": 10
+    },
+    {
+      "name": "marketing",
+      "title": "Marketing Agent",
+      "description": "Lead outreach ├ęs teaser email kamp├ínyok gener├íl├ísa - Corporate hunting, personaliz├íl├ís, CRM integr├íci├│",
+      "class": "MarketingAgent",
+      "module": "./agents/MarketingAgent.js",
+      "capabilities": [
+        "corporate_lead_hunting",
+        "teaser_email_generation",
+        "personalization",
+        "multi_language_support",
+        "crm_integration"
+      ],
+      "triggers": ["marketing", "leads", "teaser", "outreach", "corporate hunt"],
+      "category": "marketing",
+      "status": "active",
+      "tags": ["real-estate", "marketing", "outreach", "automation"],
+      "priority": 5
+    },
+    {
+      "name": "ux_designer",
+      "title": "UX Designer Agent",
+      "description": "UI/UX design specifik├íci├│k, wireframe-ek ├ęs komponens blueprintek gener├íl├ísa - Accessibility compliance",
+      "class": "UXDesignerAgent",
+      "module": "./agents/UXDesignerAgent.js",
+      "capabilities": [
+        "design_spec_generation",
+        "component_blueprint",
+        "wireframe_creation",
+        "accessibility_audit",
+        "design_system_creation"
+      ],
+      "triggers": ["ux", "design", "wireframe", "accessibility", "a11y"],
+      "category": "engineering",
+      "status": "active",
+      "tags": ["design", "ux", "accessibility", "genesis"],
+      "priority": 8
+    }
+  ]
+}

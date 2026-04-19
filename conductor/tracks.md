@@ -1,11 +1,11 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-04-17T15:00:00.569Z
+**Utolso frissites:** 2026-04-18T23:00:00.422Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 247 total | 11 active | 24 completed | 210 archived
-**Csoportok:** Könyvelés / üzleti automatizálás: 53 | Nova asszisztens: 24 | Brunella rendszer: 96 | Egyéb: 74
+**Stats:** 249 total | 12 active | 25 completed | 210 archived
+**Csoportok:** Könyvelés / üzleti automatizálás: 54 | Nova asszisztens: 24 | Brunella rendszer: 97 | Egyéb: 74
 
 ---
 
@@ -28,7 +28,7 @@
 
 ---
 
-## Aktiv Szalak (Active) (11)
+## Aktiv Szalak (Active) (12)
 
 ### Könyvelés / üzleti automatizálás (4)
 
@@ -104,7 +104,14 @@
   - Mappa: ./tracks/paios_integration_audit_20260415/
 
 
-### Brunella rendszer (2)
+### Brunella rendszer (3)
+
+- [~] **Cloudflare Deep Integration (AI Gateway, D1, DO, Queues) + Gemma-4** [HIGH]
+  - **ID:** `cloudflare_deep_integration_20260417`
+  - **Progress:** 100%
+  - **Assignee:** Gemini
+  - **Updated:** 2026-04-19
+  - Mappa: ./tracks/cloudflare_deep_integration_20260417/
 
 - [ ] **Brunella Studio Agent v2** [HIGH]
   - **ID:** `brunella-studio-agent-v2_20260414`
@@ -113,18 +120,24 @@
   - **Updated:** 2026-04-15
   - Mappa: ./tracks/brunella-studio-agent-v2_20260414/
 
-- [~] **Napi AI Agent Jelentes Pipeline** [HIGH]
+- [ ] **Napi AI Agent Jelentes Pipeline** [HIGH]
   - **ID:** `daily_agent_report_pipeline_20260417`
   - **Progress:** 90%
   - **Assignee:** GitHub Copilot
   - **Updated:** 2026-04-17
   - Mappa: ./tracks/daily_agent_report_pipeline_20260417/
 
+
 ---
 
-## Befejezett (Completed - Not Archived) (24)
+## Befejezett (Completed - Not Archived) (25)
 
-### Könyvelés / üzleti automatizálás (11)
+### Könyvelés / üzleti automatizálás (12)
+
+- [x] **Bérszemfejtő — Telegram, n8n, Sheets & Neon Dashboard**
+  - **ID:** `payroll_telegram_sheets_20260417`
+  - **Completed:** 2026-04-17T20:15:00Z
+  - Mappa: ./tracks/payroll_telegram_sheets_20260417/
 
 - [x] **KKV CRM es lead-utanakovetes automatizalas**
   - **ID:** `kkv_crm_automation_20260404`

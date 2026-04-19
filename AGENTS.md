@@ -11,7 +11,7 @@ Every AI agent working on this repo MUST:
 
 1. Read `BRUNELLA_MASTER_CONTEXT.md` first (system overview)
 2. Read `HANDOFF.md` second (current state, active tasks)
-3. Read `AGENT_MEMORY.md` third (accumulated knowledge)
+3. Read `AGENT_MEMORY.md, .ai\foszal.md` third (accumulated knowledge)
 4. Update `HANDOFF.md` BEFORE ending any session
 
 ## Active Agents

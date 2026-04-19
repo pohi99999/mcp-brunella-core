@@ -1,0 +1,378 @@
+- generic [ref=e4]:
+  - generic [ref=e7]:
+    - generic [ref=e8]:
+      - generic [ref=e9]:
+        - generic [ref=e12]:
+          - link "Personal" [ref=e14] [cursor=pointer]:
+            - /url: /projects/johLSwPlUades2LG
+            - generic [ref=e16]:
+              - generic "Personal" [ref=e17]:
+                - img [ref=e18]
+              - generic [ref=e22]: Personal
+          - generic [ref=e23]: /
+          - generic "04 - ISZ Weekly Reminder" [ref=e24]:
+            - generic [ref=e26] [cursor=pointer]: 04 - ISZ Weekly Reminder
+        - generic [ref=e27]:
+          - generic [ref=e28]: + Add tag
+          - button "Edit workflow description" [ref=e31] [cursor=pointer]:
+            - img [ref=e33]
+        - generic [ref=e37]:
+          - generic [ref=e39] [cursor=pointer]:
+            - generic: 0 / 2
+          - generic [ref=e41]:
+            - generic [ref=e43]: Active
+            - generic "Deactivate workflow" [ref=e44]:
+              - switch [checked]
+          - button "Share" [ref=e48] [cursor=pointer]
+          - generic [ref=e49]:
+            - generic [ref=e51]: Saved
+            - link [ref=e52] [cursor=pointer]:
+              - /url: /workflow/hLop0AeEKH6NyUaj/history
+              - button [ref=e53]:
+                - img [ref=e55]
+          - button [ref=e62] [cursor=pointer]:
+            - img [ref=e64]
+      - iframe [ref=e72]:
+        - generic [ref=f61e2]:
+          - link "Star n8n-io/n8n on GitHub" [ref=f61e3] [cursor=pointer]:
+            - /url: https://github.com/n8n-io/n8n
+            - img [ref=f61e4]
+            - generic [ref=f61e6]: Star
+          - link "180047 stargazers on GitHub" [ref=f61e7] [cursor=pointer]:
+            - /url: https://github.com/n8n-io/n8n/stargazers
+            - text: 180,047
+    - radiogroup [ref=e74]:
+      - radio "Editor" [checked] [ref=e75]:
+        - generic [ref=e76] [cursor=pointer]: Editor
+      - radio "Executions" [ref=e77]:
+        - generic [ref=e78] [cursor=pointer]: Executions
+      - radio "Evaluations" [ref=e79]:
+        - generic [ref=e80] [cursor=pointer]: Evaluations
+  - generic [ref=e82]:
+    - img [ref=e84] [cursor=pointer]
+    - generic [ref=e86]:
+      - img [ref=e88]
+      - menubar [ref=e90]:
+        - menuitem [ref=e91]:
+          - button [ref=e93] [cursor=pointer]:
+            - img [ref=e95]
+    - generic [ref=e99]:
+      - generic [ref=e100]:
+        - generic [ref=e101]:
+          - menuitem [ref=e103] [cursor=pointer]:
+            - img [ref=e105]
+          - menuitem [ref=e110] [cursor=pointer]:
+            - img [ref=e112]
+          - menuitem [ref=e117] [cursor=pointer]:
+            - img [ref=e119]
+        - button [disabled] [ref=e122]:
+          - img [ref=e124]
+      - generic [ref=e127]:
+        - menuitem [ref=e129] [cursor=pointer]:
+          - img [ref=e131]
+        - menuitem [ref=e137] [cursor=pointer]:
+          - img [ref=e139]
+        - menuitem [ref=e144] [cursor=pointer]:
+          - img [ref=e146]
+    - generic [ref=e152] [cursor=pointer]:
+      - img [ref=e153]
+      - generic [ref=e158]: JP
+  - generic [ref=e159]:
+    - generic [ref=e162]:
+      - generic [ref=e164]:
+        - generic [ref=e166]:
+          - generic:
+            - img
+            - img:
+              - group "Edge from 3192cacd-6525-4afb-94b2-85235d8a87b1 to c2a45013-e8ff-4fc1-aa9f-3e9cbf1849d9":
+                - img
+            - img:
+              - group "Edge from c2a45013-e8ff-4fc1-aa9f-3e9cbf1849d9 to 43c5deff-9f3f-4f40-8da7-75bffc58ff6f":
+                - img
+            - img:
+              - group "Edge from 43c5deff-9f3f-4f40-8da7-75bffc58ff6f to 5113925c-5dd4-410d-9459-c9520da69de0":
+                - img
+            - img:
+              - group "Edge from 5113925c-5dd4-410d-9459-c9520da69de0 to 6b83eca5-0174-451a-bf29-a30ae7309721":
+                - img
+            - img:
+              - group "Edge from 6b83eca5-0174-451a-bf29-a30ae7309721 to 938c5dee-7c5b-4d38-b6ec-fab88403f2c5":
+                - img
+            - img:
+              - group "Edge from 55916376-d72a-459c-ba1b-a2aee4791846 to b4893ee8-8906-4b12-b886-82fdc05dffaa":
+                - img
+            - img:
+              - group "Edge from b4893ee8-8906-4b12-b886-82fdc05dffaa to cec2302c-2290-4271-b9dc-0456c442531a":
+                - img
+            - img:
+              - group "Edge from cec2302c-2290-4271-b9dc-0456c442531a to 0ad88d50-12a2-448e-b82e-e68ecf8c247f":
+                - img
+            - img:
+              - group "Edge from 0ad88d50-12a2-448e-b82e-e68ecf8c247f to 0271467c-9714-487b-b423-14ba1f712623":
+                - img
+            - img:
+              - group "Edge from 0271467c-9714-487b-b423-14ba1f712623 to 262d5a2b-348a-4a80-ab7e-14a38a0b8f7c":
+                - img
+            - generic:
+              - group [ref=e167] [cursor=pointer]:
+                - generic [ref=e168]:
+                  - generic [ref=e172]:
+                    - button "Execute step" [ref=e173]:
+                      - img [ref=e175]
+                    - button "Deactivate" [ref=e177]:
+                      - img [ref=e179]
+                    - button "Delete" [ref=e182]:
+                      - img [ref=e184]
+                    - button [ref=e186]:
+                      - img [ref=e188]
+                  - generic [ref=e190]:
+                    - generic [ref=e193]:
+                      - img
+                    - generic:
+                      - generic: Cron_Trigger
+                  - generic:
+                    - generic:
+                      - generic:
+                        - img
+                      - button "Execute workflow":
+                        - generic:
+                          - img
+                        - generic: Execute workflow
+              - group [ref=e194] [cursor=pointer]:
+                - generic [ref=e195]:
+                  - generic [ref=e202]:
+                    - button "Execute step" [ref=e203]:
+                      - img [ref=e205]
+                    - button "Deactivate" [ref=e207]:
+                      - img [ref=e209]
+                    - button "Delete" [ref=e212]:
+                      - img [ref=e214]
+                    - button [ref=e216]:
+                      - img [ref=e218]
+                  - generic [ref=e220]:
+                    - generic [ref=e223]:
+                      - img
+                    - generic:
+                      - generic: Airtable_-_Munkatrsak_Lista
+                      - generic: List
+              - group [ref=e224] [cursor=pointer]:
+                - generic [ref=e225]:
+                  - generic [ref=e232]:
+                    - button "Execute step" [ref=e233]:
+                      - img [ref=e235]
+                    - button "Deactivate" [ref=e237]:
+                      - img [ref=e239]
+                    - button "Delete" [ref=e242]:
+                      - img [ref=e244]
+                    - button [ref=e246]:
+                      - img [ref=e248]
+                  - generic [ref=e250]:
+                    - generic [ref=e253]:
+                      - img
+                    - generic:
+                      - generic: Munkatrsak_Feldolgozs
+              - group [ref=e254] [cursor=pointer]:
+                - generic [ref=e255]:
+                  - generic [ref=e262]:
+                    - button "Execute step" [ref=e263]:
+                      - img [ref=e265]
+                    - button "Deactivate" [ref=e267]:
+                      - img [ref=e269]
+                    - button "Delete" [ref=e272]:
+                      - img [ref=e274]
+                    - button [ref=e276]:
+                      - img [ref=e278]
+                  - generic [ref=e280]:
+                    - generic [ref=e283]:
+                      - img
+                    - generic:
+                      - generic: Airtable_-_Heti_Munkaid
+                      - generic: List
+              - group [ref=e284] [cursor=pointer]:
+                - generic [ref=e285]:
+                  - generic [ref=e292]:
+                    - button "Execute step" [ref=e293]:
+                      - img [ref=e295]
+                    - button "Deactivate" [ref=e297]:
+                      - img [ref=e299]
+                    - button "Delete" [ref=e302]:
+                      - img [ref=e304]
+                    - button [ref=e306]:
+                      - img [ref=e308]
+                  - generic [ref=e310]:
+                    - generic [ref=e313]:
+                      - img
+                    - generic:
+                      - generic: Munkaid_Ellenrzs
+              - group [ref=e314] [cursor=pointer]:
+                - generic [ref=e315]:
+                  - img [ref=e319]
+                  - generic [ref=e326]:
+                    - button "Execute step" [ref=e327]:
+                      - img [ref=e329]
+                    - button "Deactivate" [ref=e331]:
+                      - img [ref=e333]
+                    - button "Delete" [ref=e336]:
+                      - img [ref=e338]
+                    - button [ref=e340]:
+                      - img [ref=e342]
+                  - generic [ref=e344]:
+                    - generic [ref=e347]:
+                      - img
+                    - generic:
+                      - generic: Telegram_-_Emlkeztet
+                      - generic: "sendMessage: message"
+              - group [ref=e348] [cursor=pointer]:
+                - generic [ref=e349]:
+                  - generic [ref=e353]:
+                    - button "Execute step" [ref=e354]:
+                      - img [ref=e356]
+                    - button "Deactivate" [ref=e358]:
+                      - img [ref=e360]
+                    - button "Delete" [ref=e363]:
+                      - img [ref=e365]
+                    - button [ref=e367]:
+                      - img [ref=e369]
+                  - generic [ref=e371]:
+                    - generic [ref=e374]:
+                      - img
+                    - generic:
+                      - generic: Cron Trigger
+                  - generic:
+                    - generic:
+                      - generic:
+                        - img
+                      - button "Execute workflow" [ref=e633]:
+                        - img [ref=e635]
+                        - generic [ref=e637]: Execute workflow
+              - group [ref=e375] [cursor=pointer]:
+                - generic [ref=e376]:
+                  - generic [ref=e383]:
+                    - button "Execute step" [ref=e384]:
+                      - img [ref=e386]
+                    - button "Deactivate" [ref=e388]:
+                      - img [ref=e390]
+                    - button "Delete" [ref=e393]:
+                      - img [ref=e395]
+                    - button [ref=e397]:
+                      - img [ref=e399]
+                  - generic [ref=e401]:
+                    - generic [ref=e404]:
+                      - img
+                    - generic:
+                      - generic: Airtable - MunkatĂˇrsak Lista
+                      - generic: "list: record"
+                    - img [ref=e406]
+              - group [ref=e408] [cursor=pointer]:
+                - generic [ref=e409]:
+                  - generic [ref=e416]:
+                    - button "Execute step" [ref=e417]:
+                      - img [ref=e419]
+                    - button "Deactivate" [ref=e421]:
+                      - img [ref=e423]
+                    - button "Delete" [ref=e426]:
+                      - img [ref=e428]
+                    - button [ref=e430]:
+                      - img [ref=e432]
+                  - generic [ref=e434]:
+                    - generic [ref=e437]:
+                      - img
+                    - generic:
+                      - generic: MunkatĂˇrsak FeldolgozĂˇs
+              - group [ref=e438] [cursor=pointer]:
+                - generic [ref=e439]:
+                  - generic [ref=e446]:
+                    - button "Execute step" [ref=e447]:
+                      - img [ref=e449]
+                    - button "Deactivate" [ref=e451]:
+                      - img [ref=e453]
+                    - button "Delete" [ref=e456]:
+                      - img [ref=e458]
+                    - button [ref=e460]:
+                      - img [ref=e462]
+                  - generic [ref=e464]:
+                    - generic [ref=e467]:
+                      - img
+                    - generic:
+                      - generic: Airtable - Heti MunkaidĹ‘
+                      - generic: "list: record"
+                    - img [ref=e469]
+              - group [ref=e471] [cursor=pointer]:
+                - generic [ref=e472]:
+                  - generic [ref=e479]:
+                    - button "Execute step" [ref=e480]:
+                      - img [ref=e482]
+                    - button "Deactivate" [ref=e484]:
+                      - img [ref=e486]
+                    - button "Delete" [ref=e489]:
+                      - img [ref=e491]
+                    - button [ref=e493]:
+                      - img [ref=e495]
+                  - generic [ref=e497]:
+                    - generic [ref=e500]:
+                      - img
+                    - generic:
+                      - generic: MunkaidĹ‘ EllenĹ‘rzĂ©s
+              - group [ref=e501] [cursor=pointer]:
+                - generic [ref=e502]:
+                  - img [ref=e506]
+                  - generic [ref=e513]:
+                    - button "Execute step" [ref=e514]:
+                      - img [ref=e516]
+                    - button "Deactivate" [ref=e518]:
+                      - img [ref=e520]
+                    - button "Delete" [ref=e523]:
+                      - img [ref=e525]
+                    - button [ref=e527]:
+                      - img [ref=e529]
+                  - generic [ref=e531]:
+                    - generic [ref=e534]:
+                      - img
+                    - generic:
+                      - generic: Telegram - EmlĂ©keztetĹ‘
+                      - generic: "sendMessage: message"
+        - img [ref=e535]
+        - img [ref=e536]
+        - generic [ref=e538]:
+          - button [ref=e539] [cursor=pointer]:
+            - img [ref=e541]
+          - button [ref=e543] [cursor=pointer]:
+            - img [ref=e545]
+          - button [ref=e549] [cursor=pointer]:
+            - img [ref=e551]
+          - button [ref=e555] [cursor=pointer]:
+            - img [ref=e557]
+          - button [ref=e561] [cursor=pointer]:
+            - img [ref=e562]
+      - generic [ref=e565]:
+        - button "Execute workflow from Cron_Trigger" [ref=e566] [cursor=pointer]:
+          - img [ref=e568]
+          - generic [ref=e570]:
+            - text: Execute workflow
+            - generic [ref=e571]:
+              - text: from
+              - generic [ref=e572]: Cron_Trigger
+        - button "Select trigger node" [ref=e575] [cursor=pointer]:
+          - img [ref=e577]
+      - generic [ref=e579]:
+        - button [ref=e580] [cursor=pointer]:
+          - img [ref=e582]
+        - button [ref=e584] [cursor=pointer]:
+          - img [ref=e586]
+        - button [ref=e590] [cursor=pointer]:
+          - img [ref=e592]
+        - button [ref=e596] [cursor=pointer]:
+          - img [ref=e598]
+        - button [ref=e601] [cursor=pointer]:
+          - img [ref=e603]
+      - generic:
+        - complementary
+    - generic [ref=e613]:
+      - banner [ref=e614] [cursor=pointer]:
+        - generic [ref=e615]: Logs
+        - generic [ref=e617]:
+          - button [ref=e620]:
+            - img [ref=e622]
+          - button "Collapse panel" [ref=e627]:
+            - img [ref=e629]
+      - paragraph [ref=e632]: Nothing to display yet. Execute the workflow to see execution logs.

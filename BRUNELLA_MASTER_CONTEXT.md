@@ -1,7 +1,7 @@
 # 🌌 BRUNELLA MASTER CONTEXT (Élő Rendszertérkép)
 
 **Verzió:** 2.4.0
-**Frissítve:** 2026-04-15
+**Frissítve:** 2026-04-17
 **Státusz:** ACTIVE (Élő rendszer)
 
 ---
@@ -21,7 +21,7 @@ A **Brunella Agent System (BAS)** egy hibrid, multi-agent AI ökoszisztéma, ame
 
 ## 2. 🤖 Az Ügynök Sereg (The Legion)
 
-A rendszer **94** regisztrált ügynökkel rendelkezik.
+A rendszer **95** regisztrált ügynökkel rendelkezik.
 
 ### 👑 Vezérkar (Core Leadership)
 | Ügynök | Szerep | Képességek |
@@ -123,13 +123,14 @@ A rendszer **94** regisztrált ügynökkel rendelkezik.
 | **PettyCashAgent** | Házi pénztár kezelő | petty-cash-management, cash-flow-tracking, accounting-records |
 | **i18n_specialist** | undefined | i18n_architecture, string_extraction, locale_management |
 | **InventoryPipeline** | Készletgazdálkodási koordinátor | inventory-optimization-orchestration, replenishment-pipeline |
-| **DailyAgentBriefing** | undefined | github_search, web_crawl, llm_synthesis |
+| **DailyAgentBriefing** | undefined | tech_harvester, agent_news, markdown_report |
 | **StudioSupervisor** | undefined | studio_orchestration, promo_pipeline, resolve_handoff |
 | **MediaIngest** | undefined | studio_ingest, media_analysis, proxy_generation |
 | **StoryCut** | undefined | rough_cut_planning, segment_assembly, timeline_markers |
 | **AudioMix** | undefined | audio_plan, ducking, music_cue_planning |
 | **ColorPrep** | undefined | resolve_prep, color_finishing_handoff, render_queue_planning |
 | **QcRender** | undefined | ffmpeg_render, studio_qc, delivery_validation |
+| **StudioReviewer** | undefined | studio_review, render_feedback, rerun_decision |
 
 
 ---

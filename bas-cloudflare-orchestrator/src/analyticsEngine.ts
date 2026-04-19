@@ -144,7 +144,7 @@ export class BASAnalytics {
     const multipliers: Record<string, number> = {
       "@cf/meta/llama-3.3-70b-instruct-fp8-fast": 1.5,
       "@cf/deepseek/deepseek-r1-distill-qwen-32b": 1.2,
-      "@cf/meta/llama-3.1-8b-instruct": 0.5,
+      "@cf/google/gemma-4-26b-a4b-it": 0.5,
       "@cf/microsoft/phi-4": 0.3,
     };
 

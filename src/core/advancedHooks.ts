@@ -1,6 +1,7 @@
 import { registerHook } from '../utils/hooks.js';
 import { logInfo, logError } from '../utils/logger.js';
 import { fireHooks } from './hookEngine.js';
+import { agentManager } from '../agents/AgentManager.js';
 
 /**
  * Advanced Hooks Implementation from fejlv2.md
@@ -36,11 +37,17 @@ export function registerAdvancedHooks() {
   // 3. Voice TTS Hook
   registerHook('phoenix:agent:failed', async (ctx: any) => {
     logInfo('VoiceHook', `Attention! Agent ${ctx?.agentName} failed. Phoenix recovery starting.`);
+    agentManager.queueTask(`HIBA JAVÍTÁSA: A(z) ${ctx?.agentName} ügynök hibát jelzett. Elemezd a hiba okát és javítsd ki a kódot vagy konfigurációt.`, 'developer', {
+        originalError: ctx?.error,
+        failedAgent: ctx?.agentName,
+        autoFix: true
+    });
   }, { category: 'infra' });
 
   registerHook('finance:anomaly:detected', async (ctx: any) => {
     if (ctx?.result?.severity === 'critical') {
       logInfo('VoiceHook', `Critical financial anomaly detected: ${ctx?.result?.description}`);
+      agentManager.queueTask(`Financial anomaly investigation: ${ctx?.result?.description}`, 'AdvancedMatching', ctx);
     }
   }, { category: 'business' });
 
@@ -71,8 +78,9 @@ export function registerAdvancedHooks() {
   registerHook('gmail:new:email', async (ctx: any) => {
     const { from, subject, hasAttachment } = ctx?.result || {};
     logInfo('GmailHook', `New email from ${from}. Subject: ${subject}`);
-    if (hasAttachment && ctx?.result?.attachmentType === 'pdf') {
-      logInfo('GmailHook', 'Triggering OCR pipeline for PDF attachment.');
+    if (hasAttachment) {
+      logInfo('GmailHook', 'Triggering InvoiceAutomation pipeline.');
+      agentManager.queueTask(`Process new invoice email from ${from}: ${subject}`, 'InvoiceAutomation', ctx);
     }
   }, { category: 'business' });
 
@@ -81,54 +89,64 @@ export function registerAdvancedHooks() {
     const { event, hoursUntil } = ctx?.result || {};
     if (hoursUntil <= 48 && event?.type === 'track_deadline') {
       logInfo('CalendarHook', `Track deadline approaching for ${event?.trackId}. Checking progress.`);
+      agentManager.queueTask(`Track progress review for deadline: ${event?.trackId}`, 'BrunellaProjectManager', ctx);
     }
   }, { category: 'business' });
 
   // 8. ChromeDevTools Performance Hook
   registerHook('dashboard:deploy:completed', async (ctx: any) => {
     logInfo('PerfHook', `Deploy completed. Running ChromeDevTools Lighthouse audit on http://localhost:5173`);
+    agentManager.queueTask('Run Lighthouse performance audit on dashboard', 'ChromeDevTools', { url: 'http://localhost:5173' });
   }, { category: 'infra' });
 
   // 9. Innovation Bridge Hook
   registerHook('agent:task:failed', async (ctx: any) => {
     logInfo('InnovationHook', `Agent ${ctx?.agentName} failed task ${ctx?.task}. Checking failure patterns for TRIZ analysis.`);
+    agentManager.queueTask(`Analyze task failure using TRIZ principles: ${ctx?.task}`, 'innovation_bridge', ctx);
   }, { category: 'learning' });
 
   // 10. UX Designer Hook
   registerHook('track:phase:architect:completed', async (ctx: any) => {
     logInfo('UXHook', `Architect phase completed for ${ctx?.agentName}. Generating UX spec for UI components.`);
+    agentManager.queueTask(`Generate UX specification for track: ${ctx?.trackId}`, 'UXDesigner', ctx);
   }, { category: 'lifecycle' });
 
   // 11. Napi KKV Pénzügyi Pulzus Hook
   registerHook('cron:daily:financial:close', async () => {
     logInfo('CronHook', `Executing Daily Financial Close for KKV clients. Collecting bank, invoice, and cashflow data.`);
+    agentManager.queueTask('Run full daily accounting and financial reconciliation pipeline', 'AccountingPipeline');
   }, { category: 'cron' });
 
   // 12. KnowledgeBase Builder Hook
   registerHook('track:completed', async (ctx: any) => {
     logInfo('KBHook', `Track completed by ${ctx?.agentName}. Generating wiki entry with lessons learned.`);
+    agentManager.queueTask(`Generate knowledge base entry and summary for the completed track: ${ctx?.trackId || 'unknown'}`, 'documenter', ctx);
   }, { category: 'learning' });
 
   // 13. Orphan File Cleanup Hook
   registerHook('file:created:root', async (ctx: any) => {
     logInfo('CleanupHook', `File created in root: ${ctx?.result?.filename}. Checking if it needs auto-sorting.`);
+    agentManager.queueTask(`Root file triage: ${ctx?.result?.filename}`, 'ProjectMaintainer', ctx);
   }, { category: 'infra' });
 
   registerHook('log:file:size:exceeded', async (ctx: any) => {
     if (ctx?.result?.sizeMb > 50) {
       logInfo('CleanupHook', `Log file ${ctx?.result?.filename} exceeded 50MB. Rotating and compressing.`);
+      agentManager.queueTask(`Log rotation for ${ctx?.result?.filename}`, 'ProjectMaintainer', ctx);
     }
   }, { category: 'infra' });
 
   // 14. Build Failure Auto-heal Hook
   registerHook('build:failed', async (ctx: any) => {
     logInfo('AutoHealHook', `Build failed. Errors: ${ctx?.result?.errors?.length}. Attempting LintFixer auto-heal.`);
+    agentManager.queueTask('Fix lint and build errors in the current workspace', 'lint_fixer', ctx);
   }, { category: 'infra' });
 
   // 15. Test Flakiness Hook
   registerHook('test:flaky:detected', async (ctx: any) => {
     if (ctx?.result?.passRate < 0.7) {
       logInfo('TestHook', `Flaky test detected: ${ctx?.result?.testFile} with pass rate ${ctx?.result?.passRate}. Diagnosing.`);
+      agentManager.queueTask(`Debug flaky test file: ${ctx?.result?.testFile}`, 'qa', ctx);
     }
   }, { category: 'infra' });
 
@@ -141,11 +159,13 @@ export function registerAdvancedHooks() {
   // 17. n8n NAV Live Hook
   registerHook('nav:invoice:submitted', async (ctx: any) => {
     logInfo('NAVHook', `Invoice ${ctx?.result?.invoiceId} submitted. Starting polling for NAV status.`);
+    agentManager.queueTask(`Poll NAV status for invoice: ${ctx?.result?.invoiceId}`, 'NavAgent', ctx);
   }, { category: 'business' });
 
   // 18. RobotkezV2 Selector Memory Hook
   registerHook('browser:selector:failed', async (ctx: any) => {
     logInfo('BrowserHook', `Selector failed on ${ctx?.result?.url}. Initiating Vision analysis and LLM selector repair.`);
+    agentManager.queueTask(`Repair selector failure on ${ctx?.result?.url}`, 'RobotkezV2', ctx);
   }, { category: 'infra' });
 
   // 19. Browser Session Persistence Hook
@@ -165,36 +185,45 @@ export function registerAdvancedHooks() {
   registerHook('db:write:batch:completed', async (ctx: any) => {
     if (ctx?.result?.rowsAffected > 100) {
       logInfo('DBHook', `Batch write of ${ctx?.result?.rowsAffected} rows completed. Initiating auto-backup.`);
+      agentManager.queueTask('Database backup and vacuum', 'ProjectMaintainer', ctx);
     }
   }, { category: 'infra' });
 
   // 21. LanceDB Embedding Drift Hook
   registerHook('ollama:model:changed', async (ctx: any) => {
     logInfo('EmbeddingHook', `Model changed from ${ctx?.result?.oldModel} to ${ctx?.result?.newModel}. Scheduling re-embedding task.`);
+    agentManager.queueTask(`Re-embed knowledge base using new model: ${ctx?.result?.newModel}`, 'researcher', ctx);
   }, { category: 'learning' });
 
   // 22. Weekly Business Hook
   registerHook('cron:weekly:friday:close', async () => {
     logInfo('CronHook', `Executing Weekly Friday Close. Generating executive summaries for sales, HR, and finance.`);
+    agentManager.queueTask('Generate weekly business executive summary', 'BrunellaProjectManager');
   }, { category: 'cron' });
 
   // 23. Demand Forecast Campaign Hook
   registerHook('demand:forecast:completed', async (ctx: any) => {
     const { product, trend, currentStock } = ctx?.result || {};
     logInfo('MarketingHook', `Forecast complete for ${product}. Trend is ${trend}. Checking inventory ${currentStock} for campaign generation.`);
+    if (trend === 'up' && currentStock > 0) {
+        agentManager.queueTask(`Generate marketing campaign for trending product: ${product}`, 'marketing_director', ctx);
+    }
   }, { category: 'business' });
 
   // 24. LocalCSR ESG Report Hook
   registerHook('cron:quarterly', async () => {
     logInfo('CronHook', 'Executing Quarterly ESG calculations. Generating carbon footprint report.');
+    agentManager.queueTask('Generate quarterly ESG and Carbon report', 'LocalCSR');
   }, { category: 'cron' });
 
   registerHook('cron:weekly:self-improve', async () => {
     logInfo('CronHook', 'Weekly self-improvement scheduler hook fired.');
+    agentManager.queueTask('Run system self-improvement cycle', 'agent_architect');
   }, { category: 'cron' });
 
   registerHook('cron:daily:world-perception', async () => {
     logInfo('CronHook', 'Daily world perception scheduler hook fired.');
+    agentManager.queueTask('Run daily AI news briefing and tech harvesting', 'DailyAgentBriefing');
   }, { category: 'cron' });
 
   registerHook('decision.analysis.started', async (ctx: any) => {

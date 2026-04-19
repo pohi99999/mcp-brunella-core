@@ -362,13 +362,11 @@ async function deferredInit(
   }
 
   const { createV1Router } = await import("./routes/index.js");
-  const { webhookHooksRouter } = await import("./routes/webhookHooks.js");
   const { createOnboardingIntakeRoutes } = await import("./routes/onboardingIntake.js");
   const v1Router = createV1Router();
   const onboardingIntakeRouter = createOnboardingIntakeRoutes();
 
   app.use("/api/v1", v1Router);
-  app.use("/api/v1/webhook", webhookHooksRouter);
   app.use("/api/v1/webhook/onboarding-intake", onboardingIntakeRouter);
   app.use("/api", v1Router);
 

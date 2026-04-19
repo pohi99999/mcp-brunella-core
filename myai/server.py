@@ -254,12 +254,36 @@ class GoldSampleRequest(BaseModel):
     quality: Optional[float] = 1.0
 
 
+class CFSyncRequest(BaseModel):
+    text: str
+    source: str
+    metadata: Optional[Dict[str, Any]] = {}
+
+
 # --- Health & Endpoints ---
 
 @app.get("/health")
 def health_check():
     browser_use_status = "available" if HAS_BROWSER_USE else "not_installed"
     return {"status": "ok", "component": "python_subsystem", "browser_use": browser_use_status}
+
+@app.post("/api/sync/cloudflare")
+async def sync_cloudflare_data(req: CFSyncRequest):
+    """
+    Webhook for synchronizing data from Cloudflare edge to local RAG.
+    """
+    if not HAS_RAG:
+        raise HTTPException(status_code=503, detail="RAG service unavailable")
+    try:
+        result = await rag_service.ingest_text(
+            text=req.text,
+            source=f"cf_edge:{req.source}",
+            metadata=req.metadata
+        )
+        return result
+    except Exception as e:
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=str(e))
 
 # --- Comet Browser Endpoints ---
 

@@ -47,22 +47,30 @@
 **StÃ¡tusz:** âœ… Befejezve
 **MegjegyzÃ©s:** MegvalÃ³sult a legmagasabb szintÅ± (L5) szÃ¡mlafeldolgozÃ¡si automatizÃ¡ciÃ³. A rendszer mostantÃ³l automatikusan figyeli a Gmail-t (30 percenkÃ©nt), elvÃ©gzi a Vision alapÃº kivonÃ¡st, Drive mentÃ©st Ã©s Sheets rÃ¶gzÃ­tÃ©st, majd esemÃ©nyvezÃ©relt mÃ³don (EventBus) Ã¡tadja a folyamatot a NAV cross-check Ã¡gensnek. A Dashboard widget frissÃ¼lt egy Ã©lÅ‘ history nÃ©zettel. A folyamat teljes mÃ©rtÃ©kben idempotens Ã©s DB szinten nyomon kÃ¶vethetÅ‘ az Ãºj `invoices` tÃ¡blÃ¡ban.
 
-\
 ### 2026-04-16 18:13 - PAIOS Orchestrator & UI Reactive Sync
-**Feladat:** A PAIOS Chat felületének és az Orkesztrátor rendszer közötti valós idejû, kétirányú (Socket.IO) hálózati kommunikációjának és szándék-felismerõ promptjának tökéletesítése magyar nyelven.
-**Érintett fájlok:** src/core/universalOrchestratorService.ts, src/dashboard/components/dashboard/PAIOSOrchestratorChat.tsx, test/paios_orchestrator.e2e.spec.ts
-**Státusz:** ? Befejezve
-**Megjegyzés:** Kialakult az Event-First Architektúra, a PAIOS UI frissítve lett élõ Chatter visszajelzéssel, és a MAGYAR_SYSTEM_PROMPT mostantól teljeskörûen fedi az n8n és Cloudflare integrációkat.\
-\
+**Feladat:** A PAIOS Chat felÃ¼letÃ©nek Ã©s az OrkesztrÃ¡tor rendszer kÃ¶zÃ¶tti valÃ³s idejÅ±, kÃ©tirÃ¡nyÃº (Socket.IO) hÃ¡lÃ³zati kommunikÃ¡ciÃ³jÃ¡nak Ã©s szÃ¡ndÃ©k-felismerÅ‘ promptjÃ¡nak tÃ¶kÃ©letesÃ­tÃ©se magyar nyelven.
+**Ã‰rintett fÃ¡jlok:** src/core/universalOrchestratorService.ts, src/dashboard/components/dashboard/PAIOSOrchestratorChat.tsx, test/paios_orchestrator.e2e.spec.ts
+**StÃ¡tusz:** âœ… Befejezve
+**MegjegyzÃ©s:** Kialakult az Event-First ArchitektÃºra, a PAIOS UI frissÃ­tve lett Ã©lÅ‘ Chatter visszajelzÃ©ssel, Ã©s a MAGYAR_SYSTEM_PROMPT mostantÃ³l teljeskÃ¶rÅ±en fedi az n8n Ã©s Cloudflare integrÃ¡ciÃ³kat.
+
 ### 2026-04-16 19:48 - System Integration & Intelligence Audit Complete
-**Feladat:** Átfogó integrációs audit és fejlesztés: aszinkron n8n/Cloudflare feladatkezelés, hibrid Pre-Retrieval RAG, és láthatatlan Debug csatorna a PAIOS UI-on.
-**Érintett fájlok:** src/agents/AgentManager.ts, src/core/universalOrchestratorService.ts, src/server/SocketService.ts, src/dashboard/components/dashboard/PAIOSOrchestratorChat.tsx, src/tools/n8n.ts
-**Státusz:** ? Befejezve
-**Megjegyzés:** A rendszer mostantól nem blokkol a hosszú n8n hívásoknál, azonnal tud válaszolni dokumentum-alapú kérdésekre a chaten, és a fejlesztõk számára egy új élõ Debug panel érhetõ el. A code_reviewer javaslatait (típusbiztonság) beépítettük. A polling perzisztencia jövõbeli track javaslat.
-\
-\
+**Feladat:** ÃtfogÃ³ integrÃ¡ciÃ³s audit Ã©s fejlesztÃ©s: aszinkron n8n/Cloudflare feladatkezelÃ©s, hibrid Pre-Retrieval RAG, Ã©s lÃ¡thatatlan Debug csatorna a PAIOS UI-on.
+**Ã‰rintett fÃ¡jlok:** src/agents/AgentManager.ts, src/core/universalOrchestratorService.ts, src/server/SocketService.ts, src/dashboard/components/dashboard/PAIOSOrchestratorChat.tsx, src/tools/n8n.ts
+**StÃ¡tusz:** âœ… Befejezve
+**MegjegyzÃ©s:** A rendszer mostantÃ³l nem blokkol a hosszÃº n8n hÃ­vÃ¡soknÃ¡l, azonnal tud vÃ¡laszolni dokumentum-alapÃº kÃ©rdÃ©sekre a chaten, Ã©s a fejlesztÅ‘k szÃ¡mÃ¡ra egy Ãºj Ã©lÅ‘ Debug panel Ã©rhetÅ‘ el. A code_reviewer javaslatait (tÃ­pusbiztonsÃ¡g) beÃ©pÃ­tettÃ©k. A polling perzisztencia jÃ¶vÅ‘beli track javaslat.
+
 ### 2026-04-16 20:29 - Push & Sync Complete
-**Feladat:** GitHub feltöltés és fõág (main) frissítése az összes audit és integrációs fejlesztéssel.
-**Státusz:** ? Befejezve
-**Megjegyzés:** Minden változás élesítve a GitHubon. Git LFS szinkronizálva. Tesztek PASS.
-\
+**Feladat:** GitHub feltÃ¶ltÃ©s Ã©s fÃ¶Ã¡g (main) frissÃ­tÃ©se az Ã¶sszes audit Ã©s integrÃ¡ciÃ³s fejlesztÃ©ssel.
+**StÃ¡tusz:** âœ… Befejezve
+**MegjegyzÃ©s:** Minden vÃ¡ltozÃ¡s Ã©lesÃ­tve a GitHubon. Git LFS szinkronizÃ¡lva. Tesztek PASS.
+
+### 2026-04-19 01:25 - Cloudflare MÃ©ly IntegrÃ¡ciÃ³ (cl.md)
+**Feladat:** Cloudflare szolgÃ¡ltatÃ¡sok (AI Gateway, D1, DO, Queues) auditÃ¡lÃ¡sa Ã©s 100% tesztlefedettsÃ©ggel tÃ¶rtÃ©nÅ‘ implementÃ¡lÃ¡sa.
+**Ã‰rintett fÃ¡jlok:** 
+- `bas-cloudflare-orchestrator/src/index.ts` (AI Gateway, Rate Limit, D1)
+- `bas-cloudflare-orchestrator/src/swarmCoordinator.ts` (Durable Objects)
+- `bas-cloudflare-orchestrator/src/queueHandler.ts` (Queues)
+- `myai/server.py` & `myai/rag.py` (Edge-to-local RAG sync)
+- `src/core/intentRouter.ts` (PAIOS Bridge)
+**StÃ¡tusz:** âœ… Befejezve
+**MegjegyzÃ©s:** A rendszer mostantÃ³l kÃ©pes a Cloudflare edge-en futÃ³ Ã¡gensek adatait valÃ³s idÅ‘ben szinkronizÃ¡lni a helyi LanceDB-be. A tesztlefedettsÃ©g az Ãºj komponenseknÃ©l 100%-os, az Ã¶sszesen 22 unit teszt sikeresen lefutott.

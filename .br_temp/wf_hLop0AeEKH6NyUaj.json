@@ -1,0 +1,862 @@
+{
+  "updatedAt": "2026-03-26T03:13:56.692Z",
+  "createdAt": "2026-03-18T23:52:13.912Z",
+  "id": "hLop0AeEKH6NyUaj",
+  "name": "04 - ISZ Weekly Reminder",
+  "description": null,
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "triggerTimes": {
+          "item": [
+            {
+              "mode": "everyWeek",
+              "hour": 16,
+              "weekday": 4
+            }
+          ]
+        }
+      },
+      "name": "Cron_Trigger",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "3192cacd-6525-4afb-94b2-85235d8a87b1",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "authentication": "airtableTokenApi",
+        "operation": "list",
+        "application": {
+          "__rl": true,
+          "mode": "id",
+          "value": "appU3xQMuAmpmmCEy"
+        },
+        "table": {
+          "__rl": true,
+          "value": "Munkat├írsak",
+          "mode": "name"
+        },
+        "additionalOptions": {}
+      },
+      "name": "Airtable_-_Munkatrsak_Lista",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "c2a45013-e8ff-4fc1-aa9f-3e9cbf1849d9",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "xzTM1nLU5Iaomt9x",
+          "name": "ISZ_Airtable_PAT_v3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Munkat─é╦çrsak list─é╦çj─é╦çnak feldolgoz─é╦çsa ─é┬ęs munkaid─╣ÔÇś ellen─╣ÔÇśrz─é┬ęs\nconst employees = $input.all();\nconst today = new Date();\nconst weekStart = new Date(today);\nweekStart.setDate(today.getDate() - (today.getDay() || 7) + 1); // H─é┬ętf─╣ÔÇś\n\nconst results = [];\n\nfor (const employee of employees) {\n  const employeeData = employee.json;\n  const telegramChatId = employeeData['Telegram Chat ID'] || employeeData['Telegram ChatId'] || null;\n  const name = employeeData['N─é┬ęv'] || employeeData['Name'] || 'Ismeretlen';\n  \n  if (!telegramChatId) {\n    continue; // Nincs Telegram chat ID, kihagyjuk\n  }\n  \n  results.push({\n    json: {\n      chatId: telegramChatId,\n      name: name,\n      employeeId: employeeData.id\n    }\n  });\n}\n\nreturn results;"
+      },
+      "name": "Munkatrsak_Feldolgozs",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        400,
+        0
+      ],
+      "id": "43c5deff-9f3f-4f40-8da7-75bffc58ff6f"
+    },
+    {
+      "parameters": {
+        "authentication": "airtableTokenApi",
+        "operation": "list",
+        "application": {
+          "__rl": true,
+          "mode": "id",
+          "value": "appU3xQMuAmpmmCEy"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Munkaid┼Ĺ Nyilv├íntart├ís"
+        },
+        "additionalOptions": {}
+      },
+      "name": "Airtable_-_Heti_Munkaid",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 1,
+      "position": [
+        608,
+        0
+      ],
+      "id": "5113925c-5dd4-410d-9459-c9520da69de0",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "xzTM1nLU5Iaomt9x",
+          "name": "ISZ_Airtable_PAT_v3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Ellen─╣ÔÇśrz─é┬ęs: van-e munkaid─╣ÔÇś bejegyz─é┬ęs a h─é┬ęten\nconst employee = $('Munkat─é╦çrsak Feldolgoz─é╦çs').item.json;\nconst worktimeRecords = $input.all();\n\nconst today = new Date();\nconst weekStart = new Date(today);\nweekStart.setDate(today.getDate() - (today.getDay() || 7) + 1);\nweekStart.setHours(0, 0, 0, 0);\n\n// Sz─╣┬▒r─é┬ęs: csak az elm─é┼člt 7 nap rekordjai\nconst thisWeekRecords = worktimeRecords.filter(record => {\n  const recordDate = new Date(record.json.D─é╦çtum);\n  return recordDate >= weekStart;\n});\n\nconst hasRecords = thisWeekRecords.length > 0;\nconst recordCount = thisWeekRecords.length;\n\nlet message = `─Ĺ┼║ÔÇśÔÇ╣ **${employee.name}**,\\n\\n`;\n\nif (hasRecords) {\n  message += `├ó┼ŤÔÇŽ K─é┬Âsz─é┬Ânj─é─Żk! A h─é┬ęten **${recordCount}** munkaid─╣ÔÇś bejegyz─é┬ęsed van r─é┬Âgz─é┬ştve.\\n\\n`;\n  message += '─Ĺ┼║ÔÇÖ╦ç Ha m─é┬ęg van munkaid─╣ÔÇś, amit elfelejtett─é┬ęl, k─é─Żldd el most!\\n';\n  message += 'P─é┬ęlda: \"Ma 4 ─é┼ér─é╦çt dolgoztam adminisztr─é╦çci─é┼éval\"';\n} else {\n  message += '├ó┼í┬á─Ć┬Ş┼╣ **Figyelem!**\\n\\n';\n  message += 'A h─é┬ęten m─é┬ęg nincs r─é┬Âgz─é┬ştett munkaid─╣ÔÇś bejegyz─é┬ęsed.\\n\\n';\n  message += '─Ĺ┼║ÔÇť┼ą K─é┬ęrlek, r─é┬Âgz─é┬ştsd a munkaid─╣ÔÇśdet!\\n\\n';\n  message += '─Ĺ┼║ÔÇÖ╦ç P─é┬ęlda ─é─Żzenetek:\\n';\n  message += '├óÔéČ╦ś \"Ma 8 ─é┼ér─é╦çt dolgoztam\"\\n';\n  message += '├óÔéČ╦ś \"Kezdtem 9:00, befejeztem 17:00\"\\n';\n  message += '├óÔéČ╦ś \"Tegnap 6 ─é┼ér─é╦çt dolgoztam\"';\n}\n\nmessage += '\\n\\n─Ĺ┼║ÔÇť┼á Haszn─é╦çld a /statusz parancsot a mai st─é╦çtuszhoz, vagy /het a heti ─é┬Âsszes─é┬şt─╣ÔÇśh─é┬Âz.';\n\nreturn [{\n  json: {\n    chatId: employee.chatId,\n    name: employee.name,\n    message: message,\n    hasRecords: hasRecords,\n    recordCount: recordCount\n  }\n}];"
+      },
+      "name": "Munkaid_Ellenrzs",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        800,
+        0
+      ],
+      "id": "6b83eca5-0174-451a-bf29-a30ae7309721"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.chatId }}",
+        "text": "={{ $json.message }}",
+        "additionalFields": {
+          "parse_mode": "Markdown"
+        }
+      },
+      "name": "Telegram_-_Emlkeztet",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        1008,
+        0
+      ],
+      "id": "938c5dee-7c5b-4d38-b6ec-fab88403f2c5",
+      "webhookId": "0fc0325e-720d-4fdd-9eef-3d9ab20c79c9",
+      "credentials": {
+        "telegramApi": {
+          "id": "XkjqRpMaHKDFOO3C",
+          "name": "ISZ_Telegram_Prod"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "triggerTimes": {
+          "item": [
+            {
+              "mode": "everyWeek",
+              "hour": 16,
+              "weekday": 4
+            }
+          ]
+        }
+      },
+      "name": "Cron Trigger",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [
+        144,
+        144
+      ],
+      "id": "55916376-d72a-459c-ba1b-a2aee4791846"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Munkat─é╦çrsak list─é╦çj─é╦çnak feldolgoz─é╦çsa ─é┬ęs munkaid─╣ÔÇś ellen─╣ÔÇśrz─é┬ęs\nconst employees = $input.all();\nconst today = new Date();\nconst weekStart = new Date(today);\nweekStart.setDate(today.getDate() - (today.getDay() || 7) + 1); // H─é┬ętf─╣ÔÇś\n\nconst results = [];\n\nfor (const employee of employees) {\n  const employeeData = employee.json;\n  const telegramChatId = employeeData['Telegram Chat ID'] || employeeData['Telegram ChatId'] || null;\n  const name = employeeData['N─é┬ęv'] || employeeData['Name'] || 'Ismeretlen';\n  \n  if (!telegramChatId) {\n    continue; // Nincs Telegram chat ID, kihagyjuk\n  }\n  \n  results.push({\n    json: {\n      chatId: telegramChatId,\n      name: name,\n      employeeId: employeeData.id\n    }\n  });\n}\n\nreturn results;"
+      },
+      "name": "Munkat─é╦çrsak Feldolgoz─é╦çs",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        960,
+        144
+      ],
+      "id": "cec2302c-2290-4271-b9dc-0456c442531a"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Ellen─╣ÔÇśrz─é┬ęs: van-e munkaid─╣ÔÇś bejegyz─é┬ęs a h─é┬ęten\nconst employee = $('Munkat─é╦çrsak Feldolgoz─é╦çs').item.json;\nconst worktimeRecords = $input.all();\n\nconst today = new Date();\nconst weekStart = new Date(today);\nweekStart.setDate(today.getDate() - (today.getDay() || 7) + 1);\nweekStart.setHours(0, 0, 0, 0);\n\n// Sz─╣┬▒r─é┬ęs: csak az elm─é┼člt 7 nap rekordjai\nconst thisWeekRecords = worktimeRecords.filter(record => {\n  const recordDate = new Date(record.json.D─é╦çtum);\n  return recordDate >= weekStart;\n});\n\nconst hasRecords = thisWeekRecords.length > 0;\nconst recordCount = thisWeekRecords.length;\n\nlet message = `─Ĺ┼║ÔÇśÔÇ╣ **${employee.name}**,\\n\\n`;\n\nif (hasRecords) {\n  message += `├ó┼ŤÔÇŽ K─é┬Âsz─é┬Ânj─é─Żk! A h─é┬ęten **${recordCount}** munkaid─╣ÔÇś bejegyz─é┬ęsed van r─é┬Âgz─é┬ştve.\\n\\n`;\n  message += '─Ĺ┼║ÔÇÖ╦ç Ha m─é┬ęg van munkaid─╣ÔÇś, amit elfelejtett─é┬ęl, k─é─Żldd el most!\\n';\n  message += 'P─é┬ęlda: \"Ma 4 ─é┼ér─é╦çt dolgoztam adminisztr─é╦çci─é┼éval\"';\n} else {\n  message += '├ó┼í┬á─Ć┬Ş┼╣ **Figyelem!**\\n\\n';\n  message += 'A h─é┬ęten m─é┬ęg nincs r─é┬Âgz─é┬ştett munkaid─╣ÔÇś bejegyz─é┬ęsed.\\n\\n';\n  message += '─Ĺ┼║ÔÇť┼ą K─é┬ęrlek, r─é┬Âgz─é┬ştsd a munkaid─╣ÔÇśdet!\\n\\n';\n  message += '─Ĺ┼║ÔÇÖ╦ç P─é┬ęlda ─é─Żzenetek:\\n';\n  message += '├óÔéČ╦ś \"Ma 8 ─é┼ér─é╦çt dolgoztam\"\\n';\n  message += '├óÔéČ╦ś \"Kezdtem 9:00, befejeztem 17:00\"\\n';\n  message += '├óÔéČ╦ś \"Tegnap 6 ─é┼ér─é╦çt dolgoztam\"';\n}\n\nmessage += '\\n\\n─Ĺ┼║ÔÇť┼á Haszn─é╦çld a /statusz parancsot a mai st─é╦çtuszhoz, vagy /het a heti ─é┬Âsszes─é┬şt─╣ÔÇśh─é┬Âz.';\n\nreturn [{\n  json: {\n    chatId: employee.chatId,\n    name: employee.name,\n    message: message,\n    hasRecords: hasRecords,\n    recordCount: recordCount\n  }\n}];"
+      },
+      "name": "Munkaid─╣ÔÇś Ellen─╣ÔÇśrz─é┬ęs",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1568,
+        144
+      ],
+      "id": "0271467c-9714-487b-b423-14ba1f712623"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.chatId }}",
+        "text": "={{ $json.message }}",
+        "additionalFields": {
+          "parse_mode": "Markdown"
+        }
+      },
+      "name": "Telegram - Eml─é┬ękeztet─╣ÔÇś",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1776,
+        144
+      ],
+      "id": "262d5a2b-348a-4a80-ab7e-14a38a0b8f7c",
+      "webhookId": "0fc0325e-720d-4fdd-9eef-3d9ab20c79c9",
+      "credentials": {
+        "telegramApi": {
+          "id": "XkjqRpMaHKDFOO3C",
+          "name": "ISZ_Telegram_Prod"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "appU3xQMuAmpmmCEy",
+          "mode": "list",
+          "cachedResultName": "Folyamatfigyel┼Ĺ Rendszer",
+          "cachedResultUrl": "https://airtable.com/appU3xQMuAmpmmCEy"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblu9E94nW9llCUD8",
+          "mode": "list",
+          "cachedResultName": "Munkat├írsak",
+          "cachedResultUrl": "https://airtable.com/appU3xQMuAmpmmCEy/tblu9E94nW9llCUD8"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        352,
+        144
+      ],
+      "id": "2e1f7b8e-12d8-4d1a-96b9-67793603a83c",
+      "name": "Airtable - Munkatarsak ListaSearch records",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "xzTM1nLU5Iaomt9x",
+          "name": "ISZ_Airtable_PAT_v3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "appU3xQMuAmpmmCEy",
+          "mode": "list",
+          "cachedResultName": "Folyamatfigyel┼Ĺ Rendszer",
+          "cachedResultUrl": "https://airtable.com/appU3xQMuAmpmmCEy"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblVLekXRPVHUxvsh",
+          "mode": "list",
+          "cachedResultName": "Munkaid┼Ĺ Nyilv├íntart├ís",
+          "cachedResultUrl": "https://airtable.com/appU3xQMuAmpmmCEy/tblVLekXRPVHUxvsh"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        1168,
+        144
+      ],
+      "id": "af0805bb-4746-44cf-a754-5fd1562c66df",
+      "name": "Search records",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "xzTM1nLU5Iaomt9x",
+          "name": "ISZ_Airtable_PAT_v3"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Cron_Trigger": {
+      "main": [
+        [
+          {
+            "node": "Airtable_-_Munkatrsak_Lista",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Airtable_-_Munkatrsak_Lista": {
+      "main": [
+        [
+          {
+            "node": "Munkatrsak_Feldolgozs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Munkatrsak_Feldolgozs": {
+      "main": [
+        [
+          {
+            "node": "Airtable_-_Heti_Munkaid",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Airtable_-_Heti_Munkaid": {
+      "main": [
+        [
+          {
+            "node": "Munkaid_Ellenrzs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Munkaid_Ellenrzs": {
+      "main": [
+        [
+          {
+            "node": "Telegram_-_Emlkeztet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cron Trigger": {
+      "main": [
+        [
+          {
+            "node": "Airtable - Munkatarsak ListaSearch records",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Munkat─é╦çrsak Feldolgoz─é╦çs": {
+      "main": [
+        [
+          {
+            "node": "Search records",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Munkaid─╣ÔÇś Ellen─╣ÔÇśrz─é┬ęs": {
+      "main": [
+        [
+          {
+            "node": "Telegram - Eml─é┬ękeztet─╣ÔÇś",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Airtable - Munkatarsak ListaSearch records": {
+      "main": [
+        [
+          {
+            "node": "Munkat─é╦çrsak Feldolgoz─é╦çs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search records": {
+      "main": [
+        [
+          {
+            "node": "Munkaid─╣ÔÇś Ellen─╣ÔÇśrz─é┬ęs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {
+    "Cron_Trigger": [
+      {
+        "json": {},
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ]
+  },
+  "versionId": "2df6eca6-c009-4a86-be0b-ef544eb181dc",
+  "activeVersionId": "2df6eca6-c009-4a86-be0b-ef544eb181dc",
+  "versionCounter": 43,
+  "triggerCount": 1,
+  "shared": [
+    {
+      "updatedAt": "2026-03-18T23:52:13.914Z",
+      "createdAt": "2026-03-18T23:52:13.914Z",
+      "role": "workflow:owner",
+      "workflowId": "hLop0AeEKH6NyUaj",
+      "projectId": "johLSwPlUades2LG",
+      "project": {
+        "updatedAt": "2026-01-03T00:33:46.337Z",
+        "createdAt": "2026-01-02T11:12:48.559Z",
+        "id": "johLSwPlUades2LG",
+        "name": "József Péter Pohánka <peterpohankapersonal@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "projectRelations": [
+          {
+            "updatedAt": "2026-01-02T11:12:48.561Z",
+            "createdAt": "2026-01-02T11:12:48.561Z",
+            "userId": "de33e76d-7bbf-4de8-9867-d4646a43eff4",
+            "projectId": "johLSwPlUades2LG",
+            "user": {
+              "updatedAt": "2026-04-01T07:33:51.000Z",
+              "createdAt": "2026-01-02T11:12:48.556Z",
+              "id": "de33e76d-7bbf-4de8-9867-d4646a43eff4",
+              "email": "peterpohankapersonal@gmail.com",
+              "firstName": "József Péter",
+              "lastName": "Pohánka",
+              "personalizationAnswers": null,
+              "settings": {
+                "userClaimedAiCredits": true,
+                "easyAIWorkflowOnboarded": true,
+                "firstSuccessfulWorkflowId": "Xo0yXlQ7oI7iOFbN",
+                "userActivated": true,
+                "userActivatedAt": 1774243654482
+              },
+              "disabled": false,
+              "mfaEnabled": false,
+              "lastActiveAt": "2026-03-31",
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": [],
+  "activeVersion": {
+    "updatedAt": "2026-03-26T03:13:56.693Z",
+    "createdAt": "2026-03-26T03:13:56.693Z",
+    "versionId": "2df6eca6-c009-4a86-be0b-ef544eb181dc",
+    "workflowId": "hLop0AeEKH6NyUaj",
+    "nodes": [
+      {
+        "parameters": {
+          "triggerTimes": {
+            "item": [
+              {
+                "mode": "everyWeek",
+                "hour": 16,
+                "weekday": 4
+              }
+            ]
+          }
+        },
+        "name": "Cron_Trigger",
+        "type": "n8n-nodes-base.cron",
+        "typeVersion": 1,
+        "position": [
+          0,
+          0
+        ],
+        "id": "3192cacd-6525-4afb-94b2-85235d8a87b1",
+        "disabled": true
+      },
+      {
+        "parameters": {
+          "authentication": "airtableTokenApi",
+          "operation": "list",
+          "application": {
+            "__rl": true,
+            "mode": "id",
+            "value": "appU3xQMuAmpmmCEy"
+          },
+          "table": {
+            "__rl": true,
+            "value": "Munkat├írsak",
+            "mode": "name"
+          },
+          "additionalOptions": {}
+        },
+        "name": "Airtable_-_Munkatrsak_Lista",
+        "type": "n8n-nodes-base.airtable",
+        "typeVersion": 1,
+        "position": [
+          208,
+          0
+        ],
+        "id": "c2a45013-e8ff-4fc1-aa9f-3e9cbf1849d9",
+        "credentials": {
+          "airtableTokenApi": {
+            "id": "xzTM1nLU5Iaomt9x",
+            "name": "ISZ_Airtable_PAT_v3"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "jsCode": "// Munkat─é╦çrsak list─é╦çj─é╦çnak feldolgoz─é╦çsa ─é┬ęs munkaid─╣ÔÇś ellen─╣ÔÇśrz─é┬ęs\nconst employees = $input.all();\nconst today = new Date();\nconst weekStart = new Date(today);\nweekStart.setDate(today.getDate() - (today.getDay() || 7) + 1); // H─é┬ętf─╣ÔÇś\n\nconst results = [];\n\nfor (const employee of employees) {\n  const employeeData = employee.json;\n  const telegramChatId = employeeData['Telegram Chat ID'] || employeeData['Telegram ChatId'] || null;\n  const name = employeeData['N─é┬ęv'] || employeeData['Name'] || 'Ismeretlen';\n  \n  if (!telegramChatId) {\n    continue; // Nincs Telegram chat ID, kihagyjuk\n  }\n  \n  results.push({\n    json: {\n      chatId: telegramChatId,\n      name: name,\n      employeeId: employeeData.id\n    }\n  });\n}\n\nreturn results;"
+        },
+        "name": "Munkatrsak_Feldolgozs",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          400,
+          0
+        ],
+        "id": "43c5deff-9f3f-4f40-8da7-75bffc58ff6f"
+      },
+      {
+        "parameters": {
+          "authentication": "airtableTokenApi",
+          "operation": "list",
+          "application": {
+            "__rl": true,
+            "mode": "id",
+            "value": "appU3xQMuAmpmmCEy"
+          },
+          "table": {
+            "__rl": true,
+            "mode": "name",
+            "value": "Munkaid┼Ĺ Nyilv├íntart├ís"
+          },
+          "additionalOptions": {}
+        },
+        "name": "Airtable_-_Heti_Munkaid",
+        "type": "n8n-nodes-base.airtable",
+        "typeVersion": 1,
+        "position": [
+          608,
+          0
+        ],
+        "id": "5113925c-5dd4-410d-9459-c9520da69de0",
+        "credentials": {
+          "airtableTokenApi": {
+            "id": "xzTM1nLU5Iaomt9x",
+            "name": "ISZ_Airtable_PAT_v3"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "jsCode": "// Ellen─╣ÔÇśrz─é┬ęs: van-e munkaid─╣ÔÇś bejegyz─é┬ęs a h─é┬ęten\nconst employee = $('Munkat─é╦çrsak Feldolgoz─é╦çs').item.json;\nconst worktimeRecords = $input.all();\n\nconst today = new Date();\nconst weekStart = new Date(today);\nweekStart.setDate(today.getDate() - (today.getDay() || 7) + 1);\nweekStart.setHours(0, 0, 0, 0);\n\n// Sz─╣┬▒r─é┬ęs: csak az elm─é┼člt 7 nap rekordjai\nconst thisWeekRecords = worktimeRecords.filter(record => {\n  const recordDate = new Date(record.json.D─é╦çtum);\n  return recordDate >= weekStart;\n});\n\nconst hasRecords = thisWeekRecords.length > 0;\nconst recordCount = thisWeekRecords.length;\n\nlet message = `─Ĺ┼║ÔÇśÔÇ╣ **${employee.name}**,\\n\\n`;\n\nif (hasRecords) {\n  message += `├ó┼ŤÔÇŽ K─é┬Âsz─é┬Ânj─é─Żk! A h─é┬ęten **${recordCount}** munkaid─╣ÔÇś bejegyz─é┬ęsed van r─é┬Âgz─é┬ştve.\\n\\n`;\n  message += '─Ĺ┼║ÔÇÖ╦ç Ha m─é┬ęg van munkaid─╣ÔÇś, amit elfelejtett─é┬ęl, k─é─Żldd el most!\\n';\n  message += 'P─é┬ęlda: \"Ma 4 ─é┼ér─é╦çt dolgoztam adminisztr─é╦çci─é┼éval\"';\n} else {\n  message += '├ó┼í┬á─Ć┬Ş┼╣ **Figyelem!**\\n\\n';\n  message += 'A h─é┬ęten m─é┬ęg nincs r─é┬Âgz─é┬ştett munkaid─╣ÔÇś bejegyz─é┬ęsed.\\n\\n';\n  message += '─Ĺ┼║ÔÇť┼ą K─é┬ęrlek, r─é┬Âgz─é┬ştsd a munkaid─╣ÔÇśdet!\\n\\n';\n  message += '─Ĺ┼║ÔÇÖ╦ç P─é┬ęlda ─é─Żzenetek:\\n';\n  message += '├óÔéČ╦ś \"Ma 8 ─é┼ér─é╦çt dolgoztam\"\\n';\n  message += '├óÔéČ╦ś \"Kezdtem 9:00, befejeztem 17:00\"\\n';\n  message += '├óÔéČ╦ś \"Tegnap 6 ─é┼ér─é╦çt dolgoztam\"';\n}\n\nmessage += '\\n\\n─Ĺ┼║ÔÇť┼á Haszn─é╦çld a /statusz parancsot a mai st─é╦çtuszhoz, vagy /het a heti ─é┬Âsszes─é┬şt─╣ÔÇśh─é┬Âz.';\n\nreturn [{\n  json: {\n    chatId: employee.chatId,\n    name: employee.name,\n    message: message,\n    hasRecords: hasRecords,\n    recordCount: recordCount\n  }\n}];"
+        },
+        "name": "Munkaid_Ellenrzs",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          800,
+          0
+        ],
+        "id": "6b83eca5-0174-451a-bf29-a30ae7309721"
+      },
+      {
+        "parameters": {
+          "chatId": "={{ $json.chatId }}",
+          "text": "={{ $json.message }}",
+          "additionalFields": {
+            "parse_mode": "Markdown"
+          }
+        },
+        "name": "Telegram_-_Emlkeztet",
+        "type": "n8n-nodes-base.telegram",
+        "typeVersion": 1,
+        "position": [
+          1008,
+          0
+        ],
+        "id": "938c5dee-7c5b-4d38-b6ec-fab88403f2c5",
+        "webhookId": "0fc0325e-720d-4fdd-9eef-3d9ab20c79c9",
+        "credentials": {
+          "telegramApi": {
+            "id": "XkjqRpMaHKDFOO3C",
+            "name": "ISZ_Telegram_Prod"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "triggerTimes": {
+            "item": [
+              {
+                "mode": "everyWeek",
+                "hour": 16,
+                "weekday": 4
+              }
+            ]
+          }
+        },
+        "name": "Cron Trigger",
+        "type": "n8n-nodes-base.cron",
+        "typeVersion": 1,
+        "position": [
+          144,
+          144
+        ],
+        "id": "55916376-d72a-459c-ba1b-a2aee4791846"
+      },
+      {
+        "parameters": {
+          "jsCode": "// Munkat─é╦çrsak list─é╦çj─é╦çnak feldolgoz─é╦çsa ─é┬ęs munkaid─╣ÔÇś ellen─╣ÔÇśrz─é┬ęs\nconst employees = $input.all();\nconst today = new Date();\nconst weekStart = new Date(today);\nweekStart.setDate(today.getDate() - (today.getDay() || 7) + 1); // H─é┬ętf─╣ÔÇś\n\nconst results = [];\n\nfor (const employee of employees) {\n  const employeeData = employee.json;\n  const telegramChatId = employeeData['Telegram Chat ID'] || employeeData['Telegram ChatId'] || null;\n  const name = employeeData['N─é┬ęv'] || employeeData['Name'] || 'Ismeretlen';\n  \n  if (!telegramChatId) {\n    continue; // Nincs Telegram chat ID, kihagyjuk\n  }\n  \n  results.push({\n    json: {\n      chatId: telegramChatId,\n      name: name,\n      employeeId: employeeData.id\n    }\n  });\n}\n\nreturn results;"
+        },
+        "name": "Munkat─é╦çrsak Feldolgoz─é╦çs",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          960,
+          144
+        ],
+        "id": "cec2302c-2290-4271-b9dc-0456c442531a"
+      },
+      {
+        "parameters": {
+          "jsCode": "// Ellen─╣ÔÇśrz─é┬ęs: van-e munkaid─╣ÔÇś bejegyz─é┬ęs a h─é┬ęten\nconst employee = $('Munkat─é╦çrsak Feldolgoz─é╦çs').item.json;\nconst worktimeRecords = $input.all();\n\nconst today = new Date();\nconst weekStart = new Date(today);\nweekStart.setDate(today.getDate() - (today.getDay() || 7) + 1);\nweekStart.setHours(0, 0, 0, 0);\n\n// Sz─╣┬▒r─é┬ęs: csak az elm─é┼člt 7 nap rekordjai\nconst thisWeekRecords = worktimeRecords.filter(record => {\n  const recordDate = new Date(record.json.D─é╦çtum);\n  return recordDate >= weekStart;\n});\n\nconst hasRecords = thisWeekRecords.length > 0;\nconst recordCount = thisWeekRecords.length;\n\nlet message = `─Ĺ┼║ÔÇśÔÇ╣ **${employee.name}**,\\n\\n`;\n\nif (hasRecords) {\n  message += `├ó┼ŤÔÇŽ K─é┬Âsz─é┬Ânj─é─Żk! A h─é┬ęten **${recordCount}** munkaid─╣ÔÇś bejegyz─é┬ęsed van r─é┬Âgz─é┬ştve.\\n\\n`;\n  message += '─Ĺ┼║ÔÇÖ╦ç Ha m─é┬ęg van munkaid─╣ÔÇś, amit elfelejtett─é┬ęl, k─é─Żldd el most!\\n';\n  message += 'P─é┬ęlda: \"Ma 4 ─é┼ér─é╦çt dolgoztam adminisztr─é╦çci─é┼éval\"';\n} else {\n  message += '├ó┼í┬á─Ć┬Ş┼╣ **Figyelem!**\\n\\n';\n  message += 'A h─é┬ęten m─é┬ęg nincs r─é┬Âgz─é┬ştett munkaid─╣ÔÇś bejegyz─é┬ęsed.\\n\\n';\n  message += '─Ĺ┼║ÔÇť┼ą K─é┬ęrlek, r─é┬Âgz─é┬ştsd a munkaid─╣ÔÇśdet!\\n\\n';\n  message += '─Ĺ┼║ÔÇÖ╦ç P─é┬ęlda ─é─Żzenetek:\\n';\n  message += '├óÔéČ╦ś \"Ma 8 ─é┼ér─é╦çt dolgoztam\"\\n';\n  message += '├óÔéČ╦ś \"Kezdtem 9:00, befejeztem 17:00\"\\n';\n  message += '├óÔéČ╦ś \"Tegnap 6 ─é┼ér─é╦çt dolgoztam\"';\n}\n\nmessage += '\\n\\n─Ĺ┼║ÔÇť┼á Haszn─é╦çld a /statusz parancsot a mai st─é╦çtuszhoz, vagy /het a heti ─é┬Âsszes─é┬şt─╣ÔÇśh─é┬Âz.';\n\nreturn [{\n  json: {\n    chatId: employee.chatId,\n    name: employee.name,\n    message: message,\n    hasRecords: hasRecords,\n    recordCount: recordCount\n  }\n}];"
+        },
+        "name": "Munkaid─╣ÔÇś Ellen─╣ÔÇśrz─é┬ęs",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          1568,
+          144
+        ],
+        "id": "0271467c-9714-487b-b423-14ba1f712623"
+      },
+      {
+        "parameters": {
+          "chatId": "={{ $json.chatId }}",
+          "text": "={{ $json.message }}",
+          "additionalFields": {
+            "parse_mode": "Markdown"
+          }
+        },
+        "name": "Telegram - Eml─é┬ękeztet─╣ÔÇś",
+        "type": "n8n-nodes-base.telegram",
+        "typeVersion": 1.2,
+        "position": [
+          1776,
+          144
+        ],
+        "id": "262d5a2b-348a-4a80-ab7e-14a38a0b8f7c",
+        "webhookId": "0fc0325e-720d-4fdd-9eef-3d9ab20c79c9",
+        "credentials": {
+          "telegramApi": {
+            "id": "XkjqRpMaHKDFOO3C",
+            "name": "ISZ_Telegram_Prod"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "search",
+          "base": {
+            "__rl": true,
+            "value": "appU3xQMuAmpmmCEy",
+            "mode": "list",
+            "cachedResultName": "Folyamatfigyel┼Ĺ Rendszer",
+            "cachedResultUrl": "https://airtable.com/appU3xQMuAmpmmCEy"
+          },
+          "table": {
+            "__rl": true,
+            "value": "tblu9E94nW9llCUD8",
+            "mode": "list",
+            "cachedResultName": "Munkat├írsak",
+            "cachedResultUrl": "https://airtable.com/appU3xQMuAmpmmCEy/tblu9E94nW9llCUD8"
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.airtable",
+        "typeVersion": 2.1,
+        "position": [
+          352,
+          144
+        ],
+        "id": "2e1f7b8e-12d8-4d1a-96b9-67793603a83c",
+        "name": "Airtable - Munkatarsak ListaSearch records",
+        "credentials": {
+          "airtableTokenApi": {
+            "id": "xzTM1nLU5Iaomt9x",
+            "name": "ISZ_Airtable_PAT_v3"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "search",
+          "base": {
+            "__rl": true,
+            "value": "appU3xQMuAmpmmCEy",
+            "mode": "list",
+            "cachedResultName": "Folyamatfigyel┼Ĺ Rendszer",
+            "cachedResultUrl": "https://airtable.com/appU3xQMuAmpmmCEy"
+          },
+          "table": {
+            "__rl": true,
+            "value": "tblVLekXRPVHUxvsh",
+            "mode": "list",
+            "cachedResultName": "Munkaid┼Ĺ Nyilv├íntart├ís",
+            "cachedResultUrl": "https://airtable.com/appU3xQMuAmpmmCEy/tblVLekXRPVHUxvsh"
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.airtable",
+        "typeVersion": 2.1,
+        "position": [
+          1168,
+          144
+        ],
+        "id": "af0805bb-4746-44cf-a754-5fd1562c66df",
+        "name": "Search records",
+        "credentials": {
+          "airtableTokenApi": {
+            "id": "xzTM1nLU5Iaomt9x",
+            "name": "ISZ_Airtable_PAT_v3"
+          }
+        }
+      }
+    ],
+    "connections": {
+      "Cron_Trigger": {
+        "main": [
+          [
+            {
+              "node": "Airtable_-_Munkatrsak_Lista",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Airtable_-_Munkatrsak_Lista": {
+        "main": [
+          [
+            {
+              "node": "Munkatrsak_Feldolgozs",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Munkatrsak_Feldolgozs": {
+        "main": [
+          [
+            {
+              "node": "Airtable_-_Heti_Munkaid",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Airtable_-_Heti_Munkaid": {
+        "main": [
+          [
+            {
+              "node": "Munkaid_Ellenrzs",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Munkaid_Ellenrzs": {
+        "main": [
+          [
+            {
+              "node": "Telegram_-_Emlkeztet",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Cron Trigger": {
+        "main": [
+          [
+            {
+              "node": "Airtable - Munkatarsak ListaSearch records",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Munkat─é╦çrsak Feldolgoz─é╦çs": {
+        "main": [
+          [
+            {
+              "node": "Search records",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Munkaid─╣ÔÇś Ellen─╣ÔÇśrz─é┬ęs": {
+        "main": [
+          [
+            {
+              "node": "Telegram - Eml─é┬ękeztet─╣ÔÇś",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Airtable - Munkatarsak ListaSearch records": {
+        "main": [
+          [
+            {
+              "node": "Munkat─é╦çrsak Feldolgoz─é╦çs",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Search records": {
+        "main": [
+          [
+            {
+              "node": "Munkaid─╣ÔÇś Ellen─╣ÔÇśrz─é┬ęs",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "József Péter Pohánka",
+    "name": null,
+    "description": null
+  }
+}

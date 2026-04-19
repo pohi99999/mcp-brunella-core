@@ -46,7 +46,7 @@ async function handleSalesOutreach(agent: string, task: string, context: any, re
   const prompt = `You are the ${agent}. Your task is: ${task}.
   Generate a professional B2B response or content based on this request.`;
   
-  const aiResponse = await env.AI.run("@cf/meta/llama-3.1-8b-instruct", {
+  const aiResponse = await env.AI.run("@cf/google/gemma-4-26b-a4b-it", {
     prompt
   });
 

@@ -95,6 +95,20 @@ const KEYWORD_MAP: Array<{ patterns: string[]; profile: IntentProfile }> = [
       approvalRequired: false,
     },
   },
+  {
+    patterns: ['edge', 'cloudflare', 'cean', 'harvest', 'felhő', 'proxy'],
+    profile: {
+      intent: 'cloud_edge_task',
+      domain: 'infrastructure',
+      requiredCapabilities: ['cloud_dispatch', 'edge_execution'],
+      definitionOfDone: [
+        'Cloudflare integration point identified',
+        'Task delegated to edge worker',
+        'Result synchronized to local RAG',
+      ],
+      approvalRequired: false,
+    },
+  },
 ];
 
 const DEFAULT_PROFILE: IntentProfile = {

@@ -45,7 +45,7 @@ export default {
 
         const prompt = `You are the ${agent}. Task: ${task}. Found relevant context: ${JSON.stringify(matches)}. Provide a comprehensive research summary.`;
 
-        const llmModel = "@cf/meta/llama-3.1-8b-instruct";
+        const llmModel = "@cf/google/gemma-4-26b-a4b-it";
         const aiRaw = await env.AI.run(llmModel as any, { prompt });
         const { text: analysis } = parseAiResponse(aiRaw);
 

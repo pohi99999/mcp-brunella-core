@@ -7168,3 +7168,9 @@ node scripts/spec-freeze-check.cjs --freeze <id>  # Spec "frozen"-ra
 **Tesztek:** ✅ 3 Playwright passed, 10 skipped (helyes)
 **Státusz:** ✅ Befejezve
 
+
+### 2026-04-17 - Bérszemfejtő dashboard dokumentáció tisztítás
+**Feladat:** A Z:\Workspace\ber,es munkaugy\dashboard_data_mapping.md és PAYROLL_SYSTEM_HANDOVER.md dokumentumok átírása standalone React dashboardra.
+**Érintett fájlok:** Z:\Workspace\ber,es munkaugy\dashboard_data_mapping.md, Z:\Workspace\ber,es munkaugy\PAYROLL_SYSTEM_HANDOVER.md, F:\mcp-brunella-core\HANDOFF.md
+**Státusz:** ✅ Befejezve
+**Megjegyzés:** A dokumentáció most önálló frontendként írja le a payroll dashboardot, saját routinggal, data-fetch réteggel és a Brunella-hivatkozások nélkül.

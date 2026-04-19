@@ -1,0 +1,262 @@
+[
+  {
+    "parameters": {
+      "resource": "label",
+      "returnAll": true
+    },
+    "type": "n8n-nodes-base.gmail",
+    "typeVersion": 2.1,
+    "position": [
+      1168,
+      736
+    ],
+    "id": "c5130696-2e22-4d69-8a72-55ec3faddd1f",
+    "name": "Get_many_labels",
+    "webhookId": "b38e2f6d-93c0-4a07-80d2-3658353b27f5",
+    "credentials": {
+      "gmailOAuth2": {
+        "id": "9yx6t71JVnl0hDva",
+        "name": "Gmail account 4"
+      }
+    }
+  },
+  {
+    "parameters": {
+      "jsCode": "const labels = $input.all();\nconst outputs = $(\"Split_Out\").all();\n\nconst pairedLabels = outputs.map((output) => {\n  const matchedLabel = labels.find(\n    (label) => label?.json?.name === output?.json[\"output.labels\"],\n  );\n  return matchedLabel ? { ...output.json, ...matchedLabel.json } : output.json;\n});\n\nconst uniquePairedLabels = Array.from(\n  new Set(pairedLabels.map(JSON.stringify)),\n).map(JSON.parse);\n\nreturn uniquePairedLabels.map((item) => ({ json: item }));\n"
+    },
+    "type": "n8n-nodes-base.code",
+    "typeVersion": 2,
+    "position": [
+      1360,
+      736
+    ],
+    "id": "7cf99dd4-4e2e-4178-90cf-257675f87ca5",
+    "name": "Code_in_JavaScript"
+  },
+  {
+    "parameters": {
+      "operation": "addLabels",
+      "messageId": "={{ $json.threadID }}",
+      "labelIds": "={{ $json.id }}"
+    },
+    "type": "n8n-nodes-base.gmail",
+    "typeVersion": 2.1,
+    "position": [
+      1760,
+      736
+    ],
+    "id": "2887a62d-3916-4d62-8bb0-d67946a8b145",
+    "name": "Add_label_to_message",
+    "webhookId": "88c28687-3336-4829-b83f-54b5cb2935e0",
+    "credentials": {
+      "gmailOAuth2": {
+        "id": "9yx6t71JVnl0hDva",
+        "name": "Gmail account 4"
+      }
+    }
+  },
+  {
+    "parameters": {
+      "resource": "label",
+      "returnAll": true
+    },
+    "type": "n8n-nodes-base.gmail",
+    "typeVersion": 2.1,
+    "position": [
+      1040,
+      1760
+    ],
+    "id": "63b6eb40-8c26-4ed0-a8c0-e41df6e86788",
+    "name": "Get_many_labels1",
+    "webhookId": "b38e2f6d-93c0-4a07-80d2-3658353b27f5",
+    "credentials": {
+      "gmailOAuth2": {
+        "id": "9yx6t71JVnl0hDva",
+        "name": "Gmail account 4"
+      }
+    }
+  },
+  {
+    "parameters": {
+      "jsCode": "const labels = $input.all();\nconst outputs = $(\"Split Out1\").all();\n\nconst pairedLabels = outputs.map((output) => {\n  const matchedLabel = labels.find(\n    (label) => label?.json?.name === output?.json[\"output.labels\"],\n  );\n  return matchedLabel ? { ...output.json, ...matchedLabel.json } : output.json;\n});\n\nconst uniquePairedLabels = Array.from(\n  new Set(pairedLabels.map(JSON.stringify)),\n).map(JSON.parse);\n\nreturn uniquePairedLabels.map((item) => ({ json: item }));\n"
+    },
+    "type": "n8n-nodes-base.code",
+    "typeVersion": 2,
+    "position": [
+      1232,
+      1760
+    ],
+    "id": "d2b4c0e7-e2e1-4f7f-83eb-592230f8f7cb",
+    "name": "Code_in_JavaScript1"
+  },
+  {
+    "parameters": {
+      "operation": "addLabels",
+      "messageId": "={{ $json.threadID }}",
+      "labelIds": "={{ $json.id }}"
+    },
+    "type": "n8n-nodes-base.gmail",
+    "typeVersion": 2.1,
+    "position": [
+      1872,
+      1760
+    ],
+    "id": "cdaa5e53-984d-4a6c-bd05-5815486303ad",
+    "name": "Add_label_to_message1",
+    "webhookId": "88c28687-3336-4829-b83f-54b5cb2935e0",
+    "credentials": {
+      "gmailOAuth2": {
+        "id": "9yx6t71JVnl0hDva",
+        "name": "Gmail account 4"
+      }
+    }
+  },
+  {
+    "parameters": {
+      "promptType": "define",
+      "text": "=Email tárgya: {{ $('Gmail_Trigger').item.json.subject }}\nEmail feladója: {{ $('Gmail_Trigger').item.json.from.text }}\nEmail törzse: {{ $('Gmail_Trigger').item.json.text }}",
+      "hasOutputParser": true,
+      "options": {
+        "systemMessage": "=Te egy email kategorizáló asszisztens vagy az Iszapfaló Kft. számára, amely iszapkotrási és vízgazdálkodási szolgáltatásokat nyújt.\n\nFELADATOD:\n\nElemezd a bejövő emaileket és válaszd ki a megfelelő Gmail címkéket a hierarchikus címkerendszerből. Egy emailhez TÖBB címke is kiválasztható, de MINDIG válassz legalább egyet minden főkategóriából ahol releváns.\n\nHIERARCHIKUS CÍMKE STRUKTÚRA:\n\n📁 1_Bejövő (Prioritás és Típus)\n├── Sürgős - Azonnali intézkedést igényel\n├── Ajánlatkérés - Új üzleti lehetőség\n├── Folyamatban - Aktív projekthez kapcsolódó kommunikáció\n└── Kérdés - Válaszra váró kérdés\n\n📁 2_Admin (Adminisztratív)\n├── Számlázás - Számlák, díjbekérők, fizetések\n├── Szerződés - Szerződések, megrendelők\n└── Belső - Csapattagok közötti kommunikáció\n\n📁 3_Tevékenység (Szolgáltatás típusa)\n├── Kotrás - Mederkotrás, iszapkitermelés\n├── Felmérés - Állapotfelmérés, dokumentáció, mérés\n├── Biológia - Biológiai kezelések, vízminőség, algakezelés\n└── Tanácsadás - Szakértői vélemény, tervezés, konzultáció\n\n📁 4_Rendszer (Automatizáció státusza)\n├── Feldolgozva - Sikeresen feldolgozva (automatikusan)\n├── Hiba - Feldolgozási hiba történt (automatikusan)\n└── Spam - Spam, irreleváns tartalom\n\n---\n\nKATEGORIZÁLÁSI SZABÁLYOK:\n\n📁 1_BEJÖVŐ KATEGÓRIÁK:\n\nSürgős:\n- Kulcsszavak: sürgős, azonnali, határidő, kritikus, ma, holnap, hétvégéig, haladéktalanul, mára, holnapra\n- Projekt érték ≥20 millió Ft\n- Tender/közbeszerzés rövid leadási határidővel (< 48 óra)\n- Hiánypótlás + határidő\n- MINDIG kombinálható más címkékkel\n- Példa: \"Sürgős ajánlatkérés kotrásra\" → Sürgős + Ajánlatkérés + Kotrás\n\nAjánlatkérés:\n- Új üzleti lehetőség, potenciális projekt\n- Kulcsszavak: ajánlatkérés, árajánlat, RFP, RFQ, tender, pályázat, költségbecslés, mennyibe kerül, árat kérnék, kalkulációt kérek\n- NEM folyamatban lévő projekt\n- Indítja az \"Új Projekt\" workflow-t\n- Példa: \"Kérem árajánlatukat tó felmérésére\" → Ajánlatkérés + Felmérés\n\nFolyamatban:\n- Aktív, már létező projekthez kapcsolódó email\n- Jellemzők: Re:, Fwd: prefix az email tárgyban\n- Hivatkozás korábbi kommunikációra\n- Helyszíni bejárás egyeztetése meglévő projektnél\n- Projekt státusz frissítés\n- Példa: \"Re: Balaton projekt - helyszíni időpont\" → Folyamatban + Kotrás\n\nKérdés:\n- Email kérdést tartalmaz, amire válaszolni kell\n- Tisztázó kérdések, információkérés\n- Technikai részletek pontosítása\n- Lehet kombinálva Ajánlatkérés vagy Folyamatban címkékkel\n- Példa: \"Milyen engedélyek kellenek a kotráshoz?\" → Kérdés + Ajánlatkérés + Kotrás\n\n---\n\n📁 2_ADMIN KATEGÓRIÁK:\n\nSzámlázás:\n- MINDEN számla (bejövő beszállítói ÉS AI platform számlák)\n- Díjbekérő, fizetési felszólítás\n- Számla kiegyenlítésre vonatkozó levelek\n- Elszámolás, könyvelés\n- Kulcsszavak: számla, invoice, receipt, billing, díjbekérő, fizetés, átutalás\n- Feladók: könyvelő, beszállítók, n8n.io, openai.com, airtable.com, stb.\n- Példa: \"Invoice from n8n - $49\" → Számlázás\n- Példa: \"Mellékeljük a novemberi könyvelési számlát\" → Számlázás\n\nSzerződés:\n- Szerződéstervezet, megrendelő\n- Aláírt szerződés megküldése\n- Szerződés módosítás, kiegészítés\n- Hivatalos megállapodások\n- Kulcsszavak: szerződés, megrendelő, hivatalos formában, aláírás, kiegészítés\n- Példa: \"Mellékeljük az aláírt szerződést\" → Szerződés + Folyamatban\n\nBelső:\n- Csapattagok közötti kommunikáció\n- Email címek: @iszapfalo.hu domainről @iszapfalo.hu-ra\n- \"FIGYELD\" jelzésű emailek\n- Belső megbeszélések, koordináció\n- Feladók: bartos.istvan@iszapfalo.hu, kovasznai.gergely@iszapfalo.hu, iszapfalo@gmail.com\n- Példa: \"FIGYELD - Eger tó projekt holnap\" → Belső + Folyamatban\n\n---\n\n📁 3_TEVÉKENYSÉG KATEGÓRIÁK (szolgáltatás típusa):\n\nKotrás:\n- Mederkotrás, iszapkotrás, iszapkitermelés\n- Kulcsszavak: kotrás, kotorás, mederkotrás, mederrendezés, hidromechanizáció, iszapkitermelés, víztelenítés, depónia, medertisztítás\n- m³ mennyiség + tó/folyó/csatorna kontextus\n- Kombinálható más szolgáltatásokkal\n- Példa: \"5000 m³ iszapkotrás Balaton\" → Ajánlatkérés + Kotrás\n\nFelmérés:\n- Állapotfelmérés, mérés, dokumentáció\n- Kulcsszavak: felmérés, mérés, állapotfelmérés, bemérés, dokumentáció, térképezés, ultrahangos, pontszerű mérés, fotorealisztikus\n- Gyakran \"előprojekt\" kotrás előtt\n- Példa: \"Tó ultrahangos felmérése\" → Ajánlatkérés + Felmérés\n\nBiológia:\n- Biológiai kezelések, vízminőség javítás\n- Kulcsszavak: algakezelés, víztisztítás, monitoring, vízminőség, oxigénszint, eutrofizáció, pelyhesítés, élőhely fejlesztés\n- Példa: \"Tó algakezelése kérése\" → Ajánlatkérés + Biológia\n\nTanácsadás:\n- Szakértői vélemény, konzultáció\n- Kulcsszavak: tanácsadás, konzultáció, szakértői vélemény, tervezés, engedélyeztetés, hatástanulmány, környezeti hatásvizsgálat\n- Hatósági dokumentumok, engedélyek\n- Példa: \"Vízjogi engedély tanácsadás\" → Ajánlatkérés + Tanácsadás\n\n---\n\n📁 4_RENDSZER KATEGÓRIÁK (NE HASZNÁLD - automatikus):\n\nFeldolgozva:\n- NE használd, az n8n workflow automatikusan hozzáadja sikeres feldolgozás után\n- Jelzi hogy az email már bekerült az Airtable-be\n\nHiba:\n- NE használd, az n8n workflow automatikusan hozzáadja hiba esetén\n- Jelzi hogy manuális beavatkozás szükséges\n\nSpam:\n- Hírlevél, newsletter, marketing, reklám\n- Irreleváns szolgáltatások (IT szoftver, biztosítás, autó, webshop)\n- Tömeges kiküldés jelei: \"unsubscribe\", \"leiratkozás\"\n- Ha SPAM → CSAK Spam címke, semmi más!\n- Példa: \"Hírlevél: Black Friday akciók\" → Spam\n\n---\n\nDÖNTÉSI ALGORITMUS (lépésről lépésre):\n\n1. SPAM ellenőrzés:\n   Ha SPAM → CSAK Spam → VÉGE\n\n2. Bejövő kategória kiválasztása (1 vagy több):\n   - Sürgős? → Sürgős\n   - Új ajánlatkérés? → Ajánlatkérés\n   - Folyamatban lévő projekt? → Folyamatban\n   - Tartalmaz kérdést? → Kérdés\n\n3. Admin kategória (ha releváns):\n   - Számla? → Számlázás\n   - Szerződés? → Szerződés\n   - Belső levél? → Belső\n\n4. Tevékenység kategória (1 vagy több):\n   - Kotrás? → Kotrás\n   - Felmérés? → Felmérés\n   - Biológia? → Biológia\n   - Tanácsadás? → Tanácsadás\n\n5. Rendszer kategória:\n   - NE használd (automatikus)\n\n\nMinden esetben használd a Címkék gmail tool-t hogy visszakapd, hogy milyen címkék vannak, és a Felcímkézés tool-t, hogy rátedd a címkét a bejövő e-mailre az alábbi leírás alapján."
+      }
+    },
+    "type": "@n8n/n8n-nodes-langchain.agent",
+    "typeVersion": 3,
+    "position": [
+      608,
+      736
+    ],
+    "id": "d4b8c373-54b0-49f3-8064-347fed7d4c2d",
+    "name": "E-mail_kategorizl"
+  },
+  {
+    "parameters": {
+      "resource": "label",
+      "returnAll": true
+    },
+    "type": "n8n-nodes-base.gmail",
+    "typeVersion": 2.1,
+    "position": [
+      5440,
+      944
+    ],
+    "id": "dc5e86bf-1d8a-4b4d-827f-dc97dfe170eb",
+    "name": "Get many labels",
+    "webhookId": "b38e2f6d-93c0-4a07-80d2-3658353b27f5",
+    "credentials": {
+      "gmailOAuth2": {
+        "id": "9yx6t71JVnl0hDva",
+        "name": "Gmail account 4"
+      }
+    }
+  },
+  {
+    "parameters": {
+      "jsCode": "const labels = $input.all();\nconst outputs = $(\"Split Out\").all();\n\nconst pairedLabels = outputs.map((output) => {\n  const matchedLabel = labels.find(\n    (label) => label?.json?.name === output?.json[\"output.labels\"],\n  );\n  return matchedLabel ? { ...output.json, ...matchedLabel.json } : output.json;\n});\n\nconst uniquePairedLabels = Array.from(\n  new Set(pairedLabels.map(JSON.stringify)),\n).map(JSON.parse);\n\nreturn uniquePairedLabels.map((item) => ({ json: item }));\n"
+    },
+    "type": "n8n-nodes-base.code",
+    "typeVersion": 2,
+    "position": [
+      5632,
+      944
+    ],
+    "id": "ab3da609-0089-4b1a-903d-76b3f7839349",
+    "name": "Code in JavaScript"
+  },
+  {
+    "parameters": {
+      "operation": "addLabels",
+      "messageId": "={{ $json.threadID }}",
+      "labelIds": "={{ $json.id }}"
+    },
+    "type": "n8n-nodes-base.gmail",
+    "typeVersion": 2.1,
+    "position": [
+      6032,
+      944
+    ],
+    "id": "919bfca7-eb62-478d-bc72-21571a571d99",
+    "name": "Add label to message",
+    "webhookId": "88c28687-3336-4829-b83f-54b5cb2935e0",
+    "credentials": {
+      "gmailOAuth2": {
+        "id": "9yx6t71JVnl0hDva",
+        "name": "Gmail account 4"
+      }
+    }
+  },
+  {
+    "parameters": {
+      "resource": "label",
+      "returnAll": true
+    },
+    "type": "n8n-nodes-base.gmail",
+    "typeVersion": 2.1,
+    "position": [
+      5312,
+      1968
+    ],
+    "id": "6a6b3559-e370-4240-a8b3-f940bfe3e949",
+    "name": "Get many labels1",
+    "webhookId": "b38e2f6d-93c0-4a07-80d2-3658353b27f5",
+    "credentials": {
+      "gmailOAuth2": {
+        "id": "9yx6t71JVnl0hDva",
+        "name": "Gmail account 4"
+      }
+    }
+  },
+  {
+    "parameters": {
+      "jsCode": "const labels = $input.all();\nconst outputs = $(\"Split Out1\").all();\n\nconst pairedLabels = outputs.map((output) => {\n  const matchedLabel = labels.find(\n    (label) => label?.json?.name === output?.json[\"output.labels\"],\n  );\n  return matchedLabel ? { ...output.json, ...matchedLabel.json } : output.json;\n});\n\nconst uniquePairedLabels = Array.from(\n  new Set(pairedLabels.map(JSON.stringify)),\n).map(JSON.parse);\n\nreturn uniquePairedLabels.map((item) => ({ json: item }));\n"
+    },
+    "type": "n8n-nodes-base.code",
+    "typeVersion": 2,
+    "position": [
+      5504,
+      1968
+    ],
+    "id": "4445701f-5fb1-434d-a4a5-201d890704fc",
+    "name": "Code in JavaScript1"
+  },
+  {
+    "parameters": {
+      "operation": "addLabels",
+      "messageId": "={{ $json.threadID }}",
+      "labelIds": "={{ $json.id }}"
+    },
+    "type": "n8n-nodes-base.gmail",
+    "typeVersion": 2.1,
+    "position": [
+      6144,
+      1968
+    ],
+    "id": "a3446005-1a00-4cce-83d5-8168406b6e64",
+    "name": "Add label to message1",
+    "webhookId": "88c28687-3336-4829-b83f-54b5cb2935e0",
+    "credentials": {
+      "gmailOAuth2": {
+        "id": "9yx6t71JVnl0hDva",
+        "name": "Gmail account 4"
+      }
+    }
+  },
+  {
+    "parameters": {
+      "promptType": "define",
+      "text": "=Email tárgya: {{ $('Gmail Trigger').item.json.subject }}\nEmail feladója: {{ $('Gmail Trigger').item.from.text }}\nEmail törzse: {{ $('Gmail Trigger').item.json.text }}",
+      "hasOutputParser": true,
+      "options": {
+        "systemMessage": "=Te egy email kategorizáló asszisztens vagy az Iszapfaló Kft. számára, amely iszapkotrási és vízgazdálkodási szolgáltatásokat nyújt.\n\nFELADATOD:\n\nElemezd a bejövő emaileket és válaszd ki a megfelelő Gmail címkéket a hierarchikus címkerendszerből. Egy emailhez TÖBB címke is kiválasztható, de MINDIG válassz legalább egyet minden főkategóriából ahol releváns.\n\nHIERARCHIKUS CÍMKE STRUKTÚRA:\n\n📁 1_Bejövő (Prioritás és Típus)\n├── Sürgős - Azonnali intézkedést igényel\n├── Ajánlatkérés - Új üzleti lehetőség\n├── Folyamatban - Aktív projekthez kapcsolódó kommunikáció\n└── Kérdés - Válaszra váró kérdés\n\n📁 2_Admin (Adminisztratív)\n├── Számlázás - Számlák, díjbekérők, fizetések\n├── Szerződés - Szerződések, megrendelők\n└── Belső - Csapattagok közötti kommunikáció\n\n📁 3_Tevékenység (Szolgáltatás típusa)\n├── Kotrás - Mederkotrás, iszapkitermelés\n├── Felmérés - Állapotfelmérés, dokumentáció, mérés\n├── Biológia - Biológiai kezelések, vízminőség, algakezelés\n└── Tanácsadás - Szakértői vélemény, tervezés, konzultáció\n\n📁 4_Rendszer (Automatizáció státusza)\n├── Feldolgozva - Sikeresen feldolgozva (automatikusan)\n├── Hiba - Feldolgozási hiba történt (automatikusan)\n└── Spam - Spam, irreleváns tartalom\n\n---\n\nKATEGORIZÁLÁSI SZABÁLYOK:\n\n📁 1_BEJÖVŐ KATEGÓRIÁK:\n\nSürgős:\n- Kulcsszavak: sürgős, azonnali, határidő, kritikus, ma, holnap, hétvégéig, haladéktalanul, mára, holnapra\n- Projekt érték ≥20 millió Ft\n- Tender/közbeszerzés rövid leadási határidővel (< 48 óra)\n- Hiánypótlás + határidő\n- MINDIG kombinálható más címkékkel\n- Példa: \"Sürgős ajánlatkérés kotrásra\" → Sürgős + Ajánlatkérés + Kotrás\n\nAjánlatkérés:\n- Új üzleti lehetőség, potenciális projekt\n- Kulcsszavak: ajánlatkérés, árajánlat, RFP, RFQ, tender, pályázat, költségbecslés, mennyibe kerül, árat kérnék, kalkulációt kérek\n- NEM folyamatban lévő projekt\n- Indítja az \"Új Projekt\" workflow-t\n- Példa: \"Kérem árajánlatukat tó felmérésére\" → Ajánlatkérés + Felmérés\n\nFolyamatban:\n- Aktív, már létező projekthez kapcsolódó email\n- Jellemzők: Re:, Fwd: prefix az email tárgyban\n- Hivatkozás korábbi kommunikációra\n- Helyszíni bejárás egyeztetése meglévő projektnél\n- Projekt státusz frissítés\n- Példa: \"Re: Balaton projekt - helyszíni időpont\" → Folyamatban + Kotrás\n\nKérdés:\n- Email kérdést tartalmaz, amire válaszolni kell\n- Tisztázó kérdések, információkérés\n- Technikai részletek pontosítása\n- Lehet kombinálva Ajánlatkérés vagy Folyamatban címkékkel\n- Példa: \"Milyen engedélyek kellenek a kotráshoz?\" → Kérdés + Ajánlatkérés + Kotrás\n\n---\n\n📁 2_ADMIN KATEGÓRIÁK:\n\nSzámlázás:\n- MINDEN számla (bejövő beszállítói ÉS AI platform számlák)\n- Díjbekérő, fizetési felszólítás\n- Számla kiegyenlítésre vonatkozó levelek\n- Elszámolás, könyvelés\n- Kulcsszavak: számla, invoice, receipt, billing, díjbekérő, fizetés, átutalás\n- Feladók: könyvelő, beszállítók, n8n.io, openai.com, airtable.com, stb.\n- Példa: \"Invoice from n8n - $49\" → Számlázás\n- Példa: \"Mellékeljük a novemberi könyvelési számlát\" → Számlázás\n\nSzerződés:\n- Szerződéstervezet, megrendelő\n- Aláírt szerződés megküldése\n- Szerződés módosítás, kiegészítés\n- Hivatalos megállapodások\n- Kulcsszavak: szerződés, megrendelő, hivatalos formában, aláírás, kiegészítés\n- Példa: \"Mellékeljük az aláírt szerződést\" → Szerződés + Folyamatban\n\nBelső:\n- Csapattagok közötti kommunikáció\n- Email címek: @iszapfalo.hu domainről @iszapfalo.hu-ra\n- \"FIGYELD\" jelzésű emailek\n- Belső megbeszélések, koordináció\n- Feladók: bartos.istvan@iszapfalo.hu, kovasznai.gergely@iszapfalo.hu, iszapfalo@gmail.com\n- Példa: \"FIGYELD - Eger tó projekt holnap\" → Belső + Folyamatban\n\n---\n\n📁 3_TEVÉKENYSÉG KATEGÓRIÁK (szolgáltatás típusa):\n\nKotrás:\n- Mederkotrás, iszapkotrás, iszapkitermelés\n- Kulcsszavak: kotrás, kotorás, mederkotrás, mederrendezés, hidromechanizáció, iszapkitermelés, víztelenítés, depónia, medertisztítás\n- m³ mennyiség + tó/folyó/csatorna kontextus\n- Kombinálható más szolgáltatásokkal\n- Példa: \"5000 m³ iszapkotrás Balaton\" → Ajánlatkérés + Kotrás\n\nFelmérés:\n- Állapotfelmérés, mérés, dokumentáció\n- Kulcsszavak: felmérés, mérés, állapotfelmérés, bemérés, dokumentáció, térképezés, ultrahangos, pontszerű mérés, fotorealisztikus\n- Gyakran \"előprojekt\" kotrás előtt\n- Példa: \"Tó ultrahangos felmérése\" → Ajánlatkérés + Felmérés\n\nBiológia:\n- Biológiai kezelések, vízminőség javítás\n- Kulcsszavak: algakezelés, víztisztítás, monitoring, vízminőség, oxigénszint, eutrofizáció, pelyhesítés, élőhely fejlesztés\n- Példa: \"Tó algakezelése kérése\" → Ajánlatkérés + Biológia\n\nTanácsadás:\n- Szakértői vélemény, konzultáció\n- Kulcsszavak: tanácsadás, konzultáció, szakértői vélemény, tervezés, engedélyeztetés, hatástanulmány, környezeti hatásvizsgálat\n- Hatósági dokumentumok, engedélyek\n- Példa: \"Vízjogi engedély tanácsadás\" → Ajánlatkérés + Tanácsadás\n\n---\n\n📁 4_RENDSZER KATEGÓRIÁK (NE HASZNÁLD - automatikus):\n\nFeldolgozva:\n- NE használd, az n8n workflow automatikusan hozzáadja sikeres feldolgozás után\n- Jelzi hogy az email már bekerült az Airtable-be\n\nHiba:\n- NE használd, az n8n workflow automatikusan hozzáadja hiba esetén\n- Jelzi hogy manuális beavatkozás szükséges\n\nSpam:\n- Hírlevél, newsletter, marketing, reklám\n- Irreleváns szolgáltatások (IT szoftver, biztosítás, autó, webshop)\n- Tömeges kiküldés jelei: \"unsubscribe\", \"leiratkozás\"\n- Ha SPAM → CSAK Spam címke, semmi más!\n- Példa: \"Hírlevél: Black Friday akciók\" → Spam\n\n---\n\nDÖNTÉSI ALGORITMUS (lépésről lépésre):\n\n1. SPAM ellenőrzés:\n   Ha SPAM → CSAK Spam → VÉGE\n\n2. Bejövő kategória kiválasztása (1 vagy több):\n   - Sürgős? → Sürgős\n   - Új ajánlatkérés? → Ajánlatkérés\n   - Folyamatban lévő projekt? → Folyamatban\n   - Tartalmaz kérdést? → Kérdés\n\n3. Admin kategória (ha releváns):\n   - Számla? → Számlázás\n   - Szerződés? → Szerződés\n   - Belső levél? → Belső\n\n4. Tevékenység kategória (1 vagy több):\n   - Kotrás? → Kotrás\n   - Felmérés? → Felmérés\n   - Biológia? → Biológia\n   - Tanácsadás? → Tanácsadás\n\n5. Rendszer kategória:\n   - NE használd (automatikus)\n\n\nMinden esetben használd a Címkék gmail tool-t hogy visszakapd, hogy milyen címkék vannak, és a Felcímkézés tool-t, hogy rátedd a címkét a bejövő e-mailre az alábbi leírás alapján."
+      }
+    },
+    "type": "@n8n/n8n-nodes-langchain.agent",
+    "typeVersion": 3,
+    "position": [
+      4880,
+      944
+    ],
+    "id": "bedd2bd1-de15-4d28-ba2e-cf7b994608cb",
+    "name": "E-mail kategorizáló"
+  }
+]

@@ -31,6 +31,9 @@ const WORKER_ROUTE_POLICIES: WorkerRoutePolicy[] = [
   { path: /^\/analytics\/summary$/, methods: ["GET"], access: "protected" },
   { path: /^\/chat\/messages$/, methods: ["GET", "POST"], access: "protected" },
   { path: /^\/swarm(?:\/.*)?$/, access: "protected" },
+  { path: /^\/ai\/generate$/, methods: ["POST"], access: "protected" },
+  { path: /^\/kkv\/clients$/, methods: ["GET", "POST"], access: "protected" },
+  { path: /^\/kkv\/invoices$/, methods: ["GET", "POST"], access: "protected" },
 ];
 
 function normalizeToken(value?: string): string | null {

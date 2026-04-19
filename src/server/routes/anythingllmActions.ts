@@ -5,14 +5,16 @@ import { agentManager } from '../../agents/AgentManager.js';
 import { getEnhancedPermissionManager } from '../../core/rbac/agentPermissions.js';
 import { approvalManager } from '../../utils/approvalManager.js';
 import { logInfo, logError } from '../../utils/logger.js';
+import {
+  executeWorkspaceAction,
+  isWorkspaceAction,
+  type WorkspaceActionPayload,
+} from '../workspaceActions.js';
 
 type AnythingLLMRole = 'viewer' | 'operator' | 'admin';
 type PermissionAction = 'read_file' | 'http' | 'browser' | 'run_command';
 
-interface ActionRequestPayload {
-  task?: string;
-  context?: Record<string, unknown>;
-}
+type ActionRequestPayload = WorkspaceActionPayload;
 
 interface ActionRequestBody {
   action?: string;
@@ -40,28 +42,59 @@ const ROLE_ORDER: Record<AnythingLLMRole, number> = {
   admin: 2,
 };
 
-const HIGH_RISK_ACTIONS = new Set<string>(['browser_task', 'agent_start']);
+const HIGH_RISK_ACTIONS = new Set<string>([
+  'browser_task',
+  'agent_start',
+  'email_send',
+  'calendar_create',
+  'drive_upload',
+  'chat_send',
+]);
 const ACTION_ROLE_REQUIREMENTS: Record<string, AnythingLLMRole> = {
   email_triage: 'operator',
+  email_draft: 'operator',
+  email_send: 'admin',
   calendar_check: 'operator',
+  calendar_create: 'admin',
+  drive_list: 'operator',
+  drive_upload: 'admin',
+  chat_list_spaces: 'operator',
+  chat_list_messages: 'operator',
+  chat_send: 'admin',
   document_summary: 'operator',
   browser_task: 'admin',
   agent_start: 'admin',
 };
 const ACTION_PERMISSION_MAP: Record<string, PermissionAction> = {
-  email_triage: 'read_file',
+  email_triage: 'http',
+  email_draft: 'http',
+  email_send: 'http',
   calendar_check: 'http',
+  calendar_create: 'http',
+  drive_list: 'http',
+  drive_upload: 'http',
+  chat_list_spaces: 'http',
+  chat_list_messages: 'http',
+  chat_send: 'http',
   document_summary: 'read_file',
   browser_task: 'browser',
   agent_start: 'run_command',
 };
 
 export const ACTION_MAP: Record<string, string> = {
-  email_triage:     'InvoiceAutomation',
-  calendar_check:   'Orchestrator',
+  email_triage: 'CopilotBridge',
+  email_draft: 'CopilotBridge',
+  email_send: 'CopilotBridge',
+  calendar_check: 'CopilotBridge',
+  calendar_create: 'CopilotBridge',
+  drive_list: 'CopilotBridge',
+  drive_upload: 'CopilotBridge',
+  chat_list_spaces: 'CopilotBridge',
+  chat_list_messages: 'CopilotBridge',
+  chat_send: 'CopilotBridge',
   document_summary: 'Researcher',
-  browser_task:     'RobotkezV2',
-  agent_start:      'Orchestrator',
+  browser_task: 'RobotkezV2',
+  agent_start: 'Orchestrator',
 };
 
 function addAudit(record: ActionAuditRecord): void {
@@ -122,6 +155,7 @@ export function createAnythingLLMActionRoutes(): Router {
     }
 
     const agentName = ACTION_MAP[action];
+    const workspaceAction = isWorkspaceAction(action);
     const task = payload?.task ?? action;
     const context = payload?.context ?? {};
     const role = getRole(req);
@@ -266,7 +300,9 @@ export function createAnythingLLMActionRoutes(): Router {
 
     try {
       logInfo('AnythingLLMAction', `${action} → ${agentName} | ${task.slice(0, 50)}`);
-      const raw = await agentManager.delegate(agentName, task, context);
+      const raw = workspaceAction
+        ? await executeWorkspaceAction(action, payload ?? {})
+        : await agentManager.delegate(agentName, task, context);
       const result = toResultMessage(raw);
       const durationMs = Date.now() - start;
 

@@ -1,37 +1,41 @@
+import { Router } from 'express';
+import { readFileSync, writeFileSync, existsSync } from 'fs';
 import path from 'path';
-import { promises as fs } from 'fs';
 
 export interface BookkeepingStatusSnapshot {
-  summary: Record<string, unknown>;
-  exceptions: Record<string, unknown>[];
+  summary: Record<string, any>;
+  exceptions: any[];
   timestamp: string;
   updatedAt: string;
-  source: 'api' | 'n8n' | 'dashboard';
+  source: 'dashboard' | 'api' | 'n8n';
 }
 
-function getSnapshotPath(): string {
-  return process.env.BOOKKEEPING_STATUS_PATH || path.join(process.cwd(), 'data', 'bookkeeping', 'status.json');
-}
-
-export function getBookkeepingStatusSnapshotPath(): string {
-  return getSnapshotPath();
-}
+const SNAPSHOT_FILE = path.join(process.cwd(), 'data', 'bookkeeping_status.json');
 
 export async function readBookkeepingStatusSnapshot(): Promise<BookkeepingStatusSnapshot | null> {
+  if (!existsSync(SNAPSHOT_FILE)) return null;
   try {
-    const text = await fs.readFile(getSnapshotPath(), 'utf-8');
-    return JSON.parse(text) as BookkeepingStatusSnapshot;
-  } catch (error: unknown) {
-    if (typeof error === 'object' && error !== null && 'code' in error && String((error as { code?: unknown }).code) === 'ENOENT') {
-      return null;
-    }
-
-    throw error;
+    return JSON.parse(readFileSync(SNAPSHOT_FILE, 'utf-8'));
+  } catch {
+    return null;
   }
 }
 
 export async function writeBookkeepingStatusSnapshot(snapshot: BookkeepingStatusSnapshot): Promise<void> {
-  const snapshotPath = getSnapshotPath();
-  await fs.mkdir(path.dirname(snapshotPath), { recursive: true });
-  await fs.writeFile(snapshotPath, JSON.stringify(snapshot, null, 2), 'utf-8');
+  try {
+    writeFileSync(SNAPSHOT_FILE, JSON.stringify(snapshot, null, 2), 'utf-8');
+  } catch (e) {
+    console.error('Failed to write bookkeeping snapshot:', e);
+  }
 }
+
+export function createBookkeepingStatusSnapshotRoutes(): Router {
+  const router = Router();
+  router.get('/', async (_req, res) => {
+    const snapshot = await readBookkeepingStatusSnapshot();
+    res.json({ success: true, snapshot });
+  });
+  return router;
+}
+
+export default createBookkeepingStatusSnapshotRoutes;

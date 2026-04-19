@@ -2,18 +2,21 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import request from 'supertest';
 import express from 'express';
 
-const { delegateMock, requestApprovalMock, getRequestMock, checkPermissionMock } = vi.hoisted(() => {
+const { delegateMock, executeWorkspaceActionMock, requestApprovalMock, getRequestMock, checkPermissionMock, isWorkspaceActionMock } = vi.hoisted(() => {
   const delegateMock = vi.fn().mockResolvedValue({ message: 'OK' });
+  const executeWorkspaceActionMock = vi.fn().mockResolvedValue({ operation: 'email_triage', count: 1, messages: [] });
   const requestApprovalMock = vi.fn().mockResolvedValue('approval-123');
   const getRequestMock = vi.fn();
   const checkPermissionMock = vi.fn(() => ({
     allowed: true,
-    agent: 'InvoiceAutomation',
-    action: 'read_file',
+    agent: 'CopilotBridge',
+    action: 'http',
     reason: 'Permission granted',
-    profile: 'READONLY',
+    profile: 'ADMIN',
   }));
-  return { delegateMock, requestApprovalMock, getRequestMock, checkPermissionMock };
+  const workspaceActions = new Set(['email_triage', 'email_draft', 'email_send', 'calendar_check', 'calendar_create', 'drive_list', 'drive_upload', 'chat_list_spaces', 'chat_list_messages', 'chat_send']);
+  const isWorkspaceActionMock = vi.fn((action: string) => workspaceActions.has(action));
+  return { delegateMock, executeWorkspaceActionMock, requestApprovalMock, getRequestMock, checkPermissionMock, isWorkspaceActionMock };
 });
 
 vi.mock('../src/agents/AgentManager.js', () => ({
@@ -38,6 +41,11 @@ vi.mock('../src/utils/logger.js', () => ({
   logError: vi.fn(),
 }));
 
+vi.mock('../src/server/workspaceActions.js', () => ({
+  executeWorkspaceAction: executeWorkspaceActionMock,
+  isWorkspaceAction: isWorkspaceActionMock,
+}));
+
 async function buildApp() {
   const { createAnythingLLMActionRoutes } = await import('../src/server/routes/anythingllmActions.js');
   const app = express();
@@ -55,8 +63,9 @@ describe('AnythingLLM Action Routes', () => {
       agent: agentName,
       action,
       reason: 'Permission granted',
-      profile: agentName === 'Orchestrator' ? 'ADMIN' : 'READONLY',
+      profile: agentName === 'Orchestrator' ? 'ADMIN' : 'ADMIN',
     }));
+    executeWorkspaceActionMock.mockResolvedValue({ operation: 'email_triage', count: 1, messages: [] });
     getRequestMock.mockReturnValue(undefined);
   });
 
@@ -86,17 +95,18 @@ describe('AnythingLLM Action Routes', () => {
     expect(res.body.supported).toContain('email_triage');
   });
 
-  it('executes email_triage with normal risk', async () => {
+  it('executes email_triage directly through the workspace bridge', async () => {
     const app = await buildApp();
     const res = await request(app)
       .post('/')
       .set('X-Brunella-Secret', 'test-secret')
-      .send({ action: 'email_triage', payload: { task: 'Process emails' } });
+      .send({ action: 'email_triage', payload: { task: 'Process emails', query: 'inbox' } });
     expect(res.status).toBe(200);
     expect(res.body.success).toBe(true);
     expect(res.body.riskLevel).toBe('normal');
-    expect(res.body.agent).toBe('InvoiceAutomation');
-    expect(delegateMock).toHaveBeenCalledWith('InvoiceAutomation', 'Process emails', {});
+    expect(res.body.agent).toBe('CopilotBridge');
+    expect(executeWorkspaceActionMock).toHaveBeenCalledWith('email_triage', { task: 'Process emails', query: 'inbox' });
+    expect(delegateMock).not.toHaveBeenCalled();
   });
 
   it('blocks high-risk actions for non-admin role', async () => {
@@ -111,25 +121,26 @@ describe('AnythingLLM Action Routes', () => {
     expect(delegateMock).not.toHaveBeenCalled();
   });
 
-  it('requests approval before high-risk execution', async () => {
+  it('requests approval before high-risk workspace execution', async () => {
     const app = await buildApp();
     const res = await request(app)
       .post('/')
       .set('X-Brunella-Secret', 'test-secret')
       .set('X-Brunella-Role', 'admin')
-      .send({ action: 'agent_start', payload: { task: 'Start agent' } });
+      .send({ action: 'email_send', payload: { to: ['team@example.com'], subject: 'Hi', body: 'Message' } });
     expect(res.status).toBe(202);
     expect(res.body.approvalRequired).toBe(true);
     expect(res.body.approvalId).toBe('approval-123');
     expect(requestApprovalMock).toHaveBeenCalledTimes(1);
+    expect(executeWorkspaceActionMock).not.toHaveBeenCalled();
     expect(delegateMock).not.toHaveBeenCalled();
   });
 
-  it('executes high-risk action after approval', async () => {
+  it('executes high-risk workspace action after approval', async () => {
     getRequestMock.mockReturnValue({
       id: 'approval-123',
       status: 'approved',
-      metadata: { action: 'browser_task', agent: 'RobotkezV2' },
+      metadata: { action: 'email_send', agent: 'CopilotBridge' },
     });
 
     const app = await buildApp();
@@ -138,15 +149,16 @@ describe('AnythingLLM Action Routes', () => {
       .set('X-Brunella-Secret', 'test-secret')
       .set('X-Brunella-Role', 'admin')
       .send({
-        action: 'browser_task',
+        action: 'email_send',
         approvalId: 'approval-123',
-        payload: { task: 'Navigate somewhere' },
+        payload: { to: ['team@example.com'], subject: 'Hi', body: 'Message' },
       });
 
     expect(res.status).toBe(200);
     expect(res.body.riskLevel).toBe('high');
     expect(res.body.role).toBe('admin');
-    expect(delegateMock).toHaveBeenCalledWith('RobotkezV2', 'Navigate somewhere', {});
+    expect(executeWorkspaceActionMock).toHaveBeenCalledWith('email_send', { to: ['team@example.com'], subject: 'Hi', body: 'Message' });
+    expect(delegateMock).not.toHaveBeenCalled();
   });
 
   it('rejects unresolved approval tokens', async () => {
@@ -169,6 +181,18 @@ describe('AnythingLLM Action Routes', () => {
 
     expect(res.status).toBe(409);
     expect(res.body.approvalStatus).toBe('pending');
+    expect(delegateMock).not.toHaveBeenCalled();
+  });
+
+  it('executes chat workspace actions directly', async () => {
+    const app = await buildApp();
+    const res = await request(app)
+      .post('/')
+      .set('X-Brunella-Secret', 'test-secret')
+      .send({ action: 'chat_list_spaces', payload: { maxResults: 5 } });
+
+    expect(res.status).toBe(200);
+    expect(executeWorkspaceActionMock).toHaveBeenCalledWith('chat_list_spaces', { maxResults: 5 });
     expect(delegateMock).not.toHaveBeenCalled();
   });
 

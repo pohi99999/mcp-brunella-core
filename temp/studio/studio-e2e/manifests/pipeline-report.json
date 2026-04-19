@@ -1,14 +1,14 @@
 {
-  "pipelineId": "9918741d-e9fc-4875-a3bc-509c602df75f",
+  "pipelineId": "044bdca4-020b-42e2-9e82-8c0ac2a70fbb",
   "projectName": "studio-e2e",
-  "createdAt": "2026-04-17T10:45:57.587Z",
+  "createdAt": "2026-04-19T00:26:31.214Z",
   "status": "completed",
-  "inputDir": "C:\\Users\\pohi9\\AppData\\Local\\Temp\\brunella-studio-e2e-XTTrId\\input",
+  "inputDir": "C:\\Users\\pohi9\\AppData\\Local\\Temp\\brunella-studio-e2e-kvIb4N\\input",
   "outputDir": "F:\\mcp-brunella-core\\out\\studio\\studio-e2e",
   "assets": [
     {
       "id": "detail-texture",
-      "path": "C:\\Users\\pohi9\\AppData\\Local\\Temp\\brunella-studio-e2e-XTTrId\\input\\detail-texture.mp4",
+      "path": "C:\\Users\\pohi9\\AppData\\Local\\Temp\\brunella-studio-e2e-kvIb4N\\input\\detail-texture.mp4",
       "fileName": "detail-texture.mp4",
       "type": "video",
       "sizeBytes": 4333,
@@ -32,7 +32,7 @@
     },
     {
       "id": "music",
-      "path": "C:\\Users\\pohi9\\AppData\\Local\\Temp\\brunella-studio-e2e-XTTrId\\input\\music.mp3",
+      "path": "C:\\Users\\pohi9\\AppData\\Local\\Temp\\brunella-studio-e2e-kvIb4N\\input\\music.mp3",
       "fileName": "music.mp3",
       "type": "audio",
       "sizeBytes": 96566,
@@ -54,7 +54,7 @@
     },
     {
       "id": "opening-look",
-      "path": "C:\\Users\\pohi9\\AppData\\Local\\Temp\\brunella-studio-e2e-XTTrId\\input\\opening-look.mp4",
+      "path": "C:\\Users\\pohi9\\AppData\\Local\\Temp\\brunella-studio-e2e-kvIb4N\\input\\opening-look.mp4",
       "fileName": "opening-look.mp4",
       "type": "video",
       "sizeBytes": 4333,
@@ -78,7 +78,7 @@
     },
     {
       "id": "utolso-end",
-      "path": "C:\\Users\\pohi9\\AppData\\Local\\Temp\\brunella-studio-e2e-XTTrId\\input\\utolso-end.mp4",
+      "path": "C:\\Users\\pohi9\\AppData\\Local\\Temp\\brunella-studio-e2e-kvIb4N\\input\\utolso-end.mp4",
       "fileName": "utolso-end.mp4",
       "type": "video",
       "sizeBytes": 4332,
@@ -103,10 +103,10 @@
   ],
   "timelinePlan": {
     "version": "1.0.0",
-    "createdAt": "2026-04-17T10:45:46.173Z",
+    "createdAt": "2026-04-19T00:26:14.740Z",
     "style": "elegant",
     "targetDurationSec": 72,
-    "musicTrackPath": "C:\\Users\\pohi9\\AppData\\Local\\Temp\\brunella-studio-e2e-XTTrId\\input\\music.mp3",
+    "musicTrackPath": "C:\\Users\\pohi9\\AppData\\Local\\Temp\\brunella-studio-e2e-kvIb4N\\input\\music.mp3",
     "inputSummary": {
       "clipCount": 3,
       "totalDurationSec": 6
@@ -181,7 +181,7 @@
     "timeline": [
       {
         "assetId": "opening-look",
-        "assetPath": "C:\\Users\\pohi9\\AppData\\Local\\Temp\\brunella-studio-e2e-XTTrId\\input\\opening-look.mp4",
+        "assetPath": "C:\\Users\\pohi9\\AppData\\Local\\Temp\\brunella-studio-e2e-kvIb4N\\input\\opening-look.mp4",
         "segmentId": "hero-opening-1",
         "startSec": 0,
         "endSec": 2,
@@ -192,7 +192,7 @@
       },
       {
         "assetId": "detail-texture",
-        "assetPath": "C:\\Users\\pohi9\\AppData\\Local\\Temp\\brunella-studio-e2e-XTTrId\\input\\detail-texture.mp4",
+        "assetPath": "C:\\Users\\pohi9\\AppData\\Local\\Temp\\brunella-studio-e2e-kvIb4N\\input\\detail-texture.mp4",
         "segmentId": "hero-opening-1",
         "startSec": 0,
         "endSec": 2,
@@ -203,7 +203,7 @@
       },
       {
         "assetId": "utolso-end",
-        "assetPath": "C:\\Users\\pohi9\\AppData\\Local\\Temp\\brunella-studio-e2e-XTTrId\\input\\utolso-end.mp4",
+        "assetPath": "C:\\Users\\pohi9\\AppData\\Local\\Temp\\brunella-studio-e2e-kvIb4N\\input\\utolso-end.mp4",
         "segmentId": "hero-opening-1",
         "startSec": 0,
         "endSec": 2,
@@ -214,7 +214,7 @@
       },
       {
         "assetId": "detail-texture",
-        "assetPath": "C:\\Users\\pohi9\\AppData\\Local\\Temp\\brunella-studio-e2e-XTTrId\\input\\detail-texture.mp4",
+        "assetPath": "C:\\Users\\pohi9\\AppData\\Local\\Temp\\brunella-studio-e2e-kvIb4N\\input\\detail-texture.mp4",
         "segmentId": "detail-montage-2",
         "startSec": 0,
         "endSec": 2,
@@ -225,7 +225,7 @@
       },
       {
         "assetId": "opening-look",
-        "assetPath": "C:\\Users\\pohi9\\AppData\\Local\\Temp\\brunella-studio-e2e-XTTrId\\input\\opening-look.mp4",
+        "assetPath": "C:\\Users\\pohi9\\AppData\\Local\\Temp\\brunella-studio-e2e-kvIb4N\\input\\opening-look.mp4",
         "segmentId": "detail-montage-2",
         "startSec": 0,
         "endSec": 2,
@@ -236,7 +236,7 @@
       },
       {
         "assetId": "utolso-end",
-        "assetPath": "C:\\Users\\pohi9\\AppData\\Local\\Temp\\brunella-studio-e2e-XTTrId\\input\\utolso-end.mp4",
+        "assetPath": "C:\\Users\\pohi9\\AppData\\Local\\Temp\\brunella-studio-e2e-kvIb4N\\input\\utolso-end.mp4",
         "segmentId": "detail-montage-2",
         "startSec": 0,
         "endSec": 2,
@@ -247,7 +247,7 @@
       },
       {
         "assetId": "opening-look",
-        "assetPath": "C:\\Users\\pohi9\\AppData\\Local\\Temp\\brunella-studio-e2e-XTTrId\\input\\opening-look.mp4",
+        "assetPath": "C:\\Users\\pohi9\\AppData\\Local\\Temp\\brunella-studio-e2e-kvIb4N\\input\\opening-look.mp4",
         "segmentId": "silhouette-motion-3",
         "startSec": 0,
         "endSec": 2,
@@ -258,7 +258,7 @@
       },
       {
         "assetId": "detail-texture",
-        "assetPath": "C:\\Users\\pohi9\\AppData\\Local\\Temp\\brunella-studio-e2e-XTTrId\\input\\detail-texture.mp4",
+        "assetPath": "C:\\Users\\pohi9\\AppData\\Local\\Temp\\brunella-studio-e2e-kvIb4N\\input\\detail-texture.mp4",
         "segmentId": "silhouette-motion-3",
         "startSec": 0,
         "endSec": 2,
@@ -269,7 +269,7 @@
       },
       {
         "assetId": "utolso-end",
-        "assetPath": "C:\\Users\\pohi9\\AppData\\Local\\Temp\\brunella-studio-e2e-XTTrId\\input\\utolso-end.mp4",
+        "assetPath": "C:\\Users\\pohi9\\AppData\\Local\\Temp\\brunella-studio-e2e-kvIb4N\\input\\utolso-end.mp4",
         "segmentId": "silhouette-motion-3",
         "startSec": 0,
         "endSec": 2,
@@ -280,7 +280,7 @@
       },
       {
         "assetId": "opening-look",
-        "assetPath": "C:\\Users\\pohi9\\AppData\\Local\\Temp\\brunella-studio-e2e-XTTrId\\input\\opening-look.mp4",
+        "assetPath": "C:\\Users\\pohi9\\AppData\\Local\\Temp\\brunella-studio-e2e-kvIb4N\\input\\opening-look.mp4",
         "segmentId": "emotional-close-4",
         "startSec": 0,
         "endSec": 2,
@@ -291,7 +291,7 @@
       },
       {
         "assetId": "detail-texture",
-        "assetPath": "C:\\Users\\pohi9\\AppData\\Local\\Temp\\brunella-studio-e2e-XTTrId\\input\\detail-texture.mp4",
+        "assetPath": "C:\\Users\\pohi9\\AppData\\Local\\Temp\\brunella-studio-e2e-kvIb4N\\input\\detail-texture.mp4",
         "segmentId": "emotional-close-4",
         "startSec": 0,
         "endSec": 2,
@@ -302,7 +302,7 @@
       },
       {
         "assetId": "utolso-end",
-        "assetPath": "C:\\Users\\pohi9\\AppData\\Local\\Temp\\brunella-studio-e2e-XTTrId\\input\\utolso-end.mp4",
+        "assetPath": "C:\\Users\\pohi9\\AppData\\Local\\Temp\\brunella-studio-e2e-kvIb4N\\input\\utolso-end.mp4",
         "segmentId": "emotional-close-4",
         "startSec": 0,
         "endSec": 2,
@@ -313,7 +313,7 @@
       },
       {
         "assetId": "utolso-end",
-        "assetPath": "C:\\Users\\pohi9\\AppData\\Local\\Temp\\brunella-studio-e2e-XTTrId\\input\\utolso-end.mp4",
+        "assetPath": "C:\\Users\\pohi9\\AppData\\Local\\Temp\\brunella-studio-e2e-kvIb4N\\input\\utolso-end.mp4",
         "segmentId": "cta-ending-5",
         "startSec": 0,
         "endSec": 2,
@@ -324,7 +324,7 @@
       },
       {
         "assetId": "opening-look",
-        "assetPath": "C:\\Users\\pohi9\\AppData\\Local\\Temp\\brunella-studio-e2e-XTTrId\\input\\opening-look.mp4",
+        "assetPath": "C:\\Users\\pohi9\\AppData\\Local\\Temp\\brunella-studio-e2e-kvIb4N\\input\\opening-look.mp4",
         "segmentId": "cta-ending-5",
         "startSec": 0,
         "endSec": 2,
@@ -335,7 +335,7 @@
       },
       {
         "assetId": "detail-texture",
-        "assetPath": "C:\\Users\\pohi9\\AppData\\Local\\Temp\\brunella-studio-e2e-XTTrId\\input\\detail-texture.mp4",
+        "assetPath": "C:\\Users\\pohi9\\AppData\\Local\\Temp\\brunella-studio-e2e-kvIb4N\\input\\detail-texture.mp4",
         "segmentId": "cta-ending-5",
         "startSec": 0,
         "endSec": 2,
@@ -385,9 +385,9 @@
   },
   "audioPlan": {
     "version": "1.0.0",
-    "createdAt": "2026-04-17T10:45:46.287Z",
+    "createdAt": "2026-04-19T00:26:14.870Z",
     "style": "elegant",
-    "musicTrackPath": "C:\\Users\\pohi9\\AppData\\Local\\Temp\\brunella-studio-e2e-XTTrId\\input\\music.mp3",
+    "musicTrackPath": "C:\\Users\\pohi9\\AppData\\Local\\Temp\\brunella-studio-e2e-kvIb4N\\input\\music.mp3",
     "trackDurationSec": 12,
     "estimatedBpm": 92,
     "targetLufs": -14,
@@ -586,7 +586,7 @@
   },
   "renderJobs": [
     {
-      "id": "4907fd0a-6851-4c33-b7e9-61afee065a6d",
+      "id": "624182b4-4564-4835-817a-7caddd7eca8b",
       "preset": {
         "name": "master-16x9",
         "label": "16:9 Master Promo",
@@ -635,7 +635,7 @@
   "qcReports": [
     {
       "filePath": "F:\\mcp-brunella-core\\out\\studio\\studio-e2e\\studio-e2e-master-16x9.mp4",
-      "checkedAt": "2026-04-17T10:45:57.585Z",
+      "checkedAt": "2026-04-19T00:26:31.211Z",
       "passed": true,
       "durationSec": 30,
       "aspectRatio": "1920:1080",

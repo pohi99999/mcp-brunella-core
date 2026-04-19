@@ -3,7 +3,6 @@ import { ensureError } from '../../utils/ensureError.js';
 import { logError, logInfo, logWarn } from '../../utils/logger.js';
 import { ingestCrmLead, getCrmLeadStats, getCrmFollowUpStats, listCrmLeads } from '../../data/crm_db.js';
 import { normalizeCrmLead } from '../../utils/crmLead.js';
-import { createCrmFollowUpRoutes } from './crmFollowUp.js';
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
@@ -35,7 +34,6 @@ function extractWorkflowId(body: unknown, headerValue: string | undefined): stri
 
 export function createCrmRoutes(): Router {
   const router = Router();
-  router.use('/follow-up', createCrmFollowUpRoutes());
 
   router.post('/intake', async (req, res) => {
     try {
