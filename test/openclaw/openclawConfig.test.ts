@@ -101,12 +101,19 @@ describe('OpenClaw config loading', () => {
       env: {
         OPENCLAW_BASE_URL: 'not-a-url',
         OPENCLAW_AGENT_ALLOWLISTS: '{not json}',
+        OPENCLAW_DEFAULT_TRUST_ZONE: 'ultra-violet',
+        OPENCLAW_APPROVAL_THRESHOLD: 'infra-red',
+        OPENCLAW_ENABLED: 'false',
+        OPENCLAW_REDACTION_ENABLED: '0',
       },
     });
 
     expect(malformedConfig.baseUrl).toBeNull();
     expect(malformedConfig.enabled).toBe(false);
     expect(malformedConfig.agentAllowlists).toEqual({});
+    expect(malformedConfig.defaultTrustZone).toBe('amber');
+    expect(malformedConfig.approvalThreshold).toBe('amber');
+    expect(malformedConfig.redaction.enabled).toBe(false);
   });
 
   it('parses explicit token refs and invalid timeout fields without breaking defaults', () => {

@@ -110,16 +110,28 @@ describe('OpenClaw policy translation', () => {
   });
 
   it('fails when the target agent is not allowlisted', () => {
+    const goal = {
+      ...buildGoal(),
+      trackId: 'goal-track-fallback',
+    };
+    const execution = {
+      ...buildExecution(),
+      correlationId: undefined,
+      trackId: undefined,
+    };
+
     const config = buildConfig({
       allowedAgents: ['approved-agent'],
     });
 
-    const decision = classifyOpenClawPolicy({ goal: buildGoal(), execution: buildExecution() }, config);
+    const decision = classifyOpenClawPolicy({ goal: goal as never, execution: execution as never }, config);
 
     expect(decision.verdict).toBe('fail');
     expect(decision.canDispatch).toBe(false);
     expect(decision.approvalEligible).toBe(false);
     expect(decision.reasonCodes).toContain('AGENT_NOT_ALLOWED');
+    expect(decision.correlationId).toBe(goal.correlationId);
+    expect(decision.trackId).toBe(goal.trackId);
   });
 
   it('classifies broad exec/write/network combinations as red', () => {
@@ -219,17 +231,23 @@ describe('OpenClaw policy translation', () => {
   });
 
   it('rejects requests with missing required fields', () => {
+    const goal = {
+      ...buildGoal(),
+      goal: '',
+      trackId: 'goal-track-fallback',
+    };
+    const execution = {
+      ...buildExecution(),
+      targetAgent: '',
+      toolScope: [],
+      correlationId: undefined,
+      trackId: undefined,
+    };
+
     const decision = classifyOpenClawPolicy(
       {
-        goal: {
-          ...buildGoal(),
-          goal: '',
-        },
-        execution: {
-          ...buildExecution(),
-          targetAgent: '',
-          toolScope: [],
-        },
+        goal: goal as never,
+        execution: execution as never,
       },
       buildConfig(),
     );
@@ -237,16 +255,28 @@ describe('OpenClaw policy translation', () => {
     expect(decision.verdict).toBe('fail');
     expect(decision.requiresApproval).toBe(false);
     expect(decision.reasonCodes).toContain('MISSING_REQUIRED_FIELDS');
+    expect(decision.correlationId).toBe(goal.correlationId);
+    expect(decision.trackId).toBe(goal.trackId);
   });
 
   it('rejects agents that request tool scopes outside their allowlist', () => {
+    const goal = {
+      ...buildGoal(),
+      trackId: 'goal-track-fallback',
+    };
+    const execution = {
+      ...buildExecution({
+        targetAgent: 'ops-agent',
+        toolScope: ['write_file'],
+      }),
+      correlationId: undefined,
+      trackId: undefined,
+    };
+
     const decision = classifyOpenClawPolicy(
       {
-        goal: buildGoal(),
-        execution: buildExecution({
-          targetAgent: 'ops-agent',
-          toolScope: ['write_file'],
-        }),
+        goal: goal as never,
+        execution: execution as never,
       },
       buildConfig({
         allowedAgents: ['ops-agent'],
@@ -259,16 +289,28 @@ describe('OpenClaw policy translation', () => {
     expect(decision.verdict).toBe('fail');
     expect(decision.requiresApproval).toBe(false);
     expect(decision.reasonCodes).toContain('AGENT_TOOL_SCOPE_NOT_ALLOWED');
+    expect(decision.correlationId).toBe(goal.correlationId);
+    expect(decision.trackId).toBe(goal.trackId);
   });
 
   it('marks destructive tool scopes as red and blocked', () => {
+    const goal = {
+      ...buildGoal(),
+      trackId: 'goal-track-fallback',
+    };
+    const execution = {
+      ...buildExecution({
+        executionMode: 'exec',
+        toolScope: ['delete_workspace'],
+      }),
+      correlationId: undefined,
+      trackId: undefined,
+    };
+
     const decision = classifyOpenClawPolicy(
       {
-        goal: buildGoal(),
-        execution: buildExecution({
-          executionMode: 'exec',
-          toolScope: ['delete_workspace'],
-        }),
+        goal: goal as never,
+        execution: execution as never,
       },
       buildConfig(),
     );
@@ -277,6 +319,8 @@ describe('OpenClaw policy translation', () => {
     expect(decision.verdict).toBe('needs_review');
     expect(decision.requiresApproval).toBe(true);
     expect(decision.reasonCodes).toContain('DESTRUCTIVE_OR_CREDENTIAL_TOUCHING_SCOPE');
+    expect(decision.correlationId).toBe(goal.correlationId);
+    expect(decision.trackId).toBe(goal.trackId);
   });
 
   it('builds an approval request from the policy decision', () => {
@@ -285,6 +329,7 @@ describe('OpenClaw policy translation', () => {
         ...buildGoal(),
         goal: 'Ship the OpenClaw pilot safely',
         requester: 'brunella-orchestrator',
+        trackId: 'track-approval-fallback',
       },
       execution: {
         ...buildExecution(),
@@ -312,6 +357,7 @@ describe('OpenClaw policy translation', () => {
     expect(approval.summary).toContain('research-agent');
     expect(approval.summary).toContain(decision.trustZone);
     expect(approval.correlationId).toBe(request.execution.correlationId);
+    expect(approval.trackId).toBe(request.goal.trackId);
     expect(approval.metadata).toMatchObject({
       requester: 'brunella-orchestrator',
       executionMode: 'read',
@@ -324,6 +370,7 @@ describe('OpenClaw policy translation', () => {
     expect(mapApprovalStateToDispatchStatus('denied', true)).toBe('blocked');
     expect(mapApprovalStateToDispatchStatus('skipped', true)).toBe('dry_run');
     expect(mapApprovalStateToDispatchStatus('pending', false)).toBe('blocked');
+    expect(mapApprovalStateToDispatchStatus('not_required' as never, true)).toBe('success');
     expect(mapApprovalStateToDispatchStatus('not_required' as never, false)).toBe('failed');
   });
 

@@ -50,7 +50,7 @@ function buildHeaders(config: OpenClawConfig): HeadersInit {
 
 function createSyntheticDryRunResponse(request: OpenClawGatewayRequest): OpenClawGatewayResponse {
   return OpenClawGatewayResponseSchema.parse({
-    runId: `dry-run-${request.id ?? randomUUID()}`,
+    runId: `dry-run-${request.id}`,
     status: 'dry_run',
     output: {
       dryRun: true,
@@ -67,12 +67,8 @@ function createSyntheticDryRunResponse(request: OpenClawGatewayRequest): OpenCla
   });
 }
 
-function parseFetchError(error: unknown): OpenClawGatewayError {
-  const normalized = normalizeOpenClawError(error);
-  return new OpenClawGatewayError(normalized.message, {
-    details: normalized.details ?? error,
-    retryable: normalized.retryable,
-  });
+function parseFetchError(error: unknown): OpenClawError {
+  return normalizeOpenClawError(error);
 }
 
 export class HttpOpenClawGatewayAdapter implements OpenClawGatewayAdapter {
@@ -206,7 +202,7 @@ export class HttpOpenClawGatewayAdapter implements OpenClawGatewayAdapter {
         return schema.parse(payload);
       } catch (error: unknown) {
         clearTimeout(timeoutHandle);
-        const normalized = error instanceof OpenClawGatewayError ? error : parseFetchError(error);
+        const normalized = parseFetchError(error);
         lastError = normalized;
 
         if (!normalized.retryable || attempt === attempts) {
@@ -217,7 +213,7 @@ export class HttpOpenClawGatewayAdapter implements OpenClawGatewayAdapter {
       }
     }
 
-    throw lastError ?? new OpenClawGatewayError(`OpenClaw request to ${path} failed`, { retryable: false });
+    throw lastError;
   }
 
   private async requestVoid(path: string, init: RequestInit): Promise<void> {
@@ -253,7 +249,7 @@ export class HttpOpenClawGatewayAdapter implements OpenClawGatewayAdapter {
         return;
       } catch (error: unknown) {
         clearTimeout(timeoutHandle);
-        const normalized = error instanceof OpenClawGatewayError ? error : parseFetchError(error);
+        const normalized = parseFetchError(error);
         lastError = normalized;
         if (!normalized.retryable || attempt === attempts) {
           break;
@@ -262,6 +258,6 @@ export class HttpOpenClawGatewayAdapter implements OpenClawGatewayAdapter {
       }
     }
 
-    throw lastError ?? new OpenClawGatewayError(`OpenClaw request to ${path} failed`, { retryable: false });
+    throw lastError;
   }
 }

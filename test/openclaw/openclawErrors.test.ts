@@ -59,6 +59,16 @@ describe('OpenClaw error normalization', () => {
     expect(unconfiguredError.retryable).toBe(false);
   });
 
+  it('uses the base OpenClawError defaults when options are omitted', () => {
+    const baseError = new OpenClawError('base failure');
+    const gatewayError = new OpenClawGatewayError('gateway failure');
+
+    expect(baseError.code).toBe('OPENCLAW_ERROR');
+    expect(baseError.retryable).toBe(false);
+    expect(gatewayError.code).toBe('OPENCLAW_GATEWAY_ERROR');
+    expect(gatewayError.retryable).toBe(true);
+  });
+
   it('preserves the policy and dispatch error classes', () => {
     const policyError = new OpenClawPolicyError('policy blocked');
     const dispatchError = new OpenClawDispatchError('dispatch failed', {

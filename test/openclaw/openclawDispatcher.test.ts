@@ -146,9 +146,53 @@ function buildMixedEvidenceGatewayResponse() {
         },
       ],
       confidence: 0.5,
+      metadata: {
+        origin: 'mixed-response',
+      },
     },
     warnings: [],
     receivedAt: '2026-04-17T00:05:00.000Z',
+  });
+}
+
+function buildMetadataOnlyGatewayResponse() {
+  return OpenClawGatewayResponseSchema.parse({
+    runId: 'run-7',
+    status: 'completed',
+    output: {
+      message: 'metadata only',
+      metadata: {
+        source: 'metadata-path',
+        channel: 'test',
+      },
+    },
+    warnings: [],
+    receivedAt: '2026-04-17T00:10:00.000Z',
+  });
+}
+
+function buildEvidenceWithoutMetadataGatewayResponse() {
+  return OpenClawGatewayResponseSchema.parse({
+    runId: 'run-8',
+    status: 'completed',
+    output: {
+      message: 'evidence without metadata',
+    },
+    evidence: {
+      id: 'evidence-8',
+      goalId: 'goal-1',
+      executionId: 'exec-1',
+      sources: [],
+      artifacts: [],
+      logs: [],
+      diffs: [],
+      testResults: [],
+      confidence: 0.2,
+      capturedAt: '2026-04-17T00:11:00.000Z',
+      redactionApplied: false,
+    },
+    warnings: [],
+    receivedAt: '2026-04-17T00:11:00.000Z',
   });
 }
 
@@ -322,15 +366,117 @@ describe('OpenClaw task dispatcher', () => {
     });
 
     const result = await dispatcher.dispatch({
-      goal: buildGoal(),
-      execution: buildExecution(),
+      goal: {
+        ...buildGoal(),
+        correlationId: 'goal-only-correlation',
+        trackId: 'goal-only-track',
+      },
+      execution: {
+        ...buildExecution(),
+        correlationId: undefined,
+        trackId: undefined,
+      } as never,
     });
 
     expect(result.status).toBe('failed');
     expect(result.approvalState).toBe('not_required');
     expect(result.message).toBe('OpenClaw dispatch failed');
     expect(result.error).toContain('direct dispatch exploded');
+    expect(result.correlationId).toBe('goal-only-correlation');
+    expect(result.trackId).toBe('goal-only-track');
     expect(gateway.dispatch).toHaveBeenCalledTimes(1);
+  });
+
+  it('uses the default dry-run and success messages when the gateway returns no warnings', async () => {
+    const gateway = {
+      ...buildGatewayMock(),
+      dispatch: vi.fn(async () => OpenClawGatewayResponseSchema.parse({
+        runId: 'run-default',
+        status: 'completed',
+        output: { message: 'done' },
+        warnings: [],
+        receivedAt: '2026-04-17T00:00:00.000Z',
+      })),
+    };
+
+    const dispatcher = new OpenClawTaskDispatcher({
+      config: buildConfig(),
+      gateway: gateway as never,
+      logger: undefined,
+    });
+
+    const successResult = await dispatcher.dispatch({
+      goal: {
+        ...buildGoal(),
+        correlationId: 'goal-only-correlation',
+        trackId: 'goal-only-track',
+      },
+      execution: {
+        ...buildExecution(),
+        correlationId: undefined,
+        trackId: undefined,
+      } as never,
+    });
+    const previewResult = await dispatcher.preview({
+      goal: {
+        ...buildGoal(),
+        correlationId: 'goal-only-correlation',
+        trackId: 'goal-only-track',
+      },
+      execution: {
+        ...buildExecution({
+          executionMode: 'constrained_write',
+          toolScope: ['write_file'],
+        }),
+        correlationId: undefined,
+        trackId: undefined,
+      } as never,
+    });
+
+    expect(successResult.message).toBe('OpenClaw dispatch completed');
+    expect(successResult.correlationId).toBe('goal-only-correlation');
+    expect(successResult.trackId).toBe('goal-only-track');
+    expect(previewResult.message).toBe('Dry run completed');
+    expect(previewResult.approvalState).toBe('skipped');
+    expect(previewResult.correlationId).toBe('goal-only-correlation');
+    expect(previewResult.trackId).toBe('goal-only-track');
+  });
+
+  it('returns a pending dry-run block when evaluation says approval is required but not eligible', async () => {
+    const gateway = buildGatewayMock();
+    const dispatcher = new OpenClawTaskDispatcher({
+      config: buildConfig(),
+      gateway,
+      logger: undefined,
+    });
+
+    dispatcher.evaluate = vi.fn(() => ({
+      id: 'policy-1',
+      goalId: 'goal-1',
+      targetAgent: 'research-agent',
+      trustZone: 'amber',
+      executionMode: 'constrained_write',
+      verdict: 'fail',
+      canDispatch: false,
+      requiresApproval: true,
+      approvalEligible: false,
+      reasonCodes: ['CUSTOM_POLICY'],
+      blockedReasons: [],
+      isDestructive: false,
+      redactionApplied: false,
+      createdAt: '2026-04-17T00:00:00.000Z',
+      correlationId: 'corr-exec-1',
+      metadata: {},
+    })) as never;
+
+    const result = await dispatcher.preview({
+      goal: buildGoal(),
+      execution: buildExecution(),
+    });
+
+    expect(result.status).toBe('blocked');
+    expect(result.approvalState).toBe('pending');
+    expect(result.message).toContain('OpenClaw dry-run blocked by policy.');
   });
 
   it('normalizes mixed evidence payloads from the gateway response', () => {
@@ -380,6 +526,66 @@ describe('OpenClaw task dispatcher', () => {
       source: 'gateway',
     });
     expect(evidence.sources).toHaveLength(1);
+  });
+
+  it('preserves metadata from both the output payload and passthrough evidence', () => {
+    const request = {
+      goal: buildGoal(),
+      execution: buildExecution(),
+    };
+
+    const outputEvidence = buildEvidenceFromGatewayResponse(request, buildMetadataOnlyGatewayResponse(), false);
+    const passthroughEvidence = buildEvidenceFromGatewayResponse(request, buildEvidenceWithoutMetadataGatewayResponse(), false);
+
+    expect(outputEvidence.metadata).toMatchObject({
+      gatewayStatus: 'completed',
+      summary: 'metadata only',
+      source: 'metadata-path',
+      channel: 'test',
+    });
+    expect(passthroughEvidence.metadata).toMatchObject({
+      gatewayStatus: 'completed',
+      correlationId: 'corr-exec-1',
+    });
+  });
+
+  it('normalizes fallback evidence fields when optional gateway output data is absent', () => {
+    const request = {
+      goal: buildGoal(),
+      execution: buildExecution(),
+    };
+
+    const evidence = buildEvidenceFromGatewayResponse(request, OpenClawGatewayResponseSchema.parse({
+      runId: 'run-9',
+      status: 'completed',
+      output: {
+        sources: [{ url: 'https://example.com/fallback-source' }],
+        logs: [{ message: 'fallback log' }],
+        diffs: [
+          { path: 'src/fallback.ts', changeType: 'modified' },
+          { path: 'src/unknown.ts' },
+        ],
+        testResults: [{ name: 'fallback suite' }],
+        metadata: {
+          source: 'raw-output',
+        },
+      },
+      warnings: [],
+      receivedAt: '2026-04-17T00:12:00.000Z',
+    }), false);
+
+    expect(evidence.sources[0]?.label).toBeUndefined();
+    expect(evidence.sources[0]?.note).toBeUndefined();
+    expect(evidence.logs[0]?.level).toBe('info');
+    expect(evidence.logs[0]?.timestamp).toBe('2026-04-17T00:12:00.000Z');
+    expect(evidence.confidence).toBeUndefined();
+    expect(evidence.diffs[0]?.summary).toBeUndefined();
+    expect(evidence.diffs[1]?.changeType).toBe('unknown');
+    expect(evidence.testResults[0]?.passed).toBe(false);
+    expect(evidence.metadata).toMatchObject({
+      gatewayStatus: 'completed',
+      source: 'raw-output',
+    });
   });
 
   it('falls back to stringified output when the gateway payload is circular', () => {
@@ -442,7 +648,6 @@ describe('OpenClaw task dispatcher', () => {
       requestApproval: vi.fn(async (_request: OpenClawApprovalRequest): Promise<OpenClawApprovalDecision> => ({
         approved: true,
         reviewer: 'human-reviewer',
-        reason: 'explicit approval required',
         decidedAt: '2026-04-17T00:02:00.000Z',
       })),
     };
@@ -455,10 +660,18 @@ describe('OpenClaw task dispatcher', () => {
     });
 
     const result = await dispatcher.dispatch({
-      goal: buildGoal(),
-      execution: buildExecution({
-        requiresApproval: true,
-      }),
+      goal: {
+        ...buildGoal(),
+        correlationId: 'goal-only-correlation',
+        trackId: 'goal-only-track',
+      },
+      execution: {
+        ...buildExecution({
+          requiresApproval: true,
+        }),
+        correlationId: undefined,
+        trackId: undefined,
+      } as never,
     });
 
     expect(result.policy.trustZone).toBe('green');
@@ -468,6 +681,8 @@ describe('OpenClaw task dispatcher', () => {
     expect(result.status).toBe('success');
     expect(result.approvalState).toBe('approved');
     expect(result.approvedBy).toBe('human-reviewer');
+    expect(result.correlationId).toBe('goal-only-correlation');
+    expect(result.trackId).toBe('goal-only-track');
   });
 
   it('blocks amber tasks when approval is denied', async () => {
@@ -476,7 +691,6 @@ describe('OpenClaw task dispatcher', () => {
       requestApproval: vi.fn(async (_request: OpenClawApprovalRequest): Promise<OpenClawApprovalDecision> => ({
         approved: false,
         reviewer: 'human-reviewer',
-        reason: 'not now',
         decidedAt: '2026-04-17T00:01:00.000Z',
       })),
     };
@@ -499,7 +713,7 @@ describe('OpenClaw task dispatcher', () => {
     expect(gateway.dispatch).not.toHaveBeenCalled();
     expect(result.status).toBe('blocked');
     expect(result.approvalState).toBe('denied');
-    expect(result.message).toContain('not now');
+    expect(result.message).toBe('OpenClaw approval denied.');
   });
 
   it('blocks dry-run requests before gateway dispatch when they are not eligible', async () => {
@@ -553,13 +767,23 @@ describe('OpenClaw task dispatcher', () => {
     });
 
     const result = await dispatcher.preview({
-      goal: buildGoal(),
-      execution: buildExecution(),
+      goal: {
+        ...buildGoal(),
+        correlationId: 'goal-only-correlation',
+        trackId: 'goal-only-track',
+      },
+      execution: {
+        ...buildExecution(),
+        correlationId: undefined,
+        trackId: undefined,
+      } as never,
     });
 
     expect(result.status).toBe('dry_run');
     expect(result.approvalState).toBe('not_required');
     expect(result.redactionApplied).toBe(false);
+    expect(result.correlationId).toBe('goal-only-correlation');
+    expect(result.trackId).toBe('goal-only-track');
     expect(gateway.dispatch).toHaveBeenCalledTimes(1);
     const [dispatchRequest] = gateway.dispatch.mock.calls[0] as unknown as [
       { dryRun?: boolean }
@@ -584,14 +808,24 @@ describe('OpenClaw task dispatcher', () => {
     });
 
     const result = await dispatcher.preview({
-      goal: buildGoal(),
-      execution: buildExecution(),
+      goal: {
+        ...buildGoal(),
+        correlationId: 'goal-only-correlation',
+        trackId: 'goal-only-track',
+      },
+      execution: {
+        ...buildExecution(),
+        correlationId: undefined,
+        trackId: undefined,
+      } as never,
     });
 
     expect(result.status).toBe('failed');
     expect(result.approvalState).toBe('skipped');
     expect(result.message).toBe('OpenClaw dispatch failed');
     expect(result.error).toContain('dry-run gateway exploded');
+    expect(result.correlationId).toBe('goal-only-correlation');
+    expect(result.trackId).toBe('goal-only-track');
   });
 
   it('blocks non-eligible requests before gateway dispatch', async () => {
@@ -605,12 +839,60 @@ describe('OpenClaw task dispatcher', () => {
     });
 
     const result = await dispatcher.dispatch({
+      goal: {
+        ...buildGoal(),
+        correlationId: 'goal-only-correlation',
+        trackId: 'goal-only-track',
+      },
+      execution: {
+        ...buildExecution(),
+        correlationId: undefined,
+        trackId: undefined,
+      } as never,
+    });
+
+    expect(result.status).toBe('blocked');
+    expect(result.approvalState).toBe('skipped');
+    expect(result.correlationId).toBe('goal-only-correlation');
+    expect(result.trackId).toBe('goal-only-track');
+    expect(gateway.dispatch).not.toHaveBeenCalled();
+  });
+
+  it('uses the default blocked reason when policy does not provide one', async () => {
+    const gateway = buildGatewayMock();
+    const dispatcher = new OpenClawTaskDispatcher({
+      config: buildConfig(),
+      gateway,
+      logger: undefined,
+    });
+
+    dispatcher.evaluate = vi.fn(() => ({
+      id: 'policy-empty-block',
+      goalId: 'goal-1',
+      targetAgent: 'research-agent',
+      trustZone: 'amber',
+      executionMode: 'read',
+      verdict: 'fail',
+      canDispatch: false,
+      requiresApproval: false,
+      approvalEligible: false,
+      reasonCodes: ['CUSTOM_POLICY'],
+      blockedReasons: [],
+      isDestructive: false,
+      redactionApplied: false,
+      createdAt: '2026-04-17T00:00:00.000Z',
+      correlationId: 'corr-exec-1',
+      metadata: {},
+    })) as never;
+
+    const result = await dispatcher.dispatch({
       goal: buildGoal(),
       execution: buildExecution(),
     });
 
     expect(result.status).toBe('blocked');
     expect(result.approvalState).toBe('skipped');
+    expect(result.message).toBe('OpenClaw task is not approval eligible.');
     expect(gateway.dispatch).not.toHaveBeenCalled();
   });
 

@@ -221,13 +221,13 @@ function buildEvidenceFromGatewayResponse(
   response: OpenClawGatewayResponse,
   redactionApplied: boolean,
 ): OpenClawEvidencePacket {
-  const capturedAt = response.receivedAt || new Date().toISOString();
+  const capturedAt = response.receivedAt;
   const fallbackPrefix = `${request.execution.id}:evidence`;
 
   if (response.evidence) {
     return OpenClawEvidencePacketSchema.parse({
       ...response.evidence,
-      capturedAt: response.evidence.capturedAt || capturedAt,
+      capturedAt: response.evidence.capturedAt,
       redactionApplied: redactionApplied || response.evidence.redactionApplied,
       metadata: {
         ...(response.evidence.metadata ?? {}),

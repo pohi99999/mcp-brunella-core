@@ -9,7 +9,7 @@
 
 ## 🔴 CURRENT STATE (update this section every session)
 
-**Last Updated:** 2026-04-17 17:20
+**Last Updated:** 2026-04-19 09:12
 **Last Agent/Session:** brunella-orchestrator
 **Overall Status:** IN-PROGRESS
 
@@ -17,12 +17,12 @@
 
 - Node.js primary runtime builds via `npm run build`
 - Python runtime starts via `npm run start:python:stable`
-- OpenClaw integration coverage commit exists locally (`test(openclaw): finalize integration coverage`)
+- OpenClaw integration coverage is now branch-complete in the focused `src/integrations/openclaw` coverage run
 - `RUNTIMES.md` and `AGENT_MEMORY.md` now exist in root
 
 ### What is currently broken or in-progress:
 
-- Architectural cleanup batch is still in progress (docs + directory consolidation + CI)
+- OpenClaw code/docs handoff still needs the final commit/push to `main`
 - `git push origin HEAD:main` previously failed because pre-push caught two issues:
   - `test/dashboard/components/OpenClawIntegrationPanel.test.ts` import path was wrong
   - `test/cloudflare_core.test.ts` used `self` inside a Node test double
@@ -38,22 +38,19 @@
 
 ## 📋 SESSION LOG
 
-### Session: 2026-04-17 (repo cleanup + runtime unification)
+### Session: 2026-04-19 (OpenClaw coverage finish-up)
 
 **Agent:** GitHub Copilot / brunella-orchestrator
 **Changes made:**
 
-- Created `AGENT_MEMORY.md` as shared knowledge ledger
-- Started root-level architecture cleanup per multi-runtime consolidation request
-- Created `RUNTIMES.md`
-- Finalized OpenClaw coverage locally and created commit `test(openclaw): finalize integration coverage`
+- Closed the remaining OpenClaw branch gaps with focused tests
+- Simplified the OpenClaw gateway error normalization path
+- Reconfirmed the OpenClaw module is branch-complete in the focused coverage run
+- Updated `.ai/copilot.md` and `HANDOFF.md`
 **Status at end:** IN-PROGRESS
 **Unresolved items:**
-- `AGENTS.md` rewrite still pending
-- `HANDOFF.md` rewrite still pending
-- `vitest.master.config.ts` + package scripts still pending
-- Directory consolidation + lock cleanup still pending
-- Pre-push blockers must be fixed before push to `main`
+- Commit/push to `main` still pending
+- Any further repo-wide cleanup work remains separate from this OpenClaw finish-up
 
 ***
 

@@ -3,6 +3,7 @@ import {
   HttpOpenClawGatewayAdapter,
   OpenClawConfigSchema,
   OpenClawExecPacketSchema,
+  OpenClawGatewayError,
   OpenClawGatewayRequestSchema,
   OpenClawGoalPacketSchema,
   OpenClawGatewayResponseSchema,
@@ -93,6 +94,26 @@ describe('OpenClaw gateway adapter', () => {
     expect(response.runId).toContain('dry-run-');
   });
 
+  it('uses the host fetch implementation when no fetch override is supplied', async () => {
+    const fetchMock = vi.fn();
+    vi.stubGlobal('fetch', fetchMock as unknown as typeof fetch);
+
+    const adapter = new HttpOpenClawGatewayAdapter(buildConfig());
+    const policy = classifyOpenClawPolicy({ goal: buildGoal(), execution: buildExecution() }, buildConfig());
+    const request = OpenClawGatewayRequestSchema.parse({
+      id: 'exec-1',
+      correlationId: 'corr-exec-1',
+      dryRun: true,
+      packet: buildExecution(),
+      policy,
+    });
+
+    const response = await adapter.dispatch(request);
+
+    expect(fetchMock).not.toHaveBeenCalled();
+    expect(response.status).toBe('dry_run');
+  });
+
   it('throws when the host environment has no fetch implementation', () => {
     vi.stubGlobal('fetch', undefined);
 
@@ -145,6 +166,78 @@ describe('OpenClaw gateway adapter', () => {
     await expect(adapter.dispatch(request)).rejects.toMatchObject({
       code: 'OPENCLAW_GATEWAY_ERROR',
       retryable: true,
+    });
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
+
+  it('passes through explicit OpenClaw gateway errors from fetch', async () => {
+    const fetchMock = vi.fn(async () => {
+      throw new OpenClawGatewayError('direct gateway error', {
+        details: {
+          reason: 'manual',
+        },
+      });
+    });
+    const adapter = new HttpOpenClawGatewayAdapter(buildConfig(), { fetchImpl: fetchMock as unknown as typeof fetch });
+    const policy = classifyOpenClawPolicy({ goal: buildGoal(), execution: buildExecution() }, buildConfig());
+    const request = OpenClawGatewayRequestSchema.parse({
+      id: 'exec-1',
+      correlationId: 'corr-exec-1',
+      dryRun: false,
+      packet: buildExecution(),
+      policy,
+    });
+
+    await expect(adapter.dispatch(request)).rejects.toMatchObject({
+      code: 'OPENCLAW_GATEWAY_ERROR',
+      message: 'direct gateway error',
+    });
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
+
+  it('normalizes generic fetch failures as gateway errors', async () => {
+    const fetchMock = vi.fn(async () => {
+      throw new Error('network broke');
+    });
+    const adapter = new HttpOpenClawGatewayAdapter(buildConfig(), { fetchImpl: fetchMock as unknown as typeof fetch });
+    const policy = classifyOpenClawPolicy({ goal: buildGoal(), execution: buildExecution() }, buildConfig());
+    const request = OpenClawGatewayRequestSchema.parse({
+      id: 'exec-1',
+      correlationId: 'corr-exec-1',
+      dryRun: false,
+      packet: buildExecution(),
+      policy,
+    });
+
+    await expect(adapter.dispatch(request)).rejects.toMatchObject({
+      code: 'OPENCLAW_GATEWAY_ERROR',
+      message: 'network broke',
+    });
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
+
+  it('normalizes generic getRun fetch failures as gateway errors', async () => {
+    const fetchMock = vi.fn(async () => {
+      throw new Error('run lookup broke');
+    });
+    const adapter = new HttpOpenClawGatewayAdapter(buildConfig(), { fetchImpl: fetchMock as unknown as typeof fetch });
+
+    await expect(adapter.getRun('run-123')).rejects.toMatchObject({
+      code: 'OPENCLAW_GATEWAY_ERROR',
+      message: 'run lookup broke',
+    });
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
+
+  it('passes through explicit getRun OpenClawGatewayError failures', async () => {
+    const fetchMock = vi.fn(async () => {
+      throw new OpenClawGatewayError('run lookup direct error');
+    });
+    const adapter = new HttpOpenClawGatewayAdapter(buildConfig(), { fetchImpl: fetchMock as unknown as typeof fetch });
+
+    await expect(adapter.getRun('run-123')).rejects.toMatchObject({
+      code: 'OPENCLAW_GATEWAY_ERROR',
+      message: 'run lookup direct error',
     });
     expect(fetchMock).toHaveBeenCalledTimes(1);
   });
