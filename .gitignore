@@ -101,11 +101,18 @@ Ollama/
 AnythingLLM/
 _archive/
 _br_temp/
+.br_temp/
+temp/
+out/
 logs/
 *.db
 *.db-wal
 *.db-shm
 *.log
+
+# Specialized Agent Bloat
+myai/agents/a2a-go/
+myai/agents/ready-agents/
 
 # Wrangler and local state files
 .wrangler/
