@@ -7,7 +7,7 @@ import { fileURLToPath } from "url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
-  root: 'src/dashboard',
+  root: 'apps/dashboard',
   publicDir: '../../public',
   server: {
     host: true,
@@ -81,7 +81,8 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src/dashboard')
+      '@': path.resolve(__dirname, './apps/dashboard'),
+      '@packages': path.resolve(__dirname, './packages')
     }
   },
 });

@@ -1,8 +1,0 @@
-{
-  "track_id": "dashboard-integration_20260120",
-  "type": "feature",
-  "status": "new",
-  "created_at": "2026-01-20T19:46:00Z",
-  "updated_at": "2026-01-20T19:46:00Z",
-  "description": "Integration of external dashboard (mcp-brunella-core-ir) as the main UI, including agent management, system monitoring, and semantic testing with Jules."
-}

@@ -264,6 +264,24 @@
     "retryDelayMs": 1000
   },
   {
+    "name": "maestro",
+    "transport": "stdio",
+    "command": "node",
+    "args": ["C:/Users/pohi9/.gemini/extensions/maestro/claude/mcp/maestro-server.js"],
+    "env": {
+      "CLAUDE_PROJECT_DIR": "${WORKSPACE_ROOT}",
+      "CLAUDE_PLUGIN_ROOT": "C:/Users/pohi9/.gemini/extensions/maestro/claude",
+      "MAESTRO_RUNTIME": "claude"
+    },
+    "description": "Maestro multi-agent orchestration MCP – 12 tools: session lifecycle (create/get/update/transition/archive), workspace (initialize/assess/validate/resolve), content (get_skill_content/get_agent/get_runtime_context)",
+    "autoStart": true,
+    "required": false,
+    "disabled": false,
+    "requiredEnv": [],
+    "connectRetries": 1,
+    "retryDelayMs": 1500
+  },
+  {
     "name": "brunella-self-improve",
     "transport": "stdio",
     "command": "node",

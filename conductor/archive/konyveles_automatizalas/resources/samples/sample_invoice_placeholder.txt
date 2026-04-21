@@ -1,7 +1,0 @@
-Placeholder for invoice PDF
-Invoice ID: INV-2026-0001
-Partner: Kovács Kft.
-Net: 40000
-VAT: 8080
-Gross: 48080
-IssueDate: 2026-03-01

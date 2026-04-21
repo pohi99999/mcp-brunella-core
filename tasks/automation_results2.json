@@ -1,9 +1,0 @@
-{
-  "timestamp": "2026-04-01T12:28:18.578Z",
-  "results": {
-    "todo4": "Found 0 credentials. Airtable creds: ",
-    "todo1": "Gmail: ",
-    "todo3": "Drive: ",
-    "todo2": "⚠️ Gmail loaded but \"Create new label\" button not found on settings page"
-  }
-}

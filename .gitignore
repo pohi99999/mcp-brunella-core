@@ -93,6 +93,8 @@ __pycache__/
 
 # Large generated/temporary directories and files (added by Gemini CLI)
 build/
+generated/
+tmp/
 test-results/
 .lancedb/
 .pytest_tmp/
@@ -103,8 +105,13 @@ _archive/
 _br_temp/
 .br_temp/
 temp/
+temp/generated/
+temp/archive/
 out/
 logs/
+.genkit/
+.ai-test-logs/
+.validation-logs/
 *.db
 *.db-wal
 *.db-shm
@@ -113,6 +120,35 @@ logs/
 # Specialized Agent Bloat
 myai/agents/a2a-go/
 myai/agents/ready-agents/
+.ralph-state/
+.adal/
+.agents/
+.ai/
+.augment/
+.bob/
+.claude/
+.codebuddy/
+.commandcode/
+.continue/
+.copilot-memory/
+.factory/
+.gemini/
+.Jules/
+.kilocode/
+.kiro/
+.mcpjam/
+.openhands/
+.pi/
+.projectmanager/
+.qoder/
+.qodo/
+.qwen/
+.sixth/
+.snapshots/
+.windsurf/
+.pytest_cache/
+.playwright-mcp/
+playwright-report/
 
 # Wrangler and local state files
 .wrangler/
@@ -120,6 +156,9 @@ myai/agents/ready-agents/
 *.sqlite
 *.sqlite-wal
 *.sqlite-shm
+
+# Credentials folder (entirely ignored, use credentials.example for templates)
+credentials/
 
 # LanceDB vector embeddings
 data/brunella_lancedb/
@@ -138,6 +177,17 @@ latest_email.html
 test_call.ts
 verify_port.ts
 test_robotkez_dashboard.ts
+archive/
+test/testing/
+docs/evidence/
+docs/sessions/
+docs/root-legacy/
+docs/project/
+files/installers/
+files/vendors/
+browser-inspect/agent-chrome/
+.geminiignore
+GEMINI_ROOT.md
 
 # AI generated temporary files
 _AI_CHAT_LOG.*
@@ -175,6 +225,7 @@ docs/Cégfejlesztés_Iszapafló/
 # Rust build artifacts (Tauri)
 src-tauri/target/
 n8nv2
+files/vendors/n8nv2/
 
 # ESLint output (large, generated)
 eslint_output.json

@@ -1310,6 +1310,9 @@ E2B_API_KEY=your-e2b-api-key          # Secure Python sandboxes
 GEMINI_API_KEY=your-gemini-key        # Google Gemini LLM
 GITHUB_PAT=your-github-token           # GitHub Models (GPT-4o)
 ANTHROPIC_API_KEY=your-anthropic-key   # Claude access
+
+# Optional local/runtime overrides
+BOOKKEEPING_STATUS_PATH=./data/bookkeeping_status.json  # Override bookkeeping snapshot file path (useful for local/dev/test isolation)
 ```
 
 **Safe Zones (config/safe_zones.json):**

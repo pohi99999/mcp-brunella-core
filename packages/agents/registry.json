@@ -1,0 +1,1066 @@
+{
+  "version": 1,
+  "agents": [
+    {
+      "name": "InvoiceAutomation",
+      "title": "Invoice Automation Agent",
+      "description": "Számlák automatikus feldolgozása: Gmail letöltés, Gemini Vision OCR elemzés, anomália detekció, Drive mentés és Sheets rögzítés.",
+      "class": "InvoiceAutomationAgent",
+      "module": "./agents/InvoiceAutomationAgent.js",
+      "capabilities": [
+        "gmail_read",
+        "vision_extraction",
+        "ocr_extraction",
+        "invoice_parsing",
+        "anomaly_detection",
+        "drive_organization",
+        "sheets_logging"
+      ],
+      "category": "enterprise",
+      "status": "active",
+      "priority": 7
+    },
+    {
+      "name": "SzamlazzHu",
+      "title": "Számlázz.hu Sync Agent",
+      "description": "Számlázz.hu számlák lekérése, normalizálása és Sheets szinkronizálása.",
+      "class": "SzamlazzHuAgent",
+      "module": "./agents/SzamlazzHuAgent.js",
+      "capabilities": [
+        "szamlazz_fetch",
+        "invoice_normalization",
+        "sheets_sync"
+      ],
+      "category": "enterprise",
+      "status": "active",
+      "priority": 7
+    },
+    {
+      "name": "agent_architect",
+      "title": "Agent Architect",
+      "description": "Új ügynököket tervez, generálja a promptjaikat, függőségeiket és konfigurációjukat.",
+      "class": "DynamicAgent",
+      "module": "./agents/DynamicAgent.js",
+      "config": {
+        "tomlPath": "packages/myai/agents/agent_architect.toml"
+      },
+      "capabilities": [
+        "prompt_engineering",
+        "agent_design",
+        "configuration"
+      ],
+      "tools": [
+        "workspace_read_file",
+        "knowledge_read_context",
+        "system_run_command"
+      ],
+      "category": "engineering",
+      "status": "active",
+      "tags": [
+        "design",
+        "meta"
+      ]
+    },
+    {
+      "name": "ApifyScraping",
+      "module": "./agents/ApifyScrapingAgent.js",
+      "class": "ApifyScrapingAgent",
+      "role": "Research & Intelligence — Deep Web Scraper",
+      "description": "Apify platform-alapú professzionális scraping: Google, LinkedIn, e-commerce, trendek",
+      "triggers": [
+        "scrape",
+        "google",
+        "linkedin",
+        "leads",
+        "ecommerce",
+        "apify"
+      ],
+      "priority": 4
+    },
+    {
+      "name": "Architect",
+      "module": "./agents/ArchitectAgent.js",
+      "class": "ArchitectAgent",
+      "role": "architect",
+      "description": "Rendszerarchitektúra tervezés - SystemBlueprint és tech stack definíciók.",
+      "triggers": [
+        "architect",
+        "architectagent"
+      ],
+      "priority": 1
+    },
+    {
+      "name": "ChromeDevTools",
+      "module": "./agents/ChromeDevToolsAgent.js",
+      "class": "ChromeDevToolsAgent",
+      "role": "Web Debug & Performance Analyst",
+      "description": "Chrome DevTools Protocol-alapú web debug és performance metrics.",
+      "triggers": [
+        "chromedevtools",
+        "chromedevtoolsagent"
+      ],
+      "priority": 1
+    },
+    {
+      "name": "ViktoriaPhygital",
+      "module": "./agents/ViktoriaPhygitalAgent.js",
+      "class": "ViktoriaPhygitalAgent",
+      "role": "Luxury Fashion Phygital Orchestrator",
+      "description": "High-end web-to-commerce pipeline híd VIKTORIAVARGA számára.",
+      "triggers": [
+        "viktoria",
+        "phygital",
+        "fashion",
+        "luxury",
+        "colours"
+      ],
+      "capabilities": [
+        "lux_harvesting",
+        "visual_brand_safety",
+        "bilingual_extraction",
+        "phygital_bridge"
+      ],
+      "category": "lifestyle",
+      "status": "active",
+      "priority": 5
+    },
+    {
+      "name": "CampaignGenerator",
+      "title": "Campaign Generator",
+      "description": "Teljes marketing kampányt generál: leadek, posztok, landing oldal és akcióterv.",
+      "class": "CampaignGeneratorAgent",
+      "module": "./agents/CampaignGeneratorAgent.js",
+      "category": "marketing",
+      "status": "active",
+      "priority": 5
+    },
+    {
+      "name": "BrunellaProjectManager",
+      "title": "Brunella Project Manager",
+      "description": "Projekt státusz, FOSZAL összegzés és RAG alapú project review.",
+      "class": "BrunellaProjectManagerAgent",
+      "module": "./agents/BrunellaProjectManagerAgent.js",
+      "capabilities": [
+        "project_status",
+        "track_snapshot",
+        "foszal_summary",
+        "rag_summary"
+      ],
+      "triggers": [
+        "project manager",
+        "pm status",
+        "status snapshot",
+        "foszal summary"
+      ],
+      "category": "management",
+      "status": "active",
+      "tags": [
+        "management",
+        "status",
+        "rag"
+      ],
+      "priority": 10
+    },
+    {
+      "name": "ProjectMaintainer",
+      "title": "Project Maintainer",
+      "description": "Napi 22:00-kor futó karbantartó: rendrakás, archiválás és egészségellenőrzés.",
+      "class": "ProjectMaintainerAgent",
+      "module": "./agents/ProjectMaintainerAgent.js",
+      "category": "management",
+      "status": "active",
+      "priority": 10,
+      "capabilities": [
+        "root_cleanup",
+        "log_rotation",
+        "track_verification",
+        "build_health_check"
+      ],
+      "triggers": [
+        "maintain",
+        "cleanup",
+        "project_maintainer",
+        "janitor"
+      ]
+    },
+    {
+      "name": "ReconciliationIngestion",
+      "title": "Reconciliation Ingestion Agent",
+      "role": "Pénzügyi adat ingesztor",
+      "description": "Banki kivonatok, NAV XML-ek és számlák beolvasása, normalizálása.",
+      "class": "ReconciliationIngestionAgent",
+      "module": "./agents/ReconciliationIngestionAgent.js",
+      "capabilities": [
+        "finance-ingestion",
+        "data-normalization",
+        "accounting-parsing"
+      ],
+      "category": "finance",
+      "status": "active",
+      "priority": 8
+    },
+    {
+      "name": "AdvancedMatching",
+      "title": "Advanced Matching Agent",
+      "role": "Intelligens párosító motor",
+      "description": "Számlák és kifizetések kognitív párosítása.",
+      "class": "AdvancedMatchingAgent",
+      "module": "./agents/AdvancedMatchingAgent.js",
+      "capabilities": [
+        "smart-reconciliation",
+        "partial-payment-split",
+        "fx-recalculation"
+      ],
+      "category": "finance",
+      "status": "active",
+      "priority": 9
+    },
+    {
+      "name": "PropertyVisionary",
+      "title": "Property Visionary",
+      "description": "Ingatlan elemző és befektetési tanácsadó ágens.",
+      "class": "PropertyVisionaryAgent",
+      "module": "./agents/PropertyVisionaryAgent.js",
+      "category": "enterprise",
+      "status": "active",
+      "priority": 7
+    },
+    {
+      "name": "ConflictMediator",
+      "module": "./agents/ConflictMediatorAgent.js",
+      "class": "ConflictMediatorAgent",
+      "role": "Organizational Conflict Resolution",
+      "description": "Email hangulatelemzés és konfliktusfeloldás.",
+      "triggers": [
+        "conflictmediator",
+        "conflictmediatoragent"
+      ],
+      "priority": 1
+    },
+    {
+      "name": "copywriter",
+      "title": "✍️ Copywriter",
+      "description": "Szociális média és email copywriting specialista.",
+      "class": "DynamicAgent",
+      "module": "./agents/DynamicAgent.js",
+      "config": {
+        "tomlPath": "packages/myai/agents/CopywriterAgent.toml"
+      },
+      "capabilities": [
+        "social_media_generation",
+        "email_drafting",
+        "copywriting",
+        "slogan_creation"
+      ],
+      "triggers": [
+        "copywriter",
+        "copywriting",
+        "content",
+        "post"
+      ],
+      "category": "marketing",
+      "status": "active",
+      "tags": [
+        "marketing",
+        "content",
+        "copywriting"
+      ],
+      "priority": 4
+    },
+    {
+      "name": "viktoria-brand-voice",
+      "title": "VIKTORIAVARGA Márka AI",
+      "description": "Prémium fashion brand voice agent.",
+      "class": "DynamicAgent",
+      "module": "./agents/DynamicAgent.js",
+      "config": {
+        "tomlPath": "packages/myai/agents/ViktoriaBrandVoice.toml"
+      },
+      "capabilities": [
+        "brand-voice",
+        "caption-writing",
+        "email-drafting",
+        "campaign-copy",
+        "product-descriptions",
+        "bilingual-copywriting",
+        "tone-guardrails"
+      ],
+      "triggers": [
+        "viktoria",
+        "brand",
+        "vv",
+        "fashion",
+        "viktoriavarga"
+      ],
+      "category": "marketing",
+      "status": "active",
+      "tags": [
+        "marketing",
+        "fashion",
+        "brand-voice"
+      ],
+      "priority": 4
+    },
+    {
+      "name": "social_concierge",
+      "title": "VIKTORIAVARGA Social Concierge",
+      "description": "Social reply és DM draftok a márka hangján.",
+      "class": "DynamicAgent",
+      "module": "./agents/DynamicAgent.js",
+      "config": {
+        "tomlPath": "packages/myai/agents/SocialConciergeAgent.toml"
+      },
+      "capabilities": [
+        "social_post_drafting",
+        "social_reply_drafting",
+        "dm_drafting",
+        "community_response"
+      ],
+      "category": "marketing",
+      "status": "active",
+      "tags": [
+        "marketing",
+        "fashion",
+        "social"
+      ],
+      "priority": 6
+    },
+    {
+      "name": "shopping_assistant",
+      "title": "VIKTORIAVARGA Shopping Assistant",
+      "description": "Prémium customer-service és shopping assistant.",
+      "class": "DynamicAgent",
+      "module": "./agents/DynamicAgent.js",
+      "config": {
+        "tomlPath": "packages/myai/agents/ShoppingAssistantAgent.toml"
+      },
+      "capabilities": [
+        "shopping_guidance",
+        "availability_reply",
+        "order_support",
+        "customer_service"
+      ],
+      "category": "business",
+      "status": "active",
+      "tags": [
+        "shopping",
+        "customer-service"
+      ],
+      "priority": 7
+    },
+    {
+      "name": "DataScientist",
+      "module": "./agents/DataScientistAgent.js",
+      "class": "DataScientistAgent",
+      "role": "scientist",
+      "description": "Adatok elemzése és Python refiner futtatása.",
+      "triggers": [
+        "datascientist",
+        "datascientistagent"
+      ],
+      "priority": 1
+    },
+    {
+      "name": "DependencyGraph",
+      "module": "./agents/DependencyGraphAgent.js",
+      "class": "DependencyGraphAgent",
+      "role": "Dependency Graph Analyzer",
+      "description": "Kód függőségi gráf elemző és vizualizáló.",
+      "triggers": [
+        "dependencygraph"
+      ],
+      "priority": 1
+    },
+    {
+      "name": "Developer",
+      "title": "Developer Agent",
+      "description": "Kódol és javít a self-healing pipeline segítségével.",
+      "class": "DeveloperAgent",
+      "module": "./agents/DeveloperAgent.js",
+      "capabilities": [
+        "code_generation",
+        "self_healing"
+      ],
+      "tools": [
+        "pipeline_self_healing_gen"
+      ],
+      "category": "engineering",
+      "status": "active",
+      "tags": [
+        "code",
+        "pipeline"
+      ]
+    },
+    {
+      "name": "DevOps",
+      "module": "./agents/DevOpsAgent.js",
+      "class": "DevOpsAgent",
+      "role": "devops",
+      "description": "CI/CD pipeline és infrastruktúra menedzsment.",
+      "triggers": [
+        "devops"
+      ],
+      "priority": 1
+    },
+    {
+      "name": "DigitalHeadhunter",
+      "title": "HR Aszisztens (Digital Headhunter)",
+      "module": "./agents/DigitalHeadhunterAgent.js",
+      "class": "DigitalHeadhunterAgent",
+      "role": "HR aszisztens és Toborzási specialist",
+      "description": "Szabadság engedélyezés, toborzás és CV szűrés.",
+      "capabilities": [
+        "cv_parsing",
+        "candidate_matching",
+        "leave_approval",
+        "timesheet_management"
+      ],
+      "triggers": [
+        "hr",
+        "szabadság"
+      ],
+      "category": "enterprise",
+      "status": "active",
+      "priority": 7
+    },
+    {
+      "name": "documenter",
+      "title": "Documentation Agent",
+      "description": "Dokumentáció frissítés és összefoglalás.",
+      "class": "DocsIntelligenceAgent",
+      "module": "./agents/DocsIntelligenceAgent.js",
+      "capabilities": [
+        "docs",
+        "summarization"
+      ],
+      "category": "product",
+      "status": "active",
+      "tags": [
+        "docs"
+      ]
+    },
+    {
+      "name": "EdgeProxy",
+      "module": "./agents/EdgeProxyAgent.js",
+      "class": "EdgeProxyAgent",
+      "role": "Edge Proxy & Remote Access",
+      "description": "Cloudflare Edge kommunikáció és task routing.",
+      "priority": 1
+    },
+    {
+      "name": "NavAgent",
+      "title": "NAV Compliance Agent",
+      "description": "NAV Online Számla adatok lekérése, normalizálása és validálása.",
+      "class": "NavAgent",
+      "module": "./agents/NavAgent.js",
+      "capabilities": [
+        "nav_api_integration",
+        "xml_parsing",
+        "data_normalization",
+        "nav_cross_check"
+      ],
+      "category": "enterprise",
+      "status": "active",
+      "priority": 7
+    },
+    {
+      "name": "AnomalyDetection",
+      "module": "./agents/AnomalyDetectionAgent.js",
+      "class": "AnomalyDetectionAgent",
+      "role": "Pénzügyi anomáliadetektáló",
+      "description": "Duplikált számlák és szokatlan tranzakciós minták azonosítása.",
+      "category": "finance",
+      "priority": 2
+    },
+    {
+      "name": "CashFlowPrediction",
+      "module": "./agents/CashFlowPredictionAgent.js",
+      "class": "CashFlowPredictionAgent",
+      "role": "Cash-flow elemző",
+      "description": "Pénzforgalmi előrejelzés készítése.",
+      "category": "finance",
+      "priority": 2
+    },
+    {
+      "name": "email_triage",
+      "title": "Email Triage Agent",
+      "description": "Automated email classification with priority detection.",
+      "class": "EmailTriageAgent",
+      "module": "./agents/EmailTriageAgent.js",
+      "capabilities": [
+        "email_classification",
+        "priority_detection",
+        "auto_response"
+      ],
+      "category": "enterprise",
+      "status": "active",
+      "priority": 8
+    },
+    {
+      "name": "enterprise_orchestrator",
+      "title": "Enterprise Orchestrator",
+      "description": "Koordinálja a 18 BAS Enterprise Suite modul végrehajtását.",
+      "class": "EnterpriseOrchestratorAgent",
+      "module": "./agents/EnterpriseOrchestratorAgent.js",
+      "capabilities": [
+        "enterprise_event_parsing",
+        "priority_assignment",
+        "module_routing",
+        "execution_monitoring"
+      ],
+      "category": "enterprise",
+      "status": "active",
+      "priority": 9
+    },
+    {
+      "name": "evaluator",
+      "title": "Evaluator Agent",
+      "description": "Rendszer auditor és egészségellenőrző.",
+      "class": "EvaluatorAgent",
+      "module": "./agents/EvaluatorAgent.js",
+      "capabilities": [
+        "audit_system",
+        "run_tests",
+        "check_health"
+      ],
+      "category": "quality",
+      "status": "active"
+    },
+    {
+      "name": "github_models",
+      "title": "GitHub Models Agent",
+      "description": "Premium AI ügynök GitHub Models API (GPT-4o) használatával.",
+      "class": "GitHubModelsAgent",
+      "module": "./agents/GitHubModelsAgent.js",
+      "capabilities": [
+        "code_generation",
+        "code_review",
+        "architecture_design"
+      ],
+      "category": "core",
+      "status": "active",
+      "priority": 9
+    },
+    {
+      "name": "grant_watcher",
+      "title": "Grant Watcher Agent",
+      "description": "Automated tender monitoring.",
+      "class": "GrantWatcherAgent",
+      "module": "./agents/GrantWatcherAgent.js",
+      "capabilities": [
+        "grant_scraping",
+        "eligibility_matching"
+      ],
+      "category": "enterprise",
+      "status": "active",
+      "priority": 7
+    },
+    {
+      "name": "innovation_bridge",
+      "title": "Innovation Bridge Agent",
+      "description": "TRIZ-alapú kereszt-ipari innovációs transzfer.",
+      "class": "InnovationBridgeAgent",
+      "module": "./agents/InnovationBridgeAgent.js",
+      "capabilities": [
+        "problem_abstraction",
+        "triz_analysis",
+        "cross_industry_search",
+        "analogy_matching",
+        "innovation_reporting"
+      ],
+      "category": "research",
+      "status": "active",
+      "priority": 5
+    },
+    {
+      "name": "law_detective",
+      "title": "Law Detective Agent",
+      "description": "Magyar Közlöny figyelés és megfelelőségi elemzés.",
+      "class": "LawDetectiveAgent",
+      "module": "./agents/LawDetectiveAgent.js",
+      "capabilities": [
+        "law_monitoring",
+        "legal_intelligence",
+        "compliance_analysis",
+        "magyar_kozlony_tracking"
+      ],
+      "category": "compliance",
+      "status": "active",
+      "priority": 7
+    },
+    {
+      "name": "lead_mining",
+      "title": "Lead Mining Agent",
+      "description": "B2B lead lista generálás.",
+      "class": "LeadMiningAgent",
+      "module": "./agents/LeadMiningAgent.js",
+      "capabilities": [
+        "lead_generation",
+        "web_scraping",
+        "icebreaker_generation"
+      ],
+      "category": "enterprise",
+      "status": "active",
+      "priority": 7
+    },
+    {
+      "name": "lint_fixer",
+      "title": "Lint Fixer Agent",
+      "description": "TS/ESLint hibák automatikus javítása.",
+      "class": "LintFixerAgent",
+      "module": "./agents/LintFixerAgent.js",
+      "capabilities": [
+        "lint_check",
+        "auto_fix",
+        "type_check"
+      ],
+      "category": "maintenance",
+      "status": "active"
+    },
+    {
+      "name": "LocalCSR",
+      "module": "./agents/LocalCSRAgent.js",
+      "class": "LocalCSRAgent",
+      "role": "Sustainability & Social Responsibility Tracking",
+      "description": "Karbon kalkulátor és ESG jelentés.",
+      "priority": 1
+    },
+    {
+      "name": "LogisticsDispatcher",
+      "module": "./agents/LogisticsDispatcherAgent.js",
+      "class": "LogisticsDispatcherAgent",
+      "role": "Automated Shipment Tracking & Complaint Management",
+      "description": "Szállítmány követés és reklamáció kezelés.",
+      "priority": 1
+    },
+    {
+      "name": "market_intel",
+      "title": "Market Intelligence Agent",
+      "description": "Versenytárs figyelés és dinamikus árazási ajánlások.",
+      "class": "MarketIntelAgent",
+      "module": "./agents/MarketIntelAgent.js",
+      "capabilities": [
+        "competitor_scraping",
+        "price_extraction",
+        "trend_analysis",
+        "dynamic_pricing"
+      ],
+      "category": "enterprise",
+      "status": "active",
+      "priority": 7
+    },
+    {
+      "name": "marketing_director",
+      "title": "🎯 Marketing Director",
+      "description": "Marketing kampány orchestrator.",
+      "class": "DynamicAgent",
+      "module": "./agents/DynamicAgent.js",
+      "config": {
+        "tomlPath": "packages/myai/agents/MarketingDirectorAgent.toml"
+      },
+      "capabilities": [
+        "campaign_orchestration",
+        "content_assembly",
+        "trend_analysis_coordination"
+      ],
+      "category": "marketing",
+      "status": "active",
+      "priority": 4
+    },
+    {
+      "name": "orchestrator",
+      "title": "Orchestrator",
+      "description": "Koordinálja a feladatokat és delegálja az agentekhez.",
+      "class": "OrchestratorAgent",
+      "module": "./agents/OrchestratorAgent.js",
+      "capabilities": [
+        "planning",
+        "routing",
+        "delegation"
+      ],
+      "category": "core",
+      "status": "active"
+    },
+    {
+      "name": "procurement",
+      "title": "Procurement Agent",
+      "description": "Automated supplier negotiation.",
+      "class": "ProcurementAgent",
+      "module": "./agents/ProcurementAgent.js",
+      "capabilities": [
+        "supplier_price_analysis",
+        "negotiation_strategy_selection"
+      ],
+      "category": "enterprise",
+      "status": "active",
+      "priority": 7
+    },
+    {
+      "name": "project_organizer",
+      "title": "Project Organizer",
+      "description": "Rendszerezi a projektet és frissíti a könyvtár térképet.",
+      "class": "DynamicAgent",
+      "module": "./agents/DynamicAgent.js",
+      "config": {
+        "tomlPath": "packages/myai/agents/project_organizer.toml"
+      },
+      "capabilities": [
+        "organization",
+        "documentation",
+        "cleanup"
+      ],
+      "category": "operations",
+      "status": "active"
+    },
+    {
+      "name": "ProjectConductor",
+      "title": "Project Conductor",
+      "description": "Projekt menedzsment és track követés.",
+      "class": "ProjectConductorAgent",
+      "module": "./agents/ProjectConductorAgent.js",
+      "capabilities": [
+        "project_management",
+        "documentation_sync",
+        "track_management"
+      ],
+      "category": "management",
+      "status": "active",
+      "priority": 10
+    },
+    {
+      "name": "PropertyAnalyst",
+      "module": "./agents/PropertyAnalystAgent.js",
+      "class": "PropertyAnalystAgent",
+      "role": "Ingatlan Elemző",
+      "description": "Ingatlan dokumentumok elemzése Gemini Vision OCR-rel.",
+      "priority": 1
+    },
+    {
+      "name": "Python",
+      "module": "./agents/PythonAgent.js",
+      "class": "PythonAgent",
+      "role": "Python Subsystem Guardian",
+      "description": "Monitors and manages the Python subsystem (myai).",
+      "priority": 1
+    },
+    {
+      "name": "qa",
+      "title": "QA Agent",
+      "description": "Funkcionális tesztek és validáció.",
+      "class": "EvaluatorAgent",
+      "module": "./agents/EvaluatorAgent.js",
+      "capabilities": [
+        "test_execution",
+        "validation"
+      ],
+      "category": "quality",
+      "status": "active"
+    },
+    {
+      "name": "researcher",
+      "title": "Research Agent",
+      "description": "Keres a tudásbázisban és összefoglal.",
+      "class": "ResearcherAgent",
+      "module": "./agents/ResearcherAgent.js",
+      "capabilities": [
+        "rag_search",
+        "summarization"
+      ],
+      "category": "knowledge",
+      "status": "active"
+    },
+    {
+      "name": "DailyAgentBriefing",
+      "title": "Daily AI News Briefing",
+      "description": "Napi/Heti AI agent jelentés: Tech-Harvester, GitHub, Google és Foundry frissítések gyűjtése.",
+      "module": "./agents/DailyAgentBriefingAgent.js",
+      "class": "DailyAgentBriefingAgent",
+      "capabilities": [
+        "tech_harvester",
+        "agent_news",
+        "web_research",
+        "github_signal_collection",
+        "markdown_report",
+        "scheduled_briefing"
+      ],
+      "category": "research",
+      "status": "active",
+      "priority": 4
+    },
+    {
+      "name": "RobotkezV2",
+      "module": "./agents/RobotkezV2Agent.js",
+      "class": "RobotkezV2Agent",
+      "role": "Magyar Agentic Browser (Comet Stílus)",
+      "description": "Proaktív böngésző ügynök öntanuló Selector memóriával és vizuális visszajelzéssel.",
+      "capabilities": [
+        "web_search",
+        "data_extract",
+        "form_fill",
+        "self_healing",
+        "selector_memory",
+        "vision_analysis"
+      ],
+      "priority": 3,
+      "status": "active"
+    },
+    {
+      "name": "sales",
+      "title": "Sales Agent",
+      "description": "Lead generation, CRM integration, email drafting.",
+      "class": "SalesAgent",
+      "module": "./agents/SalesAgent.js",
+      "category": "enterprise",
+      "status": "active",
+      "priority": 6
+    },
+    {
+      "name": "SpecWriter",
+      "title": "SpecWriter Agent",
+      "description": "Automatikus track generálás EPP v2 protokoll szerint.",
+      "class": "SpecWriterAgent",
+      "module": "./agents/SpecWriterAgent.js",
+      "category": "engineering",
+      "status": "active",
+      "priority": 5
+    },
+    {
+      "name": "TaskDecomposer",
+      "title": "Task Decomposer",
+      "description": "Komplex feladatok dekompozíciója DAG alapon.",
+      "class": "TaskDecomposerAgent",
+      "module": "./agents/TaskDecomposerAgent.js",
+      "category": "engineering",
+      "status": "active"
+    },
+    {
+      "name": "UXDesigner",
+      "module": "./agents/UXDesignerAgent.js",
+      "class": "UXDesignerAgent",
+      "role": "User Experience Designer Agent",
+      "description": "UX/UI design specifikációk generálása.",
+      "priority": 1
+    },
+    {
+      "name": "voice",
+      "title": "Voice Agent",
+      "description": "Hangutasítások és multimodális interakciók specialistája.",
+      "class": "VoiceAgent",
+      "module": "./agents/VoiceAgent.js",
+      "category": "interface",
+      "status": "active",
+      "priority": 1
+    },
+    {
+      "name": "EmailAgent",
+      "title": "Email Intake Agent",
+      "description": "Számlák figyelése emailben és GDrive-on.",
+      "class": "EmailAgent",
+      "module": "./agents/EmailAgent.js",
+      "category": "enterprise",
+      "status": "active",
+      "priority": 7
+    },
+    {
+      "name": "BankAgent",
+      "description": "Banki tranzakciók beolvasása (CSV).",
+      "role": "Transaction Watcher",
+      "module": "./agents/BankAgent.js",
+      "class": "BankAgent"
+    },
+    {
+      "name": "MatchingAgent",
+      "description": "Számlák és tranzakciók párosítása.",
+      "role": "The Brain",
+      "module": "./agents/MatchingAgent.js",
+      "class": "MatchingAgent"
+    },
+    {
+      "name": "SheetsSyncAgent",
+      "description": "Adatok szinkronizálása Google Sheets-be.",
+      "role": "UI Sync",
+      "module": "./agents/SheetsSyncAgent.js",
+      "class": "SheetsSyncAgent"
+    },
+    {
+      "name": "InventoryFifoAgent",
+      "description": "FIFO alapú készletbevételezés és ELÁBÉ kalkuláció.",
+      "role": "Készletkezelő — FIFO értékelés",
+      "module": "./agents/InventoryFifoAgent.js",
+      "class": "InventoryFifoAgent",
+      "track": "inventory_automation_20260330"
+    },
+    {
+      "name": "InventoryWacAgent",
+      "description": "Súlyozott átlagár alapú készletértékelés.",
+      "role": "Készletkezelő — WAC értékelés",
+      "module": "./agents/InventoryWacAgent.js",
+      "class": "InventoryWacAgent",
+      "track": "inventory_automation_20260330"
+    },
+    {
+      "name": "DemandForecastAgent",
+      "description": "LLM-alapú kereslet-előrejelzés.",
+      "role": "Kereslet-előrejelzési ágens",
+      "module": "./agents/DemandForecastAgent.js",
+      "class": "DemandForecastAgent",
+      "track": "inventory_automation_20260330"
+    },
+    {
+      "name": "SafetyStockAgent",
+      "description": "Biztonsági készlet és újrarendelési pont kalkulátor.",
+      "role": "Biztonsági készlet kalkulátor",
+      "module": "./agents/SafetyStockAgent.js",
+      "class": "SafetyStockAgent",
+      "track": "inventory_automation_20260330"
+    },
+    {
+      "name": "PurchaseOrderAgent",
+      "description": "Autonóm beszerzési rendelés generáló.",
+      "role": "Autonóm beszerzési rendelés generáló",
+      "module": "./agents/PurchaseOrderAgent.js",
+      "class": "PurchaseOrderAgent",
+      "track": "inventory_automation_20260330"
+    },
+    {
+      "name": "StocktakeReconciliationAgent",
+      "module": "./agents/StocktakeReconciliationAgent.js",
+      "class": "StocktakeReconciliationAgent",
+      "description": "Leltáreltérés analizátor.",
+      "capabilities": [
+        "inventory_reconciliation"
+      ]
+    },
+    {
+      "name": "StocktakeReportAgent",
+      "module": "./agents/StocktakeReportAgent.js",
+      "class": "StocktakeReportAgent",
+      "description": "Leltárjelentés generátor.",
+      "capabilities": [
+        "inventory_reporting"
+      ]
+    },
+    {
+      "name": "InventoryAdjustmentAgent",
+      "module": "./agents/InventoryAdjustmentAgent.js",
+      "class": "InventoryAdjustmentAgent",
+      "description": "Leltáreltérések könyvelésének előkészítése.",
+      "capabilities": [
+        "accounting_preparation"
+      ]
+    },
+    {
+      "name": "AccountingPipeline",
+      "title": "Accounting Pipeline Agent",
+      "description": "Könyvelési folyamat koordinátor.",
+      "class": "AccountingPipelineAgent",
+      "module": "./agents/AccountingPipelineAgent.js",
+      "category": "finance",
+      "status": "active",
+      "priority": 10
+    },
+    {
+      "name": "PettyCashAgent",
+      "title": "Petty Cash Agent",
+      "role": "Házi pénztár kezelő",
+      "description": "Kezeli a házi pénztár forgalmát.",
+      "class": "PettyCashAgent",
+      "module": "./agents/PettyCashAgent.js",
+      "category": "finance",
+      "status": "active",
+      "priority": 8
+    },
+    {
+      "name": "i18n_specialist",
+      "title": "i18n Specialist",
+      "description": "Lokalizációs szakértő.",
+      "class": "DynamicAgent",
+      "module": "./agents/DynamicAgent.js",
+      "config": {
+        "tomlPath": "packages/myai/agents/i18n_specialist.toml"
+      },
+      "category": "generated",
+      "status": "active"
+    },
+    {
+      "name": "InventoryPipeline",
+      "title": "Inventory Pipeline Agent",
+      "description": "Készletgazdálkodási koordinátor.",
+      "class": "InventoryPipelineAgent",
+      "module": "./agents/InventoryPipelineAgent.js",
+      "category": "finance",
+      "status": "active",
+      "priority": 10
+    },
+    {
+      "name": "StudioSupervisor",
+      "title": "Studio Supervisor Agent",
+      "description": "Brunella Studio promo pipeline orchestráció.",
+      "class": "StudioSupervisorAgent",
+      "module": "./agents/StudioSupervisorAgent.js",
+      "category": "creative",
+      "status": "active",
+      "priority": 9
+    },
+    {
+      "name": "MediaIngest",
+      "title": "Media Ingest Agent",
+      "description": "Media ingest és metaadat normalizálás.",
+      "class": "MediaIngestAgent",
+      "module": "./agents/MediaIngestAgent.js",
+      "category": "creative",
+      "status": "active",
+      "priority": 8
+    },
+    {
+      "name": "StoryCut",
+      "title": "Story Cut Agent",
+      "description": "Rough-cut és promo segment tervezés.",
+      "class": "StoryCutAgent",
+      "module": "./agents/StoryCutAgent.js",
+      "category": "creative",
+      "status": "active",
+      "priority": 8
+    },
+    {
+      "name": "AudioMix",
+      "title": "Audio Mix Agent",
+      "description": "Zenei cue planning és ducking terv.",
+      "class": "AudioMixAgent",
+      "module": "./agents/AudioMixAgent.js",
+      "category": "creative",
+      "status": "active",
+      "priority": 7
+    },
+    {
+      "name": "ColorPrep",
+      "title": "Color Prep Agent",
+      "description": "DaVinci Resolve finishing handoff előkészítés.",
+      "class": "ColorPrepAgent",
+      "module": "./agents/ColorPrepAgent.js",
+      "category": "creative",
+      "status": "active",
+      "priority": 7
+    },
+    {
+      "name": "QcRender",
+      "title": "QC Render Agent",
+      "description": "FFmpeg render és delivery QC.",
+      "class": "QcRenderAgent",
+      "module": "./agents/QcRenderAgent.js",
+      "category": "creative",
+      "status": "active",
+      "priority": 8
+    },
+    {
+      "name": "StudioReviewer",
+      "title": "Studio Reviewer Agent",
+      "description": "Studio pipeline jelentés és visszajelzés.",
+      "class": "StudioReviewerAgent",
+      "module": "./agents/StudioReviewerAgent.js",
+      "category": "creative",
+      "status": "active",
+      "priority": 8
+    }
+  ]
+}

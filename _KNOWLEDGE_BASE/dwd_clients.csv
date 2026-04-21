@@ -1,3 +1,0 @@
-Name,Client Id,Scopes
-pohi-ai-pro,111491190832178765410,"https://www.googleapis.com/auth/gmail.modify,https://www.googleapis.com/auth/drive,https://www.googleapis.com/auth/calendar,https://www.googleapis.com/auth/documents,https://www.googleapis.com/auth/spreadsheets"
-Data Migration (New),106907082238364409239,"https://www.googleapis.com/auth/gmail.modify,https://www.googleapis.com/auth/gmail.insert,https://www.googleapis.com/auth/gmail.readonly,https://www.googleapis.com/auth/gmail.labels,https://www.googleapis.com/auth/gmail.compose"
