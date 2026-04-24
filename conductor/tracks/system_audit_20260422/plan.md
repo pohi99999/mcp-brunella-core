@@ -1,11 +1,11 @@
-# Implementációs Terv
+# Implementï¿½ciï¿½s Terv
 
-## Phase 1: Dokumentáció Audit
-- [ ] Feladat: README és architektúra fájlok áttekintése
-- [ ] Feladat: Elavult referenciák frissítése
-- [ ] Feladat: Conductor - Manuális ellenõrzés Phase 1: Dokumentáció Audit (Protokoll a workflow.md-ben)
+## Phase 1: Dokumentï¿½ciï¿½ Audit
+- [x] Feladat: README s architektra fjlok ttekintse (a3adc49)
+- [x] Feladat: Elavult referencik frisstse (50fd617)
+- [ ] Feladat: Conductor - Manuï¿½lis ellenï¿½rzï¿½s Phase 1: Dokumentï¿½ciï¿½ Audit (Protokoll a workflow.md-ben)
 
-## Phase 2: Teszt Stabilizálás
-- [ ] Feladat: Hiányzó tesztek azonosítása
-- [ ] Feladat: Smoke tesztek futtatása és javítása
-- [ ] Feladat: Conductor - Manuális ellenõrzés Phase 2: Teszt Stabilizálás (Protokoll a workflow.md-ben)
+## Phase 2: Teszt Stabilizï¿½lï¿½s
+- [ ] Feladat: Hiï¿½nyzï¿½ tesztek azonosï¿½tï¿½sa
+- [ ] Feladat: Smoke tesztek futtatï¿½sa ï¿½s javï¿½tï¿½sa
+- [ ] Feladat: Conductor - Manuï¿½lis ellenï¿½rzï¿½s Phase 2: Teszt Stabilizï¿½lï¿½s (Protokoll a workflow.md-ben)
