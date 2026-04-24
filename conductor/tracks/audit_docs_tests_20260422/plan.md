@@ -1,8 +1,8 @@
 # Implementation Plan
 
 ## Phase 1: Audit Documentation
-- [x] Task: Review existing README and architecture docs (894b05d)
-- [x] Task: Update outdated documentation references (261a631)
+- [ ] Task: Review existing README and architecture docs
+- [ ] Task: Update outdated documentation references
 - [ ] Task: Conductor - User Manual Verification 'Phase 1: Audit Documentation' (Protocol in workflow.md)
 
 ## Phase 2: Audit Test Protocols
