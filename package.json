@@ -33,7 +33,7 @@
     "start:python:stable": "cd myai && uv run uvicorn server:app --host 0.0.0.0 --port 8000",
     "dev": "node --max-old-space-size=6144 --loader ts-node/esm apps/mcp-core/index.ts",
     "watch": "tsc -w",
-    "smoke": "tsx scripts/startup_smoke_test.ts",
+    "smoke": "tsx ops/scripts/startup_smoke_test.ts",
     "mcp:run": "npm run start:stable",
     "cli:run": "node build/apps/mcp-core/cli.js",
     "cli": "node build/apps/mcp-core/cli.js",
