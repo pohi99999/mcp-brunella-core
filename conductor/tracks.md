@@ -1,8 +1,8 @@
-# Projekt Szálak (Tracks)
+# Projekt Szï¿½lak (Tracks)
 
-Ez a fájl követi a projekt fõbb fejlesztési szálait. Minden szálnak saját terve van a megfelelõ könyvtárban.
+Ez a fï¿½jl kï¿½veti a projekt fï¿½bb fejlesztï¿½si szï¿½lait. Minden szï¿½lnak sajï¿½t terve van a megfelelï¿½ kï¿½nyvtï¿½rban.
 
 ---
 
-- [ ] **Track: Audit és rendszer-dokumentáció frissítése, tesztprotokollok stabilizálása**
+- [x] **Track: Audit s rendszer-dokumentci frisstse, tesztprotokollok stabilizlsa**
   *Link: [./tracks/system_audit_20260422/](./tracks/system_audit_20260422/)*
