@@ -1,7 +1,7 @@
 # GEMINI.md - Brunella Agent System (BAS)
 
 **Version:** 2.4.0
-**Last Updated:** 2026-04-20
+**Last Updated:** 2026-04-22
 
 This document provides the necessary context for an AI agent to understand and work on the Brunella Agent System (BAS).
 
@@ -10,6 +10,12 @@ This document provides the necessary context for an AI agent to understand and w
 ## 1. 🏗️ Project Overview
 
 The **Brunella Agent System (BAS)** is a hybrid, multi-agent AI ecosystem designed for software development, research, and business process automation.
+
+**Strategic Vision (Fő irányvonalak):**
+- **Zero-Prompt AI**: Proactive, event-driven operation based on environment monitoring.
+- **Continuous Self-Improvement**: Automated synthetic data generation and SLM fine-tuning (reflex models).
+- **Dynamic Agent Spawning**: On-the-fly creation of specialized, disposable agents for complex tasks.
+- **Federated MCP**: Inter-agent (B2B) network for secure negotiations and system-to-system actions.
 
 **Core Architecture:**
 
