@@ -5,7 +5,21 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>MCP Brunella Core - AI Irányítópult</title>
-    <link rel="icon" type="image/svg+xml" href="/p-sales-icon.svg" />
+    <script>
+      // Quick shim for 'events' module to prevent Vite externalization error
+      window.EventEmitter = class {
+        constructor() { this.ls = {}; }
+        on(e, f) { (this.ls[e] = this.ls[e] || []).push(f); return this; }
+        emit(e, ...a) { (this.ls[e] || []).forEach(f => f(...a)); return true; }
+        removeListener(e, f) { if(this.ls[e]) this.ls[e] = this.ls[e].filter(l => l !== f); return this; }
+        removeAllListeners() { this.ls = {}; return this; }
+        once(e, f) { const w = (...a) => { this.removeListener(e, w); f(...a); }; return this.on(e, w); }
+        setMaxListeners() { return this; }
+      };
+      // Provide as a global that some shims might look for
+      window.process = { env: {}, nextTick: (f) => setTimeout(f, 0), versions: { node: '20.0.0' } };
+    </script>
+    <link rel="icon" type="image/svg+xml" href="/p-sales-icon.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">

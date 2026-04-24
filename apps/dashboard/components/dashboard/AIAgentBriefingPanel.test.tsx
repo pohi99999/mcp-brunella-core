@@ -54,7 +54,7 @@ describe('AIAgentBriefingPanel', () => {
   it('renders the panel header correctly', async () => {
     vi.mocked(apiService.getLatestBriefingReport).mockResolvedValue(null);
     render(<AIAgentBriefingPanel />);
-    expect(screen.getByText('Napi AI Agent Összefoglaló')).toBeInTheDocument();
+    expect(screen.getByText('Napi AI Agent Jelentés')).toBeInTheDocument();
   });
 
   it('shows loading state initially', () => {
@@ -71,8 +71,8 @@ describe('AIAgentBriefingPanel', () => {
       expect(apiService.getLatestBriefingReport).toHaveBeenCalledTimes(1);
     });
 
-    expect(screen.getByText(/Még nincs elérhető napi összefoglaló/)).toBeInTheDocument();
-    expect(screen.getByText(/Kattints a "Futtatás most" gombra/)).toBeInTheDocument();
+    expect(screen.getByText(/Még nincs elérhető napi jelentés/)).toBeInTheDocument();
+    expect(screen.getByText(/Kattints a "Riport futtatása" gombra/)).toBeInTheDocument();
   });
 
   it('renders the latest report with metadata and items', async () => {
@@ -117,7 +117,7 @@ describe('AIAgentBriefingPanel', () => {
       expect(apiService.getLatestBriefingReport).toHaveBeenCalledTimes(1);
     });
 
-    const runButton = screen.getByText('Futtatás most');
+    const runButton = screen.getByText('Riport futtatása');
     fireEvent.click(runButton);
 
     // Button should show loading state
@@ -127,7 +127,7 @@ describe('AIAgentBriefingPanel', () => {
 
     // After completion, success message should appear and report reloaded
     await waitFor(() => {
-      expect(screen.getByText(/Összefoglaló elkészült/)).toBeInTheDocument();
+      expect(screen.getByText(/Jelentés elkészült/)).toBeInTheDocument();
     });
 
     // Report should be refreshed
@@ -147,7 +147,7 @@ describe('AIAgentBriefingPanel', () => {
       expect(apiService.getLatestBriefingReport).toHaveBeenCalledTimes(1);
     });
 
-    const runButton = screen.getByText('Futtatás most');
+    const runButton = screen.getByText('Riport futtatása');
     fireEvent.click(runButton);
 
     await waitFor(() => {

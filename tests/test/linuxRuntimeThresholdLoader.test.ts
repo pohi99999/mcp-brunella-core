@@ -35,7 +35,7 @@ describe('linux runtime threshold loader', () => {
         'bash',
         [
           '-lc',
-          `set -euo pipefail; source "./scripts/supervisors/linux/load-runtime-threshold-env.sh"; load_runtime_threshold_env "${contractPosix}"; env | grep '^BRUNELLA_' | sort`,
+          `set -euo pipefail; source "./ops/scripts/supervisors/linux/load-runtime-threshold-env.sh"; load_runtime_threshold_env "${contractPosix}"; env | grep '^BRUNELLA_' | sort`,
         ],
         {
           cwd: process.cwd(),
@@ -76,7 +76,7 @@ describe('linux runtime threshold loader', () => {
         'bash',
         [
           '-lc',
-          `set -euo pipefail; source "./scripts/supervisors/linux/load-runtime-threshold-env.sh"; load_runtime_threshold_env "${contractPosix}"`,
+          `set -euo pipefail; source "./ops/scripts/supervisors/linux/load-runtime-threshold-env.sh"; load_runtime_threshold_env "${contractPosix}"`,
         ],
         {
           cwd: process.cwd(),

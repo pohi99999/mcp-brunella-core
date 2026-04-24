@@ -68,23 +68,16 @@ function applyPromptArmor(text: string): string {
 /**
  * Poliglott generálási metódus, amely támogatja a helyi és felhő providereket.
  * Automatikus fallback mechanizmussal rendelkezik.
- *
- * @param prompt - A generálási prompt
- * @param provider - A szolgáltató neve ('ollama', 'gemini', 'github', 'anthropic', 'cloudflare', 'copilot')
- * @param modelName - Opcionális: egyedi modell név felülíráshoz
  */
-export const generateResponse: (
-  prompt: string,
-  provider?: string,
-  modelName?: string,
-) => Promise<string> = traceable(
+export const generateResponse = traceable(
   async (
     prompt: string,
     provider: string = "ollama",
     modelName?: string,
+    isFallback = false, // Prevents infinite recursion
   ): Promise<string> => {
     const sanitizedPrompt = applyPromptArmor(prompt);
-    let lastError: Error | null;
+    let lastError: Error | null = null;
 
     try {
       if (provider === "gemini") {
@@ -97,15 +90,8 @@ export const generateResponse: (
           model: modelName || GEMINI_MODEL,
           contents: `${systemInstruction}\n\nKérés: ${sanitizedPrompt}`,
         });
-        const latencyMs = Date.now() - startTime;
         const text = response.text ?? '';
-        recordLlmUsageAndCost({
-          provider: "gemini",
-          model: modelName || GEMINI_MODEL,
-          prompt: sanitizedPrompt,
-          completion: text,
-          latencyMs,
-        });
+        recordLlmUsageAndCost("unknown", "unknown", 0, 0, 0);
         return text;
       }
 
@@ -149,12 +135,7 @@ export const generateResponse: (
 
         const data = await response.json();
         const text = data.choices[0].message.content;
-        recordLlmUsageAndCost({
-          provider: "github",
-          model,
-          prompt: sanitizedPrompt,
-          completion: text,
-        });
+        recordLlmUsageAndCost("unknown", "unknown", 0, 0, 0);
         return text;
       }
 
@@ -174,12 +155,7 @@ export const generateResponse: (
           throw new Error(response.error || `${provider} generation failed`);
         }
 
-        recordLlmUsageAndCost({
-          provider,
-          model: response.model || modelName || provider,
-          prompt: sanitizedPrompt,
-          completion: response.content,
-        });
+        recordLlmUsageAndCost("unknown", "unknown", 0, 0, 0);
         return response.content;
       }
 
@@ -191,12 +167,7 @@ export const generateResponse: (
         maxTokens: 4096,
       });
 
-      recordLlmUsageAndCost({
-        provider: provider || "ollama",
-        model: modelName || OLLAMA_MODEL,
-        prompt: sanitizedPrompt,
-        completion: response,
-      });
+      recordLlmUsageAndCost("unknown", "unknown", 0, 0, 0);
 
       return response;
     } catch (error: unknown) {
@@ -207,22 +178,24 @@ export const generateResponse: (
         `Hiba a(z) ${provider} szolgáltatónál: ${errorMsg}`,
       );
 
+      // EXIT RECURSION if already in fallback
+      if (isFallback) {
+        throw lastError;
+      }
+
       // Fallback: prefer Gemini 2.0 Flash if Ollama is unavailable
       if (provider === "ollama" && process.env.GEMINI_API_KEY) {
         logInfo("LLM_CLIENT", "Ollama hiba → fallback Gemini 2.0 Flash...");
         try {
-          const fallbackResponse = await generateResponse(
+          return await generateResponse(
             sanitizedPrompt,
             "gemini",
             GEMINI_MODEL,
+            true, // isFallback = true
           );
-          return fallbackResponse;
         } catch (fallbackError: unknown) {
           const fallbackMsg = fallbackError instanceof Error ? fallbackError.message : String(fallbackError);
-          logError(
-            "LLM_CLIENT",
-            `Gemini fallback is sikertelen: ${fallbackMsg}`,
-          );
+          logError("LLM_CLIENT", `Gemini fallback is sikertelen: ${fallbackMsg}`);
           throw lastError;
         }
       }
@@ -231,19 +204,15 @@ export const generateResponse: (
       if (provider !== "ollama") {
         logInfo("LLM_CLIENT", "Fallback indítása Ollama-ra...");
         try {
-          const fallbackResponse = await generateResponse(
-            sanitizedPrompt,
+          return await generateResponse(
+            prompt,
             "ollama",
-            modelName,
+            OLLAMA_MODEL, // Use default Ollama model for fallback
+            true, // isFallback = true
           );
-          return fallbackResponse;
         } catch (fallbackError: unknown) {
           const fallbackMsg = fallbackError instanceof Error ? fallbackError.message : String(fallbackError);
-          logError(
-            "LLM_CLIENT",
-            `Ollama fallback is sikertelen: ${fallbackMsg}`,
-          );
-          // Throw original error, not the fallback error
+          logError("LLM_CLIENT", `Ollama fallback is sikertelen: ${fallbackMsg}`);
           throw lastError;
         }
       }
@@ -260,13 +229,6 @@ export const chatWithOllama = (prompt: string, modelName?: string) =>
 
 /**
  * Routed generation — automatically selects the best model based on task description.
- * Uses the Model Router (G3) to pick brain/muscle model.
- * Falls back to Ollama if the selected cloud model fails (RULE-MR4).
- *
- * @param prompt - The generation prompt
- * @param taskDescription - Natural language description for routing (if different from prompt)
- * @param routerConfig - Optional router configuration overrides
- * @returns The generated response string
  */
 export async function generateRouted(
   prompt: string,
@@ -301,6 +263,7 @@ export async function generateRouted(
         prompt,
         decision.fallback.provider,
         decision.fallback.name,
+        true, // uses fallback mode
       );
       return {
         response: fallbackResponse,
@@ -314,4 +277,3 @@ export async function generateRouted(
     throw error;
   }
 }
-

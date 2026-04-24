@@ -1,5 +1,27 @@
 import '@testing-library/jest-dom';
 import 'dotenv/config';
+import { vi } from 'vitest';
+
+// react-i18next global mock
+vi.mock('react-i18next', () => ({
+  useTranslation: () => ({
+    t: (key: string) => {
+        // Return the last part of the key (e.g. 'common.mission_control' -> 'mission_control')
+        const parts = key.split('.');
+        return parts[parts.length - 1];
+    },
+    i18n: {
+      changeLanguage: () => Promise.resolve(),
+      language: 'hu',
+    },
+  }),
+  initReactI18next: {
+    type: '3rdParty',
+    init: () => {},
+  },
+  Trans: ({ children }: any) => children,
+  Translation: ({ children }: any) => children( (k: string) => k, { i18n: {} } ),
+}));
 
 // Polyfill ResizeObserver
 global.ResizeObserver = class ResizeObserver {
