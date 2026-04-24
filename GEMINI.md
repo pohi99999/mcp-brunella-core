@@ -133,20 +133,4 @@ The project uses Vitest for unit and integration testing, and Playwright for end
 *   `package.json`: Node.js project definition and scripts.
 *   `pyproject.toml`: Python project definition and dependencies.
 *   `docker-compose.yml`: Docker service definitions.
-* `mcp_servers.json`: Configuration for all MCP servers.
-
----
-
-## 6. 📝 Recent Updates & Audit (2026-04-22)
-
-### System Audit and Critical Fixes
-- **Dashboard Rendering:** Resolved a critical issue where the Node `events` module was externalized by Vite, causing the frontend build to crash in the browser. 
-  - *Fix:* Implemented `packages/utils/events-shim.ts`, added `events` alias to `vite.config.ts`, and a global fallback in `index.html`.
-- **LLM Stability:** Fixed an infinite recursion bug in `llm_client.ts` during fallback (Gemini ↔ Ollama), which caused OOM crashes. Added `isFallback` guard.
-- **Universal Logger:** Standardized `packages/utils/logger.ts` to be fully compatible with both Node.js and Browser environments. Fixed function signatures to handle flexible argument counts.
-- **Test Suite Optimization:**
-  - Fixed relative paths in `ev_hunter_research.test.ts` and `linuxRuntimeThresholdLoader.test.ts`.
-  - Updated `AIAgentBriefingPanel.test.tsx` to match current Hungarian UI labels ("Jelentés" instead of "Összefoglaló").
-  - Enhanced `setup-ui.ts` with a robust `react-i18next` global mock.
-- **Phoenix Protocol:** Verified recovery logic and event bus connectivity.
-
+*   `mcp_servers.json`: Configuration for all MCP servers.

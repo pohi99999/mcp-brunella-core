@@ -28,8 +28,7 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, '.'),
-      'events': path.resolve(__dirname, '../../packages/utils/events-shim.ts')
+      '@': path.resolve(__dirname, '.')
     }
   },
 });

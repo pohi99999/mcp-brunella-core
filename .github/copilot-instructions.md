@@ -55,9 +55,7 @@ Use `README.md` as the master guide. If docs conflict, prefer `README.md`, then 
 
 - ESM local imports must use `.js`.
 - Prefer `unknown` plus type guards; avoid `any`.
-- Use `logInfo`, `logWarn`, `logError`, or `Logger` from `@packages/utils/logger.js`. Do not use `console.log`.
-- **Universal Logger:** The logger is cross-compatible. When using shared logic, ensure you don't import Node-only modules (like `events`) directly; use the shims provided.
-- **LLM Fallbacks:** Always use the `isFallback` guard in `generateResponse` to prevent infinite recursion during provider failures.
+- Use `logInfo`, `logWarn`, `logError`, or `Logger`; do not use `console.log`.
 - If you implement `IAgent` directly, reset status in `finally`.
 - Use Vitest, not Jest.
 - In tests, `fileParallelism: false` means files share one fork; do not assume isolation between files.

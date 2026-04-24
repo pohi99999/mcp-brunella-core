@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-vi.mock("@packages/core-logic/cloudflare/cloudflareHelpers.js", () => {
+vi.mock("./cloudflareHelpers.js", () => {
   const inventory = [
     { id: "cean-orchestrator", name: "cean-orchestrator", url: "https://cean.example", kind: "public" },
     { id: "agents-api", name: "agents-api", url: "https://agents.example", kind: "internal" },
@@ -20,9 +20,9 @@ vi.mock("@packages/core-logic/cloudflare/cloudflareHelpers.js", () => {
   };
 });
 
-import { buildBrunellaTaskMeta, shouldDelegate } from "@packages/core-logic/cloudflare/CFDispatcher.js";
-import { withCFDispatch } from "@packages/core-logic/cloudflare/CFDispatchMiddleware.js";
-import { postTaskToWorker } from "@packages/core-logic/cloudflare/cloudflareHelpers.js";
+import { buildBrunellaTaskMeta, shouldDelegate } from "./CFDispatcher.js";
+import { withCFDispatch } from "./CFDispatchMiddleware.js";
+import { postTaskToWorker } from "./cloudflareHelpers.js";
 
 const mockedPostTaskToWorker = vi.mocked(postTaskToWorker);
 

@@ -3,152 +3,122 @@
 import { EventEmitter } from 'events';
 import { ensureError } from './ensureError.js';
 
-export const EventEmitterClass = EventEmitter;
-export const logEmitter = new EventEmitter();
-
 const LOG_LEVELS = {
   error: 0,
   warn: 1,
-  success: 2,
-  info: 3,
-  debug: 4,
+  info: 2,
+  debug: 3,
 };
 
-// In a real app, this would come from env or config
-const CURRENT_LOG_LEVEL = 4; // debug
+// In a real app, this would come from env vars
+const CURRENT_LOG_LEVEL = 'debug';
 
-export type LogLevel = keyof typeof LOG_LEVELS;
+function getTimestamp(): string {
+  return new Date().toISOString();
+}
 
-export type LogEvent = {
+export type LogLevel = 'error' | 'warn' | 'info' | 'debug' | string;
+export interface LogEvent {
+  timestamp: string;
   level: LogLevel;
   message: string;
-  meta?: any;
-  timestamp: string;
-  agent?: string;
   source?: string;
-};
+  agent?: string;
+  details?: unknown;
+}
 
-export type AgentStatusEvent = {
+export interface AgentStatusEvent {
   agentName: string;
   status: string;
-  taskDescription?: string;
   message?: string;
-  timestamp: number;
-};
+  timestamp: string;
+  agent?: string;
+  task?: string;
+}
 
-function emitLog(level: LogLevel, message: string, meta?: any) {
-  const agent = meta?.agent || (typeof meta === 'string' ? meta : undefined);
-  const source = meta?.source || 'System';
+export const logEmitter = new EventEmitter();
 
-  logEmitter.emit('log', {
-    level,
-    message,
-    meta,
-    timestamp: new Date().toISOString(),
-    agent,
-    source
-  } as LogEvent);
-
-  if (LOG_LEVELS[level] <= CURRENT_LOG_LEVEL) {
-    const timestamp = new Date().toISOString();
-    const metaStr = meta && typeof meta !== 'string' ? ` ${JSON.stringify(meta)}` : (meta ? ` ${meta}` : '');
-    const output = `[${timestamp}] [${level.toUpperCase()}] ${message}${metaStr}`;
-    
-    if (level === 'error') console.error(output);
-    else if (level === 'warn') console.warn(output);
-    else console.log(output);
+function emitLog(level: LogLevel, message: string, details?: unknown, agent?: unknown) {
+  const event: LogEvent = { 
+    timestamp: getTimestamp(), 
+    level, 
+    message, 
+    source: typeof agent === 'string' && agent.trim() ? agent : message,
+    agent: typeof agent === 'string' ? agent : undefined,
+    details 
+  };
+  try {
+    logEmitter.emit('log', event);
+  } catch (error: unknown) {
+    const normalized = ensureError(error);
+    console.warn(`[${getTimestamp()}] [WARN]`, `Logger emit failed: ${normalized.message}`);
   }
 }
 
-export function logSuccess(contextOrMsg: string, message?: any, meta?: unknown) {
-  const ctx = message !== undefined ? contextOrMsg : 'System';
-  const msg = message !== undefined ? message : contextOrMsg;
-  emitLog('success', `${ctx}: ${msg}`, meta);
+export function logError(message: string, details?: unknown, agent?: unknown) {
+  if (LOG_LEVELS.error <= LOG_LEVELS[CURRENT_LOG_LEVEL]) {
+    console.error(`[${getTimestamp()}] [ERROR]`, message, details || '');
+    emitLog('error', String(message), details, agent);
+  }
 }
 
-export function logError(contextOrMsg: string, message?: any, error?: unknown) {
-  const ctx = message !== undefined ? contextOrMsg : 'System';
-  const msg = message !== undefined ? message : contextOrMsg;
-  const err = error ? ensureError(error) : (typeof msg !== 'string' ? ensureError(msg) : undefined);
-  
-  emitLog('error', `${ctx}: ${typeof msg === 'string' ? msg : 'Error'}`, err ? { 
-    message: err.message, 
-    stack: err.stack,
-    name: err.name
-  } : undefined);
+export function logWarn(message: string, details?: unknown, agent?: unknown) {
+  if (LOG_LEVELS.warn <= LOG_LEVELS[CURRENT_LOG_LEVEL]) {
+    console.warn(`[${getTimestamp()}] [WARN]`, message, details || '');
+    emitLog('warn', String(message), details, agent);
+  }
 }
 
-export function logWarn(contextOrMsg: string, message?: any, meta?: unknown) {
-  const ctx = message !== undefined ? contextOrMsg : 'System';
-  const msg = message !== undefined ? message : contextOrMsg;
-  emitLog('warn', `${ctx}: ${msg}`, meta);
+export function logInfo(message: string, details?: unknown, agent?: unknown) {
+  if (LOG_LEVELS.info <= LOG_LEVELS[CURRENT_LOG_LEVEL]) {
+    console.info(`[${getTimestamp()}] [INFO]`, message, details || '');
+    emitLog('info', String(message), details, agent);
+  }
 }
 
-export function logInfo(contextOrMsg: string, message?: any, meta?: unknown) {
-  const ctx = message !== undefined ? contextOrMsg : 'System';
-  const msg = message !== undefined ? message : contextOrMsg;
-  emitLog('info', `${ctx}: ${msg}`, meta);
+export function logDebug(message: string, details?: unknown, agent?: unknown) {
+  if (LOG_LEVELS.debug <= LOG_LEVELS[CURRENT_LOG_LEVEL]) {
+    console.debug(`[${getTimestamp()}] [DEBUG]`, message, details || '');
+    emitLog('debug', String(message), details, agent);
+  }
 }
 
-export function logDebug(contextOrMsg: string, message?: any, meta?: unknown) {
-  const ctx = message !== undefined ? contextOrMsg : 'System';
-  const msg = message !== undefined ? message : contextOrMsg;
-  emitLog('debug', `${ctx}: ${msg}`, meta);
+export function setAgentStatus(agentName: string, status: string, message?: string) {
+  const ev: AgentStatusEvent = {
+    agentName,
+    agent: agentName,
+    status,
+    message,
+    task: message,
+    timestamp: getTimestamp(),
+  };
+  try {
+    logEmitter.emit('agentStatus', ev);
+  } catch (error: unknown) {
+    const normalized = ensureError(error);
+    console.warn(`[${getTimestamp()}] [WARN]`, `[AgentStatus] emit failed for ${agentName}: ${normalized.message}`);
+  }
+  logInfo(`[AgentStatus] ${agentName} -> ${status} ${message ?? ''}`);
 }
 
 export class Logger {
-  constructor(private context: string) {}
-
-  error(message: string, error?: unknown) {
-    logError(this.context, message, error);
+  prefix: string;
+  constructor(prefix = '') {
+    this.prefix = prefix;
   }
-
-  warn(message: string, meta?: unknown) {
-    logWarn(this.context, message, meta);
-  }
-
-  success(message: string, meta?: unknown) {
-    logSuccess(this.context, message, meta);
-  }
-
-  info(message: string, meta?: unknown) {
-    logInfo(this.context, message, meta);
-  }
-
-  debug(message: string, meta?: unknown) {
-    logDebug(this.context, message, meta);
-  }
-
-  log(message: string, meta?: unknown) {
-    logInfo(this.context, message, meta);
-  }
-
-  structured(level: LogLevel, message: string, meta?: unknown) {
-    emitLog(level, `${this.context}: ${message}`, meta);
-  }
+  info(msg: string, ...args: unknown[]) { logInfo(`${this.prefix} ${msg}`, ...args); }
+  warn(msg: string, ...args: unknown[]) { logWarn(`${this.prefix} ${msg}`, ...args); }
+  error(msg: string, ...args: unknown[]) { logError(`${this.prefix} ${msg}`, ...args); }
+  debug(msg: string, ...args: unknown[]) { logDebug(`${this.prefix} ${msg}`, ...args); }
+  async log(msg: string, meta?: unknown) { logInfo(`${this.prefix} ${msg}`, meta); return Promise.resolve(); }
+  structured(level: LogLevel, msg: string, meta?: unknown) { emitLog(level, `${this.prefix} ${msg}`, meta); }
 }
 
-export function setAgentStatus(agentName: string, status: string, taskDescription?: string, message?: string) {
-  logEmitter.emit('agent:update', {
-    agentName,
-    status,
-    taskDescription,
-    message,
-    timestamp: Date.now()
-  } as AgentStatusEvent);
-}
-
-/**
- * Unified Logger interface for both Node and Browser
- */
-export const logger = {
-  error: async (m: string, error?: unknown) => { logError('System', m, error); return Promise.resolve(); },
-  warn: async (m: string, meta?: unknown) => { logWarn('System', m, meta); return Promise.resolve(); },
-  success: async (m: string, meta?: unknown) => { logSuccess('System', m, meta); return Promise.resolve(); },
-  info: async (m: string, meta?: unknown) => { logInfo('System', m, meta); return Promise.resolve(); },
-  debug: async (m: string, meta?: unknown) => { logDebug('System', m, meta); return Promise.resolve(); },
-  log: async (m: string, meta?: unknown) => { logInfo('System', m, meta); return Promise.resolve(); },
+export const cliLogger = {
+  info: async (m: string, ...a: unknown[]) => { logInfo(m, ...a); return Promise.resolve(); },
+  warn: async (m: string, ...a: unknown[]) => { logWarn(m, ...a); return Promise.resolve(); },
+  error: async (m: string, ...a: unknown[]) => { logError(m, ...a); return Promise.resolve(); },
+  debug: async (m: string, ...a: unknown[]) => { logDebug(m, ...a); return Promise.resolve(); },
+  log: async (m: string, meta?: unknown) => { logInfo(m, meta); return Promise.resolve(); },
   structured: async (level: LogLevel, m: string, meta?: unknown) => { emitLog(level, m, meta); return Promise.resolve(); }
 };
-
-export const cliLogger = logger;

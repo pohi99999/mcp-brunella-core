@@ -81,10 +81,8 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, 'apps/dashboard'),
-      '@packages': path.resolve(__dirname, 'packages'),
-      'events': path.resolve(__dirname, 'packages/utils/events-shim.ts')
-    },
-    extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json']
+      '@': path.resolve(__dirname, './apps/dashboard'),
+      '@packages': path.resolve(__dirname, './packages')
+    }
   },
 });
