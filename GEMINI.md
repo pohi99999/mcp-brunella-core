@@ -11,12 +11,6 @@ This document provides the necessary context for an AI agent to understand and w
 
 The **Brunella Agent System (BAS)** is a hybrid, multi-agent AI ecosystem designed for software development, research, and business process automation.
 
-**Strategic Vision (Fő irányvonalak):**
-- **Zero-Prompt AI**: Proactive, event-driven operation based on environment monitoring.
-- **Continuous Self-Improvement**: Automated synthetic data generation and SLM fine-tuning (reflex models).
-- **Dynamic Agent Spawning**: On-the-fly creation of specialized, disposable agents for complex tasks.
-- **Federated MCP**: Inter-agent (B2B) network for secure negotiations and system-to-system actions.
-
 **Core Architecture:**
 
 *   **Backend (Orchestration):** A Node.js/TypeScript application using Express.js for the API, Socket.IO for real-time communication, and the Model Context Protocol (MCP) for agent interaction.
