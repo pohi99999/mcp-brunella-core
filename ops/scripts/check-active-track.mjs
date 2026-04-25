@@ -46,8 +46,8 @@ function collectStagedFiles() {
 }
 
 async function emitPreCommitHook(stagedFiles, activeTracks) {
-  const hookRegistryPath = path.join(repoRoot, 'build', 'core', 'hookRegistry.js');
-  const builtinHooksPath = path.join(repoRoot, 'build', 'core', 'hooks', 'builtinHooks.js');
+  const hookRegistryPath = path.join(repoRoot, 'build', 'packages', 'core-logic', 'hookRegistry.js');
+  const builtinHooksPath = path.join(repoRoot, 'build', 'packages', 'core-logic', 'hooks', 'builtinHooks.js');
 
   if (!fs.existsSync(hookRegistryPath) || !fs.existsSync(builtinHooksPath)) {
     throw new Error('Hook runtime not built; pre-commit hook cannot run safely.');

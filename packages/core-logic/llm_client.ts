@@ -99,13 +99,7 @@ export const generateResponse: (
         });
         const latencyMs = Date.now() - startTime;
         const text = response.text ?? '';
-        recordLlmUsageAndCost({
-          provider: "gemini",
-          model: modelName || GEMINI_MODEL,
-          prompt: sanitizedPrompt,
-          completion: text,
-          latencyMs,
-        });
+        recordLlmUsageAndCost(modelName || GEMINI_MODEL, "gemini", 0, 0, 0);
         return text;
       }
 
@@ -149,12 +143,7 @@ export const generateResponse: (
 
         const data = await response.json();
         const text = data.choices[0].message.content;
-        recordLlmUsageAndCost({
-          provider: "github",
-          model,
-          prompt: sanitizedPrompt,
-          completion: text,
-        });
+        recordLlmUsageAndCost(model, "github", 0, 0, 0);
         return text;
       }
 
@@ -174,12 +163,7 @@ export const generateResponse: (
           throw new Error(response.error || `${provider} generation failed`);
         }
 
-        recordLlmUsageAndCost({
-          provider,
-          model: response.model || modelName || provider,
-          prompt: sanitizedPrompt,
-          completion: response.content,
-        });
+        recordLlmUsageAndCost(response.model || modelName || provider, provider, 0, 0, 0);
         return response.content;
       }
 
@@ -191,12 +175,7 @@ export const generateResponse: (
         maxTokens: 4096,
       });
 
-      recordLlmUsageAndCost({
-        provider: provider || "ollama",
-        model: modelName || OLLAMA_MODEL,
-        prompt: sanitizedPrompt,
-        completion: response,
-      });
+      recordLlmUsageAndCost(modelName || OLLAMA_MODEL, provider || "ollama", 0, 0, 0);
 
       return response;
     } catch (error: unknown) {

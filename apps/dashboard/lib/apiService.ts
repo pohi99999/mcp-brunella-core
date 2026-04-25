@@ -4,37 +4,37 @@
  */
 
 import { AgentStatusType, TaskItem } from '@packages/types/dashboard.js';
-import type { HealthResponse } from '../../utils/health.js';
-import type { PhoenixFlywheelObservabilitySnapshot } from '../../tools/phoenixInsights.js';
-import type { KkvPackResponse } from '../../tools/kkvPack.js';
+import type { HealthResponse } from '@packages/utils/health.js';
+import type { PhoenixFlywheelObservabilitySnapshot } from '@packages/utils/phoenixInsights.js';
+import type { KkvPackResponse } from '@packages/utils/kkvPack.js';
 import type {
   MissionSurface,
   TestCadenceTier,
   DevExPlannerResponse,
-} from '../../tools/devExTypes.js';
+} from '@packages/utils/devExTypes.js';
 import type {
   HookCircuitSnapshot,
   HookDlqEntry,
   HookExecutionRecord,
   HookSnapshot,
   HookSummary,
-} from '../../core/hookRegistry.js';
-import type { ReflectionNightlyCycleResult, ReflectionOverview } from '../../core/reflectionOverview.js';
-export type { ReflectionNightlyCycleResult, ReflectionOverview } from '../../core/reflectionOverview.js';
-import type { TrackStatusSnapshot } from '../../types/trackStatus.js';
+} from '@packages/core-logic/hookRegistry.js';
+import type { ReflectionNightlyCycleResult, ReflectionOverview } from '@packages/core-logic/reflectionOverview.js';
+export type { ReflectionNightlyCycleResult, ReflectionOverview } from '@packages/core-logic/reflectionOverview.js';
+import type { TrackStatusSnapshot } from '@packages/types/trackStatus.js';
 import { logError } from '@packages/utils/logger.js';
 export {
   missionSurfaceLabels,
   missionSurfaceValues,
   testCadenceTierLabels,
   testCadenceTierValues,
-} from '../../tools/devExTypes.js';
+} from '@packages/utils/devExTypes.js';
 export {
   kkvPackDomainLabels,
   kkvPackIds,
   kkvPackStatusLabels,
   kkvPackSurfaceKindLabels,
-} from '../../tools/kkvPack.js';
+} from '@packages/utils/kkvPack.js';
 export type {
   MissionSurface,
   MissionTemplate,
@@ -43,7 +43,7 @@ export type {
   DevExPlannerSnapshot,
   DevExPlannerResponse,
   DevExRecommendation,
-} from '../../tools/devExTypes.js';
+} from '@packages/utils/devExTypes.js';
 export type {
   KkvPackBrief,
   KkvPackDefinition,
@@ -52,7 +52,7 @@ export type {
   KkvPackSnapshot,
   KkvPackStatus,
   KkvPackSurface,
-} from '../../tools/kkvPack.js';
+} from '@packages/utils/kkvPack.js';
 export type {
   TrackBucket,
   TrackLifecycleStatus,
@@ -62,14 +62,14 @@ export type {
   TrackStatusRecommendation,
   TrackStatusSnapshot,
   TrackStatusTrack,
-} from '../../types/trackStatus.js';
+} from '@packages/types/trackStatus.js';
 export type {
   HookCircuitSnapshot,
   HookDlqEntry,
   HookExecutionRecord,
   HookSnapshot,
   HookSummary,
-} from '../../core/hookRegistry.js';
+} from '@packages/core-logic/hookRegistry.js';
 export const API_BASE = ""; // Same origin
 const DEFAULT_TIMEOUT_MS = 30000; // 30 seconds default timeout
 const LONG_TIMEOUT_MS = 120000; // 2 minutes for LLM calls

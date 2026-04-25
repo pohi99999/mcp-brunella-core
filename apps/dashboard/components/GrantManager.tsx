@@ -30,7 +30,7 @@ import {
   type GrantProfileForm,
   type GrantWatcherAgentResponse,
   type GrantWatcherPayload,
-} from "../../lib/grantFlow.js";
+} from "@packages/utils/grantFlow.js";
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;

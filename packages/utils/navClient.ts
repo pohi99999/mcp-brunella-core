@@ -3,6 +3,7 @@ import { XMLParser } from 'fast-xml-parser';
 import { logInfo, logError } from '@packages/utils/logger.js';
 import https from 'https';
 import fs from 'fs';
+import { NavUserConfig, buildQueryInvoiceDataRequest } from './navRequestBuilder.js';
 
 export type NavConfig = {
   baseUrl: string;
@@ -82,6 +83,44 @@ export function parseInvoiceXml(xml: string): Record<string, unknown> | null {
   } catch (e) {
     logError('navClient', `parseInvoiceXml error: ${String(e)}`);
     return null;
+  }
+}
+
+const NAV_PROD_URL = 'https://api.onlineszamla.nav.gov.hu/invoiceService/v3';
+const NAV_TEST_URL = 'https://api-test.onlineszamla.nav.gov.hu/invoiceService/v3';
+
+export class NavClient {
+  private baseUrl: string;
+  private config: NavUserConfig;
+
+  constructor(config: NavUserConfig, isTest: boolean) {
+    this.config = config;
+    this.baseUrl = isTest ? NAV_TEST_URL : NAV_PROD_URL;
+  }
+
+  async queryInvoiceData(invoiceNumber: string): Promise<Record<string, unknown> | null> {
+    try {
+      const xml = buildQueryInvoiceDataRequest(this.config, { invoiceNumber });
+      const url = `${this.baseUrl}/queryInvoiceData`;
+      logInfo('NavClient', `Querying NAV API for invoice: ${invoiceNumber}`);
+
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/xml', 'Accept': 'application/xml' },
+        body: xml,
+      });
+
+      if (!res.ok) {
+        logError('NavClient', `NAV API error: ${res.status} ${res.statusText}`);
+        return null;
+      }
+
+      const responseXml = await res.text();
+      return parseInvoiceXml(responseXml);
+    } catch (e) {
+      logError('NavClient', `queryInvoiceData error: ${String(e)}`);
+      return null;
+    }
   }
 }
 

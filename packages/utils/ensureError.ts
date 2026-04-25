@@ -16,9 +16,17 @@ export function ensureError(error: unknown): Error {
     try {
       return new Error(JSON.stringify(record));
     } catch {
-      return new Error(String(error));
+      try {
+        return new Error(String(error));
+      } catch {
+        return new Error('[unserializable error]');
+      }
     }
   }
 
-  return new Error(String(error));
+  try {
+    return new Error(String(error));
+  } catch {
+    return new Error('[unserializable error]');
+  }
 }

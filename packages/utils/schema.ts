@@ -37,6 +37,8 @@ export const ConfigSchema = z.object({
   pythonBaseUrl: z.string().url().default('http://localhost:8000'),
 
   // External Services
+  anythingllmBaseUrl: z.string().default('http://localhost:3001'),
+  anythingllmWorkspace: z.string().default('brunella'),
   anythingllmApiKey: z.string().optional(),
   langchainApiKey: z.string().optional(), // LangSmith tracing
 
@@ -44,6 +46,10 @@ export const ConfigSchema = z.object({
   workspaceRoot: z.string().default(process.cwd()),
   dataDir: z.string().default('data'),
   systemLogDir: z.string().default('logs'),
+  allowedRoots: z.array(z.string()).default(['apps', 'packages', 'ops', 'docs', 'conductor', 'config', 'data', 'src']),
+  denyContains: z.array(z.string()).default(['.env', 'node_modules', '.git', 'secrets']),
+  maxReadBytes: z.coerce.number().int().positive().default(1048576),
+  maxFileBytesForSearch: z.coerce.number().int().positive().default(524288), // 512KB
 });
 
 export type Config = z.infer<typeof ConfigSchema>;
@@ -79,6 +85,8 @@ function parseConfig(): Config {
       pythonBaseUrl: process.env.PYTHON_BASE_URL || process.env.PYTHON_SUBSET_URL,
 
       // External Services
+      anythingllmBaseUrl: process.env.ANYTHINGLLM_BASE_URL,
+      anythingllmWorkspace: process.env.ANYTHINGLLM_WORKSPACE,
       anythingllmApiKey: process.env.ANYTHINGLLM_API_KEY,
       langchainApiKey: process.env.LANGCHAIN_API_KEY,
 

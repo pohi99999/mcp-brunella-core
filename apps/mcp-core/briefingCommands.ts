@@ -10,9 +10,9 @@
 
 import type { Command } from 'commander';
 import { getGlobalDb } from '@packages/utils/globalDb.js';
-import { initBriefingSchema, runDailyAgentBriefing } from '../server/services/briefingService.js';
+import { initBriefingSchema, runDailyAgentBriefing } from '@packages/core-logic/services/briefingService.js';
 import { logError, logInfo } from '@packages/utils/logger.js';
-import type { BriefingReport } from '../server/services/briefingService.js';
+import type { BriefingReport } from '@packages/core-logic/services/briefingService.js';
 
 // ── Module constant ───────────────────────────────────────────────────────────
 const MODULE = 'BriefingCommands';

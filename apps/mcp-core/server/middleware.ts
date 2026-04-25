@@ -6,7 +6,16 @@ import type { Request, Response, NextFunction } from "express";
 import { rateLimit } from "express-rate-limit";
 import { v4 as uuidv4 } from "uuid";
 import { Logger } from "@packages/utils/logger.js";
-import { verifyRemoteToken } from "@packages/core-logic/remoteAuth.js";
+import { verifyRemoteToken, type TokenClaims } from "@packages/core-logic/remoteAuth.js";
+
+declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
+  namespace Express {
+    interface Request {
+      remoteUser?: TokenClaims;
+    }
+  }
+}
 
 const reqLogger = new Logger("http.log");
 const DEV_CORS_ORIGINS = [

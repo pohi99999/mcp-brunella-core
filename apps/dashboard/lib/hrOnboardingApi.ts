@@ -1,11 +1,11 @@
 import { fetchWithTimeout, safeJson } from './apiService.js';
 import type {
   HROnboardingSamplePayload,
-} from '../../utils/hrOnboarding.js';
+} from '@packages/utils/hrOnboarding.js';
 import type {
   HROnboardingDryRunReport,
   HROnboardingDryRunResult,
-} from '../../utils/hrOnboardingDryRun.js';
+} from '@packages/utils/hrOnboardingDryRun.js';
 
 const API_BASE = '';
 const DEFAULT_TIMEOUT_MS = 30000;

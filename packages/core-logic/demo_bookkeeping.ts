@@ -1,10 +1,10 @@
-import { NavAgent } from './agents/NavAgent.js';
-import { BankAgent } from './agents/BankAgent.js';
-import { MatchingAgent } from './agents/MatchingAgent.js';
-import { logInfo, logError } from './utils/logger.js';
-import { initDB } from './data/bookkeeping_db.js';
-import { AgentResponse } from './agents/types.js';
-import { writeLine } from './utils/cliOutput.js';
+import { NavAgent } from '@packages/agents/NavAgent.js';
+import { BankAgent } from '@packages/agents/BankAgent.js';
+import { MatchingAgent } from '@packages/agents/MatchingAgent.js';
+import { logInfo, logError } from '@packages/utils/logger.js';
+import { initDB } from '@packages/utils/bookkeeping_db.js';
+import { AgentResponse } from '@packages/agents/types.js';
+import { writeLine } from '@packages/utils/cliOutput.js';
 
 async function runBookkeepingDemo() {
   const SESSION_NAME = 'Bookkeeping_Demo_v1';

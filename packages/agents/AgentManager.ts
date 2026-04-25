@@ -34,7 +34,7 @@ import {
   traceAgentExecution,
   type TraceContext,
 } from "@packages/utils/agentTracer.js";
-import AgentCoordinator from "@packages/core-logic/agentCoordinator.js";
+import { AgentCoordinator } from "@packages/core-logic/agentCoordinator.js";
 import { recordAgentExecution } from "@packages/utils/metrics.js";
 import { checkToolPermission } from "@packages/utils/toolPermissions.js";
 import { record as auditRecord } from "@packages/core-logic/auditLog.js";
@@ -373,7 +373,7 @@ export class AgentManager extends EventEmitter {
           });
           logError(
             "AgentManager",
-            `Ügynök betöltési hiba (${agentConfig.name}): ${error}`,
+            `Ügynök betöltési hiba (${agentConfig.name}): ${err.message}`,
           );
         }
       }),

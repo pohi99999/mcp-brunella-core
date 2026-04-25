@@ -10,7 +10,7 @@ import {
   type RemoteCommandPayload,
   type RemoteSessionPayload,
   type RemoteTargetPayload,
-} from "../../../utils/BrunellaRemoteClient";
+} from "@packages/utils/BrunellaRemoteClient.js";
 
 const DEFAULT_USER_ID = "dashboard-user";
 const DEFAULT_COMMAND_INPUT = "{\n}";

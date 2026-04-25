@@ -48,17 +48,17 @@ export function recordLlmUsageAndCost(model: string, provider: string, inputToke
 }
 
 /** Record Memory Cache Hit */
-export function recordMemoryCacheHit(): void {
+export function recordMemoryCacheHit(_agentName?: string): void {
   // Stubbed for now
 }
 
 /** Record Memory Cache Miss */
-export function recordMemoryCacheMiss(): void {
+export function recordMemoryCacheMiss(_agentName?: string): void {
   // Stubbed for now
 }
 
 /** Record Cloudflare Dispatch Outcome */
-export function recordCloudflareDispatchOutcome(agent: string, outcome: string): void {
+export function recordCloudflareDispatchOutcome(agent: string, outcome: string, _durationMs?: number): void {
   // Stubbed for now
 }
 

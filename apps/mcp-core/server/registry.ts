@@ -615,7 +615,7 @@ export async function registerAllTools(server: McpServer) {
       dryRun?: boolean;
     }) => {
       try {
-        const { runDailyAgentBriefing } = await import("./services/briefingService.js");
+        const { runDailyAgentBriefing } = await import("@packages/core-logic/services/briefingService.js");
 
         const report = await runDailyAgentBriefing({
           triggeredBy: "mcp",

@@ -87,10 +87,10 @@
 - Agent registry entries: **79**
 - Route modulok a `src/server/routes/` alatt: **94**
 - Aktív route mountok a központi routerben: **111**
-- MCP tool fájlok a `src/tools/` alatt: **61**
+- MCP tool fájlok a `src/tools/` alatt: **175**
 - Detektált MCP tool definíciók / regisztrációk: **4**
-- CLI parancs deklarációk: **324**
-- Dashboard navigációs panelek: **112**
+- CLI parancs deklarációk: **328**
+- Dashboard navigációs panelek: **113**
 
 > Ezt a blokkot a `npm run sync:doc-stats` generálja.
 <!-- DOC_STATS_END -->
