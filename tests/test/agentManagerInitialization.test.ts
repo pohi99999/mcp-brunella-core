@@ -1,85 +1,86 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { AgentManager } from "../src/agents/AgentManager.js";
-import { SocketServiceClass } from "../src/server/SocketService.js";
-import type { AgentConfig, RegistryConfig } from "../src/agents/registryStandard.js";
-import type { IAgent } from "../src/agents/types.js";
-import { loadQueuedTasksForHydration, updateTaskStatus } from "../src/utils/tasksDb.js";
+import { AgentManager } from "@packages/agents/AgentManager.js";
+import { SocketServiceClass } from "@apps/mcp-core/server/SocketService.js";
+import type { AgentConfig, RegistryConfig } from "@packages/agents/registryStandard.js";
+import type { IAgent } from "@packages/agents/types.js";
+import { loadQueuedTasksForHydration, updateTaskStatus } from "@packages/utils/tasksDb.js";
 
-vi.mock("../src/utils/logger.js", () => ({
+vi.mock("@packages/utils/logger.js", () => ({
   logInfo: vi.fn(),
   logWarn: vi.fn(),
   logError: vi.fn(),
   setAgentStatus: vi.fn(),
 }));
 
-vi.mock("../src/utils/tasksDb.js", () => ({
+vi.mock("@packages/utils/tasksDb.js", () => ({
   saveTask: vi.fn().mockResolvedValue(1),
   updateTaskStatus: vi.fn().mockResolvedValue(undefined),
   loadQueuedTasksForHydration: vi.fn().mockResolvedValue([]),
 }));
 
-vi.mock("../src/core/retryStrategy.js", () => ({
+vi.mock("@packages/core-logic/retryStrategy.js", () => ({
   withRetry: vi.fn(),
   calculateDelay: vi.fn(),
   DEFAULT_RETRY_CONFIG: {},
 }));
 
-vi.mock("../src/core/checkpoint.js", () => ({
+vi.mock("@packages/core-logic/checkpoint.js", () => ({
   saveCheckpoint: vi.fn(),
   loadCheckpoint: vi.fn(),
 }));
 
-vi.mock("../src/core/gitRecovery.js", () => ({
+vi.mock("@packages/core-logic/gitRecovery.js", () => ({
   gitAutoCheckpoint: vi.fn(),
   logRecoveryEvent: vi.fn(),
 }));
 
-vi.mock("../src/core/goldenDatasetBridge.js", () => ({
+vi.mock("@packages/core-logic/goldenDatasetBridge.js", () => ({
   autoSaveGoldenSample: vi.fn(),
 }));
 
-vi.mock("../src/core/dagEngine.js", () => ({
+vi.mock("@packages/core-logic/dagEngine.js", () => ({
   executeDAG: vi.fn(),
 }));
 
-vi.mock("../src/core/phoenixEventBus.js", () => ({
+vi.mock("@packages/core-logic/phoenixEventBus.js", () => ({
   phoenixEventBus: {},
 }));
 
-vi.mock("../src/core/failoverRegistry.js", () => ({
+vi.mock("@packages/core-logic/failoverRegistry.js", () => ({
   failoverRegistry: {},
 }));
 
-vi.mock("../src/utils/agentTracer.js", () => ({
+vi.mock("@packages/utils/agentTracer.js", () => ({
   traceAgentExecution: vi.fn(),
 }));
 
-vi.mock("../src/core/agentCoordinator.js", () => ({
+vi.mock("@packages/core-logic/agentCoordinator.js", () => ({
+  AgentCoordinator: class MockAgentCoordinator {},
   default: class MockAgentCoordinator {},
 }));
 
-vi.mock("../src/utils/metrics.js", () => ({
+vi.mock("@packages/utils/metrics.js", () => ({
   recordAgentExecution: vi.fn(),
 }));
 
-vi.mock("../src/tools/toolPermissions.js", () => ({
+vi.mock("@packages/utils/toolPermissions.js", () => ({
   checkToolPermission: vi.fn(() => ({ allowed: true })),
 }));
 
-vi.mock("../src/core/auditLog.js", () => ({
+vi.mock("@packages/core-logic/auditLog.js", () => ({
   record: vi.fn(),
 }));
 
-vi.mock("../src/utils/fixQueue.js", () => ({
+vi.mock("@packages/utils/fixQueue.js", () => ({
   getPendingFixes: vi.fn(() => []),
   updateFixStatus: vi.fn(),
 }));
 
-vi.mock("../src/utils/responseFormatter.js", () => ({
+vi.mock("@packages/utils/responseFormatter.js", () => ({
   formatResponse: vi.fn(),
 }));
 
-vi.mock("../src/agents/swarm/SwarmManager.js", () => ({
+vi.mock("@packages/agents/swarm/SwarmManager.js", () => ({
   SwarmManager: class MockSwarmManager {
     static getTriadConfig() {
       return { name: "triad", agentIds: ["a", "b", "c"] };
@@ -90,15 +91,15 @@ vi.mock("../src/agents/swarm/SwarmManager.js", () => ({
   },
 }));
 
-vi.mock("../src/agents/agentLoader.js", () => ({
+vi.mock("@packages/agents/agentLoader.js", () => ({
   resolveAgentExport: vi.fn(),
 }));
 
-vi.mock("../src/agents/agentRouting.js", () => ({
+vi.mock("@packages/agents/agentRouting.js", () => ({
   selectAgentForInstruction: vi.fn(),
 }));
 
-vi.mock("../src/agents/registryValidation.js", () => ({
+vi.mock("@packages/agents/registryValidation.js", () => ({
   validateAndNormalizeRegistry: vi.fn((value: RegistryConfig) => ({
     registry: value,
     report: {
@@ -116,12 +117,12 @@ vi.mock("../src/agents/registryValidation.js", () => ({
   })),
 }));
 
-vi.mock("../src/skills/index.js", () => ({
+vi.mock("@packages/utils/skill-registry.js", () => ({
   getSkill: vi.fn(),
   SKILL_REGISTRY: {},
 }));
 
-vi.mock("../src/config/paiosConfig.js", () => ({
+vi.mock("@packages/utils/paiosConfig.js", () => ({
   getOrchestrationConcurrencyConfig: vi.fn(() => ({ profile: "test" })),
   getOrchestrationConcurrencyLimit: vi.fn(() => 1),
 }));
