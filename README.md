@@ -1416,9 +1416,14 @@ const result = await manager.executeCode(
 ### Statistics
 
 - **Total Implementation Time:** ~4.5 hours (est. 80h → **17.7x AI acceleration**)
-- **Test Coverage:** 1452/1494 tests passing (100%, 42 skipped)
-- **Components:** 5 major phases, 42/55 tasks complete (80%)
-- **Lines of Code:** ~3000+ (TypeScript + Python)
+### Stabilizáció és Portabilitás (2026-04-25)
+- **Universal PathResolver:** Bevezetésre került a `@packages/utils/pathResolver.ts`, amely dinamikusan feloldja a monorepo gyökerét az `import.meta.url` segítségével. Megszűnt a `process.cwd()` függőség a kritikus modulokban.
+- **Dinamikus MCP Konfiguráció:** Az `mcp_servers.json` mostantól támogatja a `{{PROJECT_ROOT}}` és `${USER_HOME}` helyőrzőket, lehetővé téve a projekt egyszerű áthelyezését más környezetbe.
+- **Browser-Safe Integráció:** A közös segédfüggvények (pl. `cn`, `constants`, `backendOrigin`) megtisztítva a Node-specifikus kódoktól, biztosítva a zökkenőmentes Dashboard buildet.
+- **Git Integritás:** A `src/` mappa teljes tartalma újra regisztrálva a git alá, elhárítva a korábbi strukturális hiányosságokat.
+
+- **Fast Audit:** 427/428 tesztcsomag sikeresen lefutva (3091 teszt).
+
 
 ---
 
