@@ -48,7 +48,7 @@
     "command": "npx",
     "args": [
       "-y",
-      "@modelcontextprotocol/server-fetch"
+      "mcp-fetch-server"
     ],
     "description": "Fetch MCP server - web content retrieval",
     "autoStart": true,
@@ -68,7 +68,7 @@
       "-ExecutionPolicy",
       "Bypass",
       "-File",
-      "csharp-mcp-server\\launch.ps1"
+      "packages\\csharp-mcp-server\\launch.ps1"
     ],
     "description": "Standalone C# MCP server with workspace file tools and review prompt",
     "autoStart": true,
@@ -202,7 +202,7 @@
     "transport": "stdio",
     "command": "python",
     "args": [
-      "windows_bridge/wab_server.py"
+      "packages\\windows_bridge\\wab_server.py"
     ],
     "description": "Windows Automation Bridge - nat\u00edv Windows automatizalas",
     "autoStart": true,
@@ -267,10 +267,10 @@
     "name": "maestro",
     "transport": "stdio",
     "command": "node",
-    "args": ["C:/Users/pohi9/.gemini/extensions/maestro/claude/mcp/maestro-server.js"],
+    "args": ["${USER_HOME}/.gemini/extensions/maestro/claude/mcp/maestro-server.js"],
     "env": {
-      "CLAUDE_PROJECT_DIR": "${WORKSPACE_ROOT}",
-      "CLAUDE_PLUGIN_ROOT": "C:/Users/pohi9/.gemini/extensions/maestro/claude",
+      "CLAUDE_PROJECT_DIR": "{{PROJECT_ROOT}}",
+      "CLAUDE_PLUGIN_ROOT": "${USER_HOME}/.gemini/extensions/maestro/claude",
       "MAESTRO_RUNTIME": "claude"
     },
     "description": "Maestro multi-agent orchestration MCP – 12 tools: session lifecycle (create/get/update/transition/archive), workspace (initialize/assess/validate/resolve), content (get_skill_content/get_agent/get_runtime_context)",
