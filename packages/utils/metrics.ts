@@ -10,19 +10,64 @@ import { logError } from './logger.js';
 
 let isInitialized = false;
 
-// Metrics definitions
-const httpRequestDurationMicroseconds = new client.Histogram({
-  name: 'http_request_duration_seconds',
-  help: 'Duration of HTTP requests in seconds',
-  labelNames: ['method', 'route', 'code'],
-  buckets: [0.1, 0.3, 0.5, 0.7, 1, 3, 5, 7, 10]
-});
+function getOrCreateCounter(name: string, help: string, labelNames: string[]) {
+  const existing = client.register.getSingleMetric(name);
+  return existing instanceof client.Counter
+    ? existing
+    : new client.Counter({ name, help, labelNames });
+}
 
-const agentOperationsTotal = new client.Counter({
-  name: 'brunella_agent_operations_total',
-  help: 'Total number of agent operations',
-  labelNames: ['agent', 'operation', 'status']
-});
+function getOrCreateHistogram(name: string, help: string, labelNames: string[], buckets: number[]) {
+  const existing = client.register.getSingleMetric(name);
+  return existing instanceof client.Histogram
+    ? existing
+    : new client.Histogram({ name, help, labelNames, buckets });
+}
+
+// Metrics definitions
+const httpRequestsTotal = getOrCreateCounter(
+  'http_requests_total',
+  'Total number of HTTP requests',
+  ['method', 'path', 'status_code'],
+);
+const httpRequestDurationMicroseconds = getOrCreateHistogram(
+  'http_request_duration_seconds',
+  'Duration of HTTP requests in seconds',
+  ['method', 'path', 'status_code'],
+  [0.1, 0.3, 0.5, 0.7, 1, 3, 5, 7, 10],
+);
+const agentExecutionsTotal = getOrCreateCounter(
+  'agent_executions_total',
+  'Total number of agent executions',
+  ['agent_name', 'status'],
+);
+const agentExecutionSeconds = getOrCreateHistogram(
+  'agent_execution_seconds',
+  'Duration of agent executions in seconds',
+  ['agent_name', 'status'],
+  [0.1, 0.5, 1, 2.5, 5, 10, 30],
+);
+const llmTokensTotal = getOrCreateCounter(
+  'llm_tokens_total',
+  'Total LLM tokens estimated by provider and model',
+  ['provider', 'model', 'type'],
+);
+const llmCostUsdTotal = getOrCreateCounter(
+  'llm_cost_usd_total',
+  'Estimated LLM cost in USD',
+  ['provider', 'model'],
+);
+const cloudflareDispatchDecisionsTotal = getOrCreateCounter(
+  'bas_cloudflare_dispatch_decisions_total',
+  'Cloudflare dispatch decisions by target and outcome',
+  ['target', 'outcome'],
+);
+const cloudflareDispatchLatencySeconds = getOrCreateHistogram(
+  'bas_cloudflare_dispatch_latency_seconds',
+  'Cloudflare dispatch latency in seconds',
+  ['target', 'outcome'],
+  [0.05, 0.1, 0.25, 0.5, 1, 2.5, 5],
+);
 
 /** Initialize Prometheus default metrics */
 export function initMetrics(): void {
@@ -41,10 +86,31 @@ export async function getPrometheusMetrics(): Promise<string> {
   return await client.register.metrics();
 }
 
+export async function resetPrometheusMetricsForTests(): Promise<void> {
+  client.register.resetMetrics();
+}
+
+function estimateTokenCount(text: string): number {
+  return Math.max(1, Math.ceil(text.trim().length / 4));
+}
+
 /** Record LLM usage and cost */
-export function recordLlmUsageAndCost(model: string, provider: string, inputTokens: number, outputTokens: number, costUsd: number): void {
-  // Metric update logic here (stubbed for now to unblock boot)
-  agentOperationsTotal.labels('system', 'llm_call', 'success').inc();
+export function recordLlmUsageAndCost(
+  usage: { provider: string; model: string; prompt: string; completion: string } | string,
+  providerArg?: string,
+  inputTokensArg?: number,
+  outputTokensArg?: number,
+  costUsdArg?: number,
+): void {
+  const provider = typeof usage === 'string' ? (providerArg ?? 'unknown') : usage.provider;
+  const model = typeof usage === 'string' ? usage : usage.model;
+  const inputTokens = typeof usage === 'string' ? (inputTokensArg ?? 0) : estimateTokenCount(usage.prompt);
+  const outputTokens = typeof usage === 'string' ? (outputTokensArg ?? 0) : estimateTokenCount(usage.completion);
+  const costUsd = typeof usage === 'string' ? (costUsdArg ?? 0) : (inputTokens + outputTokens) * 0.000001;
+
+  llmTokensTotal.labels(provider, model, 'input').inc(inputTokens);
+  llmTokensTotal.labels(provider, model, 'output').inc(outputTokens);
+  llmCostUsdTotal.labels(provider, model).inc(costUsd);
 }
 
 /** Record Memory Cache Hit */
@@ -58,21 +124,29 @@ export function recordMemoryCacheMiss(_agentName?: string): void {
 }
 
 /** Record Cloudflare Dispatch Outcome */
-export function recordCloudflareDispatchOutcome(agent: string, outcome: string, _durationMs?: number): void {
-  // Stubbed for now
+export function recordCloudflareDispatchOutcome(target: string, outcome: string, durationMs = 0): void {
+  cloudflareDispatchDecisionsTotal.labels(target, outcome).inc();
+  cloudflareDispatchLatencySeconds.labels(target, outcome).observe(durationMs / 1000);
 }
 
 /** Record Agent Execution outcome and duration */
-export function recordAgentExecution(agent: string, status: string, duration: number): void {
-  // Stubbed for now
-  agentOperationsTotal.labels(agent, 'execution', status).inc();
+export function recordAgentExecution(agent: string, status: string, durationMs: number): void {
+  agentExecutionsTotal.labels(agent, status).inc();
+  agentExecutionSeconds.labels(agent, status).observe(durationMs / 1000);
+}
+
+function normalizeHttpPath(pathValue: string): string {
+  return pathValue.replace(/\/\d+(?=\/|$)/g, '/:id');
 }
 
 /** Record HTTP request duration and outcome */
-export function recordHttpRequest(method: string, path: string, status: number, duration: number): void {
+export function recordHttpRequest(method: string, path: string, status: number, durationMs: number): void {
+  const normalizedPath = normalizeHttpPath(path);
+  const statusCode = status.toString();
+  httpRequestsTotal.labels(method, normalizedPath, statusCode).inc();
   httpRequestDurationMicroseconds
-    .labels(method, path, status.toString())
-    .observe(duration);
+    .labels(method, normalizedPath, statusCode)
+    .observe(durationMs / 1000);
 }
 
 /** Get a snapshot of cognitive metrics (for Health check) */
@@ -85,13 +159,8 @@ export function getCognitiveMetricsSnapshot() {
 }
 
 /** Get a snapshot of memory cache metrics */
-export function getMemoryCacheMetricsSnapshot() {
-  return {
-    hits: 0,
-    misses: 0,
-    size: 0,
-    timestamp: new Date().toISOString()
-  };
+export function getMemoryCacheMetricsSnapshot(): Record<string, { hits: number; misses: number; hitRate: number }> {
+  return {};
 }
 
 // --- CEAN METRICS (Cloudflare Edge) ---
@@ -160,7 +229,23 @@ export async function gatherMetrics(db: unknown): Promise<MetricsData> {
 
 /** Format metrics for Prometheus */
 export function formatPrometheusMetrics(metrics: MetricsData): string {
-  return `cean_pipelines_total ${metrics.pipelines_total}\ncean_pipeline_success_rate ${metrics.success_rate_pct}`;
+  return [
+    '# HELP cean_pipelines_total Total number of CEAN pipeline executions',
+    '# TYPE cean_pipelines_total counter',
+    `cean_pipelines_total ${metrics.pipelines_total}`,
+    '# HELP cean_pipeline_success_rate CEAN pipeline success rate percentage',
+    '# TYPE cean_pipeline_success_rate gauge',
+    `cean_pipeline_success_rate ${metrics.success_rate_pct}`,
+    '# HELP cean_latency_ms Average CEAN pipeline latency in milliseconds',
+    '# TYPE cean_latency_ms gauge',
+    `cean_latency_ms ${metrics.avg_latency_ms}`,
+    '# HELP cean_cache_hit_rate CEAN cache hit rate percentage',
+    '# TYPE cean_cache_hit_rate gauge',
+    `cean_cache_hit_rate ${metrics.cache_hit_rate_pct}`,
+    '# HELP cean_cost_usd Estimated CEAN cost in USD',
+    '# TYPE cean_cost_usd gauge',
+    `cean_cost_usd ${metrics.cost_usd}`,
+  ].join('\n');
 }
 
 /** Format metrics as JSON */

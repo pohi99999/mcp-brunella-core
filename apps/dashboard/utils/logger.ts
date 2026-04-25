@@ -29,22 +29,23 @@ export function logInfo(component: string, message: string): void {
 
 export function logError(component: string, message: string): void {
   console.error(
-    `%c[${formatTime()}] ❌ ${component}: ${message}`,
+    `%c[${formatTime()}] [ERROR] ${component}: ${message}`,
     `color: ${LOG_COLORS.ERROR}; font-weight: bold;`
   );
 }
 
 export function logWarn(component: string, message: string): void {
   console.warn(
-    `%c[${formatTime()}] ⚠️ ${component}: ${message}`,
+    `%c[${formatTime()}] [WARN] ${component}: ${message}`,
     `color: ${LOG_COLORS.WARN}; font-weight: bold;`
   );
 }
 
 export function logDebug(component: string, message: string): void {
-  if (process.env.NODE_ENV === 'development') {
+  const hostname = globalThis.location?.hostname;
+  if (hostname === 'localhost' || hostname === '127.0.0.1') {
     console.debug(
-      `%c[${formatTime()}] 🐛 ${component}: ${message}`,
+      `%c[${formatTime()}] [DEBUG] ${component}: ${message}`,
       `color: ${LOG_COLORS.DEBUG}; font-weight: bold;`
     );
   }

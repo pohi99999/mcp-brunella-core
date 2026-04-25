@@ -69,7 +69,7 @@ describe('sync_doc_stats', () => {
       '## 📂 HOL VANNAK A FONTOS DOLGOK?',
     ].join('\n'));
 
-    writeFile(rootDir, 'PROJEKT_DIAGRAM.md', [
+    writeFile(rootDir, path.join('docs', 'PROJEKT_DIAGRAM.md'), [
       '[0 agents total...]',
       '[0+ tool handlers...]',
       '## 📂 Fájl Struktúra (Kritikus Komponensek)',
@@ -88,7 +88,7 @@ describe('sync_doc_stats', () => {
     const bootstrapSource = fs.readFileSync(path.join(rootDir, '.ai', 'BOOTSTRAP.md'), 'utf8');
     const bootstrapCopy = fs.readFileSync(path.join(rootDir, 'BOOTSTRAP.md'), 'utf8');
     const vscodeBootstrapCopy = fs.readFileSync(path.join(rootDir, '.vscode', 'BOOTSTRAP.md'), 'utf8');
-    const projectDiagram = fs.readFileSync(path.join(rootDir, 'PROJEKT_DIAGRAM.md'), 'utf8');
+    const projectDiagram = fs.readFileSync(path.join(rootDir, 'docs', 'PROJEKT_DIAGRAM.md'), 'utf8');
 
     expect(readme).toContain('Agent registry entries: **3**');
     expect(bootstrapSource).toContain('└─ 3 AI Agents (IAgent interface)');

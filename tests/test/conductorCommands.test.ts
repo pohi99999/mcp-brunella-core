@@ -7,7 +7,7 @@ const conductorHarness = vi.hoisted(() => ({
   startWatcher: vi.fn(),
 }));
 
-vi.mock('../src/services/trackStateManager.js', () => ({
+vi.mock('@packages/core-logic/trackStateManager.js', () => ({
   trackStateManager: {
     fullSync: conductorHarness.fullSync,
     getState: conductorHarness.getState,
@@ -15,7 +15,7 @@ vi.mock('../src/services/trackStateManager.js', () => ({
   },
 }));
 
-import { registerConductorCommands } from '../src/cli/conductorCommands.js';
+import { registerConductorCommands } from '@apps/mcp-core/commands/conductorCommands.js';
 
 describe('Conductor CLI Commands', () => {
   beforeEach(() => {

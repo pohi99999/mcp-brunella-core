@@ -1,6 +1,6 @@
 import path from "path";
 import fs from "fs/promises";
-import { config } from "@packages/utils/index.js";
+import { config } from "./schema.js";
 import { resolvePythonPath } from "./pythonUtils.js";
 
 export class PythonShell {

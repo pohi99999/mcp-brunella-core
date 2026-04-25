@@ -49,6 +49,7 @@ import { selectAgentForInstruction } from "./agentRouting.js";
 import { validateAndNormalizeRegistry, type RegistryValidationReport } from "./registryValidation.js";
 import { type AgentConfig, type RegistryConfig } from "./registryStandard.js";
 import { getSkill, SKILL_REGISTRY } from "@packages/utils/index.js";
+import { PROJECT_ROOT } from "../utils/pathResolver.js";
 import { getOrchestrationConcurrencyConfig, getOrchestrationConcurrencyLimit } from "@packages/utils/paiosConfig.js";
 import { buildBrunellaTaskMeta } from "@packages/core-logic/cloudflare/CFDispatcher.js";
 import { withCFDispatch } from "@packages/core-logic/cloudflare/CFDispatchMiddleware.js";
@@ -2220,7 +2221,7 @@ export class AgentManager extends EventEmitter {
       const fs = await import("fs");
 
       const registryPath = path.default.resolve(
-        process.cwd(),
+        PROJECT_ROOT,
         "packages",
         "agents",
         "registry.json",

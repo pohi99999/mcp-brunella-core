@@ -2,7 +2,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { buildDocsConfigSotSnapshot } from '../src/tools/docsConfigSot.js';
+import { buildDocsConfigSotSnapshot } from '../../packages/utils/docsConfigSot.js';
 
 // Paths
 const ROOT_DIR = process.cwd();
@@ -115,7 +115,7 @@ ${formatAgentTable(businessAgents)}
 ---
 
 **Ez a dokumentum automatikusan generált. Ne szerkeszd kézzel!**
-*Script: scripts/update_master_context.ts*
+*Script: ops/scripts/update_master_context.ts*
 
 `;
 

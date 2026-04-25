@@ -47,7 +47,7 @@ export function createDocsConfigFixture(): DocsConfigFixture {
 
   writeFile(
     rootDir,
-    "RENDSZER.md",
+    path.join("docs", "RENDSZER.md"),
     [
       "# Rendszer",
       "",
@@ -58,7 +58,7 @@ export function createDocsConfigFixture(): DocsConfigFixture {
 
   for (const relativePath of [
     "BOOTSTRAP.md",
-    "PROJEKT_DIAGRAM.md",
+    path.join("docs", "PROJEKT_DIAGRAM.md"),
     ".ai/BOOTSTRAP.md",
     ".vscode/BOOTSTRAP.md",
   ]) {

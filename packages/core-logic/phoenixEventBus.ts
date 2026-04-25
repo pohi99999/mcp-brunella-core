@@ -364,16 +364,13 @@ class PhoenixEventBusClass extends EventEmitter {
       logError('PhoenixEventBus', `Error in event handler for ${event}: ${err instanceof Error ? err.message : String(err)}`);
     }
 
-    // 2. Socket.IO broadcast to dashboard (asynchronous)
+    // 2. Socket.IO broadcast to dashboard
     if (this.socketBroadcaster) {
-      const broadcaster = this.socketBroadcaster;
-      process.nextTick(() => {
-        try {
-          broadcaster(event, data);
-        } catch (err) {
-          logError('PhoenixEventBus', `Error in socket broadcaster for ${event}: ${err instanceof Error ? err.message : String(err)}`);
-        }
-      });
+      try {
+        this.socketBroadcaster(event, data);
+      } catch (err) {
+        logError('PhoenixEventBus', `Error in socket broadcaster for ${event}: ${err instanceof Error ? err.message : String(err)}`);
+      }
     }
 
     // 3. Event history ring buffer (synchronous - fast operation)

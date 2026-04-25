@@ -1,5 +1,5 @@
 import { logInfo, logError } from '@packages/utils/logger.js';
-import { runTests, getSchedulerStatus } from '@apps/mcp-core/server/schedulers/testRunner.js';
+import { runTests, getSchedulerStatus } from '@packages/core-logic/schedulers/testRunner.js';
 import {
   getTestStats,
   getTestRuns,

@@ -9,7 +9,7 @@ const {
   loadRuntimeThresholdContract,
   renderRuntimeThresholdContract,
   parseEnvFile,
-} = require('../scripts/runtime-threshold-contract.cjs') as {
+} = require('../../ops/scripts/runtime-threshold-contract.cjs') as {
   loadRuntimeThresholdContract: (options?: {
     env?: NodeJS.ProcessEnv;
     contractFile?: string;

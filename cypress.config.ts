@@ -19,7 +19,7 @@ export default defineConfig({
       framework: 'react',
       bundler: 'vite',
     },
-    specPattern: 'src/dashboard/**/*.cy.{ts,tsx}',
+    specPattern: 'apps/dashboard/**/*.cy.{ts,tsx}',
     supportFile: 'testing/cypress/support/component.ts',
   },
 });

@@ -16,10 +16,22 @@ export interface MemoryConfig {
 }
 
 function findProjectRoot(dir: string): string {
-  let d = path.resolve(dir);
+  const resolvedDir = path.resolve(dir);
+  const workspaceRoot = path.resolve(process.cwd());
+  const relativeToWorkspace = path.relative(workspaceRoot, resolvedDir);
+  if (relativeToWorkspace.startsWith('..') || path.isAbsolute(relativeToWorkspace)) {
+    return resolvedDir;
+  }
+
+  let d = resolvedDir;
   const root = path.parse(d).root;
   while (d !== root) {
-    if (fs.existsSync(path.join(d, '.git'))) return d;
+    if (
+      fs.existsSync(path.join(d, '.git')) &&
+      (fs.existsSync(path.join(d, 'package.json')) || fs.existsSync(path.join(d, 'conductor')))
+    ) {
+      return d;
+    }
     d = path.dirname(d);
   }
   return path.resolve(dir);
@@ -51,11 +63,6 @@ export function discoverMemoryPaths(cwd: string, config: MemoryConfig): string[]
       : DEFAULT_NAMES;
   const out: string[] = [];
   const home = os.homedir();
-
-  for (const name of names) {
-    const globalPath = path.join(home, '.brunella', name);
-    if (fs.existsSync(globalPath)) out.push(globalPath);
-  }
 
   const root = findProjectRoot(cwd);
   let dir = cwd;

@@ -10,7 +10,7 @@ import {
 } from '../scripts/lib/trackAudit.mjs';
 
 const mainRepoRoot = process.cwd();
-const hookProofScript = path.join(mainRepoRoot, 'scripts', 'hook-proof.mjs');
+const hookProofScript = path.join(mainRepoRoot, 'ops', 'scripts', 'hook-proof.mjs');
 
 function cleanGitEnv(): NodeJS.ProcessEnv {
   const env = { ...process.env };

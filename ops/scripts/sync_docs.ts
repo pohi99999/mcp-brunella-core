@@ -7,9 +7,9 @@ import boxen from "boxen";
 
 import { syncDocStats } from "./sync_doc_stats.js";
 import { updateMasterContext } from "./update_master_context.js";
-import { buildDocsConfigSotSnapshot, renderDocsConfigSotMarkdown } from "../src/tools/docsConfigSot.js";
-import { buildDocsUnifierReport } from "../src/tools/docUnifier.js";
-import { buildConfigGuardianReport } from "../src/tools/configGuardian.js";
+import { buildDocsConfigSotSnapshot, renderDocsConfigSotMarkdown } from "../../packages/utils/docsConfigSot.js";
+import { buildDocsUnifierReport } from "../../packages/utils/docUnifier.js";
+import { buildConfigGuardianReport } from "../../packages/utils/configGuardian.js";
 
 function printHumanSummary(
   stats: ReturnType<typeof syncDocStats>["stats"],

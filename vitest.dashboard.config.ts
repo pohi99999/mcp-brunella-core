@@ -2,20 +2,20 @@ import { defineConfig } from 'vitest/config';
 import path from 'path';
 
 export default defineConfig({
-    test: {
-        environment: 'jsdom',
-        include: [
-          'test/dashboard/**/*.test.{ts,tsx}',
-          'src/dashboard/**/*.test.{ts,tsx}', // component-level tests co-located with source
-        ],
-        globals: true,
-        setupFiles: ['./test/dashboard/setup.ts'],
-        css: false,
+  test: {
+    environment: 'jsdom',
+    include: [
+      'apps/dashboard/**/*.test.{ts,tsx}',
+      'tests/test/dashboard/**/*.test.{ts,tsx}',
+    ],
+    exclude: ['**/node_modules/**', '**/build/**'],
+    globals: true,
+    setupFiles: ['./tests/test/setup-ui.ts'],
+  },
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './apps/dashboard'),
+      '@packages': path.resolve(__dirname, './packages'),
     },
-    resolve: {
-        alias: {
-            '@': path.resolve(__dirname, './src/dashboard'),
-        },
-    },
+  },
 });
-

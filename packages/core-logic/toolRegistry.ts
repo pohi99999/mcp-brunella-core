@@ -85,7 +85,7 @@ export class ToolRegistry {
   private pollTimer: NodeJS.Timeout | null = null;
 
   constructor() {
-    this.registryPath = path.resolve(__dirname, '../agents/registry.json');
+    this.registryPath = path.resolve(process.cwd(), 'packages', 'agents', 'registry.json');
   }
 
   async init(): Promise<void> {
@@ -161,3 +161,15 @@ export async function getToolRegistry(): Promise<ToolRegistry> {
   return _registry;
 }
 
+/**
+ * Execute a locally-registered tool by name.
+ * This is a thin stub — the real implementation lives in apps/mcp-core/server/registry.ts.
+ * Returns undefined if the tool has no registered handler in this package.
+ */
+export async function executeLocalTool(
+  _name: string,
+  _args: unknown,
+  _ctx?: { agentName?: string; requestId?: string; metadata?: Record<string, unknown> },
+): Promise<unknown> {
+  return undefined;
+}

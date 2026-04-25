@@ -6,7 +6,7 @@
 
 import { useState, useCallback } from 'react';
 import { toast } from 'sonner';
-import { logError } from '@packages/utils/logger.js';
+import { logError } from '../utils/logger.js';
 
 export type VoiceOption = 'alloy' | 'echo' | 'fable' | 'onyx' | 'nova' | 'shimmer';
 

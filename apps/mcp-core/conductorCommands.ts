@@ -59,14 +59,28 @@ export function registerConductorCommands(conductorCmd: Command): void {
       }
     });
 
+  function showStatusSnapshot(): void {
+    const snapshot = buildTrackStatusSnapshot(trackStateManager.getState());
+    writeLine(formatTrackStatusSnapshot(snapshot));
+  }
+
   // brunella conductor masterplan
   conductorCmd
     .command('masterplan')
     .description('Show KKV masterplan status snapshot')
     .action(async () => {
-      const snapshot = buildTrackStatusSnapshot(trackStateManager.getState());
-      writeLine(formatTrackStatusSnapshot(snapshot));
+      showStatusSnapshot();
     });
+
+  // brunella conductor status
+  if (!conductorCmd.commands.some((command) => command.name() === 'status')) {
+    conductorCmd
+      .command('status')
+      .description('Show current KKV masterplan status snapshot')
+      .action(async () => {
+        showStatusSnapshot();
+      });
+  }
 
   // brunella conductor list
   conductorCmd

@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import { ensureError } from '../../utils/ensureError.js';
-import { logError, logInfo, logWarn } from '../../utils/logger.js';
-import { ingestCrmLead, getCrmLeadStats, getCrmFollowUpStats, listCrmLeads, createCrmFollowUpPlan, recordCrmLeadScore, approveCrmFollowUpPlan, pauseCrmFollowUpPlan, resumeCrmFollowUpPlan, listCrmFollowUpAuditTrail, getCrmFollowUpSummary } from '../../data/crm_db.js';
-import { normalizeCrmLead } from '../../utils/crmLead.js';
+import { ensureError } from '@packages/utils/ensureError.js';
+import { logError, logInfo, logWarn } from '@packages/utils/logger.js';
+import { ingestCrmLead, getCrmLeadStats, getCrmFollowUpStats, listCrmLeads, createCrmFollowUpPlan, recordCrmLeadScore, approveCrmFollowUpPlan, pauseCrmFollowUpPlan, resumeCrmFollowUpPlan, listCrmFollowUpPlans, listCrmFollowUpAuditTrail, getCrmFollowUpSummary } from '@packages/utils/crm_db.js';
+import { normalizeCrmLead } from '@packages/utils/crmLead.js';
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
@@ -242,6 +242,19 @@ export function createCrmRoutes(): Router {
     } catch (error: unknown) {
       const normalized = ensureError(error);
       logError('CRMRoute', `GET /follow-up/summary failed: ${normalized.message}`);
+      return res.status(500).json({ ok: false, error: normalized.message });
+    }
+  });
+
+  router.get('/follow-up/plans', async (req, res) => {
+    try {
+      const limit = parsePositiveLimit(req.query.limit, 25);
+      const status = parseOptionalString(req.query.status);
+      const plans = listCrmFollowUpPlans(limit, status);
+      return res.json({ ok: true, count: plans.length, plans });
+    } catch (error: unknown) {
+      const normalized = ensureError(error);
+      logError('CRMRoute', `GET /follow-up/plans failed: ${normalized.message}`);
       return res.status(500).json({ ok: false, error: normalized.message });
     }
   });

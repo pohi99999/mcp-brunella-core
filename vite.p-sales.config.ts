@@ -43,7 +43,8 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src/dashboard')
+      '@': path.resolve(__dirname, './apps/dashboard'),
+      '@packages': path.resolve(__dirname, './packages')
     }
   },
 });

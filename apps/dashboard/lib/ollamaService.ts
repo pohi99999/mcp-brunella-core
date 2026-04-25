@@ -1,5 +1,5 @@
 import { OllamaStatus, ChatMessage, AgentTool, ToolCall } from './types'
-import { logError } from '@packages/utils/logger.js'
+import { logError } from '../utils/logger.js'
 
 const DEFAULT_OLLAMA_BASE_URL = 'http://localhost:11434'
 const DEFAULT_MODEL = 'llama3.2'

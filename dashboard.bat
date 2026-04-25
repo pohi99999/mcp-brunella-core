@@ -24,9 +24,14 @@ if "%ERRORLEVEL%"=="1" (
     echo    - Ollama már fut.
 )
 
-echo [3/7] INDÍTÁS: AnythingLLM...
-start /b "" AnythingLLM.exe
-echo    - AnythingLLM elindítva a háttérben.
+echo [3/7] ELLENŐRZÉS: AnythingLLM...
+where AnythingLLM.exe >nul 2>&1
+if %ERRORLEVEL%==0 (
+    start /b "" AnythingLLM.exe
+    echo    - AnythingLLM elindítva a háttérben.
+) else (
+    echo    - AnythingLLM nem található, kihagyva.
+)
 
 echo [4/7] INDÍTÁS: Python FastAPI Backend (Port 8000)...
 start /b "Brunella-Python" npm run start:python:stable

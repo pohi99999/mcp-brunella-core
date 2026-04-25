@@ -3,10 +3,10 @@
   "title": "Monorepo Path Drift Stabilizáció",
   "status": "active",
   "priority": "high",
-  "progress": 20,
+  "progress": 30,
   "createdAt": "2026-04-25T14:50:00Z",
-  "updatedAt": "2026-04-25T15:20:00Z",
-  "completedAt": "2026-04-25T15:20:00Z",
+  "updatedAt": "2026-04-25T15:35:00Z",
+  "completedAt": "2026-04-25T15:35:00Z",
   "owner": "Copilot",
   "description": "Monorepo útvonal-elcsúszások javítása és build/dashboard/CLI/test stabilizáció.",
   "verificationNotes": "Zöld validáció: npm run build, npm run build:ui, npm run sync:docs, npm run mcp:validate, node build\\apps\\mcp-core\\cli.js --help, npx vitest run tests/test/conductorCommands.test.ts, npm run test:fast:raw (426 passed / 1 skipped).",
@@ -17,3 +17,4 @@
     "no_verify_used": false
   }
 }
+

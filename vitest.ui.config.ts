@@ -3,15 +3,19 @@ import path from 'path';
 
 export default defineConfig({
   test: {
-    environment: 'jsdom', // Use JSDOM for UI component testing
-    include: ['src/dashboard/**/*.test.{ts,tsx}'], // Include tests within the dashboard directory
-    exclude: ['**/node_modules/**', '**/build/**'],
+    environment: 'jsdom',
+    include: [
+      'tests/test/dashboard/**/*.test.{ts,tsx}',
+      'apps/dashboard/**/*.test.{ts,tsx}',
+    ],
     globals: true,
-    setupFiles: ['./test/setup-ui.ts'], // Re-use existing setup if compatible
+    setupFiles: ['./tests/test/dashboard/setup.ts'],
+    css: false,
   },
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src/dashboard'),
+      '@': path.resolve(__dirname, './apps/dashboard'),
+      '@packages': path.resolve(__dirname, './packages'),
     },
   },
 });

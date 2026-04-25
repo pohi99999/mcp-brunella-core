@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import { useMcpStore } from '@/lib/mcpStore';
 import * as api from '@/lib/apiService';
 import { toast } from 'sonner';
-import { logError, logWarn } from '@packages/utils/logger.js';
+import { logError, logWarn } from '../utils/logger.js';
 
 export function useDashboardData() {
     const { setAgentTools, setServerState, setConnected } = useMcpStore();

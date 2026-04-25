@@ -5,8 +5,8 @@ sync_foszal.py - FŐSZÁL automatikus generálása
 Összegyűjti az összes AI ügynök naplóját és időrendbe rendezi őket.
 
 Használat:
-    python scripts/sync_foszal.py
-    python scripts/sync_foszal.py --watch  # Folyamatos figyelés
+    python ops/scripts/sync_foszal.py
+    python ops/scripts/sync_foszal.py --watch  # Folyamatos figyelés
 
 Források:
     - .ai/claude.md
@@ -33,7 +33,7 @@ if sys.platform == "win32":
     sys.stdout.reconfigure(encoding='utf-8', errors='replace')
 
 # Konfiguráció
-PROJECT_ROOT = Path(__file__).parent.parent
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
 AI_DIR = PROJECT_ROOT / ".ai"
 FOSZAL_PATH = AI_DIR / "FOSZAL.md"
 
@@ -165,13 +165,13 @@ def generate_foszal() -> str:
     md = f"""# FŐSZÁL - Egyesített Fejlesztési Napló
 
 **Generálva:** {now}
-**Script:** `scripts/sync_foszal.py`
+**Script:** `ops/scripts/sync_foszal.py`
 
 ---
 
 ## Mi ez a fájl?
 
-Ez a fájl **automatikusan generálódik** a `scripts/sync_foszal.py` script által.
+Ez a fájl **automatikusan generálódik** az `ops/scripts/sync_foszal.py` script által.
 Összegyűjti az összes AI ügynök naplóját (claude.md, gemini.md, cursor.md, copilot.md) és időrendbe rendezi őket.
 
 **NE SZERKESZD KÉZZEL!** - A következő szinkron felülírja.
@@ -182,7 +182,7 @@ Ez a fájl **automatikusan generálódik** a `scripts/sync_foszal.py` script ál
 
 ```bash
 # FOSZAL frissítése
-python scripts/sync_foszal.py
+python ops/scripts/sync_foszal.py
 
 # Teljes rendszer indítás (automatikusan frissíti)
 start-full.bat
@@ -222,7 +222,7 @@ start-full.bat
         md += f"| {agent_name} | {stat['count']} | {stat['last_activity']} |\n"
 
     md += "\n---\n\n"
-    md += "*Automatikusan generálva: scripts/sync_foszal.py*\n"
+    md += "*Automatikusan generálva: ops/scripts/sync_foszal.py*\n"
 
     return md
 

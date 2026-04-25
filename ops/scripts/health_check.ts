@@ -20,7 +20,7 @@ import {
   getBasCloudflareApiToken,
   getPersonalCloudflareAccountId,
   getPersonalCloudflareApiToken,
-} from "../src/utils/cloudflareConfig.js";
+} from "../../packages/utils/cloudflareConfig.js";
 
 // ============================================================================
 // Types

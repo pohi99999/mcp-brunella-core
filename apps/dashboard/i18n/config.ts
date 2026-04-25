@@ -17,7 +17,7 @@ i18n
     fallbackLng: 'hu',
     supportedLngs: ['hu', 'en'],
     nonExplicitSupportedLngs: true,
-    debug: process.env.NODE_ENV === 'development',
+    debug: import.meta.env.DEV,
     interpolation: {
       escapeValue: false, // React már biztonságos
     },

@@ -22,7 +22,7 @@ import type {
 import type { ReflectionNightlyCycleResult, ReflectionOverview } from '@packages/core-logic/reflectionOverview.js';
 export type { ReflectionNightlyCycleResult, ReflectionOverview } from '@packages/core-logic/reflectionOverview.js';
 import type { TrackStatusSnapshot } from '@packages/types/trackStatus.js';
-import { logError } from '@packages/utils/logger.js';
+import { logError } from '../utils/logger.js';
 export {
   missionSurfaceLabels,
   missionSurfaceValues,
