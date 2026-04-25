@@ -110,14 +110,13 @@ ${formatAgentTable(businessAgents)}
 ## 4. 🖥️ Interfészek
 
 *   **Mission Control Dashboard:** http://localhost:5173
-*   **Brunella CLI:** 
+*   **Brunella CLI:** npm run cli / npm run cli:hu
 
 ---
 
 **Ez a dokumentum automatikusan generált. Ne szerkeszd kézzel!**
 *Script: ops/scripts/update_master_context.ts*
-
-`;
+`.trimEnd() + '\n';
 
     // 4. Write File
     const existing = fs.existsSync(MASTER_CONTEXT_PATH) ? await fs.promises.readFile(MASTER_CONTEXT_PATH, 'utf-8') : '';

@@ -156,7 +156,7 @@ A rendszer **95** regisztrált ügynökkel rendelkezik.
 ## 4. 🖥️ Interfészek
 
 *   **Mission Control Dashboard:** http://localhost:5173
-*   **Brunella CLI:**
+*   **Brunella CLI:** npm run cli / npm run cli:hu
 
 ---
 
