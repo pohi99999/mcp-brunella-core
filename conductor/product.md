@@ -23,3 +23,6 @@ Egyéni fejlesztők és csapatok, akik skálázható és önfenntartó AI automa
 ## Specializált Alkalmazások
 ### P-book (Könyvelés)
 A Brunella motorra épülő, önálló KKV könyvelési automatizálási megoldás. Dark FinTech UI-val és A2UI alapú ügynök-interakciókkal segíti a könyvelők munkáját.
+
+### P-SEARCH (Pályázatkereső)
+Intelligens pályázat- és hitelkereső alkalmazás. Cégprofil alapján szűr, rangsorol és dokumentumcsomagot állít össze A2UI alapú generatív felületen.
