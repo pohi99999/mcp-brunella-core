@@ -1,0 +1,73 @@
+{
+  "lastUpdated": "2026-04-26T12:00:00.000Z",
+  "tracks": [
+    {
+      "id": "stabilization-path-drift-20260425",
+      "name": "Monorepo Path Drift Stabilizáció",
+      "status": "completed",
+      "priority": "high",
+      "progress": 100,
+      "created": "2026-04-25T14:50:00Z",
+      "updated": "2026-04-25T15:35:00Z",
+      "completed": "2026-04-25T15:35:00Z",
+      "assignee": "Copilot",
+      "tags": [],
+      "dependencies": [],
+      "dod": {
+        "tests_pass": true,
+        "build_clean": true,
+        "code_committed": true,
+        "no_verify_used": false
+      },
+      "group": "brunella",
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\stabilization-path-drift-20260425",
+      "_isArchived": false
+    },
+    {
+      "id": "p_book_20260426",
+      "name": "P-book (Könyvelés) alkalmazás",
+      "status": "active",
+      "priority": "high",
+      "progress": 0,
+      "created": "2026-04-26T10:00:00Z",
+      "updated": "2026-04-26T10:00:00Z",
+      "assignee": "Gemini CLI",
+      "group": "accounting",
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\p_book_20260426",
+      "_isArchived": false
+    },
+    {
+      "id": "p_ber_20260426",
+      "name": "p-ber (Bér és munkaügy) alkalmazás",
+      "status": "active",
+      "priority": "medium",
+      "progress": 0,
+      "created": "2026-04-26T10:30:00Z",
+      "updated": "2026-04-26T10:30:00Z",
+      "assignee": "Gemini CLI",
+      "group": "accounting",
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\p_ber_20260426",
+      "_isArchived": false
+    },
+    {
+      "id": "p_search_20260426",
+      "name": "P-SEARCH (Pályázat- és hitelkereső) alkalmazás",
+      "status": "active",
+      "priority": "high",
+      "progress": 0,
+      "created": "2026-04-26T11:00:00Z",
+      "updated": "2026-04-26T11:00:00Z",
+      "assignee": "Gemini CLI",
+      "group": "search",
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\p_search_20260426",
+      "_isArchived": false
+    }
+  ],
+  "stats": {
+    "total": 4,
+    "active": 3,
+    "completed": 1,
+    "archived": 0,
+    "proposed": 0
+  }
+}
