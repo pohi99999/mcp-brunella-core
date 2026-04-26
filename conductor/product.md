@@ -26,3 +26,6 @@ A Brunella motorra épülő, önálló KKV könyvelési automatizálási megold�
 
 ### P-SEARCH (Pályázatkereső)
 Intelligens pályázat- és hitelkereső alkalmazás. Cégprofil alapján szűr, rangsorol és dokumentumcsomagot állít össze A2UI alapú generatív felületen.
+
+### p-ber (Bérszámfejtő)
+Munkaügyi és bérszámfejtési asszisztens Telegram és Google Sheets integrációval. Gyors távollét-rögzítést és automatizált bérjegyzék-generálást biztosít.
