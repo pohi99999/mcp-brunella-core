@@ -1,21 +1,25 @@
-# Termékdefiníció - Brunella Agent System (BAS)
+# TermÃ©kdefinÃ­ciÃ³ - Brunella Agent System (BAS)
 
-## Jövõkép
-A Brunella Agent System egy hibrid, multi-agent AI ökoszisztéma, amelyet szoftverfejlesztés, kutatás és üzleti folyamatok automatizálására terveztek. A rendszer lokális (Ollama) és felhõ alapú (Gemini, GitHub Models) LLM-eket, az MCP protokollt és egy öngyógyító architektúrát (Phoenix Protocol) ötvöz.
+## JÃ¶vÅ‘kÃ©p
+A Brunella Agent System egy hibrid, multi-agent AI Ã¶koszisztÃ©ma, amelyet szoftverfejlesztÃ©s, kutatÃ¡s Ã©s Ã¼zleti folyamatok automatizÃ¡lÃ¡sÃ¡ra terveztek. A rendszer lokÃ¡lis (Ollama) Ã©s felhÅ‘ alapÃº (Gemini, GitHub Models) LLM-eket, az MCP protokollt Ã©s egy Ã¶ngyÃ³gyÃ­tÃ³ architektÃºrÃ¡t (Phoenix Protocol) Ã¶tvÃ¶z.
 
-## Stratégiai Irányvonalak
+## StratÃ©giai IrÃ¡nyvonalak
 
-### 1. Eseményvezérelt, Proaktív Mûködés (Zero-Prompt AI)
-A Brunella nem vár utasításra. Folyamatosan monitorozza a környezetét (email, GitHub, szerverek), és proaktívan reagál az eseményekre (pl. automatikus hibajavítás).
+### 1. EsemÃ©nyvezÃ©relt, ProaktÃ­v MÅ±kÃ¶dÃ©s (Zero-Prompt AI)
+A Brunella nem vÃ¡r utasÃ­tÃ¡sra. Folyamatosan monitorozza a kÃ¶rnyezetÃ©t (email, GitHub, szerverek), Ã©s proaktÃ­van reagÃ¡l az esemÃ©nyekre (pl. automatikus hibajavÃ­tÃ¡s).
 
-### 2. Folyamatos Önfejlesztés (Continuous Self-Improvement)
-A rendszer a sikeres akciókból szintetikus tanítóadatbázist generál saját, kisebb modelljei (SLM) finomhangolásához, csökkentve a költségeket és növelve a sebességet.
+### 2. Folyamatos Ã–nfejlesztÃ©s (Continuous Self-Improvement)
+A rendszer a sikeres akciÃ³kbÃ³l szintetikus tanÃ­tÃ³adatbÃ¡zist generÃ¡l sajÃ¡t, kisebb modelljei (SLM) finomhangolÃ¡sÃ¡hoz, csÃ¶kkentve a kÃ¶ltsÃ©geket Ã©s nÃ¶velve a sebessÃ©get.
 
-### 3. Dinamikus, Eldobható Ágensek (Dynamic Agent Spawning)
-A rendszer menet közben hoz létre specializált ágenseket egy-egy komplex feladatra, majd a munka végeztével terminálja õket.
+### 3. Dinamikus, EldobhatÃ³ ÃœgynÃ¶kÃ¶k (Dynamic Agent Spawning)
+A rendszer menet kÃ¶zben hoz lÃ©tre specializÃ¡lt Ã¼gynÃ¶kÃ¶ket egy-egy komplex feladatra, majd a munka vÃ©geztÃ©vel terminÃ¡lja Å‘ket.
 
-### 4. Ágens-Ágens (B2B) Hálózatok (Federated MCP)
-Biztonságos kommunikáció külsõ rendszerek ágenseivel autonóm tárgyalásokhoz és erõforrás-kezeléshez.
+### 4. ÃœgynÃ¶k-ÃœgynÃ¶k (B2B) HÃ¡lÃ³zatok (Federated MCP)
+BiztonsÃ¡gos kommunikÃ¡ciÃ³ kÃ¼lsÅ‘ rendszerek Ã¼gynÃ¶keivel autonÃ³m tÃ¡rgyalÃ¡sokhoz Ã©s erÅ‘forrÃ¡s-kezelÃ©shez.
 
-## Célközönség
-Egyéni fejlesztõk és csapatok, akik skálázható és önfenntartó AI automatizációt keresnek.
+## CÃ©lkÃ¶zÃ¶nsÃ©g
+EgyÃ©ni fejlesztÅ‘k Ã©s csapatok, akik skÃ¡lÃ¡zhatÃ³ Ã©s Ã¶nfenntartÃ³ AI automatizÃ¡ciÃ³t keresnek.
+
+## SpecializÃ¡lt AlkalmazÃ¡sok
+### P-book (KÃ¶nyvelÃ©s)
+A Brunella motorra Ã©pÃ¼lÅ‘, Ã¶nÃ¡llÃ³ KKV kÃ¶nyvelÃ©si automatizÃ¡lÃ¡si megoldÃ¡s. Dark FinTech UI-val Ã©s A2UI alapÃº Ã¼gynÃ¶k-interakciÃ³kkal segÃ­ti a kÃ¶nyvelÅ‘k munkÃ¡jÃ¡t.

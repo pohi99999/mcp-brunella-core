@@ -1,4 +1,4 @@
-# TechnolÛgiai Stack
+# Technol√≥gi Stack
 
 ## Nyelvek
 - TypeScript
@@ -9,25 +9,26 @@
 - React
 - TailwindCSS
 - Vite
+- A2UI v0.9 (Generat√≠v UI szabv√°ny √ºgyn√∂k√∂kh√∂z)
 
-## Backend Ès Orchestration
+## Backend √©s Orchestration
 - Express.js (Node.js)
 - FastAPI (Python)
-- Socket.IO (ValÛs idej˚ kommunik·ciÛ)
+- Socket.IO (Val√≥s idej≈± kommunik√°ci√≥)
 - Model Context Protocol (MCP)
 
-## Adatb·zisok Ès T·rol·s
-- SQLite (Metaadatok Ès feladatkezelÈs)
-- LanceDB (Vektoros adatb·zis RAG-hoz)
+## Adatb√°zisok √©s T√°rol√°s
+- SQLite (Metaadatok √©s feladatkezel√©s)
+- LanceDB (Vektoros adatb√°zis RAG-hoz)
 
-## Cloudflare Integr·ciÛk
-- **Cloudflare Workers**: Edge computing Ès orchestration.
-- **Cloudflare Tunnel**: Biztons·gos t·voli hozz·fÈrÈs.
-- **AI Gateway**: LLM kÈrÈsek menedzselÈse, cache Ès rate limiting.
-- **Workers KV / D1 / R2**: Elosztott t·rol·s Ès adatb·zisok.
+## Cloudflare Integr√°ci√≥k
+- **Cloudflare Workers**: Edge computing √©s orchestration.
+- **Cloudflare Tunnel**: Biztons√°gos t√°voli hozz√°f√©r√©s.
+- **AI Gateway**: LLM k√©r√©sek menedzsel√©se, cache √©s rate limiting.
+- **Workers KV / D1 / R2**: Elosztott t√°rol√°s √©s adatb√°zisok.
 
-## AI Ès LLM Szolg·ltatÛk
-- Ollama (Lok·lis modellek: Qwen, Llama, Gemma)
+## AI √©s LLM Szolg√°ltat√≥k
+- Ollama (Lok√°lis modellek: Qwen, Llama, Gemma)
 - Google Gemini
 - Anthropic Claude
 - GitHub Models (GPT-4.1)
