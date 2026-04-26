@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-04-26T12:00:00.000Z",
+  "lastUpdated": "2026-04-26T12:45:00.000Z",
   "tracks": [
     {
       "id": "stabilization-path-drift-20260425",
@@ -26,15 +26,22 @@
     {
       "id": "p_book_20260426",
       "name": "P-book (Könyvelés) alkalmazás",
-      "status": "active",
+      "status": "completed",
       "priority": "high",
-      "progress": 0,
+      "progress": 100,
       "created": "2026-04-26T10:00:00Z",
-      "updated": "2026-04-26T10:00:00Z",
+      "updated": "2026-04-26T12:40:00Z",
+      "completed": "2026-04-26T12:40:00Z",
       "assignee": "Gemini CLI",
       "group": "accounting",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\p_book_20260426",
-      "_isArchived": false
+      "_isArchived": false,
+      "dod": {
+        "tests_pass": true,
+        "build_clean": true,
+        "code_committed": true,
+        "no_verify_used": false
+      }
     },
     {
       "id": "p_ber_20260426",
@@ -65,8 +72,8 @@
   ],
   "stats": {
     "total": 4,
-    "active": 3,
-    "completed": 1,
+    "active": 2,
+    "completed": 2,
     "archived": 0,
     "proposed": 0
   }

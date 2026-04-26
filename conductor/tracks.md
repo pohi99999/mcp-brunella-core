@@ -1,10 +1,10 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-04-26T12:00:00.000Z
+**Utolso frissites:** 2026-04-26T12:45:00.000Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 4 total | 3 active | 1 completed | 0 archived
+**Stats:** 4 total | 2 active | 2 completed | 0 archived
 **Csoportok:** Könyvelés / üzleti automatizálás: 2 | Pályázat- és hitelkezelés: 1 | Brunella rendszer: 1 | Egyéb: 0
 
 ---
@@ -15,12 +15,9 @@ _Nincs track ebben a szekcioban._
 
 ---
 
-## Aktiv Szalak (Active) (3)
+## Aktiv Szalak (Active) (2)
 
-### Könyvelés / üzleti automatizálás (2)
-
-- [ ] **P-book (Könyvelés) alkalmazás**
-  *Link: [./tracks/p_book_20260426/](./tracks/p_book_20260426/)*
+### Könyvelés / üzleti automatizálás (1)
 
 - [ ] **p-ber (Bér és munkaügy) alkalmazás**
   *Link: [./tracks/p_ber_20260426/](./tracks/p_ber_20260426/)*
@@ -32,7 +29,14 @@ _Nincs track ebben a szekcioban._
 
 ---
 
-## Befejezett (Completed - Not Archived) (1)
+## Befejezett (Completed - Not Archived) (2)
+
+### Könyvelés / üzleti automatizálás (1)
+
+- [x] **P-book (Könyvelés) alkalmazás**
+  - **ID:** `p_book_20260426`
+  - **Completed:** 2026-04-26T12:40:00Z
+  - Mappa: ./tracks/p_book_20260426/
 
 ### Brunella rendszer (1)
 
