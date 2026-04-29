@@ -4,7 +4,7 @@ import request from "supertest";
 import fs from "fs/promises";
 import path from "path";
 import os from "os";
-import { createTracksRouter } from "../src/server/tracksRoutes.js";
+import { createTracksRouter } from "@apps/mcp-core/server/tracksRoutes.js";
 
 function isRecord(v: unknown): v is Record<string, unknown> {
   return typeof v === "object" && v !== null;

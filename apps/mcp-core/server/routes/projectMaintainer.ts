@@ -9,9 +9,9 @@
 
 import { Router, type Request, type Response } from 'express';
 import type Database from 'better-sqlite3';
-import { ReflectionEngine } from '../../core/reflectionEngine.js';
-import { logError, logInfo } from '../../utils/logger.js';
-import { runProjectMaintainerReport } from '@packages/core-logic/projectMaintainerService.js';
+import { ReflectionEngine } from '@packages/core-logic/reflectionEngine.js';
+import { logError, logInfo } from '@packages/utils/logger.js';
+import { runProjectMaintainerReport } from '@packages/core-logic/services/projectMaintainerService.js';
 
 interface ReportRow {
   id: string;

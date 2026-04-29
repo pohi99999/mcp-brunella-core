@@ -1,8 +1,8 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { PipelineRunner } from '../src/agents/developerPipeline.js';
+import { PipelineRunner } from '@packages/agents/developerPipeline.js';
 
 // Mock logger
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
     logInfo: vi.fn(),
     logError: vi.fn(),
     setAgentStatus: vi.fn()

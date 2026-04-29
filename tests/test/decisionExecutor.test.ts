@@ -13,14 +13,14 @@ vi.mock('crypto', () => ({
   randomUUID: vi.fn(() => 'action-uuid'),
 }));
 
-vi.mock('../src/core/autonomousInfraRuntime.js', () => ({
+vi.mock('@packages/core-logic/autonomousInfraRuntime.js', () => ({
   goalEngine: {
     createGoal: harness.createGoal,
     setGoalStatus: harness.setGoalStatus,
   },
 }));
 
-vi.mock('../src/core/predictiveIntelligence.js', () => ({
+vi.mock('@packages/core-logic/predictiveIntelligence.js', () => ({
   PredictiveIntelligence: {
     getInstance: () => ({
       acknowledgeAlert: harness.acknowledgeAlert,
@@ -29,12 +29,12 @@ vi.mock('../src/core/predictiveIntelligence.js', () => ({
   },
 }));
 
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
   logInfo: harness.logInfo,
   logError: harness.logError,
 }));
 
-import { executeDecisionAction, rollbackDecisionAction } from '../src/core/decisionExecutor.js';
+import { executeDecisionAction, rollbackDecisionAction } from '@packages/core-logic/decisionExecutor.js';
 
 describe('decisionExecutor', () => {
   beforeEach(() => {

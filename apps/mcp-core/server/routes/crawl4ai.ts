@@ -7,8 +7,8 @@
  */
 
 import { Router } from "express";
-import { crawl4aiCrawlHandler, crawl4aiBatchHandler } from "../../tools/crawl4aiTool.js";
-import { logInfo, logError } from "../../utils/logger.js";
+import { crawl4aiCrawlHandler, crawl4aiBatchHandler } from "@packages/utils/crawl4aiTool.js";
+import { logInfo, logError } from "@packages/utils/logger.js";
 import { socketService } from "@packages/agents/SocketService.js";
 
 const PYTHON_API = process.env.PYTHON_API_URL || "http://127.0.0.1:8000";

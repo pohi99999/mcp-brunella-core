@@ -1,9 +1,9 @@
 import { describe, it, expect, vi, beforeEach, afterAll } from "vitest";
-import { agentManager } from "../src/agents/AgentManager.js";
-import { PythonShell } from "../src/utils/pythonShell.js";
-import { saveCheckpoint, loadCheckpoint } from "../src/core/checkpoint.js";
+import { agentManager } from "@packages/agents/AgentManager.js";
+import { PythonShell } from "@packages/utils/pythonShell.js";
+import { saveCheckpoint, loadCheckpoint } from "@packages/core-logic/checkpoint.js";
 // Mocking core modules
-vi.mock("../src/utils/logger.js", () => ({
+vi.mock("@packages/utils/logger.js", () => ({
     Logger: class {
         info = vi.fn();
         error = vi.fn();
@@ -14,13 +14,13 @@ vi.mock("../src/utils/logger.js", () => ({
     logWarn: vi.fn(),
     setAgentStatus: vi.fn(),
 }));
-vi.mock("../src/core/gitRecovery.js", () => ({
+vi.mock("@packages/core-logic/gitRecovery.js", () => ({
     gitAutoCheckpoint: vi.fn().mockResolvedValue({ success: true }),
     logRecoveryEvent: vi.fn(),
     getRecoveryLog: vi.fn().mockReturnValue([]),
     clearRecoveryLog: vi.fn(),
 }));
-vi.mock("../src/core/retryStrategy.js", () => ({
+vi.mock("@packages/core-logic/retryStrategy.js", () => ({
     withRetry: vi.fn().mockImplementation(async (fn, label, config) => {
         let lastError;
         // Simulate retries without actual delay

@@ -15,7 +15,7 @@ import {
   getHookCircuitSnapshot,
   getHookRegistrySnapshot,
   type HookDispatchContext,
-} from '../src/utils/hooks.js';
+} from '@packages/utils/hooks.js';
 
 // ============================================================================
 // HELPERS
@@ -441,7 +441,7 @@ describe('Hooks — Core Registry', () => {
 
   describe('fireHooks (hookEngine integration)', () => {
     it('invokes registered handler via fireHooks', async () => {
-      const { fireHooks } = await import('../src/core/hookEngine.js');
+      const { fireHooks } = await import('@packages/core-logic/hookEngine.js');
 
       let invoked = false;
       registerHook('AfterTool', () => {
@@ -453,7 +453,7 @@ describe('Hooks — Core Registry', () => {
     });
 
     it('fireHooks never throws even when handler throws', async () => {
-      const { fireHooks } = await import('../src/core/hookEngine.js');
+      const { fireHooks } = await import('@packages/core-logic/hookEngine.js');
 
       registerHook('SessionEnd', () => {
         throw new Error('engine swallow test');
@@ -464,7 +464,7 @@ describe('Hooks — Core Registry', () => {
     });
 
     it('fireHooks respects the disabled option', async () => {
-      const { fireHooks } = await import('../src/core/hookEngine.js');
+      const { fireHooks } = await import('@packages/core-logic/hookEngine.js');
 
       let ran = false;
       registerHook('BeforeAgent', () => {
@@ -476,7 +476,7 @@ describe('Hooks — Core Registry', () => {
     });
 
     it('fireHooks with enabled:false skips all handlers', async () => {
-      const { fireHooks } = await import('../src/core/hookEngine.js');
+      const { fireHooks } = await import('@packages/core-logic/hookEngine.js');
 
       let ran = false;
       registerHook('AfterAgent', () => {
@@ -488,7 +488,7 @@ describe('Hooks — Core Registry', () => {
     });
 
     it('fireHooks with skipCircuitBreaker bypasses circuit protection', async () => {
-      const { fireHooks } = await import('../src/core/hookEngine.js');
+      const { fireHooks } = await import('@packages/core-logic/hookEngine.js');
 
       let callCount = 0;
       registerHook('BeforeTool', () => {

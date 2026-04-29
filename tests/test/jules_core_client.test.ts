@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { JulesAICoreClient, JulesFixResponse } from '../src/core/julesMock.js';
-import type { DeploymentAnalysis } from '../src/tools/deploymentAnalyzer.js';
+import { JulesAICoreClient, JulesFixResponse } from '@packages/core-logic/julesMock.js';
+import type { DeploymentAnalysis } from '@packages/utils/deploymentAnalyzer.js';
 
 describe('JulesAICoreClient', () => {
   const originalEnv = process.env;

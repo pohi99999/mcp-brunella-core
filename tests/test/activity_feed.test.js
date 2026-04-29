@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { activityFeed } from '../src/utils/activityFeed.js';
+import { activityFeed } from '@packages/utils/activityFeed.js';
 describe('ActivityFeedManager', () => {
     beforeEach(() => {
         activityFeed.clear();

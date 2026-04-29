@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { ensureError } from '../src/utils/ensureError.js';
+import { ensureError } from '@packages/utils/ensureError.js';
 
 describe('ensureError', () => {
   it('returns the original Error instance unchanged', () => {

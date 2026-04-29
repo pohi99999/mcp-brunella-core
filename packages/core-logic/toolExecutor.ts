@@ -42,9 +42,9 @@ let _toolRegistry: LocalToolRegistryModule | null = null;
 async function getToolRegistry(): Promise<typeof _toolRegistry> {
   if (_toolRegistry !== null) return _toolRegistry;
   try {
-    const mod = await import('../server/toolRegistry.js');
+    const mod = await import('./toolRegistry.js');
     _toolRegistry = {
-      executeLocalTool: mod.executeLocalTool,
+      executeLocalTool: (mod as unknown as LocalToolRegistryModule).executeLocalTool,
     };
   } catch {
     _toolRegistry = {};

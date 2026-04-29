@@ -13,7 +13,7 @@ let phoenixEventBus;
 async function freshEventBus() {
     // Reset module cache for a clean singleton
     vi.resetModules();
-    const mod = await import('../src/core/phoenixEventBus.js');
+    const mod = await import('@packages/core-logic/phoenixEventBus.js');
     return mod.phoenixEventBus;
 }
 describe('PhoenixEventBus', () => {

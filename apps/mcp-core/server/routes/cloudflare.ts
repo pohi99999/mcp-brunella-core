@@ -1,16 +1,16 @@
 import { Router } from "express";
-import { agentManager } from "../../agents/AgentManager.js";
-import { cloudflareClient } from "../../utils/cloudflareClient.js";
-import { resolveBrowserCopilotEndpoint } from "../../utils/browserEndpoint.js";
-import { getCloudflareAuthHeaders } from "../../utils/cloudflareConfig.js";
+import { agentManager } from "@packages/agents/AgentManager.js";
+import { cloudflareClient } from "@packages/utils/cloudflareClient.js";
+import { resolveBrowserCopilotEndpoint } from "@packages/utils/browserEndpoint.js";
+import { getCloudflareAuthHeaders } from "@packages/utils/cloudflareConfig.js";
 import {
   getCloudflareWorkersInventory as sharedGetCloudflareWorkersInventory,
   postTaskToWorker as sharedPostTaskToWorker,
   type WorkerDefinition,
   type WorkerTaskProxyResponse,
-} from "../../cloudflare/cloudflareHelpers.js";
-import { ensureError } from "../../utils/ensureError.js";
-import { logDebug } from "../../utils/logger.js";
+} from "@packages/core-logic/cloudflare/cloudflareHelpers.js";
+import { ensureError } from "@packages/utils/ensureError.js";
+import { logDebug } from "@packages/utils/logger.js";
 
 type ChatHistoryItem = {
   role: "user" | "assistant";

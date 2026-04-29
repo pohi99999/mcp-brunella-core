@@ -10,11 +10,11 @@
  */
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { mapVoiceToCommand, listVoiceIntents } from '../src/core/voicePipeline.js';
-import { buildMobileSessionSummary, processMobileHeartbeat } from '../src/core/mobileClientBootstrap.js';
-import { remoteEventBridge } from '../src/core/remoteEventBridge.js';
-import { enqueuePaiosAction, processNextPaiosAction, getPaiosQueueStatus } from '../src/core/paiosRemoteIntegration.js';
-import type { RemoteSession, RemoteBridgeEvent } from '../src/core/types/remote.js';
+import { mapVoiceToCommand, listVoiceIntents } from '@packages/core-logic/voicePipeline.js';
+import { buildMobileSessionSummary, processMobileHeartbeat } from '@packages/core-logic/mobileClientBootstrap.js';
+import { remoteEventBridge } from '@packages/core-logic/remoteEventBridge.js';
+import { enqueuePaiosAction, processNextPaiosAction, getPaiosQueueStatus } from '@packages/core-logic/paiosRemoteIntegration.js';
+import type { RemoteSession, RemoteBridgeEvent } from '@packages/core-logic/types/remote.js';
 
 // ─── VoicePipeline ───────────────────────────────────────────────────────────
 

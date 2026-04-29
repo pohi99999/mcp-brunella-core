@@ -9,17 +9,17 @@ const routeHarness = vi.hoisted(() => ({
   fireHookSafely: vi.fn(),
 }));
 
-vi.mock('../src/utils/rag.js', () => ({
+vi.mock('@packages/utils/rag.js', () => ({
   addToIndex: routeHarness.addToIndex,
   searchRAG: routeHarness.searchRAG,
 }));
 
-vi.mock('../src/core/hookRegistry.js', () => ({
+vi.mock('@packages/core-logic/hookRegistry.js', () => ({
   fireHookSafely: routeHarness.fireHookSafely,
 }));
 
-import { createExternalKnowledgeRoutes } from '../src/server/routes/externalKnowledge.js';
-import { initExternalKnowledgeSchema } from '../src/server/services/externalKnowledgeService.js';
+import { createExternalKnowledgeRoutes } from '@apps/mcp-core/server/routes/externalKnowledge.js';
+import { initExternalKnowledgeSchema } from '@apps/mcp-core/server/services/externalKnowledgeService.js';
 
 const db = new Database(':memory:');
 

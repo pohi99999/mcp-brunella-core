@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import express from "express";
 import request from "supertest";
-import { createJulesRoutes } from "../src/server/routes/jules.js";
+import { createJulesRoutes } from "@apps/mcp-core/server/routes/jules.js";
 
 describe("Jules workflow routes", () => {
   let app: express.Express;

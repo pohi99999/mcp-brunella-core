@@ -5,7 +5,7 @@ const { getToolRegistryMock, generateMock } = vi.hoisted(() => ({
   generateMock: vi.fn(),
 }));
 
-vi.mock('../src/core/toolRegistry.js', () => ({
+vi.mock('@packages/core-logic/toolRegistry.js', () => ({
   getToolRegistry: getToolRegistryMock,
   getFallbackToolDefinitions: vi.fn().mockReturnValue([
     {
@@ -16,13 +16,13 @@ vi.mock('../src/core/toolRegistry.js', () => ({
   ]),
 }));
 
-vi.mock('../src/core/bifrost_gateway.js', () => ({
+vi.mock('@packages/core-logic/bifrost_gateway.js', () => ({
   getBifrostGateway: () => ({
     generate: generateMock,
   }),
 }));
 
-vi.mock('../src/core/graphRagEngine.js', () => ({
+vi.mock('@packages/core-logic/graphRagEngine.js', () => ({
   GraphRagEngine: {
     getInstance: () => ({
       init: vi.fn().mockResolvedValue(undefined),
@@ -32,7 +32,7 @@ vi.mock('../src/core/graphRagEngine.js', () => ({
   },
 }));
 
-vi.mock('../src/core/reflectionEngine.js', () => ({
+vi.mock('@packages/core-logic/reflectionEngine.js', () => ({
   ReflectionEngine: {
     getInstance: () => ({
       generatePromptContext: () => '',
@@ -41,7 +41,7 @@ vi.mock('../src/core/reflectionEngine.js', () => ({
   },
 }));
 
-vi.mock('../src/core/predictiveIntelligence.js', () => ({
+vi.mock('@packages/core-logic/predictiveIntelligence.js', () => ({
   PredictiveIntelligence: {
     getInstance: () => ({
       getDecisionContext: () => '',
@@ -54,7 +54,7 @@ vi.mock('../src/core/predictiveIntelligence.js', () => ({
   },
 }));
 
-import { UniversalOrchestratorService } from '../src/core/universalOrchestratorService.js';
+import { UniversalOrchestratorService } from '@packages/core-logic/universalOrchestratorService.js';
 
 describe('UniversalOrchestratorService fail-open bootstrap', () => {
   beforeEach(() => {

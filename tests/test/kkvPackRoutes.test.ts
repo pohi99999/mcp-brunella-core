@@ -2,9 +2,9 @@ import express from "express";
 import request from "supertest";
 import { describe, expect, it, vi } from "vitest";
 
-import { createKkvPackRoutes } from "../src/server/routes/kkvPack.js";
+import { createKkvPackRoutes } from "@apps/mcp-core/server/routes/kkvPack.js";
 
-vi.mock("../src/utils/logger.js", () => ({
+vi.mock("@packages/utils/logger.js", () => ({
   logError: vi.fn(),
 }));
 

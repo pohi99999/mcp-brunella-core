@@ -2,19 +2,19 @@ import express from 'express';
 import request from 'supertest';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
   logInfo: vi.fn(),
   logError: vi.fn(),
 }));
 
 describe('CEAN routes tenant isolation', () => {
-  let router: typeof import('../src/server/routes/cean.js').default;
+  let router: typeof import('@apps/mcp-core/server/routes/cean.js').default;
   let app: express.Express;
 
   beforeEach(async () => {
     vi.resetModules();
     process.env.DATABASE_PATH = ':memory:';
-    ({ default: router } = await import('../src/server/routes/cean.js'));
+    ({ default: router } = await import('@apps/mcp-core/server/routes/cean.js'));
     app = express();
     app.use(express.json());
     app.use(router);

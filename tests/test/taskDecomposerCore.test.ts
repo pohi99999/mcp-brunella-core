@@ -3,7 +3,7 @@ import {
   decomposePreview,
   detectCycle,
   type MicroTask,
-} from "../src/agents/taskDecomposerCore.js";
+} from "@packages/agents/taskDecomposerCore.js";
 
 describe("taskDecomposerCore", () => {
   it("decomposePreview creates at least one microtask", () => {

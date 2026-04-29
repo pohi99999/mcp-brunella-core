@@ -9,7 +9,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import fs from 'fs';
 import yaml from 'js-yaml';
-import type { PAIOSConfig, ModelProvider } from '../src/config/paiosConfig.js';
+import type { PAIOSConfig, ModelProvider } from '@packages/utils/paiosConfig.js';
 
 // Mock fs module
 vi.mock('fs', () => ({
@@ -30,7 +30,7 @@ import {
   PAIOSConfigSchema,
   getOrchestrationConcurrencyConfig,
   getOrchestrationConcurrencyLimit,
-} from '../src/config/paiosConfig.js';
+} from '@packages/utils/paiosConfig.js';
 
 describe('paiosConfig', () => {
   beforeEach(() => {

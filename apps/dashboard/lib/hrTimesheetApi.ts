@@ -1,5 +1,5 @@
 import { fetchWithTimeout, safeJson } from './apiService.js';
-import type { HRTimesheetStatusResponse } from '../../types/hrTimesheetStatus.js';
+import type { HRTimesheetStatusResponse } from '@packages/types/hrTimesheetStatus.js';
 
 const API_BASE = '';
 const DEFAULT_TIMEOUT_MS = 30000;

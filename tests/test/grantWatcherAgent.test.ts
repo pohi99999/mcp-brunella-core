@@ -4,7 +4,7 @@
  */
 
 import { describe, it, expect, beforeEach } from 'vitest';
-import { GrantWatcherAgent } from '../src/agents/GrantWatcherAgent.js';
+import { GrantWatcherAgent } from '@packages/agents/GrantWatcherAgent.js';
 
 describe('GrantWatcherAgent', () => {
   let agent: GrantWatcherAgent;

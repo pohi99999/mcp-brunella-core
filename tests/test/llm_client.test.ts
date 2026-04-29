@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { generateResponse } from '../src/core/llm_client.js';
+import { generateResponse } from '@packages/core-logic/llm_client.js';
 
 const { mockGenerateContent, mockBifrostGenerate } = vi.hoisted(() => {
     const mockGenerateContent = vi.fn();
@@ -18,8 +18,8 @@ vi.mock('@google/genai', () => {
 });
 
 // Mock aiGateway to always use local Ollama (bypass CF routing in tests)
-vi.mock('../src/utils/aiGateway.js', async () => {
-    const { AIGatewayClient, ...rest } = await vi.importActual('../src/utils/aiGateway.js') as any;
+vi.mock('@packages/utils/aiGateway.js', async () => {
+    const { AIGatewayClient, ...rest } = await vi.importActual('@packages/utils/aiGateway.js') as any;
     const localClient = new AIGatewayClient({ enabled: false });
     return {
         ...rest,
@@ -33,7 +33,7 @@ vi.mock('langsmith/traceable', () => ({
     traceable: (fn: any) => fn
 }));
 
-vi.mock('../src/core/bifrost_gateway.js', () => ({
+vi.mock('@packages/core-logic/bifrost_gateway.js', () => ({
     bifrostGateway: {
         generate: mockBifrostGenerate,
     },

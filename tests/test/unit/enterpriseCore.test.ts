@@ -1,17 +1,17 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { eventStore } from '../../src/core/eventStore.js';
-import { commandBus } from '../../src/core/commandBus.js';
-import { businessPolicies } from '../../src/core/businessPolicies.js';
-import { runWithContext, getContext } from '../../src/core/ambientContext.js';
-import { agentRateLimiter } from '../../src/core/agentRateLimiter.js';
+import { eventStore } from '@packages/core-logic/eventStore.js';
+import { commandBus } from '@packages/core-logic/commandBus.js';
+import { businessPolicies } from '@packages/core-logic/businessPolicies.js';
+import { runWithContext, getContext } from '@packages/core-logic/ambientContext.js';
+import { agentRateLimiter } from '@packages/core-logic/agentRateLimiter.js';
 
-import { POLICIES } from '../../src/core/businessPolicies.js';
+import { POLICIES } from '@packages/core-logic/businessPolicies.js';
 
-import { sagaOrchestrator } from '../../src/core/sagaOrchestrator.js';
-import { selfDiagnostics } from '../../src/core/selfDiagnostics.js';
+import { sagaOrchestrator } from '@packages/core-logic/sagaOrchestrator.js';
+import { selfDiagnostics } from '@packages/core-logic/selfDiagnostics.js';
 
 // Mock auditLog to avoid real DB access
-vi.mock('../../src/core/auditLog.js', () => ({
+vi.mock('@packages/core-logic/auditLog.js', () => ({
   getAuditDb: vi.fn().mockResolvedValue({
     prepare: vi.fn().mockReturnValue({
       run: vi.fn(),

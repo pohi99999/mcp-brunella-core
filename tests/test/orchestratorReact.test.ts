@@ -1,12 +1,12 @@
 import { describe, it, expect, vi, beforeEach, type Mock } from 'vitest';
-import { OrchestratorAgent } from '../src/agents/OrchestratorAgent.js';
-import * as bifrostGateway from '../src/core/bifrost_gateway.js';
-import { agentManager } from '../src/agents/AgentManager.js';
-import { socketService } from '../src/server/SocketService.js';
-import type { AgentResponse } from '../src/agents/types.js';
+import { OrchestratorAgent } from '@packages/agents/OrchestratorAgent.js';
+import * as bifrostGateway from '@packages/core-logic/bifrost_gateway.js';
+import { agentManager } from '@packages/agents/AgentManager.js';
+import { socketService } from '@apps/mcp-core/server/SocketService.js';
+import type { AgentResponse } from '@packages/agents/types.js';
 
 // Mock the gateway
-vi.mock('../src/core/bifrost_gateway.js', () => {
+vi.mock('@packages/core-logic/bifrost_gateway.js', () => {
     const mockGenerate = vi.fn();
     return {
         getBifrostGateway: () => ({
@@ -16,7 +16,7 @@ vi.mock('../src/core/bifrost_gateway.js', () => {
 });
 
 // Mock agent manager
-vi.mock('../src/agents/AgentManager.js', () => ({
+vi.mock('@packages/agents/AgentManager.js', () => ({
     agentManager: {
         listAgentDefinitions: vi.fn().mockReturnValue([{ name: 'testAgent', description: 'test', role: 'test' }]),
         listAgentStatuses: vi.fn().mockReturnValue([{ name: 'testAgent', status: 'idle' }]),
@@ -25,7 +25,7 @@ vi.mock('../src/agents/AgentManager.js', () => ({
 }));
 
 // Mock socket service
-vi.mock('../src/server/SocketService.js', () => ({
+vi.mock('@apps/mcp-core/server/SocketService.js', () => ({
     socketService: {
         broadcastChatter: vi.fn()
     }

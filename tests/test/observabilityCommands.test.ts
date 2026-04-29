@@ -9,11 +9,11 @@ const observabilityHarness = vi.hoisted(() => ({
   spinnerSucceed: vi.fn(),
 }));
 
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
   logInfo: observabilityHarness.logInfo,
 }));
 
-vi.mock('../src/utils/globalDb.js', () => ({
+vi.mock('@packages/utils/globalDb.js', () => ({
   getLlmCallStats: observabilityHarness.getLlmCallStats,
   queryLlmCalls: observabilityHarness.queryLlmCalls,
 }));
@@ -29,7 +29,7 @@ vi.mock('ora', () => ({
   }),
 }));
 
-import { registerObservabilityCommands } from '../src/cli/observabilityCommands.js';
+import { registerObservabilityCommands } from '@apps/mcp-core/commands/observabilityCommands.js';
 
 describe('Observability CLI Commands', () => {
   beforeEach(() => {

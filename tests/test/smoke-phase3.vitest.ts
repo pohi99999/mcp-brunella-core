@@ -11,7 +11,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 
 // --- MOCK-OK ---
 
-vi.mock("../src/utils/logger.js", () => ({
+vi.mock("@packages/utils/logger.js", () => ({
   logInfo: vi.fn(),
   logError: vi.fn(),
   logWarn: vi.fn(),
@@ -22,7 +22,7 @@ vi.mock("../src/utils/logger.js", () => ({
   })),
 }));
 
-vi.mock("../src/server/SocketService.js", () => ({
+vi.mock("@apps/mcp-core/server/SocketService.js", () => ({
   socketService: { emit: vi.fn() },
 }));
 
@@ -30,7 +30,7 @@ vi.mock("../src/server/SocketService.js", () => ({
 
 describe("Crawl4AI Tool — Import Smoke", () => {
   it("crawl4aiTool modul importálható", async () => {
-    const mod = await import("../src/tools/crawl4aiTool.js");
+    const mod = await import("@packages/utils/crawl4aiTool.js");
     expect(mod.crawl4aiCrawlHandler).toBeTypeOf("function");
     expect(mod.crawl4aiBatchHandler).toBeTypeOf("function");
   });
@@ -40,7 +40,7 @@ describe("Crawl4AI Tool — Import Smoke", () => {
 
 describe("Memory Tool — Import Smoke", () => {
   it("memoryTool modul importálható", async () => {
-    const mod = await import("../src/tools/memoryTool.js");
+    const mod = await import("@packages/utils/memoryTool.js");
     expect(mod.memoryStoreHandler).toBeTypeOf("function");
     expect(mod.memoryQueryHandler).toBeTypeOf("function");
     expect(mod.memoryContextHandler).toBeTypeOf("function");
@@ -53,7 +53,7 @@ describe("Memory Tool — Import Smoke", () => {
 
 describe("Python Bridge (Zod) — Import Smoke", () => {
   it("pythonBridge modul és sémák importálhatók", async () => {
-    const mod = await import("../src/utils/pythonBridge.js");
+    const mod = await import("@packages/utils/pythonBridge.js");
     expect(mod.CrawlResultSchema).toBeDefined();
     expect(mod.ExecuteResultSchema).toBeDefined();
     expect(mod.validatePythonResponse).toBeTypeOf("function");
@@ -61,7 +61,7 @@ describe("Python Bridge (Zod) — Import Smoke", () => {
   });
 
   it("CrawlResultSchema alapértelmezett validáció", async () => {
-    const { CrawlResultSchema } = await import("../src/utils/pythonBridge.js");
+    const { CrawlResultSchema } = await import("@packages/utils/pythonBridge.js");
     const result = CrawlResultSchema.safeParse({
       status: "success",
       url: "https://example.com",
@@ -71,7 +71,7 @@ describe("Python Bridge (Zod) — Import Smoke", () => {
   });
 
   it("CrawlResultSchema hibás status elutasítása", async () => {
-    const { CrawlResultSchema } = await import("../src/utils/pythonBridge.js");
+    const { CrawlResultSchema } = await import("@packages/utils/pythonBridge.js");
     const result = CrawlResultSchema.safeParse({
       status: "invalid",
       url: "https://example.com",
@@ -84,12 +84,12 @@ describe("Python Bridge (Zod) — Import Smoke", () => {
 
 describe("Crawl4AI Route — Import Smoke", () => {
   it("crawl4ai route factory importálható", async () => {
-    const mod = await import("../src/server/routes/crawl4ai.js");
+    const mod = await import("@apps/mcp-core/server/routes/crawl4ai.js");
     expect(mod.createCrawl4aiRouter).toBeTypeOf("function");
   });
 
   it("crawl4ai router Express Router-t ad vissza", async () => {
-    const { createCrawl4aiRouter } = await import("../src/server/routes/crawl4ai.js");
+    const { createCrawl4aiRouter } = await import("@apps/mcp-core/server/routes/crawl4ai.js");
     const router = createCrawl4aiRouter();
     expect(router).toBeDefined();
     expect(typeof router).toBe("function"); // Express Router is a function
@@ -100,12 +100,12 @@ describe("Crawl4AI Route — Import Smoke", () => {
 
 describe("Preferences Route — Import Smoke", () => {
   it("preferences route factory importálható", async () => {
-    const mod = await import("../src/server/routes/preferences.js");
+    const mod = await import("@apps/mcp-core/server/routes/preferences.js");
     expect(mod.createPreferencesRouter).toBeTypeOf("function");
   });
 
   it("preferences router Express Router-t ad vissza", async () => {
-    const { createPreferencesRouter } = await import("../src/server/routes/preferences.js");
+    const { createPreferencesRouter } = await import("@apps/mcp-core/server/routes/preferences.js");
     const router = createPreferencesRouter();
     expect(router).toBeDefined();
     expect(typeof router).toBe("function");
@@ -117,7 +117,7 @@ describe("Preferences Route — Import Smoke", () => {
 describe("CLI Command Registration — Smoke", () => {
   it("crawl4aiCommands regisztrálható", async () => {
     const { Command } = await import("commander");
-    const { registerCrawl4aiCommands } = await import("../src/cli/crawl4aiCommands.js");
+    const { registerCrawl4aiCommands } = await import("@apps/mcp-core/commands/crawl4aiCommands.js");
     const program = new Command();
     expect(() => registerCrawl4aiCommands(program)).not.toThrow();
     const crawl4aiCmd = program.commands.find((c) => c.name() === "crawl4ai");
@@ -127,7 +127,7 @@ describe("CLI Command Registration — Smoke", () => {
 
   it("memoriaCommands regisztrálható", async () => {
     const { Command } = await import("commander");
-    const { registerMemoriaCommands } = await import("../src/cli/memoriaCommands.js");
+    const { registerMemoriaCommands } = await import("@apps/mcp-core/commands/memoriaCommands.js");
     const program = new Command();
     expect(() => registerMemoriaCommands(program)).not.toThrow();
     const memoriaCmd = program.commands.find((c) => c.name() === "memoria");
@@ -137,7 +137,7 @@ describe("CLI Command Registration — Smoke", () => {
 
   it("crawl4ai alparancsok regisztrálva", async () => {
     const { Command } = await import("commander");
-    const { registerCrawl4aiCommands } = await import("../src/cli/crawl4aiCommands.js");
+    const { registerCrawl4aiCommands } = await import("@apps/mcp-core/commands/crawl4aiCommands.js");
     const program = new Command();
     registerCrawl4aiCommands(program);
     const crawl4aiCmd = program.commands.find((c) => c.name() === "crawl4ai")!;
@@ -149,7 +149,7 @@ describe("CLI Command Registration — Smoke", () => {
 
   it("memoria alparancsok regisztrálva", async () => {
     const { Command } = await import("commander");
-    const { registerMemoriaCommands } = await import("../src/cli/memoriaCommands.js");
+    const { registerMemoriaCommands } = await import("@apps/mcp-core/commands/memoriaCommands.js");
     const program = new Command();
     registerMemoriaCommands(program);
     const memoriaCmd = program.commands.find((c) => c.name() === "memoria")!;
@@ -166,7 +166,7 @@ describe("CLI Command Registration — Smoke", () => {
 
 describe("Zod Validation — Funkcionális Smoke", () => {
   it("validatePythonResponse sikeres validáció", async () => {
-    const { CrawlResultSchema, validatePythonResponse } = await import("../src/utils/pythonBridge.js");
+    const { CrawlResultSchema, validatePythonResponse } = await import("@packages/utils/pythonBridge.js");
     const data = {
       status: "success",
       url: "https://test.com",
@@ -182,7 +182,7 @@ describe("Zod Validation — Funkcionális Smoke", () => {
   });
 
   it("parseAndValidate JSON parsing + validáció", async () => {
-    const { CrawlResultSchema, parseAndValidate } = await import("../src/utils/pythonBridge.js");
+    const { CrawlResultSchema, parseAndValidate } = await import("@packages/utils/pythonBridge.js");
     const jsonStr = JSON.stringify({
       status: "success",
       url: "https://test.com",
@@ -193,7 +193,7 @@ describe("Zod Validation — Funkcionális Smoke", () => {
   });
 
   it("parseAndValidate hibás JSON kezelése", async () => {
-    const { CrawlResultSchema, parseAndValidate } = await import("../src/utils/pythonBridge.js");
+    const { CrawlResultSchema, parseAndValidate } = await import("@packages/utils/pythonBridge.js");
     const result = parseAndValidate(CrawlResultSchema, "not-json", "/test");
     expect(result.success).toBe(false);
     if (!result.success) {

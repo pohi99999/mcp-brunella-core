@@ -1,25 +1,25 @@
 import { afterAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
   logInfo: vi.fn(),
   logError: vi.fn(),
   logWarn: vi.fn(),
   setAgentStatus: vi.fn(),
 }));
 
-vi.mock('../src/server/toolRegistry.js', () => ({
+vi.mock('@apps/mcp-core/server/toolRegistry.js', () => ({
   getAllToolDefinitions: vi.fn(),
   executeLocalTool: vi.fn(),
 }));
 
-vi.mock('../src/tools/toolPermissions.js', () => ({
+vi.mock('@packages/utils/toolPermissions.js', () => ({
   checkToolPermission: vi.fn(),
 }));
 
-import { GitHubModelsAgent } from '../src/agents/GitHubModelsAgent.js';
-import type { ToolDefinition } from '../src/agents/types.js';
-import * as toolRegistry from '../src/server/toolRegistry.js';
-import * as toolPermissions from '../src/tools/toolPermissions.js';
+import { GitHubModelsAgent } from '@packages/agents/GitHubModelsAgent.js';
+import type { ToolDefinition } from '@packages/agents/types.js';
+import * as toolRegistry from '@apps/mcp-core/server/toolRegistry.js';
+import * as toolPermissions from '@packages/utils/toolPermissions.js';
 
 const originalFetch = global.fetch;
 const originalGhToken = process.env.GH_TOKEN;

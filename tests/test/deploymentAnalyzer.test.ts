@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { DeploymentAnalyzer, DeploymentAnalysis } from '../src/tools/deploymentAnalyzer.js';
+import { DeploymentAnalyzer, DeploymentAnalysis } from '@packages/utils/deploymentAnalyzer.js';
 
 describe('DeploymentAnalyzer', () => {
   it('should detect TypeScript build errors', () => {

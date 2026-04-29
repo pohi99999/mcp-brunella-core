@@ -1,12 +1,12 @@
 import { Router } from 'express';
 import { v4 as uuidv4 } from 'uuid';
-import { getBusinessJobs, saveBusinessJob } from '../../utils/db.js';
+import { getBusinessJobs, saveBusinessJob } from '@packages/utils/db.js';
 import {
   getHROnboardingSamplePayloads,
-} from '../../utils/hrOnboarding.js';
-import { buildHROnboardingDryRunReport } from '../../utils/hrOnboardingDryRun.js';
-import { ensureError } from '../../utils/ensureError.js';
-import { logError, logInfo } from '../../utils/logger.js';
+} from '@packages/utils/hrOnboarding.js';
+import { buildHROnboardingDryRunReport } from '@packages/utils/hrOnboardingDryRun.js';
+import { ensureError } from '@packages/utils/ensureError.js';
+import { logError, logInfo } from '@packages/utils/logger.js';
 
 function parseLimit(value: unknown, fallback = 10): number {
   const parsed = typeof value === 'string' ? Number.parseInt(value, 10) : Number(value);

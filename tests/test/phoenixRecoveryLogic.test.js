@@ -6,9 +6,9 @@
  * @version 1.0.0
  * @track phoenix_protocol_v2_20260205
  */
-import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest';
-import { agentManager } from '../src/agents/AgentManager.js';
-import { saveCheckpoint, clearCheckpoints, closeCheckpointDb } from '../src/core/checkpoint.js';
+import { describe, it, expect, beforeAll, beforeEach, afterAll, vi } from 'vitest';
+import { agentManager } from '@packages/agents/AgentManager.js';
+import { saveCheckpoint, clearCheckpoints, closeCheckpointDb } from '@packages/core-logic/checkpoint.js';
 describe('Phoenix Protocol v2 - AgentManager Recovery Logic', () => {
     // Mock agent for testing
     const mockAgent = {

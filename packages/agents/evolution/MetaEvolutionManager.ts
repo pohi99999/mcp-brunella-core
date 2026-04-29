@@ -4,10 +4,10 @@
  * Menedzseli a Meta-Evolúciós folyamatot. 
  */
 
-import { EmergentLayer } from '../../core/emergentLayer.js';
-import { PlanetMesh } from '../../mesh/planetMesh.js';
+import { EmergentLayer } from '@packages/core-logic/emergentLayer.js';
+import { PlanetMesh } from '@packages/core-logic/planetMesh.js';
 import { MetaEvolutionAgent, EvolutionProposal } from './MetaEvolutionAgent.js';
-import { logInfo, logError } from '../../utils/logger.js';
+import { logInfo, logError } from '@packages/utils/logger.js';
 
 export class MetaEvolutionManager {
   private agent: MetaEvolutionAgent;

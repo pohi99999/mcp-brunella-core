@@ -12,8 +12,8 @@ import { Router, Request, Response } from 'express';
 import {
   copilotOrchestratorBridge,
   OrchestratorStepStatus,
-} from '../../core/copilotOrchestratorBridge.js';
-import { logInfo, logError } from '../../utils/logger.js';
+} from '@packages/core-logic/copilotOrchestratorBridge.js';
+import { logInfo, logError } from '@packages/utils/logger.js';
 
 const TAG = 'CopilotOrchestratorRoute';
 

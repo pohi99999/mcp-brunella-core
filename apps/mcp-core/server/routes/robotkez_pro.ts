@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { RobotkezProService } from "../../services/RobotkezProService.js";
+import { RobotkezProService } from "@packages/core-logic/RobotkezProService.js";
 
 export function createRobotkezProRoutes(): Router {
   const router = Router();

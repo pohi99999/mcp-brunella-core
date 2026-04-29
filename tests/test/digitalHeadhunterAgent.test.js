@@ -3,7 +3,7 @@
  * Tests CV parsing, candidate matching, and interview scheduling
  */
 import { describe, it, expect, beforeEach } from 'vitest';
-import { DigitalHeadhunterAgent } from '../src/agents/DigitalHeadhunterAgent.js';
+import { DigitalHeadhunterAgent } from '@packages/agents/DigitalHeadhunterAgent.js';
 describe('DigitalHeadhunterAgent', () => {
     let agent;
     beforeEach(() => {

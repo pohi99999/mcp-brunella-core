@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { sendCriticalTasksEmail } from "../src/utils/notificationService.js";
+import { sendCriticalTasksEmail } from "@packages/utils/notificationService.js";
 const sendMailMock = vi.fn();
 const createTransportMock = vi.fn();
 vi.mock("nodemailer", () => ({

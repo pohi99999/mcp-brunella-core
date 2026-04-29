@@ -16,8 +16,8 @@
  */
 import { describe, it, expect, beforeEach } from 'vitest';
 import crypto from 'crypto';
-import { DeploymentAnalyzer } from '../src/tools/deploymentAnalyzer.js';
-import { JulesAICoreClient } from '../src/core/julesMock.js';
+import { DeploymentAnalyzer } from '@packages/utils/deploymentAnalyzer.js';
+import { JulesAICoreClient } from '@packages/core-logic/julesMock.js';
 /**
  * Mock data for E2E testing
  */

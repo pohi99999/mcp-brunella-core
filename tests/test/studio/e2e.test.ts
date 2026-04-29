@@ -5,9 +5,9 @@ import path from 'path';
 
 import { describe, expect, it } from 'vitest';
 
-import { getStudioConfig } from '../../src/config/studioConfig.js';
-import { studioFullPipeline } from '../../src/cli/studioRuntime.js';
-import { probeFfmpegRuntime } from '../../src/tools/ffmpegTool.js';
+import { getStudioConfig } from '@packages/utils/studioConfig.js';
+import { studioFullPipeline } from '@apps/mcp-core/studioRuntime.js';
+import { probeFfmpegRuntime } from '@packages/utils/ffmpegTool.js';
 
 function execFileAsync(command: string, args: string[]): Promise<void> {
   return new Promise((resolve, reject) => {

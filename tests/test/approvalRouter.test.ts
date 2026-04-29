@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
   logInfo: vi.fn(),
   logError: vi.fn(),
   logWarn: vi.fn(),
@@ -11,7 +11,7 @@ const { dispatchApprovalRequestedMock, dispatchApprovalResolvedMock } = vi.hoist
   dispatchApprovalResolvedMock: vi.fn().mockResolvedValue([]),
 }));
 
-vi.mock('../src/core/notificationChannels.js', () => ({
+vi.mock('@packages/core-logic/notificationChannels.js', () => ({
   notificationChannels: {
     dispatchApprovalRequested: dispatchApprovalRequestedMock,
     dispatchApprovalResolved: dispatchApprovalResolvedMock,
@@ -20,9 +20,9 @@ vi.mock('../src/core/notificationChannels.js', () => ({
 
 async function freshApprovalModules() {
   vi.resetModules();
-  const approvalRouterModule = await import('../src/core/approvalRouter.js');
-  const approvalManagerModule = await import('../src/utils/approvalManager.js');
-  const phoenixModule = await import('../src/core/phoenixEventBus.js');
+  const approvalRouterModule = await import('@packages/core-logic/approvalRouter.js');
+  const approvalManagerModule = await import('@packages/utils/approvalManager.js');
+  const phoenixModule = await import('@packages/core-logic/phoenixEventBus.js');
   return {
     approvalRouterModule,
     approvalManagerModule,

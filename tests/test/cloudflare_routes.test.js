@@ -1,8 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import express from "express";
 import request from "supertest";
-import { createCloudflareRoutes } from "../src/server/routes/cloudflare.js";
-vi.mock("../src/agents/AgentManager.js", () => ({
+import { createCloudflareRoutes } from "@apps/mcp-core/server/routes/cloudflare.js";
+vi.mock("@packages/agents/AgentManager.js", () => ({
     agentManager: {
         getEdgeStatus: vi.fn().mockReturnValue({
             enabled: false,
@@ -11,7 +11,7 @@ vi.mock("../src/agents/AgentManager.js", () => ({
         }),
     },
 }));
-vi.mock("../src/utils/cloudflareClient.js", () => ({
+vi.mock("@packages/utils/cloudflareClient.js", () => ({
     cloudflareClient: {
         submitTask: vi.fn(),
         checkStatus: vi.fn(),
@@ -69,7 +69,7 @@ describe("Cloudflare routes", () => {
     describe("Edge enabled scenarios", () => {
         beforeEach(async () => {
             // Mock Edge as enabled for this test suite
-            const { agentManager } = vi.mocked(await import("../src/agents/AgentManager.js"));
+            const { agentManager } = vi.mocked(await import("@packages/agents/AgentManager.js"));
             vi.mocked(agentManager.getEdgeStatus).mockReturnValue({
                 enabled: true,
                 healthy: true,
@@ -77,7 +77,7 @@ describe("Cloudflare routes", () => {
             });
         });
         it("POST /api/cloudflare/task submits task when edge enabled", async () => {
-            const { cloudflareClient } = vi.mocked(await import("../src/utils/cloudflareClient.js"));
+            const { cloudflareClient } = vi.mocked(await import("@packages/utils/cloudflareClient.js"));
             vi.mocked(cloudflareClient.submitTask).mockResolvedValueOnce({
                 success: true,
                 taskId: "task_123",
@@ -96,7 +96,7 @@ describe("Cloudflare routes", () => {
             expect(cloudflareClient.submitTask).toHaveBeenCalledWith("Generate Python code", { language: "python" });
         });
         it("GET /api/cloudflare/status/:taskId returns task status when edge enabled", async () => {
-            const { cloudflareClient } = vi.mocked(await import("../src/utils/cloudflareClient.js"));
+            const { cloudflareClient } = vi.mocked(await import("@packages/utils/cloudflareClient.js"));
             vi.mocked(cloudflareClient.checkStatus).mockResolvedValueOnce({
                 taskId: "task_123",
                 status: "completed",
@@ -116,7 +116,7 @@ describe("Cloudflare routes", () => {
             expect(res.body.error).toMatch(/instruction is required/i);
         });
         it("POST /api/cloudflare/task handles worker error gracefully", async () => {
-            const { cloudflareClient } = vi.mocked(await import("../src/utils/cloudflareClient.js"));
+            const { cloudflareClient } = vi.mocked(await import("@packages/utils/cloudflareClient.js"));
             vi.mocked(cloudflareClient.submitTask).mockRejectedValueOnce(new Error("Worker timeout"));
             const res = await request(app)
                 .post("/api/cloudflare/task")

@@ -1,13 +1,13 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 // Mock all heavy dependencies before importing the module
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
   logInfo: vi.fn(),
   logError: vi.fn(),
   setAgentStatus: vi.fn(),
 }));
 
-vi.mock('../src/core/structuredMemory.js', () => ({
+vi.mock('@packages/core-logic/structuredMemory.js', () => ({
   queryMemory: vi.fn().mockReturnValue([
     { agentName: 'TestAgent', task: 'test task', confidence: 0.9, reuseCount: 3 }
   ]),
@@ -17,25 +17,25 @@ vi.mock('../src/core/structuredMemory.js', () => ({
   }),
 }));
 
-vi.mock('../src/core/patternReuse.js', () => ({
+vi.mock('@packages/core-logic/patternReuse.js', () => ({
   checkPattern: vi.fn().mockReturnValue({ matched: false, threshold: 0.7 }),
   getPatternReuseThreshold: vi.fn().mockReturnValue(0.7),
 }));
 
-vi.mock('../src/core/userPreferences.js', () => ({
+vi.mock('@packages/core-logic/userPreferences.js', () => ({
   getPreferenceContext: vi.fn().mockReturnValue('User prefers Hungarian language'),
   queryPreferences: vi.fn().mockReturnValue([{ key: 'lang', value: 'hu' }]),
   initSchema: vi.fn(),
 }));
 
-vi.mock('../src/core/goldenDatasetBridge.js', () => ({
+vi.mock('@packages/core-logic/goldenDatasetBridge.js', () => ({
   getGoldenStats: vi.fn().mockResolvedValue({ totalSamples: 42, avgQuality: 0.85 }),
   autoSaveGoldenSample: vi.fn().mockResolvedValue(undefined),
   calculateQuality: vi.fn().mockReturnValue(0.8),
 }));
 
 // Mock dynamic imports for lazy-loaded modules
-vi.mock('../src/core/graphRagEngine.js', () => ({
+vi.mock('@packages/core-logic/graphRagEngine.js', () => ({
   GraphRagEngine: {
     getInstance: vi.fn().mockReturnValue({
       queryContext: vi.fn().mockReturnValue({
@@ -51,7 +51,7 @@ vi.mock('../src/core/graphRagEngine.js', () => ({
   },
 }));
 
-vi.mock('../src/core/reflectionEngine.js', () => ({
+vi.mock('@packages/core-logic/reflectionEngine.js', () => ({
   ReflectionEngine: {
     getInstance: vi.fn().mockReturnValue({
       reflect: vi.fn().mockResolvedValue({
@@ -64,7 +64,7 @@ vi.mock('../src/core/reflectionEngine.js', () => ({
   },
 }));
 
-vi.mock('../src/core/sharedCognition.js', () => ({
+vi.mock('@packages/core-logic/sharedCognition.js', () => ({
   SharedCognition: vi.fn().mockImplementation(() => ({
     query: vi.fn().mockReturnValue({ entries: [], confidence: 0.5 }),
     store: vi.fn().mockReturnValue({ id: 'cog-1' }),
@@ -72,14 +72,14 @@ vi.mock('../src/core/sharedCognition.js', () => ({
   })),
 }));
 
-vi.mock('../src/core/selfModel.js', () => ({
+vi.mock('@packages/core-logic/selfModel.js', () => ({
   SelfModel: vi.fn().mockImplementation(() => ({
     getState: vi.fn().mockReturnValue({ identity: 'Brunella', capabilities: ['coding'] }),
     ingestSignal: vi.fn().mockReturnValue({ signalId: 'sig-1' }),
   })),
 }));
 
-vi.mock('../src/core/metaReasoner.js', () => ({
+vi.mock('@packages/core-logic/metaReasoner.js', () => ({
   MetaReasoner: vi.fn().mockImplementation(() => ({
     getInsights: vi.fn().mockReturnValue([{ category: 'pattern', description: 'X works' }]),
     recordDecision: vi.fn().mockReturnValue({ id: 'dec-1' }),
@@ -87,7 +87,7 @@ vi.mock('../src/core/metaReasoner.js', () => ({
   })),
 }));
 
-vi.mock('../src/core/predictiveIntelligence.js', () => ({
+vi.mock('@packages/core-logic/predictiveIntelligence.js', () => ({
   PredictiveIntelligence: {
     getInstance: vi.fn().mockReturnValue({
       getActiveAlerts: vi.fn().mockReturnValue([]),
@@ -97,7 +97,7 @@ vi.mock('../src/core/predictiveIntelligence.js', () => ({
   },
 }));
 
-vi.mock('../src/core/collectiveMind.js', () => ({
+vi.mock('@packages/core-logic/collectiveMind.js', () => ({
   CollectiveMind: vi.fn().mockImplementation(() => ({
     getStats: vi.fn().mockReturnValue({ total: 8, avgConfidence: 0.75 }),
     buildConsensus: vi.fn().mockReturnValue({ consensus: 'agreed', confidence: 0.9 }),
@@ -111,7 +111,7 @@ describe('CopilotCognitiveBridge', () => {
 
   describe('enrich()', () => {
     it('should enrich query with all 11 layers', async () => {
-      const { enrich } = await import('../src/core/copilotCognitiveBridge.js');
+      const { enrich } = await import('@packages/core-logic/copilotCognitiveBridge.js');
       const result = await enrich({ query: 'média kampány tervezés', userId: 'peter' });
 
       expect(result).toBeDefined();
@@ -124,7 +124,7 @@ describe('CopilotCognitiveBridge', () => {
     });
 
     it('should return layer names for all 11 systems', async () => {
-      const { enrich } = await import('../src/core/copilotCognitiveBridge.js');
+      const { enrich } = await import('@packages/core-logic/copilotCognitiveBridge.js');
       const result = await enrich({ query: 'test query' });
 
       const layerNames = result.layers.map(l => l.layer);
@@ -142,14 +142,14 @@ describe('CopilotCognitiveBridge', () => {
     });
 
     it('should extract recommended agents from GraphRAG', async () => {
-      const { enrich } = await import('../src/core/copilotCognitiveBridge.js');
+      const { enrich } = await import('@packages/core-logic/copilotCognitiveBridge.js');
       const result = await enrich({ query: 'marketing campaign' });
 
       expect(result.recommendedAgents).toContain('MarketingAgent');
     });
 
     it('should build a summary string', async () => {
-      const { enrich } = await import('../src/core/copilotCognitiveBridge.js');
+      const { enrich } = await import('@packages/core-logic/copilotCognitiveBridge.js');
       const result = await enrich({ query: 'test' });
 
       expect(result.summary).toBeTruthy();
@@ -157,7 +157,7 @@ describe('CopilotCognitiveBridge', () => {
     });
 
     it('should handle default parameters', async () => {
-      const { enrich } = await import('../src/core/copilotCognitiveBridge.js');
+      const { enrich } = await import('@packages/core-logic/copilotCognitiveBridge.js');
       const result = await enrich({ query: 'minimal query' });
 
       expect(result.layers.length).toBe(11);
@@ -166,7 +166,7 @@ describe('CopilotCognitiveBridge', () => {
 
   describe('reflect()', () => {
     it('should store reflection across multiple layers', async () => {
-      const { reflect } = await import('../src/core/copilotCognitiveBridge.js');
+      const { reflect } = await import('@packages/core-logic/copilotCognitiveBridge.js');
       const result = await reflect({
         taskId: 'task-001',
         agentName: 'MarketingAgent',
@@ -187,7 +187,7 @@ describe('CopilotCognitiveBridge', () => {
     });
 
     it('should extract lesson from reflection', async () => {
-      const { reflect } = await import('../src/core/copilotCognitiveBridge.js');
+      const { reflect } = await import('@packages/core-logic/copilotCognitiveBridge.js');
       const result = await reflect({
         taskId: 'task-002',
         agentName: 'TestAgent',
@@ -201,8 +201,8 @@ describe('CopilotCognitiveBridge', () => {
     });
 
     it('should skip golden dataset for failed tasks', async () => {
-      const { reflect } = await import('../src/core/copilotCognitiveBridge.js');
-      const { autoSaveGoldenSample } = await import('../src/core/goldenDatasetBridge.js');
+      const { reflect } = await import('@packages/core-logic/copilotCognitiveBridge.js');
+      const { autoSaveGoldenSample } = await import('@packages/core-logic/goldenDatasetBridge.js');
 
       const result = await reflect({
         taskId: 'task-003',
@@ -221,7 +221,7 @@ describe('CopilotCognitiveBridge', () => {
 
   describe('getCognitiveStats()', () => {
     it('should return stats from all layers', async () => {
-      const { getCognitiveStats } = await import('../src/core/copilotCognitiveBridge.js');
+      const { getCognitiveStats } = await import('@packages/core-logic/copilotCognitiveBridge.js');
       const stats = await getCognitiveStats();
 
       expect(stats.timestamp).toBeTruthy();
@@ -232,7 +232,7 @@ describe('CopilotCognitiveBridge', () => {
     });
 
     it('should include StructuredMemory stats', async () => {
-      const { getCognitiveStats } = await import('../src/core/copilotCognitiveBridge.js');
+      const { getCognitiveStats } = await import('@packages/core-logic/copilotCognitiveBridge.js');
       const stats = await getCognitiveStats();
 
       expect(stats.layers['StructuredMemory']).toBeDefined();
@@ -240,7 +240,7 @@ describe('CopilotCognitiveBridge', () => {
     });
 
     it('should include GraphRAG stats', async () => {
-      const { getCognitiveStats } = await import('../src/core/copilotCognitiveBridge.js');
+      const { getCognitiveStats } = await import('@packages/core-logic/copilotCognitiveBridge.js');
       const stats = await getCognitiveStats();
 
       expect(stats.layers['GraphRAG']).toBeDefined();

@@ -4,7 +4,7 @@ import {
     startIssueFixAttempt,
     getIssueFixAttempt,
     hydrateIssueFixAttemptsFromStore,
-} from '../src/agents/issueFixLoop.js';
+} from '@packages/agents/issueFixLoop.js';
 
 const {
     requestApprovalMock,
@@ -20,7 +20,7 @@ const {
     saveIssueFixAttemptRuntimeMock: vi.fn(),
 }));
 
-vi.mock('../src/utils/approvalManager.js', () => ({
+vi.mock('@packages/utils/approvalManager.js', () => ({
     approvalManager: {
         requestApproval: requestApprovalMock,
         waitForResult: waitForResultMock,
@@ -28,7 +28,7 @@ vi.mock('../src/utils/approvalManager.js', () => ({
     },
 }));
 
-vi.mock('../src/agents/developerPipeline.js', () => ({
+vi.mock('@packages/agents/developerPipeline.js', () => ({
     pipelineRunner: {
         createPipeline: vi.fn().mockReturnValue({ taskId: 'dev-issue-42' }),
         startPhase: vi.fn(),
@@ -38,25 +38,26 @@ vi.mock('../src/agents/developerPipeline.js', () => ({
     },
 }));
 
-vi.mock('../src/agents/AgentManager.js', () => ({
+vi.mock('@packages/agents/AgentManager.js', () => ({
     agentManager: {
         delegate: vi.fn().mockResolvedValue({ status: 'success', message: 'done' }),
     },
 }));
 
-vi.mock('../src/utils/activityFeed.js', () => ({
+vi.mock('@packages/utils/activityFeed.js', () => ({
     activityFeed: {
         addActivity: vi.fn(),
     },
 }));
 
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
     logInfo: vi.fn(),
     logWarn: vi.fn(),
     logError: vi.fn(),
+    logDebug: vi.fn(),
 }));
 
-vi.mock('../src/core/autonomyRuntimeStore.js', () => ({
+vi.mock('@packages/core-logic/autonomyRuntimeStore.js', () => ({
     loadIssueFixAttemptRuntimeEntries: loadIssueFixAttemptRuntimeEntriesMock,
     saveIssueFixAttemptRuntime: saveIssueFixAttemptRuntimeMock,
 }));
@@ -76,7 +77,7 @@ vi.mock('fs/promises', async (importOriginal) => {
     };
 });
 
-vi.mock('../src/core/githubAPIClient.js', () => ({
+vi.mock('@packages/core-logic/githubAPIClient.js', () => ({
     GitHubAPIClient: vi.fn().mockImplementation(() => ({
         getIssue: vi.fn().mockResolvedValue({
             number: 42,
@@ -261,7 +262,7 @@ describe('issueFixLoop', () => {
         ]);
 
         vi.resetModules();
-        const runtimeModule = await import('../src/agents/issueFixLoop.js');
+        const runtimeModule = await import('@packages/agents/issueFixLoop.js');
         const count = runtimeModule.hydrateIssueFixAttemptsFromStore();
 
         expect(count).toBeGreaterThanOrEqual(1);

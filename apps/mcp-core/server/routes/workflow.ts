@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { agentManager } from '../../agents/AgentManager.js';
-import { decomposeToDAGAsync } from '../../agents/taskDecomposerCore.js';
+import { agentManager } from '@packages/agents/AgentManager.js';
+import { decomposeToDAGAsync } from '@packages/agents/taskDecomposerCore.js';
 
 export function createWorkflowRoutes(): Router {
   const router = Router();

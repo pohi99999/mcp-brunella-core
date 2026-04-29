@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import request from 'supertest';
 import express from 'express';
-import { createHRLeaveRoutes } from '../src/server/routes/hrLeave.js';
+import { createHRLeaveRoutes } from '@apps/mcp-core/server/routes/hrLeave.js';
 
 const {
   businessJobs,
@@ -98,37 +98,37 @@ const hookHarness = vi.hoisted(() => ({
   fireHook: vi.fn(async () => ({ status: 'fired' })),
 }));
 
-vi.mock('../src/agents/AgentManager.js', () => ({
+vi.mock('@packages/agents/AgentManager.js', () => ({
   agentManager: {
     delegateTask: delegateTaskMock,
   },
 }));
 
-vi.mock('../src/utils/db.js', () => ({
+vi.mock('@packages/utils/db.js', () => ({
   getBusinessJobs: getBusinessJobsMock,
   getBusinessJobById: getBusinessJobByIdMock,
   saveBusinessJob: saveBusinessJobMock,
   updateBusinessJobStatus: updateBusinessJobStatusMock,
 }));
 
-vi.mock('../src/utils/approvalManager.js', () => ({
+vi.mock('@packages/utils/approvalManager.js', () => ({
   approvalManager: {
     requestApproval: requestApprovalMock,
     respond: respondApprovalMock,
   },
 }));
 
-vi.mock('../src/core/auditLog.js', () => ({
+vi.mock('@packages/core-logic/auditLog.js', () => ({
   record: approveApprovalMock,
 }));
 
-vi.mock('../src/tools/unifiedWorkspace.js', () => ({
+vi.mock('@packages/utils/unifiedWorkspace.js', () => ({
   getWorkspaceClient: vi.fn(async () => ({
     createCalendarEvent: createCalendarEventMock,
   })),
 }));
 
-vi.mock('../src/core/hookRegistry.js', () => ({
+vi.mock('@packages/core-logic/hookRegistry.js', () => ({
   fireHook: hookHarness.fireHook,
   fireHookSafely: hookHarness.fireHook,
 }));

@@ -6,11 +6,11 @@
  */
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { UnifiedWorkspaceClient, resetWorkspaceClient } from '../src/tools/unifiedWorkspace.js';
+import { UnifiedWorkspaceClient, resetWorkspaceClient } from '@packages/utils/unifiedWorkspace.js';
 import * as fs from 'fs/promises';
 
 // Mock Google Auth utility
-vi.mock('../src/utils/googleAuth.js', () => ({
+vi.mock('@packages/utils/googleAuth.js', () => ({
   getGoogleAuth: vi.fn().mockResolvedValue({
     credentials: {
       installed: {
@@ -564,7 +564,7 @@ describe('UnifiedWorkspaceClient', () => {
 
   describe('Factory Function', () => {
     it('should return singleton instance on subsequent calls', async () => {
-      const { getWorkspaceClient } = await import('../src/tools/unifiedWorkspace.js');
+      const { getWorkspaceClient } = await import('@packages/utils/unifiedWorkspace.js');
 
       const client1 = await getWorkspaceClient();
       const client2 = await getWorkspaceClient();
@@ -574,7 +574,7 @@ describe('UnifiedWorkspaceClient', () => {
 
     it('should reset singleton on resetWorkspaceClient()', async () => {
       const { getWorkspaceClient, resetWorkspaceClient } = await import(
-        '../src/tools/unifiedWorkspace.js'
+        '@packages/utils/unifiedWorkspace.js'
       );
 
       const client1 = await getWorkspaceClient();

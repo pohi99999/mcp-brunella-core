@@ -8,7 +8,7 @@
  */
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { WorkerThreadPool, type PoolConfig, type WorkerTask } from '../src/core/workerThreadPool.js';
+import { WorkerThreadPool, type PoolConfig, type WorkerTask } from '@packages/core-logic/workerThreadPool.js';
 import path from 'path';
 
 // Mock worker_threads
@@ -51,7 +51,7 @@ describe('WorkerThreadPool', () => {
     maxThreads: 5,
     idleTimeout: 5000,
     taskQueueSize: 10,
-    workerScript: path.resolve(__dirname, '../src/core/worker_thread_executor.js')
+    workerScript: path.resolve(__dirname, '@packages/core-logic/worker_thread_executor.js')
   };
 
   beforeEach(async () => {

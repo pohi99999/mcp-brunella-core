@@ -5,9 +5,9 @@ import path from 'node:path';
 import express from 'express';
 import request from 'supertest';
 import { afterEach, beforeEach, describe, it } from 'vitest';
-import { createCrmRoutes } from '../src/server/routes/crm.js';
-import { closeCrmDb, initCrmDb, ingestCrmLead } from '../src/data/crm_db.js';
-import { normalizeCrmLead } from '../src/utils/crmLead.js';
+import { createCrmRoutes } from '@apps/mcp-core/server/routes/crm.js';
+import { closeCrmDb, initCrmDb, ingestCrmLead } from '@packages/utils/crm_db.js';
+import { normalizeCrmLead } from '@packages/utils/crmLead.js';
 
 describe('crm follow-up routes', () => {
   let app: express.Express;

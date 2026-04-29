@@ -4,12 +4,12 @@
  */
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import type { ChainStep, AgentResponse } from '../src/agents/types.js';
+import type { ChainStep, AgentResponse } from '@packages/agents/types.js';
 
 // ── Mock agentManager ────────────────────────────────────────────────────────
 const mockDelegate = vi.fn();
 
-vi.mock('../src/agents/AgentManager.js', () => ({
+vi.mock('@packages/agents/AgentManager.js', () => ({
   agentManager: {
     delegate: mockDelegate,
     queueTask: vi.fn().mockResolvedValue(1),
@@ -18,15 +18,15 @@ vi.mock('../src/agents/AgentManager.js', () => ({
   },
 }));
 
-vi.mock('../src/core/llm_client.js', () => ({
+vi.mock('@packages/core-logic/llm_client.js', () => ({
   chatWithOllama: vi.fn().mockResolvedValue('[]'),
 }));
 
-vi.mock('../src/core/phoenixEventBus.js', () => ({
+vi.mock('@packages/core-logic/phoenixEventBus.js', () => ({
   phoenixEventBus: { subscribe: vi.fn(), emit: vi.fn() },
 }));
 
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
   Logger: class {
     info = vi.fn();
     error = vi.fn();
@@ -39,7 +39,7 @@ vi.mock('../src/utils/logger.js', () => ({
 }));
 
 // ── Import after mocks ───────────────────────────────────────────────────────
-const { OrchestratorAgent } = await import('../src/agents/OrchestratorAgent.js');
+const { OrchestratorAgent } = await import('@packages/agents/OrchestratorAgent.js');
 
 // ── Tests ─────────────────────────────────────────────────────────────────────
 describe('OrchestratorAgent.executeChain()', () => {

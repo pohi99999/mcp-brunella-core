@@ -4,8 +4,8 @@ import request from "supertest";
 import fs from "fs/promises";
 import os from "os";
 import path from "path";
-import { suggestedTasksRouter } from "../src/server/routes/suggestedTasks.js";
-import { initSuggestedTasksDb, getSuggestedTasksDb } from "../src/core/suggestedTasksScanner.js";
+import { suggestedTasksRouter } from "@apps/mcp-core/server/routes/suggestedTasks.js";
+import { initSuggestedTasksDb, getSuggestedTasksDb } from "@packages/core-logic/suggestedTasksScanner.js";
 
 interface TaskRecord {
   id: string;

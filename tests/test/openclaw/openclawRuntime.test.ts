@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { Logger } from '../../src/utils/logger.js';
-import { createOpenClawRuntime, OpenClawConfigSchema } from '../../src/integrations/openclaw/index.js';
+import { Logger } from '@packages/utils/logger.js';
+import { createOpenClawRuntime, OpenClawConfigSchema } from '@packages/core-logic/openclaw/index.js';
 
 describe('OpenClaw runtime bundle', () => {
   it('returns a safe snapshot without exposing secret config fields', () => {

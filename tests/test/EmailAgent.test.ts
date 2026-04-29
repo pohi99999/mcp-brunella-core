@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { EmailAgent } from '../src/agents/EmailAgent.js';
+import { EmailAgent } from '@packages/agents/EmailAgent.js';
 
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
   logInfo: vi.fn(),
   logError: vi.fn(),
   setAgentStatus: vi.fn(),

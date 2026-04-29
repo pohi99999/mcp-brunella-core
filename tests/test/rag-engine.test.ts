@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { HybridMemory, RagEngine } from '../src/utils/rag.js';
+import { HybridMemory, RagEngine } from '@packages/utils/rag.js';
 
 const ragHarness = vi.hoisted(() => ({
   embeddings: vi.fn(),
@@ -10,19 +10,19 @@ const ragHarness = vi.hoisted(() => ({
   logError: vi.fn(),
 }));
 
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
   logInfo: ragHarness.logInfo,
   logWarn: ragHarness.logWarn,
   logError: ragHarness.logError,
 }));
 
-vi.mock('../src/utils/aiGateway.js', () => ({
+vi.mock('@packages/utils/aiGateway.js', () => ({
   aiGateway: {
     embeddings: ragHarness.embeddings,
   },
 }));
 
-vi.mock('../src/utils/vectorize.js', () => ({
+vi.mock('@packages/utils/vectorize.js', () => ({
   vectorizeClient: {
     getStatus: vi.fn(() => ({ enabled: false })),
     upsertText: ragHarness.upsertText,

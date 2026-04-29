@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { selfModificationEngine } from '../src/core/selfModificationEngine.js';
-import { agentPerformanceTracker } from '../src/core/agentPerformanceTracker.js';
-import type { SelfModificationProposal } from '../src/core/selfModificationEngine.js';
+import { selfModificationEngine } from '@packages/core-logic/selfModificationEngine.js';
+import { agentPerformanceTracker } from '@packages/core-logic/agentPerformanceTracker.js';
+import type { SelfModificationProposal } from '@packages/core-logic/selfModificationEngine.js';
 
 function buildProposal(
   id: string,

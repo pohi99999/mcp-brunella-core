@@ -2,7 +2,7 @@ import express from 'express';
 import { type AddressInfo } from 'net';
 import { type Server } from 'node:http';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { createOpenClawRoutes } from '../../src/server/routes/openclaw.js';
+import { createOpenClawRoutes } from '@apps/mcp-core/server/routes/openclaw.js';
 
 let server: Server | undefined;
 const originalBaseUrl = process.env.OPENCLAW_BASE_URL;

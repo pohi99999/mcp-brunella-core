@@ -1,12 +1,12 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { SelfReplication } from '../src/mesh/selfReplication.js';
-import { InfraAI } from '../src/infra/infraAI.js';
-import { GlobalOptimizer } from '../src/core/globalOptimizer.js';
-import { EvoEcosystem } from '../src/agents/evolution/EvoEcosystem.js';
-import { SelfModel } from '../src/core/selfModel.js';
-import { GoalEngine } from '../src/core/goalEngine.js';
-import { BrunellaKernel } from '../src/kernel/BrunellaKernel.js';
-import { HyperKernel } from '../src/kernel/HyperKernel.js';
+import { SelfReplication } from '@packages/core-logic/selfReplication.js';
+import { InfraAI } from '@packages/core-logic/infraAI.js';
+import { GlobalOptimizer } from '@packages/core-logic/globalOptimizer.js';
+import { EvoEcosystem } from '@packages/agents/evolution/EvoEcosystem.js';
+import { SelfModel } from '@packages/core-logic/selfModel.js';
+import { GoalEngine } from '@packages/core-logic/goalEngine.js';
+import { BrunellaKernel } from '@packages/core-logic/BrunellaKernel.js';
+import { HyperKernel } from '@packages/core-logic/HyperKernel.js';
 
 describe('SelfReplication', () => {
   let replication: SelfReplication;

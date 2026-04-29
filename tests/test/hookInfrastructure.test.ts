@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { registerHook, fireHook, clearHooks } from '../src/core/agentHookEngine.js';
-import { wrapToolWithHooks } from '../src/core/mcpToolHook.js';
-import { initializeSdlcHooks } from '../src/core/sdlcHooks.js';
+import { registerHook, fireHook, clearHooks } from '@packages/core-logic/agentHookEngine.js';
+import { wrapToolWithHooks } from '@packages/core-logic/mcpToolHook.js';
+import { initializeSdlcHooks } from '@packages/core-logic/sdlcHooks.js';
 import fs from 'fs';
 import path from 'path';
 

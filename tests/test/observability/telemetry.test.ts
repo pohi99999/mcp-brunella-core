@@ -3,7 +3,7 @@
  * Track: observability_opentelemetry_20260323
  */
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { getTracer, wrapWithSpan } from '../../src/utils/otelTracing.js';
+import { getTracer, wrapWithSpan } from '@packages/utils/otelTracing.js';
 
 describe('getTracer()', () => {
   it('returns a tracer object', () => {

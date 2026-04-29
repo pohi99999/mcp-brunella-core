@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { getIntelligenceOverview, ingestSignal, listReviewQueue, listSignals, reviewSignal } from '../../core/intelligenceMonitor.js';
-import type { IntelligenceSignalInput, IntelligenceSignalStatus } from '../../core/intelligenceMonitor.js';
+import { getIntelligenceOverview, ingestSignal, listReviewQueue, listSignals, reviewSignal } from '@packages/core-logic/intelligenceMonitor.js';
+import type { IntelligenceSignalInput, IntelligenceSignalStatus } from '@packages/core-logic/intelligenceMonitor.js';
 
 export function createIntelligenceRouter(): Router {
   const router = Router();

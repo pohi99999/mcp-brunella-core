@@ -3,7 +3,7 @@ import {
   approveSelfModificationProposal,
   getSelfModificationOverview,
   runSelfModification,
-} from '../../../src/dashboard/lib/selfModificationApi';
+} from '@/lib/selfModificationApi';
 
 function mockResponse(body: unknown, status = 200): Response {
   return {

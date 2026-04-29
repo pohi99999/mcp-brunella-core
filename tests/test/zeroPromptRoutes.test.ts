@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import express from 'express';
 import request from 'supertest';
-import { createZeroPromptRouter } from '../src/server/routes/zeroPrompt.js';
+import { createZeroPromptRouter } from '@apps/mcp-core/server/routes/zeroPrompt.js';
 
 const {
   approvalRouterMock,
@@ -125,31 +125,31 @@ const {
   };
 });
 
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
   logError: vi.fn(),
 }));
 
-vi.mock('../src/core/zeroPromptRuntime.js', () => ({
+vi.mock('@packages/core-logic/zeroPromptRuntime.js', () => ({
   zeroPromptRuntime: zeroPromptRuntimeMock,
 }));
 
-vi.mock('../src/core/githubRemediationRuntime.js', () => ({
+vi.mock('@packages/core-logic/githubRemediationRuntime.js', () => ({
   githubRemediationRuntime: githubRemediationRuntimeMock,
 }));
 
-vi.mock('../src/core/eventFabric.js', () => ({
+vi.mock('@packages/core-logic/eventFabric.js', () => ({
   eventFabric: eventFabricMock,
 }));
 
-vi.mock('../src/core/approvalRouter.js', () => ({
+vi.mock('@packages/core-logic/approvalRouter.js', () => ({
   approvalRouter: approvalRouterMock,
 }));
 
-vi.mock('../src/core/notificationChannels.js', () => ({
+vi.mock('@packages/core-logic/notificationChannels.js', () => ({
   notificationChannels: notificationChannelsMock,
 }));
 
-vi.mock('../src/core/policyEngine.js', () => ({
+vi.mock('@packages/core-logic/policyEngine.js', () => ({
   evaluateAndLogPolicy: evaluateAndLogPolicyMock,
 }));
 

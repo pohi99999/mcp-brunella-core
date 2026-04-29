@@ -7,7 +7,7 @@ import {
   recordHttpRequest,
   recordLlmUsageAndCost,
   resetPrometheusMetricsForTests,
-} from "../src/utils/metrics.js";
+} from "@packages/utils/metrics.js";
 
 describe("prometheus metrics", () => {
   beforeEach(async () => {

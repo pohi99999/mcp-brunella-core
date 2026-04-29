@@ -1,13 +1,13 @@
 import { Router } from 'express';
 import { v4 as uuidv4 } from 'uuid';
-import { agentManager } from '../../agents/AgentManager.js';
-import { record as auditRecord } from '../../core/auditLog.js';
-import { fireHookSafely } from '../../core/hookRegistry.js';
-import { approvalManager, type ApprovalAction } from '../../utils/approvalManager.js';
-import { getBusinessJobById, getBusinessJobs, saveBusinessJob, updateBusinessJobStatus } from '../../utils/db.js';
-import { ensureError } from '../../utils/ensureError.js';
-import { logError, logInfo, logWarn } from '../../utils/logger.js';
-import { getWorkspaceClient } from '../../tools/unifiedWorkspace.js';
+import { agentManager } from '@packages/agents/AgentManager.js';
+import { record as auditRecord } from '@packages/core-logic/auditLog.js';
+import { fireHookSafely } from '@packages/core-logic/hookRegistry.js';
+import { approvalManager, type ApprovalAction } from '@packages/utils/approvalManager.js';
+import { getBusinessJobById, getBusinessJobs, saveBusinessJob, updateBusinessJobStatus } from '@packages/utils/db.js';
+import { ensureError } from '@packages/utils/ensureError.js';
+import { logError, logInfo, logWarn } from '@packages/utils/logger.js';
+import { getWorkspaceClient } from '@packages/utils/unifiedWorkspace.js';
 
 /**
  * HR Leave Approval Routes

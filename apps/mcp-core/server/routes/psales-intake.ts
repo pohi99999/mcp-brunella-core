@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import { IntakeSurveyAgent } from '../../agents/IntakeSurveyAgent.js';
-import { ensureError } from '../../utils/ensureError.js';
-import { logError, logInfo } from '../../utils/logger.js';
+import { IntakeSurveyAgent } from '@packages/agents/IntakeSurveyAgent.js';
+import { ensureError } from '@packages/utils/ensureError.js';
+import { logError, logInfo } from '@packages/utils/logger.js';
 
 const agent = new IntakeSurveyAgent();
 

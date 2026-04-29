@@ -1,6 +1,6 @@
 // src/server/routes/anthropic.ts
 import express from 'express';
-import { sendAnthropicMessage } from '../../services/anthropicClient.js';
+import { sendAnthropicMessage } from '@packages/core-logic/anthropicClient.js';
 
 const router = express.Router();
 

@@ -1,13 +1,13 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { CodeReviewEngine, } from '../src/agents/codeReview.js';
+import { CodeReviewEngine, } from '@packages/agents/codeReview.js';
 // Mock logger
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
     logInfo: vi.fn(),
     logError: vi.fn(),
     setAgentStatus: vi.fn(),
 }));
 // Mock llm_client
-vi.mock('../src/core/llm_client.js', () => ({
+vi.mock('@packages/core-logic/llm_client.js', () => ({
     generateResponse: vi.fn(),
 }));
 // Mock fs/promises
@@ -17,7 +17,7 @@ vi.mock('fs/promises', () => ({
         writeFile: vi.fn(),
     },
 }));
-import { generateResponse } from '../src/core/llm_client.js';
+import { generateResponse } from '@packages/core-logic/llm_client.js';
 import fs from 'fs/promises';
 const mockGenerateResponse = vi.mocked(generateResponse);
 const mockReadFile = vi.mocked(fs.readFile);

@@ -8,20 +8,20 @@ const toolHarness = vi.hoisted(() => ({
   fireHookSafely: vi.fn(),
 }));
 
-vi.mock('../src/utils/globalDb.js', () => ({
+vi.mock('@packages/utils/globalDb.js', () => ({
   getGlobalDb: () => toolHarness.db,
 }));
 
-vi.mock('../src/utils/rag.js', () => ({
+vi.mock('@packages/utils/rag.js', () => ({
   addToIndex: toolHarness.addToIndex,
   searchRAG: toolHarness.searchRAG,
 }));
 
-vi.mock('../src/core/hookRegistry.js', () => ({
+vi.mock('@packages/core-logic/hookRegistry.js', () => ({
   fireHookSafely: toolHarness.fireHookSafely,
 }));
 
-import { initExternalKnowledgeSchema } from '../src/server/services/externalKnowledgeService.js';
+import { initExternalKnowledgeSchema } from '@apps/mcp-core/server/services/externalKnowledgeService.js';
 import {
   governanceReviewQueueHandler,
   knowledgeCardSearchHandler,
@@ -29,7 +29,7 @@ import {
   knowledgePromoteHandler,
   sourceIngestWebHandler,
   sourceIngestYoutubeHandler,
-} from '../src/tools/externalKnowledge.js';
+} from '@packages/utils/externalKnowledge.js';
 
 describe('externalKnowledge tool handlers', () => {
   beforeEach(() => {

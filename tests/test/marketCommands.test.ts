@@ -20,7 +20,7 @@ vi.mock("ora", () => ({
   }),
 }));
 
-import { registerMarketCommands } from "../src/cli/marketCommands.js";
+import { registerMarketCommands } from "@apps/mcp-core/commands/marketCommands.js";
 
 describe("Market CLI Commands", () => {
   beforeEach(() => {

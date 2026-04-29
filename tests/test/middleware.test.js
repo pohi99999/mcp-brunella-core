@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { AppError } from '../src/utils/AppError.js';
-import { globalErrorHandler, asyncHandler } from '../src/server/middleware/errorHandler.js';
-import { requestId, corsWhitelist } from '../src/server/middleware.js';
+import { AppError } from '@packages/utils/AppError.js';
+import { globalErrorHandler, asyncHandler } from '@apps/mcp-core/server/middleware/errorHandler.js';
+import { requestId, corsWhitelist } from '@apps/mcp-core/server/middleware.js';
 describe('Middleware Tests', () => {
     describe('errorHandler', () => {
         let mockRequest;

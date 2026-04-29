@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { PropertyResearchAgent } from '../src/agents/PropertyResearchAgent.js';
+import { PropertyResearchAgent } from '@packages/agents/PropertyResearchAgent.js';
 
 describe('PropertyResearchAgent', () => {
   let agent: PropertyResearchAgent;

@@ -12,7 +12,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import path from 'path';
 
 // Mock logger
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
   logInfo: vi.fn(),
   logError: vi.fn(),
 }));
@@ -37,7 +37,7 @@ vi.mock('node:fs/promises', () => ({
 }));
 
 // Import TemplateEngine
-import { TemplateEngine } from '../src/agents/codeScaffold.js';
+import { TemplateEngine } from '@packages/agents/codeScaffold.js';
 
 describe('TemplateEngine - P9 Code Scaffolding', () => {
   let engine: TemplateEngine;

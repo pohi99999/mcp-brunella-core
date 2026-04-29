@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { outreachService } from '../src/services/outreachService.js';
+import { outreachService } from '@packages/core-logic/outreachService.js';
 import fs from 'fs/promises';
 import path from 'path';
 

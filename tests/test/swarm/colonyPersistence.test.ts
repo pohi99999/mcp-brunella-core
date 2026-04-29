@@ -11,7 +11,7 @@ const mockPrepare = vi.fn().mockReturnValue({ run: mockRun, get: mockGet, all: m
 const mockExec = vi.fn();
 const mockPragma = vi.fn();
 
-vi.mock('../../src/utils/globalDb.js', () => ({
+vi.mock('@packages/utils/globalDb.js', () => ({
   getGlobalDb: () => ({
     exec: mockExec,
     prepare: mockPrepare,
@@ -19,7 +19,7 @@ vi.mock('../../src/utils/globalDb.js', () => ({
   }),
 }));
 
-vi.mock('../../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
   logInfo: vi.fn(),
   logWarn: vi.fn(),
   logError: vi.fn(),
@@ -34,7 +34,7 @@ import {
   getCheckpointStats,
   type ColonyCheckpoint,
   type ColonySnapshotData,
-} from '../../src/core/swarm/colonyPersistence.js';
+} from '@packages/core-logic/swarm/colonyPersistence.js';
 
 // Helper: create a mock colony
 function createMockColony() {

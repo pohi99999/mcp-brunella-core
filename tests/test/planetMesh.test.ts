@@ -5,7 +5,7 @@
  */
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { PlanetMesh, RegionConfig, MeshNode } from '../src/mesh/planetMesh.js';
+import { PlanetMesh, RegionConfig, MeshNode } from '@packages/core-logic/planetMesh.js';
 
 describe('PlanetMesh Component', () => {
   let mesh: PlanetMesh;

@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import express from 'express';
 import request from 'supertest';
-import { createLearningLoopRouter } from '../src/server/routes/learningLoop.js';
+import { createLearningLoopRouter } from '@apps/mcp-core/server/routes/learningLoop.js';
 
 const learningLoopMocks = vi.hoisted(() => ({
   getLearningLoopOverview: vi.fn(),
@@ -22,7 +22,7 @@ const learningLoopMocks = vi.hoisted(() => ({
   listTrainingRuns: vi.fn(),
 }));
 
-vi.mock('../src/core/goldenDatasetBridge.js', () => ({
+vi.mock('@packages/core-logic/goldenDatasetBridge.js', () => ({
   captureCuratedGoldenCandidate: learningLoopMocks.captureCuratedGoldenCandidate,
   captureToolRunCandidates: learningLoopMocks.captureToolRunCandidates,
   getCuratedGoldenStats: learningLoopMocks.getCuratedGoldenStats,
@@ -30,7 +30,7 @@ vi.mock('../src/core/goldenDatasetBridge.js', () => ({
   reviewCuratedGoldenSample: learningLoopMocks.reviewCuratedGoldenSample,
 }));
 
-vi.mock('../src/core/learningLoopService.js', () => ({
+vi.mock('@packages/core-logic/learningLoopService.js', () => ({
   createCuratedSnapshot: learningLoopMocks.createCuratedSnapshot,
   executeLearningLoopCycle: learningLoopMocks.executeLearningLoopCycle,
   getLearningLoopOverview: learningLoopMocks.getLearningLoopOverview,
@@ -40,7 +40,7 @@ vi.mock('../src/core/learningLoopService.js', () => ({
   runNightlyTraining: learningLoopMocks.runNightlyTraining,
 }));
 
-vi.mock('../src/core/reflexModelRegistry.js', () => ({
+vi.mock('@packages/core-logic/reflexModelRegistry.js', () => ({
   getReflexRegistrySummary: learningLoopMocks.getReflexRegistrySummary,
   listEvalResults: learningLoopMocks.listEvalResults,
   listReflexModels: learningLoopMocks.listReflexModels,

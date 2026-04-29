@@ -2,8 +2,8 @@ import inquirer from "inquirer";
 import chalk from "chalk";
 import boxen from "boxen";
 import ora from "ora";
-import { agentManager } from "../../agents/AgentManager.js";
-import { writeLine } from '../../utils/cliOutput.js';
+import { agentManager } from "@packages/agents/AgentManager.js";
+import { writeLine } from '../../../packages/utils/cliOutput.js';
 
 export async function innovateCommand() {
   writeLine(

@@ -1,16 +1,16 @@
 import type { NextFunction, Request, Response } from 'express';
 
-import { federationReplayGuard } from '../../core/federation/federationReplayGuard.js';
-import { trustRegistry } from '../../core/federation/trustRegistry.js';
+import { federationReplayGuard } from '@packages/core-logic/federation/federationReplayGuard.js';
+import { trustRegistry } from '@packages/core-logic/federation/trustRegistry.js';
 import {
   FEDERATION_AUTH_HEADER,
   getLocalFederationKeyId,
   getLocalFederationKeyIds,
   verifyFederationRequest,
-} from '../../security/federationPeerAuth.js';
+} from '@packages/core-logic/federationPeerAuth.js';
 import { authRemote } from './authRemote.js';
-import { ensureError } from '../../utils/ensureError.js';
-import { logDebug } from '../../utils/logger.js';
+import { ensureError } from '@packages/utils/ensureError.js';
+import { logDebug } from '@packages/utils/logger.js';
 
 interface FederationPeerRequestContext {
   peerId: string;

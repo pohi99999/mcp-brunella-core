@@ -14,7 +14,7 @@ vi.mock('apify-client', () => ({
   })),
 }));
 
-import { ApifyScrapingAgent } from '../src/agents/ApifyScrapingAgent.js';
+import { ApifyScrapingAgent } from '@packages/agents/ApifyScrapingAgent.js';
 
 function configureMockClient(items: unknown[]) {
   apifyMocks.actor.mockReturnValue({ call: apifyMocks.actorCall });

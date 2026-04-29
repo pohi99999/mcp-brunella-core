@@ -3,16 +3,16 @@ import request from 'supertest';
 import express from 'express';
 import Database from 'better-sqlite3';
 import crypto from 'crypto';
-import { createWebhookRoutes } from '../src/server/routes/webhooks.js';
+import { createWebhookRoutes } from '@apps/mcp-core/server/routes/webhooks.js';
 // Mock config
-vi.mock('../src/config/schema.js', () => ({
+vi.mock('@packages/utils/schema.js', () => ({
     config: {
         githubToken: 'test-token',
         githubWebhookSecret: 'test-secret'
     }
 }));
 // Mock logger
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
     logInfo: vi.fn(),
     logError: vi.fn()
 }));

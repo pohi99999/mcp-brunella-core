@@ -4,14 +4,14 @@
  */
 
 import { Router } from 'express';
-import { logInfo, logError } from '../../utils/logger.js';
+import { logInfo, logError } from '@packages/utils/logger.js';
 import {
   enrich,
   reflect,
   getCognitiveStats,
   type EnrichmentRequest,
   type ReflectRequest,
-} from '../../core/copilotCognitiveBridge.js';
+} from '@packages/core-logic/copilotCognitiveBridge.js';
 
 const MODULE = 'CognitiveBridgeRoute';
 
@@ -104,26 +104,26 @@ export function createCognitiveBridgeRoutes(): Router {
       let result: unknown;
       switch (layer) {
         case 'structured':
-          result = (await import('../../core/structuredMemory.js')).queryMemory({
+          result = (await import('@packages/core-logic/structuredMemory.js')).queryMemory({
             task: query,
             agentName: params?.agentName as string | undefined,
             limit: (params?.limit as number) ?? 10,
           });
           break;
         case 'graphrag': {
-          const gr = (await import('../../core/graphRagEngine.js')).GraphRagEngine.getInstance();
+          const gr = (await import('@packages/core-logic/graphRagEngine.js')).GraphRagEngine.getInstance();
           result = gr.queryContext(query, (params?.maxNodes as number) ?? 10);
           break;
         }
         case 'preferences':
-          result = (await import('../../core/userPreferences.js')).queryPreferences({
+          result = (await import('@packages/core-logic/userPreferences.js')).queryPreferences({
             user_id: (params?.userId as string) ?? 'default',
             key: query,
             limit: (params?.limit as number) ?? 10,
           });
           break;
         case 'golden':
-          result = await (await import('../../core/goldenDatasetBridge.js')).getGoldenStats();
+          result = await (await import('@packages/core-logic/goldenDatasetBridge.js')).getGoldenStats();
           break;
         default:
           res.status(400).json({ success: false, error: `Unknown layer: ${layer}. Valid: structured, graphrag, preferences, golden` });

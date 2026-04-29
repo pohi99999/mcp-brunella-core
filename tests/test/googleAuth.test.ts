@@ -31,7 +31,7 @@ vi.mock('fs/promises', () => ({
   mkdir: mkdirMock,
 }));
 
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
   logWarn: logWarnMock,
 }));
 
@@ -71,7 +71,7 @@ describe('googleAuth', () => {
   });
 
   it('uses credentials directory as the preferred workspace auth path', async () => {
-    const mod = await import('../src/utils/googleAuth.js');
+    const mod = await import('@packages/utils/googleAuth.js');
 
     const paths = mod.getGoogleWorkspaceAuthPaths();
 
@@ -91,7 +91,7 @@ describe('googleAuth', () => {
       );
     });
 
-    const mod = await import('../src/utils/googleAuth.js');
+    const mod = await import('@packages/utils/googleAuth.js');
 
     const paths = mod.getGoogleWorkspaceAuthPaths();
 
@@ -125,7 +125,7 @@ describe('googleAuth', () => {
       throw new Error(`Unexpected path: ${targetPath}`);
     });
 
-    const mod = await import('../src/utils/googleAuth.js');
+    const mod = await import('@packages/utils/googleAuth.js');
 
     const auth = await mod.getGoogleAuth();
 
@@ -157,7 +157,7 @@ describe('googleAuth', () => {
       }),
     );
 
-    const mod = await import('../src/utils/googleAuth.js');
+    const mod = await import('@packages/utils/googleAuth.js');
 
     await mod.createGoogleWorkspaceOAuthClient();
 

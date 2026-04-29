@@ -3,7 +3,7 @@ import {
   parseTrackTodos,
   toggleTodoInContent,
   findTodoLineNumber,
-} from '../src/utils/trackTodoParser.js';
+} from '@packages/utils/trackTodoParser.js';
 
 describe('TrackTodoParser', () => {
   const sampleTrackMd = `# Track: Test Track

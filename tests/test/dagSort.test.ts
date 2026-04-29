@@ -4,8 +4,8 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import { kahnSort } from '../src/utils/dagSort.js';
-import type { MicroTask } from '../src/agents/taskDecomposerCore.js';
+import { kahnSort } from '@packages/utils/dagSort.js';
+import type { MicroTask } from '@packages/agents/taskDecomposerCore.js';
 
 function makeTask(id: string, dependencies: string[] = []): MicroTask {
   return { id, agent: 'Developer', task: `Task ${id}`, dependencies, parallel: false, retries: 1, timeoutMs: 60000 };

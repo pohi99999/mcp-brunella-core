@@ -13,22 +13,22 @@
  * @phase Phase 4 - Background Task Manager
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { backgroundTaskManager } from '../src/utils/backgroundTaskManager.js';
+import { backgroundTaskManager } from '@packages/utils/backgroundTaskManager.js';
 // Mock persistentBrowser
 const mockSendCommand = vi.fn();
-vi.mock('../src/utils/persistentBrowser.js', () => ({
+vi.mock('@packages/utils/persistentBrowser.js', () => ({
     persistentBrowser: {
         sendCommand: (...args) => mockSendCommand(...args)
     }
 }));
 // Mock logger
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
     logInfo: vi.fn(),
     logWarn: vi.fn(),
     logError: vi.fn()
 }));
 // Mock tasksDb (Phase 4.2 persistence)
-vi.mock('../src/utils/tasksDb.js', () => ({
+vi.mock('@packages/utils/tasksDb.js', () => ({
     saveBackgroundTask: vi.fn().mockResolvedValue(undefined),
     updateBackgroundTask: vi.fn().mockResolvedValue(undefined),
     loadBackgroundTask: vi.fn().mockResolvedValue(null),
@@ -390,7 +390,7 @@ describe('BackgroundTaskManager (Phase 4)', () => {
                 estimatedDuration: 5000,
                 backgroundEligible: false
             };
-            const tasksDb = await import('../src/utils/tasksDb.js');
+            const tasksDb = await import('@packages/utils/tasksDb.js');
             const saveBackgroundTaskSpy = vi.spyOn(tasksDb, 'saveBackgroundTask');
             mockSendCommand.mockResolvedValue({ status: 'success' });
             const taskId = await backgroundTaskManager.startTask('DB test', plan);
@@ -409,7 +409,7 @@ describe('BackgroundTaskManager (Phase 4)', () => {
                 estimatedDuration: 5000,
                 backgroundEligible: false
             };
-            const tasksDb = await import('../src/utils/tasksDb.js');
+            const tasksDb = await import('@packages/utils/tasksDb.js');
             const updateBackgroundTaskSpy = vi.spyOn(tasksDb, 'updateBackgroundTask');
             mockSendCommand.mockResolvedValue({ status: 'success' });
             const taskId = await backgroundTaskManager.startTask('Progress test', plan);
@@ -424,7 +424,7 @@ describe('BackgroundTaskManager (Phase 4)', () => {
                 estimatedDuration: 2000,
                 backgroundEligible: false
             };
-            const tasksDb = await import('../src/utils/tasksDb.js');
+            const tasksDb = await import('@packages/utils/tasksDb.js');
             const updateBackgroundTaskSpy = vi.spyOn(tasksDb, 'updateBackgroundTask');
             mockSendCommand.mockResolvedValue({ status: 'success' });
             const taskId = await backgroundTaskManager.startTask('Completion test', plan);
@@ -436,7 +436,7 @@ describe('BackgroundTaskManager (Phase 4)', () => {
             expect(updateBackgroundTaskSpy).toHaveBeenCalled();
         });
         it('should initialize and recover tasks from database', async () => {
-            const tasksDb = await import('../src/utils/tasksDb.js');
+            const tasksDb = await import('@packages/utils/tasksDb.js');
             const mockRecoveredTask = {
                 id: 'recovered_task_123',
                 instruction: 'Recovered task',

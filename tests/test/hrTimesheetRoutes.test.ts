@@ -2,7 +2,7 @@ import Database from 'better-sqlite3';
 import express from 'express';
 import request from 'supertest';
 import { beforeEach, afterEach, describe, expect, it, vi } from 'vitest';
-import { createHRTimesheetRoutes } from '../src/server/routes/hrTimesheet.js';
+import { createHRTimesheetRoutes } from '@apps/mcp-core/server/routes/hrTimesheet.js';
 
 const harness = vi.hoisted(() => ({
   db: undefined as Database.Database | undefined,
@@ -10,17 +10,17 @@ const harness = vi.hoisted(() => ({
   auditRecord: vi.fn(async () => undefined),
 }));
 
-vi.mock('../src/agents/AgentManager.js', () => ({
+vi.mock('@packages/agents/AgentManager.js', () => ({
   agentManager: {
     delegateTask: harness.delegateTask,
   },
 }));
 
-vi.mock('../src/core/auditLog.js', () => ({
+vi.mock('@packages/core-logic/auditLog.js', () => ({
   record: harness.auditRecord,
 }));
 
-vi.mock('../src/utils/globalDb.js', () => ({
+vi.mock('@packages/utils/globalDb.js', () => ({
   getGlobalDb: vi.fn(() => {
     if (!harness.db) {
       throw new Error('test database not initialized');

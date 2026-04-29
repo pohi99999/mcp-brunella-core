@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import fs from 'node:fs';
 import path from 'node:path';
 import os from 'node:os';
-import { discoverMemoryPaths, loadMemoryContent, getMemory } from '../src/utils/memoryContext.js';
+import { discoverMemoryPaths, loadMemoryContent, getMemory } from '@packages/utils/memoryContext.js';
 describe('Memory context', () => {
     it('discoverMemoryPaths returns empty when no files exist', () => {
         const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'brunella-mem-'));

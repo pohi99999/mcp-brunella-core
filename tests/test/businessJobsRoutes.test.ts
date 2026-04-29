@@ -4,9 +4,9 @@ import path from 'node:path';
 import express from 'express';
 import request from 'supertest';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { DatabaseManager } from '../src/utils/db.js';
-import { agentManager } from '../src/agents/AgentManager.js';
-import { createBusinessJobsRoutes } from '../src/server/routes/businessJobs.js';
+import { DatabaseManager } from '@packages/utils/db.js';
+import { agentManager } from '@packages/agents/AgentManager.js';
+import { createBusinessJobsRoutes } from '@apps/mcp-core/server/routes/businessJobs.js';
 
 describe('business jobs routes', () => {
   let tempDir: string;

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { mcpCatch } from '../src/utils/mcpResponse.js';
+import { mcpCatch } from '@packages/utils/mcpResponse.js';
 
 describe('mcpCatch', () => {
   it('normalizes string errors into readable responses', () => {

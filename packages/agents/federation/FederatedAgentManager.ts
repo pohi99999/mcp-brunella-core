@@ -7,12 +7,12 @@
  */
 
 import { EventEmitter } from 'events';
-import { logInfo, logWarn, logError } from '../../utils/logger.js';
-import { trustRegistry } from '../../core/federation/trustRegistry.js';
-import { phoenixEventBus } from '../../core/phoenixEventBus.js';
-import { postSignedFederationJson } from '../../core/federation/remoteRequest.js';
-import type { MeshNodeInfo } from '../../mesh/meshNode.js';
-import type { MeshManager } from '../../mesh/meshManager.js';
+import { logInfo, logWarn, logError } from '@packages/utils/logger.js';
+import { trustRegistry } from '@packages/core-logic/federation/trustRegistry.js';
+import { phoenixEventBus } from '@packages/core-logic/phoenixEventBus.js';
+import { postSignedFederationJson } from '@packages/core-logic/federation/remoteRequest.js';
+import type { MeshNodeInfo } from '@packages/core-logic/meshNode.js';
+import type { MeshManager } from '@packages/core-logic/meshManager.js';
 
 export interface FederatedAgent {
   agentId: string;

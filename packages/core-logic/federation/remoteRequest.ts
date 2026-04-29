@@ -1,5 +1,5 @@
 import type { PeerRuntimeKeyBinding } from './trustRegistry.js';
-import { signFederationRequest } from '@packages/security/federationPeerAuth.js';
+import { signFederationRequest } from '@packages/core-logic/federationPeerAuth.js';
 import { logWarn } from '@packages/utils/logger.js';
 
 const RETRYABLE_HTTP_STATUS_CODES = new Set([408, 429]);

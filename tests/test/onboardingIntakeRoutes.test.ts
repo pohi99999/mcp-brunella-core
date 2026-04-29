@@ -108,7 +108,7 @@ const {
   };
 });
 
-vi.mock('../src/utils/db.js', () => ({
+vi.mock('@packages/utils/db.js', () => ({
   getBusinessJobById: getBusinessJobByIdMock,
   getBusinessJobs: getBusinessJobsMock,
   saveBusinessJob: saveBusinessJobMock,
@@ -116,17 +116,17 @@ vi.mock('../src/utils/db.js', () => ({
   updateBusinessJobStatus: updateBusinessJobStatusMock,
 }));
 
-vi.mock('../src/utils/globalDb.js', () => ({
+vi.mock('@packages/utils/globalDb.js', () => ({
   getGlobalDb: vi.fn(() => null),
 }));
 
-vi.mock('../src/agents/AgentManager.js', () => ({
+vi.mock('@packages/agents/AgentManager.js', () => ({
   agentManager: {
     queueTask: queueTaskMock,
   },
 }));
 
-import { createOnboardingIntakeRoutes } from '../src/server/routes/onboardingIntake.js';
+import { createOnboardingIntakeRoutes } from '@apps/mcp-core/server/routes/onboardingIntake.js';
 
 describe('Onboarding intake routes', () => {
   const originalSecret = process.env.BRUNELLA_WEBHOOK_SECRET;

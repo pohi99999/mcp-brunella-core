@@ -5,10 +5,10 @@ import {
   buildKkvPackSnapshot,
   renderKkvPackBriefMarkdown,
   renderKkvPackMarkdown,
-} from "../src/tools/kkvPack.js";
-import { buildFinancePackSnapshot } from "../src/tools/kkvFinancePack.js";
-import { buildInventoryPackSnapshot } from "../src/tools/kkvInventoryPack.js";
-import { buildLogisticsPackSnapshot } from "../src/tools/kkvLogisticsPack.js";
+} from "@packages/utils/kkvPack.js";
+import { buildFinancePackSnapshot } from "@packages/utils/kkvFinancePack.js";
+import { buildInventoryPackSnapshot } from "@packages/utils/kkvInventoryPack.js";
+import { buildLogisticsPackSnapshot } from "@packages/utils/kkvLogisticsPack.js";
 
 describe("kkvPack", () => {
   it("builds a healthy default snapshot with finance selected", () => {

@@ -1,6 +1,6 @@
 import express from 'express';
-import { logInfo, logError } from '../../utils/logger.js';
-import { ensureError } from '../../utils/ensureError.js';
+import { logInfo, logError } from '@packages/utils/logger.js';
+import { ensureError } from '@packages/utils/ensureError.js';
 import fetch from 'node-fetch';
 
 const router = express.Router();

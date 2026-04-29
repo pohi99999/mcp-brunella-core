@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { EventBus, BusEvent } from '../src/core/eventBus.js';
+import { EventBus, BusEvent } from '@packages/core-logic/eventBus.js';
 
 interface EventRow { id: number; ts: number; source: string; type: string; payload: string; consumed: number; }
 

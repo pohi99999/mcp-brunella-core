@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
-import { LogisticsDispatcher } from '../src/agents/LogisticsDispatcher.js';
-import { NurturerAgent } from '../src/agents/NurturerAgent.js';
-import { GenesisOrchestrator } from '../src/agents/GenesisOrchestrator.js';
+import { LogisticsDispatcher } from '@packages/agents/LogisticsDispatcher.js';
+import { NurturerAgent } from '@packages/agents/NurturerAgent.js';
+import { GenesisOrchestrator } from '@packages/agents/GenesisOrchestrator.js';
 describe('Phase 3 Integration Tests', () => {
     describe('LogisticsDispatcher + RouteOptimizer', () => {
         it('should calculate optimized route via python worker', async () => {
@@ -51,7 +51,7 @@ describe('Phase 3 Integration Tests', () => {
         it('should orchestrate a genesis protocol from spec', async () => {
             const orchestrator = new GenesisOrchestrator();
             // Register mock agents to prevent "Agent not found"
-            const { agentManager } = await import('../src/agents/AgentManager.js');
+            const { agentManager } = await import('@packages/agents/AgentManager.js');
             agentManager.registerAgent({
                 name: 'Developer',
                 role: 'dev',

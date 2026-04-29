@@ -7,15 +7,15 @@ const hookCommandHarness = vi.hoisted(() => ({
 }));
 const fetchMock = vi.fn();
 
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
   logInfo: hookCommandHarness.logInfo,
 }));
 
-vi.mock('../src/dashboard/lib/apiService.js', () => ({
+vi.mock('@/lib/apiService.js', () => ({
   getHookObservabilitySnapshot: hookCommandHarness.getHookObservabilitySnapshot,
 }));
 
-import { registerHookCommands } from '../src/cli/hooksCommands.js';
+import { registerHookCommands } from '@apps/mcp-core/commands/hooksCommands.js';
 
 describe('Hook CLI commands', () => {
   beforeEach(() => {

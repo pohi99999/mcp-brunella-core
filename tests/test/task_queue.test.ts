@@ -13,7 +13,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { EventEmitter } from 'node:events'
 
 // Mock logger first
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
   logInfo: vi.fn(),
   logError: vi.fn(),
   logWarning: vi.fn(),
@@ -25,7 +25,7 @@ const mockPipelineRunner = {
   startPipeline: vi.fn(),
   getPipeline: vi.fn(),
 }
-vi.mock('../src/agents/pipelineRunner.js', () => ({
+vi.mock('@packages/agents/pipelineRunner.js', () => ({
   pipelineRunner: mockPipelineRunner,
 }))
 
@@ -44,7 +44,7 @@ describe('TaskQueueManager - P7 Queue', () => {
     mockPipelineRunner.getPipeline.mockReset()
     
     // Import module fresh
-    const mod = await import('../src/agents/taskQueue.js')
+    const mod = await import('@packages/agents/taskQueue.js')
     TaskQueueManager = mod.TaskQueueManager
     // Create manager with autoStart=false for testing
     manager = new TaskQueueManager(3, false)

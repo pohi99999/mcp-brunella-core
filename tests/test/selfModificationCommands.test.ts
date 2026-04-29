@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { Command } from 'commander';
-import { registerSelfModificationCommands } from '../src/cli/selfModificationCommands.js';
+import { registerSelfModificationCommands } from '@apps/mcp-core/commands/selfModificationCommands.js';
 
 function mockJsonResponse(body: unknown, status = 200): Response {
   return {

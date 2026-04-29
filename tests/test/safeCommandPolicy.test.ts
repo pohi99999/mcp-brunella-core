@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { validateSafeCommand, recommendSafeVerificationCommands } from '../src/core/safeCommandPolicy.js';
+import { validateSafeCommand, recommendSafeVerificationCommands } from '@packages/core-logic/safeCommandPolicy.js';
 
 describe('safeCommandPolicy', () => {
     it('should allow explicit npm build commands', () => {

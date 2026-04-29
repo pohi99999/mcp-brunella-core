@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import * as fs from "fs/promises";
 import * as path from "path";
 import * as os from "os";
-vi.mock("../src/utils/logger.js", () => ({
+vi.mock("@packages/utils/logger.js", () => ({
     logInfo: vi.fn(),
     logError: vi.fn(),
     setAgentStatus: vi.fn(),
@@ -33,7 +33,7 @@ describe("ProjectConductor Living Documentation", () => {
       `, "utf-8");
         process.chdir(testRoot);
         vi.resetModules();
-        const imported = await import("../src/agents/ProjectConductorAgent.js");
+        const imported = await import("@packages/agents/ProjectConductorAgent.js");
         ProjectConductorAgent =
             imported.ProjectConductorAgent;
     });

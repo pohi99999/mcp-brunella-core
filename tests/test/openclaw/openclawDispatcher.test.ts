@@ -11,7 +11,7 @@ import {
   OpenClawStatusSnapshotSchema,
   OpenClawTaskDispatcher,
   buildEvidenceFromGatewayResponse,
-} from '../../src/integrations/openclaw/index.js';
+} from '@packages/core-logic/openclaw/index.js';
 
 function buildConfig(overrides: Record<string, unknown> = {}) {
   const baseRedaction = {

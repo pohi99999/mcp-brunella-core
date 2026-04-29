@@ -1,9 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { MatchingAgent } from '../src/agents/MatchingAgent.js';
-import * as db from '../src/data/bookkeeping_db.js';
-import { AgentContext } from '../src/agents/BaseAgent.js';
-import { BookkeepingTransaction, NavInvoiceData, TransactionStatus, BankTransactionData } from '../src/types/bookkeeping.d.js';
-import * as logger from '../src/utils/logger.js';
+import { MatchingAgent } from '@packages/agents/MatchingAgent.js';
+import * as db from '@packages/utils/bookkeeping_db.js';
+import { AgentContext } from '@packages/agents/BaseAgent.js';
+import { BookkeepingTransaction, NavInvoiceData, TransactionStatus, BankTransactionData } from '@packages/types/bookkeeping.d.js';
+import * as logger from '@packages/utils/logger.js';
 
 describe('MatchingAgent', () => {
     const mockNavTxs: BookkeepingTransaction[] = [

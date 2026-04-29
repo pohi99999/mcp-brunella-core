@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { Command } from 'commander';
-import { registerProjectMaintainerCommands } from '../src/cli/projectMaintainerCommands.js';
+import { registerProjectMaintainerCommands } from '@apps/mcp-core/commands/projectMaintainerCommands.js';
 
 const spinnerStop = vi.fn();
 const spinnerFail = vi.fn();

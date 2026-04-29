@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import { DynamicAgent } from "../src/agents/DynamicAgent.js";
+import { DynamicAgent } from "@packages/agents/DynamicAgent.js";
 
 describe("VIKTORIAVARGA shopping assistant", () => {
   it("loads the registry entry and TOML-backed DynamicAgent config", () => {
@@ -24,7 +24,7 @@ describe("VIKTORIAVARGA shopping assistant", () => {
       module: "./agents/DynamicAgent.js",
       status: "active",
     });
-    expect(entry?.config?.tomlPath).toBe("myai/agents/ShoppingAssistantAgent.toml");
+    expect(entry?.config?.tomlPath).toBe("packages/myai/agents/ShoppingAssistantAgent.toml");
 
     const tomlPath = path.resolve(process.cwd(), entry!.config!.tomlPath!);
     expect(fs.existsSync(tomlPath)).toBe(true);

@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { agentManager } from '../../agents/AgentManager.js';
+import { agentManager } from '@packages/agents/AgentManager.js';
 import {
   createCashEntry,
   getAllTransactions,
@@ -13,9 +13,9 @@ import {
   getTransaction,
   updateTransaction,
   updateCashEntry,
-} from '../../data/bookkeeping_db.js';
-import { buildBookkeepingReadinessReport } from '../../utils/bookkeepingReadiness.js';
-import { logError, logInfo } from '../../utils/logger.js';
+} from '@packages/utils/bookkeeping_db.js';
+import { buildBookkeepingReadinessReport } from '@packages/utils/bookkeepingReadiness.js';
+import { logError, logInfo } from '@packages/utils/logger.js';
 import {
   readBookkeepingStatusSnapshot,
   writeBookkeepingStatusSnapshot,
@@ -28,7 +28,7 @@ import type {
   CashEntrySummary,
   CashEntryType,
   TransactionStatus,
-} from '../../types/bookkeeping.d.js';
+} from '@packages/types/bookkeeping.d.js';
 import type { BookkeepingStatusSnapshot } from './bookkeepingStatusSnapshot.js';
 
 type BookkeepingException = Record<string, unknown>;
@@ -637,7 +637,7 @@ export function createBookkeepingRoutes(): Router {
       const summary = buildSummary(transactions);
       const exceptions = transactions.filter(t => t.status === 'UNMATCHED' || t.status === 'ERROR');
 
-      const { sendNotificationEmail, isNotificationEmailConfigured } = await import('../../utils/notificationService.js');
+      const { sendNotificationEmail, isNotificationEmailConfigured } = await import('@packages/utils/notificationService.js');
 
       if (!isNotificationEmailConfigured()) {
         res.status(503).json({ success: false, error: 'Email service not configured' });

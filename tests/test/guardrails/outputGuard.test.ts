@@ -1,19 +1,19 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import * as validateOutputModule from '../../src/agents/middleware/validateOutput.js';
-import * as criticQuickReviewModule from '../../src/core/criticQuickReview.js';
-import * as redactorModule from '../../src/security/redactor.js';
+import * as validateOutputModule from '@packages/agents/middleware/validateOutput.js';
+import * as criticQuickReviewModule from '@packages/core-logic/criticQuickReview.js';
+import * as redactorModule from '@packages/core-logic/redactor.js';
 
 const { recordValidation, recordRedaction } = vi.hoisted(() => ({
   recordValidation: vi.fn(),
   recordRedaction: vi.fn(),
 }));
 
-vi.mock('../../src/server/guardrailsRoutes.js', () => ({
+vi.mock('@apps/mcp-core/server/guardrailsRoutes.js', () => ({
   recordValidation,
   recordRedaction,
 }));
 
-import { guardAgentResponseOutput, guardAgentResultOutput } from '../../src/core/outputGuard.js';
+import { guardAgentResponseOutput, guardAgentResultOutput } from '@packages/core-logic/outputGuard.js';
 
 describe('outputGuard', () => {
   beforeEach(() => {

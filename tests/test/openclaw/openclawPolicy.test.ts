@@ -5,13 +5,13 @@ import {
   OpenClawConfigSchema,
   OpenClawExecPacketSchema,
   OpenClawGoalPacketSchema,
-} from '../../src/integrations/openclaw/index.js';
+} from '@packages/core-logic/openclaw/index.js';
 import {
   buildOpenClawApprovalRequest,
   classifyOpenClawPolicy,
   mapApprovalStateToDispatchStatus,
   redactOpenClawPayload,
-} from '../../src/integrations/openclaw/index.js';
+} from '@packages/core-logic/openclaw/index.js';
 
 function buildConfig(overrides: Partial<OpenClawConfig> = {}) {
   return OpenClawConfigSchema.parse({

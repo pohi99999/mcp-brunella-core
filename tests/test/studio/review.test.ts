@@ -4,9 +4,9 @@ import path from 'path';
 
 import { describe, expect, it, vi } from 'vitest';
 
-import { StudioReviewerAgent } from '../../src/agents/StudioReviewerAgent.js';
-import { buildStudioReview, reviewStudioRun, studioPipelineReportPath } from '../../src/cli/studioRuntime.js';
-import type { PipelineRunReport } from '../../src/schemas/studioSchemas.js';
+import { StudioReviewerAgent } from '@packages/agents/StudioReviewerAgent.js';
+import { buildStudioReview, reviewStudioRun, studioPipelineReportPath } from '@apps/mcp-core/studioRuntime.js';
+import type { PipelineRunReport } from '@packages/types/studioSchemas.js';
 
 function createPipelineReport(overrides: Partial<PipelineRunReport> = {}): PipelineRunReport {
   return {

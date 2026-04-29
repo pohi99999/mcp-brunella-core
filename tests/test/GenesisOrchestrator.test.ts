@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
-import { GenesisOrchestrator } from '../src/agents/GenesisOrchestrator.js';
-import type { AgentContext } from '../src/agents/BaseAgent.js';
-import type { SpecDocument } from '../src/types/blueprint.js';
+import { GenesisOrchestrator } from '@packages/agents/GenesisOrchestrator.js';
+import type { AgentContext } from '@packages/agents/BaseAgent.js';
+import type { SpecDocument } from '@packages/types/blueprint.js';
 
 describe('GenesisOrchestrator spec guard', () => {
   it('returns the existing missing-spec message when metadata.spec is absent', async () => {

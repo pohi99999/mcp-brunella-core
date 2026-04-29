@@ -3,7 +3,7 @@ import {
   getBasCloudflareApiToken,
   getCloudflareApiToken,
   getCloudflareAuthHeaders,
-} from "../src/utils/cloudflareConfig.js";
+} from "@packages/utils/cloudflareConfig.js";
 
 describe("cloudflareConfig", () => {
   afterEach(() => {

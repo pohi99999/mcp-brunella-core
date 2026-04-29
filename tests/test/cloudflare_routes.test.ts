@@ -1,9 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import express from "express";
 import request from "supertest";
-import { createCloudflareRoutes } from "../src/server/routes/cloudflare.js";
+import { createCloudflareRoutes } from "@apps/mcp-core/server/routes/cloudflare.js";
 
-vi.mock("../src/agents/AgentManager.js", () => ({
+vi.mock("@packages/agents/AgentManager.js", () => ({
   agentManager: {
     getEdgeStatus: vi.fn().mockReturnValue({
       enabled: false,
@@ -13,7 +13,7 @@ vi.mock("../src/agents/AgentManager.js", () => ({
   },
 }));
 
-vi.mock("../src/utils/cloudflareClient.js", () => ({
+vi.mock("@packages/utils/cloudflareClient.js", () => ({
   cloudflareClient: {
     submitTask: vi.fn(),
     checkStatus: vi.fn(),
@@ -96,7 +96,7 @@ describe("Cloudflare routes", () => {
     beforeEach(async () => {
       // Mock Edge as enabled for this test suite
       const { agentManager } = vi.mocked(
-        await import("../src/agents/AgentManager.js"),
+        await import("@packages/agents/AgentManager.js"),
       );
       vi.mocked(agentManager.getEdgeStatus).mockReturnValue({
         enabled: true,
@@ -107,7 +107,7 @@ describe("Cloudflare routes", () => {
 
     it("POST /api/cloudflare/task submits task when edge enabled", async () => {
       const { cloudflareClient } = vi.mocked(
-        await import("../src/utils/cloudflareClient.js"),
+        await import("@packages/utils/cloudflareClient.js"),
       );
       vi.mocked(cloudflareClient.submitTask).mockResolvedValueOnce({
         success: true,
@@ -134,7 +134,7 @@ describe("Cloudflare routes", () => {
 
     it("GET /api/cloudflare/status/:taskId returns task status when edge enabled", async () => {
       const { cloudflareClient } = vi.mocked(
-        await import("../src/utils/cloudflareClient.js"),
+        await import("@packages/utils/cloudflareClient.js"),
       );
       vi.mocked(cloudflareClient.checkStatus).mockResolvedValueOnce({
         taskId: "task_123",
@@ -161,7 +161,7 @@ describe("Cloudflare routes", () => {
 
     it("POST /api/cloudflare/task handles worker error gracefully", async () => {
       const { cloudflareClient } = vi.mocked(
-        await import("../src/utils/cloudflareClient.js"),
+        await import("@packages/utils/cloudflareClient.js"),
       );
       vi.mocked(cloudflareClient.submitTask).mockRejectedValueOnce(
         new Error("Worker timeout"),

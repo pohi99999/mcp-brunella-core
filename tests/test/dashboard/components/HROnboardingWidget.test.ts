@@ -3,11 +3,11 @@
 import React from 'react';
 import { act, render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { HROnboardingWidget } from '../../../src/dashboard/components/dashboard/HROnboardingWidget.js';
-import * as api from '../../../src/dashboard/lib/hrOnboardingApi.js';
+import { HROnboardingWidget } from '@/components/dashboard/HROnboardingWidget.js';
+import * as api from '@/lib/hrOnboardingApi.js';
 import { toast } from 'sonner';
 
-vi.mock('../../../src/dashboard/components/ui/card.js', () => ({
+vi.mock('@/components/ui/card.js', () => ({
   Card: ({ children }: { children?: React.ReactNode }) => React.createElement('div', null, children),
   CardContent: ({ children }: { children?: React.ReactNode }) => React.createElement('div', null, children),
   CardDescription: ({ children }: { children?: React.ReactNode }) => React.createElement('p', null, children),
@@ -15,28 +15,28 @@ vi.mock('../../../src/dashboard/components/ui/card.js', () => ({
   CardTitle: ({ children }: { children?: React.ReactNode }) => React.createElement('h2', null, children),
 }));
 
-vi.mock('../../../src/dashboard/components/ui/button.js', () => ({
+vi.mock('@/components/ui/button.js', () => ({
   Button: ({ children, ...props }: React.ButtonHTMLAttributes<HTMLButtonElement> & { children?: React.ReactNode }) =>
     React.createElement('button', props, children),
 }));
 
-vi.mock('../../../src/dashboard/components/ui/badge.js', () => ({
+vi.mock('@/components/ui/badge.js', () => ({
   Badge: ({ children }: { children?: React.ReactNode }) => React.createElement('span', null, children),
 }));
 
-vi.mock('../../../src/dashboard/components/ui/scroll-area.js', () => ({
+vi.mock('@/components/ui/scroll-area.js', () => ({
   ScrollArea: ({ children }: { children?: React.ReactNode }) => React.createElement('div', null, children),
 }));
 
-vi.mock('../../../src/dashboard/components/ui/input.js', () => ({
+vi.mock('@/components/ui/input.js', () => ({
   Input: (props: React.InputHTMLAttributes<HTMLInputElement>) => React.createElement('input', props),
 }));
 
-vi.mock('../../../src/dashboard/components/ui/textarea.js', () => ({
+vi.mock('@/components/ui/textarea.js', () => ({
   Textarea: (props: React.TextareaHTMLAttributes<HTMLTextAreaElement>) => React.createElement('textarea', props),
 }));
 
-vi.mock('../../../src/dashboard/lib/hrOnboardingApi.js', () => ({
+vi.mock('@/lib/hrOnboardingApi.js', () => ({
   getHROnboardingSamples: vi.fn(),
   getHROnboardingJobs: vi.fn(),
   runHROnboardingDryRun: vi.fn(),

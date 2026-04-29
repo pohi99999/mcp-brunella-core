@@ -1,9 +1,9 @@
 import { Router } from 'express';
-import { evHunterHandler } from '../../tools/evHunterTool.js';
+import { evHunterHandler } from '@packages/utils/evHunterTool.js';
 import path from 'path';
 import fs from 'fs/promises';
-import { logInfo, logError } from '../../utils/logger.js';
-import { kvCache } from '../../utils/kvCache.js';
+import { logInfo, logError } from '@packages/utils/logger.js';
+import { kvCache } from '@packages/utils/kvCache.js';
 
 export function createEvHunterRouter(): Router {
     const router = Router();

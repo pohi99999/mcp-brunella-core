@@ -9,8 +9,8 @@ import {
   stopHookDlqProcessor,
   type HookDispatchContext,
 } from '../hookRegistry.js';
-import { ensureError } from '../../utils/ensureError.js';
-import { logInfo, logWarn } from '../../utils/logger.js';
+import { ensureError } from '@packages/utils/ensureError.js';
+import { logInfo, logWarn } from '@packages/utils/logger.js';
 import { BUILTIN_HOOK_CATALOG } from './builtinHookCatalog.js';
 
 import { registerAdvancedHooks } from '../advancedHooks.js';

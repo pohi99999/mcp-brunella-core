@@ -8,7 +8,7 @@ import {
   chunkContent,
   type ChunkInfo,
   type IndexStats
-} from '../src/core/codebaseIndexer.js';
+} from '@packages/core-logic/codebaseIndexer.js';
 
 // ============================================================================
 // CHUNKING TESTS

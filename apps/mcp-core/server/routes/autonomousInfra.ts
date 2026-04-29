@@ -4,7 +4,7 @@
  */
 
 import { Router, type Request, type Response } from 'express';
-import { logError, logInfo } from '../../utils/logger.js';
+import { logError, logInfo } from '@packages/utils/logger.js';
 import {
   ensureAutonomousInfraSeed,
   hyperKernel,
@@ -14,7 +14,7 @@ import {
   selfModel,
   goalEngine,
   evoEcosystem,
-} from '../../core/autonomousInfraRuntime.js';
+} from '@packages/core-logic/autonomousInfraRuntime.js';
 
 export function createAutonomousInfraRouter(): Router {
   const router = Router();

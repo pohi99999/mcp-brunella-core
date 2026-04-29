@@ -5,18 +5,18 @@ import {
   queryRuntimeThresholdRolloutJournalSummaries,
   recordRuntimeThresholdRolloutJournal,
   type LlmCallQuery,
-} from '../../utils/globalDb.js';
-import { getRuntimeDriftSnapshot } from '../../utils/runtimeDriftMonitor.js';
+} from '@packages/utils/globalDb.js';
+import { getRuntimeDriftSnapshot } from '@packages/utils/runtimeDriftMonitor.js';
 import {
   buildThresholdRolloutPlan,
   renderThresholdRolloutPlan,
   readRepoRuntimeContract,
-} from '../../utils/runtimeThresholdRollout.js';
-import { logError } from '../../utils/logger.js';
+} from '@packages/utils/runtimeThresholdRollout.js';
+import { logError } from '@packages/utils/logger.js';
 import {
   buildPhoenixFlywheelObservabilitySnapshot,
   renderPhoenixFlywheelMarkdown,
-} from '../../tools/phoenixInsights.js';
+} from '@packages/utils/phoenixInsights.js';
 
 export function createObservabilityRouter(): Router {
   const router = Router();

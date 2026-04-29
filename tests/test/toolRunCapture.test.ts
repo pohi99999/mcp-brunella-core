@@ -8,22 +8,22 @@ const toolHarness = vi.hoisted(() => ({
   logError: vi.fn(),
 }));
 
-vi.mock('../src/utils/globalDb.js', () => ({
+vi.mock('@packages/utils/globalDb.js', () => ({
   recordToolRun: toolHarness.recordToolRun,
 }));
 
-vi.mock('../src/core/hookRegistry.js', () => ({
+vi.mock('@packages/core-logic/hookRegistry.js', () => ({
   fireHook: toolHarness.fireHook,
   fireHookSafely: toolHarness.fireHook,
 }));
 
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
   logInfo: toolHarness.logInfo,
   logWarn: toolHarness.logWarn,
   logError: toolHarness.logError,
 }));
 
-import { wrapToolHandler } from '../src/core/toolRunCapture.js';
+import { wrapToolHandler } from '@packages/core-logic/toolRunCapture.js';
 
 describe('wrapToolHandler hook integration', () => {
   beforeEach(() => {

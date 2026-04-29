@@ -1,8 +1,8 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { generateKeyPairSync } from 'crypto';
-import { trustRegistry } from '../../src/core/federation/trustRegistry.js';
-import { phoenixEventBus } from '../../src/core/phoenixEventBus.js';
-import { inspectFederationPublicKey } from '../../src/security/federationPeerProof.js';
+import { trustRegistry } from '@packages/core-logic/federation/trustRegistry.js';
+import { phoenixEventBus } from '@packages/core-logic/phoenixEventBus.js';
+import { inspectFederationPublicKey } from '@packages/core-logic/federationPeerProof.js';
 
 describe('TrustRegistry', () => {
   beforeEach(() => {

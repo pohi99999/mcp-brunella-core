@@ -1,9 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { globalPermissionManager } from '../src/agents/permissions.js';
-import * as auditLog from '../src/core/auditLog.js';
+import { globalPermissionManager } from '@packages/agents/permissions.js';
+import * as auditLog from '@packages/core-logic/auditLog.js';
 
 // Mock the audit log module
-vi.mock('../src/core/auditLog.js', () => ({
+vi.mock('@packages/core-logic/auditLog.js', () => ({
     record: vi.fn().mockResolvedValue(undefined),
     // Add other exports if needed for module loading, but record is what we care about
     getAuditLog: vi.fn(),

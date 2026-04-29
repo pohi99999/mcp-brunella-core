@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { createOpenClawCliHandlers, formatOpenClawCliPayload } from '../../src/cli/openclawCommands.js';
+import { createOpenClawCliHandlers, formatOpenClawCliPayload } from '@apps/mcp-core/commands/openclawCommands.js';
 
 const originalBaseUrl = process.env.OPENCLAW_BASE_URL;
 

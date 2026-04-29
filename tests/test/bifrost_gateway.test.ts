@@ -1,5 +1,5 @@
 import { vi, describe, it, expect, beforeEach } from 'vitest';
-import { BifrostGateway } from '../src/core/bifrost_gateway.js';
+import { BifrostGateway } from '@packages/core-logic/bifrost_gateway.js';
 
 // Re-implementing mocks safely
 vi.mock('ollama', () => ({

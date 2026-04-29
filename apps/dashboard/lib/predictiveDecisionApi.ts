@@ -1,4 +1,4 @@
-import type { DecisionResult, DecisionStats, MonteCarloConfig } from '../../core/decisionTypes.js';
+import type { DecisionResult, DecisionStats, MonteCarloConfig } from '@packages/core-logic/decisionTypes.js';
 import { fetchWithTimeout, safeJson } from './apiService.js';
 
 const API_BASE = '';

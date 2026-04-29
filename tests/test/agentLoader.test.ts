@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { resolveAgentExport } from '../src/agents/agentLoader.js';
+import { resolveAgentExport } from '@packages/agents/agentLoader.js';
 
 class DefaultAgentMock {
   constructor(_config?: Record<string, unknown>) {}

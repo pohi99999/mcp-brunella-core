@@ -5,7 +5,7 @@ const curatedHarness = vi.hoisted(() => ({
   db: null as Database.Database | null,
 }));
 
-vi.mock('../src/utils/globalDb.js', () => ({
+vi.mock('@packages/utils/globalDb.js', () => ({
   getGlobalDb: () => {
     if (!curatedHarness.db) {
       throw new Error('Curated test database not initialized');
@@ -15,13 +15,13 @@ vi.mock('../src/utils/globalDb.js', () => ({
   getD1Adapter: vi.fn(() => null),
 }));
 
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
   logInfo: vi.fn(),
   logWarn: vi.fn(),
   logError: vi.fn(),
 }));
 
-vi.mock('../src/utils/vectorize.js', () => ({
+vi.mock('@packages/utils/vectorize.js', () => ({
   vectorizeClient: {
     getStatus: vi.fn(() => ({ enabled: false })),
     upsertText: vi.fn(),
@@ -40,7 +40,7 @@ describe('goldenDatasetBridge curated listing', () => {
       captureCuratedGoldenCandidate,
       listCuratedGoldenSamples,
       getCuratedGoldenSample,
-    } = await import('../src/core/goldenDatasetBridge.js');
+    } = await import('@packages/core-logic/goldenDatasetBridge.js');
 
     const saved = captureCuratedGoldenCandidate({
       id: 'curated-manual-1',
@@ -112,7 +112,7 @@ describe('goldenDatasetBridge curated listing', () => {
       captureCuratedGoldenCandidate,
       captureToolRunCandidates,
       listCuratedGoldenSamples,
-    } = await import('../src/core/goldenDatasetBridge.js');
+    } = await import('@packages/core-logic/goldenDatasetBridge.js');
 
     captureCuratedGoldenCandidate({
       id: 'curated_tool_run_101',

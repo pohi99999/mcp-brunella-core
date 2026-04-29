@@ -98,7 +98,7 @@ export class AnalyticsService {
   static async trackEvent(event: PipelineEvent): Promise<void> {
     try {
       // Import dynamically to avoid circular deps
-      const { getD1Adapter } = await import('./utils/globalDb.js');
+      const { getD1Adapter } = await import('./globalDb.js');
       const d1Adapter = getD1Adapter();
 
       if (!d1Adapter) {
@@ -122,7 +122,7 @@ export class AnalyticsService {
       });
     } catch (error) {
       // Non-critical: analytics tracking should never break the main flow
-      const { logWarn } = await import('./utils/logger.js');
+      const { logWarn } = await import('./logger.js');
       const message = error instanceof Error ? error.message : String(error);
       logWarn('AnalyticsService', `Analytics tracking failed: ${message}`);
     }

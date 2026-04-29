@@ -20,7 +20,7 @@ import {
   logDebug,
 } from "../../../packages/utils/logger.js";
 import { ensureError } from "../../../packages/utils/ensureError.js";
-import type { AgentStatusPayload } from "../../../packages/agents/SocketService.js";
+import type { AgentStatusPayload } from "@packages/agents/SocketService.js";
 import {
   corsWhitelist,
   getCorsOrigins,
@@ -258,7 +258,7 @@ export async function startWebServer() {
       methods: ["GET", "POST"],
     },
   });
-  const { socketService } = await import("../../../packages/agents/SocketService.js");
+  const { socketService } = await import("@packages/agents/SocketService.js");
   socketService.init(io);
   setRuntimeStatus({ phase: "socket-ready" });
 
@@ -385,8 +385,8 @@ async function deferredInit(
   await yieldToEventLoop();
 
   // ── Phase 5: AgentManager + ToolManager + Socket handlers ──────
-  const { socketService } = await import("../../../packages/agents/SocketService.js");
-  const { agentManager, initializeAgentManager } = await import("../../../packages/agents/AgentManager.js");
+  const { socketService } = await import("@packages/agents/SocketService.js");
+  const { agentManager, initializeAgentManager } = await import("@packages/agents/AgentManager.js");
   const { toolManager } = await import("./ToolManager.js");
 
   // Wire up socketService so agents can broadcast status updates
@@ -402,12 +402,12 @@ async function deferredInit(
       { PropertyVisionaryAgent },
       { ViktoriaPhygitalAgent },
     ] = await Promise.all([
-      import("../../../packages/agents/InnovationBridgeAgent.js"),
-      import("../../../packages/agents/DigitalHeadhunterAgent.js"),
-      import("../../../packages/agents/GrantHunter.js"),
-      import("../../../packages/agents/LawDetectiveAgent.js"),
-      import("../../../packages/agents/PropertyVisionaryAgent.js"),
-      import("../../../packages/agents/ViktoriaPhygitalAgent.js"),
+      import("@packages/agents/InnovationBridgeAgent.js"),
+      import("@packages/agents/DigitalHeadhunterAgent.js"),
+      import("@packages/agents/GrantHunter.js"),
+      import("@packages/agents/LawDetectiveAgent.js"),
+      import("@packages/agents/PropertyVisionaryAgent.js"),
+      import("@packages/agents/ViktoriaPhygitalAgent.js"),
     ]);
     agentManager.registerAgent(new InnovationBridgeAgent());
     agentManager.registerAgent(new DigitalHeadhunterAgent());
@@ -517,7 +517,7 @@ async function deferredInit(
   }
 
   try {
-    const { pipelineRunner } = await import("../../../packages/agents/developerPipeline.js");
+    const { pipelineRunner } = await import("@packages/agents/developerPipeline.js");
     pipelineRunner.on("progress", (event: unknown) => {
       socketService.emit("developer:progress", event);
     });

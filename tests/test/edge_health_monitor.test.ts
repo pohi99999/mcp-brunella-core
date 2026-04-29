@@ -9,11 +9,11 @@
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
-let edgeHealthMonitor: typeof import('../src/core/edgeHealthMonitor.js')['edgeHealthMonitor'];
+let edgeHealthMonitor: typeof import('@packages/core-logic/edgeHealthMonitor.js')['edgeHealthMonitor'];
 
 async function freshMonitor() {
   vi.resetModules();
-  const mod = await import('../src/core/edgeHealthMonitor.js');
+  const mod = await import('@packages/core-logic/edgeHealthMonitor.js');
   return mod.edgeHealthMonitor;
 }
 

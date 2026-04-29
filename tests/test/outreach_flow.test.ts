@@ -1,38 +1,38 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { mkdir, rm, writeFile } from 'fs/promises';
 import path from 'path';
-import { validateEmail } from '../src/services/emailValidator.js';
-import { outreachService } from '../src/services/outreachService.js';
-import { LeadMiningAgent } from '../src/agents/LeadMiningAgent.js';
-import { globalPythonShell } from '../src/utils/pythonShell.js';
-import { agentManager } from '../src/agents/AgentManager.js';
-import { socketService } from '../src/server/SocketService.js';
+import { validateEmail } from '@packages/core-logic/emailValidator.js';
+import { outreachService } from '@packages/core-logic/outreachService.js';
+import { LeadMiningAgent } from '@packages/agents/LeadMiningAgent.js';
+import { globalPythonShell } from '@packages/utils/pythonShell.js';
+import { agentManager } from '@packages/agents/AgentManager.js';
+import { socketService } from '@apps/mcp-core/server/SocketService.js';
 
-vi.mock('../src/utils/pythonShell.js', () => ({
+vi.mock('@packages/utils/pythonShell.js', () => ({
     globalPythonShell: {
         run: vi.fn()
     }
 }));
 
-vi.mock('../src/agents/AgentManager.js', () => ({
+vi.mock('@packages/agents/AgentManager.js', () => ({
     agentManager: {
         delegate: vi.fn()
     }
 }));
 
 // Mock RAG utilities (LanceDB not available in test env)
-vi.mock('../src/utils/rag.js', () => ({
+vi.mock('@packages/utils/rag.js', () => ({
     searchRAG: vi.fn().mockResolvedValue([]),
     addToIndex: vi.fn().mockResolvedValue(undefined),
 }));
 
-vi.mock('../src/utils/db.js', () => ({
+vi.mock('@packages/utils/db.js', () => ({
     saveBusinessJob: vi.fn().mockResolvedValue('job-123'),
     saveBusinessLead: vi.fn().mockResolvedValue('lead-123'),
     updateBusinessJobStatus: vi.fn().mockResolvedValue(undefined),
 }));
 
-vi.mock('../src/server/SocketService.js', () => ({
+vi.mock('@apps/mcp-core/server/SocketService.js', () => ({
     socketService: {
         emit: vi.fn(),
     },

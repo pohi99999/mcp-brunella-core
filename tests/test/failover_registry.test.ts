@@ -10,11 +10,11 @@
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 
-let failoverRegistry: typeof import('../src/core/failoverRegistry.js')['failoverRegistry'];
+let failoverRegistry: typeof import('@packages/core-logic/failoverRegistry.js')['failoverRegistry'];
 
 async function freshRegistry() {
   vi.resetModules();
-  const mod = await import('../src/core/failoverRegistry.js');
+  const mod = await import('@packages/core-logic/failoverRegistry.js');
   return mod.failoverRegistry;
 }
 

@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
-import { selectAgentForInstruction } from "../src/agents/agentRouting.js";
-import { normalizeRegistryConfig } from "../src/agents/registryStandard.js";
+import { selectAgentForInstruction } from "@packages/agents/agentRouting.js";
+import { normalizeRegistryConfig } from "@packages/agents/registryStandard.js";
 
 describe("selectAgentForInstruction", () => {
   it("prefers capability-rich healthy agent over weaker matches", () => {

@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import request from 'supertest';
 import express from 'express';
-import { swarmRouter } from '../src/server/routes/swarm.js';
+import { swarmRouter } from '@apps/mcp-core/server/routes/swarm.js';
 
 const {
   listCheckpointsMock,
@@ -34,7 +34,7 @@ const {
 }));
 
 // Mock AgentManager — hoisted above import by Vitest
-vi.mock('../src/agents/AgentManager.js', () => ({
+vi.mock('@packages/agents/AgentManager.js', () => ({
   agentManager: { initialize: vi.fn() },
   swarmManager: {
     listColonies: vi.fn(() => [
@@ -49,13 +49,13 @@ vi.mock('../src/agents/AgentManager.js', () => ({
   }
 }));
 
-vi.mock('../src/config/index.js', () => ({ config: { workspaceRoot: '.', systemLogDir: 'logs' } }));
-vi.mock('../src/utils/rag.js', () => ({ addToIndex: vi.fn() }));
-vi.mock('../src/core/swarm/colonyPersistence.js', () => ({
+vi.mock('@packages/utils/index.js', () => ({ config: { workspaceRoot: '.', systemLogDir: 'logs' } }));
+vi.mock('@packages/utils/rag.js', () => ({ addToIndex: vi.fn() }));
+vi.mock('@packages/core-logic/swarm/colonyPersistence.js', () => ({
   listCheckpoints: listCheckpointsMock,
   getCheckpointStats: getCheckpointStatsMock,
 }));
-vi.mock('../src/core/SwarmChatManager.js', () => ({
+vi.mock('@packages/core-logic/SwarmChatManager.js', () => ({
   globalSwarmChatManager: {
     listSessions: listSessionsMock,
     createSession: createSessionMock,

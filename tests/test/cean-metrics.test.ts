@@ -4,7 +4,7 @@
  */
 
 import { describe, it, expect, beforeAll } from 'vitest';
-import type { MetricsData } from '../src/metrics';
+import type { MetricsData } from '@packages/utils/metrics';
 
 // Mock D1Database for testing
 class MockD1 {
@@ -64,7 +64,7 @@ describe('Metrics Collection', () => {
 
   it('should gather metrics from database', async () => {
     // Import the function after mock setup
-    const { gatherMetrics } = await import('../src/metrics');
+    const { gatherMetrics } = await import('@packages/utils/metrics');
 
     const metrics = await gatherMetrics(mockDb as any);
 
@@ -79,7 +79,7 @@ describe('Metrics Collection', () => {
 
   it('should format metrics in Prometheus format', async () => {
     const { gatherMetrics, formatPrometheusMetrics } = await import(
-      '../src/metrics'
+      '@packages/utils/metrics'
     );
      
     const metrics = await gatherMetrics(mockDb as any);
@@ -99,7 +99,7 @@ describe('Metrics Collection', () => {
 
   it('should format metrics in JSON format', async () => {
     const { gatherMetrics, formatJsonMetrics } = await import(
-      '../src/metrics'
+      '@packages/utils/metrics'
     );
 
     const metrics = await gatherMetrics(mockDb as any);
@@ -116,7 +116,7 @@ describe('Metrics Collection', () => {
   });
 
   it.skip('should calculate success rate correctly', async () => {
-    const { gatherMetrics } = await import('../src/metrics');
+    const { gatherMetrics } = await import('@packages/utils/metrics');
      
     const metrics = await gatherMetrics(mockDb as any);
 
@@ -125,7 +125,7 @@ describe('Metrics Collection', () => {
   });
 
   it.skip('should calculate cache hit rate', async () => {
-    const { gatherMetrics } = await import('../src/metrics');
+    const { gatherMetrics } = await import('@packages/utils/metrics');
      
     const metrics = await gatherMetrics(mockDb as any);
 
@@ -135,7 +135,7 @@ describe('Metrics Collection', () => {
   });
 
   it.skip('should estimate cost correctly', async () => {
-    const { gatherMetrics } = await import('../src/metrics');
+    const { gatherMetrics } = await import('@packages/utils/metrics');
      
     const metrics = await gatherMetrics(mockDb as any);
 
@@ -146,7 +146,7 @@ describe('Metrics Collection', () => {
   });
 
   it('should include timestamp in metrics', async () => {
-    const { gatherMetrics } = await import('../src/metrics');
+    const { gatherMetrics } = await import('@packages/utils/metrics');
      
     const metrics = await gatherMetrics(mockDb as any);
 
@@ -163,7 +163,7 @@ describe('Metrics Collection', () => {
       }),
     };
 
-    const { gatherMetrics } = await import('../src/metrics');
+    const { gatherMetrics } = await import('@packages/utils/metrics');
      
     const metrics = await gatherMetrics(emptyDb as any);
 
@@ -180,7 +180,7 @@ describe('Metrics Collection', () => {
       }),
     };
 
-    const { gatherMetrics } = await import('../src/metrics');
+    const { gatherMetrics } = await import('@packages/utils/metrics');
      
     const metrics = await gatherMetrics(zeroDb as any);
 
@@ -190,7 +190,7 @@ describe('Metrics Collection', () => {
   });
 
   it('should generate valid metrics within 1 second', async () => {
-    const { gatherMetrics } = await import('../src/metrics');
+    const { gatherMetrics } = await import('@packages/utils/metrics');
      
     const startTime = Date.now();
      
@@ -204,7 +204,7 @@ describe('Metrics Collection', () => {
 
 describe('Analytics Engine Integration', () => {
   it('should build pipeline start event', async () => {
-    const { PipelineEventBuilder } = await import('../src/analytics');
+    const { PipelineEventBuilder } = await import('@packages/utils/analytics.js');
 
     const event = PipelineEventBuilder.start('task_123', 'research');
 
@@ -216,7 +216,7 @@ describe('Analytics Engine Integration', () => {
   });
 
   it('should build pipeline completion event', async () => {
-    const { PipelineEventBuilder } = await import('../src/analytics');
+    const { PipelineEventBuilder } = await import('@packages/utils/analytics.js');
 
     const event = PipelineEventBuilder.complete('task_123', 'grant', 250, true);
 
@@ -226,7 +226,7 @@ describe('Analytics Engine Integration', () => {
   });
 
   it('should build error event', async () => {
-    const { PipelineEventBuilder } = await import('../src/analytics');
+    const { PipelineEventBuilder } = await import('@packages/utils/analytics.js');
 
     const event = PipelineEventBuilder.error('task_123', 'harvester', 'Connection timeout');
 
@@ -236,7 +236,7 @@ describe('Analytics Engine Integration', () => {
   });
 
   it('should build cache hit event', async () => {
-    const { PipelineEventBuilder } = await import('../src/analytics');
+    const { PipelineEventBuilder } = await import('@packages/utils/analytics.js');
 
     const event = PipelineEventBuilder.cacheHit('research');
 
@@ -246,7 +246,7 @@ describe('Analytics Engine Integration', () => {
   });
 
   it('should include timestamp in events', async () => {
-    const { PipelineEventBuilder } = await import('../src/analytics');
+    const { PipelineEventBuilder } = await import('@packages/utils/analytics.js');
 
     const event = PipelineEventBuilder.start('task_123', 'research');
 

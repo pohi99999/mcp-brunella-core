@@ -3,7 +3,7 @@
  */
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 // Mock logger
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
     logInfo: vi.fn(),
     logError: vi.fn(),
     logWarn: vi.fn(),
@@ -18,7 +18,7 @@ vi.mock('fs/promises', () => ({
     },
 }));
 import fs from 'fs/promises';
-import { ContextBuilder } from '../src/agents/contextBuilder.js';
+import { ContextBuilder } from '@packages/agents/contextBuilder.js';
 const fsMock = vi.mocked(fs);
 describe('ContextBuilder', () => {
     let builder;

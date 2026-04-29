@@ -2,7 +2,7 @@ import { mkdtempSync, rmSync } from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { DatabaseManager } from '../src/utils/db.js';
+import { DatabaseManager } from '@packages/utils/db.js';
 
 describe('DatabaseManager', () => {
   it('opens once, initializes tables, and reopens after close', async () => {

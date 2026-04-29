@@ -5,11 +5,11 @@ const { verifyRemoteTokenMock } = vi.hoisted(() => ({
   verifyRemoteTokenMock: vi.fn(),
 }));
 
-vi.mock('../src/security/remoteAuth.js', () => ({
+vi.mock('@packages/core-logic/remoteAuth.js', () => ({
   verifyRemoteToken: verifyRemoteTokenMock,
 }));
 
-type MiddlewareModule = typeof import('../src/server/middleware.js');
+type MiddlewareModule = typeof import('@apps/mcp-core/server/middleware.js');
 
 function createRequest(overrides: Partial<Request> = {}): Request {
   return {
@@ -41,7 +41,7 @@ describe('requireOperatorAccess', () => {
     verifyRemoteTokenMock.mockReset();
     delete process.env.BRUNELLA_API_KEY;
 
-    ({ requireOperatorAccess, isLoopbackRequest } = await import('../src/server/middleware.js'));
+    ({ requireOperatorAccess, isLoopbackRequest } = await import('@apps/mcp-core/server/middleware.js'));
   });
 
   it('allows valid remote bearer tokens and stores remote claims on the request', () => {

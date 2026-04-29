@@ -2,9 +2,9 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import type { Stats } from 'fs';
 import { execSync } from 'child_process';
 import * as fs from 'fs/promises';
-import { EvaluatorAgent } from '../src/agents/EvaluatorAgent.js';
-import type { GenerateResponse } from '../src/core/bifrost_gateway.js';
-import { socketService } from '../src/server/SocketService.js';
+import { EvaluatorAgent } from '@packages/agents/EvaluatorAgent.js';
+import type { GenerateResponse } from '@packages/core-logic/bifrost_gateway.js';
+import { socketService } from '@apps/mcp-core/server/SocketService.js';
 
 const mockGenerate = vi.hoisted(() => vi.fn());
 const mockBaseAgent = vi.hoisted(() => class {
@@ -30,13 +30,13 @@ const mockSocketServiceClass = vi.hoisted(() =>
 );
 const mockExecSync = vi.hoisted(() => vi.fn());
 
-vi.mock('../src/core/bifrost_gateway.js', () => ({
+vi.mock('@packages/core-logic/bifrost_gateway.js', () => ({
   getBifrostGateway: () => ({
     generate: mockGenerate,
   }),
 }));
 
-vi.mock('../src/agents/BaseAgent.js', () => ({
+vi.mock('@packages/agents/BaseAgent.js', () => ({
   BaseAgent: mockBaseAgent,
 }));
 
@@ -52,7 +52,7 @@ vi.mock('child_process', () => ({
   execSync: mockExecSync,
 }));
 
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
   logInfo: vi.fn(),
   logError: vi.fn(),
   logWarn: vi.fn(),
@@ -60,7 +60,7 @@ vi.mock('../src/utils/logger.js', () => ({
   Logger: vi.fn().mockImplementation(() => mockLoggerInstance),
 }));
 
-vi.mock('../src/server/SocketService.js', () => ({
+vi.mock('@apps/mcp-core/server/SocketService.js', () => ({
   SocketServiceClass: vi.fn().mockImplementation(() => ({
     broadcastChatter: mockBroadcastChatter,
   })),

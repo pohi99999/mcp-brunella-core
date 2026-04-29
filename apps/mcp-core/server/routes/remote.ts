@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { v4 as uuidv4 } from 'uuid';
-import { logInfo, logError } from '../../utils/logger.js';
-import { generateRemoteToken } from '../../security/remoteAuth.js';
+import { logInfo, logError } from '@packages/utils/logger.js';
+import { generateRemoteToken } from '@packages/core-logic/remoteAuth.js';
 import { authRemote as requireRemoteAuth } from '../middleware/authRemote.js';
 import {
   saveSession,
@@ -11,15 +11,15 @@ import {
   saveCommand,
   getCommand,
   updateCommandStatus,
-} from '../../core/remoteSessionStore.js';
-import { discoverMcpServers, getDiscoveredTargets } from '../../core/mcpDiscovery.js';
-import { mcpRouter } from '../../core/MCPRouter.js';
-import { mcpClientManager } from '../../utils/mcpClientManager.js';
-import { remoteReadFile, remoteWriteFile, remoteListFiles } from '../../core/remoteFileAccess.js';
-import { mapVoiceToCommand, listVoiceIntents } from '../../core/voicePipeline.js';
-import { buildMobileSessionSummary, processMobileHeartbeat } from '../../core/mobileClientBootstrap.js';
-import { enqueuePaiosAction, processNextPaiosAction, getPaiosQueueStatus } from '../../core/paiosRemoteIntegration.js';
-import { remoteEventBridge } from '../../core/remoteEventBridge.js';
+} from '@packages/core-logic/remoteSessionStore.js';
+import { discoverMcpServers, getDiscoveredTargets } from '@packages/core-logic/mcpDiscovery.js';
+import { mcpRouter } from '@packages/core-logic/MCPRouter.js';
+import { mcpClientManager } from '@packages/utils/mcpClientManager.js';
+import { remoteReadFile, remoteWriteFile, remoteListFiles } from '@packages/core-logic/remoteFileAccess.js';
+import { mapVoiceToCommand, listVoiceIntents } from '@packages/core-logic/voicePipeline.js';
+import { buildMobileSessionSummary, processMobileHeartbeat } from '@packages/core-logic/mobileClientBootstrap.js';
+import { enqueuePaiosAction, processNextPaiosAction, getPaiosQueueStatus } from '@packages/core-logic/paiosRemoteIntegration.js';
+import { remoteEventBridge } from '@packages/core-logic/remoteEventBridge.js';
 import type {
   RemoteSession,
   RemoteCommand,
@@ -29,8 +29,8 @@ import type {
   RemoteFileWriteRequest,
   VoiceInputRequest,
   RemoteBridgeEvent,
-} from '../../core/types/remote.js';
-import type { PaiosAction } from '../../core/paiosRemoteIntegration.js';
+} from '@packages/core-logic/types/remote.js';
+import type { PaiosAction } from '@packages/core-logic/paiosRemoteIntegration.js';
 
 export function createRemoteRoutes(): Router {
   const router = Router();

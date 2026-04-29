@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import DataScientistAgent from "../src/agents/DataScientistAgent.js";
+import DataScientistAgent from "@packages/agents/DataScientistAgent.js";
 
 // Mock callRefiner to avoid Python subprocess dependency in tests
 const mockRefineResult = {

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { socketService } from '../src/server/SocketService.js';
+import { socketService } from '@apps/mcp-core/server/SocketService.js';
 describe('SocketService Tests', () => {
     let mockIo;
     beforeEach(() => {

@@ -4,7 +4,7 @@ import {
   createWorldPerceptionSignal,
   getWorldPerceptionOverview,
   promoteWorldPerceptionSignal,
-} from '../../../src/dashboard/lib/worldPerceptionApi.js';
+} from '@/lib/worldPerceptionApi.js';
 
 function mockResponse(body: unknown, status = 200): Response {
   return {

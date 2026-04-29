@@ -1,22 +1,22 @@
 import cron from 'node-cron';
 import path from 'path';
-import { getGlobalDb } from '../../utils/globalDb.js';
-import { logInfo, logError, logWarn } from '../../utils/logger.js';
-import { agentManager } from '../../agents/AgentManager.js';
+import { getGlobalDb } from '@packages/utils/globalDb.js';
+import { logInfo, logError, logWarn } from '@packages/utils/logger.js';
+import { agentManager } from '@packages/agents/AgentManager.js';
 import { PythonShell } from 'python-shell';
-import { JulesAutomationService } from '../../core/julesAutomationService.js';
-import { executeLearningLoopCycle } from '../../core/learningLoopService.js';
-import { runWeeklySelfImprovementCycle } from '../../core/selfModificationEngine.js';
-import { eventFabric, createSchedulerTaskOutcomeEnvelope } from '../../core/eventFabric.js';
-import { fireHookSafely } from '../../core/hookRegistry.js';
-import { runWorldPerceptionCycle } from '../../core/worldPerceptionLayer.js';
-import { executeDueCrmFollowUpActions } from '@packages/core-logic/crmFollowUpExecutionService.js';
+import { JulesAutomationService } from '@packages/core-logic/julesAutomationService.js';
+import { executeLearningLoopCycle } from '@packages/core-logic/learningLoopService.js';
+import { runWeeklySelfImprovementCycle } from '@packages/core-logic/selfModificationEngine.js';
+import { eventFabric, createSchedulerTaskOutcomeEnvelope } from '@packages/core-logic/eventFabric.js';
+import { fireHookSafely } from '@packages/core-logic/hookRegistry.js';
+import { runWorldPerceptionCycle } from '@packages/core-logic/worldPerceptionLayer.js';
+import { executeDueCrmFollowUpActions } from '@packages/core-logic/services/crmFollowUpExecutionService.js';
 import {
   resolveSchedulerExportMonth,
   runDailyCultureAlerts,
   runMonthlyPayrollExport,
-} from '@packages/core-logic/hrTimesheetService.js';
-import { PredictiveDecisionEngine } from '../../core/predictiveDecisionEngine.js';
+} from '@packages/core-logic/services/hrTimesheetService.js';
+import { PredictiveDecisionEngine } from '@packages/core-logic/predictiveDecisionEngine.js';
 
 interface ScheduledTask {
   id: string;
@@ -934,7 +934,7 @@ export class ScheduledTasksRunner {
         const engine = new PredictiveDecisionEngine();
         result = await engine.analyzeDecisionPoint('scheduler');
       } else if (task.handler === 'reflection_cycle') {
-        const { ReflectionEngine } = await import('../../core/reflectionEngine.js');
+        const { ReflectionEngine } = await import('@packages/core-logic/reflectionEngine.js');
         result = await ReflectionEngine.getInstance().runNightlyCycle();
       } else if (task.handler === 'brand_monitor' || task.handler === 'robotkezv2_car_hunter') {
         // Map specialized handlers to agent delegation
@@ -942,8 +942,8 @@ export class ScheduledTasksRunner {
         logInfo('ScheduledTasksRunner', `Mapping specialized handler ${task.handler} to agent: ${agentName}`);
         result = await agentManager.delegate(agentName, task.prompt, taskContext);
       } else if (task.handler === 'project_maintainer') {
-        const { runProjectMaintainerReport } = await import('@packages/core-logic/projectMaintainerService.js');
-        const { ReflectionEngine } = await import('../../core/reflectionEngine.js');
+        const { runProjectMaintainerReport } = await import('@packages/core-logic/services/projectMaintainerService.js');
+        const { ReflectionEngine } = await import('@packages/core-logic/reflectionEngine.js');
         const pmMeta = this.parseTaskMetadata(task);
         const dryRun = typeof pmMeta.dryRun === 'boolean' ? pmMeta.dryRun : true;
         const triggeredBy = typeof pmMeta.triggeredBy === 'string' ? pmMeta.triggeredBy : 'scheduler';

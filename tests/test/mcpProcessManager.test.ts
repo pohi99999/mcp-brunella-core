@@ -11,7 +11,7 @@ vi.mock("fs", () => ({
   readFileSync: readFileSyncMock,
 }));
 
-vi.mock("../src/utils/mcpClientManager.js", () => ({
+vi.mock("@packages/utils/mcpClientManager.js", () => ({
   mcpClientManager: {
     connectStdio: connectStdioMock,
     connectHttp: connectHttpMock,
@@ -19,13 +19,13 @@ vi.mock("../src/utils/mcpClientManager.js", () => ({
   },
 }));
 
-vi.mock("../src/utils/logger.js", () => ({
+vi.mock("@packages/utils/logger.js", () => ({
   logError: vi.fn(),
   logInfo: vi.fn(),
   logWarn: vi.fn(),
 }));
 
-import { McpProcessManager } from "../src/server/McpProcessManager.js";
+import { McpProcessManager } from "@apps/mcp-core/server/McpProcessManager.js";
 
 const ORIGINAL_ENV = { ...process.env };
 

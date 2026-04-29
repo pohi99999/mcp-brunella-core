@@ -20,7 +20,7 @@
  */
 
 import { Router, type Request, type Response } from 'express';
-import { logInfo, logError } from '../../utils/logger.js';
+import { logInfo, logError } from '@packages/utils/logger.js';
 import {
   createItem,
   getAllItems,
@@ -35,14 +35,14 @@ import {
   getItemById,
   updateStocktakeStatus,
   updatePurchaseOrderStatus,
-} from '../../utils/inventoryDb.js';
-import { InventoryFifoAgent } from '../../agents/InventoryFifoAgent.js';
-import { InventoryWacAgent } from '../../agents/InventoryWacAgent.js';
-import { DemandForecastAgent, type DemandForecastTask } from '../../agents/DemandForecastAgent.js';
-import { SafetyStockAgent, type SafetyStockTask } from '../../agents/SafetyStockAgent.js';
-import { PurchaseOrderAgent, type PurchaseOrderTask } from '../../agents/PurchaseOrderAgent.js';
+} from '@packages/utils/inventoryDb.js';
+import { InventoryFifoAgent } from '@packages/agents/InventoryFifoAgent.js';
+import { InventoryWacAgent } from '@packages/agents/InventoryWacAgent.js';
+import { DemandForecastAgent, type DemandForecastTask } from '@packages/agents/DemandForecastAgent.js';
+import { SafetyStockAgent, type SafetyStockTask } from '@packages/agents/SafetyStockAgent.js';
+import { PurchaseOrderAgent, type PurchaseOrderTask } from '@packages/agents/PurchaseOrderAgent.js';
 
-import { StocktakeReconciliationAgent } from '../../agents/StocktakeReconciliationAgent.js';
+import { StocktakeReconciliationAgent } from '@packages/agents/StocktakeReconciliationAgent.js';
 
 // Singleton agent példányok
 const fifoAgent = new InventoryFifoAgent();

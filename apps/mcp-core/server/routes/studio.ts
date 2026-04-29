@@ -1,9 +1,9 @@
 import { Router } from 'express';
-import { saveStudioProject, getStudioProjects, updateProjectStatus } from '../../utils/db.js';
-import { agentManager } from '../../agents/AgentManager.js';
-import { studioRunner } from '../../utils/StudioRunner.js';
-import { ensureError } from '../../utils/ensureError.js';
-import { logWarn, logError } from '../../utils/logger.js';
+import { saveStudioProject, getStudioProjects, updateProjectStatus } from '@packages/utils/db.js';
+import { agentManager } from '@packages/agents/AgentManager.js';
+import { studioRunner } from '@packages/utils/StudioRunner.js';
+import { ensureError } from '@packages/utils/ensureError.js';
+import { logWarn, logError } from '@packages/utils/logger.js';
 import { v4 as uuidv4 } from 'uuid';
 import path from 'path';
 import fs from 'fs/promises';

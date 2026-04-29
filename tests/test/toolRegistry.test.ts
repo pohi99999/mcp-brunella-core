@@ -1,9 +1,9 @@
 import { describe, it, expect, vi } from 'vitest';
 import { z } from 'zod';
-import { ToolRegistry } from '../src/core/toolRegistry.js';
-import { executeLocalTool } from '../src/server/toolRegistry.js';
-import { globalPermissionManager, Permission } from '../src/agents/permissions.js';
-import { normalizeToolInputSchema } from '../src/server/registry.js';
+import { ToolRegistry } from '@packages/core-logic/toolRegistry.js';
+import { executeLocalTool } from '@apps/mcp-core/server/toolRegistry.js';
+import { globalPermissionManager, Permission } from '@packages/agents/permissions.js';
+import { normalizeToolInputSchema } from '@apps/mcp-core/server/registry.js';
 
 describe('ToolRegistry', () => {
   it('should load tools from registry.json on init', async () => {
@@ -44,7 +44,7 @@ describe('ToolRegistry', () => {
 
   it('should deny unmapped tools for non-admin agent contexts', async () => {
     vi.resetModules();
-    const toolRegistry = await import('../src/server/toolRegistry.js');
+    const toolRegistry = await import('@apps/mcp-core/server/toolRegistry.js');
 
     toolRegistry.registerToolHandler('dangerous_unmapped_tool', async () => 'ok');
     globalPermissionManager.registerAgent('LimitedAgent', {
@@ -59,7 +59,7 @@ describe('ToolRegistry', () => {
 
   it('should build registered tool metadata without recursively importing the registry', async () => {
     vi.resetModules();
-    const toolRegistry = await import('../src/server/toolRegistry.js');
+    const toolRegistry = await import('@apps/mcp-core/server/toolRegistry.js');
 
     toolRegistry.registerToolDefinition({
       name: 'health_probe',

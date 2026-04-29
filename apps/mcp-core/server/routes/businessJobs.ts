@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { defaultDatabaseManager, type DatabaseManager, getBusinessJobs, saveBusinessJob, updateBusinessJobStatus, getLeadsByJob, getPipelineStats, updateLeadStatus } from '../../utils/db.js';
-import { agentManager } from '../../agents/AgentManager.js';
+import { defaultDatabaseManager, type DatabaseManager, getBusinessJobs, saveBusinessJob, updateBusinessJobStatus, getLeadsByJob, getPipelineStats, updateLeadStatus } from '@packages/utils/db.js';
+import { agentManager } from '@packages/agents/AgentManager.js';
 import { v4 as uuidv4 } from 'uuid';
 
 export function createBusinessJobsRoutes(dbManager: DatabaseManager = defaultDatabaseManager): Router {

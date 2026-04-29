@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { swaggerSpec } from "../src/server/swagger.js";
+import { swaggerSpec } from "@apps/mcp-core/server/swagger.js";
 describe("swaggerSpec", () => {
     it("includes metrics endpoint documentation", () => {
         const paths = swaggerSpec.paths;

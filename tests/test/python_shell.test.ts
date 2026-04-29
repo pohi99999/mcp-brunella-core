@@ -2,8 +2,8 @@ import { describe, it, expect } from "vitest";
 import fs from "fs";
 import path from "path";
 import { execSync } from "child_process";
-import { config } from "../src/config/index.js";
-import { PythonShell } from "../src/utils/pythonShell.js";
+import { config } from "@packages/utils/index.js";
+import { PythonShell } from "@packages/utils/pythonShell.js";
 
 // Logic to check if we have ANY valid python
 const venvPy = path.resolve(

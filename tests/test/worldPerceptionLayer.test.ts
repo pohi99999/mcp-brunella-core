@@ -7,7 +7,7 @@ const harness = vi.hoisted(() => ({
   fireHookSafely: vi.fn(async () => ({ status: 'fired' })),
 }));
 
-vi.mock('../src/utils/globalDb.js', () => ({
+vi.mock('@packages/utils/globalDb.js', () => ({
   getGlobalDb: vi.fn(() => {
     if (!harness.db) {
       throw new Error('Test database not initialized');
@@ -16,15 +16,15 @@ vi.mock('../src/utils/globalDb.js', () => ({
   }),
 }));
 
-vi.mock('../src/core/intelligenceMonitor.js', () => ({
+vi.mock('@packages/core-logic/intelligenceMonitor.js', () => ({
   ingestSignal: harness.ingestSignal,
 }));
 
-vi.mock('../src/core/hookRegistry.js', () => ({
+vi.mock('@packages/core-logic/hookRegistry.js', () => ({
   fireHookSafely: harness.fireHookSafely,
 }));
 
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
   logInfo: vi.fn(),
 }));
 
@@ -34,7 +34,7 @@ import {
   listWorldSignals,
   promoteWorldSignal,
   runWorldPerceptionCycle,
-} from '../src/core/worldPerceptionLayer.js';
+} from '@packages/core-logic/worldPerceptionLayer.js';
 
 describe('worldPerceptionLayer', () => {
   beforeEach(() => {

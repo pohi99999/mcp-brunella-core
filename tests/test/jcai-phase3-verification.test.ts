@@ -14,8 +14,8 @@ import crypto from 'crypto';
 import type {
   GitHubWorkflowRunPayload,
   DeploymentAnalysis
-} from '../src/types/index.js';
-import { DeploymentAnalyzer } from '../src/tools/deploymentAnalyzer.js';
+} from '@packages/types/index.js';
+import { DeploymentAnalyzer } from '@packages/utils/deploymentAnalyzer.js';
 
 /**
  * TEST 1: GitHub Webhook Signature Verification

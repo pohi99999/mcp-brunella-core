@@ -9,7 +9,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 describe('WebSocket integration smoke tests', () => {
   describe('Module exports', () => {
     it('socketService module exports correctly', async () => {
-      const mod = await import('../src/server/SocketService.js');
+      const mod = await import('@apps/mcp-core/server/SocketService.js');
       expect(mod.socketService).toBeDefined();
       expect(typeof mod.socketService.emit).toBe('function');
       expect(typeof mod.socketService.isReady).toBe('function');
@@ -17,13 +17,13 @@ describe('WebSocket integration smoke tests', () => {
     });
 
     it('crawl4ai route still exports createCrawl4aiRouter', async () => {
-      const mod = await import('../src/server/routes/crawl4ai.js');
+      const mod = await import('@apps/mcp-core/server/routes/crawl4ai.js');
       expect(mod.createCrawl4aiRouter).toBeDefined();
       expect(typeof mod.createCrawl4aiRouter).toBe('function');
     });
 
     it('preferences route still exports createPreferencesRouter', async () => {
-      const mod = await import('../src/server/routes/preferences.js');
+      const mod = await import('@apps/mcp-core/server/routes/preferences.js');
       expect(mod.createPreferencesRouter).toBeDefined();
       expect(typeof mod.createPreferencesRouter).toBe('function');
     });
@@ -33,14 +33,14 @@ describe('WebSocket integration smoke tests', () => {
     let mockEmit: ReturnType<typeof vi.fn>;
 
     beforeEach(async () => {
-      const { socketService } = await import('../src/server/SocketService.js');
+      const { socketService } = await import('@apps/mcp-core/server/SocketService.js');
       mockEmit = vi.fn();
       // Replace emit with mock to test emission without a real Socket.IO server
       vi.spyOn(socketService, 'emit').mockImplementation(mockEmit);
     });
 
     it('crawl4ai:status event has correct shape', async () => {
-      const { socketService } = await import('../src/server/SocketService.js');
+      const { socketService } = await import('@apps/mcp-core/server/SocketService.js');
       const payload = {
         available: true,
         python_api: 'http://127.0.0.1:8000',
@@ -56,7 +56,7 @@ describe('WebSocket integration smoke tests', () => {
     });
 
     it('crawl4ai:progress event has correct shape', async () => {
-      const { socketService } = await import('../src/server/SocketService.js');
+      const { socketService } = await import('@apps/mcp-core/server/SocketService.js');
       const payload = {
         url: 'https://example.com',
         status: 'completed',
@@ -71,7 +71,7 @@ describe('WebSocket integration smoke tests', () => {
     });
 
     it('crawl4ai:batch-progress event has correct shape', async () => {
-      const { socketService } = await import('../src/server/SocketService.js');
+      const { socketService } = await import('@apps/mcp-core/server/SocketService.js');
       const payload = {
         urlCount: 5,
         status: 'started',
@@ -86,7 +86,7 @@ describe('WebSocket integration smoke tests', () => {
     });
 
     it('preferences:change event has correct shape', async () => {
-      const { socketService } = await import('../src/server/SocketService.js');
+      const { socketService } = await import('@apps/mcp-core/server/SocketService.js');
       const payload = {
         userId: 'default',
         action: 'create' as const,
@@ -103,7 +103,7 @@ describe('WebSocket integration smoke tests', () => {
     });
 
     it('preferences:stats event has correct shape', async () => {
-      const { socketService } = await import('../src/server/SocketService.js');
+      const { socketService } = await import('@apps/mcp-core/server/SocketService.js');
       const payload = {
         userId: 'default',
         stats: { total: 10, by_type: { semantic: 5 } },

@@ -15,7 +15,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // ─── Mocks ────────────────────────────────────────────────────────────────────
 
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
   logInfo: vi.fn(),
   logError: vi.fn(),
   logWarn: vi.fn(),
@@ -23,7 +23,7 @@ vi.mock('../src/utils/logger.js', () => ({
 }));
 
 const storeLessonMock = vi.fn();
-vi.mock('../src/core/graphRagEngine.js', () => ({
+vi.mock('@packages/core-logic/graphRagEngine.js', () => ({
   GraphRagEngine: {
     getInstance: vi.fn().mockReturnValue({
       storeLesson: storeLessonMock,
@@ -35,7 +35,7 @@ vi.mock('../src/core/graphRagEngine.js', () => ({
 // Decision array accessible to tests
 let _decisions: Array<{ outcome: string; decisionMaker: string; outcomeDetails?: string }> = [];
 
-vi.mock('../src/core/selfModel.js', () => ({
+vi.mock('@packages/core-logic/selfModel.js', () => ({
   SelfModel: vi.fn().mockImplementation(() => ({
     reflect: vi.fn(),
     ingestSignal: vi.fn().mockReturnValue({ signalId: 'mock-sig', timestamp: '', source: '', category: 'performance', value: 0, context: {} }),
@@ -50,7 +50,7 @@ vi.mock('../src/core/selfModel.js', () => ({
   })),
 }));
 
-vi.mock('../src/core/metaReasoner.js', () => ({
+vi.mock('@packages/core-logic/metaReasoner.js', () => ({
   MetaReasoner: vi.fn().mockImplementation(() => ({
     reason: vi.fn().mockReturnValue([]),
     getInsights: vi.fn().mockReturnValue([]),
@@ -62,7 +62,7 @@ vi.mock('../src/core/metaReasoner.js', () => ({
 
 // ─── Helper: get singleton ───────────────────────────────────────────────────
 async function getEngine() {
-  const { ReflectionEngine } = await import('../src/core/reflectionEngine.js');
+  const { ReflectionEngine } = await import('@packages/core-logic/reflectionEngine.js');
   return ReflectionEngine.getInstance();
 }
 
@@ -256,7 +256,7 @@ describe('[Integration] ReflectionEngine — brunella_reflection_continual_learn
 
   describe('createReflectionRouter()', () => {
     it('exposes all required endpoint paths', async () => {
-      const { createReflectionRouter } = await import('../src/server/routes/reflection.js');
+      const { createReflectionRouter } = await import('@apps/mcp-core/server/routes/reflection.js');
       const router = createReflectionRouter();
 
       const paths = (router as any).stack

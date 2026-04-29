@@ -7,7 +7,7 @@ import {
   getCuratedGoldenStats,
   listCuratedGoldenSamples,
   reviewCuratedGoldenSample,
-} from '../../core/goldenDatasetBridge.js';
+} from '@packages/core-logic/goldenDatasetBridge.js';
 import {
   executeLearningLoopCycle,
   createCuratedSnapshot,
@@ -16,14 +16,14 @@ import {
   rollbackLearningLoopModel,
   runEvalHarness,
   runNightlyTraining,
-} from '../../core/learningLoopService.js';
+} from '@packages/core-logic/learningLoopService.js';
 import {
   getReflexRegistrySummary,
   listEvalResults,
   listReflexModels,
   type ReflexModelState,
   listTrainingRuns,
-} from '../../core/reflexModelRegistry.js';
+} from '@packages/core-logic/reflexModelRegistry.js';
 
 function parseBoolean(value: unknown, fallback = false): boolean {
   if (typeof value === 'boolean') return value;

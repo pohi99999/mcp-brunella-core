@@ -8,7 +8,7 @@ import {
   OpenClawTimeoutError,
   OpenClawUnconfiguredError,
   normalizeOpenClawError,
-} from '../../src/integrations/openclaw/index.js';
+} from '@packages/core-logic/openclaw/index.js';
 
 describe('OpenClaw error normalization', () => {
   it('returns OpenClawError instances unchanged', () => {

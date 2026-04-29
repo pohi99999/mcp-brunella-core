@@ -2,7 +2,7 @@ import { mkdtemp, mkdir, rm, writeFile } from 'fs/promises';
 import os from 'os';
 import path from 'path';
 import { describe, expect, it } from 'vitest';
-import { buildBookkeepingReadinessReport } from '../src/utils/bookkeepingReadiness.js';
+import { buildBookkeepingReadinessReport } from '@packages/utils/bookkeepingReadiness.js';
 
 async function createTempWorkspace(): Promise<string> {
     return mkdtemp(path.join(os.tmpdir(), 'bookkeeping-readiness-'));

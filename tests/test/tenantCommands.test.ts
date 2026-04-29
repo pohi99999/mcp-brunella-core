@@ -9,18 +9,18 @@ const tenantHarness = vi.hoisted(() => ({
   logError: vi.fn(),
 }));
 
-vi.mock('../src/core/tenantRegistry.js', () => ({
+vi.mock('@packages/core-logic/tenantRegistry.js', () => ({
   listTenants: tenantHarness.listTenants,
   createTenant: tenantHarness.createTenant,
   getTenantStatus: tenantHarness.getTenantStatus,
 }));
 
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
   logInfo: tenantHarness.logInfo,
   logError: tenantHarness.logError,
 }));
 
-import { registerTenantCommands } from '../src/cli/tenantCommands.js';
+import { registerTenantCommands } from '@apps/mcp-core/commands/tenantCommands.js';
 
 describe('Tenant CLI commands', () => {
   beforeEach(() => {

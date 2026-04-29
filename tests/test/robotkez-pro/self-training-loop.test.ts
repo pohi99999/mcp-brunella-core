@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { SelfTrainingLoop } from '../../src/orchestrator/self_training_loop.js';
+import { SelfTrainingLoop } from '@packages/core-logic/self_training_loop.js';
 import fs from 'fs/promises';
 
 describe('SelfTrainingLoop', () => {

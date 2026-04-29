@@ -3,7 +3,7 @@
  * Tests: Gmail draft template, Human-in-the-loop approval flow
  */
 import { describe, it, expect, beforeEach } from 'vitest';
-import { LogisticsDispatcher } from '../src/agents/LogisticsDispatcher.js';
+import { LogisticsDispatcher } from '@packages/agents/LogisticsDispatcher.js';
 describe('Phase 4: Supply Chain - Draft & Approval Workflow', () => {
     let agent;
     beforeEach(() => {

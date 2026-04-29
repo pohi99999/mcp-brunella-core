@@ -1,18 +1,18 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { FastApiService } from '../src/services/fastApiService.js';
+import { FastApiService } from '@packages/core-logic/fastApiService.js';
 import * as child_process from 'child_process';
 import * as net from 'net';
-import * as pythonUtils from '../src/utils/pythonUtils.js';
-import * as processUtils from '../src/utils/processUtils.js';
-import * as serverManager from '../src/utils/serverManager.js';
+import * as pythonUtils from '@packages/utils/pythonUtils.js';
+import * as processUtils from '@packages/utils/processUtils.js';
+import * as serverManager from '@packages/utils/serverManager.js';
 import EventEmitter from 'events';
 
 // Mocks
 vi.mock('child_process');
 vi.mock('net');
-vi.mock('../src/utils/pythonUtils.js');
-vi.mock('../src/utils/processUtils.js');
-vi.mock('../src/utils/serverManager.js');
+vi.mock('@packages/utils/pythonUtils.js');
+vi.mock('@packages/utils/processUtils.js');
+vi.mock('@packages/utils/serverManager.js');
 
 describe('FastApiService', () => {
   let fastApiService: FastApiService;
@@ -50,7 +50,7 @@ describe('FastApiService', () => {
     // But since I can't easily modify the service to export class now without another write,
     // I will use the singleton.
     // Wait, I exported the class `FastApiService` in my implementation!
-    const module = await import('../src/services/fastApiService.js');
+    const module = await import('@packages/core-logic/fastApiService.js');
     fastApiService = new module.FastApiService();
   });
 

@@ -4,7 +4,7 @@
  */
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import Database from 'better-sqlite3';
-import { MetricsService } from '../src/services/metricsService.js';
+import { MetricsService } from '@packages/core-logic/metricsService.js';
 let db;
 let metricsService;
 beforeEach(() => {

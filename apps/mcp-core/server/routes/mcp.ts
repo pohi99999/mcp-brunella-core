@@ -1,8 +1,8 @@
 import express from 'express';
-import { getBifrostGateway } from '../../core/bifrost_gateway.js';
-import { getSafeZoneValidator } from '../../security/safe_zone_validator.js';
-import { getE2BSandboxManager } from '../../security/e2b_sandbox_manager.js';
-import { logInfo, logError } from '../../utils/logger.js';
+import { getBifrostGateway } from '@packages/core-logic/bifrost_gateway.js';
+import { getSafeZoneValidator } from '@packages/core-logic/safe_zone_validator.js';
+import { getE2BSandboxManager } from '@packages/core-logic/e2b_sandbox_manager.js';
+import { logInfo, logError } from '@packages/utils/logger.js';
 import { MCPFilesystemServer } from '../mcp_server.js';
 
 /**

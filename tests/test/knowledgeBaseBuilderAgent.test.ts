@@ -4,7 +4,7 @@
  */
 
 import { describe, it, expect, beforeEach } from 'vitest';
-import { KnowledgeBaseBuilderAgent } from '../src/agents/KnowledgeBaseBuilderAgent.js';
+import { KnowledgeBaseBuilderAgent } from '@packages/agents/KnowledgeBaseBuilderAgent.js';
 
 describe('KnowledgeBaseBuilderAgent', () => {
   let agent: KnowledgeBaseBuilderAgent;

@@ -12,8 +12,8 @@
 import { Router, Request, Response } from 'express';
 import { Database } from 'better-sqlite3';
 import { v4 as uuidv4 } from 'uuid';
-import { logInfo, logError } from '../../utils/logger.js';
-import { agentManager } from '../../agents/AgentManager.js';
+import { logInfo, logError } from '@packages/utils/logger.js';
+import { agentManager } from '@packages/agents/AgentManager.js';
 
 export function createMetricsRouter(db: Database) {
   const router = Router();

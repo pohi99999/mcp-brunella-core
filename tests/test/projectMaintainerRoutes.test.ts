@@ -2,12 +2,12 @@ import Database from 'better-sqlite3';
 import express from 'express';
 import request from 'supertest';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { createProjectMaintainerRoutes } from '../src/server/routes/projectMaintainer.js';
-import * as projectMaintainerService from '../src/server/services/projectMaintainerService.js';
+import { createProjectMaintainerRoutes } from '@apps/mcp-core/server/routes/projectMaintainer.js';
+import * as projectMaintainerService from '@apps/mcp-core/server/services/projectMaintainerService.js';
 
-vi.mock('../src/server/services/projectMaintainerService.js', async () => {
-  const actual = await vi.importActual<typeof import('../src/server/services/projectMaintainerService.js')>(
-    '../src/server/services/projectMaintainerService.js',
+vi.mock('@apps/mcp-core/server/services/projectMaintainerService.js', async () => {
+  const actual = await vi.importActual<typeof import('@apps/mcp-core/server/services/projectMaintainerService.js')>(
+    '@apps/mcp-core/server/services/projectMaintainerService.js',
   );
   return {
     ...actual,

@@ -5,7 +5,7 @@
 
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import Database from 'better-sqlite3';
-import { ScalingService, DEFAULT_POLICY } from '../src/services/scalingService.js';
+import { ScalingService, DEFAULT_POLICY } from '@packages/core-logic/scalingService.js';
 
 let db: Database.Database;
 let scalingService: ScalingService;

@@ -9,7 +9,7 @@ const { aiGatewayGenerate, geminiGenerateContent } = vi.hoisted(() => ({
   geminiGenerateContent: vi.fn(),
 }));
 
-vi.mock("../src/utils/aiGateway.js", () => ({
+vi.mock("@packages/utils/aiGateway.js", () => ({
   aiGateway: {
     generate: aiGatewayGenerate,
   },
@@ -23,7 +23,7 @@ vi.mock("@google/genai", () => ({
   })),
 }));
 
-import { generateResponse } from "../src/core/llm_client";
+import { generateResponse } from "@packages/core-logic/llm_client";
 
 const isCI = !!process.env.CI;
 

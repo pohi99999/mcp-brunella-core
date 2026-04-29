@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
-import type { RenderJob, TimelinePlan } from '../../src/schemas/studioSchemas.js';
-import { prepareResolveTimelineImportFlow } from '../../src/tools/resolveBridgeTool.js';
+import type { RenderJob, TimelinePlan } from '@packages/types/studioSchemas.js';
+import { prepareResolveTimelineImportFlow } from '@packages/utils/resolveBridgeTool.js';
 
 describe('resolveBridgeTool', () => {
   it('builds a Resolve handoff flow from a timeline plan', () => {

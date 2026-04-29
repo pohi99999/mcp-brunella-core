@@ -1,8 +1,8 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { getSpecStatus, approveSpec, rejectSpec, requiresSpec, isSpecApproved, listSpecStatuses } from '../src/agents/specStatus.js';
+import { getSpecStatus, approveSpec, rejectSpec, requiresSpec, isSpecApproved, listSpecStatuses } from '@packages/agents/specStatus.js';
 import fs from 'fs/promises';
 // Mock logger
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
     logInfo: vi.fn(),
     logWarn: vi.fn(),
     logError: vi.fn(),

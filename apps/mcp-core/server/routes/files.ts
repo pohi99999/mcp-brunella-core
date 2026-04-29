@@ -1,13 +1,13 @@
 import { Router } from 'express';
 import path from 'path';
 import fs from 'fs';
-import { vectorizeClient } from '../../utils/vectorize.js';
-import { logWarn } from '../../utils/logger.js';
+import { vectorizeClient } from '@packages/utils/vectorize.js';
+import { logWarn } from '@packages/utils/logger.js';
 import {
     getRAGCount as defaultGetRAGCount,
     searchRAG as defaultSearchRAG,
     addToIndex as defaultAddToIndex,
-} from '../../utils/rag.js';
+} from '@packages/utils/rag.js';
 
 // Analytics tracking for Vectorize searches
 interface SearchAnalytics {

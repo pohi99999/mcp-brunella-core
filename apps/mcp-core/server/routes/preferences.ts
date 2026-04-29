@@ -16,8 +16,8 @@ import {
   memoryContextHandler,
   memoryDeleteHandler,
   memoryPurgeHandler,
-} from "../../tools/memoryTool.js";
-import { logInfo, logError } from "../../utils/logger.js";
+} from "@packages/utils/memoryTool.js";
+import { logInfo, logError } from "@packages/utils/logger.js";
 import { socketService } from "@packages/agents/SocketService.js";
 
 export function createPreferencesRouter(): Router {

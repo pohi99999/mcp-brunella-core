@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
-import { auditAgentRegistry } from "../src/tools/agentRegistryAudit.js";
-import { generateAgentRegistryRecommendations } from "../src/tools/agentRegistryRecommendations.js";
+import { auditAgentRegistry } from "@packages/utils/agentRegistryAudit.js";
+import { generateAgentRegistryRecommendations } from "@packages/utils/agentRegistryRecommendations.js";
 
 const checkedAt = "2026-04-08T12:00:00.000Z";
 

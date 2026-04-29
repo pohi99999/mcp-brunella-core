@@ -1,7 +1,7 @@
 import { Router, Request, Response } from 'express';
-import { logError, logInfo } from '../../utils/logger.js';
-import { createOpenClawRuntime, OpenClawTaskRequestSchema } from '../../integrations/openclaw/index.js';
-import { ensureError } from '../../utils/ensureError.js';
+import { logError, logInfo } from '@packages/utils/logger.js';
+import { createOpenClawRuntime, OpenClawTaskRequestSchema } from '@packages/core-logic/openclaw/index.js';
+import { ensureError } from '@packages/utils/ensureError.js';
 
 export function createOpenClawRoutes(): Router {
   const router = Router();

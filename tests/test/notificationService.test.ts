@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import type { Transporter } from "nodemailer";
-import { sendCriticalTasksEmail } from "../src/utils/notificationService.js";
+import { sendCriticalTasksEmail } from "@packages/utils/notificationService.js";
 
 const sendMailMock = vi.fn();
 const createTransportMock = vi.fn();

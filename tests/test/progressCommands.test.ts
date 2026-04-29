@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { Command } from 'commander';
-import { registerProgressCommands } from '../src/cli/progressCommands.js';
+import { registerProgressCommands } from '@apps/mcp-core/commands/progressCommands.js';
 
 const progressHarness = vi.hoisted(() => ({
   promptMock: vi.fn(),

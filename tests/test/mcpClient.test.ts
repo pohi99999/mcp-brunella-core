@@ -10,7 +10,7 @@ vi.mock('fs', () => ({
   },
 }));
 
-vi.mock('../src/utils/prebuiltTools.js', () => ({
+vi.mock('@packages/utils/prebuiltTools.js', () => ({
   hasPrebuiltTool: vi.fn((name: string) => name === 'stale_tool'),
 }));
 
@@ -41,7 +41,7 @@ describe('BrunellaClient self-managed fallback', () => {
   });
 
   it('returns an empty tool list when only self-managed brunella-core is unavailable', async () => {
-    const { BrunellaClient } = await import('../src/utils/mcpClient.js');
+    const { BrunellaClient } = await import('@packages/utils/mcpClient.js');
     const client = new BrunellaClient();
 
     await client.connect();
@@ -49,7 +49,7 @@ describe('BrunellaClient self-managed fallback', () => {
   });
 
   it('throws a deterministic error for stale prebuilt-only tools', async () => {
-    const { BrunellaClient } = await import('../src/utils/mcpClient.js');
+    const { BrunellaClient } = await import('@packages/utils/mcpClient.js');
     const client = new BrunellaClient();
 
     await client.connect();
@@ -62,7 +62,7 @@ describe('BrunellaClient self-managed fallback', () => {
   it('throws immediately when MCP connectivity is disabled by environment', async () => {
     process.env.BRUNELLA_MCP_DISABLED = '1';
 
-    const { BrunellaClient } = await import('../src/utils/mcpClient.js');
+    const { BrunellaClient } = await import('@packages/utils/mcpClient.js');
     const client = new BrunellaClient();
 
     await expect(client.connect()).rejects.toThrow(
@@ -71,7 +71,7 @@ describe('BrunellaClient self-managed fallback', () => {
   });
 
   it('continues fallback lookup when one client fails to list tools', async () => {
-    const { BrunellaClient } = await import('../src/utils/mcpClient.js');
+    const { BrunellaClient } = await import('@packages/utils/mcpClient.js');
     const client = new BrunellaClient();
 
     const failingClient = {

@@ -1,9 +1,9 @@
 import { describe, it, expect, vi } from 'vitest';
-import { checkToolPermission, checkFilePermission } from '../src/tools/toolPermissions.js';
-import { globalPermissionManager } from '../src/agents/permissions.js';
-import * as auditLog from '../src/core/auditLog.js';
+import { checkToolPermission, checkFilePermission } from '@packages/utils/toolPermissions.js';
+import { globalPermissionManager } from '@packages/agents/permissions.js';
+import * as auditLog from '@packages/core-logic/auditLog.js';
 
-vi.mock('../src/core/auditLog.js', () => ({
+vi.mock('@packages/core-logic/auditLog.js', () => ({
     record: vi.fn().mockResolvedValue(undefined),
     // Needed for module loading if imported elsewhere
     getAuditLog: vi.fn(),

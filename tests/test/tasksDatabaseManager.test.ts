@@ -2,7 +2,7 @@ import { mkdtempSync, rmSync } from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { TasksDatabaseManager } from '../src/utils/tasksDb.js';
+import { TasksDatabaseManager } from '@packages/utils/tasksDb.js';
 
 describe('TasksDatabaseManager', () => {
   it('opens once, initializes schema, and reopens after close', async () => {

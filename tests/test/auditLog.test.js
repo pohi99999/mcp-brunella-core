@@ -4,9 +4,9 @@
  * Tests RULE-AU1 (recording), RULE-AU2 (denied logging), RULE-AU3 (retention cleanup)
  */
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { record, getAuditLog, getDeniedEntries, getAuditStats, cleanupOldEntries, clearAuditLog, } from '../src/core/auditLog.js';
+import { record, getAuditLog, getDeniedEntries, getAuditStats, cleanupOldEntries, clearAuditLog, } from '@packages/core-logic/auditLog.js';
 // Mock logger to avoid side effects
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
     logError: vi.fn(),
     logInfo: vi.fn(),
     logWarn: vi.fn(),

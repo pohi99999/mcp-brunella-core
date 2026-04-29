@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { RobotkezV2Agent } from '../src/agents/RobotkezV2Agent.js';
-import * as robotkezProModule from '../src/services/RobotkezProService.js';
-import * as llmPlanner from '../src/utils/llmPlanner.js';
+import { RobotkezV2Agent } from '@packages/agents/RobotkezV2Agent.js';
+import * as robotkezProModule from '@packages/core-logic/RobotkezProService.js';
+import * as llmPlanner from '@packages/utils/llmPlanner.js';
 
 const { mockEngine } = vi.hoisted(() => ({
     mockEngine: {
@@ -12,18 +12,18 @@ const { mockEngine } = vi.hoisted(() => ({
     }
 }));
 
-vi.mock('../src/utils/browserEngine.js', () => ({
+vi.mock('@packages/utils/browserEngine.js', () => ({
     getRobotkezBrowserEngine: () => mockEngine,
     getRobotkezEngineName: () => 'local'
 }));
 
-vi.mock('../src/utils/rag.js', () => ({
+vi.mock('@packages/utils/rag.js', () => ({
     searchRAG: vi.fn().mockResolvedValue([]),
     addToIndex: vi.fn().mockResolvedValue(undefined),
 }));
 
 // Mock the whole module to ensure robotkezPro is a mock
-vi.mock('../src/services/RobotkezProService.js', () => {
+vi.mock('@packages/core-logic/RobotkezProService.js', () => {
     const mock = {
         executeAction: vi.fn().mockResolvedValue({ status: 'success', coords: { x: 100, y: 200 } }),
         getSnapshot: vi.fn().mockResolvedValue({ status: 'success', image: 'base64...' })

@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { Command } from 'commander';
-import { registerFederationCommands } from '../src/cli/federationCommands.js';
+import { registerFederationCommands } from '@apps/mcp-core/commands/federationCommands.js';
 
 const spinnerStop = vi.fn();
 const spinnerFail = vi.fn();

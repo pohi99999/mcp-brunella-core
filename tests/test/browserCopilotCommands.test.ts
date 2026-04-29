@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { Command } from 'commander';
-import { registerBrowserCopilotCommands } from '../src/cli/browserCopilotCommands.js';
+import { registerBrowserCopilotCommands } from '@apps/mcp-core/commands/browserCopilotCommands.js';
 
 const spinnerSucceed = vi.fn();
 const spinnerFail = vi.fn();

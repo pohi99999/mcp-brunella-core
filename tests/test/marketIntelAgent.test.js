@@ -3,7 +3,7 @@
  * Tests competitor price tracking, trend analysis, and alerts
  */
 import { describe, it, expect, beforeEach } from 'vitest';
-import { MarketIntelAgent } from '../src/agents/MarketIntelAgent.js';
+import { MarketIntelAgent } from '@packages/agents/MarketIntelAgent.js';
 describe('MarketIntelAgent', () => {
     let agent;
     beforeEach(() => {

@@ -4,12 +4,12 @@ import fs from 'fs';
 const normalizePath = (value: unknown): string => String(value).replaceAll('\\', '/');
 
 vi.mock('fs');
-vi.mock('../src/agents/AgentManager.js', () => ({
+vi.mock('@packages/agents/AgentManager.js', () => ({
   agentManager: {
     executeWithRecovery: vi.fn().mockResolvedValue({ success: true }),
   },
 }));
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
   logInfo: vi.fn(),
   logError: vi.fn(),
   setAgentStatus: vi.fn(),
@@ -52,7 +52,7 @@ describe('sdlcPipeline', () => {
 
   describe('init()', () => {
     it('writes sdlc block to meta.json', async () => {
-      const { init } = await import('../src/core/sdlcPipeline.js');
+      const { init } = await import('@packages/core-logic/sdlcPipeline.js');
       init(TRACK_ID, TRACK_DIR);
 
       const { calls } = (fs.writeFileSync as ReturnType<typeof vi.fn>).mock;
@@ -66,7 +66,7 @@ describe('sdlcPipeline', () => {
 
     it('creates phases/ directory', async () => {
       (fs.existsSync as ReturnType<typeof vi.fn>).mockReturnValue(false);
-      const { init } = await import('../src/core/sdlcPipeline.js');
+      const { init } = await import('@packages/core-logic/sdlcPipeline.js');
       init(TRACK_ID, TRACK_DIR);
 
       expect(fs.mkdirSync).toHaveBeenCalledWith(
@@ -77,14 +77,14 @@ describe('sdlcPipeline', () => {
 
     it('is idempotent when sdlc block already exists', async () => {
       (fs.readFileSync as ReturnType<typeof vi.fn>).mockReturnValue(metaWithSdlc());
-      const { init } = await import('../src/core/sdlcPipeline.js');
+      const { init } = await import('@packages/core-logic/sdlcPipeline.js');
       init(TRACK_ID, TRACK_DIR);
 
       expect(fs.writeFileSync).not.toHaveBeenCalled();
     });
 
     it('emits sdlc:phase:start with phase=architect', async () => {
-      const { init, sdlcEvents } = await import('../src/core/sdlcPipeline.js');
+      const { init, sdlcEvents } = await import('@packages/core-logic/sdlcPipeline.js');
       const spy = vi.fn();
       sdlcEvents.once('sdlc:phase:start', spy);
       init(TRACK_ID, TRACK_DIR);
@@ -95,7 +95,7 @@ describe('sdlcPipeline', () => {
 
   describe('getStatus()', () => {
     it('returns disabled when no sdlc block', async () => {
-      const { getStatus } = await import('../src/core/sdlcPipeline.js');
+      const { getStatus } = await import('@packages/core-logic/sdlcPipeline.js');
       const s = getStatus(TRACK_ID, TRACK_DIR);
       expect(s.enabled).toBe(false);
     });
@@ -104,7 +104,7 @@ describe('sdlcPipeline', () => {
       (fs.readFileSync as ReturnType<typeof vi.fn>).mockReturnValue(
         metaWithSdlc('devops', { architect: 'completed', devops: 'pending' }),
       );
-      const { getStatus } = await import('../src/core/sdlcPipeline.js');
+      const { getStatus } = await import('@packages/core-logic/sdlcPipeline.js');
       const s = getStatus(TRACK_ID, TRACK_DIR);
 
       expect(s.enabled).toBe(true);
@@ -121,7 +121,7 @@ describe('sdlcPipeline', () => {
           coder: 'completed', qa: 'completed', reviewer: 'completed',
         }),
       );
-      const { getStatus } = await import('../src/core/sdlcPipeline.js');
+      const { getStatus } = await import('@packages/core-logic/sdlcPipeline.js');
       const s = getStatus(TRACK_ID, TRACK_DIR);
       expect(s.complete).toBe(true);
     });
@@ -132,7 +132,7 @@ describe('sdlcPipeline', () => {
       (fs.readFileSync as ReturnType<typeof vi.fn>).mockReturnValue(
         metaWithSdlc('qa', { architect: 'completed', devops: 'completed', coder: 'completed' }),
       );
-      const { reset } = await import('../src/core/sdlcPipeline.js');
+      const { reset } = await import('@packages/core-logic/sdlcPipeline.js');
       await reset(TRACK_ID, TRACK_DIR);
 
       const written = JSON.parse(
@@ -146,7 +146,7 @@ describe('sdlcPipeline', () => {
     });
 
     it('does nothing when no sdlc block', async () => {
-      const { reset } = await import('../src/core/sdlcPipeline.js');
+      const { reset } = await import('@packages/core-logic/sdlcPipeline.js');
       await reset(TRACK_ID, TRACK_DIR);
       expect(fs.writeFileSync).not.toHaveBeenCalled();
     });
@@ -155,8 +155,8 @@ describe('sdlcPipeline', () => {
   describe('runPhase()', () => {
     it('calls AgentManager.executeWithRecovery with correct agent', async () => {
       (fs.readFileSync as ReturnType<typeof vi.fn>).mockReturnValue(metaWithSdlc());
-      const { runPhase } = await import('../src/core/sdlcPipeline.js');
-      const { agentManager } = await import('../src/agents/AgentManager.js');
+      const { runPhase } = await import('@packages/core-logic/sdlcPipeline.js');
+      const { agentManager } = await import('@packages/agents/AgentManager.js');
 
       await runPhase(TRACK_ID, TRACK_DIR, 'architect');
 
@@ -169,7 +169,7 @@ describe('sdlcPipeline', () => {
 
     it('marks phase completed in meta.json', async () => {
       (fs.readFileSync as ReturnType<typeof vi.fn>).mockReturnValue(metaWithSdlc());
-      const { runPhase } = await import('../src/core/sdlcPipeline.js');
+      const { runPhase } = await import('@packages/core-logic/sdlcPipeline.js');
       await runPhase(TRACK_ID, TRACK_DIR, 'coder');
 
       const writes = (fs.writeFileSync as ReturnType<typeof vi.fn>).mock.calls;
@@ -189,7 +189,7 @@ describe('sdlcPipeline', () => {
         return true;
       });
 
-      const { runPhase } = await import('../src/core/sdlcPipeline.js');
+      const { runPhase } = await import('@packages/core-logic/sdlcPipeline.js');
       await runPhase(TRACK_ID, TRACK_DIR, 'architect');
 
       const writes = (fs.writeFileSync as ReturnType<typeof vi.fn>).mock.calls;
@@ -201,8 +201,8 @@ describe('sdlcPipeline', () => {
 
     it('marks phase failed when recovery returns success=false', async () => {
       (fs.readFileSync as ReturnType<typeof vi.fn>).mockReturnValue(metaWithSdlc());
-      const { runPhase } = await import('../src/core/sdlcPipeline.js');
-      const { agentManager } = await import('../src/agents/AgentManager.js');
+      const { runPhase } = await import('@packages/core-logic/sdlcPipeline.js');
+      const { agentManager } = await import('@packages/agents/AgentManager.js');
       (agentManager.executeWithRecovery as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
         success: false,
         message: 'runtime fallback failed',

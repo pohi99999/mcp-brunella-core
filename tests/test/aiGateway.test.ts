@@ -4,10 +4,10 @@
  */
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { AIGatewayClient } from '../src/utils/aiGateway.js';
+import { AIGatewayClient } from '@packages/utils/aiGateway.js';
 
 // Mock logger
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
     logInfo: vi.fn(),
     logError: vi.fn(),
     logWarn: vi.fn(),

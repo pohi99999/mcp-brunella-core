@@ -15,14 +15,14 @@
  */
 
 import { Router } from 'express';
-import { logInfo } from '../../utils/logger.js';
+import { logInfo } from '@packages/utils/logger.js';
 
 export const securityRouter = Router();
 
 // --- Sandbox Stats ---
 securityRouter.get('/sandbox/stats', async (_req, res) => {
   try {
-    const { getSandboxPool } = await import('../../core/sandbox/wasmSandbox.js');
+    const { getSandboxPool } = await import('@packages/core-logic/sandbox/wasmSandbox.js');
     const pool = getSandboxPool();
     res.json(pool.getStats());
   } catch (err: unknown) {
@@ -33,7 +33,7 @@ securityRouter.get('/sandbox/stats', async (_req, res) => {
 // --- Network Policy Stats ---
 securityRouter.get('/network/stats', async (_req, res) => {
   try {
-    const { getNetworkPolicy } = await import('../../core/sandbox/networkPolicy.js');
+    const { getNetworkPolicy } = await import('@packages/core-logic/sandbox/networkPolicy.js');
     const policy = getNetworkPolicy();
     res.json(policy.getStats());
   } catch (err: unknown) {
@@ -49,7 +49,7 @@ securityRouter.post('/network/check', async (req, res) => {
       res.status(400).json({ error: 'url is required' });
       return;
     }
-    const { getNetworkPolicy } = await import('../../core/sandbox/networkPolicy.js');
+    const { getNetworkPolicy } = await import('@packages/core-logic/sandbox/networkPolicy.js');
     const policy = getNetworkPolicy();
     res.json(policy.checkAccess(url));
   } catch (err: unknown) {
@@ -61,7 +61,7 @@ securityRouter.post('/network/check', async (req, res) => {
 securityRouter.get('/violations', async (req, res) => {
   try {
     const limit = parseInt(req.query.limit as string, 10) || 50;
-    const { getEnhancedPermissionManager } = await import('../../core/rbac/agentPermissions.js');
+    const { getEnhancedPermissionManager } = await import('@packages/core-logic/rbac/agentPermissions.js');
     const pm = getEnhancedPermissionManager();
     res.json(pm.getViolations(limit));
   } catch (err: unknown) {
@@ -71,7 +71,7 @@ securityRouter.get('/violations', async (req, res) => {
 
 securityRouter.get('/violations/stats', async (_req, res) => {
   try {
-    const { getEnhancedPermissionManager } = await import('../../core/rbac/agentPermissions.js');
+    const { getEnhancedPermissionManager } = await import('@packages/core-logic/rbac/agentPermissions.js');
     const pm = getEnhancedPermissionManager();
     res.json(pm.getViolationStats());
   } catch (err: unknown) {
@@ -82,7 +82,7 @@ securityRouter.get('/violations/stats', async (_req, res) => {
 // --- RBAC Profiles ---
 securityRouter.get('/rbac/profiles', async (_req, res) => {
   try {
-    const { getEnhancedPermissionManager } = await import('../../core/rbac/agentPermissions.js');
+    const { getEnhancedPermissionManager } = await import('@packages/core-logic/rbac/agentPermissions.js');
     const pm = getEnhancedPermissionManager();
     res.json(pm.listProfiles());
   } catch (err: unknown) {
@@ -100,7 +100,7 @@ securityRouter.get('/rbac/check', async (req, res) => {
       res.status(400).json({ error: 'agent and action query params required' });
       return;
     }
-    const { getEnhancedPermissionManager } = await import('../../core/rbac/agentPermissions.js');
+    const { getEnhancedPermissionManager } = await import('@packages/core-logic/rbac/agentPermissions.js');
     const pm = getEnhancedPermissionManager();
     res.json(pm.checkPermission(agent, action, resource));
   } catch (err: unknown) {

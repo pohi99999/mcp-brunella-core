@@ -8,7 +8,7 @@ import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import Database from 'better-sqlite3';
 import fs from 'fs';
 import path from 'path';
-import { archiveMetric, getMetricsHistory, deleteOldMetrics, getMetricsAggregate, getLatestMetricsSnapshot, initMetricsArchive, } from '../src/services/metricsArchiveService.js';
+import { archiveMetric, getMetricsHistory, deleteOldMetrics, getMetricsAggregate, getLatestMetricsSnapshot, initMetricsArchive, } from '@packages/core-logic/metricsArchiveService.js';
 let db;
 const testDbPath = path.join(process.cwd(), '.test-metrics-archive.db');
 describe('MetricsArchiveService', () => {

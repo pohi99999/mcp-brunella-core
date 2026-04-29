@@ -1,18 +1,18 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { InnovationBridgeAgent } from '../src/agents/InnovationBridgeAgent.js';
-import * as llmClient from '../src/core/llm_client.js';
-import { agentManager } from '../src/agents/AgentManager.js';
+import { InnovationBridgeAgent } from '@packages/agents/InnovationBridgeAgent.js';
+import * as llmClient from '@packages/core-logic/llm_client.js';
+import { agentManager } from '@packages/agents/AgentManager.js';
 
-vi.mock('../src/core/llm_client.js', () => ({
+vi.mock('@packages/core-logic/llm_client.js', () => ({
   generateResponse: vi.fn()
 }));
 
-vi.mock('../src/utils/rag.js', () => ({
+vi.mock('@packages/utils/rag.js', () => ({
   searchRAG: vi.fn().mockResolvedValue([]),
   addToIndex: vi.fn().mockResolvedValue(undefined),
 }));
 
-vi.mock('../src/agents/AgentManager.js', () => ({
+vi.mock('@packages/agents/AgentManager.js', () => ({
   agentManager: {
     delegate: vi.fn()
   }

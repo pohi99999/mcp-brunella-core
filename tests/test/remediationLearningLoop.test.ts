@@ -20,7 +20,7 @@ const remediationHarness = vi.hoisted(() => ({
   unsubscribe: vi.fn(),
 }));
 
-vi.mock('../src/utils/globalDb.js', () => ({
+vi.mock('@packages/utils/globalDb.js', () => ({
   getGlobalDb: () => {
     if (!remediationHarness.db) {
       throw new Error('Test database not initialized');
@@ -30,39 +30,39 @@ vi.mock('../src/utils/globalDb.js', () => ({
   getD1Adapter: vi.fn(() => null),
 }));
 
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
   logInfo: vi.fn(),
   logWarn: vi.fn(),
   logError: vi.fn(),
 }));
 
-vi.mock('../src/utils/vectorize.js', () => ({
+vi.mock('@packages/utils/vectorize.js', () => ({
   vectorizeClient: {
     getStatus: vi.fn(() => ({ enabled: false })),
     upsertText: vi.fn(),
   },
 }));
 
-vi.mock('../src/agents/AgentManager.js', () => ({
+vi.mock('@packages/agents/AgentManager.js', () => ({
   agentManager: {
     delegate: remediationHarness.delegate,
   },
 }));
 
-vi.mock('../src/core/ephemeralAgentManager.js', () => ({
+vi.mock('@packages/core-logic/ephemeralAgentManager.js', () => ({
   ephemeralAgentManager: {
     spawn: remediationHarness.spawn,
     terminate: remediationHarness.terminate,
   },
 }));
 
-vi.mock('../src/core/githubAPIClient.js', () => ({
+vi.mock('@packages/core-logic/githubAPIClient.js', () => ({
   githubAPI: {
     getWorkflowRunLogs: remediationHarness.getWorkflowRunLogs,
   },
 }));
 
-vi.mock('../src/core/approvalRouter.js', () => ({
+vi.mock('@packages/core-logic/approvalRouter.js', () => ({
   approvalRouter: {
     createWorkflowFromPolicy: remediationHarness.createWorkflowFromPolicy,
     getWorkflow: remediationHarness.getWorkflow,
@@ -70,19 +70,19 @@ vi.mock('../src/core/approvalRouter.js', () => ({
   },
 }));
 
-vi.mock('../src/core/autonomyRuntimeStore.js', () => ({
+vi.mock('@packages/core-logic/autonomyRuntimeStore.js', () => ({
   saveRemediationRun: remediationHarness.saveRemediationRun,
   loadRemediationRuns: remediationHarness.loadRemediationRuns,
   clearRemediationRuns: remediationHarness.clearRemediationRuns,
 }));
 
-vi.mock('../src/core/eventFabric.js', () => ({
+vi.mock('@packages/core-logic/eventFabric.js', () => ({
   eventFabric: {
     getHistory: vi.fn(() => []),
   },
 }));
 
-vi.mock('../src/core/phoenixEventBus.js', () => ({
+vi.mock('@packages/core-logic/phoenixEventBus.js', () => ({
   phoenixEventBus: {
     publish: remediationHarness.publish,
     subscribe: remediationHarness.subscribe,
@@ -105,7 +105,7 @@ describe('Remediation learning loop integration', () => {
       getCuratedGoldenStats,
       getCuratedGoldenSample,
       reviewCuratedGoldenSample,
-    } = await import('../src/core/goldenDatasetBridge.js');
+    } = await import('@packages/core-logic/goldenDatasetBridge.js');
 
     const run = {
       id: 'run-approved-1',
@@ -239,11 +239,11 @@ describe('Remediation learning loop integration', () => {
 
   it('triggers curated sample capture when final remediation approval resolves as approved', async () => {
     vi.resetModules();
-    vi.doMock('../src/core/goldenDatasetBridge.js', () => ({
+    vi.doMock('@packages/core-logic/goldenDatasetBridge.js', () => ({
       captureApprovedRemediationGoldenCandidate: remediationHarness.captureApprovedRemediationGoldenCandidate,
     }));
     try {
-      const runtimeModule = await import('../src/core/githubRemediationRuntime.js');
+      const runtimeModule = await import('@packages/core-logic/githubRemediationRuntime.js');
 
       remediationHarness.captureApprovedRemediationGoldenCandidate.mockReturnValue({
         success: true,
@@ -311,15 +311,15 @@ describe('Remediation learning loop integration', () => {
         }),
       );
     } finally {
-      vi.doUnmock('../src/core/goldenDatasetBridge.js');
+      vi.doUnmock('@packages/core-logic/goldenDatasetBridge.js');
       vi.resetModules();
     }
   });
 
   it('creates remediation-only snapshots from remediation-derived approved samples', async () => {
     remediationHarness.db = new Database(':memory:');
-    const { captureCuratedGoldenCandidate } = await import('../src/core/goldenDatasetBridge.js');
-    const { createCuratedSnapshot } = await import('../src/core/learningLoopService.js');
+    const { captureCuratedGoldenCandidate } = await import('@packages/core-logic/goldenDatasetBridge.js');
+    const { createCuratedSnapshot } = await import('@packages/core-logic/learningLoopService.js');
 
     captureCuratedGoldenCandidate({
       id: 'sample-general-1',
@@ -360,9 +360,9 @@ describe('Remediation learning loop integration', () => {
 
   it('exposes latest snapshot metadata and training scope in the learning loop overview', async () => {
     remediationHarness.db = new Database(':memory:');
-    const { captureCuratedGoldenCandidate } = await import('../src/core/goldenDatasetBridge.js');
-    const { createCuratedSnapshot, getLearningLoopOverview } = await import('../src/core/learningLoopService.js');
-    const { createTrainingRun } = await import('../src/core/reflexModelRegistry.js');
+    const { captureCuratedGoldenCandidate } = await import('@packages/core-logic/goldenDatasetBridge.js');
+    const { createCuratedSnapshot, getLearningLoopOverview } = await import('@packages/core-logic/learningLoopService.js');
+    const { createTrainingRun } = await import('@packages/core-logic/reflexModelRegistry.js');
 
     captureCuratedGoldenCandidate({
       id: 'sample-remediation-metadata',

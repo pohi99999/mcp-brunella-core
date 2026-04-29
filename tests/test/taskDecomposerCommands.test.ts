@@ -28,7 +28,7 @@ vi.mock("ora", () => ({
   }),
 }));
 
-vi.mock("../src/utils/mcpClient.js", () => ({
+vi.mock("@packages/utils/mcpClient.js", () => ({
   BrunellaClient: class {
     connect = decomposerHarness.connectMock;
     callTool = decomposerHarness.callToolMock;
@@ -36,7 +36,7 @@ vi.mock("../src/utils/mcpClient.js", () => ({
   },
 }));
 
-import { registerTaskDecomposerCommands } from "../src/cli/taskDecomposerCommands.js";
+import { registerTaskDecomposerCommands } from "@apps/mcp-core/commands/taskDecomposerCommands.js";
 
 describe("Task Decomposer CLI Commands", () => {
   beforeEach(() => {

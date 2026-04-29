@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { negotiationProtocol } from '../../src/core/federation/negotiationProtocol.js';
-import { trustRegistry } from '../../src/core/federation/trustRegistry.js';
+import { negotiationProtocol } from '@packages/core-logic/federation/negotiationProtocol.js';
+import { trustRegistry } from '@packages/core-logic/federation/trustRegistry.js';
 
 describe('NegotiationProtocol', () => {
   beforeEach(() => {

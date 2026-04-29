@@ -4,7 +4,7 @@
  */
 
 import { describe, it, expect, beforeEach } from 'vitest';
-import { LocalCSRAgent } from '../src/agents/LocalCSRAgent.js';
+import { LocalCSRAgent } from '@packages/agents/LocalCSRAgent.js';
 
 describe('LocalCSRAgent', () => {
   let agent: LocalCSRAgent;

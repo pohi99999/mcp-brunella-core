@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import { swarmManager } from '../../agents/AgentManager.js';
-import { logInfo, logError } from '../../utils/logger.js';
-import { listCheckpoints, getCheckpointStats } from '../../core/swarm/colonyPersistence.js';
-import { globalSwarmChatManager } from "../../core/SwarmChatManager.js";
+import { swarmManager } from '@packages/agents/AgentManager.js';
+import { logInfo, logError } from '@packages/utils/logger.js';
+import { listCheckpoints, getCheckpointStats } from '@packages/core-logic/swarm/colonyPersistence.js';
+import { globalSwarmChatManager } from "@packages/core-logic/SwarmChatManager.js";
 
 const swarmRouter = Router();
 

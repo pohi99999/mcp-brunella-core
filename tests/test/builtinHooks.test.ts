@@ -12,28 +12,28 @@ const builtinHarness = vi.hoisted(() => ({
   logError: vi.fn(),
 }));
 
-vi.mock('../src/utils/globalDb.js', () => ({
+vi.mock('@packages/utils/globalDb.js', () => ({
   getGlobalDb: () => builtinHarness.db,
 }));
 
-vi.mock('../src/agents/AgentManager.js', () => ({
+vi.mock('@packages/agents/AgentManager.js', () => ({
   agentManager: {
     getAgent: builtinHarness.getAgent,
     delegate: builtinHarness.delegate,
   },
 }));
 
-vi.mock('../src/core/phoenixEventBus.js', () => ({
+vi.mock('@packages/core-logic/phoenixEventBus.js', () => ({
   phoenixEventBus: {
     publish: builtinHarness.publish,
   },
 }));
 
-vi.mock('../src/core/goldenDatasetBridge.js', () => ({
+vi.mock('@packages/core-logic/goldenDatasetBridge.js', () => ({
   captureToolRunCandidates: builtinHarness.captureToolRunCandidates,
 }));
 
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
   logInfo: builtinHarness.logInfo,
   logWarn: builtinHarness.logWarn,
   logError: builtinHarness.logError,
@@ -45,8 +45,8 @@ import {
   clearHooks,
   fireHook,
   getHookRegistrySnapshot,
-} from '../src/core/hookRegistry.js';
-import { initializeBuiltinHooks, resetBuiltinHooksForTests } from '../src/core/hooks/builtinHooks.js';
+} from '@packages/core-logic/hookRegistry.js';
+import { initializeBuiltinHooks, resetBuiltinHooksForTests } from '@packages/core-logic/hooks/builtinHooks.js';
 
 builtinHarness.db = new Database(':memory:');
 

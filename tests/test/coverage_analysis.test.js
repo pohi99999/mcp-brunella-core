@@ -3,7 +3,7 @@
  */
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 // Mock logger
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
     logInfo: vi.fn(),
     logError: vi.fn(),
     logWarn: vi.fn(),
@@ -24,7 +24,7 @@ vi.mock('fs/promises', () => ({
     },
 }));
 import fs from 'fs/promises';
-import { CoverageAnalyzer } from '../src/agents/coverageAnalysis.js';
+import { CoverageAnalyzer } from '@packages/agents/coverageAnalysis.js';
 const fsMock = vi.mocked(fs);
 // ==================== Sample coverage-final.json structure ====================
 function makeCoverageJson(files) {

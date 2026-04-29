@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { Command } from 'commander';
 
-import { registerWorldPerceptionCommands } from '../src/cli/worldPerceptionCommands.js';
+import { registerWorldPerceptionCommands } from '@apps/mcp-core/commands/worldPerceptionCommands.js';
 
 function mockJsonResponse(body: unknown, status = 200): Response {
   return {

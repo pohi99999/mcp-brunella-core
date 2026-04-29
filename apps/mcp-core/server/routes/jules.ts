@@ -2,10 +2,10 @@ import { Router } from "express";
 import { exec } from "child_process";
 import path from "path";
 import { fileURLToPath } from "url";
-import { logError, logInfo, logWarn, logDebug } from "../../utils/logger.js";
-import { getGlobalDb } from "../../utils/globalDb.js";
-import { JulesAutomationService } from "../../core/julesAutomationService.js";
-import { ensureError } from "../../utils/ensureError.js";
+import { logError, logInfo, logWarn, logDebug } from "@packages/utils/logger.js";
+import { getGlobalDb } from "@packages/utils/globalDb.js";
+import { JulesAutomationService } from "@packages/core-logic/julesAutomationService.js";
+import { ensureError } from "@packages/utils/ensureError.js";
 
 interface GithubApiError extends Error {
   statusCode?: number;

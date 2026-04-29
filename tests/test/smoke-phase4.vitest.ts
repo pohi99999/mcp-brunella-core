@@ -7,14 +7,14 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 describe('Phase 4 — userId threading', () => {
   it('UniversalRequest interfész tartalmazza a userId mezőt', async () => {
-    const mod = await import('../src/core/universalOrchestratorService.js');
+    const mod = await import('@packages/core-logic/universalOrchestratorService.js');
     // A modul exportálja az UniversalRequest típust — nem tudjuk runtime-ban ellenőrizni,
     // de ha a build sikerül, a típus jó. Runtime: process() fogadja a userId-t.
     expect(mod.getUniversalOrchestratorService).toBeDefined();
   });
 
   it('BifrostGateway GenerateOptions fogadja a userId mezőt', async () => {
-    const mod = await import('../src/core/bifrost_gateway.js');
+    const mod = await import('@packages/core-logic/bifrost_gateway.js');
     expect(mod.BifrostGateway).toBeDefined();
     const gw = new mod.BifrostGateway();
     // A GenerateOptions interface-ben van userId — ha build OK, ez jó
@@ -22,7 +22,7 @@ describe('Phase 4 — userId threading', () => {
   });
 
   it('Observability route elérhető és stats-ot ad', async () => {
-    const mod = await import('../src/server/routes/observability.js');
+    const mod = await import('@apps/mcp-core/server/routes/observability.js');
     expect(mod.createObservabilityRouter).toBeDefined();
     const router = mod.createObservabilityRouter();
     expect(router).toBeDefined();
@@ -36,7 +36,7 @@ describe('Phase 4 — userId threading', () => {
   });
 
   it('CLI observability parancs regisztrálva', async () => {
-    const mod = await import('../src/cli/observabilityCommands.js');
+    const mod = await import('@apps/mcp-core/commands/observabilityCommands.js');
     expect(mod.registerObservabilityCommands).toBeDefined();
   });
 });
@@ -45,14 +45,14 @@ describe('Phase 4 — userId threading', () => {
 
 describe('Phase 4 — LLM Observability DB', () => {
   it('recordLlmCall és queryLlmCalls exportálva', async () => {
-    const mod = await import('../src/utils/globalDb.js');
+    const mod = await import('@packages/utils/globalDb.js');
     expect(mod.recordLlmCall).toBeDefined();
     expect(mod.queryLlmCalls).toBeDefined();
     expect(mod.getLlmCallStats).toBeDefined();
   });
 
   it('recordLlmCall ír az adatbázisba', async () => {
-    const { recordLlmCall, queryLlmCalls } = await import('../src/utils/globalDb.js');
+    const { recordLlmCall, queryLlmCalls } = await import('@packages/utils/globalDb.js');
 
     // Sikeres hívás mentése
     recordLlmCall({
@@ -78,7 +78,7 @@ describe('Phase 4 — LLM Observability DB', () => {
   });
 
   it('getLlmCallStats helyes összesítést ad', async () => {
-    const { getLlmCallStats } = await import('../src/utils/globalDb.js');
+    const { getLlmCallStats } = await import('@packages/utils/globalDb.js');
     const stats = getLlmCallStats();
     expect(stats).toHaveProperty('totalCalls');
     expect(stats).toHaveProperty('successRate');
@@ -92,7 +92,7 @@ describe('Phase 4 — LLM Observability DB', () => {
   });
 
   it('queryLlmCalls szűrés provider szerint működik', async () => {
-    const { recordLlmCall, queryLlmCalls } = await import('../src/utils/globalDb.js');
+    const { recordLlmCall, queryLlmCalls } = await import('@packages/utils/globalDb.js');
 
     recordLlmCall({
       provider: 'filter-test-xyz',

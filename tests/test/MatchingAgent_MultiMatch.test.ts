@@ -1,8 +1,8 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { MatchingAgent } from '../src/agents/MatchingAgent.js';
-import { initDB, saveTransaction } from '../src/data/bookkeeping_db.js';
+import { MatchingAgent } from '@packages/agents/MatchingAgent.js';
+import { initDB, saveTransaction } from '@packages/utils/bookkeeping_db.js';
 
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
   logInfo: vi.fn(),
   logError: vi.fn(),
   logWarn: vi.fn(),
@@ -49,7 +49,7 @@ describe('MatchingAgent Multi-Match', () => {
     expect(result.status).toBe('success');
     
     // Check if bank transaction is COMPLETED
-    const { getAllTransactions } = await import('../src/data/bookkeeping_db.js');
+    const { getAllTransactions } = await import('@packages/utils/bookkeeping_db.js');
     const transactions = getAllTransactions();
     const updatedBankTx = transactions.find(t => t.id === 'bank_tx_1');
     

@@ -9,27 +9,27 @@ const ragHarness = vi.hoisted(() => ({
   addToIndex: vi.fn(),
 }));
 
-vi.mock('../src/utils/vectorize.js', () => ({
+vi.mock('@packages/utils/vectorize.js', () => ({
   vectorizeClient: {
     getStatus: ragHarness.getStatus,
   },
 }));
 
-vi.mock('../src/utils/rag.js', () => ({
+vi.mock('@packages/utils/rag.js', () => ({
   getRAGCount: ragHarness.getRAGCount,
   searchRAG: ragHarness.searchRAG,
   addToIndex: ragHarness.addToIndex,
 }));
 
 describe('RAG routes', () => {
-  let createRagRoutes: typeof import('../src/server/routes/files.js').createRagRoutes;
+  let createRagRoutes: typeof import('@apps/mcp-core/server/routes/files.js').createRagRoutes;
   let app: express.Express;
 
   beforeEach(async () => {
     vi.clearAllMocks();
     vi.resetModules();
 
-    ({ createRagRoutes } = await import('../src/server/routes/files.js'));
+    ({ createRagRoutes } = await import('@apps/mcp-core/server/routes/files.js'));
 
     app = express();
     app.use(express.json());

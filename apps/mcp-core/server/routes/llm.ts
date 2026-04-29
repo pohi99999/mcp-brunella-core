@@ -1,9 +1,9 @@
 import { Router } from 'express';
-import { chatWithOllama, generateResponse } from '../../core/llm_client.js';
-import { sendAnthropicMessage } from '../../services/anthropicClient.js';
-import { getBifrostGateway } from '../../core/bifrost_gateway.js';
-import { logDebug, logError } from '../../utils/logger.js';
-import { ensureError } from '../../utils/ensureError.js';
+import { chatWithOllama, generateResponse } from '@packages/core-logic/llm_client.js';
+import { sendAnthropicMessage } from '@packages/core-logic/anthropicClient.js';
+import { getBifrostGateway } from '@packages/core-logic/bifrost_gateway.js';
+import { logDebug, logError } from '@packages/utils/logger.js';
+import { ensureError } from '@packages/utils/ensureError.js';
 
 interface CatalogModel {
     id: string;

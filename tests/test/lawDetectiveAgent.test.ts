@@ -1,12 +1,12 @@
 import { describe, it, expect, beforeAll, vi } from 'vitest';
-import { LawDetectiveAgent } from '../src/agents/LawDetectiveAgent.js';
+import { LawDetectiveAgent } from '@packages/agents/LawDetectiveAgent.js';
 
 // Mock LLM client
-vi.mock('../src/core/llm_client.js', () => ({
+vi.mock('@packages/core-logic/llm_client.js', () => ({
   generateResponse: vi.fn(),
 }));
 
-import { generateResponse } from '../src/core/llm_client.js';
+import { generateResponse } from '@packages/core-logic/llm_client.js';
 
 describe('LawDetectiveAgent', () => {
   let agent: LawDetectiveAgent;

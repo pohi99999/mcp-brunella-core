@@ -3,17 +3,17 @@
  */
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { MeshNode } from '../src/mesh/meshNode.js';
-import { MeshManager } from '../src/mesh/meshManager.js';
-import { EdgeRouter } from '../src/core/edgeRouter.js';
-import { DeviceOrchestrator } from '../src/core/deviceOrchestrator.js';
-import { OfflineSync } from '../src/core/offlineSync.js';
-import { PhoenixReplication } from '../src/core/phoenixReplication.js';
-import { FederatedAgentManager } from '../src/agents/federation/FederatedAgentManager.js';
-import { AutoJoin } from '../src/mesh/autoJoin.js';
+import { MeshNode } from '@packages/core-logic/meshNode.js';
+import { MeshManager } from '@packages/core-logic/meshManager.js';
+import { EdgeRouter } from '@packages/core-logic/edgeRouter.js';
+import { DeviceOrchestrator } from '@packages/core-logic/deviceOrchestrator.js';
+import { OfflineSync } from '@packages/core-logic/offlineSync.js';
+import { PhoenixReplication } from '@packages/core-logic/phoenixReplication.js';
+import { FederatedAgentManager } from '@packages/agents/federation/FederatedAgentManager.js';
+import { AutoJoin } from '@packages/core-logic/autoJoin.js';
 import { generateKeyPairSync } from 'crypto';
-import { inspectFederationPublicKey } from '../src/security/federationPeerProof.js';
-import { phoenixEventBus } from '../src/core/phoenixEventBus.js';
+import { inspectFederationPublicKey } from '@packages/core-logic/federationPeerProof.js';
+import { phoenixEventBus } from '@packages/core-logic/phoenixEventBus.js';
 
 // ─── MeshNode ────────────────────────────────────────────────────────────────
 
@@ -695,7 +695,7 @@ describe('FederatedAgentManager', () => {
     });
     globalThis.fetch = fetchMock as typeof globalThis.fetch;
 
-    const { trustRegistry } = await import('../src/core/federation/trustRegistry.js');
+    const { trustRegistry } = await import('@packages/core-logic/federation/trustRegistry.js');
     await trustRegistry.register({
       peerId: 'remote-discovery-peer',
       displayName: 'Remote Discovery',
@@ -739,7 +739,7 @@ describe('FederatedAgentManager', () => {
     const fetchMock = vi.fn();
     globalThis.fetch = fetchMock as typeof globalThis.fetch;
 
-    const { trustRegistry } = await import('../src/core/federation/trustRegistry.js');
+    const { trustRegistry } = await import('@packages/core-logic/federation/trustRegistry.js');
     await trustRegistry.register({
       peerId: 'pending-discovery-peer',
       displayName: 'Pending Discovery',
@@ -817,7 +817,7 @@ describe('FederatedAgentManager', () => {
       lastSeen: Date.now(),
     });
 
-    const { trustRegistry } = await import('../src/core/federation/trustRegistry.js');
+    const { trustRegistry } = await import('@packages/core-logic/federation/trustRegistry.js');
     await trustRegistry.register({
       peerId: 'remote',
       displayName: 'Remote',
@@ -882,7 +882,7 @@ describe('FederatedAgentManager', () => {
       lastSeen: Date.now(),
     });
 
-    const { trustRegistry } = await import('../src/core/federation/trustRegistry.js');
+    const { trustRegistry } = await import('@packages/core-logic/federation/trustRegistry.js');
     await trustRegistry.register({
       peerId: 'remote',
       displayName: 'Remote',
@@ -931,7 +931,7 @@ describe('FederatedAgentManager', () => {
       lastSeen: Date.now(),
     });
 
-    const { trustRegistry } = await import('../src/core/federation/trustRegistry.js');
+    const { trustRegistry } = await import('@packages/core-logic/federation/trustRegistry.js');
     await trustRegistry.register({
       peerId: 'remote',
       displayName: 'Remote',
@@ -956,7 +956,7 @@ describe('FederatedAgentManager', () => {
       json: async () => ({ ok: true }),
     });
     globalThis.fetch = fetchMock as typeof globalThis.fetch;
-    const { trustRegistry } = await import('../src/core/federation/trustRegistry.js');
+    const { trustRegistry } = await import('@packages/core-logic/federation/trustRegistry.js');
 
     federation.registerAgent({
       agentId: 'remote-agent-2',

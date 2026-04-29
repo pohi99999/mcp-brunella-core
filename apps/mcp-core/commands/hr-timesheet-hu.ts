@@ -2,9 +2,9 @@ import chalk from 'chalk';
 import boxen from 'boxen';
 import ora from 'ora';
 
-import { writeLine } from '../../utils/cliOutput.js';
-import { ensureError } from '../../utils/ensureError.js';
-import type { HRTimesheetStatusResponse } from '../../types/hrTimesheetStatus.js';
+import { writeLine } from '../../../packages/utils/cliOutput.js';
+import { ensureError } from '../../../packages/utils/ensureError.js';
+import type { HRTimesheetStatusResponse } from '@packages/types/hrTimesheetStatus.js';
 
 const API_BASE = process.env.BRUNELLA_API_BASE_URL || process.env.API_BASE || 'http://localhost:3000';
 

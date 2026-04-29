@@ -8,9 +8,9 @@
  */
 
 import { Router, type Request, type Response } from 'express';
-import { ReflectionEngine, type TaskOutcome } from '../../core/reflectionEngine.js';
-import type { ReflectionOverview } from '../../core/reflectionOverview.js';
-import { logInfo } from '../../utils/logger.js';
+import { ReflectionEngine, type TaskOutcome } from '@packages/core-logic/reflectionEngine.js';
+import type { ReflectionOverview } from '@packages/core-logic/reflectionOverview.js';
+import { logInfo } from '@packages/utils/logger.js';
 
 const MODULE = 'reflectionRoutes';
 

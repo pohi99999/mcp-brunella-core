@@ -1,6 +1,6 @@
 import { beforeEach, afterEach, describe, expect, it, vi } from 'vitest';
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
-import { registerBrowserTools } from '../src/tools/browser.js';
+import { registerBrowserTools } from '@packages/utils/browser.js';
 
 type BrowserToolArgs = {
   target_url: string;

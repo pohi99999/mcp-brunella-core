@@ -1,10 +1,10 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import express from 'express';
 import request from 'supertest';
-import { createDeveloperRoutes } from '../src/server/routes/developer.js';
+import { createDeveloperRoutes } from '@apps/mcp-core/server/routes/developer.js';
 
 // Mock pipelineRunner
-vi.mock('../src/agents/developerPipeline.js', () => {
+vi.mock('@packages/agents/developerPipeline.js', () => {
     const mockPhases = [
         { id: 'plan', label: 'Planning', status: 'pending' },
         { id: 'generate', label: 'Code Generation', status: 'pending' },
@@ -47,7 +47,7 @@ vi.mock('../src/agents/developerPipeline.js', () => {
 });
 
 // Mock AgentManager
-vi.mock('../src/agents/AgentManager.js', () => ({
+vi.mock('@packages/agents/AgentManager.js', () => ({
     agentManager: {
         executeAgent: vi.fn().mockResolvedValue({
             status: 'success',
@@ -57,7 +57,7 @@ vi.mock('../src/agents/AgentManager.js', () => ({
 }));
 
 // Mock logger
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
     logInfo: vi.fn(),
     logError: vi.fn(),
     setAgentStatus: vi.fn(),

@@ -12,10 +12,10 @@
  */
 
 import { Router, Request, Response } from 'express';
-import { agentManager } from '../../agents/AgentManager.js';
-import { EnterpriseOrchestratorAgent } from '../../agents/EnterpriseOrchestratorAgent.js';
-import { logInfo, logError } from '../../utils/logger.js';
-import { taskQueueManager } from '../../agents/taskQueue.js';
+import { agentManager } from '@packages/agents/AgentManager.js';
+import { EnterpriseOrchestratorAgent } from '@packages/agents/EnterpriseOrchestratorAgent.js';
+import { logInfo, logError } from '@packages/utils/logger.js';
+import { taskQueueManager } from '@packages/agents/taskQueue.js';
 
 interface Module {
   name: string;
@@ -311,7 +311,7 @@ export function createEnterpriseAnalyticsRouter(): Router {
       logInfo('EnterpriseAnalytics', `Fetching events: type=${type || 'all'}, limit=${limit}, days=${days}`);
 
       // Import D1 adapter dynamically to avoid circular deps
-      const { getD1Adapter } = await import('../../utils/globalDb.js');
+      const { getD1Adapter } = await import('@packages/utils/globalDb.js');
       const d1Adapter = getD1Adapter();
 
       // Parse input early for consistent fallback response
@@ -371,7 +371,7 @@ export function createEnterpriseAnalyticsRouter(): Router {
     try {
       logInfo('EnterpriseAnalytics', 'Fetching analytics stats from D1');
 
-      const { getD1Adapter } = await import('../../utils/globalDb.js');
+      const { getD1Adapter } = await import('@packages/utils/globalDb.js');
       const d1Adapter = getD1Adapter();
 
       if (!d1Adapter) {
@@ -454,7 +454,7 @@ export function createEnterpriseAnalyticsRouter(): Router {
 
       logInfo('EnterpriseAnalytics', `Creating event: ${type}`);
 
-      const { getD1Adapter } = await import('../../utils/globalDb.js');
+      const { getD1Adapter } = await import('@packages/utils/globalDb.js');
       const d1Adapter = getD1Adapter();
 
       if (!d1Adapter) {

@@ -1,11 +1,11 @@
 import { describe, expect, it, vi } from 'vitest';
-import { parseRecentFoszalEntries } from '../src/services/brunellaProjectManagerFoszal.js';
+import { parseRecentFoszalEntries } from '@packages/core-logic/brunellaProjectManagerFoszal.js';
 import {
   queryProjectSummary,
   summarizeRagHits,
-} from '../src/services/brunellaProjectManagerRag.js';
+} from '@packages/core-logic/brunellaProjectManagerRag.js';
 
-vi.mock('../src/utils/rag.js', () => ({
+vi.mock('@packages/utils/rag.js', () => ({
   searchRAG: vi.fn(async (query: string, limit: number) => [
     { text: `Result for ${query}`, path: 'docs/status.md', score: limit },
   ]),

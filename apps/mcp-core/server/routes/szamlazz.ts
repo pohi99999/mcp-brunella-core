@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import type { Request, Response } from 'express';
-import { ensureError } from '../../utils/ensureError.js';
-import { logError, logInfo } from '../../utils/logger.js';
+import { ensureError } from '@packages/utils/ensureError.js';
+import { logError, logInfo } from '@packages/utils/logger.js';
 import { sendSzamlazzInvoice } from '../szamlazzBridge.js';
 import {
   readBookkeepingStatusSnapshot,

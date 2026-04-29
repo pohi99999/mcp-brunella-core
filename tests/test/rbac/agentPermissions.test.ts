@@ -5,7 +5,7 @@
  */
 
 import { describe, it, expect, beforeEach } from 'vitest';
-import { EnhancedPermissionManager, resetEnhancedPermissionManager } from '../../src/core/rbac/agentPermissions.js';
+import { EnhancedPermissionManager, resetEnhancedPermissionManager } from '@packages/core-logic/rbac/agentPermissions.js';
 
 describe('EnhancedPermissionManager', () => {
   let pm: EnhancedPermissionManager;

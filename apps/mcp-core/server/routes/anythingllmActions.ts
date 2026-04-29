@@ -1,10 +1,10 @@
 // src/server/routes/anythingllmActions.ts
 import { Router } from 'express';
 import type { Request, Response, NextFunction } from 'express';
-import { agentManager } from '../../agents/AgentManager.js';
-import { getEnhancedPermissionManager } from '../../core/rbac/agentPermissions.js';
-import { approvalManager } from '../../utils/approvalManager.js';
-import { logInfo, logError } from '../../utils/logger.js';
+import { agentManager } from '@packages/agents/AgentManager.js';
+import { getEnhancedPermissionManager } from '@packages/core-logic/rbac/agentPermissions.js';
+import { approvalManager } from '@packages/utils/approvalManager.js';
+import { logInfo, logError } from '@packages/utils/logger.js';
 import {
   executeWorkspaceAction,
   isWorkspaceAction,

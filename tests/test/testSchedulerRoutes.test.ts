@@ -1,7 +1,7 @@
 import express from 'express';
 import request from 'supertest';
 import { beforeEach, afterEach, describe, expect, it, vi } from 'vitest';
-import testSchedulerRouter from '../src/server/routes/testScheduler.js';
+import testSchedulerRouter from '@apps/mcp-core/server/routes/testScheduler.js';
 
 const schedulerMocks = vi.hoisted(() => ({
   logInfo: vi.fn(),
@@ -15,17 +15,17 @@ const schedulerMocks = vi.hoisted(() => ({
   validateCron: vi.fn(),
 }));
 
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
   logInfo: schedulerMocks.logInfo,
   logError: schedulerMocks.logError,
 }));
 
-vi.mock('../src/server/schedulers/testRunner.js', () => ({
+vi.mock('@apps/mcp-core/server/schedulers/testRunner.js', () => ({
   runTests: schedulerMocks.runTests,
   getSchedulerStatus: schedulerMocks.getSchedulerStatus,
 }));
 
-vi.mock('../src/core/testResultsService.js', () => ({
+vi.mock('@packages/core-logic/testResultsService.js', () => ({
   getTestRuns: schedulerMocks.getTestRuns,
   getTestRunById: schedulerMocks.getTestRunById,
   getTestStats: schedulerMocks.getTestStats,

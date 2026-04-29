@@ -1,19 +1,19 @@
 import { describe, expect, it, vi } from 'vitest';
 import { z } from 'zod';
-import { DynamicToolRegistry } from '../src/core/dynamicToolRegistry.js';
-import { createScopedToolRegistryView } from '../src/core/ephemeralScopedToolRegistry.js';
+import { DynamicToolRegistry } from '@packages/core-logic/dynamicToolRegistry.js';
+import { createScopedToolRegistryView } from '@packages/core-logic/ephemeralScopedToolRegistry.js';
 
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
   logInfo: vi.fn(),
   logError: vi.fn(),
   logWarn: vi.fn(),
 }));
 
-vi.mock('../src/core/auditLog.js', () => ({
+vi.mock('@packages/core-logic/auditLog.js', () => ({
   record: vi.fn().mockResolvedValue(undefined),
 }));
 
-vi.mock('../src/security/safe_zone_validator.js', () => ({
+vi.mock('@packages/core-logic/safe_zone_validator.js', () => ({
   getSafeZoneValidator: () => ({ validate: vi.fn().mockReturnValue(true) }),
 }));
 

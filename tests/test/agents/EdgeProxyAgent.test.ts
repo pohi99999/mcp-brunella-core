@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { EdgeProxyAgent } from '../../src/agents/EdgeProxyAgent.js';
+import { EdgeProxyAgent } from '@packages/agents/EdgeProxyAgent.js';
 
 // Mock DB instance structure using vi.hoisted to ensure availability in vi.mock
 const { mockDb, mockExec, mockTransaction, mockAll, mockRun, mockPrepare } = vi.hoisted(() => {
@@ -26,13 +26,13 @@ const { mockDb, mockExec, mockTransaction, mockAll, mockRun, mockPrepare } = vi.
 });
 
 // Mock globalDb to return our mockDb
-vi.mock('../../src/utils/globalDb.js', () => ({
+vi.mock('@packages/utils/globalDb.js', () => ({
   getGlobalDb: () => mockDb,
   closeGlobalDb: vi.fn(),
 }));
 
 // Mock logger
-vi.mock('../../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
   logInfo: vi.fn(),
   logError: vi.fn(),
   setAgentStatus: vi.fn(),

@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import { agentManager } from '../../agents/AgentManager.js';
-import { heartbeatMonitor } from '../../utils/heartbeatMonitor.js';
-import { getGlobalDb } from '../../utils/globalDb.js';
-import { Logger } from '../../utils/logger.js';
+import { agentManager } from '@packages/agents/AgentManager.js';
+import { heartbeatMonitor } from '@packages/utils/heartbeatMonitor.js';
+import { getGlobalDb } from '@packages/utils/globalDb.js';
+import { Logger } from '@packages/utils/logger.js';
 
 const logger = new Logger("dashboard_api.log");
 

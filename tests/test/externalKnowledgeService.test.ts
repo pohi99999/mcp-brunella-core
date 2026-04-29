@@ -7,12 +7,12 @@ const externalKnowledgeHarness = vi.hoisted(() => ({
   fireHookSafely: vi.fn(),
 }));
 
-vi.mock('../src/utils/rag.js', () => ({
+vi.mock('@packages/utils/rag.js', () => ({
   addToIndex: externalKnowledgeHarness.addToIndex,
   searchRAG: externalKnowledgeHarness.searchRAG,
 }));
 
-vi.mock('../src/core/hookRegistry.js', () => ({
+vi.mock('@packages/core-logic/hookRegistry.js', () => ({
   fireHookSafely: externalKnowledgeHarness.fireHookSafely,
 }));
 
@@ -24,7 +24,7 @@ import {
   listGovernanceReviewQueue,
   promoteKnowledgeCard,
   searchKnowledgeCards,
-} from '../src/server/services/externalKnowledgeService.js';
+} from '@apps/mcp-core/server/services/externalKnowledgeService.js';
 
 describe('externalKnowledgeService', () => {
   let db: Database.Database;

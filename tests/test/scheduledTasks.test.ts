@@ -1,17 +1,17 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import express from "express";
 import request from "supertest";
-import { ScheduledTasksEngine } from "../src/core/scheduledTasksEngine.js";
-import { createScheduledTasksRoutes } from "../src/server/routes/scheduledTasks.js";
+import { ScheduledTasksEngine } from "@packages/core-logic/scheduledTasksEngine.js";
+import { createScheduledTasksRoutes } from "@apps/mcp-core/server/routes/scheduledTasks.js";
 
 // Mock dependencies
-vi.mock("../src/utils/logger.js", () => ({
+vi.mock("@packages/utils/logger.js", () => ({
   logInfo: vi.fn(),
   logError: vi.fn(),
 }));
 
 const executeTaskMock = vi.hoisted(() => vi.fn(async () => ({ success: true, message: "ok" })));
-vi.mock("../src/server/schedulers/scheduledTasksRunner.js", () => ({
+vi.mock("@apps/mcp-core/server/schedulers/scheduledTasksRunner.js", () => ({
   scheduledTasksRunner: {
     executeTask: executeTaskMock,
   },
@@ -76,7 +76,7 @@ describe("ScheduledTasksEngine Integráció", () => {
 
     // Initialize Engine with mocked DB
     const Database = (await import("better-sqlite3")).default;
-    // @ts-expect-error
+    // @ts-expect-error - generic Database typing relaxed for in-memory test instance
     db = new Database(":memory:");
     engine = new ScheduledTasksEngine(db as any);
 

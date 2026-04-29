@@ -12,9 +12,9 @@ import {
   getPendingPurchaseOrders,
   updatePurchaseOrderStatus,
   createStocktake
-} from '../../utils/inventoryDb.js';
-import { DemandForecastAgent, type DemandForecastTask } from '../../agents/DemandForecastAgent.js';
-import { writeLine } from '../../utils/cliOutput.js';
+} from '../../../packages/utils/inventoryDb.js';
+import { DemandForecastAgent, type DemandForecastTask } from '@packages/agents/DemandForecastAgent.js';
+import { writeLine } from '../../../packages/utils/cliOutput.js';
 
 export async function inventoryStatus(): Promise<void> {
   const spinner = ora('Készletadatok betöltése...').start();

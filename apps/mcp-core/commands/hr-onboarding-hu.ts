@@ -3,7 +3,7 @@ import chalk from 'chalk';
 import boxen from 'boxen';
 import ora from 'ora';
 import inquirer from 'inquirer';
-import { writeLine } from '../../utils/cliOutput.js';
+import { writeLine } from '../../../packages/utils/cliOutput.js';
 import {
   getHROnboardingJobs,
   getHROnboardingSamples,
@@ -14,7 +14,7 @@ import type {
   HROnboardingDryRunReport,
   HROnboardingDryRunResult,
   HROnboardingSamplePayload,
-} from '../../utils/hrOnboardingDryRun.js';
+} from '@packages/utils/hrOnboardingDryRun.js';
 
 type DryRunOptions = {
   sample?: string;

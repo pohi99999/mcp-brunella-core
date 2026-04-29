@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import { ensureError } from '../../utils/ensureError.js';
-import { logError, logInfo } from '../../utils/logger.js';
-import { kkvCrmService } from '@packages/core-logic/kkvCrmService.js';
+import { ensureError } from '@packages/utils/ensureError.js';
+import { logError, logInfo } from '@packages/utils/logger.js';
+import { kkvCrmService } from '@packages/core-logic/services/kkvCrmService.js';
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);

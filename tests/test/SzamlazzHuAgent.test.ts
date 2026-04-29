@@ -1,11 +1,11 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { SzamlazzHuAgent } from '../src/agents/SzamlazzHuAgent.js';
-import { getSzamlazzInvoicesHandler } from '../src/tools/getSzamlazzInvoices.js';
-import { writeSheetsInvoicesHandler } from '../src/tools/writeSheetsInvoices.js';
+import { SzamlazzHuAgent } from '@packages/agents/SzamlazzHuAgent.js';
+import { getSzamlazzInvoicesHandler } from '@packages/utils/getSzamlazzInvoices.js';
+import { writeSheetsInvoicesHandler } from '@packages/utils/writeSheetsInvoices.js';
 
-vi.mock('../src/tools/getSzamlazzInvoices.js');
-vi.mock('../src/tools/writeSheetsInvoices.js');
-vi.mock('../src/utils/logger.js');
+vi.mock('@packages/utils/getSzamlazzInvoices.js');
+vi.mock('@packages/utils/writeSheetsInvoices.js');
+vi.mock('@packages/utils/logger.js');
 
 describe('SzamlazzHuAgent', () => {
   let agent: SzamlazzHuAgent;

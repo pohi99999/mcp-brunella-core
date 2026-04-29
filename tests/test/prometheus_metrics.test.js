@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { getPrometheusMetrics, initMetrics, recordAgentExecution, recordHttpRequest, recordLlmUsageAndCost, resetPrometheusMetricsForTests, } from "../src/utils/metrics.js";
+import { getPrometheusMetrics, initMetrics, recordAgentExecution, recordHttpRequest, recordLlmUsageAndCost, resetPrometheusMetricsForTests, } from "@packages/utils/metrics.js";
 describe("prometheus metrics", () => {
     beforeEach(async () => {
         initMetrics();

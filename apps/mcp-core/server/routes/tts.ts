@@ -5,10 +5,10 @@
  */
 
 import { Router } from 'express';
-import { textToSpeech, VoiceOption, TTSModel } from '../../utils/tts.js';
-import { logInfo, logError } from '../../utils/logger.js';
-import { loadPaiosConfig } from '../../config/paiosConfig.js';
-import { ensureError } from '../../utils/ensureError.js';
+import { textToSpeech, VoiceOption, TTSModel } from '@packages/utils/tts.js';
+import { logInfo, logError } from '@packages/utils/logger.js';
+import { loadPaiosConfig } from '@packages/utils/paiosConfig.js';
+import { ensureError } from '@packages/utils/ensureError.js';
 
 export function createTTSRoutes(): Router {
   const router = Router();

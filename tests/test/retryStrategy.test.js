@@ -1,12 +1,12 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 // Mock logger
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
     logInfo: vi.fn(),
     logWarn: vi.fn(),
     logError: vi.fn(),
     setAgentStatus: vi.fn()
 }));
-import { withRetry, calculateDelay, DEFAULT_RETRY_CONFIG } from '../src/core/retryStrategy.js';
+import { withRetry, calculateDelay, DEFAULT_RETRY_CONFIG } from '@packages/core-logic/retryStrategy.js';
 describe('RetryStrategy (G2.2)', () => {
     beforeEach(() => {
         vi.clearAllMocks();

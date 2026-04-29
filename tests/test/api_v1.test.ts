@@ -1,12 +1,12 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import express from 'express';
 import request from 'supertest';
-import { createHealthRoutes } from '../src/server/routes/health.js';
-import { globalErrorHandler, asyncHandler } from '../src/server/middleware/errorHandler.js';
-import { AppError } from '../src/utils/AppError.js';
+import { createHealthRoutes } from '@apps/mcp-core/server/routes/health.js';
+import { globalErrorHandler, asyncHandler } from '@apps/mcp-core/server/middleware/errorHandler.js';
+import { AppError } from '@packages/utils/AppError.js';
 
 // Mocks
-vi.mock('../src/utils/health.js', () => ({
+vi.mock('@packages/utils/health.js', () => ({
   checkOllamaHealth: vi.fn().mockResolvedValue({ status: 'ok', model: 'llama3' }),
   checkAnythingLLMHealth: vi.fn().mockResolvedValue({ status: 'ok' }),
   checkPythonHealth: vi.fn().mockResolvedValue({ status: 'ok' }),
@@ -22,13 +22,13 @@ vi.mock('../src/utils/health.js', () => ({
   }))
 }));
 
-vi.mock('../src/agents/AgentManager.js', () => ({
+vi.mock('@packages/agents/AgentManager.js', () => ({
   agentManager: {
     listAgents: vi.fn().mockReturnValue(['agent1', 'agent2'])
   }
 }));
 
-vi.mock('../src/server/McpProcessManager.js', () => ({
+vi.mock('@apps/mcp-core/server/McpProcessManager.js', () => ({
   mcpProcessManager: {
     getServersStatus: vi.fn().mockReturnValue([{ name: 'server1', status: 'connected' }])
   }

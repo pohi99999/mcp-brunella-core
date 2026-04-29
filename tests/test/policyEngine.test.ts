@@ -4,11 +4,11 @@ const { auditRecordMock } = vi.hoisted(() => ({
   auditRecordMock: vi.fn(),
 }));
 
-vi.mock('../src/core/auditLog.js', () => ({
+vi.mock('@packages/core-logic/auditLog.js', () => ({
   record: auditRecordMock,
 }));
 
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
   logInfo: vi.fn(),
   logError: vi.fn(),
   logWarn: vi.fn(),
@@ -16,8 +16,8 @@ vi.mock('../src/utils/logger.js', () => ({
 
 async function freshPolicyModules() {
   vi.resetModules();
-  const policyModule = await import('../src/core/policyEngine.js');
-  const phoenixModule = await import('../src/core/phoenixEventBus.js');
+  const policyModule = await import('@packages/core-logic/policyEngine.js');
+  const phoenixModule = await import('@packages/core-logic/phoenixEventBus.js');
   return {
     policyModule,
     phoenixModule,

@@ -12,9 +12,9 @@ function getEnv(name: string): string | undefined {
   }
   
   // Try Vite/Browser import.meta.env
-  // @ts-ignore - Vite specific
+  // @ts-expect-error - Vite specific environment access
   if (typeof import.meta !== 'undefined' && import.meta.env) {
-    // @ts-ignore
+    // @ts-expect-error - Dynamic environment property access
     return import.meta.env[name];
   }
   

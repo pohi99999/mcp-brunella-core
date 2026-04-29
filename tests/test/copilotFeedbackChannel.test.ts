@@ -1,23 +1,23 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 // Module-level mocks must come before imports that use them
-vi.mock('../src/core/copilotCognitiveBridge.js', () => ({
+vi.mock('@packages/core-logic/copilotCognitiveBridge.js', () => ({
   reflect: vi.fn().mockResolvedValue({ stored: true, layers: [], lesson: '', qualityScore: 0.8 }),
 }));
 
-vi.mock('../src/core/structuredMemory.js', () => ({
+vi.mock('@packages/core-logic/structuredMemory.js', () => ({
   saveMemory: vi.fn().mockResolvedValue(undefined),
 }));
 
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
   logInfo: vi.fn(),
   logError: vi.fn(),
 }));
 
-import { CopilotFeedbackChannel } from '../src/core/copilotFeedbackChannel.js';
-import type { CopilotReviewFeedback } from '../src/core/copilotFeedbackChannel.js';
-import { reflect as mockReflect } from '../src/core/copilotCognitiveBridge.js';
-import { saveMemory as mockSaveMemory } from '../src/core/structuredMemory.js';
+import { CopilotFeedbackChannel } from '@packages/core-logic/copilotFeedbackChannel.js';
+import type { CopilotReviewFeedback } from '@packages/core-logic/copilotFeedbackChannel.js';
+import { reflect as mockReflect } from '@packages/core-logic/copilotCognitiveBridge.js';
+import { saveMemory as mockSaveMemory } from '@packages/core-logic/structuredMemory.js';
 
 // Minimal SelfModel stub
 function makeSelfModelStub() {

@@ -5,7 +5,7 @@
  */
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { logEmitter, LogEvent } from '../src/utils/logger.js';
+import { logEmitter, LogEvent } from '@packages/utils/logger.js';
 
 describe('Telemetry Service', () => {
   it('should emit structured log events with metadata', () => {

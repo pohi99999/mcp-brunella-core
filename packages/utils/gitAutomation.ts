@@ -104,7 +104,7 @@ export class GitAutomation {
       throw new Error(`PR creation failed: ${response.statusText}`);
     }
 
-    const data = await response.json();
+    const data = await response.json() as { html_url: string };
     logInfo('GitAutomation', `Created PR: ${data.html_url}`);
     return data.html_url;
   }

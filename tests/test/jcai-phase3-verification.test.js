@@ -10,7 +10,7 @@
  */
 import { describe, it, expect } from 'vitest';
 import crypto from 'crypto';
-import { DeploymentAnalyzer } from '../src/tools/deploymentAnalyzer.js';
+import { DeploymentAnalyzer } from '@packages/utils/deploymentAnalyzer.js';
 /**
  * TEST 1: GitHub Webhook Signature Verification
  */

@@ -28,7 +28,7 @@ let mockBatches: MockBatch[] = [];
 let mockItemStock = 0;
 let movementsLog: unknown[] = [];
 
-vi.mock('../src/utils/inventoryDb.js', () => ({
+vi.mock('@packages/utils/inventoryDb.js', () => ({
   getItemBySku: vi.fn(),
   getItemById: vi.fn(),
   createBatch: vi.fn(),
@@ -47,10 +47,10 @@ vi.mock('../src/utils/inventoryDb.js', () => ({
   getAllItems: vi.fn(() => []),
 }));
 
-import { InventoryFifoAgent } from '../src/agents/InventoryFifoAgent.js';
+import { InventoryFifoAgent } from '@packages/agents/InventoryFifoAgent.js';
 
 const { getItemBySku, createBatch, getOpenBatchesByItemId, updateBatchRemainingQty } =
-  await import('../src/utils/inventoryDb.js');
+  await import('@packages/utils/inventoryDb.js');
 
 // ─── Segédfüggvény ────────────────────────────────────────────────────────────
 

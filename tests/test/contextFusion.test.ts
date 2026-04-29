@@ -15,7 +15,7 @@ import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest';
 
 // ─── Module mocks ──────────────────────────────────────────────────────────────
 
-vi.mock('../src/core/graphRagEngine.js', () => {
+vi.mock('@packages/core-logic/graphRagEngine.js', () => {
   const mockGetStats = vi.fn().mockReturnValue({
     nodes: 42,
     edges: 100,
@@ -43,7 +43,7 @@ vi.mock('../src/core/graphRagEngine.js', () => {
   };
 });
 
-vi.mock('../src/core/reflectionEngine.js', () => {
+vi.mock('@packages/core-logic/reflectionEngine.js', () => {
   const mockGetStats = vi.fn().mockReturnValue({
     totalReflections: 12,
     avgQualityScore: 0.87,
@@ -64,7 +64,7 @@ vi.mock('../src/core/reflectionEngine.js', () => {
   };
 });
 
-vi.mock('../src/utils/rag.js', () => {
+vi.mock('@packages/utils/rag.js', () => {
   const mockGetTableCount = vi.fn().mockResolvedValue(8);
   const MockHybridMemory = vi.fn().mockImplementation(() => ({
     getTableCount: mockGetTableCount,
@@ -75,7 +75,7 @@ vi.mock('../src/utils/rag.js', () => {
   };
 });
 
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
   logInfo: vi.fn(),
   logWarn: vi.fn(),
   logError: vi.fn(),
@@ -84,12 +84,12 @@ vi.mock('../src/utils/logger.js', () => ({
 
 // ─── Imports (after mocks) ────────────────────────────────────────────────────
 
-import { buildContextFusionCard, buildBrowserDiagnosticsCard } from '../src/core/contextFusion.js';
+import { buildContextFusionCard, buildBrowserDiagnosticsCard } from '@packages/core-logic/contextFusion.js';
 
 // ─── Test helpers ─────────────────────────────────────────────────────────────
 
 async function getGraphRagMockInstance() {
-  const mod = await import('../src/core/graphRagEngine.js');
+  const mod = await import('@packages/core-logic/graphRagEngine.js');
   // @ts-expect-error — _mockInstance is a test-only export from the vi.mock factory
   return mod._mockInstance as {
     init: ReturnType<typeof vi.fn>;
@@ -99,7 +99,7 @@ async function getGraphRagMockInstance() {
 }
 
 async function getReflectionMockInstance() {
-  const mod = await import('../src/core/reflectionEngine.js');
+  const mod = await import('@packages/core-logic/reflectionEngine.js');
   // @ts-expect-error — _mockInstance is a test-only export
   return mod._mockInstance as {
     getStats: ReturnType<typeof vi.fn>;
@@ -108,7 +108,7 @@ async function getReflectionMockInstance() {
 }
 
 async function getRagMockGetTableCount() {
-  const mod = await import('../src/utils/rag.js');
+  const mod = await import('@packages/utils/rag.js');
   // @ts-expect-error — _mockGetTableCount is a test-only export
   return mod._mockGetTableCount as ReturnType<typeof vi.fn>;
 }
@@ -220,7 +220,7 @@ describe('buildContextFusionCard', () => {
   });
 
   it('should return memory: null when HybridMemory constructor throws', async () => {
-    const ragMod = await import('../src/utils/rag.js');
+    const ragMod = await import('@packages/utils/rag.js');
     const throwingImpl = (): never => {
       throw new Error('HybridMemory constructor failed');
     };

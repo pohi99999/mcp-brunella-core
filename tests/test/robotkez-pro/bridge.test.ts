@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { RobotkezBridge } from '../../src/orchestrator/robotkez_bridge.js';
+import { RobotkezBridge } from '@packages/core-logic/robotkez_bridge.js';
 
 describe('RobotkezBridge', () => {
   let bridge: RobotkezBridge;

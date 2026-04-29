@@ -2,7 +2,7 @@ import express from 'express';
 import request from 'supertest';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import type { DecisionResult, DecisionStats } from '../src/core/decisionTypes.js';
+import type { DecisionResult, DecisionStats } from '@packages/core-logic/decisionTypes.js';
 
 const predictiveHarness = vi.hoisted(() => ({
   getDecisionHistory: vi.fn(),
@@ -12,7 +12,7 @@ const predictiveHarness = vi.hoisted(() => ({
   rollbackDecision: vi.fn(),
 }));
 
-vi.mock('../src/core/predictiveDecisionEngine.js', () => ({
+vi.mock('@packages/core-logic/predictiveDecisionEngine.js', () => ({
   predictiveDecisionEngine: {
     getDecisionHistory: predictiveHarness.getDecisionHistory,
     getDecisionStats: predictiveHarness.getDecisionStats,
@@ -22,7 +22,7 @@ vi.mock('../src/core/predictiveDecisionEngine.js', () => ({
   },
 }));
 
-import { createPredictiveDecisionRouter } from '../src/server/routes/predictiveDecision.js';
+import { createPredictiveDecisionRouter } from '@apps/mcp-core/server/routes/predictiveDecision.js';
 
 function makeDecisionResult(overrides: Partial<DecisionResult> = {}): DecisionResult {
   return {

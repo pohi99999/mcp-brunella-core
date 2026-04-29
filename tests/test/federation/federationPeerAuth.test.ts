@@ -4,8 +4,8 @@ import {
   getLocalFederationKeyIds,
   signFederationRequest,
   verifyFederationRequest,
-} from '../../src/security/federationPeerAuth.js';
-import { inspectFederationPublicKey } from '../../src/security/federationPeerProof.js';
+} from '@packages/core-logic/federationPeerAuth.js';
+import { inspectFederationPublicKey } from '@packages/core-logic/federationPeerProof.js';
 
 describe('federationPeerAuth', () => {
   const localKeyPair = generateKeyPairSync('ed25519');

@@ -18,15 +18,15 @@
  */
 
 import { Router, Request, Response } from 'express';
-import { RobotkezV2Agent } from '../../agents/RobotkezV2Agent.js';
-import { generateExecutionPlan } from '../../utils/llmPlanner.js';
-import { getRobotkezBrowserEngine, getRobotkezEngineName } from '../../utils/browserEngine.js';
-import { backgroundTaskManager } from '../../utils/backgroundTaskManager.js';
-import { logInfo, logError } from '../../utils/logger.js';
-import { getMessages, saveMessage } from '../../utils/db.js';
+import { RobotkezV2Agent } from '@packages/agents/RobotkezV2Agent.js';
+import { generateExecutionPlan } from '@packages/utils/llmPlanner.js';
+import { getRobotkezBrowserEngine, getRobotkezEngineName } from '@packages/utils/browserEngine.js';
+import { backgroundTaskManager } from '@packages/utils/backgroundTaskManager.js';
+import { logInfo, logError } from '@packages/utils/logger.js';
+import { getMessages, saveMessage } from '@packages/utils/db.js';
 import { socketService } from '@packages/agents/SocketService.js';
-import { ChromeDevToolsAgent } from '../../agents/ChromeDevToolsAgent.js';
-import { ISwarmContext } from '../../agents/types.js';
+import { ChromeDevToolsAgent } from '@packages/agents/ChromeDevToolsAgent.js';
+import { ISwarmContext } from '@packages/agents/types.js';
 
 const PYTHON_API = process.env.PYTHON_API_URL || 'http://localhost:8000';
 

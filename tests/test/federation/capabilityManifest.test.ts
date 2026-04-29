@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { CapabilityManifestConfigError, capabilityManifestManager } from '../../src/core/federation/capabilityManifest.js';
-import { phoenixEventBus } from '../../src/core/phoenixEventBus.js';
+import { CapabilityManifestConfigError, capabilityManifestManager } from '@packages/core-logic/federation/capabilityManifest.js';
+import { phoenixEventBus } from '@packages/core-logic/phoenixEventBus.js';
 
 describe('CapabilityManifest', () => {
   beforeEach(() => {

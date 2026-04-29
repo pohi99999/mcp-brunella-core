@@ -1,8 +1,8 @@
 import { afterEach, describe, expect, it } from "vitest";
 
 import { createDocsConfigFixture } from "./docsConfigFixture.js";
-import { buildDocsConfigSotSnapshot } from "../src/tools/docsConfigSot.js";
-import { buildDocsUnifierReport, renderDocsUnifierMarkdown } from "../src/tools/docUnifier.js";
+import { buildDocsConfigSotSnapshot } from "@packages/utils/docsConfigSot.js";
+import { buildDocsUnifierReport, renderDocsUnifierMarkdown } from "@packages/utils/docUnifier.js";
 
 describe("docUnifier / report", () => {
   const fixtures: Array<{ cleanup: () => void }> = [];

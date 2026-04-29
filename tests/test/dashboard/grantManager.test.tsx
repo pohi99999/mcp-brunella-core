@@ -5,7 +5,7 @@ import userEvent from '@testing-library/user-event';
 
 import { GrantManager } from '@/components/GrantManager';
 import * as apiService from '@/lib/apiService';
-import type { GrantWatcherAgentResponse } from '../../src/lib/grantFlow.js';
+import type { GrantWatcherAgentResponse } from '@packages/utils/grantFlow.js';
 import { toast } from 'sonner';
 
 vi.mock('@/lib/apiService', () => ({

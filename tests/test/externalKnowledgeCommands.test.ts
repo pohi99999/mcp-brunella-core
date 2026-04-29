@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { Command } from 'commander';
 
-import { registerExternalKnowledgeCommands } from '../src/cli/externalKnowledgeCommands.js';
+import { registerExternalKnowledgeCommands } from '@apps/mcp-core/commands/externalKnowledgeCommands.js';
 
 describe('external knowledge CLI commands', () => {
   beforeEach(() => {

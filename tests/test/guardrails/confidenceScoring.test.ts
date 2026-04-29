@@ -3,7 +3,7 @@
  * Track: guardrails_evaluation_20260323
  */
 import { describe, it, expect } from 'vitest';
-import { calculateConfidence, type ConfidenceReport } from '../../src/agents/scoring/confidenceCalculator.js';
+import { calculateConfidence, type ConfidenceReport } from '@packages/agents/scoring/confidenceCalculator.js';
 
 describe('calculateConfidence()', () => {
   it('baseline score for minimal success result', () => {

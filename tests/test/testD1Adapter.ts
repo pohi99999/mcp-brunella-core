@@ -11,8 +11,8 @@
  *   CEAN_API_KEY - API key for authentication
  */
 
-import { D1Adapter } from '../src/utils/d1Adapter.js';
-import { logInfo, logError } from '../src/utils/logger.js';
+import { D1Adapter } from '@packages/utils/d1Adapter.js';
+import { logInfo, logError } from '@packages/utils/logger.js';
 
 async function testD1Adapter() {
   logInfo('D1 Test', '========== D1 Adapter Test ==========');

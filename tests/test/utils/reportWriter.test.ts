@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { mkdtempSync, readFileSync, rmSync } from 'fs';
 import os from 'os';
 import path from 'path';
-import { writeMarkdownReport } from '../../src/utils/reportWriter.js';
+import { writeMarkdownReport } from '@packages/utils/reportWriter.js';
 
 describe('writeMarkdownReport', () => {
   it('writes front matter and uses the date as filename', async () => {

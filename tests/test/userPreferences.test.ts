@@ -6,7 +6,7 @@ import {
   getPreferenceContext,
   getPreferenceStats,
   purgeExpiredPreferences,
-} from "../src/core/userPreferences.js";
+} from "@packages/core-logic/userPreferences.js";
 
 const makeTestPref = (overrides: Partial<{
   user_id: string; key: string; value: string; memory_type: "episodic" | "semantic" | "procedural";

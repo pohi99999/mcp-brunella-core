@@ -1,8 +1,8 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { CloudflareBrowser } from '../src/utils/cloudflareBrowser.js';
-import { getRobotkezBrowserEngine, getRobotkezEngineName } from '../src/utils/browserEngine.js';
-import { persistentBrowser } from '../src/utils/persistentBrowser.js';
-import { cloudflareBrowser } from '../src/utils/cloudflareBrowser.js';
+import { CloudflareBrowser } from '@packages/utils/cloudflareBrowser.js';
+import { getRobotkezBrowserEngine, getRobotkezEngineName } from '@packages/utils/browserEngine.js';
+import { persistentBrowser } from '@packages/utils/persistentBrowser.js';
+import { cloudflareBrowser } from '@packages/utils/cloudflareBrowser.js';
 
 describe('CloudflareBrowser adapter', () => {
   const originalEnv = { ...process.env };

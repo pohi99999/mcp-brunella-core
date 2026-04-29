@@ -1,6 +1,6 @@
 import { Command } from 'commander';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { registerHROnboardingCommands } from '../src/cli/hrOnboardingCommands.js';
+import { registerHROnboardingCommands } from '@apps/mcp-core/commands/hrOnboardingCommands.js';
 
 const spinnerStop = vi.fn();
 const spinnerFail = vi.fn();
@@ -22,7 +22,7 @@ vi.mock('ora', () => ({
   })),
 }));
 
-vi.mock('../src/dashboard/lib/hrOnboardingApi.js', () => ({
+vi.mock('@/lib/hrOnboardingApi.js', () => ({
   getHROnboardingSamples: samplesMock,
   runHROnboardingDryRun: dryRunMock,
   getHROnboardingJobs: jobsMock,

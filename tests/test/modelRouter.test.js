@@ -2,12 +2,12 @@
 // PURPOSE: G3.2 — Model Router tesztek (RULE-MR1 through RULE-MR4)
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 // Mock logger before importing modelRouter
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
     logInfo: vi.fn(),
     logError: vi.fn(),
     setAgentStatus: vi.fn(),
 }));
-import { selectModel, routeTask, detectComplexity, detectCategory, getModelProfiles, getRoutingHistory, clearRoutingHistory, getRouterConfig, } from '../src/core/modelRouter.js';
+import { selectModel, routeTask, detectComplexity, detectCategory, getModelProfiles, getRoutingHistory, clearRoutingHistory, getRouterConfig, } from '@packages/core-logic/modelRouter.js';
 describe('Model Router (G3)', () => {
     beforeEach(() => {
         clearRoutingHistory();

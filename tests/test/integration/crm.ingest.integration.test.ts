@@ -6,8 +6,8 @@ import os from 'os';
 import fs from 'fs';
 
 // Import routers and DB helpers (use .js extensions to match repo ESM rules)
-import { createCrmRoutes } from '../../src/server/routes/crm.js';
-import { initCrmDb, closeCrmDb, listCrmLeads } from '../../src/data/crm_db.js';
+import { createCrmRoutes } from '@apps/mcp-core/server/routes/crm.js';
+import { initCrmDb, closeCrmDb, listCrmLeads } from '@packages/utils/crm_db.js';
 
 // Helper: create a unique temp DB path for each test run
 function makeTempDbPath(): string {

@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { UXDesignerAgent } from '../src/agents/UXDesignerAgent.js';
-import DevOpsAgent from '../src/agents/DevOpsAgent.js';
-import { GenesisOrchestrator } from '../src/agents/GenesisOrchestrator.js';
+import { UXDesignerAgent } from '@packages/agents/UXDesignerAgent.js';
+import DevOpsAgent from '@packages/agents/DevOpsAgent.js';
+import { GenesisOrchestrator } from '@packages/agents/GenesisOrchestrator.js';
 
 describe('Software Genesis Phase 4 - End-to-End Flow', () => {
   let uxDesigner: UXDesignerAgent;

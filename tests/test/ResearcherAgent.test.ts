@@ -7,11 +7,11 @@
  */
 
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { ResearcherAgent } from "../src/agents/ResearcherAgent.js";
+import { ResearcherAgent } from "@packages/agents/ResearcherAgent.js";
 
 // ── Shared mocks ─────────────────────────────────────────────────────────────
 
-vi.mock("../src/utils/logger.js", () => ({
+vi.mock("@packages/utils/logger.js", () => ({
   logInfo: vi.fn(),
   logError: vi.fn(),
   setAgentStatus: vi.fn(),

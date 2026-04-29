@@ -10,8 +10,8 @@
 
 import Database from 'better-sqlite3';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import type { BriefingReport } from '../src/server/services/briefingService.js';
-import { initBriefingSchema, persistBriefingReport } from '../src/server/services/briefingService.js';
+import type { BriefingReport } from '@apps/mcp-core/server/services/briefingService.js';
+import { initBriefingSchema, persistBriefingReport } from '@apps/mcp-core/server/services/briefingService.js';
 
 // ── Mock DailyAgentBriefingAgent at module level ───────────────────────────
 // vi.mock hoists to the top — mocks the constructor so `new DailyAgentBriefingAgent()`
@@ -19,7 +19,7 @@ import { initBriefingSchema, persistBriefingReport } from '../src/server/service
 
 const mockExecuteTask = vi.fn();
 
-vi.mock('../src/agents/DailyAgentBriefingAgent.js', () => ({
+vi.mock('@packages/agents/DailyAgentBriefingAgent.js', () => ({
   DailyAgentBriefingAgent: vi.fn().mockImplementation(() => ({
     executeTask: mockExecuteTask,
   })),
@@ -198,7 +198,7 @@ describe('briefingService — runDailyAgentBriefing (mocked agent)', () => {
   it('persists a row when dryRun is false', async () => {
     mockExecuteTask.mockResolvedValue(MOCK_AGENT_RESULT);
 
-    const { runDailyAgentBriefing } = await import('../src/server/services/briefingService.js');
+    const { runDailyAgentBriefing } = await import('@apps/mcp-core/server/services/briefingService.js');
     const result = await runDailyAgentBriefing({ db, triggeredBy: 'test', dryRun: false });
 
     expect(result).toBeDefined();
@@ -219,7 +219,7 @@ describe('briefingService — runDailyAgentBriefing (mocked agent)', () => {
   it('does NOT persist when dryRun is true', async () => {
     mockExecuteTask.mockResolvedValue({ ...MOCK_AGENT_RESULT, data: { ...MOCK_AGENT_RESULT.data } });
 
-    const { runDailyAgentBriefing } = await import('../src/server/services/briefingService.js');
+    const { runDailyAgentBriefing } = await import('@apps/mcp-core/server/services/briefingService.js');
     const result = await runDailyAgentBriefing({ db, triggeredBy: 'test', dryRun: true });
 
     expect(result.dryRun).toBe(true);
@@ -231,7 +231,7 @@ describe('briefingService — runDailyAgentBriefing (mocked agent)', () => {
   it('throws when the agent returns success=false', async () => {
     mockExecuteTask.mockResolvedValue({ success: false, message: 'Valami hiba történt', data: null });
 
-    const { runDailyAgentBriefing } = await import('../src/server/services/briefingService.js');
+    const { runDailyAgentBriefing } = await import('@apps/mcp-core/server/services/briefingService.js');
     await expect(runDailyAgentBriefing({ db, triggeredBy: 'test', dryRun: false })).rejects.toThrow(
       'Valami hiba történt',
     );

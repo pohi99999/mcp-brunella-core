@@ -13,9 +13,9 @@
  */
 
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { getSecurityMonitor, type SecurityEvent } from '../src/core/securityEventsMonitor.js';
-import { getWorkerPool, shutdownWorkerPool } from '../src/core/workerThreadPool.js';
-import { globalPermissionManager, Permission } from '../src/agents/permissions.js';
+import { getSecurityMonitor, type SecurityEvent } from '@packages/core-logic/securityEventsMonitor.js';
+import { getWorkerPool, shutdownWorkerPool } from '@packages/core-logic/workerThreadPool.js';
+import { globalPermissionManager, Permission } from '@packages/agents/permissions.js';
 
 describe('BAS Security Test Suite (42 Scenarios)', () => {
   const monitor = getSecurityMonitor();

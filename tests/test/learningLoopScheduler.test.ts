@@ -11,35 +11,35 @@ const schedulerHarness = vi.hoisted(() => ({
   createSchedulerTaskOutcomeEnvelope: vi.fn((_task: unknown, payload: unknown) => payload),
 }));
 
-vi.mock('../src/utils/globalDb.js', () => ({
+vi.mock('@packages/utils/globalDb.js', () => ({
   getGlobalDb: () => schedulerHarness.db,
 }));
 
-vi.mock('../src/core/learningLoopService.js', () => ({
+vi.mock('@packages/core-logic/learningLoopService.js', () => ({
   executeLearningLoopCycle: schedulerHarness.executeLearningLoopCycle,
 }));
 
-vi.mock('../src/core/eventFabric.js', () => ({
+vi.mock('@packages/core-logic/eventFabric.js', () => ({
   eventFabric: {
     publish: schedulerHarness.publish,
   },
   createSchedulerTaskOutcomeEnvelope: schedulerHarness.createSchedulerTaskOutcomeEnvelope,
 }));
 
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
   logInfo: vi.fn(),
   logWarn: vi.fn(),
   logError: vi.fn(),
 }));
 
-vi.mock('../src/agents/AgentManager.js', () => ({
+vi.mock('@packages/agents/AgentManager.js', () => ({
   agentManager: {
     delegate: vi.fn(),
     delegateTask: vi.fn(),
   },
 }));
 
-import { ScheduledTasksRunner } from '../src/server/schedulers/scheduledTasksRunner.js';
+import { ScheduledTasksRunner } from '@apps/mcp-core/server/schedulers/scheduledTasksRunner.js';
 
 describe('ScheduledTasksRunner — Learning Loop integration', () => {
   let db: Database.Database;

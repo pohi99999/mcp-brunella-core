@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { socketService } from '../src/server/SocketService.js';
+import { socketService } from '@apps/mcp-core/server/SocketService.js';
 import type { Server } from 'socket.io';
 
 describe('SocketService Tests', () => {

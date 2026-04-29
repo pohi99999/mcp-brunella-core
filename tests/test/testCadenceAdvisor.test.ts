@@ -2,8 +2,8 @@ import { describe, expect, it } from "vitest";
 
 import {
   buildDevExPlannerSnapshot,
-} from "../src/tools/missionPlanner.js";
-import { buildTestCadenceAdvice, renderTestPlanMarkdown } from "../src/tools/testCadenceAdvisor.js";
+} from "@packages/utils/missionPlanner.js";
+import { buildTestCadenceAdvice, renderTestPlanMarkdown } from "@packages/utils/testCadenceAdvisor.js";
 
 describe("testCadenceAdvisor", () => {
   it("uses the dashboard full cadence with UI validation commands", () => {

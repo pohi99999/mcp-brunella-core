@@ -2,7 +2,7 @@ import inquirer from "inquirer";
 import chalk from "chalk";
 import boxen from "boxen";
 import ora from "ora";
-import { globalSwarmChatManager } from "../../core/SwarmChatManager.js";
+import { globalSwarmChatManager } from "../../../src/core/SwarmChatManager.js";
 
 export async function swarmMenu() {
   console.log(

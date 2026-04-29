@@ -1,8 +1,8 @@
 import express from 'express';
 import fs from 'fs/promises';
 import path from 'path';
-import { logInfo, logError } from '../../utils/logger.js';
-import { ensureError } from '../../utils/ensureError.js';
+import { logInfo, logError } from '@packages/utils/logger.js';
+import { ensureError } from '@packages/utils/ensureError.js';
 
 const router = express.Router();
 const GRANTS_PATH = path.join(process.cwd(), 'config', 'grants_2026.json');

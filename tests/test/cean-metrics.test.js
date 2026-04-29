@@ -57,7 +57,7 @@ describe('Metrics Collection', () => {
     });
     it('should gather metrics from database', async () => {
         // Import the function after mock setup
-        const { gatherMetrics } = await import('../src/metrics');
+        const { gatherMetrics } = await import('@packages/utils/metrics');
         const metrics = await gatherMetrics(mockDb);
         // Verify metrics structure
         expect(metrics).toHaveProperty('pipelines_total');
@@ -68,7 +68,7 @@ describe('Metrics Collection', () => {
         expect(metrics).toHaveProperty('cache_hit_rate_pct');
     });
     it('should format metrics in Prometheus format', async () => {
-        const { gatherMetrics, formatPrometheusMetrics } = await import('../src/metrics');
+        const { gatherMetrics, formatPrometheusMetrics } = await import('@packages/utils/metrics');
          
         const metrics = await gatherMetrics(mockDb);
         const output = formatPrometheusMetrics(metrics);
@@ -83,7 +83,7 @@ describe('Metrics Collection', () => {
         expect(output).toContain('cean_cost_usd');
     });
     it('should format metrics in JSON format', async () => {
-        const { gatherMetrics, formatJsonMetrics } = await import('../src/metrics');
+        const { gatherMetrics, formatJsonMetrics } = await import('@packages/utils/metrics');
         const metrics = await gatherMetrics(mockDb);
         const output = formatJsonMetrics(metrics);
         // Verify JSON structure is correct (not actual values since mock is partial)
@@ -96,14 +96,14 @@ describe('Metrics Collection', () => {
         expect(output).toHaveProperty('timestamp');
     });
     it.skip('should calculate success rate correctly', async () => {
-        const { gatherMetrics } = await import('../src/metrics');
+        const { gatherMetrics } = await import('@packages/utils/metrics');
          
         const metrics = await gatherMetrics(mockDb);
         // 950 completed / 1000 total = 95%
         expect(metrics.success_rate_pct).toBe(95);
     });
     it.skip('should calculate cache hit rate', async () => {
-        const { gatherMetrics } = await import('../src/metrics');
+        const { gatherMetrics } = await import('@packages/utils/metrics');
          
         const metrics = await gatherMetrics(mockDb);
         // Cache hit rate should be > 0
@@ -111,7 +111,7 @@ describe('Metrics Collection', () => {
         expect(metrics.cache_hit_rate_pct).toBeLessThanOrEqual(100);
     });
     it.skip('should estimate cost correctly', async () => {
-        const { gatherMetrics } = await import('../src/metrics');
+        const { gatherMetrics } = await import('@packages/utils/metrics');
          
         const metrics = await gatherMetrics(mockDb);
         // Cost per 100 pipelines: $0.000118
@@ -120,7 +120,7 @@ describe('Metrics Collection', () => {
         expect(metrics.cost_usd).toBeLessThan(0.1); // Sanity check
     });
     it('should include timestamp in metrics', async () => {
-        const { gatherMetrics } = await import('../src/metrics');
+        const { gatherMetrics } = await import('@packages/utils/metrics');
          
         const metrics = await gatherMetrics(mockDb);
         // Verify timestamp exists and is ISO 8601
@@ -134,7 +134,7 @@ describe('Metrics Collection', () => {
                 all: async () => ({ results: [] }),
             }),
         };
-        const { gatherMetrics } = await import('../src/metrics');
+        const { gatherMetrics } = await import('@packages/utils/metrics');
          
         const metrics = await gatherMetrics(emptyDb);
         // Should return zeros, not errors
@@ -148,7 +148,7 @@ describe('Metrics Collection', () => {
                 all: async () => ({ results: [] }),
             }),
         };
-        const { gatherMetrics } = await import('../src/metrics');
+        const { gatherMetrics } = await import('@packages/utils/metrics');
          
         const metrics = await gatherMetrics(zeroDb);
         // Should return 0, not NaN or infinity
@@ -156,7 +156,7 @@ describe('Metrics Collection', () => {
         expect(metrics.cache_hit_rate_pct).toBeGreaterThanOrEqual(0);
     });
     it('should generate valid metrics within 1 second', async () => {
-        const { gatherMetrics } = await import('../src/metrics');
+        const { gatherMetrics } = await import('@packages/utils/metrics');
          
         const startTime = Date.now();
          
@@ -168,7 +168,7 @@ describe('Metrics Collection', () => {
 });
 describe('Analytics Engine Integration', () => {
     it('should build pipeline start event', async () => {
-        const { PipelineEventBuilder } = await import('../src/analytics');
+        const { PipelineEventBuilder } = await import('@packages/utils/analytics.js');
         const event = PipelineEventBuilder.start('task_123', 'research');
         expect(event.event_type).toBe('pipeline_start');
         expect(event.task_id).toBe('task_123');
@@ -177,28 +177,28 @@ describe('Analytics Engine Integration', () => {
         expect(event.success).toBe(true);
     });
     it('should build pipeline completion event', async () => {
-        const { PipelineEventBuilder } = await import('../src/analytics');
+        const { PipelineEventBuilder } = await import('@packages/utils/analytics.js');
         const event = PipelineEventBuilder.complete('task_123', 'grant', 250, true);
         expect(event.event_type).toBe('pipeline_complete');
         expect(event.latency_ms).toBe(250);
         expect(event.success).toBe(true);
     });
     it('should build error event', async () => {
-        const { PipelineEventBuilder } = await import('../src/analytics');
+        const { PipelineEventBuilder } = await import('@packages/utils/analytics.js');
         const event = PipelineEventBuilder.error('task_123', 'harvester', 'Connection timeout');
         expect(event.event_type).toBe('pipeline_error');
         expect(event.error_message).toBe('Connection timeout');
         expect(event.success).toBe(false);
     });
     it('should build cache hit event', async () => {
-        const { PipelineEventBuilder } = await import('../src/analytics');
+        const { PipelineEventBuilder } = await import('@packages/utils/analytics.js');
         const event = PipelineEventBuilder.cacheHit('research');
         expect(event.event_type).toBe('cache_hit');
         expect(event.agent_type).toBe('research');
         expect(event.status).toBe('hit');
     });
     it('should include timestamp in events', async () => {
-        const { PipelineEventBuilder } = await import('../src/analytics');
+        const { PipelineEventBuilder } = await import('@packages/utils/analytics.js');
         const event = PipelineEventBuilder.start('task_123', 'research');
         // Verify timestamp is a recent Unix timestamp (seconds)
         expect(event.timestamp).toBeGreaterThan(1700000000); // After 2023-11-14

@@ -64,7 +64,7 @@ describe('imapConnector / attachment intake', () => {
   });
 
   it('should store raw messages under the inbox default directory', async () => {
-    const { fetchEmailsAsEml } = await import('../src/connectors/imapConnector.js');
+    const { fetchEmailsAsEml } = await import('@packages/database/imapConnector.js');
 
     mocks.search.mockResolvedValue([101]);
     const fetch = vi.fn().mockReturnValue(
@@ -102,7 +102,7 @@ describe('imapConnector / attachment intake', () => {
   });
 
   it('should honor a custom destination directory and mark messages as seen', async () => {
-    const { fetchEmailsAsEml } = await import('../src/connectors/imapConnector.js');
+    const { fetchEmailsAsEml } = await import('@packages/database/imapConnector.js');
     const customDir = path.join(process.cwd(), 'temp', 'imap-custom');
 
     mocks.search.mockResolvedValue([202]);
@@ -141,7 +141,7 @@ describe('imapConnector / attachment intake', () => {
   });
 
   it('should extract attachments into the inbox default directory', async () => {
-    const { fetchAndExtractAttachments } = await import('../src/connectors/imapConnector.js');
+    const { fetchAndExtractAttachments } = await import('@packages/database/imapConnector.js');
 
     mocks.search.mockResolvedValue([303]);
     mocks.simpleParser.mockResolvedValue({
@@ -188,7 +188,7 @@ describe('imapConnector / attachment intake', () => {
   });
 
   it('should fall back to raw EML when no attachments are present', async () => {
-    const { fetchAndExtractAttachments } = await import('../src/connectors/imapConnector.js');
+    const { fetchAndExtractAttachments } = await import('@packages/database/imapConnector.js');
 
     mocks.search.mockResolvedValue([404]);
     mocks.simpleParser.mockResolvedValue({ attachments: [] });

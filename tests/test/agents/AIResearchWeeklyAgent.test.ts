@@ -1,18 +1,18 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { AIResearchWeeklyAgent } from '../../src/agents/AIResearchWeeklyAgent.js';
-import { crawl4aiCrawlHandler } from '../../src/tools/crawl4aiTool.js';
-import { generateRouted } from '../../src/core/llm_client.js';
-import { writeMarkdownReport } from '../../src/utils/reportWriter.js';
+import { AIResearchWeeklyAgent } from '@packages/agents/AIResearchWeeklyAgent.js';
+import { crawl4aiCrawlHandler } from '@packages/utils/crawl4aiTool.js';
+import { generateRouted } from '@packages/core-logic/llm_client.js';
+import { writeMarkdownReport } from '@packages/utils/reportWriter.js';
 
-vi.mock('../../src/tools/crawl4aiTool.js', () => ({
+vi.mock('@packages/utils/crawl4aiTool.js', () => ({
   crawl4aiCrawlHandler: vi.fn(),
 }));
 
-vi.mock('../../src/core/llm_client.js', () => ({
+vi.mock('@packages/core-logic/llm_client.js', () => ({
   generateRouted: vi.fn(),
 }));
 
-vi.mock('../../src/utils/reportWriter.js', () => ({
+vi.mock('@packages/utils/reportWriter.js', () => ({
   writeMarkdownReport: vi.fn(),
 }));
 

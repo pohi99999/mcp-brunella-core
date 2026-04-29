@@ -1,9 +1,9 @@
 import { describe, it, expect, vi } from 'vitest';
 import { Command } from 'commander';
-import { registerDevCommands } from '../src/cli/devCommands.js';
+import { registerDevCommands } from '@apps/mcp-core/commands/devCommands.js';
 
 // Mock logger
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
     logInfo: vi.fn(),
     logError: vi.fn(),
     setAgentStatus: vi.fn(),

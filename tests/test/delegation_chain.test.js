@@ -1,10 +1,10 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { agentManager } from "../src/agents/AgentManager.js";
-import { OrchestratorAgent } from "../src/agents/OrchestratorAgent.js";
-import * as llmClient from "../src/core/llm_client.js";
+import { agentManager } from "@packages/agents/AgentManager.js";
+import { OrchestratorAgent } from "@packages/agents/OrchestratorAgent.js";
+import * as llmClient from "@packages/core-logic/llm_client.js";
 // Mock all agent dependencies before import
-vi.mock("../src/core/llm_client.js");
-vi.mock("../src/utils/logger.js", () => {
+vi.mock("@packages/core-logic/llm_client.js");
+vi.mock("@packages/utils/logger.js", () => {
     return {
         Logger: class {
             info = vi.fn();
@@ -17,7 +17,7 @@ vi.mock("../src/utils/logger.js", () => {
         setAgentStatus: vi.fn(),
     };
 });
-vi.mock("../src/utils/tasksDb.js", () => ({
+vi.mock("@packages/utils/tasksDb.js", () => ({
     saveTask: vi.fn(async () => Math.floor(Math.random() * 1000)),
     updateTaskStatus: vi.fn(async () => { }),
 }));

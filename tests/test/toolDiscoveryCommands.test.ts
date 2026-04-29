@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { Command } from 'commander';
-import { registerToolDiscoveryCommands } from '../src/cli/toolDiscoveryCommands.js';
-import * as logger from '../src/utils/logger.js';
+import { registerToolDiscoveryCommands } from '@apps/mcp-core/commands/toolDiscoveryCommands.js';
+import * as logger from '@packages/utils/logger.js';
 
 describe('Tool Discovery CLI Commands', () => {
   beforeEach(() => {

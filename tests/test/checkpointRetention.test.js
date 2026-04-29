@@ -5,7 +5,7 @@
  * to prevent unbounded database growth.
  */
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { saveCheckpoint, loadCheckpoint, cleanupOldCheckpoints, getCheckpointStats, closeCheckpointDb, clearAllCheckpoints, } from '../src/core/checkpoint.js';
+import { saveCheckpoint, loadCheckpoint, cleanupOldCheckpoints, getCheckpointStats, closeCheckpointDb, clearAllCheckpoints, } from '@packages/core-logic/checkpoint.js';
 import Database from 'better-sqlite3';
 import path from 'path';
 import fs from 'fs';

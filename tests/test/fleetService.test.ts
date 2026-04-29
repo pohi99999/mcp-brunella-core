@@ -5,7 +5,7 @@
 
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import Database from 'better-sqlite3';
-import { FleetService } from '../src/services/fleetService.js';
+import { FleetService } from '@packages/core-logic/fleetService.js';
 
 let db: Database.Database;
 let fleetService: FleetService;

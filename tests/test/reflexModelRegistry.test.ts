@@ -8,11 +8,11 @@ const registryHarness = vi.hoisted(() => ({
   db: null as unknown,
 }));
 
-vi.mock('../src/utils/globalDb.js', () => ({
+vi.mock('@packages/utils/globalDb.js', () => ({
   getGlobalDb: () => registryHarness.db,
 }));
 
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
   logInfo: vi.fn(),
   logWarn: vi.fn(),
 }));
@@ -26,7 +26,7 @@ import {
   recordEvalResult,
   registerReflexModelCandidate,
   rollbackReflexModel,
-} from '../src/core/reflexModelRegistry.js';
+} from '@packages/core-logic/reflexModelRegistry.js';
 
 function createPassedCandidate(version: string, categories: string[]) {
   const runId = `train-${version}`;

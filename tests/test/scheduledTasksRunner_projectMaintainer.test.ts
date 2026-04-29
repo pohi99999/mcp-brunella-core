@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { scheduledTasksRunner } from '../src/server/schedulers/scheduledTasksRunner.js';
+import { scheduledTasksRunner } from '@apps/mcp-core/server/schedulers/scheduledTasksRunner.js';
 
 const mockDb = {
   prepare: vi.fn(),
@@ -21,23 +21,23 @@ const scheduledAgentHarness = vi.hoisted(() => ({
   delegateTask: vi.fn(async () => ({ success: true, message: 'ok' })),
 }));
 
-vi.mock('../src/utils/globalDb.js', () => ({
+vi.mock('@packages/utils/globalDb.js', () => ({
   getGlobalDb: vi.fn(() => mockDb),
 }));
 
-vi.mock('../src/core/hookRegistry.js', () => ({
+vi.mock('@packages/core-logic/hookRegistry.js', () => ({
   fireHook: schedulerHookHarness.fireHook,
   fireHookSafely: schedulerHookHarness.fireHook,
 }));
 
-vi.mock('../src/agents/AgentManager.js', () => ({
+vi.mock('@packages/agents/AgentManager.js', () => ({
   agentManager: {
     delegate: scheduledAgentHarness.delegate,
     delegateTask: scheduledAgentHarness.delegateTask,
   },
 }));
 
-vi.mock('../src/server/services/projectMaintainerService.js', () => ({
+vi.mock('@apps/mcp-core/server/services/projectMaintainerService.js', () => ({
   runProjectMaintainerReport: vi.fn(async () => ({
     id: 'pmr-1',
     generatedAt: '2026-04-02T22:00:00.000Z',
@@ -50,7 +50,7 @@ vi.mock('../src/server/services/projectMaintainerService.js', () => ({
   initProjectMaintainerSchema: vi.fn(),
 }));
 
-vi.mock('../src/core/reflectionEngine.js', () => ({
+vi.mock('@packages/core-logic/reflectionEngine.js', () => ({
   ReflectionEngine: {
     getInstance: () => ({
       ingestProjectMaintainerReport: ingestProjectMaintainerReportMock,
@@ -59,11 +59,11 @@ vi.mock('../src/core/reflectionEngine.js', () => ({
   },
 }));
 
-vi.mock('../src/server/services/crmFollowUpExecutionService.js', () => ({
+vi.mock('@apps/mcp-core/server/services/crmFollowUpExecutionService.js', () => ({
   executeDueCrmFollowUpActions: crmHarness.dispatchDueCrmFollowUpActions,
 }));
 
-vi.mock('../src/server/services/hrTimesheetService.js', () => ({
+vi.mock('@apps/mcp-core/server/services/hrTimesheetService.js', () => ({
   runMonthlyPayrollExport: hrTimesheetHarness.runMonthlyPayrollExport,
   runDailyCultureAlerts: hrTimesheetHarness.runDailyCultureAlerts,
   resolveSchedulerExportMonth: vi.fn(() => '2026-03'),

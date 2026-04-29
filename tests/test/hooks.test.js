@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { registerHook, listHooks, runHooks, clearHooks } from '../src/utils/hooks.js';
+import { registerHook, listHooks, runHooks, clearHooks } from '@packages/utils/hooks.js';
 describe('Hooks', () => {
     beforeEach(() => {
         clearHooks();

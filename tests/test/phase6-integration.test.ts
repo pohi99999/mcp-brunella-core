@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { moduleRegistry } from '../src/services/ModuleRegistry.js';
+import { moduleRegistry } from '@packages/core-logic/ModuleRegistry.js';
 
 /**
  * Phase 6: Enterprise Suite Integration & E2E Tests

@@ -1,9 +1,9 @@
 import { Router } from 'express';
-import { getTasks, getTaskCount, getTaskById, getTaskStats } from '../../utils/tasksDb.js';
-import { agentManager } from '../../agents/AgentManager.js';
-import { decomposeToDAGAsync } from '../../agents/taskDecomposerCore.js';
-import { ensureError } from '../../utils/ensureError.js';
-import { logDebug } from '../../utils/logger.js';
+import { getTasks, getTaskCount, getTaskById, getTaskStats } from '@packages/utils/tasksDb.js';
+import { agentManager } from '@packages/agents/AgentManager.js';
+import { decomposeToDAGAsync } from '@packages/agents/taskDecomposerCore.js';
+import { ensureError } from '@packages/utils/ensureError.js';
+import { logDebug } from '@packages/utils/logger.js';
 
 export function createTaskRoutes(): Router {
     const router = Router();
@@ -104,7 +104,7 @@ export function createTaskRoutes(): Router {
                     }
                     const traceId = parsed?.metadata?.traceId || parsed?.traceId || (parsed?.data && parsed.data.traceId);
                     if (traceId) {
-                        const { getTraceSpans } = await import('../../utils/agentTracer.js');
+                        const { getTraceSpans } = await import('@packages/utils/agentTracer.js');
                         const spans = getTraceSpans(traceId);
                         logs = spans.map(s => ({
                             timestamp: new Date(s.startTime).toISOString(),

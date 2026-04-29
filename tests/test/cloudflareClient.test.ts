@@ -9,21 +9,21 @@ const edgeAgentMocks = vi.hoisted(() => ({
   shutdown: vi.fn(),
 }));
 
-vi.mock("../src/agents/EdgeProxyAgent.js", () => ({
+vi.mock("@packages/agents/EdgeProxyAgent.js", () => ({
   EdgeProxyAgent: vi.fn().mockImplementation(() => edgeAgentMocks),
 }));
 
-vi.mock("../src/utils/logger.js", () => ({
+vi.mock("@packages/utils/logger.js", () => ({
   logInfo: vi.fn(),
   logError: vi.fn(),
 }));
 
-vi.mock("../src/utils/ensureError.js", () => ({
+vi.mock("@packages/utils/ensureError.js", () => ({
   ensureError: (error: unknown) =>
     error instanceof Error ? error : new Error(String(error)),
 }));
 
-import { cloudflareClient } from "../src/agents/cloudflare/CloudflareClient.js";
+import { cloudflareClient } from "@packages/agents/cloudflare/CloudflareClient.js";
 
 describe("CloudflareClient wrapper", () => {
   beforeEach(() => {

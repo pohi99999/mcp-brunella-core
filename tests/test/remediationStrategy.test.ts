@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
-import type { DeploymentAnalysis } from '../src/tools/deploymentAnalyzer.js';
-import { buildVerificationPlan, selectRemediationFixerStrategy } from '../src/core/remediationStrategy.js';
+import type { DeploymentAnalysis } from '@packages/utils/deploymentAnalyzer.js';
+import { buildVerificationPlan, selectRemediationFixerStrategy } from '@packages/core-logic/remediationStrategy.js';
 
 function buildAnalysis(overrides: Partial<DeploymentAnalysis>): DeploymentAnalysis {
   return {

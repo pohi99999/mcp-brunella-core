@@ -3,9 +3,9 @@ import chalk from 'chalk';
 import boxen from 'boxen';
 import ora from 'ora';
 
-import { agentManager } from '../../agents/AgentManager.js';
-import { ensureError } from '../../utils/ensureError.js';
-import { writeLine } from '../../utils/cliOutput.js';
+import { agentManager } from '@packages/agents/AgentManager.js';
+import { ensureError } from '../../../packages/utils/ensureError.js';
+import { writeLine } from '../../../packages/utils/cliOutput.js';
 import {
   DEFAULT_GRANT_PROFILE,
   buildGrantTask,
@@ -14,7 +14,7 @@ import {
   type GrantProfileForm,
   type GrantWatcherAgentResponse,
   type GrantWatcherPayload,
-} from '../../lib/grantFlow.js';
+} from '../../../packages/utils/grantFlow.js';
 
 function printBanner(): void {
   writeLine(

@@ -50,7 +50,7 @@ export function createMemoryRouter(): Router {
       const recentReuses = getRecentPatternReuses(12);
       const agents = memory.agents.map((agent) => ({
         ...agent,
-        cache: cache[agent.agentName] ?? { hits: 0, misses: 0, hitRate: 0 },
+        cache: (cache as Record<string, { hits: number; misses: number; hitRate: number }>)[agent.agentName] ?? { hits: 0, misses: 0, hitRate: 0 },
       }));
 
       res.json({

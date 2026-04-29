@@ -1,12 +1,12 @@
 import { describe, it, expect, vi } from 'vitest';
 
-vi.mock('../src/utils/pythonShell.js', () => ({
+vi.mock('@packages/utils/pythonShell.js', () => ({
   globalPythonShell: {
     run: vi.fn(async () => '{"count":2,"total":3000,"average":1500,"minimum":1000,"maximum":2000,"median":1500}'),
   },
 }));
 
-vi.mock('../src/tools/getSzamlazzInvoices.js', () => ({
+vi.mock('@packages/utils/getSzamlazzInvoices.js', () => ({
   getSzamlazzInvoicesHandler: vi.fn(async () => ({
     success: true,
     data: [
@@ -17,19 +17,19 @@ vi.mock('../src/tools/getSzamlazzInvoices.js', () => ({
   })),
 }));
 
-vi.mock('../src/tools/unifiedGoogleWorkspaceTool.js', () => ({
+vi.mock('@packages/utils/unifiedGoogleWorkspaceTool.js', () => ({
   googleWorkspaceHandler: vi.fn(async () => ({ success: true, operation: 'sheet_write', data: { updatedRows: 2 } })),
 }));
 
-vi.mock('../src/tools/evHunterTool.js', () => ({
+vi.mock('@packages/utils/evHunterTool.js', () => ({
   evHunterHandler: vi.fn(async () => ({ content: [{ type: 'text', text: 'mock ev hunter' }] })),
 }));
 
-vi.mock('../src/utils/rag.js', () => ({
+vi.mock('@packages/utils/rag.js', () => ({
   searchRAG: vi.fn(async () => [{ text: 'knowledge hit', path: 'doc.md', score: 0.9 }]),
 }));
 
-vi.mock('../src/tools/memoryTool.js', () => ({
+vi.mock('@packages/utils/memoryTool.js', () => ({
   memoryStoreHandler: vi.fn(async () => ({ success: true })),
   memoryQueryHandler: vi.fn(async () => ({ success: true, count: 1, preferences: [] })),
   memoryContextHandler: vi.fn(async () => ({ success: true, context: {}, stats: {} })),
@@ -37,13 +37,13 @@ vi.mock('../src/tools/memoryTool.js', () => ({
   memoryPurgeHandler: vi.fn(async () => ({ success: true, purged: 0 })),
 }));
 
-vi.mock('../src/tools/negotiationEngine.js', () => ({
+vi.mock('@packages/utils/negotiationEngine.js', () => ({
   negotiationEngineHandler: vi.fn(async () => ({ success: true, data: { subject: 'Deal', body: 'Body' } })),
 }));
 
 describe('skills registry', () => {
   it('exposes the registered skills including the studio set', async () => {
-    const { listSkills, getSkill, SKILL_REGISTRY } = await import('../src/skills/index.js');
+    const { listSkills, getSkill, SKILL_REGISTRY } = await import('@packages/utils/skill-registry.js');
 
     expect(listSkills()).toHaveLength(10);
     expect(new Set(Object.keys(SKILL_REGISTRY))).toEqual(new Set([
@@ -63,7 +63,7 @@ describe('skills registry', () => {
   });
 
   it('executes finance report skill with workspace write support', async () => {
-    const { getSkill } = await import('../src/skills/index.js');
+    const { getSkill } = await import('@packages/utils/skill-registry.js');
     const skill = getSkill('finance-report');
     expect(skill).toBeDefined();
 
@@ -87,7 +87,7 @@ describe('skills registry', () => {
   });
 
   it('rejects invalid skill validation inputs', async () => {
-    const { getSkill } = await import('../src/skills/index.js');
+    const { getSkill } = await import('@packages/utils/skill-registry.js');
     const skill = getSkill('negotiation');
     expect(skill?.validate?.({})).toBe(false);
   });

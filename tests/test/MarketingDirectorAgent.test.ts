@@ -1,32 +1,32 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { MarketingDirectorAgent } from '../src/agents/MarketingDirectorAgent.js';
-import { generateResponse } from '../src/core/llm_client.js';
-import { updateBusinessJobStatus, saveStudioProject } from '../src/utils/db.js';
-import { socketService } from '../src/server/SocketService.js';
-import { agentManager } from '../src/agents/AgentManager.js';
+import { MarketingDirectorAgent } from '@packages/agents/MarketingDirectorAgent.js';
+import { generateResponse } from '@packages/core-logic/llm_client.js';
+import { updateBusinessJobStatus, saveStudioProject } from '@packages/utils/db.js';
+import { socketService } from '@apps/mcp-core/server/SocketService.js';
+import { agentManager } from '@packages/agents/AgentManager.js';
 import fs from 'fs/promises';
 
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
   logInfo: vi.fn(),
   logError: vi.fn(),
 }));
 
-vi.mock('../src/core/llm_client.js', () => ({
+vi.mock('@packages/core-logic/llm_client.js', () => ({
   generateResponse: vi.fn(),
 }));
 
-vi.mock('../src/utils/db.js', () => ({
+vi.mock('@packages/utils/db.js', () => ({
   updateBusinessJobStatus: vi.fn().mockResolvedValue(undefined),
   saveStudioProject: vi.fn().mockResolvedValue(undefined),
 }));
 
-vi.mock('../src/server/SocketService.js', () => ({
+vi.mock('@apps/mcp-core/server/SocketService.js', () => ({
   socketService: {
     emit: vi.fn(),
   },
 }));
 
-vi.mock('../src/agents/AgentManager.js', () => ({
+vi.mock('@packages/agents/AgentManager.js', () => ({
   agentManager: {
     queueTask: vi.fn(),
   },

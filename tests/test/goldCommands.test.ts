@@ -14,32 +14,32 @@ const goldHarness = vi.hoisted(() => ({
   getGoldenStats: vi.fn(),
 }));
 
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
   logInfo: goldHarness.logInfo,
   logError: goldHarness.logError,
 }));
 
-vi.mock('../src/agents/specStatus.js', () => ({
+vi.mock('@packages/agents/specStatus.js', () => ({
   listSpecStatuses: goldHarness.listSpecStatuses,
   approveSpec: goldHarness.approveSpec,
   rejectSpec: goldHarness.rejectSpec,
 }));
 
-vi.mock('../src/core/checkpoint.js', () => ({
+vi.mock('@packages/core-logic/checkpoint.js', () => ({
   listActiveCheckpoints: goldHarness.listActiveCheckpoints,
   clearCheckpoints: goldHarness.clearCheckpoints,
   getCheckpointStats: goldHarness.getCheckpointStats,
 }));
 
-vi.mock('../src/core/modelRouter.js', () => ({
+vi.mock('@packages/core-logic/modelRouter.js', () => ({
   getRecentDecisions: goldHarness.getRecentDecisions,
 }));
 
-vi.mock('../src/core/goldenDatasetBridge.js', () => ({
+vi.mock('@packages/core-logic/goldenDatasetBridge.js', () => ({
   getGoldenStats: goldHarness.getGoldenStats,
 }));
 
-import { registerGoldCommands } from '../src/cli/goldCommands.js';
+import { registerGoldCommands } from '@apps/mcp-core/commands/goldCommands.js';
 
 describe('Gold CLI Commands', () => {
   beforeEach(() => {

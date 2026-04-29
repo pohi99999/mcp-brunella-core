@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { registerHook, fireHook, clearHooks, getDLQ, isHookBlockedExternally } from '../src/core/agentHookEngine.js';
+import { registerHook, fireHook, clearHooks, getDLQ, isHookBlockedExternally } from '@packages/core-logic/agentHookEngine.js';
 
 describe('AgentHookEngine', () => {
   beforeEach(() => {

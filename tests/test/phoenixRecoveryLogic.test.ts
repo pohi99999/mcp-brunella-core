@@ -8,9 +8,9 @@
  */
 
 import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest';
-import { agentManager } from '../src/agents/AgentManager.js';
-import { saveCheckpoint, clearCheckpoints } from '../src/core/checkpoint.js';
-import type { IAgent } from '../src/agents/types.js';
+import { agentManager } from '@packages/agents/AgentManager.js';
+import { saveCheckpoint, clearCheckpoints } from '@packages/core-logic/checkpoint.js';
+import type { IAgent } from '@packages/agents/types.js';
 
 describe('Phoenix Protocol v2 - AgentManager Recovery Logic', () => {
   // Mock agent for testing

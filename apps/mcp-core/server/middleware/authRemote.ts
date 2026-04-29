@@ -7,7 +7,7 @@
  */
 
 import { Request, Response, NextFunction } from 'express';
-import { verifyRemoteToken, type TokenClaims } from '../../security/remoteAuth.js';
+import { verifyRemoteToken, type TokenClaims } from '@packages/core-logic/remoteAuth.js';
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace

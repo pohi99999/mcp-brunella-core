@@ -18,13 +18,13 @@ const mockListAgents = vi.fn();
 const mockEmit = vi.fn();
 const mockLoadPaiosConfig = vi.fn();
 
-vi.mock('../src/core/universalOrchestratorService.js', () => ({
+vi.mock('@packages/core-logic/universalOrchestratorService.js', () => ({
   getUniversalOrchestratorService: vi.fn(() => ({
     process: mockProcess,
   })),
 }));
 
-vi.mock('../src/server/SocketService.js', () => ({
+vi.mock('@apps/mcp-core/server/SocketService.js', () => ({
   socketService: {
     emit: mockEmit,
     broadcastDebug: vi.fn(),
@@ -33,17 +33,17 @@ vi.mock('../src/server/SocketService.js', () => ({
   },
 }));
 
-vi.mock('../src/agents/AgentManager.js', () => ({
+vi.mock('@packages/agents/AgentManager.js', () => ({
   agentManager: {
     listAgents: mockListAgents,
   },
 }));
 
-vi.mock('../src/config/paiosConfig.js', () => ({
+vi.mock('@packages/utils/paiosConfig.js', () => ({
   loadPaiosConfig: mockLoadPaiosConfig,
 }));
 
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
   logInfo: vi.fn(),
   logError: vi.fn(),
 }));
@@ -51,7 +51,7 @@ vi.mock('../src/utils/logger.js', () => ({
 // --- APP SETUP ---
 
 async function buildTestApp() {
-  const { default: router } = await import('../src/server/routes/paiosOrchestrator.js');
+  const { default: router } = await import('@apps/mcp-core/server/routes/paiosOrchestrator.js');
   const app = express();
   app.use(express.json());
   app.use('/', router);

@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { Command } from 'commander';
-import { registerScheduledTasksCommands } from '../src/cli/scheduledTasksCommands.js';
+import { registerScheduledTasksCommands } from '@apps/mcp-core/commands/scheduledTasksCommands.js';
 
 const spinnerStop = vi.fn();
 const spinnerFail = vi.fn();

@@ -14,15 +14,15 @@ import fs from 'fs';
 
 // --- MOCK-OK ---
 
-vi.mock('../src/core/universalOrchestratorService.js', () => ({
+vi.mock('@packages/core-logic/universalOrchestratorService.js', () => ({
   getUniversalOrchestratorService: vi.fn(() => ({ process: vi.fn() })),
 }));
 
-vi.mock('../src/server/SocketService.js', () => ({
+vi.mock('@apps/mcp-core/server/SocketService.js', () => ({
   socketService: { emit: vi.fn() },
 }));
 
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
   logInfo: vi.fn(),
   logError: vi.fn(),
   logWarn: vi.fn(),
@@ -34,14 +34,14 @@ vi.mock('../src/utils/logger.js', () => ({
 
 describe('PAIOS Config — Smoke', () => {
   afterEach(async () => {
-    const { clearConfigCache } = await import('../src/config/paiosConfig.js');
+    const { clearConfigCache } = await import('@packages/utils/paiosConfig.js');
     clearConfigCache();
     vi.restoreAllMocks();
   });
 
   it('loadPaiosConfig() visszaad érvényes objektumot', async () => {
     vi.spyOn(fs, 'existsSync').mockReturnValue(false);
-    const { loadPaiosConfig } = await import('../src/config/paiosConfig.js');
+    const { loadPaiosConfig } = await import('@packages/utils/paiosConfig.js');
     const config = loadPaiosConfig();
     expect(config).toBeDefined();
     expect(typeof config).toBe('object');
@@ -49,21 +49,21 @@ describe('PAIOS Config — Smoke', () => {
 
   it('orchestrator.default_model alapértéke "github"', async () => {
     vi.spyOn(fs, 'existsSync').mockReturnValue(false);
-    const { loadPaiosConfig } = await import('../src/config/paiosConfig.js');
+    const { loadPaiosConfig } = await import('@packages/utils/paiosConfig.js');
     const config = loadPaiosConfig();
     expect(config.orchestrator.default_model).toBe('github');
   });
 
   it('orchestrator.max_tasks_per_request alapértéke 5', async () => {
     vi.spyOn(fs, 'existsSync').mockReturnValue(false);
-    const { loadPaiosConfig } = await import('../src/config/paiosConfig.js');
+    const { loadPaiosConfig } = await import('@packages/utils/paiosConfig.js');
     const config = loadPaiosConfig();
     expect(config.orchestrator.max_tasks_per_request).toBe(5);
   });
 
   it('providers mező létezik és objektum', async () => {
     vi.spyOn(fs, 'existsSync').mockReturnValue(false);
-    const { loadPaiosConfig } = await import('../src/config/paiosConfig.js');
+    const { loadPaiosConfig } = await import('@packages/utils/paiosConfig.js');
     const config = loadPaiosConfig();
     expect(config.providers).toBeDefined();
     expect(typeof config.providers).toBe('object');
@@ -71,7 +71,7 @@ describe('PAIOS Config — Smoke', () => {
 
   it('clearConfigCache() után újratölthető a konfig', async () => {
     vi.spyOn(fs, 'existsSync').mockReturnValue(false);
-    const { loadPaiosConfig, clearConfigCache } = await import('../src/config/paiosConfig.js');
+    const { loadPaiosConfig, clearConfigCache } = await import('@packages/utils/paiosConfig.js');
     const first = loadPaiosConfig();
     clearConfigCache();
     const second = loadPaiosConfig();
@@ -121,13 +121,13 @@ describe('CLI Config (ConfigManager) — Smoke', () => {
   });
 
   it('ConfigManager példányosítható', async () => {
-    const { ConfigManager } = await import('../src/utils/cliConfig.js');
+    const { ConfigManager } = await import('@packages/utils/cliConfig.js');
     const mgr = new ConfigManager(tmpDir);
     expect(mgr).toBeDefined();
   });
 
   it('getAll() visszaad egy objektumot', async () => {
-    const { ConfigManager } = await import('../src/utils/cliConfig.js');
+    const { ConfigManager } = await import('@packages/utils/cliConfig.js');
     const mgr = new ConfigManager(tmpDir);
     const all = mgr.getAll();
     expect(all).toBeDefined();
@@ -135,44 +135,44 @@ describe('CLI Config (ConfigManager) — Smoke', () => {
   });
 
   it('serverUrl alapértéke "http://localhost:3000"', async () => {
-    const { ConfigManager } = await import('../src/utils/cliConfig.js');
+    const { ConfigManager } = await import('@packages/utils/cliConfig.js');
     const mgr = new ConfigManager(tmpDir);
     expect(mgr.get('serverUrl')).toBe('http://localhost:3000');
   });
 
   it('theme string típusú', async () => {
-    const { ConfigManager } = await import('../src/utils/cliConfig.js');
+    const { ConfigManager } = await import('@packages/utils/cliConfig.js');
     const mgr = new ConfigManager(tmpDir);
     expect(typeof mgr.get('theme')).toBe('string');
   });
 
   it('general.vimMode alapértéke false', async () => {
-    const { ConfigManager } = await import('../src/utils/cliConfig.js');
+    const { ConfigManager } = await import('@packages/utils/cliConfig.js');
     const mgr = new ConfigManager(tmpDir);
     expect(mgr.get('general.vimMode')).toBe(false);
   });
 
   it('tools.approvalMode alapértéke "default"', async () => {
-    const { ConfigManager } = await import('../src/utils/cliConfig.js');
+    const { ConfigManager } = await import('@packages/utils/cliConfig.js');
     const mgr = new ConfigManager(tmpDir);
     expect(mgr.get('tools.approvalMode')).toBe('default');
   });
 
   it('tools.exclude alapértéke üres tömb', async () => {
-    const { ConfigManager } = await import('../src/utils/cliConfig.js');
+    const { ConfigManager } = await import('@packages/utils/cliConfig.js');
     const mgr = new ConfigManager(tmpDir);
     expect(mgr.get('tools.exclude')).toEqual([]);
   });
 
   it('set() + get() roundtrip működik', async () => {
-    const { ConfigManager } = await import('../src/utils/cliConfig.js');
+    const { ConfigManager } = await import('@packages/utils/cliConfig.js');
     const mgr = new ConfigManager(tmpDir);
     mgr.set('serverUrl', 'http://test-server:9999');
     expect(mgr.get('serverUrl')).toBe('http://test-server:9999');
   });
 
   it('userSettingsPath .json fájlra mutat', async () => {
-    const { ConfigManager } = await import('../src/utils/cliConfig.js');
+    const { ConfigManager } = await import('@packages/utils/cliConfig.js');
     const mgr = new ConfigManager(tmpDir);
     expect(mgr.userSettingsPath.endsWith('.json')).toBe(true);
   });
@@ -184,13 +184,13 @@ describe('CLI Config (ConfigManager) — Smoke', () => {
 
 describe('PAIOS Express Router — Import Smoke', () => {
   it('a paiosOrchestrator router importálható', async () => {
-    const mod = await import('../src/server/routes/paiosOrchestrator.js');
+    const mod = await import('@apps/mcp-core/server/routes/paiosOrchestrator.js');
     expect(mod).toBeDefined();
     expect(mod.default).toBeDefined();
   });
 
   it('a router Express Router függvény', async () => {
-    const mod = await import('../src/server/routes/paiosOrchestrator.js');
+    const mod = await import('@apps/mcp-core/server/routes/paiosOrchestrator.js');
     expect(typeof mod.default).toBe('function');
   });
 });

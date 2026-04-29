@@ -3,7 +3,7 @@ import { describe, it, expect, beforeAll, afterAll } from "vitest";
 import path from "path";
 import fs from "fs/promises";
 import os from "os";
-import { HybridMemory } from "../src/utils/rag.js";
+import { HybridMemory } from "@packages/utils/rag.js";
 
 const TEST_EMBEDDING_MODEL = process.env.EMBEDDING_MODEL || "nomic-embed-text";
 

@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { Command } from 'commander';
 
-import { registerPredictiveDecisionCommands } from '../src/cli/predictiveDecisionCommands.js';
+import { registerPredictiveDecisionCommands } from '@apps/mcp-core/commands/predictiveDecisionCommands.js';
 
 function mockJsonResponse(body: unknown, status = 200): Response {
   return {

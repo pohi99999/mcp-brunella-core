@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import { PropertyResearchAgent } from '../../agents/PropertyResearchAgent.js';
-import { ensureError } from '../../utils/ensureError.js';
-import { logError, logInfo } from '../../utils/logger.js';
+import { PropertyResearchAgent } from '@packages/agents/PropertyResearchAgent.js';
+import { ensureError } from '@packages/utils/ensureError.js';
+import { logError, logInfo } from '@packages/utils/logger.js';
 
 const agent = new PropertyResearchAgent();
 

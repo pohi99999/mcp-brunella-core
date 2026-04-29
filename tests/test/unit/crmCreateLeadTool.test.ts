@@ -2,8 +2,8 @@ import { mkdtempSync, rmSync } from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { closeCrmDb, initCrmDb } from '../../src/data/crm_db.js';
-import { crmCreateLeadHandler } from '../../src/tools/crm_create_lead.js';
+import { closeCrmDb, initCrmDb } from '@packages/utils/crm_db.js';
+import { crmCreateLeadHandler } from '@packages/utils/crm_create_lead.js';
 
 describe('crmCreateLeadHandler', () => {
   let dbPath: string;

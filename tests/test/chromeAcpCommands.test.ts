@@ -24,7 +24,7 @@ vi.mock('child_process', () => ({
   spawnSync: chromeAcpHarness.spawnSyncMock,
 }));
 
-import { registerChromeAcpCommands } from '../src/cli/chromeAcpCommands.js';
+import { registerChromeAcpCommands } from '@apps/mcp-core/commands/chromeAcpCommands.js';
 
 describe('Chrome ACP CLI Commands', () => {
   beforeEach(() => {

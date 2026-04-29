@@ -1,25 +1,25 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 // IMPORTANT: vi.mock() MUST be at module scope (Vitest hoisting!)
-vi.mock('../src/core/checkpoint.js', () => ({
+vi.mock('@packages/core-logic/checkpoint.js', () => ({
   saveCheckpoint: vi.fn().mockResolvedValue(1),
   loadCheckpoint: vi.fn().mockResolvedValue(null),
 }));
 
-vi.mock('../src/core/phoenixEventBus.js', () => ({
+vi.mock('@packages/core-logic/phoenixEventBus.js', () => ({
   phoenixEventBus: {
     publish: vi.fn(),
     subscribe: vi.fn(),
   },
 }));
 
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
   logInfo: vi.fn(),
   logError: vi.fn(),
   logWarn: vi.fn(),
 }));
 
-import { AgentStateMachine, type StateNode, type Transition } from '../src/core/agentStateMachine.js';
+import { AgentStateMachine, type StateNode, type Transition } from '@packages/core-logic/agentStateMachine.js';
 
 type TestState = 'IDLE' | 'WORKING' | 'DONE' | 'ERROR';
 
@@ -80,7 +80,7 @@ describe('AgentStateMachine', () => {
   });
 
   it('calls saveCheckpoint on each transition', async () => {
-    const { saveCheckpoint } = await import('../src/core/checkpoint.js');
+    const { saveCheckpoint } = await import('@packages/core-logic/checkpoint.js');
     const m = makeSimpleMachine('test-cp');
     await m.transition('start');
     expect(saveCheckpoint).toHaveBeenCalledWith(

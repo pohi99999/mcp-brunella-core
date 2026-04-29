@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import { ensureError } from '../../utils/ensureError.js';
-import { logInfo, logError } from '../../utils/logger.js';
-import { normalizeCrmLead } from '../../utils/crmLead.js';
-import { ingestCrmLead, createCrmFollowUpPlan } from '../../data/crm_db.js';
+import { ensureError } from '@packages/utils/ensureError.js';
+import { logInfo, logError } from '@packages/utils/logger.js';
+import { normalizeCrmLead } from '@packages/utils/crmLead.js';
+import { ingestCrmLead, createCrmFollowUpPlan } from '@packages/utils/crm_db.js';
 
 /**
  * Lightweight webhook receiver for KKV follow-up (used by n8n or other webhooks)

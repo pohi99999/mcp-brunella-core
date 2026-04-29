@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { DEFAULT_TRACK_DOD, normalizeTrackDod } from '../src/utils/trackDod.js';
+import { DEFAULT_TRACK_DOD, normalizeTrackDod } from '@packages/utils/trackDod.js';
 
 describe('trackDod utilities', () => {
   it('returns default checklist for non-object inputs', () => {

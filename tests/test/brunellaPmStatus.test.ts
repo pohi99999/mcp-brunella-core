@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { brunellaPmStatusHandler } from '../src/tools/brunellaPmStatus.js';
-import { agentManager } from '../src/agents/AgentManager.js';
+import { brunellaPmStatusHandler } from '@packages/utils/brunellaPmStatus.js';
+import { agentManager } from '@packages/agents/AgentManager.js';
 
-vi.mock('../src/agents/AgentManager.js', () => ({
+vi.mock('@packages/agents/AgentManager.js', () => ({
   agentManager: {
     delegate: vi.fn(),
   },

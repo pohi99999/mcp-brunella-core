@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { logInfo, logError } from '../../utils/logger.js';
+import { logInfo, logError } from '@packages/utils/logger.js';
 
 const harvestRouter = Router();
 

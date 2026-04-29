@@ -8,7 +8,7 @@ import {
   OpenClawGoalPacketSchema,
   OpenClawGatewayResponseSchema,
   classifyOpenClawPolicy,
-} from '../../src/integrations/openclaw/index.js';
+} from '@packages/core-logic/openclaw/index.js';
 
 function buildConfig(overrides: Record<string, unknown> = {}) {
   return OpenClawConfigSchema.parse({

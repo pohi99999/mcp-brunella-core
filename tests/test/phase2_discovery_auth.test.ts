@@ -9,8 +9,8 @@
  */
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { mcpRouter } from '../src/core/MCPRouter.js';
-import { generateRemoteToken, verifyRemoteToken } from '../src/security/remoteAuth.js';
+import { mcpRouter } from '@packages/core-logic/MCPRouter.js';
+import { generateRemoteToken, verifyRemoteToken } from '@packages/core-logic/remoteAuth.js';
 
 // ─── MCPRouter ───────────────────────────────────────────────────────────────
 

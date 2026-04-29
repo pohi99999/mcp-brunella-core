@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import type { PredictiveAlert } from '../src/core/predictiveIntelligence.js';
+import type { PredictiveAlert } from '@packages/core-logic/predictiveIntelligence.js';
 
 const dbHarness = vi.hoisted(() => {
   const decisionRuns: Array<Record<string, unknown>> = [];
@@ -127,14 +127,14 @@ const hookHarness = vi.hoisted(() => ({
   fireHookSafely: vi.fn(async () => ({ status: 'fired' })),
 }));
 
-vi.mock('../src/utils/globalDb.js', () => ({
+vi.mock('@packages/utils/globalDb.js', () => ({
   getGlobalDb: vi.fn(() => ({
     exec: dbHarness.mockExec,
     prepare: dbHarness.mockPrepare,
   })),
 }));
 
-vi.mock('../src/core/autonomousInfraRuntime.js', () => ({
+vi.mock('@packages/core-logic/autonomousInfraRuntime.js', () => ({
   goalEngine: {
     getGoals: goalHarness.getGoals,
     createGoal: goalHarness.createGoal,
@@ -142,7 +142,7 @@ vi.mock('../src/core/autonomousInfraRuntime.js', () => ({
   },
 }));
 
-vi.mock('../src/core/predictiveIntelligence.js', () => ({
+vi.mock('@packages/core-logic/predictiveIntelligence.js', () => ({
   PredictiveIntelligence: {
     getInstance: () => ({
       listAlerts: predictiveHarness.listAlerts,
@@ -152,19 +152,19 @@ vi.mock('../src/core/predictiveIntelligence.js', () => ({
   },
 }));
 
-vi.mock('../src/core/worldPerceptionLayer.js', () => ({
+vi.mock('@packages/core-logic/worldPerceptionLayer.js', () => ({
   listWorldSignals: worldHarness.listWorldSignals,
 }));
 
-vi.mock('../src/core/intelligenceMonitor.js', () => ({
+vi.mock('@packages/core-logic/intelligenceMonitor.js', () => ({
   listReviewQueue: reviewHarness.listReviewQueue,
 }));
 
-vi.mock('../src/core/hookRegistry.js', () => ({
+vi.mock('@packages/core-logic/hookRegistry.js', () => ({
   fireHookSafely: hookHarness.fireHookSafely,
 }));
 
-import { PredictiveDecisionEngine } from '../src/core/predictiveDecisionEngine.js';
+import { PredictiveDecisionEngine } from '@packages/core-logic/predictiveDecisionEngine.js';
 
 function makeAlert(overrides: Partial<PredictiveAlert> = {}): PredictiveAlert {
   return {

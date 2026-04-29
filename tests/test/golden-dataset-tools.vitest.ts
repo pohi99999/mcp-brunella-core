@@ -26,7 +26,7 @@ function createFakeDb() {
   };
 }
 
-vi.mock('../src/utils/globalDb.js', () => {
+vi.mock('@packages/utils/globalDb.js', () => {
   const fakeDb = createFakeDb();
   const recordToolRun = vi.fn((run: Record<string, unknown>) => {
     fakeDb.prepare('INSERT INTO tool_runs').run(
@@ -64,8 +64,8 @@ vi.mock('../src/utils/globalDb.js', () => {
 
 /* ───── Import subjects AFTER mocks ───── */
 
-import { recordToolRun, queryToolRuns, getToolRunStats } from '../src/utils/globalDb.js';
-import { wrapToolHandler, calculateQuality } from '../src/core/toolRunCapture.js';
+import { recordToolRun, queryToolRuns, getToolRunStats } from '@packages/utils/globalDb.js';
+import { wrapToolHandler, calculateQuality } from '@packages/core-logic/toolRunCapture.js';
 
 describe('toolRunCapture', () => {
   beforeEach(() => {

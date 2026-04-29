@@ -6,7 +6,7 @@
  * @vitest-environment node
  */
 import { describe, it, expect, beforeEach } from 'vitest';
-import { EnterpriseOrchestratorAgent } from '../src/agents/EnterpriseOrchestratorAgent.js';
+import { EnterpriseOrchestratorAgent } from '@packages/agents/EnterpriseOrchestratorAgent.js';
 describe('EnterpriseOrchestratorAgent', () => {
     let agent;
     beforeEach(() => {

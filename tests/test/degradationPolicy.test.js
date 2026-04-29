@@ -5,7 +5,7 @@
  * when services fail, rather than complete shutdown.
  */
 import { describe, it, expect, beforeEach } from 'vitest';
-import { degradationPolicy, canPerformOperation, getFallbackMessage, } from '../src/utils/degradationPolicy.js';
+import { degradationPolicy, canPerformOperation, getFallbackMessage, } from '@packages/utils/degradationPolicy.js';
 describe('Phoenix Protocol v2 - Graceful Degradation', () => {
     beforeEach(() => {
         // Reset to healthy state before each test

@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { SignJWT, jwtVerify } from 'jose';
-import { logInfo, logError, logDebug } from '../../utils/logger.js';
-import { ensureError } from '../../utils/ensureError.js';
+import { logInfo, logError, logDebug } from '@packages/utils/logger.js';
+import { ensureError } from '@packages/utils/ensureError.js';
 
 interface TestUser {
   email: string;

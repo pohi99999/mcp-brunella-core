@@ -4,7 +4,7 @@ import {
   buildDevExPlannerSnapshot,
   loadMissionTemplates,
   renderDevExPlannerMarkdown,
-} from "../src/tools/missionPlanner.js";
+} from "@packages/utils/missionPlanner.js";
 
 describe("missionPlanner", () => {
   it("loads and sorts the mission templates", () => {

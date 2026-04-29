@@ -10,11 +10,11 @@ const hookHarness = vi.hoisted(() => {
   };
 });
 
-vi.mock('../src/utils/globalDb.js', () => ({
+vi.mock('@packages/utils/globalDb.js', () => ({
   getGlobalDb: () => hookHarness.db,
 }));
 
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
   logInfo: hookHarness.logInfo,
   logWarn: hookHarness.logWarn,
   logError: hookHarness.logError,
@@ -35,7 +35,7 @@ import {
   isHookEnabled,
   registerHook,
   retryHookDlqEntry,
-} from '../src/core/hookRegistry.js';
+} from '@packages/core-logic/hookRegistry.js';
 
 hookHarness.db = new Database(':memory:');
 

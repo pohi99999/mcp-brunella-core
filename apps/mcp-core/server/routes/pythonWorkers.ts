@@ -13,8 +13,8 @@ import { Router, Request, Response } from 'express';
 import { spawn } from 'child_process';
 import fs from 'fs';
 import path from 'path';
-import { globalPythonShell } from '../../utils/pythonShell.js';
-import { logInfo, logError } from '../../utils/logger.js';
+import { globalPythonShell } from '@packages/utils/pythonShell.js';
+import { logInfo, logError } from '@packages/utils/logger.js';
 
 interface PythonWorkerResult {
   success: boolean;

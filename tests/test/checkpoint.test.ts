@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
 // Mock logger before any imports that use it
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
   logInfo: vi.fn(),
   logWarn: vi.fn(),
   logError: vi.fn(),
@@ -38,7 +38,7 @@ import {
   clearCheckpoints,
   listActiveCheckpoints,
   getCheckpointStats
-} from '../src/core/checkpoint.js';
+} from '@packages/core-logic/checkpoint.js';
 
 describe('Checkpoint System (G2.1)', () => {
   beforeEach(() => {

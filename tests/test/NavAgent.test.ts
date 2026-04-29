@@ -2,9 +2,9 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { rmSync } from 'fs';
 import path from 'path';
 
-vi.mock('../src/utils/logger.js');
+vi.mock('@packages/utils/logger.js');
 
-import { NavAgent } from '../src/agents/NavAgent.js';
+import { NavAgent } from '@packages/agents/NavAgent.js';
 
 const navDir = path.resolve(process.cwd(), 'data', 'nav');
 

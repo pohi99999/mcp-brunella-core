@@ -1,5 +1,5 @@
 import { vi, describe, it, expect, beforeEach } from "vitest";
-import { CloudflareClient } from "../src/utils/cloudflareClient";
+import { CloudflareClient } from "@packages/utils/cloudflareClient";
 import axios from "axios";
 // Mock axios
 vi.mock("axios");

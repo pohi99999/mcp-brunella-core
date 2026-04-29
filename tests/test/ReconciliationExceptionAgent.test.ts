@@ -1,16 +1,16 @@
 import { describe, expect, it, vi, beforeEach } from 'vitest';
-import type { AgentContext } from '../src/agents/BaseAgent.js';
+import type { AgentContext } from '@packages/agents/BaseAgent.js';
 
-vi.mock('../src/agents/BaseAgent.js', () => ({
+vi.mock('@packages/agents/BaseAgent.js', () => ({
   BaseAgent: class {},
 }));
 
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
   logInfo: vi.fn(),
 }));
 
-import { logInfo } from '../src/utils/logger.js';
-import { ReconciliationExceptionAgent } from '../src/agents/ReconciliationExceptionAgent.js';
+import { logInfo } from '@packages/utils/logger.js';
+import { ReconciliationExceptionAgent } from '@packages/agents/ReconciliationExceptionAgent.js';
 
 describe('ReconciliationExceptionAgent', () => {
   const agent = new ReconciliationExceptionAgent();

@@ -128,7 +128,7 @@ describe('CLI E2E — swarm dispatch', () => {
 // REST API — swarm routes (supertest + mock)
 // ====================================================================
 
-vi.mock('../src/agents/AgentManager.js', () => ({
+vi.mock('@packages/agents/AgentManager.js', () => ({
   agentManager: { initialize: vi.fn() },
   swarmManager: {
     listColonies: vi.fn(() => [
@@ -169,14 +169,14 @@ vi.mock('../src/agents/AgentManager.js', () => ({
   },
 }));
 
-vi.mock('../src/config/index.js', () => ({ config: { workspaceRoot: '.', systemLogDir: 'logs' } }));
-vi.mock('../src/utils/rag.js', () => ({ addToIndex: vi.fn() }));
+vi.mock('@packages/utils/index.js', () => ({ config: { workspaceRoot: '.', systemLogDir: 'logs' } }));
+vi.mock('@packages/utils/rag.js', () => ({ addToIndex: vi.fn() }));
 
 describe('REST E2E — GET /api/v1/swarm/status', () => {
   let app: express.Application;
 
   beforeEach(async () => {
-    const { swarmRouter } = await import('../src/server/routes/swarm.js');
+    const { swarmRouter } = await import('@apps/mcp-core/server/routes/swarm.js');
     app = express();
     app.use(express.json());
     app.use('/api/v1/swarm', swarmRouter);
@@ -214,7 +214,7 @@ describe('REST E2E — POST /api/v1/swarm/dispatch', () => {
   let app: express.Application;
 
   beforeEach(async () => {
-    const { swarmRouter } = await import('../src/server/routes/swarm.js');
+    const { swarmRouter } = await import('@apps/mcp-core/server/routes/swarm.js');
     app = express();
     app.use(express.json());
     app.use('/api/v1/swarm', swarmRouter);
@@ -277,7 +277,7 @@ describe('REST E2E — GET /api/v1/harvest/status', () => {
   let app: express.Application;
 
   beforeEach(async () => {
-    const { harvestRouter } = await import('../src/server/routes/harvest.js');
+    const { harvestRouter } = await import('@apps/mcp-core/server/routes/harvest.js');
     app = express();
     app.use(express.json());
     app.use('/api/v1/harvest', harvestRouter);
@@ -303,7 +303,7 @@ describe('REST E2E — POST /api/v1/harvest/sync', () => {
   let app: express.Application;
 
   beforeEach(async () => {
-    const { harvestRouter } = await import('../src/server/routes/harvest.js');
+    const { harvestRouter } = await import('@apps/mcp-core/server/routes/harvest.js');
     app = express();
     app.use(express.json());
     app.use('/api/v1/harvest', harvestRouter);

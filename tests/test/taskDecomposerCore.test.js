@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { decomposePreview, detectCycle, } from "../src/agents/taskDecomposerCore.js";
+import { decomposePreview, detectCycle, } from "@packages/agents/taskDecomposerCore.js";
 describe("taskDecomposerCore", () => {
     it("decomposePreview creates at least one microtask", () => {
         const r = decomposePreview("Create API route. Add tests.");

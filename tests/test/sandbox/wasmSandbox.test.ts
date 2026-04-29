@@ -5,7 +5,7 @@
  */
 
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { SandboxPool, SandboxTimeoutError, SandboxSecurityError, resetSandboxPool } from '../../src/core/sandbox/wasmSandbox.js';
+import { SandboxPool, SandboxTimeoutError, SandboxSecurityError, resetSandboxPool } from '@packages/core-logic/sandbox/wasmSandbox.js';
 
 describe('SandboxPool', () => {
   let pool: SandboxPool;

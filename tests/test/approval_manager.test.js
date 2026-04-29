@@ -1,6 +1,6 @@
 // FILE: test/approval_manager.test.ts
 import { describe, it, expect, beforeEach } from 'vitest';
-import { approvalManager } from '../src/utils/approvalManager.js';
+import { approvalManager } from '@packages/utils/approvalManager.js';
 describe('ApprovalManager', () => {
     beforeEach(() => {
         // Clear requests if possible or just use unique IDs

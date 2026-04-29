@@ -7,7 +7,7 @@
  */
 
 import { EventEmitter } from 'events';
-import { logInfo } from '../../utils/logger.js';
+import { logInfo } from '@packages/utils/logger.js';
 import { EvolutionaryAgent, type AgentGenome, type MutationType } from './EvolutionaryAgent.js';
 
 export interface EvolutionConfig {

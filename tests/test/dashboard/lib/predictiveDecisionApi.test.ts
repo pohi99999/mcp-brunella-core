@@ -5,7 +5,7 @@ import {
   getDecisionStats,
   rollbackDecision,
   triggerDecision,
-} from '../../../src/dashboard/lib/predictiveDecisionApi.js';
+} from '@/lib/predictiveDecisionApi.js';
 
 function mockResponse(body: unknown, status = 200): Response {
   return {

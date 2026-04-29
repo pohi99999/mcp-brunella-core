@@ -4,7 +4,7 @@ import { createDocsConfigFixture } from "./docsConfigFixture.js";
 import {
   buildDocsConfigSotSnapshot,
   renderDocsConfigSotMarkdown,
-} from "../src/tools/docsConfigSot.js";
+} from "@packages/utils/docsConfigSot.js";
 
 describe("docsConfigSot / snapshot", () => {
   const fixtures: Array<{ cleanup: () => void }> = [];

@@ -1,13 +1,13 @@
 import { Router } from 'express';
-import { logInfo, logError } from '../../utils/logger.js';
+import { logInfo, logError } from '@packages/utils/logger.js';
 import {
   getAllSuggestedTasks,
   getSuggestedTasksByStatus,
   updateSuggestedTaskStatus,
   deleteSuggestedTask,
   scanCodebaseForTodos,
-} from '../../core/suggestedTasksScanner.js';
-import { sendCriticalTasksEmail } from '../../utils/notificationService.js';
+} from '@packages/core-logic/suggestedTasksScanner.js';
+import { sendCriticalTasksEmail } from '@packages/utils/notificationService.js';
 
 export const suggestedTasksRouter = Router();
 

@@ -20,8 +20,8 @@ import {
     updateInvoiceStatus,
     updateCashEntry,
     updateTransaction,
-} from '../src/data/bookkeeping_db.js';
-import { BookkeepingTransaction, Invoice } from '../src/types/bookkeeping.d.js';
+} from '@packages/utils/bookkeeping_db.js';
+import { BookkeepingTransaction, Invoice } from '@packages/types/bookkeeping.d.js';
 
 describe('Bookkeeping Database', () => {
     beforeEach(() => {

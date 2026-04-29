@@ -1,5 +1,5 @@
 import { spawn, ChildProcess } from 'child_process';
-import { socketService } from '../server/SocketService.js';
+import { socketService } from '../agents/SocketService.js';
 import { logInfo, logError } from './logger.js';
 import { updateProjectStatus } from './db.js';
 import path from 'path';

@@ -1,9 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { StocktakeReconciliationAgent } from '../src/agents/StocktakeReconciliationAgent.js';
-import { StocktakeReportAgent } from '../src/agents/StocktakeReportAgent.js';
-import { InventoryAdjustmentAgent } from '../src/agents/InventoryAdjustmentAgent.js';
-import * as db from '../src/utils/inventoryDb.js';
-import * as llm from '../src/core/llm_client.js';
+import { StocktakeReconciliationAgent } from '@packages/agents/StocktakeReconciliationAgent.js';
+import { StocktakeReportAgent } from '@packages/agents/StocktakeReportAgent.js';
+import { InventoryAdjustmentAgent } from '@packages/agents/InventoryAdjustmentAgent.js';
+import * as db from '@packages/utils/inventoryDb.js';
+import * as llm from '@packages/core-logic/llm_client.js';
 
 describe('Inventory Phase 3 - Stocktake Agents', () => {
   beforeEach(() => {

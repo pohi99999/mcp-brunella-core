@@ -12,10 +12,10 @@ import {
   getAuditStats,
   cleanupOldEntries,
   clearAuditLog,
-} from '../src/core/auditLog.js';
+} from '@packages/core-logic/auditLog.js';
 
 // Mock logger to avoid side effects
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
   logError: vi.fn(),
   logInfo: vi.fn(),
   logWarn: vi.fn(),

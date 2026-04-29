@@ -3,11 +3,11 @@ import '@testing-library/jest-dom/vitest';
 import { createElement } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
-import { ReflectionPanel } from '../../../src/dashboard/components/dashboard/ReflectionPanel.js';
-import * as apiService from '../../../src/dashboard/lib/apiService.js';
+import { ReflectionPanel } from '@/components/dashboard/ReflectionPanel.js';
+import * as apiService from '@/lib/apiService.js';
 
-vi.mock('../../../src/dashboard/lib/apiService.js', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('../../../src/dashboard/lib/apiService.js')>();
+vi.mock('@/lib/apiService.js', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@/lib/apiService.js')>();
   return {
     ...actual,
     getReflectionOverview: vi.fn(),

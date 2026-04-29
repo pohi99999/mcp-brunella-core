@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { createOpenClawStatusSnapshot, loadOpenClawConfig } from '../../src/integrations/openclaw/index.js';
+import { createOpenClawStatusSnapshot, loadOpenClawConfig } from '@packages/core-logic/openclaw/index.js';
 
 describe('OpenClaw config loading', () => {
   it('parses env values and normalizes the base url', () => {

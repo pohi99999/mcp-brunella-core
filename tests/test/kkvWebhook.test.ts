@@ -5,8 +5,8 @@ import path from 'path';
 import os from 'os';
 import { describe, it, beforeEach, afterEach, expect } from 'vitest';
 
-import { createKkvWebhookRoutes } from '../src/server/routes/kkvWebhook.js';
-import { initCrmDb, closeCrmDb } from '../src/data/crm_db.js';
+import { createKkvWebhookRoutes } from '@apps/mcp-core/server/routes/kkvWebhook.js';
+import { initCrmDb, closeCrmDb } from '@packages/utils/crm_db.js';
 
 describe('KKV follow-up webhook', () => {
   let tmpDir: string;

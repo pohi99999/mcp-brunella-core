@@ -2,8 +2,8 @@ import inquirer from 'inquirer';
 import chalk from 'chalk';
 import boxen from 'boxen';
 import ora from 'ora';
-import { cloudflareClient } from '../../utils/cloudflareClient.js';
-import { writeLine } from '../../utils/cliOutput.js';
+import { cloudflareClient } from '../../../packages/utils/cloudflareClient.js';
+import { writeLine } from '../../../packages/utils/cliOutput.js';
 
 /**
  * Cloudflare Edge Agents Network (CEAN) CLI Vezérlő - MAGYAR

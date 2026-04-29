@@ -7,9 +7,9 @@ import {
   formatAgentResult,
   formatResponse,
   specialFormatters
-} from '../src/utils/responseFormatter.js';
-import type { AgentResponse } from '../src/agents/types.js';
-import type { AgentResult } from '../src/agents/BaseAgent.js';
+} from '@packages/utils/responseFormatter.js';
+import type { AgentResponse } from '@packages/agents/types.js';
+import type { AgentResult } from '@packages/agents/BaseAgent.js';
 
 describe('Response Formatter - Magyar nyelvű válaszok', () => {
   describe('formatAgentResponse', () => {

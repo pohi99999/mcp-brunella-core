@@ -10,19 +10,19 @@ const { mockDb, mockRagEngine, logInfoMock } = vi.hoisted(() => ({
   logInfoMock: vi.fn(),
 }));
 
-vi.mock('../src/utils/databaseManager.js', () => ({
+vi.mock('@packages/utils/databaseManager.js', () => ({
   defaultDatabaseManager: mockDb,
 }));
 
-vi.mock('../src/utils/rag.js', () => ({
+vi.mock('@packages/utils/rag.js', () => ({
   defaultRagEngine: mockRagEngine,
 }));
 
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
   logInfo: logInfoMock,
 }));
 
-import { ServiceRegistry, getServiceRegistry } from '../src/utils/serviceRegistry.js';
+import { ServiceRegistry, getServiceRegistry } from '@packages/utils/serviceRegistry.js';
 
 describe('ServiceRegistry', () => {
   beforeEach(() => {

@@ -4,16 +4,16 @@ import request from 'supertest';
 import express from 'express';
 import Database from 'better-sqlite3';
 import crypto from 'crypto';
-import { createWebhookRoutes } from '../src/server/routes/webhooks.js';
-import { config } from '../src/config/schema.js';
-import { eventFabric } from '../src/core/eventFabric.js';
+import { createWebhookRoutes } from '@apps/mcp-core/server/routes/webhooks.js';
+import { config } from '@packages/utils/schema.js';
+import { eventFabric } from '@packages/core-logic/eventFabric.js';
 
 const hookHarness = vi.hoisted(() => ({
   fireHook: vi.fn(async () => ({ status: 'fired' })),
 }));
 
 // Mock config
-vi.mock('../src/config/schema.js', () => ({
+vi.mock('@packages/utils/schema.js', () => ({
   config: {
     githubToken: 'test-token',
     githubWebhookSecret: 'test-secret'
@@ -21,12 +21,12 @@ vi.mock('../src/config/schema.js', () => ({
 }));
 
 // Mock logger
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
   logInfo: vi.fn(),
   logError: vi.fn()
 }));
 
-vi.mock('../src/core/hookRegistry.js', () => ({
+vi.mock('@packages/core-logic/hookRegistry.js', () => ({
   fireHook: hookHarness.fireHook,
   fireHookSafely: hookHarness.fireHook,
   isHookEnabled: vi.fn(() => false),

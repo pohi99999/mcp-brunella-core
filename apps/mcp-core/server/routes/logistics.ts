@@ -1,7 +1,7 @@
 import { Router, type Request, type Response } from "express";
-import { agentManager } from "../../agents/AgentManager.js";
-import { ensureError } from "../../utils/ensureError.js";
-import { logError } from "../../utils/logger.js";
+import { agentManager } from "@packages/agents/AgentManager.js";
+import { ensureError } from "@packages/utils/ensureError.js";
+import { logError } from "@packages/utils/logger.js";
 
 interface LogisticsAgentSummary {
   name: string;

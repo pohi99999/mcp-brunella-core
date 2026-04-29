@@ -4,14 +4,14 @@ const initializeMock = vi.fn();
 const registerAgentMock = vi.fn();
 const dynamicAgentCtorMock = vi.fn();
 
-vi.mock('../src/agents/AgentManager.js', () => ({
+vi.mock('@packages/agents/AgentManager.js', () => ({
   agentManager: {
     initialize: initializeMock,
     registerAgent: registerAgentMock,
   },
 }));
 
-vi.mock('../src/agents/DynamicAgent.js', () => ({
+vi.mock('@packages/agents/DynamicAgent.js', () => ({
   DynamicAgent: class {
     constructor(path: string) {
       dynamicAgentCtorMock(path);
@@ -28,7 +28,7 @@ describe('registerAgents', () => {
   });
 
   it('initializes and registers dynamic agents only once per process', async () => {
-    const { registerAgents } = await import('../src/server/registry.js');
+    const { registerAgents } = await import('@apps/mcp-core/server/registry.js');
 
     await registerAgents();
     await registerAgents();

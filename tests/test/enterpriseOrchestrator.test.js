@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import EnterpriseOrchestrator from '../src/agents/EnterpriseOrchestrator.js';
+import EnterpriseOrchestrator from '@packages/agents/EnterpriseOrchestrator.js';
 // ============================================================================
 // MOCK AGENT FOR TESTING
 // ============================================================================

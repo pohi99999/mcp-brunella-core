@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach } from 'vitest';
-import { saveCheckpoint, loadCheckpoint } from '../src/utils/checkpoint.js';
+import { saveCheckpoint, loadCheckpoint } from '@packages/utils/checkpoint.js';
 import fs from 'fs/promises';
 import path from 'path';
 // Test checkpoint path — use a temp location

@@ -1,20 +1,20 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-vi.mock('../src/core/goldenDatasetBridge.js', () => ({
+vi.mock('@packages/core-logic/goldenDatasetBridge.js', () => ({
   getGoldenStats: vi.fn(),
   getCuratedGoldenStats: vi.fn(),
 }));
 
-vi.mock('../src/core/learningLoopService.js', () => ({
+vi.mock('@packages/core-logic/learningLoopService.js', () => ({
   getLearningLoopOverview: vi.fn(),
 }));
 
 import {
   buildDataFlywheelMetricsSnapshot,
   renderDataFlywheelMetricsMarkdown,
-} from '../src/tools/dataFlywheelMetrics.js';
-import { getCuratedGoldenStats, getGoldenStats } from '../src/core/goldenDatasetBridge.js';
-import { getLearningLoopOverview } from '../src/core/learningLoopService.js';
+} from '@packages/utils/dataFlywheelMetrics.js';
+import { getCuratedGoldenStats, getGoldenStats } from '@packages/core-logic/goldenDatasetBridge.js';
+import { getLearningLoopOverview } from '@packages/core-logic/learningLoopService.js';
 
 const mockedGetGoldenStats = vi.mocked(getGoldenStats);
 const mockedGetCuratedGoldenStats = vi.mocked(getCuratedGoldenStats);

@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import { DynamicAgent } from "../src/agents/DynamicAgent.js";
+import { DynamicAgent } from "@packages/agents/DynamicAgent.js";
 
 type RegistryAgent = {
   name: string;
@@ -24,7 +24,7 @@ type Fixture = {
 const fixtures: Fixture[] = [
   {
     name: "social_concierge",
-    tomlPath: "myai/agents/SocialConciergeAgent.toml",
+    tomlPath: "packages/myai/agents/SocialConciergeAgent.toml",
     displayName: "VIKTORIAVARGA Social Concierge",
     descriptionIncludes: ["post, reply és DM draftok"],
     systemPromptIncludes: [
@@ -44,7 +44,7 @@ const fixtures: Fixture[] = [
   },
   {
     name: "shopping_assistant",
-    tomlPath: "myai/agents/ShoppingAssistantAgent.toml",
+    tomlPath: "packages/myai/agents/ShoppingAssistantAgent.toml",
     displayName: "VIKTORIAVARGA Shopping Assistant",
     descriptionIncludes: ["product discovery", "order és support draftok"],
     systemPromptIncludes: [

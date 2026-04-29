@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import fs from "fs";
 import path from "path";
-import { config } from "../src/config/index.js";
+import { config } from "@packages/utils/index.js";
 
 describe("SwarmCoordinator Durable Object", () => {
   const workerSrcDir = path.resolve(

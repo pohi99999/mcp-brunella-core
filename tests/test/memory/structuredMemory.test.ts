@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { getGlobalDb } from "../../src/utils/globalDb.js";
-import { initMemoryDb, purgeExpired, queryMemory, saveMemory } from "../../src/core/structuredMemory.js";
+import { getGlobalDb } from "@packages/utils/globalDb.js";
+import { initMemoryDb, purgeExpired, queryMemory, saveMemory } from "@packages/core-logic/structuredMemory.js";
 
 const TEST_AGENT = "StructuredMemoryTestAgent";
 

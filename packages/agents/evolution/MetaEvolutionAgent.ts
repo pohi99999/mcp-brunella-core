@@ -9,9 +9,9 @@
  */
 
 import { IAgent, AgentResponse } from '../types.js';
-import { logInfo, logError, setAgentStatus } from '../../utils/logger.js';
-import { EmergentLayer } from '../../core/emergentLayer.js';
-import { PlanetMesh } from '../../mesh/planetMesh.js';
+import { logInfo, logError, setAgentStatus } from '@packages/utils/logger.js';
+import { EmergentLayer } from '@packages/core-logic/emergentLayer.js';
+import { PlanetMesh } from '@packages/core-logic/planetMesh.js';
 
 export interface EvolutionProposal {
   patternId: string;

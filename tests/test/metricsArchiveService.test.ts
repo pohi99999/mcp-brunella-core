@@ -16,7 +16,7 @@ import {
   getMetricsAggregate,
   getLatestMetricsSnapshot,
   initMetricsArchive,
-} from '../src/services/metricsArchiveService.js';
+} from '@packages/core-logic/metricsArchiveService.js';
 
 let db: Database.Database | undefined;
 const testDbPath = path.join(process.cwd(), '.test-metrics-archive.db');

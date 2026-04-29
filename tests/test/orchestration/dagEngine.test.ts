@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { executeDAG, topologicalSort, type DAGContext, type DAGNode, type DAGWorkflow } from "../../src/core/dagEngine.js";
+import { executeDAG, topologicalSort, type DAGContext, type DAGNode, type DAGWorkflow } from "@packages/core-logic/dagEngine.js";
 
 function createExecutor(log: string[]) {
   return {

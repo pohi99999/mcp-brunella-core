@@ -4,7 +4,7 @@
 
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { z } from 'zod';
-import { ConfigSchema } from '../src/config/schema.js';
+import { ConfigSchema } from '@packages/utils/schema.js';
 
 describe('Config Validation (P5)', () => {
   const originalEnv = process.env;

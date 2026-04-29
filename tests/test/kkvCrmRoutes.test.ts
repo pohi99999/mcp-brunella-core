@@ -4,8 +4,8 @@ import { mkdtempSync, rmSync } from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { closeCrmDb, initCrmDb } from '../src/data/crm_db.js';
-import { createKkvCrmRoutes } from '../src/server/routes/kkvCrm.js';
+import { closeCrmDb, initCrmDb } from '@packages/utils/crm_db.js';
+import { createKkvCrmRoutes } from '@apps/mcp-core/server/routes/kkvCrm.js';
 
 describe('kkv CRM routes', () => {
   let app: express.Express;

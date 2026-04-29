@@ -1,6 +1,6 @@
 import { Router, type Request, type Response } from 'express';
 import cron from 'node-cron';
-import { logInfo, logError } from '../../utils/logger.js';
+import { logInfo, logError } from '@packages/utils/logger.js';
 import { runTests, getSchedulerStatus } from '../schedulers/testRunner.js';
 import {
   getTestRuns,
@@ -9,7 +9,7 @@ import {
   getTestRunsByDateRange,
   type TestRun,
   type TestStats,
-} from '../../core/testResultsService.js';
+} from '@packages/core-logic/testResultsService.js';
 
 const router = Router();
 

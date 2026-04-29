@@ -1,9 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { BankAgent } from '../src/agents/BankAgent.js';
-import * as db from '../src/data/bookkeeping_db.js';
-import { AgentContext } from '../src/agents/BaseAgent.js';
+import { BankAgent } from '@packages/agents/BankAgent.js';
+import * as db from '@packages/utils/bookkeeping_db.js';
+import { AgentContext } from '@packages/agents/BaseAgent.js';
 import { promises as fs } from 'fs';
-import * as logger from '../src/utils/logger.js';
+import * as logger from '@packages/utils/logger.js';
 
 vi.mock('fs', () => ({
     promises: {

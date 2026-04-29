@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { Command } from 'commander';
-import { registerLeadCommands } from '../src/cli/leadCommands.js';
+import { registerLeadCommands } from '@apps/mcp-core/commands/leadCommands.js';
 
 const spinnerStop = vi.fn();
 const spinnerFail = vi.fn();

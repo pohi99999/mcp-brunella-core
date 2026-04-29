@@ -12,10 +12,10 @@ import {
   toggleTodoInContent,
   findTodoLineNumber,
   type TrackTodoView,
-} from '../../utils/trackTodoParser.js';
-import { ensureError } from '../../utils/ensureError.js';
-import { logDebug, logError } from '../../utils/logger.js';
-import { normalizeTrackDod } from '../../utils/trackDod.js';
+} from '@packages/utils/trackTodoParser.js';
+import { ensureError } from '@packages/utils/ensureError.js';
+import { logDebug, logError } from '@packages/utils/logger.js';
+import { normalizeTrackDod } from '@packages/utils/trackDod.js';
 
 const TRACKS_DIR = path.join(process.cwd(), 'conductor', 'tracks');
 

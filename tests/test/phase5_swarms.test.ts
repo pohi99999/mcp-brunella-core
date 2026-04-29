@@ -3,17 +3,17 @@
  */
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { SwarmAgent } from '../src/agents/swarm/SwarmAgent.js';
-import { SwarmManager } from '../src/agents/swarm/SwarmManager.js';
-import { AdaptiveFlow } from '../src/core/adaptiveFlow.js';
-import { PredictiveRouter } from '../src/core/predictiveRouter.js';
-import { MeshHealing } from '../src/mesh/meshHealing.js';
-import { KnowledgeGraph } from '../src/core/knowledgeGraph.js';
-import { SharedCognition } from '../src/core/sharedCognition.js';
-import { BrunellaKernel } from '../src/kernel/BrunellaKernel.js';
-import { MeshNode } from '../src/mesh/meshNode.js';
-import { MeshManager } from '../src/mesh/meshManager.js';
-import type { IAgent } from '../src/agents/types.js';
+import { SwarmAgent } from '@packages/agents/swarm/SwarmAgent.js';
+import { SwarmManager } from '@packages/agents/swarm/SwarmManager.js';
+import { AdaptiveFlow } from '@packages/core-logic/adaptiveFlow.js';
+import { PredictiveRouter } from '@packages/core-logic/predictiveRouter.js';
+import { MeshHealing } from '@packages/core-logic/meshHealing.js';
+import { KnowledgeGraph } from '@packages/core-logic/knowledgeGraph.js';
+import { SharedCognition } from '@packages/core-logic/sharedCognition.js';
+import { BrunellaKernel } from '@packages/core-logic/BrunellaKernel.js';
+import { MeshNode } from '@packages/core-logic/meshNode.js';
+import { MeshManager } from '@packages/core-logic/meshManager.js';
+import type { IAgent } from '@packages/agents/types.js';
 
 // ─── Mock Agent ──────────────────────────────────────────────────────────────
 function createMockAgent(name: string, capabilities: string[], failOnTask?: string): IAgent {

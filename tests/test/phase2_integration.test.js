@@ -1,7 +1,7 @@
 // FILE: test/phase2_integration.test.ts
 import { describe, it, expect } from "vitest";
-import { PropertyAnalystAgent } from "../src/agents/PropertyAnalystAgent.js";
-import { LogisticsDispatcher } from "../src/agents/LogisticsDispatcher.js";
+import { PropertyAnalystAgent } from "@packages/agents/PropertyAnalystAgent.js";
+import { LogisticsDispatcher } from "@packages/agents/LogisticsDispatcher.js";
 describe("Phase 2 Integration Tests (Python Workers)", () => {
     it("PropertyAnalystAgent should call CMA worker", async () => {
         const agent = new PropertyAnalystAgent();

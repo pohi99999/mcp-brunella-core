@@ -7,7 +7,7 @@
  */
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { RemoteSessionManager } from '../src/core/RemoteSessionManager.js';
+import { RemoteSessionManager } from '@packages/core-logic/RemoteSessionManager.js';
 
 // ─── RemoteSessionManager ────────────────────────────────────────────────────
 

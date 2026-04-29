@@ -9,13 +9,13 @@ const hookHarness = vi.hoisted(() => ({
   fireHook: vi.fn(async () => ({ status: 'fired' })),
 }));
 
-vi.mock('../src/core/hookRegistry.js', () => ({
+vi.mock('@packages/core-logic/hookRegistry.js', () => ({
   fireHook: hookHarness.fireHook,
   fireHookSafely: hookHarness.fireHook,
   isHookEnabled: vi.fn(() => false),
 }));
 
-import { EmailTriageAgent } from '../src/agents/EmailTriageAgent.js';
+import { EmailTriageAgent } from '@packages/agents/EmailTriageAgent.js';
 
 describe('EmailTriageAgent', () => {
   let agent: EmailTriageAgent;

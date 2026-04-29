@@ -7,20 +7,20 @@ const { sendNotificationEmailMock } = vi.hoisted(() => ({
   sendNotificationEmailMock: vi.fn().mockResolvedValue({ sent: true, message: 'Email sent' }),
 }));
 
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
   logInfo: vi.fn(),
   logWarn: vi.fn(),
   logError: vi.fn(),
 }));
 
-vi.mock('../src/utils/notificationService.js', () => ({
+vi.mock('@packages/utils/notificationService.js', () => ({
   isNotificationEmailConfigured: vi.fn(() => true),
   sendNotificationEmail: sendNotificationEmailMock,
 }));
 
 async function freshNotificationModules() {
   vi.resetModules();
-  const notificationModule = await import('../src/core/notificationChannels.js');
+  const notificationModule = await import('@packages/core-logic/notificationChannels.js');
   return notificationModule;
 }
 

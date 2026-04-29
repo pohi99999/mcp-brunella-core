@@ -3,7 +3,7 @@ import {
   getCloudflareWorkersInventory,
   postTaskToWorker,
   type WorkerDefinition,
-} from "../src/cloudflare/cloudflareHelpers.js";
+} from "@packages/core-logic/cloudflare/cloudflareHelpers.js";
 
 function makeWorker(overrides: Partial<WorkerDefinition> = {}): WorkerDefinition {
   return {

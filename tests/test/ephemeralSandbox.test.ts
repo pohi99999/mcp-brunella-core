@@ -11,17 +11,17 @@ const { safeZoneValidateMock } = vi.hoisted(() => ({
   safeZoneValidateMock: vi.fn().mockReturnValue(true),
 }));
 
-vi.mock('../src/core/auditLog.js', () => ({
+vi.mock('@packages/core-logic/auditLog.js', () => ({
   record: auditRecordMock,
 }));
 
-vi.mock('../src/security/safe_zone_validator.js', () => ({
+vi.mock('@packages/core-logic/safe_zone_validator.js', () => ({
   getSafeZoneValidator: () => ({
     validate: safeZoneValidateMock,
   }),
 }));
 
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
   logInfo: vi.fn(),
   logError: vi.fn(),
   logWarn: vi.fn(),
@@ -40,7 +40,7 @@ describe('EphemeralSandbox', () => {
 
   it('allows a tool that is in the allowed list', async () => {
     vi.resetModules();
-    const { ephemeralSandbox } = await import('../src/core/ephemeralSandbox.js');
+    const { ephemeralSandbox } = await import('@packages/core-logic/ephemeralSandbox.js');
 
     const verdict = ephemeralSandbox.checkToolAccess(['read_file', 'parse_csv'], {
       agentId: 'agent-001',
@@ -55,7 +55,7 @@ describe('EphemeralSandbox', () => {
 
   it('blocks a tool not in the allowed list and records DENIED', async () => {
     vi.resetModules();
-    const { ephemeralSandbox } = await import('../src/core/ephemeralSandbox.js');
+    const { ephemeralSandbox } = await import('@packages/core-logic/ephemeralSandbox.js');
 
     const verdict = ephemeralSandbox.checkToolAccess(['read_file'], {
       agentId: 'agent-002',
@@ -77,8 +77,8 @@ describe('EphemeralSandbox', () => {
 
   it('publishes a phoenix:ephemeral_tool_violation event on violation', async () => {
     vi.resetModules();
-    const { ephemeralSandbox } = await import('../src/core/ephemeralSandbox.js');
-    const { phoenixEventBus } = await import('../src/core/phoenixEventBus.js');
+    const { ephemeralSandbox } = await import('@packages/core-logic/ephemeralSandbox.js');
+    const { phoenixEventBus } = await import('@packages/core-logic/phoenixEventBus.js');
     phoenixEventBus.clearHistory();
 
     ephemeralSandbox.checkToolAccess(['tool_a'], {
@@ -97,7 +97,7 @@ describe('EphemeralSandbox', () => {
 
   it('allows a call when the allowed list is empty only for tools explicitly listed', async () => {
     vi.resetModules();
-    const { ephemeralSandbox } = await import('../src/core/ephemeralSandbox.js');
+    const { ephemeralSandbox } = await import('@packages/core-logic/ephemeralSandbox.js');
 
     const emptyVerdict = ephemeralSandbox.checkToolAccess([], {
       agentId: 'agent-004',
@@ -118,7 +118,7 @@ describe('EphemeralSandbox', () => {
 
   it('blocks file access outside allowed paths', async () => {
     vi.resetModules();
-    const { ephemeralSandbox } = await import('../src/core/ephemeralSandbox.js');
+    const { ephemeralSandbox } = await import('@packages/core-logic/ephemeralSandbox.js');
 
     const verdict = ephemeralSandbox.checkFileAccess(['f:\\workspace\\allowed'], {
       agentId: 'agent-006',
@@ -135,7 +135,7 @@ describe('EphemeralSandbox', () => {
 
   it('allows file access inside assigned scope when safe zone passes', async () => {
     vi.resetModules();
-    const { ephemeralSandbox } = await import('../src/core/ephemeralSandbox.js');
+    const { ephemeralSandbox } = await import('@packages/core-logic/ephemeralSandbox.js');
 
     const verdict = ephemeralSandbox.checkFileAccess(['f:\\workspace\\allowed'], {
       agentId: 'agent-007',
@@ -152,7 +152,7 @@ describe('EphemeralSandbox', () => {
 
   it('blocks network access outside assigned hosts', async () => {
     vi.resetModules();
-    const { ephemeralSandbox } = await import('../src/core/ephemeralSandbox.js');
+    const { ephemeralSandbox } = await import('@packages/core-logic/ephemeralSandbox.js');
 
     const verdict = ephemeralSandbox.checkNetworkAccess(['api.example.com'], {
       agentId: 'agent-008',
@@ -168,7 +168,7 @@ describe('EphemeralSandbox', () => {
 
   it('blocks composed chains that include disallowed tools', async () => {
     vi.resetModules();
-    const { ephemeralSandbox } = await import('../src/core/ephemeralSandbox.js');
+    const { ephemeralSandbox } = await import('@packages/core-logic/ephemeralSandbox.js');
 
     const verdict = ephemeralSandbox.checkToolComposition(['tool_a'], {
       agentId: 'agent-009',

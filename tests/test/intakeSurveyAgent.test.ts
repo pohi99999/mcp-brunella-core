@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { IntakeSurveyAgent } from '../src/agents/IntakeSurveyAgent.js';
+import { IntakeSurveyAgent } from '@packages/agents/IntakeSurveyAgent.js';
 
 describe('IntakeSurveyAgent', () => {
   let agent: IntakeSurveyAgent;

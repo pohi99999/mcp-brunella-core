@@ -5,7 +5,7 @@
  */
 
 import { describe, it, expect, beforeEach } from 'vitest';
-import { NetworkPolicy } from '../../src/core/sandbox/networkPolicy.js';
+import { NetworkPolicy } from '@packages/core-logic/sandbox/networkPolicy.js';
 
 describe('NetworkPolicy', () => {
   let policy: NetworkPolicy;

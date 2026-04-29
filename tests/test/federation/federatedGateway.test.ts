@@ -1,9 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { generateKeyPairSync } from 'crypto';
-import { federatedGateway } from '../../src/core/federation/federatedGateway.js';
-import { trustRegistry } from '../../src/core/federation/trustRegistry.js';
-import { capabilityManifestManager } from '../../src/core/federation/capabilityManifest.js';
-import { inspectFederationPublicKey } from '../../src/security/federationPeerProof.js';
+import { federatedGateway } from '@packages/core-logic/federation/federatedGateway.js';
+import { trustRegistry } from '@packages/core-logic/federation/trustRegistry.js';
+import { capabilityManifestManager } from '@packages/core-logic/federation/capabilityManifest.js';
+import { inspectFederationPublicKey } from '@packages/core-logic/federationPeerProof.js';
 
 describe('FederatedGateway', () => {
   const originalFetch = globalThis.fetch;

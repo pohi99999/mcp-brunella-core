@@ -1,8 +1,8 @@
 import { Command } from 'commander';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { registerHROnboardingCommands } from '../src/cli/hrOnboardingCommands.js';
-import { registerHRTimesheetCommands } from '../src/cli/hrTimesheetCommands.js';
+import { registerHROnboardingCommands } from '@apps/mcp-core/commands/hrOnboardingCommands.js';
+import { registerHRTimesheetCommands } from '@apps/mcp-core/commands/hrTimesheetCommands.js';
 
 const { fetchMock, infoMock } = vi.hoisted(() => ({
   fetchMock: vi.fn(),

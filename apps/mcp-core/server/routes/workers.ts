@@ -12,7 +12,7 @@
 import { Router, Request, Response } from 'express';
 import { Database } from 'better-sqlite3';
 import { v4 as uuidv4 } from 'uuid';
-import { logInfo, logError } from '../../utils/logger.js';
+import { logInfo, logError } from '@packages/utils/logger.js';
 
 export function createWorkersRouter(db: Database) {
   const router = Router();

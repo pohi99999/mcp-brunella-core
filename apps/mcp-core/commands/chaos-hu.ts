@@ -3,7 +3,7 @@ import chalk from "chalk";
 import boxen from "boxen";
 import ora from "ora";
 import * as api from "../../dashboard/lib/apiService.js";
-import type { AgentResponse } from "../../agents/types.js";
+import type { AgentResponse } from "@packages/agents/types.js";
 
 function isAgentResponse(value: unknown): value is AgentResponse {
   return typeof value === "object" && value !== null && "status" in value;
@@ -94,7 +94,7 @@ export async function chaosMenu() {
     const testSpinner = ora("Chaos tesztek futtatása az EvaluatorAgent-tel...").start();
     try {
       // Direct call to AgentManager for implementation
-      const { agentManager } = await import("../../agents/AgentManager.js");
+      const { agentManager } = await import("@packages/agents/AgentManager.js");
       const evaluator = agentManager.getAgent("evaluator");
       if (evaluator) {
         const result = await evaluator.execute(`Futtass le ${count} chaos tesztesetet a run_chaos_test_suite eszközzel.`);

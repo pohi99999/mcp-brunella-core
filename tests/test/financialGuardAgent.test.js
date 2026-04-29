@@ -3,7 +3,7 @@
  * Tests invoice OCR, validation, and anomaly detection
  */
 import { describe, it, expect, beforeEach } from 'vitest';
-import { FinancialGuardAgent } from '../src/agents/FinancialGuardAgent.js';
+import { FinancialGuardAgent } from '@packages/agents/FinancialGuardAgent.js';
 describe('FinancialGuardAgent', () => {
     let agent;
     beforeEach(() => {

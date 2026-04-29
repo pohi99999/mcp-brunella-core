@@ -2,9 +2,9 @@ import express from "express";
 import request from "supertest";
 import { describe, expect, it, vi } from "vitest";
 
-import { createDevExRouter } from "../src/server/routes/devex.js";
+import { createDevExRouter } from "@apps/mcp-core/server/routes/devex.js";
 
-vi.mock("../src/utils/logger.js", () => ({
+vi.mock("@packages/utils/logger.js", () => ({
   logError: vi.fn(),
 }));
 

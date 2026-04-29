@@ -7,8 +7,8 @@
  */
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { EnterpriseOrchestratorAgent } from '../src/agents/EnterpriseOrchestratorAgent.js';
-import type { EnterpriseEvent, ModuleType, EventPriority } from '../src/types/enterprise.js';
+import { EnterpriseOrchestratorAgent } from '@packages/agents/EnterpriseOrchestratorAgent.js';
+import type { EnterpriseEvent, ModuleType, EventPriority } from '@packages/types/enterprise.js';
 
 describe('EnterpriseOrchestratorAgent', () => {
   let agent: EnterpriseOrchestratorAgent;

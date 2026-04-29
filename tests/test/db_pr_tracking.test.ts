@@ -42,7 +42,7 @@ vi.mock('better-sqlite3', () => {
 });
 
 // Import db AFTER setting env var and mocks
-import { savePullRequest, getPullRequest, initDb } from '../src/utils/db';
+import { savePullRequest, getPullRequest, initDb } from '@packages/utils/db';
 
 describe('Database PR Tracking', () => {
 

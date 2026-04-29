@@ -169,7 +169,7 @@ const observabilityRouteHarness = vi.hoisted(() => ({
   })),
 }));
 
-vi.mock('../src/utils/globalDb.js', () => ({
+vi.mock('@packages/utils/globalDb.js', () => ({
   queryLlmCalls: observabilityRouteHarness.queryLlmCalls,
   getLlmCallStats: observabilityRouteHarness.getLlmCallStats,
   queryRuntimeThresholdRolloutJournalSummaries:
@@ -180,8 +180,8 @@ vi.mock('../src/utils/globalDb.js', () => ({
     observabilityRouteHarness.recordRuntimeThresholdRolloutJournal,
 }));
 
-vi.mock('../src/utils/runtimeThresholdRollout.js', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('../src/utils/runtimeThresholdRollout.js')>();
+vi.mock('@packages/utils/runtimeThresholdRollout.js', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@packages/utils/runtimeThresholdRollout.js')>();
   return {
     ...actual,
     renderThresholdRolloutPlan: observabilityRouteHarness.renderThresholdRolloutPlan,
@@ -192,11 +192,11 @@ vi.mock('../src/utils/runtimeThresholdRollout.js', async (importOriginal) => {
   };
 });
 
-vi.mock('../src/utils/runtimeDriftMonitor.js', () => ({
+vi.mock('@packages/utils/runtimeDriftMonitor.js', () => ({
   getRuntimeDriftSnapshot: observabilityRouteHarness.getRuntimeDriftSnapshot,
 }));
 
-import { createObservabilityRouter } from '../src/server/routes/observability.js';
+import { createObservabilityRouter } from '@apps/mcp-core/server/routes/observability.js';
 
 describe('observability runtime threshold rollout routes', () => {
   it('lists rollout journal entries', async () => {

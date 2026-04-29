@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { validateAndNormalizeRegistry } from "../src/agents/registryValidation.js";
+import { validateAndNormalizeRegistry } from "@packages/agents/registryValidation.js";
 
 describe("validateAndNormalizeRegistry", () => {
   it("normalizes metadata and reports missing default agent as warning", () => {

@@ -1,1 +1,1 @@
-import "../src/cloudflare/CFDispatcher.test.js";
+import "../../apps/cloudflare-edge/CFDispatcher.test.js";

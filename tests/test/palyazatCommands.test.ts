@@ -1,8 +1,8 @@
 import { Command } from 'commander';
 import { describe, expect, it } from 'vitest';
 
-import { registerPalyazatCommands } from '../src/cli/palyazatCommands.js';
-import { DEFAULT_GRANT_PROFILE, buildGrantTask } from '../src/lib/grantFlow.js';
+import { registerPalyazatCommands } from '@apps/mcp-core/palyazatCommands.js';
+import { DEFAULT_GRANT_PROFILE, buildGrantTask } from '@packages/utils/grantFlow.js';
 
 describe('Pályázat CLI commands', () => {
   it('registers the palyazat command group', () => {

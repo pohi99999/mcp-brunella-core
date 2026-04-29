@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { AgentCoordinator } from '../src/core/agentCoordinator.js';
+import { AgentCoordinator } from '@packages/core-logic/agentCoordinator.js';
 
 describe('AgentCoordinator', () => {
   let coord: AgentCoordinator;

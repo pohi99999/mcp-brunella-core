@@ -2,13 +2,13 @@ import { describe, expect, it, beforeEach, afterEach } from "vitest";
 import {
   buildConversationPrompt,
   MAX_CONTEXT_MESSAGES,
-} from "../src/dashboard/lib/chat/contextBuilder";
+} from "@/lib/chat/contextBuilder";
 import {
   clearChatSession,
   loadChatSession,
   saveChatSession,
-} from "../src/dashboard/lib/chat/sessionStore";
-import type { ChatMessage } from "../src/dashboard/lib/chat/types";
+} from "@/lib/chat/sessionStore";
+import type { ChatMessage } from "@/lib/chat/types";
 
 type MemoryStorage = {
   getItem: (key: string) => string | null;

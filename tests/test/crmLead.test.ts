@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { describe, expect, it } from 'vitest';
-import { buildCrmDedupeKey, normalizeCrmLead, normalizeCrmLeadResponse } from '../src/utils/crmLead.js';
+import { buildCrmDedupeKey, normalizeCrmLead, normalizeCrmLeadResponse } from '@packages/utils/crmLead.js';
 
 describe('crmLead helpers', () => {
   it('normalizes canonical lead payloads', () => {

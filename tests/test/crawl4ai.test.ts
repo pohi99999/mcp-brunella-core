@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { crawl4aiCrawlHandler, crawl4aiBatchHandler } from "../src/tools/crawl4aiTool.js";
+import { crawl4aiCrawlHandler, crawl4aiBatchHandler } from "@packages/utils/crawl4aiTool.js";
 
 // Mock fetch globally
 const mockFetch = vi.fn();

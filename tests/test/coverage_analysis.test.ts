@@ -6,7 +6,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import path from 'path';
 
 // Mock logger
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
     logInfo: vi.fn(),
     logError: vi.fn(),
     logWarn: vi.fn(),
@@ -30,7 +30,7 @@ vi.mock('fs/promises', () => ({
 }));
 
 import fs from 'fs/promises';
-import { CoverageAnalyzer, type CoverageSummary } from '../src/agents/coverageAnalysis.js';
+import { CoverageAnalyzer, type CoverageSummary } from '@packages/agents/coverageAnalysis.js';
 
 const fsMock = vi.mocked(fs);
 

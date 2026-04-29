@@ -1,8 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { BrowserCopilotSessionService } from '../src/services/BrowserCopilotSessionService.js';
-import { resolveBrowserCopilotEndpoint } from '../src/utils/browserEndpoint.js';
-import type { AgentResponse } from '../src/agents/types.js';
-import type { ExecutionPlan } from '../src/utils/llmPlanner.js';
+import { BrowserCopilotSessionService } from '@packages/core-logic/BrowserCopilotSessionService.js';
+import { resolveBrowserCopilotEndpoint } from '@packages/utils/browserEndpoint.js';
+import type { AgentResponse } from '@packages/agents/types.js';
+import type { ExecutionPlan } from '@packages/utils/llmPlanner.js';
 
 const samplePlan: ExecutionPlan = {
   plan: [

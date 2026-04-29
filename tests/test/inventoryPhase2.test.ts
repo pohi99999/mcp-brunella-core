@@ -11,14 +11,14 @@
  */
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { SafetyStockAgent } from '../src/agents/SafetyStockAgent.js';
-import { DemandForecastAgent } from '../src/agents/DemandForecastAgent.js';
-import { PurchaseOrderAgent } from '../src/agents/PurchaseOrderAgent.js';
-import type { InventoryItem } from '../src/utils/inventoryDb.js';
+import { SafetyStockAgent } from '@packages/agents/SafetyStockAgent.js';
+import { DemandForecastAgent } from '@packages/agents/DemandForecastAgent.js';
+import { PurchaseOrderAgent } from '@packages/agents/PurchaseOrderAgent.js';
+import type { InventoryItem } from '@packages/utils/inventoryDb.js';
 
 // ─── Mock-ok ─────────────────────────────────────────────────────────────────
 
-vi.mock('../src/utils/inventoryDb.js', () => ({
+vi.mock('@packages/utils/inventoryDb.js', () => ({
   getItemBySku: vi.fn(),
   getAllItems: vi.fn(),
   getSalesHistory: vi.fn(),
@@ -28,11 +28,11 @@ vi.mock('../src/utils/inventoryDb.js', () => ({
   createPurchaseOrder: vi.fn(),
 }));
 
-vi.mock('../src/core/llm_client.js', () => ({
+vi.mock('@packages/core-logic/llm_client.js', () => ({
   generateResponse: vi.fn(),
 }));
 
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
   logInfo: vi.fn(),
   logError: vi.fn(),
   setAgentStatus: vi.fn(),
@@ -45,8 +45,8 @@ import {
   updateSafetyStockAndRop,
   getItemsBelowReorderPoint,
   createPurchaseOrder,
-} from '../src/utils/inventoryDb.js';
-import { generateResponse } from '../src/core/llm_client.js';
+} from '@packages/utils/inventoryDb.js';
+import { generateResponse } from '@packages/core-logic/llm_client.js';
 
 // ─── Test Fixtures ─────────────────────────────────────────────────────────
 
@@ -156,7 +156,7 @@ describe('DemandForecastAgent — statisztika és fallback', () => {
   it('[DF-1] Kevés adat esetén statikus fallback, confidence < 0.5', async () => {
     vi.mocked(getItemBySku).mockResolvedValue(mockItem);
     // Csak 3 nap historikus adat → statikus becslés
-    const { getSalesHistory: mockSH } = vi.mocked(await import('../src/utils/inventoryDb.js'));
+    const { getSalesHistory: mockSH } = vi.mocked(await import('@packages/utils/inventoryDb.js'));
     mockSH.mockResolvedValue([
       { date: '2024-01-01', qty: 10 },
       { date: '2024-01-02', qty: 8 },
@@ -199,7 +199,7 @@ describe('DemandForecastAgent — statisztika és fallback', () => {
   it('[DF-4] LLM hiba esetén fallback result visszajön (confidence >= 0.3)', async () => {
     // LLM dob egy hibát
     vi.mocked(generateResponse).mockRejectedValue(new Error('LLM hiba'));
-    const { getSalesHistory: mockSH } = vi.mocked(await import('../src/utils/inventoryDb.js'));
+    const { getSalesHistory: mockSH } = vi.mocked(await import('@packages/utils/inventoryDb.js'));
     // 30 napos adat → LLM-et hív, de fallback-ra esik
     const dates = Array.from({ length: 30 }, (_, i) => ({
       date: `2024-02-${String(i + 1).padStart(2, '0')}`,

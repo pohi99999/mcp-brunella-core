@@ -1,6 +1,6 @@
 import { describe, expect, it, beforeEach, afterEach } from "vitest";
-import { buildConversationPrompt, MAX_CONTEXT_MESSAGES, } from "../src/dashboard/lib/chat/contextBuilder";
-import { clearChatSession, loadChatSession, saveChatSession, } from "../src/dashboard/lib/chat/sessionStore";
+import { buildConversationPrompt, MAX_CONTEXT_MESSAGES, } from "@/lib/chat/contextBuilder";
+import { clearChatSession, loadChatSession, saveChatSession, } from "@/lib/chat/sessionStore";
 function createMemoryStorage() {
     const store = new Map();
     return {

@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { BrunellaProjectManagerAgent } from '../src/agents/BrunellaProjectManagerAgent.js';
+import { BrunellaProjectManagerAgent } from '@packages/agents/BrunellaProjectManagerAgent.js';
 
-vi.mock('../src/services/brunellaProjectManagerStatus.js', () => ({
+vi.mock('@packages/core-logic/brunellaProjectManagerStatus.js', () => ({
   buildBrunellaProjectManagerSnapshot: vi.fn(async () => ({
     checkedAt: '2026-04-08T22:00:00.000Z',
     trackSnapshot: {

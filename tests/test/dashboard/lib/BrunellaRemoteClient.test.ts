@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { BrunellaRemoteClient } from "../../../src/utils/BrunellaRemoteClient";
+import { BrunellaRemoteClient } from "@packages/utils/BrunellaRemoteClient";
 
 describe("BrunellaRemoteClient", () => {
   const fetchMock = vi.fn();

@@ -11,11 +11,11 @@
  */
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { RobotkezV2Agent } from '../src/agents/RobotkezV2Agent.js';
-import { AgentContext } from '../src/agents/BaseAgent.js';
+import { RobotkezV2Agent } from '@packages/agents/RobotkezV2Agent.js';
+import { AgentContext } from '@packages/agents/BaseAgent.js';
 
 // Mock RAG utilities
-vi.mock('../src/utils/rag.js', () => ({
+vi.mock('@packages/utils/rag.js', () => ({
     searchRAG: vi.fn().mockResolvedValue([]),
     addToIndex: vi.fn().mockResolvedValue(undefined),
 }));
@@ -23,7 +23,7 @@ vi.mock('../src/utils/rag.js', () => ({
 // Mock persistentBrowser
 const mockSendCommand = vi.hoisted(() => vi.fn());
 const mockGenerateExecutionPlan = vi.hoisted(() => vi.fn());
-vi.mock('../src/utils/persistentBrowser.js', () => ({
+vi.mock('@packages/utils/persistentBrowser.js', () => ({
     persistentBrowser: {
         sendCommand: mockSendCommand
     }
@@ -31,12 +31,12 @@ vi.mock('../src/utils/persistentBrowser.js', () => ({
 
 // Mock llmPlanner to force fallback to Phase 2 simple parsing
 // (Phase 3 LLM planning has separate tests)
-vi.mock('../src/utils/llmPlanner.js', () => ({
+vi.mock('@packages/utils/llmPlanner.js', () => ({
     generateExecutionPlan: mockGenerateExecutionPlan
 }));
 
 // Mock logger
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
     logInfo: vi.fn(),
     logWarn: vi.fn(),
     logError: vi.fn(),
@@ -45,7 +45,7 @@ vi.mock('../src/utils/logger.js', () => ({
 }));
 
 // Mock backgroundTaskManager (Phase 4.4)
-vi.mock('../src/utils/backgroundTaskManager.js', () => ({
+vi.mock('@packages/utils/backgroundTaskManager.js', () => ({
     backgroundTaskManager: {
         startTask: vi.fn().mockResolvedValue('mock_task_id_123'),
         getTaskStatus: vi.fn().mockReturnValue(null),

@@ -12,7 +12,7 @@ import {
   getFallbackMessage,
   type DegradationLevel,
   type DegradationState,
-} from '../src/utils/degradationPolicy.js';
+} from '@packages/utils/degradationPolicy.js';
 
 describe('Phoenix Protocol v2 - Graceful Degradation', () => {
   beforeEach(() => {

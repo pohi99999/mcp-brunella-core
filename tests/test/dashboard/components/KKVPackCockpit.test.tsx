@@ -4,7 +4,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { KKVPackCockpit } from "@/components/dashboard/KKVPackCockpit";
 import * as api from "@/lib/apiService";
-import { buildKkvPackResponse } from "../../../src/tools/kkvPack.js";
+import { buildKkvPackResponse } from "@packages/utils/kkvPack.js";
 
 vi.mock("@/lib/apiService", async (importOriginal) => {
   const actual = await importOriginal<typeof import("@/lib/apiService")>();

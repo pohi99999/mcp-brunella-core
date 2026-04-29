@@ -10,28 +10,28 @@
  * @track robotkezv2-full-comet-20260215
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { RobotkezV2Agent } from '../src/agents/RobotkezV2Agent.js';
+import { RobotkezV2Agent } from '@packages/agents/RobotkezV2Agent.js';
 // Mock persistentBrowser
 const mockSendCommand = vi.fn();
-vi.mock('../src/utils/persistentBrowser.js', () => ({
+vi.mock('@packages/utils/persistentBrowser.js', () => ({
     persistentBrowser: {
         sendCommand: (...args) => mockSendCommand(...args)
     }
 }));
 // Mock llmPlanner to force fallback to Phase 2 simple parsing
 // (Phase 3 LLM planning has separate tests)
-vi.mock('../src/utils/llmPlanner.js', () => ({
+vi.mock('@packages/utils/llmPlanner.js', () => ({
     generateExecutionPlan: vi.fn().mockRejectedValue(new Error('LLM mocked - using fallback'))
 }));
 // Mock logger
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
     logInfo: vi.fn(),
     logWarn: vi.fn(),
     logError: vi.fn(),
     setAgentStatus: vi.fn()
 }));
 // Mock backgroundTaskManager (Phase 4.4)
-vi.mock('../src/utils/backgroundTaskManager.js', () => ({
+vi.mock('@packages/utils/backgroundTaskManager.js', () => ({
     backgroundTaskManager: {
         startTask: vi.fn().mockResolvedValue('mock_task_id_123'),
         getTaskStatus: vi.fn().mockReturnValue(null),
@@ -239,7 +239,7 @@ describe('RobotkezV2Agent (Phase 2 - MVP)', () => {
                 backgroundEligible: false,
                 requiresUserInput: []
             };
-            const { generateExecutionPlan } = await import('../src/utils/llmPlanner.js');
+            const { generateExecutionPlan } = await import('@packages/utils/llmPlanner.js');
             vi.spyOn({ generateExecutionPlan }, 'generateExecutionPlan').mockResolvedValue(longPlan);
             mockSendCommand.mockResolvedValue({ status: 'success' });
             const context = {
@@ -261,7 +261,7 @@ describe('RobotkezV2Agent (Phase 2 - MVP)', () => {
                 backgroundEligible: true, // But explicitly marked as background
                 requiresUserInput: []
             };
-            const { generateExecutionPlan } = await import('../src/utils/llmPlanner.js');
+            const { generateExecutionPlan } = await import('@packages/utils/llmPlanner.js');
             vi.spyOn({ generateExecutionPlan }, 'generateExecutionPlan').mockResolvedValue(backgroundPlan);
             mockSendCommand.mockResolvedValue({ status: 'success' });
             const context = {
@@ -281,7 +281,7 @@ describe('RobotkezV2Agent (Phase 2 - MVP)', () => {
                 backgroundEligible: false,
                 requiresUserInput: []
             };
-            const { generateExecutionPlan } = await import('../src/utils/llmPlanner.js');
+            const { generateExecutionPlan } = await import('@packages/utils/llmPlanner.js');
             vi.spyOn({ generateExecutionPlan }, 'generateExecutionPlan').mockResolvedValue(shortPlan);
             mockSendCommand.mockResolvedValue({ status: 'success' });
             const context = {
@@ -302,7 +302,7 @@ describe('RobotkezV2Agent (Phase 2 - MVP)', () => {
                 backgroundEligible: false,
                 requiresUserInput: []
             };
-            const { generateExecutionPlan } = await import('../src/utils/llmPlanner.js');
+            const { generateExecutionPlan } = await import('@packages/utils/llmPlanner.js');
             vi.spyOn({ generateExecutionPlan }, 'generateExecutionPlan').mockResolvedValue(plan);
             mockSendCommand.mockResolvedValue({ status: 'success' });
             const result = await agent.executeInBackground('Manual background test');

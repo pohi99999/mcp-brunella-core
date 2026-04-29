@@ -1,20 +1,19 @@
-// @ts-nocheck
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import Database from 'better-sqlite3';
 
 // Setup test DB
 const testDb = new Database(':memory:');
-// @ts-ignore
+// @ts-expect-error - test-only global injection for mocked dependency resolution
 globalThis.testDb = testDb;
 
 // Mock globalDb
-vi.mock('../src/utils/globalDb.js', () => ({
-  // @ts-ignore
+vi.mock('@packages/utils/globalDb.js', () => ({
+  // @ts-expect-error - returning test-only global injected above
   getGlobalDb: () => globalThis.testDb
 }));
 
 // Mock logger
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
   logInfo: vi.fn(),
   logError: vi.fn(),
   logDebug: vi.fn(),
@@ -25,7 +24,7 @@ vi.mock('../src/utils/logger.js', () => ({
 const fetchMock = vi.fn();
 global.fetch = fetchMock;
 
-import { EdgeProxyAgent } from '../src/agents/EdgeProxyAgent.js';
+import { EdgeProxyAgent } from '@packages/agents/EdgeProxyAgent.js';
 
 describe('EdgeProxyAgent Sync', () => {
   let agent: EdgeProxyAgent;

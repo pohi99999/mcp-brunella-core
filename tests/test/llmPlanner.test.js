@@ -11,8 +11,8 @@
  * @phase Phase 3 - LLM Planning Integration
  */
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { generateExecutionPlan, validateExecutionPlan } from '../src/utils/llmPlanner.js';
-import * as llmClient from '../src/core/llm_client.js';
+import { generateExecutionPlan, validateExecutionPlan } from '@packages/utils/llmPlanner.js';
+import * as llmClient from '@packages/core-logic/llm_client.js';
 const mockDecision = {
     model: {
         name: 'test-model',
@@ -27,11 +27,11 @@ const mockDecision = {
     timestamp: Date.now()
 };
 // Mock llm_client
-vi.mock('../src/core/llm_client.js', () => ({
+vi.mock('@packages/core-logic/llm_client.js', () => ({
     generateRouted: vi.fn()
 }));
 // Mock logger
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
     logInfo: vi.fn(),
     logWarn: vi.fn(),
     logError: vi.fn()

@@ -11,7 +11,7 @@ const perceptionHarness = vi.hoisted(() => ({
   ignoreSignal: vi.fn(),
 }));
 
-vi.mock('../src/core/worldPerceptionLayer.js', () => ({
+vi.mock('@packages/core-logic/worldPerceptionLayer.js', () => ({
   getWorldPerceptionOverview: perceptionHarness.getOverview,
   listWorldSignals: perceptionHarness.listSignals,
   ingestWorldSignal: perceptionHarness.ingestSignal,
@@ -20,7 +20,7 @@ vi.mock('../src/core/worldPerceptionLayer.js', () => ({
   ignoreWorldSignal: perceptionHarness.ignoreSignal,
 }));
 
-import { createWorldPerceptionRouter } from '../src/server/routes/worldPerception.js';
+import { createWorldPerceptionRouter } from '@apps/mcp-core/server/routes/worldPerception.js';
 
 describe('WorldPerception route', () => {
   const app = express();

@@ -3,13 +3,13 @@
  * Track: guardrails_evaluation_20260323
  */
 import { describe, it, expect } from 'vitest';
-import { AgentResponseSchema, AgentResultSchema } from '../../src/agents/schemas/agentOutput.js';
+import { AgentResponseSchema, AgentResultSchema } from '@packages/agents/schemas/agentOutput.js';
 import {
   validateAgentResult,
   validateAgentResponse,
   validateWithSchema,
   GuardrailsValidationError,
-} from '../../src/agents/middleware/validateOutput.js';
+} from '@packages/agents/middleware/validateOutput.js';
 
 describe('AgentResponseSchema', () => {
   it('valid success response', () => {

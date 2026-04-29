@@ -118,7 +118,7 @@ const REST_API_TEMPLATE: Template = {
  */
 
 import { Router } from 'express';
-import { logInfo, logError } from '../../utils/logger.js';
+import { logInfo, logError } from '@packages/utils/logger.js';
 
 const router = Router();
 

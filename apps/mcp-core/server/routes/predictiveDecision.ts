@@ -1,8 +1,8 @@
 import { Router } from 'express';
 import { z } from 'zod';
 
-import type { MonteCarloConfig } from '../../core/decisionTypes.js';
-import { predictiveDecisionEngine } from '../../core/predictiveDecisionEngine.js';
+import type { MonteCarloConfig } from '@packages/core-logic/decisionTypes.js';
+import { predictiveDecisionEngine } from '@packages/core-logic/predictiveDecisionEngine.js';
 
 const triggerSchema = z.object({
   triggeredBy: z.string().trim().min(1).optional(),

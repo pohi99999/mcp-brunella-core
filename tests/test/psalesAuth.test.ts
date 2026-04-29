@@ -2,7 +2,7 @@ import { describe, it, expect, beforeAll } from 'vitest';
 import express from 'express';
 import request from 'supertest';
 import { SignJWT } from 'jose';
-import { createPSalesAuthRoutes } from '../src/server/routes/psales-auth.js';
+import { createPSalesAuthRoutes } from '@apps/mcp-core/server/routes/psales-auth.js';
 
 // Tesztfelhasználók beállítása
 process.env.PSALES_JWT_SECRET = 'test-secret-32-chars-minimum-ok!!';

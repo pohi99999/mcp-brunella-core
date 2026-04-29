@@ -2,14 +2,14 @@ import { mkdtempSync, rmSync } from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { closeCrmDb, initCrmDb } from '../../src/data/crm_db.js';
-import { kkvCrmService } from '../../src/server/services/kkvCrmService.js';
+import { closeCrmDb, initCrmDb } from '@packages/utils/crm_db.js';
+import { kkvCrmService } from '@packages/core-logic/services/kkvCrmService.js';
 
 const hookHarness = vi.hoisted(() => ({
   fireHook: vi.fn(async () => ({ status: 'fired' })),
 }));
 
-vi.mock('../../src/core/hookRegistry.js', () => ({
+vi.mock('@packages/core-logic/hookRegistry.js', () => ({
   fireHook: hookHarness.fireHook,
   fireHookSafely: hookHarness.fireHook,
 }));

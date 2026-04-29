@@ -4,17 +4,17 @@ import os from 'os';
 import path from 'path';
 import request from 'supertest';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { createSzamlazzRoutes } from '../src/server/routes/szamlazz.js';
+import { createSzamlazzRoutes } from '@apps/mcp-core/server/routes/szamlazz.js';
 
 const { sendSzamlazzInvoiceMock } = vi.hoisted(() => ({
     sendSzamlazzInvoiceMock: vi.fn(),
 }));
 
-vi.mock('../src/server/szamlazzBridge.js', () => ({
+vi.mock('@apps/mcp-core/server/szamlazzBridge.js', () => ({
     sendSzamlazzInvoice: sendSzamlazzInvoiceMock,
 }));
 
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
     logInfo: vi.fn(),
     logError: vi.fn(),
 }));

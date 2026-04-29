@@ -12,11 +12,11 @@ const hookRouteHarness = vi.hoisted(() => {
   };
 });
 
-vi.mock('../src/utils/globalDb.js', () => ({
+vi.mock('@packages/utils/globalDb.js', () => ({
   getGlobalDb: () => hookRouteHarness.db,
 }));
 
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
   logInfo: hookRouteHarness.logInfo,
   logWarn: hookRouteHarness.logWarn,
   logError: hookRouteHarness.logError,
@@ -28,8 +28,8 @@ import {
   clearHooks,
   fireHook,
   registerHook,
-} from '../src/core/hookRegistry.js';
-import { createHookRoutes } from '../src/server/routes/hooks.js';
+} from '@packages/core-logic/hookRegistry.js';
+import { createHookRoutes } from '@apps/mcp-core/server/routes/hooks.js';
 
 hookRouteHarness.db = new Database(':memory:');
 

@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 
-import { clearAuditLog, getAuditLog, getAuditStats, getDeniedEntries, record } from '../src/core/auditLog.js';
+import { clearAuditLog, getAuditLog, getAuditStats, getDeniedEntries, record } from '@packages/core-logic/auditLog.js';
 
 describe('audit log tenant support', () => {
   beforeEach(async () => {

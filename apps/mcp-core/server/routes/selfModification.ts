@@ -2,9 +2,9 @@ import { Router } from 'express';
 import {
   selfModificationEngine,
   type SelfModificationProposalStatus,
-} from '../../core/selfModificationEngine.js';
-import { agentPerformanceTracker } from '../../core/agentPerformanceTracker.js';
-import { logError } from '../../utils/logger.js';
+} from '@packages/core-logic/selfModificationEngine.js';
+import { agentPerformanceTracker } from '@packages/core-logic/agentPerformanceTracker.js';
+import { logError } from '@packages/utils/logger.js';
 
 const VALID_STATUSES: SelfModificationProposalStatus[] = [
   'pending_review',

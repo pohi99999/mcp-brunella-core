@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { E2BSandboxManager } from '../src/security/e2b_sandbox_manager.js';
+import { E2BSandboxManager } from '@packages/core-logic/e2b_sandbox_manager.js';
 import fs from 'fs/promises';
 import path from 'path';
 /**

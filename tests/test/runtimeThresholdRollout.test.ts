@@ -1,10 +1,10 @@
 import { describe, expect, it, vi } from 'vitest';
-vi.unmock('../src/utils/runtimeThresholdRollout.js');
+vi.unmock('@packages/utils/runtimeThresholdRollout.js');
 import {
   buildThresholdRolloutPlan,
   renderThresholdRolloutPlan,
   type RuntimeDriftThresholdSummary,
-} from '../src/utils/runtimeThresholdRollout.js';
+} from '@packages/utils/runtimeThresholdRollout.js';
 
 function createSummary(
   action: 'align' | 'tune' | 'observe' | 'keep',

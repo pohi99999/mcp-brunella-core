@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest';
-import type { LoadTestResult } from '../src/types/cean.js';
+import type { LoadTestResult } from '@packages/types/cean.js';
 
 /**
  * Phase 4.3: E2E Testing & Validation

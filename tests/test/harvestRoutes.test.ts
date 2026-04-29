@@ -1,10 +1,10 @@
 import { describe, it, expect, vi } from 'vitest';
 import request from 'supertest';
 import express from 'express';
-import { harvestRouter } from '../src/server/routes/harvest.js';
+import { harvestRouter } from '@apps/mcp-core/server/routes/harvest.js';
 
-vi.mock('../src/config/index.js', () => ({ config: { workspaceRoot: '.', systemLogDir: 'logs' } }));
-vi.mock('../src/utils/rag.js', () => ({ addToIndex: vi.fn() }));
+vi.mock('@packages/utils/index.js', () => ({ config: { workspaceRoot: '.', systemLogDir: 'logs' } }));
+vi.mock('@packages/utils/rag.js', () => ({ addToIndex: vi.fn() }));
 
 const app = express();
 app.use(express.json());

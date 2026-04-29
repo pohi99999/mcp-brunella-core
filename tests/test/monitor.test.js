@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import fs from 'fs';
 import path from 'path';
 import process from 'process';
-import { registerMonitorTools } from '../src/tools/monitor.js';
+import { registerMonitorTools } from '@packages/utils/monitor.js';
 // Mock MCP Server to capture tool registration
 class MockServer {
     tools = new Map();

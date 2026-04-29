@@ -3,7 +3,7 @@
  * Tests email classification, auto-response, and calendar integration
  */
 import { describe, it, expect, beforeEach } from 'vitest';
-import { EmailTriageAgent } from '../src/agents/EmailTriageAgent.js';
+import { EmailTriageAgent } from '@packages/agents/EmailTriageAgent.js';
 describe('EmailTriageAgent', () => {
     let agent;
     beforeEach(() => {

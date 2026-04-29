@@ -11,7 +11,7 @@
  */
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 // Mock logger first
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
     logInfo: vi.fn(),
     logError: vi.fn(),
     logWarn: vi.fn(),
@@ -28,7 +28,7 @@ vi.mock('node:util', async () => {
     };
 });
 // Import GitManager after mocks
-import { GitManager } from '../src/agents/gitIntegration.js';
+import { GitManager } from '@packages/agents/gitIntegration.js';
 describe('GitManager - P8 Git Integration', () => {
     let gitManager;
     beforeEach(() => {

@@ -13,12 +13,12 @@
  * @phase Phase 5 - REST API Endpoints
  */
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { createRobotkezRoutes } from '../src/server/routes/robotkez.js';
+import { createRobotkezRoutes } from '@apps/mcp-core/server/routes/robotkez.js';
 // Spies for agent methods
 export const mockExecute = vi.fn().mockResolvedValue({ success: true, message: 'Task executed' });
 export const mockExecuteTask = vi.fn().mockResolvedValue({ success: true, message: 'Task executed' });
 // Mock dependencies
-vi.mock('../src/agents/RobotkezV2Agent.js', () => ({
+vi.mock('@packages/agents/RobotkezV2Agent.js', () => ({
     RobotkezV2Agent: class {
         name = 'RobotkezV2';
         role = 'Magyar Agentic Browser';
@@ -27,26 +27,26 @@ vi.mock('../src/agents/RobotkezV2Agent.js', () => ({
         executeTask = mockExecuteTask;
     }
 }));
-vi.mock('../src/utils/llmPlanner.js', () => ({
+vi.mock('@packages/utils/llmPlanner.js', () => ({
     generateExecutionPlan: vi.fn().mockResolvedValue({
         plan: [{ action: 'navigate', url: 'https://test.com', description: 'Test' }],
         estimatedDuration: 5000,
         backgroundEligible: false
     })
 }));
-vi.mock('../src/utils/persistentBrowser.js', () => ({
+vi.mock('@packages/utils/persistentBrowser.js', () => ({
     persistentBrowser: {
         sendCommand: vi.fn().mockResolvedValue({ status: 'success' })
     }
 }));
-vi.mock('../src/utils/backgroundTaskManager.js', () => ({
+vi.mock('@packages/utils/backgroundTaskManager.js', () => ({
     backgroundTaskManager: {
         getAllTasks: vi.fn().mockReturnValue([]),
         getTaskStatus: vi.fn().mockReturnValue(null),
         cancelTask: vi.fn().mockReturnValue(false)
     }
 }));
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
     logInfo: vi.fn(),
     logError: vi.fn()
 }));

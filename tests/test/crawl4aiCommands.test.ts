@@ -27,7 +27,7 @@ vi.mock("ora", () => ({
   }),
 }));
 
-import { registerCrawl4aiCommands } from "../src/cli/crawl4aiCommands.js";
+import { registerCrawl4aiCommands } from "@apps/mcp-core/commands/crawl4aiCommands.js";
 
 describe("Crawl4AI CLI Commands", () => {
   beforeEach(() => {

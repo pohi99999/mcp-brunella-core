@@ -17,13 +17,13 @@ import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import express from 'express';
 import request from 'supertest';
 
-import { createPSalesStrategyRoutes } from '../../src/server/routes/psales-strategy.js';
+import { createPSalesStrategyRoutes } from '@apps/mcp-core/server/routes/psales-strategy.js';
 import {
   initPSalesDb,
   closePSalesDb,
   getStrategyPlan,
   listPSalesAuditEvents,
-} from '../../src/data/psales_db.js';
+} from '@packages/utils/psales_db.js';
 
 // ---------------------------------------------------------------------------
 // Test app factory

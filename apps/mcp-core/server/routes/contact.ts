@@ -1,6 +1,6 @@
 import { Router, Request, Response } from "express";
 import nodemailer from "nodemailer";
-import { logInfo, logError, logWarn } from "../../utils/logger.js";
+import { logInfo, logError, logWarn } from "@packages/utils/logger.js";
 
 const router = Router();
 

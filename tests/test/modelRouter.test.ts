@@ -4,7 +4,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 // Mock logger before importing modelRouter
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
   logInfo: vi.fn(),
   logError: vi.fn(),
   setAgentStatus: vi.fn(),
@@ -21,7 +21,7 @@ import {
   getRouterConfig,
   type TaskProfile,
   type RouterConfig,
-} from '../src/core/modelRouter.js';
+} from '@packages/core-logic/modelRouter.js';
 
 describe('Model Router (G3)', () => {
   beforeEach(() => {

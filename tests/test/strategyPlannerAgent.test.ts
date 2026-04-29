@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { StrategyPlannerAgent } from '../src/agents/StrategyPlannerAgent.js';
+import { StrategyPlannerAgent } from '@packages/agents/StrategyPlannerAgent.js';
 
 describe('StrategyPlannerAgent', () => {
   let agent: StrategyPlannerAgent;

@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import fs from "fs";
 import path from "path";
 import { execSync } from "child_process";
-import { config } from "../src/config/index.js";
+import { config } from "@packages/utils/index.js";
 
 function getPythonCommand() {
   const venvPath = path.resolve(

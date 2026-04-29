@@ -1,7 +1,7 @@
 import express from 'express';
 import request from 'supertest';
 import { beforeEach, afterEach, describe, expect, it, vi } from 'vitest';
-import { createHROnboardingRoutes } from '../src/server/routes/hrOnboarding.js';
+import { createHROnboardingRoutes } from '@apps/mcp-core/server/routes/hrOnboarding.js';
 
 const { buildReportMock, samplesMock, jobsMock, saveJobMock } = vi.hoisted(() => ({
   buildReportMock: vi.fn(),
@@ -10,21 +10,21 @@ const { buildReportMock, samplesMock, jobsMock, saveJobMock } = vi.hoisted(() =>
   saveJobMock: vi.fn(),
 }));
 
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
   logInfo: vi.fn(),
   logError: vi.fn(),
 }));
 
-vi.mock('../src/utils/db.js', () => ({
+vi.mock('@packages/utils/db.js', () => ({
   getBusinessJobs: jobsMock,
   saveBusinessJob: saveJobMock,
 }));
 
-vi.mock('../src/utils/hrOnboardingDryRun.js', () => ({
+vi.mock('@packages/utils/hrOnboardingDryRun.js', () => ({
   buildHROnboardingDryRunReport: buildReportMock,
 }));
 
-vi.mock('../src/utils/hrOnboarding.js', () => ({
+vi.mock('@packages/utils/hrOnboarding.js', () => ({
   getHROnboardingSamplePayloads: samplesMock,
 }));
 

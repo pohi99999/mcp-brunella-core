@@ -3,15 +3,15 @@ import { Router } from "express";
 import {
   buildDocsConfigSotSnapshot,
   renderDocsConfigSotMarkdown,
-} from "../../tools/docsConfigSot.js";
+} from "@packages/utils/docsConfigSot.js";
 import {
   buildDocsUnifierReport,
   renderDocsUnifierMarkdown,
-} from "../../tools/docUnifier.js";
+} from "@packages/utils/docUnifier.js";
 import {
   buildConfigGuardianReport,
   renderConfigGuardianMarkdown,
-} from "../../tools/configGuardian.js";
+} from "@packages/utils/configGuardian.js";
 
 export interface DocsConfigHealthResponse {
   snapshot: ReturnType<typeof buildDocsConfigSotSnapshot>;

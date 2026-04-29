@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import { getAssistantBlueprint } from '../../core/assistantBlueprint.js';
-import { buildContextFusionCard } from '../../core/contextFusion.js';
-import { logError } from '../../utils/logger.js';
+import { getAssistantBlueprint } from '@packages/core-logic/assistantBlueprint.js';
+import { buildContextFusionCard } from '@packages/core-logic/contextFusion.js';
+import { logError } from '@packages/utils/logger.js';
 
 export function createAssistantRoutes(): Router {
   const router = Router();

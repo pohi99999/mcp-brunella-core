@@ -10,7 +10,7 @@ vi.stubEnv('CF_API_TOKEN', 'test-token-abc123');
 vi.stubEnv('CF_BAS_ACCOUNT_ID', 'test-account-id-xyz');
 
 // Mock logger to prevent side effects
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
     logInfo: vi.fn(),
     logError: vi.fn(),
     logWarn: vi.fn(),
@@ -20,7 +20,7 @@ vi.mock('../src/utils/logger.js', () => ({
 const mockFetch = vi.fn();
 vi.stubGlobal('fetch', mockFetch);
 
-import { CloudflareBrowserAPI } from '../src/utils/browserRendering.js';
+import { CloudflareBrowserAPI } from '@packages/utils/browserRendering.js';
 
 describe('CloudflareBrowserAPI', () => {
     let api: CloudflareBrowserAPI;

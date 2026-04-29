@@ -1,5 +1,9 @@
 {
   "name": "@packages/utils",
   "version": "1.0.0",
-  "type": "module"
+  "type": "module",
+  "exports": {
+    "./*.js": "./*.ts",
+    "./*": "./*.ts"
+  }
 }

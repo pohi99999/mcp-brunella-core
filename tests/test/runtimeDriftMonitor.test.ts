@@ -5,12 +5,12 @@ import {
   didPythonRestart,
   parsePythonHealthTelemetry,
   type RuntimeDriftSample,
-} from '../src/utils/runtimeDriftMonitor.js';
+} from '@packages/utils/runtimeDriftMonitor.js';
 import type {
   RuntimeBudgetTelemetry,
   RuntimeMemoryTelemetry,
   RuntimeTelemetry,
-} from '../src/utils/runtimeTelemetry.js';
+} from '@packages/utils/runtimeTelemetry.js';
 
 type SampleOverrides = {
   timestamp: string;

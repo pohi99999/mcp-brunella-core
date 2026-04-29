@@ -2,7 +2,7 @@
  * Response Formatter - Magyar nyelvű válaszok tesztelése
  */
 import { describe, it, expect } from 'vitest';
-import { formatAgentResponse, formatAgentResult, formatResponse, specialFormatters } from '../src/utils/responseFormatter.js';
+import { formatAgentResponse, formatAgentResult, formatResponse, specialFormatters } from '@packages/utils/responseFormatter.js';
 describe('Response Formatter - Magyar nyelvű válaszok', () => {
     describe('formatAgentResponse', () => {
         it('should format success response in Hungarian', () => {

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { formatAgentResponse } from '../../../src/dashboard/lib/agentResponseFormatter.js';
+import { formatAgentResponse } from '@/lib/agentResponseFormatter.js';
 
 describe('agentResponseFormatter', () => {
   it('formats success responses with translated keys', () => {

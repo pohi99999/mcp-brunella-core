@@ -8,12 +8,12 @@ vi.mock('fs/promises', () => ({
   },
 }));
 
-vi.mock('../src/utils/rag.js', () => ({
+vi.mock('@packages/utils/rag.js', () => ({
   searchRAG: vi.fn(async () => []),
 }));
 
-import { trackStateManager } from '../src/services/trackStateManager.js';
-import { buildBrunellaProjectManagerSnapshot } from '../src/services/brunellaProjectManagerStatus.js';
+import { trackStateManager } from '@packages/core-logic/trackStateManager.js';
+import { buildBrunellaProjectManagerSnapshot } from '@packages/core-logic/brunellaProjectManagerStatus.js';
 
 afterEach(() => {
   vi.restoreAllMocks();

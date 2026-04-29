@@ -2,12 +2,12 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { generateKeyPairSync } from 'crypto';
 import express from 'express';
 import request from 'supertest';
-import { createFederationRouter } from '../src/server/routes/federation.js';
-import { generateRemoteToken } from '../src/security/remoteAuth.js';
-import { signFederationRequest } from '../src/security/federationPeerAuth.js';
-import { inspectFederationPublicKey } from '../src/security/federationPeerProof.js';
-import { record as auditRecord, clearAuditLog, closeAuditDb } from '../src/core/auditLog.js';
-import { phoenixEventBus } from '../src/core/phoenixEventBus.js';
+import { createFederationRouter } from '@apps/mcp-core/server/routes/federation.js';
+import { generateRemoteToken } from '@packages/core-logic/remoteAuth.js';
+import { signFederationRequest } from '@packages/core-logic/federationPeerAuth.js';
+import { inspectFederationPublicKey } from '@packages/core-logic/federationPeerProof.js';
+import { record as auditRecord, clearAuditLog, closeAuditDb } from '@packages/core-logic/auditLog.js';
+import { phoenixEventBus } from '@packages/core-logic/phoenixEventBus.js';
 
 const federationMocks = vi.hoisted(() => ({
   listPeers: vi.fn(),
@@ -36,7 +36,7 @@ const federationMocks = vi.hoisted(() => ({
   consume: vi.fn(),
 }));
 
-vi.mock('../src/core/federation/trustRegistry.js', () => ({
+vi.mock('@packages/core-logic/federation/trustRegistry.js', () => ({
   trustRegistry: {
     listPeers: federationMocks.listPeers,
     getPeer: federationMocks.getPeer,
@@ -50,13 +50,13 @@ vi.mock('../src/core/federation/trustRegistry.js', () => ({
   },
 }));
 
-vi.mock('../src/core/federation/federationReplayGuard.js', () => ({
+vi.mock('@packages/core-logic/federation/federationReplayGuard.js', () => ({
   federationReplayGuard: {
     consume: federationMocks.consume,
   },
 }));
 
-vi.mock('../src/core/federation/capabilityManifest.js', () => ({
+vi.mock('@packages/core-logic/federation/capabilityManifest.js', () => ({
   capabilityManifestManager: {
     issue: federationMocks.issue,
     getValidManifestForPeer: federationMocks.getValidManifestForPeer,
@@ -67,7 +67,7 @@ vi.mock('../src/core/federation/capabilityManifest.js', () => ({
   isCapabilityManifestConfigError: federationMocks.isCapabilityManifestConfigError,
 }));
 
-vi.mock('../src/core/federation/negotiationProtocol.js', () => ({
+vi.mock('@packages/core-logic/federation/negotiationProtocol.js', () => ({
   negotiationProtocol: {
     listSessions: federationMocks.listSessions,
     createOffer: federationMocks.createOffer,
@@ -76,36 +76,36 @@ vi.mock('../src/core/federation/negotiationProtocol.js', () => ({
   },
 }));
 
-vi.mock('../src/core/federation/federatedGateway.js', () => ({
+vi.mock('@packages/core-logic/federation/federatedGateway.js', () => ({
   federatedGateway: {
     execute: federationMocks.execute,
   },
 }));
 
-vi.mock('../src/core/dynamicToolRegistry.js', () => ({
+vi.mock('@packages/core-logic/dynamicToolRegistry.js', () => ({
   getDynamicToolRegistry: federationMocks.getDynamicToolRegistry,
 }));
 
-vi.mock('../src/core/toolRegistry.js', () => ({
+vi.mock('@packages/core-logic/toolRegistry.js', () => ({
   getToolRegistry: federationMocks.getToolRegistry,
 }));
 
-vi.mock('../src/server/registry.js', () => ({
+vi.mock('@apps/mcp-core/server/registry.js', () => ({
   getRegisteredToolsList: federationMocks.getRegisteredToolsList,
 }));
 
-vi.mock('../src/server/toolRegistry.js', () => ({
+vi.mock('@apps/mcp-core/server/toolRegistry.js', () => ({
   executeLocalTool: federationMocks.execute,
 }));
 
-vi.mock('../src/agents/AgentManager.js', () => ({
+vi.mock('@packages/agents/AgentManager.js', () => ({
   agentManager: {
     listAgents: vi.fn(),
     getAgent: vi.fn(),
   },
 }));
 
-import { agentManager } from '../src/agents/AgentManager.js';
+import { agentManager } from '@packages/agents/AgentManager.js';
 
 describe('Federation routes', () => {
   const localKeyPair = generateKeyPairSync('ed25519');

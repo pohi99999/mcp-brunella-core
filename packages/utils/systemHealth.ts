@@ -183,7 +183,7 @@ async function checkMCPServer(timeoutMs: number): Promise<ServiceHealth> {
         const latencyMs = Date.now() - start;
 
         if (response.ok) {
-            const data = await response.json();
+            const data = await response.json() as Record<string, unknown>;
             return {
                 name,
                 status: 'healthy',

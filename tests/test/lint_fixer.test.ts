@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeAll } from "vitest";
-import LintFixerAgent from "../src/agents/LintFixerAgent.js";
+import LintFixerAgent from "@packages/agents/LintFixerAgent.js";
 
 describe("LintFixerAgent", () => {
   let agent: LintFixerAgent;

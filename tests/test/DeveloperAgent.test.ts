@@ -1,30 +1,30 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { DeveloperAgent } from '../src/agents/DeveloperAgent.js';
-import * as pythonShell from '../src/utils/pythonShell.js';
+import { DeveloperAgent } from '@packages/agents/DeveloperAgent.js';
+import * as pythonShell from '@packages/utils/pythonShell.js';
 import fs from 'fs/promises';
 import { execSync } from 'child_process';
 
 // Mock dependencies
 const mockGenerate = vi.fn();
-vi.mock('../src/core/bifrost_gateway.js', () => ({
+vi.mock('@packages/core-logic/bifrost_gateway.js', () => ({
     getBifrostGateway: () => ({
         generate: mockGenerate
     })
 }));
-vi.mock('../src/utils/pythonShell.js');
+vi.mock('@packages/utils/pythonShell.js');
 vi.mock('fs/promises');
 vi.mock('child_process');
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
     logInfo: vi.fn(),
     logError: vi.fn(),
     setAgentStatus: vi.fn()
 }));
-vi.mock('../src/server/SocketService.js', () => ({
+vi.mock('@apps/mcp-core/server/SocketService.js', () => ({
     socketService: {
         broadcastChatter: vi.fn()
     }
 }));
-vi.mock('../src/agents/specStatus.js', () => ({
+vi.mock('@packages/agents/specStatus.js', () => ({
     getSpecStatus: vi.fn().mockResolvedValue('approved'),
     requiresSpec: vi.fn().mockReturnValue(false)
 }));

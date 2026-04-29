@@ -1,7 +1,7 @@
 import express from "express";
 import request from "supertest";
 import { describe, expect, it } from "vitest";
-import { createLogisticsRoutes } from "../src/server/routes/logistics.js";
+import { createLogisticsRoutes } from "@apps/mcp-core/server/routes/logistics.js";
 
 describe("repository-local logistics routes", () => {
   it("returns the split boundary and logistics capabilities", async () => {

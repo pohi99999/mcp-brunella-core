@@ -3,7 +3,7 @@
  */
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 
-vi.mock('../../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
   logInfo: vi.fn(),
   logWarn: vi.fn(),
   logError: vi.fn(),
@@ -14,7 +14,7 @@ import {
   DynamicToolRegistry,
   manifestToMcpTool,
   type ToolManifest,
-} from '../../src/core/dynamicToolRegistry.js';
+} from '@packages/core-logic/dynamicToolRegistry.js';
 
 function createManifest(overrides: Partial<ToolManifest> = {}): ToolManifest {
   return {

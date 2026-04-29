@@ -6,7 +6,7 @@ import {
   discoverMemoryPaths,
   loadMemoryContent,
   getMemory
-} from '../src/utils/memoryContext.js';
+} from '@packages/utils/memoryContext.js';
 
 describe('Memory context', () => {
   it('discoverMemoryPaths returns empty when no files exist', () => {

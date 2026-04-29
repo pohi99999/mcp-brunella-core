@@ -10,9 +10,9 @@ import {
   safeIngestWebSource,
   safeIngestYoutubeSource,
   searchKnowledgeCards,
-} from '@packages/core-logic/externalKnowledgeService.js';
-import { ensureError } from '../../utils/ensureError.js';
-import { logError, logInfo } from '../../utils/logger.js';
+} from '@packages/core-logic/services/externalKnowledgeService.js';
+import { ensureError } from '@packages/utils/ensureError.js';
+import { logError, logInfo } from '@packages/utils/logger.js';
 
 const MODULE = 'ExternalKnowledgeRoutes';
 

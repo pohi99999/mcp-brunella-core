@@ -14,8 +14,8 @@ import {
   pauseCrmFollowUpPlan,
   resumeCrmFollowUpPlan,
   recordCrmLeadResponse,
-} from '../src/data/crm_db.js';
-import { normalizeCrmLead } from '../src/utils/crmLead.js';
+} from '@packages/utils/crm_db.js';
+import { normalizeCrmLead } from '@packages/utils/crmLead.js';
 
 function buildLead(payload: Record<string, unknown>): ReturnType<typeof normalizeCrmLead> {
   const lead = normalizeCrmLead({

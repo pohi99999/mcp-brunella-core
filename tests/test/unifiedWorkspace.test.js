@@ -5,7 +5,7 @@
  * Uses mocked Google API clients for testing without real credentials.
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { UnifiedWorkspaceClient, resetWorkspaceClient } from '../src/tools/unifiedWorkspace.js';
+import { UnifiedWorkspaceClient, resetWorkspaceClient } from '@packages/utils/unifiedWorkspace.js';
 import * as fs from 'fs/promises';
 // Mock Google APIs
 vi.mock('googleapis', () => {
@@ -448,13 +448,13 @@ describe('UnifiedWorkspaceClient', () => {
     // ======================================================================
     describe('Factory Function', () => {
         it('should return singleton instance on subsequent calls', async () => {
-            const { getWorkspaceClient } = await import('../src/tools/unifiedWorkspace.js');
+            const { getWorkspaceClient } = await import('@packages/utils/unifiedWorkspace.js');
             const client1 = await getWorkspaceClient();
             const client2 = await getWorkspaceClient();
             expect(client1).toBe(client2);
         });
         it('should reset singleton on resetWorkspaceClient()', async () => {
-            const { getWorkspaceClient, resetWorkspaceClient } = await import('../src/tools/unifiedWorkspace.js');
+            const { getWorkspaceClient, resetWorkspaceClient } = await import('@packages/utils/unifiedWorkspace.js');
             const client1 = await getWorkspaceClient();
             resetWorkspaceClient();
             const client2 = await getWorkspaceClient();

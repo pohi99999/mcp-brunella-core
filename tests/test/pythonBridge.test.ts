@@ -6,7 +6,7 @@ import {
   RefineResultSchema,
   validatePythonResponse,
   parseAndValidate,
-} from "../src/utils/pythonBridge.js";
+} from "@packages/utils/pythonBridge.js";
 
 describe("pythonBridge Zod schemas", () => {
   describe("ExecuteResultSchema", () => {

@@ -3,27 +3,27 @@
  */
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 
-vi.mock('../../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
   logInfo: vi.fn(),
   logWarn: vi.fn(),
   logError: vi.fn(),
 }));
 
 import { z } from 'zod';
-import { DynamicToolRegistry, type ToolManifest } from '../../src/core/dynamicToolRegistry.js';
+import { DynamicToolRegistry, type ToolManifest } from '@packages/core-logic/dynamicToolRegistry.js';
 
 // We need to mock getDynamicToolRegistry to return our test instance
 let testRegistry: DynamicToolRegistry;
 
-vi.mock('../../src/core/dynamicToolRegistry.js', async () => {
-  const actual = await vi.importActual<typeof import('../../src/core/dynamicToolRegistry.js')>('../../src/core/dynamicToolRegistry.js');
+vi.mock('@packages/core-logic/dynamicToolRegistry.js', async () => {
+  const actual = await vi.importActual<typeof import('@packages/core-logic/dynamicToolRegistry.js')>('@packages/core-logic/dynamicToolRegistry.js');
   return {
     ...actual,
     getDynamicToolRegistry: () => testRegistry,
   };
 });
 
-import { validateChain, executeChain, createChain, type ToolChain } from '../../src/core/toolComposition.js';
+import { validateChain, executeChain, createChain, type ToolChain } from '@packages/core-logic/toolComposition.js';
 
 function createTestManifest(id: string, name: string): ToolManifest {
   return {

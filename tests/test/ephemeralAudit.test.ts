@@ -1,12 +1,12 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
   logInfo: vi.fn(),
   logError: vi.fn(),
   logWarn: vi.fn(),
 }));
 
-vi.mock('../src/core/auditLog.js', () => ({
+vi.mock('@packages/core-logic/auditLog.js', () => ({
   record: vi.fn().mockResolvedValue(undefined),
 }));
 
@@ -17,13 +17,13 @@ vi.mock('../src/core/auditLog.js', () => ({
 describe('EphemeralAudit', () => {
   beforeEach(async () => {
     vi.resetModules();
-    const { clearPostmortems } = await import('../src/core/ephemeralAudit.js');
+    const { clearPostmortems } = await import('@packages/core-logic/ephemeralAudit.js');
     clearPostmortems();
   });
 
   it('generates a postmortem with correct fields', async () => {
     vi.resetModules();
-    const { generatePostmortem, clearPostmortems } = await import('../src/core/ephemeralAudit.js');
+    const { generatePostmortem, clearPostmortems } = await import('@packages/core-logic/ephemeralAudit.js');
     clearPostmortems();
 
     const record = {
@@ -65,7 +65,7 @@ describe('EphemeralAudit', () => {
 
   it('getPostmortems returns newest first', async () => {
     vi.resetModules();
-    const { generatePostmortem, getPostmortems, clearPostmortems } = await import('../src/core/ephemeralAudit.js');
+    const { generatePostmortem, getPostmortems, clearPostmortems } = await import('@packages/core-logic/ephemeralAudit.js');
     clearPostmortems();
 
     const makeRecord = (id: string, spawnedAt: string, terminatedAt: string) => ({
@@ -98,7 +98,7 @@ describe('EphemeralAudit', () => {
 
   it('getPostmortem finds by agent ID', async () => {
     vi.resetModules();
-    const { generatePostmortem, getPostmortem, clearPostmortems } = await import('../src/core/ephemeralAudit.js');
+    const { generatePostmortem, getPostmortem, clearPostmortems } = await import('@packages/core-logic/ephemeralAudit.js');
     clearPostmortems();
 
     const record = {
@@ -122,7 +122,7 @@ describe('EphemeralAudit', () => {
 
   it('clearPostmortems empties the store', async () => {
     vi.resetModules();
-    const { generatePostmortem, getPostmortems, clearPostmortems } = await import('../src/core/ephemeralAudit.js');
+    const { generatePostmortem, getPostmortems, clearPostmortems } = await import('@packages/core-logic/ephemeralAudit.js');
     clearPostmortems();
 
     generatePostmortem({

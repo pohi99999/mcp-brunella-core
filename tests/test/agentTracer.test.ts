@@ -16,7 +16,7 @@ import {
   clearAllSpans,
   type TraceSpan,
   type TraceContext,
-} from '../src/utils/agentTracer.js';
+} from '@packages/utils/agentTracer.js';
 
 describe('agentTracer', () => {
   beforeEach(() => {

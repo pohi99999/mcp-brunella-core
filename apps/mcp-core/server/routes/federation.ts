@@ -1,19 +1,19 @@
 import { Router } from 'express';
 import type { Request, Response } from 'express';
 import { z } from 'zod';
-import { agentManager } from '../../agents/AgentManager.js';
-import type { FederatedAgent } from '../../agents/federation/FederatedAgentManager.js';
-import { trustRegistry } from '../../core/federation/trustRegistry.js';
-import { capabilityManifestManager, isCapabilityManifestConfigError } from '../../core/federation/capabilityManifest.js';
-import { negotiationProtocol } from '../../core/federation/negotiationProtocol.js';
-import { buildFederationEvidenceSnapshot } from '../../core/federation/evidence.js';
-import { getDynamicToolRegistry } from '../../core/dynamicToolRegistry.js';
-import { getToolRegistry } from '../../core/toolRegistry.js';
+import { agentManager } from '@packages/agents/AgentManager.js';
+import type { FederatedAgent } from '@packages/agents/federation/FederatedAgentManager.js';
+import { trustRegistry } from '@packages/core-logic/federation/trustRegistry.js';
+import { capabilityManifestManager, isCapabilityManifestConfigError } from '@packages/core-logic/federation/capabilityManifest.js';
+import { negotiationProtocol } from '@packages/core-logic/federation/negotiationProtocol.js';
+import { buildFederationEvidenceSnapshot } from '@packages/core-logic/federation/evidence.js';
+import { getDynamicToolRegistry } from '@packages/core-logic/dynamicToolRegistry.js';
+import { getToolRegistry } from '@packages/core-logic/toolRegistry.js';
 import { getRegisteredToolsList } from '../registry.js';
 import { allowLoopbackWithoutAuth, authFederationPeer } from '../middleware/federationAuth.js';
 import { executeLocalTool } from '../toolRegistry.js';
-import { getLocalFederationPeerId } from '../../security/federationPeerAuth.js';
-import { logError } from '../../utils/logger.js';
+import { getLocalFederationPeerId } from '@packages/core-logic/federationPeerAuth.js';
+import { logError } from '@packages/utils/logger.js';
 
 const federationManifestCapabilitySchema = z.object({
   name: z.string().min(1).max(256),

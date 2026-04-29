@@ -17,19 +17,19 @@ const trackerHarness = vi.hoisted(() => ({
   getWeakAgents: vi.fn(),
 }));
 
-vi.mock('../src/core/selfModificationEngine.js', () => ({
+vi.mock('@packages/core-logic/selfModificationEngine.js', () => ({
   selfModificationEngine: selfModHarness,
 }));
 
-vi.mock('../src/core/agentPerformanceTracker.js', () => ({
+vi.mock('@packages/core-logic/agentPerformanceTracker.js', () => ({
   agentPerformanceTracker: trackerHarness,
 }));
 
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
   logError: vi.fn(),
 }));
 
-import { createSelfModificationRouter } from '../src/server/routes/selfModification.js';
+import { createSelfModificationRouter } from '@apps/mcp-core/server/routes/selfModification.js';
 
 describe('SelfModification route', () => {
   const app = express();

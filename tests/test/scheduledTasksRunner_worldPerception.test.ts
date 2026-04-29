@@ -24,44 +24,44 @@ const hookHarness = vi.hoisted(() => ({
   fireHook: vi.fn(async () => ({ status: 'fired' })),
 }));
 
-vi.mock('../src/utils/globalDb.js', () => ({
+vi.mock('@packages/utils/globalDb.js', () => ({
   getGlobalDb: vi.fn(() => ({
     prepare: dbHarness.mockPrepare,
     pragma: vi.fn(),
   })),
 }));
 
-vi.mock('../src/core/hookRegistry.js', () => ({
+vi.mock('@packages/core-logic/hookRegistry.js', () => ({
   fireHook: hookHarness.fireHook,
   fireHookSafely: hookHarness.fireHook,
 }));
 
-vi.mock('../src/core/eventFabric.js', () => ({
+vi.mock('@packages/core-logic/eventFabric.js', () => ({
   eventFabric: { publish: vi.fn() },
   createSchedulerTaskOutcomeEnvelope: vi.fn((_task: unknown, outcome: unknown) => outcome),
 }));
 
-vi.mock('../src/agents/AgentManager.js', () => ({
+vi.mock('@packages/agents/AgentManager.js', () => ({
   agentManager: {
     delegate: vi.fn(async () => ({ success: true })),
     delegateTask: vi.fn(async () => ({ success: true })),
   },
 }));
 
-vi.mock('../src/core/selfModificationEngine.js', () => ({
+vi.mock('@packages/core-logic/selfModificationEngine.js', () => ({
   runWeeklySelfImprovementCycle: vi.fn(),
 }));
 
-vi.mock('../src/core/worldPerceptionLayer.js', () => ({
+vi.mock('@packages/core-logic/worldPerceptionLayer.js', () => ({
   runWorldPerceptionCycle: worldHarness.runWorldPerceptionCycle,
 }));
 
-vi.mock('../src/server/services/projectMaintainerService.js', () => ({
+vi.mock('@apps/mcp-core/server/services/projectMaintainerService.js', () => ({
   runProjectMaintainerReport: vi.fn(),
   initProjectMaintainerSchema: vi.fn(),
 }));
 
-vi.mock('../src/core/reflectionEngine.js', () => ({
+vi.mock('@packages/core-logic/reflectionEngine.js', () => ({
   ReflectionEngine: {
     getInstance: () => ({
       ingestProjectMaintainerReport: vi.fn(),
@@ -70,17 +70,17 @@ vi.mock('../src/core/reflectionEngine.js', () => ({
   },
 }));
 
-vi.mock('../src/server/services/crmFollowUpExecutionService.js', () => ({
+vi.mock('@apps/mcp-core/server/services/crmFollowUpExecutionService.js', () => ({
   executeDueCrmFollowUpActions: vi.fn(),
 }));
 
-vi.mock('../src/server/services/hrTimesheetService.js', () => ({
+vi.mock('@apps/mcp-core/server/services/hrTimesheetService.js', () => ({
   runMonthlyPayrollExport: vi.fn(),
   runDailyCultureAlerts: vi.fn(),
   resolveSchedulerExportMonth: vi.fn(() => '2026-04'),
 }));
 
-import { scheduledTasksRunner } from '../src/server/schedulers/scheduledTasksRunner.js';
+import { scheduledTasksRunner } from '@apps/mcp-core/server/schedulers/scheduledTasksRunner.js';
 
 describe('ScheduledTasksRunner world-perception handler', () => {
   beforeEach(() => {

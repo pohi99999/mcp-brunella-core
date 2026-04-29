@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { parseTrackTodos, toggleTodoInContent, findTodoLineNumber, } from '../src/utils/trackTodoParser.js';
+import { parseTrackTodos, toggleTodoInContent, findTodoLineNumber, } from '@packages/utils/trackTodoParser.js';
 describe('TrackTodoParser', () => {
     const sampleTrackMd = `# Track: Test Track
 

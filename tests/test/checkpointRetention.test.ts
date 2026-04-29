@@ -14,7 +14,7 @@ import {
   closeCheckpointDb,
   clearAllCheckpoints,
   type CheckpointState,
-} from '../src/core/checkpoint.js';
+} from '@packages/core-logic/checkpoint.js';
 import Database from 'better-sqlite3';
 import path from 'path';
 import fs from 'fs';

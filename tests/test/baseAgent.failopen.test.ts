@@ -16,35 +16,35 @@ const {
   fireHooksMock: vi.fn(),
 }));
 
-vi.mock('../src/core/patternReuse.js', () => ({
+vi.mock('@packages/core-logic/patternReuse.js', () => ({
   checkPattern: checkPatternMock,
   getPatternReuseThreshold: vi.fn().mockReturnValue(0.7),
 }));
 
-vi.mock('../src/core/structuredMemory.js', () => ({
+vi.mock('@packages/core-logic/structuredMemory.js', () => ({
   queryMemory: vi.fn().mockReturnValue([]),
   saveMemory: saveMemoryMock,
 }));
 
-vi.mock('../src/utils/rag.js', () => ({
+vi.mock('@packages/utils/rag.js', () => ({
   searchRAG: vi.fn().mockResolvedValue([]),
   addToIndex: addToIndexMock,
 }));
 
-vi.mock('../src/utils/responseFormatter.js', () => ({
+vi.mock('@packages/utils/responseFormatter.js', () => ({
   formatAgentResult: vi.fn((result: { message: string }) => result.message),
 }));
 
-vi.mock('../src/core/hookRegistry.js', () => ({
+vi.mock('@packages/core-logic/hookRegistry.js', () => ({
   fireHookSafely: fireHookSafelyMock,
   isHookEnabled: isHookEnabledMock,
 }));
 
-vi.mock('../src/core/hookEngine.js', () => ({
+vi.mock('@packages/core-logic/hookEngine.js', () => ({
   fireHooks: fireHooksMock,
 }));
 
-import { BaseAgent, type AgentContext, type AgentResult } from '../src/agents/BaseAgent.js';
+import { BaseAgent, type AgentContext, type AgentResult } from '@packages/agents/BaseAgent.js';
 
 class FailOpenTestAgent extends BaseAgent {
   name = 'FailOpenTestAgent';

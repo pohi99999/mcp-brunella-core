@@ -3,7 +3,7 @@
  * PURPOSE: G4.4 — Tests for codebaseIndexer module
  */
 import { describe, it, expect } from 'vitest';
-import { chunkContent } from '../src/core/codebaseIndexer.js';
+import { chunkContent } from '@packages/core-logic/codebaseIndexer.js';
 // ============================================================================
 // CHUNKING TESTS
 // ============================================================================

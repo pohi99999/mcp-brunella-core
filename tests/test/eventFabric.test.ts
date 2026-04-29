@@ -3,7 +3,7 @@ import fs from 'fs';
 import os from 'os';
 import path from 'path';
 
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
   logInfo: vi.fn(),
   logError: vi.fn(),
   logWarn: vi.fn(),
@@ -11,8 +11,8 @@ vi.mock('../src/utils/logger.js', () => ({
 
 async function freshModules() {
   vi.resetModules();
-  const eventFabricModule = await import('../src/core/eventFabric.js');
-  const phoenixModule = await import('../src/core/phoenixEventBus.js');
+  const eventFabricModule = await import('@packages/core-logic/eventFabric.js');
+  const phoenixModule = await import('@packages/core-logic/phoenixEventBus.js');
   return {
     eventFabricModule,
     phoenixModule,

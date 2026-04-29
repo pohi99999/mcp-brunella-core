@@ -1,7 +1,7 @@
 import { Router, Request, Response } from 'express';
-import { getWrangler, initializeWrangler } from '../../utils/wranglerHelper.js';
-import { logInfo, logError } from '../../utils/logger.js';
-import { CEANAutoDeploy } from '../../core/ceanAutoDeploy.js';
+import { getWrangler, initializeWrangler } from '@packages/utils/wranglerHelper.js';
+import { logInfo, logError } from '@packages/utils/logger.js';
+import { CEANAutoDeploy } from '@packages/core-logic/ceanAutoDeploy.js';
 
 export const createWranglerRouter = () => {
   const router = Router();

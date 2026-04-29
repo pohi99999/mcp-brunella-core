@@ -1,12 +1,12 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { LanceDBClient, lanceDBClient, invoiceStore } from '../src/utils/lancedb_client.js';
+import { LanceDBClient, lanceDBClient, invoiceStore } from '@packages/utils/lancedb_client.js';
 
 const harness = vi.hoisted(() => ({
   logInfo: vi.fn(),
   logError: vi.fn(),
 }));
 
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
   logInfo: harness.logInfo,
   logError: harness.logError,
 }));

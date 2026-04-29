@@ -11,7 +11,7 @@ class MockServer {
 }
 
 async function loadMonitorTools() {
-  const { registerMonitorTools } = await import('../src/tools/monitor.js');
+  const { registerMonitorTools } = await import('@packages/utils/monitor.js');
   const server = new MockServer();
   registerMonitorTools(server as any);
   return server;

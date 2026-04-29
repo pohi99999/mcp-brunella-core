@@ -4,9 +4,9 @@ import os from 'os';
 import path from 'path';
 import request from 'supertest';
 import { beforeEach, afterEach, describe, expect, it, vi } from 'vitest';
-import { initDB, saveTransaction, createCashEntry, saveReconciliationEvent, saveInvoice } from '../src/data/bookkeeping_db.js';
-import { createBookkeepingRoutes } from '../src/server/routes/bookkeeping.js';
-import type { BookkeepingTransaction } from '../src/types/bookkeeping.d.js';
+import { initDB, saveTransaction, createCashEntry, saveReconciliationEvent, saveInvoice } from '@packages/utils/bookkeeping_db.js';
+import { createBookkeepingRoutes } from '@apps/mcp-core/server/routes/bookkeeping.js';
+import type { BookkeepingTransaction } from '@packages/types/bookkeeping.d.js';
 
 const { delegateMock } = vi.hoisted(() => ({
     delegateMock: vi.fn(),
@@ -61,22 +61,22 @@ const { notificationConfiguredMock, sendNotificationEmailMock } = vi.hoisted(() 
     sendNotificationEmailMock: vi.fn(),
 }));
 
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
     logInfo: vi.fn(),
     logError: vi.fn(),
 }));
 
-vi.mock('../src/agents/AgentManager.js', () => ({
+vi.mock('@packages/agents/AgentManager.js', () => ({
     agentManager: {
         delegate: delegateMock,
     },
 }));
 
-vi.mock('../src/utils/bookkeepingReadiness.js', () => ({
+vi.mock('@packages/utils/bookkeepingReadiness.js', () => ({
     buildBookkeepingReadinessReport: readinessMock,
 }));
 
-vi.mock('../src/utils/notificationService.js', () => ({
+vi.mock('@packages/utils/notificationService.js', () => ({
     isNotificationEmailConfigured: notificationConfiguredMock,
     sendNotificationEmail: sendNotificationEmailMock,
 }));

@@ -1,10 +1,10 @@
 // test/SheetsSyncAgent.test.ts
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { SheetsSyncAgent } from '../src/agents/SheetsSyncAgent.js';
-import * as db from '../src/data/bookkeeping_db.js';
-import { AgentContext } from '../src/agents/BaseAgent.js';
-import { BookkeepingTransaction, TransactionStatus } from '../src/types/bookkeeping.d.js';
-import * as logger from '../src/utils/logger.js';
+import { SheetsSyncAgent } from '@packages/agents/SheetsSyncAgent.js';
+import * as db from '@packages/utils/bookkeeping_db.js';
+import { AgentContext } from '@packages/agents/BaseAgent.js';
+import { BookkeepingTransaction, TransactionStatus } from '@packages/types/bookkeeping.d.js';
+import * as logger from '@packages/utils/logger.js';
 
 describe('SheetsSyncAgent', () => {
     beforeEach(() => {

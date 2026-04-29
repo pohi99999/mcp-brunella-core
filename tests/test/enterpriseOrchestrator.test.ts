@@ -3,8 +3,8 @@ import EnterpriseOrchestrator, {
   type EnterpriseEvent,
   type ModuleType,
   type ExecutionResult,
-} from '../src/agents/EnterpriseOrchestrator.js';
-import { type IAgent, type AgentResponse } from '../src/agents/types.js';
+} from '@packages/agents/EnterpriseOrchestrator.js';
+import { type IAgent, type AgentResponse } from '@packages/agents/types.js';
 
 // ============================================================================
 // MOCK AGENT FOR TESTING

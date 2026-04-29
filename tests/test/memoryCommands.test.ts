@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { Command } from 'commander';
-import { registerMemoryCommands } from '../src/cli/memoryCommands.js';
+import { registerMemoryCommands } from '@apps/mcp-core/commands/memoryCommands.js';
 
 const promptMock = vi.hoisted(() => vi.fn());
 const writeFileMock = vi.hoisted(() => vi.fn());

@@ -18,11 +18,11 @@
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import crypto from 'crypto';
-import { DeploymentAnalyzer, type DeploymentAnalysis } from '../src/tools/deploymentAnalyzer.js';
-import { JulesAICoreClient, type JulesFixResponse } from '../src/core/julesMock.js';
+import { DeploymentAnalyzer, type DeploymentAnalysis } from '@packages/utils/deploymentAnalyzer.js';
+import { JulesAICoreClient, type JulesFixResponse } from '@packages/core-logic/julesMock.js';
 import type {
   GitHubWorkflowRunPayload
-} from '../src/types/github.js';
+} from '@packages/types/github.js';
 
 /**
  * Mock data for E2E testing

@@ -2,7 +2,7 @@ import inquirer from "inquirer";
 import chalk from "chalk";
 import boxen from "boxen";
 import ora from "ora";
-import { generateResponse } from "../../core/llm_client.js";
+import { generateResponse } from "../../../src/core/llm_client.js";
 
 export async function securityMenu() {
   console.log(

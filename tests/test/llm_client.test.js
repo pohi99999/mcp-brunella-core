@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { generateResponse } from '../src/core/llm_client.js';
+import { generateResponse } from '@packages/core-logic/llm_client.js';
 const { mockGenerateContent, mockGetGenerativeModel } = vi.hoisted(() => {
     const mockGenerateContent = vi.fn();
     const mockGetGenerativeModel = vi.fn(() => ({
@@ -15,8 +15,8 @@ vi.mock('@google/generative-ai', () => {
     };
 });
 // Mock aiGateway to always use local Ollama (bypass CF routing in tests)
-vi.mock('../src/utils/aiGateway.js', async () => {
-    const { AIGatewayClient, ...rest } = await vi.importActual('../src/utils/aiGateway.js');
+vi.mock('@packages/utils/aiGateway.js', async () => {
+    const { AIGatewayClient, ...rest } = await vi.importActual('@packages/utils/aiGateway.js');
     const localClient = new AIGatewayClient({ enabled: false });
     return {
         ...rest,

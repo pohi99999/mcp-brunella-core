@@ -1,8 +1,8 @@
 import inquirer from "inquirer";
 import chalk from "chalk";
 import boxen from "boxen";
-import { pSalesTrack, formatPSalesPhaseStatus } from "../../data/pSalesTrack.js";
-import { writeLine } from '../../utils/cliOutput.js';
+import { pSalesTrack, formatPSalesPhaseStatus } from "../../../packages/utils/pSalesTrack.js";
+import { writeLine } from '../../../packages/utils/cliOutput.js';
 
 function printStatus(): void {
   writeLine(

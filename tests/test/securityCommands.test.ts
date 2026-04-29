@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { Command } from 'commander';
-import { registerSecurityCommands } from '../src/cli/securityCommands.js';
+import { registerSecurityCommands } from '@apps/mcp-core/commands/securityCommands.js';
 
 describe('Security CLI Commands', () => {
   beforeEach(() => {

@@ -2,11 +2,11 @@ import { Router, Request, Response } from 'express';
 import Database from 'better-sqlite3';
 import { v4 as uuidv4 } from 'uuid';
 import crypto from 'crypto';
-import { logInfo, logError } from '../../utils/logger.js';
-import { JulesAutomationService } from '../../core/julesAutomationService.js';
-import { ingestGitHubWorkflowFailure } from '../../core/githubWebhookIngress.js';
-import { fireHookSafely } from '../../core/hookRegistry.js';
-import { config } from '../../config/schema.js';
+import { logInfo, logError } from '@packages/utils/logger.js';
+import { JulesAutomationService } from '@packages/core-logic/julesAutomationService.js';
+import { ingestGitHubWorkflowFailure } from '@packages/core-logic/githubWebhookIngress.js';
+import { fireHookSafely } from '@packages/core-logic/hookRegistry.js';
+import { config } from '@packages/utils/schema.js';
 
 interface WebhookEvent {
   id: string;

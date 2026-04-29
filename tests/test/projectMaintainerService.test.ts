@@ -3,7 +3,7 @@ import fs from 'fs/promises';
 import os from 'os';
 import path from 'path';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { initProjectMaintainerSchema, runProjectMaintainerReport } from '../src/server/services/projectMaintainerService.js';
+import { initProjectMaintainerSchema, runProjectMaintainerReport } from '@apps/mcp-core/server/services/projectMaintainerService.js';
 
 describe('ProjectMaintainerService', () => {
   let tempDir: string;

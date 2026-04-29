@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { Command } from 'commander';
-import { registerGuardrailsCommands, registerTelemetryCommands } from '../src/cli/guardrailsCommands.js';
+import { registerGuardrailsCommands, registerTelemetryCommands } from '@apps/mcp-core/commands/guardrailsCommands.js';
 
 describe('Guardrails CLI Commands', () => {
   beforeEach(() => {

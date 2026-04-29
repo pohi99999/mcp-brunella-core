@@ -10,13 +10,13 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 // We import the CLASS via module so we get a fresh instance for each test
-let phoenixEventBus: typeof import('../src/core/phoenixEventBus.js')['phoenixEventBus'];
+let phoenixEventBus: typeof import('@packages/core-logic/phoenixEventBus.js')['phoenixEventBus'];
 
 // Dynamic import helper to get a fresh singleton each time
 async function freshEventBus() {
   // Reset module cache for a clean singleton
   vi.resetModules();
-  const mod = await import('../src/core/phoenixEventBus.js');
+  const mod = await import('@packages/core-logic/phoenixEventBus.js');
   return mod.phoenixEventBus;
 }
 

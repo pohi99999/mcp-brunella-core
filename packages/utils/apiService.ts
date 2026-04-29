@@ -1,1 +1,1 @@
-export * from '../dashboard/lib/apiService.js';
+export * from '../../apps/dashboard/lib/apiService.js';

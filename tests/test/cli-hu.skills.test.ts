@@ -4,13 +4,13 @@ const executeSkillMock = vi.fn();
 const connectMock = vi.fn();
 const closeMock = vi.fn();
 
-vi.mock('../src/agents/AgentManager.js', () => ({
+vi.mock('@packages/agents/AgentManager.js', () => ({
   agentManager: {
     executeSkill: executeSkillMock,
   },
 }));
 
-vi.mock('../src/utils/mcpClient.js', () => ({
+vi.mock('@packages/utils/mcpClient.js', () => ({
   BrunellaClient: class {
     connect = connectMock;
     close = closeMock;
@@ -19,15 +19,15 @@ vi.mock('../src/utils/mcpClient.js', () => ({
   },
 }));
 
-vi.mock('../src/cli/invoiceSync.js', () => ({
+vi.mock('@apps/mcp-core/commands/invoiceSync.js', () => ({
   runInvoiceSync: vi.fn(),
 }));
 
-vi.mock('../src/cli/commands/innovate-hu.js', () => ({
+vi.mock('@apps/mcp-core/commands/commands/innovate-hu.js', () => ({
   innovateCommand: vi.fn(),
 }));
 
-vi.mock('../src/cli/commands/hr-onboarding-hu.js', () => ({
+vi.mock('@apps/mcp-core/commands/commands/hr-onboarding-hu.js', () => ({
   hrOnboardingCommand: vi.fn(),
 }));
 
@@ -56,7 +56,7 @@ describe('cli-hu skill commands', () => {
     const originalArgv = process.argv;
     vi.stubGlobal('process', { ...process, argv: ['node', 'cli-hu.js', 'skill', 'lista'] } as NodeJS.Process);
 
-    const module = await import('../src/cli-hu.js');
+    const module = await import('@packages/utils/cli-hu.js');
     const handled = await module.runSkillCommand(['skill', 'lista']);
     expect(handled).toBe(true);
     expect(connectMock).not.toHaveBeenCalled();
@@ -70,7 +70,7 @@ describe('cli-hu skill commands', () => {
     executeSkillMock.mockResolvedValue({ ok: true });
     vi.stubGlobal('process', { ...process, argv: ['node', 'cli-hu.js', 'skill', 'futtat', 'lead-hunter', '{"query":"b2b"}'] } as NodeJS.Process);
 
-    const module = await import('../src/cli-hu.js');
+    const module = await import('@packages/utils/cli-hu.js');
     const handled = await module.runSkillCommand(['skill', 'futtat', 'lead-hunter', '{"query":"b2b"}']);
     expect(handled).toBe(true);
     expect(executeSkillMock).toHaveBeenCalledWith('lead-hunter', { query: 'b2b' });

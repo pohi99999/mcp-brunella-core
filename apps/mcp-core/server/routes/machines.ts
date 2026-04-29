@@ -15,10 +15,10 @@ import { spawn } from "child_process";
 import path from "path";
 import { fileURLToPath } from "url";
 import { socketService } from "@packages/agents/SocketService.js";
-import { logInfo, logError } from "../../utils/logger.js";
-import { alertDispatcher } from "../../pipeline/alertDispatcher.js";
-import { ensureError } from "../../utils/ensureError.js";
-import { logDebug } from "../../utils/logger.js";
+import { logInfo, logError } from "@packages/utils/logger.js";
+import { alertDispatcher } from "@packages/core-logic/alertDispatcher.js";
+import { ensureError } from "@packages/utils/ensureError.js";
+import { logDebug } from "@packages/utils/logger.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const WORKER_PATH = path.resolve(__dirname, "../../../myai/workers/machine_hunter.py");

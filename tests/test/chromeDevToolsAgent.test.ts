@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeAll } from 'vitest';
-import { ChromeDevToolsAgent } from '../src/agents/ChromeDevToolsAgent.js';
+import { ChromeDevToolsAgent } from '@packages/agents/ChromeDevToolsAgent.js';
 
 describe('ChromeDevToolsAgent', () => {
   let agent: ChromeDevToolsAgent;

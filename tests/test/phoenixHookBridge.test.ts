@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
-import { fireHook } from '../src/core/agentHookEngine.js';
-import { phoenixEventBus } from '../src/core/phoenixEventBus.js';
-import '../src/core/phoenixHookBridge.js'; // Import triggers registration
+import { fireHook } from '@packages/core-logic/agentHookEngine.js';
+import { phoenixEventBus } from '@packages/core-logic/phoenixEventBus.js';
+import '@packages/core-logic/phoenixHookBridge.js'; // Import triggers registration
 
 describe('PhoenixHookBridge', () => {
   it('should relay agent:task:failed hook to phoenixEventBus', async () => {

@@ -1,9 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import express from "express";
 import request from "supertest";
-import { createCopilotBridgeRoutes } from "../src/server/routes/copilotBridge.js";
+import { createCopilotBridgeRoutes } from "@apps/mcp-core/server/routes/copilotBridge.js";
 
-vi.mock("../src/utils/logger.js", () => ({
+vi.mock("@packages/utils/logger.js", () => ({
   logInfo: vi.fn(),
   logError: vi.fn(),
   setAgentStatus: vi.fn(),

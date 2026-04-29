@@ -11,12 +11,12 @@ vi.mock('inquirer', () => ({
   },
 }));
 
-vi.mock('../src/dashboard/lib/apiService.js', () => ({
+vi.mock('@/lib/apiService.js', () => ({
   fetchWithTimeout: fetchWithTimeoutMock,
   safeJson: async (response: Response) => JSON.parse(await response.text()) as unknown,
 }));
 
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
   logInfo: logInfoMock,
   logError: logErrorMock,
 }));
@@ -52,7 +52,7 @@ describe('hrOnboardingCommand', () => {
     );
     promptMock.mockResolvedValueOnce({ action: 'samples' });
 
-    const { hrOnboardingCommand } = await import('../src/cli/commands/hr-onboarding-hu.js');
+    const { hrOnboardingCommand } = await import('@apps/mcp-core/commands/commands/hr-onboarding-hu.js');
     await hrOnboardingCommand();
 
     expect(promptMock).toHaveBeenCalledTimes(1);

@@ -16,8 +16,8 @@ import {
   initBriefingSchema,
   runDailyAgentBriefing,
   type BriefingReport,
-} from '@packages/core-logic/briefingService.js';
-import { logError, logInfo } from '../../utils/logger.js';
+} from '@packages/core-logic/services/briefingService.js';
+import { logError, logInfo } from '@packages/utils/logger.js';
 
 // ── Module constant ───────────────────────────────────────────────────────────
 const MODULE = 'BriefingRoutes';

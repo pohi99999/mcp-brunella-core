@@ -3,7 +3,7 @@
  * Track: guardrails_evaluation_20260323
  */
 import { describe, it, expect } from 'vitest';
-import { redactText, redactObject, safeRedactAgentOutput } from '../../src/security/redactor.js';
+import { redactText, redactObject, safeRedactAgentOutput } from '@packages/core-logic/redactor.js';
 
 describe('redactText()', () => {
   it('redacts email addresses', () => {

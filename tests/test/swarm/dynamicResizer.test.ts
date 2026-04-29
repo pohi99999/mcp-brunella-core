@@ -2,9 +2,9 @@
  * Tests for Dynamic Resizer — Track #5 Phase 3
  */
 import { describe, it, expect, beforeEach } from 'vitest';
-import { evaluateResize, checkAgentHealth, getResizeSummary } from '../../src/core/swarm/dynamicResizer.js';
-import type { AgentHealth, ResizeConfig } from '../../src/core/swarm/dynamicResizer.js';
-import type { SwarmColony } from '../../src/agents/swarm/SwarmManager.js';
+import { evaluateResize, checkAgentHealth, getResizeSummary } from '@packages/core-logic/swarm/dynamicResizer.js';
+import type { AgentHealth, ResizeConfig } from '@packages/core-logic/swarm/dynamicResizer.js';
+import type { SwarmColony } from '@packages/agents/swarm/SwarmManager.js';
 
 function makeAgent(id: string, role = 'worker', activeTasks = 0) {
   return {

@@ -23,8 +23,8 @@ import {
   recordCrmLeadScore,
   resumeCrmFollowUpPlan,
   scoreCrmFollowUpLeadById,
-} from '../src/data/crm_db.js';
-import { normalizeCrmLead } from '../src/utils/crmLead.js';
+} from '@packages/utils/crm_db.js';
+import { normalizeCrmLead } from '@packages/utils/crmLead.js';
 
 vi.mock('nodemailer', () => ({
   default: {

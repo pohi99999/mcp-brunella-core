@@ -5,8 +5,8 @@
  * The CLI pushes command logs here, the Dashboard panel reads them.
  */
 import { Router, Request, Response } from 'express';
-import { copilotBridgeState, CopilotCommand } from '../../core/copilotBridgeState.js';
-import { logInfo, logError } from '../../utils/logger.js';
+import { copilotBridgeState, CopilotCommand } from '@packages/core-logic/copilotBridgeState.js';
+import { logInfo, logError } from '@packages/utils/logger.js';
 
 const TAG = 'CopilotBridge';
 

@@ -3,14 +3,14 @@
  */
 import { describe, it, expect, vi } from 'vitest';
 
-vi.mock('../../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
   logInfo: vi.fn(),
   logWarn: vi.fn(),
   logError: vi.fn(),
 }));
 
-import { conductVoting, negotiate, type Vote } from '../../src/core/swarm/votingProtocol.js';
-import type { SwarmAgent } from '../../src/agents/swarm/SwarmAgent.js';
+import { conductVoting, negotiate, type Vote } from '@packages/core-logic/swarm/votingProtocol.js';
+import type { SwarmAgent } from '@packages/agents/swarm/SwarmAgent.js';
 
 function createMockAgent(id: string, completed: number, failed: number): SwarmAgent {
   return {

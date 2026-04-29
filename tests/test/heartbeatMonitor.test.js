@@ -2,7 +2,7 @@
  * Phoenix Protocol v2 - Heartbeat Monitor Test Suite
  */
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { heartbeatMonitor } from '../src/utils/heartbeatMonitor.js';
+import { heartbeatMonitor } from '@packages/utils/heartbeatMonitor.js';
 describe('Phoenix Protocol v2 - Heartbeat Monitor', () => {
     beforeEach(() => {
         // Stop any previous running monitor

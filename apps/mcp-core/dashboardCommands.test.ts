@@ -5,9 +5,9 @@ import * as logger from '@packages/utils/logger.js';
 
 describe('dashboardCommand', () => {
   let program: Command;
-  let logInfoSpy: vi.SpiedFunction<typeof logger.logInfo>;
-  let logErrorSpy: vi.SpiedFunction<typeof logger.logError>;
-  let stdoutSpy: vi.SpiedFunction<typeof process.stdout.write>;
+  let logInfoSpy: ReturnType<typeof vi.spyOn>;
+  let logErrorSpy: ReturnType<typeof vi.spyOn>;
+  let stdoutSpy: ReturnType<typeof vi.spyOn>;
 
   beforeEach(() => {
     program = new Command();

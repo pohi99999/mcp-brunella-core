@@ -1,1 +1,1 @@
-export * from '../../data/pSalesTrack';
+export * from '@packages/utils/pSalesTrack';

@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { Command } from 'commander';
-import { registerReflectionCommands } from '../src/cli/reflectionCommands.js';
+import { registerReflectionCommands } from '@apps/mcp-core/commands/reflectionCommands.js';
 
 const spinnerStop = vi.fn();
 const spinnerFail = vi.fn();

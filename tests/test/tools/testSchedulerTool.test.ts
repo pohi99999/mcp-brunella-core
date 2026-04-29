@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type { TestRun, TestStats } from '../../src/core/testResultsService.js';
+import type { TestRun, TestStats } from '@packages/core-logic/testResultsService.js';
 
 const schedulerMocks = vi.hoisted(() => ({
   logInfo: vi.fn(),
@@ -10,17 +10,17 @@ const schedulerMocks = vi.hoisted(() => ({
   getTestRuns: vi.fn(),
 }));
 
-vi.mock('../../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
   logInfo: schedulerMocks.logInfo,
   logError: schedulerMocks.logError,
 }));
 
-vi.mock('../../src/server/schedulers/testRunner.js', () => ({
+vi.mock('@apps/mcp-core/server/schedulers/testRunner.js', () => ({
   runTests: schedulerMocks.runTests,
   getSchedulerStatus: schedulerMocks.getSchedulerStatus,
 }));
 
-vi.mock('../../src/core/testResultsService.js', () => ({
+vi.mock('@packages/core-logic/testResultsService.js', () => ({
   getTestStats: schedulerMocks.getTestStats,
   getTestRuns: schedulerMocks.getTestRuns,
 }));
@@ -28,7 +28,7 @@ vi.mock('../../src/core/testResultsService.js', () => ({
 import {
   testSchedulerRunHandler,
   testSchedulerStatusHandler,
-} from '../../src/tools/testSchedulerTool.js';
+} from '@packages/utils/testSchedulerTool.js';
 
 function createTestRun(overrides: Partial<TestRun> = {}): TestRun {
   return {

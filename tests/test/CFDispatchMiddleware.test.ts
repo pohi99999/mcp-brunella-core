@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-vi.mock("../src/cloudflare/cloudflareHelpers.js", () => {
+vi.mock("@packages/core-logic/cloudflare/cloudflareHelpers.js", () => {
   const inventory = [
     { id: "cean-orchestrator", name: "cean-orchestrator", url: "https://cean.example", kind: "public" },
     { id: "agents-api", name: "agents-api", url: "https://agents.example", kind: "internal" },
@@ -13,19 +13,19 @@ vi.mock("../src/cloudflare/cloudflareHelpers.js", () => {
   };
 });
 
-vi.mock("../src/utils/metrics.js", () => ({
+vi.mock("@packages/utils/metrics.js", () => ({
   recordCloudflareDispatchOutcome: vi.fn(),
 }));
 
-vi.mock("../src/utils/logger.js", () => ({
+vi.mock("@packages/utils/logger.js", () => ({
   logDebug: vi.fn(),
   logInfo: vi.fn(),
   logWarn: vi.fn(),
 }));
 
-import { withCFDispatch } from "../src/cloudflare/CFDispatchMiddleware.js";
-import { getCloudflareWorkersInventory, postTaskToWorker } from "../src/cloudflare/cloudflareHelpers.js";
-import { recordCloudflareDispatchOutcome } from "../src/utils/metrics.js";
+import { withCFDispatch } from "@packages/core-logic/cloudflare/CFDispatchMiddleware.js";
+import { getCloudflareWorkersInventory, postTaskToWorker } from "@packages/core-logic/cloudflare/cloudflareHelpers.js";
+import { recordCloudflareDispatchOutcome } from "@packages/utils/metrics.js";
 
 const mockedWorkersInventory = vi.mocked(getCloudflareWorkersInventory);
 const mockedPostTaskToWorker = vi.mocked(postTaskToWorker);

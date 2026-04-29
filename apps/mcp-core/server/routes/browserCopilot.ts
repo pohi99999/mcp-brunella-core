@@ -3,8 +3,8 @@ import {
   browserCopilotSessionService,
   type BrowserCopilotEnginePreference,
   type BrowserCopilotMode,
-} from '../../services/BrowserCopilotSessionService.js';
-import { logError, logInfo } from '../../utils/logger.js';
+} from '@packages/core-logic/BrowserCopilotSessionService.js';
+import { logError, logInfo } from '@packages/utils/logger.js';
 
 function isMode(value: unknown): value is BrowserCopilotMode {
   return value === 'observe' || value === 'guide' || value === 'auto';

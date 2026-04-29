@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getMessages } from '../../utils/db.js';
+import { getMessages } from '@packages/utils/db.js';
 
 export function createChatRoutes(): Router {
     const router = Router();

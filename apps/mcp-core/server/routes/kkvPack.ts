@@ -4,8 +4,8 @@ import {
   buildKkvPackResponse,
   isKkvPackId,
   type KkvPackResponse,
-} from "../../tools/kkvPack.js";
-import { logError } from "../../utils/logger.js";
+} from "@packages/utils/kkvPack.js";
+import { logError } from "@packages/utils/logger.js";
 
 function readPackId(queryValue: unknown): string | undefined {
   return typeof queryValue === "string" ? queryValue : undefined;

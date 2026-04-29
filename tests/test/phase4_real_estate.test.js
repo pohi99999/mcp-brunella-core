@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { MarketingAgent } from '../src/agents/MarketingAgent.js';
+import { MarketingAgent } from '@packages/agents/MarketingAgent.js';
 describe('MarketingAgent - Real Estate Phase 4 Outreach', () => {
     let agent;
     beforeEach(() => {

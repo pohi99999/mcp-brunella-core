@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'vitest';
-import { buildCrmFollowUpSchedule, scoreCrmFollowUpLead } from '../src/utils/crmFollowUp.js';
+import { buildCrmFollowUpSchedule, scoreCrmFollowUpLead } from '@packages/utils/crmFollowUp.js';
 
 describe('crmFollowUp helpers', () => {
   it('scores hot inbound leads and builds D+3/D+7/D+14 schedule', () => {

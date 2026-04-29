@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { ReActExecutor } from '../src/core/reactLoop.js';
+import { ReActExecutor } from '@packages/core-logic/reactLoop.js';
 
 describe('ReActExecutor', () => {
   it('records thought-action-observation steps and returns final message', async () => {

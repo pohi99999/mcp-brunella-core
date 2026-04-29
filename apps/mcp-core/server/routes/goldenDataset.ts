@@ -4,8 +4,8 @@
 
 import { Router } from 'express';
 import { asyncHandler } from '../middleware/errorHandler.js';
-import { queryToolRuns, getToolRunStats } from '../../utils/globalDb.js';
-import type { ToolRunQuery } from '../../utils/globalDb.js';
+import { queryToolRuns, getToolRunStats } from '@packages/utils/globalDb.js';
+import type { ToolRunQuery } from '@packages/utils/globalDb.js';
 
 export function createGoldenDatasetRouter(): Router {
   const router = Router();

@@ -1,10 +1,10 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { MarketIntelAgent } from '../../src/agents/MarketIntelAgent.js';
-import * as pythonShell from '../../src/utils/pythonShell.js';
-import { lanceDBClient } from '../../src/utils/lancedb_client.js';
+import { MarketIntelAgent } from '@packages/agents/MarketIntelAgent.js';
+import * as pythonShell from '@packages/utils/pythonShell.js';
+import { lanceDBClient } from '@packages/utils/lancedb_client.js';
 
 // Mock PythonShell
-vi.mock('../../src/utils/pythonShell.js', () => ({
+vi.mock('@packages/utils/pythonShell.js', () => ({
     runPythonWorker: vi.fn(async (script, args) => {
         if (script === 'market_scraper.py') {
             return { title: 'Product X', price: '100', currency: 'HUF' };
@@ -18,7 +18,7 @@ vi.mock('../../src/utils/pythonShell.js', () => ({
 }));
 
 // Mock LanceDB
-vi.mock('../../src/utils/lancedb_client.js', () => ({
+vi.mock('@packages/utils/lancedb_client.js', () => ({
     lanceDBClient: {
         addData: vi.fn(() => Promise.resolve()),
         query: vi.fn(() => Promise.resolve([])),

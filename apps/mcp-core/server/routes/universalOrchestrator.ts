@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import { getUniversalOrchestratorService, type UniversalChatMessage } from '../../core/universalOrchestratorService.js';
-import { logInfo, logError } from '../../utils/logger.js';
-import type { OrchestratorAgent, OrchestratorState } from '../../agents/OrchestratorAgent.js';
-import { agentManager } from '../../agents/AgentManager.js';
+import { getUniversalOrchestratorService, type UniversalChatMessage } from '@packages/core-logic/universalOrchestratorService.js';
+import { logInfo, logError } from '@packages/utils/logger.js';
+import type { OrchestratorAgent, OrchestratorState } from '@packages/agents/OrchestratorAgent.js';
+import { agentManager } from '@packages/agents/AgentManager.js';
 
 export function createUniversalOrchestratorRouter(): Router {
   const router = Router();

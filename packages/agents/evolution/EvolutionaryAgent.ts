@@ -7,7 +7,7 @@
  */
 
 import { EventEmitter } from 'events';
-import { logInfo, logWarn } from '../../utils/logger.js';
+import { logInfo, logWarn } from '@packages/utils/logger.js';
 
 export interface AgentGenome {
   id: string;

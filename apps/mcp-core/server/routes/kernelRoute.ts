@@ -9,10 +9,10 @@
  */
 
 import { Router, Request, Response } from 'express';
-import { logInfo, logError } from '../../utils/logger.js';
-import { executeKernelPipeline } from '../../core/conductor.js';
-import { runLedger } from '../../core/conductor.js';
-import { createRunEnvelope } from '../../core/kernelTypes.js';
+import { logInfo, logError } from '@packages/utils/logger.js';
+import { executeKernelPipeline } from '@packages/core-logic/conductor.js';
+import { runLedger } from '@packages/core-logic/conductor.js';
+import { createRunEnvelope } from '@packages/core-logic/kernelTypes.js';
 
 function toKnowledgeScope(value: unknown): string[] {
   if (!Array.isArray(value)) {

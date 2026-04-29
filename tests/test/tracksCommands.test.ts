@@ -74,7 +74,7 @@ describe('Tracks CLI Commands', () => {
   });
 
   it('registers the open tracks command', async () => {
-    const { registerTracksCommands } = await import('../src/cli/tracksCommands.js');
+    const { registerTracksCommands } = await import('@apps/mcp-core/commands/tracksCommands.js');
     const program = new Command();
     registerTracksCommands(program);
 
@@ -86,7 +86,7 @@ describe('Tracks CLI Commands', () => {
   });
 
   it('lists only open tracks when using the open command', async () => {
-    const { registerTracksCommands } = await import('../src/cli/tracksCommands.js');
+    const { registerTracksCommands } = await import('@apps/mcp-core/commands/tracksCommands.js');
     const program = new Command();
     registerTracksCommands(program);
 

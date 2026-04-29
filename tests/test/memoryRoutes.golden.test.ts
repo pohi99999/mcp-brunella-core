@@ -6,13 +6,13 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 const mockFetch = vi.fn();
 vi.stubGlobal("fetch", mockFetch);
 
-vi.mock("../src/server/SocketService.js", () => ({
+vi.mock("@apps/mcp-core/server/SocketService.js", () => ({
   socketService: {
     emit: vi.fn(),
   },
 }));
 
-import { createMemoryRouter } from "../src/server/memoryRoutes.js";
+import { createMemoryRouter } from "@apps/mcp-core/server/memoryRoutes.js";
 
 describe("memoryRoutes /golden", () => {
   beforeEach(() => {

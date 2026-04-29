@@ -19,35 +19,35 @@ const { delegateMock, executeWorkspaceActionMock, requestApprovalMock, getReques
   return { delegateMock, executeWorkspaceActionMock, requestApprovalMock, getRequestMock, checkPermissionMock, isWorkspaceActionMock };
 });
 
-vi.mock('../src/agents/AgentManager.js', () => ({
+vi.mock('@packages/agents/AgentManager.js', () => ({
   agentManager: { delegate: delegateMock }
 }));
 
-vi.mock('../src/utils/approvalManager.js', () => ({
+vi.mock('@packages/utils/approvalManager.js', () => ({
   approvalManager: {
     requestApproval: requestApprovalMock,
     getRequest: getRequestMock,
   },
 }));
 
-vi.mock('../src/core/rbac/agentPermissions.js', () => ({
+vi.mock('@packages/core-logic/rbac/agentPermissions.js', () => ({
   getEnhancedPermissionManager: () => ({
     checkPermission: checkPermissionMock,
   }),
 }));
 
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
   logInfo: vi.fn(),
   logError: vi.fn(),
 }));
 
-vi.mock('../src/server/workspaceActions.js', () => ({
+vi.mock('@apps/mcp-core/server/workspaceActions.js', () => ({
   executeWorkspaceAction: executeWorkspaceActionMock,
   isWorkspaceAction: isWorkspaceActionMock,
 }));
 
 async function buildApp() {
-  const { createAnythingLLMActionRoutes } = await import('../src/server/routes/anythingllmActions.js');
+  const { createAnythingLLMActionRoutes } = await import('@apps/mcp-core/server/routes/anythingllmActions.js');
   const app = express();
   app.use(express.json());
   app.use('/', createAnythingLLMActionRoutes());

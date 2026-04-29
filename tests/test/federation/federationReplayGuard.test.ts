@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { FederationReplayGuard, FEDERATION_REPLAY_TTL_MS } from '../../src/core/federation/federationReplayGuard.js';
-import { clearFederationReplayNonces } from '../../src/core/autonomyRuntimeStore.js';
+import { FederationReplayGuard, FEDERATION_REPLAY_TTL_MS } from '@packages/core-logic/federation/federationReplayGuard.js';
+import { clearFederationReplayNonces } from '@packages/core-logic/autonomyRuntimeStore.js';
 
 describe('FederationReplayGuard', () => {
   beforeEach(() => {

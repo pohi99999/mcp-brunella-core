@@ -3,7 +3,7 @@
  * Tests conflict detection, resolution suggestions, and HR notifications
  */
 import { describe, it, expect, beforeEach } from 'vitest';
-import { ConflictMediatorAgent } from '../src/agents/ConflictMediatorAgent.js';
+import { ConflictMediatorAgent } from '@packages/agents/ConflictMediatorAgent.js';
 describe('ConflictMediatorAgent', () => {
     let agent;
     beforeEach(() => {

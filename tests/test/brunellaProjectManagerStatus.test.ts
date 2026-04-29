@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   parseRecentFoszalEntries,
   renderBrunellaProjectManagerSnapshot,
-} from '../src/services/brunellaProjectManagerStatus.js';
+} from '@packages/core-logic/brunellaProjectManagerStatus.js';
 
 describe('brunellaProjectManagerStatus', () => {
   it('parses recent FOSZAL entries', () => {

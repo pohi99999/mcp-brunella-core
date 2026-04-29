@@ -1,16 +1,16 @@
 // FILE: test/specWriterAgent.test.ts
 // PURPOSE: Unit tests for SpecWriterAgent v2.0 (EPP v2 Protocol)
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { SpecWriterAgent } from "../src/agents/SpecWriterAgent.js";
-import * as llmClient from "../src/core/llm_client.js";
+import { SpecWriterAgent } from "@packages/agents/SpecWriterAgent.js";
+import * as llmClient from "@packages/core-logic/llm_client.js";
 import fs from "fs/promises";
 import path from "path";
 // Mock LLM client
-vi.mock("../src/core/llm_client.js", () => ({
+vi.mock("@packages/core-logic/llm_client.js", () => ({
     generateResponse: vi.fn(),
 }));
 // Mock logger
-vi.mock("../src/utils/logger.js", () => ({
+vi.mock("@packages/utils/logger.js", () => ({
     logInfo: vi.fn(),
     logError: vi.fn(),
     setAgentStatus: vi.fn(),

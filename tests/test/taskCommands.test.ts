@@ -25,7 +25,7 @@ vi.mock('ora', () => ({
   }),
 }));
 
-import { registerTaskCommands } from '../src/cli/taskCommands.js';
+import { registerTaskCommands } from '@apps/mcp-core/commands/taskCommands.js';
 
 describe('Task CLI Commands', () => {
   beforeEach(() => {

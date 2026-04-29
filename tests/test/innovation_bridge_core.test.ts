@@ -1,13 +1,13 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { InnovationBridgeAgent } from '../src/agents/InnovationBridgeAgent.js';
-import * as llmClient from '../src/core/llm_client.js';
+import { InnovationBridgeAgent } from '@packages/agents/InnovationBridgeAgent.js';
+import * as llmClient from '@packages/core-logic/llm_client.js';
 
-vi.mock('../src/core/llm_client.js', () => ({
+vi.mock('@packages/core-logic/llm_client.js', () => ({
   generateResponse: vi.fn()
 }));
 
 // Mock RAG utilities (LanceDB not available in test env)
-vi.mock('../src/utils/rag.js', () => ({
+vi.mock('@packages/utils/rag.js', () => ({
   searchRAG: vi.fn().mockResolvedValue([]),
   addToIndex: vi.fn().mockResolvedValue(undefined),
 }));

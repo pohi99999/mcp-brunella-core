@@ -74,18 +74,18 @@ const { approvalRouterState } = vi.hoisted(() => {
   };
 });
 
-vi.mock('../src/core/auditLog.js', () => ({
+vi.mock('@packages/core-logic/auditLog.js', () => ({
   record: auditRecordMock,
 }));
 
-vi.mock('../src/core/approvalRouter.js', () => ({
+vi.mock('@packages/core-logic/approvalRouter.js', () => ({
   approvalRouter: {
     createWorkflowFromPolicy: approvalRouterState.createWorkflowFromPolicy,
     getWorkflow: approvalRouterState.getWorkflow,
   },
 }));
 
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
   logInfo: vi.fn(),
   logError: vi.fn(),
   logWarn: vi.fn(),
@@ -98,8 +98,8 @@ vi.mock('../src/utils/logger.js', () => ({
 async function freshModules() {
   vi.resetModules();
   const [managerModule, busModule] = await Promise.all([
-    import('../src/core/ephemeralAgentManager.js'),
-    import('../src/core/phoenixEventBus.js'),
+    import('@packages/core-logic/ephemeralAgentManager.js'),
+    import('@packages/core-logic/phoenixEventBus.js'),
   ]);
   return { managerModule, busModule };
 }
@@ -141,7 +141,7 @@ describe('EphemeralAgentManager', () => {
 
   it('terminate() sets state to terminated and emits event', async () => {
     const { managerModule, busModule } = await freshModules();
-    const { getPostmortem, clearPostmortems } = await import('../src/core/ephemeralAudit.js');
+    const { getPostmortem, clearPostmortems } = await import('@packages/core-logic/ephemeralAudit.js');
     managerModule.ephemeralAgentManager.clear();
     busModule.phoenixEventBus.clearHistory();
     clearPostmortems();

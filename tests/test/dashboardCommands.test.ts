@@ -7,16 +7,16 @@ const dashboardHarness = vi.hoisted(() => ({
   logError: vi.fn(),
 }));
 
-vi.mock('../src/dashboard/lib/apiService.js', () => ({
+vi.mock('@/lib/apiService.js', () => ({
   fetchWithTimeout: dashboardHarness.fetchWithTimeout,
 }));
 
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
   logInfo: dashboardHarness.logInfo,
   logError: dashboardHarness.logError,
 }));
 
-import { dashboardCommand } from '../src/cli/dashboardCommands.js';
+import { dashboardCommand } from '@apps/mcp-core/commands/dashboardCommands.js';
 
 describe('Dashboard CLI Commands', () => {
   beforeEach(() => {

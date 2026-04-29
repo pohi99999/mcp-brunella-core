@@ -10,18 +10,18 @@ const { callToolMock, getDiscoveredTargetsMock } = vi.hoisted(() => ({
   getDiscoveredTargetsMock: vi.fn(),
 }));
 
-vi.mock("../src/utils/logger.js", () => ({
+vi.mock("@packages/utils/logger.js", () => ({
   logInfo: vi.fn(),
   logError: vi.fn(),
   logWarn: vi.fn(),
 }));
 
-vi.mock("../src/core/mcpDiscovery.js", () => ({
+vi.mock("@packages/core-logic/mcpDiscovery.js", () => ({
   discoverMcpServers: vi.fn(),
   getDiscoveredTargets: getDiscoveredTargetsMock,
 }));
 
-vi.mock("../src/utils/mcpClientManager.js", () => ({
+vi.mock("@packages/utils/mcpClientManager.js", () => ({
   mcpClientManager: {
     callTool: callToolMock,
   },
@@ -39,7 +39,7 @@ describe("Remote routes", () => {
     process.env.BRUNELLA_WORKSPACE_ROOT = tempDir;
 
     vi.resetModules();
-    ({ closeStore } = await import("../src/core/remoteSessionStore.js"));
+    ({ closeStore } = await import("@packages/core-logic/remoteSessionStore.js"));
 
     getDiscoveredTargetsMock.mockReturnValue([
       {
@@ -67,7 +67,7 @@ describe("Remote routes", () => {
   });
 
   async function createApp() {
-    const { createRemoteRoutes } = await import("../src/server/routes/remote.js");
+    const { createRemoteRoutes } = await import("@apps/mcp-core/server/routes/remote.js");
     const app = express();
     app.use(express.json());
     app.use("/api/v1/remote", createRemoteRoutes());

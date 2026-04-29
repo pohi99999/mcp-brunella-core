@@ -7,11 +7,11 @@ import {
   listWorldSignals,
   promoteWorldSignal,
   runWorldPerceptionCycle,
-} from '../../core/worldPerceptionLayer.js';
+} from '@packages/core-logic/worldPerceptionLayer.js';
 import type {
   WorldPerceptionSignalInput,
   WorldPerceptionSignalStatus,
-} from '../../core/worldPerceptionLayer.js';
+} from '@packages/core-logic/worldPerceptionLayer.js';
 
 export function createWorldPerceptionRouter(): Router {
   const router = Router();

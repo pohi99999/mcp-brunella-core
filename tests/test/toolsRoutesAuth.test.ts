@@ -5,7 +5,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 const executeToolMock = vi.fn();
 const getToolDefinitionsMock = vi.fn(() => []);
 
-vi.mock('../src/server/ToolManager.js', () => ({
+vi.mock('@apps/mcp-core/server/ToolManager.js', () => ({
   toolManager: {
     executeTool: executeToolMock,
     getToolDefinitions: getToolDefinitionsMock,
@@ -32,7 +32,7 @@ describe('tool routes operator access', () => {
   }
 
   it('rejects non-loopback tool execution without operator auth', async () => {
-    const { createToolRoutes } = await import('../src/server/routes/tools.js');
+    const { createToolRoutes } = await import('@apps/mcp-core/server/routes/tools.js');
     const app = createApp();
     app.use('/', createToolRoutes());
 
@@ -56,7 +56,7 @@ describe('tool routes operator access', () => {
       },
     ]);
 
-    const { createToolRoutes } = await import('../src/server/routes/tools.js');
+    const { createToolRoutes } = await import('@apps/mcp-core/server/routes/tools.js');
     const app = createApp();
     app.use('/', createToolRoutes());
 
@@ -86,7 +86,7 @@ describe('tool routes operator access', () => {
     process.env.BRUNELLA_API_KEY = 'secret-key';
     executeToolMock.mockResolvedValue({ ok: true });
 
-    const { createToolRoutes } = await import('../src/server/routes/tools.js');
+    const { createToolRoutes } = await import('@apps/mcp-core/server/routes/tools.js');
     const app = createApp();
     app.use('/', createToolRoutes());
 
@@ -107,7 +107,7 @@ describe('tool routes operator access', () => {
   });
 
   it('rejects non-loopback tool chain execution without operator auth', async () => {
-    const { createToolRoutes } = await import('../src/server/routes/tools.js');
+    const { createToolRoutes } = await import('@apps/mcp-core/server/routes/tools.js');
     const app = createApp();
     app.use('/', createToolRoutes());
 
@@ -125,7 +125,7 @@ describe('tool routes operator access', () => {
       .mockResolvedValueOnce({ task: 'middle' })
       .mockResolvedValueOnce({ done: true });
 
-    const { createToolRoutes } = await import('../src/server/routes/tools.js');
+    const { createToolRoutes } = await import('@apps/mcp-core/server/routes/tools.js');
     const app = createApp();
     app.use('/', createToolRoutes());
 

@@ -4,19 +4,19 @@
 // VERSION: 3.0.5 — P4+P5+P6+P7+P8+P9: Code Review, Context, Coverage, Task Queue, Git Integration, Code Scaffolding
 
 import { Router } from 'express';
-import { pipelineRunner, type TaskPipeline } from '../../agents/developerPipeline.js';
-import { codeReviewEngine } from '../../agents/codeReview.js';
-import { contextBuilder } from '../../agents/contextBuilder.js';
-import { coverageAnalyzer } from '../../agents/coverageAnalysis.js';
-import { taskQueueManager } from '../../agents/taskQueue.js';
-import { getGitManager } from '../../agents/gitIntegration.js';
-import { getTemplateEngine } from '../../agents/codeScaffold.js';
-import { developerMetrics } from '../../utils/developerMetrics.js';
-import { approvalManager } from '../../utils/approvalManager.js';
-import { activityFeed } from '../../utils/activityFeed.js';
-import { agentManager } from '../../agents/AgentManager.js';
-import { logInfo, logError } from '../../utils/logger.js';
-import { approvalRouter } from '../../core/approvalRouter.js';
+import { pipelineRunner, type TaskPipeline } from '@packages/agents/developerPipeline.js';
+import { codeReviewEngine } from '@packages/agents/codeReview.js';
+import { contextBuilder } from '@packages/agents/contextBuilder.js';
+import { coverageAnalyzer } from '@packages/agents/coverageAnalysis.js';
+import { taskQueueManager } from '@packages/agents/taskQueue.js';
+import { getGitManager } from '@packages/agents/gitIntegration.js';
+import { getTemplateEngine } from '@packages/agents/codeScaffold.js';
+import { developerMetrics } from '@packages/utils/developerMetrics.js';
+import { approvalManager } from '@packages/utils/approvalManager.js';
+import { activityFeed } from '@packages/utils/activityFeed.js';
+import { agentManager } from '@packages/agents/AgentManager.js';
+import { logInfo, logError } from '@packages/utils/logger.js';
+import { approvalRouter } from '@packages/core-logic/approvalRouter.js';
 import * as path from 'path';
 
 export function createDeveloperRoutes(): Router {

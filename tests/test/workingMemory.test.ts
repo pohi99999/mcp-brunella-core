@@ -5,7 +5,7 @@ import {
   formatWorkingMemory,
   recordWorkingMemoryObservation,
   rememberWorkingMemoryGoal,
-} from '../src/core/workingMemory.js';
+} from '@packages/core-logic/workingMemory.js';
 
 describe('workingMemory', () => {
   it('compacts large message history into a summary window', () => {

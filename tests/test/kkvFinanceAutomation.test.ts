@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { summarizeInvoices } from '../src/kkv/financeAutomation.js';
+import { summarizeInvoices } from '@packages/core-logic/financeAutomation.js';
 
 describe('KKV Finance Automation - summarizeInvoices', () => {
   it('summarizes invoices by status', () => {

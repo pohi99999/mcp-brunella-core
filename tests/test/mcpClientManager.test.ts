@@ -63,7 +63,7 @@ vi.mock("fs", () => ({
   readFileSync: managerHarness.readFileSyncMock,
 }));
 
-vi.mock("../src/utils/logger.js", () => ({
+vi.mock("@packages/utils/logger.js", () => ({
   logWarn: managerHarness.logWarnMock,
   logInfo: vi.fn(),
   logError: vi.fn(),
@@ -107,7 +107,7 @@ describe("McpClientManager", () => {
         }),
     );
 
-    const { McpClientManager } = await import("../src/utils/mcpClientManager.js");
+    const { McpClientManager } = await import("@packages/utils/mcpClientManager.js");
     const manager = new McpClientManager();
 
     const first = manager.connectHttp({ name: "remote", url: "http://example.test/mcp" });
@@ -128,7 +128,7 @@ describe("McpClientManager", () => {
   it("should_cleanup_client_state_when_transport_onclose_fires_and_invoke_callback", async () => {
     managerHarness.connectQueue.push(async () => undefined);
 
-    const { McpClientManager } = await import("../src/utils/mcpClientManager.js");
+    const { McpClientManager } = await import("@packages/utils/mcpClientManager.js");
     const manager = new McpClientManager();
     const onClose = vi.fn();
 
@@ -166,7 +166,7 @@ describe("McpClientManager", () => {
       },
     );
 
-    const { McpClientManager } = await import("../src/utils/mcpClientManager.js");
+    const { McpClientManager } = await import("@packages/utils/mcpClientManager.js");
     const manager = new McpClientManager();
 
     const result = await manager.connectHttp({ name: "fallback-server", url: "http://example.test/mcp" });
@@ -182,7 +182,7 @@ describe("McpClientManager", () => {
   it("should_disconnect_clients_when_disconnect_and_disconnect_all_are_called_and_cleanup_transports", async () => {
     managerHarness.connectQueue.push(async () => undefined, async () => undefined);
 
-    const { McpClientManager } = await import("../src/utils/mcpClientManager.js");
+    const { McpClientManager } = await import("@packages/utils/mcpClientManager.js");
     const manager = new McpClientManager();
 
     await manager.connectStdio({ name: "one", command: "node" });

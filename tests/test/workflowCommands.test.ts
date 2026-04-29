@@ -12,13 +12,13 @@ vi.mock('inquirer', () => ({
   },
 }));
 
-vi.mock('../src/core/copilotBridgeState.js', () => ({
+vi.mock('@packages/core-logic/copilotBridgeState.js', () => ({
   copilotBridgeState: {
     addDispatch: workflowHarness.addDispatch,
   },
 }));
 
-import { registerWorkflowCommands } from '../src/cli/workflowCommands.js';
+import { registerWorkflowCommands } from '@apps/mcp-core/commands/workflowCommands.js';
 
 describe('Workflow CLI Commands', () => {
   beforeEach(() => {

@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { Command } from 'commander';
-import { registerSwarmCommands } from '../src/cli/swarmCommands.js';
+import { registerSwarmCommands } from '@apps/mcp-core/commands/swarmCommands.js';
 
 describe('Swarm CLI Commands', () => {
   beforeEach(() => {

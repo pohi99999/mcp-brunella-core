@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { SafeZoneValidator } from '../src/security/safe_zone_validator.js';
+import { SafeZoneValidator } from '@packages/core-logic/safe_zone_validator.js';
 import fs from 'fs';
 import path from 'path';
 

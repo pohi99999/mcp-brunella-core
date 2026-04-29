@@ -1,40 +1,40 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-vi.mock('../src/tools/dataFlywheelMetrics.js', () => ({
+vi.mock('@packages/utils/dataFlywheelMetrics.js', () => ({
   buildDataFlywheelMetricsSnapshot: vi.fn(),
 }));
 
-vi.mock('../src/core/checkpoint.js', () => ({
+vi.mock('@packages/core-logic/checkpoint.js', () => ({
   getCheckpointStats: vi.fn(),
   listActiveCheckpoints: vi.fn(),
 }));
 
-vi.mock('../src/core/failoverRegistry.js', () => ({
+vi.mock('@packages/core-logic/failoverRegistry.js', () => ({
   failoverRegistry: {
     getStats: vi.fn(),
     getAttempts: vi.fn(),
   },
 }));
 
-vi.mock('../src/core/githubRemediationRuntime.js', () => ({
+vi.mock('@packages/core-logic/githubRemediationRuntime.js', () => ({
   githubRemediationRuntime: {
     getSummary: vi.fn(),
     listRuns: vi.fn(),
   },
 }));
 
-vi.mock('../src/core/gitRecovery.js', () => ({
+vi.mock('@packages/core-logic/gitRecovery.js', () => ({
   getRecoveryLog: vi.fn(),
 }));
 
-vi.mock('../src/core/phoenixEventBus.js', () => ({
+vi.mock('@packages/core-logic/phoenixEventBus.js', () => ({
   phoenixEventBus: {
     getStats: vi.fn(),
     getHistory: vi.fn(),
   },
 }));
 
-vi.mock('../src/utils/heartbeatMonitor.js', () => ({
+vi.mock('@packages/utils/heartbeatMonitor.js', () => ({
   heartbeatMonitor: {
     getOverallHealth: vi.fn(),
   },
@@ -43,14 +43,14 @@ vi.mock('../src/utils/heartbeatMonitor.js', () => ({
 import {
   buildPhoenixFlywheelObservabilitySnapshot,
   renderPhoenixFlywheelMarkdown,
-} from '../src/tools/phoenixInsights.js';
-import { buildDataFlywheelMetricsSnapshot } from '../src/tools/dataFlywheelMetrics.js';
-import { getCheckpointStats, listActiveCheckpoints } from '../src/core/checkpoint.js';
-import { failoverRegistry } from '../src/core/failoverRegistry.js';
-import { githubRemediationRuntime } from '../src/core/githubRemediationRuntime.js';
-import { getRecoveryLog } from '../src/core/gitRecovery.js';
-import { phoenixEventBus } from '../src/core/phoenixEventBus.js';
-import { heartbeatMonitor } from '../src/utils/heartbeatMonitor.js';
+} from '@packages/utils/phoenixInsights.js';
+import { buildDataFlywheelMetricsSnapshot } from '@packages/utils/dataFlywheelMetrics.js';
+import { getCheckpointStats, listActiveCheckpoints } from '@packages/core-logic/checkpoint.js';
+import { failoverRegistry } from '@packages/core-logic/failoverRegistry.js';
+import { githubRemediationRuntime } from '@packages/core-logic/githubRemediationRuntime.js';
+import { getRecoveryLog } from '@packages/core-logic/gitRecovery.js';
+import { phoenixEventBus } from '@packages/core-logic/phoenixEventBus.js';
+import { heartbeatMonitor } from '@packages/utils/heartbeatMonitor.js';
 
 const mockedBuildDataFlywheelMetricsSnapshot = vi.mocked(buildDataFlywheelMetricsSnapshot);
 const mockedGetCheckpointStats = vi.mocked(getCheckpointStats);

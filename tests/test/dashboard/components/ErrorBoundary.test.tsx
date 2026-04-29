@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { ErrorBoundary } from "react-error-boundary";
-import { ErrorFallback } from "../../../src/dashboard/ErrorFallback.js";
+import { ErrorFallback } from "@/ErrorFallback.js";
 import React from "react";
 
 // Mocking the UI components if needed, or if they are simple enough just let them render.

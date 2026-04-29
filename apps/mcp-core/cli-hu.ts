@@ -12,12 +12,12 @@ import TerminalRenderer from "marked-terminal";
 import { readdirSync, existsSync, readFileSync } from 'fs';
 import { join, resolve } from 'path';
 import { fileURLToPath } from 'url';
-import { runInvoiceSync } from './cli/invoiceSync.js';
-import { innovateCommand } from './cli/commands/innovate-hu.js';
-import { hrOnboardingCommand } from './cli/commands/hr-onboarding-hu.js';
+import { runInvoiceSync } from './invoiceSync.js';
+import { innovateCommand } from './commands/innovate-hu.js';
+import { hrOnboardingCommand } from './commands/hr-onboarding-hu.js';
 import { agentManager } from '@packages/agents/AgentManager.js';
 import { getSkill, listSkills } from '@packages/utils/index.js';
-import { studioFullPipeline, studioInit, studioProbe } from './cli/studioRuntime.js';
+import { studioFullPipeline, studioInit, studioProbe } from './studioRuntime.js';
 import { generateAudioPlan } from '@packages/utils/audioPlanTool.js';
 import { ingestMediaDirectory } from '@packages/utils/mediaAnalysisTool.js';
 import { runQcChecks } from '@packages/utils/qcTool.js';
@@ -741,5 +741,6 @@ const isDirectExecution = (() => {
 if (isDirectExecution) {
     void start();
 }
+
 
 

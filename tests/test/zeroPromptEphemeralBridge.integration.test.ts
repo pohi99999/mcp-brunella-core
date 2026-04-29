@@ -19,9 +19,9 @@ const { auditRecordMock } = vi.hoisted(() => ({
   auditRecordMock: vi.fn().mockResolvedValue(undefined),
 }));
 
-vi.mock('../src/core/auditLog.js', () => ({ record: auditRecordMock }));
+vi.mock('@packages/core-logic/auditLog.js', () => ({ record: auditRecordMock }));
 
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
   logInfo: vi.fn(),
   logError: vi.fn(),
   logWarn: vi.fn(),
@@ -32,7 +32,7 @@ const { dispatchApprovalRequestedMock } = vi.hoisted(() => ({
   dispatchApprovalRequestedMock: vi.fn().mockResolvedValue([]),
 }));
 
-vi.mock('../src/core/notificationChannels.js', () => ({
+vi.mock('@packages/core-logic/notificationChannels.js', () => ({
   notificationChannels: {
     dispatchApprovalRequested: dispatchApprovalRequestedMock,
     dispatchApprovalResolved: vi.fn().mockResolvedValue([]),
@@ -44,14 +44,14 @@ vi.mock('../src/core/notificationChannels.js', () => ({
 async function freshEnv() {
   vi.resetModules();
   // Re-register mocks after resetModules
-  vi.mock('../src/core/auditLog.js', () => ({ record: auditRecordMock }));
-  vi.mock('../src/utils/logger.js', () => ({
+  vi.mock('@packages/core-logic/auditLog.js', () => ({ record: auditRecordMock }));
+  vi.mock('@packages/utils/logger.js', () => ({
     logInfo: vi.fn(),
     logError: vi.fn(),
     logWarn: vi.fn(),
     setAgentStatus: vi.fn(),
   }));
-  vi.mock('../src/core/notificationChannels.js', () => ({
+  vi.mock('@packages/core-logic/notificationChannels.js', () => ({
     notificationChannels: {
       dispatchApprovalRequested: dispatchApprovalRequestedMock,
       dispatchApprovalResolved: vi.fn().mockResolvedValue([]),
@@ -59,11 +59,11 @@ async function freshEnv() {
   }));
 
   const [runtimeMod, eventFabricMod, approvalMod, phoenixMod, ephemeralMod] = await Promise.all([
-    import('../src/core/zeroPromptRuntime.js'),
-    import('../src/core/eventFabric.js'),
-    import('../src/core/approvalRouter.js'),
-    import('../src/core/phoenixEventBus.js'),
-    import('../src/core/ephemeralAgentManager.js'),
+    import('@packages/core-logic/zeroPromptRuntime.js'),
+    import('@packages/core-logic/eventFabric.js'),
+    import('@packages/core-logic/approvalRouter.js'),
+    import('@packages/core-logic/phoenixEventBus.js'),
+    import('@packages/core-logic/ephemeralAgentManager.js'),
   ]);
 
   return { runtimeMod, eventFabricMod, approvalMod, phoenixMod, ephemeralMod };
@@ -234,7 +234,7 @@ describe('[Integration] ZeroPromptRuntime — brunella_zero_prompt_ephemeral_bri
   // ── 5. policyEngine classifies github.issue.opened as safe ───────────────
 
   it('policyEngine.evaluateAndLogPolicy classifies github.issue.opened as safe/no-approval', async () => {
-    const { evaluateAndLogPolicy } = await import('../src/core/policyEngine.js');
+    const { evaluateAndLogPolicy } = await import('@packages/core-logic/policyEngine.js');
     const decision = await evaluateAndLogPolicy({
       event: makeSignalEvent('policy-001', 'github', 'github.issue.opened', {
         issue: { number: 99, title: 'Test', body: '' },

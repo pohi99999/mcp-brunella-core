@@ -1,20 +1,20 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { MarketIntelAgent } from '../../src/agents/MarketIntelAgent.js';
-import { runPythonWorker } from '../../src/utils/pythonShell.js';
-import { getWorkspaceClient } from '../../src/tools/unifiedWorkspace.js';
+import { MarketIntelAgent } from '@packages/agents/MarketIntelAgent.js';
+import { runPythonWorker } from '@packages/utils/pythonShell.js';
+import { getWorkspaceClient } from '@packages/utils/unifiedWorkspace.js';
 
 // Mock dependencies
-vi.mock('../../src/utils/pythonShell.js', () => ({
+vi.mock('@packages/utils/pythonShell.js', () => ({
     runPythonWorker: vi.fn()
 }));
 
-vi.mock('../../src/tools/unifiedWorkspace.js', () => ({
+vi.mock('@packages/utils/unifiedWorkspace.js', () => ({
     getWorkspaceClient: vi.fn().mockResolvedValue({
         createEmailDraft: vi.fn().mockResolvedValue({ url: 'http://mail.google.com/draft/123' })
     })
 }));
 
-vi.mock('../../src/utils/lancedb_client.js', () => ({
+vi.mock('@packages/utils/lancedb_client.js', () => ({
     lanceDBClient: {
         addData: vi.fn().mockResolvedValue(true)
     }

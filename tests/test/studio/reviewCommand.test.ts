@@ -5,7 +5,7 @@ import path from 'path';
 import { Command } from 'commander';
 import { describe, expect, it, vi } from 'vitest';
 
-import { registerStudioCommands } from '../../src/cli/studioCommands.js';
+import { registerStudioCommands } from '@apps/mcp-core/studioCommands.js';
 
 function createReport() {
   return {

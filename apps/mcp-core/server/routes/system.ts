@@ -14,19 +14,19 @@ import { Router } from 'express';
 import { exec } from 'child_process';
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import { agentManager } from '../../agents/AgentManager.js';
+import { agentManager } from '@packages/agents/AgentManager.js';
 import { asyncHandler } from '../middleware/errorHandler.js';
-import { getGlobalDb } from '../../utils/globalDb.js';
-import { getRAGCount } from '../../utils/rag.js';
-import { logInfo, logError, logDebug } from '../../utils/logger.js';
-import { ensureError } from '../../utils/ensureError.js';
+import { getGlobalDb } from '@packages/utils/globalDb.js';
+import { getRAGCount } from '@packages/utils/rag.js';
+import { logInfo, logError, logDebug } from '@packages/utils/logger.js';
+import { ensureError } from '@packages/utils/ensureError.js';
 import {
   checkOllamaHealth,
   checkAnythingLLMHealth,
   checkPythonHealth,
   checkN8nHealth,
   checkLangflowHealth,
-} from '../../utils/health.js';
+} from '@packages/utils/health.js';
 
 /**
  * Segédfüggvény: shell parancs végrehajtása Promise-ként

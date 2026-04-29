@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { record as auditRecord } from '../auditLog.js';
 import { phoenixEventBus } from '../phoenixEventBus.js';
 import { evaluateAndLogPolicy } from '../policyEngine.js';
-import { inspectFederationPublicKey } from '@packages/security/federationPeerProof.js';
+import { inspectFederationPublicKey } from '@packages/core-logic/federationPeerProof.js';
 import { logInfo, logWarn } from '@packages/utils/logger.js';
 import {
   clearFederationPeers,

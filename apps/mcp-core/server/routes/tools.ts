@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getDynamicToolRegistry } from '../../core/dynamicToolRegistry.js';
+import { getDynamicToolRegistry } from '@packages/core-logic/dynamicToolRegistry.js';
 import { toolManager } from '../ToolManager.js';
 import { socketService } from '@packages/agents/SocketService.js';
 import { requireOperatorAccess } from '../middleware.js';

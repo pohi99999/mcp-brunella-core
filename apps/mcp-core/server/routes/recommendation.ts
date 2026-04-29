@@ -8,8 +8,8 @@
  * statikus fallback ajánlásokat ad vissza.
  */
 import { Router, type Request, type Response } from "express";
-import { logInfo, logError } from "../../utils/logger.js";
-import { HybridMemory } from "../../utils/rag.js";
+import { logInfo, logError } from "@packages/utils/logger.js";
+import { HybridMemory } from "@packages/utils/rag.js";
 
 const AGENT = "RecommendationRoute";
 const RECOMMENDATION_TIMEOUT_MS = 30_000;

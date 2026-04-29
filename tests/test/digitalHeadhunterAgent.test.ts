@@ -4,7 +4,7 @@
  */
 
 import { describe, it, expect, beforeEach } from 'vitest';
-import { DigitalHeadhunterAgent, type LeaveRequest } from '../src/agents/DigitalHeadhunterAgent.js';
+import { DigitalHeadhunterAgent, type LeaveRequest } from '@packages/agents/DigitalHeadhunterAgent.js';
 
 describe('DigitalHeadhunterAgent', () => {
   let agent: DigitalHeadhunterAgent;

@@ -1,13 +1,13 @@
 import { Router, type Request, type Response } from 'express';
-import { zeroPromptRuntime } from '../../core/zeroPromptRuntime.js';
-import { eventFabric } from '../../core/eventFabric.js';
-import { approvalRouter } from '../../core/approvalRouter.js';
-import { githubRemediationRuntime } from '../../core/githubRemediationRuntime.js';
-import { notificationChannels } from '../../core/notificationChannels.js';
-import { evaluateAndLogPolicy } from '../../core/policyEngine.js';
-import { logError } from '../../utils/logger.js';
+import { zeroPromptRuntime } from '@packages/core-logic/zeroPromptRuntime.js';
+import { eventFabric } from '@packages/core-logic/eventFabric.js';
+import { approvalRouter } from '@packages/core-logic/approvalRouter.js';
+import { githubRemediationRuntime } from '@packages/core-logic/githubRemediationRuntime.js';
+import { notificationChannels } from '@packages/core-logic/notificationChannels.js';
+import { evaluateAndLogPolicy } from '@packages/core-logic/policyEngine.js';
+import { logError } from '@packages/utils/logger.js';
 import { v4 as uuidv4 } from 'uuid';
-import type { EventEnvelope, EventFabricPriority, EventFabricRiskHint } from '../../core/eventFabric.js';
+import type { EventEnvelope, EventFabricPriority, EventFabricRiskHint } from '@packages/core-logic/eventFabric.js';
 
 function isString(v: unknown): v is string {
   return typeof v === 'string' && v.trim().length > 0;

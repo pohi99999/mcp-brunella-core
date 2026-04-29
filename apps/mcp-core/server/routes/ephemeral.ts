@@ -7,10 +7,10 @@
  * DELETE /api/v1/ephemeral/:id       — manuális terminálás
  */
 import { Router } from 'express';
-import { ephemeralAgentManager } from '../../core/ephemeralAgentManager.js';
-import type { EphemeralAgentSpec } from '../../core/ephemeralAgentManager.js';
-import { executeEphemeralAgent } from '../../core/ephemeralAgentExecutor.js';
-import { logInfo } from '../../utils/logger.js';
+import { ephemeralAgentManager } from '@packages/core-logic/ephemeralAgentManager.js';
+import type { EphemeralAgentSpec } from '@packages/core-logic/ephemeralAgentManager.js';
+import { executeEphemeralAgent } from '@packages/core-logic/ephemeralAgentExecutor.js';
+import { logInfo } from '@packages/utils/logger.js';
 
 export function createEphemeralRouter(): Router {
   const router = Router();

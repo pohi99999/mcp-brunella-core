@@ -4,11 +4,11 @@ const { auditRecordMock } = vi.hoisted(() => ({
   auditRecordMock: vi.fn().mockResolvedValue(undefined),
 }));
 
-vi.mock('../src/core/auditLog.js', () => ({
+vi.mock('@packages/core-logic/auditLog.js', () => ({
   record: auditRecordMock,
 }));
 
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
   logInfo: vi.fn(),
   logError: vi.fn(),
   logWarn: vi.fn(),
@@ -19,7 +19,7 @@ const { dispatchApprovalRequestedMock, dispatchApprovalResolvedMock } = vi.hoist
   dispatchApprovalResolvedMock: vi.fn().mockResolvedValue([]),
 }));
 
-vi.mock('../src/core/notificationChannels.js', () => ({
+vi.mock('@packages/core-logic/notificationChannels.js', () => ({
   notificationChannels: {
     dispatchApprovalRequested: dispatchApprovalRequestedMock,
     dispatchApprovalResolved: dispatchApprovalResolvedMock,
@@ -28,10 +28,10 @@ vi.mock('../src/core/notificationChannels.js', () => ({
 
 async function freshZeroPromptModules() {
   vi.resetModules();
-  const runtimeModule = await import('../src/core/zeroPromptRuntime.js');
-  const eventFabricModule = await import('../src/core/eventFabric.js');
-  const approvalRouterModule = await import('../src/core/approvalRouter.js');
-  const phoenixModule = await import('../src/core/phoenixEventBus.js');
+  const runtimeModule = await import('@packages/core-logic/zeroPromptRuntime.js');
+  const eventFabricModule = await import('@packages/core-logic/eventFabric.js');
+  const approvalRouterModule = await import('@packages/core-logic/approvalRouter.js');
+  const phoenixModule = await import('@packages/core-logic/phoenixEventBus.js');
   return {
     runtimeModule,
     eventFabricModule,

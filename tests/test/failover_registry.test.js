@@ -11,7 +11,7 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 let failoverRegistry;
 async function freshRegistry() {
     vi.resetModules();
-    const mod = await import('../src/core/failoverRegistry.js');
+    const mod = await import('@packages/core-logic/failoverRegistry.js');
     return mod.failoverRegistry;
 }
 describe('FailoverRegistry', () => {

@@ -69,24 +69,24 @@ const healthRouteHarness = vi.hoisted(() => ({
   buildHealthResponse: vi.fn(() => ({ status: 'ok', services: {} })),
 }));
 
-vi.mock('../src/agents/AgentManager.js', () => ({
+vi.mock('@packages/agents/AgentManager.js', () => ({
   agentManager: { listAgents: healthRouteHarness.listAgents },
 }));
 
-vi.mock('../src/server/McpProcessManager.js', () => ({
+vi.mock('@apps/mcp-core/server/McpProcessManager.js', () => ({
   mcpProcessManager: { getServersStatus: healthRouteHarness.getServersStatus },
 }));
 
-vi.mock('../src/utils/runtimeTelemetry.js', () => ({
+vi.mock('@packages/utils/runtimeTelemetry.js', () => ({
   getRuntimeTelemetry: healthRouteHarness.getRuntimeTelemetry,
 }));
 
-vi.mock('../src/utils/runtimeDriftMonitor.js', () => ({
+vi.mock('@packages/utils/runtimeDriftMonitor.js', () => ({
   getRuntimeDriftSnapshot: healthRouteHarness.getRuntimeDriftSnapshot,
 }));
 
-vi.mock('../src/utils/runtimeThresholdRollout.js', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('../src/utils/runtimeThresholdRollout.js')>();
+vi.mock('@packages/utils/runtimeThresholdRollout.js', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@packages/utils/runtimeThresholdRollout.js')>();
   return {
     ...actual,
     buildThresholdRolloutPlan: healthRouteHarness.buildThresholdRolloutPlan,
@@ -94,12 +94,12 @@ vi.mock('../src/utils/runtimeThresholdRollout.js', async (importOriginal) => {
   };
 });
 
-vi.mock('../src/utils/globalDb.js', () => ({
+vi.mock('@packages/utils/globalDb.js', () => ({
   getLatestRuntimeThresholdRolloutJournalSummary:
     healthRouteHarness.getLatestRuntimeThresholdRolloutJournalSummary,
 }));
 
-vi.mock('../src/utils/health.js', () => ({
+vi.mock('@packages/utils/health.js', () => ({
   checkOllamaHealth: healthRouteHarness.checkOllamaHealth,
   checkAnythingLLMHealth: healthRouteHarness.checkAnythingLLMHealth,
   checkPythonHealth: healthRouteHarness.checkPythonHealth,
@@ -109,14 +109,14 @@ vi.mock('../src/utils/health.js', () => ({
   buildHealthResponse: healthRouteHarness.buildHealthResponse,
 }));
 
-vi.mock('../src/server/middleware/errorHandler.js', () => ({
+vi.mock('@apps/mcp-core/server/middleware/errorHandler.js', () => ({
   asyncHandler:
     (handler: (...args: any[]) => unknown) =>
     (req: unknown, res: unknown, next: (error?: unknown) => void) =>
       Promise.resolve(handler(req, res)).catch(next),
 }));
 
-import { createHealthRoutes } from '../src/server/routes/health.js';
+import { createHealthRoutes } from '@apps/mcp-core/server/routes/health.js';
 
 describe('health runtime rollout route', () => {
   it('returns rollout metadata on runtime-drift endpoint', async () => {

@@ -2,7 +2,7 @@ import { mkdtemp, mkdir, rm, writeFile } from 'fs/promises';
 import os from 'os';
 import path from 'path';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { buildHROnboardingDryRunReport } from '../src/utils/hrOnboardingDryRun.js';
+import { buildHROnboardingDryRunReport } from '@packages/utils/hrOnboardingDryRun.js';
 
 describe('HR onboarding dry-run helper', () => {
   afterEach(() => {

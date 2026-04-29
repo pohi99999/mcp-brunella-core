@@ -4,7 +4,7 @@
  */
 
 import { describe, it, expect, beforeEach } from 'vitest';
-import { MarketIntelAgent } from '../src/agents/MarketIntelAgent.js';
+import { MarketIntelAgent } from '@packages/agents/MarketIntelAgent.js';
 
 describe('MarketIntelAgent', () => {
   let agent: MarketIntelAgent;

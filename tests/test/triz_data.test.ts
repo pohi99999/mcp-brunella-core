@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import principles from '../src/data/triz_principles.json';
-import matrixData from '../src/data/triz_matrix.json';
+import principles from '@packages/utils/triz_principles.json';
+import matrixData from '@packages/utils/triz_matrix.json';
 
 describe('TRIZ Knowledge Base', () => {
   it('should have all 40 principles', () => {

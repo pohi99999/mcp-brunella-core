@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { BifrostGateway } from '../src/core/bifrost_gateway.js';
+import { BifrostGateway } from '@packages/core-logic/bifrost_gateway.js';
 /**
  * Bifrost Gateway Tests
  *

@@ -5,11 +5,11 @@ import Database from "better-sqlite3";
 import fs from "fs/promises";
 import os from "os";
 import path from "path";
-import { createScheduledTasksRoutes } from "../src/server/routes/scheduledTasks.js";
-import { createWebhookRoutes } from "../src/server/routes/webhooks.js";
-import { suggestedTasksRouter } from "../src/server/routes/suggestedTasks.js";
-import { initSuggestedTasksDb, getSuggestedTasksDb } from "../src/core/suggestedTasksScanner.js";
-import { config } from "../src/config/schema.js";
+import { createScheduledTasksRoutes } from "@apps/mcp-core/server/routes/scheduledTasks.js";
+import { createWebhookRoutes } from "@apps/mcp-core/server/routes/webhooks.js";
+import { suggestedTasksRouter } from "@apps/mcp-core/server/routes/suggestedTasks.js";
+import { initSuggestedTasksDb, getSuggestedTasksDb } from "@packages/core-logic/suggestedTasksScanner.js";
+import { config } from "@packages/utils/schema.js";
 import crypto from "crypto";
 
 type FetchResponse = {

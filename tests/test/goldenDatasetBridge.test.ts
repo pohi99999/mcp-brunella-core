@@ -83,12 +83,12 @@ function createFakeDb() {
 }
 
 // Mock getD1Adapter
-vi.mock('../src/utils/globalDb.js', () => ({
+vi.mock('@packages/utils/globalDb.js', () => ({
   getD1Adapter: vi.fn(),
   getGlobalDb: vi.fn(() => createFakeDb()),
 }));
 
-import { getD1Adapter, getGlobalDb } from '../src/utils/globalDb.js';
+import { getD1Adapter, getGlobalDb } from '@packages/utils/globalDb.js';
 import {
   saveGoldenSample,
   saveGoldenSampleLocal,
@@ -108,7 +108,7 @@ import {
   type GoldenSaveResult,
   type GoldenDatasetStats,
   type CuratedGoldenSample,
-} from '../src/core/goldenDatasetBridge.js';
+} from '@packages/core-logic/goldenDatasetBridge.js';
 
 describe('goldenDatasetBridge', () => {
   beforeEach(() => {
@@ -1067,7 +1067,7 @@ describe('captureCuratedGoldenCandidate', () => {
       );
     `);
 
-    const { captureCuratedGoldenCandidate, getCuratedGoldenSample, listCuratedGoldenSamples } = await import('../src/core/goldenDatasetBridge.js');
+    const { captureCuratedGoldenCandidate, getCuratedGoldenSample, listCuratedGoldenSamples } = await import('@packages/core-logic/goldenDatasetBridge.js');
 
     const result = captureCuratedGoldenCandidate({
       id: 'legacy-curated-1',

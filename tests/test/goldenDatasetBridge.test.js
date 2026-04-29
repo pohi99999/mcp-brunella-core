@@ -6,7 +6,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 // Mock fetch globally
 const mockFetch = vi.fn();
 vi.stubGlobal('fetch', mockFetch);
-import { saveGoldenSample, getGoldenStats, autoSaveGoldenSample, calculateQuality } from '../src/core/goldenDatasetBridge.js';
+import { saveGoldenSample, getGoldenStats, autoSaveGoldenSample, calculateQuality } from '@packages/core-logic/goldenDatasetBridge.js';
 describe('goldenDatasetBridge', () => {
     beforeEach(() => {
         mockFetch.mockReset();

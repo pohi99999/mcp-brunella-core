@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { DeadlockDetector } from '../src/core/deadlockDetector.js';
+import { DeadlockDetector } from '@packages/core-logic/deadlockDetector.js';
 
 describe('DeadlockDetector', () => {
   it('detects simple cycle', () => {

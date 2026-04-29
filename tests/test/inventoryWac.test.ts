@@ -28,7 +28,7 @@ let mockWacPrice: number | null = null;
 let mockStock = 0;
 let movementsLog: unknown[] = [];
 
-vi.mock('../src/utils/inventoryDb.js', () => ({
+vi.mock('@packages/utils/inventoryDb.js', () => ({
   getItemBySku: vi.fn(),
   getItemById: vi.fn(),
   getAllItems: vi.fn(() => []),
@@ -40,10 +40,10 @@ vi.mock('../src/utils/inventoryDb.js', () => ({
   logMovement: vi.fn((m: unknown) => { movementsLog.push(m); }),
 }));
 
-import { InventoryWacAgent } from '../src/agents/InventoryWacAgent.js';
+import { InventoryWacAgent } from '@packages/agents/InventoryWacAgent.js';
 
 const { getItemBySku, getItemById, getAllItems, getOpenBatchesByItemId, updateWacPrice } =
-  await import('../src/utils/inventoryDb.js');
+  await import('@packages/utils/inventoryDb.js');
 
 // ─── Segédfüggvény ────────────────────────────────────────────────────────────
 

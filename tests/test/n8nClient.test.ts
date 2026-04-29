@@ -1,11 +1,11 @@
 import express from "express";
 import request from "supertest";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { createN8nRoutes } from "../src/server/routes/external.js";
+import { createN8nRoutes } from "@apps/mcp-core/server/routes/external.js";
 import {
   N8nClient,
   sanitizeWorkflowForWrite,
-} from "../src/utils/n8nClient.js";
+} from "@packages/utils/n8nClient.js";
 
 describe("N8nClient", () => {
   beforeEach(() => {

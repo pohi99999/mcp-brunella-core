@@ -53,7 +53,7 @@ export function registerClaudeTool(server: McpServer) {
                     throw new Error(`Claude API error: ${response.status} - ${errorText}`);
                 }
 
-                const data = await response.json();
+                const data = await response.json() as { content: Array<{ text: string }>; id: string };
                 const textContent = data.content[0].text;
                 
                 await logger.log(`Response received`, { id: data.id });

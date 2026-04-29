@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
   logInfo: vi.fn(),
   logWarn: vi.fn(),
   logError: vi.fn(),
@@ -11,8 +11,8 @@ import {
   classifyToolError,
   formatToolObservation,
   ToolErrorType,
-} from '../src/core/toolErrorClassifier.js';
-import { withClassifiedRetry } from '../src/core/retryStrategy.js';
+} from '@packages/core-logic/toolErrorClassifier.js';
+import { withClassifiedRetry } from '@packages/core-logic/retryStrategy.js';
 
 describe('toolErrorClassifier', () => {
   beforeEach(() => {

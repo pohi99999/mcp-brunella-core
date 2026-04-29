@@ -1,7 +1,7 @@
 // FILE: test/agentTracer.test.ts
 // PURPOSE: G5.4 — Tests for Agent Delegation Tracer (RULE-OB1→OB4)
 import { describe, it, expect, beforeEach } from 'vitest';
-import { startSpan, endSpan, traceAgentExecution, traceLLMCall, getTraceSpans, getRecentSpans, getActiveSpans, getTokenUsageSummary, getRecentTraceIds, getTracerStats, clearAllSpans, } from '../src/utils/agentTracer.js';
+import { startSpan, endSpan, traceAgentExecution, traceLLMCall, getTraceSpans, getRecentSpans, getActiveSpans, getTokenUsageSummary, getRecentTraceIds, getTracerStats, clearAllSpans, } from '@packages/utils/agentTracer.js';
 describe('agentTracer', () => {
     beforeEach(() => {
         clearAllSpans();

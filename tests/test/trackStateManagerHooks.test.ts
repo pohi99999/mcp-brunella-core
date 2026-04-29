@@ -10,12 +10,12 @@ const trackHookHarness = vi.hoisted(() => ({
   logError: vi.fn(),
 }));
 
-vi.mock('../src/core/hookRegistry.js', () => ({
+vi.mock('@packages/core-logic/hookRegistry.js', () => ({
   fireHook: trackHookHarness.fireHook,
   fireHookSafely: trackHookHarness.fireHook,
 }));
 
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
   logInfo: trackHookHarness.logInfo,
   logWarn: trackHookHarness.logWarn,
   logError: trackHookHarness.logError,
@@ -64,7 +64,7 @@ describe('TrackStateManager hook integration', () => {
   });
 
   it('emits status change and completion hooks when a track completes', async () => {
-    const { TrackStateManager } = await import('../src/services/trackStateManager.js');
+    const { TrackStateManager } = await import('@packages/core-logic/trackStateManager.js');
 
     const manager = new TrackStateManager();
     await manager.fullSync();
@@ -88,7 +88,7 @@ describe('TrackStateManager hook integration', () => {
   });
 
   it('normalizes missing dod checklist values when syncing meta.json', async () => {
-    const { TrackStateManager } = await import('../src/services/trackStateManager.js');
+    const { TrackStateManager } = await import('@packages/core-logic/trackStateManager.js');
 
     const manager = new TrackStateManager();
     await manager.fullSync();
@@ -121,7 +121,7 @@ describe('TrackStateManager hook integration', () => {
       updated: '2026-04-09T12:00:00.000Z',
     }, null, 2));
 
-    const { TrackStateManager } = await import('../src/services/trackStateManager.js');
+    const { TrackStateManager } = await import('@packages/core-logic/trackStateManager.js');
 
     const manager = new TrackStateManager();
     await manager.fullSync();

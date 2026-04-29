@@ -19,7 +19,7 @@ const routeMocks = vi.hoisted(() => ({
   executeCode: vi.fn(async () => ({ success: true })),
 }));
 
-vi.mock('../src/core/bifrost_gateway.js', () => ({
+vi.mock('@packages/core-logic/bifrost_gateway.js', () => ({
   getBifrostGateway: () => ({
     checkHealth: routeMocks.checkHealth,
     getEnabledProviders: routeMocks.getEnabledProviders,
@@ -28,7 +28,7 @@ vi.mock('../src/core/bifrost_gateway.js', () => ({
   }),
 }));
 
-vi.mock('../src/security/safe_zone_validator.js', () => ({
+vi.mock('@packages/core-logic/safe_zone_validator.js', () => ({
   getSafeZoneValidator: () => ({
     getAuditLog: routeMocks.getAuditLog,
     config: {
@@ -40,14 +40,14 @@ vi.mock('../src/security/safe_zone_validator.js', () => ({
   }),
 }));
 
-vi.mock('../src/security/e2b_sandbox_manager.js', () => ({
+vi.mock('@packages/core-logic/e2b_sandbox_manager.js', () => ({
   getE2BSandboxManager: () => ({
     getStats: vi.fn(() => ({ totalRuns: 0 })),
     executeCode: routeMocks.executeCode,
   }),
 }));
 
-vi.mock('../src/server/mcp_server.js', () => ({
+vi.mock('@apps/mcp-core/server/mcp_server.js', () => ({
   MCPFilesystemServer: vi.fn().mockImplementation(() => ({
     getTools: routeMocks.getTools,
     handleReadFile: routeMocks.handleReadFile,
@@ -57,7 +57,7 @@ vi.mock('../src/server/mcp_server.js', () => ({
   })),
 }));
 
-import mcpRouter from '../src/server/routes/mcp.js';
+import mcpRouter from '@apps/mcp-core/server/routes/mcp.js';
 
 async function startServer() {
   const app = express();

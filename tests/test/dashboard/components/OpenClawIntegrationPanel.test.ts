@@ -3,10 +3,10 @@ import '@testing-library/jest-dom/vitest';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { cleanup, render, screen, waitFor } from '@testing-library/react';
 import { createElement } from 'react';
-import { OpenClawIntegrationPanel } from '../../../src/dashboard/components/dashboard/OpenClawIntegrationPanel.js';
-import type { OpenClawRuntimeSnapshot } from '../../../src/integrations/openclaw/index.js';
+import { OpenClawIntegrationPanel } from '@/components/dashboard/OpenClawIntegrationPanel.js';
+import type { OpenClawRuntimeSnapshot } from '@packages/core-logic/openclaw/index.js';
 
-vi.mock( '../../../src/dashboard/components/ui/scroll-area.js', () => ( {
+vi.mock( '@/components/ui/scroll-area.js', () => ( {
     ScrollArea: ( { children }: { children: unknown } ) => createElement( 'div', { 'data-testid': 'scroll-area' }, children ),
 } ) );
 

@@ -9,16 +9,16 @@
  */
 
 import { Router, type Request, type Response } from 'express';
-import { logInfo, logError, logDebug, setAgentStatus } from '../../utils/logger.js';
-import { ensureError } from '../../utils/ensureError.js';
+import { logInfo, logError, logDebug, setAgentStatus } from '@packages/utils/logger.js';
+import { ensureError } from '@packages/utils/ensureError.js';
 import type {
   GitHubWorkflowRunPayload,
   GitHubPullRequestPayload,
   GitHubCheckRunPayload
-} from '../../types/github.js';
-import { ingestGitHubWorkflowFailure, verifyGitHubWebhookSignature } from '../../core/githubWebhookIngress.js';
-import { getGlobalDb } from '../../utils/globalDb.js';
-import { savePullRequest } from '../../utils/db.js';
+} from '@packages/types/github.js';
+import { ingestGitHubWorkflowFailure, verifyGitHubWebhookSignature } from '@packages/core-logic/githubWebhookIngress.js';
+import { getGlobalDb } from '@packages/utils/globalDb.js';
+import { savePullRequest } from '@packages/utils/db.js';
 
 const router = Router();
 

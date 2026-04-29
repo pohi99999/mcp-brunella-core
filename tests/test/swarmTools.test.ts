@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 
 // Mock AgentManager BEFORE importing swarmTools
-vi.mock('../src/agents/AgentManager.js', () => ({
+vi.mock('@packages/agents/AgentManager.js', () => ({
   agentManager: { initialize: vi.fn() },
   swarmManager: {
     listColonies: vi.fn(() => [
@@ -17,8 +17,8 @@ vi.mock('../src/agents/AgentManager.js', () => ({
 }));
 
 // Mock config/rag imports used by swarmTools
-vi.mock('../src/config/index.js', () => ({ config: { workspaceRoot: '.', systemLogDir: 'logs' } }));
-vi.mock('../src/utils/rag.js', () => ({ addToIndex: vi.fn() }));
+vi.mock('@packages/utils/index.js', () => ({ config: { workspaceRoot: '.', systemLogDir: 'logs' } }));
+vi.mock('@packages/utils/rag.js', () => ({ addToIndex: vi.fn() }));
 
 describe('swarmTools MCP registration', () => {
   it('registerSwarmTools registers swarm_dispatch, swarm_status, and swarm_ingest', async () => {
@@ -27,7 +27,7 @@ describe('swarmTools MCP registration', () => {
       tool: vi.fn((name: string) => { registeredTools.push(name); return mockServer; })
     };
 
-    const { registerSwarmTools } = await import('../src/tools/swarmTools.js');
+    const { registerSwarmTools } = await import('@packages/utils/swarmTools.js');
     registerSwarmTools(mockServer as any);
 
     expect(registeredTools).toContain('swarm_ingest');
@@ -44,7 +44,7 @@ describe('swarmTools MCP registration', () => {
       })
     };
 
-    const { registerSwarmTools } = await import('../src/tools/swarmTools.js');
+    const { registerSwarmTools } = await import('@packages/utils/swarmTools.js');
     registerSwarmTools(mockServer as any);
 
     expect(dispatchHandler).not.toBeNull();
@@ -62,7 +62,7 @@ describe('swarmTools MCP registration', () => {
       })
     };
 
-    const { registerSwarmTools } = await import('../src/tools/swarmTools.js');
+    const { registerSwarmTools } = await import('@packages/utils/swarmTools.js');
     registerSwarmTools(mockServer as any);
 
     expect(statusHandler).not.toBeNull();

@@ -1,34 +1,34 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { LeadMiningAgent } from '../../src/agents/LeadMiningAgent.js';
-import { agentManager } from '../../src/agents/AgentManager.js';
-import { socketService } from '../../src/server/SocketService.js';
-import { globalPythonShell } from '../../src/utils/pythonShell.js';
-import { saveBusinessJob, saveBusinessLead, updateBusinessJobStatus } from '../../src/utils/db.js';
-import { validateEmail } from '../../src/services/emailValidator.js';
+import { LeadMiningAgent } from '@packages/agents/LeadMiningAgent.js';
+import { agentManager } from '@packages/agents/AgentManager.js';
+import { socketService } from '@apps/mcp-core/server/SocketService.js';
+import { globalPythonShell } from '@packages/utils/pythonShell.js';
+import { saveBusinessJob, saveBusinessLead, updateBusinessJobStatus } from '@packages/utils/db.js';
+import { validateEmail } from '@packages/core-logic/emailValidator.js';
 
-vi.mock('../../src/utils/db.js', () => ({
+vi.mock('@packages/utils/db.js', () => ({
   saveBusinessJob: vi.fn(),
   saveBusinessLead: vi.fn(),
   updateBusinessJobStatus: vi.fn(),
 }));
 
-vi.mock('../../src/utils/pythonShell.js', () => ({
+vi.mock('@packages/utils/pythonShell.js', () => ({
   globalPythonShell: {
     run: vi.fn(),
   },
 }));
 
-vi.mock('../../src/services/emailValidator.js', () => ({
+vi.mock('@packages/core-logic/emailValidator.js', () => ({
   validateEmail: vi.fn(),
 }));
 
-vi.mock('../../src/agents/AgentManager.js', () => ({
+vi.mock('@packages/agents/AgentManager.js', () => ({
   agentManager: {
     delegate: vi.fn(),
   },
 }));
 
-vi.mock('../../src/server/SocketService.js', () => ({
+vi.mock('@apps/mcp-core/server/SocketService.js', () => ({
   socketService: {
     emit: vi.fn(),
   },

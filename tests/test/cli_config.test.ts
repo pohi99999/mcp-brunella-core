@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import os from 'node:os';
 import process from 'node:process';
-import { getConfigManager, ConfigManager } from '../src/utils/cliConfig.js';
+import { getConfigManager, ConfigManager } from '@packages/utils/cliConfig.js';
 
 describe('CLI Config', () => {
   it('getConfigManager returns a config manager', () => {

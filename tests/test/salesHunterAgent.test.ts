@@ -4,7 +4,7 @@
  */
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { SalesHunterAgent } from '../src/agents/SalesHunterAgent.js';
+import { SalesHunterAgent } from '@packages/agents/SalesHunterAgent.js';
 
 describe('SalesHunterAgent', () => {
   let agent: SalesHunterAgent;

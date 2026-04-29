@@ -24,7 +24,7 @@ vi.mock('ora', () => ({
   })),
 }));
 
-import { registerIntelligenceCommands } from '../src/cli/intelligenceCommands.js';
+import { registerIntelligenceCommands } from '@apps/mcp-core/commands/intelligenceCommands.js';
 
 const originalIsTTY = Object.getOwnPropertyDescriptor(process.stdin, 'isTTY');
 

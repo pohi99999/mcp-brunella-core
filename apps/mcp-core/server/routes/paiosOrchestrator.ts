@@ -3,9 +3,9 @@
  */
 
 import { Router } from 'express';
-import { getUniversalOrchestratorService, type UniversalChatMessage } from '../../core/universalOrchestratorService.js';
+import { getUniversalOrchestratorService, type UniversalChatMessage } from '@packages/core-logic/universalOrchestratorService.js';
 import { socketService } from '@packages/agents/SocketService.js';
-import { logInfo, logError } from '../../utils/logger.js';
+import { logInfo, logError } from '@packages/utils/logger.js';
 
 const router = Router();
 
@@ -115,7 +115,7 @@ router.post('/chat', async (req, res) => {
  */
 router.get('/status', async (_req, res) => {
   try {
-    const { agentManager } = await import('../../agents/AgentManager.js');
+    const { agentManager } = await import('@packages/agents/AgentManager.js');
     const agents = agentManager.listAgents();
 
     return res.json({
@@ -139,7 +139,7 @@ router.get('/status', async (_req, res) => {
  */
 router.get('/config', async (_req, res) => {
   try {
-    const { loadPaiosConfig } = await import('../../config/paiosConfig.js');
+    const { loadPaiosConfig } = await import('@packages/utils/paiosConfig.js');
     const config = loadPaiosConfig();
 
     return res.json(config);

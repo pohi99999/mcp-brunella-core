@@ -6,13 +6,13 @@
  */
 
 import { describe, it, expect, beforeEach } from 'vitest';
-import { EvolutionaryAgent } from '../src/agents/evolution/EvolutionaryAgent.js';
-import { EvolutionManager } from '../src/agents/evolution/EvolutionManager.js';
-import { GeneticFlow } from '../src/core/geneticFlow.js';
-import { TopologyAI } from '../src/mesh/topologyAI.js';
-import { CollectiveMind } from '../src/core/collectiveMind.js';
-import { MetaReasoner } from '../src/core/metaReasoner.js';
-import { UnifiedRuntime } from '../src/core/unifiedRuntime.js';
+import { EvolutionaryAgent } from '@packages/agents/evolution/EvolutionaryAgent.js';
+import { EvolutionManager } from '@packages/agents/evolution/EvolutionManager.js';
+import { GeneticFlow } from '@packages/core-logic/geneticFlow.js';
+import { TopologyAI } from '@packages/core-logic/topologyAI.js';
+import { CollectiveMind } from '@packages/core-logic/collectiveMind.js';
+import { MetaReasoner } from '@packages/core-logic/metaReasoner.js';
+import { UnifiedRuntime } from '@packages/core-logic/unifiedRuntime.js';
 
 // ─── EvolutionaryAgent ──────────────────────────────────────────────────────
 

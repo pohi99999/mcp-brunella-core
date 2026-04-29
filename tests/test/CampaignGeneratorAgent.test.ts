@@ -1,8 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { CampaignGeneratorAgent } from '../src/agents/CampaignGeneratorAgent.js';
-import { agentManager } from '../src/agents/AgentManager.js';
+import { CampaignGeneratorAgent } from '@packages/agents/CampaignGeneratorAgent.js';
+import { agentManager } from '@packages/agents/AgentManager.js';
 
-vi.mock('../src/agents/AgentManager.js', () => ({
+vi.mock('@packages/agents/AgentManager.js', () => ({
   agentManager: {
     delegate: vi.fn()
   }

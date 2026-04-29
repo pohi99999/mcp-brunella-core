@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { MCPFilesystemServer } from '../src/server/mcp_server.js';
+import { MCPFilesystemServer } from '@apps/mcp-core/server/mcp_server.js';
 import fs from 'fs';
 import path from 'path';
 describe('MCP Filesystem Server', () => {

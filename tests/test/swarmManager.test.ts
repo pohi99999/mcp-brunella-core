@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { SwarmManager } from '../src/agents/swarm/SwarmManager.js';
-import { SwarmAgent } from '../src/agents/swarm/SwarmAgent.js';
-import { swarmManager } from '../src/agents/AgentManager.js';
+import { SwarmManager } from '@packages/agents/swarm/SwarmManager.js';
+import { SwarmAgent } from '@packages/agents/swarm/SwarmAgent.js';
+import { swarmManager } from '@packages/agents/AgentManager.js';
 
 describe('SwarmManager', () => {
   let manager: SwarmManager;

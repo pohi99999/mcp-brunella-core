@@ -1,20 +1,20 @@
 import { describe, it, expect, vi } from "vitest";
-import { generateResponse } from "../src/core/llm_client.js";
+import { generateResponse } from "@packages/core-logic/llm_client.js";
 
 // Mocking dependencies to focus on Prompt Armor logic
-vi.mock("../src/utils/logger.js", () => ({
+vi.mock("@packages/utils/logger.js", () => ({
   logInfo: vi.fn(),
   logError: vi.fn(),
   logWarn: vi.fn(),
 }));
 
-vi.mock("../src/utils/aiGateway.js", () => ({
+vi.mock("@packages/utils/aiGateway.js", () => ({
   aiGateway: {
     generate: vi.fn().mockImplementation(async (prompt) => prompt), // Return prompt to see transformations
   },
 }));
 
-vi.mock("../src/utils/metrics.js", () => ({
+vi.mock("@packages/utils/metrics.js", () => ({
   recordLlmUsageAndCost: vi.fn(),
 }));
 

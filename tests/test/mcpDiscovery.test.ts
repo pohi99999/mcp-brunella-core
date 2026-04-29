@@ -13,7 +13,7 @@ vi.mock('fs', () => ({
   readFileSync: discoveryHarness.readFileSync,
 }));
 
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@packages/utils/logger.js', () => ({
   logInfo: discoveryHarness.logInfo,
   logWarn: discoveryHarness.logWarn,
   logError: discoveryHarness.logError,
@@ -33,7 +33,7 @@ describe('mcpDiscovery', () => {
   it('should_return_empty_targets_when_config_file_is_missing_and_log_warning', async () => {
     discoveryHarness.existsSync.mockReturnValue(false);
 
-    const { getDiscoveredTargets } = await import('../src/core/mcpDiscovery.js');
+    const { getDiscoveredTargets } = await import('@packages/core-logic/mcpDiscovery.js');
 
     expect(getDiscoveredTargets()).toEqual([]);
     expect(discoveryHarness.logWarn).toHaveBeenCalledWith(
@@ -47,7 +47,7 @@ describe('mcpDiscovery', () => {
     discoveryHarness.existsSync.mockReturnValue(true);
     discoveryHarness.readFileSync.mockReturnValue('{ invalid json');
 
-    const { discoverMcpServers } = await import('../src/core/mcpDiscovery.js');
+    const { discoverMcpServers } = await import('@packages/core-logic/mcpDiscovery.js');
 
     expect(discoverMcpServers()).toEqual([]);
     expect(discoveryHarness.logError).toHaveBeenCalledWith(
@@ -71,7 +71,7 @@ describe('mcpDiscovery', () => {
     const nowSpy = vi.spyOn(Date, 'now').mockImplementation(() => 1_000);
     nowSpy.mockReturnValueOnce(0).mockReturnValueOnce(1_000);
 
-    const { discoverMcpServers, getDiscoveredTargets } = await import('../src/core/mcpDiscovery.js');
+    const { discoverMcpServers, getDiscoveredTargets } = await import('@packages/core-logic/mcpDiscovery.js');
 
     const firstDiscovery = discoverMcpServers();
     const cachedTargets = getDiscoveredTargets();
@@ -109,7 +109,7 @@ describe('mcpDiscovery', () => {
     const nowSpy = vi.spyOn(Date, 'now').mockImplementation(() => 61_001);
     nowSpy.mockReturnValueOnce(0).mockReturnValueOnce(61_001);
 
-    const { discoverMcpServers, getTargetById } = await import('../src/core/mcpDiscovery.js');
+    const { discoverMcpServers, getTargetById } = await import('@packages/core-logic/mcpDiscovery.js');
 
     expect(discoverMcpServers()).toEqual([
       { name: 'alpha', command: 'node', args: ['alpha.js'], description: 'Alpha server' },
@@ -137,7 +137,7 @@ describe('mcpDiscovery', () => {
     discoveryHarness.existsSync.mockReturnValue(true);
     discoveryHarness.readFileSync.mockReturnValue(JSON.stringify({ servers: [] }));
 
-    const { discoverMcpServers } = await import('../src/core/mcpDiscovery.js');
+    const { discoverMcpServers } = await import('@packages/core-logic/mcpDiscovery.js');
 
     expect(discoverMcpServers()).toEqual([]);
     // JSON.parse does not throw; but .filter() on non-array throws → caught → logError
@@ -151,7 +151,7 @@ describe('mcpDiscovery', () => {
     discoveryHarness.existsSync.mockReturnValue(true);
     discoveryHarness.readFileSync.mockReturnValue('null');
 
-    const { discoverMcpServers } = await import('../src/core/mcpDiscovery.js');
+    const { discoverMcpServers } = await import('@packages/core-logic/mcpDiscovery.js');
 
     expect(discoverMcpServers()).toEqual([]);
     expect(discoveryHarness.logError).toHaveBeenCalledWith(
@@ -164,7 +164,7 @@ describe('mcpDiscovery', () => {
     discoveryHarness.existsSync.mockReturnValue(true);
     discoveryHarness.readFileSync.mockReturnValue('[]');
 
-    const { discoverMcpServers } = await import('../src/core/mcpDiscovery.js');
+    const { discoverMcpServers } = await import('@packages/core-logic/mcpDiscovery.js');
 
     const result = discoverMcpServers();
     expect(result).toEqual([]);
@@ -182,7 +182,7 @@ describe('mcpDiscovery', () => {
         JSON.stringify([{ name: 'late-server', command: 'node', args: ['late.js'] }]),
       );
 
-    const { discoverMcpServers } = await import('../src/core/mcpDiscovery.js');
+    const { discoverMcpServers } = await import('@packages/core-logic/mcpDiscovery.js');
 
     const first = discoverMcpServers();
     const second = discoverMcpServers();
@@ -201,7 +201,7 @@ describe('mcpDiscovery', () => {
     );
 
     const nowSpy = vi.spyOn(Date, 'now').mockReturnValue(1_000);
-    const { discoverMcpServers } = await import('../src/core/mcpDiscovery.js');
+    const { discoverMcpServers } = await import('@packages/core-logic/mcpDiscovery.js');
 
     discoverMcpServers(); // populates cache at t=1000
 
@@ -218,7 +218,7 @@ describe('mcpDiscovery', () => {
       JSON.stringify([{ name: 'my-server', command: 'node', args: ['s.js'], description: 'Test' }]),
     );
 
-    const { getTargetById } = await import('../src/core/mcpDiscovery.js');
+    const { getTargetById } = await import('@packages/core-logic/mcpDiscovery.js');
 
     expect(getTargetById('mcp:nonexistent')).toBeUndefined();
     expect(getTargetById('')).toBeUndefined();
@@ -231,7 +231,7 @@ describe('mcpDiscovery', () => {
       JSON.stringify([{ name: 'target-server', command: 'node', args: ['t.js'], description: 'My target server' }]),
     );
 
-    const { getTargetById } = await import('../src/core/mcpDiscovery.js');
+    const { getTargetById } = await import('@packages/core-logic/mcpDiscovery.js');
 
     const target = getTargetById('mcp:target-server');
 
@@ -249,7 +249,7 @@ describe('mcpDiscovery', () => {
       JSON.stringify([{ name: 'nodesc-server', command: 'node' }]),
     );
 
-    const { getTargetById } = await import('../src/core/mcpDiscovery.js');
+    const { getTargetById } = await import('@packages/core-logic/mcpDiscovery.js');
 
     const target = getTargetById('mcp:nodesc-server');
 
@@ -265,7 +265,7 @@ describe('mcpDiscovery', () => {
       ]),
     );
 
-    const { getDiscoveredTargets } = await import('../src/core/mcpDiscovery.js');
+    const { getDiscoveredTargets } = await import('@packages/core-logic/mcpDiscovery.js');
 
     const targets = getDiscoveredTargets();
 
@@ -283,7 +283,7 @@ describe('mcpDiscovery', () => {
       ]),
     );
 
-    const { discoverMcpServers, listServerConfigs } = await import('../src/core/mcpDiscovery.js');
+    const { discoverMcpServers, listServerConfigs } = await import('@packages/core-logic/mcpDiscovery.js');
 
     const discovered = discoverMcpServers();
     const listed = listServerConfigs();
@@ -300,7 +300,7 @@ describe('mcpDiscovery', () => {
       throw new Error('EACCES: permission denied');
     });
 
-    const { discoverMcpServers } = await import('../src/core/mcpDiscovery.js');
+    const { discoverMcpServers } = await import('@packages/core-logic/mcpDiscovery.js');
 
     let result: unknown;
     expect(() => { result = discoverMcpServers(); }).not.toThrow();

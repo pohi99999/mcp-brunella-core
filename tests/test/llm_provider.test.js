@@ -2,7 +2,7 @@
 // PURPOSE: Ellenőrzi a Multi-Provider LLM váltót és a fallback mechanizmust.
 // NOTE: CI-ben skip-elve — Ollama nem elérhető GitHub runners-en.
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { generateResponse } from "../src/core/llm_client";
+import { generateResponse } from "@packages/core-logic/llm_client";
 const isCI = !!process.env.CI;
 describe.skipIf(isCI)("Brunella 2.0 LLM Provider Test", () => {
     const originalGeminiKey = process.env.GEMINI_API_KEY;

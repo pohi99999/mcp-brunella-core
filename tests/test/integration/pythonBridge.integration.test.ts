@@ -16,7 +16,7 @@ import {
   HarvestResultSchema,
   HarvestExtractResultSchema,
   RefineResultSchema,
-} from '../../src/utils/pythonBridge.js';
+} from '@packages/utils/pythonBridge.js';
 import { startPythonServer, stopPythonServer, PYTHON_TEST_HOST, PYTHON_TEST_PORT } from '../helpers/startPythonServer.js';
 
 const BASE_URL = `http://${PYTHON_TEST_HOST}:${PYTHON_TEST_PORT}`;
