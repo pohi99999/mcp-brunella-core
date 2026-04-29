@@ -1,6 +1,69 @@
 {
-  "lastUpdated": "2026-04-26T13:45:00.000Z",
+  "lastUpdated": "2026-04-29T09:45:00.000Z",
   "tracks": [
+    {
+      "id": "agent_legacy_migration_2026Q3",
+      "name": "Legacy src/agents migration audit to packages/agents",
+      "status": "completed",
+      "priority": "medium",
+      "progress": 100,
+      "created": "2026-04-29T05:37:00+02:00",
+      "completed": "2026-04-29T05:47:00+02:00",
+      "assignee": "brunella-architect",
+      "tags": ["audit", "agents", "legacy-drift", "monorepo-cleanup"],
+      "dependencies": [],
+      "dod": {"tests_pass": true, "build_clean": true, "code_committed": true, "no_verify_used": false},
+      "group": "other",
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\agent_legacy_migration_2026Q3",
+      "_isArchived": false
+    },
+    {
+      "id": "cloudflare_deploy_consolidation_20260510",
+      "name": "Cloudflare 4-dir audit + integrations vendor copy identification",
+      "status": "completed",
+      "priority": "medium",
+      "progress": 100,
+      "created": "2026-04-29T05:36:00+02:00",
+      "completed": "2026-04-29T05:46:00+02:00",
+      "assignee": "brunella-architect",
+      "tags": ["audit", "cloudflare", "vendor-cleanup", "legacy-drift"],
+      "dependencies": [],
+      "dod": {"tests_pass": true, "build_clean": true, "code_committed": true, "no_verify_used": false},
+      "group": "brunella",
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\cloudflare_deploy_consolidation_20260510",
+      "_isArchived": false
+    },
+    {
+      "id": "dashboard_route_health_audit_20260501",
+      "name": "Dashboard route health & legacy src/server/routes audit",
+      "status": "completed",
+      "priority": "medium",
+      "progress": 100,
+      "created": "2026-04-29T05:35:00+02:00",
+      "completed": "2026-04-29T05:45:00+02:00",
+      "assignee": "brunella-architect",
+      "tags": ["audit", "dashboard", "routes", "legacy-drift"],
+      "dependencies": [],
+      "dod": {"tests_pass": true, "build_clean": true, "code_committed": true, "no_verify_used": false},
+      "group": "brunella",
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\dashboard_route_health_audit_20260501",
+      "_isArchived": false
+    },
+    {
+      "id": "legacy_drift_cleanup_20260430",
+      "name": "Legacy drift cleanup (tracked routes + Cloudflare vendor copy)",
+      "status": "active",
+      "priority": "medium",
+      "progress": 95,
+      "created": "2026-04-29T10:45:00+02:00",
+      "assignee": "brunella-implementer",
+      "tags": ["cleanup", "legacy-drift", "tracked-only", "cloudflare", "routes"],
+      "dependencies": [],
+      "dod": {"tests_pass": true, "build_clean": true, "code_committed": true, "no_verify_used": false},
+      "group": "brunella",
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\legacy_drift_cleanup_20260430",
+      "_isArchived": false
+    },
     {
       "id": "stabilization-path-drift-20260425",
       "name": "Monorepo Path Drift Stabilizáció",
@@ -13,82 +76,28 @@
       "assignee": "Copilot",
       "tags": [],
       "dependencies": [],
-      "dod": {
-        "tests_pass": true,
-        "build_clean": true,
-        "code_committed": true,
-        "no_verify_used": false
-      },
+      "dod": {"tests_pass": true, "build_clean": true, "code_committed": true, "no_verify_used": false},
       "group": "brunella",
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\stabilization-path-drift-20260425",
       "_isArchived": false
     },
     {
-      "id": "p_book_20260426",
-      "name": "P-book (Könyvelés) alkalmazás",
-      "status": "completed",
-      "priority": "high",
-      "progress": 100,
-      "created": "2026-04-26T10:00:00Z",
-      "updated": "2026-04-26T12:40:00Z",
-      "completed": "2026-04-26T12:40:00Z",
-      "assignee": "Gemini CLI",
-      "group": "accounting",
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\p_book_20260426",
-      "_isArchived": false,
-      "dod": {
-        "tests_pass": true,
-        "build_clean": true,
-        "code_committed": true,
-        "no_verify_used": false
-      }
-    },
-    {
-      "id": "p_ber_20260426",
-      "name": "p-ber (Bér és munkaügy) alkalmazás",
+      "id": "system_grand_audit_20260429",
+      "name": "Brunella Grand Audit + @packages migration finalization",
       "status": "completed",
       "priority": "medium",
       "progress": 100,
-      "created": "2026-04-26T10:30:00Z",
-      "updated": "2026-04-26T13:40:00Z",
-      "completed": "2026-04-26T13:40:00Z",
-      "assignee": "Gemini CLI",
-      "group": "accounting",
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\p_ber_20260426",
-      "_isArchived": false,
-      "dod": {
-        "tests_pass": true,
-        "build_clean": true,
-        "code_committed": true,
-        "no_verify_used": false
-      }
-    },
-    {
-      "id": "p_search_20260426",
-      "name": "P-SEARCH (Pályázat- és hitelkereső) alkalmazás",
-      "status": "completed",
-      "priority": "high",
-      "progress": 100,
-      "created": "2026-04-26T11:00:00Z",
-      "updated": "2026-04-26T13:20:00Z",
-      "completed": "2026-04-26T13:20:00Z",
-      "assignee": "Gemini CLI",
-      "group": "search",
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\p_search_20260426",
-      "_isArchived": false,
-      "dod": {
-        "tests_pass": true,
-        "build_clean": true,
-        "code_committed": true,
-        "no_verify_used": false
-      }
+      "created": "2026-04-29T03:30:00+02:00",
+      "updated": "2026-04-29T05:30:00+02:00",
+      "completed": "2026-04-29T05:30:00+02:00",
+      "assignee": "Copilot CLI (Chief of Staff)",
+      "tags": [],
+      "dependencies": [],
+      "dod": {"tests_pass": true, "build_clean": true, "code_committed": true, "no_verify_used": false},
+      "group": "brunella",
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\system_grand_audit_20260429",
+      "_isArchived": false
     }
   ],
-  "stats": {
-    "total": 4,
-    "active": 0,
-    "completed": 4,
-    "archived": 0,
-    "proposed": 0
-  }
+  "stats": {"total": 6, "active": 1, "completed": 5, "archived": 0, "proposed": 0}
 }

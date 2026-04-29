@@ -12,11 +12,11 @@
     "integrations/bas-cloudflare-orchestrator/ removed",
     "docs/sessions/2026-04-29-1045-session.md checkpoint"
   ],
-  "verificationNotes": "Cleanup diff is staged and validated. The 6 routes are unused, integrations/bas-cloudflare-orchestrator is the tracked vendor copy, and build/test:fast both passed after the final memory sync. The track remains active until the commit lands so the pre-commit guard can permit the code change.",
+  "verificationNotes": "Cleanup codecommit f19c1c35c is done and the cleanup diff was validated; the track stays active for the docs-only closure step that follows.",
   "dod": {
     "tests_pass": true,
     "build_clean": true,
-    "code_committed": false,
+    "code_committed": true,
     "no_verify_used": false,
     "no_verify_admin_only": false,
     "evidence": [

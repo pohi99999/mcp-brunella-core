@@ -1,6 +1,6 @@
 # FŐSZÁL - Egyesített Fejlesztési Napló
 
-**Generálva:** 2026-04-29 11:04
+**Generálva:** 2026-04-29 11:44
 **Script:** `ops/scripts/sync_foszal.py`
 
 ---
@@ -30,10 +30,10 @@ start-full.bat
 
 ### 2026-04-29
 
-#### 11:05 - [Copilot] Legacy drift cleanup scaffold + tracked deletions
+#### 11:45 - [Copilot] Legacy drift cleanup metadata adjusted
 - **Agent:** Copilot
-- **Státusz:** ✅ Befejezve
-- **Érintett fájlok:** `conductor/tracks/legacy_drift_cleanup_20260430/{meta.json,plan.md}`, `conductor/tracks.md`, `docs/sessions/2026-04-29-1045-session.md`, `src/server/routes/{chaos,crmFollowUp,planetMesh,prometheus,tenants,webhookHooks}.ts`, `integrations/bas-cloudflare-orchestrator/`
+- **Státusz:** ⏳ Folyamatban
+- **Érintett fájlok:** `conductor/tracks.md`, `conductor/tracks/legacy_drift_cleanup_20260430/meta.json`, `conductor/project_state.json`, `docs/sessions/2026-04-29-1045-session.md`, `.ai/copilot.md`
 
 ---
 
