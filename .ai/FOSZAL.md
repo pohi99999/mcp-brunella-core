@@ -1,6 +1,6 @@
 # FŐSZÁL - Egyesített Fejlesztési Napló
 
-**Generálva:** 2026-04-29 05:57
+**Generálva:** 2026-04-29 11:04
 **Script:** `ops/scripts/sync_foszal.py`
 
 ---
@@ -30,20 +30,10 @@ start-full.bat
 
 ### 2026-04-29
 
-#### 05:47 - [Copilot] P2/P3/P4 follow-up audit trackek lezárása (audit-only)
+#### 11:05 - [Copilot] Legacy drift cleanup scaffold + tracked deletions
 - **Agent:** Copilot
 - **Státusz:** ✅ Befejezve
-- **Érintett fájlok:** `conductor/tracks/dashboard_route_health_audit_20260501/{meta.json,plan.md}` (új), `conductor/tracks/cloudflare_deploy_consolidation_20260510/{meta.json,plan.md}` (új), `conductor/tracks/agent_legacy_migration_2026Q3/{meta.json,plan.md}` (új), `docs/audits/legacy-drift-followups-20260429.md` (új konszolidált audit, 8552 char), `conductor/tracks.md` (manual sync: 5 completed, 0 active)
-
-#### 05:16 - [Copilot] Grand Audit FÁZIS 1.3-2.F + 3-4 lezárás (`system_grand_audit_20260429`)
-- **Agent:** Copilot
-- **Státusz:** ✅ Befejezve
-- **Érintett fájlok:** `conductor/tracks/system_grand_audit_20260429/phase2-audit.md` (új), `meta.json` (status: completed, verificationNotes string, DoD), `docs/audits/grand-audit-20260429-summary.md` (új top-level summary)
-
-#### 04:55 - [Copilot] System Grand Audit P1 lezárás (MCP racionalizáció + agent registry konszolidáció)
-- **Agent:** Copilot
-- **Státusz:** ✅ Befejezve
-- **Érintett fájlok:** mcp_servers.json (chrome-devtools, playwright, maestro -> autoStart=false), packages/agents/registry.json (79->88 agent, alfabetikus sort, 2 alias merge), conductor/tracks/system_grand_audit_20260429/phase1-audit.md (P1 final state), conductor/tracks/system_grand_audit_20260429/meta.json (progress 50->75)
+- **Érintett fájlok:** `conductor/tracks/legacy_drift_cleanup_20260430/{meta.json,plan.md}`, `conductor/tracks.md`, `docs/sessions/2026-04-29-1045-session.md`, `src/server/routes/{chaos,crmFollowUp,planetMesh,prometheus,tenants,webhookHooks}.ts`, `integrations/bas-cloudflare-orchestrator/`
 
 ---
 
@@ -57,11 +47,6 @@ start-full.bat
 ---
 
 ### 2026-04-25
-
-#### 15:15 - [Copilot] Monorepo path drift stabilization
-- **Agent:** Copilot
-- **Státusz:** ✅ Befejezve
-- **Érintett fájlok:** `package.json`, `dashboard.bat`, `mcp_servers.json`, `ops/scripts/*`, `apps/dashboard/*`, `apps/mcp-core/conductorCommands.ts`, `apps/mcp-core/server/routes/crm.ts`, `src/agents/registry.json`, `src/agents/AgentArchitect.ts`, `packages/agents/InnovationBridgeAgent.ts`, `packages/utils/*`, `vitest.config.ts`, `tests/test/*`, `README.md`
 
 #### 14:55 - [Gemini] Monorepo Stabilizáció
 - **Agent:** Gemini
@@ -689,7 +674,7 @@ start-full.bat
 | Claude | 95 | 2026-04-16 |
 | Gemini | 5 | 2026-04-20 |
 | Cursor | 0 | N/A |
-| Copilot | 4 | 2026-04-29 |
+| Copilot | 1 | 2026-04-29 |
 
 ---
 

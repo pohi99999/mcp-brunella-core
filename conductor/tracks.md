@@ -1,11 +1,11 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-04-29T03:00:00.078Z
+**Utolso frissites:** 2026-04-29T11:20:00+02:00
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 5 total | 0 active | 5 completed | 0 archived
-**Csoportok:** Könyvelés / üzleti automatizálás: 0 | Nova asszisztens: 0 | Brunella rendszer: 5 | Egyéb: 0
+**Stats:** 6 total | 1 active | 5 completed | 0 archived
+**Csoportok:** Könyvelés / üzleti automatizálás: 0 | Nova asszisztens: 0 | Brunella rendszer: 5 | Egyéb: 1
 
 ---
 
@@ -15,40 +15,49 @@ _Nincs track ebben a szekcioban._
 
 ---
 
-## Aktiv Szalak (Active) (0)
+## Aktiv Szalak (Active) (1)
 
-_Nincs track ebben a szekcioban._
+### Brunella rendszer (1)
+
+- [~] **Legacy drift cleanup (tracked routes + Cloudflare vendor copy)**
+  - **ID:** `legacy_drift_cleanup_20260430`
+  - **Started:** 2026-04-29T10:45:00+02:00
+  - Mappa: ./tracks/legacy_drift_cleanup_20260430/
+  - Scope: confirmed tracked cleanup only; 6 orphan routes + tracked integrations vendor copy
 
 ---
 
 ## Befejezett (Completed - Not Archived) (5)
 
-### Brunella rendszer (5)
-
-- [x] **Brunella Grand Audit + @packages migration finalization**
-  - **ID:** `system_grand_audit_20260429`
-  - **Completed:** 2026-04-29T03:00:00Z
-  - Mappa: ./tracks/system_grand_audit_20260429/
-
-- [x] **Dashboard route health & legacy src/server/routes audit (P2)**
-  - **ID:** `dashboard_route_health_audit_20260501`
-  - **Completed:** 2026-04-29T05:45:00+02:00
-  - Mappa: ./tracks/dashboard_route_health_audit_20260501/
-
-- [x] **Cloudflare 4-dir audit + integrations vendor copy identification (P3)**
-  - **ID:** `cloudflare_deploy_consolidation_20260510`
-  - **Completed:** 2026-04-29T05:46:00+02:00
-  - Mappa: ./tracks/cloudflare_deploy_consolidation_20260510/
-
-- [x] **Legacy src/agents migration audit to packages/agents (P4)**
-  - **ID:** `agent_legacy_migration_2026Q3`
-  - **Completed:** 2026-04-29T05:47:00+02:00
-  - Mappa: ./tracks/agent_legacy_migration_2026Q3/
+### Brunella rendszer (4)
 
 - [x] **Monorepo Path Drift Stabilizáció**
   - **ID:** `stabilization-path-drift-20260425`
   - **Completed:** 2026-04-25T15:35:00Z
   - Mappa: ./tracks/stabilization-path-drift-20260425/
+
+- [x] **Brunella Grand Audit + @packages migration finalization**
+  - **ID:** `system_grand_audit_20260429`
+  - **Completed:** 2026-04-29T05:30:00+02:00
+  - Mappa: ./tracks/system_grand_audit_20260429/
+
+- [x] **Cloudflare 4-dir audit + integrations vendor copy identification**
+  - **ID:** `cloudflare_deploy_consolidation_20260510`
+  - **Completed:** 2026-04-29T05:46:00+02:00
+  - Mappa: ./tracks/cloudflare_deploy_consolidation_20260510/
+
+- [x] **Dashboard route health & legacy src/server/routes audit**
+  - **ID:** `dashboard_route_health_audit_20260501`
+  - **Completed:** 2026-04-29T05:45:00+02:00
+  - Mappa: ./tracks/dashboard_route_health_audit_20260501/
+
+
+### Egyéb (1)
+
+- [x] **Legacy src/agents migration audit to packages/agents**
+  - **ID:** `agent_legacy_migration_2026Q3`
+  - **Completed:** 2026-04-29T05:47:00+02:00
+  - Mappa: ./tracks/agent_legacy_migration_2026Q3/
 
 
 ---

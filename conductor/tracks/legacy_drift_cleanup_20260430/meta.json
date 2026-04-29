@@ -1,0 +1,28 @@
+{
+  "id": "legacy_drift_cleanup_20260430",
+  "title": "Legacy drift cleanup (tracked routes + Cloudflare vendor copy)",
+  "status": "active",
+  "progress": 95,
+  "owner": "brunella-implementer",
+  "createdAt": "2026-04-29T10:45:00+02:00",
+  "predecessor": "agent_legacy_migration_2026Q3",
+  "scope": "Confirmed tracked cleanup only: remove the 6 orphan src/server/routes files and the tracked integrations/bas-cloudflare-orchestrator vendor copy. Untracked workspace-only legacy files stay out of scope until separately approved.",
+  "deliverables": [
+    "src/server/routes/{chaos,crmFollowUp,planetMesh,prometheus,tenants,webhookHooks}.ts removed",
+    "integrations/bas-cloudflare-orchestrator/ removed",
+    "docs/sessions/2026-04-29-1045-session.md checkpoint"
+  ],
+  "verificationNotes": "Cleanup diff is staged and validated. The 6 routes are unused, integrations/bas-cloudflare-orchestrator is the tracked vendor copy, and build/test:fast both passed after the final memory sync. The track remains active until the commit lands so the pre-commit guard can permit the code change.",
+  "dod": {
+    "tests_pass": true,
+    "build_clean": true,
+    "code_committed": false,
+    "no_verify_used": false,
+    "no_verify_admin_only": false,
+    "evidence": [
+      "docs/sessions/2026-04-29-1045-session.md"
+    ]
+  },
+  "followUpTracks": [],
+  "tags": ["cleanup", "legacy-drift", "tracked-only", "cloudflare", "routes"]
+}
