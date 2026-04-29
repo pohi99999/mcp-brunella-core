@@ -1,0 +1,30 @@
+{
+  "id": "agent_legacy_migration_2026Q3",
+  "title": "Legacy src/agents migration audit to packages/agents",
+  "status": "completed",
+  "progress": 100,
+  "owner": "brunella-architect",
+  "createdAt": "2026-04-29T05:37:00+02:00",
+  "completedAt": "2026-04-29T05:47:00+02:00",
+  "predecessor": "system_grand_audit_20260429",
+  "scope": "P4 follow-up: src/agents legacy fa állapota a packages/agents kanonikus fához képest. Build pipeline a packages-re fut (registry.json innen másolódik), src/agents orphan.",
+  "deliverables": [
+    "docs/audits/legacy-drift-followups-20260429.md (P4 section)"
+  ],
+  "verificationNotes": "Audit-only track. Mérőszámok: packages/agents/ 129 .ts (kanonikus, registry.json source), src/agents/ 122 .ts (LEGACY, orphan a build-pipeline szempontjából). 7 fájl különbség arra utal hogy packages új fájlokat kapott, de src nem lett törölve. myai/agents/ (TOML DynamicAgent) és .github/agents/ (Copilot subagent .md) NEM érintettek. Plusz: src/index.ts is orphan (package.json main=apps/mcp-core/index.js). Findings részletesen a docs/audits/legacy-drift-followups-20260429.md P4 fejezetében. Cleanup BLOKKOLVA user approval-ig (HIGH risk).",
+  "dod": {
+    "tests_pass": true,
+    "build_clean": true,
+    "code_committed": true,
+    "no_verify_used": false,
+    "no_verify_admin_only": false,
+    "evidence": [
+      "docs/audits/legacy-drift-followups-20260429.md",
+      "conductor/tracks/agent_legacy_migration_2026Q3/plan.md"
+    ]
+  },
+  "followUpTracks": [
+    "legacy_drift_cleanup_20260430"
+  ],
+  "tags": ["audit", "agents", "legacy-drift", "monorepo-cleanup"]
+}

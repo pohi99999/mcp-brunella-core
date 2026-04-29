@@ -1,11 +1,11 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-04-29T01:00:00.054Z
+**Utolso frissites:** 2026-04-29T03:00:00.078Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 2 total | 1 active | 1 completed | 0 archived
-**Csoportok:** Könyvelés / üzleti automatizálás: 0 | Nova asszisztens: 0 | Brunella rendszer: 2 | Egyéb: 0
+**Stats:** 5 total | 0 active | 5 completed | 0 archived
+**Csoportok:** Könyvelés / üzleti automatizálás: 0 | Nova asszisztens: 0 | Brunella rendszer: 5 | Egyéb: 0
 
 ---
 
@@ -15,21 +15,35 @@ _Nincs track ebben a szekcioban._
 
 ---
 
-## Aktiv Szalak (Active) (1)
+## Aktiv Szalak (Active) (0)
 
-### Brunella rendszer (1)
-
-- [~] **Brunella Grand Audit + @packages migration finalization**
-  - **ID:** `system_grand_audit_20260429`
-  - **Started:** 2026-04-29T03:30:00+02:00
-  - **Owner:** Copilot CLI (Chief of Staff)
-  - Mappa: ./tracks/system_grand_audit_20260429/
+_Nincs track ebben a szekcioban._
 
 ---
 
-## Befejezett (Completed - Not Archived) (1)
+## Befejezett (Completed - Not Archived) (5)
 
-### Brunella rendszer (1)
+### Brunella rendszer (5)
+
+- [x] **Brunella Grand Audit + @packages migration finalization**
+  - **ID:** `system_grand_audit_20260429`
+  - **Completed:** 2026-04-29T03:00:00Z
+  - Mappa: ./tracks/system_grand_audit_20260429/
+
+- [x] **Dashboard route health & legacy src/server/routes audit (P2)**
+  - **ID:** `dashboard_route_health_audit_20260501`
+  - **Completed:** 2026-04-29T05:45:00+02:00
+  - Mappa: ./tracks/dashboard_route_health_audit_20260501/
+
+- [x] **Cloudflare 4-dir audit + integrations vendor copy identification (P3)**
+  - **ID:** `cloudflare_deploy_consolidation_20260510`
+  - **Completed:** 2026-04-29T05:46:00+02:00
+  - Mappa: ./tracks/cloudflare_deploy_consolidation_20260510/
+
+- [x] **Legacy src/agents migration audit to packages/agents (P4)**
+  - **ID:** `agent_legacy_migration_2026Q3`
+  - **Completed:** 2026-04-29T05:47:00+02:00
+  - Mappa: ./tracks/agent_legacy_migration_2026Q3/
 
 - [x] **Monorepo Path Drift Stabilizáció**
   - **ID:** `stabilization-path-drift-20260425`

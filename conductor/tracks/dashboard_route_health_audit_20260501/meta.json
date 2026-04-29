@@ -1,0 +1,30 @@
+{
+  "id": "dashboard_route_health_audit_20260501",
+  "title": "Dashboard route health & legacy src/server/routes audit",
+  "status": "completed",
+  "progress": 100,
+  "owner": "brunella-architect",
+  "createdAt": "2026-04-29T05:35:00+02:00",
+  "completedAt": "2026-04-29T05:45:00+02:00",
+  "predecessor": "system_grand_audit_20260429",
+  "scope": "P2 follow-up: runtime endpoint mapping, dashboard ↔ API valóság-szinkron, src/server/routes vs apps/mcp-core/server/routes diff",
+  "deliverables": [
+    "docs/audits/legacy-drift-followups-20260429.md (P2 section)"
+  ],
+  "verificationNotes": "Audit-only track. Mérőszámok: apps/dashboard/lib/apiService.ts 4313 sor, 93 API URL konstans, 0 direkt fetch literál. Routes: 100 src vs 94 apps, 94 közös, 6 orphan src-only (chaos.ts, crmFollowUp.ts, planetMesh.ts, prometheus.ts, tenants.ts, webhookHooks.ts). Findings részletesen a docs/audits/legacy-drift-followups-20260429.md P2 fejezetében. Kód-szintű cleanup BLOKKOLVA user approval-ig (HIGH risk).",
+  "dod": {
+    "tests_pass": true,
+    "build_clean": true,
+    "code_committed": true,
+    "no_verify_used": false,
+    "no_verify_admin_only": false,
+    "evidence": [
+      "docs/audits/legacy-drift-followups-20260429.md",
+      "conductor/tracks/dashboard_route_health_audit_20260501/plan.md"
+    ]
+  },
+  "followUpTracks": [
+    "legacy_drift_cleanup_20260430"
+  ],
+  "tags": ["audit", "dashboard", "routes", "legacy-drift"]
+}

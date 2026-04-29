@@ -1,4 +1,38 @@
 
+### 2026-04-29 05:47 - P2/P3/P4 follow-up audit trackek lezárása (audit-only)
+
+**Feladat:** A grand audit follow-up trackjeinek (P2 dashboard route health, P3 cloudflare consolidation, P4 agent legacy migration) audit-only feldolgozása és lezárása completed státusszal.
+
+**Érintett fájlok:**
+- `conductor/tracks/dashboard_route_health_audit_20260501/{meta.json,plan.md}` (új)
+- `conductor/tracks/cloudflare_deploy_consolidation_20260510/{meta.json,plan.md}` (új)
+- `conductor/tracks/agent_legacy_migration_2026Q3/{meta.json,plan.md}` (új)
+- `docs/audits/legacy-drift-followups-20260429.md` (új konszolidált audit, 8552 char)
+- `conductor/tracks.md` (manual sync: 5 completed, 0 active)
+
+**Konszolidált findings:**
+1. **P2 — Dashboard tiszta:** `apps/dashboard/lib/apiService.ts` 4313 sor, **0 direkt fetch literál**, 93 URL konstans. **Routes 100 src vs 94 apps**, 94 közös, 6 src-only orphan (chaos, crmFollowUp, planetMesh, prometheus, tenants, webhookHooks).
+2. **P3 — Cloudflare 3 dir kanonikus + 1 vendor dup:** `integrations/bas-cloudflare-orchestrator/` 673 .ts saját node_modules+.wrangler+n8n+langflow+cloudflared = teljes vendor másolat ugyanazzal a `package.json name+version`-vel mint a top-level fa.
+3. **P4 — `packages/agents/` kanonikus:** 129 .ts + registry.json source. `src/agents/` 122 .ts **orphan legacy** (build pipeline csak packages-ből másol). `src/index.ts` is orphan (`package.json main=apps/mcp-core/index.js`). `myai/agents/` és `.github/agents/` független rétegek, érintetlenek.
+
+**Konszolidált gyökér-ok:** A monorepo refaktor (`src/` → `apps/` + `packages/`) **partial migration**. A kanonikus fák működnek, a legacy fák ott maradtak — CI/build NEM hivatkozik rájuk, de IDE auto-import zavart okozhat.
+
+**Validáció:**
+- ✅ npm run build PASS (registry+TRIZ+pathResolver alias copy OK)
+- ⏳ npm run test:fast háttérben (~7 perc, kezdte 05:38)
+- ⏳ git commit pending (DoD evidence: `docs/audits/legacy-drift-followups-20260429.md` ✓ — `docs/` elfogadott path)
+
+**HIGH risk cleanup BLOKKOLVA user approval-ig:**
+- 6 src-only route fizikai törlése (`grep` import-elemzés szükséges előbb)
+- `integrations/bas-cloudflare-orchestrator/` 673 fájl törlése
+- `src/agents/` 122 fájl + `src/index.ts` törlése
+
+**Javasolt follow-up cleanup track:** `legacy_drift_cleanup_20260430` — scope: a 3 audit eredménye alapján fokozatos legacy törlés user approval-lel.
+
+**Tanulság:** Az audit-only track is teljes-értékű DoD-vel kell hogy bezáruljon (build clean + test pass + code committed + non-`--no-verify`), mert a `docs/audits/...` path elfogadott evidence — nem kell kód-változás a closure-höz.
+
+**Státusz:** 3 track `completed`, progress 100, dod evidence, audit-only marker.
+
 ### 2026-04-29 05:16 - Grand Audit FÁZIS 1.3-2.F + 3-4 lezárás (`system_grand_audit_20260429`)
 **Feladat:** FÁZIS 1.3 (PAIOS chat e2e), 1.7 (Hook/Scheduler/Reflection wiring), 1.8 (skill/plugin/.vscode inventory), 2 (mount points), 2.F (Cloudflare konszolidáció), 3 (full validáció), 4 (lezárás).
 **Érintett fájlok:** `conductor/tracks/system_grand_audit_20260429/phase2-audit.md` (új), `meta.json` (status: completed, verificationNotes string, DoD), `docs/audits/grand-audit-20260429-summary.md` (új top-level summary)

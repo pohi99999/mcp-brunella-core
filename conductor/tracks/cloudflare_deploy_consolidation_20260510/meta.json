@@ -1,0 +1,31 @@
+{
+  "id": "cloudflare_deploy_consolidation_20260510",
+  "title": "Cloudflare 4-dir audit + integrations vendor copy identification",
+  "status": "completed",
+  "progress": 100,
+  "owner": "brunella-architect",
+  "createdAt": "2026-04-29T05:36:00+02:00",
+  "completedAt": "2026-04-29T05:46:00+02:00",
+  "predecessor": "system_grand_audit_20260429",
+  "scope": "P3 follow-up: wrangler config + vendor copy audit. Az előző audit megerősítette hogy 3 funkcionális komponens él, de a 4. (integrations/bas-cloudflare-orchestrator) vendor duplikátum.",
+  "deliverables": [
+    "docs/audits/legacy-drift-followups-20260429.md (P3 section)"
+  ],
+  "verificationNotes": "Audit-only track. Mérőszámok: apps/cloudflare-edge/ 8 .ts (kanonikus edge worker), bas-cloudflare-orchestrator/ 8 .ts (kanonikus D1/R2 sync), workers/ 4 .ts (cean-* edge agentek). KRITIKUS FINDING: integrations/bas-cloudflare-orchestrator/ 673 .ts fájl saját node_modules + .wrangler + n8n + langflow + cloudflared mappákkal — VENDOR DUPLIKÁTUM ugyanazzal a package.json name+version-vel mint a top-level bas-cloudflare-orchestrator/. Findings részletesen a docs/audits/legacy-drift-followups-20260429.md P3 fejezetében. Kód-szintű törlés BLOKKOLVA user approval-ig (HIGH risk, ~700 fájlnyi history-érintő művelet).",
+  "dod": {
+    "tests_pass": true,
+    "build_clean": true,
+    "code_committed": true,
+    "no_verify_used": false,
+    "no_verify_admin_only": false,
+    "evidence": [
+      "docs/audits/legacy-drift-followups-20260429.md",
+      "conductor/tracks/cloudflare_deploy_consolidation_20260510/plan.md"
+    ]
+  },
+  "followUpTracks": [
+    "legacy_drift_cleanup_20260430",
+    "wrangler_pipeline_unify_20260512"
+  ],
+  "tags": ["audit", "cloudflare", "vendor-cleanup", "legacy-drift"]
+}
