@@ -4,7 +4,7 @@
   "status": "active",
   "owner": "Copilot CLI (Chief of Staff)",
   "createdAt": "2026-04-29T03:30:00+02:00",
-  "progress": 25,
+  "progress": 50,
   "scope": [
     "Vite cache cleanup (.gitignore + working tree)",
     "@packages/* import refaktor zárás (apps/ + tests/ ~660 fájl)",
@@ -19,3 +19,4 @@
   "sdlc": { "enabled": false },
   "notes": "Folyamatban lévő @packages alias migráció befejezése + Brunella system grand audit. A felhasználó autonóm jóváhagyást adott."
 }
+
