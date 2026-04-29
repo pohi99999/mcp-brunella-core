@@ -148,3 +148,29 @@ F:/w                                                       7ccaddca7 [external-.
 | **P3** | Skill/plugin kihasználtság inventory | `bas-self-reflect` |
 
 **Folyamat-konvenció FÁZIS 2-höz:** minden alfeladat → külön commit + `phase2-<feladat>.md` log a track mappába. Validáció minden 2-3 alfeladat után `npm run build` + targeted vitest.
+
+---
+
+## 📌 P1 PROGRESS — 2026-04-29 04:18
+
+### 1.1 Agent Registry — RÉSZBEN MEGOLDVA ✅
+**Indulás:** packages/agents/registry.json = 79 agent, src/agents/registry.json = 95 (16 src-only divergencia)
+
+**Fájl szintű probe eredmény:**
+- 11 src-only agent: implementáció megvan **mindkét helyen** (src/ és packages/)
+- 6 src-only agent: implementáció **csak src/-ben** (NavCrossCheck, finance_guardian, FinancialGuard, logistics_dispatcher, robotkezv2, OCRAgent)
+
+**Akció (végrehajtva):**
+- 9 új entry hozzáadva packages/agents/registry.json-hez (sorrendezve)
+- 2 alias merge: `task_decomposer` → `TaskDecomposer` (capabilities, tools, tags, autoStart kibővítve, `aliases: ["task_decomposer"]`); `ops` → `evaluator` (tools és tags merge-elve, `aliases: ["ops"]`)
+
+**Eredmény:** packages/agents/registry.json: 79 → **88 agent** ✅
+
+**Validáció:**
+- `npm run build` ✅ zöld
+- `npx vitest run` agent_health_matrix + agentRegistryAudit + agentManagerInit + agentRouting → **272/272 passed** ✅
+
+**Még nyitott (FÁZIS 2-ben):**
+- 6 implementáció src/-ben kizárólag — vagy migrálni packages/-be vagy formálisan deprecated jelölni
+- src/agents/registry.json **NEM TÖRÖLHETŐ** (runtime ref: `packages/core-logic/policyEngine.ts:32`, `ops/scripts/update_master_context.ts:9`)
+
