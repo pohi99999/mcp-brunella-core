@@ -255,3 +255,10 @@ yarn.lock
 
 # GitHub App credentials
 gha-creds-*.json
+node_modules
+
+# Vite dependency cache (auto-generated)
+apps/dashboard/.vite/
+apps/*/.vite/
+**/.vite/
+
