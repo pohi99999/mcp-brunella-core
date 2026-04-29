@@ -174,8 +174,8 @@
       "https://registry.npmjs.org",
       "chrome-devtools-mcp@0.17.0"
     ],
-    "description": "Chrome DevTools MCP server - bongeszo diagnosztika",
-    "autoStart": true,
+    "description": "Chrome DevTools MCP server - bongeszo diagnosztika (on-demand)",
+    "autoStart": false,
     "required": false,
     "disabled": false,
     "requiredEnv": [],
@@ -189,8 +189,8 @@
     "args": [
       "@playwright/mcp@latest"
     ],
-    "description": "Playwright MCP server - browser automatizalas",
-    "autoStart": true,
+    "description": "Playwright MCP server - browser automatizalas (on-demand)",
+    "autoStart": false,
     "required": false,
     "disabled": false,
     "requiredEnv": [],
@@ -273,8 +273,8 @@
       "CLAUDE_PLUGIN_ROOT": "${USER_HOME}/.gemini/extensions/maestro/claude",
       "MAESTRO_RUNTIME": "claude"
     },
-    "description": "Maestro multi-agent orchestration MCP – 12 tools: session lifecycle (create/get/update/transition/archive), workspace (initialize/assess/validate/resolve), content (get_skill_content/get_agent/get_runtime_context)",
-    "autoStart": true,
+    "description": "Maestro multi-agent orchestration MCP – 12 tools: session lifecycle (create/get/update/transition/archive), workspace (initialize/assess/validate/resolve), content (get_skill_content/get_agent/get_runtime_context) — on-demand",
+    "autoStart": false,
     "required": false,
     "disabled": false,
     "requiredEnv": [],

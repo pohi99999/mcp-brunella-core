@@ -169,8 +169,21 @@ F:/w                                                       7ccaddca7 [external-.
 **Validáció:**
 - `npm run build` ✅ zöld
 - `npx vitest run` agent_health_matrix + agentRegistryAudit + agentManagerInit + agentRouting → **272/272 passed** ✅
+- `npm run test:fast` (full): **427 passed | 1 skipped (3129 tests)** 393s ✅
+- Push commit `4e95d4a44` → origin/main ✅
 
-**Még nyitott (FÁZIS 2-ben):**
-- 6 implementáció src/-ben kizárólag — vagy migrálni packages/-be vagy formálisan deprecated jelölni
-- src/agents/registry.json **NEM TÖRÖLHETŐ** (runtime ref: `packages/core-logic/policyEngine.ts:32`, `ops/scripts/update_master_context.ts:9`)
+### 1.1b 6 src-only implementáció — DOKUMENTÁLT KÉSZENLÉT ✅
+A 6 implementáció (NavCrossCheckAgent, FinanceGuardian, FinancialGuardAgent, LogisticsDispatcher, CometBrowserAgent, OCRAgent) `src/agents/`-ben él, és **`packages/agents/registry.legacy.json`-ban** dokumentált formában. Az `AgentManager.ts:520-523` modulokat csak a `packages/agents/` mappából tölt — ezért a kanonikus registry-be felvenni jelenleg `Modul nem található` hibát eredményezne. **Helyes állapot:** legacy registry tartalmazza, runtime referencia él `src/agents/registry.json`-on keresztül (lásd `packages/core-logic/policyEngine.ts:32`). Migráció akkor szükséges, ha a 6 .ts fájlt mirror-oljuk `packages/agents/`-be.
+
+### 1.4 MCP Autostart — JAVÍTVA ✅
+**Indulás:** 12 autostart MCP szerver
+**Akció:** `chrome-devtools`, `playwright`, `maestro` → `autoStart: false` (on-demand)
+**Eredmény:** 10 autostart MCP (brunella-core, brunella-remote, filesystem, fetch, csharp-mcp-server, workspace-mcp-server, memory, sequential-thinking, github, windows_automation_bridge)
+**Validáció:** `npm run mcp:validate` ✅ "4 konfigurációs felület valid"
+
+### 1.2 Route ↔ Dashboard mapping — RÉSZLEGES KÉPALKOTÁS ✅
+- `apps/mcp-core/server/routes/*.ts` regisztrált route-ok: **361 unique** (`get/post/put/delete/patch`)
+- `apps/dashboard/lib/apiService.ts` `${API_BASE}` alapú endpoint hivatkozások: **>50 különböző** (cloudflare, bookkeeping, kernel, agents, tools, services, …)
+- `apps/dashboard/**` `api.*` és `apiService.*` hívások: **151 unique**
+- Teljes mátrix-mapping (halott gomb / árva route detektálás) FÁZIS 2-ben dedikált scripttel — autonóm scope-ban defernálva, jelenlegi prioritás a stabilizáció.
 
