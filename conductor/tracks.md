@@ -1,11 +1,11 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-04-26T13:45:00.000Z
+**Utolso frissites:** 2026-04-29T01:00:00.054Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 4 total | 0 active | 4 completed | 0 archived
-**Csoportok:** Könyvelés / üzleti automatizálás: 2 | Pályázat- és hitelkezelés: 1 | Brunella rendszer: 1 | Egyéb: 0
+**Stats:** 2 total | 1 active | 1 completed | 0 archived
+**Csoportok:** Könyvelés / üzleti automatizálás: 0 | Nova asszisztens: 0 | Brunella rendszer: 2 | Egyéb: 0
 
 ---
 
@@ -15,32 +15,19 @@ _Nincs track ebben a szekcioban._
 
 ---
 
-## Aktiv Szalak (Active) (0)
+## Aktiv Szalak (Active) (1)
 
-_Nincs track ebben a szekcioban._
+### Brunella rendszer (1)
+
+- [~] **Brunella Grand Audit + @packages migration finalization**
+  - **ID:** `system_grand_audit_20260429`
+  - **Started:** 2026-04-29T03:30:00+02:00
+  - **Owner:** Copilot CLI (Chief of Staff)
+  - Mappa: ./tracks/system_grand_audit_20260429/
 
 ---
 
-## Befejezett (Completed - Not Archived) (4)
-
-### Könyvelés / üzleti automatizálás (2)
-
-- [x] **p-ber (Bér és munkaügy) alkalmazás**
-  - **ID:** `p_ber_20260426`
-  - **Completed:** 2026-04-26T13:40:00Z
-  - Mappa: ./tracks/p_ber_20260426/
-
-- [x] **P-book (Könyvelés) alkalmazás**
-  - **ID:** `p_book_20260426`
-  - **Completed:** 2026-04-26T12:40:00Z
-  - Mappa: ./tracks/p_book_20260426/
-
-### Pályázat- és hitelkezelés (1)
-
-- [x] **P-SEARCH (Pályázat- és hitelkereső) alkalmazás**
-  - **ID:** `p_search_20260426`
-  - **Completed:** 2026-04-26T13:20:00Z
-  - Mappa: ./tracks/p_search_20260426/
+## Befejezett (Completed - Not Archived) (1)
 
 ### Brunella rendszer (1)
 

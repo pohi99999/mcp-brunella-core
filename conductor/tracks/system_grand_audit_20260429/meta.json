@@ -1,0 +1,21 @@
+{
+  "id": "system_grand_audit_20260429",
+  "title": "Brunella Grand Audit + @packages migration finalization",
+  "status": "active",
+  "owner": "Copilot CLI (Chief of Staff)",
+  "createdAt": "2026-04-29T03:30:00+02:00",
+  "progress": 25,
+  "scope": [
+    "Vite cache cleanup (.gitignore + working tree)",
+    "@packages/* import refaktor zárás (apps/ + tests/ ~660 fájl)",
+    "Read-only system audit (route/dashboard mapping, MCP, dashboard.bat, PAIOS, Cloudflare)",
+    "Audit jelentés és prioritás-mátrix"
+  ],
+  "outOfScope": [
+    "src/ legacy mappa migrációja (külön track)",
+    "Cloudflare élő deploy (csak kód-szintű audit)",
+    "Halott gombok automatikus törlése (csak dokumentálás)"
+  ],
+  "sdlc": { "enabled": false },
+  "notes": "Folyamatban lévő @packages alias migráció befejezése + Brunella system grand audit. A felhasználó autonóm jóváhagyást adott."
+}
