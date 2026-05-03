@@ -9,8 +9,37 @@ import { logError } from '@packages/utils/logger.js';
 import { v4 as uuidv4 } from 'uuid';
 import type { EventEnvelope, EventFabricPriority, EventFabricRiskHint } from '@packages/core-logic/eventFabric.js';
 
+const PRIORITIES = new Set<EventFabricPriority>(['critical', 'high', 'medium', 'low']);
+const RISK_HINTS = new Set<EventFabricRiskHint>(['safe', 'guarded', 'dangerous']);
+
 function isString(v: unknown): v is string {
   return typeof v === 'string' && v.trim().length > 0;
+}
+
+function readString(v: unknown): string | null {
+  return isString(v) ? v.trim() : null;
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function readPriority(value: unknown): EventFabricPriority {
+  return typeof value === 'string' && PRIORITIES.has(value as EventFabricPriority)
+    ? (value as EventFabricPriority)
+    : 'medium';
+}
+
+function readRiskHint(value: unknown): EventFabricRiskHint {
+  return typeof value === 'string' && RISK_HINTS.has(value as EventFabricRiskHint)
+    ? (value as EventFabricRiskHint)
+    : 'safe';
+}
+
+function readLimit(value: unknown, fallback: number): number {
+  const parsed = typeof value === 'number' ? value : Number.parseInt(String(value ?? fallback), 10);
+  if (!Number.isFinite(parsed)) return fallback;
+  return Math.min(Math.max(Math.trunc(parsed), 1), 200);
 }
 
 export function createZeroPromptRouter(): Router {
@@ -44,10 +73,9 @@ export function createZeroPromptRouter(): Router {
    */
   router.get('/events', (req: Request, res: Response) => {
     try {
-      const source = isString(req.query.source) ? req.query.source : undefined;
-      const type = isString(req.query.type) ? req.query.type : undefined;
-      const limit = parseInt(String(req.query.limit ?? '50'), 10);
-      const events = eventFabric.getHistory({ source, type, limit: isNaN(limit) ? 50 : limit });
+      const source = readString(req.query.source) ?? undefined;
+      const type = readString(req.query.type) ?? undefined;
+      const events = eventFabric.getHistory({ source, type, limit: readLimit(req.query.limit, 50) });
       res.json({ count: events.length, events });
     } catch (e: unknown) {
       logError('ZeroPromptRoute', `events error: ${e instanceof Error ? e.message : String(e)}`);
@@ -62,8 +90,10 @@ export function createZeroPromptRouter(): Router {
    */
   router.post('/events', (req: Request, res: Response) => {
     try {
-      const { source, type, priority, riskHint, payload, metadata } = req.body as Record<string, unknown>;
-      if (!isString(source) || !isString(type)) {
+      const body = isRecord(req.body) ? req.body : {};
+      const source = readString(body.source);
+      const type = readString(body.type);
+      if (!source || !type) {
         res.status(400).json({ error: 'source and type are required strings' });
         return;
       }
@@ -72,13 +102,13 @@ export function createZeroPromptRouter(): Router {
         id: uuidv4(),
         source,
         type,
-        priority: (isString(priority) ? priority : 'medium') as EventFabricPriority,
-        riskHint: (isString(riskHint) ? riskHint : 'safe') as EventFabricRiskHint,
+        priority: readPriority(body.priority),
+        riskHint: readRiskHint(body.riskHint),
         dedupKey: `manual:${source}:${type}:${Date.now()}`,
-        payload: payload ?? {},
+        payload: body.payload ?? {},
         timestamp: new Date().toISOString(),
-        metadata: (metadata && typeof metadata === 'object' && !Array.isArray(metadata))
-          ? metadata as Record<string, unknown>
+        metadata: isRecord(body.metadata)
+          ? body.metadata
           : { source: 'manual_api' },
       };
 
@@ -181,9 +211,9 @@ export function createZeroPromptRouter(): Router {
    */
   router.get('/notifications', (req: Request, res: Response) => {
     try {
-      const limit = parseInt(String(req.query.limit ?? '20'), 10);
-      const channel = isString(req.query.channel) ? req.query.channel : undefined;
-      const status = isString(req.query.status) ? req.query.status : undefined;
+      const limit = readLimit(req.query.limit, 20);
+      const channel = readString(req.query.channel) ?? undefined;
+      const status = readString(req.query.status) ?? undefined;
 
       const deliveries = notificationChannels.listDeliveries({
         limit: isNaN(limit) ? 20 : limit,
@@ -234,8 +264,8 @@ export function createZeroPromptRouter(): Router {
    */
   router.get('/remediation-runs', (req: Request, res: Response) => {
     try {
-      const status = isString(req.query.status) ? req.query.status : undefined;
-      const limit = parseInt(String(req.query.limit ?? '20'), 10);
+      const status = readString(req.query.status) ?? undefined;
+      const limit = readLimit(req.query.limit, 20);
       const validStatuses = [
         'queued',
         'analyzing',
@@ -258,7 +288,7 @@ export function createZeroPromptRouter(): Router {
           | 'rejected'
           | 'failed'
           | undefined,
-        isNaN(limit) ? 20 : limit,
+        limit,
       );
 
       res.json({
@@ -359,8 +389,10 @@ export function createZeroPromptRouter(): Router {
    */
   router.post('/evaluate', async (req: Request, res: Response) => {
     try {
-      const { source, type, priority, riskHint, payload, resource, agentName } = req.body as Record<string, unknown>;
-      if (!isString(source) || !isString(type)) {
+      const body = isRecord(req.body) ? req.body : {};
+      const source = readString(body.source);
+      const type = readString(body.type);
+      if (!source || !type) {
         res.status(400).json({ error: 'source and type are required' });
         return;
       }
@@ -369,17 +401,17 @@ export function createZeroPromptRouter(): Router {
         id: uuidv4(),
         source,
         type,
-        priority: (isString(priority) ? priority : 'medium') as EventFabricPriority,
-        riskHint: (isString(riskHint) ? riskHint : 'safe') as EventFabricRiskHint,
+        priority: readPriority(body.priority),
+        riskHint: readRiskHint(body.riskHint),
         dedupKey: `eval:${source}:${type}:${Date.now()}`,
-        payload: payload ?? {},
+        payload: body.payload ?? {},
         timestamp: new Date().toISOString(),
       };
 
       const decision = await evaluateAndLogPolicy({
         event: envelope,
-        agentName: isString(agentName) ? agentName : 'ManualEvaluate',
-        resource: isString(resource) ? resource : undefined,
+        agentName: readString(body.agentName) ?? 'ManualEvaluate',
+        resource: readString(body.resource) ?? undefined,
       });
 
       res.json({ decision });
@@ -396,12 +428,11 @@ export function createZeroPromptRouter(): Router {
    */
   router.post('/replay', (req: Request, res: Response) => {
     try {
-      const { source, type, limit } = req.body as Record<string, unknown>;
-      const parsedLimit = typeof limit === 'number' ? limit : parseInt(String(limit ?? '10'), 10);
+      const body = isRecord(req.body) ? req.body : {};
       const result = eventFabric.replay({
-        source: isString(source) ? source : undefined,
-        type: isString(type) ? type : undefined,
-        limit: isNaN(parsedLimit) ? 10 : parsedLimit,
+        source: readString(body.source) ?? undefined,
+        type: readString(body.type) ?? undefined,
+        limit: readLimit(body.limit, 10),
       });
       res.json({ replayed: result.replayed, events: result.events });
     } catch (e: unknown) {

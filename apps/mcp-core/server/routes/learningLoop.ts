@@ -25,10 +25,51 @@ import {
   listTrainingRuns,
 } from '@packages/core-logic/reflexModelRegistry.js';
 
+const REFLEX_MODEL_STATES = new Set<ReflexModelState>(['candidate', 'shadow', 'active', 'retired']);
+const CURATED_APPROVAL_STATES = new Set<CuratedGoldenApprovalState>(['pending', 'approved', 'rejected']);
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function readString(value: unknown): string | undefined {
+  if (typeof value !== 'string') return undefined;
+  const trimmed = value.trim();
+  return trimmed ? trimmed : undefined;
+}
+
+function readLimit(value: unknown, fallback: number, max = 200): number {
+  const parsed = Number(value ?? fallback);
+  if (!Number.isFinite(parsed)) return fallback;
+  return Math.min(Math.max(Math.trunc(parsed), 1), max);
+}
+
+function readOffset(value: unknown): number {
+  const parsed = Number(value ?? 0);
+  if (!Number.isFinite(parsed)) return 0;
+  return Math.max(Math.trunc(parsed), 0);
+}
+
+function readRatio(value: unknown, fallback: number): number {
+  const parsed = Number(value ?? fallback);
+  if (!Number.isFinite(parsed)) return fallback;
+  return Math.min(Math.max(parsed, 0), 1);
+}
+
+function readReflexModelState(value: unknown): ReflexModelState | undefined {
+  const state = readString(value);
+  return state && REFLEX_MODEL_STATES.has(state as ReflexModelState) ? state as ReflexModelState : undefined;
+}
+
+function readCuratedApprovalState(value: unknown): CuratedGoldenApprovalState | undefined {
+  const state = readString(value);
+  return state && CURATED_APPROVAL_STATES.has(state as CuratedGoldenApprovalState) ? state as CuratedGoldenApprovalState : undefined;
+}
+
 function parseBoolean(value: unknown, fallback = false): boolean {
   if (typeof value === 'boolean') return value;
   if (typeof value === 'string') {
-    return ['1', 'true', 'yes', 'on'].includes(value.toLowerCase());
+    return ['1', 'true', 'yes', 'on'].includes(value.trim().toLowerCase());
   }
   return fallback;
 }
@@ -46,18 +87,18 @@ export function createLearningLoopRouter(): Router {
   }));
 
   router.get('/models', asyncHandler(async (req, res) => {
-    const state = typeof req.query.state === 'string' ? req.query.state : undefined;
-    const limit = typeof req.query.limit === 'string' ? Number(req.query.limit) : 25;
-    res.json({ success: true, data: listReflexModels(state as ReflexModelState | undefined, limit) });
+    const state = readReflexModelState(req.query.state);
+    const limit = readLimit(req.query.limit, 25);
+    res.json({ success: true, data: listReflexModels(state, limit) });
   }));
 
   router.get('/training-runs', asyncHandler(async (req, res) => {
-    const limit = typeof req.query.limit === 'string' ? Number(req.query.limit) : 20;
+    const limit = readLimit(req.query.limit, 20);
     res.json({ success: true, data: listTrainingRuns(limit) });
   }));
 
   router.get('/eval-results', asyncHandler(async (req, res) => {
-    const limit = typeof req.query.limit === 'string' ? Number(req.query.limit) : 20;
+    const limit = readLimit(req.query.limit, 20);
     res.json({ success: true, data: listEvalResults(limit) });
   }));
 
@@ -66,42 +107,45 @@ export function createLearningLoopRouter(): Router {
   }));
 
   router.get('/curated/samples', asyncHandler(async (req, res) => {
-    const state = typeof req.query.state === 'string' ? req.query.state : undefined;
-    const limit = typeof req.query.limit === 'string' ? Number(req.query.limit) : 100;
-    const offset = typeof req.query.offset === 'string' ? Number(req.query.offset) : 0;
-    const data = listCuratedGoldenSamples({ state: state as CuratedGoldenApprovalState | undefined, limit, offset });
+    const state = readCuratedApprovalState(req.query.state);
+    const limit = readLimit(req.query.limit, 100);
+    const offset = readOffset(req.query.offset);
+    const data = listCuratedGoldenSamples({ state, limit, offset });
     res.json({ success: true, count: data.length, data });
   }));
 
   router.post('/curated/capture', asyncHandler(async (req, res) => {
+    const body = isRecord(req.body) ? req.body : {};
     const result = captureCuratedGoldenCandidate({
-      prompt: String(req.body?.prompt ?? ''),
-      completion: String(req.body?.completion ?? ''),
-      source: String(req.body?.source ?? 'manual'),
-      quality: typeof req.body?.quality === 'number' ? req.body.quality : undefined,
-      provenance: req.body?.provenance && typeof req.body.provenance === 'object' ? req.body.provenance : undefined,
-      autoApprove: parseBoolean(req.body?.autoApprove, false),
+      prompt: readString(body.prompt) ?? '',
+      completion: readString(body.completion) ?? '',
+      source: readString(body.source) ?? 'manual',
+      quality: typeof body.quality === 'number' && Number.isFinite(body.quality) ? readRatio(body.quality, body.quality) : undefined,
+      provenance: isRecord(body.provenance) ? body.provenance : undefined,
+      autoApprove: parseBoolean(body.autoApprove, false),
     });
     res.status(result.success ? 200 : 400).json(result);
   }));
 
   router.post('/curated/ingest-tool-runs', asyncHandler(async (req, res) => {
-    const limit = typeof req.body?.limit === 'number' ? req.body.limit : 50;
+    const body = isRecord(req.body) ? req.body : {};
+    const limit = readLimit(body.limit, 50);
     const results = captureToolRunCandidates(limit);
     res.json({ success: true, count: results.length, data: results });
   }));
 
   router.post('/curated/review/:sampleId', asyncHandler(async (req, res) => {
-    const decision = req.body?.decision;
+    const body = isRecord(req.body) ? req.body : {};
+    const decision = readString(body.decision);
     if (decision !== 'approved' && decision !== 'rejected') {
       res.status(400).json({ success: false, error: 'decision must be approved or rejected' });
       return;
     }
     const sample = reviewCuratedGoldenSample(
-      String(req.params.sampleId),
+      readString(req.params.sampleId) ?? '',
       decision,
-      String(req.body?.reviewer ?? 'manual'),
-      typeof req.body?.notes === 'string' ? req.body.notes : undefined,
+      readString(body.reviewer) ?? 'manual',
+      readString(body.notes),
     );
     if (!sample) {
       res.status(404).json({ success: false, error: 'sample not found' });
@@ -111,41 +155,46 @@ export function createLearningLoopRouter(): Router {
   }));
 
   router.post('/snapshot', asyncHandler(async (req, res) => {
-    const minQuality = typeof req.body?.minQuality === 'number' ? req.body.minQuality : 0.7;
+    const body = isRecord(req.body) ? req.body : {};
+    const minQuality = readRatio(body.minQuality, 0.7);
     const snapshot = await createCuratedSnapshot(minQuality);
     res.json({ success: true, data: snapshot });
   }));
 
   router.post('/train', asyncHandler(async (req, res) => {
-    const dryRun = parseBoolean(req.body?.dryRun, true);
-    const modelName = typeof req.body?.modelName === 'string' ? req.body.modelName : undefined;
+    const body = isRecord(req.body) ? req.body : {};
+    const dryRun = parseBoolean(body.dryRun, true);
+    const modelName = readString(body.modelName);
     const data = await runNightlyTraining({ dryRun, modelName });
     res.json({ success: true, data });
   }));
 
   router.post('/evaluate', asyncHandler(async (req, res) => {
-    const modelId = typeof req.body?.modelId === 'string' ? req.body.modelId : undefined;
-    const baselineModel = typeof req.body?.baselineModel === 'string' ? req.body.baselineModel : undefined;
+    const body = isRecord(req.body) ? req.body : {};
+    const modelId = readString(body.modelId);
+    const baselineModel = readString(body.baselineModel);
     const data = await runEvalHarness({ modelId, baselineModel });
     res.json({ success: true, data });
   }));
 
   router.post('/cycle', asyncHandler(async (req, res) => {
-    const dryRun = parseBoolean(req.body?.dryRun, true);
-    const promotePassed = parseBoolean(req.body?.promotePassed, false);
-    const baselineModel = typeof req.body?.baselineModel === 'string' ? req.body.baselineModel : undefined;
+    const body = isRecord(req.body) ? req.body : {};
+    const dryRun = parseBoolean(body.dryRun, true);
+    const promotePassed = parseBoolean(body.promotePassed, false);
+    const baselineModel = readString(body.baselineModel);
     const data = await executeLearningLoopCycle({ dryRun, promotePassed, baselineModel });
     res.json({ success: true, data });
   }));
 
   router.post('/models/:modelId/promote', asyncHandler(async (req, res) => {
-    const data = promoteLearningLoopModel(String(req.params.modelId));
+    const data = promoteLearningLoopModel(readString(req.params.modelId) ?? '');
     res.json({ success: true, data });
   }));
 
   router.post('/rollback', asyncHandler(async (req, res) => {
-    const targetModelId = typeof req.body?.targetModelId === 'string' ? req.body.targetModelId : undefined;
-    const reason = typeof req.body?.reason === 'string' ? req.body.reason : undefined;
+    const body = isRecord(req.body) ? req.body : {};
+    const targetModelId = readString(body.targetModelId);
+    const reason = readString(body.reason);
     const data = rollbackLearningLoopModel(targetModelId, reason);
     res.json({ success: true, data });
   }));

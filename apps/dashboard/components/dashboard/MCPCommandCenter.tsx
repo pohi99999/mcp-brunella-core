@@ -10,6 +10,7 @@ import {
   Shield,
   FileText,
   Play,
+  Server,
   CheckCircle2,
   XCircle,
   Clock,
@@ -36,10 +37,74 @@ interface Provider {
   error?: string;
 }
 
+type JsonPrimitive = string | number | boolean | null;
+type JsonValue = JsonPrimitive | JsonValue[] | { [key: string]: JsonValue };
+
+interface JsonSchemaProperty {
+  type?: string | string[];
+  description?: string;
+  default?: JsonValue;
+  enum?: JsonValue[];
+}
+
+interface JsonSchema {
+  type?: string;
+  properties?: Record<string, JsonSchemaProperty>;
+  required?: string[];
+}
+
 interface MCPTool {
   name: string;
   description: string;
-  inputSchema: any;
+  inputSchema: JsonSchema;
+}
+
+type MCPServerRuntimeStatus = 'running' | 'stopped' | 'starting' | 'error' | 'disabled' | 'skipped';
+
+interface MCPServerStatus {
+  name: string;
+  status: MCPServerRuntimeStatus;
+  transport: 'self' | 'stdio' | 'http';
+  autoStart: boolean;
+  pid: number | null;
+  description?: string;
+  error?: string;
+}
+
+interface MCPServerSummary {
+  total: number;
+  running: number;
+  stopped: number;
+  starting: number;
+  error: number;
+  disabled: number;
+  skipped: number;
+  autoStart: number;
+}
+
+interface MCPManifestEntry {
+  name: string;
+  canStart: boolean;
+  readinessState: 'ready' | 'action_required' | 'disabled' | 'unsupported';
+  disabled: boolean;
+  platformSupported: boolean;
+  required: boolean;
+  requiredEnv: string[];
+  missingRequiredEnv: string[];
+  blockers: string[];
+  actionableBlockers: string[];
+  inactiveReason?: string;
+}
+
+interface MCPManifestSummary {
+  total: number;
+  ready: number;
+  blocked: number;
+  actionRequired: number;
+  inactive: number;
+  disabled: number;
+  unsupportedPlatform: number;
+  missingEnv: number;
 }
 
 interface AuditEntry {
@@ -64,15 +129,80 @@ interface Stats {
   };
 }
 
+function getServerStatusIcon(status: MCPServerRuntimeStatus) {
+  if (status === 'running') {
+    return <CheckCircle2 className="w-4 h-4 text-green-400" />;
+  }
+
+  if (status === 'starting') {
+    return <Activity className="w-4 h-4 text-blue-400 animate-spin" />;
+  }
+
+  if (status === 'error') {
+    return <XCircle className="w-4 h-4 text-red-400" />;
+  }
+
+  return <Clock className="w-4 h-4 text-zinc-500" />;
+}
+
+function getManifestBadgeLabel(readiness: MCPManifestEntry): string {
+  if (readiness.readinessState === 'ready') return 'manifest ready';
+  if (readiness.readinessState === 'action_required') return 'action required';
+  if (readiness.readinessState === 'disabled') return 'disabled by manifest';
+  return 'unsupported platform';
+}
+
+function getManifestBadgeVariant(readiness: MCPManifestEntry): 'default' | 'secondary' | 'outline' | 'destructive' {
+  if (readiness.readinessState === 'ready') return 'default';
+  if (readiness.readinessState === 'action_required') return 'destructive';
+  return 'outline';
+}
+
+function defaultValueForSchema(property: JsonSchemaProperty): JsonValue {
+  if (property.default !== undefined) return property.default;
+  const schemaType = Array.isArray(property.type) ? property.type[0] : property.type;
+  if (schemaType === 'boolean') return false;
+  if (schemaType === 'number' || schemaType === 'integer') return 0;
+  if (schemaType === 'array') return [];
+  if (schemaType === 'object') return {};
+  return '';
+}
+
+function buildDefaultToolArgs(schema: JsonSchema): Record<string, JsonValue> {
+  const defaults: Record<string, JsonValue> = {};
+  const required = new Set(schema.required ?? []);
+  for (const [key, property] of Object.entries(schema.properties ?? {})) {
+    if (required.has(key)) {
+      defaults[key] = defaultValueForSchema(property);
+    }
+  }
+  return defaults;
+}
+
+function parseToolArgsJson(value: string): Record<string, unknown> {
+  const parsed = JSON.parse(value) as unknown;
+  if (typeof parsed !== 'object' || parsed === null || Array.isArray(parsed)) {
+    throw new Error('Tool arguments must be a JSON object.');
+  }
+
+  return parsed as Record<string, unknown>;
+}
+
 export function MCPCommandCenter() {
   const [providers, setProviders] = useState<Provider[]>([]);
   const [tools, setTools] = useState<MCPTool[]>([]);
+  const [mcpServers, setMcpServers] = useState<MCPServerStatus[]>([]);
+  const [mcpServerSummary, setMcpServerSummary] = useState<MCPServerSummary | null>(null);
+  const [mcpManifest, setMcpManifest] = useState<MCPManifestEntry[]>([]);
+  const [mcpManifestSummary, setMcpManifestSummary] = useState<MCPManifestSummary | null>(null);
+  const [serverAction, setServerAction] = useState<string | null>(null);
+  const [serverActionError, setServerActionError] = useState<string | null>(null);
   const [auditLog, setAuditLog] = useState<AuditEntry[]>([]);
   const [stats, setStats] = useState<Stats | null>(null);
   const [loading, setLoading] = useState(true);
   const [selectedTool, setSelectedTool] = useState<MCPTool | null>(null);
   const [toolArgs, setToolArgs] = useState('{}');
-  const [toolResult, setToolResult] = useState<any>(null);
+  const [toolResult, setToolResult] = useState<unknown | null>(null);
   const [executing, setExecuting] = useState(false);
 
   // Fetch data on mount
@@ -96,6 +226,21 @@ export function MCPCommandCenter() {
       const toolsData = await toolsRes.json();
       if (toolsData.success) {
         setTools(toolsData.tools);
+      }
+
+      // Fetch configured MCP server runtime state
+      const serversRes = await fetch('/api/v1/mcp/servers');
+      const serversData = await serversRes.json();
+      if (serversData.success) {
+        setMcpServers(Array.isArray(serversData.servers) ? serversData.servers : []);
+        setMcpServerSummary(serversData.summary ?? null);
+      }
+
+      const manifestRes = await fetch('/api/v1/mcp/manifest');
+      const manifestData = await manifestRes.json();
+      if (manifestData.success) {
+        setMcpManifest(Array.isArray(manifestData.entries) ? manifestData.entries : []);
+        setMcpManifestSummary(manifestData.summary ?? null);
       }
 
       // Fetch audit log
@@ -127,7 +272,7 @@ export function MCPCommandCenter() {
     setToolResult(null);
 
     try {
-      const args = JSON.parse(toolArgs);
+      const args = parseToolArgsJson(toolArgs);
 
       const response = await fetch(`/api/v1/mcp/tools/${selectedTool.name}`, {
         method: 'POST',
@@ -145,6 +290,30 @@ export function MCPCommandCenter() {
     }
   }
 
+  async function controlMcpServer(server: MCPServerStatus, action: 'start' | 'stop') {
+    const actionKey = `${server.name}:${action}`;
+    setServerAction(actionKey);
+    setServerActionError(null);
+
+    try {
+      const response = await fetch(`/api/v1/mcp/servers/${encodeURIComponent(server.name)}/${action}`, {
+        method: 'POST'
+      });
+      const result = await response.json();
+
+      if (!response.ok || result.success === false) {
+        throw new Error(result.error ?? `MCP server ${action} failed`);
+      }
+
+      await fetchData();
+    } catch (e: unknown) {
+      const error = e instanceof Error ? e.message : String(e);
+      setServerActionError(error);
+    } finally {
+      setServerAction(null);
+    }
+  }
+
   if (loading) {
     return (
       <Card className="glass-card border-white/[0.04]">
@@ -157,6 +326,8 @@ export function MCPCommandCenter() {
       </Card>
     );
   }
+
+  const readinessByName = new Map(mcpManifest.map((entry) => [entry.name, entry]));
 
   return (
     <Card className="glass-card border-white/[0.04]">
@@ -185,8 +356,9 @@ export function MCPCommandCenter() {
 
       <CardContent>
         <Tabs defaultValue="providers" className="w-full">
-          <TabsList className="grid w-full grid-cols-4 bg-zinc-900/50">
+          <TabsList className="grid w-full grid-cols-5 bg-zinc-900/50">
             <TabsTrigger value="providers">Providers</TabsTrigger>
+            <TabsTrigger value="servers">MCP Servers</TabsTrigger>
             <TabsTrigger value="tools">MCP Tools</TabsTrigger>
             <TabsTrigger value="audit">Audit Log</TabsTrigger>
             <TabsTrigger value="stats">Statistics</TabsTrigger>
@@ -238,6 +410,162 @@ export function MCPCommandCenter() {
             </div>
           </TabsContent>
 
+          {/* MCP Servers Tab */}
+          <TabsContent value="servers" className="space-y-3">
+            {serverActionError && (
+              <Card className="bg-red-950/20 border-red-500/30 rounded-lg">
+                <CardContent className="py-3 px-4 text-sm text-red-300">
+                  {serverActionError}
+                </CardContent>
+              </Card>
+            )}
+
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+              <Card className="bg-white/[0.02] border-white/[0.04] rounded-lg">
+                <CardContent className="py-3 px-4">
+                  <div className="text-xs text-zinc-500">Manifest ready</div>
+                  <div className="text-lg font-mono text-zinc-100">{mcpManifestSummary?.ready ?? 0}</div>
+                </CardContent>
+              </Card>
+              <Card className="bg-white/[0.02] border-white/[0.04] rounded-lg">
+                <CardContent className="py-3 px-4">
+                  <div className="text-xs text-zinc-500">Running</div>
+                  <div className="text-lg font-mono text-green-400">{mcpServerSummary?.running ?? 0}</div>
+                </CardContent>
+              </Card>
+              <Card className="bg-white/[0.02] border-white/[0.04] rounded-lg">
+                <CardContent className="py-3 px-4">
+                  <div className="text-xs text-zinc-500">Errors</div>
+                  <div className="text-lg font-mono text-red-400">{mcpServerSummary?.error ?? 0}</div>
+                </CardContent>
+              </Card>
+              <Card className="bg-white/[0.02] border-white/[0.04] rounded-lg">
+                <CardContent className="py-3 px-4">
+                  <div className="text-xs text-zinc-500">Action required</div>
+                  <div className="text-lg font-mono text-amber-400">{mcpManifestSummary?.actionRequired ?? mcpManifestSummary?.blocked ?? 0}</div>
+                </CardContent>
+              </Card>
+              <Card className="bg-white/[0.02] border-white/[0.04] rounded-lg">
+                <CardContent className="py-3 px-4">
+                  <div className="text-xs text-zinc-500">Intentional inactive</div>
+                  <div className="text-lg font-mono text-zinc-300">{mcpManifestSummary?.inactive ?? 0}</div>
+                </CardContent>
+              </Card>
+            </div>
+
+            <div className="grid gap-3">
+              {mcpServers.map((server) => {
+                const readiness = readinessByName.get(server.name);
+                const startBlockedByManifest = server.status !== 'running' && readiness?.canStart === false;
+                const nextAction = server.status === 'running' ? 'stop' : 'start';
+
+                return (
+                <Card key={server.name} className="bg-white/[0.02] border-white/[0.04] rounded-lg">
+                  <CardContent className="py-3 px-4">
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="flex items-start gap-3 min-w-0">
+                        <Server className="w-5 h-5 text-cyan-400 mt-0.5 shrink-0" />
+                        <div className="min-w-0">
+                          <div className="font-mono text-sm text-zinc-100 flex items-center gap-2">
+                            {server.name}
+                            {getServerStatusIcon(server.status)}
+                          </div>
+                          <div className="text-xs text-zinc-500 mt-1">
+                            {server.description ?? `${server.transport} MCP server`}
+                          </div>
+                          {server.error && (
+                            <div className="text-xs text-red-400 mt-1">
+                              {server.error}
+                            </div>
+                          )}
+                          {readiness && (readiness.actionableBlockers.length > 0 || readiness.inactiveReason) && (
+                            <div className="text-xs text-amber-300 mt-1">
+                              {(readiness.actionableBlockers.length > 0
+                                ? readiness.actionableBlockers
+                                : [readiness.inactiveReason]
+                              ).filter(Boolean).join(' • ')}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="flex flex-wrap justify-end gap-2 shrink-0">
+                        <Badge
+                          variant={server.status === 'running' ? 'default' : server.status === 'error' ? 'destructive' : 'outline'}
+                          className="text-xs"
+                        >
+                          {server.status}
+                        </Badge>
+                        <Badge variant="outline" className="text-xs">
+                          {server.transport}
+                        </Badge>
+                        {server.autoStart && (
+                          <Badge variant="secondary" className="text-xs">
+                            auto
+                          </Badge>
+                        )}
+                        {readiness?.required && (
+                          <Badge variant="outline" className="text-xs">
+                            required
+                          </Badge>
+                        )}
+                        {readiness && (
+                          <Badge
+                            variant={getManifestBadgeVariant(readiness)}
+                            className="text-xs"
+                          >
+                            {getManifestBadgeLabel(readiness)}
+                          </Badge>
+                        )}
+                        {server.pid !== null && (
+                          <Badge variant="outline" className="text-xs">
+                            pid {server.pid}
+                          </Badge>
+                        )}
+                        {server.transport === 'self' ? (
+                          <Badge variant="secondary" className="text-xs">
+                            kernel
+                          </Badge>
+                        ) : (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="h-6 px-2 text-xs"
+                            disabled={
+                              serverAction !== null ||
+                              server.status === 'disabled' ||
+                              server.status === 'skipped' ||
+                              server.status === 'starting' ||
+                              startBlockedByManifest
+                            }
+                            onClick={() => {
+                              void controlMcpServer(server, nextAction);
+                            }}
+                          >
+                            {serverAction === `${server.name}:${nextAction}` ? (
+                              <Activity className="w-3 h-3 mr-1 animate-spin" />
+                            ) : (
+                              <Zap className="w-3 h-3 mr-1" />
+                            )}
+                            {server.status === 'running' ? 'Stop' : 'Start'}
+                          </Button>
+                        )}
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+              })}
+              {mcpServers.length === 0 && (
+                <Card className="bg-white/[0.02] border-white/[0.04] rounded-lg">
+                  <CardContent className="py-6 text-center text-sm text-zinc-500">
+                    No MCP servers reported by the runtime.
+                  </CardContent>
+                </Card>
+              )}
+            </div>
+          </TabsContent>
+
           {/* MCP Tools Tab */}
           <TabsContent value="tools" className="space-y-3">
             <div className="grid md:grid-cols-2 gap-3">
@@ -255,15 +583,7 @@ export function MCPCommandCenter() {
                     onClick={() => {
                       setSelectedTool(tool);
                       setToolResult(null);
-                      // Set default args based on schema
-                      const defaultArgs: any = {};
-                      if (tool.inputSchema?.properties) {
-                        Object.keys(tool.inputSchema.properties).forEach(key => {
-                          if (tool.inputSchema.required?.includes(key)) {
-                            defaultArgs[key] = '';
-                          }
-                        });
-                      }
+                      const defaultArgs = buildDefaultToolArgs(tool.inputSchema);
                       setToolArgs(JSON.stringify(defaultArgs, null, 2));
                     }}
                   >
@@ -274,6 +594,11 @@ export function MCPCommandCenter() {
                       <div className="text-xs text-zinc-400 mt-1">
                         {tool.description}
                       </div>
+                      {tool.inputSchema.required?.length ? (
+                        <div className="text-[11px] text-zinc-500 mt-2">
+                          Required: {tool.inputSchema.required.join(', ')}
+                        </div>
+                      ) : null}
                     </CardContent>
                   </Card>
                 ))}

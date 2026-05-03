@@ -66,7 +66,7 @@
 ## 📊 Auto-generated projekt statisztikák
 
 - Agent registry entries: **95**
-- Route modulok a `src/server/routes/` alatt: **100**
+- Route modulok a `src/server/routes/` alatt: **94**
 - Aktív route mountok a központi routerben: **111**
 - MCP tool fájlok a `src/tools/` alatt: **61**
 - Detektált MCP tool definíciók / regisztrációk: **4**

@@ -2,7 +2,39 @@ import { Router } from 'express';
 import { agentManager } from '@packages/agents/AgentManager.js';
 import { AgentArchitect } from '@packages/agents/AgentArchitect.js';
 import { buildAgentRegistryGovernanceSnapshot } from '../agentRegistryGovernance.js';
-import { logEmitter, type LogEvent } from '@packages/utils/logger.js';
+import { logEmitter, logError, type LogEvent } from '@packages/utils/logger.js';
+
+type AgentRouteContext = Record<string, unknown> | undefined;
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+    return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function readTask(body: unknown): string | null {
+    if (!isRecord(body) || typeof body.task !== 'string') return null;
+    const task = body.task.trim();
+    return task ? task : null;
+}
+
+function readContext(body: unknown): AgentRouteContext {
+    if (!isRecord(body)) return undefined;
+    return isRecord(body.context) ? body.context : undefined;
+}
+
+function normalizeAgentMessage(result: unknown): string {
+    if (typeof result === 'string' && result.trim()) return result;
+    if (!isRecord(result)) return 'Kész.';
+
+    if (typeof result.message === 'string' && result.message.trim()) return result.message;
+    if (typeof result.data === 'string' && result.data.trim()) return result.data;
+    if (result.data !== undefined) return JSON.stringify(result.data);
+
+    return 'Kész.';
+}
+
+function readOptionalResultField(result: unknown, key: string): unknown {
+    return isRecord(result) ? result[key] : undefined;
+}
 
 export function createAgentRoutes(): Router {
     const router = Router();
@@ -81,7 +113,8 @@ export function createAgentRoutes(): Router {
     // Szinkron orkesztrátori chat endpoint — megvárja a valódi magyar választ
     router.post('/orchestrate', async (req, res) => {
         try {
-            const { task, context } = req.body;
+            const task = readTask(req.body);
+            const context = readContext(req.body);
             if (!task) {
                 res.status(400).json({ error: 'A feladat megadása kötelező' });
                 return;
@@ -92,12 +125,11 @@ export function createAgentRoutes(): Router {
                 chatMode: 'orchestrator'
             });
 
-            const message = (result as any)?.message || (result as any)?.data || 'Kész.';
             res.json({
                 success: true,
-                message,
-                taskId: (result as any)?.taskId,
-                steps: (result as any)?.steps,
+                message: normalizeAgentMessage(result),
+                taskId: readOptionalResultField(result, 'taskId'),
+                steps: readOptionalResultField(result, 'steps'),
                 executedBy: 'Orchestrator'
             });
         } catch (e: unknown) {
@@ -109,7 +141,8 @@ export function createAgentRoutes(): Router {
     router.post('/:agentName/execute', async (req, res) => {
         try {
             let { agentName } = req.params;
-            const { task, context } = req.body;
+            const task = readTask(req.body);
+            const context = readContext(req.body);
 
             if (!task) {
                 res.status(400).json({ error: 'A feladat megadása kötelező' });
@@ -126,10 +159,11 @@ export function createAgentRoutes(): Router {
 
             // A ténylegesen létező queueTask-ot használjuk a várólistához
             const taskId = await agentManager.queueTask(task, agentName, context);
-            
+
             // Azonnali végrehajtás elindítása a háttérben
             agentManager.delegate(agentName, task, { ...context, taskId }).catch((err: unknown) => {
-                console.error(`Execution error for task ${taskId}:`, err);
+                const msg = err instanceof Error ? err.message : String(err);
+                logError('AgentRoutes', `Execution error for task ${taskId}: ${msg}`);
             });
 
             res.json({ success: true, taskId, message: `#${taskId} feladat elindítva (${agentName})` });

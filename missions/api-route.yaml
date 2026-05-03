@@ -1,0 +1,22 @@
+id: api-route
+title: API Route Mission
+description: Implement and validate a backend route with explicit request and response handling.
+goal: Deliver an API route with predictable inputs, outputs, and smoke coverage.
+surface: api
+category: 01-api
+tags:
+  - backend
+  - route
+  - smoke
+steps:
+  - Inspect the current API contract and route wiring.
+  - Implement the route with clear validation and response shape.
+  - Add tests for happy path and failure handling.
+  - Verify the endpoint responds correctly end to end.
+commands:
+  - npm run build
+  - npm run test:fast
+artifacts:
+  - src/server/routes/index.ts
+trackRefs:
+  - conductor/tracks.md

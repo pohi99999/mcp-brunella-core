@@ -59,15 +59,41 @@ describe('External knowledge routes', () => {
     const response = await request(createApp())
       .post('/api/v1/knowledge/sources/web')
       .send({
-        url: 'https://example.com/knowledge',
-        content: 'Web payload for staged ingestion.',
-        tags: ['nova', 'workflow'],
+        url: '  https://example.com/knowledge  ',
+        content: '  Web payload for staged ingestion.  ',
+        tags: [' nova ', 'workflow', ''],
       });
 
     expect(response.status).toBe(201);
     expect(response.body.success).toBe(true);
     expect(response.body.source.status).toBe('screened');
     expect(response.body.source.tags).toEqual(['nova', 'workflow']);
+  });
+
+  it('normalizes card creation payloads', async () => {
+    const ingest = await request(createApp())
+      .post('/api/v1/knowledge/sources/web')
+      .send({
+        url: 'https://example.com/knowledge',
+        content: 'Web payload for staged ingestion.',
+      });
+
+    const response = await request(createApp())
+      .post('/api/v1/knowledge/cards')
+      .send({
+        sourceIds: [` ${ingest.body.source.id} `, ''],
+        summary: '  Route-created provisional card.  ',
+        claims: [' Route-created provisional card. ', ''],
+        evidence: '  Evidence A | Evidence B  ',
+        tags: ' nova, workflow ',
+        scores: ['not-object'],
+      });
+
+    expect(response.status).toBe(201);
+    expect(response.body.card.sourceIds).toEqual([ingest.body.source.id]);
+    expect(response.body.card.claims).toEqual(['Route-created provisional card.']);
+    expect(response.body.card.evidence).toEqual(['Evidence A', 'Evidence B']);
+    expect(response.body.card.tags).toEqual(['nova', 'workflow']);
   });
 
   it('creates a provisional card and lists it in the review queue', async () => {
@@ -130,7 +156,7 @@ describe('External knowledge routes', () => {
 
     const promote = await request(app)
       .post(`/api/v1/knowledge/cards/${create.body.card.id}/promote`)
-      .send({ reviewer: 'Copilot', note: 'Two-source approval.' });
+      .send({ reviewer: '  Copilot  ', note: '  Two-source approval.  ' });
 
     expect(promote.status).toBe(200);
     expect(promote.body.card.status).toBe('canonical');

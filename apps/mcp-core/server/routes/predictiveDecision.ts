@@ -20,12 +20,24 @@ function getErrorMessage(error: unknown): string {
   return error instanceof Error ? error.message : String(error);
 }
 
+function readString(value: unknown): string | null {
+  if (typeof value !== 'string') return null;
+  const trimmed = value.trim();
+  return trimmed ? trimmed : null;
+}
+
+function readBoundedInteger(value: unknown, fallback: number, min: number, max: number): number {
+  const parsed = Number(value ?? fallback);
+  if (!Number.isFinite(parsed)) return fallback;
+  return Math.min(Math.max(Math.trunc(parsed), min), max);
+}
+
 export function createPredictiveDecisionRouter(): Router {
   const router = Router();
 
   router.get('/history', async (req, res) => {
     try {
-      const limit = req.query.limit ? Number(req.query.limit) : 25;
+      const limit = readBoundedInteger(req.query.limit, 25, 1, 100);
       const history = predictiveDecisionEngine.getDecisionHistory(limit);
       res.json({ success: true, data: history, count: history.length });
     } catch (error) {
@@ -35,7 +47,7 @@ export function createPredictiveDecisionRouter(): Router {
 
   router.get('/stats', async (req, res) => {
     try {
-      const daysBack = req.query.daysBack ? Number(req.query.daysBack) : 30;
+      const daysBack = readBoundedInteger(req.query.daysBack, 30, 1, 365);
       const stats = predictiveDecisionEngine.getDecisionStats(daysBack);
       res.json({ success: true, data: stats });
     } catch (error) {
@@ -62,7 +74,12 @@ export function createPredictiveDecisionRouter(): Router {
 
   router.get('/:decisionId', async (req, res) => {
     try {
-      const result = predictiveDecisionEngine.getDecisionResult(req.params.decisionId);
+      const decisionId = readString(req.params.decisionId);
+      if (!decisionId) {
+        res.status(400).json({ success: false, error: 'decisionId is required' });
+        return;
+      }
+      const result = predictiveDecisionEngine.getDecisionResult(decisionId);
       res.json({ success: true, data: result });
     } catch (error) {
       const message = getErrorMessage(error);
@@ -72,7 +89,12 @@ export function createPredictiveDecisionRouter(): Router {
 
   router.post('/:decisionId/rollback', async (req, res) => {
     try {
-      const result = await predictiveDecisionEngine.rollbackDecision(req.params.decisionId);
+      const decisionId = readString(req.params.decisionId);
+      if (!decisionId) {
+        res.status(400).json({ success: false, error: 'decisionId is required' });
+        return;
+      }
+      const result = await predictiveDecisionEngine.rollbackDecision(decisionId);
       res.json({ success: true, data: result });
     } catch (error) {
       const message = getErrorMessage(error);

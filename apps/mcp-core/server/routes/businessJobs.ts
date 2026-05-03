@@ -3,6 +3,28 @@ import { defaultDatabaseManager, type DatabaseManager, getBusinessJobs, saveBusi
 import { agentManager } from '@packages/agents/AgentManager.js';
 import { v4 as uuidv4 } from 'uuid';
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+    return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function readString(value: unknown): string | null {
+    if (typeof value !== 'string') return null;
+    const trimmed = value.trim();
+    return trimmed ? trimmed : null;
+}
+
+function readLimit(value: unknown, fallback: number): number {
+    const parsed = Number(value ?? fallback);
+    if (!Number.isFinite(parsed)) return fallback;
+    return Math.min(Math.max(Math.trunc(parsed), 1), 100);
+}
+
+function normalizeMetadata(value: unknown): string | undefined {
+    if (isRecord(value)) return JSON.stringify(value);
+    const text = readString(value);
+    return text ?? undefined;
+}
+
 export function createBusinessJobsRoutes(dbManager: DatabaseManager = defaultDatabaseManager): Router {
     const router = Router();
 
@@ -45,7 +67,12 @@ export function createBusinessJobsRoutes(dbManager: DatabaseManager = defaultDat
      */
     router.get('/leads/:jobId', async (req, res) => {
         try {
-            const leads = await getLeadsByJob(req.params.jobId);
+            const jobId = readString(req.params.jobId);
+            if (!jobId) {
+                res.status(400).json({ success: false, error: 'Job id is required' });
+                return;
+            }
+            const leads = await getLeadsByJob(jobId);
             res.json({ success: true, leads });
         } catch (e: unknown) {
             const msg = e instanceof Error ? e.message : String(e);
@@ -59,12 +86,19 @@ export function createBusinessJobsRoutes(dbManager: DatabaseManager = defaultDat
      */
     router.patch('/leads/:leadId/status', async (req, res) => {
         try {
-            const { status, notes } = req.body;
+            const body = isRecord(req.body) ? req.body : {};
+            const leadId = readString(req.params.leadId);
+            const status = readString(body.status);
+            const notes = readString(body.notes);
+            if (!leadId) {
+                res.status(400).json({ success: false, error: 'Lead id is required' });
+                return;
+            }
             if (!status) {
                 res.status(400).json({ success: false, error: 'Status is required' });
                 return;
             }
-            await updateLeadStatus(req.params.leadId, status, notes);
+            await updateLeadStatus(leadId, status, notes ?? undefined);
             res.json({ success: true, message: 'Lead status updated' });
         } catch (e: unknown) {
             const msg = e instanceof Error ? e.message : String(e);
@@ -78,8 +112,8 @@ export function createBusinessJobsRoutes(dbManager: DatabaseManager = defaultDat
      */
     router.get('/', async (req, res) => {
         try {
-            const limit = parseInt(req.query.limit as string) || 20;
-            const type = typeof req.query.type === 'string' ? req.query.type : undefined;
+            const limit = readLimit(req.query.limit, 20);
+            const type = readString(req.query.type) ?? undefined;
             const jobs = await getBusinessJobs(limit, type);
             res.json({ success: true, jobs });
         } catch (e: unknown) {
@@ -94,7 +128,10 @@ export function createBusinessJobsRoutes(dbManager: DatabaseManager = defaultDat
      */
     router.post('/', async (req, res) => {
         try {
-            const { type, query, metadata } = req.body;
+            const body = isRecord(req.body) ? req.body : {};
+            const type = readString(body.type);
+            const query = readString(body.query);
+            const metadata = isRecord(body.metadata) ? body.metadata : undefined;
 
             if (!type || !query) {
                 res.status(400).json({ success: false, error: 'Type and query are required' });
@@ -106,7 +143,7 @@ export function createBusinessJobsRoutes(dbManager: DatabaseManager = defaultDat
                 id: jobId,
                 type,
                 query,
-                metadata: typeof metadata === 'object' ? JSON.stringify(metadata) : metadata
+                metadata: normalizeMetadata(metadata)
             });
 
             // Trigger the agent asynchronously

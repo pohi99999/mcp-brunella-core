@@ -22,14 +22,36 @@ interface ScheduledTaskRecord {
 
 function normalizeMetadata(value: unknown): string {
   if (typeof value === 'string') {
-    return value.trim() ? value : '{}';
+    const trimmed = value.trim();
+    return trimmed ? trimmed : '{}';
   }
 
-  if (value && typeof value === 'object') {
+  if (isRecord(value)) {
     return JSON.stringify(value);
   }
 
   return '{}';
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function readString(value: unknown): string | null {
+  if (typeof value !== 'string') return null;
+  const trimmed = value.trim();
+  return trimmed ? trimmed : null;
+}
+
+function readBoolean(value: unknown): boolean | undefined {
+  if (typeof value === 'boolean') return value;
+  if (typeof value === 'number') return value === 1 ? true : value === 0 ? false : undefined;
+  if (typeof value === 'string') {
+    const normalized = value.trim().toLowerCase();
+    if (normalized === 'true' || normalized === '1') return true;
+    if (normalized === 'false' || normalized === '0') return false;
+  }
+  return undefined;
 }
 
 const manualTriggerHandlers = new Set([
@@ -77,9 +99,13 @@ export function createScheduledTasksRoutes(db: Database.Database): Router {
    */
   router.get('/:id', (req: Request, res: Response) => {
     try {
+      const id = readString(req.params.id);
+      if (!id) {
+        return res.status(400).json({ error: 'Task id is required' });
+      }
       const task = db
         .prepare('SELECT * FROM scheduled_tasks WHERE id = ?')
-        .get(req.params.id) as ScheduledTaskRecord | undefined;
+        .get(id) as ScheduledTaskRecord | undefined;
 
       if (!task) {
         return res.status(404).json({ error: 'Task not found' });
@@ -98,7 +124,12 @@ export function createScheduledTasksRoutes(db: Database.Database): Router {
    */
   router.post('/', (req: Request, res: Response) => {
     try {
-      const { title, prompt, cron_expression, handler, metadata } = req.body;
+      const body = isRecord(req.body) ? req.body : {};
+      const title = readString(body.title);
+      const prompt = readString(body.prompt);
+      const cron_expression = readString(body.cron_expression);
+      const handler = readString(body.handler);
+      const metadata = body.metadata;
 
       if (!title || !prompt || !cron_expression || !handler) {
         return res.status(400).json({ error: 'Missing required fields' });
@@ -153,8 +184,17 @@ export function createScheduledTasksRoutes(db: Database.Database): Router {
    */
   router.patch('/:id', (req: Request, res: Response) => {
     try {
-      const { title, prompt, cron_expression, handler, enabled, metadata } = req.body;
-      const { id } = req.params;
+      const body = isRecord(req.body) ? req.body : {};
+      const id = readString(req.params.id);
+      if (!id) {
+        return res.status(400).json({ error: 'Task id is required' });
+      }
+      const title = readString(body.title);
+      const prompt = readString(body.prompt);
+      const cron_expression = readString(body.cron_expression);
+      const handler = readString(body.handler);
+      const enabled = readBoolean(body.enabled);
+      const metadata = body.metadata;
 
       const task = db
         .prepare('SELECT * FROM scheduled_tasks WHERE id = ?')
@@ -218,7 +258,10 @@ export function createScheduledTasksRoutes(db: Database.Database): Router {
    */
   router.delete('/:id', (req: Request, res: Response) => {
     try {
-      const { id } = req.params;
+      const id = readString(req.params.id);
+      if (!id) {
+        return res.status(400).json({ error: 'Task id is required' });
+      }
 
       const result = db.prepare('DELETE FROM scheduled_tasks WHERE id = ?').run(id);
 
@@ -244,7 +287,10 @@ export function createScheduledTasksRoutes(db: Database.Database): Router {
    */
   router.post('/:id/trigger', async (req: Request, res: Response) => {
     try {
-      const { id } = req.params;
+      const id = readString(req.params.id);
+      if (!id) {
+        return res.status(400).json({ error: 'Task id is required' });
+      }
 
       const task = db
         .prepare('SELECT * FROM scheduled_tasks WHERE id = ?')

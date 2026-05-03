@@ -1,0 +1,22 @@
+id: cli-ops
+title: CLI Operations Mission
+description: Wire and verify a command-line surface for a common Brunella operation.
+goal: Expose a reliable CLI path with clear operator feedback.
+surface: cli
+category: 03-cli
+tags:
+  - cli
+  - operator
+  - tooling
+steps:
+  - Identify the target CLI command and its dependencies.
+  - Wire the command into the existing CLI entrypoint.
+  - Add tests for parsing, branching, and error handling.
+  - Validate the command from the terminal.
+commands:
+  - npm run build:stable
+  - npm run test:fast
+artifacts:
+  - src/cli.ts
+trackRefs:
+  - src/cli.ts

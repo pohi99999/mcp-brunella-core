@@ -35,6 +35,16 @@ const federationManifestSchema = z.object({
   signature: z.string().regex(/^[0-9a-f]{64}$/i),
 });
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function readString(value: unknown): string | null {
+  if (typeof value !== 'string') return null;
+  const trimmed = value.trim();
+  return trimmed ? trimmed : null;
+}
+
 async function buildLocalCapabilities() {
   const capabilities = new Map<string, {
     name: string;
@@ -138,18 +148,21 @@ export function createFederationRouter(): Router {
 
   const executeFederatedCapability = async (req: Request, res: Response): Promise<void> => {
     try {
-      const { capabilityName, payload, preferredPeerId, timeoutMs } = req.body as {
-        capabilityName: string;
-        payload: unknown;
-        preferredPeerId?: string;
-        timeoutMs?: number;
-      };
+      const body = isRecord(req.body) ? req.body : {};
+      const capabilityName = readString(body.capabilityName);
+      const payload = body.payload;
+
       if (!capabilityName || payload === undefined) {
         res.status(400).json({ error: 'capabilityName és payload kötelező' });
         return;
       }
 
-      if (preferredPeerId !== undefined || timeoutMs !== undefined) {
+      if (!isRecord(payload)) {
+        res.status(400).json({ error: 'payload object kötelező' });
+        return;
+      }
+
+      if (body.preferredPeerId !== undefined || body.timeoutMs !== undefined) {
         res.status(400).json({ error: 'A federation execute inbound route csak lokális capability végrehajtást fogad.' });
         return;
       }

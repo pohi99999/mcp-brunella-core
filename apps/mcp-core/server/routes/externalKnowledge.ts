@@ -16,9 +16,27 @@ import { logError, logInfo } from '@packages/utils/logger.js';
 
 const MODULE = 'ExternalKnowledgeRoutes';
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function readString(value: unknown): string | undefined {
+  if (typeof value !== 'string') return undefined;
+  const trimmed = value.trim();
+  return trimmed ? trimmed : undefined;
+}
+
+function readLimit(value: unknown, fallback = 20): number {
+  const parsed = Number(value ?? fallback);
+  if (!Number.isFinite(parsed)) return fallback;
+  return Math.min(Math.max(Math.trunc(parsed), 1), 100);
+}
+
 function parseTags(value: unknown): string[] {
   if (Array.isArray(value)) {
-    return value.map((item) => String(item));
+    return value
+      .map((item) => readString(item))
+      .filter((item): item is string => item !== undefined);
   }
   if (typeof value === 'string') {
     return value.split(',').map((item) => item.trim()).filter(Boolean);
@@ -28,7 +46,9 @@ function parseTags(value: unknown): string[] {
 
 function parseClaims(value: unknown): string[] {
   if (Array.isArray(value)) {
-    return value.map((item) => String(item));
+    return value
+      .map((item) => readString(item))
+      .filter((item): item is string => item !== undefined);
   }
   if (typeof value === 'string') {
     return value
@@ -49,15 +69,16 @@ export function createExternalKnowledgeRoutes(db: Database.Database): Router {
 
   router.post('/sources/web', async (req: Request, res: Response) => {
     try {
+      const body = isRecord(req.body) ? req.body : {};
       const source = await safeIngestWebSource(
         {
-          url: String(req.body?.url ?? ''),
-          title: typeof req.body?.title === 'string' ? req.body.title : undefined,
-          content: typeof req.body?.content === 'string' ? req.body.content : undefined,
-          author: typeof req.body?.author === 'string' ? req.body.author : undefined,
-          publishedAt: typeof req.body?.publishedAt === 'string' ? req.body.publishedAt : undefined,
-          language: typeof req.body?.language === 'string' ? req.body.language : undefined,
-          tags: parseTags(req.body?.tags),
+          url: readString(body.url) ?? '',
+          title: readString(body.title),
+          content: readString(body.content),
+          author: readString(body.author),
+          publishedAt: readString(body.publishedAt),
+          language: readString(body.language),
+          tags: parseTags(body.tags),
         },
         { db },
       );
@@ -72,15 +93,16 @@ export function createExternalKnowledgeRoutes(db: Database.Database): Router {
 
   router.post('/sources/youtube', async (req: Request, res: Response) => {
     try {
+      const body = isRecord(req.body) ? req.body : {};
       const source = await safeIngestYoutubeSource(
         {
-          url: String(req.body?.url ?? ''),
-          title: typeof req.body?.title === 'string' ? req.body.title : undefined,
-          transcript: String(req.body?.transcript ?? ''),
-          channel: typeof req.body?.channel === 'string' ? req.body.channel : undefined,
-          publishedAt: typeof req.body?.publishedAt === 'string' ? req.body.publishedAt : undefined,
-          language: typeof req.body?.language === 'string' ? req.body.language : undefined,
-          tags: parseTags(req.body?.tags),
+          url: readString(body.url) ?? '',
+          title: readString(body.title),
+          transcript: readString(body.transcript) ?? '',
+          channel: readString(body.channel),
+          publishedAt: readString(body.publishedAt),
+          language: readString(body.language),
+          tags: parseTags(body.tags),
         },
         { db },
       );
@@ -95,17 +117,20 @@ export function createExternalKnowledgeRoutes(db: Database.Database): Router {
 
   router.post('/cards', (req: Request, res: Response) => {
     try {
+      const body = isRecord(req.body) ? req.body : {};
       const card = createKnowledgeCard(
         {
-          sourceIds: Array.isArray(req.body?.sourceIds) ? req.body.sourceIds.map((item: unknown) => String(item)) : [],
-          title: typeof req.body?.title === 'string' ? req.body.title : undefined,
-          summary: String(req.body?.summary ?? ''),
-          claims: parseClaims(req.body?.claims),
-          evidence: parseClaims(req.body?.evidence),
-          tags: parseTags(req.body?.tags),
-          entities: parseClaims(req.body?.entities),
-          scores: typeof req.body?.scores === 'object' && req.body?.scores !== null ? req.body.scores : undefined,
-          confidence: typeof req.body?.confidence === 'number' ? req.body.confidence : undefined,
+          sourceIds: Array.isArray(body.sourceIds)
+            ? body.sourceIds.map((item: unknown) => readString(item)).filter((item): item is string => item !== undefined)
+            : [],
+          title: readString(body.title),
+          summary: readString(body.summary) ?? '',
+          claims: parseClaims(body.claims),
+          evidence: parseClaims(body.evidence),
+          tags: parseTags(body.tags),
+          entities: parseClaims(body.entities),
+          scores: isRecord(body.scores) ? body.scores : undefined,
+          confidence: typeof body.confidence === 'number' && Number.isFinite(body.confidence) ? body.confidence : undefined,
         },
         { db },
       );
@@ -120,7 +145,7 @@ export function createExternalKnowledgeRoutes(db: Database.Database): Router {
 
   router.get('/review-queue', (req: Request, res: Response) => {
     try {
-      const limit = typeof req.query.limit === 'string' ? Number(req.query.limit) : undefined;
+      const limit = readLimit(req.query.limit, 20);
       const items = listGovernanceReviewQueue({ db, limit });
       res.json({ success: true, items, count: items.length });
     } catch (error: unknown) {
@@ -133,10 +158,11 @@ export function createExternalKnowledgeRoutes(db: Database.Database): Router {
   router.post('/cards/:cardId/promote', async (req: Request, res: Response) => {
     try {
       const cardId = Array.isArray(req.params.cardId) ? req.params.cardId[0] : req.params.cardId;
+      const body = isRecord(req.body) ? req.body : {};
       const card = await promoteKnowledgeCard(cardId, {
         db,
-        reviewer: String(req.body?.reviewer ?? ''),
-        note: typeof req.body?.note === 'string' ? req.body.note : undefined,
+        reviewer: readString(body.reviewer) ?? '',
+        note: readString(body.note),
       });
 
       res.json({ success: true, card });
@@ -149,8 +175,8 @@ export function createExternalKnowledgeRoutes(db: Database.Database): Router {
 
   router.get('/search', async (req: Request, res: Response) => {
     try {
-      const query = typeof req.query.query === 'string' ? req.query.query : '';
-      const limit = typeof req.query.limit === 'string' ? Number(req.query.limit) : undefined;
+      const query = readString(req.query.query) ?? '';
+      const limit = readLimit(req.query.limit, 20);
       const includeProvisional = parseBoolean(req.query.includeProvisional);
       const results = await searchKnowledgeCards({ query, limit, includeProvisional }, { db });
       res.json({ success: true, results, count: results.length });

@@ -13,7 +13,7 @@ describe("kkv pack routes", () => {
     const app = express();
     app.use("/api/v1/kkv-pack", createKkvPackRoutes());
 
-    const response = await request(app).get("/api/v1/kkv-pack/snapshot?pack=inventory-core");
+    const response = await request(app).get("/api/v1/kkv-pack/snapshot?pack=%20inventory-core%20");
 
     expect(response.status).toBe(200);
     expect(response.body.success).toBe(true);

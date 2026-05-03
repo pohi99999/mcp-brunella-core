@@ -23,14 +23,43 @@ import { remoteEventBridge } from '@packages/core-logic/remoteEventBridge.js';
 import type {
   RemoteSession,
   RemoteCommand,
-  CreateSessionRequest,
-  SendCommandRequest,
-  RemoteFileReadRequest,
-  RemoteFileWriteRequest,
-  VoiceInputRequest,
   RemoteBridgeEvent,
 } from '@packages/core-logic/types/remote.js';
 import type { PaiosAction } from '@packages/core-logic/paiosRemoteIntegration.js';
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function readString(value: unknown): string | null {
+  if (typeof value !== 'string') return null;
+  const trimmed = value.trim();
+  return trimmed ? trimmed : null;
+}
+
+function readPositiveTtl(value: unknown): number {
+  if (typeof value !== 'number' || !Number.isFinite(value) || value <= 0) {
+    return 3_600_000;
+  }
+  return Math.min(Math.trunc(value), 86_400_000);
+}
+
+function errorMessage(error: unknown): string {
+  return error instanceof Error ? error.message : String(error);
+}
+
+function readPaiosAction(value: unknown): PaiosAction | null {
+  if (!isRecord(value)) return null;
+  const actionId = readString(value.actionId);
+  const type = readString(value.type);
+  const description = readString(value.description) ?? '';
+  const payload = isRecord(value.payload) ? value.payload : {};
+  const priority = typeof value.priority === 'number' && Number.isFinite(value.priority)
+    ? Math.max(1, Math.trunc(value.priority))
+    : undefined;
+  if (!actionId || !type) return null;
+  return { actionId, type, description, payload, priority };
+}
 
 export function createRemoteRoutes(): Router {
   const router = Router();
@@ -43,14 +72,15 @@ export function createRemoteRoutes(): Router {
    * Returns: { token: string, expiresAt: number }
    * NOTE: In production, call this only after validating the caller's identity
    *       via your primary auth mechanism (e.g., session cookie, OAuth).
-   */
+  */
   router.post('/auth/token', (req, res) => {
-    const { userId, ttlMs } = req.body as { userId?: string; ttlMs?: number };
-    if (!userId || typeof userId !== 'string') {
+    const body = isRecord(req.body) ? req.body : {};
+    const userId = readString(body.userId);
+    if (!userId) {
       res.status(400).json({ error: 'userId is required' });
       return;
     }
-    const ttl = typeof ttlMs === 'number' && ttlMs > 0 ? ttlMs : 3_600_000;
+    const ttl = readPositiveTtl(body.ttlMs);
     const expiresAt = Date.now() + ttl;
     const token = generateRemoteToken(userId, ttl);
     logInfo('RemoteRouter', `Token issued for user=${userId}`);
@@ -82,27 +112,30 @@ export function createRemoteRoutes(): Router {
   /**
    * POST /sessions
    * Body: CreateSessionRequest
-   */
+  */
   router.post('/sessions', requireRemoteAuth, (req, res) => {
-    const body = req.body as CreateSessionRequest;
-    if (!body.targetId || !body.userId) {
+    const body = isRecord(req.body) ? req.body : {};
+    const targetId = readString(body.targetId);
+    const userId = readString(body.userId);
+    const metadata = isRecord(body.metadata) ? body.metadata : undefined;
+    if (!targetId || !userId) {
       res.status(400).json({ error: 'targetId and userId are required' });
       return;
     }
-    const cap = mcpRouter.getCapability(body.targetId);
+    const cap = mcpRouter.getCapability(targetId);
     if (!cap) {
-      res.status(404).json({ error: `Target '${body.targetId}' not found` });
+      res.status(404).json({ error: `Target '${targetId}' not found` });
       return;
     }
     const session: RemoteSession = {
       id: uuidv4(),
-      userId: body.userId,
-      targetId: body.targetId,
+      userId,
+      targetId,
       createdAt: Date.now(),
       expiresAt: Date.now() + 3_600_000,
       active: true,
       commands: [],
-      metadata: body.metadata,
+      metadata,
     };
     try {
       saveSession(session);
@@ -124,16 +157,17 @@ export function createRemoteRoutes(): Router {
    * Query: ?userId=...  (optional filter)
    */
   router.get('/sessions', requireRemoteAuth, (req, res) => {
-    const userId = typeof req.query.userId === 'string' ? req.query.userId : undefined;
+    const userId = readString(req.query.userId) ?? undefined;
     const sessions = listActiveSessions(userId);
     res.json({ sessions, count: sessions.length });
   });
 
   /**
    * GET /sessions/:id
-   */
+  */
   router.get('/sessions/:id', requireRemoteAuth, (req, res) => {
-    const session = getSession(req.params.id as string);
+    const sessionId = readString(req.params.id);
+    const session = sessionId ? getSession(sessionId) : undefined;
     if (!session) {
       res.status(404).json({ error: 'Session not found' });
       return;
@@ -143,15 +177,16 @@ export function createRemoteRoutes(): Router {
 
   /**
    * DELETE /sessions/:id
-   */
+  */
   router.delete('/sessions/:id', requireRemoteAuth, (req, res) => {
-    const session = getSession(req.params.id as string);
-    if (!session) {
+    const sessionId = readString(req.params.id);
+    const session = sessionId ? getSession(sessionId) : undefined;
+    if (!sessionId || !session) {
       res.status(404).json({ error: 'Session not found' });
       return;
     }
-    deactivateSession(req.params.id as string);
-    logInfo('RemoteRouter', `Session closed id=${req.params.id}`);
+    deactivateSession(sessionId);
+    logInfo('RemoteRouter', `Session closed id=${sessionId}`);
     res.json({ ok: true });
   });
 
@@ -160,24 +195,32 @@ export function createRemoteRoutes(): Router {
   /**
    * POST /commands
    * Body: SendCommandRequest
-   */
+  */
   router.post('/commands', requireRemoteAuth, (req, res) => {
-    const body = req.body as SendCommandRequest;
-    if (!body.sessionId || !body.targetId || !body.toolName) {
+    const body = isRecord(req.body) ? req.body : {};
+    const sessionId = readString(body.sessionId);
+    const targetId = readString(body.targetId);
+    const toolName = readString(body.toolName);
+    const input = body.input === undefined ? {} : body.input;
+    if (!sessionId || !targetId || !toolName) {
       res.status(400).json({ error: 'sessionId, targetId, toolName are required' });
       return;
     }
-    const session = getSession(body.sessionId);
+    if (!isRecord(input)) {
+      res.status(400).json({ error: 'input must be an object when provided' });
+      return;
+    }
+    const session = getSession(sessionId);
     if (!session || !session.active) {
       res.status(404).json({ error: 'Session not found or inactive' });
       return;
     }
     const command: RemoteCommand = {
       id: uuidv4(),
-      sessionId: body.sessionId,
-      targetId: body.targetId,
-      toolName: body.toolName,
-      input: body.input ?? {},
+      sessionId,
+      targetId,
+      toolName,
+      input,
       status: 'pending',
       createdAt: Date.now(),
       updatedAt: Date.now(),
@@ -186,8 +229,8 @@ export function createRemoteRoutes(): Router {
       saveCommand(command);
       logInfo('RemoteRouter', `Command queued id=${command.id} tool=${command.toolName}`);
       // Async execution dispatched — update status asynchronously
-      _dispatchCommand(command).catch(err =>
-        logError('RemoteRouter', `Command dispatch failed id=${command.id}: ${err.message}`)
+      _dispatchCommand(command).catch((err: unknown) =>
+        logError('RemoteRouter', `Command dispatch failed id=${command.id}: ${errorMessage(err)}`)
       );
       res.status(202).json({ commandId: command.id, status: 'pending' });
     } catch (e: unknown) {
@@ -198,9 +241,10 @@ export function createRemoteRoutes(): Router {
 
   /**
    * GET /commands/:id
-   */
+  */
   router.get('/commands/:id', requireRemoteAuth, (req, res) => {
-    const command = getCommand(req.params.id as string);
+    const commandId = readString(req.params.id);
+    const command = commandId ? getCommand(commandId) : undefined;
     if (!command) {
       res.status(404).json({ error: 'Command not found' });
       return;
@@ -213,20 +257,22 @@ export function createRemoteRoutes(): Router {
   /**
    * POST /files/read
    * Body: RemoteFileReadRequest
-   */
+  */
   router.post('/files/read', requireRemoteAuth, (req, res) => {
-    const body = req.body as RemoteFileReadRequest;
-    if (!body.sessionId || !body.path) {
+    const body = isRecord(req.body) ? req.body : {};
+    const sessionId = readString(body.sessionId);
+    const filePath = readString(body.path);
+    if (!sessionId || !filePath) {
       res.status(400).json({ error: 'sessionId and path are required' });
       return;
     }
-    const session = getSession(body.sessionId);
+    const session = getSession(sessionId);
     if (!session || !session.active) {
       res.status(404).json({ error: 'Session not found or inactive' });
       return;
     }
     try {
-      const result = remoteReadFile(body);
+      const result = remoteReadFile({ sessionId, path: filePath });
       res.json(result);
     } catch (e: unknown) {
       const msg = e instanceof Error ? e.message : String(e);
@@ -237,20 +283,23 @@ export function createRemoteRoutes(): Router {
   /**
    * POST /files/write
    * Body: RemoteFileWriteRequest
-   */
+  */
   router.post('/files/write', requireRemoteAuth, (req, res) => {
-    const body = req.body as RemoteFileWriteRequest;
-    if (!body.sessionId || !body.path || body.content === undefined) {
+    const body = isRecord(req.body) ? req.body : {};
+    const sessionId = readString(body.sessionId);
+    const filePath = readString(body.path);
+    const content = typeof body.content === 'string' ? body.content : null;
+    if (!sessionId || !filePath || content === null) {
       res.status(400).json({ error: 'sessionId, path, and content are required' });
       return;
     }
-    const session = getSession(body.sessionId);
+    const session = getSession(sessionId);
     if (!session || !session.active) {
       res.status(404).json({ error: 'Session not found or inactive' });
       return;
     }
     try {
-      const result = remoteWriteFile(body);
+      const result = remoteWriteFile({ sessionId, path: filePath, content });
       res.json(result);
     } catch (e: unknown) {
       const msg = e instanceof Error ? e.message : String(e);
@@ -261,9 +310,9 @@ export function createRemoteRoutes(): Router {
   /**
    * GET /files/list
    * Query: ?sessionId=...&dir=...
-   */
+  */
   router.get('/files/list', requireRemoteAuth, (req, res) => {
-    const sessionId = req.query.sessionId as string;
+    const sessionId = readString(req.query.sessionId);
     if (!sessionId) {
       res.status(400).json({ error: 'sessionId query param is required' });
       return;
@@ -287,19 +336,22 @@ export function createRemoteRoutes(): Router {
   /**
    * POST /voice/input
    * Body: VoiceInputRequest
-   */
+  */
   router.post('/voice/input', requireRemoteAuth, (req, res) => {
-    const body = req.body as VoiceInputRequest;
-    if (!body.sessionId || !body.transcript) {
+    const body = isRecord(req.body) ? req.body : {};
+    const sessionId = readString(body.sessionId);
+    const transcript = readString(body.transcript);
+    const lang = readString(body.lang) ?? undefined;
+    if (!sessionId || !transcript) {
       res.status(400).json({ error: 'sessionId and transcript are required' });
       return;
     }
-    const session = getSession(body.sessionId);
+    const session = getSession(sessionId);
     if (!session || !session.active) {
       res.status(404).json({ error: 'Session not found or inactive' });
       return;
     }
-    const voiceResult = mapVoiceToCommand(body);
+    const voiceResult = mapVoiceToCommand({ sessionId, transcript, lang });
     res.json(voiceResult);
   });
 
@@ -315,9 +367,10 @@ export function createRemoteRoutes(): Router {
 
   /**
    * GET /mobile/summary/:sessionId
-   */
+  */
   router.get('/mobile/summary/:sessionId', requireRemoteAuth, (req, res) => {
-    const session = getSession(req.params.sessionId as string);
+    const sessionId = readString(req.params.sessionId);
+    const session = sessionId ? getSession(sessionId) : undefined;
     if (!session) {
       res.status(404).json({ error: 'Session not found' });
       return;
@@ -329,9 +382,10 @@ export function createRemoteRoutes(): Router {
   /**
    * POST /mobile/heartbeat
    * Body: { sessionId: string }
-   */
+  */
   router.post('/mobile/heartbeat', requireRemoteAuth, (req, res) => {
-    const { sessionId } = req.body as { sessionId?: string };
+    const body = isRecord(req.body) ? req.body : {};
+    const sessionId = readString(body.sessionId);
     if (!sessionId) {
       res.status(400).json({ error: 'sessionId is required' });
       return;
@@ -352,8 +406,10 @@ export function createRemoteRoutes(): Router {
   * Body: { sessionId: string, action: PaiosAction }
   */
   router.post('/paios/action', requireRemoteAuth, (req, res) => {
-    const { sessionId, action } = req.body as { sessionId?: string; action?: PaiosAction };
-    if (!sessionId || !action || !action.actionId || !action.type) {
+    const body = isRecord(req.body) ? req.body : {};
+    const sessionId = readString(body.sessionId);
+    const action = readPaiosAction(body.action);
+    if (!sessionId || !action) {
       res.status(400).json({ error: 'sessionId and action (with actionId, type) are required' });
       return;
     }
@@ -369,19 +425,24 @@ export function createRemoteRoutes(): Router {
   /**
    * POST /paios/process
    * Body: { sessionId: string }
-   */
-  router.post('/paios/process', requireRemoteAuth, (req, res) => {
-    const { sessionId } = req.body as { sessionId?: string };
+  */
+  router.post('/paios/process', requireRemoteAuth, async (req, res) => {
+    const body = isRecord(req.body) ? req.body : {};
+    const sessionId = readString(body.sessionId);
     if (!sessionId) {
       res.status(400).json({ error: 'sessionId is required' });
       return;
     }
-    const result = processNextPaiosAction(sessionId);
-    if (!result) {
-      res.json({ message: 'Queue is empty' });
-      return;
+    try {
+      const result = await processNextPaiosAction(sessionId);
+      if (!result) {
+        res.json({ message: 'Queue is empty' });
+        return;
+      }
+      res.json(result);
+    } catch (error: unknown) {
+      res.status(500).json({ error: error instanceof Error ? error.message : String(error) });
     }
-    res.json(result);
   });
 
   /**

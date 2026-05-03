@@ -4,16 +4,18 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Loader2, Play, RefreshCcw, CheckCircle2, XCircle, Settings, MessageSquare } from 'lucide-react';
+import { Loader2, Play, RefreshCcw, CheckCircle2, XCircle, MessageSquare, AlertTriangle } from 'lucide-react';
 import {
   getLLMProviderStatus,
   getLLMModelCatalog,
+  getLLMOrchestrationReadiness,
   generateWithAnthropic,
   generateWithGemini,
   generateWithGithubModels,
   generateWithOllama,
   LLMProviderStatus,
   LLMCatalogProvider,
+  LLMOrchestrationReadiness,
 } from '@/lib/apiService';
 import { useWebSocketEvents } from '@/lib/websocketClient';
 import { toast } from 'sonner';
@@ -30,6 +32,7 @@ export function LLMProvidersPanel() {
   const [loading, setLoading] = useState(true);
   const [providerStatus, setProviderStatus] = useState<LLMProviderStatus | null>(null);
   const [modelCatalog, setModelCatalog] = useState<LLMCatalogProvider[] | null>(null);
+  const [orchestrationReadiness, setOrchestrationReadiness] = useState<LLMOrchestrationReadiness | null>(null);
   const [testResults, setTestResults] = useState<LLMTestResult[]>([]);
   const [testPrompt, setTestPrompt] = useState('Mi a fővárosa Franciaországnak?');
   const [testingProvider, setTestingProvider] = useState<string | null>(null);
@@ -41,10 +44,12 @@ export function LLMProvidersPanel() {
     try {
       const [statusRes, catalogRes] = await Promise.all([
         getLLMProviderStatus(),
-        getLLMModelCatalog().catch(() => ({ providers: [] })) // Handle catalog fetch errors gracefully
+        getLLMModelCatalog().catch(() => ({ providers: [] })),
       ]);
+      const readinessRes = await getLLMOrchestrationReadiness().catch(() => null);
       setProviderStatus(statusRes);
       setModelCatalog(catalogRes.providers);
+      setOrchestrationReadiness(readinessRes);
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : String(err));
     } finally {
@@ -78,6 +83,7 @@ export function LLMProvidersPanel() {
         case 'gemini':
           response = await generateWithGemini(testPrompt, modelId);
           break;
+        case 'github':
         case 'github-models':
           response = await generateWithGithubModels(testPrompt, modelId);
           break;
@@ -90,10 +96,11 @@ export function LLMProvidersPanel() {
       const latency = Date.now() - startTime;
       setTestResults(prev => [...prev, { provider: providerId, model: modelId, response, latency }]);
       toast.success(`Sikeres teszt (${providerId})!`);
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : String(err);
       const latency = Date.now() - startTime;
-      setTestResults(prev => [...prev, { provider: providerId, model: modelId, response: '', error: err.message, latency }]);
-      toast.error(`Teszt hiba (${providerId}): ${err.message}`);
+      setTestResults(prev => [...prev, { provider: providerId, model: modelId, response: '', error: message, latency }]);
+      toast.error(`Teszt hiba (${providerId}): ${message}`);
     } finally {
       setTestingProvider(null);
     }
@@ -149,6 +156,60 @@ export function LLMProvidersPanel() {
           />
         </CardContent>
       </Card>
+
+      {orchestrationReadiness && (
+        <Card className="glass-card border-white/[0.04] bg-white/[0.02]">
+          <CardHeader>
+            <CardTitle className="text-lg flex items-center gap-2">
+              {orchestrationReadiness.summary.status === 'ready' ? (
+                <CheckCircle2 className="text-green-500" size={20} />
+              ) : (
+                <AlertTriangle className="text-amber-400" size={20} />
+              )}
+              Fő LLM csatorna readiness
+            </CardTitle>
+            <CardDescription className="text-zinc-500">
+              AnythingLLM brunella_main → GitHub Models GPT-4.1 elsődleges → Ollama fallback.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="grid gap-3 md:grid-cols-3">
+            <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3">
+              <p className="text-xs uppercase tracking-[0.2em] text-zinc-500">Primary</p>
+              <p className="mt-1 text-sm font-semibold text-zinc-100">{orchestrationReadiness.primary.label}</p>
+              <p className="text-xs text-zinc-400">{orchestrationReadiness.primary.apiModel}</p>
+              <Badge variant="outline" className={orchestrationReadiness.primary.configured ? 'mt-2 border-emerald-500/30 text-emerald-300' : 'mt-2 border-red-500/30 text-red-300'}>
+                {orchestrationReadiness.primary.configured ? `configured (${orchestrationReadiness.primary.tokenEnv})` : 'missing token'}
+              </Badge>
+            </div>
+            <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3">
+              <p className="text-xs uppercase tracking-[0.2em] text-zinc-500">Fallback</p>
+              <p className="mt-1 text-sm font-semibold text-zinc-100">{orchestrationReadiness.fallback.label}</p>
+              <p className="text-xs text-zinc-400">{orchestrationReadiness.fallback.model}</p>
+              <Badge variant="outline" className={orchestrationReadiness.fallback.configured ? 'mt-2 border-emerald-500/30 text-emerald-300' : 'mt-2 border-amber-500/30 text-amber-300'}>
+                {orchestrationReadiness.fallback.configured ? 'model available' : 'needs model'}
+              </Badge>
+            </div>
+            <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3">
+              <p className="text-xs uppercase tracking-[0.2em] text-zinc-500">AnythingLLM</p>
+              <p className="mt-1 text-sm font-semibold text-zinc-100">{orchestrationReadiness.anythingllm.workspace.slug}</p>
+              <p className="text-xs text-zinc-400">{orchestrationReadiness.anythingllm.baseUrl}</p>
+              <Badge variant="outline" className={orchestrationReadiness.anythingllm.workspace.available ? 'mt-2 border-emerald-500/30 text-emerald-300' : 'mt-2 border-amber-500/30 text-amber-300'}>
+                {orchestrationReadiness.anythingllm.workspace.available ? 'workspace ready' : 'workspace missing'}
+              </Badge>
+            </div>
+            {orchestrationReadiness.summary.blockers.length > 0 && (
+              <div className="md:col-span-3 rounded-xl border border-amber-500/20 bg-amber-500/[0.04] p-3">
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-amber-300">Blokkolók</p>
+                <ul className="mt-2 space-y-1 text-xs text-amber-100/80">
+                  {orchestrationReadiness.summary.blockers.map((blocker) => (
+                    <li key={blocker}>{blocker}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {providerStatus?.providers.map((provider) => (

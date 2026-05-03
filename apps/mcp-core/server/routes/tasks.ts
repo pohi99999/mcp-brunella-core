@@ -4,15 +4,50 @@ import { agentManager } from '@packages/agents/AgentManager.js';
 import { decomposeToDAGAsync } from '@packages/agents/taskDecomposerCore.js';
 import { ensureError } from '@packages/utils/ensureError.js';
 import { logDebug } from '@packages/utils/logger.js';
+import type { DAGWorkflow } from '@packages/core-logic/dagEngine.js';
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+    return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function readString(value: unknown): string | null {
+    if (typeof value !== 'string') return null;
+    const trimmed = value.trim();
+    return trimmed ? trimmed : null;
+}
+
+function readLimit(value: unknown, fallback: number): number {
+    const parsed = Number(value ?? fallback);
+    if (!Number.isFinite(parsed)) return fallback;
+    return Math.min(Math.max(Math.trunc(parsed), 1), 100);
+}
+
+function readOffset(value: unknown): number {
+    const parsed = Number(value ?? 0);
+    if (!Number.isFinite(parsed)) return 0;
+    return Math.max(Math.trunc(parsed), 0);
+}
+
+function isDAGWorkflow(value: unknown): value is DAGWorkflow {
+    if (!isRecord(value)) return false;
+    if (!readString(value.id) || !readString(value.name)) return false;
+    if (!Array.isArray(value.nodes) || value.nodes.length === 0) return false;
+
+    return value.nodes.every((node) => {
+        if (!isRecord(node)) return false;
+        if (!readString(node.id) || !readString(node.label)) return false;
+        return node.type === 'agent' || node.type === 'condition' || node.type === 'loop' || node.type === 'transform';
+    });
+}
 
 export function createTaskRoutes(): Router {
     const router = Router();
 
     router.get('/', async (req, res) => {
         try {
-            const limit = parseInt(req.query.limit as string) || 20;
-            const offset = parseInt(req.query.offset as string) || 0;
-            const status = typeof req.query.status === 'string' ? req.query.status : undefined;
+            const limit = readLimit(req.query.limit, 20);
+            const offset = readOffset(req.query.offset);
+            const status = readString(req.query.status) ?? undefined;
             const tasks = await getTasks(limit, offset, status);
             const total = await getTaskCount(status);
             res.json({ tasks, total, limit, offset, status });
@@ -43,7 +78,9 @@ export function createTaskRoutes(): Router {
 
     router.post('/workflow/preview', async (req, res) => {
         try {
-            const { task, defaultAgent } = req.body as { task?: string; defaultAgent?: string };
+            const body = isRecord(req.body) ? req.body : {};
+            const task = readString(body.task);
+            const defaultAgent = readString(body.defaultAgent) ?? undefined;
             if (!task) {
                 res.status(400).json({ error: 'task is required' });
                 return;
@@ -59,12 +96,21 @@ export function createTaskRoutes(): Router {
 
     router.post('/workflow/run', async (req, res) => {
         try {
-            const { task, workflow, defaultAgent, initialContext } = req.body as {
-                task?: string;
-                workflow?: Parameters<typeof agentManager.executeWorkflow>[0];
-                defaultAgent?: string;
-                initialContext?: Record<string, unknown>;
-            };
+            const body = isRecord(req.body) ? req.body : {};
+            const task = readString(body.task);
+            const defaultAgent = readString(body.defaultAgent) ?? undefined;
+            const initialContext = isRecord(body.initialContext) ? body.initialContext : undefined;
+
+            if (body.initialContext !== undefined && !isRecord(body.initialContext)) {
+                res.status(400).json({ error: 'initialContext must be an object when provided' });
+                return;
+            }
+
+            if (body.workflow !== undefined && !isDAGWorkflow(body.workflow)) {
+                res.status(400).json({ error: 'workflow must be a DAG workflow with id, name, and at least one valid node' });
+                return;
+            }
+            const workflow = body.workflow === undefined ? undefined : body.workflow;
 
             const resolvedWorkflow = workflow ?? (task ? await decomposeToDAGAsync(task, { defaultAgent }) : undefined);
             if (!resolvedWorkflow) {

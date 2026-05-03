@@ -333,7 +333,10 @@ async function deferredInit(
     const forceStdio = ["1", "true", "yes", "on"].includes(
       (process.env.BRUNELLA_FORCE_STDIO ?? "").trim().toLowerCase(),
     );
-    if (!process.stdin.isTTY && !forceStdio) {
+    const webOnly = ["1", "true", "yes", "on"].includes(
+      (process.env.BRUNELLA_WEB_ONLY ?? "").trim().toLowerCase(),
+    );
+    if ((!process.stdin.isTTY || webOnly) && !forceStdio) {
       mod.mcpProcessManager.markInternalServerRunning("brunella-core");
     }
     const configured = mod.mcpProcessManager.getServersStatus();

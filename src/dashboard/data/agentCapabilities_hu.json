@@ -1,0 +1,57 @@
+{
+  "orchestrator": {
+    "title": "Fő Orkesztrátor",
+    "description": "A rendszer agya. Elemzi a kéréseidet és delegálja a feladatokat a legalkalmasabb ügynöknek.",
+    "capabilities": ["Tervezés", "Delegálás", "Helyi és Felhő koordináció"]
+  },
+  "robotkezv2": {
+    "title": "Robotkéz V2",
+    "description": "Intelligens böngésző ügynök. Képes weboldalakon navigálni, adatokat gyűjteni és vásárlásokat intézni.",
+    "capabilities": ["Webböngészés", "Adatgyűjtés", "Automatizált interakció"]
+  },
+  "developer": {
+    "title": "AI Fejlesztő",
+    "description": "Szoftverfejlesztési feladatok specialistája. Kódot ír, javít és tesztel a self-healing pipeline segítségével.",
+    "capabilities": ["Kódgenerálás", "Öngyógyítás", "Hibajavítás"]
+  },
+  "researcher": {
+    "title": "Kutató Ügynök",
+    "description": "Tudásbázis és RAG specialista. Dokumentumokban keres és összefoglalja a lényeget.",
+    "capabilities": ["RAG Keresés", "Összefoglalás", "Tudásbázis kezelés"]
+  },
+  "evaluator": {
+    "title": "Minőségbiztosító",
+    "description": "Rendszer audit és tesztfuttató. Ellenőrzi az ügynökök munkáját és a rendszer állapotát.",
+    "capabilities": ["Audit", "Tesztelés", "Health Check"]
+  },
+  "ProjectConductor": {
+    "title": "Projekt Vezető",
+    "description": "Projekt menedzsment és dokumentáció szinkronizáció. Követi a track-ek haladását.",
+    "capabilities": ["Projektkövetés", "Dokumentáció", "Szinkronizálás"]
+  },
+  "SpecWriter": {
+    "title": "Specifikáció Író",
+    "description": "Ötletekből mérnöki terveket és track-eket készít az EPP v2 protokoll szerint.",
+    "capabilities": ["Tervezés", "Track generálás", "Validáció"]
+  },
+  "sales": {
+    "title": "Értékesítő",
+    "description": "Automata lead generálás, CRM rögzítés és follow-up routing.",
+    "capabilities": ["Lead generálás", "CRM kezelés", "Follow-up routing", "Email küldés"]
+  },
+  "SalesAgent": {
+    "title": "Értékesítő",
+    "description": "Automata lead generálás, CRM rögzítés és follow-up routing.",
+    "capabilities": ["Lead generálás", "CRM kezelés", "Follow-up routing", "Email küldés"]
+  },
+  "SalesHunter": {
+    "title": "Lead Hunter",
+    "description": "Lead discovery, CRM szinkron és follow-up terv készítés.",
+    "capabilities": ["Lead generálás", "Keresés", "CRM szinkron", "Follow-up terv"]
+  },
+  "finance_guardian": {
+    "title": "Pénzügyi Őrszem",
+    "description": "Számlafeldolgozás és anomália detektálás.",
+    "capabilities": ["OCR", "Számlakezelés", "Pénzügyi elemzés"]
+  }
+}

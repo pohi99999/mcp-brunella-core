@@ -89,6 +89,20 @@ describe("CopilotBridge routes", () => {
       expect(res.status).toBe(400);
       expect(res.body.error).toMatch(/action/i);
     });
+
+    it("should reject invalid command status and params shapes", async () => {
+      const invalidStatus = await request(app)
+        .post("/api/copilot-bridge/commands")
+        .send({ domain: "cli", action: "build", status: "done" });
+      expect(invalidStatus.status).toBe(400);
+      expect(invalidStatus.body.error).toMatch(/status/i);
+
+      const invalidParams = await request(app)
+        .post("/api/copilot-bridge/commands")
+        .send({ domain: "cli", action: "build", params: ["bad"] });
+      expect(invalidParams.status).toBe(400);
+      expect(invalidParams.body.error).toMatch(/params/i);
+    });
   });
 
   // ── GET /commands ─────────────────────────────────────────────
@@ -125,6 +139,20 @@ describe("CopilotBridge routes", () => {
       expect(res.body).toHaveLength(1);
       expect(res.body[0].action).toBe("three");
     });
+
+    it("should clamp the command limit query to the supported range", async () => {
+      await Promise.all(
+        Array.from({ length: 3 }, (_, index) =>
+          request(app)
+            .post("/api/copilot-bridge/commands")
+            .send({ domain: "bulk", action: `cmd-${index}` }),
+        ),
+      );
+
+      const res = await request(app).get("/api/copilot-bridge/commands?limit=0");
+      expect(res.status).toBe(200);
+      expect(res.body).toHaveLength(1);
+    });
   });
 
   // ── PATCH /commands/:id ───────────────────────────────────────
@@ -150,6 +178,24 @@ describe("CopilotBridge routes", () => {
         .send({ status: "error" });
       expect(res.status).toBe(404);
       expect(res.body.error).toMatch(/not found/i);
+    });
+
+    it("should reject invalid command patch payload fields", async () => {
+      const created = await request(app)
+        .post("/api/copilot-bridge/commands")
+        .send({ domain: "cli", action: "deploy" });
+
+      const invalidStatus = await request(app)
+        .patch(`/api/copilot-bridge/commands/${created.body.id}`)
+        .send({ status: "finished" });
+      expect(invalidStatus.status).toBe(400);
+      expect(invalidStatus.body.error).toMatch(/status/i);
+
+      const invalidDuration = await request(app)
+        .patch(`/api/copilot-bridge/commands/${created.body.id}`)
+        .send({ durationMs: -1 });
+      expect(invalidDuration.status).toBe(400);
+      expect(invalidDuration.body.error).toMatch(/durationMs/i);
     });
   });
 
@@ -181,6 +227,14 @@ describe("CopilotBridge routes", () => {
         .send({ agentName: "TestAgent" });
       expect(res.status).toBe(400);
       expect(res.body.error).toMatch(/task/i);
+    });
+
+    it("should reject invalid dispatch statuses", async () => {
+      const res = await request(app)
+        .post("/api/copilot-bridge/dispatches")
+        .send({ agentName: "TestAgent", task: "do something", status: "done" });
+      expect(res.status).toBe(400);
+      expect(res.body.error).toMatch(/status/i);
     });
   });
 

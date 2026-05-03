@@ -8,7 +8,9 @@ import {
 import { logError } from "@packages/utils/logger.js";
 
 function readPackId(queryValue: unknown): string | undefined {
-  return typeof queryValue === "string" ? queryValue : undefined;
+  if (typeof queryValue !== "string") return undefined;
+  const trimmed = queryValue.trim();
+  return trimmed ? trimmed : undefined;
 }
 
 function sendPackResponse(req: Request, res: Response): void {

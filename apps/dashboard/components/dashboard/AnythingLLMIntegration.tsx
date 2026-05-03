@@ -21,6 +21,7 @@ export function AnythingLLMIntegration({ className }: AnythingLLMIntegrationProp
     const [message, setMessage] = useState('');
     const [response, setResponse] = useState('');
     const [isProcessing, setIsProcessing] = useState(false);
+    const [readiness, setReadiness] = useState<api.LLMOrchestrationReadiness | null>(null);
 
     useEffect(() => {
         loadWorkspaces();
@@ -29,21 +30,28 @@ export function AnythingLLMIntegration({ className }: AnythingLLMIntegrationProp
     const loadWorkspaces = async () => {
         setLoading(true);
         try {
-            const data = await api.getAnythingLLMWorkspaces();
+            const [data, readinessData] = await Promise.all([
+                api.getAnythingLLMWorkspaces(),
+                api.getLLMOrchestrationReadiness().catch(() => null),
+            ]);
             setWorkspaces(data);
+            setReadiness(readinessData);
             
             if (data.length > 0) {
-                // Select default workspace from env or first one
-                const defaultWorkspace = process.env.ANYTHINGLLM_WORKSPACE || data[0].slug;
+                const configuredWorkspace = readinessData?.anythingllm.workspace.slug;
+                const defaultWorkspace = configuredWorkspace && data.some((workspace) => workspace.slug === configuredWorkspace)
+                    ? configuredWorkspace
+                    : data[0].slug;
                 setSelectedWorkspace(defaultWorkspace);
             } else {
                 toast.warning('Nincs elérhető workspace', {
                     description: 'Hozz létre egy workspace-t az AnythingLLM-ben'
                 });
             }
-        } catch (error: any) {
+        } catch (error: unknown) {
+            const message = error instanceof Error ? error.message : String(error);
             toast.error('AnythingLLM betöltési hiba', {
-                description: error.message
+                description: message
             });
         } finally {
             setLoading(false);
@@ -65,11 +73,12 @@ export function AnythingLLMIntegration({ className }: AnythingLLMIntegrationProp
             const result = await api.chatWithAnythingLLM(selectedWorkspace, message);
             setResponse(result);
             toast.success('RAG válasz megérkezett');
-        } catch (error: any) {
+        } catch (error: unknown) {
+            const message = error instanceof Error ? error.message : String(error);
             toast.error('AnythingLLM chat hiba', {
-                description: error.message
+                description: message
             });
-            setResponse(`Hiba: ${error.message}`);
+            setResponse(`Hiba: ${message}`);
         } finally {
             setIsProcessing(false);
         }
@@ -111,6 +120,16 @@ export function AnythingLLMIntegration({ className }: AnythingLLMIntegrationProp
                 </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4 p-4 lg:p-5">
+                {readiness && (
+                    <Alert className="border-white/10 bg-white/[0.03] text-zinc-200">
+                        <Info size={20} />
+                        <AlertDescription>
+                            Fő workspace: <span className="font-mono text-cyan-200">{readiness.anythingllm.workspace.slug}</span>
+                            {' '}· API kulcs: {readiness.anythingllm.apiKeyConfigured ? 'beállítva' : 'hiányzik'}
+                            {' '}· LLM: {readiness.primary.apiModel} → {readiness.fallback.model}
+                        </AlertDescription>
+                    </Alert>
+                )}
                 {workspaces.length === 0 ? (
                     <Alert className="border-white/10 bg-white/[0.03] text-zinc-200">
                         <Info size={20} />

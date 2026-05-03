@@ -2,12 +2,16 @@ import React, { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { WIDGET_REGISTRY } from "@/lib/widgetRegistry";
-import { RotateCcw, ShieldCheck, Bot, ListTodo, Sparkles, Activity } from "lucide-react";
+import { RotateCcw, ShieldCheck, Bot, ListTodo, Sparkles, Activity, Brain } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useLayout } from "@/lib/layout/LayoutContext";
 import { useSystemSignal } from "@/hooks/useSystemSignal";
 
-export function WidgetGrid ()
+interface WidgetGridProps {
+  onOpenPaios?: () => void;
+}
+
+export function WidgetGrid ( { onOpenPaios }: WidgetGridProps )
 {
   const { t } = useTranslation();
   const { currentLayout, setLayoutMode } = useLayout();
@@ -142,6 +146,14 @@ export function WidgetGrid ()
         </div>
 
         <div className="flex shrink-0 items-center gap-2 self-start lg:self-center">
+          <Button
+            size="sm"
+            onClick={ onOpenPaios }
+            className="h-10 gap-2 rounded-xl bg-cyan-400 px-3.5 text-slate-950 transition-all hover:bg-cyan-300"
+          >
+            <Brain size={ 12 } />
+            <span className="text-[10px] font-semibold uppercase tracking-[0.22em]">Ask PAIOS</span>
+          </Button>
           <Button
             variant="outline"
             size="sm"

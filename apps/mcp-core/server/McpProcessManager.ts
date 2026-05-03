@@ -36,6 +36,26 @@ export interface ServerStatus {
   error?: string;
 }
 
+export interface McpServerReadiness {
+  name: string;
+  transport: "self" | "stdio" | "http";
+  autoStart: boolean;
+  required: boolean;
+  disabled: boolean;
+  canStart: boolean;
+  readinessState: "ready" | "action_required" | "disabled" | "unsupported";
+  platformSupported: boolean;
+  supportedPlatforms?: NodeJS.Platform[];
+  requiredEnv: string[];
+  missingRequiredEnv: string[];
+  blockers: string[];
+  actionableBlockers: string[];
+  inactiveReason?: string;
+  command?: string;
+  url?: string;
+  description?: string;
+}
+
 const AUTO_START_DISABLED_VALUES = new Set(["0", "false", "no", "off"]);
 const SUPPORTED_PLATFORMS: ReadonlySet<NodeJS.Platform> = new Set([
   "aix",
@@ -363,6 +383,59 @@ export class McpProcessManager {
 
   getServersStatus(): ServerStatus[] {
     return Array.from(this.serverStatuses.values());
+  }
+
+  getServersReadiness(): McpServerReadiness[] {
+    return Array.from(this.configs.values()).map((config) => {
+      const platformSupported = !config.platforms || config.platforms.includes(process.platform);
+      const missingRequiredEnv = this.resolveEnvironment(config).missingRequired;
+      const blockers: string[] = [];
+      const actionableBlockers: string[] = [];
+      let readinessState: McpServerReadiness["readinessState"] = "ready";
+      let inactiveReason: string | undefined;
+
+      if (config.disabled) {
+        blockers.push("disabled in mcp_servers.json");
+        readinessState = "disabled";
+        inactiveReason = "Disabled intentionally in mcp_servers.json";
+      }
+
+      if (!platformSupported) {
+        blockers.push(`platform ${process.platform} not supported`);
+        if (readinessState === "ready") {
+          readinessState = "unsupported";
+          inactiveReason = `Platform ${process.platform} is not in supported platforms`;
+        }
+      }
+
+      if (missingRequiredEnv.length > 0) {
+        blockers.push(`missing required env: ${missingRequiredEnv.join(", ")}`);
+        if (readinessState === "ready") {
+          readinessState = "action_required";
+          actionableBlockers.push(`missing required env: ${missingRequiredEnv.join(", ")}`);
+        }
+      }
+
+      return {
+        name: config.name,
+        transport: config.transport,
+        autoStart: config.autoStart,
+        required: config.required,
+        disabled: config.disabled,
+        canStart: readinessState === "ready",
+        readinessState,
+        platformSupported,
+        supportedPlatforms: config.platforms,
+        requiredEnv: [...config.requiredEnv],
+        missingRequiredEnv,
+        blockers,
+        actionableBlockers,
+        inactiveReason,
+        command: config.command,
+        url: config.url,
+        description: config.description,
+      };
+    });
   }
 
   private handleTransportClose(name: string): void {

@@ -14,6 +14,22 @@ import { HybridMemory } from "@packages/utils/rag.js";
 const AGENT = "RecommendationRoute";
 const RECOMMENDATION_TIMEOUT_MS = 30_000;
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function readString(value: unknown): string | undefined {
+  if (typeof value !== "string") return undefined;
+  const trimmed = value.trim();
+  return trimmed ? trimmed : undefined;
+}
+
+function readLimit(value: unknown): number {
+  const parsed = typeof value === "number" ? value : typeof value === "string" ? Number(value.trim()) : NaN;
+  if (!Number.isFinite(parsed)) return 5;
+  return Math.min(Math.max(Math.trunc(parsed), 1), 20);
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 // Types (előre kell jönnie a konstansok előtt)
 // ─────────────────────────────────────────────────────────────────────────────
@@ -132,9 +148,12 @@ export function createRecommendationRoutes(): Router {
     const startTime = Date.now();
 
     try {
-      const { query, limit = 5, context } = req.body as RecommendationRequest;
+      const body = isRecord(req.body) ? req.body : {};
+      const query = readString(body.query);
+      const context = readString(body.context);
+      const safeLimit = readLimit(body.limit);
 
-      if (!query || typeof query !== "string" || query.trim().length === 0) {
+      if (!query) {
         res.status(400).json({
           error: "A 'query' mező kötelező és nem lehet üres.",
           code: "MISSING_QUERY",
@@ -142,7 +161,6 @@ export function createRecommendationRoutes(): Router {
         return;
       }
 
-      const safeLimit = Math.min(Math.max(Number(limit) || 5, 1), 20);
       const enrichedQuery = context ? `${context}\n${query}` : query;
 
       logInfo(

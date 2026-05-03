@@ -1,0 +1,29 @@
+{
+  "grants": [
+    {
+      "id": "demjan-sandor-2026",
+      "name": "Demján Sándor Program",
+      "support_rate": "90%",
+      "max_amount": "12,000,000 HUF",
+      "focus": ["Digitalizáció", "Eszközbeszerzés", "Szoftver"],
+      "eligibility": "Kereskedelmi és szolgáltató KKV-k, min. 1 lezárt üzleti év",
+      "deadline": "2026. december 31.",
+      "cta_text": "Kérje Brunella AI auditunkat a pályázathoz!"
+    },
+    {
+      "id": "dimop-plusz-126",
+      "name": "DIMOP Plusz-1.2.6-24/B",
+      "support_rate": "90%",
+      "max_amount": "10,000,000 HUF",
+      "focus": ["Felhő alapú szolgáltatások", "MI megoldások", "IT biztonság"],
+      "eligibility": "Mikro- és kisvállalkozások országszerte",
+      "deadline": "2026. június 30.",
+      "cta_text": "AI automatizációs csomagunk 100% kompatibilis."
+    }
+  ],
+  "sales_angles": {
+    "manufacturing": "Használja a 90%-os támogatást az automatikus minőségellenőrzés bevezetésére.",
+    "finance": "A digitális transzformációs keretből finanszírozható az automata könyvelési asszisztens.",
+    "logistics": "Flotta-optimalizáló szoftverünk belefér a DIMOP eszközbeszerzési keretébe."
+  }
+}

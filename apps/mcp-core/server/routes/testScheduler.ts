@@ -102,16 +102,22 @@ function readString(value: unknown): string | undefined {
 }
 
 function readBoolean(value: unknown): boolean | undefined {
-  return typeof value === 'boolean' ? value : undefined;
+  if (typeof value === 'boolean') return value;
+  if (typeof value === 'string') {
+    const normalized = value.trim().toLowerCase();
+    if (normalized === 'true') return true;
+    if (normalized === 'false') return false;
+  }
+  return undefined;
 }
 
-function readQueryInteger(value: unknown, fallback: number): number {
-  const parsed = typeof value === 'string' ? Number.parseInt(value, 10) : Number.NaN;
-  if (Number.isNaN(parsed)) {
+function readQueryInteger(value: unknown, fallback: number, min = 0, max = Number.MAX_SAFE_INTEGER): number {
+  const parsed = typeof value === 'string' ? Number.parseInt(value, 10) : Number(value);
+  if (!Number.isFinite(parsed)) {
     return fallback;
   }
 
-  return parsed || fallback;
+  return Math.min(Math.max(Math.trunc(parsed), min), max);
 }
 
 /**
@@ -194,8 +200,8 @@ router.get(
     res: Response<TestResultsListResponse | ErrorResponse>,
   ) => {
     try {
-      const limit = Math.min(readQueryInteger(req.query.limit, 20), 100);
-      const offset = readQueryInteger(req.query.offset, 0);
+      const limit = readQueryInteger(req.query.limit, 20, 1, 100);
+      const offset = readQueryInteger(req.query.offset, 0, 0, 100_000);
       const runs = await getTestRuns(limit, offset);
 
       return res.json({
@@ -223,7 +229,10 @@ router.get(
     res: Response<TestRunResponse | ErrorResponse>,
   ) => {
     try {
-      const id = req.params.id;
+      const id = readString(req.params.id);
+      if (!id) {
+        return res.status(400).json({ success: false, error: 'Missing or invalid test run id' });
+      }
       const run = getTestRunById(id);
 
       if (!run) {
@@ -306,8 +315,11 @@ router.get(
     res: Response<DateRangeResponse | ErrorResponse>,
   ) => {
     try {
-      const startDate = req.params.startDate;
-      const endDate = req.params.endDate;
+      const startDate = readString(req.params.startDate);
+      const endDate = readString(req.params.endDate);
+      if (!startDate || !endDate) {
+        return res.status(400).json({ success: false, error: 'Missing or invalid date range' });
+      }
       const runs = getTestRunsByDateRange(startDate, endDate);
 
       return res.json({

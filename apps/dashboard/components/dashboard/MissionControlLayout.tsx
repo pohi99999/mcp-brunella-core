@@ -207,7 +207,7 @@ export function MissionControlLayout ()
               {activeTab === 'dashboard' ? (
                 <div className="glass-panel flex-1 min-h-0 overflow-hidden rounded-[1.75rem] p-2.5 md:p-3.5">
                   <div className="flex h-full min-h-0 overflow-y-auto custom-scrollbar">
-                    <WidgetGrid />
+                    <WidgetGrid onOpenPaios={ () => setActiveTab( "paios" ) } />
                   </div>
                 </div>
               ) : (

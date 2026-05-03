@@ -1,9 +1,9 @@
 {
   "id": "stabilization-path-drift-20260425",
   "title": "Monorepo Path Drift Stabilizáció",
-  "status": "active",
+  "status": "completed",
   "priority": "high",
-  "progress": 30,
+  "progress": 100,
   "createdAt": "2026-04-25T14:50:00Z",
   "updatedAt": "2026-04-25T15:35:00Z",
   "completedAt": "2026-04-25T15:35:00Z",

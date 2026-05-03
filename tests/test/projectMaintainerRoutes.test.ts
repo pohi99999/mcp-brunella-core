@@ -23,6 +23,7 @@ describe('Project Maintainer routes', () => {
     db = new Database(':memory:');
     projectMaintainerService.initProjectMaintainerSchema(db);
     app = express();
+    app.use(express.json());
     app.use('/api/v1/project-maintainer', createProjectMaintainerRoutes(db));
   });
 
@@ -82,5 +83,28 @@ describe('Project Maintainer routes', () => {
     });
     expect(response.body.success).toBe(true);
     expect(response.body.report.dryRun).toBe(true);
+  });
+
+  it('accepts explicit dryRun false from JSON payload', async () => {
+    vi.mocked(projectMaintainerService.runProjectMaintainerReport).mockResolvedValue({
+      id: 'pmr-3',
+      generatedAt: '2026-04-02T22:10:00.000Z',
+      triggeredBy: 'api',
+      findings: [],
+      suggestions: [],
+      trackSummary: { total: 1, missingSpec: [], missingPlan: [], healthy: 1 },
+      dryRun: false,
+    });
+
+    const response = await request(app)
+      .post('/api/v1/project-maintainer/run')
+      .send({ dryRun: ' false ' });
+
+    expect(response.status).toBe(200);
+    expect(projectMaintainerService.runProjectMaintainerReport).toHaveBeenCalledWith({
+      triggeredBy: 'manual',
+      dryRun: false,
+      db,
+    });
   });
 });

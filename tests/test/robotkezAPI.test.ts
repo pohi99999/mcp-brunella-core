@@ -16,6 +16,8 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { Request, Response } from 'express';
 import { createRobotkezRoutes } from '@apps/mcp-core/server/routes/robotkez.js';
+import { generateExecutionPlan } from '@packages/utils/llmPlanner.js';
+import { getRobotkezBrowserEngine } from '@packages/utils/browserEngine.js';
 
 // Spies for agent methods
 export const mockExecute = vi.fn().mockResolvedValue({ success: true, message: 'Task executed' });
@@ -118,7 +120,7 @@ describe('RobotkezV2 REST API (Phase 5)', () => {
         });
 
         it('should execute task with valid instruction', async () => {
-            mockReq.body = { instruction: 'Test instruction' };
+            mockReq.body = { instruction: '  Test instruction  ' };
 
             const handler = router.stack.find((s: any) =>
                 s.route?.path === '/chat' && s.route.methods.post
@@ -130,6 +132,7 @@ describe('RobotkezV2 REST API (Phase 5)', () => {
                 success: true,
                 message: 'Task executed'
             });
+            expect(mockExecute).toHaveBeenCalledWith('Test instruction', expect.any(Object));
         });
     });
 
@@ -147,7 +150,7 @@ describe('RobotkezV2 REST API (Phase 5)', () => {
         });
 
         it('should generate plan with valid instruction', async () => {
-            mockReq.body = { instruction: 'Navigate to google.com' };
+            mockReq.body = { instruction: '  Navigate to google.com  ' };
 
             const handler = router.stack.find((s: any) =>
                 s.route?.path === '/plan' && s.route.methods.post
@@ -159,6 +162,7 @@ describe('RobotkezV2 REST API (Phase 5)', () => {
                 success: true,
                 plan: expect.any(Object)
             }));
+            expect(generateExecutionPlan).toHaveBeenCalledWith('Navigate to google.com');
         });
     });
 
@@ -175,12 +179,12 @@ describe('RobotkezV2 REST API (Phase 5)', () => {
             expect(statusSpy).toHaveBeenCalledWith(400);
             expect(jsonSpy).toHaveBeenCalledWith({
                 success: false,
-                error: 'Missing "action" field'
+                error: 'Missing or invalid "action" field'
             });
         });
 
         it('should execute action with valid params', async () => {
-            mockReq.body = { action: 'navigate', url: 'https://test.com' };
+            mockReq.body = { action: '  navigate  ', url: 'https://test.com' };
 
             const handler = router.stack.find((s: any) =>
                 s.route?.path === '/exec' && s.route.methods.post
@@ -192,6 +196,10 @@ describe('RobotkezV2 REST API (Phase 5)', () => {
                 success: true,
                 message: expect.stringContaining('navigate')
             }));
+            expect(getRobotkezBrowserEngine().sendCommand).toHaveBeenCalledWith({
+                action: 'navigate',
+                url: 'https://test.com'
+            });
         });
     });
 
@@ -253,6 +261,24 @@ describe('RobotkezV2 REST API (Phase 5)', () => {
             await handler(mockReq, mockRes);
 
             expect(statusSpy).toHaveBeenCalledWith(400);
+        });
+    });
+
+    describe('POST /computer/click-pct', () => {
+        it('should reject out-of-range percentage coordinates', async () => {
+            mockReq.body = { x_pct: 1.4, y_pct: 0.5 };
+
+            const handler = router.stack.find((s: any) =>
+                s.route?.path === '/computer/click-pct' && s.route.methods.post
+            ).route.stack[0].handle;
+
+            await handler(mockReq, mockRes);
+
+            expect(statusSpy).toHaveBeenCalledWith(400);
+            expect(jsonSpy).toHaveBeenCalledWith({
+                success: false,
+                error: 'x_pct és y_pct megadása kötelező (0.0-1.0)'
+            });
         });
     });
 });

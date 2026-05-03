@@ -17,5 +17,14 @@
     }
   },
   "include": ["apps/**/*", "packages/**/*"],
-  "exclude": ["node_modules", "apps/dashboard", "apps/p-sales-standalone"]
+  "exclude": [
+    "node_modules",
+    "apps/dashboard",
+    "apps/p-sales-standalone",
+    "apps/cloudflare-edge",
+    "apps/tauri-desktop",
+    "packages/myai/agents",
+    "**/*.test.ts",
+    "**/*.spec.ts"
+  ]
 }

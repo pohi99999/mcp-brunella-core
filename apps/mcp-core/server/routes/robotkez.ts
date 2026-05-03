@@ -27,8 +27,57 @@ import { getMessages, saveMessage } from '@packages/utils/db.js';
 import { socketService } from '@packages/agents/SocketService.js';
 import { ChromeDevToolsAgent } from '@packages/agents/ChromeDevToolsAgent.js';
 import { ISwarmContext } from '@packages/agents/types.js';
+import type { BrowserCommand } from '@packages/utils/persistentBrowser.js';
 
 const PYTHON_API = process.env.PYTHON_API_URL || 'http://localhost:8000';
+const BROWSER_ACTIONS = new Set<BrowserCommand['action']>([
+    'launch',
+    'navigate',
+    'click',
+    'type',
+    'screenshot',
+    'content',
+    'scroll',
+    'wait',
+    'extract',
+    'close',
+    'press',
+    'state',
+    'query',
+]);
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+    return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function readString(value: unknown): string | null {
+    if (typeof value !== 'string') return null;
+    const trimmed = value.trim();
+    return trimmed ? trimmed : null;
+}
+
+function readNumber(value: unknown): number | null {
+    if (typeof value !== 'number' || !Number.isFinite(value)) return null;
+    return value;
+}
+
+function readLimit(value: unknown, fallback: number): number {
+    const parsed = Number(value ?? fallback);
+    if (!Number.isFinite(parsed)) return fallback;
+    return Math.min(Math.max(Math.trunc(parsed), 1), 100);
+}
+
+function readClicks(value: unknown): number {
+    const parsed = Number(value ?? 1);
+    if (!Number.isFinite(parsed)) return 1;
+    return Math.min(Math.max(Math.trunc(parsed), 1), 10);
+}
+
+function readBrowserAction(value: unknown): BrowserCommand['action'] | null {
+    const action = readString(value);
+    if (!action) return null;
+    return BROWSER_ACTIONS.has(action as BrowserCommand['action']) ? action as BrowserCommand['action'] : null;
+}
 
 export function createRobotkezRoutes(): Router {
     const router = Router();
@@ -43,9 +92,10 @@ export function createRobotkezRoutes(): Router {
      */
     router.post('/chat', async (req: Request, res: Response) => {
         try {
-            const { instruction } = req.body;
+            const body = isRecord(req.body) ? req.body : {};
+            const instruction = readString(body.instruction);
 
-            if (!instruction || typeof instruction !== 'string') {
+            if (!instruction) {
                 return res.status(400).json({
                     success: false,
                     error: 'Missing or invalid "instruction" field'
@@ -105,9 +155,10 @@ export function createRobotkezRoutes(): Router {
      */
     router.post('/plan', async (req: Request, res: Response) => {
         try {
-            const { instruction } = req.body;
+            const body = isRecord(req.body) ? req.body : {};
+            const instruction = readString(body.instruction);
 
-            if (!instruction || typeof instruction !== 'string') {
+            if (!instruction) {
                 return res.status(400).json({
                     success: false,
                     error: 'Missing or invalid "instruction" field'
@@ -146,12 +197,14 @@ export function createRobotkezRoutes(): Router {
      */
     router.post('/exec', async (req: Request, res: Response) => {
         try {
-            const { action, ...params } = req.body;
+            const body = isRecord(req.body) ? req.body : {};
+            const action = readBrowserAction(body.action);
+            const { action: _action, ...params } = body;
 
             if (!action) {
                 return res.status(400).json({
                     success: false,
-                    error: 'Missing "action" field'
+                    error: 'Missing or invalid "action" field'
                 });
             }
 
@@ -239,14 +292,13 @@ export function createRobotkezRoutes(): Router {
             let tasks = backgroundTaskManager.getAllTasks();
 
             // Filter by status if provided
-            if (status && typeof status === 'string') {
-                const statusStr = Array.isArray(status) ? status[0] : status;
+            const statusStr = readString(Array.isArray(status) ? status[0] : status);
+            if (statusStr) {
                 tasks = tasks.filter(t => t.status === statusStr);
             }
 
             // Apply limit
-            const limitStr = Array.isArray(limit) ? limit[0] : limit;
-            const limitNum = limitStr ? parseInt(limitStr as string, 10) : 50;
+            const limitNum = readLimit(Array.isArray(limit) ? limit[0] : limit, 50);
             tasks = tasks.slice(0, limitNum);
 
             res.json({
@@ -273,7 +325,7 @@ export function createRobotkezRoutes(): Router {
      */
     router.get('/tasks/:id', async (req: Request, res: Response) => {
         try {
-            const id = req.params.id as string;
+            const id = readString(req.params.id) ?? '';
 
             const task = backgroundTaskManager.getTaskStatus(id);
 
@@ -307,7 +359,7 @@ export function createRobotkezRoutes(): Router {
      */
     router.delete('/tasks/:id', async (req: Request, res: Response) => {
         try {
-            const id = req.params.id as string;
+            const id = readString(req.params.id) ?? '';
 
             const cancelled = backgroundTaskManager.cancelTask(id);
 
@@ -414,8 +466,11 @@ export function createRobotkezRoutes(): Router {
      */
     router.post('/computer/click', async (req: Request, res: Response) => {
         try {
-            const { x, y, clicks = 1 } = req.body as { x: number; y: number; clicks?: number };
-            if (x === undefined || y === undefined) {
+            const body = isRecord(req.body) ? req.body : {};
+            const x = readNumber(body.x);
+            const y = readNumber(body.y);
+            const clicks = readClicks(body.clicks);
+            if (x === null || y === null) {
                 return res.status(400).json({ success: false, error: 'x és y megadása kötelező' });
             }
             const r = await fetch(`${PYTHON_API}/os/click`, {
@@ -440,8 +495,11 @@ export function createRobotkezRoutes(): Router {
      */
     router.post('/computer/click-pct', async (req: Request, res: Response) => {
         try {
-            const { x_pct, y_pct, clicks = 1 } = req.body as { x_pct: number; y_pct: number; clicks?: number };
-            if (x_pct === undefined || y_pct === undefined) {
+            const body = isRecord(req.body) ? req.body : {};
+            const x_pct = readNumber(body.x_pct);
+            const y_pct = readNumber(body.y_pct);
+            const clicks = readClicks(body.clicks);
+            if (x_pct === null || y_pct === null || x_pct < 0 || x_pct > 1 || y_pct < 0 || y_pct > 1) {
                 return res.status(400).json({ success: false, error: 'x_pct és y_pct megadása kötelező (0.0-1.0)' });
             }
             const r = await fetch(`${PYTHON_API}/os/click-pct`, {
@@ -466,12 +524,14 @@ export function createRobotkezRoutes(): Router {
      */
     router.post('/computer/type', async (req: Request, res: Response) => {
         try {
-            const { text, interval } = req.body as { text: string; interval?: number };
-            if (!text || typeof text !== 'string') {
+            const bodyRecord = isRecord(req.body) ? req.body : {};
+            const text = readString(bodyRecord.text);
+            const interval = readNumber(bodyRecord.interval);
+            if (!text) {
                 return res.status(400).json({ success: false, error: 'text megadása kötelező' });
             }
             const body: Record<string, unknown> = { text };
-            if (interval !== undefined) body['interval'] = interval;
+            if (interval !== null && interval >= 0) body['interval'] = interval;
             const r = await fetch(`${PYTHON_API}/os/type`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -494,8 +554,9 @@ export function createRobotkezRoutes(): Router {
      */
     router.post('/computer/vision-click', async (req: Request, res: Response) => {
         try {
-            const { description } = req.body as { description: string };
-            if (!description || typeof description !== 'string') {
+            const body = isRecord(req.body) ? req.body : {};
+            const description = readString(body.description);
+            if (!description) {
                 return res.status(400).json({ success: false, error: 'description megadása kötelező' });
             }
             const r = await fetch(`${PYTHON_API}/os/vision-click`, {

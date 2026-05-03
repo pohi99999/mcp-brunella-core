@@ -12,6 +12,32 @@ interface GithubApiError extends Error {
   data?: unknown;
 }
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function readString(value: unknown): string | null {
+  if (typeof value !== "string") return null;
+  const trimmed = value.trim();
+  return trimmed ? trimmed : null;
+}
+
+function readBoolean(value: unknown, fallback: boolean): boolean {
+  if (typeof value === "boolean") return value;
+  if (typeof value === "string") {
+    const normalized = value.trim().toLowerCase();
+    if (normalized === "true") return true;
+    if (normalized === "false") return false;
+  }
+  return fallback;
+}
+
+function readLimit(value: unknown, fallback: number, max: number): number {
+  const parsed = Number(value ?? fallback);
+  if (!Number.isFinite(parsed)) return fallback;
+  return Math.min(Math.max(Math.trunc(parsed), 1), max);
+}
+
 // Helper to run shell commands
 const runCommand = (command: string): Promise<string> => {
   return new Promise((resolve, reject) => {
@@ -120,17 +146,8 @@ export function createJulesRoutes(): Router {
   // GET /workflow-runs?workflow=jules-async-tests.yml&limit=10
   router.get("/workflow-runs", async (req, res) => {
     try {
-      const workflow =
-        typeof req.query.workflow === "string" && req.query.workflow.trim()
-          ? req.query.workflow.trim()
-          : "jules-async-tests.yml";
-
-      const limitRaw =
-        typeof req.query.limit === "string" ? req.query.limit : "10";
-      const limit = Math.max(
-        1,
-        Math.min(50, parseInt(limitRaw || "10", 10) || 10),
-      );
+      const workflow = readString(req.query.workflow) ?? "jules-async-tests.yml";
+      const limit = readLimit(req.query.limit, 10, 50);
 
       const repo = getGithubRepo();
       const base = getGithubApiBase();
@@ -148,17 +165,10 @@ export function createJulesRoutes(): Router {
   // POST /dispatch { workflow?: string, ref?: string, inputs?: object }
   router.post("/dispatch", async (req, res) => {
     try {
-      const workflow =
-        typeof req.body?.workflow === "string" && req.body.workflow.trim()
-          ? String(req.body.workflow).trim()
-          : "jules-async-tests.yml";
-
-      const ref =
-        typeof req.body?.ref === "string" && req.body.ref.trim()
-          ? String(req.body.ref).trim()
-          : "main";
-
-      const inputs = (req.body?.inputs ?? {}) as Record<string, unknown>;
+      const body = isRecord(req.body) ? req.body : {};
+      const workflow = readString(body.workflow) ?? "jules-async-tests.yml";
+      const ref = readString(body.ref) ?? "main";
+      const inputs = isRecord(body.inputs) ? body.inputs : {};
 
       const repo = getGithubRepo();
       const base = getGithubApiBase();
@@ -220,7 +230,8 @@ export function createJulesRoutes(): Router {
 
   // POST /task - Create new task
   router.post("/task", async (req, res) => {
-    const { task } = req.body;
+    const body = isRecord(req.body) ? req.body : {};
+    const task = readString(body.task);
     if (!task) {
       return res.status(400).json({ error: "Task is required" });
     }
@@ -253,7 +264,8 @@ export function createJulesRoutes(): Router {
 
   // POST /sync - Sync/Pull a session
   router.post("/sync", async (req, res) => {
-    const { sessionId } = req.body;
+    const body = isRecord(req.body) ? req.body : {};
+    const sessionId = readString(body.sessionId);
     if (!sessionId) {
       return res.status(400).json({ error: "Session ID is required" });
     }
@@ -291,12 +303,9 @@ export function createJulesRoutes(): Router {
   // POST /automations/import - manually trigger import from .jules.yml
   router.post("/automations/import", async (req, res) => {
     try {
-      const skipIfExists =
-        typeof req.body?.skipIfExists === "boolean" ? req.body.skipIfExists : true;
-      const enableImmediately =
-        typeof req.body?.enableImmediately === "boolean"
-          ? req.body.enableImmediately
-          : true;
+      const body = isRecord(req.body) ? req.body : {};
+      const skipIfExists = readBoolean(body.skipIfExists, true);
+      const enableImmediately = readBoolean(body.enableImmediately, true);
 
       const db = getGlobalDb();
       const julesService = new JulesAutomationService(db);

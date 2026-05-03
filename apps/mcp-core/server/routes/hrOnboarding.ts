@@ -9,12 +9,16 @@ import { ensureError } from '@packages/utils/ensureError.js';
 import { logError, logInfo } from '@packages/utils/logger.js';
 
 function parseLimit(value: unknown, fallback = 10): number {
-  const parsed = typeof value === 'string' ? Number.parseInt(value, 10) : Number(value);
+  const parsed = typeof value === 'string' ? Number.parseInt(value.trim(), 10) : Number(value);
   if (!Number.isFinite(parsed) || Number.isNaN(parsed) || parsed <= 0) {
     return fallback;
   }
 
   return Math.min(Math.trunc(parsed), 50);
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
 export function createHROnboardingRoutes(): Router {
@@ -41,7 +45,7 @@ export function createHROnboardingRoutes(): Router {
 
   router.post('/dry-run', async (req, res) => {
     try {
-      const dryRun = buildHROnboardingDryRunReport(req.body);
+      const dryRun = buildHROnboardingDryRunReport(isRecord(req.body) ? req.body : {});
       const jobId = uuidv4();
       const query = `${dryRun.normalized.employeeName} · ${dryRun.normalized.jobTitle}`;
 

@@ -8,22 +8,32 @@ import { toast } from 'sonner'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { cloudflareClient } from '@/lib/apiService'
 
 interface WorkerStatus {
-  agent_name: string;
-  worker_url: string;
-  is_healthy: number;
-  last_health_check: string;
-  avg_latency_ms: number;
+  id: string;
+  name: string;
+  url?: string;
+  customDomain?: string;
+  status: 'online' | 'offline' | 'unknown';
+  latencyMs?: number;
 }
 
 interface WorkerTask {
   id: string;
-  agent_name: string;
-  task: string;
+  agent_name?: string;
+  instruction?: string;
+  task?: string;
   status: string;
-  created_at: string;
+  created_at?: string;
+  createdAt?: string;
+}
+
+interface WorkersResponse {
+  workers?: WorkerStatus[];
+}
+
+interface HistoryResponse {
+  tasks?: WorkerTask[];
 }
 
 export function CloudflareOrchestrator() {
@@ -31,20 +41,28 @@ export function CloudflareOrchestrator() {
   const [tasks, setTasks] = useState<WorkerTask[]>([])
   const [loading, setLoading] = useState(true)
   const [dispatching, setDispatching] = useState<string | null>(null)
-  const [selectedAgent, setSelectedAgent] = useState<string>('LeadMiningAgent')
+  const [selectedAgent, setSelectedAgent] = useState<string>('')
   const [instruction, setInstruction] = useState('')
 
   const fetchData = async () => {
     try {
       const [workersRes, tasksRes] = await Promise.all([
-        fetch('/api/edge/workers'),
-        fetch('/api/edge/tasks?limit=10')
+        fetch('/api/v1/cloudflare/agents'),
+        fetch('/api/v1/cloudflare/history?limit=10')
       ]);
 
-      if (workersRes.ok) setWorkers(await workersRes.json());
-      if (tasksRes.ok) setTasks(await tasksRes.json());
+      if (workersRes.ok) {
+        const data = await workersRes.json() as WorkersResponse;
+        const nextWorkers = data.workers || [];
+        setWorkers(nextWorkers);
+        setSelectedAgent((current) => current || nextWorkers[0]?.id || '');
+      }
+      if (tasksRes.ok) {
+        const data = await tasksRes.json() as HistoryResponse;
+        setTasks(data.tasks || []);
+      }
     } catch (e) {
-      console.error('Failed to fetch edge data', e);
+      toast.error(e instanceof Error ? e.message : 'Nem sikerült lekérni az Edge adatokat');
     } finally {
       setLoading(false);
     }
@@ -62,12 +80,17 @@ export function CloudflareOrchestrator() {
       return;
     }
 
+    if (!selectedAgent) {
+      toast.error('Nincs kiválasztott Cloudflare worker.');
+      return;
+    }
+
     setDispatching(selectedAgent);
     try {
-      const res = await fetch('/api/edge/dispatch', {
+      const res = await fetch(`/api/v1/cloudflare/agents/${encodeURIComponent(selectedAgent)}/task`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ agent: selectedAgent, task: instruction })
+        body: JSON.stringify({ instruction, context: { source: 'dashboard' } })
       });
 
       if (res.ok) {
@@ -123,21 +146,21 @@ export function CloudflareOrchestrator() {
             <ScrollArea className="h-[300px]">
               <div className="divide-y divide-white/5">
                 {workers.map(w => (
-                  <div key={w.agent_name} className="flex items-center justify-between px-4 py-3 hover:bg-white/[0.03]">
+                  <div key={w.id} className="flex items-center justify-between px-4 py-3 hover:bg-white/[0.03]">
                     <div className="flex items-center gap-3">
-                      <Globe size={16} className={w.is_healthy ? "text-green-400" : "text-red-400"} />
+                      <Globe size={16} className={w.status === "online" ? "text-green-400" : w.status === "unknown" ? "text-amber-300" : "text-red-400"} />
                       <div className="flex flex-col">
-                        <span className="text-sm font-mono text-zinc-200">{w.agent_name}</span>
-                        <span className="text-[10px] text-zinc-500">{w.worker_url}</span>
+                        <span className="text-sm font-mono text-zinc-200">{w.name}</span>
+                        <span className="text-[10px] text-zinc-500">{w.customDomain || w.url || 'URL nincs konfigurálva'}</span>
                       </div>
                     </div>
                     <div className="flex items-center gap-4">
                       <div className="flex flex-col items-end">
                         <span className="text-[10px] text-zinc-400">Latency</span>
-                        <span className="text-xs font-mono">{w.avg_latency_ms || 0}ms</span>
+                        <span className="text-xs font-mono">{w.latencyMs || 0}ms</span>
                       </div>
-                      <Badge variant={w.is_healthy ? "default" : "destructive"} className="text-[10px] h-5">
-                        {w.is_healthy ? "Healthy" : "Down"}
+                      <Badge variant={w.status === "online" ? "default" : "destructive"} className="text-[10px] h-5">
+                        {w.status}
                       </Badge>
                     </div>
                   </div>
@@ -155,7 +178,7 @@ export function CloudflareOrchestrator() {
                 onChange={(e) => setSelectedAgent(e.target.value)}
               >
                 {workers.map(w => (
-                  <option key={w.agent_name} value={w.agent_name}>{w.agent_name}</option>
+                  <option key={w.id} value={w.id}>{w.name}</option>
                 ))}
               </select>
             </div>
@@ -184,11 +207,11 @@ export function CloudflareOrchestrator() {
                 {tasks.map(t => (
                   <div key={t.id} className="px-4 py-3 hover:bg-white/[0.03]">
                     <div className="flex items-center justify-between mb-1">
-                      <span className="text-xs font-bold text-cyan-400">{t.agent_name}</span>
+                      <span className="text-xs font-bold text-cyan-400">{t.agent_name || t.id}</span>
                       <Badge variant="outline" className="text-[9px] uppercase">{t.status}</Badge>
                     </div>
-                    <p className="text-[11px] text-zinc-300 line-clamp-1">{t.task}</p>
-                    <span className="text-[9px] text-zinc-500">{new Date(t.created_at).toLocaleString()}</span>
+                    <p className="text-[11px] text-zinc-300 line-clamp-1">{t.instruction || t.task || 'Nincs feladatleírás'}</p>
+                    <span className="text-[9px] text-zinc-500">{new Date(t.created_at || t.createdAt || Date.now()).toLocaleString()}</span>
                   </div>
                 ))}
                 {tasks.length === 0 && <div className="p-8 text-center text-xs text-zinc-500">Nincsenek rögzített feladatok.</div>}

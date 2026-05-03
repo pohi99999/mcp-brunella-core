@@ -217,4 +217,65 @@ describe('ZeroPrompt routes', () => {
     expect(summaryResponse.body.summary.total).toBe(1);
     expect(summaryResponse.body.summary.pendingFinalApproval).toBe(1);
   });
+
+  it('normalizes manual event publication payloads', async () => {
+    const response = await request(app)
+      .post('/api/v1/zero-prompt/events')
+      .send({
+        source: '  dashboard  ',
+        type: '  readiness.detected  ',
+        priority: 'invalid',
+        riskHint: 'unknown',
+        metadata: ['drop'],
+        payload: { ok: true },
+      });
+
+    expect(response.status).toBe(201);
+    expect(eventFabricMock.publish).toHaveBeenCalledWith(expect.objectContaining({
+      source: 'dashboard',
+      type: 'readiness.detected',
+      priority: 'medium',
+      riskHint: 'safe',
+      payload: { ok: true },
+      metadata: { source: 'manual_api' },
+    }));
+  });
+
+  it('normalizes evaluate and replay inputs for policy checks', async () => {
+    evaluateAndLogPolicyMock.mockResolvedValue({ decision: 'allow' });
+
+    const evaluate = await request(app)
+      .post('/api/v1/zero-prompt/evaluate')
+      .send({
+        source: '  copilot  ',
+        type: '  route.check  ',
+        priority: 'critical',
+        riskHint: 'dangerous',
+        agentName: '  CopilotCLI  ',
+        resource: '  route-contracts  ',
+      });
+
+    expect(evaluate.status).toBe(200);
+    expect(evaluateAndLogPolicyMock).toHaveBeenCalledWith(expect.objectContaining({
+      agentName: 'CopilotCLI',
+      resource: 'route-contracts',
+      event: expect.objectContaining({
+        source: 'copilot',
+        type: 'route.check',
+        priority: 'critical',
+        riskHint: 'dangerous',
+      }),
+    }));
+
+    const replay = await request(app)
+      .post('/api/v1/zero-prompt/replay')
+      .send({ source: ' copilot ', type: ' route.check ', limit: 999 });
+
+    expect(replay.status).toBe(200);
+    expect(eventFabricMock.replay).toHaveBeenCalledWith({
+      source: 'copilot',
+      type: 'route.check',
+      limit: 200,
+    });
+  });
 });

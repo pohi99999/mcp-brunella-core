@@ -97,4 +97,41 @@ describe('CEAN routes tenant isolation', () => {
 
     expect(response.body.tenantId).toBe('system');
   });
+
+  it('normalizes chat save payloads and clamps history pagination', async () => {
+    await request(app)
+      .post('/cean/chat/save')
+      .set('X-Tenant-ID', 'tenant-a')
+      .send({
+        sessionId: ' session-4 ',
+        role: ' user ',
+        content: ' Hello trimmed ',
+        taskId: ' task-1 ',
+      })
+      .expect(200);
+
+    const history = await request(app)
+      .get('/cean/chat/history/%20session-4%20?limit=999&offset=-5')
+      .set('X-Tenant-ID', 'tenant-a')
+      .expect(200);
+
+    expect(history.body.sessionId).toBe('session-4');
+    expect(history.body.limit).toBe(500);
+    expect(history.body.offset).toBe(0);
+    expect(history.body.messages).toHaveLength(1);
+    expect(history.body.messages[0]).toEqual(expect.objectContaining({
+      role: 'user',
+      content: 'Hello trimmed',
+      taskId: 'task-1',
+    }));
+  });
+
+  it('rejects blank chat content before persistence', async () => {
+    const response = await request(app)
+      .post('/cean/chat/save')
+      .send({ sessionId: 'session-5', role: 'user', content: '   ' });
+
+    expect(response.status).toBe(400);
+    expect(response.body.error).toContain('Missing required fields');
+  });
 });

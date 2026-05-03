@@ -4,6 +4,28 @@ import { logInfo, logError } from '@packages/utils/logger.js';
 import type { OrchestratorAgent, OrchestratorState } from '@packages/agents/OrchestratorAgent.js';
 import { agentManager } from '@packages/agents/AgentManager.js';
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function readString(value: unknown): string | null {
+  if (typeof value !== 'string') return null;
+  const trimmed = value.trim();
+  return trimmed ? trimmed : null;
+}
+
+function readConversationHistory(value: unknown): UniversalChatMessage[] {
+  if (!Array.isArray(value)) return [];
+
+  return value
+    .filter((entry): entry is Record<string, unknown> => isRecord(entry))
+    .map((entry) => ({
+      role: entry.role === 'assistant' ? 'assistant' as const : entry.role === 'user' ? 'user' as const : null,
+      content: readString(entry.content),
+    }))
+    .filter((entry): entry is UniversalChatMessage => entry.role !== null && entry.content !== null);
+}
+
 export function createUniversalOrchestratorRouter(): Router {
   const router = Router();
 
@@ -14,31 +36,30 @@ export function createUniversalOrchestratorRouter(): Router {
    * értelmezi az utasítást, és delegál a megfelelő agentnek.
    */
   router.post('/universal', async (req, res) => {
-    const { message, provider, model, conversationHistory, userId } = req.body as {
-      message?: string;
-      provider?: string;
-      model?: string;
-      conversationHistory?: UniversalChatMessage[];
-      sessionId?: string;
-      userId?: string;
-    };
+    const body = isRecord(req.body) ? req.body : {};
+    const message = readString(body.message);
+    const provider = readString(body.provider) ?? 'github';
+    const model = readString(body.model) ?? undefined;
+    const conversationHistory = readConversationHistory(body.conversationHistory);
+    const sessionId = readString(body.sessionId) ?? undefined;
+    const userId = readString(body.userId) ?? undefined;
 
-    if (!message || typeof message !== 'string' || message.trim() === '') {
+    if (!message) {
       res.status(400).json({ error: 'Hiányzó vagy üres "message" mező.' });
       return;
     }
 
-    const effectiveProvider = provider ?? 'github';
+    const effectiveProvider = provider;
     logInfo('UniversalOrchestratorRoute', `POST /universal — provider: ${effectiveProvider}, msg: "${message.slice(0, 60)}..."`);
 
     try {
       const service = getUniversalOrchestratorService();
       const result = await service.process({
-        message: message.trim(),
+        message,
         provider: effectiveProvider,
         model,
-        conversationHistory: conversationHistory ?? [],
-        sessionId: typeof req.body?.sessionId === 'string' ? req.body.sessionId : undefined,
+        conversationHistory,
+        sessionId,
         userId,
       });
 
@@ -51,7 +72,7 @@ export function createUniversalOrchestratorRouter(): Router {
         actionsTriggered: [],
         provider: effectiveProvider,
         thinkingMs: 0,
-        sessionId: typeof req.body?.sessionId === 'string' ? req.body.sessionId : 'legacy-anonymous',
+        sessionId: sessionId ?? 'legacy-anonymous',
         missionTimeline: [{
           phase: 'error',
           status: 'blocked',

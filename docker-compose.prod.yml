@@ -1,0 +1,30 @@
+services:
+  brunella-core:
+    image: node:22-alpine
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,nodev,size=256m
+    volumes:
+      - brunella-core-data:/app/data
+      - brunella-core-logs:/app/logs
+    command: ["node", "server.js"]
+
+  brunella-ai:
+    image: python:3.12-slim
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,nodev,size=256m
+    volumes:
+      - brunella-ai-logs:/app/logs
+    command: ["python", "-m", "myai.server"]
+
+volumes:
+  brunella-core-data: {}
+  brunella-core-logs: {}
+  brunella-ai-logs: {}

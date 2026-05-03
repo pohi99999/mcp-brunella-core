@@ -120,6 +120,7 @@ export type RemoteBridgeEventType =
   | 'paios:action:queued'
   | 'paios:action:running'
   | 'paios:action:completed'
+  | 'paios:action:failed'
   | 'session:update'
   | 'system:heartbeat';
 

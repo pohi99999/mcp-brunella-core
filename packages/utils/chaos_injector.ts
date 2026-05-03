@@ -13,15 +13,37 @@ export class ChaosInjector {
   constructor(config?: Partial<ChaosConfig>) {
     this.config = {
       enabled: process.env.CHAOS_MODE === "true",
-      probability: parseFloat(process.env.CHAOS_PROBABILITY || "0.1"),
-      types: (process.env.CHAOS_TYPES || "timeout,rate_limit,corruption").split(",") as any,
-      maxDelayMs: parseInt(process.env.CHAOS_MAX_DELAY || "5000"),
+      probability: clampProbability(parseFloat(process.env.CHAOS_PROBABILITY || "0.1")),
+      types: normalizeChaosTypes((process.env.CHAOS_TYPES || "timeout,rate_limit,corruption").split(",")),
+      maxDelayMs: clampDelay(parseInt(process.env.CHAOS_MAX_DELAY || "5000", 10)),
       ...config,
     };
+    this.config = this.updateConfig(this.config);
   }
 
   public shouldInject(): boolean {
     return this.config.enabled && Math.random() < this.config.probability;
+  }
+
+  public getConfig(): ChaosConfig {
+    return {
+      enabled: this.config.enabled,
+      probability: this.config.probability,
+      types: [...this.config.types],
+      maxDelayMs: this.config.maxDelayMs,
+    };
+  }
+
+  public updateConfig(config: Partial<ChaosConfig>): ChaosConfig {
+    const nextConfig = {
+      ...this.config,
+      ...config,
+      probability: clampProbability(config.probability ?? this.config.probability),
+      maxDelayMs: clampDelay(config.maxDelayMs ?? this.config.maxDelayMs),
+      types: normalizeChaosTypes(config.types ?? this.config.types),
+    };
+    this.config = nextConfig;
+    return this.getConfig();
   }
 
   public async injectChaos<T>(toolName: string, handler: () => Promise<T>): Promise<T> {
@@ -55,20 +77,21 @@ export class ChaosInjector {
     }
   }
 
-  private corruptData(data: any): any {
+  private corruptData<T>(data: T): T {
     try {
       if (typeof data === "string") {
-        return data.split("").reverse().join("");
+        return data.split("").reverse().join("") as T;
       }
       if (typeof data === "object" && data !== null) {
-        const keys = Object.keys(data);
+        const record = data as Record<string, unknown>;
+        const keys = Object.keys(record);
         if (keys.length > 0) {
           const randomKey = keys[Math.floor(Math.random() * keys.length)];
           // Modifikáció: vagy töröljük, vagy felülírjuk véletlen értékkel
           if (Math.random() > 0.5) {
-            delete data[randomKey];
+            delete record[randomKey];
           } else {
-            data[randomKey] = "CORRUPTED_BY_BRUNELLA_CHAOS";
+            record[randomKey] = "CORRUPTED_BY_BRUNELLA_CHAOS";
           }
         }
       }
@@ -78,6 +101,24 @@ export class ChaosInjector {
       return data;
     }
   }
+}
+
+function clampProbability(value: number): number {
+  if (!Number.isFinite(value)) return 0.1;
+  return Math.min(1, Math.max(0, value));
+}
+
+function clampDelay(value: number): number {
+  if (!Number.isFinite(value)) return 5000;
+  return Math.max(0, Math.floor(value));
+}
+
+function normalizeChaosTypes(types: readonly string[]): ChaosConfig["types"] {
+  const allowed = new Set<ChaosConfig["types"][number]>(["timeout", "rate_limit", "corruption"]);
+  const normalized = types.filter((type): type is ChaosConfig["types"][number] =>
+    allowed.has(type as ChaosConfig["types"][number]),
+  );
+  return normalized.length > 0 ? normalized : ["timeout"];
 }
 
 export const globalChaosInjector = new ChaosInjector();

@@ -15,6 +15,16 @@ const VALID_STATUSES: SelfModificationProposalStatus[] = [
   'applying',
 ];
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function readString(value: unknown): string | undefined {
+  if (typeof value !== 'string') return undefined;
+  const trimmed = value.trim();
+  return trimmed ? trimmed : undefined;
+}
+
 function parseBoolean(value: unknown): boolean | undefined {
   if (typeof value === 'boolean') {
     return value;
@@ -29,9 +39,29 @@ function parseBoolean(value: unknown): boolean | undefined {
   return undefined;
 }
 
-function parseInteger(value: unknown, fallback: number): number {
+function parseInteger(value: unknown, fallback: number, min = 1, max = Number.MAX_SAFE_INTEGER): number {
   const numeric = typeof value === 'string' ? Number.parseInt(value, 10) : Number(value);
-  return Number.isFinite(numeric) ? numeric : fallback;
+  if (!Number.isFinite(numeric)) return fallback;
+  return Math.min(Math.max(Math.trunc(numeric), min), max);
+}
+
+function parseOptionalInteger(value: unknown, min = 1, max = Number.MAX_SAFE_INTEGER): number | undefined {
+  if (value === undefined || value === null) return undefined;
+  const numeric = typeof value === 'string' ? Number.parseInt(value, 10) : Number(value);
+  if (!Number.isFinite(numeric)) return undefined;
+  return Math.min(Math.max(Math.trunc(numeric), min), max);
+}
+
+function parseRatio(value: unknown): number | undefined {
+  const numeric = Number(value);
+  if (!Number.isFinite(numeric)) return undefined;
+  return Math.min(Math.max(numeric, 0), 1);
+}
+
+function parsePositiveNumber(value: unknown): number | undefined {
+  const numeric = Number(value);
+  if (!Number.isFinite(numeric)) return undefined;
+  return Math.max(numeric, 0);
 }
 
 function parseStatus(value: unknown): SelfModificationProposalStatus | undefined {
@@ -66,11 +96,11 @@ export function createSelfModificationRouter(): Router {
 
   router.get('/weak-agents', (req, res) => {
     try {
-      const days = parseInteger(req.query.days, 7);
-      const successThreshold = Number(req.query.successThreshold ?? 0.7);
-      const durationThresholdMs = parseInteger(req.query.durationThresholdMs, 30_000);
-      const minRuns = parseInteger(req.query.minRuns, 3);
-      const limit = parseInteger(req.query.limit, 10);
+      const days = parseInteger(req.query.days, 7, 1, 365);
+      const successThreshold = parseRatio(req.query.successThreshold) ?? 0.7;
+      const durationThresholdMs = parseInteger(req.query.durationThresholdMs, 30_000, 1, 86_400_000);
+      const minRuns = parseInteger(req.query.minRuns, 3, 1, 100);
+      const limit = parseInteger(req.query.limit, 10, 1, 50);
       res.json({
         success: true,
         data: agentPerformanceTracker.getWeakAgents({
@@ -90,7 +120,7 @@ export function createSelfModificationRouter(): Router {
   router.get('/proposals', (req, res) => {
     try {
       const status = parseStatus(req.query.status);
-      const limit = parseInteger(req.query.limit, 20);
+      const limit = parseInteger(req.query.limit, 20, 1, 100);
       const proposals = selfModificationEngine.listProposals(status, limit);
       res.json({
         success: true,
@@ -105,7 +135,12 @@ export function createSelfModificationRouter(): Router {
 
   router.get('/proposals/:proposalId', (req, res) => {
     try {
-      const proposal = selfModificationEngine.getProposal(String(req.params.proposalId));
+      const proposalId = readString(req.params.proposalId);
+      if (!proposalId) {
+        res.status(400).json({ success: false, error: 'proposalId is required' });
+        return;
+      }
+      const proposal = selfModificationEngine.getProposal(proposalId);
       if (!proposal) {
         res.status(404).json({ success: false, error: 'Proposal not found' });
         return;
@@ -123,12 +158,18 @@ export function createSelfModificationRouter(): Router {
 
   router.post('/improve/:agentName', async (req, res) => {
     try {
-      const proposal = await selfModificationEngine.improveAgent(String(req.params.agentName), {
-        force: parseBoolean(req.body?.force),
-        successThreshold: typeof req.body?.successThreshold === 'number' ? req.body.successThreshold : undefined,
-        durationThresholdMs: typeof req.body?.durationThresholdMs === 'number' ? req.body.durationThresholdMs : undefined,
-        minRuns: typeof req.body?.minRuns === 'number' ? req.body.minRuns : undefined,
-        timeoutMs: typeof req.body?.timeoutMs === 'number' ? req.body.timeoutMs : undefined,
+      const agentName = readString(req.params.agentName);
+      if (!agentName) {
+        res.status(400).json({ success: false, error: 'agentName is required' });
+        return;
+      }
+      const body = isRecord(req.body) ? req.body : {};
+      const proposal = await selfModificationEngine.improveAgent(agentName, {
+        force: parseBoolean(body.force),
+        successThreshold: parseRatio(body.successThreshold),
+        durationThresholdMs: parsePositiveNumber(body.durationThresholdMs),
+        minRuns: parseOptionalInteger(body.minRuns, 1, 100),
+        timeoutMs: parsePositiveNumber(body.timeoutMs),
         triggeredBy: 'api',
       });
 
@@ -145,10 +186,11 @@ export function createSelfModificationRouter(): Router {
 
   router.post('/cycle', async (req, res) => {
     try {
+      const body = isRecord(req.body) ? req.body : {};
       const result = await selfModificationEngine.runWeeklyCycle({
-        successThreshold: typeof req.body?.successThreshold === 'number' ? req.body.successThreshold : undefined,
-        durationThresholdMs: typeof req.body?.durationThresholdMs === 'number' ? req.body.durationThresholdMs : undefined,
-        minRuns: typeof req.body?.minRuns === 'number' ? req.body.minRuns : undefined,
+        successThreshold: parseRatio(body.successThreshold),
+        durationThresholdMs: parsePositiveNumber(body.durationThresholdMs),
+        minRuns: parseOptionalInteger(body.minRuns, 1, 100),
       });
 
       res.json({
@@ -164,11 +206,17 @@ export function createSelfModificationRouter(): Router {
 
   router.post('/proposals/:proposalId/retest', async (req, res) => {
     try {
-      const proposal = await selfModificationEngine.retestProposal(String(req.params.proposalId), {
-        proposedToml: typeof req.body?.proposedToml === 'string' ? req.body.proposedToml : undefined,
-        reviewer: typeof req.body?.reviewer === 'string' ? req.body.reviewer : undefined,
-        notes: typeof req.body?.notes === 'string' ? req.body.notes : undefined,
-        timeoutMs: typeof req.body?.timeoutMs === 'number' ? req.body.timeoutMs : undefined,
+      const proposalId = readString(req.params.proposalId);
+      if (!proposalId) {
+        res.status(400).json({ success: false, error: 'proposalId is required' });
+        return;
+      }
+      const body = isRecord(req.body) ? req.body : {};
+      const proposal = await selfModificationEngine.retestProposal(proposalId, {
+        proposedToml: readString(body.proposedToml),
+        reviewer: readString(body.reviewer),
+        notes: readString(body.notes),
+        timeoutMs: parsePositiveNumber(body.timeoutMs),
       });
 
       res.json({
@@ -184,9 +232,15 @@ export function createSelfModificationRouter(): Router {
 
   router.post('/proposals/:proposalId/approve', async (req, res) => {
     try {
-      const proposal = await selfModificationEngine.approveProposal(String(req.params.proposalId), {
-        reviewer: typeof req.body?.reviewer === 'string' ? req.body.reviewer : undefined,
-        notes: typeof req.body?.notes === 'string' ? req.body.notes : undefined,
+      const proposalId = readString(req.params.proposalId);
+      if (!proposalId) {
+        res.status(400).json({ success: false, error: 'proposalId is required' });
+        return;
+      }
+      const body = isRecord(req.body) ? req.body : {};
+      const proposal = await selfModificationEngine.approveProposal(proposalId, {
+        reviewer: readString(body.reviewer),
+        notes: readString(body.notes),
       });
 
       res.json({
@@ -202,9 +256,15 @@ export function createSelfModificationRouter(): Router {
 
   router.post('/proposals/:proposalId/reject', async (req, res) => {
     try {
-      const proposal = await selfModificationEngine.rejectProposal(String(req.params.proposalId), {
-        reviewer: typeof req.body?.reviewer === 'string' ? req.body.reviewer : undefined,
-        notes: typeof req.body?.notes === 'string' ? req.body.notes : undefined,
+      const proposalId = readString(req.params.proposalId);
+      if (!proposalId) {
+        res.status(400).json({ success: false, error: 'proposalId is required' });
+        return;
+      }
+      const body = isRecord(req.body) ? req.body : {};
+      const proposal = await selfModificationEngine.rejectProposal(proposalId, {
+        reviewer: readString(body.reviewer),
+        notes: readString(body.notes),
       });
 
       res.json({

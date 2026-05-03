@@ -17,11 +17,12 @@ function parseSurface(value: unknown): MissionSurface | undefined {
     return undefined;
   }
 
-  if (!isMissionSurface(value)) {
-    throw new Error(`Invalid surface parameter: ${value}`);
+  const normalized = value.trim();
+  if (!isMissionSurface(normalized)) {
+    throw new Error(`Invalid surface parameter: ${normalized}`);
   }
 
-  return value;
+  return normalized;
 }
 
 function parseTier(value: unknown): TestCadenceTier | undefined {
@@ -29,11 +30,18 @@ function parseTier(value: unknown): TestCadenceTier | undefined {
     return undefined;
   }
 
-  if (!isTestCadenceTier(value)) {
-    throw new Error(`Invalid tier parameter: ${value}`);
+  const normalized = value.trim();
+  if (!isTestCadenceTier(normalized)) {
+    throw new Error(`Invalid tier parameter: ${normalized}`);
   }
 
-  return value;
+  return normalized;
+}
+
+function readString(value: unknown): string | undefined {
+  if (typeof value !== "string") return undefined;
+  const trimmed = value.trim();
+  return trimmed ? trimmed : undefined;
 }
 
 export function createDevExRouter(): Router {
@@ -41,7 +49,7 @@ export function createDevExRouter(): Router {
 
   router.get("/planner", (req, res) => {
     try {
-      const templateId = typeof req.query.templateId === "string" ? req.query.templateId : undefined;
+      const templateId = readString(req.query.templateId);
       const surface = parseSurface(req.query.surface);
       const tier = parseTier(req.query.tier);
 

@@ -23,6 +23,20 @@ interface ReportRow {
   created_at: string;
 }
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function parseBoolean(value: unknown, fallback: boolean): boolean {
+  if (typeof value === 'boolean') return value;
+  if (typeof value === 'string') {
+    const normalized = value.trim().toLowerCase();
+    if (normalized === 'true') return true;
+    if (normalized === 'false') return false;
+  }
+  return fallback;
+}
+
 /**
  * Creates and returns the Project Maintainer Express router.
  * @param db - SQLite database instance (injected for testability)
@@ -106,7 +120,7 @@ export function createProjectMaintainerRoutes(db: Database.Database): Router {
    */
   router.post('/run', async (req: Request, res: Response) => {
     try {
-      const body = req.body ?? {};
+      const body = isRecord(req.body) ? req.body : {};
       const bodyStr = JSON.stringify(body);
       logInfo('ProjectMaintainerRoute', `On-demand scan triggered via API. Body: ${bodyStr}`);
 
@@ -115,8 +129,7 @@ export function createProjectMaintainerRoutes(db: Database.Database): Router {
         logError('ProjectMaintainerRoute', 'WARNING: Received empty body but content-type was JSON. Possible middleware skip?');
       }
 
-      // Robust boolean check: must be explicitly false (boolean) or "false" (string) to disable dryRun
-      const dryRun = body.dryRun !== false && String(body.dryRun).toLowerCase() !== 'false';
+      const dryRun = parseBoolean(body.dryRun, true);
       logInfo('ProjectMaintainerRoute', `DryRun decided: ${dryRun} (from raw: ${JSON.stringify(req.body)})`);
 
       const report = await runProjectMaintainerReport({

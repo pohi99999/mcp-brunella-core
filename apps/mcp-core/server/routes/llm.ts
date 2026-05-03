@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { chatWithOllama, generateResponse } from '@packages/core-logic/llm_client.js';
+import { chatWithOllama, generateResponse, resolveOllamaFallbackModel } from '@packages/core-logic/llm_client.js';
 import { sendAnthropicMessage } from '@packages/core-logic/anthropicClient.js';
 import { getBifrostGateway } from '@packages/core-logic/bifrost_gateway.js';
 import { logDebug, logError } from '@packages/utils/logger.js';
@@ -20,11 +20,188 @@ interface CatalogProvider {
     models: CatalogModel[];
 }
 
+interface RuntimeModelListResult {
+    models: string[];
+    error?: string;
+}
+
+interface AnythingLLMWorkspaceSummary {
+    id: string;
+    name: string;
+    slug: string;
+}
+
+interface AnythingLLMWorkspaceResult {
+    workspaces: AnythingLLMWorkspaceSummary[];
+    error?: string;
+}
+
+type GenerateProvider = 'ollama' | 'cloudflare' | 'gemini' | 'github' | 'anthropic';
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+    return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function readString(value: unknown): string | null {
+    if (typeof value !== 'string') return null;
+    const trimmed = value.trim();
+    return trimmed ? trimmed : null;
+}
+
+function readGenerateProvider(value: unknown): GenerateProvider | null {
+    const provider = readString(value) ?? 'ollama';
+    if (
+        provider === 'ollama' ||
+        provider === 'cloudflare' ||
+        provider === 'gemini' ||
+        provider === 'github' ||
+        provider === 'anthropic'
+    ) {
+        return provider;
+    }
+    return null;
+}
+
 function parseModelEnvList(envValue: string | undefined, fallback: string[]): string[] {
     const models = (envValue ? envValue.split(',') : fallback)
         .map((name) => name.trim())
         .filter(Boolean);
     return Array.from(new Set(models));
+}
+
+function getGithubTokenEnvName(): string | null {
+    if (process.env.GH_TOKEN) return 'GH_TOKEN';
+    if (process.env.GITHUB_TOKEN) return 'GITHUB_TOKEN';
+    if (process.env.GITHUB_PAT) return 'GITHUB_PAT';
+    return null;
+}
+
+function getGithubDefaultModel(): string {
+    return process.env.GITHUB_MODELS_DEFAULT_MODEL || process.env.GITHUB_MODEL || 'gpt-4.1';
+}
+
+function getAnythingLLMWorkspaceSlug(): string {
+    return process.env.ANYTHINGLLM_WORKSPACE || process.env.ANYTHINGLLM_WORKSPACE_SLUG || 'brunella_main';
+}
+
+function normalizeWorkspace(value: unknown): AnythingLLMWorkspaceSummary | null {
+    if (typeof value !== 'object' || value === null) return null;
+    const record = value as Record<string, unknown>;
+    const slug = typeof record.slug === 'string' ? record.slug : '';
+    if (!slug) return null;
+    return {
+        id: typeof record.id === 'string' ? record.id : slug,
+        name: typeof record.name === 'string' ? record.name : slug,
+        slug,
+    };
+}
+
+async function listOllamaModelNames(baseUrl: string): Promise<RuntimeModelListResult> {
+    try {
+        const response = await fetch(`${baseUrl}/api/tags`, {
+            signal: AbortSignal.timeout(5000),
+        });
+        if (!response.ok) {
+            return { models: [], error: `Ollama API error: ${response.status} ${response.statusText}` };
+        }
+        const data = await response.json() as { models?: Array<{ name?: string }> };
+        const models = (data.models || [])
+            .map((model) => String(model.name || '').trim())
+            .filter(Boolean);
+        return { models: Array.from(new Set(models)) };
+    } catch (error: unknown) {
+        return { models: [], error: ensureError(error).message };
+    }
+}
+
+async function listAnythingLLMWorkspaces(baseUrl: string, apiKey: string | undefined): Promise<AnythingLLMWorkspaceResult> {
+    if (!apiKey) {
+        return { workspaces: [], error: 'ANYTHINGLLM_API_KEY not configured' };
+    }
+    try {
+        const response = await fetch(`${baseUrl}/api/v1/workspaces`, {
+            headers: { Authorization: `Bearer ${apiKey}` },
+            signal: AbortSignal.timeout(5000),
+        });
+        if (!response.ok) {
+            return { workspaces: [], error: `AnythingLLM API error: ${response.status} ${response.statusText}` };
+        }
+        const data = await response.json() as { workspaces?: unknown[] };
+        const workspaces = (data.workspaces || [])
+            .map(normalizeWorkspace)
+            .filter((workspace): workspace is AnythingLLMWorkspaceSummary => workspace !== null);
+        return { workspaces };
+    } catch (error: unknown) {
+        return { workspaces: [], error: ensureError(error).message };
+    }
+}
+
+async function buildOrchestrationReadiness() {
+    const githubModel = getGithubDefaultModel();
+    const githubTokenEnv = getGithubTokenEnvName();
+    const ollamaBaseUrl = process.env.OLLAMA_BASE_URL || 'http://127.0.0.1:11434';
+    const ollamaFallbackModel = resolveOllamaFallbackModel();
+    const anythingBaseUrl = process.env.ANYTHINGLLM_BASE_URL || 'http://localhost:3001';
+    const anythingWorkspaceSlug = getAnythingLLMWorkspaceSlug();
+
+    const [ollamaRuntime, anythingRuntime] = await Promise.all([
+        listOllamaModelNames(ollamaBaseUrl),
+        listAnythingLLMWorkspaces(anythingBaseUrl, process.env.ANYTHINGLLM_API_KEY),
+    ]);
+
+    const fallbackModelAvailable = ollamaRuntime.models.includes(ollamaFallbackModel);
+    const workspace = anythingRuntime.workspaces.find((item) => item.slug === anythingWorkspaceSlug) || null;
+
+    const primaryBlockers = githubTokenEnv ? [] : ['GitHub Models token not configured'];
+    const fallbackBlockers = [
+        ...(ollamaRuntime.error ? [`Ollama runtime unavailable: ${ollamaRuntime.error}`] : []),
+        ...(!fallbackModelAvailable ? [`Ollama fallback model not found: ${ollamaFallbackModel}`] : []),
+    ];
+    const anythingBlockers = [
+        ...(anythingRuntime.error ? [anythingRuntime.error] : []),
+        ...(!workspace ? [`AnythingLLM workspace not found: ${anythingWorkspaceSlug}`] : []),
+    ];
+    const blockers = [...primaryBlockers, ...fallbackBlockers, ...anythingBlockers];
+    const fallbackReady = fallbackBlockers.length === 0;
+    const fullyReady = blockers.length === 0;
+
+    return {
+        summary: {
+            status: fullyReady ? 'ready' : fallbackReady ? 'partial' : 'blocked',
+            blockers,
+        },
+        primary: {
+            provider: 'github',
+            label: 'GitHub Models',
+            model: githubModel,
+            apiModel: githubModel.includes('/') ? githubModel : `openai/${githubModel}`,
+            configured: githubTokenEnv !== null,
+            tokenEnv: githubTokenEnv,
+            blockers: primaryBlockers,
+        },
+        fallback: {
+            provider: 'ollama',
+            label: 'Ollama Local',
+            baseUrl: ollamaBaseUrl,
+            model: ollamaFallbackModel,
+            configured: fallbackReady,
+            availableModels: ollamaRuntime.models,
+            runtimeError: ollamaRuntime.error,
+            blockers: fallbackBlockers,
+        },
+        anythingllm: {
+            baseUrl: anythingBaseUrl,
+            apiKeyConfigured: Boolean(process.env.ANYTHINGLLM_API_KEY),
+            workspace: {
+                slug: anythingWorkspaceSlug,
+                available: workspace !== null,
+                matched: workspace,
+            },
+            workspaces: anythingRuntime.workspaces,
+            runtimeError: anythingRuntime.error,
+            blockers: anythingBlockers,
+        },
+    };
 }
 
 async function buildModelCatalog(): Promise<CatalogProvider[]> {
@@ -126,6 +303,23 @@ async function buildModelCatalog(): Promise<CatalogProvider[]> {
 
 export function createProvidersRoutes(): Router {
     const router = Router();
+
+    router.get('/config', (_req, res) => {
+        const enabledProviders = getBifrostGateway().getEnabledProviders();
+        const cloudProviders = ['github', 'gemini', 'anthropic', 'cloudflare'];
+
+        res.json({
+            enabledProviders,
+            hasLocal: enabledProviders.includes('ollama'),
+            hasCloudFallback: enabledProviders.some((provider) => cloudProviders.includes(provider)),
+            githubConfigured: enabledProviders.includes('github'),
+            cloudflareConfigured: enabledProviders.includes('cloudflare'),
+            defaultModels: {
+                github: process.env.GITHUB_MODELS_DEFAULT_MODEL || process.env.GITHUB_MODEL || 'gpt-4.1',
+                ollama: process.env.OLLAMA_MODEL || 'qwen2.5-coder:7b',
+            },
+        });
+    });
 
     router.get('/status', async (req, res) => {
         try {
@@ -281,7 +475,7 @@ export function createGithubModelsRoutes(): Router {
     router.get('/models', (req, res) => {
         try {
             const envList = process.env.GITHUB_MODELS;
-            const defaultModel = process.env.GITHUB_MODEL || 'gpt-4.1';
+            const defaultModel = getGithubDefaultModel();
             const models = (envList ? envList.split(',') : [defaultModel])
                 .map((name) => name.trim())
                 .filter(Boolean)
@@ -357,6 +551,16 @@ export function createLLMRoutes(): Router {
         }
     });
 
+    router.get('/orchestration-readiness', async (_req, res) => {
+        try {
+            const readiness = await buildOrchestrationReadiness();
+            res.json(readiness);
+        } catch (e: unknown) {
+            const msg = e instanceof Error ? e.message : String(e);
+            res.status(500).json({ error: msg });
+        }
+    });
+
     // GET /api/llm/status
     router.get('/status', async (_req, res) => {
         try {
@@ -388,15 +592,19 @@ export function createLLMRoutes(): Router {
     // POST /api/llm/generate
     router.post('/generate', async (req, res) => {
         try {
-            const { prompt, provider = 'ollama', model, userId } = req.body as {
-                prompt?: string;
-                provider?: string;
-                model?: string;
-                userId?: string;
-            };
+            const body = isRecord(req.body) ? req.body : {};
+            const prompt = readString(body.prompt);
+            const provider = readGenerateProvider(body.provider);
+            const model = readString(body.model) ?? undefined;
+            const userId = readString(body.userId) ?? undefined;
 
             if (!prompt) {
                 res.status(400).json({ error: 'prompt mező kötelező' });
+                return;
+            }
+
+            if (!provider) {
+                res.status(400).json({ error: 'unsupported provider' });
                 return;
             }
 

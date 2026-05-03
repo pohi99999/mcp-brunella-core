@@ -66,6 +66,7 @@ describe('Swarm REST Routes', () => {
   let app: express.Application;
 
   beforeEach(() => {
+    vi.clearAllMocks();
     app = express();
     app.use(express.json());
     app.use('/api/v1/swarm', swarmRouter);
@@ -80,7 +81,7 @@ describe('Swarm REST Routes', () => {
   });
 
   it('POST /api/v1/swarm/dispatch dispatches task to colony', async () => {
-    const res = await request(app).post('/api/v1/swarm/dispatch').send({ task: 'analyse trends' });
+    const res = await request(app).post('/api/v1/swarm/dispatch').send({ task: '  analyse trends  ', colonyId: ' triad-default ' });
     expect(res.status).toBe(200);
     expect(res.body.success).toBe(true);
   });
@@ -107,11 +108,20 @@ describe('Swarm REST Routes', () => {
   it('POST /api/v1/swarm/create creates a swarm chat session', async () => {
     const res = await request(app)
       .post('/api/v1/swarm/create')
-      .send({ objective: 'Review architecture', participants: ['Researcher', 'Developer'] });
+      .send({ objective: '  Review architecture  ', participants: [' Researcher ', 'Developer'] });
 
     expect(res.status).toBe(200);
     expect(res.body.success).toBe(true);
     expect(createSessionMock).toHaveBeenCalledWith('Review architecture', ['Researcher', 'Developer']);
+  });
+
+  it('POST /api/v1/swarm/create rejects invalid participants', async () => {
+    const res = await request(app)
+      .post('/api/v1/swarm/create')
+      .send({ objective: 'Review architecture', participants: ['Researcher', ''] });
+
+    expect(res.status).toBe(400);
+    expect(createSessionMock).not.toHaveBeenCalled();
   });
 
   it('GET /api/v1/swarm/checkpoints/stats returns checkpoint summary', async () => {
@@ -128,7 +138,7 @@ describe('Swarm REST Routes', () => {
   });
 
   it('GET /api/v1/swarm/checkpoints returns the checkpoint list for a colony', async () => {
-    const res = await request(app).get('/api/v1/swarm/checkpoints?swarmId=triad-default');
+    const res = await request(app).get('/api/v1/swarm/checkpoints?swarmId=%20triad-default%20');
     expect(res.status).toBe(200);
     expect(res.body.total).toBe(1);
     expect(listCheckpointsMock).toHaveBeenCalledWith('triad-default');

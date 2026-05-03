@@ -1,0 +1,23 @@
+id: docs-config
+title: Docs and Config Mission
+description: Synchronize documentation and config changes for a repo-wide workflow update.
+goal: Keep the operator docs, generated notes, and runtime config aligned.
+surface: docs
+category: 02-docs
+tags:
+  - docs
+  - config
+  - sync
+steps:
+  - Review the source docs and current configuration layout.
+  - Update the relevant documentation and generated sync outputs.
+  - Run the documentation sync command to refresh derived notes.
+  - Confirm the resulting markdown reflects the new workflow.
+commands:
+  - python scripts/sync_foszal.py
+  - npm run sync:doc-stats
+artifacts:
+  - README.md
+  - .ai/FOSZAL.md
+trackRefs:
+  - .ai/copilot.md

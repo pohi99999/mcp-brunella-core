@@ -126,10 +126,10 @@ describe('HR onboarding routes', () => {
     expect(sampleResponse.body.samples).toHaveLength(1);
     expect(samplesMock).toHaveBeenCalledTimes(1);
 
-    const jobsResponse = await request(app).get('/api/v1/hr-onboarding/jobs').query({ limit: 2 });
+    const jobsResponse = await request(app).get('/api/v1/hr-onboarding/jobs').query({ limit: ' 999 ' });
     expect(jobsResponse.status).toBe(200);
     expect(jobsResponse.body.jobs).toHaveLength(1);
-    expect(jobsMock).toHaveBeenCalledWith(2, 'hr_onboarding');
+    expect(jobsMock).toHaveBeenCalledWith(50, 'hr_onboarding');
 
     const dryRunResponse = await request(app)
       .post('/api/v1/hr-onboarding/dry-run')

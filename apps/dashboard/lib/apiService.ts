@@ -682,6 +682,46 @@ export interface LLMModelCatalog {
   providers: LLMCatalogProvider[];
 }
 
+export type LLMOrchestrationReadinessStatus = "ready" | "partial" | "blocked";
+
+export interface LLMOrchestrationReadiness {
+  summary: {
+    status: LLMOrchestrationReadinessStatus;
+    blockers: string[];
+  };
+  primary: {
+    provider: "github";
+    label: string;
+    model: string;
+    apiModel: string;
+    configured: boolean;
+    tokenEnv: string | null;
+    blockers: string[];
+  };
+  fallback: {
+    provider: "ollama";
+    label: string;
+    baseUrl: string;
+    model: string;
+    configured: boolean;
+    availableModels: string[];
+    runtimeError?: string;
+    blockers: string[];
+  };
+  anythingllm: {
+    baseUrl: string;
+    apiKeyConfigured: boolean;
+    workspace: {
+      slug: string;
+      available: boolean;
+      matched: Workspace | null;
+    };
+    workspaces: Workspace[];
+    runtimeError?: string;
+    blockers: string[];
+  };
+}
+
 export interface AnthropicTestResponse {
   ok?: boolean;
   reply?: string;
@@ -709,6 +749,18 @@ export async function getLLMModelCatalog(): Promise<LLMModelCatalog> {
     throw new Error(`LLM model catalog: HTTP ${response.status}`);
   }
   return safeJson<LLMModelCatalog>(response);
+}
+
+export async function getLLMOrchestrationReadiness(): Promise<LLMOrchestrationReadiness> {
+  const response = await fetchWithTimeout(
+    `${API_BASE}/api/llm/orchestration-readiness`,
+    {},
+    15000,
+  );
+  if (!response.ok) {
+    throw new Error(`LLM orchestration readiness: HTTP ${response.status}`);
+  }
+  return safeJson<LLMOrchestrationReadiness>(response);
 }
 
 export type AssistantReadinessStatus = "ready" | "partial" | "planned";
@@ -1240,6 +1292,33 @@ export interface HookObservabilityResponse {
   snapshot: HookObservabilitySnapshot;
 }
 
+export type HookReadinessStatus = "ready" | "partial" | "blocked";
+
+export interface HookReadinessResponse {
+  success: boolean;
+  readiness: {
+    status: HookReadinessStatus;
+    blockers: string[];
+    summary: HookSummary;
+    registry: {
+      totalEvents: number;
+      enabledEvents: number;
+      registeredHandlers: number;
+      enabledHandlers: number;
+      disabledEvents: number;
+    };
+    circuits: {
+      open: HookCircuitSnapshot[];
+      total: number;
+    };
+    dlq: {
+      count: number;
+      entries: HookDlqEntry[];
+    };
+    recentFailures: HookExecutionRecord[];
+  };
+}
+
 export async function getDevExPlannerSnapshot(
   templateId?: string,
   surface?: MissionSurface,
@@ -1318,6 +1397,14 @@ export async function getHookObservabilitySnapshot(windowHours: number = 24): Pr
     throw new Error(`Hook observability: HTTP ${response.status}`);
   }
   return safeJson<HookObservabilityResponse>(response);
+}
+
+export async function getHookReadiness(windowHours: number = 24): Promise<HookReadinessResponse> {
+  const response = await fetchWithTimeout(`${API_BASE}/api/v1/hooks/readiness?hours=${windowHours}`);
+  if (!response.ok) {
+    throw new Error(`Hook readiness: HTTP ${response.status}`);
+  }
+  return safeJson<HookReadinessResponse>(response);
 }
 
 export async function getKkvPackSnapshot(packId?: string): Promise<KkvPackResponse> {
@@ -4310,4 +4397,3 @@ export async function getRemoteToken(userId: string): Promise<{ token: string, e
   if (!response.ok) throw new Error(`Get remote token failed: ${response.status}`);
   return safeJson<{ token: string, expiresAt: number }>(response);
 }
-

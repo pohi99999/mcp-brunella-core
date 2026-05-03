@@ -11,11 +11,45 @@
 import { Router, Request, Response } from 'express';
 import {
   copilotOrchestratorBridge,
-  OrchestratorStepStatus,
 } from '@packages/core-logic/copilotOrchestratorBridge.js';
+import type { OrchestratorStepStatus } from '@packages/core-logic/copilotOrchestratorBridge.js';
 import { logInfo, logError } from '@packages/utils/logger.js';
 
 const TAG = 'CopilotOrchestratorRoute';
+const STEP_STATUSES = new Set<OrchestratorStepStatus>(['running', 'success', 'error', 'skipped']);
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function readString(value: unknown): string | null {
+  if (typeof value !== 'string') return null;
+  const trimmed = value.trim();
+  return trimmed ? trimmed : null;
+}
+
+function readOptionalString(value: unknown): string | undefined {
+  return typeof value === 'string' && value.trim() ? value.trim() : undefined;
+}
+
+function readStepStatus(value: unknown): OrchestratorStepStatus | undefined | null {
+  if (value === undefined) return undefined;
+  return typeof value === 'string' && STEP_STATUSES.has(value as OrchestratorStepStatus)
+    ? (value as OrchestratorStepStatus)
+    : null;
+}
+
+function readConfidence(value: unknown): number | undefined | null {
+  if (value === undefined) return undefined;
+  if (typeof value !== 'number' || !Number.isFinite(value) || value < 0 || value > 1) return null;
+  return value;
+}
+
+function readLimit(value: unknown): number {
+  const parsed = Number(value);
+  if (!Number.isFinite(parsed)) return 50;
+  return Math.min(Math.max(Math.trunc(parsed), 1), 200);
+}
 
 export function createCopilotOrchestratorRoutes(): Router {
   const router = Router();
@@ -34,7 +68,7 @@ export function createCopilotOrchestratorRoutes(): Router {
   // ── GET /steps ── Recent orchestration steps (flat timeline) ─────
   router.get('/steps', (req: Request, res: Response) => {
     try {
-      const limit = Math.min(Number(req.query.limit) || 50, 200);
+      const limit = readLimit(req.query.limit);
       res.json(copilotOrchestratorBridge.getRecentSteps(limit));
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : String(err);
@@ -75,10 +109,9 @@ export function createCopilotOrchestratorRoutes(): Router {
   // ── PATCH /sessions/:id ── Complete or fail a session ───────────
   router.patch('/sessions/:id', (req: Request, res: Response) => {
     try {
-      const { status, summary } = req.body as {
-        status?: 'completed' | 'failed';
-        summary?: string;
-      };
+      const body = isRecord(req.body) ? req.body : {};
+      const status = body.status;
+      const summary = readOptionalString(body.summary);
 
       let session = null;
       if (status === 'completed') {
@@ -107,29 +140,34 @@ export function createCopilotOrchestratorRoutes(): Router {
   // This is the main endpoint called by the Copilot CLI agent.
   router.post('/log', (req: Request, res: Response) => {
     try {
-      const { sessionId, step, status, detail, delegateTo, confidence, model } = req.body as {
-        sessionId?: string;
-        step?: string;
-        status?: OrchestratorStepStatus;
-        detail?: string;
-        delegateTo?: string;
-        confidence?: number;
-        model?: string;
-      };
+      const body = isRecord(req.body) ? req.body : {};
+      const step = readString(body.step);
+      const status = readStepStatus(body.status);
+      const confidence = readConfidence(body.confidence);
 
       if (!step) {
         res.status(400).json({ error: '"step" is required' });
         return;
       }
 
+      if (status === null) {
+        res.status(400).json({ error: 'status must be one of: running, success, error, skipped' });
+        return;
+      }
+
+      if (confidence === null) {
+        res.status(400).json({ error: 'confidence must be a number between 0 and 1' });
+        return;
+      }
+
       const stepObj = copilotOrchestratorBridge.addStep({
-        sessionId,
+        sessionId: readOptionalString(body.sessionId),
         step,
         status,
-        detail,
-        delegateTo,
+        detail: readOptionalString(body.detail),
+        delegateTo: readOptionalString(body.delegateTo),
         confidence,
-        model,
+        model: readOptionalString(body.model),
       });
 
       logInfo(TAG, `Step logged: ${step} (${status ?? 'running'})`);
@@ -144,16 +182,23 @@ export function createCopilotOrchestratorRoutes(): Router {
   // ── PATCH /steps/:sessionId/:stepId ── Update existing step ─────
   router.patch('/steps/:sessionId/:stepId', (req: Request, res: Response) => {
     try {
-      const { status, detail, model } = req.body as {
-        status?: OrchestratorStepStatus;
-        detail?: string;
-        model?: string;
-      };
+      const body = isRecord(req.body) ? req.body : {};
+      const status = readStepStatus(body.status);
+
+      if (status === null) {
+        res.status(400).json({ error: 'status must be one of: running, success, error, skipped' });
+        return;
+      }
 
       const step = copilotOrchestratorBridge.updateStep(
         String(req.params.sessionId),
         String(req.params.stepId),
-        { status, detail, model, completedAt: status && status !== 'running' ? Date.now() : undefined },
+        {
+          status,
+          detail: readOptionalString(body.detail),
+          model: readOptionalString(body.model),
+          completedAt: status && status !== 'running' ? Date.now() : undefined,
+        },
       );
 
       if (!step) {

@@ -1,12 +1,24 @@
 // scripts/sync/precommit-track-guard.mts
 // Ellenőrzi: minden módosított src/ fájl mögött van-e aktív track
-import { execSync } from 'child_process';
+import { spawnSync } from 'child_process';
 import fs from 'fs';
 import path from 'path';
 
 try {
   // 1. Megszerezzük a módosított TypeScript forrásfájlokat
-  const changed = execSync('git diff --cached --name-only').toString().split('\n').filter(Boolean);
+  const diffResult = spawnSync('git', ['diff', '--cached', '--name-only', '--', 'src'], {
+    encoding: 'utf8',
+  });
+
+  if (diffResult.error) {
+    throw diffResult.error;
+  }
+
+  if (diffResult.status !== 0) {
+    throw new Error(diffResult.stderr || `git diff failed with exit code ${diffResult.status}`);
+  }
+
+  const changed = (diffResult.stdout ?? '').split('\n').filter(Boolean);
   const srcFiles = changed.filter(f => f.startsWith('src/') && (f.endsWith('.ts') || f.endsWith('.tsx')));
 
   if (srcFiles.length === 0) {
@@ -23,10 +35,12 @@ try {
 
   const tracksRaw = fs.readFileSync(tracksPath, 'utf8');
   
-  // Keressük az aktív trackeket ( [~] jelölés a BAS konvenció szerint)
-  const activeTracks = tracksRaw.match(/- \[~\] \*\*Track:/g) || 
-                       tracksRaw.match(/## \[~\] Track:/g) ||
-                       tracksRaw.match(/- \[~\] \*\*.+\*\*/g); // Általánosabb illeszkedés
+  // Keressük az aktív trackeket az "Aktiv Szalak" szekcióban.
+  const activeSectionMatch = tracksRaw.match(/## Aktiv Szalak[\s\S]*?\n---/);
+  const activeSection = activeSectionMatch?.[0] ?? tracksRaw;
+  const activeTracks =
+    activeSection.match(/- \[(?:~| )\] \*\*.+\*\*/g) ||
+    activeSection.match(/- \[(?:~| )\] \*\*Track:.*/g);
 
   if (!activeTracks || activeTracks.length === 0) {
     console.error('\n' + '!'.repeat(80));

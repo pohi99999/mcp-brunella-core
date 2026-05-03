@@ -77,7 +77,7 @@ describe("Remote routes", () => {
   async function issueToken(app: express.Express): Promise<string> {
     const response = await request(app)
       .post("/api/v1/remote/auth/token")
-      .send({ userId: "dashboard-user" });
+      .send({ userId: "  dashboard-user  ", ttlMs: 99_999_999 });
 
     expect(response.status).toBe(200);
     expect(response.body.token).toBeTypeOf("string");
@@ -108,8 +108,8 @@ describe("Remote routes", () => {
       .post("/api/v1/remote/sessions")
       .set(authHeader)
       .send({
-        targetId: "mcp:test-server",
-        userId: "dashboard-user",
+        targetId: "  mcp:test-server  ",
+        userId: "  dashboard-user  ",
         metadata: { source: "test" },
       });
 
@@ -128,9 +128,9 @@ describe("Remote routes", () => {
       .post("/api/v1/remote/commands")
       .set(authHeader)
       .send({
-        sessionId,
-        targetId: "mcp:test-server",
-        toolName: "list_tools",
+        sessionId: `  ${sessionId}  `,
+        targetId: "  mcp:test-server  ",
+        toolName: "  list_tools  ",
         input: { limit: 5 },
       });
 
@@ -164,5 +164,60 @@ describe("Remote routes", () => {
       userId: "dashboard-user",
     });
     expect(sessionFetch.body.session.commands).toHaveLength(1);
+  });
+
+  it("rejects non-object remote command input before dispatch", async () => {
+    const app = await createApp();
+    const token = await issueToken(app);
+    const authHeader = { Authorization: `Bearer ${token}` };
+
+    const sessionResponse = await request(app)
+      .post("/api/v1/remote/sessions")
+      .set(authHeader)
+      .send({ targetId: "mcp:test-server", userId: "dashboard-user" });
+    const sessionId = sessionResponse.body.sessionId as string;
+
+    const response = await request(app)
+      .post("/api/v1/remote/commands")
+      .set(authHeader)
+      .send({
+        sessionId,
+        targetId: "mcp:test-server",
+        toolName: "list_tools",
+        input: ["not-object"],
+      });
+
+    expect(response.status).toBe(400);
+    expect(response.body.error).toBe("input must be an object when provided");
+    expect(callToolMock).not.toHaveBeenCalled();
+  });
+
+  it("normalizes PAIOS remote actions before enqueueing", async () => {
+    const app = await createApp();
+    const token = await issueToken(app);
+    const authHeader = { Authorization: `Bearer ${token}` };
+
+    const sessionResponse = await request(app)
+      .post("/api/v1/remote/sessions")
+      .set(authHeader)
+      .send({ targetId: "mcp:test-server", userId: "dashboard-user" });
+    const sessionId = sessionResponse.body.sessionId as string;
+
+    const response = await request(app)
+      .post("/api/v1/remote/paios/action")
+      .set(authHeader)
+      .send({
+        sessionId: `  ${sessionId}  `,
+        action: {
+          actionId: "  action-1  ",
+          type: "  remote_help  ",
+          description: "  help  ",
+          payload: ["ignored"],
+          priority: 2.8,
+        },
+      });
+
+    expect(response.status).toBe(202);
+    expect(response.body).toEqual({ actionId: "action-1", status: "queued" });
   });
 });

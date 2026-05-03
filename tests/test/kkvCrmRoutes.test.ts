@@ -31,18 +31,18 @@ describe('kkv CRM routes', () => {
   it('ingests a lead through the HTTP route', async () => {
     const res = await request(app)
       .post('/api/v1/kkv-crm/leads')
-      .set('x-workflow-id', 'wf-kkv-crm-1')
+      .set('x-workflow-id', ' wf-kkv-crm-1 ')
       .send({
-        source: 'webhook',
+        source: ' webhook ',
         payload: {
-          id: 'route-lead-1',
-          email: 'route@example.com',
-          phone: '+36-30-555-3333',
-          company: 'Route Kft',
-          created_at: '2026-04-04T13:00:00Z',
-          urgency: 'high',
+          id: ' route-lead-1 ',
+          email: ' route@example.com ',
+          phone: ' +36-30-555-3333 ',
+          company: ' Route Kft ',
+          created_at: ' 2026-04-04T13:00:00Z ',
+          urgency: ' high ',
           budget: 9000,
-          timeline: 'soon',
+          timeline: ' soon ',
         },
       });
 
@@ -56,6 +56,7 @@ describe('kkv CRM routes', () => {
       }),
     );
     expect(res.body.lead.id).toBe('route-lead-1');
+    expect(res.body.lead.company).toBe('Route Kft');
     expect(res.body.followUpPlan).toBeTruthy();
     expect(res.body.snapshot.leadStats.total).toBe(1);
   });

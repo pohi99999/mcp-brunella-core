@@ -13,12 +13,13 @@ app.use('/api/v1/harvest', harvestRouter);
 describe('Harvest Routes', () => {
   it('POST /sync returns success', async () => {
     const res = await request(app).post('/api/v1/harvest/sync').send({
-      source: 'github-trending',
-      items: [{ title: 'Test', summary: 'Test summary' }]
+      source: ' github-trending ',
+      items: [{ title: 'Test', summary: 'Test summary' }, 'invalid-item']
     });
     expect(res.status).toBe(200);
     expect(res.body.success).toBe(true);
     expect(res.body.received).toBe(1);
+    expect(res.body.source).toBe('github-trending');
   });
 
   it('GET /status returns harvest time', async () => {

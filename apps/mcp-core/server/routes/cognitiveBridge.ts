@@ -9,11 +9,35 @@ import {
   enrich,
   reflect,
   getCognitiveStats,
-  type EnrichmentRequest,
-  type ReflectRequest,
 } from '@packages/core-logic/copilotCognitiveBridge.js';
 
 const MODULE = 'CognitiveBridgeRoute';
+const QUERY_LAYERS = new Set(['structured', 'graphrag', 'preferences', 'golden']);
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function readString(value: unknown): string | null {
+  if (typeof value !== 'string') return null;
+  const trimmed = value.trim();
+  return trimmed ? trimmed : null;
+}
+
+function readOptionalString(value: unknown): string | undefined {
+  return readString(value) ?? undefined;
+}
+
+function readPositiveInteger(value: unknown, fallback: number, max: number): number {
+  if (typeof value !== 'number' || !Number.isFinite(value)) return fallback;
+  return Math.min(Math.max(Math.trunc(value), 1), max);
+}
+
+function readConfidence(value: unknown): number | undefined | null {
+  if (value === undefined) return undefined;
+  if (typeof value !== 'number' || !Number.isFinite(value) || value < 0 || value > 1) return null;
+  return value;
+}
 
 export function createCognitiveBridgeRoutes(): Router {
   const router = Router();
@@ -24,16 +48,17 @@ export function createCognitiveBridgeRoutes(): Router {
    */
   router.post('/enrich', async (req, res) => {
     try {
-      const body = req.body as Partial<EnrichmentRequest>;
-      if (!body.query || typeof body.query !== 'string') {
+      const body = isRecord(req.body) ? req.body : {};
+      const query = readString(body.query);
+      if (!query) {
         res.status(400).json({ success: false, error: 'query is required (string)' });
         return;
       }
       const result = await enrich({
-        query: body.query,
-        userId: body.userId,
-        agentName: body.agentName,
-        maxResults: body.maxResults,
+        query,
+        userId: readOptionalString(body.userId),
+        agentName: readOptionalString(body.agentName),
+        maxResults: readPositiveInteger(body.maxResults, 5, 50),
       });
       logInfo(MODULE, `Enrichment: ${result.layers.filter(l => l.status === 'ok').length} layers OK (${result.processingTimeMs}ms)`);
       res.json({ success: true, data: result });
@@ -50,21 +75,33 @@ export function createCognitiveBridgeRoutes(): Router {
    */
   router.post('/reflect', async (req, res) => {
     try {
-      const body = req.body as Partial<ReflectRequest>;
-      if (!body.taskId || !body.agentName || !body.task || body.result === undefined || body.success === undefined) {
+      const body = isRecord(req.body) ? req.body : {};
+      const taskId = readString(body.taskId);
+      const agentName = readString(body.agentName);
+      const task = readString(body.task);
+      const resultText = readString(body.result);
+      const confidence = readConfidence(body.confidence);
+
+      if (!taskId || !agentName || !task || !resultText || typeof body.success !== 'boolean') {
         res.status(400).json({
           success: false,
           error: 'Required: taskId, agentName, task, result, success'
         });
         return;
       }
+
+      if (confidence === null) {
+        res.status(400).json({ success: false, error: 'confidence must be a number between 0 and 1' });
+        return;
+      }
+
       const result = await reflect({
-        taskId: body.taskId,
-        agentName: body.agentName,
-        task: body.task,
-        result: body.result,
+        taskId,
+        agentName,
+        task,
+        result: resultText,
         success: body.success,
-        confidence: body.confidence,
+        confidence,
       });
       logInfo(MODULE, `Reflection stored in ${result.layers.length} layers`);
       res.json({ success: true, data: result });
@@ -95,9 +132,17 @@ export function createCognitiveBridgeRoutes(): Router {
    */
   router.post('/query', async (req, res) => {
     try {
-      const { layer, query, params } = req.body as { layer?: string; query?: string; params?: Record<string, unknown> };
+      const body = isRecord(req.body) ? req.body : {};
+      const layer = readString(body.layer);
+      const query = readString(body.query);
+      const params = isRecord(body.params) ? body.params : {};
       if (!layer || !query) {
         res.status(400).json({ success: false, error: 'Required: layer, query' });
+        return;
+      }
+
+      if (!QUERY_LAYERS.has(layer)) {
+        res.status(400).json({ success: false, error: `Unknown layer: ${layer}. Valid: structured, graphrag, preferences, golden` });
         return;
       }
 
@@ -106,28 +151,25 @@ export function createCognitiveBridgeRoutes(): Router {
         case 'structured':
           result = (await import('@packages/core-logic/structuredMemory.js')).queryMemory({
             task: query,
-            agentName: params?.agentName as string | undefined,
-            limit: (params?.limit as number) ?? 10,
+            agentName: readOptionalString(params.agentName),
+            limit: readPositiveInteger(params.limit, 10, 50),
           });
           break;
         case 'graphrag': {
           const gr = (await import('@packages/core-logic/graphRagEngine.js')).GraphRagEngine.getInstance();
-          result = gr.queryContext(query, (params?.maxNodes as number) ?? 10);
+          result = gr.queryContext(query, readPositiveInteger(params.maxNodes, 10, 50));
           break;
         }
         case 'preferences':
           result = (await import('@packages/core-logic/userPreferences.js')).queryPreferences({
-            user_id: (params?.userId as string) ?? 'default',
+            user_id: readString(params.userId) ?? 'default',
             key: query,
-            limit: (params?.limit as number) ?? 10,
+            limit: readPositiveInteger(params.limit, 10, 50),
           });
           break;
         case 'golden':
           result = await (await import('@packages/core-logic/goldenDatasetBridge.js')).getGoldenStats();
           break;
-        default:
-          res.status(400).json({ success: false, error: `Unknown layer: ${layer}. Valid: structured, graphrag, preferences, golden` });
-          return;
       }
 
       res.json({ success: true, layer, data: result });

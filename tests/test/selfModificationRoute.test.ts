@@ -65,13 +65,15 @@ describe('SelfModification route', () => {
     });
 
     const response = await request(app)
-      .post('/api/v1/self-modification/improve/MarketingDirector')
-      .send({ force: true, minRuns: 5 });
+      .post('/api/v1/self-modification/improve/%20MarketingDirector%20')
+      .send({ force: ' true ', minRuns: 5, successThreshold: 7, durationThresholdMs: -10 });
 
     expect(response.status).toBe(200);
     expect(selfModHarness.improveAgent).toHaveBeenCalledWith('MarketingDirector', expect.objectContaining({
       force: true,
       minRuns: 5,
+      successThreshold: 1,
+      durationThresholdMs: 0,
       triggeredBy: 'api',
     }));
     expect(response.body.data.id).toBe('proposal-1');
@@ -82,11 +84,39 @@ describe('SelfModification route', () => {
       { id: 'proposal-2', status: 'approved' },
     ]);
 
-    const response = await request(app).get('/api/v1/self-modification/proposals?status=approved&limit=5');
+    const response = await request(app).get('/api/v1/self-modification/proposals?status=approved&limit=999');
 
     expect(response.status).toBe(200);
-    expect(selfModHarness.listProposals).toHaveBeenCalledWith('approved', 5);
+    expect(selfModHarness.listProposals).toHaveBeenCalledWith('approved', 100);
     expect(response.body.count).toBe(1);
+  });
+
+  it('normalizes weak-agent query bounds', async () => {
+    const response = await request(app)
+      .get('/api/v1/self-modification/weak-agents?days=999&successThreshold=-2&durationThresholdMs=-5&minRuns=0&limit=999');
+
+    expect(response.status).toBe(200);
+    expect(trackerHarness.getWeakAgents).toHaveBeenCalledWith({
+      days: 365,
+      successThreshold: 0,
+      durationThresholdMs: 1,
+      minRuns: 1,
+      limit: 50,
+    });
+  });
+
+  it('trims proposal review inputs', async () => {
+    selfModHarness.approveProposal.mockResolvedValue({ id: 'proposal-3', status: 'approved' });
+
+    const response = await request(app)
+      .post('/api/v1/self-modification/proposals/%20proposal-3%20/approve')
+      .send({ reviewer: '  dashboard  ', notes: '  accepted  ' });
+
+    expect(response.status).toBe(200);
+    expect(selfModHarness.approveProposal).toHaveBeenCalledWith('proposal-3', {
+      reviewer: 'dashboard',
+      notes: 'accepted',
+    });
   });
 
   it('returns 400 when approval fails', async () => {

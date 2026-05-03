@@ -113,6 +113,7 @@ interface PaiosChatResponse {
 
 type ModelProvider = 'gemini' | 'github' | 'ollama' | 'anthropic' | 'cloudflare' | 'copilot';
 type VoiceOption = 'alloy' | 'echo' | 'fable' | 'onyx' | 'nova' | 'shimmer';
+type VoiceMode = 'nova-tts' | 'browser-fallback-female' | 'browser-fallback-default' | 'unavailable';
 
 interface PaiosVoiceConfig {
     response_voice: VoiceOption;
@@ -211,6 +212,8 @@ function isModelProvider(value: string): value is ModelProvider {
 }
 
 const SESSION_STORAGE_KEY = 'paios_orchestrator_session_id';
+const FEMALE_VOICE_HINTS = ['female', 'woman', 'samantha', 'zira', 'eva', 'anna', 'katja', 'julia', 'victoria', 'nova', 'shimmer', 'zsuzsanna', 'agnes', 'ágnes', 'ildiko', 'ildikó'];
+const MALE_VOICE_HINTS = ['male', 'man', 'szabolcs', 'daniel', 'dániel', 'onyx', 'echo', 'fable'];
 
 function createSessionId(): string {
     const randomPart = Math.random().toString(36).slice(2, 10);
@@ -219,9 +222,6 @@ function createSessionId(): string {
 
 function selectPreferredSpeechVoice(voices: SpeechSynthesisVoice[], preferredVoice: VoiceOption): SpeechSynthesisVoice | undefined {
     const normalizedPreferredVoice = preferredVoice.toLowerCase();
-    // Extended female hints — Windows, macOS, common TTS names
-    const femaleHints = ['female', 'woman', 'samantha', 'zira', 'eva', 'anna', 'katja', 'julia', 'victoria', 'nova', 'shimmer', 'zsuzsanna', 'agnes', 'ágnes', 'ildiko', 'ildikó'];
-    const maleHints = ['male', 'man', 'szabolcs', 'daniel', 'dániel', 'onyx', 'echo', 'fable'];
     const preferredLocaleVoices = voices.filter((voice) => voice.lang.toLowerCase().startsWith('hu'));
 
     // 1. Exact name match (e.g. browser has a "nova" voice)
@@ -230,24 +230,32 @@ function selectPreferredSpeechVoice(voices: SpeechSynthesisVoice[], preferredVoi
 
     // 2. Hungarian female voice
     const huFemale = preferredLocaleVoices.find((voice) =>
-        femaleHints.some((hint) => voice.name.toLowerCase().includes(hint))
+        FEMALE_VOICE_HINTS.some((hint) => voice.name.toLowerCase().includes(hint))
     );
     if (huFemale) return huFemale;
 
     // 3. Hungarian voice that is NOT male (skip Szabolcs etc.)
     const huNonMale = preferredLocaleVoices.find((voice) =>
-        !maleHints.some((hint) => voice.name.toLowerCase().includes(hint))
+        !MALE_VOICE_HINTS.some((hint) => voice.name.toLowerCase().includes(hint))
     );
     if (huNonMale) return huNonMale;
 
     // 4. Any female voice
     const anyFemale = voices.find((voice) =>
-        femaleHints.some((hint) => voice.name.toLowerCase().includes(hint))
+        FEMALE_VOICE_HINTS.some((hint) => voice.name.toLowerCase().includes(hint))
     );
     if (anyFemale) return anyFemale;
 
     // 5. Last resort: first available (better than silence)
     return voices[0];
+}
+
+function classifyBrowserVoice(voice: SpeechSynthesisVoice | undefined): VoiceMode {
+    if (!voice) return 'browser-fallback-default';
+    const name = voice.name.toLowerCase();
+    return FEMALE_VOICE_HINTS.some((hint) => name.includes(hint))
+        ? 'browser-fallback-female'
+        : 'browser-fallback-default';
 }
 
 export function PAIOSOrchestratorChat() {
@@ -265,6 +273,13 @@ export function PAIOSOrchestratorChat() {
     const activeVoiceLabel = voiceConfig.response_voice === 'nova'
         ? 'Nova női hang'
         : voiceConfig.response_voice;
+    const [voiceMode, setVoiceMode] = useState<VoiceMode>('unavailable');
+    const voiceStatusLabel: Record<VoiceMode, string> = {
+        'nova-tts': `${activeVoiceLabel} aktív`,
+        'browser-fallback-female': 'Böngésző női fallback',
+        'browser-fallback-default': 'Böngésző fallback',
+        unavailable: 'Hang nem ellenőrzött',
+    };
     const [sessionId, setSessionId] = useState<string>(() => {
         if (typeof window === 'undefined') {
             return createSessionId();
@@ -407,6 +422,7 @@ export function PAIOSOrchestratorChat() {
                 audio.onended = () => { setIsSpeaking(false); URL.revokeObjectURL(audioUrl); };
                 audio.onerror = () => { setIsSpeaking(false); URL.revokeObjectURL(audioUrl); };
                 await audio.play();
+                setVoiceMode('nova-tts');
                 toast.success(`🎙️ Brunella beszél... (${activeVoiceLabel})`);
                 return;
             }
@@ -425,11 +441,18 @@ export function PAIOSOrchestratorChat() {
             if (preferredVoice) {
                 utterance.voice = preferredVoice;
             }
+            const fallbackMode = classifyBrowserVoice(preferredVoice);
+            setVoiceMode(fallbackMode);
+            toast.warning(fallbackMode === 'browser-fallback-female'
+                ? 'Nova TTS nem elérhető, női böngészőhangot használok.'
+                : 'Nova TTS nem elérhető, böngészőhang fallback aktív.');
             utterance.onend = () => setIsSpeaking(false);
             utterance.onerror = () => setIsSpeaking(false);
             window.speechSynthesis.speak(utterance);
         } else {
+            setVoiceMode('unavailable');
             setIsSpeaking(false);
+            toast.error('A hangos válasz nem érhető el ebben a böngészőben.');
         }
     };
 
@@ -667,7 +690,7 @@ export function PAIOSOrchestratorChat() {
                         Session: <span className="font-mono">{ sessionId.slice(-12) }</span>
                     </p>
                         <Badge variant="secondary" className="h-5 px-2 text-[10px]">
-                            🎙️ { activeVoiceLabel }
+                            🎙️ { voiceStatusLabel[voiceMode] }
                         </Badge>
                 </div>
             </CardHeader>

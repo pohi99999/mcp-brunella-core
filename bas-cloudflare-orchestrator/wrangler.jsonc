@@ -1,0 +1,20 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "bas-cloudflare-orchestrator",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-04-22",
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "SWARM_COORDINATOR",
+        "class_name": "SwarmCoordinator"
+      }
+    ]
+  },
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_classes": ["SwarmCoordinator"]
+    }
+  ]
+}

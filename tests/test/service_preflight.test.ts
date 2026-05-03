@@ -25,10 +25,10 @@ describe('service preflight', () => {
         [
           '/repo/build/index.js',
           '/repo/build/public/index.html',
-          '/repo/myai/server.py',
-          '/repo/scripts/supervisors/linux/run-brunella-core.sh',
-          '/repo/scripts/supervisors/linux/run-brunella-python.sh',
-          '/repo/myai/.venv/bin/python',
+          '/repo/packages/myai/server.py',
+          '/repo/ops/scripts/supervisors/linux/run-brunella-core.sh',
+          '/repo/ops/scripts/supervisors/linux/run-brunella-python.sh',
+          '/repo/packages/myai/.venv/bin/python',
         ].includes(targetPath),
       commandExists: vi.fn(() => false),
       ensureWritableDir: vi.fn(),
@@ -45,9 +45,9 @@ describe('service preflight', () => {
       env: {},
       pathExists: (targetPath: string) =>
         [
-          'C:\\repo\\myai\\server.py',
-          'C:\\repo\\scripts\\supervisors\\windows\\run-brunella-core.ps1',
-          'C:\\repo\\scripts\\supervisors\\windows\\run-brunella-python.ps1',
+          'C:\\repo\\packages\\myai\\server.py',
+          'C:\\repo\\ops\\scripts\\supervisors\\windows\\run-brunella-core.ps1',
+          'C:\\repo\\ops\\scripts\\supervisors\\windows\\run-brunella-python.ps1',
         ].includes(targetPath),
       commandExists: vi.fn(() => true),
       ensureWritableDir: vi.fn(),
@@ -61,9 +61,9 @@ describe('service preflight', () => {
     const windowsCandidates = getPythonRuntimeCandidates('windows', 'C:\\repo');
     const linuxCandidates = getPythonRuntimeCandidates('linux', '/repo');
 
-    expect(windowsCandidates.paths[0]).toContain('myai');
+    expect(windowsCandidates.paths[0]).toContain('packages\\myai');
     expect(windowsCandidates.commands).toContain('uv');
-    expect(linuxCandidates.paths[0]).toBe(path.posix.join('/repo', 'myai', '.venv', 'bin', 'python'));
+    expect(linuxCandidates.paths[0]).toBe(path.posix.join('/repo', 'packages', 'myai', '.venv', 'bin', 'python'));
     expect(linuxCandidates.commands).toContain('python3');
   });
 });

@@ -16,12 +16,6 @@ type PermissionAction = 'read_file' | 'http' | 'browser' | 'run_command';
 
 type ActionRequestPayload = WorkspaceActionPayload;
 
-interface ActionRequestBody {
-  action?: string;
-  approvalId?: string;
-  payload?: ActionRequestPayload;
-}
-
 export interface ActionAuditRecord {
   id: string;
   timestamp: string;
@@ -97,6 +91,25 @@ export const ACTION_MAP: Record<string, string> = {
   agent_start: 'Orchestrator',
 };
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function readString(value: unknown): string | null {
+  if (typeof value !== 'string') return null;
+  const trimmed = value.trim();
+  return trimmed ? trimmed : null;
+}
+
+function readActionPayload(value: unknown): ActionRequestPayload | null {
+  if (value === undefined) return {};
+  return isRecord(value) ? value : null;
+}
+
+function readContext(value: unknown): Record<string, unknown> {
+  return isRecord(value) ? value : {};
+}
+
 function addAudit(record: ActionAuditRecord): void {
   auditBuffer.push(record);
   if (auditBuffer.length > MAX_AUDIT) auditBuffer.shift();
@@ -120,9 +133,9 @@ function hasRequiredRole(role: AnythingLLMRole, required: AnythingLLMRole): bool
 }
 
 function toResultMessage(raw: unknown): string {
-  return typeof raw === 'string'
-    ? raw
-    : ((raw as Record<string, unknown>)?.message as string | undefined) ?? JSON.stringify(raw);
+  if (typeof raw === 'string') return raw;
+  if (isRecord(raw) && typeof raw.message === 'string') return raw.message;
+  return JSON.stringify(raw);
 }
 
 function authMiddleware(req: Request, res: Response, next: NextFunction): void {
@@ -147,17 +160,25 @@ export function createAnythingLLMActionRoutes(): Router {
   router.use(authMiddleware);
 
   router.post('/', async (req: Request, res: Response): Promise<void> => {
-    const { action, approvalId, payload } = req.body as ActionRequestBody;
+    const body = isRecord(req.body) ? req.body : {};
+    const action = readString(body.action);
+    const approvalId = readString(body.approvalId) ?? undefined;
+    const payload = readActionPayload(body.payload);
 
     if (!action || !ACTION_MAP[action]) {
       res.status(400).json({ error: `Unknown action: '${action ?? ''}'`, supported });
       return;
     }
 
+    if (!payload) {
+      res.status(400).json({ error: 'payload must be an object when provided' });
+      return;
+    }
+
     const agentName = ACTION_MAP[action];
     const workspaceAction = isWorkspaceAction(action);
-    const task = payload?.task ?? action;
-    const context = payload?.context ?? {};
+    const task = readString(payload.task) ?? action;
+    const context = readContext(payload.context);
     const role = getRole(req);
     const requiredRole = ACTION_ROLE_REQUIREMENTS[action] ?? 'operator';
     const riskLevel: 'normal' | 'high' = HIGH_RISK_ACTIONS.has(action) ? 'high' : 'normal';

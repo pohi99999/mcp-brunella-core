@@ -170,10 +170,10 @@ describe('Onboarding intake routes', () => {
       .post('/')
       .set('X-Brunella-Token', 'test-secret')
       .send({
-        client_name: 'Acme Kft',
-        contact_email: 'ops@acme.test',
-        form_type: 'kkv_general',
-        pain_point: 'Könyvelés és számla káosz',
+        client_name: ' Acme Kft ',
+        contact_email: ' ops@acme.test ',
+        form_type: ' kkv_general ',
+        pain_point: ' Könyvelés és számla káosz ',
       });
 
     expect(createResponse.status).toBe(201);
@@ -232,7 +232,7 @@ describe('Onboarding intake routes', () => {
 
     const jobId = String(createResponse.body.job_id);
     const approveResponse = await request(app)
-      .post(`/${jobId}/approve`)
+      .post(`/%20${jobId}%20/approve`)
       .send({});
 
     expect(approveResponse.status).toBe(200);
@@ -283,8 +283,8 @@ describe('Onboarding intake routes', () => {
 
     const jobId = String(createResponse.body.job_id);
     const rejectResponse = await request(app)
-      .post(`/${jobId}/reject`)
-      .send({ reason: 'Not a fit' });
+      .post(`/%20${jobId}%20/reject`)
+      .send({ reason: ' Not a fit ' });
 
     expect(rejectResponse.status).toBe(200);
     expect(rejectResponse.body).toEqual({

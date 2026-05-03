@@ -1,6 +1,6 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-04-29T11:45:00+02:00
+**Utolso frissites:** 2026-05-03T09:00:00.035Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
@@ -19,11 +19,12 @@ _Nincs track ebben a szekcioban._
 
 ### Brunella rendszer (1)
 
-- [~] **Legacy drift cleanup (tracked routes + Cloudflare vendor copy)**
+- [ ] **Legacy drift cleanup (tracked routes + Cloudflare vendor copy)** [MEDIUM]
   - **ID:** `legacy_drift_cleanup_20260430`
-  - **Started:** 2026-04-29T10:45:00+02:00
+  - **Progress:** 95%
+  - **Assignee:** brunella-implementer
   - Mappa: ./tracks/legacy_drift_cleanup_20260430/
-  - Scope: confirmed tracked cleanup only; 6 orphan routes + tracked integrations vendor copy
+
 
 ---
 

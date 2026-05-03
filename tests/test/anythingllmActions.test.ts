@@ -95,6 +95,18 @@ describe('AnythingLLM Action Routes', () => {
     expect(res.body.supported).toContain('email_triage');
   });
 
+  it('returns 400 when payload is not an object', async () => {
+    const app = await buildApp();
+    const res = await request(app)
+      .post('/')
+      .set('X-Brunella-Secret', 'test-secret')
+      .send({ action: 'email_triage', payload: ['bad'] });
+
+    expect(res.status).toBe(400);
+    expect(res.body.error).toMatch(/payload/i);
+    expect(executeWorkspaceActionMock).not.toHaveBeenCalled();
+  });
+
   it('executes email_triage directly through the workspace bridge', async () => {
     const app = await buildApp();
     const res = await request(app)
@@ -194,6 +206,28 @@ describe('AnythingLLM Action Routes', () => {
     expect(res.status).toBe(200);
     expect(executeWorkspaceActionMock).toHaveBeenCalledWith('chat_list_spaces', { maxResults: 5 });
     expect(delegateMock).not.toHaveBeenCalled();
+  });
+
+  it('normalizes delegated agent task and context from object payloads only', async () => {
+    getRequestMock.mockReturnValue({
+      id: 'approval-agent',
+      status: 'approved',
+      metadata: { action: 'agent_start', agent: 'Orchestrator' },
+    });
+
+    const app = await buildApp();
+    const res = await request(app)
+      .post('/')
+      .set('X-Brunella-Secret', 'test-secret')
+      .set('X-Brunella-Role', 'admin')
+      .send({
+        action: 'agent_start',
+        approvalId: 'approval-agent',
+        payload: { task: '  Start governance track  ', context: ['not-an-object'] },
+      });
+
+    expect(res.status).toBe(200);
+    expect(delegateMock).toHaveBeenCalledWith('Orchestrator', 'Start governance track', {});
   });
 
   it('returns audit log with executed records', async () => {

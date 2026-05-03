@@ -118,7 +118,7 @@ describe('testScheduler routes', () => {
 
     const response = await request(createApp())
       .post('/api/v1/tests/schedule')
-      .send({ schedule: '0 3 * * *', enabled: false });
+      .send({ schedule: ' 0 3 * * * ', enabled: ' false ' });
 
     expect(response.status).toBe(200);
     expect(response.body).toEqual({
@@ -134,22 +134,22 @@ describe('testScheduler routes', () => {
   it('normalizes results query parameters before fetching runs', async () => {
     schedulerMocks.getTestRuns.mockResolvedValue([createTestRun({ id: 'run-7' })]);
 
-    const response = await request(createApp()).get('/api/v1/tests/results?limit=0&offset=foo');
+    const response = await request(createApp()).get('/api/v1/tests/results?limit=0&offset=-5');
 
     expect(response.status).toBe(200);
-    expect(schedulerMocks.getTestRuns).toHaveBeenCalledWith(20, 0);
+    expect(schedulerMocks.getTestRuns).toHaveBeenCalledWith(1, 0);
     expect(response.body).toEqual({
       success: true,
       data: [expect.objectContaining({ id: 'run-7' })],
       runs: [expect.objectContaining({ id: 'run-7' })],
-      pagination: { limit: 20, offset: 0, total: 1 },
+      pagination: { limit: 1, offset: 0, total: 1 },
     });
   });
 
   it('returns 404 when a test run is missing', async () => {
     schedulerMocks.getTestRunById.mockReturnValue(null);
 
-    const response = await request(createApp()).get('/api/v1/tests/results/missing-id');
+    const response = await request(createApp()).get('/api/v1/tests/results/%20missing-id%20');
 
     expect(response.status).toBe(404);
     expect(response.body).toEqual({
@@ -206,7 +206,7 @@ describe('testScheduler routes', () => {
   it('returns date-range runs using the provided params', async () => {
     schedulerMocks.getTestRunsByDateRange.mockReturnValue([createTestRun({ id: 'run-range-1' })]);
 
-    const response = await request(createApp()).get('/api/v1/tests/results/range/2026-01-01/2026-01-31');
+    const response = await request(createApp()).get('/api/v1/tests/results/range/%202026-01-01%20/%202026-01-31%20');
 
     expect(response.status).toBe(200);
     expect(schedulerMocks.getTestRunsByDateRange).toHaveBeenCalledWith('2026-01-01', '2026-01-31');

@@ -1,0 +1,22 @@
+id: track-bootstrap
+title: Track Bootstrap Mission
+description: Create the track scaffolding needed for a new coordinated workflow.
+goal: Establish the conductor metadata and execution checklist for a feature track.
+surface: track
+category: 04-track
+tags:
+  - conductor
+  - track
+  - planning
+steps:
+  - Define the track scope and desired outcome.
+  - Add the track metadata and plan entries.
+  - Confirm the DoD markers and closure evidence requirements.
+  - Verify the track appears in the conductor index.
+commands:
+  - brunella conductor status
+  - npm run test:fast
+artifacts:
+  - conductor/tracks.md
+trackRefs:
+  - conductor/tracks

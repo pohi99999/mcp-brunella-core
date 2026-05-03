@@ -61,8 +61,8 @@ export async function probeFfmpegRuntime(): Promise<{ ffmpegAvailable: boolean; 
   const config = getStudioConfig();
   let ffmpegVersion: string | undefined;
   let ffprobeVersion: string | undefined;
-  let ffmpegAvailable = false;
-  let ffprobeAvailable = false;
+  let ffmpegAvailable: boolean;
+  let ffprobeAvailable: boolean;
 
   try {
     const result = await execFileAsync(config.ffmpegPath, ['-version']);

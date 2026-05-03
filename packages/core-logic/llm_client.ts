@@ -21,6 +21,10 @@ const LLM_TIMEOUT_MS = parseInt(process.env.LLM_TIMEOUT_MS || "120000"); // 2 mi
 
 const genAI = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || "" });
 
+export function resolveOllamaFallbackModel(): string {
+  return process.env.OLLAMA_FALLBACK_MODEL || process.env.OLLAMA_MODEL || "gemma4:latest";
+}
+
 // ── Prompt Armor (IPI Defense) ───────────────────────────────────────────
 
 /**
@@ -210,10 +214,11 @@ export const generateResponse: (
       if (provider !== "ollama") {
         logInfo("LLM_CLIENT", "Fallback indítása Ollama-ra...");
         try {
+          const fallbackModel = resolveOllamaFallbackModel();
           const fallbackResponse = await generateResponse(
             sanitizedPrompt,
             "ollama",
-            modelName,
+            fallbackModel,
           );
           return fallbackResponse;
         } catch (fallbackError: unknown) {

@@ -54,7 +54,10 @@ async function main() {
     const forceStdio = ["1", "true", "yes", "on"].includes(
       (process.env.BRUNELLA_FORCE_STDIO ?? "").trim().toLowerCase(),
     );
-    const shouldStartStdio = Boolean(process.stdin.isTTY) || forceStdio;
+    const webOnly = ["1", "true", "yes", "on"].includes(
+      (process.env.BRUNELLA_WEB_ONLY ?? "").trim().toLowerCase(),
+    );
+    const shouldStartStdio = !webOnly && (Boolean(process.stdin.isTTY) || forceStdio);
 
     if (shouldStartStdio) {
       const { McpServer } =

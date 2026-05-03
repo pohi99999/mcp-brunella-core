@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import express from 'express';
 import request from 'supertest';
 import { createDeveloperRoutes } from '@apps/mcp-core/server/routes/developer.js';
+import { pipelineRunner } from '@packages/agents/developerPipeline.js';
 
 // Mock pipelineRunner
 vi.mock('@packages/agents/developerPipeline.js', () => {
@@ -86,12 +87,13 @@ describe('Developer Routes', () => {
 
     describe('GET /api/v1/developer/history', () => {
         it('should return task history', async () => {
-            const response = await request(app).get('/api/v1/developer/history?limit=10');
+            const response = await request(app).get('/api/v1/developer/history?limit=999');
 
             expect(response.status).toBe(200);
             expect(response.body).toHaveProperty('history');
             expect(Array.isArray(response.body.history)).toBe(true);
             expect(response.body.history).toHaveLength(2);
+            expect(pipelineRunner.getHistory).toHaveBeenCalledWith(100);
         });
     });
 
@@ -116,11 +118,12 @@ describe('Developer Routes', () => {
         it('should create a pipeline and return taskId', async () => {
             const response = await request(app)
                 .post('/api/v1/developer/execute')
-                .send({ task: 'generate a REST API module' });
+                .send({ task: '  generate a REST API module  ', context: ['not-object'] });
 
             expect(response.status).toBe(200);
             expect(response.body).toHaveProperty('taskId');
             expect(response.body.status).toBe('queued');
+            expect(pipelineRunner.createPipeline).toHaveBeenCalledWith('generate a REST API module');
         });
 
         it('should return 400 when task is missing', async () => {

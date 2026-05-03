@@ -5,10 +5,49 @@
  * The CLI pushes command logs here, the Dashboard panel reads them.
  */
 import { Router, Request, Response } from 'express';
-import { copilotBridgeState, CopilotCommand } from '@packages/core-logic/copilotBridgeState.js';
+import { copilotBridgeState } from '@packages/core-logic/copilotBridgeState.js';
+import type { AgentDispatchResult, CopilotCommand } from '@packages/core-logic/copilotBridgeState.js';
 import { logInfo, logError } from '@packages/utils/logger.js';
 
 const TAG = 'CopilotBridge';
+const COMMAND_STATUSES = new Set<CopilotCommand['status']>(['pending', 'running', 'success', 'error']);
+const DISPATCH_STATUSES = new Set<AgentDispatchResult['status']>(['queued', 'running', 'success', 'error']);
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function readString(value: unknown): string | null {
+  if (typeof value !== 'string') return null;
+  const trimmed = value.trim();
+  return trimmed ? trimmed : null;
+}
+
+function readLimit(value: unknown): number {
+  const parsed = Number(value);
+  if (!Number.isFinite(parsed)) return 50;
+  return Math.min(Math.max(Math.trunc(parsed), 1), 200);
+}
+
+function readCommandStatus(value: unknown): CopilotCommand['status'] | undefined | null {
+  if (value === undefined) return undefined;
+  return typeof value === 'string' && COMMAND_STATUSES.has(value as CopilotCommand['status'])
+    ? (value as CopilotCommand['status'])
+    : null;
+}
+
+function readDispatchStatus(value: unknown): AgentDispatchResult['status'] | undefined | null {
+  if (value === undefined) return undefined;
+  return typeof value === 'string' && DISPATCH_STATUSES.has(value as AgentDispatchResult['status'])
+    ? (value as AgentDispatchResult['status'])
+    : null;
+}
+
+function readDuration(value: unknown): number | undefined | null {
+  if (value === undefined) return undefined;
+  if (typeof value !== 'number' || !Number.isFinite(value) || value < 0) return null;
+  return Math.round(value);
+}
 
 export function createCopilotBridgeRoutes(): Router {
   const router = Router();
@@ -28,7 +67,7 @@ export function createCopilotBridgeRoutes(): Router {
   // GET /api/copilot-bridge/commands — Recent commands list
   router.get('/commands', (req: Request, res: Response) => {
     try {
-      const limit = Math.min(Number(req.query.limit) || 50, 200);
+      const limit = readLimit(req.query.limit);
       const commands = copilotBridgeState.getRecentCommands(limit);
       res.json(commands);
     } catch (err: unknown) {
@@ -41,22 +80,30 @@ export function createCopilotBridgeRoutes(): Router {
   // POST /api/copilot-bridge/commands — Log a new command (used by CLI)
   router.post('/commands', (req: Request, res: Response) => {
     try {
-      const { domain, action, params, status } = req.body as {
-        domain?: string;
-        action?: string;
-        params?: Record<string, unknown>;
-        status?: 'pending' | 'running' | 'success' | 'error';
-      };
+      const body = isRecord(req.body) ? req.body : {};
+      const domain = readString(body.domain);
+      const action = readString(body.action);
+      const status = readCommandStatus(body.status);
 
       if (!domain || !action) {
         res.status(400).json({ error: 'domain and action are required' });
         return;
       }
 
+      if (status === null) {
+        res.status(400).json({ error: 'status must be one of: pending, running, success, error' });
+        return;
+      }
+
+      if (body.params !== undefined && !isRecord(body.params)) {
+        res.status(400).json({ error: 'params must be an object when provided' });
+        return;
+      }
+
       const cmd = copilotBridgeState.addCommand({
         domain,
         action,
-        params,
+        params: body.params,
         status: status ?? 'running',
       });
 
@@ -73,7 +120,26 @@ export function createCopilotBridgeRoutes(): Router {
   router.patch('/commands/:id', (req: Request, res: Response) => {
     try {
       const id = String(req.params.id);
-      const update = req.body as Partial<CopilotCommand>;
+      const body = isRecord(req.body) ? req.body : {};
+      const status = readCommandStatus(body.status);
+      const durationMs = readDuration(body.durationMs);
+
+      if (status === null) {
+        res.status(400).json({ error: 'status must be one of: pending, running, success, error' });
+        return;
+      }
+
+      if (durationMs === null) {
+        res.status(400).json({ error: 'durationMs must be a non-negative finite number' });
+        return;
+      }
+
+      const update: Partial<CopilotCommand> = {
+        status,
+        result: body.result,
+        error: readString(body.error) ?? undefined,
+        durationMs,
+      };
       const cmd = copilotBridgeState.updateCommand(id, update);
       if (!cmd) {
         res.status(404).json({ error: 'Command not found' });
@@ -90,7 +156,7 @@ export function createCopilotBridgeRoutes(): Router {
   // GET /api/copilot-bridge/dispatches — Recent agent dispatches
   router.get('/dispatches', (req: Request, res: Response) => {
     try {
-      const limit = Math.min(Number(req.query.limit) || 50, 200);
+      const limit = readLimit(req.query.limit);
       const dispatches = copilotBridgeState.getRecentDispatches(limit);
       res.json(dispatches);
     } catch (err: unknown) {
@@ -103,14 +169,18 @@ export function createCopilotBridgeRoutes(): Router {
   // POST /api/copilot-bridge/dispatches — Log an agent dispatch
   router.post('/dispatches', (req: Request, res: Response) => {
     try {
-      const { agentName, task, status } = req.body as {
-        agentName?: string;
-        task?: string;
-        status?: 'queued' | 'running' | 'success' | 'error';
-      };
+      const body = isRecord(req.body) ? req.body : {};
+      const agentName = readString(body.agentName);
+      const task = readString(body.task);
+      const status = readDispatchStatus(body.status);
 
       if (!agentName || !task) {
         res.status(400).json({ error: 'agentName and task are required' });
+        return;
+      }
+
+      if (status === null) {
+        res.status(400).json({ error: 'status must be one of: queued, running, success, error' });
         return;
       }
 

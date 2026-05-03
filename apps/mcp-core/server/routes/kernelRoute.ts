@@ -13,6 +13,23 @@ import { logInfo, logError } from '@packages/utils/logger.js';
 import { executeKernelPipeline } from '@packages/core-logic/conductor.js';
 import { runLedger } from '@packages/core-logic/conductor.js';
 import { createRunEnvelope } from '@packages/core-logic/kernelTypes.js';
+import type { RunEnvelope } from '@packages/core-logic/kernelTypes.js';
+
+const RISK_LEVELS = new Set<RunEnvelope['riskLevel']>(['low', 'medium', 'high']);
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function readString(value: unknown): string | null {
+  if (typeof value !== 'string') return null;
+  const trimmed = value.trim();
+  return trimmed ? trimmed : null;
+}
+
+function readOptionalString(value: unknown): string | undefined {
+  return readString(value) ?? undefined;
+}
 
 function toKnowledgeScope(value: unknown): string[] {
   if (!Array.isArray(value)) {
@@ -34,12 +51,25 @@ function toPriority(value: unknown): 'low' | 'medium' | 'high' | 'critical' {
   return 'medium';
 }
 
+function toRiskLevel(value: unknown): RunEnvelope['riskLevel'] {
+  if (typeof value === 'string' && RISK_LEVELS.has(value as RunEnvelope['riskLevel'])) {
+    return value as RunEnvelope['riskLevel'];
+  }
+
+  return 'low';
+}
+
+function readApprovalRequired(value: unknown): boolean {
+  return typeof value === 'boolean' ? value : false;
+}
+
 export function createKernelRoutes(): Router {
   const router = Router();
 
   // ── POST /kernel/run ──────────────────────────────────────────────────────
   router.post('/run', async (req: Request, res: Response) => {
     try {
+      const body = isRecord(req.body) ? req.body : {};
       const {
         goal,
         taskType,
@@ -52,21 +82,22 @@ export function createKernelRoutes(): Router {
         capabilities,
         approvalRequired,
         terminationCondition,
-      } = req.body as Record<string, unknown>;
+      } = body;
 
-      if (!goal || typeof goal !== 'string') {
+      const trimmedGoal = readString(goal);
+      if (!trimmedGoal) {
         return res.status(400).json({ error: 'goal is required (string)' });
       }
 
-      const envelope = createRunEnvelope(String(goal), {
-          taskType: typeof taskType === 'string' ? taskType : 'general',
-          riskLevel: (riskLevel as 'low' | 'medium' | 'high') ?? 'low',
+      const envelope = createRunEnvelope(trimmedGoal, {
+          taskType: readString(taskType) ?? 'general',
+          riskLevel: toRiskLevel(riskLevel),
           priority: toPriority(priority),
-          threadId: (threadId as string) ?? undefined,
-          tenantId: (tenantId as string) ?? undefined,
-          projectId: (projectId as string) ?? undefined,
+          threadId: readOptionalString(threadId),
+          tenantId: readOptionalString(tenantId),
+          projectId: readOptionalString(projectId),
           userContext: {
-            userId: (userId as string) ?? 'anonymous',
+            userId: readString(userId) ?? 'anonymous',
             locale: 'hu-HU',
             timezone: 'Europe/Budapest',
             preferences: {},
@@ -79,15 +110,15 @@ export function createKernelRoutes(): Router {
           constraints: {
             budgetTokens: 8192,
             latencyMs: 60_000,
-            approvalRequired: (approvalRequired as boolean) ?? false,
+            approvalRequired: readApprovalRequired(approvalRequired),
           },
         inputPayload: {},
       });
 
-      logInfo('KernelRoute', `POST /kernel/run ${envelope.runId}: "${goal.slice(0, 80)}"`);
+      logInfo('KernelRoute', `POST /kernel/run ${envelope.runId}: "${trimmedGoal.slice(0, 80)}"`);
 
       const result = await executeKernelPipeline(envelope, {
-        terminationCondition: (terminationCondition as string) ?? undefined,
+        terminationCondition: readOptionalString(terminationCondition),
       });
 
       return res.status(result.status === 'error' ? 500 : 200).json(result);

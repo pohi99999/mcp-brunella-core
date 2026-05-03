@@ -14,6 +14,16 @@ function isEnginePreference(value: unknown): value is BrowserCopilotEnginePrefer
   return value === 'auto' || value === 'chrome-acp' || value === 'robotkez';
 }
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function readString(value: unknown): string | null {
+  if (typeof value !== 'string') return null;
+  const trimmed = value.trim();
+  return trimmed ? trimmed : null;
+}
+
 export function createBrowserCopilotRoutes(): Router {
   const router = Router();
 
@@ -23,11 +33,8 @@ export function createBrowserCopilotRoutes(): Router {
 
   router.post('/session/configure', async (req: Request, res: Response) => {
     try {
-      const { mode, enginePreference, overlayEnabled } = req.body as {
-        mode?: unknown;
-        enginePreference?: unknown;
-        overlayEnabled?: unknown;
-      };
+      const body = isRecord(req.body) ? req.body : {};
+      const { mode, enginePreference, overlayEnabled } = body;
 
       if (mode !== undefined && !isMode(mode)) {
         return res.status(400).json({ success: false, error: 'Érvénytelen mode. Használd: observe | guide | auto.' });
@@ -54,8 +61,9 @@ export function createBrowserCopilotRoutes(): Router {
 
   router.post('/message', async (req: Request, res: Response) => {
     try {
-      const { instruction } = req.body as { instruction?: unknown };
-      if (typeof instruction !== 'string' || !instruction.trim()) {
+      const body = isRecord(req.body) ? req.body : {};
+      const instruction = readString(body.instruction);
+      if (!instruction) {
         return res.status(400).json({ success: false, error: 'Hiányzó vagy üres instruction mező.' });
       }
 

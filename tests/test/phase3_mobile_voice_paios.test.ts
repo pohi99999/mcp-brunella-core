@@ -10,10 +10,22 @@
  */
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+
+vi.mock('@packages/agents/AgentManager.js', () => ({
+  agentManager: {
+    queueTask: vi.fn().mockResolvedValue(4242),
+    listAgentStatuses: vi.fn().mockReturnValue([
+      { name: 'ResearchAgent', status: 'idle', lastTask: undefined, errorCount: 0 },
+      { name: 'DataCollector', status: 'working', lastTask: 'Collecting data', errorCount: 0 },
+    ]),
+  },
+}));
+
 import { mapVoiceToCommand, listVoiceIntents } from '@packages/core-logic/voicePipeline.js';
 import { buildMobileSessionSummary, processMobileHeartbeat } from '@packages/core-logic/mobileClientBootstrap.js';
 import { remoteEventBridge } from '@packages/core-logic/remoteEventBridge.js';
 import { enqueuePaiosAction, processNextPaiosAction, getPaiosQueueStatus } from '@packages/core-logic/paiosRemoteIntegration.js';
+import { agentManager } from '@packages/agents/AgentManager.js';
 import type { RemoteSession, RemoteBridgeEvent } from '@packages/core-logic/types/remote.js';
 
 // ─── VoicePipeline ───────────────────────────────────────────────────────────
@@ -251,16 +263,17 @@ describe('RemoteEventBridge', () => {
 
 describe('PaiosRemoteIntegration', () => {
   // Drain queue before each test
-  beforeEach(() => {
-    while (processNextPaiosAction('drain') !== null) { /* drain */ }
+  beforeEach(async () => {
+    vi.clearAllMocks();
+    while (await processNextPaiosAction('drain') !== null) { /* drain */ }
   });
 
   it('should enqueue an action and return queued status', () => {
     const result = enqueuePaiosAction('sess-1', {
       actionId: 'act-1',
-      type: 'research',
-      description: 'Research AI trends',
-      payload: { topic: 'AI' },
+      type: 'remote_help',
+      description: 'List supported remote actions',
+      payload: {},
     });
 
     expect(result.status).toBe('queued');
@@ -270,15 +283,15 @@ describe('PaiosRemoteIntegration', () => {
   it('should track queue status', () => {
     enqueuePaiosAction('sess-1', {
       actionId: 'act-q1',
-      type: 'scrape',
-      description: 'Scrape data',
+      type: 'remote_help',
+      description: 'First supported action',
       payload: {},
     });
     enqueuePaiosAction('sess-1', {
       actionId: 'act-q2',
-      type: 'analyze',
-      description: 'Analyze data',
-      payload: {},
+      type: 'agent_status',
+      description: 'Second supported action',
+      payload: { agentId: 'DataCollector' },
     });
 
     const status = getPaiosQueueStatus();
@@ -287,41 +300,70 @@ describe('PaiosRemoteIntegration', () => {
     expect(status.actionIds).toContain('act-q2');
   });
 
-  it('should process the next action and complete it', () => {
+  it('should process agent_run actions by queueing a real agent task', async () => {
     enqueuePaiosAction('sess-proc', {
       actionId: 'proc-1',
+      type: 'agent_run',
+      description: 'Research AI trends',
+      payload: { agentId: 'ResearchAgent', task: 'Research AI trends' },
+    });
+
+    const result = await processNextPaiosAction('sess-proc');
+    expect(result).not.toBeNull();
+    expect(result!.actionId).toBe('proc-1');
+    expect(result!.status).toBe('completed');
+    expect(result!.result).toEqual(expect.objectContaining({
+      dispatched: true,
+      dispatch: 'agent_queue',
+      agentName: 'ResearchAgent',
+      taskId: 4242,
+    }));
+    expect(agentManager.queueTask).toHaveBeenCalledWith(
+      'Research AI trends',
+      'ResearchAgent',
+      expect.objectContaining({
+        source: 'paios_remote_action',
+        sessionId: 'sess-proc',
+        actionId: 'proc-1',
+      }),
+    );
+  });
+
+  it('should fail unsupported actions instead of simulating completion', async () => {
+    enqueuePaiosAction('sess-unsupported', {
+      actionId: 'unsupported-1',
       type: 'translate',
       description: 'Translate doc',
       payload: { lang: 'hu' },
     });
 
-    const result = processNextPaiosAction('sess-proc');
+    const result = await processNextPaiosAction('sess-unsupported');
     expect(result).not.toBeNull();
-    expect(result!.actionId).toBe('proc-1');
-    expect(result!.status).toBe('completed');
+    expect(result!.status).toBe('failed');
+    expect(result!.error).toContain('Unsupported PAIOS action type');
   });
 
-  it('should return null when queue is empty', () => {
-    const result = processNextPaiosAction('sess-empty');
+  it('should return null when queue is empty', async () => {
+    const result = await processNextPaiosAction('sess-empty');
     expect(result).toBeNull();
   });
 
-  it('should process actions in FIFO order', () => {
+  it('should process actions in FIFO order', async () => {
     enqueuePaiosAction('sess-fifo', {
       actionId: 'first',
-      type: 'a',
+      type: 'agent_status',
       description: 'First',
-      payload: {},
+      payload: { agentId: 'ResearchAgent' },
     });
     enqueuePaiosAction('sess-fifo', {
       actionId: 'second',
-      type: 'b',
+      type: 'remote_help',
       description: 'Second',
       payload: {},
     });
 
-    const r1 = processNextPaiosAction('sess-fifo');
-    const r2 = processNextPaiosAction('sess-fifo');
+    const r1 = await processNextPaiosAction('sess-fifo');
+    const r2 = await processNextPaiosAction('sess-fifo');
 
     expect(r1!.actionId).toBe('first');
     expect(r2!.actionId).toBe('second');
@@ -331,7 +373,7 @@ describe('PaiosRemoteIntegration', () => {
 // ─── E2E: Full Phase 3 Integration Flow ─────────────────────────────────────
 
 describe('E2E: Phase 3 Full Integration', () => {
-  it('should complete voice → event bridge → PAIOS flow', () => {
+  it('should complete voice → event bridge → PAIOS flow', async () => {
     const bridgeEvents: RemoteBridgeEvent[] = [];
     const handler = (e: RemoteBridgeEvent) => bridgeEvents.push(e);
     remoteEventBridge.subscribeGlobal(handler);
@@ -363,12 +405,37 @@ describe('E2E: Phase 3 Full Integration', () => {
     expect(queuedEvent).toBeDefined();
 
     // 5. Process the action
-    const processed = processNextPaiosAction('e2e-sess');
+    const processed = await processNextPaiosAction('e2e-sess');
     expect(processed!.status).toBe('completed');
 
     // 6. Bridge should have completed event
     const completedEvent = bridgeEvents.find(e => e.type === 'paios:action:completed');
     expect(completedEvent).toBeDefined();
+
+    remoteEventBridge.unsubscribeGlobal(handler);
+  });
+
+  it('should publish failed events for unsupported PAIOS actions', async () => {
+    const bridgeEvents: RemoteBridgeEvent[] = [];
+    const handler = (e: RemoteBridgeEvent) => bridgeEvents.push(e);
+    remoteEventBridge.subscribeGlobal(handler);
+
+    enqueuePaiosAction('fail-action-sess', {
+      actionId: 'unsupported-e2e',
+      type: 'unsupported',
+      description: 'Unsupported action',
+      payload: {},
+    });
+
+    const processed = await processNextPaiosAction('fail-action-sess');
+    expect(processed!.status).toBe('failed');
+
+    const failedEvent = bridgeEvents.find(e => e.type === 'paios:action:failed');
+    expect(failedEvent).toBeDefined();
+    expect(failedEvent!.payload).toEqual(expect.objectContaining({
+      actionId: 'unsupported-e2e',
+      status: 'failed',
+    }));
 
     remoteEventBridge.unsubscribeGlobal(handler);
   });

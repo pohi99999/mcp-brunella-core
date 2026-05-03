@@ -52,6 +52,7 @@ describe('llm_client', () => {
         process.env.OLLAMA_BASE_URL = 'http://127.0.0.1:11434';
         process.env.OLLAMA_MODEL = 'qwen2.5-coder:7b';
         process.env.AI_GATEWAY_ENABLED = 'false'; // Force local Ollama for tests
+        delete process.env.OLLAMA_FALLBACK_MODEL;
         delete process.env.ANTHROPIC_API_KEY;
         delete process.env.CLAUDE_API_KEY;
     });
@@ -149,6 +150,29 @@ describe('llm_client', () => {
 
             expect(result).toBe('Fallback Ollama response');
             expect(global.fetch).toHaveBeenCalledTimes(2); // 1 github + 1 ollama
+        });
+
+        it('should use the configured Ollama fallback model instead of the failed cloud model name', async () => {
+            process.env.OLLAMA_FALLBACK_MODEL = 'gemma4:latest';
+            (global.fetch as any)
+                .mockRejectedValueOnce(new Error('GitHub API Error'))
+                .mockResolvedValueOnce({
+                    ok: true,
+                    json: async () => ({
+                        message: { content: 'Fallback Ollama response' }
+                    })
+                });
+
+            const result = await generateResponse('test prompt', 'github', 'gpt-4.1');
+
+            expect(result).toBe('Fallback Ollama response');
+            expect(global.fetch).toHaveBeenNthCalledWith(
+                2,
+                'http://127.0.0.1:11434/api/chat',
+                expect.objectContaining({
+                    body: expect.stringContaining('"model":"gemma4:latest"')
+                })
+            );
         });
 
         it('should fallback to Ollama if Gemini API key is missing', async () => {

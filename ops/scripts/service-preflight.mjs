@@ -8,7 +8,7 @@ import {
 } from "./start-stable.mjs";
 
 const SCRIPT_DIR = path.dirname(fileURLToPath(import.meta.url));
-const DEFAULT_REPO_ROOT = path.resolve(SCRIPT_DIR, "..");
+const DEFAULT_REPO_ROOT = path.resolve(SCRIPT_DIR, "..", "..");
 
 function getPathApi(platform) {
   return platform === "windows" ? path.win32 : path.posix;
@@ -38,7 +38,7 @@ export function getPythonRuntimeCandidates(platform, repoRoot) {
   if (platform === "windows") {
     return {
       paths: [
-        pathApi.join(repoRoot, "myai", ".venv", "Scripts", "python.exe"),
+        pathApi.join(repoRoot, "packages", "myai", ".venv", "Scripts", "python.exe"),
         pathApi.join(repoRoot, ".venv", "Scripts", "python.exe"),
         pathApi.join(repoRoot, "mcp_env", "Scripts", "python.exe"),
       ],
@@ -48,7 +48,7 @@ export function getPythonRuntimeCandidates(platform, repoRoot) {
 
   return {
     paths: [
-      pathApi.join(repoRoot, "myai", ".venv", "bin", "python"),
+      pathApi.join(repoRoot, "packages", "myai", ".venv", "bin", "python"),
       pathApi.join(repoRoot, ".venv", "bin", "python"),
       pathApi.join(repoRoot, "mcp_env", "bin", "python"),
     ],
@@ -117,20 +117,20 @@ export function buildServicePreflightReport({
     },
     {
       name: "Python app",
-      filePath: pathApi.join(repoRoot, "myai", "server.py"),
+      filePath: pathApi.join(repoRoot, "packages", "myai", "server.py"),
       guidance: "Python runtime sources are missing.",
     },
   ];
 
   const runnerPaths =
     resolvedPlatform === "windows"
-      ? [
-          pathApi.join(repoRoot, "scripts", "supervisors", "windows", "run-brunella-core.ps1"),
-          pathApi.join(repoRoot, "scripts", "supervisors", "windows", "run-brunella-python.ps1"),
+        ? [
+          pathApi.join(repoRoot, "ops", "scripts", "supervisors", "windows", "run-brunella-core.ps1"),
+          pathApi.join(repoRoot, "ops", "scripts", "supervisors", "windows", "run-brunella-python.ps1"),
         ]
       : [
-          pathApi.join(repoRoot, "scripts", "supervisors", "linux", "run-brunella-core.sh"),
-          pathApi.join(repoRoot, "scripts", "supervisors", "linux", "run-brunella-python.sh"),
+          pathApi.join(repoRoot, "ops", "scripts", "supervisors", "linux", "run-brunella-core.sh"),
+          pathApi.join(repoRoot, "ops", "scripts", "supervisors", "linux", "run-brunella-python.sh"),
         ];
 
   for (const requiredPath of requiredPaths) {

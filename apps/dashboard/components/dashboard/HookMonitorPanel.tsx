@@ -15,7 +15,12 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { getHookObservabilitySnapshot, type HookObservabilityResponse } from "@/lib/apiService";
+import {
+  getHookObservabilitySnapshot,
+  getHookReadiness,
+  type HookObservabilityResponse,
+  type HookReadinessResponse,
+} from "@/lib/apiService";
 
 function badgeVariant(status: string): "default" | "secondary" | "destructive" | "outline" {
   if (status === "fired" || status === "healthy" || status === "closed") return "default";
@@ -34,14 +39,19 @@ function statusIcon(status: string) {
 
 export function HookMonitorPanel() {
   const [snapshotResponse, setSnapshotResponse] = useState<HookObservabilityResponse | null>(null);
+  const [readinessResponse, setReadinessResponse] = useState<HookReadinessResponse | null>(null);
   const [windowHours, setWindowHours] = useState(24);
   const [loading, setLoading] = useState(true);
 
   const loadSnapshot = useCallback(async () => {
     setLoading(true);
     try {
-      const response = await getHookObservabilitySnapshot(windowHours);
+      const [response, readiness] = await Promise.all([
+        getHookObservabilitySnapshot(windowHours),
+        getHookReadiness(windowHours),
+      ]);
       setSnapshotResponse(response);
+      setReadinessResponse(readiness);
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : String(error);
       toast.error(`Hook observability hiba: ${message}`);
@@ -65,6 +75,7 @@ export function HookMonitorPanel() {
   const executions = snapshot?.executions ?? [];
   const dlq = snapshot?.dlq ?? [];
   const circuits = snapshot?.circuits ?? [];
+  const readiness = readinessResponse?.readiness;
 
   const failureRate = useMemo(() => {
     const rate = summary?.audit.failureRate ?? 0;
@@ -165,6 +176,40 @@ export function HookMonitorPanel() {
           </CardContent>
         </Card>
       </div>
+
+      <Card className="glass-card overflow-hidden border-white/10">
+        <CardHeader className="border-b border-white/[0.05] bg-white/[0.015] pb-3">
+          <CardTitle className="flex items-center gap-2 text-[11px] font-mono font-semibold uppercase tracking-[0.28em] text-zinc-400">
+            <ShieldCheck className="h-4 w-4 text-emerald-300" /> Readiness contract
+          </CardTitle>
+          <CardDescription className="text-zinc-500">
+            Same hook readiness contract used by Dashboard, CLI, and Copilot orchestration.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="flex flex-wrap items-center gap-3">
+            <Badge variant={badgeVariant(readiness?.status ?? "blocked")} data-testid="hook-readiness-status">
+              {readiness?.status ?? "loading"}
+            </Badge>
+            <span className="text-xs text-zinc-500">
+              {readiness?.registry.enabledHandlers ?? summary?.enabledHandlers ?? 0} enabled handlers ·{" "}
+              {readiness?.circuits.open.length ?? summary?.circuitOpenCount ?? 0} open circuits ·{" "}
+              {readiness?.dlq.count ?? summary?.dlqCount ?? 0} DLQ entries
+            </span>
+          </div>
+          {readiness?.blockers.length ? (
+            <div className="grid gap-2 md:grid-cols-2">
+              {readiness.blockers.map((blocker) => (
+                <div key={blocker} className="rounded-lg border border-amber-500/20 bg-amber-500/10 px-3 py-2 text-xs text-amber-100">
+                  {blocker}
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-xs text-emerald-300">Hook engine is ready for lifecycle, business, and orchestration events.</p>
+          )}
+        </CardContent>
+      </Card>
 
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
         <Card className="glass-card overflow-hidden border-white/10">

@@ -88,12 +88,48 @@ describe("Jules workflow routes", () => {
 
     const res = await request(app)
       .get("/api/jules/workflow-runs")
-      .query({ workflow: "jules-async-tests.yml", limit: "2" });
+      .query({ workflow: "  jules-async-tests.yml  ", limit: "999" });
 
     expect(res.status).toBe(200);
     expect(res.body.runs?.length).toBe(1);
     expect(res.body.runs[0]).toEqual(
       expect.objectContaining({ id: 1, conclusion: "success" }),
+    );
+    expect(fetchSpy).toHaveBeenCalledWith(
+      expect.stringContaining("per_page=50"),
+      expect.any(Object),
+    );
+
+    fetchSpy.mockRestore();
+  });
+
+  it("POST /api/jules/dispatch normalizes workflow payload", async () => {
+    process.env.GITHUB_TOKEN = process.env.GITHUB_TOKEN || "test-token";
+    process.env.GITHUB_REPOSITORY = "owner/repo";
+
+    const fetchSpy = vi.spyOn(globalThis, "fetch").mockResolvedValueOnce({
+      ok: true,
+      status: 204,
+      statusText: "No Content",
+      text: async () => "",
+    } as unknown as Response);
+
+    const res = await request(app)
+      .post("/api/jules/dispatch")
+      .send({
+        workflow: "  jules-async-tests.yml  ",
+        ref: "  main  ",
+        inputs: ["invalid"],
+      });
+
+    expect(res.status).toBe(200);
+    expect(res.body).toEqual({ success: true, workflow: "jules-async-tests.yml", ref: "main" });
+    expect(fetchSpy).toHaveBeenCalledWith(
+      expect.stringContaining("/actions/workflows/jules-async-tests.yml/dispatches"),
+      expect.objectContaining({
+        method: "POST",
+        body: JSON.stringify({ ref: "main", inputs: {} }),
+      }),
     );
 
     fetchSpy.mockRestore();
@@ -101,8 +137,8 @@ describe("Jules workflow routes", () => {
 
   it("POST /api/jules/automations/import imports rules from .jules.yml", async () => {
     const res = await request(app).post("/api/jules/automations/import").send({
-      skipIfExists: true,
-      enableImmediately: true,
+      skipIfExists: " true ",
+      enableImmediately: " true ",
     });
 
     expect(res.status).toBe(200);

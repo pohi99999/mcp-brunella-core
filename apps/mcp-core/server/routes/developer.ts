@@ -9,6 +9,7 @@ import { codeReviewEngine } from '@packages/agents/codeReview.js';
 import { contextBuilder } from '@packages/agents/contextBuilder.js';
 import { coverageAnalyzer } from '@packages/agents/coverageAnalysis.js';
 import { taskQueueManager } from '@packages/agents/taskQueue.js';
+import type { TaskPriority, TaskStatus, TaskType } from '@packages/agents/taskQueue.js';
 import { getGitManager } from '@packages/agents/gitIntegration.js';
 import { getTemplateEngine } from '@packages/agents/codeScaffold.js';
 import { developerMetrics } from '@packages/utils/developerMetrics.js';
@@ -18,6 +19,48 @@ import { agentManager } from '@packages/agents/AgentManager.js';
 import { logInfo, logError } from '@packages/utils/logger.js';
 import { approvalRouter } from '@packages/core-logic/approvalRouter.js';
 import * as path from 'path';
+
+const TASK_TYPES = new Set<TaskType>(['generate', 'test', 'fix', 'review', 'refactor', 'coverage', 'scaffold', 'generic']);
+const TASK_PRIORITIES = new Set<TaskPriority>(['high', 'medium', 'low']);
+const TASK_STATUSES = new Set<TaskStatus>(['queued', 'running', 'completed', 'failed', 'cancelled']);
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+    return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function readString(value: unknown): string | null {
+    if (typeof value !== 'string') return null;
+    const trimmed = value.trim();
+    return trimmed ? trimmed : null;
+}
+
+function readLimit(value: unknown, fallback: number): number {
+    const parsed = Number(value ?? fallback);
+    if (!Number.isFinite(parsed)) return fallback;
+    return Math.min(Math.max(Math.trunc(parsed), 1), 100);
+}
+
+function readStringArray(value: unknown): string[] | undefined {
+    if (!Array.isArray(value)) return undefined;
+    return value
+        .map((item) => readString(item))
+        .filter((item): item is string => item !== null);
+}
+
+function readTaskType(value: unknown): TaskType | null {
+    const type = readString(value);
+    return type && TASK_TYPES.has(type as TaskType) ? type as TaskType : null;
+}
+
+function readTaskPriority(value: unknown): TaskPriority | undefined {
+    const priority = readString(value);
+    return priority && TASK_PRIORITIES.has(priority as TaskPriority) ? priority as TaskPriority : undefined;
+}
+
+function readTaskStatus(value: unknown): TaskStatus | undefined {
+    const status = readString(value);
+    return status && TASK_STATUSES.has(status as TaskStatus) ? status as TaskStatus : undefined;
+}
 
 export function createDeveloperRoutes(): Router {
     const router = Router();
@@ -49,7 +92,7 @@ export function createDeveloperRoutes(): Router {
      */
     router.get('/history', (req, res) => {
         try {
-            const limit = parseInt(req.query.limit as string) || 20;
+            const limit = readLimit(req.query.limit, 20);
             const history = pipelineRunner.getHistory(limit);
 
             res.json({
@@ -70,9 +113,11 @@ export function createDeveloperRoutes(): Router {
      */
     router.post('/execute', async (req, res) => {
         try {
-            const { task, context } = req.body;
+            const body = isRecord(req.body) ? req.body : {};
+            const task = readString(body.task);
+            const context = isRecord(body.context) ? body.context : undefined;
 
-            if (!task || typeof task !== 'string') {
+            if (!task) {
                 res.status(400).json({ error: 'task (string) is required' });
                 return;
             }
@@ -154,7 +199,10 @@ export function createDeveloperRoutes(): Router {
      */
     router.post('/review', async (req, res) => {
         try {
-            const { filePath, code, language } = req.body;
+            const body = isRecord(req.body) ? req.body : {};
+            const filePath = readString(body.filePath);
+            const code = readString(body.code);
+            const language = readString(body.language) ?? 'typescript';
 
             if (!filePath && !code) {
                 res.status(400).json({ error: 'filePath or code is required' });
@@ -166,11 +214,8 @@ export function createDeveloperRoutes(): Router {
             let result;
             if (filePath) {
                 result = await codeReviewEngine.reviewFile(filePath);
-            } else {
-                result = await codeReviewEngine.reviewCode(
-                    code as string,
-                    (language as string) || 'typescript'
-                );
+            } else if (code) {
+                result = await codeReviewEngine.reviewCode(code, language);
             }
 
             res.json({ review: result });
@@ -189,13 +234,16 @@ export function createDeveloperRoutes(): Router {
      */
     router.post('/refactor', async (req, res) => {
         try {
-            const { filePath, instruction, apply } = req.body;
+            const body = isRecord(req.body) ? req.body : {};
+            const filePath = readString(body.filePath);
+            const instruction = readString(body.instruction);
+            const apply = body.apply === true;
 
-            if (!filePath || typeof filePath !== 'string') {
+            if (!filePath) {
                 res.status(400).json({ error: 'filePath (string) is required' });
                 return;
             }
-            if (!instruction || typeof instruction !== 'string') {
+            if (!instruction) {
                 res.status(400).json({ error: 'instruction (string) is required' });
                 return;
             }
@@ -233,7 +281,7 @@ export function createDeveloperRoutes(): Router {
      */
     router.get('/review/history', (_req, res) => {
         try {
-            const limit = parseInt(_req.query.limit as string) || 20;
+            const limit = readLimit(_req.query.limit, 20);
             const history = codeReviewEngine.getHistory(limit);
             const stats = codeReviewEngine.getAggregateStats();
 
@@ -254,9 +302,11 @@ export function createDeveloperRoutes(): Router {
      */
     router.post('/context', async (req, res) => {
         try {
-            const { filePath, options } = req.body;
+            const body = isRecord(req.body) ? req.body : {};
+            const filePath = readString(body.filePath);
+            const options = isRecord(body.options) ? body.options : {};
 
-            if (!filePath || typeof filePath !== 'string') {
+            if (!filePath) {
                 res.status(400).json({ error: 'filePath (string) is required' });
                 return;
             }
@@ -294,11 +344,11 @@ export function createDeveloperRoutes(): Router {
     // POST /coverage — Run coverage analysis (or parse existing)
     router.post('/coverage', async (req, res) => {
         try {
-            const { mode, include, exclude } = req.body as {
-                mode?: 'run' | 'parse';
-                include?: string[];
-                exclude?: string[];
-            };
+            const body = isRecord(req.body) ? req.body : {};
+            const requestedMode = readString(body.mode);
+            const mode: 'run' | 'parse' = requestedMode === 'run' ? 'run' : 'parse';
+            const include = readStringArray(body.include);
+            const exclude = readStringArray(body.exclude);
 
             logInfo('DeveloperRoute', `Coverage request: mode=${mode || 'parse'}`);
 
@@ -334,13 +384,14 @@ export function createDeveloperRoutes(): Router {
     // POST /queue — Add task to queue
     router.post('/queue', async (req, res) => {
         try {
-            const { type, description, params, priority, maxRetries } = req.body as {
-                type?: string;
-                description?: string;
-                params?: Record<string, unknown>;
-                priority?: string;
-                maxRetries?: number;
-            };
+            const body = isRecord(req.body) ? req.body : {};
+            const type = readTaskType(body.type);
+            const description = readString(body.description);
+            const params = isRecord(body.params) ? body.params : {};
+            const priority = readTaskPriority(body.priority);
+            const maxRetries = typeof body.maxRetries === 'number' && Number.isFinite(body.maxRetries)
+                ? Math.min(Math.max(Math.trunc(body.maxRetries), 0), 10)
+                : undefined;
 
             if (!type || !description) {
                 res.status(400).json({ error: 'type and description are required' });
@@ -348,10 +399,10 @@ export function createDeveloperRoutes(): Router {
             }
 
             const taskId = await taskQueueManager.addTask(
-                type as any,
+                type,
                 description,
-                params ?? {},
-                { priority: priority as any, maxRetries }
+                params,
+                { priority, maxRetries }
             );
 
             const task = taskQueueManager.getTask(taskId);
@@ -366,16 +417,14 @@ export function createDeveloperRoutes(): Router {
     // GET /queue — List all tasks (with optional filters)
     router.get('/queue', (req, res) => {
         try {
-            const { status, type, priority } = req.query as {
-                status?: string;
-                type?: string;
-                priority?: string;
-            };
+            const status = readTaskStatus(req.query.status);
+            const type = readTaskType(req.query.type);
+            const priority = readTaskPriority(req.query.priority);
 
             const tasks = taskQueueManager.getTasks({
-                status: status as any,
-                type: type as any,
-                priority: priority as any,
+                status,
+                type: type ?? undefined,
+                priority,
             });
 
             const stats = taskQueueManager.getStats();
@@ -411,10 +460,9 @@ export function createDeveloperRoutes(): Router {
     router.put('/queue/:id', async (req, res) => {
         try {
             const { id } = req.params;
-            const { action, priority } = req.body as {
-                action?: 'cancel' | 'prioritize';
-                priority?: string;
-            };
+            const body = isRecord(req.body) ? req.body : {};
+            const action = readString(body.action);
+            const priority = readTaskPriority(body.priority);
 
             if (action === 'cancel') {
                 const success = await taskQueueManager.cancelTask(id);
@@ -425,7 +473,7 @@ export function createDeveloperRoutes(): Router {
                 const task = taskQueueManager.getTask(id);
                 res.json({ task, message: 'Task cancelled' });
             } else if (action === 'prioritize' && priority) {
-                const success = taskQueueManager.prioritizeTask(id, priority as any);
+                const success = taskQueueManager.prioritizeTask(id, priority);
                 if (!success) {
                     res.status(400).json({ error: 'Cannot change priority (not queued or not found)' });
                     return;
@@ -849,7 +897,7 @@ export function createDeveloperRoutes(): Router {
     // GET /feed — Get recent activity feed
     router.get('/feed', (req, res) => {
         try {
-            const limit = parseInt(req.query.limit as string) || 50;
+            const limit = readLimit(req.query.limit, 50);
             const activities = activityFeed.getRecent(limit);
             res.json({ activities });
         } catch (e: unknown) {

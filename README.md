@@ -88,7 +88,7 @@ A `README.md` a master dokumentum (~1100 sor). NE olvasd be egészben indulásko
 ## 📊 Auto-generated projekt statisztikák
 
 - Agent registry entries: **95**
-- Route modulok a `src/server/routes/` alatt: **100**
+- Route modulok a `src/server/routes/` alatt: **94**
 - Aktív route mountok a központi routerben: **111**
 - MCP tool fájlok a `src/tools/` alatt: **61**
 - Detektált MCP tool definíciók / regisztrációk: **4**
@@ -297,7 +297,8 @@ A hagyományos hierarchikus delegálás mellett elérhető a **Raj Intelligencia
 ### Model Router & Bifrost Gateway
 
 **Model Router** (`src/core/modelRouter.ts`) — Brain vs Muscle routing:
-- **Brain (Cloud):** Gemini (1M ctx), GitHub Models GPT-4o → `complexity: 'high'`
+
+- **Brain (Cloud):** Primary policy: GPT-4.1 (GitHub Models), fallback: Gemini (1M ctx) → `complexity: 'high'`
 - **Muscle (Local):** Ollama → `complexity: 'low'` vagy `budget=0`
 
 **Bifrost Gateway** (`src/core/bifrost_gateway.ts`) — Multi-LLM Gateway:
@@ -463,6 +464,11 @@ npx vitest run test/foo.test.ts  # Egy specifikus teszt
 npm run smoke        # Ollama, Express, FastAPI ellenőrzés
 npm run health       # Teljes health riport, runtime memória telemetriával
 ```
+
+Windows launcher note (`dashboard.bat`):
+
+- AnythingLLM Desktop explicit path: `C:\Program Files\AnythingLLM\AnythingLLM.exe`
+- Ha az exe nincs ezen az útvonalon, a script `[WARN]` üzenetet ír és folytatja az indítást.
 
 ### CLI Parancsok
 
@@ -1151,7 +1157,7 @@ npx wrangler deploy
 
 **Funkciók:**
 - 🇭🇺 Magyar nyelvű utasítások ("Keress rá az AI hírekre")
-- 🤖 LLM-based multi-step planning (GPT-4o/Gemini)
+- 🤖 LLM-based multi-step planning (Primary: GPT-4.1, fallback: Gemini)
 - 🌐 Automated browser control (Playwright + Python)
 - ⏱️ Background task management (long-running operations)
 - 📊 Live View dashboard + CLI interface
@@ -1195,7 +1201,7 @@ brunella robotkez status      # Agent status
 ### v2.4.0 (2026-02-15)
 
 - **NEW:** RobotkezV2 Agent - Magyar agentic browser (Comet-style) ⭐
-- **NEW:** LLM-based multi-step planning (GPT-4o/Gemini)
+- **NEW:** LLM-based multi-step planning (Primary: GPT-4.1, fallback: Gemini)
 - **NEW:** Background task manager for long-running browser operations
 - **NEW:** Live View dashboard with real-time screenshots
 - **NEW:** CLI commands (`brunella robotkez ...`)
@@ -1281,7 +1287,8 @@ curl http://localhost:3000/api/v1/mcp/tools | python -m json.tool
 - **Integration:** DataScientistAgent uses E2B by default
 
 #### 3. Bifrost Gateway (Phase 3 ✅)
-- **4 LLM Providers:** Ollama (local), Gemini, GitHub Models (GPT-4o), Anthropic (Claude)
+
+- **4 LLM Providers:** Ollama (local), Gemini, GitHub Models (GPT-4.1), Anthropic (Claude)
 - **Smart Routing:** Auto-select best provider by task type
 - **Fallback:** Cloud fail → Ollama (always available)
 - **Health Monitoring:** Real-time provider availability tracking
@@ -1308,7 +1315,7 @@ OLLAMA_BASE_URL=http://localhost:11434
 # Optional (enable more providers)
 E2B_API_KEY=your-e2b-api-key          # Secure Python sandboxes
 GEMINI_API_KEY=your-gemini-key        # Google Gemini LLM
-GITHUB_PAT=your-github-token           # GitHub Models (GPT-4o)
+GITHUB_PAT=your-github-token           # GitHub Models (GPT-4.1)
 ANTHROPIC_API_KEY=your-anthropic-key   # Claude access
 
 # Optional local/runtime overrides

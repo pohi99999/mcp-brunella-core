@@ -164,7 +164,7 @@ describe("ScheduledTasksEngine Integráció", () => {
         }),
       });
 
-      const response = await request(app).post("/api/v1/scheduled-tasks/agent-task/trigger");
+      const response = await request(app).post("/api/v1/scheduled-tasks/%20agent-task%20/trigger");
       expect(response.status).toBe(200);
       expect(response.body.success).toBe(true);
       expect(executeTaskMock).toHaveBeenCalledTimes(1);
@@ -173,6 +173,41 @@ describe("ScheduledTasksEngine Integráció", () => {
         handler: "agent",
         title: "Agent Task",
       }));
+    });
+
+    it("should normalize scheduled task creation payloads", async () => {
+      mockAll.mockReturnValueOnce([{ name: "metadata" }]);
+      mockGet.mockReturnValueOnce({
+        id: "created-task",
+        title: "Nightly Agent",
+        prompt: "Run checks",
+        cron_expression: "0 2 * * *",
+        handler: "agent",
+        enabled: 1,
+        metadata: "{\"team\":\"ops\"}",
+      });
+
+      const response = await request(app)
+        .post("/api/v1/scheduled-tasks")
+        .send({
+          title: "  Nightly Agent  ",
+          prompt: "  Run checks  ",
+          cron_expression: "  0 2 * * *  ",
+          handler: "  agent  ",
+          metadata: { team: "ops" },
+        });
+
+      expect(response.status).toBe(201);
+      expect(mockRun).toHaveBeenCalledWith(
+        expect.any(String),
+        "Nightly Agent",
+        "Run checks",
+        "0 2 * * *",
+        "agent",
+        "{\"team\":\"ops\"}",
+        expect.any(String),
+        expect.any(String),
+      );
     });
 
     it("should reject unsupported handlers on manual trigger", async () => {

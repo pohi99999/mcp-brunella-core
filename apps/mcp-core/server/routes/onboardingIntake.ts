@@ -35,15 +35,36 @@ type StoredIntakeMetadata = IntakeBody & {
   agent_trigger?: string;
 };
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function readString(value: unknown): string | undefined {
+  if (typeof value !== 'string') return undefined;
+  const trimmed = value.trim();
+  return trimmed ? trimmed : undefined;
+}
+
+function normalizeIntakeBody(value: unknown): IntakeBody {
+  if (!isRecord(value)) return {};
+  return Object.fromEntries(
+    Object.entries(value).map(([key, entry]) => [
+      key,
+      typeof entry === 'string' ? entry.trim() : entry,
+    ]),
+  ) as IntakeBody;
+}
+
 /** Map form_type + pain_point → agent trigger */
 function resolveAgentTrigger(body: IntakeBody): string {
-  if (body.trigger) return body.trigger;
+  const trigger = readString(body.trigger);
+  if (trigger) return trigger;
 
-  const formType = body.form_type ?? '';
+  const formType = readString(body.form_type) ?? '';
   if (formType === 'premium_brand') return 'copywriter';
 
   // KKV routing by pain_point
-  const pain = (body.pain_point ?? '').toLowerCase();
+  const pain = (readString(body.pain_point) ?? '').toLowerCase();
   if (pain.includes('könyvel') || pain.includes('pénzügy') || pain.includes('számla')) return 'InvoiceAutomation';
   if (pain.includes('marketing') || pain.includes('kampány')) return 'CampaignGenerator';
   if (pain.includes('hr') || pain.includes('toborzás') || pain.includes('bér')) return 'enterprise_orchestrator';
@@ -52,19 +73,15 @@ function resolveAgentTrigger(body: IntakeBody): string {
 }
 
 function normalizeClientName(body: IntakeBody): string {
-  return typeof body.client_name === 'string' && body.client_name.trim().length > 0
-    ? body.client_name.trim()
-    : typeof body.brand_name === 'string' && body.brand_name.trim().length > 0
-      ? body.brand_name.trim()
-      : '';
+  return readString(body.client_name)
+    ?? readString(body.brand_name)
+    ?? '';
 }
 
 function normalizeContactEmail(body: IntakeBody): string {
-  return typeof body.contact_email === 'string' && body.contact_email.trim().length > 0
-    ? body.contact_email.trim()
-    : typeof body.email === 'string' && body.email.trim().length > 0
-      ? body.email.trim()
-      : '';
+  return readString(body.contact_email)
+    ?? readString(body.email)
+    ?? '';
 }
 
 function parseStoredIntakeMetadata(raw: string | null): StoredIntakeMetadata | null {
@@ -72,10 +89,10 @@ function parseStoredIntakeMetadata(raw: string | null): StoredIntakeMetadata | n
 
   try {
     const parsed = JSON.parse(raw) as unknown;
-    if (typeof parsed !== 'object' || parsed === null) {
+    if (!isRecord(parsed)) {
       return null;
     }
-    return parsed as StoredIntakeMetadata;
+    return normalizeIntakeBody(parsed) as StoredIntakeMetadata;
   } catch {
     return null;
   }
@@ -83,18 +100,18 @@ function parseStoredIntakeMetadata(raw: string | null): StoredIntakeMetadata | n
 
 function buildDispatchTask(body: StoredIntakeMetadata, agentTrigger: string): string {
   const clientLabel = normalizeClientName(body);
-  const painPoint = typeof body.pain_point === 'string' ? body.pain_point : 'nincs megadva';
-  const industry = typeof body.industry === 'string' ? body.industry : 'nincs megadva';
-  const formType = typeof body.form_type === 'string' ? body.form_type : 'nincs megadva';
+  const painPoint = readString(body.pain_point) ?? 'nincs megadva';
+  const industry = readString(body.industry) ?? 'nincs megadva';
+  const formType = readString(body.form_type) ?? 'nincs megadva';
 
   if (agentTrigger === 'copywriter') {
     return [
       `Jóváhagyott brand onboarding intake: ${clientLabel}.`,
       'Készíts approval-safe kickoff csomagot: tone of voice vázlat, első ajánlott deliverable lista, és a következő manuális egyeztetési lépések.',
       `Form type: ${formType}.`,
-      `Pilot termék: ${typeof body.pilot_product === 'string' ? body.pilot_product : 'nincs megadva'}.`,
-      `Célvásárló: ${typeof body.target_customer === 'string' ? body.target_customer : 'nincs megadva'}.`,
-      `Márka leírás: ${typeof body.brand_sentence === 'string' ? body.brand_sentence : 'nincs megadva'}.`,
+      `Pilot termék: ${readString(body.pilot_product) ?? 'nincs megadva'}.`,
+      `Célvásárló: ${readString(body.target_customer) ?? 'nincs megadva'}.`,
+      `Márka leírás: ${readString(body.brand_sentence) ?? 'nincs megadva'}.`,
     ].join(' ');
   }
 
@@ -105,6 +122,14 @@ function buildDispatchTask(body: StoredIntakeMetadata, agentTrigger: string): st
     `Form type: ${formType}.`,
     'Készíts approval-safe következő lépés tervet, elsődleges agent outputot és manuális follow-up javaslatot; kifelé ható üzenetet csak javaslatként adj vissza, ne automatikus küldésként.',
   ].join(' ');
+}
+
+function getJobId(req: Request): string | undefined {
+  return readString(req.params['jobId']);
+}
+
+function getRejectReason(value: unknown): string {
+  return isRecord(value) ? readString(value.reason) ?? 'Nincs megadva ok' : 'Nincs megadva ok';
 }
 
 type TokenValidationResult =
@@ -150,10 +175,10 @@ export function createOnboardingIntakeRoutes(): Router {
       return res.status(tokenValidation.status).json({ status: 'error', error: tokenValidation.error });
     }
 
-    const body = (req.body ?? {}) as IntakeBody;
+    const body = normalizeIntakeBody(req.body);
     const clientName = normalizeClientName(body);
     const contactEmail = normalizeContactEmail(body);
-    const formType = typeof body.form_type === 'string' ? body.form_type : '';
+    const formType = readString(body.form_type) ?? '';
 
     // Required field validation
     const missing: string[] = [];
@@ -229,7 +254,10 @@ export function createOnboardingIntakeRoutes(): Router {
    * Jóváhagyás — az agent trigger ekkor indul el
    */
   router.post('/:jobId/approve', async (req: Request, res: Response) => {
-    const jobId = String(req.params['jobId']);
+    const jobId = getJobId(req);
+    if (!jobId) {
+      return res.status(400).json({ status: 'error', error: 'jobId is required' });
+    }
     try {
       const job = await getBusinessJobById(jobId);
       if (!job) {
@@ -244,9 +272,8 @@ export function createOnboardingIntakeRoutes(): Router {
         return res.status(422).json({ status: 'error', error: 'Az intake metadata sérült vagy hiányzik' });
       }
 
-      const agentTrigger = typeof intake.agent_trigger === 'string' && intake.agent_trigger.trim().length > 0
-        ? intake.agent_trigger
-        : resolveAgentTrigger(intake);
+      const storedAgentTrigger = readString(intake.agent_trigger);
+      const agentTrigger = storedAgentTrigger ?? resolveAgentTrigger(intake);
       const dispatchTask = buildDispatchTask(intake, agentTrigger);
       const queuedTaskId = await agentManager.queueTask(dispatchTask, agentTrigger, {
         source: 'onboarding_intake',
@@ -297,8 +324,11 @@ export function createOnboardingIntakeRoutes(): Router {
    * Elutasítás
    */
   router.post('/:jobId/reject', async (req: Request, res: Response) => {
-    const jobId = String(req.params['jobId']);
-    const reason = (req.body as { reason?: string }).reason ?? 'Nincs megadva ok';
+    const jobId = getJobId(req);
+    if (!jobId) {
+      return res.status(400).json({ status: 'error', error: 'jobId is required' });
+    }
+    const reason = getRejectReason(req.body);
     try {
       const job = await getBusinessJobById(jobId);
       if (!job) {

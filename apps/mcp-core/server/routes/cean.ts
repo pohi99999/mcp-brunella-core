@@ -47,6 +47,33 @@ function getTenantId(req: Request): string {
   return normalizeTenantContext(req.header('X-Tenant-ID') || undefined);
 }
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function readString(value: unknown): string | undefined {
+  if (typeof value !== 'string') return undefined;
+  const trimmed = value.trim();
+  return trimmed ? trimmed : undefined;
+}
+
+function readLimit(value: unknown, fallback: number): number {
+  const parsed = typeof value === 'string' ? Number.parseInt(value.trim(), 10) : fallback;
+  if (!Number.isFinite(parsed)) return fallback;
+  return Math.min(Math.max(parsed, 1), 500);
+}
+
+function readOffset(value: unknown): number {
+  const parsed = typeof value === 'string' ? Number.parseInt(value.trim(), 10) : 0;
+  if (!Number.isFinite(parsed)) return 0;
+  return Math.max(parsed, 0);
+}
+
+function readRole(value: unknown): 'user' | 'assistant' | undefined {
+  const role = readString(value);
+  return role === 'user' || role === 'assistant' ? role : undefined;
+}
+
 /**
  * POST /api/cean/chat/save
  * Save a chat message to history
@@ -69,17 +96,22 @@ function getTenantId(req: Request): string {
 router.post('/cean/chat/save', (req: Request, res: Response): void => {
   try {
     const tenantId = getTenantId(req);
-    const { sessionId, role, content, taskId } = req.body;
+    const body = isRecord(req.body) ? req.body : {};
+    const sessionId = readString(body.sessionId);
+    const roleText = readString(body.role);
+    const role = readRole(body.role);
+    const content = readString(body.content);
+    const taskId = readString(body.taskId);
 
     // Validation
-    if (!sessionId || !role || !content) {
+    if (!sessionId || !roleText || !content) {
       res.status(400).json({
         error: 'Missing required fields: sessionId, role, content',
       });
       return;
     }
 
-    if (!['user', 'assistant'].includes(role)) {
+    if (!role) {
       res.status(400).json({
         error: 'Invalid role. Must be "user" or "assistant"',
       });
@@ -96,7 +128,7 @@ router.post('/cean/chat/save', (req: Request, res: Response): void => {
       VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     `);
 
-    stmt.run(id, tenantId, sessionId, role, content, taskId || null, timestamp, created_at);
+    stmt.run(id, tenantId, sessionId, role, content, taskId ?? null, timestamp, created_at);
 
     logInfo('CEAN Routes', `Chat message saved: ${role} - ${content.slice(0, 50)}...`);
 
@@ -138,18 +170,15 @@ router.post('/cean/chat/save', (req: Request, res: Response): void => {
 router.get('/cean/chat/history/:sessionId', (req: Request, res: Response): void => {
   try {
     const tenantId = getTenantId(req);
-    const { sessionId } = req.params;
-    const { limit, offset } = req.query;
+    const sessionId = readString(req.params.sessionId);
+    if (!sessionId) {
+      res.status(400).json({ error: 'sessionId is required' });
+      return;
+    }
 
     // Parse and validate pagination
-    const parsedLimit = typeof limit === 'string' ? parseInt(limit, 10) : 100;
-    const parsedOffset = typeof offset === 'string' ? parseInt(offset, 10) : 0;
-    let limitNum = Number.isFinite(parsedLimit) ? parsedLimit : 100;
-    let offsetNum = Number.isFinite(parsedOffset) ? parsedOffset : 0;
-
-    if (limitNum > 500) limitNum = 500;
-    if (limitNum < 1) limitNum = 1;
-    if (offsetNum < 0) offsetNum = 0;
+    const limitNum = readLimit(req.query.limit, 100);
+    const offsetNum = readOffset(req.query.offset);
 
     const stmt = db.prepare(`
       SELECT id, tenant_id, role, content, task_id, timestamp, created_at
@@ -204,7 +233,11 @@ router.get('/cean/chat/history/:sessionId', (req: Request, res: Response): void 
 router.delete('/cean/chat/history/:sessionId', (req: Request, res: Response): void => {
   try {
     const tenantId = getTenantId(req);
-    const { sessionId } = req.params;
+    const sessionId = readString(req.params.sessionId);
+    if (!sessionId) {
+      res.status(400).json({ error: 'sessionId is required' });
+      return;
+    }
 
     const rows = db.prepare(
       'SELECT id, tenant_id FROM cean_chat_history WHERE session_id = ? ORDER BY created_at ASC'

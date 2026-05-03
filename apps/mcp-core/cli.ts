@@ -76,6 +76,7 @@ import { registerSwarmCommands } from "./swarmCommands.js";
 import { registerToolDiscoveryCommands } from "./toolDiscoveryCommands.js";
 import { registerSecurityCommands } from "./securityCommands.js";
 import { registerChromeAcpCommands } from "./chromeAcpCommands.js";
+import { registerReadinessCommands } from "./readinessCommands.js";
 import { createOpenClawCliHandlers, formatOpenClawCliPayload } from "./openclawCommands.js";
 import { validateAndNormalizeRegistry } from "@packages/agents/registryValidation.js";
 import { getAssistantBlueprint, type AssistantBlueprint, type AssistantReadinessStatus } from "@packages/core-logic/assistantBlueprint.js";
@@ -1927,6 +1928,7 @@ registerSwarmCommands(program);
 registerToolDiscoveryCommands(program);
 registerSecurityCommands(program);
 registerChromeAcpCommands(program);
+registerReadinessCommands(program);
 registerBrowserCopilotCommands(program);
 
 // Register Crawl4AI & Memoria commands (Phase 3 — kutatas.md integráció)

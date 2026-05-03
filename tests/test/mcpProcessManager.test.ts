@@ -138,6 +138,79 @@ describe("McpProcessManager", () => {
     );
   });
 
+  it("reports manifest readiness blockers without connecting servers", async () => {
+    const unsupportedPlatform = process.platform === "win32" ? "linux" : "win32";
+    setConfig([
+      {
+        name: "github",
+        transport: "stdio",
+        command: "docker",
+        args: ["run"],
+        envFromHost: {
+          GITHUB_PERSONAL_ACCESS_TOKEN: ["GITHUB_PAT"],
+        },
+        requiredEnv: ["GITHUB_PERSONAL_ACCESS_TOKEN"],
+        autoStart: true,
+      },
+      {
+        name: "disabled-placeholder",
+        transport: "stdio",
+        command: "node",
+        args: ["placeholder.js"],
+        autoStart: false,
+        disabled: true,
+      },
+      {
+        name: "wrong-platform",
+        transport: "stdio",
+        command: "python",
+        args: ["server.py"],
+        autoStart: true,
+        platforms: [unsupportedPlatform],
+      },
+    ]);
+
+    const manager = new McpProcessManager();
+    await manager.loadConfig();
+    const readiness = manager.getServersReadiness();
+
+    expect(connectStdioMock).not.toHaveBeenCalled();
+      expect(readiness).toEqual([
+        expect.objectContaining({
+          name: "github",
+          canStart: false,
+          readinessState: "action_required",
+          missingRequiredEnv: ["GITHUB_PERSONAL_ACCESS_TOKEN"],
+          actionableBlockers: expect.arrayContaining([
+            "missing required env: GITHUB_PERSONAL_ACCESS_TOKEN",
+          ]),
+          blockers: expect.arrayContaining([
+            "missing required env: GITHUB_PERSONAL_ACCESS_TOKEN",
+          ]),
+      }),
+      expect.objectContaining({
+          name: "disabled-placeholder",
+          disabled: true,
+          canStart: false,
+          readinessState: "disabled",
+          inactiveReason: "Disabled intentionally in mcp_servers.json",
+          actionableBlockers: [],
+          blockers: expect.arrayContaining(["disabled in mcp_servers.json"]),
+        }),
+        expect.objectContaining({
+          name: "wrong-platform",
+          platformSupported: false,
+          canStart: false,
+          readinessState: "unsupported",
+          inactiveReason: `Platform ${process.platform} is not in supported platforms`,
+          actionableBlockers: [],
+          blockers: expect.arrayContaining([
+            `platform ${process.platform} not supported`,
+          ]),
+      }),
+    ]);
+  });
+
   it("auto-starts configured remote http servers", async () => {
     setConfig([
       {

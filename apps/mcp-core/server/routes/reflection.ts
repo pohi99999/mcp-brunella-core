@@ -13,6 +13,26 @@ import type { ReflectionOverview } from '@packages/core-logic/reflectionOverview
 import { logInfo } from '@packages/utils/logger.js';
 
 const MODULE = 'reflectionRoutes';
+const OUTCOMES = new Set<TaskOutcome['result']>(['success', 'failure', 'partial']);
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function readString(value: unknown): string | null {
+  if (typeof value !== 'string') return null;
+  const trimmed = value.trim();
+  return trimmed ? trimmed : null;
+}
+
+function readTaskId(value: unknown): string | number | null {
+  if (typeof value === 'number' && Number.isFinite(value)) return value;
+  return readString(value);
+}
+
+function readDuration(value: unknown): number {
+  return typeof value === 'number' && Number.isFinite(value) && value >= 0 ? Math.round(value) : 0;
+}
 
 function buildMemoryScopes(): ReflectionOverview['selfModel']['memoryScopes'] {
   return {
@@ -83,11 +103,29 @@ function createReflectionRouter(): Router {
   // POST /api/v1/reflection/reflect
   // Manually submit a task outcome for reflection.
   router.post('/reflect', async (req: Request, res: Response) => {
-    const outcome = req.body as TaskOutcome;
-    if (!outcome?.agent || !outcome?.task || !outcome?.result) {
+    const body = isRecord(req.body) ? req.body : {};
+    const taskId = readTaskId(body.taskId) ?? `manual-${Date.now()}`;
+    const agent = readString(body.agent);
+    const task = readString(body.task);
+    const resultText = readString(body.result);
+    const output = readString(body.output) ?? '';
+
+    if (!agent || !task || !resultText || !OUTCOMES.has(resultText as TaskOutcome['result'])) {
       res.status(400).json({ ok: false, error: 'Missing required fields: agent, task, result' });
       return;
     }
+
+    const outcome: TaskOutcome = {
+      taskId,
+      agent,
+      task,
+      result: resultText as TaskOutcome['result'],
+      output,
+      durationMs: readDuration(body.durationMs),
+      errorMessage: readString(body.errorMessage) ?? undefined,
+      metadata: isRecord(body.metadata) ? body.metadata : undefined,
+    };
+
     const result = await engine.reflect(outcome);
     logInfo(MODULE, `Manual reflect: agent=${outcome.agent}, quality=${(result.qualityScore * 100).toFixed(0)}%`);
     res.json({ ok: true, result });

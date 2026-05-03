@@ -4,8 +4,8 @@ import 'dotenv/config';
  * BAS Startup Smoke Test — Szolgáltatás végpont ellenőrzés
  *
  * Minden futó szolgáltatás HTTP endpointját teszteli és összesített riportot ad.
- * Használat: npx tsx scripts/startup_smoke_test.ts
- * Vagy: npm run smoke:startup
+ * Használat: npx tsx ops/scripts/startup_smoke_test.ts
+ * Vagy: npm run smoke
  */
 
 interface EndpointCheck {
@@ -26,9 +26,9 @@ function joinUrl(base: string, path: string): string {
 
 const ENDPOINTS: Omit<EndpointCheck, 'status' | 'responseTime' | 'error'>[] = [
   { name: 'Brunella Core Ready', url: 'http://localhost:3000/readyz', optional: false },
-  { name: 'Dashboard UI', url: 'http://localhost:3000/', optional: false },
+  { name: 'Core Root / SPA Fallback', url: 'http://localhost:3000/', optional: true },
   { name: 'FastAPI Python', url: 'http://localhost:8000/health', optional: false },
-  { name: 'Dashboard Dev UI', url: 'http://localhost:5173', optional: true },
+  { name: 'Dashboard Dev UI', url: 'http://localhost:5173', optional: false },
   { name: 'Ollama LLM', url: 'http://localhost:11434/api/tags', optional: false },
   { name: 'AnythingLLM', url: joinUrl(anythingLlmBaseUrl, '/api/ping'), optional: true },
 ];

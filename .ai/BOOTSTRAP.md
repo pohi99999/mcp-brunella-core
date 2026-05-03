@@ -82,7 +82,7 @@
 ## 📊 Auto-generated projekt statisztikák
 
 - Agent registry entries: **95**
-- Route modulok a `src/server/routes/` alatt: **100**
+- Route modulok a `src/server/routes/` alatt: **94**
 - Aktív route mountok a központi routerben: **111**
 - MCP tool fájlok a `src/tools/` alatt: **61**
 - Detektált MCP tool definíciók / regisztrációk: **4**
@@ -96,7 +96,7 @@
 
 ### Kód
 - `src/agents/` - 95 AI ügynök (OrchestratorAgent, DeveloperAgent, stb.)
-- `src/server/` - Backend API + MCP registry (100 route fájl)
+- `src/server/` - Backend API + MCP registry (94 route fájl)
 - `src/core/` - Model Router, Bifrost Gateway, Observability, Phoenix Protocol
 - `src/dashboard/` - React UI komponensek (Radix UI + Tailwind v4)
 - `src/tools/` - MCP tool definíciók

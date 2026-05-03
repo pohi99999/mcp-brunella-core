@@ -721,6 +721,28 @@ describe('Federation routes', () => {
     expect(federationMocks.execute).toHaveBeenCalledTimes(1);
   });
 
+  it('trims capability names before local federation execution', async () => {
+    const body = { capabilityName: '  agent_list  ', payload: { sample: true } };
+    const response = await request(app)
+      .post('/api/v1/federation/execute')
+      .set(createSignedHeaders('/api/v1/federation/execute', body))
+      .send(body);
+
+    expect(response.status).toBe(200);
+    expect(federationMocks.execute).toHaveBeenCalledWith('agent_list', { sample: true });
+  });
+
+  it('rejects non-object local federation payloads', async () => {
+    const body = { capabilityName: 'agent_list', payload: 'not-object' };
+    const response = await request(app)
+      .post('/api/v1/federation/execute')
+      .set(createSignedHeaders('/api/v1/federation/execute', body))
+      .send(body);
+
+    expect(response.status).toBe(400);
+    expect(federationMocks.execute).not.toHaveBeenCalled();
+  });
+
   it('rejects inbound execute requests that try to re-route remotely', async () => {
     const body = {
       capabilityName: 'agent_list',

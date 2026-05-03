@@ -118,7 +118,7 @@ describe('Learning Loop routes', () => {
   it('passes trainer options through the train endpoint', async () => {
     const response = await request(app)
       .post('/api/v1/learning-loop/train')
-      .send({ dryRun: false, modelName: 'brunella-reflex' });
+      .send({ dryRun: false, modelName: '  brunella-reflex  ' });
 
     expect(response.status).toBe(200);
     expect(learningLoopMocks.runNightlyTraining).toHaveBeenCalledWith({
@@ -130,7 +130,7 @@ describe('Learning Loop routes', () => {
   it('passes cycle options through the cycle endpoint', async () => {
     const response = await request(app)
       .post('/api/v1/learning-loop/cycle')
-      .send({ dryRun: 'false', promotePassed: 'true', baselineModel: 'qwen2.5-coder:7b' });
+      .send({ dryRun: ' false ', promotePassed: ' true ', baselineModel: '  qwen2.5-coder:7b  ' });
 
     expect(response.status).toBe(200);
     expect(learningLoopMocks.executeLearningLoopCycle).toHaveBeenCalledWith({
@@ -148,6 +148,45 @@ describe('Learning Loop routes', () => {
     expect(response.status).toBe(400);
     expect(response.body.success).toBe(false);
     expect(learningLoopMocks.reviewCuratedGoldenSample).not.toHaveBeenCalled();
+  });
+
+  it('normalizes model and curated sample query bounds', async () => {
+    await request(app).get('/api/v1/learning-loop/models?state=active&limit=999');
+    await request(app).get('/api/v1/learning-loop/curated/samples?state=approved&limit=-5&offset=-10');
+
+    expect(learningLoopMocks.listReflexModels).toHaveBeenCalledWith('active', 200);
+    expect(learningLoopMocks.listCuratedGoldenSamples).toHaveBeenCalledWith({
+      state: 'approved',
+      limit: 1,
+      offset: 0,
+    });
+  });
+
+  it('normalizes curated capture and review payloads', async () => {
+    await request(app)
+      .post('/api/v1/learning-loop/curated/capture')
+      .send({
+        prompt: '  prompt  ',
+        completion: '  completion  ',
+        source: '  dashboard  ',
+        quality: 4,
+        provenance: ['invalid'],
+        autoApprove: ' yes ',
+      });
+
+    await request(app)
+      .post('/api/v1/learning-loop/curated/review/sample-1')
+      .send({ decision: ' approved ', reviewer: '  reviewer  ', notes: '  good  ' });
+
+    expect(learningLoopMocks.captureCuratedGoldenCandidate).toHaveBeenCalledWith({
+      prompt: 'prompt',
+      completion: 'completion',
+      source: 'dashboard',
+      quality: 1,
+      provenance: undefined,
+      autoApprove: true,
+    });
+    expect(learningLoopMocks.reviewCuratedGoldenSample).toHaveBeenCalledWith('sample-1', 'approved', 'reviewer', 'good');
   });
 
   it('returns 404 when a curated sample review target is missing', async () => {

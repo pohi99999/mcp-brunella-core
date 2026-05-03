@@ -22,6 +22,21 @@ import { logError, logInfo } from '@packages/utils/logger.js';
 // ── Module constant ───────────────────────────────────────────────────────────
 const MODULE = 'BriefingRoutes';
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function parseBoolean(value: unknown, fallback = false): boolean {
+  if (typeof value === 'boolean') return value;
+  if (typeof value === 'number') return value === 1 ? true : value === 0 ? false : fallback;
+  if (typeof value === 'string') {
+    const normalized = value.trim().toLowerCase();
+    if (normalized === 'true' || normalized === '1' || normalized === 'yes' || normalized === 'on') return true;
+    if (normalized === 'false' || normalized === '0' || normalized === 'no' || normalized === 'off') return false;
+  }
+  return fallback;
+}
+
 // ── Database helpers ──────────────────────────────────────────────────────────
 
 /** Row shape returned by `SELECT * FROM ai_agent_briefing_reports` */
@@ -147,13 +162,8 @@ export function createBriefingRoutes(db: Database.Database): Router {
    * - `dryRun` {boolean | 'true' | 'false' | '1' | '0'} — do not persist result
    */
   router.post('/run', async (req: Request, res: Response): Promise<void> => {
-    // Parse dryRun robustly — accept boolean, string truthy, numeric 1/0
-    const rawDryRun = req.body?.dryRun;
-    const dryRun =
-      rawDryRun === true ||
-      rawDryRun === 'true' ||
-      rawDryRun === '1' ||
-      rawDryRun === 1;
+    const body = isRecord(req.body) ? req.body : {};
+    const dryRun = parseBoolean(body.dryRun, false);
 
     logInfo(MODULE, `POST /run triggered (dryRun=${dryRun})`);
 

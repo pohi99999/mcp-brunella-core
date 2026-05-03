@@ -11,6 +11,49 @@ function parseOptionalString(value: unknown): string | undefined {
   return typeof value === 'string' && value.trim().length > 0 ? value.trim() : undefined;
 }
 
+function normalizePayload(value: unknown): unknown {
+  if (!isRecord(value)) {
+    return value;
+  }
+
+  return Object.fromEntries(
+    Object.entries(value).map(([key, entry]) => [
+      key,
+      typeof entry === 'string' ? entry.trim() : entry,
+    ]),
+  );
+}
+
+function normalizeLeadBody(value: unknown): unknown {
+  if (!isRecord(value)) {
+    return value;
+  }
+
+  const normalized: Record<string, unknown> = {
+    ...value,
+  };
+
+  if (typeof normalized.source === 'string') {
+    normalized.source = normalized.source.trim();
+  }
+
+  if (typeof normalized.workflowId === 'string') {
+    normalized.workflowId = normalized.workflowId.trim();
+  }
+
+  if (isRecord(normalized.metadata)) {
+    normalized.metadata = Object.fromEntries(
+      Object.entries(normalized.metadata).map(([key, entry]) => [
+        key,
+        typeof entry === 'string' ? entry.trim() : entry,
+      ]),
+    );
+  }
+
+  normalized.payload = normalizePayload(normalized.payload);
+  return normalized;
+}
+
 function extractWorkflowId(body: unknown, headerValue: string | undefined): string | undefined {
   const fromHeader = parseOptionalString(headerValue);
   if (fromHeader) {
@@ -34,8 +77,9 @@ export function createKkvCrmRoutes(): Router {
 
   router.post('/leads', async (req, res) => {
     try {
-      const workflowId = extractWorkflowId(req.body, req.header('x-workflow-id') ?? undefined);
-      const result = await kkvCrmService.createLead(req.body, { workflowId });
+      const normalizedBody = normalizeLeadBody(req.body);
+      const workflowId = extractWorkflowId(normalizedBody, req.header('x-workflow-id') ?? undefined);
+      const result = await kkvCrmService.createLead(normalizedBody, { workflowId });
 
       if (!result.success) {
         return res.status(result.statusCode).json({

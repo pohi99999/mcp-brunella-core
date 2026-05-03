@@ -17,6 +17,7 @@ vi.mock("@packages/utils/cloudflareClient.js", () => ({
   cloudflareClient: {
     submitTask: vi.fn(),
     checkStatus: vi.fn(),
+    fetchHistory: vi.fn(),
   },
 }));
 
@@ -132,6 +133,31 @@ describe("Cloudflare routes", () => {
       );
     });
 
+    it("POST /api/cloudflare/task trims instructions and ignores non-object context", async () => {
+      const { cloudflareClient } = vi.mocked(
+        await import("@packages/utils/cloudflareClient.js"),
+      );
+      vi.mocked(cloudflareClient.submitTask).mockResolvedValueOnce({
+        success: true,
+        taskId: "task_456",
+        type: "code_generation",
+        message: "Task submitted successfully",
+      });
+
+      const res = await request(app)
+        .post("/api/cloudflare/task")
+        .send({
+          instruction: "  Generate Python code  ",
+          context: ["not-object"],
+        });
+
+      expect(res.status).toBe(200);
+      expect(cloudflareClient.submitTask).toHaveBeenCalledWith(
+        "Generate Python code",
+        {},
+      );
+    });
+
     it("GET /api/cloudflare/status/:taskId returns task status when edge enabled", async () => {
       const { cloudflareClient } = vi.mocked(
         await import("@packages/utils/cloudflareClient.js"),
@@ -148,6 +174,18 @@ describe("Cloudflare routes", () => {
       expect(res.body.taskId).toBe("task_123");
       expect(res.body.status).toBe("completed");
       expect(cloudflareClient.checkStatus).toHaveBeenCalledWith("task_123");
+    });
+
+    it("GET /api/cloudflare/history clamps invalid limits", async () => {
+      const { cloudflareClient } = vi.mocked(
+        await import("@packages/utils/cloudflareClient.js"),
+      );
+      vi.mocked(cloudflareClient.fetchHistory).mockResolvedValueOnce({ tasks: [] });
+
+      const res = await request(app).get("/api/cloudflare/history?limit=9999");
+
+      expect(res.status).toBe(200);
+      expect(cloudflareClient.fetchHistory).toHaveBeenCalledWith(100);
     });
 
     it("POST /api/cloudflare/task returns 400 for missing instruction", async () => {

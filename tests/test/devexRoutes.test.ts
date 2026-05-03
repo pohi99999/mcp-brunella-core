@@ -14,7 +14,7 @@ describe("devex routes", () => {
     app.use("/api/v1/devex", createDevExRouter());
 
     const response = await request(app).get(
-      "/api/v1/devex/planner?templateId=docs-config&surface=docs&tier=recommended",
+      "/api/v1/devex/planner?templateId=%20docs-config%20&surface=%20docs%20&tier=%20recommended%20",
     );
 
     expect(response.status).toBe(200);

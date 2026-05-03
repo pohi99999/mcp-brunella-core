@@ -40,7 +40,7 @@ npm run build          # TypeScript fordítás (src/ → build/) + registry/TRIZ
 npm run build:ui       # Dashboard build (KÜLÖNÁLLÓ — tsconfig.ui.json + vite.config.ts)
 npm run dev            # Express :3000 + MCP stdio
 npm run dev:ui         # Vite Dashboard :5173
-dashboard.bat          # Teljes indítás + browser megnyitás :5173 (Windows)
+dashboard.bat          # Teljes indítás + browser megnyitás :5173 (Windows), AnythingLLM exe: C:\Program Files\AnythingLLM\AnythingLLM.exe
 start-full.bat         # Teljes Windows indítás (Ollama + FastAPI + backend + dashboard)
 npm run build:stable   # TypeScript + dashboard build egyben
 npm run start:stable   # Produkciós indítás (node --max-old-space-size=1536)
@@ -101,7 +101,7 @@ npm run sync:bootstrap               # .ai/BOOTSTRAP.md regenerálása
 
 **`BaseAgent` több mint kényelmi osztály:** Mintaújrahasználást, RAG lookup-ot, confidence scoring-ot, output validációt, redaction-t és automatikus státusz-visszaállítást ad `executeTask()` körül.
 
-**Model routing két réteg:** `src/core/modelRouter.ts` (local vs cloud: brain/muscle), `src/core/bifrost_gateway.ts` (Ollama → Gemini → GitHub Models → Anthropic fallback lánc).
+**Model routing két réteg:** `src/core/modelRouter.ts` (local vs cloud: brain/muscle, primary brain policy: GPT-4.1 on GitHub Models), `src/core/bifrost_gateway.ts` (Ollama → Gemini → GitHub Models → Anthropic fallback lánc).
 
 **Kernel Pipeline:** `src/core/conductor.ts` — 8 fázis: IntentRouter → Planner → ContextBuilder → ToolExecutor → Critic → Guardrail → LearningLoop. Megosztott `RunEnvelope` + `ModuleResponse<T>` (`kernelTypes.ts`), 10-esemény bus (`kernelEventBus.ts`), max 2 retry/modul, `RunLedger` utolsó 50 futás. REST: `/api/v1/kernel`.
 

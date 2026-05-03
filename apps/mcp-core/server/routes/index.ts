@@ -55,6 +55,7 @@ export function createV1Router(): Router {
   router.use("/health", createHealthRoutes());
 
   // ── Core routes ────────────────────────────────────────────────────
+  router.use("/chaos", lazy(() => import("./chaos.js"), "createChaosRoutes"));
   router.use("/agents", lazy(() => import("./agents.js"), "createAgentRoutes"));
   router.use("/registry", lazy(() => import("./agents.js"), "createRegistryRoutes"));
   router.use("/providers", lazy(() => import("./llm.js"), "createProvidersRoutes"));

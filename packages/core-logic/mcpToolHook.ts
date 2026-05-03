@@ -1,13 +1,18 @@
 // src/core/mcpToolHook.ts
 // Minden MCP tool hívás előtt/után fut — Golden Dataset audit
 import { fireHook } from './agentHookEngine.js';
-import { logInfo, logError } from '@packages/utils/logger.js';
+import { logError } from '@packages/utils/logger.js';
 
 /**
  * MCP eszköz hívás becsomagolása (wrapping) életciklus hookokkal.
  */
-export function wrapToolWithHooks(toolName: string, handler: Function) {
-  return async (args: unknown) => {
+type ToolHandler<TArgs = unknown, TResult = unknown> = (args: TArgs) => Promise<TResult> | TResult;
+
+export function wrapToolWithHooks<TArgs = unknown, TResult = unknown>(
+  toolName: string,
+  handler: ToolHandler<TArgs, TResult>,
+) {
+  return async (args: TArgs): Promise<TResult> => {
     const start = Date.now();
     
     // 1. Tool hívás előtti hook

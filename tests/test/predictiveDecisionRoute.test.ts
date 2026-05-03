@@ -87,28 +87,28 @@ describe('PredictiveDecision route', () => {
   });
 
   it('returns decision history', async () => {
-    const response = await request(app).get('/api/v1/predictive-decision/history?limit=5');
+    const response = await request(app).get('/api/v1/predictive-decision/history?limit=999');
 
     expect(response.status).toBe(200);
     expect(response.body.success).toBe(true);
     expect(response.body.count).toBe(1);
-    expect(predictiveHarness.getDecisionHistory).toHaveBeenCalledWith(5);
+    expect(predictiveHarness.getDecisionHistory).toHaveBeenCalledWith(100);
   });
 
   it('returns decision stats', async () => {
-    const response = await request(app).get('/api/v1/predictive-decision/stats?daysBack=14');
+    const response = await request(app).get('/api/v1/predictive-decision/stats?daysBack=-14');
 
     expect(response.status).toBe(200);
     expect(response.body.success).toBe(true);
     expect(response.body.data.totalDecisions).toBe(3);
-    expect(predictiveHarness.getDecisionStats).toHaveBeenCalledWith(14);
+    expect(predictiveHarness.getDecisionStats).toHaveBeenCalledWith(1);
   });
 
   it('triggers a manual decision cycle with parsed config', async () => {
     const response = await request(app)
       .post('/api/v1/predictive-decision/trigger')
       .send({
-        triggeredBy: 'dashboard',
+        triggeredBy: '  dashboard  ',
         config: {
           scenarioCount: 18,
           seed: 42,
@@ -149,6 +149,14 @@ describe('PredictiveDecision route', () => {
     expect(response.status).toBe(404);
     expect(response.body.success).toBe(false);
     expect(response.body.error).toContain('missing-id');
+  });
+
+  it('trims decision ids before lookup and rollback', async () => {
+    await request(app).get('/api/v1/predictive-decision/%20pdr-1%20');
+    await request(app).post('/api/v1/predictive-decision/%20pdr-1%20/rollback');
+
+    expect(predictiveHarness.getDecisionResult).toHaveBeenCalledWith('pdr-1');
+    expect(predictiveHarness.rollbackDecision).toHaveBeenCalledWith('pdr-1');
   });
 
   it('returns 400 when rollback is not allowed', async () => {

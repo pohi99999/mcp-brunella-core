@@ -1,0 +1,22 @@
+id: dashboard-panel
+title: Dashboard Panel Mission
+description: Add or validate a dashboard panel and its linked behavior.
+goal: Ship a visible dashboard surface that is wired to the system state.
+surface: dashboard
+category: 05-dashboard
+tags:
+  - dashboard
+  - ui
+  - panel
+steps:
+  - Locate the navigation entry and panel component.
+  - Wire the panel to the expected backend data.
+  - Add focused component tests for the panel behavior.
+  - Open the UI and verify the rendered interaction.
+commands:
+  - npm run test:dashboard
+  - npm run test:ui
+artifacts:
+  - src/dashboard/lib/navigation.tsx
+trackRefs:
+  - src/dashboard/lib/navigation.tsx

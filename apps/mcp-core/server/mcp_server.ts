@@ -61,18 +61,7 @@ export class MCPFilesystemServer {
       logInfo('MCPFilesystemServer', `Calling tool: ${name}`);
 
       try {
-        switch (name) {
-          case 'read_file':
-            return await this.handleReadFile(args);
-          case 'write_file':
-            return await this.handleWriteFile(args);
-          case 'list_directory':
-            return await this.handleListDirectory(args);
-          case 'search_files':
-            return await this.handleSearchFiles(args);
-          default:
-            throw new Error(`Unknown tool: ${name}`);
-        }
+        return await this.executeTool(name, args);
       } catch (error: unknown) {
         const errorMsg = error instanceof Error ? error.message : String(error);
         logError('MCPFilesystemServer', `Tool ${name} failed: ${errorMsg}`);
@@ -92,7 +81,7 @@ export class MCPFilesystemServer {
   /**
    * Get tool definitions
    */
-  private getTools(): Tool[] {
+  getTools(): Tool[] {
     return [
       {
         name: 'read_file',
@@ -167,6 +156,21 @@ export class MCPFilesystemServer {
         }
       }
     ];
+  }
+
+  async executeTool(name: string, args: Record<string, unknown>): Promise<CallToolResult> {
+    switch (name) {
+      case 'read_file':
+        return await this.handleReadFile(args);
+      case 'write_file':
+        return await this.handleWriteFile(args);
+      case 'list_directory':
+        return await this.handleListDirectory(args);
+      case 'search_files':
+        return await this.handleSearchFiles(args);
+      default:
+        throw new Error(`Unknown tool: ${name}`);
+    }
   }
 
   /**

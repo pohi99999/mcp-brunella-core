@@ -223,12 +223,12 @@ export function CopilotOrchestratorPanel() {
                         {[
                             {
                                 label: "Health Check",
-                                cmd: "curl http://localhost:3000/api/health",
+                                cmd: "curl http://localhost:3000/api/v1/health",
                                 desc: "Full system health status",
                             },
                             {
                                 label: "Agent Status",
-                                cmd: "curl http://localhost:3000/api/agents/status",
+                                cmd: "curl http://localhost:3000/api/v1/agents/status",
                                 desc: "All agent idle/working states",
                             },
                             {
@@ -238,7 +238,7 @@ export function CopilotOrchestratorPanel() {
                             },
                             {
                                 label: "Delegate Task",
-                                cmd: 'curl -X POST localhost:3000/api/v1/orchestrator/delegate -H "Content-Type: application/json" -d \'{"task":"…"}\'',
+                                cmd: 'curl -X POST http://localhost:3000/api/v1/orchestrator/universal -H "Content-Type: application/json" -d \'{"message":"…","provider":"github"}\'',
                                 desc: "Delegate to Brunella orchestrator",
                             },
                             {

@@ -1,9 +1,11 @@
 import express from 'express';
+import type { CallToolResult, TextContent } from '@modelcontextprotocol/sdk/types.js';
 import { getBifrostGateway } from '@packages/core-logic/bifrost_gateway.js';
 import { getSafeZoneValidator } from '@packages/core-logic/safe_zone_validator.js';
 import { getE2BSandboxManager } from '@packages/core-logic/e2b_sandbox_manager.js';
 import { logInfo, logError } from '@packages/utils/logger.js';
 import { MCPFilesystemServer } from '../mcp_server.js';
+import { mcpProcessManager, type McpServerReadiness, type ServerStatus } from '../McpProcessManager.js';
 
 /**
  * MCP API Routes
@@ -12,6 +14,8 @@ import { MCPFilesystemServer } from '../mcp_server.js';
  * - GET /api/mcp/providers - List all LLM providers + health
  * - POST /api/mcp/generate - Generate with Bifrost Gateway
  * - GET /api/mcp/tools - List MCP filesystem tools
+ * - GET /api/mcp/servers - List configured MCP server runtime states
+ * - GET /api/mcp/manifest - Audit MCP manifest readiness without starting servers
  * - POST /api/mcp/tools/:toolName - Execute MCP tool
  * - GET /api/mcp/audit - Get Safe Zone audit log
  * - GET /api/mcp/safezones - List Safe Zone configs
@@ -25,6 +29,104 @@ const bifrost = getBifrostGateway();
 const validator = getSafeZoneValidator();
 const e2bManager = getE2BSandboxManager();
 const mcpServer = new MCPFilesystemServer();
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function summarizeServerStatuses(servers: ServerStatus[]) {
+  return servers.reduce(
+    (summary, server) => {
+      summary.total += 1;
+      summary[server.status] += 1;
+      if (server.autoStart) {
+        summary.autoStart += 1;
+      }
+      return summary;
+    },
+    {
+      total: 0,
+      running: 0,
+      stopped: 0,
+      starting: 0,
+      error: 0,
+      disabled: 0,
+      skipped: 0,
+      autoStart: 0,
+    },
+  );
+}
+
+function summarizeReadiness(entries: McpServerReadiness[]) {
+  return entries.reduce(
+    (summary, entry) => {
+      summary.total += 1;
+      if (entry.canStart) {
+        summary.ready += 1;
+      }
+      if (entry.readinessState === 'action_required') {
+        summary.blocked += 1;
+        summary.actionRequired += 1;
+      }
+      if (entry.readinessState === 'disabled' || entry.readinessState === 'unsupported') {
+        summary.inactive += 1;
+      }
+      if (entry.disabled) {
+        summary.disabled += 1;
+      }
+      if (!entry.platformSupported) {
+        summary.unsupportedPlatform += 1;
+      }
+      if (entry.missingRequiredEnv.length > 0) {
+        summary.missingEnv += 1;
+      }
+      return summary;
+    },
+    {
+      total: 0,
+        ready: 0,
+        blocked: 0,
+        actionRequired: 0,
+        inactive: 0,
+        disabled: 0,
+        unsupportedPlatform: 0,
+        missingEnv: 0,
+    },
+  );
+}
+
+function parseToolResult(result: CallToolResult): unknown {
+  const textContent = result.content.find((entry): entry is TextContent => entry.type === 'text');
+  if (textContent) {
+    try {
+      return JSON.parse(textContent.text) as unknown;
+    } catch {
+      // Some MCP tools return human-readable text instead of JSON; keep it visible to callers.
+    }
+  }
+
+  return {
+    success: result.isError !== true,
+    content: result.content,
+    isError: result.isError ?? false,
+  };
+}
+
+async function ensureMcpConfigLoaded(): Promise<ServerStatus[]> {
+  if (mcpProcessManager.getServersStatus().length === 0) {
+    await mcpProcessManager.loadConfig();
+  }
+
+  return mcpProcessManager.getServersStatus();
+}
+
+async function ensureMcpReadinessLoaded(): Promise<McpServerReadiness[]> {
+  if (mcpProcessManager.getServersStatus().length === 0) {
+    await mcpProcessManager.loadConfig();
+  }
+
+  return mcpProcessManager.getServersReadiness();
+}
 
 /**
  * GET /api/mcp/providers
@@ -92,20 +194,117 @@ router.post('/generate', async (req, res) => {
  */
 router.get('/tools', (req, res) => {
   try {
-    const tools = (mcpServer as any).getTools();
+    const tools = mcpServer.getTools();
 
     res.json({
       success: true,
-      tools: tools.map((t: any) => ({
-        name: t.name,
-        description: t.description,
-        inputSchema: t.inputSchema
+      tools: tools.map((tool) => ({
+        name: tool.name,
+        description: tool.description,
+        inputSchema: tool.inputSchema
       })),
       count: tools.length
     });
   } catch (e: unknown) {
     const error = e instanceof Error ? e.message : String(e);
     logError('MCP API', `GET /tools failed: ${error}`);
+    res.status(500).json({ success: false, error });
+  }
+});
+
+/**
+ * GET /api/mcp/servers
+ * List configured MCP servers with runtime status from McpProcessManager.
+ */
+router.get('/servers', async (_req, res) => {
+  try {
+    const servers = await ensureMcpConfigLoaded();
+
+    res.json({
+      success: true,
+      servers,
+      summary: summarizeServerStatuses(servers),
+      timestamp: new Date().toISOString(),
+    });
+  } catch (e: unknown) {
+    const error = e instanceof Error ? e.message : String(e);
+    logError('MCP API', `GET /servers failed: ${error}`);
+    res.status(500).json({ success: false, error });
+  }
+});
+
+/**
+ * GET /api/mcp/manifest
+ * Side-effect-free MCP manifest readiness audit. Does not start or stop servers.
+ */
+router.get('/manifest', async (_req, res) => {
+  try {
+    const entries = await ensureMcpReadinessLoaded();
+
+    res.json({
+      success: true,
+      entries,
+      summary: summarizeReadiness(entries),
+      timestamp: new Date().toISOString(),
+    });
+  } catch (e: unknown) {
+    const error = e instanceof Error ? e.message : String(e);
+    logError('MCP API', `GET /manifest failed: ${error}`);
+    res.status(500).json({ success: false, error });
+  }
+});
+
+/**
+ * POST /api/mcp/servers/:name/start
+ * Start one configured MCP server.
+ */
+router.post('/servers/:name/start', async (req, res) => {
+  try {
+    const serverName = req.params.name;
+    const servers = await ensureMcpConfigLoaded();
+    if (!servers.some((server) => server.name === serverName)) {
+      return res.status(404).json({ success: false, error: `MCP server not found: ${serverName}` });
+    }
+
+    const started = await mcpProcessManager.startServer(serverName);
+    const updatedServers = mcpProcessManager.getServersStatus();
+    const status = updatedServers.find((server) => server.name === serverName);
+
+    res.status(started ? 200 : 409).json({
+      success: started,
+      server: status,
+      summary: summarizeServerStatuses(updatedServers),
+    });
+  } catch (e: unknown) {
+    const error = e instanceof Error ? e.message : String(e);
+    logError('MCP API', `POST /servers/${req.params.name}/start failed: ${error}`);
+    res.status(500).json({ success: false, error });
+  }
+});
+
+/**
+ * POST /api/mcp/servers/:name/stop
+ * Stop one configured MCP server.
+ */
+router.post('/servers/:name/stop', async (req, res) => {
+  try {
+    const serverName = req.params.name;
+    const servers = await ensureMcpConfigLoaded();
+    if (!servers.some((server) => server.name === serverName)) {
+      return res.status(404).json({ success: false, error: `MCP server not found: ${serverName}` });
+    }
+
+    await mcpProcessManager.stopServer(serverName);
+    const updatedServers = mcpProcessManager.getServersStatus();
+
+    res.json({
+      success: true,
+      server: updatedServers.find((server) => server.name === serverName),
+      summary: summarizeServerStatuses(updatedServers),
+    });
+  } catch (e: unknown) {
+    const error = e instanceof Error ? e.message : String(e);
+    logError('MCP API', `POST /servers/${req.params.name}/stop failed: ${error}`);
     res.status(500).json({ success: false, error });
   }
 });
@@ -119,41 +318,27 @@ router.get('/tools', (req, res) => {
 router.post('/tools/:toolName', async (req, res) => {
   try {
     const { toolName } = req.params;
-    const { args } = req.body;
+    const body = isRecord(req.body) ? req.body : {};
+    const args = body.args;
 
-    if (!args || typeof args !== 'object') {
+    if (!isRecord(args)) {
       return res.status(400).json({
         success: false,
         error: 'args is required and must be an object'
       });
     }
 
-    logInfo('MCP API', `Tool execution: ${toolName} with args: ${JSON.stringify(args).slice(0, 100)}`);
-
-    // Route to appropriate handler
-    let result;
-    switch (toolName) {
-      case 'read_file':
-        result = await (mcpServer as any).handleReadFile(args);
-        break;
-      case 'write_file':
-        result = await (mcpServer as any).handleWriteFile(args);
-        break;
-      case 'list_directory':
-        result = await (mcpServer as any).handleListDirectory(args);
-        break;
-      case 'search_files':
-        result = await (mcpServer as any).handleSearchFiles(args);
-        break;
-      default:
-        return res.status(404).json({
-          success: false,
-          error: `Tool not found: ${toolName}`
-        });
+    if (!mcpServer.getTools().some((tool) => tool.name === toolName)) {
+      return res.status(404).json({
+        success: false,
+        error: `Tool not found: ${toolName}`
+      });
     }
 
-    // Parse result content
-    const parsed = JSON.parse(result.content[0].text);
+    logInfo('MCP API', `Tool execution: ${toolName} with args: ${JSON.stringify(args).slice(0, 100)}`);
+
+    const result = await mcpServer.executeTool(toolName, args);
+    const parsed = parseToolResult(result);
 
     res.json(parsed);
   } catch (e: unknown) {

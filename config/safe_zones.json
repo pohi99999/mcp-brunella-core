@@ -1,0 +1,6 @@
+{
+  "safe_zones": [],
+  "blocked_paths": [],
+  "allowed_extensions": [".ts", ".js", ".json", ".md"],
+  "max_file_size_mb": 10
+}

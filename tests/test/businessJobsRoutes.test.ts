@@ -60,8 +60,8 @@ describe('business jobs routes', () => {
     const response = await request(app)
       .post('/api/v1/business-jobs')
       .send({
-        type: 'lead_mining',
-        query: 'fogorvos Budapest',
+        type: ' lead_mining ',
+        query: ' fogorvos Budapest ',
         metadata: {
           limit: 7,
           leadType: 'Brand',
@@ -73,7 +73,7 @@ describe('business jobs routes', () => {
     expect(body.success).toBe(true);
     expect(body.jobId).toBeTruthy();
     expect(queueTaskSpy).toHaveBeenCalledWith(
-      expect.stringContaining('Bányássz lead-eket'),
+      'Bányássz lead-eket: fogorvos Budapest',
       'lead_mining',
       expect.objectContaining({
         jobId: body.jobId,

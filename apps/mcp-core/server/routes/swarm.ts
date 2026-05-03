@@ -6,6 +6,24 @@ import { globalSwarmChatManager } from "@packages/core-logic/SwarmChatManager.js
 
 const swarmRouter = Router();
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function readString(value: unknown): string | null {
+  if (typeof value !== 'string') return null;
+  const trimmed = value.trim();
+  return trimmed ? trimmed : null;
+}
+
+function readStringArray(value: unknown): string[] | null {
+  if (!Array.isArray(value)) return null;
+  const values = value
+    .map((entry) => readString(entry))
+    .filter((entry): entry is string => entry !== null);
+  return values.length === value.length && values.length > 0 ? values : null;
+}
+
 // GET /api/v1/swarm/status
 // Returns: { colonies: ColonySummary[], total: number }
 swarmRouter.get('/status', (_req, res) => {
@@ -24,9 +42,9 @@ swarmRouter.get('/status', (_req, res) => {
 // Body: { task: string, colonyId?: string }
 // Returns: { success: true, result } or { success: false, error: string }
 swarmRouter.post('/dispatch', async (req, res) => {
-  const body = req.body as Record<string, unknown>;
-  const task = typeof body.task === 'string' ? body.task.trim() : '';
-  const colonyId = typeof body.colonyId === 'string' ? body.colonyId : 'triad-default';
+  const body = isRecord(req.body) ? req.body : {};
+  const task = readString(body.task) ?? '';
+  const colonyId = readString(body.colonyId) ?? 'triad-default';
   if (!task) {
     return res.status(400).json({ success: false, error: 'task is required' });
   }
@@ -76,7 +94,9 @@ swarmRouter.get("/sessions", (_req, res) => {
  * Új raj munkamenet létrehozása.
  */
 swarmRouter.post("/create", (req, res) => {
-  const { objective, participants } = req.body;
+  const body = isRecord(req.body) ? req.body : {};
+  const objective = readString(body.objective);
+  const participants = readStringArray(body.participants);
   if (!objective || !participants) {
     return res.status(400).json({ error: "objective and participants required" });
   }
@@ -102,7 +122,7 @@ swarmRouter.get('/checkpoints/stats', async (_req, res) => {
 // GET /api/v1/swarm/checkpoints?swarmId=xxx
 swarmRouter.get('/checkpoints', async (req, res) => {
   try {
-    const swarmId = req.query.swarmId as string | undefined;
+    const swarmId = readString(req.query.swarmId);
     if (!swarmId) {
       return res.status(400).json({ error: 'swarmId query parameter required' });
     }

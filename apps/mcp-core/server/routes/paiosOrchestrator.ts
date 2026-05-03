@@ -8,21 +8,43 @@ import { socketService } from '@packages/agents/SocketService.js';
 import { logInfo, logError } from '@packages/utils/logger.js';
 
 const router = Router();
+const PROVIDERS = new Set(['gemini', 'github', 'ollama', 'anthropic', 'claude', 'cloudflare']);
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function readString(value: unknown): string | null {
+  if (typeof value !== 'string') return null;
+  const trimmed = value.trim();
+  return trimmed ? trimmed : null;
+}
+
+function readConversationHistory(value: unknown): UniversalChatMessage[] {
+  if (!Array.isArray(value)) return [];
+
+  return value
+    .filter((entry): entry is Record<string, unknown> => isRecord(entry))
+    .map((entry) => ({
+      role: entry.role === 'assistant' ? 'assistant' as const : entry.role === 'user' ? 'user' as const : null,
+      content: readString(entry.content),
+    }))
+    .filter((entry): entry is UniversalChatMessage => entry.role !== null && entry.content !== null);
+}
 
 /**
  * POST /api/paios/chat
  * Body: { message: string, model?: string }
  */
 router.post('/chat', async (req, res) => {
-  const { message, model, provider, conversationHistory } = req.body as {
-    message: string;
-    model?: string;
-    provider?: string;
-    conversationHistory?: UniversalChatMessage[];
-    sessionId?: string;
-  };
+  const body = isRecord(req.body) ? req.body : {};
+  const message = readString(body.message);
+  const model = readString(body.model) ?? undefined;
+  const provider = readString(body.provider) ?? undefined;
+  const conversationHistory = readConversationHistory(body.conversationHistory);
+  const sessionId = readString(body.sessionId) ?? undefined;
 
-  if (!message?.trim()) {
+  if (!message) {
     return res.status(400).json({
       success: false,
       error: 'message is required',
@@ -30,7 +52,7 @@ router.post('/chat', async (req, res) => {
   }
 
   try {
-    const providerFromModel = model && ['gemini', 'github', 'ollama', 'anthropic', 'claude', 'cloudflare'].includes(model)
+    const providerFromModel = model && PROVIDERS.has(model)
       ? model
       : undefined;
     const effectiveProvider = provider ?? providerFromModel ?? 'github';
@@ -47,7 +69,7 @@ router.post('/chat', async (req, res) => {
       message,
       provider: effectiveProvider,
       model: effectiveModel,
-      sessionId: req.body?.sessionId,
+      sessionId,
     });
 
     const service = getUniversalOrchestratorService();
@@ -55,8 +77,8 @@ router.post('/chat', async (req, res) => {
       message,
       provider: effectiveProvider,
       model: effectiveModel,
-      conversationHistory: conversationHistory ?? [],
-      sessionId: typeof req.body?.sessionId === 'string' ? req.body.sessionId : undefined,
+      conversationHistory,
+      sessionId,
     });
 
     socketService.broadcastDebug('PAIOS Orchestrator Result', universalResult);

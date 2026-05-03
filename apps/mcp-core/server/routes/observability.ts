@@ -18,6 +18,22 @@ import {
   renderPhoenixFlywheelMarkdown,
 } from '@packages/utils/phoenixInsights.js';
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function readString(value: unknown): string | undefined {
+  if (typeof value !== 'string') return undefined;
+  const trimmed = value.trim();
+  return trimmed ? trimmed : undefined;
+}
+
+function readBoundedInteger(value: unknown, fallback: number, min: number, max: number): number {
+  const parsed = Number(value ?? fallback);
+  if (!Number.isFinite(parsed)) return fallback;
+  return Math.min(Math.max(Math.trunc(parsed), min), max);
+}
+
 export function createObservabilityRouter(): Router {
   const router = Router();
 
@@ -27,7 +43,7 @@ export function createObservabilityRouter(): Router {
    */
   router.get('/stats', (_req, res) => {
     try {
-      const since = typeof _req.query.since === 'string' ? _req.query.since : undefined;
+      const since = readString(_req.query.since);
       const stats = getLlmCallStats(since);
       res.json({ success: true, stats });
     } catch (e: unknown) {
@@ -44,12 +60,12 @@ export function createObservabilityRouter(): Router {
   router.get('/calls', (req, res) => {
     try {
       const query: LlmCallQuery = {
-        provider: typeof req.query.provider === 'string' ? req.query.provider : undefined,
-        since: typeof req.query.since === 'string' ? req.query.since : undefined,
-        until: typeof req.query.until === 'string' ? req.query.until : undefined,
-        userId: typeof req.query.userId === 'string' ? req.query.userId : undefined,
-        limit: typeof req.query.limit === 'string' ? parseInt(req.query.limit, 10) : 200,
-        offset: typeof req.query.offset === 'string' ? parseInt(req.query.offset, 10) : 0,
+        provider: readString(req.query.provider),
+        since: readString(req.query.since),
+        until: readString(req.query.until),
+        userId: readString(req.query.userId),
+        limit: readBoundedInteger(req.query.limit, 200, 1, 500),
+        offset: readBoundedInteger(req.query.offset, 0, 0, 100_000),
       };
       const calls = queryLlmCalls(query);
       res.json({ success: true, calls, count: calls.length });
@@ -66,7 +82,7 @@ export function createObservabilityRouter(): Router {
    */
   router.get('/timeline', (req, res) => {
     try {
-      const hours = typeof req.query.hours === 'string' ? parseInt(req.query.hours, 10) : 24;
+      const hours = readBoundedInteger(req.query.hours, 24, 1, 168);
       const since = new Date(Date.now() - hours * 3600 * 1000).toISOString();
       const calls = queryLlmCalls({ since, limit: 5000 });
 
@@ -106,9 +122,9 @@ export function createObservabilityRouter(): Router {
    */
   router.get('/runtime-threshold-rollouts', (req, res) => {
     try {
-      const limit = typeof req.query.limit === 'string' ? parseInt(req.query.limit, 10) : 50;
-      const offset = typeof req.query.offset === 'string' ? parseInt(req.query.offset, 10) : 0;
-      const approvalTicket = typeof req.query.approvalTicket === 'string' ? req.query.approvalTicket : undefined;
+      const limit = readBoundedInteger(req.query.limit, 50, 1, 100);
+      const offset = readBoundedInteger(req.query.offset, 0, 0, 100_000);
+      const approvalTicket = readString(req.query.approvalTicket);
       const entries = queryRuntimeThresholdRolloutJournalSummaries({ approvalTicket, limit, offset });
       res.json({ success: true, entries, count: entries.length });
     } catch (e: unknown) {
@@ -124,11 +140,7 @@ export function createObservabilityRouter(): Router {
    */
   router.get('/phoenix-flywheel', async (req, res) => {
     try {
-      const rawHours = typeof req.query.hours === 'string' ? parseInt(req.query.hours, 10) : 24;
-      if (!Number.isFinite(rawHours) || rawHours <= 0) {
-        res.status(400).json({ success: false, error: 'Invalid hours parameter' });
-        return;
-      }
+      const rawHours = readBoundedInteger(req.query.hours, 24, 1, 168);
 
       const snapshot = await buildPhoenixFlywheelObservabilitySnapshot({
         windowHours: rawHours,
@@ -152,13 +164,20 @@ export function createObservabilityRouter(): Router {
    */
   router.post('/runtime-threshold-rollouts', (req, res) => {
     try {
-      const { approvedBy, approvalTicket, approvedAt, changeWindow, notes } = req.body as {
-        approvedBy: string;
-        approvalTicket: string;
-        approvedAt: string;
-        changeWindow: string;
-        notes?: string;
-      };
+      const body = isRecord(req.body) ? req.body : {};
+      const approvedBy = readString(body.approvedBy);
+      const approvalTicket = readString(body.approvalTicket);
+      const approvedAt = readString(body.approvedAt);
+      const changeWindow = readString(body.changeWindow);
+      const notes = readString(body.notes);
+
+      if (!approvedBy || !approvalTicket || !approvedAt || !changeWindow) {
+        res.status(400).json({
+          success: false,
+          error: 'approvedBy, approvalTicket, approvedAt, and changeWindow are required',
+        });
+        return;
+      }
 
       const snapshot = getRuntimeDriftSnapshot();
       const contract = readRepoRuntimeContract(process.cwd());

@@ -36,6 +36,26 @@ type WorkerAuditResult = {
   error?: string;
 };
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function readString(value: unknown): string | null {
+  if (typeof value !== "string") return null;
+  const trimmed = value.trim();
+  return trimmed ? trimmed : null;
+}
+
+function readObject(value: unknown): Record<string, unknown> {
+  return isRecord(value) ? value : {};
+}
+
+function readLimit(value: unknown, fallback: number): number {
+  const parsed = Number(value ?? fallback);
+  if (!Number.isFinite(parsed)) return fallback;
+  return Math.min(Math.max(Math.trunc(parsed), 1), 100);
+}
+
 function getCloudflareChatBaseUrl(): string {
   return (
     process.env.CLOUDFLARE_CHAT_URL ||
@@ -361,11 +381,9 @@ export function createCloudflareRoutes(): Router {
   router.post("/agents/:workerId/task", async (req, res) => {
     try {
       const workerId = String(req.params.workerId || "").trim();
-      const instruction =
-        typeof req.body?.instruction === "string"
-          ? req.body.instruction.trim()
-          : "";
-      const context = (req.body?.context ?? {}) as Record<string, unknown>;
+      const body = readObject(req.body);
+      const instruction = readString(body.instruction) ?? "";
+      const context = readObject(body.context);
 
       if (!workerId) {
         res.status(400).json({ error: "workerId is required" });
@@ -418,11 +436,9 @@ export function createCloudflareRoutes(): Router {
         return;
       }
 
-      const instruction =
-        typeof req.body?.instruction === "string"
-          ? req.body.instruction.trim()
-          : "";
-      const context = (req.body?.context ?? {}) as Record<string, unknown>;
+      const body = readObject(req.body);
+      const instruction = readString(body.instruction) ?? "";
+      const context = readObject(body.context);
 
       if (!instruction) {
         res.status(400).json({ error: "instruction is required" });
@@ -476,7 +492,7 @@ export function createCloudflareRoutes(): Router {
         return;
       }
 
-      const limit = parseInt(String(req.query.limit || "20"), 10);
+      const limit = readLimit(req.query.limit, 20);
       const data = await cloudflareClient.fetchHistory(limit);
       res.json(data);
     } catch (e: unknown) {
@@ -492,13 +508,11 @@ export function createCloudflareRoutes(): Router {
    */
   router.post("/chat", async (req, res) => {
     try {
-      const instruction =
-        typeof req.body?.instruction === "string"
-          ? req.body.instruction.trim()
-          : "";
+      const body = readObject(req.body);
+      const instruction = readString(body.instruction) ?? "";
 
-      const history = Array.isArray(req.body?.history)
-        ? (req.body.history as unknown[])
+      const history = Array.isArray(body.history)
+        ? (body.history as unknown[])
             .map((item) => {
               if (!item || typeof item !== "object") return null;
               const r = item as Record<string, unknown>;

@@ -6,7 +6,7 @@ export default defineConfig({
     environment: 'jsdom',
     include: [
       'apps/dashboard/**/*.test.{ts,tsx}',
-      'tests/test/dashboard/**/*.test.{ts,tsx}',
+      'test/dashboard/**/*.test.{ts,tsx}',
     ],
     exclude: ['**/node_modules/**', '**/build/**'],
     globals: true,

@@ -7,13 +7,25 @@ const harvestRouter = Router();
 let lastHarvestTime: number | null = null;
 let lastHarvestStats: { sources: number; items: number } = { sources: 0, items: 0 };
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function readString(value: unknown, fallback: string): string {
+  if (typeof value !== 'string') return fallback;
+  const trimmed = value.trim();
+  return trimmed ? trimmed : fallback;
+}
+
 // POST /api/v1/harvest/sync
 // Receives harvest data from CEAN Worker
 // Body: { source: string; items: Array<{ title: string; summary: string }> }
 harvestRouter.post('/sync', async (req, res) => {
-  const body = req.body as Record<string, unknown>;
-  const source = typeof body.source === 'string' ? body.source : 'unknown';
-  const items = Array.isArray(body.items) ? body.items as Array<Record<string, unknown>> : [];
+  const body = isRecord(req.body) ? req.body : {};
+  const source = readString(body.source, 'unknown');
+  const items = Array.isArray(body.items)
+    ? body.items.filter(isRecord)
+    : [];
 
   lastHarvestTime = Date.now();
   lastHarvestStats = { sources: lastHarvestStats.sources + 1, items: lastHarvestStats.items + items.length };
