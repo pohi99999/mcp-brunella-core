@@ -1,5 +1,7 @@
 const http = require('http');
 const WebSocket = require('ws');
+require('dotenv').config();
+const { GoogleGenAI } = require("@google/genai");
 
 // Configuration
 const keywords = ["CEO", "Owner", "tulajdonos", "ügyvezető"];
@@ -8,6 +10,27 @@ const encodedKeyword = encodeURIComponent(keyword);
 // Hozzáadva: &network=%5B"S"%5D (S = Second degree connection) hogy biztosan legyen "Connect" gomb
 const searchUrl = `https://www.linkedin.com/search/results/people/?keywords=${encodedKeyword}&network=%5B%22S%22%5D&origin=FACETED_SEARCH`;
 const MAX_REQUESTS = 15; // Biztonsági korlát a tervnek megfelelően
+
+const genAI = new GoogleGenAI(process.env.GEMINI_API_KEY);
+const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+
+async function generateLinkedInMessage(name, company) {
+  try {
+    const firstName = name.split(' ')[0];
+    const prompt = `Írj egy rövid (max 250 karakter), profi, de közvetlen LinkedIn kapcsolódási üzenetet ${firstName} részére.
+A cége: ${company}.
+Én: Pohánka Péter, a Pohánka & Társától.
+Cél: KKV folyamatok automatizálása MI-vel, 0 manuális adatrögzítés.
+Stílus: Segítőkész, nem nyomulós értékesítői, inkább szakmai érdeklődés.
+Csak az üzenet szövegét add vissza.`;
+
+    const result = await model.generateContent(prompt);
+    return result.response.text().trim();
+  } catch (e) {
+    console.error('AI message generation failed:', e.message);
+    return `Szia ${name.split(' ')[0]}! Látom, a profilod alapján nagyszerű munkát végzel. Mi a Pohánka & Társánál KKV folyamatok automatizálásával foglalkozunk. Szívesen kapcsolódnék! Üdv, Péter`;
+  }
+}
 
 async function run() {
   try {
@@ -34,53 +57,51 @@ async function run() {
 
       // Execute automation logic in a loop
       for (let i = 0; i < MAX_REQUESTS; i++) {
-        console.log(`[${i+1}/${MAX_REQUESTS}] Célpont keresése és kapcsolódás...`);
+        console.log(`[${i+1}/${MAX_REQUESTS}] Célpont keresése...`);
         
-        const result = await evaluateInPage(ws, `
-          (async () => {
-            // Scroll down a bit to load more results
+        const prospectInfo = await evaluateInPage(ws, `
+          (() => {
             window.scrollBy(0, 300);
-            await new Promise(r => setTimeout(r, 1000));
-
-            // Find all buttons and links
             const buttons = Array.from(document.querySelectorAll('button, a'));
-            
-            // Filter to find a valid Connect button
             let connectButton = buttons.find(b => {
               const text = b.innerText.trim();
-              const isConnect = ['Összekapcsolás', 'Connect', 'Kapcsolatfelvétel', 'Kapcsolatépítés', 'Társítom'].includes(text);
-              const notProcessed = !b.hasAttribute('data-bot-processed');
-              return isConnect && notProcessed;
+              return ['Összekapcsolás', 'Connect', 'Kapcsolatfelvétel', 'Kapcsolatépítés', 'Társítom'].includes(text) && !b.hasAttribute('data-bot-processed');
             });
             
-            if (!connectButton) {
-                // Try to find "More" button in the same entry if possible, or any "More"
-                const moreButton = buttons.find(b => b.innerText.includes('More') || b.innerText.includes('Továbbiak'));
-                if (moreButton) {
-                    moreButton.click();
-                    await new Promise(r => setTimeout(r, 1000));
-                    // Re-scan buttons after click
-                    const newButtons = Array.from(document.querySelectorAll('button, a'));
-                    connectButton = newButtons.find(b => b.innerText.includes('Connect') || b.innerText.includes('Összekapcsolás'));
-                }
-            }
-
-            if (!connectButton) return { status: 'not_found' };
+            if (!connectButton) return null;
             
-            // Mark as processed
-            connectButton.setAttribute('data-bot-processed', 'true');
-            
-            // Get name
             const container = connectButton.closest('.entity-result__item');
             const name = container?.querySelector('.entity-result__title-text a')?.innerText.split('\\n')[0] || "Partner";
+            const company = container?.querySelector('.entity-result__primary-subtitle')?.innerText || "Vállalkozás";
             
+            return { name, company, buttonUid: Math.random().toString(36).substr(2, 9) };
+          })()
+        `);
+
+        if (!prospectInfo) {
+          console.log('Nincs több Connect gomb ezen az oldalon.');
+          break;
+        }
+
+        console.log(`AI üzenet generálása: ${prospectInfo.name} (${prospectInfo.company})...`);
+        const message = await generateLinkedInMessage(prospectInfo.name, prospectInfo.company);
+        console.log(`Generált üzenet: "${message}"`);
+
+        const result = await evaluateInPage(ws, `
+          (async () => {
+            const buttons = Array.from(document.querySelectorAll('button, a'));
+            const connectButton = buttons.find(b => {
+               const text = b.innerText.trim();
+               return ['Összekapcsolás', 'Connect', 'Kapcsolatfelvétel', 'Kapcsolatépítés', 'Társítom'].includes(text) && !b.hasAttribute('data-bot-processed');
+            });
+
+            if (!connectButton) return { status: 'error' };
+            connectButton.setAttribute('data-bot-processed', 'true');
             connectButton.click();
             await new Promise(r => setTimeout(r, 2000));
             
-            // Click "Add a note"
             const addNoteButton = Array.from(document.querySelectorAll('button')).find(b => 
-              b.innerText.includes('Megjegyzés hozzáadása') || 
-              b.innerText.includes('Add a note')
+              b.innerText.includes('Megjegyzés hozzáadása') || b.innerText.includes('Add a note')
             );
             
             if (addNoteButton) {
@@ -89,44 +110,29 @@ async function run() {
                
                const textArea = document.querySelector('textarea[name="message"]');
                if (textArea) {
-                  const firstName = name.split(' ')[0];
-                  const message = "Szia " + firstName + "! Látom, a profilod alapján fantasztikus munkát végzel az építőiparban. Mi a Pohánka & Társánál KKV-k folyamatait gyorsítjuk fel MI ügynökökkel. Szívesen követném a munkásságodat! Üdv, Péter";
-                  
-                  // Simulate typing
-                  textArea.value = message;
+                  textArea.value = \`${message}\`;
                   textArea.dispatchEvent(new Event('input', { bubbles: true }));
                   await new Promise(r => setTimeout(r, 1000));
                   
-                  // Find Send button
                   const sendButton = Array.from(document.querySelectorAll('button')).find(b => 
-                    b.innerText.includes('Küldés') || 
-                    b.innerText.includes('Send')
+                    b.innerText.includes('Küldés') || b.innerText.includes('Send')
                   );
                   
                   if (sendButton) {
-                    sendButton.click(); // Most már élesítve
-                    return { status: 'sent', name, message };
+                    sendButton.click();
+                    return { status: 'sent', name: \`${prospectInfo.name}\` };
                   }
                }
             }
-            
-            return { status: 'failed', name };
+            return { status: 'failed' };
           })()
         `);
         
         console.log('Eredmény:', JSON.stringify(result, null, 2));
-        
-        if (result.status === 'prepared') {
-           console.log(`>>> ELŐKÉSZÍTVE: ${result.name} számára.`);
-           // In a real automated run, we would click Send.
-           // For now, I'll stop to let the user see it in the browser if they want.
-        }
-        
-        await new Promise(r => setTimeout(r, 5000)); // Delay between requests
+        await new Promise(r => setTimeout(r, 8000 + Math.random() * 5000)); // Véletlenszerűbb késleltetés
       }
       
       console.log('LinkedIn Bot lefutott.');
-      // process.exit(0);
     });
 
   } catch (err) {
