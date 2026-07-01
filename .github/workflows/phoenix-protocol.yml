@@ -31,7 +31,7 @@ jobs:
       - name: Install Python Dependencies
         run: |
           cd myai
-          pip install -r requirements.txt
+          cd packages/myai && pip install -r requirements.txt
 
       # 3. Run quick validation on push/PR; full suite runs in daily-full-tests.yml
       - name: Run Fast Validation

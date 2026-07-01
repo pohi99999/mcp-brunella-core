@@ -141,7 +141,7 @@
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
     "@types/node": "^22.13.4",
-    "apache-arrow": "^21.1.0",
+    "apache-arrow": "^18.1.0",
     "apify-client": "^2.22.3",
     "axios": "^1.14.0",
     "better-sqlite3": "^12.8.0",

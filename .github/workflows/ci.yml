@@ -53,7 +53,7 @@ jobs:
           cache: "pip"
 
       - name: Install Python dependencies
-        run: pip install -r requirements.txt
+        run: cd packages/myai && cd packages/myai && pip install -r requirements.txt
 
       - name: Run Python tests
         run: |
@@ -79,7 +79,7 @@ jobs:
         run: |
           python3 -m venv .venv
           . .venv/bin/activate
-          pip install -r requirements.txt
+          cd packages/myai && cd packages/myai && pip install -r requirements.txt
 
       - name: Install Node deps & build
         run: npm install --legacy-peer-deps --no-frozen-lockfile && npm run build
