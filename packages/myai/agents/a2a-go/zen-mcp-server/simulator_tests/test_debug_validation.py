@@ -113,7 +113,7 @@ class SessionManager:
         expired_count = 0
 
         # BUG: Modifying dictionary while iterating over it
-        for session_id, session in self.active_sessions.items():
+        for session_id, session in list(self.active_sessions.items()):
             if current_time > session['expires_at']:
                 del self.active_sessions[session_id]  # This causes RuntimeError
                 expired_count += 1
