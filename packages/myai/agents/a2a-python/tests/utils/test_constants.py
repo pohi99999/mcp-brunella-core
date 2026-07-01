@@ -9,9 +9,6 @@ def test_agent_card_constants():
         constants.AGENT_CARD_WELL_KNOWN_PATH == '/.well-known/agent-card.json'
     )
     assert (
-        constants.PREV_AGENT_CARD_WELL_KNOWN_PATH == '/.well-known/agent.json'
-    )
-    assert (
         constants.EXTENDED_AGENT_CARD_PATH == '/agent/authenticatedExtendedCard'
     )
 
