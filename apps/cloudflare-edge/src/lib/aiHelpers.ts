@@ -3,7 +3,7 @@ export function parseAiResponse(aiRaw: unknown): { text: string; tokens: number 
   try {
     if (!aiRaw) return { text: '', tokens: 0 };
     // Common shapes
-    const raw = aiRaw as Record<string, any>;
+    const raw = aiRaw as Record<string, unknown>;
 
     // OpenAI/GitHub-like choices.message.content
     if (Array.isArray(raw.choices) && raw.choices.length > 0) {
@@ -29,7 +29,7 @@ export function parseAiResponse(aiRaw: unknown): { text: string; tokens: number 
   }
 }
 
-export function safeJsonParse<T = any>(s: string, fallback: T): T {
+export function safeJsonParse<T = unknown>(s: string, fallback: T): T {
   try {
     if (!s || typeof s !== 'string') return fallback;
     return JSON.parse(s) as T;
@@ -40,7 +40,7 @@ export function safeJsonParse<T = any>(s: string, fallback: T): T {
 
 export function extractEmbedding(aiRaw: unknown): number[] | null {
   try {
-    const raw = aiRaw as Record<string, any>;
+    const raw = aiRaw as Record<string, unknown>;
     if (Array.isArray(raw.data) && raw.data.length > 0) {
       const first = raw.data[0];
       if (Array.isArray(first)) return first as number[];

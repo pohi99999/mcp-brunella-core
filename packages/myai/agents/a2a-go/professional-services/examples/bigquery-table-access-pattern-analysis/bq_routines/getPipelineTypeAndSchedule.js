@@ -58,7 +58,7 @@ function getPipelineTypeAndSchedule(runHistory) {
 
     // Set the schedule if it is hourly
     if (timeDifferencesInHoursMedian > 0.5 && timeDifferencesInHoursMedian <= 1.5) { 
-        var elementsFollowingPattern = timeDifferencesInHour.filter(x => x > 0.5 && x <= 1.5)
+        elementsFollowingPattern = timeDifferencesInHour.filter(x => x > 0.5 && x <= 1.5)
         if (elementsFollowingPattern.length > 0.5 * timeDifferencesInHour.length && elementsFollowingPattern.length > 3) {
             schedule = 'HOURLY';
         }
@@ -66,7 +66,7 @@ function getPipelineTypeAndSchedule(runHistory) {
 
     // Set the schedule if it is daily
     if (timeDifferencesInHoursMedian >= 23 && timeDifferencesInHoursMedian <= 25) {
-        var elementsFollowingPattern = timeDifferencesInHour.filter(x => x <= 23 && x >= 25)
+        elementsFollowingPattern = timeDifferencesInHour.filter(x => x <= 23 && x >= 25)
         if (elementsFollowingPattern.length > 0.5 * timeDifferencesInHour.length && elementsFollowingPattern.length > 3) {
             schedule = 'DAILY';
         }
@@ -76,7 +76,7 @@ function getPipelineTypeAndSchedule(runHistory) {
     var timeDifferencesInDays = timeDifferences.map(timeDifference => timeDifference/1000/60/60/24);
     var timeDifferencesInDaysMedian = timeDifferencesInDays.median();
     if (timeDifferencesInDaysMedian >= 27 && timeDifferencesInDaysMedian <= 32) {
-        var elementsFollowingPattern = timeDifferencesInDays.filter(x => x >=27 && x <= 32);
+        elementsFollowingPattern = timeDifferencesInDays.filter(x => x >=27 && x <= 32);
         if (elementsFollowingPattern.length > 0.5 * timeDifferencesInDays.length && elementsFollowingPattern.length > 2) {
             schedule = 'MONTHLY';
         }
