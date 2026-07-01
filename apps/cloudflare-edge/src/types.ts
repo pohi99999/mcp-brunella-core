@@ -46,7 +46,7 @@ export interface Env {
 export interface TaskResult {
   taskId: string;
   status: "completed" | "failed";
-  result?: any;
+  result?: unknown;
   error?: string;
   agentId?: string;
   durationMs?: number;
@@ -55,7 +55,7 @@ export interface TaskResult {
 
 export interface TaskPayload {
   instruction: string;
-  context?: Record<string, any>;
+  context?: Record<string, unknown>;
   source?: string;
   timestamp?: string;
 }
@@ -65,7 +65,7 @@ export interface TaskRecord {
   type: string;
   status: "pending" | "dispatched" | "completed" | "failed";
   payload: TaskPayload;
-  result?: any;
+  result?: unknown;
   createdAt: string;
   completedAt?: string;
 }
