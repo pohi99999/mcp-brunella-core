@@ -51,7 +51,7 @@ class ConversationChainValidationTest(ConversationBaseTest):
 
 def buggy_function(x, y):
     '''Function with a bug - incorrect operator'''
-    return x - y  # BUG: Should be x + y for addition
+    return x + y  # BUG: Should be x + y for addition
 
 class TestClass:
     def method(self):
