@@ -50,7 +50,6 @@ from a2a.types import (
 from a2a.utils import (
     AGENT_CARD_WELL_KNOWN_PATH,
     EXTENDED_AGENT_CARD_PATH,
-    PREV_AGENT_CARD_WELL_KNOWN_PATH,
 )
 from a2a.utils.errors import MethodNotImplementedError
 
@@ -177,34 +176,28 @@ def test_authenticated_extended_agent_card_endpoint_not_supported(
     assert response.status_code == 404  # Starlette's default for no route
 
 
-def test_agent_card_default_endpoint_has_deprecated_route(
+def test_agent_card_default_endpoint(
     agent_card: AgentCard, handler: mock.AsyncMock
 ):
-    """Test agent card deprecated route is available for default route."""
+    """Test agent card default route."""
     app_instance = A2AStarletteApplication(agent_card, handler)
     client = TestClient(app_instance.build())
     response = client.get(AGENT_CARD_WELL_KNOWN_PATH)
     assert response.status_code == 200
     data = response.json()
     assert data['name'] == agent_card.name
-    response = client.get(PREV_AGENT_CARD_WELL_KNOWN_PATH)
-    assert response.status_code == 200
-    data = response.json()
-    assert data['name'] == agent_card.name
 
 
-def test_agent_card_custom_endpoint_has_no_deprecated_route(
+def test_agent_card_custom_endpoint(
     agent_card: AgentCard, handler: mock.AsyncMock
 ):
-    """Test agent card deprecated route is not available for custom route."""
+    """Test agent card custom route."""
     app_instance = A2AStarletteApplication(agent_card, handler)
     client = TestClient(app_instance.build(agent_card_url='/my-agent'))
     response = client.get('/my-agent')
     assert response.status_code == 200
     data = response.json()
     assert data['name'] == agent_card.name
-    response = client.get(PREV_AGENT_CARD_WELL_KNOWN_PATH)
-    assert response.status_code == 404
 
 
 def test_authenticated_extended_agent_card_endpoint_not_supported_fastapi(
@@ -378,12 +371,6 @@ def test_fastapi_build_with_extra_routes(
     data = response.json()
     assert data['name'] == agent_card.name
 
-    # check if deprecated agent card path route is available with default well-known path
-    response = client.get(PREV_AGENT_CARD_WELL_KNOWN_PATH)
-    assert response.status_code == 200
-    data = response.json()
-    assert data['name'] == agent_card.name
-
 
 def test_fastapi_build_custom_agent_card_path(
     app: A2AFastAPIApplication, agent_card: AgentCard
@@ -401,10 +388,6 @@ def test_fastapi_build_custom_agent_card_path(
 
     # Ensure default agent card location is not available
     response = client.get(AGENT_CARD_WELL_KNOWN_PATH)
-    assert response.status_code == 404
-
-    # check if deprecated agent card path route is not available
-    response = client.get(PREV_AGENT_CARD_WELL_KNOWN_PATH)
     assert response.status_code == 404
 
 
