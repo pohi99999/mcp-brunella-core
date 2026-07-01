@@ -53,10 +53,12 @@ export function registerKnowledgeTools(server: McpServer) {
     },
     async ({ pattern }) => {
       const results: string[] = [];
-      for (const rootName of KNOWLEDGE_ROOTS) {
+      await Promise.all(
+        KNOWLEDGE_ROOTS.map(async (rootName) => {
           const rootPath = path.join(config.workspaceRoot, rootName);
           await searchFiles(rootPath, pattern, results);
-      }
+        })
+      );
       const limitedResults = results.slice(0, 50);
       return {
         content: [{
