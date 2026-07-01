@@ -155,7 +155,7 @@ describe('managed threshold rollout plan', () => {
     expect(plan.canApply).toBe(true);
     expect(plan.approvalRequired).toBe(true);
     expect(plan.changes).toContain('Node heap 1536MB -> 1792MB');
-    expect(plan.managedFiles).toContain('config\\runtime-threshold-contract.env');
+    expect(plan.managedFiles.map(p => p.replace(/\\/g, '/'))).toContain('config/runtime-threshold-contract.env');
   });
 
   it('marks decreases as read-only even when the recommendation is tune', () => {
