@@ -63,7 +63,7 @@ export class SzamlazzClient {
         logInfo('SzamlazzClient', `Invoice created successfully: ${invoiceNumber}`);
 
         let pdfBase64 = undefined;
-        if (contentType.includes('application/pdf')) {
+        if (String(contentType).includes('application/pdf')) {
           pdfBase64 = Buffer.from(response.data).toString('base64');
         }
 
