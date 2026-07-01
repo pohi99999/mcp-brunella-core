@@ -385,12 +385,16 @@ export class AgentManager extends EventEmitter {
     }
 
     // Auto-start ügynökök
-    for (const agentConfig of this.registry.agents.filter((a) => a.autoStart)) {
-      const agent = this.agents.get(agentConfig.name);
-      if (agent?.initialize) {
-        await agent.initialize();
-      }
-    }
+    await Promise.all(
+      this.registry.agents
+        .filter((a) => a.autoStart)
+        .map(async (agentConfig) => {
+          const agent = this.agents.get(agentConfig.name);
+          if (agent?.initialize) {
+            await agent.initialize();
+          }
+        })
+    );
 
     logInfo("AgentManager", `${this.agents.size} ügynök betöltve`);
 
