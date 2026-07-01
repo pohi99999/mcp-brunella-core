@@ -62,7 +62,7 @@ interface CrmFollowUpDispatchTaskMetadata extends Record<string, unknown> {
  * ScheduledTasksRunner - Dynamically executes tasks from the database
  */
 export class ScheduledTasksRunner {
-  private activeJobs: Map<string, cron.ScheduledTask> = new Map();
+  private activeJobs: Map<string, any> = new Map();
 
   private async emitDerivedCronHooks(task: ScheduledTask, result: unknown): Promise<void> {
     const derivedEvents: string[] = [];

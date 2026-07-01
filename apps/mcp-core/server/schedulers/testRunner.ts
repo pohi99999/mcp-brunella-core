@@ -15,7 +15,7 @@ export interface TestRunnerConfig {
   triggerType: 'scheduled' | 'manual' | 'api';
 }
 
-let schedulerTask: cron.ScheduledTask | null = null;
+let schedulerTask: any | null = null;
 
 export async function runTests(triggerType: 'scheduled' | 'manual' | 'api' = 'manual'): Promise<TestRun> {
   const runId = uuidv4();
