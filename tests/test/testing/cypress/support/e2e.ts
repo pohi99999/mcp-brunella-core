@@ -1,7 +1,7 @@
 // Cypress E2E Support fájl
 // Globális beállítások, custom command-ok
 
-// @ts-ignore
+// @ts-expect-error -- ./commands has no type declarations available
 import './commands';
 
 // Uncaught exception handling — React 19 + Vite devmode néha dob
