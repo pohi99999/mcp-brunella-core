@@ -125,16 +125,24 @@ export function registerKnowledgeTools(server: McpServer) {
     },
     async ({ file_paths }) => {
         let context = "";
-        for (const filePath of file_paths) {
+        const readPromises = file_paths.map(async (filePath) => {
             const fullPath = path.resolve(config.workspaceRoot, filePath);
-            if (!fullPath.startsWith(config.workspaceRoot)) continue;
+            if (!fullPath.startsWith(config.workspaceRoot)) return null;
             try {
                 const content = await fs.readFile(fullPath, 'utf-8');
-                context += `\n--- FILE: ${filePath} ---\n${content}\n`;
+                return `\n--- FILE: ${filePath} ---\n${content}\n`;
             } catch (error: unknown) {
                 // Non-critical: file read errors during context building are expected
                 const err = error instanceof Error ? error : new Error(String(error));
                 logDebug('knowledge_read_context', `Skipped file ${filePath}: ${err.message}`);
+                return null;
+            }
+        });
+
+        const results = await Promise.allSettled(readPromises);
+        for (const result of results) {
+            if (result.status === 'fulfilled' && result.value !== null) {
+                context += result.value;
             }
         }
         return {
