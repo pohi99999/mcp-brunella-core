@@ -18,7 +18,7 @@ jobs:
           node-version: "24"
 
       - name: Audit completed and archived tracks
-        run: node scripts/auditCompletedTracks.mjs --json --output test-results/track-audit.json
+        run: node ops/scripts/auditCompletedTracks.mjs --json --output test-results/track-audit.json
 
       - name: Upload track audit artifact
         if: always()
