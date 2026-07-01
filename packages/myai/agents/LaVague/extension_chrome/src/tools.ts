@@ -28,7 +28,7 @@ export function extractNextEngine(text: string, nextEngines: string[] = DEFAULT_
                     }
                 }
             }
-        } catch (e) {}
+        } catch (e) { /* ignore */ }
     }
 
     throw new Error(`No next engine found in the text: ${text}`);

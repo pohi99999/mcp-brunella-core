@@ -9,8 +9,8 @@
  * 5. Workers AI - Fallback LLM
  */
 
-import { Env, TaskPayload, TaskRecord, TaskResult } from "./types.js";
-import { parseAiResponse, safeJsonParse } from './lib/aiHelpers.js';
+import { Env, TaskPayload, TaskRecord } from "./types.js";
+import { parseAiResponse } from './lib/aiHelpers.js';
 export { EdgeCoordinator } from "./edge-coordinator.js";
 export { DailyHealthCheckWorkflow } from "./workflows/daily-health-check.js";
 export { TaskPipelineWorkflow } from "./workflows/task-pipeline.js";
@@ -21,7 +21,7 @@ async function classifyTask(env: Env, instruction: string): Promise<{ type: stri
   const model = env.DEFAULT_CODE_MODEL || "@cf/meta/llama-3.3-70b-instruct-fp8-fast";
   try {
     const modelName = typeof model === 'string' ? model : String(model ?? '');
-    const aiRaw = await env.AI.run(modelName as any, {
+    const aiRaw = await env.AI.run(modelName as never, {
       messages: [{ role: 'user', content: instruction }],
       max_tokens: 50,
     });
@@ -63,7 +63,7 @@ export default {
   async fetch(
     request: Request,
     env: Env,
-    ctx: ExecutionContext,
+    _ctx: ExecutionContext,
   ): Promise<Response> {
     const url = new URL(request.url);
     const path = url.pathname;
@@ -155,7 +155,7 @@ export default {
 
         try {
           const selectedModelName = typeof selectedModel === 'string' ? selectedModel : String(selectedModel ?? '');
-          const aiRaw = await env.AI.run(selectedModelName as any, {
+          const aiRaw = await env.AI.run(selectedModelName as never, {
             messages:
               messages.length > 0
                 ? messages
@@ -220,8 +220,8 @@ export default {
         const taskType = classification.type;
         // annotate payload with classification tokens for downstream consumers
         try {
-          (payload as any).classificationTokens = classification.tokens;
-        } catch {}
+          (payload as Record<string, unknown>).classificationTokens = classification.tokens;
+        } catch { /* ignore */ }
 
         // D1 INSERT
         try {
@@ -256,7 +256,7 @@ export default {
               type: taskType,
               priority: "normal",
               createdAt: new Date().toISOString(),
-              classificationTokens: (payload as any).classificationTokens || 0,
+              classificationTokens: (payload as Record<string, unknown>).classificationTokens || 0,
             } as TaskPayload);
           } catch {
             // Queue send failed — fallback to direct local dispatch
@@ -267,7 +267,7 @@ export default {
         if (env.BAS_ANALYTICS) {
           env.BAS_ANALYTICS.writeDataPoint({
             blobs: [taskId, taskType, "edge", "submitted"],
-            doubles: [(payload as any).classificationTokens || 0, 0],
+            doubles: [(payload as Record<string, unknown>).classificationTokens || 0, 0],
             indexes: ["task_submit"],
           });
         }

@@ -92,7 +92,7 @@ export interface KnowledgeCardSummary {
   updatedAt: string;
 }
 
-export interface ReviewQueueItem extends KnowledgeCardSummary {}
+export type ReviewQueueItem = KnowledgeCardSummary;
 
 export interface SearchKnowledgeCardsInput {
   query: string;
