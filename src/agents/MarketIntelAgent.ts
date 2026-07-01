@@ -256,14 +256,14 @@ export class MarketIntelAgent extends BaseAgent {
       }
 
       // 3. Automated Outreach for critical opportunities
-      const outreachResults = [];
-      for (const opp of opportunities) {
-        if (opp.potential_score >= 0.8) {
+      const outreachPromises = opportunities
+        .filter(opp => opp.potential_score >= 0.8)
+        .map(async (opp) => {
           logInfo(this.name, `🔥 High potential found! Triggering outreach for: ${opp.title}`);
-          const outreach = await this.performOutreach(opp);
-          outreachResults.push(outreach);
-        }
-      }
+          return this.performOutreach(opp);
+        });
+
+      const outreachResults = await Promise.all(outreachPromises);
 
       // 4. Store in LanceDB
       await lanceDBClient.addData('machine_opportunities', opportunities);
