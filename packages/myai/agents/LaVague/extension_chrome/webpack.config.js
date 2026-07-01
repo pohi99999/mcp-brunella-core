@@ -1,27 +1,27 @@
-const CopyPlugin = require('copy-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const Dotenv = require('dotenv-webpack');
-const TerserPlugin = require('terser-webpack-plugin');
-const path = require('path');
+import CopyPlugin from 'copy-webpack-plugin';
+import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+import Dotenv from 'dotenv-webpack';
+import TerserPlugin from 'terser-webpack-plugin';
+import path from 'path';
 const outputPath = 'dist';
 
-module.exports = (env, { mode }) => {
+export default (env, { mode }) => {
     const isProduction = mode === 'production';
 
     return {
         entry: {
-            main: [path.resolve(__dirname, 'src', 'main.ts')],
-            background: path.resolve(__dirname, 'src', 'background.ts'),
-            content: path.resolve(__dirname, 'src', 'content.ts'),
+            main: [path.resolve(path.resolve(), 'src', 'main.ts')],
+            background: path.resolve(path.resolve(), 'src', 'background.ts'),
+            content: path.resolve(path.resolve(), 'src', 'content.ts'),
         },
         output: {
-            path: path.join(__dirname, outputPath),
+            path: path.join(path.resolve(), outputPath),
             filename: '[name].js',
         },
         resolve: {
             extensions: ['.tsx', '.ts', '.js'],
             alias: {
-                '@': path.resolve(__dirname, 'src/'),
+                '@': path.resolve(path.resolve(), 'src/'),
             },
         },
         module: {

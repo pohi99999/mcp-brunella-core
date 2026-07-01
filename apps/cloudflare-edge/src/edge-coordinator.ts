@@ -81,13 +81,14 @@ export class EdgeCoordinator implements DurableObject {
     });
   }
 
-  private async handleMessage(sessionId: string, data: any) {
+  private async handleMessage(sessionId: string, data: Record<string, unknown>) {
     // Handle incoming messages
     switch (data.type) {
-      case "ping":
+      case "ping": {
         const ws = this.sessions.get(sessionId);
         ws?.send(JSON.stringify({ type: "pong", timestamp: Date.now() }));
         break;
+      }
 
       case "task:submit":
         // Handle task submission directly via WebSocket if supported
@@ -100,7 +101,7 @@ export class EdgeCoordinator implements DurableObject {
     }
   }
 
-  private broadcast(message: any) {
+  private broadcast(message: Record<string, unknown>) {
     const payload = JSON.stringify(message);
     for (const [id, ws] of this.sessions) {
       try {
