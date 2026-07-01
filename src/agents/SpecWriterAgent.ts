@@ -847,38 +847,42 @@ ${requirements.integrations.cli}
         logError(this.name, `Failed to list tracks directory: ${err.message}`);
         throw err;
       }
-      const tracks = [];
+      const trackPromises = trackDirs
+        .filter((d) => d.isDirectory())
+        .map(async (dir) => {
+          const trackPath = path.join(this.getTracksDir(), dir.name, "track.md");
+          try {
+            const trackContent = await fs.readFile(trackPath, "utf-8");
 
-      for (const dir of trackDirs.filter((d) => d.isDirectory())) {
-        const trackPath = path.join(this.getTracksDir(), dir.name, "track.md");
-        try {
-          const trackContent = await fs.readFile(trackPath, "utf-8");
+            // Extract metadata from track.md (first 20 lines)
+            const lines = trackContent.split("\n").slice(0, 20);
+            const title =
+              lines
+                .find((l) => l.startsWith("# "))
+                ?.replace("# ", "")
+                .trim() || dir.name;
+            const priorityMatch = lines.find((l) => l.includes("**Priority:**"));
+            const priority = priorityMatch?.match(/P[0-2]/)?.[0] || "P2";
+            const progressMatch = lines.find((l) => l.includes("**Progress:**"));
+            const progress = parseInt(progressMatch?.match(/\d+/)?.[0] || "0");
 
-          // Extract metadata from track.md (first 20 lines)
-          const lines = trackContent.split("\n").slice(0, 20);
-          const title =
-            lines
-              .find((l) => l.startsWith("# "))
-              ?.replace("# ", "")
-              .trim() || dir.name;
-          const priorityMatch = lines.find((l) => l.includes("**Priority:**"));
-          const priority = priorityMatch?.match(/P[0-2]/)?.[0] || "P2";
-          const progressMatch = lines.find((l) => l.includes("**Progress:**"));
-          const progress = parseInt(progressMatch?.match(/\d+/)?.[0] || "0");
+            return {
+              id: dir.name,
+              title,
+              priority,
+              progress,
+              path: trackPath,
+            };
+          } catch (error: unknown) {
+            // Skip if track.md is missing or invalid
+            const err = ensureError(error);
+            logDebug(this.name, `Skipping invalid track: ${dir.name} (${err.message})`);
+            return null;
+          }
+        });
 
-          tracks.push({
-            id: dir.name,
-            title,
-            priority,
-            progress,
-            path: trackPath,
-          });
-        } catch (error: unknown) {
-          // Skip if track.md is missing or invalid
-          const err = ensureError(error);
-          logDebug(this.name, `Skipping invalid track: ${dir.name} (${err.message})`);
-        }
-      }
+      const trackResults = await Promise.all(trackPromises);
+      const tracks = trackResults.filter((t): t is NonNullable<typeof t> => t !== null);
 
       return {
         success: true,
